@@ -2,113 +2,177 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C456C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A7AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D82D20883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1937B2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAykI5I2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="T1TwHoTQ";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="df6kiH5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfFFGbt (ORCPT
+        id S1726653AbfFFGcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:31:49 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34444 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfFFGbt (ORCPT
+        Thu, 6 Jun 2019 02:32:20 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:51466 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfFFGcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:31:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id i2so516983plt.1;
-        Wed, 05 Jun 2019 23:31:49 -0700 (PDT)
+        Thu, 6 Jun 2019 02:32:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1559802740; x=1591338740;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=ebaA4IwcctmtX6EvJcI+FohW8pc9ALJiXy6YHR3ny2I=;
+  b=T1TwHoTQ4J7JRofov2TxphJMILBpqpGhIaLXGMOuN9o1+WysVQ2daQZJ
+   mqdgaEICur4vkaACpv3VAAybtan1Vg32kW6vRPrWwLwrB8No2f8oPcEEv
+   dfQG5KFdtHbOgv7rMLaY2/tMegFbG9x1+PdtPsp0HD7+6845eNNYX/fGl
+   axv2zOLO/+yEluqIBPn3MbAwC6uOGPHG/I/1BnaxrPLkXEr9hs8mKhHlh
+   fo8dVO0k/OxXEk1qW/3+vRQwflgGKxPTcMPmQg/SW1IGQa2+ZxJYPAAOR
+   +Q4mCpsFceHEwL+DHvWaMgbu2uw2wWbD7KQobMiqsHcOgiLwRUhqoRWZJ
+   A==;
+X-IronPort-AV: E=Sophos;i="5.63,558,1557158400"; 
+   d="scan'208";a="109916908"
+Received: from mail-dm3nam03lp2051.outbound.protection.outlook.com (HELO NAM03-DM3-obe.outbound.protection.outlook.com) ([104.47.41.51])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Jun 2019 14:32:18 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZuYL6lN4ovNLZelnmpwF2tE/28tuu9kcDrW6nhfoTIY=;
-        b=eAykI5I2cit6kpAF5jKD+nZ+aVqSXA3rMhKtgNRgXHtVFldg6wBTALZUH+Fj1//dcO
-         qvBs7E48tli/uSpkLJ9vpSavSok1SXWOCmVAw2ihUDXP4fW3ZO8EKJBv09sHO1nTngW1
-         ZxglCPmZw2XWGuaZiJx/v4jpvzkJqGG/yKzITiB91BHPg7PRB8nUMOgj/US0LkccUlQi
-         5o1CSPZ4iD4eSpqoNYNYRRijiwD12ZV3luQUBMdYROiAtu7ZSwWWj3yoswcHPQr+mM6z
-         jT0MFhki13yCIcTqLcPywQQJQpCq4FG1t49eCJXz9w7a5TpuFkHlcTaY4gyLGOiZQaER
-         QmXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZuYL6lN4ovNLZelnmpwF2tE/28tuu9kcDrW6nhfoTIY=;
-        b=lTMLrmSixKAf2p2KjMCNp/hvKkvoPf8enedePUI6m2bTnBdD0xUqyaGHSl1efKwU9G
-         sYfWsYKQWF6bvkNWLiwxOWpHpzUrWMkRCopJvfudWmLxLx6q2Mnr67oZNAfO//eGy3QH
-         qb197/7svE+QpJqpjK/vlmJAaIiZbtmj3KYfzowDYq8N2JZ8PFpRrCn5liKA4f1Yb1Sv
-         lI01fO3l5C9f0fnmSjC36UMhDpU0SrGWlamb6HX0YInZs2mm7cjK+E4PPuYZcN6peEUf
-         cGW+amiRirN/vGY2PmD1JB1CYGpzApTOPYyDM31oRMa24QD+rI0OFazy54/sGq/wcypy
-         jh9g==
-X-Gm-Message-State: APjAAAWnDCJtSdhyjsNDQSu8/SWVg081M3BRvMw2Ouu5Bo/gJXXYt1+6
-        RBwvqUw5MqNUHiW55+I20rnUtBE5bumm7kB7gno=
-X-Google-Smtp-Source: APXvYqzmTJjr3etXxZab8gtdLS3HlllT9X2yzuaibx9FNwUj6+wOU1xURYpITcK+CDPHMjIoMhfLuS/5NDX9FVoeE7w=
-X-Received: by 2002:a17:902:ab90:: with SMTP id f16mr47819648plr.262.1559802708652;
- Wed, 05 Jun 2019 23:31:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <1559115828-19146-1-git-send-email-chunfeng.yun@mediatek.com>
- <1559115828-19146-10-git-send-email-chunfeng.yun@mediatek.com>
- <CAHp75VcbZwd0e6r38C2x7HLEHLr4oR7TjwdDXnDxRPRs3anwgA@mail.gmail.com> <1559789630.8487.111.camel@mhfsdcap03>
-In-Reply-To: <1559789630.8487.111.camel@mhfsdcap03>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 6 Jun 2019 09:31:37 +0300
-Message-ID: <CAHp75VeWu+8H2=PRNud_MAoD9zozb2Ugh9b=9TCtYmGLVyCTpQ@mail.gmail.com>
-Subject: Re: [PATCH v6 09/10] usb: roles: add USB Type-B GPIO connector driver
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Min Guo <min.guo@mediatek.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+aAGpDL2fIiqLgap8rHKwiHc7yqVAxZwG0hlactOhrc=;
+ b=df6kiH5iPsvtDyxj+8PfhFCFfRyI+V222twjJvS8lfT0KX85J1+ZecI+HTPfPfzBu8PJlzSxHMHQrpBmRcOWK6fYRextrwDFMEFSwSrt36UzQP0b5hBoQUZL2/eYDkrPWYaDv22AlNyC2hVL3SmB/3YkNVqxZSRg4ehGmLKZsAY=
+Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
+ SN6PR04MB4349.namprd04.prod.outlook.com (52.135.72.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Thu, 6 Jun 2019 06:32:15 +0000
+Received: from SN6PR04MB4925.namprd04.prod.outlook.com
+ ([fe80::6d99:14d9:3fa:f530]) by SN6PR04MB4925.namprd04.prod.outlook.com
+ ([fe80::6d99:14d9:3fa:f530%6]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
+ 06:32:15 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [PATCH 0/3] (Qualcomm) UFS device reset support
+Thread-Topic: [PATCH 0/3] (Qualcomm) UFS device reset support
+Thread-Index: AQHVGqYAlQFsNx0blUeatbYnjFKLiqaMDImAgACCvoCAAAPGAIAAOZnggAD+y4CAAGBH8A==
+Date:   Thu, 6 Jun 2019 06:32:15 +0000
+Message-ID: <SN6PR04MB49255AF3D92E655E1BBD75AEFC170@SN6PR04MB4925.namprd04.prod.outlook.com>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+ <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190605060154.GJ22737@tuxbook-pro>
+ <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190606003959.GM4814@minitux>
+In-Reply-To: <20190606003959.GM4814@minitux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0278664b-7e2d-414f-12bf-08d6ea48b7a6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR04MB4349;
+x-ms-traffictypediagnostic: SN6PR04MB4349:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB434991222811C9904BDF96EAFC170@SN6PR04MB4349.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(39860400002)(376002)(346002)(136003)(189003)(199004)(66066001)(53936002)(6436002)(9686003)(14454004)(52536014)(8936002)(478600001)(2906002)(33656002)(6916009)(68736007)(7696005)(81166006)(55016002)(81156014)(54906003)(72206003)(74316002)(229853002)(99286004)(6116002)(102836004)(3846002)(76176011)(8676002)(7736002)(7416002)(186003)(6506007)(25786009)(71200400001)(71190400001)(446003)(476003)(486006)(4326008)(11346002)(73956011)(66946007)(256004)(14444005)(66556008)(66446008)(64756008)(6246003)(53546011)(66476007)(26005)(86362001)(305945005)(76116006)(316002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4349;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1ZURo+fkpKIoPJNpnvlFsYOiygUhixpJm98K/Bd/0WIVClv6E2gBKAWSo4F/VWmo4fjgT5d5ZHCOLTCnZF5EgELRS6SYl1oKDiBQYxK5QjWZfzE++HFEfTJt2ZyiT1QU0wKHSpNoQLyjHOFaD3Wzbr5Sx66ICUOaok2oeF7MhJqArygdoCO1p8iSK7FmYW7u3jefXqLlhYUQFaMzPmeY1QgUlQxcffq+CuLVJ4XAYFOJi5ZdI6DbGv+L6se5ldz3DfGkHt2FfRHZON+GdWv/9TC5a72rtoWfwPGlyfJCeL/6P1nqKIaO8kIjYoWGRByUsriLWlnCBk67EeGmK9cya5Z/rOSw0ODsQoAwTRrmEHSBCgiuZBNW4NyxoXRMepayATF+5K0cgdNQFq0XGXt1c45we1bVrut4LPAu6pPscn4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0278664b-7e2d-414f-12bf-08d6ea48b7a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 06:32:15.8083
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Avri.Altman@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4349
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 5:53 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
->
-> On Wed, 2019-06-05 at 11:45 +0300, Andy Shevchenko wrote:
-> > On Wed, May 29, 2019 at 10:44 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+>=20
+> On Wed 05 Jun 02:32 PDT 2019, Avri Altman wrote:
+>=20
 > > >
-> > > Due to the requirement of usb-connector.txt binding, the old way
-> > > using extcon to support USB Dual-Role switch is now deprecated
-> > > when use Type-B connector.
-> > > This patch introduces a driver of Type-B connector which typically
-> > > uses an input GPIO to detect USB ID pin, and try to replace the
-> > > function provided by extcon-usb-gpio driver
+> > > On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
+> > >
+> > > > Hi,
+> > > >
+> > > > >
+> > > > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
+> > > > > <bjorn.andersson@linaro.org> wrote:
+> > > > > >
+> > > > > > This series exposes the ufs_reset line as a gpio, adds support =
+for ufshcd
+> to
+> > > > > > acquire and toggle this and then adds this to SDM845 MTP.
+> > > > > >
+> > > > > > Bjorn Andersson (3):
+> > > > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> > > > > >   scsi: ufs: Allow resetting the UFS device
+> > > > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+> > > > >
+> > > > > Adding similar change as in sdm845-mtp to the not yet upstream
+> > > > > blueline dts, I validated this allows my micron UFS pixel3 to boo=
+t.
+> > > > >
+> > > > > Tested-by: John Stultz <john.stultz@linaro.org>
+> > > > Maybe ufs_hba_variant_ops would be the proper place to add this?
+> > > >
+> > >
+> > > Are you saying that these memories only need a reset when they are
+> > > paired with the Qualcomm host controller?
+> > ufs_hba_variant_ops is for vendors to implement their own vops,
+> > and as you can see, many of them do.
+> > Adding hw_reset to that template seems like the proper way
+> > to do what you are doing.
 > >
-> > > +static SIMPLE_DEV_PM_OPS(usb_conn_pm_ops,
-> > > +                        usb_conn_suspend, usb_conn_resume);
-> > > +
-> > > +#define DEV_PMS_OPS (IS_ENABLED(CONFIG_PM_SLEEP) ? &usb_conn_pm_ops : NULL)
-> >
-> > Why this macro is needed?
-> Want to set .pm as NULL when CONFIG_PM_SLEEP is not enabled.
+>=20
+> Right, but the vops is operations related to the UFS controller, this
+> property relates to the memory connected.
+This is not entirely accurate. Those are vendor/board specific,
+As the original commit log indicates:
+" vendor/board specific and hence determined with
+ the help of compatible property in device tree."
 
-Doesn't SIMPLE_DEV_PM_OPS do this for you?
+I would rather have this new vop:
+void    (*device_reset)(struct ufs_hba *), Or whatever,=20
+actively set in ufs_hba_variant_ops, rather than ufshcd_init_device_reset
+failing as part of the default init flow.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Avri
+
+>=20
+> E.g I have a Hynix memory and John have a Micron memory that needs this
+> reset and my assumption is that these memories will need their RESET pin
+> toggled regardless of which controller they are connected to.
+>=20
+> Regards,
+> Bjorn
