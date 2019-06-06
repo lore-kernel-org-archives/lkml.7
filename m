@@ -2,47 +2,67 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29F2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72985C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6952083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483A52083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:03:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfFFCCy (ORCPT
+        id S1726757AbfFFCDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:02:54 -0400
-Received: from mga09.intel.com ([134.134.136.24]:64242 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfFFCCy (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 22:02:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 19:02:53 -0700
-X-ExtLoop1: 1
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.71]) ([10.239.196.71])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Jun 2019 19:02:48 -0700
-Subject: Re: [PATCH v2 6/7] perf diff: Print the basic block cycles diff
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
- <1559572577-25436-7-git-send-email-yao.jin@linux.intel.com>
- <20190605114442.GE5868@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <049ff34b-b171-9c28-6e78-2e7b84ac30c8@linux.intel.com>
-Date:   Thu, 6 Jun 2019 10:02:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 22:03:47 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39658 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbfFFCDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 22:03:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1A9D80D;
+        Wed,  5 Jun 2019 19:03:45 -0700 (PDT)
+Received: from [10.162.43.122] (p8cg001049571a15.blr.arm.com [10.162.43.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 519F83F246;
+        Wed,  5 Jun 2019 19:03:37 -0700 (PDT)
+Subject: Re: [RFC V2] mm: Generalize notify_page_fault()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <1559630046-12940-1-git-send-email-anshuman.khandual@arm.com>
+ <20190604215325.GA2025@bombadil.infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <016a4808-527d-7164-b8a0-3173a4ecfa25@arm.com>
+Date:   Thu, 6 Jun 2019 07:33:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190605114442.GE5868@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190604215325.GA2025@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,60 +72,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 6/5/2019 7:44 PM, Jiri Olsa wrote:
-> On Mon, Jun 03, 2019 at 10:36:16PM +0800, Jin Yao wrote:
+On 06/05/2019 03:23 AM, Matthew Wilcox wrote:
+> On Tue, Jun 04, 2019 at 12:04:06PM +0530, Anshuman Khandual wrote:
+>> +++ b/arch/x86/mm/fault.c
+>> @@ -46,23 +46,6 @@ kmmio_fault(struct pt_regs *regs, unsigned long addr)
+>>  	return 0;
+>>  }
+>>  
+>> -static nokprobe_inline int kprobes_fault(struct pt_regs *regs)
+>> -{
+> ...
+>> -}
 > 
-> SNIP
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 0e8834a..c5a8dcf 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -1778,6 +1778,7 @@ static inline int pte_devmap(pte_t pte)
+>>  }
+>>  #endif
+>>  
+>> +int notify_page_fault(struct pt_regs *regs, unsigned int trap);
 > 
->> -				break;
->>   			return setup_compute_opt(option);
->>   		}
->>   
->> @@ -949,6 +953,14 @@ hist_entry__cmp_wdiff(struct perf_hpp_fmt *fmt,
->>   }
->>   
->>   static int64_t
->> +hist_entry__cmp_cycles(struct perf_hpp_fmt *fmt __maybe_unused,
->> +		       struct hist_entry *left __maybe_unused,
->> +		       struct hist_entry *right __maybe_unused)
+> Why is it now out-of-line?  
+
+Did not get it. AFAICS it is the same from last version and does not cross
+80 characters limit on that line.
+
+> 
+>> +++ b/mm/memory.c
+>> +int __kprobes notify_page_fault(struct pt_regs *regs, unsigned int trap)
 >> +{
->> +	return 0;
->> +}
-> 
-> we have hist_entry__cmp_nop for that
-> 
-> SNIP
-> 
->>   	default:
->>   		BUG_ON(1);
->>   	}
->> @@ -1407,6 +1452,12 @@ static int hpp__color_wdiff(struct perf_hpp_fmt *fmt,
->>   	return __hpp__color_compare(fmt, hpp, he, COMPUTE_WEIGHTED_DIFF);
->>   }
->>   
->> +static int hpp__color_cycles(struct perf_hpp_fmt *fmt,
->> +			     struct perf_hpp *hpp, struct hist_entry *he)
->> +{
->> +	return __hpp__color_compare(fmt, hpp, he, COMPUTE_CYCLES);
+>> +	int ret = 0;
+>> +
+>> +	/*
+>> +	 * To be potentially processing a kprobe fault and to be allowed
+>> +	 * to call kprobe_running(), we have to be non-preemptible.
+>> +	 */
+>> +	if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
+>> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
+>> +			ret = 1;
+>> +	}
+>> +	return ret;
 >> +}
 >> +
->>   static void
->>   hpp__entry_unpair(struct hist_entry *he, int idx, char *buf, size_t size)
->>   {
->> @@ -1608,6 +1659,10 @@ static void data__hpp_register(struct data__file *d, int idx)
->>   		fmt->color = hpp__color_delta;
->>   		fmt->sort  = hist_entry__cmp_delta_abs;
->>   		break;
->> +	case PERF_HPP_DIFF__CYCLES:
->> +		fmt->color = hpp__color_cycles;
->> +		fmt->sort  = hist_entry__cmp_cycles;
 > 
-> also please explain in comment why it's nop
-> 
-> jirka
-> 
+> I would argue this should be in kprobes.h as a static nokprobe_inline.
 
-Got it, I will update the patch.
-
-Thanks
-Jin Yao
+We can do that. Though it will be a stand alone (not inside #ifdef) as it
+already takes care of CONFIG_KPROBES via kprobes_built_in(). Will change
+it and in which case the above declaration in mm.h would not be required.
