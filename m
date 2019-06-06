@@ -2,66 +2,92 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33590C28D1C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45652C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1145F2064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DB5207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfFFIhf (ORCPT
+        id S1727378AbfFFIhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:37:35 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:55930 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfFFIhf (ORCPT
+        Thu, 6 Jun 2019 04:37:39 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43158 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfFFIhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:37:35 -0400
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id BCA1025B746;
-        Thu,  6 Jun 2019 18:37:32 +1000 (AEST)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id 973DAE21A74; Thu,  6 Jun 2019 10:37:30 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 10:37:30 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] soc: renesas: Enable RZ/A1 IRQC on RZ/A1H and
- RZ/A2M
-Message-ID: <20190606083730.7axbdme3hs6jcbcx@verge.net.au>
-References: <20190502123220.3016-1-geert+renesas@glider.be>
- <20190502123220.3016-4-geert+renesas@glider.be>
+        Thu, 6 Jun 2019 04:37:38 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 71E038024C; Thu,  6 Jun 2019 10:37:25 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 10:37:35 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        intel-gfx@lists.freedesktop.org,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: 5.2: display corruption on X60, X220
+Message-ID: <20190606083735.GA975@amd>
+References: <20190603074004.GA15821@amd>
+ <87v9xj15d9.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
 Content-Disposition: inline
-In-Reply-To: <20190502123220.3016-4-geert+renesas@glider.be>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <87v9xj15d9.fsf@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 02:32:18PM +0200, Geert Uytterhoeven wrote:
-> Auto-enable support for the RZ/A1 Interrupt Controller when configuring
-> a kernel which supports RZ/A1H or RZ/A2M SoCs.
-> Keep selects sorted while at it.
-> 
-> This is similar to how interrupt controllers for other Renesas SoCs are
-> enabled.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Thanks, applied for v5.3.
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu 2019-06-06 11:32:18, Jani Nikula wrote:
+> On Mon, 03 Jun 2019, Pavel Machek <pavel@ucw.cz> wrote:
+> > In recent kernels (5.2.0-rc1-next-20190522, 5.2-rc2) I'm getting
+> > display corruption in X. Usually in terminals, but also in title bars
+> > etc. Black areas with white lines in them, usually...
+> >
+> > Same configuration worked properly in ... probably 4.19? Then I got
+> > some graphics-crashes on X220 that prevented me from testing :-(.
+>=20
+> It's pretty hard to say anything based on the above.
+>=20
+> Anything in the logs with drm.debug=3D14 added?
+
+I see. It looks like hard-to-debug issue.
+
+Oh, interesting part is that corruption _is_ visible if I make a
+screenshot.
+
+Will try with drm.debug=3D...
+
+Do you do some kind of testing that would catch similar issues?
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlz40M4ACgkQMOfwapXb+vLZMACgm7iZSxYbdUCpTeiMLAPL7hEj
+stEAn1R7/eD7ZCus4hp6dl3hhM0MIh4A
+=DYR7
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
