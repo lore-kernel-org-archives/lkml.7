@@ -2,150 +2,111 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9960FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6EFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766752083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C8920868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfFFEwd (ORCPT
+        id S1726530AbfFFExs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 00:52:33 -0400
-Received: from mga04.intel.com ([192.55.52.120]:41044 "EHLO mga04.intel.com"
+        Thu, 6 Jun 2019 00:53:48 -0400
+Received: from foss.arm.com ([217.140.101.70]:40720 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbfFFEwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 00:52:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 21:52:33 -0700
-X-ExtLoop1: 1
-Received: from skhandav-mobl.amr.corp.intel.com (HELO spandruv-mobl.amr.corp.intel.com) ([10.252.70.228])
-  by orsmga005.jf.intel.com with ESMTP; 05 Jun 2019 21:52:29 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     benjamin.tissoires@redhat.com, jikos@kernel.org
-Cc:     even.xu@intel.com, hyungwoo.yang@intel.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        srinivas.pandruvada@linux.intel.com
-Subject: [UPDATE][PATCH v4] HID: intel-ish-hid: fix wrong driver_data usage
-Date:   Wed,  5 Jun 2019 21:52:27 -0700
-Message-Id: <20190606045227.7515-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
+        id S1725766AbfFFExs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 00:53:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BA9280D;
+        Wed,  5 Jun 2019 21:53:47 -0700 (PDT)
+Received: from [10.162.43.122] (p8cg001049571a15.blr.arm.com [10.162.43.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37FC13F690;
+        Wed,  5 Jun 2019 21:53:44 -0700 (PDT)
+Subject: Re: [PATCH V2 4/4] arm64/mm: Drop local variable vm_fault_t from
+ __do_page_fault()
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Hellwig <hch@infradead.org>
+References: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
+ <1559544085-7502-5-git-send-email-anshuman.khandual@arm.com>
+ <20190604145612.GM6610@arrakis.emea.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <1d89177a-e7af-ac4e-1a04-e8b750c2c768@arm.com>
+Date:   Thu, 6 Jun 2019 10:24:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190604145612.GM6610@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hyungwoo Yang <hyungwoo.yang@intel.com>
-
-Currently, in suspend() and resume(), ishtp client drivers are using
-driver_data to get "struct ishtp_cl_device" object which is set by
-bus driver. It's wrong since the driver_data should not be owned bus.
-driver_data should be owned by the corresponding ishtp client driver.
-Due to this, some ishtp client driver like cros_ec_ishtp which uses
-its driver_data to transfer its data to its child doesn't work correctly.
-
-So this patch removes setting driver_data in bus drier and instead of
-using driver_data to get "struct ishtp_cl_device", since "struct device"
-is embedded in "struct ishtp_cl_device", we introduce a helper function
-that returns "struct ishtp_cl_device" from "struct device".
-
-Signed-off-by: Hyungwoo Yang <hyungwoo.yang@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
-For 5.3
-
-v4- Updated
-Added version history for tracking by Srinivas Pandruvada
-
-v4
-- Cleaned up submission by removing linux-next merge commit from the
-  series.
-
-v3
--Remove cros-ec dependency of the patch which is not in the mainline.
-
-v2
--Make patch so that it can be applied to mainline kernel.
--Updated description to add why this patch is required?
 
 
- drivers/hid/intel-ish-hid/ishtp-hid-client.c |  4 ++--
- drivers/hid/intel-ish-hid/ishtp/bus.c        | 15 ++++++++++++++-
- include/linux/intel-ish-client-if.h          |  1 +
- 3 files changed, 17 insertions(+), 3 deletions(-)
+On 06/04/2019 08:26 PM, Catalin Marinas wrote:
+> On Mon, Jun 03, 2019 at 12:11:25PM +0530, Anshuman Khandual wrote:
+>> __do_page_fault() is over complicated with multiple goto statements. This
+>> cleans up the code flow and while there drops local variable vm_fault_t.
+> 
+> I'd change the subject as well here to something like refactor or
+> simplify __do_page_fault().
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp-hid-client.c b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
-index 56777a43e69c..19102a3be4ca 100644
---- a/drivers/hid/intel-ish-hid/ishtp-hid-client.c
-+++ b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
-@@ -899,7 +899,7 @@ static int hid_ishtp_cl_reset(struct ishtp_cl_device *cl_device)
-  */
- static int hid_ishtp_cl_suspend(struct device *device)
- {
--	struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
-+	struct ishtp_cl_device *cl_device = ishtp_dev_to_cl_device(device);
- 	struct ishtp_cl *hid_ishtp_cl = ishtp_get_drvdata(cl_device);
- 	struct ishtp_cl_data *client_data = ishtp_get_client_data(hid_ishtp_cl);
- 
-@@ -920,7 +920,7 @@ static int hid_ishtp_cl_suspend(struct device *device)
-  */
- static int hid_ishtp_cl_resume(struct device *device)
- {
--	struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
-+	struct ishtp_cl_device *cl_device = ishtp_dev_to_cl_device(device);
- 	struct ishtp_cl *hid_ishtp_cl = ishtp_get_drvdata(cl_device);
- 	struct ishtp_cl_data *client_data = ishtp_get_client_data(hid_ishtp_cl);
- 
-diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
-index fb8ca12955b4..4b4a6047dc72 100644
---- a/drivers/hid/intel-ish-hid/ishtp/bus.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
-@@ -479,7 +479,6 @@ static struct ishtp_cl_device *ishtp_bus_add_device(struct ishtp_device *dev,
- 	}
- 
- 	ishtp_device_ready = true;
--	dev_set_drvdata(&device->dev, device);
- 
- 	return device;
- }
-@@ -647,6 +646,20 @@ void *ishtp_get_drvdata(struct ishtp_cl_device *cl_device)
- }
- EXPORT_SYMBOL(ishtp_get_drvdata);
- 
-+/**
-+ * ishtp_dev_to_cl_device() - get ishtp_cl_device instance from device instance
-+ * @device: device instance
-+ *
-+ * Get ish_cl_device instance which embeds device instance in it.
-+ *
-+ * Return: pointer to ishtp_cl_device instance
-+ */
-+struct ishtp_cl_device *ishtp_dev_to_cl_device(struct device *device)
-+{
-+	return to_ishtp_cl_device(device);
-+}
-+EXPORT_SYMBOL(ishtp_dev_to_cl_device);
-+
- /**
-  * ishtp_bus_new_client() - Create a new client
-  * @dev:	ISHTP device instance
-diff --git a/include/linux/intel-ish-client-if.h b/include/linux/intel-ish-client-if.h
-index 16255c2ca2f4..0d6b4bc191c5 100644
---- a/include/linux/intel-ish-client-if.h
-+++ b/include/linux/intel-ish-client-if.h
-@@ -103,6 +103,7 @@ void ishtp_put_device(struct ishtp_cl_device *cl_dev);
- void ishtp_get_device(struct ishtp_cl_device *cl_dev);
- void ishtp_set_drvdata(struct ishtp_cl_device *cl_device, void *data);
- void *ishtp_get_drvdata(struct ishtp_cl_device *cl_device);
-+struct ishtp_cl_device *ishtp_dev_to_cl_device(struct device *dev);
- int ishtp_register_event_cb(struct ishtp_cl_device *device,
- 				void (*read_cb)(struct ishtp_cl_device *));
- struct	ishtp_fw_client *ishtp_fw_cl_get_client(struct ishtp_device *dev,
--- 
-2.17.2
+Sure.
 
+> 
+>> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+>> index 4bb65f3..41fa905 100644
+>> --- a/arch/arm64/mm/fault.c
+>> +++ b/arch/arm64/mm/fault.c
+>> @@ -397,37 +397,29 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
+>>  static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
+>>  			   unsigned int mm_flags, unsigned long vm_flags)
+>>  {
+>> -	struct vm_area_struct *vma;
+>> -	vm_fault_t fault;
+>> +	struct vm_area_struct *vma = find_vma(mm, addr);
+>>  
+>> -	vma = find_vma(mm, addr);
+>> -	fault = VM_FAULT_BADMAP;
+>>  	if (unlikely(!vma))
+>> -		goto out;
+>> -	if (unlikely(vma->vm_start > addr))
+>> -		goto check_stack;
+>> +		return VM_FAULT_BADMAP;
+>>  
+>>  	/*
+>>  	 * Ok, we have a good vm_area for this memory access, so we can handle
+>>  	 * it.
+>>  	 */
+>> -good_area:
+>> +	if (unlikely(vma->vm_start > addr)) {
+>> +		if (!(vma->vm_flags & VM_GROWSDOWN))
+>> +			return VM_FAULT_BADMAP;
+>> +		if (expand_stack(vma, addr))
+>> +			return VM_FAULT_BADMAP;
+>> +	}
+> 
+> You could have a single return here:
+> 
+> 	if (unlikely(vma->vm_start > addr) &&
+> 	    (!(vma->vm_flags & VM_GROWSDOWN) || expand_stack(vma, addr)))
+> 		return VM_FAULT_BADMAP;
+> 
+> Not sure it's any clearer though.
+> 
+
+TBH the proposed one seems clearer as it separates effect (vma->vm_start > addr)
+from required permission check (vma->vm_flags & VM_GROWSDOWN) and required action
+(expand_stack(vma, addr)). But I am happy to change as you have mentioned if that
+is preferred.
