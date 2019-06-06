@@ -2,70 +2,147 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13828C28D1B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957A6C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE90220673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF0E207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CVnld91Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfFFGvJ (ORCPT
+        id S1726671AbfFFGxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:51:09 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:38714 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFGvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:51:08 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hYmEt-0006sS-Cq; Thu, 06 Jun 2019 14:51:07 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hYmEs-0006gx-II; Thu, 06 Jun 2019 14:51:06 +0800
-Date:   Thu, 6 Jun 2019 14:51:06 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v5 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
- failure because of invalid input
-Message-ID: <20190606065106.5a45rlvxvme2kmja@gondor.apana.org.au>
-References: <1559037131-4601-1-git-send-email-iuliana.prodan@nxp.com>
+        Thu, 6 Jun 2019 02:53:24 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38046 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFGxX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:53:23 -0400
+Received: by mail-it1-f195.google.com with SMTP id h9so1475837itk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 23:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IeWfpZT2bFu7Dyu6HFjhOwPn1OYpekVmcZCpvqk6qKA=;
+        b=CVnld91YvVoVvgxrQghCO6cF6OrC6trSC4vE53CvvCJjcSY/x/Hx3em6U42Eo3F1hf
+         tUxVAkOnnbCMfJIaFQ3lUeffMZO+TA5t9VHjNIuCRHFDG1IEFw70uBUAnJj0Pbzni5TG
+         SbjuI/PYh9gcfUE1/wsKnl8NOq3d/F/asB95k4A19DAQ2Q0M5gj0AEa9ET9mppwEdGpv
+         x/JfcIu13/Hi2LlQ+HVhKMddC67BfZgLidKsdaqwALvH/UBHwZxi1DDINIaOgtG6WtEv
+         79TxzsMn6BO3bQiUSh1l9ffQbxPv4d/fZVoQkde22GnVoTctrgEudKXMdyGduDC1jK8H
+         tO9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IeWfpZT2bFu7Dyu6HFjhOwPn1OYpekVmcZCpvqk6qKA=;
+        b=mw0HajfFL9emNOEm2zpqJJTFraQzs9lSFKL/b7ME1f4TPWjwDS9IV/AjJqsWo10qeE
+         R2X5vjITTDWsNkx2h3f+dF0DH3ZUUiH9SJl6IZOreQcIblQKKan6qAZk23x05ED1TcU5
+         YSJnHz5HczqyI5igTGDCny9Cz/Wspg4Hvzaut64v/VXB6no0rzwEMLOa9ubS2WMFiN8f
+         JmeBfmFJIqE5e7JC95NW7+1L6Nv/bq+Unu1ndDK2OiJN2hgf2dxQWc/ZsQ6jm+YrZoEm
+         MaZ9DQM6/oxwAYwatgf7T+TagsyBkHADLG+l26ouNIhvbz6pKn/2k2AqCUpuHLHKeJKw
+         oxvw==
+X-Gm-Message-State: APjAAAWgXm5NwxnJAC9CSgLXQY4c1pbcahyhbxY2BcgaB3qXwnwima0x
+        keKWqd5wy0jFCJy1RoIpCVb1mS6axhP67Ww0/7+wDw==
+X-Google-Smtp-Source: APXvYqyZCVLads/57MgQ4TfPK2w6tD57a5LXkzlkRKl4t86BTh/t9o0DCnL0cKdDZJAERWOA3hu6eG1Vhds84Wqh+0A=
+X-Received: by 2002:a24:4f88:: with SMTP id c130mr4314064itb.104.1559804002863;
+ Wed, 05 Jun 2019 23:53:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559037131-4601-1-git-send-email-iuliana.prodan@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au> <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
+ <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
+ <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au> <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
+ <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
+ <20190606063724.n77z7gaf32tmyxng@gondor.apana.org.au> <CAKv+Gu-YtKRsUYMMD_PNoFvrPpmwTD7fJNs64Q-34L8-TvucqA@mail.gmail.com>
+ <20190606064603.lvde6dproqi3vwcq@gondor.apana.org.au>
+In-Reply-To: <20190606064603.lvde6dproqi3vwcq@gondor.apana.org.au>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 6 Jun 2019 08:53:10 +0200
+Message-ID: <CAKv+Gu-DokZ179_Gx8_20v_pQ3w_CARKdO0xdsO8CRZJG1uOqA@mail.gmail.com>
+Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 12:52:10PM +0300, Iuliana Prodan wrote:
-> The problem is with the input data size sent to CAAM for encrypt/decrypt.
-> Pkcs1pad is failing due to pkcs1 padding done in SW starting with0x01
-> instead of 0x00 0x01.
-> CAAM expects an input of modulus size. For this we strip the leading
-> zeros in case the size is more than modulus or pad the input with zeros
-> until the modulus size is reached.
-> 
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> ---
-> Changes since V4:
-> 	- return -ENOMEM in case zero_buffer cannot be allocated.
-> ---
->  drivers/crypto/caam/caampkc.c | 89 ++++++++++++++++++++++++++++++++++---------
->  drivers/crypto/caam/caampkc.h |  2 +
->  2 files changed, 74 insertions(+), 17 deletions(-)
+On Thu, 6 Jun 2019 at 08:46, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Thu, Jun 06, 2019 at 08:42:46AM +0200, Ard Biesheuvel wrote:
+> > On Thu, 6 Jun 2019 at 08:37, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+> > >
+> > > On Thu, May 30, 2019 at 04:31:09PM +0200, Ard Biesheuvel wrote:
+> > > >
+> > > > This might work:
+> > > >
+> > > > diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+> > > > index c0ece44f303b..3d313d2a279a 100644
+> > > > --- a/drivers/crypto/caam/caamalg.c
+> > > > +++ b/drivers/crypto/caam/caamalg.c
+> > > > @@ -1661,7 +1661,8 @@ static int aead_decrypt(struct aead_request *req)
+> > > >   * allocate and map the skcipher extended descriptor for skcipher
+> > > >   */
+> > > >  static struct skcipher_edesc *skcipher_edesc_alloc(struct
+> > > > skcipher_request *req,
+> > > > -                                                  int desc_bytes)
+> > > > +                                                  int desc_bytes,
+> > > > +                                                  u8 const *input_iv)
+> > > >  {
+> > > >         struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+> > > >         struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+> > > > @@ -1745,7 +1746,7 @@ static struct skcipher_edesc
+> > > > *skcipher_edesc_alloc(struct skcipher_request *req,
+> > > >         /* Make sure IV is located in a DMAable area */
+> > > >         if (ivsize) {
+> > > >                 iv = (u8 *)edesc->hw_desc + desc_bytes + sec4_sg_bytes;
+> > > > -               memcpy(iv, req->iv, ivsize);
+> > > > +               memcpy(iv, input_iv, ivsize);
+> > > >
+> > > >                 iv_dma = dma_map_single(jrdev, iv, ivsize, DMA_TO_DEVICE);
+> > > >                 if (dma_mapping_error(jrdev, iv_dma)) {
+> > >
+> > > Hi Ard:
+> > >
+> > > I presume you will be submitting this patch at some point?  When
+> > > you do please base it on top of your other one which I'm about to
+> > > merge.
+> >
+> > I'm not sure I follow. Do you want a better fix for the CBC output IV
+> > going forward? Or is this about other modes?
+>
+> You sent me a patch to fix CTR mode:
+>
+> https://patchwork.kernel.org/patch/10969747/
+>
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+That patch does not fix CTR mode, it just disables copying the output
+IV altogether for CTR mode so the DMA corruption does not occur.
+
+> But your suggested fix for CBC mode itself where we need to do the
+> copy (as seen quoted above) hasn't been submitted.
+>
+
+That same patch 'fixes' CBC, since CBC was never broken to begin with.
+The CTS driver does not have something like the auth_tag sharing the
+same cacheline with the IV, so CBC has always worked fine.
+
+So I guess what you are after is a patch that, instead of dodging the
+issue by limiting the copy to CBC, does not perform the copy at all
+while anything is mapped for DMA? Then we can leave it up to the NXP
+engineers to fix CTR mode.
