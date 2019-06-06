@@ -2,607 +2,186 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D1CC28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EBEC28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA2B20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26532070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C9+6sUZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfFFLc1 (ORCPT
+        id S1727629AbfFFLfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:32:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60116 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfFFLc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:32:27 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E6FCA81F0D;
-        Thu,  6 Jun 2019 11:32:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 49BE57D649;
-        Thu,  6 Jun 2019 11:32:07 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  6 Jun 2019 13:32:15 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 13:32:06 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, dbueso@suse.de,
-        axboe@kernel.dk, dave@stgolabs.net, e@80x24.org, jbaron@akamai.com,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        omar.kilani@gmail.com, tglx@linutronix.de, stable@vger.kernel.org,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@ACULAB.COM>
-Subject: [PATCH -mm V2 1/1] signal: simplify
- set_user_sigmask/restore_user_sigmask
-Message-ID: <20190606113206.GA9464@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com>
- <20190604134117.GA29963@redhat.com>
- <20190605155801.GA25165@redhat.com>
+        Thu, 6 Jun 2019 07:35:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51826 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbfFFLfK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:35:10 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56BSh8h146272;
+        Thu, 6 Jun 2019 11:35:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=Y2hmulEThShe7yuxn2FDcx828sdufBDLO8yrZJpI96k=;
+ b=C9+6sUZfQ7+PaLFXKvcdZ8fP5unf0Hvhk3clst84/Vly+0WEaLItmHwPhVfCpChOcBdn
+ 4VHiUXttyiNBfLzvvATxJcIs8G1HQYYUBfcvDmxUEWk2dkY9TsHIuOu4mG9xjvB2GQkA
+ kVhHh9qgnrHRNTyg3LbJm3qzUEs2l8ifYAVLPc3ijyo/ohRNs9NIp/Ddj8RVPje3F4TS
+ 3qEuBqc2x68nlk+I3VW8LFL39mjIOl3qQdpq2iigQYRlJ+byAOQjIjh3315kC5QXvBBE
+ 34GM5dtWdpIlZxhZci4c3NFhE3pIp1aFGYPLiRcAeA1N0jm2H6gH66iftvEt9PcOBvCZ wQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2suj0qqrgc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 11:35:05 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56BZ5hs155775;
+        Thu, 6 Jun 2019 11:35:05 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2swngmf4a5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 11:35:05 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56BZ2dK028471;
+        Thu, 6 Jun 2019 11:35:03 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Jun 2019 04:35:02 -0700
+Date:   Thu, 6 Jun 2019 14:34:55 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] staging: kpc2000: fix incorrect code comment in
+ core.c
+Message-ID: <20190606113455.GM31203@kadam>
+References: <20190603222916.20698-1-simon@nikanor.nu>
+ <20190603222916.20698-8-simon@nikanor.nu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190605155801.GA25165@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 06 Jun 2019 11:32:26 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190603222916.20698-8-simon@nikanor.nu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906060085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906060085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-task->saved_sigmask and ->restore_sigmask are only used in the ret-from-
-syscall paths. This means that set_user_sigmask() can save ->blocked in
-->saved_sigmask and do set_restore_sigmask() to indicate that ->blocked
-was modified.
+On Tue, Jun 04, 2019 at 12:29:16AM +0200, Simon Sandström wrote:
+> Step 11 was removed from kp2000_pcie_probe in a previous commit but the
+> comment was not changed to reflect this, so do it now.
+> 
+> Signed-off-by: Simon Sandström <simon@nikanor.nu>
+> ---
+>  drivers/staging/kpc2000/kpc2000/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
+> index 2d8d188624f7..cd3876f1ce17 100644
+> --- a/drivers/staging/kpc2000/kpc2000/core.c
+> +++ b/drivers/staging/kpc2000/kpc2000/core.c
+> @@ -501,7 +501,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+>  		goto out10;
+>  
+>  	/*
+> -	 * Step 12: Enable IRQs in HW
+> +	 * Step 11: Enable IRQs in HW
 
-This way the callers do not need 2 sigset_t's passed to set/restore and
-restore_user_sigmask() renamed to restore_saved_sigmask_unless() turns
-into the trivial helper which just calls restore_saved_sigmask().
-
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- fs/aio.c                     | 20 +++++--------
- fs/eventpoll.c               | 12 +++-----
- fs/io_uring.c                | 11 ++-----
- fs/select.c                  | 34 ++++++++--------------
- include/linux/compat.h       |  3 +-
- include/linux/sched/signal.h | 12 ++++++--
- include/linux/signal.h       |  4 ---
- kernel/signal.c              | 69 ++++++++++++--------------------------------
- 8 files changed, 57 insertions(+), 108 deletions(-)
-
-diff --git a/fs/aio.c b/fs/aio.c
-index c1e581d..8200f97 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -2093,7 +2093,6 @@ SYSCALL_DEFINE6(io_pgetevents,
- 		const struct __aio_sigset __user *, usig)
- {
- 	struct __aio_sigset	ksig = { NULL, };
--	sigset_t		ksigmask, sigsaved;
- 	struct timespec64	ts;
- 	bool interrupted;
- 	int ret;
-@@ -2104,14 +2103,14 @@ SYSCALL_DEFINE6(io_pgetevents,
- 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
- 		return -EFAULT;
- 
--	ret = set_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
-+	ret = set_user_sigmask(ksig.sigmask, ksig.sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
- 
- 	interrupted = signal_pending(current);
--	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-+	restore_saved_sigmask_unless(interrupted);
- 	if (interrupted && !ret)
- 		ret = -ERESTARTNOHAND;
- 
-@@ -2129,7 +2128,6 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
- 		const struct __aio_sigset __user *, usig)
- {
- 	struct __aio_sigset	ksig = { NULL, };
--	sigset_t		ksigmask, sigsaved;
- 	struct timespec64	ts;
- 	bool interrupted;
- 	int ret;
-@@ -2141,14 +2139,14 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
- 		return -EFAULT;
- 
- 
--	ret = set_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
-+	ret = set_user_sigmask(ksig.sigmask, ksig.sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
- 
- 	interrupted = signal_pending(current);
--	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-+	restore_saved_sigmask_unless(interrupted);
- 	if (interrupted && !ret)
- 		ret = -ERESTARTNOHAND;
- 
-@@ -2197,7 +2195,6 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
- 		const struct __compat_aio_sigset __user *, usig)
- {
- 	struct __compat_aio_sigset ksig = { NULL, };
--	sigset_t ksigmask, sigsaved;
- 	struct timespec64 t;
- 	bool interrupted;
- 	int ret;
-@@ -2208,14 +2205,14 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
- 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
- 		return -EFAULT;
- 
--	ret = set_compat_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
-+	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
- 
- 	interrupted = signal_pending(current);
--	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-+	restore_saved_sigmask_unless(interrupted);
- 	if (interrupted && !ret)
- 		ret = -ERESTARTNOHAND;
- 
-@@ -2233,7 +2230,6 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
- 		const struct __compat_aio_sigset __user *, usig)
- {
- 	struct __compat_aio_sigset ksig = { NULL, };
--	sigset_t ksigmask, sigsaved;
- 	struct timespec64 t;
- 	bool interrupted;
- 	int ret;
-@@ -2244,14 +2240,14 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
- 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
- 		return -EFAULT;
- 
--	ret = set_compat_user_sigmask(ksig.sigmask, &ksigmask, &sigsaved, ksig.sigsetsize);
-+	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
- 
- 	interrupted = signal_pending(current);
--	restore_user_sigmask(ksig.sigmask, &sigsaved, interrupted);
-+	restore_saved_sigmask_unless(interrupted);
- 	if (interrupted && !ret)
- 		ret = -ERESTARTNOHAND;
- 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 4c74c76..0f9c073 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -2313,19 +2313,17 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
- 		size_t, sigsetsize)
- {
- 	int error;
--	sigset_t ksigmask, sigsaved;
- 
- 	/*
- 	 * If the caller wants a certain signal mask to be set during the wait,
- 	 * we apply it here.
- 	 */
--	error = set_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-+	error = set_user_sigmask(sigmask, sigsetsize);
- 	if (error)
- 		return error;
- 
- 	error = do_epoll_wait(epfd, events, maxevents, timeout);
--
--	restore_user_sigmask(sigmask, &sigsaved, error == -EINTR);
-+	restore_saved_sigmask_unless(error == -EINTR);
- 
- 	return error;
- }
-@@ -2338,19 +2336,17 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
- 			compat_size_t, sigsetsize)
- {
- 	long err;
--	sigset_t ksigmask, sigsaved;
- 
- 	/*
- 	 * If the caller wants a certain signal mask to be set during the wait,
- 	 * we apply it here.
- 	 */
--	err = set_compat_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-+	err = set_compat_user_sigmask(sigmask, sigsetsize);
- 	if (err)
- 		return err;
- 
- 	err = do_epoll_wait(epfd, events, maxevents, timeout);
--
--	restore_user_sigmask(sigmask, &sigsaved, err == -EINTR);
-+	restore_saved_sigmask_unless(err == -EINTR);
- 
- 	return err;
- }
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 1147c5d..ad7b9bc 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2180,7 +2180,6 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- 			  const sigset_t __user *sig, size_t sigsz)
- {
- 	struct io_cq_ring *ring = ctx->cq_ring;
--	sigset_t ksigmask, sigsaved;
- 	int ret;
- 
- 	if (io_cqring_events(ring) >= min_events)
-@@ -2190,21 +2189,17 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- #ifdef CONFIG_COMPAT
- 		if (in_compat_syscall())
- 			ret = set_compat_user_sigmask((const compat_sigset_t __user *)sig,
--						      &ksigmask, &sigsaved, sigsz);
-+						      sigsz);
- 		else
- #endif
--			ret = set_user_sigmask(sig, &ksigmask,
--					       &sigsaved, sigsz);
-+			ret = set_user_sigmask(sig, sigsz);
- 
- 		if (ret)
- 			return ret;
- 	}
- 
- 	ret = wait_event_interruptible(ctx->wait, io_cqring_events(ring) >= min_events);
--
--	if (sig)
--		restore_user_sigmask(sig, &sigsaved, ret == -ERESTARTSYS);
--
-+	restore_saved_sigmask_unless(ret == -ERESTARTSYS);
- 	if (ret == -ERESTARTSYS)
- 		ret = -EINTR;
- 
-diff --git a/fs/select.c b/fs/select.c
-index a4d8f6e..1fc1b24 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -730,7 +730,6 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
- 		       const sigset_t __user *sigmask, size_t sigsetsize,
- 		       enum poll_time_type type)
- {
--	sigset_t ksigmask, sigsaved;
- 	struct timespec64 ts, end_time, *to = NULL;
- 	int ret;
- 
-@@ -753,12 +752,12 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
- 			return -EINVAL;
- 	}
- 
--	ret = set_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-+	ret = set_user_sigmask(sigmask, sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = core_sys_select(n, inp, outp, exp, to);
--	restore_user_sigmask(sigmask, &sigsaved, ret == -ERESTARTNOHAND);
-+	restore_saved_sigmask_unless(ret == -ERESTARTNOHAND);
- 	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
- 
- 	return ret;
-@@ -1086,7 +1085,6 @@ SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
- 		struct __kernel_timespec __user *, tsp, const sigset_t __user *, sigmask,
- 		size_t, sigsetsize)
- {
--	sigset_t ksigmask, sigsaved;
- 	struct timespec64 ts, end_time, *to = NULL;
- 	int ret;
- 
-@@ -1099,17 +1097,16 @@ SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
- 			return -EINVAL;
- 	}
- 
--	ret = set_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-+	ret = set_user_sigmask(sigmask, sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = do_sys_poll(ufds, nfds, to);
- 
--	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
-+	restore_saved_sigmask_unless(ret == -EINTR);
- 	/* We can restart this syscall, usually */
- 	if (ret == -EINTR)
- 		ret = -ERESTARTNOHAND;
--
- 	ret = poll_select_copy_remaining(&end_time, tsp, PT_TIMESPEC, ret);
- 
- 	return ret;
-@@ -1121,7 +1118,6 @@ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
- 		struct old_timespec32 __user *, tsp, const sigset_t __user *, sigmask,
- 		size_t, sigsetsize)
- {
--	sigset_t ksigmask, sigsaved;
- 	struct timespec64 ts, end_time, *to = NULL;
- 	int ret;
- 
-@@ -1134,17 +1130,16 @@ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
- 			return -EINVAL;
- 	}
- 
--	ret = set_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-+	ret = set_user_sigmask(sigmask, sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = do_sys_poll(ufds, nfds, to);
- 
--	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
-+	restore_saved_sigmask_unless(ret == -EINTR);
- 	/* We can restart this syscall, usually */
- 	if (ret == -EINTR)
- 		ret = -ERESTARTNOHAND;
--
- 	ret = poll_select_copy_remaining(&end_time, tsp, PT_OLD_TIMESPEC, ret);
- 
- 	return ret;
-@@ -1319,7 +1314,6 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
- 	void __user *tsp, compat_sigset_t __user *sigmask,
- 	compat_size_t sigsetsize, enum poll_time_type type)
- {
--	sigset_t ksigmask, sigsaved;
- 	struct timespec64 ts, end_time, *to = NULL;
- 	int ret;
- 
-@@ -1342,12 +1336,12 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
- 			return -EINVAL;
- 	}
- 
--	ret = set_compat_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-+	ret = set_compat_user_sigmask(sigmask, sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = compat_core_sys_select(n, inp, outp, exp, to);
--	restore_user_sigmask(sigmask, &sigsaved, ret == -ERESTARTNOHAND);
-+	restore_saved_sigmask_unless(ret == -ERESTARTNOHAND);
- 	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
- 
- 	return ret;
-@@ -1402,7 +1396,6 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
- 	unsigned int,  nfds, struct old_timespec32 __user *, tsp,
- 	const compat_sigset_t __user *, sigmask, compat_size_t, sigsetsize)
- {
--	sigset_t ksigmask, sigsaved;
- 	struct timespec64 ts, end_time, *to = NULL;
- 	int ret;
- 
-@@ -1415,17 +1408,16 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
- 			return -EINVAL;
- 	}
- 
--	ret = set_compat_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-+	ret = set_compat_user_sigmask(sigmask, sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = do_sys_poll(ufds, nfds, to);
- 
--	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
-+	restore_saved_sigmask_unless(ret == -EINTR);
- 	/* We can restart this syscall, usually */
- 	if (ret == -EINTR)
- 		ret = -ERESTARTNOHAND;
--
- 	ret = poll_select_copy_remaining(&end_time, tsp, PT_OLD_TIMESPEC, ret);
- 
- 	return ret;
-@@ -1437,7 +1429,6 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
- 	unsigned int,  nfds, struct __kernel_timespec __user *, tsp,
- 	const compat_sigset_t __user *, sigmask, compat_size_t, sigsetsize)
- {
--	sigset_t ksigmask, sigsaved;
- 	struct timespec64 ts, end_time, *to = NULL;
- 	int ret;
- 
-@@ -1450,17 +1441,16 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
- 			return -EINVAL;
- 	}
- 
--	ret = set_compat_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-+	ret = set_compat_user_sigmask(sigmask, sigsetsize);
- 	if (ret)
- 		return ret;
- 
- 	ret = do_sys_poll(ufds, nfds, to);
- 
--	restore_user_sigmask(sigmask, &sigsaved, ret == -EINTR);
-+	restore_saved_sigmask_unless(ret == -EINTR);
- 	/* We can restart this syscall, usually */
- 	if (ret == -EINTR)
- 		ret = -ERESTARTNOHAND;
--
- 	ret = poll_select_copy_remaining(&end_time, tsp, PT_TIMESPEC, ret);
- 
- 	return ret;
-diff --git a/include/linux/compat.h b/include/linux/compat.h
-index ebddcb6..16dafd9 100644
---- a/include/linux/compat.h
-+++ b/include/linux/compat.h
-@@ -138,8 +138,7 @@ typedef struct {
- 	compat_sigset_word	sig[_COMPAT_NSIG_WORDS];
- } compat_sigset_t;
- 
--int set_compat_user_sigmask(const compat_sigset_t __user *usigmask,
--			    sigset_t *set, sigset_t *oldset,
-+int set_compat_user_sigmask(const compat_sigset_t __user *umask,
- 			    size_t sigsetsize);
- 
- struct compat_sigaction {
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index 38a0f07..4d9c71d 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -417,7 +417,6 @@ void task_join_group_stop(struct task_struct *task);
- static inline void set_restore_sigmask(void)
- {
- 	set_thread_flag(TIF_RESTORE_SIGMASK);
--	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
- }
- 
- static inline void clear_tsk_restore_sigmask(struct task_struct *task)
-@@ -448,7 +447,6 @@ static inline bool test_and_clear_restore_sigmask(void)
- static inline void set_restore_sigmask(void)
- {
- 	current->restore_sigmask = true;
--	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
- }
- static inline void clear_tsk_restore_sigmask(struct task_struct *task)
- {
-@@ -481,6 +479,16 @@ static inline void restore_saved_sigmask(void)
- 		__set_current_blocked(&current->saved_sigmask);
- }
- 
-+extern int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize);
-+
-+static inline void restore_saved_sigmask_unless(bool interrupted)
-+{
-+	if (interrupted)
-+		WARN_ON(!test_thread_flag(TIF_SIGPENDING));
-+	else
-+		restore_saved_sigmask();
-+}
-+
- static inline sigset_t *sigmask_to_save(void)
- {
- 	sigset_t *res = &current->blocked;
-diff --git a/include/linux/signal.h b/include/linux/signal.h
-index 78c2bb3..b5d99482 100644
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -273,10 +273,6 @@ extern int group_send_sig_info(int sig, struct kernel_siginfo *info,
- 			       struct task_struct *p, enum pid_type type);
- extern int __group_send_sig_info(int, struct kernel_siginfo *, struct task_struct *);
- extern int sigprocmask(int, sigset_t *, sigset_t *);
--extern int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
--	sigset_t *oldset, size_t sigsetsize);
--extern void restore_user_sigmask(const void __user *usigmask,
--				 sigset_t *sigsaved, bool interrupted);
- extern void set_current_blocked(sigset_t *);
- extern void __set_current_blocked(const sigset_t *);
- extern int show_unhandled_signals;
-diff --git a/kernel/signal.c b/kernel/signal.c
-index aa6a6f1..1a1013e1 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2863,80 +2863,49 @@ EXPORT_SYMBOL(sigprocmask);
-  *
-  * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
-  * epoll_pwait where a new sigmask is passed from userland for the syscalls.
-+ *
-+ * Note that it does set_restore_sigmask() in advance, so it must be always
-+ * paired with restore_saved_sigmask_unless() before return from syscall.
-  */
--int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
--		     sigset_t *oldset, size_t sigsetsize)
-+int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize)
- {
--	if (!usigmask)
--		return 0;
-+	sigset_t kmask;
- 
-+	if (!umask)
-+		return 0;
- 	if (sigsetsize != sizeof(sigset_t))
- 		return -EINVAL;
--	if (copy_from_user(set, usigmask, sizeof(sigset_t)))
-+	if (copy_from_user(&kmask, umask, sizeof(sigset_t)))
- 		return -EFAULT;
- 
--	*oldset = current->blocked;
--	set_current_blocked(set);
-+	set_restore_sigmask();
-+	current->saved_sigmask = current->blocked;
-+	set_current_blocked(&kmask);
- 
- 	return 0;
- }
--EXPORT_SYMBOL(set_user_sigmask);
- 
- #ifdef CONFIG_COMPAT
--int set_compat_user_sigmask(const compat_sigset_t __user *usigmask,
--			    sigset_t *set, sigset_t *oldset,
-+int set_compat_user_sigmask(const compat_sigset_t __user *umask,
- 			    size_t sigsetsize)
- {
--	if (!usigmask)
--		return 0;
-+	sigset_t kmask;
- 
-+	if (!umask)
-+		return 0;
- 	if (sigsetsize != sizeof(compat_sigset_t))
- 		return -EINVAL;
--	if (get_compat_sigset(set, usigmask))
-+	if (get_compat_sigset(&kmask, umask))
- 		return -EFAULT;
- 
--	*oldset = current->blocked;
--	set_current_blocked(set);
-+	set_restore_sigmask();
-+	current->saved_sigmask = current->blocked;
-+	set_current_blocked(&kmask);
- 
- 	return 0;
- }
--EXPORT_SYMBOL(set_compat_user_sigmask);
- #endif
- 
--/*
-- * restore_user_sigmask:
-- * usigmask: sigmask passed in from userland.
-- * sigsaved: saved sigmask when the syscall started and changed the sigmask to
-- *           usigmask.
-- *
-- * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
-- * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
-- */
--void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved,
--				bool interrupted)
--{
--
--	if (!usigmask)
--		return;
--	/*
--	 * When signals are pending, do not restore them here.
--	 * Restoring sigmask here can lead to delivering signals that the above
--	 * syscalls are intended to block because of the sigmask passed in.
--	 */
--	if (interrupted) {
--		current->saved_sigmask = *sigsaved;
--		set_restore_sigmask();
--		return;
--	}
--
--	/*
--	 * This is needed because the fast syscall return path does not restore
--	 * saved_sigmask when signals are not pending.
--	 */
--	set_current_blocked(sigsaved);
--}
--EXPORT_SYMBOL(restore_user_sigmask);
--
- /**
-  *  sys_rt_sigprocmask - change the list of currently blocked signals
-  *  @how: whether to add, remove, or set signals
--- 
-2.5.0
+I don't have a problem with this patch but for the future these numbers
+don't add any value.  And the numbered out labels are sort of ugly.  The
+label name should say what the label does just like a function name says
+what the function does.  Really a lot of these comments in the probe
+function are very obvious and don't add information (delete them).
 
 
+   491          /*
+   492           * Step 9: Setup sysfs attributes
+   493           */
+   494          err = sysfs_create_files(&(pdev->dev.kobj), kp_attr_list);
+
+The comment is probably less informative than the code.
+
+   495          if (err) {
+   496                  dev_err(&pdev->dev, "Failed to add sysfs files: %d\n", err);
+   497                  goto out9;
+
+What does goto out9 do?
+
+   498          }
+   499  
+   500          /*
+   501           * Step 10: Probe cores
+   502           */
+   503          err = kp2000_probe_cores(pcard);
+   504          if (err)
+   505                  goto out10;
+
+Hopefully, goto out10 deletes the sysfs files but we don't know because
+the label doesn't give any clues away.  We have to search for it and
+then come back.
+
+   506  
+   507          /*
+   508           * Step 12: Enable IRQs in HW
+   509           */
+   510          writel(KPC_DMA_CARD_IRQ_ENABLE | KPC_DMA_CARD_USER_INTERRUPT_MODE,
+   511                 pcard->dma_common_regs);
+   512  
+   513          dev_dbg(&pcard->pdev->dev, "kp2000_pcie_probe() complete!\n");
+   514          mutex_unlock(&pcard->sem);
+   515          return 0;
+   516  
+   517  out10:
+
+err_remove_sysfs:
+
+   518          sysfs_remove_files(&(pdev->dev.kobj), kp_attr_list);
+   519  out9:
+
+err_free_irq:
+
+   520          free_irq(pcard->pdev->irq, pcard);
+   521  out8b:
+
+err_disable_msi:
+
+   522          pci_disable_msi(pcard->pdev);
+   523  out8a:
+   524  out7:
+   525  out6:
+
+err_unmap_dma:
+
+   526          iounmap(pcard->dma_bar_base);
+   527          pci_release_region(pdev, DMA_BAR);
+   528          pcard->dma_bar_base = NULL;
+   529  out5:
+
+err_unmap_regs:
+
+   530          iounmap(pcard->regs_bar_base);
+   531          pci_release_region(pdev, REG_BAR);
+   532          pcard->regs_bar_base = NULL;
+
+Something like that is way more useful because then you don't have to
+scroll back and forth because new the label names are useful.
+
+regards,
+dan carpenter
