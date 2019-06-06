@@ -2,96 +2,98 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8909C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1FEC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5BC207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="GdLHRxhx"
+	by mail.kernel.org (Postfix) with ESMTP id ED4E6207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfFFL5c (ORCPT
+        id S1728697AbfFFL5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:57:32 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38128 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727290AbfFFL5b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:57:31 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t5so2123421wmh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 04:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VvMAoYB96Ne6gNiw7p4GFcBlSUcy3tQ2OsEurFpYOpk=;
-        b=GdLHRxhx1Eu+J3NK1DpIviyVH+JsheaELn3+MZJvUpurQ7ZbpnhuXpC98K777RsjtZ
-         Ur0j4Bq8CVjlMS01NwZh+H91f9E6zGSmWvoOhDoE6UZ5w/HSwnwM9yKARE9w96fkBwjD
-         M7QoOMIYuwT23+B/IzP2d22c2QtofMPh61bSS3AEXKDZJgHwtO/mo5BRHDStfYb5F+8Y
-         xxYCNpLUck7plVgsMT0yAVLkh704eDLhMqpNJRxofjGuniSOhR1RspZPAGN5+vD8NAhE
-         gajHo5nNnB4NS/LLe5CDX989n5WFdK31oJuJaK4s5mjlJZUzxUR/qIiU7zj07bvp5ufw
-         SCDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VvMAoYB96Ne6gNiw7p4GFcBlSUcy3tQ2OsEurFpYOpk=;
-        b=BJwaOayGAUM7q/OyWt5xUmeyNIPnmT1wOHHJq0uKeRmn5hC23rnFOOL+9dR/FzJ9dz
-         Qq4cY4qO5DHIhU3PpiNi0NzCD55uRoHwz3q7puUicyFikCdvg43Y03UkGDfJpDNs5Q1L
-         WdHH0yw0wOSzj/bzoxa+hm8R/XaGbBJ4RpLPg8mitdcI/X079uv/2R05fcZb/mDTcbH3
-         B+AR/EevCqKaDqWlVJeQobfWcJktf9Xy+sdDC02P0+k/ba/GYfmCS6Pz9jrih7W4ARTz
-         fPPosccKVEa+Goi3UE/X9RMeUSWaWYfKR+A0ZpYtlLQvTtbm3ZH5hH+QOMPgiPkIwsui
-         5znQ==
-X-Gm-Message-State: APjAAAXqZuo6PY4kXOcLY4Q61zAZLtaozxuSqHSXe2kbkJoB5poMTXhT
-        GoaXFf9+AgbPVRwUnPpqmrB0/GKMpI4aAdMPyCgkS9+h85w=
-X-Google-Smtp-Source: APXvYqyIYIhNq+jLA2tljFH0wmKipdNhIUGNWVtC+4lfUpeq8DUgGzbXumkypig2mMkTG/JN0tYfjKDoyp2nwimAn8c=
-X-Received: by 2002:a1c:c915:: with SMTP id f21mr24578674wmb.123.1559822249364;
- Thu, 06 Jun 2019 04:57:29 -0700 (PDT)
+        Thu, 6 Jun 2019 07:57:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56562 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727290AbfFFL5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:57:47 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3B8B92F8BDE;
+        Thu,  6 Jun 2019 11:57:33 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 476E2619CB;
+        Thu,  6 Jun 2019 11:57:25 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
+        <140718133.18261.1559144710554.JavaMail.zimbra@efficios.com>
+        <2022553041.20966.1559249801435.JavaMail.zimbra@efficios.com>
+        <875zprm4jo.fsf@oldenburg2.str.redhat.com>
+        <732661684.21584.1559314109886.JavaMail.zimbra@efficios.com>
+        <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
+        <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
+        <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
+        <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com>
+Date:   Thu, 06 Jun 2019 13:57:23 +0200
+Message-ID: <87wohzorj0.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <1559751143-168560-1-git-send-email-john.garry@huawei.com> <e8ad370e-6528-2ab1-5001-ab3fa4dc5ae8@huawei.com>
-In-Reply-To: <e8ad370e-6528-2ab1-5001-ab3fa4dc5ae8@huawei.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Thu, 6 Jun 2019 13:57:18 +0200
-Message-ID: <CAMGffEnFWGdAYEr4mvTKfeDR4xRQwQneeDjaDSaj3gmGHY=i3Q@mail.gmail.com>
-Subject: Re: [PATCH] scsi: libsas, lldds: Use dev_is_expander()
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        intel-linux-scu@intel.com, artur.paszkiewicz@intel.com,
-        Jack Wang <jinpu.wang@profitbricks.com>,
-        lindar_liu <lindar_liu@usish.com>,
-        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 06 Jun 2019 11:57:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 3:35 AM Jason Yan <yanaijie@huawei.com> wrote:
->
->
->
-> On 2019/6/6 0:12, John Garry wrote:
-> > Many times in libsas, and in LLDDs which use libsas, the check for an
-> > expander device is re-implemented or open coded.
-> >
-> > Use dev_is_expander() instead. We rename this from
-> > sas_dev_type_is_expander() to not spill so many lines in referencing.
-> >
-> > Signed-off-by: John Garry<john.garry@huawei.com>
->
-> Cannot agree more=EF=BC=8C
->
-> Reviewed-by: Jason Yan <yanaijie@huawei.com>
->
-Looks good, thanks Jason!
+* Mathieu Desnoyers:
 
-Reviewed-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+> Should we plan ahead for such scheme to override which library "owns" rseq
+> registration from a LD_PRELOAD library ? If so, then we would want glibc to
+> set __rseq_handled _after_ LD_PRELOAD ctors are executed.
+
+I don't think so.  The LD_PRELOAD phase is not clearly delineated from
+the non-preload phase.  So it's not clear to me what this would even
+mean in practice.
+
+Let me ask the key question again: Does it matter if code observes the
+rseq area first without kernel support, and then with kernel support?
+If we don't expect any problems immediately, we do not need to worry
+much about the constructor ordering right now.  I expect that over time,
+fixing this properly will become easier.
+
+>> The final remaining case is static dlopen.  There is a copy of ld.so on
+>> the dynamic side, but it is completely inactive and has never run.  I do
+>> not think we need to support that because multi-threading does not work
+>> reliably in this scenario, either.  However, we should skip rseq
+>> registration in a nested libc (see the rtld_active function).
+>
+> So for SHARED, if (!rtld_active ()), we should indeed leave the state of
+> __rseq_handled as it is, because we are within a nested inactive ld.so.
+
+I think we should add __rseq_handled initialization to ld.so, so it will
+only run once, ever.
+
+It's the registration from libc.so which needs some care.  In
+particular, we must not override an existing registration.
+
+Thanks,
+Florian
