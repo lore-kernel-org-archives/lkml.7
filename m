@@ -2,74 +2,131 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69310C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCD5C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5309520872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07DD208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:51:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="VRyzhkBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbfFFSvB (ORCPT
+        id S1730588AbfFFSvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:51:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54886 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727238AbfFFSvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:51:00 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BEB5230842A8;
-        Thu,  6 Jun 2019 18:51:00 +0000 (UTC)
-Received: from dba62.ml3.eng.bos.redhat.com (dba62.ml3.eng.bos.redhat.com [10.19.176.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 226291017E2C;
-        Thu,  6 Jun 2019 18:51:00 +0000 (UTC)
-From:   David Arcari <darcari@redhat.com>
-To:     linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, David Arcari <darcari@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH] cpufreq: pcc-cpufreq: Fail initialization if driver cannot be registered
-Date:   Thu,  6 Jun 2019 14:50:52 -0400
-Message-Id: <20190606185052.71959-1-darcari@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 06 Jun 2019 18:51:00 +0000 (UTC)
+        Thu, 6 Jun 2019 14:51:06 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37791 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729839AbfFFSvE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:51:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a23so2057564pff.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 11:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vyH/zzUIJOyZ406UEvU+R6XaFldSrQouo2bVvFNJxzs=;
+        b=VRyzhkBvBnfDIRuAExLdUvUe//j+40drJjj5Y4J6jfg2b+zgc/ZF0D5KFfqRdmb9XD
+         oIvlhoh3t2680hBGfxcTbgJ/LC8Wr/ol8CdMBUxJ5RpEAOGZwG2GFiP0+p5xG0mNgh1m
+         wuc2LhZLUHtXEHnqETKLHsM3LVaoGY50Z1gUSqOai2oXB0QiPNuSQS2jc2pO5bHzklX4
+         /p5W6YWdAB1I8YBndGyzJXHLf71B4+EiFKXGoQQDwpUedInYUuC+KGw9Nn8uEd74WlDg
+         RnlUv/cFUeDYzPoHZWFOImPY8quUPG/mlJPTNX9mhh9YYjv6KHEYb5cL3sPqeoh8xbNB
+         YocQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=vyH/zzUIJOyZ406UEvU+R6XaFldSrQouo2bVvFNJxzs=;
+        b=Xc8O+VTgKHKjcrHmCsMyAE3Ho4ZtjzP/C+DEWOjamD9lhEZVMQK+VUkALbdyoI7Ktq
+         +qOA+2TjS/CMzEh1vX4w8PUtA+iDmFTubzxPVy69uQpo1tjqpdkERoRelmrwMQcZ/Y0U
+         zw2a5y6rSGRYFBoe49MEraXWZGaeo9mxMda8GF2YAIqxzcm5SoX2Lx5poZ9mC31an6MD
+         5MP67WihU4Ralkv8vLYtWyjlwvrq4kE5l7labtc7ZLd6s9rRzf92q0Rgi6ltoUUXQeLu
+         +epdgKrtZKp4VWtUdMfLUJQX5KaxSBx8i/3Qn2kv54xRIFB/fGvNiLQgsx18gCjvigJX
+         DE2g==
+X-Gm-Message-State: APjAAAWMdRI6CZ/sfwlKhMkzKA8+Vvrbi3IlUkeRdJ6DeeyldWDOb7Kd
+        k/dTLKRTvUflyIlwF/58cHxVuA==
+X-Google-Smtp-Source: APXvYqzmdyohsfaZb8gxQfYI50Yq72TPLfhG8iUfN0sGNNPM5UPGJBQMF/zPBOOprsFqvOgWBnUsuQ==
+X-Received: by 2002:a17:90a:2506:: with SMTP id j6mr1307940pje.129.1559847064075;
+        Thu, 06 Jun 2019 11:51:04 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b02c:95e1:658b:ab88:7a44:1879? ([2600:1010:b02c:95e1:658b:ab88:7a44:1879])
+        by smtp.gmail.com with ESMTPSA id a25sm3003410pfn.1.2019.06.06.11.51.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 11:51:03 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC][PATCH 00/10] Mount, FS, Block and Keyrings notifications [ver #3]
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <7afe1a85-bf19-b5b4-fdf3-69d9be475dab@schaufler-ca.com>
+Date:   Thu, 6 Jun 2019 11:51:01 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E7472FA4-886E-4325-87EA-9812D08CC2D3@amacapital.net>
+References: <b91710d8-cd2d-6b93-8619-130b9d15983d@tycho.nsa.gov> <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk> <3813.1559827003@warthog.procyon.org.uk> <8382af23-548c-f162-0e82-11e308049735@tycho.nsa.gov> <0eb007c5-b4a0-9384-d915-37b0e5a158bf@schaufler-ca.com> <CALCETrWn_C8oReKXGMXiJDOGoYWMs+jg2DWa5ZipKAceyXkx5w@mail.gmail.com> <7afe1a85-bf19-b5b4-fdf3-69d9be475dab@schaufler-ca.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make pcc_cpufreq_init() return error codes when the driver cannot be
-registered.  Otherwise the driver can shows up loaded via lsmod even
-though it failed initialization.  This is confusing to the user.
 
-Signed-off-by: David Arcari <darcari@redhat.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/pcc-cpufreq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/pcc-cpufreq.c b/drivers/cpufreq/pcc-cpufreq.c
-index 1e5e64643c3a..fdc767fdbe6a 100644
---- a/drivers/cpufreq/pcc-cpufreq.c
-+++ b/drivers/cpufreq/pcc-cpufreq.c
-@@ -582,10 +582,10 @@ static int __init pcc_cpufreq_init(void)
- 
- 	/* Skip initialization if another cpufreq driver is there. */
- 	if (cpufreq_get_current_driver())
--		return 0;
-+		return -EEXIST;
- 
- 	if (acpi_disabled)
--		return 0;
-+		return -ENODEV;
- 
- 	ret = pcc_cpufreq_probe();
- 	if (ret) {
--- 
-2.18.1
+> On Jun 6, 2019, at 11:33 AM, Casey Schaufler <casey@schaufler-ca.com> wrot=
+e:
+>=20
+>> On 6/6/2019 10:11 AM, Andy Lutomirski wrote:
+>>> On Thu, Jun 6, 2019 at 9:43 AM Casey Schaufler <casey@schaufler-ca.com> w=
+rote:
+>>> ...
+>>> I don't agree. That is, I don't believe it is sufficient.
+>>> There is no guarantee that being able to set a watch on an
+>>> object implies that every process that can trigger the event
+>>> can send it to you.
+>>>=20
+>>>        Watcher has Smack label W
+>>>        Triggerer has Smack label T
+>>>        Watched object has Smack label O
+>>>=20
+>>>        Relevant Smack rules are
+>>>=20
+>>>        W O rw
+>>>        T O rw
+>>>=20
+>>> The watcher will be able to set the watch,
+>>> the triggerer will be able to trigger the event,
+>>> but there is nothing that would allow the watcher
+>>> to receive the event. This is not a case of watcher
+>>> reading the watched object, as the event is delivered
+>>> without any action by watcher.
+>> I think this is an example of a bogus policy that should not be
+>> supported by the kernel.
+>=20
+> At this point it's pretty hard for me to care much what
+> you think. You don't seem to have any insight into the
+> implications of the features you're advocating, or their
+> potential consequences.
+>=20
+>=20
 
+Can you try to spell it out, then?  A mostly or fully worked out example mig=
+ht help.
+
+As Stephen said, it looks like you are considering cases where there is alre=
+ady a full communication channel between two processes, and you=E2=80=99re c=
+oncerned that this new mechanism might add a side channel too.  If this is w=
+rong, can you explain how?=
