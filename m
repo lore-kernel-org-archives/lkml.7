@@ -2,111 +2,149 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEE6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56CAC28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C58620673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:25:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YqYjs36x"
+	by mail.kernel.org (Postfix) with ESMTP id C7CD820673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:25:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfFFHZR (ORCPT
+        id S1726729AbfFFHZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:25:17 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44039 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfFFHZR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:25:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c5so556466pll.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 00:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HPvBPBVMaGSa/zB6ZJwA0LCVSOOo7DC2+M4V383+koE=;
-        b=YqYjs36xGAcQq6oProJyN99xewoE3Gp9dUzg5pvrKQgZWcmXMPyycjleWh6eJ0I3VM
-         6YwbWdPuIHoaW1cljaZDCqzRhri6ADFOnZ78uroxzrdwpZ4ut0oxPb2Ylw1SVnIiYJFn
-         7SMYhRQz/85vXnJoLBwwz26mrOxvHO0XG3T+MdCiRVQrvDOa+k5ZuS/Q8U/liWv0L1cz
-         iKeSua4sUqK326obz9Up6o2HwCqRiRAnxHJv/KP+keyali2BbIOOaVj5y9X3q/Usz6Au
-         aywDLpB6RcMyoBnUuKDfQi2y97cztibqZ9MXXPcXf8xiFfxfE58l+VGxG9J8IbbPT/sd
-         8LoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HPvBPBVMaGSa/zB6ZJwA0LCVSOOo7DC2+M4V383+koE=;
-        b=HfX2XdFG7Zoc8kZIMALdcADNU/f4Wv4hYAn7GpSyPUPgM9Z3W8wM/hwX575x+ReSZ+
-         o1qpyGLCbMV92qr9uxEL6c0h0OLMe1pAlNHAtg2UJKd2utN3ElYnXDgteuHDa+JbDk9w
-         YBJQVrtjbBPqq57mEhNVRABe+e2aM4Y6snnRYxPY/gJuGddSTHt/O6LgEzt5opSgXcCM
-         8vh8DbrHtOayemKPOVKnck7bNFqbEi7OP6z30GmPglWa62tBsm0X4M9BZIdmWRNL2/NW
-         +3J9837vCnt1L8NwWrzjNTFEtynRKjnlqrqG+dF1SLcRrSUG3z/E60LG1NuDZ61lujU7
-         sYjg==
-X-Gm-Message-State: APjAAAVXB4032xreJfZ7OBMIjROuJF8oNbT+5X2NTiGlUWmWLC7W7j/+
-        zGCOo4Yz+upUbbAyYMgQvYysSA==
-X-Google-Smtp-Source: APXvYqzfbpVJA69MZdz+/1GgtiWjtGcWwvPJtbzUDJzAbhae7fYlJ98zQNMenG1LomSBTtQg1H8vvw==
-X-Received: by 2002:a17:902:d70a:: with SMTP id w10mr41023406ply.251.1559805916729;
-        Thu, 06 Jun 2019 00:25:16 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a25sm1053735pfo.112.2019.06.06.00.25.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 00:25:16 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 00:26:01 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, hdegoede@redhat.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
-Message-ID: <20190606072601.GT22737@tuxbook-pro>
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
- <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
- <20190606055034.GA4797@dell>
+        Thu, 6 Jun 2019 03:25:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41484 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbfFFHZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:25:21 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 46381330247;
+        Thu,  6 Jun 2019 07:25:20 +0000 (UTC)
+Received: from krava (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0EA3A579A7;
+        Thu,  6 Jun 2019 07:25:16 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 09:25:16 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     ufo19890607 <ufo19890607@gmail.com>
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com,
+        arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com,
+        adrian.hunter@intel.com, wangnan0@huawei.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@redhat.com
+Subject: Re: [PATCH] perf record: Add support to collect callchains from
+ kernel or user space only.
+Message-ID: <20190606072516.GA28792@krava>
+References: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606055034.GA4797@dell>
+In-Reply-To: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 06 Jun 2019 07:25:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05 Jun 22:50 PDT 2019, Lee Jones wrote:
-
-> On Tue, 23 Apr 2019, Jeffrey Hugo wrote:
+On Thu, May 30, 2019 at 02:29:22PM +0100, ufo19890607 wrote:
+> From: yuzhoujian <yuzhoujian@didichuxing.com>
 > 
-> > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> > functionality includes USB (host), microSD-card, keyboard, and trackpad.
-> > 
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/Makefile             |   1 +
-> >  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
-> >  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
+> One can just record callchains in the kernel or user space with
+> this new options. We can use it together with "--all-kernel" options.
+> This two options is used just like print_stack(sys) or print_ustack(usr)
+> for systemtap.
 > 
-> What's happening with this patch?
+> Show below is the usage of this new option combined with "--all-kernel"
+> options.
+> 	1. Configure all used events to run in kernel space and just
+> collect kernel callchains.
+> 	$ perf record -a -g --all-kernel --kernel-callchains
+> 	2. Configure all used events to run in kernel space and just
+> collect user callchains.
+> 	$ perf record -a -g --all-kernel --user-callchains
 > 
+> Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
 
-The thermal-zones are wrong, but I'm okay with an incremental patch for
-that...
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-> It's been on the list a while now.  I'm waiting for it to be accepted,
-> since there are patches I wish to submit which are based on it.
+thanks,
+jirka
+
+
+> ---
+>  tools/perf/Documentation/perf-record.txt | 6 ++++++
+>  tools/perf/builtin-record.c              | 4 ++++
+>  tools/perf/perf.h                        | 2 ++
+>  tools/perf/util/evsel.c                  | 4 ++++
+>  4 files changed, 16 insertions(+)
 > 
-> Who is responsible for merging these?
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index de269430720a..b647eb3db0c6 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -490,6 +490,12 @@ Configure all used events to run in kernel space.
+>  --all-user::
+>  Configure all used events to run in user space.
+>  
+> +--kernel-callchains::
+> +Collect callchains from kernel space.
+> +
+> +--user-callchains::
+> +Collect callchains from user space.
+> +
+>  --timestamp-filename
+>  Append timestamp to output file name.
+>  
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index e2c3a585a61e..dca55997934e 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -2191,6 +2191,10 @@ static struct option __record_options[] = {
+>  	OPT_BOOLEAN_FLAG(0, "all-user", &record.opts.all_user,
+>  			 "Configure all used events to run in user space.",
+>  			 PARSE_OPT_EXCLUSIVE),
+> +	OPT_BOOLEAN(0, "kernel-callchains", &record.opts.kernel_callchains,
+> +		    "collect kernel callchains"),
+> +	OPT_BOOLEAN(0, "user-callchains", &record.opts.user_callchains,
+> +		    "collect user callchains"),
+>  	OPT_STRING(0, "clang-path", &llvm_param.clang_path, "clang path",
+>  		   "clang binary to use for compiling BPF scriptlets"),
+>  	OPT_STRING(0, "clang-opt", &llvm_param.clang_opt, "clang options",
+> diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+> index d59dee61b64d..711e009381ec 100644
+> --- a/tools/perf/perf.h
+> +++ b/tools/perf/perf.h
+> @@ -61,6 +61,8 @@ struct record_opts {
+>  	bool	     record_switch_events;
+>  	bool	     all_kernel;
+>  	bool	     all_user;
+> +	bool	     kernel_callchains;
+> +	bool	     user_callchains;
+>  	bool	     tail_synthesize;
+>  	bool	     overwrite;
+>  	bool	     ignore_missing_thread;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a6f572a40deb..a606b2833e27 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -680,6 +680,10 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+>  
+>  	attr->sample_max_stack = param->max_stack;
+>  
+> +	if (opts->kernel_callchains)
+> +		attr->exclude_callchain_user = 1;
+> +	if (opts->user_callchains)
+> +		attr->exclude_callchain_kernel = 1;
+>  	if (param->record_mode == CALLCHAIN_LBR) {
+>  		if (!opts->branch_stack) {
+>  			if (attr->exclude_user) {
+> -- 
+> 2.14.1
 > 
-
-...so I've just been waiting for a conclusion on the HID patch before I
-could pick this up.
-
-Regards,
-Bjorn
