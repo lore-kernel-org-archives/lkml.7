@@ -2,78 +2,124 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A0DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DC0C46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6FF2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E922083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfFFJVC (ORCPT
+        id S1727813AbfFFJVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:21:02 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:50363 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfFFJVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:21:01 -0400
-Received: by mail-it1-f199.google.com with SMTP id o128so1289494ita.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:21:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=56G2RzBG0guHoTpwxKynlW+PNBbvgl4GPrCoRWxxM0U=;
-        b=nx+Ng0Snx3NLslssHscKEHP+6cr5o/Q6Fw13OKdpPJ63Vo5T9xjUb5bvxT/P6h2fWa
-         KE327G6tU70qJO7J+5ywLPf4U7fnZ8pKduQEGlbGR1Ae18nIJRUM22mXmFhAeqeKS9r+
-         QEQzhc/aSp0ZNDkddhYMtJZx5eBlmNC+UneWlrr981NWTg6ySvP+sZlEKNwn0DUQIPcS
-         /pwA/8SUjY1GWMQajQClqcn0oPxGQUugEKZhXVwS9EXeS671Eei02O9nlEjcbK7jmtAv
-         MQFsN/YJcYE2U5YY+eK5MHh0p0BXzwK0XT2yeHmNURbeg/N26iUNfR3/hjP2QMuTYZqM
-         2eiQ==
-X-Gm-Message-State: APjAAAX+rccDd3+bTwRxMu5RbyK29nSvNBEr3Xyzwwp+GWJyFkIXzoAR
-        /YCjGLiW5CPYnE18IBFhPtaAp5iq0WCt9B+M5F0bE59ytu8e
-X-Google-Smtp-Source: APXvYqxIJibzbNxy8GOtzypAF+Oyb4w4yoUX0G2vgElVjB5zG1mUDMCfNHgGUYHjHFguEhuY8+0K3Y3HNEzzqU8WyYf5rcCq0vxQ
+        Thu, 6 Jun 2019 05:21:43 -0400
+Received: from foss.arm.com ([217.140.101.70]:43480 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727737AbfFFJVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:21:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73209341;
+        Thu,  6 Jun 2019 02:21:42 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 494063F690;
+        Thu,  6 Jun 2019 02:21:41 -0700 (PDT)
+Subject: Re: [PATCH 01/13] acpi: utils: Cleanup acpi_dev_match_cb
+To:     rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org
+References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
+ <1559747630-28065-2-git-send-email-suzuki.poulose@arm.com>
+ <CAJZ5v0iRfsLDezWAnr+PcOKOGYQuFFX3bTyhvxoqJ4mN6sGOYA@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <8490ee64-0d7b-dd9a-b269-129ed4611fc2@arm.com>
+Date:   Thu, 6 Jun 2019 10:21:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Received: by 2002:a24:9f86:: with SMTP id c128mr22407371ite.161.1559812861164;
- Thu, 06 Jun 2019 02:21:01 -0700 (PDT)
-Date:   Thu, 06 Jun 2019 02:21:01 -0700
-In-Reply-To: <0000000000008ab3c0057e8b747f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008181cc058aa43b82@google.com>
-Subject: Re: general protection fault in rb_erase (2)
-From:   syzbot <syzbot+e8c40862180d8949d624@syzkaller.appspotmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <CAJZ5v0iRfsLDezWAnr+PcOKOGYQuFFX3bTyhvxoqJ4mN6sGOYA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Hi Rafael,
 
-commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
-Author: John Fastabend <john.fastabend@gmail.com>
-Date:   Sat Jun 30 13:17:47 2018 +0000
+On 06/06/2019 10:14, Rafael J. Wysocki wrote:
+> On Wed, Jun 5, 2019 at 5:14 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> acpi_dev_match_cb match function modifies the "data" argument
+>> to pass on a result which could be easily deduced from the result
+>> of the bus_find_device() call at the caller site. Clean this
+>> up in preparation to convert the "match" argument for bus_find_device
+>> to accept a "const" data pointer, similar to class_find_device. This
+>> would allow consolidating the match routines for these two APIs.
+> 
+> This changelog can be improved IMO.
 
-     bpf: sockhash fix omitted bucket lock in sock_close
+I agree. Will update it.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1644ea92a00000
-start commit:   156c0591 Merge tag 'linux-kselftest-5.2-rc4' of git://git...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1544ea92a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1144ea92a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
-dashboard link: https://syzkaller.appspot.com/bug?extid=e8c40862180d8949d624
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f031fea00000
+> 
+> In fact, the final goal here is to pass (const void *) as the second
+> argument to acpi_dev_match_cb() (which you could do right away in this
+> patch if I'm not mistaken) which is because you want to modify the
+> prototype of bus_find_device().
+> 
+> So why don't you write something like this in the changelog:
+> 
+> "The prototype of bus_find_device() will be unified with that of
+> class_find_device() subsequently, but for this purpose the callback
+> functions passed to it need to take (const void *) as the second
+> argument.  Consequently, they cannot modify the memory pointed to by
+> that argument which currently is not the case for acpi_dev_match_cb().
+> However, acpi_dev_match_cb() really need not modify the "match" object
+> passed to it, because acpi_dev_get_first_match_dev() which uses it via
+> bus_find_device() can easily convert the result of bus_find_device()
+> into the pointer to return.
 
-Reported-by: syzbot+e8c40862180d8949d624@syzkaller.appspotmail.com
-Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
+Sure.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> For this reason, update acpi_dev_match_cb() to avoid the redundant
+> memory updates and change the type of its second argument to (const
+> void *)."
+
+We can't do that quite yet, until we unify the prototype of the
+bus_find_device().
+
+>>
+>> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+>> Cc: Len Brown <lenb@kernel.org>
+>> Cc: linux-acpi@vger.kernel.org
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   drivers/acpi/utils.c | 7 +------
+>>   1 file changed, 1 insertion(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
+>> index 7def63a..1391b63 100644
+>> --- a/drivers/acpi/utils.c
+>> +++ b/drivers/acpi/utils.c
+>> @@ -725,8 +725,6 @@ bool acpi_dev_found(const char *hid)
+>>   EXPORT_SYMBOL(acpi_dev_found);
+>>
+>>   struct acpi_dev_match_info {
+>> -       const char *dev_name;
+>> -       struct acpi_device *adev;
+>>          struct acpi_device_id hid[2];
+>>          const char *uid;
+>>          s64 hrv;
+>> @@ -746,9 +744,6 @@ static int acpi_dev_match_cb(struct device *dev, void *data)
+> 
+> And why not to change the type of the second arg to "const void *data" here?
+
+Because, that would conflict with what bus_find_device() expects now. We make
+the change only later. Since this change was a bit more intrusive than simply
+changing the type of the parameter, I kept it as a preparatory patch.
+
+Thanks for the review !
+
+Suzuki
