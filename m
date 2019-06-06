@@ -2,117 +2,57 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F063EC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D99C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB4520872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559841510;
-	bh=xfZRqQoeex0rjsT5lia2MuMyCOHqkbEMbiBprno0lnU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EwlQOwFGMrpZJICNJJftTEmhJ8aShbSQu9l+iqJWa7RB5Q5v8pp3Wvt5jUd2DYAeN
-	 xSrUOgRVWR8vGnGkysHDWYyd1oX0TY4joTY/6UPCfmXbR+9Wf8dQYae+droH9jNnkp
-	 askxMRHqv1JZp+L1mFw1yPAL/8YUqjtPXx+z4rAY=
+	by mail.kernel.org (Postfix) with ESMTP id 5DE3C208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbfFFRSa (ORCPT
+        id S1730075AbfFFRUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:18:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51000 "EHLO mail.kernel.org"
+        Thu, 6 Jun 2019 13:20:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:40558 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730057AbfFFRS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:18:29 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A769C208E3
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 17:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559841508;
-        bh=xfZRqQoeex0rjsT5lia2MuMyCOHqkbEMbiBprno0lnU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ttqi5RnBFnZ0CDlhhPjELblqvIx3Okp+N6+Ng2TOAKWVM7xvf7KU4+wxogP4eZ5SF
-         LBtR5MEQe59HXUip5bZ/XyyoMvV8z/EDII14Gan+gDkQYiK4dvT0v1PAb4E9MaHaqS
-         QJgBn/pRoUnH52BqjMBg6qThPcpvfUqAkGEwj0HU=
-Received: by mail-wr1-f48.google.com with SMTP id b17so2157063wrq.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:18:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAUShLXoME2f0PN69cyqswM5toXrWN3NPeRricBLfm128tiM9ssJ
-        bn2WlT+tTAWKZMoDiOT3nz1htpt/iI4AQHUWYHvqlQ==
-X-Google-Smtp-Source: APXvYqz+L9VkEoyCu7JqdY0NTE0bD0Q2wBWq/mFsrPsDQ5iRojaTQMSztaXWiT2/0eqKCThtuSRumT2MYYGwvQLWLIQ=
-X-Received: by 2002:a5d:4d06:: with SMTP id z6mr3348178wrt.343.1559841507169;
- Thu, 06 Jun 2019 10:18:27 -0700 (PDT)
+        id S1726693AbfFFRUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:20:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 10:20:34 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2019 10:20:34 -0700
+Date:   Thu, 6 Jun 2019 10:20:34 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: introduce is_pae_paging
+Message-ID: <20190606172033.GD23169@linux.intel.com>
+References: <1559839972-124144-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
- <155981413016.17513.10540579988392555403.stgit@warthog.procyon.org.uk>
- <176F8189-3BE9-4B8C-A4D5-8915436338FB@amacapital.net> <11031.1559833574@warthog.procyon.org.uk>
-In-Reply-To: <11031.1559833574@warthog.procyon.org.uk>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 6 Jun 2019 10:18:16 -0700
-X-Gmail-Original-Message-ID: <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com>
-Message-ID: <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com>
-Subject: Re: [PATCH 01/10] security: Override creds in __fput() with last
- fputter's creds [ver #3]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559839972-124144-1-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 8:06 AM David Howells <dhowells@redhat.com> wrote:
->
-> Andy Lutomirski <luto@amacapital.net> wrote:
->
-> > > So that the LSM can see the credentials of the last process to do an fput()
-> > > on a file object when the file object is being dismantled, do the following
-> > > steps:
-> > >
-> >
-> > I still maintain that this is a giant design error.
->
-> Yes, I know.  This was primarily a post so that Greg could play with the USB
-> notifications stuff I added.  The LSM support isn't resolved and is unchanged.
->
-> > Can someone at least come up with a single valid use case that isn't
-> > entirely full of bugs?
->
-> "Entirely full of bugs"?
+On Thu, Jun 06, 2019 at 06:52:52PM +0200, Paolo Bonzini wrote:
+> Checking for 32-bit PAE is quite common around code that fiddles with
+> the PDPTRs.  Add a function to compress all checks into a single
+> invocation.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-I can say "hey, I have this policy that the person who triggered an
-event needs such-and-such permission, otherwise the event gets
-suppressed".  But this isn't a full use case, and it's buggy.  It's
-not a full use case because I haven't specified what my actual goal is
-and why this particular policy achieves my goals.  And it's entirely
-full of bugs because, as this patch so nicely illustrates, it's not
-well defined who triggered the event.  For example, if I exec a setuid
-process, who triggers the close?  What if I send the fd to systemd
-over a socket and immediately close my copy before systemd gets (and
-ignores) the message?  Or if I send it to Wayland, or to any other
-process?
+I considered adding this helper as well, but shied away because I thought
+it might lead to incorrect code, e.g. using is_pae_paging() when is_pae()
+is needed.  But, looking at the patch, it's definitely cleaner, so:
 
-A file is closed when everyone is done with it.  Trying to figure out
-who the last intentional user of the file was seems little better than
-random guessing.  Defining a security policy based on it seems like a
-poor idea.
-
->
-> How would you propose I deal with Casey's requirement?  I'm getting the
-> feeling you're going to nak it if I try to fulfil that and he's going to nak
-> it if I don't.
->
-
-Casey, I think you need to state your requirement in a way that's well
-defined, and I think you need to make a compelling case that your
-requirement is indeed worth dictating the design of parts of the
-kernel outside LSM.
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
