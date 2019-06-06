@@ -2,229 +2,106 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD7EC28EB8
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A31C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB50120868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:27:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="d9uSlReW"
+	by mail.kernel.org (Postfix) with ESMTP id E701C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfFFL1D (ORCPT
+        id S1728436AbfFFL1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:27:03 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:60832 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726961AbfFFL1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:27:02 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C8415C0B83;
-        Thu,  6 Jun 2019 11:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559820432; bh=Hm9TTOwt6gWKtl0FtAvo7/T2dwrM5sHU6gOC7kZ7RH8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=d9uSlReWE/hY+pAFjjekO4UMnXKnALhF/NYTgeIzgNp1t5LDrgYEMFo8KahZ7bQpL
-         5VTCQhYaQAMtCfKLNeMgml+18hyXtpGm3KtRNzIOPmbWrdmHjSj1JgIBXQdE5pOizq
-         P3crtjWu4vErnMh7qJpLeg/UbvW4mlzO7T8bAHbiRRCqwxxXhbvwVesB0q1953fCCy
-         ziJndSxCZiBwvV2nGtXrpCgV3SZFzsSlxhnAPmsgJG6EgU1Xyq24slQf+VGixnuh3v
-         vOKOqidZQw53BFZjgdwe72wiALWG5+GVieXBXObwGXa+RJWfefDlinhuwlMdLNrOJQ
-         itMp/IUiNdhSQ==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 67386A022F;
-        Thu,  6 Jun 2019 11:26:54 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 30DD23E9E7;
-        Thu,  6 Jun 2019 13:26:54 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [RFC net-next 1/2] net: stmmac: Prepare to convert to phylink
-Date:   Thu,  6 Jun 2019 13:26:50 +0200
-Message-Id:
- <95af9cb02da5fdfc30967df9f291c80ecb01524d.1559741195.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1559741195.git.joabreu@synopsys.com>
-References: <cover.1559741195.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1559741195.git.joabreu@synopsys.com>
-References: <cover.1559741195.git.joabreu@synopsys.com>
+        Thu, 6 Jun 2019 07:27:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:45802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfFFL1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:27:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FDA7A78;
+        Thu,  6 Jun 2019 04:27:44 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3A13F246;
+        Thu,  6 Jun 2019 04:27:42 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 12:27:40 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH V2 4/4] arm64/mm: Drop local variable vm_fault_t from
+ __do_page_fault()
+Message-ID: <20190606112739.GB56860@arrakis.emea.arm.com>
+References: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
+ <1559544085-7502-5-git-send-email-anshuman.khandual@arm.com>
+ <20190604145612.GM6610@arrakis.emea.arm.com>
+ <1d89177a-e7af-ac4e-1a04-e8b750c2c768@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d89177a-e7af-ac4e-1a04-e8b750c2c768@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Message-ID: <20190606112650.HJpoHvPu3DKwLGXOW8-bMrns3dO-uXSt5D7aHV25j5s@z>
 
-In preparation for the convertion, split the adjust_link function into
-mac_config and add the mac_link_up and mac_link_down functions.
+On Thu, Jun 06, 2019 at 10:24:01AM +0530, Anshuman Khandual wrote:
+> On 06/04/2019 08:26 PM, Catalin Marinas wrote:
+> > On Mon, Jun 03, 2019 at 12:11:25PM +0530, Anshuman Khandual wrote:
+> >> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> >> index 4bb65f3..41fa905 100644
+> >> --- a/arch/arm64/mm/fault.c
+> >> +++ b/arch/arm64/mm/fault.c
+> >> @@ -397,37 +397,29 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
+> >>  static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
+> >>  			   unsigned int mm_flags, unsigned long vm_flags)
+> >>  {
+> >> -	struct vm_area_struct *vma;
+> >> -	vm_fault_t fault;
+> >> +	struct vm_area_struct *vma = find_vma(mm, addr);
+> >>  
+> >> -	vma = find_vma(mm, addr);
+> >> -	fault = VM_FAULT_BADMAP;
+> >>  	if (unlikely(!vma))
+> >> -		goto out;
+> >> -	if (unlikely(vma->vm_start > addr))
+> >> -		goto check_stack;
+> >> +		return VM_FAULT_BADMAP;
+> >>  
+> >>  	/*
+> >>  	 * Ok, we have a good vm_area for this memory access, so we can handle
+> >>  	 * it.
+> >>  	 */
+> >> -good_area:
+> >> +	if (unlikely(vma->vm_start > addr)) {
+> >> +		if (!(vma->vm_flags & VM_GROWSDOWN))
+> >> +			return VM_FAULT_BADMAP;
+> >> +		if (expand_stack(vma, addr))
+> >> +			return VM_FAULT_BADMAP;
+> >> +	}
+> > 
+> > You could have a single return here:
+> > 
+> > 	if (unlikely(vma->vm_start > addr) &&
+> > 	    (!(vma->vm_flags & VM_GROWSDOWN) || expand_stack(vma, addr)))
+> > 		return VM_FAULT_BADMAP;
+> > 
+> > Not sure it's any clearer though.
+> 
+> TBH the proposed one seems clearer as it separates effect (vma->vm_start > addr)
+> from required permission check (vma->vm_flags & VM_GROWSDOWN) and required action
+> (expand_stack(vma, addr)). But I am happy to change as you have mentioned if that
+> is preferred.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 113 ++++++++++++++--------
- 1 file changed, 72 insertions(+), 41 deletions(-)
+Not bothered really. You can leave them as in your proposal (I was just
+seeing the VM_GROWSDOWN check tightly coupled with the expand_stack(),
+it's fine either way).
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 268af79e2632..6a2f072c0ce3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -848,6 +848,72 @@ static void stmmac_mac_flow_ctrl(struct stmmac_priv *priv, u32 duplex)
- 			priv->pause, tx_cnt);
- }
- 
-+static void stmmac_mac_config(struct net_device *dev)
-+{
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+	struct phy_device *phydev = dev->phydev;
-+	u32 ctrl;
-+
-+	ctrl = readl(priv->ioaddr + MAC_CTRL_REG);
-+
-+	if (phydev->speed != priv->speed) {
-+		ctrl &= ~priv->hw->link.speed_mask;
-+
-+		switch (phydev->speed) {
-+		case SPEED_1000:
-+			ctrl |= priv->hw->link.speed1000;
-+			break;
-+		case SPEED_100:
-+			ctrl |= priv->hw->link.speed100;
-+			break;
-+		case SPEED_10:
-+			ctrl |= priv->hw->link.speed10;
-+			break;
-+		default:
-+			netif_warn(priv, link, priv->dev,
-+				   "broken speed: %d\n", phydev->speed);
-+			phydev->speed = SPEED_UNKNOWN;
-+			break;
-+		}
-+
-+		if (phydev->speed != SPEED_UNKNOWN)
-+			stmmac_hw_fix_mac_speed(priv);
-+
-+		priv->speed = phydev->speed;
-+	}
-+
-+	/* Now we make sure that we can be in full duplex mode.
-+	 * If not, we operate in half-duplex mode. */
-+	if (phydev->duplex != priv->oldduplex) {
-+		if (!phydev->duplex)
-+			ctrl &= ~priv->hw->link.duplex;
-+		else
-+			ctrl |= priv->hw->link.duplex;
-+
-+		priv->oldduplex = phydev->duplex;
-+	}
-+
-+	/* Flow Control operation */
-+	if (phydev->pause)
-+		stmmac_mac_flow_ctrl(priv, phydev->duplex);
-+
-+	writel(ctrl, priv->ioaddr + MAC_CTRL_REG);
-+}
-+
-+static void stmmac_mac_link_down(struct net_device *dev, bool autoneg)
-+{
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+
-+	stmmac_mac_set(priv, priv->ioaddr, false);
-+}
-+
-+static void stmmac_mac_link_up(struct net_device *dev, bool autoneg)
-+{
-+	struct stmmac_priv *priv = netdev_priv(dev);
-+
-+	stmmac_mac_set(priv, priv->ioaddr, true);
-+}
-+
- /**
-  * stmmac_adjust_link - adjusts the link parameters
-  * @dev: net device structure
-@@ -869,47 +935,7 @@ static void stmmac_adjust_link(struct net_device *dev)
- 	mutex_lock(&priv->lock);
- 
- 	if (phydev->link) {
--		u32 ctrl = readl(priv->ioaddr + MAC_CTRL_REG);
--
--		/* Now we make sure that we can be in full duplex mode.
--		 * If not, we operate in half-duplex mode. */
--		if (phydev->duplex != priv->oldduplex) {
--			new_state = true;
--			if (!phydev->duplex)
--				ctrl &= ~priv->hw->link.duplex;
--			else
--				ctrl |= priv->hw->link.duplex;
--			priv->oldduplex = phydev->duplex;
--		}
--		/* Flow Control operation */
--		if (phydev->pause)
--			stmmac_mac_flow_ctrl(priv, phydev->duplex);
--
--		if (phydev->speed != priv->speed) {
--			new_state = true;
--			ctrl &= ~priv->hw->link.speed_mask;
--			switch (phydev->speed) {
--			case SPEED_1000:
--				ctrl |= priv->hw->link.speed1000;
--				break;
--			case SPEED_100:
--				ctrl |= priv->hw->link.speed100;
--				break;
--			case SPEED_10:
--				ctrl |= priv->hw->link.speed10;
--				break;
--			default:
--				netif_warn(priv, link, priv->dev,
--					   "broken speed: %d\n", phydev->speed);
--				phydev->speed = SPEED_UNKNOWN;
--				break;
--			}
--			if (phydev->speed != SPEED_UNKNOWN)
--				stmmac_hw_fix_mac_speed(priv);
--			priv->speed = phydev->speed;
--		}
--
--		writel(ctrl, priv->ioaddr + MAC_CTRL_REG);
-+		stmmac_mac_config(dev);
- 
- 		if (!priv->oldlink) {
- 			new_state = true;
-@@ -922,6 +948,11 @@ static void stmmac_adjust_link(struct net_device *dev)
- 		priv->oldduplex = DUPLEX_UNKNOWN;
- 	}
- 
-+	if (phydev->link)
-+		stmmac_mac_link_up(dev, false);
-+	else
-+		stmmac_mac_link_down(dev, false);
-+
- 	if (new_state && netif_msg_link(priv))
- 		phy_print_status(phydev);
- 
 -- 
-2.7.4
-
+Catalin
