@@ -2,276 +2,343 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DDEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51FDC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8B4208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:27:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ibEa8c2Z"
+	by mail.kernel.org (Postfix) with ESMTP id 7402720872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbfFFS13 (ORCPT
+        id S1730629AbfFFS3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:27:29 -0400
-Received: from mail-eopbgr720086.outbound.protection.outlook.com ([40.107.72.86]:29396
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729592AbfFFS13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:27:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BcxPZJ8Cyu/te9TYREK31YISsiKlZdZy+PGqS11EjaY=;
- b=ibEa8c2ZdjR+V4psqbbKnRn09/cXcDzLPz8Y1y2Ym4XIalh34OeEq/QCNzQY83n518W5Agvb3elC7hOcdCKnOZ+KDyw1w0ItbuAflNtOi+FLDUUzwKA0SVLtaebogQE0WqKs3v4oF5ad1smQuGl8mA7+rsYFXdym5mnZKpk2vlw=
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.231.93) by
- CH2PR02MB6199.namprd02.prod.outlook.com (52.132.229.225) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Thu, 6 Jun 2019 18:27:23 +0000
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::b9dd:11e0:7fca:ba55]) by CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::b9dd:11e0:7fca:ba55%5]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
- 18:27:23 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <dkiernan@xilinx.com>
-Subject: RE: [PATCH V4 10/12] misc: xilinx_sdfec: Add stats & status ioctls
-Thread-Topic: [PATCH V4 10/12] misc: xilinx_sdfec: Add stats & status ioctls
-Thread-Index: AQHVEu5G4Eibm0gnKE+3rKpAEh7MYqaOvaYAgABGCVA=
-Date:   Thu, 6 Jun 2019 18:27:23 +0000
-Message-ID: <CH2PR02MB635905A42F3F667E81D30E27CB170@CH2PR02MB6359.namprd02.prod.outlook.com>
-References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
- <1558784245-108751-11-git-send-email-dragan.cvetic@xilinx.com>
- <20190606141138.GD7943@kroah.com>
-In-Reply-To: <20190606141138.GD7943@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a46c33e0-cfe8-4622-d241-08d6eaac9e8d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6199;
-x-ms-traffictypediagnostic: CH2PR02MB6199:
-x-microsoft-antispam-prvs: <CH2PR02MB6199E3BAB5E148152F132B72CB170@CH2PR02MB6199.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(346002)(366004)(189003)(199004)(13464003)(5660300002)(52536014)(3846002)(478600001)(14454004)(33656002)(66476007)(25786009)(64756008)(76116006)(99286004)(66066001)(81156014)(305945005)(86362001)(53936002)(81166006)(73956011)(14444005)(7736002)(4326008)(6916009)(107886003)(74316002)(9686003)(256004)(6246003)(8676002)(68736007)(6436002)(476003)(66446008)(66556008)(53546011)(6506007)(66946007)(76176011)(55016002)(8936002)(71200400001)(71190400001)(229853002)(316002)(6116002)(2906002)(486006)(54906003)(26005)(102836004)(11346002)(186003)(446003)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6199;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: D8q8Z3TukDe/YT/IZHRo7D5w0xDLXSbgnDtOnR9671hSbEsWCC4dg6FOTkpdB2DcJNq823uz4ROxODVvczFuzkkZk2mBxSTE8NoABxY/vlAAyObQq54oySDl07D7bpF85MwPOOUpX5ynBrdG5wr3nGi1k/NGiQSUfxd6IIpbvWlehxFAYxm8VpLyO6gfA6cnXE+cPydMlylNnZZr18ksEx4arJ3mZuagdeTfbbzNExHPNgMRitw4W1M8g0DVjAuIAxGpx/yvrkVZSiPzFix8Sgez0LkfC0PLYXnABa/Lc3l2b2NokTvZTosDjSmPfLwSv9hbpv0jC15zBHjRscgbET66tjP2mLneyC9wBX06YyRLfwcEOwG+DS3VM4s0yFCL2pSUuBvwmPDwysz2E4V+4lT1tkxyb2bigOK4H3cxVEM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Jun 2019 14:29:00 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35413 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729591AbfFFS3A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:29:00 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d23so3869535qto.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 11:28:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VSW0mHlKPnFKRiIMc3nnFOw6KKgjVB71Zu0QRJyAwqk=;
+        b=MT5yPgnmhJB6REKJeOacjTd/Iz6ZKcQqikrZ9pqpYI1yXHJOwtgCWlsAVoBiqYrlix
+         zsAkMPXKI2xrOiByzAT3UKZc3o8+zgPX5OGPfnqBMj+/eRnV2U8VkXBM4LOpVCxgSG1A
+         05wooa+lA+PW8GPOQafZimGeq3RLpix1+58J2F/MXM6RKKxGE3vab1n+OrhQatPVVeFQ
+         voyXZfzbuduHNVdQIyYzDuABZz2IVb4sxkmsTi+/A57hCtPL7haQ5HAXTqiDCP/Nd50+
+         /MFbLknzHOKDjPCEWjyc6QjfdtdksYThNfVOlsXwqzfwONahPSFS+WKOofiCbJAUvD7t
+         KHXw==
+X-Gm-Message-State: APjAAAULw2euie4MNcNhHibWFOOVSQDyRoqcsHE8LGfwkPiSRLzXnG68
+        0guDCWcyY6lFRL2eS3tZnBZjkQ==
+X-Google-Smtp-Source: APXvYqyOMiPipyMKs3/NXaVvVmc3VOZ8tY0mlKbylPCpIe8W3cBYix2XiQCSn1D1fkmb1e6r9hnULQ==
+X-Received: by 2002:ac8:35c2:: with SMTP id l2mr42039410qtb.123.1559845739028;
+        Thu, 06 Jun 2019 11:28:59 -0700 (PDT)
+Received: from redhat.com (pool-100-0-197-103.bstnma.fios.verizon.net. [100.0.197.103])
+        by smtp.gmail.com with ESMTPSA id c5sm1174402qtj.27.2019.06.06.11.28.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 11:28:58 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 14:28:55 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] vhost: Don't use defined in VHOST_ARCH_CAN_ACCEL_UACCESS
+ definition
+Message-ID: <20190606142606-mutt-send-email-mst@kernel.org>
+References: <20190606161223.67979-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a46c33e0-cfe8-4622-d241-08d6eaac9e8d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 18:27:23.2594
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: draganc@xilinx.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6199
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606161223.67979-1-natechancellor@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 06, 2019 at 09:12:23AM -0700, Nathan Chancellor wrote:
+> Clang warns:
+> 
+>   drivers/vhost/vhost.c:2085:5: warning: macro expansion producing
+>   'defined' has undefined behavior [-Wexpansion-to-defined]
+>   #if VHOST_ARCH_CAN_ACCEL_UACCESS
+>       ^
+>   drivers/vhost/vhost.h:98:38: note: expanded from macro
+>   'VHOST_ARCH_CAN_ACCEL_UACCESS'
+>   #define VHOST_ARCH_CAN_ACCEL_UACCESS defined(CONFIG_MMU_NOTIFIER) && \
+>                                        ^
+> 
+> Rework VHOST_ARCH_CAN_ACCEL_UACCESS to be defined under those conditions
+> so that the meaning of the code doesn't change and clang no longer
+> warns.
+> 
+> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/508
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/vhost/vhost.c | 44 +++++++++++++++++++++----------------------
+>  drivers/vhost/vhost.h |  7 ++++---
+>  2 files changed, 26 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index dc9301d31f12..cc56d08b4275 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -299,7 +299,7 @@ static void vhost_vq_meta_reset(struct vhost_dev *d)
+>  		__vhost_vq_meta_reset(d->vqs[i]);
+>  }
+>  
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  static void vhost_map_unprefetch(struct vhost_map *map)
+>  {
+>  	kfree(map->pages);
+> @@ -483,7 +483,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+>  	vq->iotlb = NULL;
+>  	vq->invalidate_count = 0;
+>  	__vhost_vq_meta_reset(vq);
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	vhost_reset_vq_maps(vq);
+>  #endif
+>  }
+> @@ -635,7 +635,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+>  	INIT_LIST_HEAD(&dev->read_list);
+>  	INIT_LIST_HEAD(&dev->pending_list);
+>  	spin_lock_init(&dev->iotlb_lock);
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	vhost_init_maps(dev);
+>  #endif
+>  
+> @@ -726,7 +726,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+>  	if (err)
+>  		goto err_cgroup;
+>  
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	err = mmu_notifier_register(&dev->mmu_notifier, dev->mm);
+>  	if (err)
+>  		goto err_mmu_notifier;
+> @@ -734,7 +734,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+>  
+>  	return 0;
+>  
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  err_mmu_notifier:
+>  	vhost_dev_free_iovecs(dev);
+>  #endif
+> @@ -828,7 +828,7 @@ static void vhost_clear_msg(struct vhost_dev *dev)
+>  	spin_unlock(&dev->iotlb_lock);
+>  }
+>  
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  static void vhost_setup_uaddr(struct vhost_virtqueue *vq,
+>  			      int index, unsigned long uaddr,
+>  			      size_t size, bool write)
+> @@ -959,12 +959,12 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+>  		dev->worker = NULL;
+>  	}
+>  	if (dev->mm) {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  		mmu_notifier_unregister(&dev->mmu_notifier, dev->mm);
+>  #endif
+>  		mmput(dev->mm);
+>  	}
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	for (i = 0; i < dev->nvqs; i++)
+>  		vhost_uninit_vq_maps(dev->vqs[i]);
+>  #endif
+> @@ -1196,7 +1196,7 @@ static inline void __user *__vhost_get_user(struct vhost_virtqueue *vq,
+>  
+>  static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_used *used;
+>  
+> @@ -1224,7 +1224,7 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+>  				 struct vring_used_elem *head, int idx,
+>  				 int count)
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_used *used;
+>  	size_t size;
+> @@ -1252,7 +1252,7 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+>  static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+>  
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_used *used;
+>  
+> @@ -1278,7 +1278,7 @@ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+>  static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
+>  
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_used *used;
+>  
+> @@ -1342,7 +1342,7 @@ static void vhost_dev_unlock_vqs(struct vhost_dev *d)
+>  static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+>  				      __virtio16 *idx)
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_avail *avail;
+>  
+> @@ -1367,7 +1367,7 @@ static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+>  static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+>  				       __virtio16 *head, int idx)
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_avail *avail;
+>  
+> @@ -1393,7 +1393,7 @@ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+>  static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+>  					__virtio16 *flags)
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_avail *avail;
+>  
+> @@ -1418,7 +1418,7 @@ static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+>  static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+>  				       __virtio16 *event)
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_avail *avail;
+>  
+> @@ -1441,7 +1441,7 @@ static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+>  static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+>  				     __virtio16 *idx)
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_used *used;
+>  
+> @@ -1466,7 +1466,7 @@ static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+>  static inline int vhost_get_desc(struct vhost_virtqueue *vq,
+>  				 struct vring_desc *desc, int idx)
+>  {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	struct vhost_map *map;
+>  	struct vring_desc *d;
+>  
+> @@ -1825,7 +1825,7 @@ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
+>  	return true;
+>  }
+>  
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
+>  {
+>  	struct vhost_map __rcu *map;
+> @@ -1846,7 +1846,7 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
+>  	unsigned int num = vq->num;
+>  
+>  	if (!vq->iotlb) {
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  		vhost_vq_map_prefetch(vq);
+>  #endif
+>  		return 1;
+> @@ -2061,7 +2061,7 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
+>  
+>  	mutex_lock(&vq->mutex);
+>  
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	/* Unregister MMU notifer to allow invalidation callback
+>  	 * can access vq->uaddrs[] without holding a lock.
+>  	 */
+> @@ -2082,7 +2082,7 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
+>  		BUG();
+>  	}
+>  
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	vhost_setup_vq_uaddr(vq);
+>  
+>  	if (d->mm)
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index c5d950cf7627..d9f36c479fa7 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -95,8 +95,9 @@ struct vhost_uaddr {
+>  	bool write;
+>  };
+>  
+> -#define VHOST_ARCH_CAN_ACCEL_UACCESS defined(CONFIG_MMU_NOTIFIER) && \
+> -	ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
+> +#if defined(CONFIG_MMU_NOTIFIER) && ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
+> +#define VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#endif
+>  
+>  /* The virtqueue structure describes a queue attached to a device. */
+>  struct vhost_virtqueue {
+> @@ -109,7 +110,7 @@ struct vhost_virtqueue {
+>  	struct vring_avail __user *avail;
+>  	struct vring_used __user *used;
+>  
+> -#if VHOST_ARCH_CAN_ACCEL_UACCESS
+> +#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+>  	/* Read by memory accessors, modified by meta data
+>  	 * prefetching, MMU notifier and vring ioctl().
+>  	 * Synchonrized through mmu_lock (writers) and RCU (writers
+> -- 
+> 2.22.0.rc3
 
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Thursday 6 June 2019 15:12
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V4 10/12] misc: xilinx_sdfec: Add stats & status ioct=
-ls
->=20
-> On Sat, May 25, 2019 at 12:37:23PM +0100, Dragan Cvetic wrote:
-> > SD-FEC statistic data are:
-> > - count of data interface errors (isr_err_count)
-> > - count of Correctable ECC errors (cecc_count)
-> > - count of Uncorrectable ECC errors (uecc_count)
-> >
-> > Add support:
-> > 1. clear stats ioctl callback which clears collected
-> > statistic data,
-> > 2. get stats ioctl callback which reads a collected
-> > statistic data,
-> > 3. set default configuration ioctl callback,
-> > 4. start ioctl callback enables SD-FEC HW,
-> > 5. stop ioctl callback disables SD-FEC HW.
-> >
-> > In a failed state driver enables the following ioctls:
-> > - get status
-> > - get statistics
-> > - clear stats
-> > - set default SD-FEC device configuration
-> >
-> > Tested-by: Santhosh Dyavanapally <SDYAVANA@xilinx.com>
-> > Tested by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
-> > Tested-by: Derek Kiernan <derek.kiernan@xilinx.com>
-> > Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> > Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
-> > Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> > ---
-> >  drivers/misc/xilinx_sdfec.c      | 121 +++++++++++++++++++++++++++++++=
-++++++++
-> >  include/uapi/misc/xilinx_sdfec.h |  75 ++++++++++++++++++++++++
-> >  2 files changed, 196 insertions(+)
-> >
-> > diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-> > index 544e746..6e04492 100644
-> > --- a/drivers/misc/xilinx_sdfec.c
-> > +++ b/drivers/misc/xilinx_sdfec.c
-> > @@ -189,6 +189,7 @@ struct xsdfec_clks {
-> >   * @dev: pointer to device struct
-> >   * @state: State of the SDFEC device
-> >   * @config: Configuration of the SDFEC device
-> > + * @intr_enabled: indicates IRQ enabled
-> >   * @state_updated: indicates State updated by interrupt handler
-> >   * @stats_updated: indicates Stats updated by interrupt handler
-> >   * @isr_err_count: Count of ISR errors
-> > @@ -207,6 +208,7 @@ struct xsdfec_dev {
-> >  	struct device *dev;
-> >  	enum xsdfec_state state;
-> >  	struct xsdfec_config config;
-> > +	bool intr_enabled;
-> >  	bool state_updated;
-> >  	bool stats_updated;
-> >  	atomic_t isr_err_count;
-> > @@ -290,6 +292,26 @@ static int xsdfec_dev_release(struct inode *iptr, =
-struct file *fptr)
-> >  	return 0;
-> >  }
-> >
-> > +static int xsdfec_get_status(struct xsdfec_dev *xsdfec, void __user *a=
-rg)
-> > +{
-> > +	struct xsdfec_status status;
-> > +	int err;
-> > +
-> > +	status.fec_id =3D xsdfec->config.fec_id;
-> > +	spin_lock_irqsave(&xsdfec->irq_lock, xsdfec->flags);
-> > +	status.state =3D xsdfec->state;
-> > +	xsdfec->state_updated =3D false;
-> > +	spin_unlock_irqrestore(&xsdfec->irq_lock, xsdfec->flags);
-> > +	status.activity =3D (xsdfec_regread(xsdfec, XSDFEC_ACTIVE_ADDR) &
-> > +			   XSDFEC_IS_ACTIVITY_SET);
-> > +
-> > +	err =3D copy_to_user(arg, &status, sizeof(status));
-> > +	if (err)
-> > +		err =3D -EFAULT;
-> > +
-> > +	return err;
-> > +}
-> > +
-> >  static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *a=
-rg)
-> >  {
-> >  	int err;
-> > @@ -850,6 +872,80 @@ static int xsdfec_cfg_axi_streams(struct xsdfec_de=
-v *xsdfec)
-> >  	return 0;
-> >  }
-> >
-> > +static int xsdfec_start(struct xsdfec_dev *xsdfec)
-> > +{
-> > +	u32 regread;
-> > +
-> > +	regread =3D xsdfec_regread(xsdfec, XSDFEC_FEC_CODE_ADDR);
-> > +	regread &=3D 0x1;
-> > +	if (regread !=3D xsdfec->config.code) {
-> > +		dev_dbg(xsdfec->dev,
-> > +			"%s SDFEC HW code does not match driver code, reg %d, code %d",
-> > +			__func__, regread, xsdfec->config.code);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Set AXIS enable */
-> > +	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_ENABLE_ADDR,
-> > +			XSDFEC_AXIS_ENABLE_MASK);
-> > +	/* Done */
-> > +	xsdfec->state =3D XSDFEC_STARTED;
-> > +	return 0;
-> > +}
-> > +
-> > +static int xsdfec_stop(struct xsdfec_dev *xsdfec)
-> > +{
-> > +	u32 regread;
-> > +
-> > +	if (xsdfec->state !=3D XSDFEC_STARTED)
-> > +		dev_dbg(xsdfec->dev, "Device not started correctly");
-> > +	/* Disable AXIS_ENABLE Input interfaces only */
-> > +	regread =3D xsdfec_regread(xsdfec, XSDFEC_AXIS_ENABLE_ADDR);
-> > +	regread &=3D (~XSDFEC_AXIS_IN_ENABLE_MASK);
-> > +	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_ENABLE_ADDR, regread);
-> > +	/* Stop */
-> > +	xsdfec->state =3D XSDFEC_STOPPED;
-> > +	return 0;
-> > +}
-> > +
-> > +static int xsdfec_clear_stats(struct xsdfec_dev *xsdfec)
-> > +{
-> > +	atomic_set(&xsdfec->isr_err_count, 0);
-> > +	atomic_set(&xsdfec->uecc_count, 0);
-> > +	atomic_set(&xsdfec->cecc_count, 0);
->=20
-> Atomics for counters?  Are you sure?  Don't we have some sort of sane
-> counter api these days for stuff like this instead of abusing atomic
-> variables?  What does the networking people use?  How often/fast do
-> these change that you need to synchronize things?
 
-Accepted.
-No need to have them atomic. They are lock protected already.
+I'd prefer just changing the definition.
+ifdefs have a disadvantage that it's easy to get
+wrong code if you forget to include a header.
 
->=20
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int xsdfec_get_stats(struct xsdfec_dev *xsdfec, void __user *ar=
-g)
-> > +{
-> > +	int err;
-> > +	struct xsdfec_stats user_stats;
-> > +
-> > +	spin_lock_irqsave(&xsdfec->irq_lock, xsdfec->flags);
-> > +	user_stats.isr_err_count =3D atomic_read(&xsdfec->isr_err_count);
-> > +	user_stats.cecc_count =3D atomic_read(&xsdfec->cecc_count);
-> > +	user_stats.uecc_count =3D atomic_read(&xsdfec->uecc_count);
-> > +	xsdfec->stats_updated =3D false;
-> > +	spin_unlock_irqrestore(&xsdfec->irq_lock, xsdfec->flags);
->=20
-> Wait, you just grabbed a lock, and then read atomic variables, why?  Why
-> do these need to be atomic variables if you are already locking around
-> them?  Unless you want to be "extra sure" they are safe?  :)
+I queued the below - pls confirm it works for you.
 
-Accepted.
-Absolutely no need for atomic variables.
-=20
->=20
-> Please fix up.
->=20
-> thanks,
->=20
-> greg k-h
+
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index c5d950cf7627..819296332913 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -95,8 +95,11 @@ struct vhost_uaddr {
+ 	bool write;
+ };
+ 
+-#define VHOST_ARCH_CAN_ACCEL_UACCESS defined(CONFIG_MMU_NOTIFIER) && \
+-	ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
++#if defined(CONFIG_MMU_NOTIFIER) && ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
++#define VHOST_ARCH_CAN_ACCEL_UACCESS 1
++#else
++#define VHOST_ARCH_CAN_ACCEL_UACCESS 0
++#endif
+ 
+ /* The virtqueue structure describes a queue attached to a device. */
+ struct vhost_virtqueue {
