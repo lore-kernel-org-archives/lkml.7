@@ -2,70 +2,97 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB97C28D1B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE727C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD1D2083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C7520883
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:58:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559804306;
+	bh=/AotUYAn81Yvabr0QOuYw3tgELf9Sx7jAvd3vMMU3kY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nQcwSo14z3YKv2o7lzCJv7p31QhSEMU7U8Nd2i4qjhYbdPljQsLfhzy7OIJKVC5Tu
+	 b5ldr3UPLraj0AFDcXCXDn6fHhhsMOHTrERy0Aqn+57PJybNiLCS6LusYXwp+S0y5B
+	 +YGr6Lil2QmvtoO15Gfgs7k1ABknGCW197/TiPe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfFFG6R (ORCPT
+        id S1726777AbfFFG60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:58:17 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:39112 "EHLO deadmen.hmeau.com"
+        Thu, 6 Jun 2019 02:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFG6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:58:17 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hYmLk-00072Z-NW; Thu, 06 Jun 2019 14:58:12 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hYmLj-0006n9-FY; Thu, 06 Jun 2019 14:58:11 +0800
-Date:   Thu, 6 Jun 2019 14:58:11 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     davem@davemloft.net, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH v2 -next] crypto: atmel-i2c - Fix build error while CRC16
- set to m
-Message-ID: <20190606065811.wxt5xy6jgol4svw6@gondor.apana.org.au>
-References: <20190531094900.12708-1-yuehaibing@huawei.com>
- <20190531121749.9144-1-yuehaibing@huawei.com>
+        id S1725267AbfFFG6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:58:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8752207E0;
+        Thu,  6 Jun 2019 06:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559804305;
+        bh=/AotUYAn81Yvabr0QOuYw3tgELf9Sx7jAvd3vMMU3kY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=loi3rC5hpwqc/ItwOijTJjtZsZuRbo9pg0ZFutYYR/BfAfq7OxiyuXfyiod69OYcM
+         ykyNP7GpIsHdSWwKHqY4ppeG7Kya1j5n+9jllVJz6BFPiB17yIxD5L300a0TaTn8Sz
+         ijLeZZ+AGRzmaXxhGzDwgga8F1Q3++6lFMxc6ZqI=
+Date:   Thu, 6 Jun 2019 08:58:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3] USB: move usb debugfs directory creation to the usb
+ common core
+Message-ID: <20190606065822.GA29436@kroah.com>
+References: <20190605092816.GA23758@kroah.com>
+ <20190605124440.GD17558@kroah.com>
+ <1559788368.8487.109.camel@mhfsdcap03>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190531121749.9144-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1559788368.8487.109.camel@mhfsdcap03>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 08:17:49PM +0800, YueHaibing wrote:
-> If CRYPTO_DEV_ATMEL_ECC is set m, which select CRC16 to m,
-> while CRYPTO_DEV_ATMEL_SHA204A is set to y, building fails.
+On Thu, Jun 06, 2019 at 10:32:48AM +0800, Chunfeng Yun wrote:
+> On Wed, 2019-06-05 at 14:44 +0200, Greg Kroah-Hartman wrote:
+> > The USB gadget subsystem wants to use the USB debugfs root directory, so
+> > move it to the common "core" USB code so that it is properly initialized
+> > and removed as needed.
+> > 
+> > In order to properly do this, we need to load the common code before the
+> > usb core code, when everything is linked into the kernel, so reorder the
+> > link order of the code.
+> > 
+> > Also as the usb common code has the possibility of the led trigger logic
+> > to be merged into it, handle the build option properly by only having
+> > one module init/exit function and have the common code initialize the
+> > led trigger if needed.
+> > 
+> > Reported-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> > Chunfeng, can you try testing this again?
 > 
-> drivers/crypto/atmel-i2c.o: In function 'atmel_i2c_checksum':
-> atmel-i2c.c:(.text+0x16): undefined reference to 'crc16'
+> Tested-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > 
-> Add CRC16 dependency to CRYPTO_DEV_ATMEL_SHA204A
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: da001fb651b0 ("crypto: atmel-i2c - add support for SHA204A random number generator")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2：use 'select' instead of 'depends on'
-> ---
->  drivers/crypto/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+> Thank you, Greg, Felipe
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks for the review, and all of the different iterations for this.
+For something so "simple" it sure took us all a number of tries :)
+
+I'll go queue it up now so that your future work can rely on it.
+
+thanks,
+
+greg k-h
