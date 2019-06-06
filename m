@@ -2,105 +2,97 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAE3C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35023C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23FB206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009FB206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="azjuJOvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfFFUAi (ORCPT
+        id S1728226AbfFFUAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:00:38 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46547 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfFFUAh (ORCPT
+        Thu, 6 Jun 2019 16:00:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39235 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfFFUAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:00:37 -0400
-Received: by mail-lf1-f65.google.com with SMTP id l26so1040897lfh.13;
-        Thu, 06 Jun 2019 13:00:36 -0700 (PDT)
+        Thu, 6 Jun 2019 16:00:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so2147825pfe.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 13:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=+S2za5E2ysBthBJN8nhvqwmLKKW4lZ4JrfmGBXCW9Do=;
+        b=azjuJOvh9vVcco4+dB9mpQHAleMSqSKTlia7Zb76u47A8WR6wIsrbR4J2n43c40KV3
+         GSF+MLvTz9qnbY1ZNCfHMS21210wyHO4i+xzLdxCaCXd1mqZv1OoUtxKv+L372BLP+Ke
+         hSgFngB1ugHgmfjgMO4YVokX3nADOSAvdKDp8nXZGwELJfVRwMkyWU6ziWl6KmY+mVLH
+         GL9PKZVR/LAbYRo85ihbUQFiVjdQsxDrYRVOHfJhSQu7qJd7CAq1Zahsbo6caUycZcJg
+         UGHPpkAn55D+E3ujXQGW/Xn2CqdL4L/fipYX8WkD+sBQufCxM3D3sgGC1udlwoZ+MJWT
+         40vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LBUHp0AIL6kvz/3M3h3KZw0asu/x3DOUpyN7cjLiU48=;
-        b=U+eLzyw9H+cjpCR7u4njbfKnzUSpZWt3afmbgn/800V3Pk74+EYu+KEe+F5eJ8FiJu
-         S6+bHwMiKwJ/W5TDtTxMmYJw1tKhghokQdF5Qt0g8XYEgojbZq4LP0VB1N4Rb85RPuPR
-         aeCMixR7M3n6/hznBeu71Nkg9qzslyxywvZwZSwQQ2jP9f+1Sry+oX0fkavkZCqxteGz
-         gMaivRTEiicCYcNCenrD74Hsk9/i144KXMGVx+tkQa1PguNj5GFn49fMXgSfMTxaEsBC
-         4GooNSMy0Q7JZj6WgD/GX5ngyGeF36UPWD6rtafU0dA6MXJHx/9Np/A7R0+7hE4zNAJF
-         DXog==
-X-Gm-Message-State: APjAAAVAYfSVQtDw4NqsTyBx8Dio0xycOicC4eJyM2OhCnQnEiw4x1dF
-        CDOt8EK3kRKg8Q8jTj/X0XUJ+ZpbrUFHjI63kWE=
-X-Google-Smtp-Source: APXvYqz3Pt/5uYFWtTLV+LTz6jkGRFZHje7gNd6cKMaRPyvVC/M1rkaJjIOO9OoHs9efArOf/nxYG3a+eM+/Kgkk9nY=
-X-Received: by 2002:ac2:597c:: with SMTP id h28mr681144lfp.90.1559851235901;
- Thu, 06 Jun 2019 13:00:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=+S2za5E2ysBthBJN8nhvqwmLKKW4lZ4JrfmGBXCW9Do=;
+        b=lnUoBibJzSPteMOIMRU9Q61bsB3W8jTvBHLIS7e02ACSyYOlsA9CZE7eeo3hKbeX+1
+         Yufty7l9YyXMsmjayo1JZP8oqB2GEnDh7qmTnauXXUPckqU3LFI1WMxj4TbF4t2txvBD
+         fUBuNkM8TzjleUWvcbrEZfdQN/hbydfZzs9AWsf8pDfbK3ZlSjA5deuSnUpAb7BRokBw
+         0aZdyHLLhijILN47EKIQH8tvKxYjJKTMIPjoCAl8iZzbA/GI+iODPJ6zjgJk5iEKmFcz
+         5Lg2qjkBjOcyaHespVcnVVIfQDIJQ2Pd74hzyMz7NQZ/zKH0WctnJFrhW35pBLMYnudB
+         8arA==
+X-Gm-Message-State: APjAAAVL9EmO3CTDX6m+oV/gr41FaOz+/R7E/CStrHPnOS4OwPDnqrge
+        CbcJyyYNEWPljG6oD1QYqcrfOQ==
+X-Google-Smtp-Source: APXvYqydS8Cff5YUUoLMVkPtd/Z9+fZKmczr/F25Y/oh1KKo7VIe1z4GFo73+LucbRJ/GmjyBOa0zA==
+X-Received: by 2002:a63:fb01:: with SMTP id o1mr251166pgh.410.1559851246224;
+        Thu, 06 Jun 2019 13:00:46 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id s42sm3271040pjc.5.2019.06.06.13.00.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 13:00:45 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 01/10] arm64: dts: meson-gxm-khadas-vim2: fix gpio-keys-polled node
+In-Reply-To: <20190527132200.17377-2-narmstrong@baylibre.com>
+References: <20190527132200.17377-1-narmstrong@baylibre.com> <20190527132200.17377-2-narmstrong@baylibre.com>
+Date:   Thu, 06 Jun 2019 13:00:45 -0700
+Message-ID: <7hy32ecwlu.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-4-jacopo+renesas@jmondi.org> <20190606165352.GK12825@pendragon.ideasonboard.com>
-In-Reply-To: <20190606165352.GK12825@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 6 Jun 2019 22:00:23 +0200
-Message-ID: <CAMuHMdVJEJ9Sehm5Ug4P+HW0iPYufPuYVD9vQ3qKg=htXFmuLg@mail.gmail.com>
-Subject: Re: [PATCH 03/20] dt-bindings: display, renesas,du: Update 'vsps' in example
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent, Jacopo,
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-On Thu, Jun 6, 2019 at 8:50 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Thu, Jun 06, 2019 at 04:22:03PM +0200, Jacopo Mondi wrote:
-> > Update the 'vsps' property structure in the documentation example to
-> > reflect what's actually implemented in the device tree sources.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > @@ -92,7 +92,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
-> >                        <&cpg CPG_MOD 722>,
-> >                        <&cpg CPG_MOD 721>;
-> >               clock-names = "du.0", "du.1", "du.2", "du.3";
-> > -             vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
-> > +             vsps = <&vspd0 0 &vspd1 0 &vspd2  &vspd0 1>;
+> From: Christian Hewitt <christianshewitt@gmail.com>
 >
-> The former is simpler to read than the latter in my opinion. Shouldn't
-> we update the .dtsi files instead ?
+> Fix DTC warnings:
+>
+> meson-gxm-khadas-vim2.dtb: Warning (avoid_unnecessary_addr_size):
+>    /gpio-keys-polled: unnecessary #address-cells/#size-cells
+> 	without "ranges" or child "reg" property
+>
+> Fixes: b8b74dda3908 ("ARM64: dts: meson-gxm: Add support for Khadas VIM2")
+> Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Yes, it is easier to read (for humans).
+This patch is missing a S-o-B from the author (Christian?)
 
-> >               cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
+The From, Suggested-by and Signed-off-by send mixed messages.  Please
+clarify if if this is missing a signoff from Christian or if the author
+is Neil.
 
-Perhaps we want grouping here, too?
+Thanks,
 
-> >
-> >               ports {
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Kevin
