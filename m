@@ -2,187 +2,269 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FFEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10ABC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33127208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79FAE2053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="npw6XvvL";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZZtTROhQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMh24P/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfFFUJw (ORCPT
+        id S1728523AbfFFULC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:09:52 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50552 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727082AbfFFUJv (ORCPT
+        Thu, 6 Jun 2019 16:11:02 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37430 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfFFULC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:09:51 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56K4Jes005445;
-        Thu, 6 Jun 2019 13:09:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=0hlzEy69btagHvz167Ug/ihAFb/NDX9JrZFUPX3rIG0=;
- b=npw6XvvLWPsV7xeuw8SPcRtpAMHfJ2f4q+wEr7KXDpkZPhoZuTdWb7tc9ieeRjs9LKOx
- IG4M4FS4cIWfD6xtMJQRpBnrQTMI2Y8g5vfxemqkvuJx6Xn4FNA+9nrgipoxxUjJksdF
- v8/uM5ZEo3EH7ucs9dBiTKE5dEavJoBdn/Q= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sy1quhwg6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 06 Jun 2019 13:09:30 -0700
-Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 6 Jun 2019 13:09:29 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Jun 2019 13:09:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0hlzEy69btagHvz167Ug/ihAFb/NDX9JrZFUPX3rIG0=;
- b=ZZtTROhQ25v9xoqB0DfwGiAKMFGyYu+cdpHFrlbhSIraf1slTKC4U26hBkH5IxJ4HakN8vWu5wYG7jNKqeQNBA9KblxahI7vxSZDq2DDmkLjj1Jg8F0iOPRSutqQVjuN8HpLnW8X36oaXSk7rxrht4JpCflxYqLy9MZhwd6Wc1M=
-Received: from MW2PR1501MB1993.namprd15.prod.outlook.com (52.132.149.157) by
- MW2PR1501MB2169.namprd15.prod.outlook.com (52.132.150.153) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Thu, 6 Jun 2019 20:09:22 +0000
-Received: from MW2PR1501MB1993.namprd15.prod.outlook.com
- ([fe80::ede1:f275:2869:8156]) by MW2PR1501MB1993.namprd15.prod.outlook.com
- ([fe80::ede1:f275:2869:8156%7]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
- 20:09:22 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Maninder Singh <maninder1.s@samsung.com>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "a.sahrawat@samsung.com" <a.sahrawat@samsung.com>,
-        "pankaj.m@samsung.com" <pankaj.m@samsung.com>,
-        Vaneet Narang <v.narang@samsung.com>
-Subject: Re: [PATCH 2/2] zstd: use U16 data type for rankPos
-Thread-Topic: [PATCH 2/2] zstd: use U16 data type for rankPos
-Thread-Index: AQHVBwEYf0+ujrSaGEy2U/daRipAjqaPOXKA
-Date:   Thu, 6 Jun 2019 20:09:22 +0000
-Message-ID: <31A71209-48C0-464D-9578-DBEEF5D16567@fb.com>
-References: <CGME20190510061418epcas5p3679447cedd01f3ec70139f79ac7bcca1@epcas5p3.samsung.com>
- <1557468839-3388-1-git-send-email-maninder1.s@samsung.com>
-In-Reply-To: <1557468839-3388-1-git-send-email-maninder1.s@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::2:d31d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f75e8b7c-6279-41a7-5ad9-08d6eabaddaa
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MW2PR1501MB2169;
-x-ms-traffictypediagnostic: MW2PR1501MB2169:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MW2PR1501MB2169E47086D6F74FFC4E300DAB170@MW2PR1501MB2169.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(376002)(346002)(39860400002)(199004)(189003)(99286004)(68736007)(6436002)(476003)(2616005)(229853002)(486006)(46003)(6306002)(6486002)(11346002)(446003)(14444005)(76176011)(6246003)(256004)(53546011)(6506007)(33656002)(7416002)(7736002)(86362001)(5660300002)(53936002)(316002)(478600001)(14454004)(6512007)(54906003)(6916009)(71190400001)(83716004)(71200400001)(966005)(82746002)(8936002)(81156014)(81166006)(66476007)(66556008)(73956011)(66446008)(76116006)(64756008)(66946007)(305945005)(36756003)(6116002)(102836004)(4326008)(8676002)(186003)(2906002)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR1501MB2169;H:MW2PR1501MB1993.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qwXE2Xt7E66ZsyPkLwqBrR5v1rG5AIDLrrOIlXU+6rqClnI734d6CkUM9/u7lsN+r6WqtcdM3XsuTzBJHS712rqi+aTq2iK33agYr+zhkJmRpF250WDwuZ/A8g04NML/z4UVh6V2AgoWn5mV7VH/g70bSVdywrzWtJOki3p3+x1JoVzQeLlaOzlhMHV98S0sW2qm6ehTNzpsFSCcTEcTzIJDSeKEKvh4cnbAQxP4pKMpBhvqWB5sKd6vbZs9CtbtUQf5qBN/kNCuMZlda+ndOgeKcLzUAMEe7aQshgUtlM78OxaPZ5QWcB1hem7FsaY+CubQFWmJ45y9DnB3QLQ9EOZfzeeObmGo6CLk+soqPzJIexyTA6Qpq9Xu60LoafgtRa+nIVhbtIVFqEU7/IvYG0z8Xzm8sLmSxfgpOASsNu0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D9DD0AFACE9A89419EC2781911FC2B00@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Jun 2019 16:11:02 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y57so4251398qtk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 13:11:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=duYNpd7u6NCsl3zgH8XpP5ZaEHzH4usCoWirRor+tVo=;
+        b=iMh24P/PiV0DTM7z521pzfS8+NG96xrFL3rQZpoIf5KLXR7ZI/zKx+hGb3j/LDr30n
+         NKrUGRSnS/eqlnl8MpzOf2DBGandEFROt/qwYa+tzXX3sa19K7LyfLWLG1zfT/Qp9cJH
+         fVKcJaHjFjaLKjkXlKaOqO6W3ql3jBEE/iy4x4Jw4vReZrFCtomtf8mt2O85InQ1Zvyo
+         aTJQ8wNcUi7SyMdzwiSkTbZkmH+Csl9ha87rRKWbr3ullN7OC7GNa/UJ8GgN6JTE6QPB
+         l87qAzUEFv/CzDy7GT6dtTVuQmoA3I7o2SPnHHVT/gASe+mMa2ztqmuasBCKnn+MNFvP
+         ZdXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=duYNpd7u6NCsl3zgH8XpP5ZaEHzH4usCoWirRor+tVo=;
+        b=aokNYJS+UxNfZKyl3Z+hCiELqzcdlNuV53L3J7vQygG1bioeWcPX1LNUfI+06tR/17
+         tMCF2yet2nFcnhUGz9vVXoWkuZWO85yAAPdGpzoIDpFIcuWIetiH2EHgzuxbkQT28Jd2
+         9T6RQBA2/WzoLaYxvgxqOBDqeyHE8o/opKgc8SMedZ8TjXh1JNtXjgmGHZMOOajEP77K
+         WjoFjSDlR+335GLMehzlsccWVGXULO9Bslrvxwt9N2sy3EWSlymHG6SWTQDrMa9LRjMu
+         S5PqvGC20wftaQdaG7am5HzmJMS+9lzBTyauZDFGngtxm/qzkPk7HXrsc757wyLgmZiK
+         6XVw==
+X-Gm-Message-State: APjAAAXAekFrsiASFr76z7nk2XAly0e8vc1kfDOCoJxCFEBm66F1IMji
+        sZpuLw6mcOwaKDmmSfIUrR4=
+X-Google-Smtp-Source: APXvYqxotMrVYYKPrBuddtUruaaEgPOYMdyXx7CBvk6Ynad31TzuMnZ6HqfKTIG73wPrO+NhBkhRBw==
+X-Received: by 2002:a0c:ad02:: with SMTP id u2mr40321031qvc.90.1559851860829;
+        Thu, 06 Jun 2019 13:11:00 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id q36sm2118602qtc.12.2019.06.06.13.10.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 13:11:00 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0A63E41149; Thu,  6 Jun 2019 17:10:57 -0300 (-03)
+Date:   Thu, 6 Jun 2019 17:10:56 -0300
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     suzuki.poulose@arm.com, leo.yan@linaro.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Properly set the value of 'old' and 'head'
+ in snapshot mode
+Message-ID: <20190606201056.GJ21245@kernel.org>
+References: <20190605161633.12245-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f75e8b7c-6279-41a7-5ad9-08d6eabaddaa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 20:09:22.1450
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: terrelln@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR1501MB2169
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060135
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605161633.12245-1-mathieu.poirier@linaro.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 9, 2019, at 11:13 PM, Maninder Singh <maninder1.s@samsung.com> wro=
-te:
->=20
-> rankPos structure variables value can not be more than 512.
-> So it can easily be declared as U16 rather than U32.
->=20
-> It will reduce stack usage of HUF_sort from 256 bytes to 128 bytes
->=20
-> original:
-> e92ddbf0        push    {r4, r5, r6, r7, r8, r9, fp, ip, lr, pc}
-> e24cb004        sub     fp, ip, #4
-> e24ddc01        sub     sp, sp, #256    ; 0x100
->=20
-> changed:
-> e92ddbf0        push    {r4, r5, r6, r7, r8, r9, fp, ip, lr, pc}
-> e24cb004        sub     fp, ip, #4
-> e24dd080        sub     sp, sp, #128    ; 0x80
->=20
->=20
-> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> Signed-off-by: Vaneet Narang <v.narang@samsung.com>
+Em Wed, Jun 05, 2019 at 10:16:33AM -0600, Mathieu Poirier escreveu:
+> This patch adds the necessay intelligence to properly compute the value
+> of 'old' and 'head' when operating in snapshot mode.  That way we can get
+> the latest information in the AUX buffer and be compatible with the
+> generic AUX ring buffer mechanic.
+
+Leo, have you had the chance to test/review this one? Suzuki?
+
+I also changed the subject to:
+
+  [PATCH] perf cs-etm: Properly set the value of 'old' and 'head' in snapshot mode
+
+So that when looking at a 'git log --oneline' one can have the proper
+context and know that its about cs-etm.
+
+- Arnaldo
+ 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > ---
-> lib/zstd/huf_compress.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/lib/zstd/huf_compress.c b/lib/zstd/huf_compress.c
-> index e727812..2203124 100644
-> --- a/lib/zstd/huf_compress.c
-> +++ b/lib/zstd/huf_compress.c
-> @@ -382,8 +382,8 @@ static U32 HUF_setMaxHeight(nodeElt *huffNode, U32 la=
-stNonNull, U32 maxNbBits)
-> }
->=20
-> typedef struct {
-> -	U32 base;
-> -	U32 curr;
-> +	U16 base;
-> +	U16 curr;
-> } rankPos;
+>  tools/perf/arch/arm/util/cs-etm.c | 127 +++++++++++++++++++++++++++++-
+>  1 file changed, 123 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index 911426721170..0a278bbcaba6 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -31,6 +31,8 @@ struct cs_etm_recording {
+>  	struct auxtrace_record	itr;
+>  	struct perf_pmu		*cs_etm_pmu;
+>  	struct perf_evlist	*evlist;
+> +	int			wrapped_cnt;
+> +	bool			*wrapped;
+>  	bool			snapshot_mode;
+>  	size_t			snapshot_size;
+>  };
+> @@ -536,16 +538,131 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
+>  	return 0;
+>  }
+>  
+> -static int cs_etm_find_snapshot(struct auxtrace_record *itr __maybe_unused,
+> +static int cs_etm_alloc_wrapped_array(struct cs_etm_recording *ptr, int idx)
+> +{
+> +	bool *wrapped;
+> +	int cnt = ptr->wrapped_cnt;
+> +
+> +	/* Make @ptr->wrapped as big as @idx */
+> +	while (cnt <= idx)
+> +		cnt++;
+> +
+> +	/*
+> +	 * Free'ed in cs_etm_recording_free().  Using realloc() to avoid
+> +	 * cross compilation problems where the host's system supports
+> +	 * reallocarray() but not the target.
+> +	 */
+> +	wrapped = realloc(ptr->wrapped, cnt * sizeof(bool));
+> +	if (!wrapped)
+> +		return -ENOMEM;
+> +
+> +	wrapped[cnt - 1] = false;
+> +	ptr->wrapped_cnt = cnt;
+> +	ptr->wrapped = wrapped;
+> +
+> +	return 0;
+> +}
+> +
+> +static bool cs_etm_buffer_has_wrapped(unsigned char *buffer,
+> +				      size_t buffer_size, u64 head)
+> +{
+> +	u64 i, watermark;
+> +	u64 *buf = (u64 *)buffer;
+> +	size_t buf_size = buffer_size;
+> +
+> +	/*
+> +	 * We want to look the very last 512 byte (chosen arbitrarily) in
+> +	 * the ring buffer.
+> +	 */
+> +	watermark = buf_size - 512;
+> +
+> +	/*
+> +	 * @head is continuously increasing - if its value is equal or greater
+> +	 * than the size of the ring buffer, it has wrapped around.
+> +	 */
+> +	if (head >= buffer_size)
+> +		return true;
+> +
+> +	/*
+> +	 * The value of @head is somewhere within the size of the ring buffer.
+> +	 * This can be that there hasn't been enough data to fill the ring
+> +	 * buffer yet or the trace time was so long that @head has numerically
+> +	 * wrapped around.  To find we need to check if we have data at the very
+> +	 * end of the ring buffer.  We can reliably do this because mmap'ed
+> +	 * pages are zeroed out and there is a fresh mapping with every new
+> +	 * session.
+> +	 */
+> +
+> +	/* @head is less than 512 byte from the end of the ring buffer */
+> +	if (head > watermark)
+> +		watermark = head;
+> +
+> +	/*
+> +	 * Speed things up by using 64 bit transactions (see "u64 *buf" above)
+> +	 */
+> +	watermark >>= 3;
+> +	buf_size >>= 3;
+> +
+> +	/*
+> +	 * If we find trace data at the end of the ring buffer, @head has
+> +	 * been there and has numerically wrapped around at least once.
+> +	 */
+> +	for (i = watermark; i < buf_size; i++)
+> +		if (buf[i])
+> +			return true;
+> +
+> +	return false;
+> +}
+> +
+> +static int cs_etm_find_snapshot(struct auxtrace_record *itr,
+>  				int idx, struct auxtrace_mmap *mm,
+> -				unsigned char *data __maybe_unused,
+> +				unsigned char *data,
+>  				u64 *head, u64 *old)
+>  {
+> +	int err;
+> +	bool wrapped;
+> +	struct cs_etm_recording *ptr =
+> +			container_of(itr, struct cs_etm_recording, itr);
+> +
+> +	/*
+> +	 * Allocate memory to keep track of wrapping if this is the first
+> +	 * time we deal with this *mm.
+> +	 */
+> +	if (idx >= ptr->wrapped_cnt) {
+> +		err = cs_etm_alloc_wrapped_array(ptr, idx);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	/*
+> +	 * Check to see if *head has wrapped around.  If it hasn't only the
+> +	 * amount of data between *head and *old is snapshot'ed to avoid
+> +	 * bloating the perf.data file with zeros.  But as soon as *head has
+> +	 * wrapped around the entire size of the AUX ring buffer it taken.
+> +	 */
+> +	wrapped = ptr->wrapped[idx];
+> +	if (!wrapped && cs_etm_buffer_has_wrapped(data, mm->len, *head)) {
+> +		wrapped = true;
+> +		ptr->wrapped[idx] = true;
+> +	}
+> +
+>  	pr_debug3("%s: mmap index %d old head %zu new head %zu size %zu\n",
+>  		  __func__, idx, (size_t)*old, (size_t)*head, mm->len);
+>  
+> -	*old = *head;
+> -	*head += mm->len;
+> +	/* No wrap has occurred, we can just use *head and *old. */
+> +	if (!wrapped)
+> +		return 0;
+> +
+> +	/*
+> +	 * *head has wrapped around - adjust *head and *old to pickup the
+> +	 * entire content of the AUX buffer.
+> +	 */
+> +	if (*head >= mm->len) {
+> +		*old = *head - mm->len;
+> +	} else {
+> +		*head += mm->len;
+> +		*old = *head - mm->len;
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -586,6 +703,8 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
+>  {
+>  	struct cs_etm_recording *ptr =
+>  			container_of(itr, struct cs_etm_recording, itr);
+> +
+> +	zfree(&ptr->wrapped);
+>  	free(ptr);
+>  }
+>  
+> -- 
+> 2.17.1
 
-This seems fine to me. I measured zstd's performance in userspace with this=
- change,
-and there is a ~1% speed regression for level 1. We wouldn't take this patc=
-h there,
-but in the kernel it makes sense to me.
+-- 
 
-This function is called by HUF_buildCTable_wksp() which takes a workspace p=
-arameter.
-We could put this table into the workspace instead to reduce the stack usag=
-e by the whole
-256 bytes. We'd just have to make sure that the workspace is large enough.
-
-Eventually I will update the zstd in the kernel to the latest upstream vers=
-ion. I've opened
-up https://github.com/facebook/zstd/issues/1636 to make sure we get this op=
-timization in
-before porting.
-
-> static void HUF_sort(nodeElt *huffNode, const U32 *count, U32 maxSymbolVa=
-lue)
-> --=20
-> 2.7.4
->=20
-
+- Arnaldo
