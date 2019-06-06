@@ -2,122 +2,93 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9238C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41B4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B399C20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Afuf3vVl"
+	by mail.kernel.org (Postfix) with ESMTP id 78E6420684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfFFO1i (ORCPT
+        id S1729061AbfFFO1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:27:38 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42810 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbfFFO1h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:27:37 -0400
-Received: by mail-io1-f66.google.com with SMTP id u19so328850ior.9;
-        Thu, 06 Jun 2019 07:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kqRYhMLHdJKsiR7IXq7x/aBj9J6gbazdWxFz4rly5JY=;
-        b=Afuf3vVl1Yw3e3iWFdNmwdMG1bgYu9ugpciggz7kqvbNCHscejJQA+BSvukD1dz59p
-         x46sHTym/8ElPPfrxO/wsVPavjfyzxFHWfZMpP2RgDQiXNJLaBCTkNwJxxm7vGg6EZrR
-         8QY0Uo4XwZwAu1K4esgr25Oz48AgBHGK0j/I+tgDlhFQE5TIv0yBaR5U889KRFMfvamq
-         Kl79A8VH81bmJgY54TPnNgq6K5HbduQw9rI3At3xrG2cQ2d7pvAYvdeXkkXPitUeS1U0
-         WIuyhVTZfvN5E5JHNMc5C1Qj9Yz0gP24eaitbc10fjtLuRe/NrxBIvg6bDT/cKGoi6D+
-         c6Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kqRYhMLHdJKsiR7IXq7x/aBj9J6gbazdWxFz4rly5JY=;
-        b=mDh31a+z3f4HEj4OMkBMvkoFzvYV8wmfy0n6EYulJtlrAVBo7/sPfovPhqEafQZ8t0
-         LWo9ioAnM63urjCjlIRD7Rrzs2hr3TaqRKU1IwY1kFSWYrMyVdqZHmIA4CgDw5TRdcma
-         vBEuPOydlv8TcT3DeIrq4lzlai/reN1kbmK7IusoJsGgoELRo+RGOYhY1xCwEN9vha/9
-         8lz41Qk9lbW1kmlINgaOnfHV6LzJkrZREyQjMsz9o0r+M3MxXAx3FwagEBZi+uaHwOo1
-         Myb0uQ0L1htwvaMdVvMWEivlT9pg7Dn+1/kAk6T4kr0qnnFdikmb16wLBcemaqwNt/io
-         xyOg==
-X-Gm-Message-State: APjAAAVIBXshrkUzvzHo6W4tppcKhQLZxncbrzpAQiiLOsXtGU3tjm1F
-        RRnwNPrbNMgtqAxJyUOnih+4v0N/73uG39Qh3dE=
-X-Google-Smtp-Source: APXvYqztIhXnUUpmSDCiWqF1d+JigmC8q5yzRd2tPYEIqnZ4z+ovWDJeyvStPeBRdVheDOeHPBukjv5tcLECRleDV9E=
-X-Received: by 2002:a05:6602:2001:: with SMTP id y1mr11874863iod.166.1559831256203;
- Thu, 06 Jun 2019 07:27:36 -0700 (PDT)
+        Thu, 6 Jun 2019 10:27:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39832 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727133AbfFFO1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:27:55 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E1AEF30BC595;
+        Thu,  6 Jun 2019 14:27:49 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E6F125F7D8;
+        Thu,  6 Jun 2019 14:27:44 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 10:27:43 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     rcampbell@nvidia.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/5] mm/hmm: Clean up some coding style and comments
+Message-ID: <20190606142743.GA8053@redhat.com>
+References: <20190506232942.12623-1-rcampbell@nvidia.com>
+ <20190506232942.12623-3-rcampbell@nvidia.com>
+ <20190606141644.GA2876@ziepe.ca>
 MIME-Version: 1.0
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
- <20190423160616.10017-1-jeffrey.l.hugo@gmail.com> <20190606055034.GA4797@dell>
- <20190606072601.GT22737@tuxbook-pro> <20190606081348.GB4797@dell>
-In-Reply-To: <20190606081348.GB4797@dell>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 6 Jun 2019 08:27:24 -0600
-Message-ID: <CAOCk7Nrt+vWG6c9uYWunbKdUN4XcukbvyKDO1NdmYvFMfOYNhA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190606141644.GA2876@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 06 Jun 2019 14:27:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 2:13 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Thu, 06 Jun 2019, Bjorn Andersson wrote:
->
-> > On Wed 05 Jun 22:50 PDT 2019, Lee Jones wrote:
-> >
-> > > On Tue, 23 Apr 2019, Jeffrey Hugo wrote:
-> > >
-> > > > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> > > > functionality includes USB (host), microSD-card, keyboard, and trackpad.
-> > > >
-> > > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > > > ---
-> > > >  arch/arm64/boot/dts/qcom/Makefile             |   1 +
-> > > >  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
-> > > >  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
-> > >
-> > > What's happening with this patch?
-> > >
-> >
-> > The thermal-zones are wrong, but I'm okay with an incremental patch for
-> > that...
->
-> I guess it would take you about 10 seconds to whip those out when
-> merging?
->
-> > > It's been on the list a while now.  I'm waiting for it to be accepted,
-> > > since there are patches I wish to submit which are based on it.
-> > >
-> > > Who is responsible for merging these?
-> >
-> > ...so I've just been waiting for a conclusion on the HID patch before I
-> > could pick this up.
->
-> Aren't they orthogonal?
+On Thu, Jun 06, 2019 at 11:16:44AM -0300, Jason Gunthorpe wrote:
+> On Mon, May 06, 2019 at 04:29:39PM -0700, rcampbell@nvidia.com wrote:
+> > From: Ralph Campbell <rcampbell@nvidia.com>
+> > 
+> > There are no functional changes, just some coding style clean ups and
+> > minor comment changes.
+> > 
+> > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> > Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Balbir Singh <bsingharora@gmail.com>
+> > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> >  include/linux/hmm.h | 71 +++++++++++++++++++++++----------------------
+> >  mm/hmm.c            | 51 ++++++++++++++++----------------
+> >  2 files changed, 62 insertions(+), 60 deletions(-)
+> 
+> Applied to hmm.git, thanks
 
-Eh, if the HID stuff changes, we'll probably have to change the DT.
-Which isn't great.
+Can you hold off, i was already collecting patches and we will
+be stepping on each other toe ... for instance i had
 
-I guess we could also merge this, and fix it up as necessary if there
-is fall out from the HID stuff.
+https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.3
+
+But i have been working on more collection.
+
+Cheers,
+Jérôme
