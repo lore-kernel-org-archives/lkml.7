@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA292C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A5EC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C69B206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5562089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="M425AF5Q"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="JXj2zIOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfFFTrG (ORCPT
+        id S1727556AbfFFTrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:47:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43602 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfFFTrG (ORCPT
+        Thu, 6 Jun 2019 15:47:20 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43615 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfFFTrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:47:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i8so3099010oth.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:47:06 -0700 (PDT)
+        Thu, 6 Jun 2019 15:47:19 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i8so3099590oth.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:47:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UcIBWNKq7rsOKiEN1ZaEM6TKSTC1rUDAvceROHJkKnU=;
-        b=M425AF5Q27k8jkeaKLy3GpcG3/THjW3EKKvWd5BFOXOfwvojEUqtEhRXM41XGdkHMb
-         h8LU8MGpp5JRP5f/g32xGqlzlKxtbJ1u9xwjgu4Nto8zWLvviGXaKB00286n9L/T4Kox
-         EiouMsmFQFmfoT7f64GMWqXE03Ohqvy/QfKEic7ODdh1rUmOXcoGOopizF9CwVrvNn0c
-         0z8zEtBu4+9BjYPIlxOhnc63GmhLiXaMMGfu+gGPXSnf9R3XUBVQggmIhg0atpJM6WBB
-         /R8fvLI5n11mZVCwWrM53Urn6/S8fYaWeKPZj+Vw4WQklRnIhDwsLMdo+hY6Ym/lt8HY
-         LkEg==
+        bh=8wGfAmKyoK9bVApTeJ1ikTLIPBAYdTrgDhJ6H/YeNVg=;
+        b=JXj2zIOFKEDcuxGqOXtaHzoMslRkH8F57wmo6Zg/C6Z48YMAJJzLyoK0y6q78VFXce
+         sdIPp8OqGlBPq3V7mf87QV2UbHH7BIm1Fc3aHqwzCA+oljMlGYlHfkc3TI0I484O1K1S
+         OXOMxDp8X8FWBYd/ysRIABwzI1ccbF3aeS12gtq8RJ0gFh57xBlSAoFVpPOzPKUEw+nG
+         KtQmVAhtVZFxD6tK91fpiuOjaUaptaq/Q5Ev9mslUgwgexLbnMK5+ugOd7rQ7C1RqPlX
+         xDPvBzguKkH0bAG2BPJA6lYOrrj/kAtz+rZsKRLu43r3SFAQxC7HLLwcCN35PWjP9wmm
+         z7tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UcIBWNKq7rsOKiEN1ZaEM6TKSTC1rUDAvceROHJkKnU=;
-        b=eiV9vcgN3VRDMDk2wgA0H/L9otsixx22/SFmepJz7hhhUFijv2ATU0BjDhi3+IXgE0
-         ZN51IGBi9kl3OZx+xIIOrz4A+tkhj97mFgz008GSVXPpZChoXgq9NM7YdCfNPxJIx4hX
-         lwBJuVknrLM/GSsak/wb3bXs+JS1eWZeW009bdq6C+t56dDFqQsgc7dJ3as94bKlpwFx
-         smNm7+JziDVG4F7t/nRFnCIKsfJbh7IhRjoi9FX1ceU/EipxQ5YGiCvTldr5vFpyZbKB
-         WPtukjzEprmaUbLjmU+CKaHsp2ipdjdllsBcVHu8wBrUJmbksqMo1KiD/XY1ShB+EgGR
-         9iCA==
-X-Gm-Message-State: APjAAAX2cKQcXDnZKU9zv9D9DzxVkXMQUbyEJiscOE9jX+PjvwRKYHDp
-        s4fGkoY4xF3S0u1tc7FPIjtF8yog38eWogUN9vs=
-X-Google-Smtp-Source: APXvYqzFpAzVe5kdyBif3vrS3V+GMrD8alJ36+ksEaUmNq0YqsSf3K6qGWZQCFu9O/Xa8RCVUUMMwVMVwimx9IQZ9h4=
-X-Received: by 2002:a9d:32a6:: with SMTP id u35mr16549424otb.81.1559850425739;
- Thu, 06 Jun 2019 12:47:05 -0700 (PDT)
+        bh=8wGfAmKyoK9bVApTeJ1ikTLIPBAYdTrgDhJ6H/YeNVg=;
+        b=T2hm4KBzA7a81YEmRbvfUEGZx78vd4yivlXxv/Lqfhz8/Is5y8EydJnxdUFqmXzh3B
+         8SGTBKzxZIYTi3ZJVqFth9mbFdWWshxIz/YGKRo0v6cH6kHHVSP71r1c4SdR7jgseTs5
+         RAc2xUGPwO7j5zszQwGD/plBwLPqqETOWRGZtsGUo6N1dxvTxSZlo1ryfHJRt2HKqfVE
+         Mgdy6xTFxuyOFZ+LAh1YsKNDk2N1eNaIgH2ggjjTG6hJhIr40rriO5G+tL/s+3LYi8Xa
+         4oRpg/6fy5WUNb2pwZ5z9d11mfiokQjlRl5WlR5r0Rjgov440jk+qYQiF+BLMc0TvqzA
+         spTw==
+X-Gm-Message-State: APjAAAWjlk8UisVOvzj1pISgZiV7KvNYwCPNYzk6T2jGtvkoKK9U3N5S
+        0Nd+mafbNJmHys0flIov0YIZGTgKXxqPqslLCHKuGdVx
+X-Google-Smtp-Source: APXvYqzuT2RwZC2LIrDFehW31R9jvGbrmRuApk42Pg+UA3g4byiNms1PcIULKfXunwPAiHdFS6Np+7uvtr1uGqZj/+s=
+X-Received: by 2002:a9d:14a:: with SMTP id 68mr15424609otu.96.1559850438867;
+ Thu, 06 Jun 2019 12:47:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190603094740.12255-1-narmstrong@baylibre.com> <20190603094740.12255-2-narmstrong@baylibre.com>
-In-Reply-To: <20190603094740.12255-2-narmstrong@baylibre.com>
+References: <20190603094740.12255-1-narmstrong@baylibre.com> <20190603094740.12255-3-narmstrong@baylibre.com>
+In-Reply-To: <20190603094740.12255-3-narmstrong@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 6 Jun 2019 21:46:54 +0200
-Message-ID: <CAFBinCDS6wovEfU+z3bxYq6Kyw-Br+EuBGTdG6sNx4oBW=NBzA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm64: dts: meson-g12a-sei510: add 32k clock to
+Date:   Thu, 6 Jun 2019 21:47:07 +0200
+Message-ID: <CAFBinCAR47VuoDoWerX4YZ4=v2G4+L0MW9kP0bEhrLWaWOPdfA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] arm64: dts: meson-g12a-x96-max: add 32k clock to
  bluetooth node
 To:     Neil Armstrong <narmstrong@baylibre.com>
 Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
@@ -75,7 +75,7 @@ On Mon, Jun 3, 2019 at 11:48 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 > combo module to initialize correctly, simply add the same clock we
 > use for the sdio pwrseq.
 >
-> Fixes: d1c023af1988 ("arm64: dts: meson-g12a-sei510: Add ADC Key and BT support")
+> Fixes: c5c9c7cff269 ("arm64: dts: meson-g12a-x96-max: Enable BT Module")
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 with the correct fixes tag:
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
