@@ -2,202 +2,131 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E13C46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE8EC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E2B20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="oM9db89X";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FxiDVYPU"
+	by mail.kernel.org (Postfix) with ESMTP id 5BEB12083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfFFP3G (ORCPT
+        id S1729376AbfFFP3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:29:06 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:46267 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727559AbfFFP3G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:29:06 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 06C7D21F3C;
-        Thu,  6 Jun 2019 11:29:05 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Thu, 06 Jun 2019 11:29:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=KM3+rjgHE9zwmgIp4q8PuCvwkLo
-        nNg1CMyx9clBhSkc=; b=oM9db89XrFgrY+/tumKGLVICuHCWNKzyOfX77t8RHNE
-        o11g79468XinfSuzHjlGFCiwcrAzGjDcyaMQQty5/HntAPek4pszDTpK0sDUStI3
-        wd1TwImS+MfB7hGSVll81mH8auge89dcFyBVs7ZK1+JEzoG6gs69l1gzhDm73oLz
-        TGauKrI7C2MyynGydBubQWOHr1iKB8uLS66ledTN+qs0Mpu4DsIZNVSI1RuL2pjk
-        8Jxn6G2FhSKcF/SSvNLBtuk/EtWt12rNE3JXTZrXBCfEMcwiGYHfru1LIK/lllgA
-        Bvcx6ce5VyWgNSp8wPbcclmuGPB7Xp19mebOtondPkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KM3+rj
-        gHE9zwmgIp4q8PuCvwkLonNg1CMyx9clBhSkc=; b=FxiDVYPUl2u4PyybhrtkRv
-        drriKiL5QyZn90jo5XB9sV9BdJMXB/F2pKKw4pZ5pA4aJG9iMCYi9KQnWGW2X2Ri
-        ESVLrCGoWgTt6lGFo6HUT5GzP1p1FtRhV/j09TtMgyzIl+Jyd3AEownEmuRLfddg
-        oKbuuT8J4Rg0NpebaJHoZH2QKMDGUEm2Ufs6em904Z80kupFNQl75sNz1S9uPvuY
-        w9f5dFMbi8pftT013ulsZHLXPhifPaYtKjgNiVFzysCUSvBLcQBSAywuU1rne90d
-        FDW2ZJY86K1/frOaD/mNricv9NUEPPhYunOG4+ubS05zVhNxKLVVnS1w75OtH+Jw
-        ==
-X-ME-Sender: <xms:QDH5XPSAcVHyx36O8wu4K8bTk_y8Gj_3p2Gbse0_bzCKnbCGSicTyQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeggedgledtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgepud
-X-ME-Proxy: <xmx:QDH5XI9y5-70iS4hv5APGNh-HIxcypogFglHTMld6JAlz96v85k8oQ>
-    <xmx:QDH5XMJSlUb7D5F8xVQOc5HxfxBnKPoNrgDeq4-yryjwXodGreS3iA>
-    <xmx:QDH5XMuutwxTpDNPLubFBIluOsa4GsVnwZZa1uFhWzNWX9FVcDdaSQ>
-    <xmx:QDH5XO3quEb2AKrjeUYuW90MHuvhigTaQCJZB4vbVnPO5cAFcMYIEw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4C62C380087;
-        Thu,  6 Jun 2019 11:29:04 -0400 (EDT)
-Date:   Thu, 6 Jun 2019 17:29:02 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Rolf Eike Beer <eb@emlix.com>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
- =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
- =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
-Message-ID: <20190606152902.GC21921@kroah.com>
-References: <259986242.BvXPX32bHu@devpool35>
- <20190606152746.GB21921@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606152746.GB21921@kroah.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Thu, 6 Jun 2019 11:29:54 -0400
+Received: from mga01.intel.com ([192.55.52.88]:53940 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729358AbfFFP3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:29:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 08:29:53 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Jun 2019 08:29:51 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
+        jmattson@google.com, yu.c.zhang@intel.com
+Cc:     Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v3 0/9] Enable Sub-page Write Protection Support
+Date:   Thu,  6 Jun 2019 23:28:03 +0800
+Message-Id: <20190606152812.13141-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 05:27:46PM +0200, Greg KH wrote:
-> On Thu, Jun 06, 2019 at 03:16:03PM +0200, Rolf Eike Beer wrote:
-> > I have at least these 2 instances:
-> > 
-> > 
-> > In file included from /tmp/e2/build/linux-4.9.180/include/drm/drm_vma_manager.h:28,
-> >                  from /tmp/e2/build/linux-4.9.180/include/drm/drmP.h:78,
-> >                  from /tmp/e2/build/linux-4.9.180/include/drm/drm_modeset_helper.h:26,
-> >                  from /tmp/e2/build/linux-4.9.180/include/drm/drm_atomic_helper.h:33,
-> >                  from /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:24:
-> > /tmp/e2/build/linux-4.9.180/include/linux/module.h:138:7: error: 'cleanup_module' specifies less restrictive attribute than its target 'tilcdc_drm_fini': 'cold' [-Werror=missing-attributes]
-> >   138 |  void cleanup_module(void) __attribute__((alias(#exitfn)));
-> >       |       ^~~~~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:757:1: note: in expansion of macro 'module_exit'
-> >   757 | module_exit(tilcdc_drm_fini);
-> >       | ^~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:748:20: note: 'cleanup_module' target declared here
-> >   748 | static void __exit tilcdc_drm_fini(void)
-> >       |                    ^~~~~~~~~~~~~~~
-> > In file included from /tmp/e2/build/linux-4.9.180/include/drm/drm_vma_manager.h:28,
-> >                  from /tmp/e2/build/linux-4.9.180/include/drm/drmP.h:78,
-> >                  from /tmp/e2/build/linux-4.9.180/include/drm/drm_modeset_helper.h:26,
-> >                  from /tmp/e2/build/linux-4.9.180/include/drm/drm_atomic_helper.h:33,
-> >                  from /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:24:
-> > /tmp/e2/build/linux-4.9.180/include/linux/module.h:132:6: error: 'init_module' specifies less restrictive attribute than its target 'tilcdc_drm_init': 'cold' [-Werror=missing-attributes]
-> >   132 |  int init_module(void) __attribute__((alias(#initfn)));
-> >       |      ^~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:756:1: note: in expansion of macro 'module_init'
-> >   756 | module_init(tilcdc_drm_init);
-> >       | ^~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:740:19: note: 'init_module' target declared here
-> >   740 | static int __init tilcdc_drm_init(void)
-> >       |                   ^~~~~~~~~~~~~~~
-> > 
-> > 
-> > 
-> > In file included from /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:17:
-> > /tmp/e2/build/linux-4.9.180/include/linux/module.h:138:7: error: 'cleanup_module' specifies less restrictive attribute than its target 'mpc52xx_lpbfifo_driver_exit': 'cold' [-Werror=missing-attributes]
-> >   138 |  void cleanup_module(void) __attribute__((alias(#exitfn)));
-> >       |       ^~~~~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/include/linux/device.h:1360:1: note: in expansion of macro 'module_exit'
-> >  1360 | module_exit(__driver##_exit);
-> >       | ^~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/include/linux/platform_device.h:228:2: note: in expansion of macro 'module_driver'
-> >   228 |  module_driver(__platform_driver, platform_driver_register, \
-> >       |  ^~~~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:1: note: in expansion of macro 'module_platform_driver'
-> >   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
-> >       | ^~~~~~~~~~~~~~~~~~~~~~
-> > In file included from /tmp/e2/build/linux-4.9.180/arch/powerpc/include/asm/io.h:27,
-> >                  from /tmp/e2/build/linux-4.9.180/include/linux/io.h:25,
-> >                  from /tmp/e2/build/linux-4.9.180/include/linux/irq.h:24,
-> >                  from /tmp/e2/build/linux-4.9.180/arch/powerpc/include/asm/hardirq.h:5,
-> >                  from /tmp/e2/build/linux-4.9.180/include/linux/hardirq.h:8,
-> >                  from /tmp/e2/build/linux-4.9.180/include/linux/interrupt.h:12,
-> >                  from /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:12:
-> > /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:24: note: 'cleanup_module' target declared here
-> >   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
-> >       |                        ^~~~~~~~~~~~~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/include/linux/device.h:1356:20: note: in definition of macro 'module_driver'
-> >  1356 | static void __exit __driver##_exit(void) \
-> >       |                    ^~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:1: note: in expansion of macro 'module_platform_driver'
-> >   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
-> >       | ^~~~~~~~~~~~~~~~~~~~~~
-> > In file included from /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:17:
-> > /tmp/e2/build/linux-4.9.180/include/linux/module.h:132:6: error: 'init_module' specifies less restrictive attribute than its target 'mpc52xx_lpbfifo_driver_init': 'cold' [-Werror=missing-attributes]
-> >   132 |  int init_module(void) __attribute__((alias(#initfn)));
-> >       |      ^~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/include/linux/device.h:1355:1: note: in expansion of macro 'module_init'
-> >  1355 | module_init(__driver##_init); \
-> >       | ^~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/include/linux/platform_device.h:228:2: note: in expansion of macro 'module_driver'
-> >   228 |  module_driver(__platform_driver, platform_driver_register, \
-> >       |  ^~~~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:1: note: in expansion of macro 'module_platform_driver'
-> >   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
-> >       | ^~~~~~~~~~~~~~~~~~~~~~
-> > In file included from /tmp/e2/build/linux-4.9.180/arch/powerpc/include/asm/io.h:27,
-> >                  from /tmp/e2/build/linux-4.9.180/include/linux/io.h:25,
-> >                  from /tmp/e2/build/linux-4.9.180/include/linux/irq.h:24,
-> >                  from /tmp/e2/build/linux-4.9.180/arch/powerpc/include/asm/hardirq.h:5,
-> >                  from /tmp/e2/build/linux-4.9.180/include/linux/hardirq.h:8,
-> >                  from /tmp/e2/build/linux-4.9.180/include/linux/interrupt.h:12,
-> >                  from /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:12:
-> > /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:24: note: 'init_module' target declared here
-> >   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
-> >       |                        ^~~~~~~~~~~~~~~~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/include/linux/device.h:1351:19: note: in definition of macro 'module_driver'
-> >  1351 | static int __init __driver##_init(void) \
-> >       |                   ^~~~~~~~
-> > /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:1: note: in expansion of macro 'module_platform_driver'
-> >   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
-> >       | ^~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > 
-> > So this needs a6e60d84989fa0e91db7f236eda40453b0e44afa, which needs 
-> > c0d9782f5b6d7157635ae2fd782a4b27d55a6013, which can't be applied cleanly 
-> > because a3f8a30f3f0079c7edfc72e329eee8594fb3e3cb is missing in 4.9.
-> > 
-> > I have applied a6e60d84989fa0e91db7f236eda40453b0e44afa and modified it to 
-> > directly use __attribute__((__copy__(initfn))) and (exitfn), which fixes the 
-> > build for me.
-> 
-> I just added some patches for gcc9 to 4.14 and 4.19, are you really
-> going to want to build it on 4.9?
-> 
-> If so, I can try to fix this up...
+EPT-Based Sub-Page write Protection(SPP)is a HW capability which
+allows Virtual Machine Monitor(VMM) to specify write-permission for
+guest physical memory at a sub-page(128 byte) granularity. When this
+capability is enabled, the CPU enforces write-access check for
+sub-pages within a 4KB page.
 
-And if you want this, you should look at how the backports to 4.14.y
-worked, they did not include a3f8a30f3f00 ("Compiler Attributes: use
-feature checks instead of version checks"), as that gets really messy...
+The feature is targeted to provide fine-grained memory protection
+for usages such as device virtualization, memory check-point and
+VM introspection etc.
 
-thanks,
+SPP is active when the "sub-page write protection" (bit 23) is 1 in
+Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+Permission Table(SPPT), SPPT is referenced via a 64-bit control field
+called Sub-Page Permission Table Pointer (SPPTP) which contains a
+4K-aligned physical address.
 
-greg k-h
+Right now, only 4KB physical pages are supported for SPP. To enable SPP
+for certain physical page, we need to first make the physical page
+write-protected, then set bit 61 of the corresponding EPT leaf entry. 
+While HW walks EPT, if bit 61 is set, it traverses SPPT with the guset
+physical address to find out the sub-page permissions at the leaf entry.
+If the corresponding bit is set, write to sub-page is permitted,
+otherwise, SPP induced EPT vilation is generated.
+
+Please refer to the SPP introduction document in this patch set and Intel SDM
+for details:
+
+Intel SDM:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Previous patch:
+https://lkml.org/lkml/2018/11/30/605
+
+Patch 1: Introduction to SPP.
+Patch 2: Add SPP related flags and control bits.
+Patch 3: Functions for SPPT setup.
+Patch 4: Add SPP access bitmaps for memslots.
+Patch 5: Low level implementation of SPP operations.
+Patch 6: Implement User space access IOCTLs.
+Patch 7: Handle SPP induced VMExit and EPT violation.
+Patch 8: Enable lazy mode SPPT setup.
+Patch 9: Handle memory remapping and reclaim.
+
+
+Change logs:
+
+V2 - V3:                                                                
+ 1. Rebased patches to kernel 5.1 release                                
+ 2. Deferred SPPT setup to EPT fault handler if the page is not available
+    while set_subpage() is being called.                                 
+ 3. Added init IOCTL to reduce extra cost if SPP is not used.            
+ 4. Refactored patch structure, cleaned up cross referenced functions.    
+ 5. Added code to deal with memory swapping/migration/shrinker cases.    
+                                                                           
+V2 - V1:                                                                
+ 1. Rebased to 4.20-rc1                                                  
+ 2. Move VMCS change to a separated patch.                               
+ 3. Code refine and Bug fix 
+
+
+Yang Weijiang (9):
+  Documentation: Introduce EPT based Subpage Protection
+  KVM: VMX: Add control flags for SPP enabling
+  KVM: VMX: Implement functions for SPPT paging setup
+  KVM: VMX: Introduce SPP access bitmap and operation functions
+  KVM: VMX: Add init/set/get functions for SPP
+  KVM: VMX: Introduce SPP user-space IOCTLs
+  KVM: VMX: Handle SPP induced vmexit and page fault
+  KVM: MMU: Enable Lazy mode SPPT setup
+  KVM: MMU: Handle host memory remapping and reclaim
+
+ Documentation/virtual/kvm/spp_kvm.txt | 216 ++++++++++++
+ arch/x86/include/asm/cpufeatures.h    |   1 +
+ arch/x86/include/asm/kvm_host.h       |  26 +-
+ arch/x86/include/asm/vmx.h            |  10 +
+ arch/x86/include/uapi/asm/vmx.h       |   2 +
+ arch/x86/kernel/cpu/intel.c           |   4 +
+ arch/x86/kvm/mmu.c                    | 469 ++++++++++++++++++++++++++
+ arch/x86/kvm/mmu.h                    |   1 +
+ arch/x86/kvm/vmx/capabilities.h       |   5 +
+ arch/x86/kvm/vmx/vmx.c                | 138 ++++++++
+ arch/x86/kvm/x86.c                    | 141 ++++++++
+ include/linux/kvm_host.h              |   9 +
+ include/uapi/linux/kvm.h              |  17 +
+ 13 files changed, 1038 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+
+-- 
+2.17.2
+
