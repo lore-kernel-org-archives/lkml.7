@@ -2,113 +2,70 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238CBC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60739C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6F92083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021CE2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559852405;
+	bh=Wh4GqJ1QrWwH3h82KZyFsR/7ezT9IgfqAPS0MThe3Yc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=HS9RWXofwTi9QWq2DDK8OO1PGIaDlqTg6uzhue0WOGecve7BYoQWyO1qptnDYA2gm
+	 vc9xAHwpV/PwGHsZ7Rtzv3RV7fRfdVSWkvU7JbS+IW/MZDFrIoDLcA0tYQTGDIQGgR
+	 Jw+s7BcM1toPzKPOY9m9q85kHcDYwGOTrcNLf6Xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfFFUTm (ORCPT
+        id S1727067AbfFFUUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:19:42 -0400
-Received: from mga17.intel.com ([192.55.52.151]:47825 "EHLO mga17.intel.com"
+        Thu, 6 Jun 2019 16:20:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728824AbfFFUPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:15:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:15:11 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga002.jf.intel.com with ESMTP; 06 Jun 2019 13:15:09 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v7 02/27] x86/cpufeatures: Add CET CPU feature flags for Control-flow Enforcement Technology (CET)
-Date:   Thu,  6 Jun 2019 13:06:21 -0700
-Message-Id: <20190606200646.3951-3-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606200646.3951-1-yu-cheng.yu@intel.com>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+        id S1726238AbfFFUUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:20:02 -0400
+Subject: Re: [GIT PULL] parisc architecture fixes for kernel v5.2-rc4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559852401;
+        bh=Wh4GqJ1QrWwH3h82KZyFsR/7ezT9IgfqAPS0MThe3Yc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Z+qQ3KUA2rM06nWeKJr5cuRZWCQ71rwOCAwI7xcnC2pxPK0wvK51lZR5WXNz24dPm
+         fDGtxPNfw1K6Fhc8zBWNjKZ6cvRHN/84ujGY7Twef9ReX4edxUxk7TWpWAAb/Bc3q6
+         hOUsbV6mJ+aw94tXK5zZE6+2+hMyj7naYCAeyN0s=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190606154015.GA13868@ls3530>
+References: <20190606154015.GA13868@ls3530>
+X-PR-Tracked-List-Id: <linux-parisc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190606154015.GA13868@ls3530>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
+ parisc-5.2-3
+X-PR-Tracked-Commit-Id: 527a1d1ede98479bf90c31a64822107ac7e6d276
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 16d72dd4891fecc1e1bf7ca193bb7d5b9804c038
+Message-Id: <155985240168.29387.12528687456834222878.pr-tracker-bot@kernel.org>
+Date:   Thu, 06 Jun 2019 20:20:01 +0000
+To:     Helge Deller <deller@gmx.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CPU feature flags for Control-flow Enforcement Technology (CET).
+The pull request you sent on Thu, 6 Jun 2019 17:40:15 +0200:
 
-CPUID.(EAX=7,ECX=0):ECX[bit 7] Shadow stack
-CPUID.(EAX=7,ECX=0):EDX[bit 20] Indirect branch tracking
+> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.2-3
 
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/include/asm/cpufeatures.h | 2 ++
- arch/x86/kernel/cpu/cpuid-deps.c   | 2 ++
- 2 files changed, 4 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/16d72dd4891fecc1e1bf7ca193bb7d5b9804c038
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 75f27ee2c263..21b2d9497c0f 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -323,6 +323,7 @@
- #define X86_FEATURE_PKU			(16*32+ 3) /* Protection Keys for Userspace */
- #define X86_FEATURE_OSPKE		(16*32+ 4) /* OS Protection Keys Enable */
- #define X86_FEATURE_AVX512_VBMI2	(16*32+ 6) /* Additional AVX512 Vector Bit Manipulation Instructions */
-+#define X86_FEATURE_SHSTK		(16*32+ 7) /* Shadow Stack */
- #define X86_FEATURE_GFNI		(16*32+ 8) /* Galois Field New Instructions */
- #define X86_FEATURE_VAES		(16*32+ 9) /* Vector AES */
- #define X86_FEATURE_VPCLMULQDQ		(16*32+10) /* Carry-Less Multiplication Double Quadword */
-@@ -347,6 +348,7 @@
- #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
- #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
- #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
-+#define X86_FEATURE_IBT			(18*32+20) /* Indirect Branch Tracking */
- #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
- #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
- #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 2c0bd38a44ab..68ef07175062 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -59,6 +59,8 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_AVX512_4VNNIW,	X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_4FMAPS,	X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_VPOPCNTDQ, X86_FEATURE_AVX512F   },
-+	{ X86_FEATURE_SHSTK,		X86_FEATURE_XSAVES    },
-+	{ X86_FEATURE_IBT,		X86_FEATURE_XSAVES    },
- 	{}
- };
- 
+Thank you!
+
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
