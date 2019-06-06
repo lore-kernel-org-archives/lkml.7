@@ -2,80 +2,78 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924ABC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A0DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5B12083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6FF2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbfFFJUB (ORCPT
+        id S1727792AbfFFJVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:20:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48042 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727540AbfFFJUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:20:01 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8B9DE754B11790C956AC;
-        Thu,  6 Jun 2019 17:19:57 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 6 Jun 2019 17:19:46 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     JC Kuo <jckuo@nvidia.com>, Kishon Vijay Abraham I <kishon@ti.com>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] phy: tegra: xusb: Remove set but not used variable 'priv'
-Date:   Thu, 6 Jun 2019 09:27:46 +0000
-Message-ID: <20190606092746.80310-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 6 Jun 2019 05:21:02 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:50363 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfFFJVB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:21:01 -0400
+Received: by mail-it1-f199.google.com with SMTP id o128so1289494ita.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:21:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=56G2RzBG0guHoTpwxKynlW+PNBbvgl4GPrCoRWxxM0U=;
+        b=nx+Ng0Snx3NLslssHscKEHP+6cr5o/Q6Fw13OKdpPJ63Vo5T9xjUb5bvxT/P6h2fWa
+         KE327G6tU70qJO7J+5ywLPf4U7fnZ8pKduQEGlbGR1Ae18nIJRUM22mXmFhAeqeKS9r+
+         QEQzhc/aSp0ZNDkddhYMtJZx5eBlmNC+UneWlrr981NWTg6ySvP+sZlEKNwn0DUQIPcS
+         /pwA/8SUjY1GWMQajQClqcn0oPxGQUugEKZhXVwS9EXeS671Eei02O9nlEjcbK7jmtAv
+         MQFsN/YJcYE2U5YY+eK5MHh0p0BXzwK0XT2yeHmNURbeg/N26iUNfR3/hjP2QMuTYZqM
+         2eiQ==
+X-Gm-Message-State: APjAAAX+rccDd3+bTwRxMu5RbyK29nSvNBEr3Xyzwwp+GWJyFkIXzoAR
+        /YCjGLiW5CPYnE18IBFhPtaAp5iq0WCt9B+M5F0bE59ytu8e
+X-Google-Smtp-Source: APXvYqxIJibzbNxy8GOtzypAF+Oyb4w4yoUX0G2vgElVjB5zG1mUDMCfNHgGUYHjHFguEhuY8+0K3Y3HNEzzqU8WyYf5rcCq0vxQ
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a24:9f86:: with SMTP id c128mr22407371ite.161.1559812861164;
+ Thu, 06 Jun 2019 02:21:01 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 02:21:01 -0700
+In-Reply-To: <0000000000008ab3c0057e8b747f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008181cc058aa43b82@google.com>
+Subject: Re: general protection fault in rb_erase (2)
+From:   syzbot <syzbot+e8c40862180d8949d624@syzkaller.appspotmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+syzbot has bisected this bug to:
 
-drivers/phy/tegra/xusb-tegra210.c: In function 'tegra210_hsic_phy_power_on':
-drivers/phy/tegra/xusb-tegra210.c:1236:31: warning:
- variable 'priv' set but not used [-Wunused-but-set-variable]
+commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+Author: John Fastabend <john.fastabend@gmail.com>
+Date:   Sat Jun 30 13:17:47 2018 +0000
 
-It's never used, so can be removed
+     bpf: sockhash fix omitted bucket lock in sock_close
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/phy/tegra/xusb-tegra210.c | 3 ---
- 1 file changed, 3 deletions(-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1644ea92a00000
+start commit:   156c0591 Merge tag 'linux-kselftest-5.2-rc4' of git://git...
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1544ea92a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1144ea92a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
+dashboard link: https://syzkaller.appspot.com/bug?extid=e8c40862180d8949d624
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f031fea00000
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index eb754baa8d71..4076b22c4087 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -1233,13 +1233,10 @@ static int tegra210_hsic_phy_power_on(struct phy *phy)
- 	struct tegra_xusb_hsic_lane *hsic = to_hsic_lane(lane);
- 	struct tegra_xusb_hsic_pad *pad = to_hsic_pad(lane->pad);
- 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
--	struct tegra210_xusb_padctl *priv;
- 	unsigned int index = lane->index;
- 	u32 value;
- 	int err;
- 
--	priv = to_tegra210_xusb_padctl(padctl);
--
- 	err = regulator_enable(pad->supply);
- 	if (err)
- 		return err;
+Reported-by: syzbot+e8c40862180d8949d624@syzkaller.appspotmail.com
+Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
 
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
