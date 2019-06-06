@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E30C28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FD0C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7833420872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FCF20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfFFIXf (ORCPT
+        id S1727254AbfFFIWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:23:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41894 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727236AbfFFIWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 04:22:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41836 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726223AbfFFIWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:22:45 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B13CE1AC1713FA364F00;
+        by Forcepoint Email with ESMTP id 9905C8A26EB2DFEE5D64;
         Thu,  6 Jun 2019 16:22:43 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 6 Jun 2019 16:22:35 +0800
+ 14.3.439.0; Thu, 6 Jun 2019 16:22:36 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
+        <linuxarm@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 01/12] net: hns3: log detail error info of ROCEE ECC and AXI errors
-Date:   Thu, 6 Jun 2019 16:20:56 +0800
-Message-ID: <1559809267-53805-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 07/12] net: hns3: Delete the redundant user nic codes
+Date:   Thu, 6 Jun 2019 16:21:02 +0800
+Message-ID: <1559809267-53805-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559809267-53805-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559809267-53805-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,164 +47,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-This patch logs detail error info of ROCEE ECC and AXI errors for
-debug purpose, and remove unnecessary reset for ROCEE overflow
-errors.
+Since HNAE3_CLIENT_UNIC and HNAE3_DEV_UNIC is not used any more,
+this patch removes the redundant codes.
 
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  2 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 87 ++++++++++++++++++++--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |  1 +
- 3 files changed, 83 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c        | 21 ++++---------
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  7 -----
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  1 -
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 34 ++++------------------
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 16 ----------
+ 5 files changed, 10 insertions(+), 69 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 61cb10d..5e6c749 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -268,6 +268,8 @@ enum hclge_opcode_type {
- 	HCLGE_CONFIG_ROCEE_RAS_INT_EN	= 0x1580,
- 	HCLGE_QUERY_CLEAR_ROCEE_RAS_INT = 0x1581,
- 	HCLGE_ROCEE_PF_RAS_INT_CMD	= 0x1584,
-+	HCLGE_QUERY_ROCEE_ECC_RAS_INFO_CMD	= 0x1585,
-+	HCLGE_QUERY_ROCEE_AXI_RAS_INFO_CMD	= 0x1586,
- 	HCLGE_IGU_EGU_TNL_INT_EN	= 0x1803,
- 	HCLGE_IGU_COMMON_INT_EN		= 0x1806,
- 	HCLGE_TM_QCN_MEM_INT_CFG	= 0x1A14,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index 784512d..64defd3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1388,6 +1388,66 @@ static int hclge_handle_all_ras_errors(struct hclge_dev *hdev)
- 	return ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index 738e013..0de3d6b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -16,14 +16,10 @@ static LIST_HEAD(hnae3_ae_dev_list);
+  */
+ static DEFINE_MUTEX(hnae3_common_lock);
+ 
+-static bool hnae3_client_match(enum hnae3_client_type client_type,
+-			       enum hnae3_dev_type dev_type)
++static bool hnae3_client_match(enum hnae3_client_type client_type)
+ {
+-	if ((dev_type == HNAE3_DEV_KNIC) && (client_type == HNAE3_CLIENT_KNIC ||
+-					     client_type == HNAE3_CLIENT_ROCE))
+-		return true;
+-
+-	if (dev_type == HNAE3_DEV_UNIC && client_type == HNAE3_CLIENT_UNIC)
++	if (client_type == HNAE3_CLIENT_KNIC ||
++	    client_type == HNAE3_CLIENT_ROCE)
+ 		return true;
+ 
+ 	return false;
+@@ -39,9 +35,6 @@ void hnae3_set_client_init_flag(struct hnae3_client *client,
+ 	case HNAE3_CLIENT_KNIC:
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_KNIC_CLIENT_INITED_B, inited);
+ 		break;
+-	case HNAE3_CLIENT_UNIC:
+-		hnae3_set_bit(ae_dev->flag, HNAE3_UNIC_CLIENT_INITED_B, inited);
+-		break;
+ 	case HNAE3_CLIENT_ROCE:
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_ROCE_CLIENT_INITED_B, inited);
+ 		break;
+@@ -61,10 +54,6 @@ static int hnae3_get_client_init_flag(struct hnae3_client *client,
+ 		inited = hnae3_get_bit(ae_dev->flag,
+ 				       HNAE3_KNIC_CLIENT_INITED_B);
+ 		break;
+-	case HNAE3_CLIENT_UNIC:
+-		inited = hnae3_get_bit(ae_dev->flag,
+-				       HNAE3_UNIC_CLIENT_INITED_B);
+-		break;
+ 	case HNAE3_CLIENT_ROCE:
+ 		inited = hnae3_get_bit(ae_dev->flag,
+ 				       HNAE3_ROCE_CLIENT_INITED_B);
+@@ -82,7 +71,7 @@ static int hnae3_init_client_instance(struct hnae3_client *client,
+ 	int ret;
+ 
+ 	/* check if this client matches the type of ae_dev */
+-	if (!(hnae3_client_match(client->type, ae_dev->dev_type) &&
++	if (!(hnae3_client_match(client->type) &&
+ 	      hnae3_get_bit(ae_dev->flag, HNAE3_DEV_INITED_B))) {
+ 		return 0;
+ 	}
+@@ -99,7 +88,7 @@ static void hnae3_uninit_client_instance(struct hnae3_client *client,
+ 					 struct hnae3_ae_dev *ae_dev)
+ {
+ 	/* check if this client matches the type of ae_dev */
+-	if (!(hnae3_client_match(client->type, ae_dev->dev_type) &&
++	if (!(hnae3_client_match(client->type) &&
+ 	      hnae3_get_bit(ae_dev->flag, HNAE3_DEV_INITED_B)))
+ 		return;
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index 2e478d9..63cdc18 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -102,15 +102,9 @@ enum hnae3_loop {
+ 
+ enum hnae3_client_type {
+ 	HNAE3_CLIENT_KNIC,
+-	HNAE3_CLIENT_UNIC,
+ 	HNAE3_CLIENT_ROCE,
+ };
+ 
+-enum hnae3_dev_type {
+-	HNAE3_DEV_KNIC,
+-	HNAE3_DEV_UNIC,
+-};
+-
+ /* mac media type */
+ enum hnae3_media_type {
+ 	HNAE3_MEDIA_TYPE_UNKNOWN,
+@@ -220,7 +214,6 @@ struct hnae3_ae_dev {
+ 	struct list_head node;
+ 	u32 flag;
+ 	u8 override_pci_need_reset; /* fix to stop multiple reset happening */
+-	enum hnae3_dev_type dev_type;
+ 	enum hnae3_reset_type reset_type;
+ 	void *priv;
+ };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 0ef4470..07e7c3a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1837,7 +1837,6 @@ static int hns3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	ae_dev->pdev = pdev;
+ 	ae_dev->flag = ent->driver_data;
+-	ae_dev->dev_type = HNAE3_DEV_KNIC;
+ 	ae_dev->reset_type = HNAE3_NONE_RESET;
+ 	hns3_get_dev_capability(pdev, ae_dev);
+ 	pci_set_drvdata(pdev, ae_dev);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 35d2a45..9fe00a8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -1461,11 +1461,6 @@ static int hclge_map_tqp(struct hclge_dev *hdev)
+ 	return 0;
  }
  
-+static int hclge_log_rocee_axi_error(struct hclge_dev *hdev)
-+{
-+	struct device *dev = &hdev->pdev->dev;
-+	struct hclge_desc desc[3];
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_ROCEE_AXI_RAS_INFO_CMD,
-+				   true);
-+	hclge_cmd_setup_basic_desc(&desc[1], HCLGE_QUERY_ROCEE_AXI_RAS_INFO_CMD,
-+				   true);
-+	hclge_cmd_setup_basic_desc(&desc[2], HCLGE_QUERY_ROCEE_AXI_RAS_INFO_CMD,
-+				   true);
-+	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
-+	desc[1].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
-+
-+	ret = hclge_cmd_send(&hdev->hw, &desc[0], 3);
-+	if (ret) {
-+		dev_err(dev, "failed(%d) to query ROCEE AXI error sts\n", ret);
-+		return ret;
-+	}
-+
-+	dev_info(dev, "AXI1: %08X %08X %08X %08X %08X %08X\n",
-+		 le32_to_cpu(desc[0].data[0]), le32_to_cpu(desc[0].data[1]),
-+		 le32_to_cpu(desc[0].data[2]), le32_to_cpu(desc[0].data[3]),
-+		 le32_to_cpu(desc[0].data[4]), le32_to_cpu(desc[0].data[5]));
-+	dev_info(dev, "AXI2: %08X %08X %08X %08X %08X %08X\n",
-+		 le32_to_cpu(desc[1].data[0]), le32_to_cpu(desc[1].data[1]),
-+		 le32_to_cpu(desc[1].data[2]), le32_to_cpu(desc[1].data[3]),
-+		 le32_to_cpu(desc[1].data[4]), le32_to_cpu(desc[1].data[5]));
-+	dev_info(dev, "AXI3: %08X %08X %08X %08X\n",
-+		 le32_to_cpu(desc[2].data[0]), le32_to_cpu(desc[2].data[1]),
-+		 le32_to_cpu(desc[2].data[2]), le32_to_cpu(desc[2].data[3]));
-+
-+	return 0;
-+}
-+
-+static int hclge_log_rocee_ecc_error(struct hclge_dev *hdev)
-+{
-+	struct device *dev = &hdev->pdev->dev;
-+	struct hclge_desc desc[2];
-+	int ret;
-+
-+	ret = hclge_cmd_query_error(hdev, &desc[0],
-+				    HCLGE_QUERY_ROCEE_ECC_RAS_INFO_CMD,
-+				    HCLGE_CMD_FLAG_NEXT, 0, 0);
-+	if (ret) {
-+		dev_err(dev, "failed(%d) to query ROCEE ECC error sts\n", ret);
-+		return ret;
-+	}
-+
-+	dev_info(dev, "ECC1: %08X %08X %08X %08X %08X %08X\n",
-+		 le32_to_cpu(desc[0].data[0]), le32_to_cpu(desc[0].data[1]),
-+		 le32_to_cpu(desc[0].data[2]), le32_to_cpu(desc[0].data[3]),
-+		 le32_to_cpu(desc[0].data[4]), le32_to_cpu(desc[0].data[5]));
-+	dev_info(dev, "ECC2: %08X %08X %08X\n", le32_to_cpu(desc[1].data[0]),
-+		 le32_to_cpu(desc[1].data[1]), le32_to_cpu(desc[1].data[2]));
-+
-+	return 0;
-+}
-+
- static int hclge_log_rocee_ovf_error(struct hclge_dev *hdev)
+-static void hclge_unic_setup(struct hclge_vport *vport, u16 num_tqps)
+-{
+-	/* this would be initialized later */
+-}
+-
+ static int hclge_vport_setup(struct hclge_vport *vport, u16 num_tqps)
  {
- 	struct device *dev = &hdev->pdev->dev;
-@@ -1456,19 +1516,33 @@ hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
+ 	struct hnae3_handle *nic = &vport->nic;
+@@ -1476,20 +1471,12 @@ static int hclge_vport_setup(struct hclge_vport *vport, u16 num_tqps)
+ 	nic->ae_algo = &ae_algo;
+ 	nic->numa_node_mask = hdev->numa_node_mask;
  
- 	status = le32_to_cpu(desc[0].data[0]);
- 
--	if (status & HCLGE_ROCEE_RERR_INT_MASK) {
--		dev_warn(dev, "ROCEE RAS AXI rresp error\n");
--		reset_type = HNAE3_FUNC_RESET;
+-	if (hdev->ae_dev->dev_type == HNAE3_DEV_KNIC) {
+-		ret = hclge_knic_setup(vport, num_tqps,
+-				       hdev->num_tx_desc, hdev->num_rx_desc);
+-
+-		if (ret) {
+-			dev_err(&hdev->pdev->dev, "knic setup failed %d\n",
+-				ret);
+-			return ret;
+-		}
+-	} else {
+-		hclge_unic_setup(vport, num_tqps);
 -	}
-+	if (status & HCLGE_ROCEE_AXI_ERR_INT_MASK) {
-+		if (status & HCLGE_ROCEE_RERR_INT_MASK)
-+			dev_warn(dev, "ROCEE RAS AXI rresp error\n");
-+
-+		if (status & HCLGE_ROCEE_BERR_INT_MASK)
-+			dev_warn(dev, "ROCEE RAS AXI bresp error\n");
++	ret = hclge_knic_setup(vport, num_tqps,
++			       hdev->num_tx_desc, hdev->num_rx_desc);
++	if (ret)
++		dev_err(&hdev->pdev->dev, "knic setup failed %d\n", ret);
  
--	if (status & HCLGE_ROCEE_BERR_INT_MASK) {
--		dev_warn(dev, "ROCEE RAS AXI bresp error\n");
- 		reset_type = HNAE3_FUNC_RESET;
-+
-+		ret = hclge_log_rocee_axi_error(hdev);
-+		if (ret) {
-+			dev_err(dev, "failed(%d) to process axi error\n", ret);
-+			/* reset everything for now */
-+			return HNAE3_GLOBAL_RESET;
-+		}
- 	}
+-	return 0;
++	return ret;
+ }
  
- 	if (status & HCLGE_ROCEE_ECC_INT_MASK) {
- 		dev_warn(dev, "ROCEE RAS 2bit ECC error\n");
- 		reset_type = HNAE3_GLOBAL_RESET;
-+
-+		ret = hclge_log_rocee_ecc_error(hdev);
-+		if (ret) {
-+			dev_err(dev, "failed(%d) to process ecc error\n", ret);
-+			/* reset everything for now */
-+			return HNAE3_GLOBAL_RESET;
-+		}
- 	}
+ static int hclge_alloc_vport(struct hclge_dev *hdev)
+@@ -8264,17 +8251,6 @@ static int hclge_init_client_instance(struct hnae3_client *client,
+ 				goto clear_roce;
  
- 	if (status & HCLGE_ROCEE_OVF_INT_MASK) {
-@@ -1478,7 +1552,6 @@ hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
- 			/* reset everything for now */
- 			return HNAE3_GLOBAL_RESET;
- 		}
--		reset_type = HNAE3_FUNC_RESET;
- 	}
+ 			break;
+-		case HNAE3_CLIENT_UNIC:
+-			hdev->nic_client = client;
+-			vport->nic.client = client;
+-
+-			ret = client->ops->init_instance(&vport->nic);
+-			if (ret)
+-				goto clear_nic;
+-
+-			hnae3_set_client_init_flag(client, ae_dev, 1);
+-
+-			break;
+ 		case HNAE3_CLIENT_ROCE:
+ 			if (hnae3_dev_roce_supported(hdev)) {
+ 				hdev->roce_client = client;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 87a619d..121c4e5 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -470,12 +470,6 @@ static int hclgevf_set_handle_info(struct hclgevf_dev *hdev)
+ 	nic->numa_node_mask = hdev->numa_node_mask;
+ 	nic->flags |= HNAE3_SUPPORT_VF;
  
- 	/* clear error status */
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-index 81d115a..6684733 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-@@ -94,6 +94,7 @@
- #define HCLGE_ROCEE_RAS_CE_INT_EN_MASK		0x1
- #define HCLGE_ROCEE_RERR_INT_MASK		BIT(0)
- #define HCLGE_ROCEE_BERR_INT_MASK		BIT(1)
-+#define HCLGE_ROCEE_AXI_ERR_INT_MASK		GENMASK(1, 0)
- #define HCLGE_ROCEE_ECC_INT_MASK		BIT(2)
- #define HCLGE_ROCEE_OVF_INT_MASK		BIT(3)
- #define HCLGE_ROCEE_OVF_ERR_INT_MASK		0x10000
+-	if (hdev->ae_dev->dev_type != HNAE3_DEV_KNIC) {
+-		dev_err(&hdev->pdev->dev, "unsupported device type %d\n",
+-			hdev->ae_dev->dev_type);
+-		return -EINVAL;
+-	}
+-
+ 	ret = hclgevf_knic_setup(hdev);
+ 	if (ret)
+ 		dev_err(&hdev->pdev->dev, "VF knic setup failed %d\n",
+@@ -2323,16 +2317,6 @@ static int hclgevf_init_client_instance(struct hnae3_client *client,
+ 			goto clear_roce;
+ 
+ 		break;
+-	case HNAE3_CLIENT_UNIC:
+-		hdev->nic_client = client;
+-		hdev->nic.client = client;
+-
+-		ret = client->ops->init_instance(&hdev->nic);
+-		if (ret)
+-			goto clear_nic;
+-
+-		hnae3_set_client_init_flag(client, ae_dev, 1);
+-		break;
+ 	case HNAE3_CLIENT_ROCE:
+ 		if (hnae3_dev_roce_supported(hdev)) {
+ 			hdev->roce_client = client;
 -- 
 2.7.4
 
