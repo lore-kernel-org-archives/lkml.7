@@ -2,116 +2,110 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83139C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419C5C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65560206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BD5206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m0s9DUtY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfFFIDM (ORCPT
+        id S1726958AbfFFIDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:03:12 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:54246 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfFFIDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:03:10 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0E911200A0C;
-        Thu,  6 Jun 2019 10:03:08 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 016FC200A13;
-        Thu,  6 Jun 2019 10:03:08 +0200 (CEST)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5069B205C7;
-        Thu,  6 Jun 2019 10:03:07 +0200 (CEST)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: imx7ulp: add crypto support
-Date:   Thu,  6 Jun 2019 11:02:55 +0300
-Message-Id: <20190606080255.25504-1-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 6 Jun 2019 04:03:36 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60762 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfFFIDf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:03:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QSKGyxx9Q9AJKtpqgKbGwuoacV8z0/sDEo2YsWMHixs=; b=m0s9DUtYOds2uc7WJfqzS3t14
+        e1a5PkDuo5Rqai36yA9Mgw6v6lF3VcsB2M1Dv1lByAzNdVYKCEsWX1lnMSU5eLt6yiYW3hpUZFJgO
+        bGS7gSojJwwHho6LqPC11dMXzwEIXW7rd+W6oMJYc6HRqY0tSOSgs7UXnvR/AwOBMCgvT+7jHBoeR
+        w8jgEeCZ2z5aBB36HYzOVX9XfAzNK/7FNR2BWYi75RH/qQlbJd9XEl5rd2it+yiqx8zojxZMdHv+9
+        6VIwFddYcsWycurAijzWZsa0Q1cyjYR2KETj/0RFrHuIywSo2o0RiwpPxgb3fbPD4Dsf48t2o48S5
+        BVjmpnp0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYnMj-0006gX-Gc; Thu, 06 Jun 2019 08:03:17 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 35B18203AA6FD; Thu,  6 Jun 2019 10:03:15 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 10:03:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>, dvyukov@google.com,
+        glider@google.com, aryabinin@virtuozzo.com
+Subject: Re: [PATCH v8 15/19] locking/rwsem: Adaptive disabling of reader
+ optimistic spinning
+Message-ID: <20190606080315.GE3402@hirez.programming.kicks-ass.net>
+References: <20190520205918.22251-16-longman@redhat.com>
+ <20190604092008.GJ3402@hirez.programming.kicks-ass.net>
+ <8e7d19ea-f2e6-f441-6ab9-cbff6d96589c@redhat.com>
+ <20190604173853.GG3419@hirez.programming.kicks-ass.net>
+ <f7f9b778-4f1a-7460-a7ae-1d4e3dd37181@redhat.com>
+ <20190604181426.GH3419@hirez.programming.kicks-ass.net>
+ <db89a086-3719-cea5-e24e-339085728c29@redhat.com>
+ <46e44f43-87fd-251b-3b83-89a8bb3b407f@redhat.com>
+ <20190605201901.GB3402@hirez.programming.kicks-ass.net>
+ <CAHk-=wgqfXUeKkjT-TJRubxU5KNt9CLi88QSXhXT0H=3v4uF3g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgqfXUeKkjT-TJRubxU5KNt9CLi88QSXhXT0H=3v4uF3g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Iuliana Prodan <iuliana.prodan@nxp.com>
+On Wed, Jun 05, 2019 at 01:52:15PM -0700, Linus Torvalds wrote:
+> On Wed, Jun 5, 2019 at 1:19 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > Urgh, that's another things that's been on the TODO list for a long long
+> > time, write code to verify the alignment of allocations :/ I'm
+> > suspecting quite a lot of that goes wrong all over the place.
+> 
+> On x86, we only guarantee 8-byte alignment from things like kmalloc(), iirc.
 
-Add crypto node in device tree for CAAM support.
+Oh sure, and I'm not proposing to change that. I was more thinking of
+having a GCC plugin that verifies, for every ptr assignment:
 
-Noteworthy is that on 7ulp the interrupt line is shared
-between the two job rings.
+	ptr = foo;
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
----
+that the actual alignment maches:
 
-I've just realized that this patch should be merged through the crypto tree,
-else bisectability could be affected due to cryptodev-2.6
-commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7ULP")
-( https://patchwork.kernel.org/patch/10970017/ )
-which should come first.
+	assert(!(uintptr_t)ptr % __alignof(*ptr));
 
- arch/arm/boot/dts/imx7ulp.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+That would catch bugs like:
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index d6b711011cba..e20483714be5 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -100,6 +100,29 @@
- 		reg = <0x40000000 0x800000>;
- 		ranges;
- 
-+		crypto: crypto@40240000 {
-+			compatible = "fsl,sec-v4.0";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0x40240000 0x10000>;
-+			ranges = <0 0x40240000 0x10000>;
-+			clocks = <&pcc2 IMX7ULP_CLK_CAAM>,
-+				 <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>;
-+			clock-names = "aclk", "ipg";
-+
-+			sec_jr0: jr0@1000 {
-+				compatible = "fsl,sec-v4.0-job-ring";
-+				reg = <0x1000 0x1000>;
-+				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			sec_jr1: jr1@2000 {
-+				compatible = "fsl,sec-v4.0-job-ring";
-+				reg = <0x2000 0x1000>;
-+				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		lpuart4: serial@402d0000 {
- 			compatible = "fsl,imx7ulp-lpuart";
- 			reg = <0x402d0000 0x1000>;
--- 
-2.17.1
+struct bar {
+	int ponies;
+	int peaches __smp_cacheline_aligned;
+};
+
+	struct bar *barp = kmalloc(sizeof(barp, GFP_KERNEL);
+
+Blatantly violating alignment can't be right; either the alignment
+constraints put on the data structures are not important and they should
+be fixed, or we should respect them and fix the allocation, either way,
+we should not silently violate things like we do today.
+
 
