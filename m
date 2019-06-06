@@ -2,124 +2,143 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B10C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB2DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A95206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EV/94w61"
+	by mail.kernel.org (Postfix) with ESMTP id 8A7642070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFFDGV (ORCPT
+        id S1726658AbfFFDJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 23:06:21 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41960 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbfFFDGV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 23:06:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 107so597155otj.8;
-        Wed, 05 Jun 2019 20:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NLcc8Hvj4GxnkbZqOSpti57+EMywR1QkzctaKlv9FJA=;
-        b=EV/94w61cJndW/aF09hT2OcRE+FgL4ycdCqgiGCIlPUBHZaw4RCokWfccuZsBTni+H
-         A8hpGC53VKVyXWlsr0ebnvShJizejBIdhp7LqCqlAG7ajtZOIRYcBm1+bt+6ghAjh7mK
-         K9deV8X0D/Yzw2ukIVzanS+6Bnk5MW7PVgjKYJLitlYdSQIP/0bNvrSU8cREls2bq4Oi
-         mTeKWqJbdA0D4u/mmWIuzkmjNyPTKqRjFYdGyjp8KYzcG+jbCAC8tgcVdyjWfVLxxAj+
-         p+L0uioQLYpw4WZI6qD5aBVhGXtbgCDj7aQGGvAc50k2+2qvVLdxflrJgaGmrhdN7OO+
-         SvDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NLcc8Hvj4GxnkbZqOSpti57+EMywR1QkzctaKlv9FJA=;
-        b=PVE0mdoBU+4dFpPAGzhfvjRgiqM9Jvl3D4DhZTrHeIc/64ar4u0WkLP29RkcSPHo1n
-         TTYCYIU+tzzuUF4tUfs4Oe+3ehY1Ief1qQ6EebIN7mGDMkaoLXIWTum25bpx9sudBBIT
-         t4GcM7lLXbN6Cf/yxiljvSVQb2jB6hECzzlGM6HaWcGoQXfSl3jYFI0uchei8y5invHz
-         TtGerZlXZZhsprDgwYtvwzMjTi7xxTAvdxih+0uC28VvaE2CLvp7GGxEwexlgcz2bcqc
-         JyQ66QPqKk9t03URPoPQAjOogAF8/BkfrCoLUcf408EAt5IeUMbZO99NF9NbXIqhesSl
-         zPwA==
-X-Gm-Message-State: APjAAAWmeoXhpXZCihlHRSI3FrbRzelcNX/14qk5hnXT8pn7CgPKi7Pg
-        9M24hi4CF6Cxy7HbS+PAD6g=
-X-Google-Smtp-Source: APXvYqxjGCBhEAui2RBiuztJJeXSwwWM/3JyYC5cgJCRJFtBekZKrRXELpA8QUdY9Iq6B9LmR5hhCg==
-X-Received: by 2002:a9d:6042:: with SMTP id v2mr6290825otj.73.1559790380624;
-        Wed, 05 Jun 2019 20:06:20 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id y4sm245567oiy.56.2019.06.05.20.06.19
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 20:06:19 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <35b3f09b-b371-e2cc-4436-120c67e2f1fb@lwfinger.net>
-Date:   Wed, 5 Jun 2019 22:06:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 23:09:04 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57426 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726427AbfFFDJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 23:09:04 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8114E8DD1A5B94991531;
+        Thu,  6 Jun 2019 11:09:02 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 6 Jun 2019 11:08:47 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     <rostedt@goodmis.org>, <mingo@redhat.com>
+CC:     <huawei.libin@huawei.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ftrace: fix NULL pointer dereference in free_ftrace_func_mapper()
+Date:   Thu, 6 Jun 2019 11:17:54 +0800
+Message-ID: <20190606031754.10798-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/19 5:50 PM, Aaro Koskinen wrote:
-> Hi,
-> 
-> When upgrading from v5.0 -> v5.1 on G4 PowerBook, I noticed WLAN does
-> not work anymore:
-> 
-> [   42.004303] b43legacy-phy0: Loading firmware version 0x127, patch level 14 (2005-04-18 02:36:27)
-> [   42.184837] b43legacy-phy0 debug: Chip initialized
-> [   42.184873] b43legacy-phy0 ERROR: The machine/kernel does not support the required 30-bit DMA mask
-> 
-> The same happens with the current mainline.
-> 
-> Bisected to:
-> 
-> 	commit 65a21b71f948406201e4f62e41f06513350ca390
-> 	Author: Christoph Hellwig <hch@lst.de>
-> 	Date:   Wed Feb 13 08:01:26 2019 +0100
-> 
-> 	    powerpc/dma: remove dma_nommu_dma_supported
-> 
-> 	    This function is largely identical to the generic version used
-> 	    everywhere else.  Replace it with the generic version.
-> 
-> 	    Signed-off-by: Christoph Hellwig <hch@lst.de>
-> 	    Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-> 	    Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+The mapper may be NULL when called from register_ftrace_function_probe()
+with probe->data == NULL.
 
-Aaro,
+This issue can be reproduced as follow (it may be coverd by compiler
+optimization sometime):
 
-First of all, you have my sympathy for the laborious bisection on a PowerBook 
-G4. I have done several myself. Thank you.
+/ # cat /sys/kernel/debug/tracing/set_ftrace_filter 
+#### all functions enabled ####
+/ # echo foo_bar:dump > /sys/kernel/debug/tracing/set_ftrace_filter 
+[  206.949100] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  206.952402] Mem abort info:
+[  206.952819]   ESR = 0x96000006
+[  206.955326]   Exception class = DABT (current EL), IL = 32 bits
+[  206.955844]   SET = 0, FnV = 0
+[  206.956272]   EA = 0, S1PTW = 0
+[  206.956652] Data abort info:
+[  206.957320]   ISV = 0, ISS = 0x00000006
+[  206.959271]   CM = 0, WnR = 0
+[  206.959938] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000419f3a000
+[  206.960483] [0000000000000000] pgd=0000000411a87003, pud=0000000411a83003, pmd=0000000000000000
+[  206.964953] Internal error: Oops: 96000006 [#1] SMP
+[  206.971122] Dumping ftrace buffer:
+[  206.973677]    (ftrace buffer empty)
+[  206.975258] Modules linked in:
+[  206.976631] Process sh (pid: 281, stack limit = 0x(____ptrval____))
+[  206.978449] CPU: 10 PID: 281 Comm: sh Not tainted 5.2.0-rc1+ #17
+[  206.978955] Hardware name: linux,dummy-virt (DT)
+[  206.979883] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  206.980499] pc : free_ftrace_func_mapper+0x2c/0x118
+[  206.980874] lr : ftrace_count_free+0x68/0x80
+[  206.982539] sp : ffff0000182f3ab0
+[  206.983102] x29: ffff0000182f3ab0 x28: ffff8003d0ec1700 
+[  206.983632] x27: ffff000013054b40 x26: 0000000000000001 
+[  206.984000] x25: ffff00001385f000 x24: 0000000000000000 
+[  206.984394] x23: ffff000013453000 x22: ffff000013054000 
+[  206.984775] x21: 0000000000000000 x20: ffff00001385fe28 
+[  206.986575] x19: ffff000013872c30 x18: 0000000000000000 
+[  206.987111] x17: 0000000000000000 x16: 0000000000000000 
+[  206.987491] x15: ffffffffffffffb0 x14: 0000000000000000 
+[  206.987850] x13: 000000000017430e x12: 0000000000000580 
+[  206.988251] x11: 0000000000000000 x10: cccccccccccccccc 
+[  206.988740] x9 : 0000000000000000 x8 : ffff000013917550 
+[  206.990198] x7 : ffff000012fac2e8 x6 : ffff000012fac000 
+[  206.991008] x5 : ffff0000103da588 x4 : 0000000000000001 
+[  206.991395] x3 : 0000000000000001 x2 : ffff000013872a28 
+[  206.991771] x1 : 0000000000000000 x0 : 0000000000000000 
+[  206.992557] Call trace:
+[  206.993101]  free_ftrace_func_mapper+0x2c/0x118
+[  206.994827]  ftrace_count_free+0x68/0x80
+[  206.995238]  release_probe+0xfc/0x1d0
+[  206.995555]  register_ftrace_function_probe+0x4a8/0x868
+[  206.995923]  ftrace_trace_probe_callback.isra.4+0xb8/0x180
+[  206.996330]  ftrace_dump_callback+0x50/0x70
+[  206.996663]  ftrace_regex_write.isra.29+0x290/0x3a8
+[  206.997157]  ftrace_filter_write+0x44/0x60
+[  206.998971]  __vfs_write+0x64/0xf0
+[  206.999285]  vfs_write+0x14c/0x2f0
+[  206.999591]  ksys_write+0xbc/0x1b0
+[  206.999888]  __arm64_sys_write+0x3c/0x58
+[  207.000246]  el0_svc_common.constprop.0+0x408/0x5f0
+[  207.000607]  el0_svc_handler+0x144/0x1c8
+[  207.000916]  el0_svc+0x8/0xc
+[  207.003699] Code: aa0003f8 a9025bf5 aa0103f5 f946ea80 (f9400303) 
+[  207.008388] ---[ end trace 7b6d11b5f542bdf1 ]---
+[  207.010126] Kernel panic - not syncing: Fatal exception
+[  207.011322] SMP: stopping secondary CPUs
+[  207.013956] Dumping ftrace buffer:
+[  207.014595]    (ftrace buffer empty)
+[  207.015632] Kernel Offset: disabled
+[  207.017187] CPU features: 0x002,20006008
+[  207.017985] Memory Limit: none
+[  207.019825] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-I confirm your results.
+Signed-off-by: Wei Li <liwei391@huawei.com>
+---
+ kernel/trace/ftrace.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-The ppc code has a maximum DMA size of 31 bits, thus a 32-bit request will fail. 
-Why the 30-bit fallback fails in b43legacy fails while it works in b43 is a mystery.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a12aff849c04..7e2488da69ac 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -4221,10 +4221,13 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
+ 	struct ftrace_func_entry *entry;
+ 	struct ftrace_func_map *map;
+ 	struct hlist_head *hhd;
+-	int size = 1 << mapper->hash.size_bits;
+-	int i;
++	int size, i;
++
++	if (!mapper)
++		return;
+ 
+ 	if (free_func && mapper->hash.count) {
++		size = 1 << mapper->hash.size_bits;
+ 		for (i = 0; i < size; i++) {
+ 			hhd = &mapper->hash.buckets[i];
+ 			hlist_for_each_entry(entry, hhd, hlist) {
+-- 
+2.17.1
 
-Although dma_nommu_dma_supported() may be "largely identical" to 
-dma_direct_supported(), they obviously differ. Routine dma_nommu_dma_supported() 
-returns 1 for 32-bit systems, but I do not know what dma_direct_supported() returns.
-
-I am trying to find a patch.
-
-Larry
