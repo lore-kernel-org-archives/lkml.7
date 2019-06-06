@@ -2,77 +2,86 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7F7C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C9DC28EB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B1C20665
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDCA208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559857606;
+	bh=e8zSxF2YstjZdXDoPM2QroSTxqWSMLpjdXaDzNM/bHM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UdRNMGCj+NEL1WIFXxNzOwibJQK64naoLR8itWpOYaX2sMU6XXLTiejhgwDe6dgyY
+	 nOSSIhy5dRSiVKv3qUbh5aG62CWb3KrwG7rnwjCnIOxtjHeHVI5t8p9oE1dDPSkXx4
+	 Zztn5PW91h8gVMuxEF/Mbbd/NPa9yejWV3Q8bapg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfFFVjH (ORCPT
+        id S1728664AbfFFVqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:39:07 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:34983 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbfFFVjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:39:06 -0400
-Received: from [192.168.1.110] ([77.9.2.22]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M2fDr-1hYB1H1K3D-004FCS; Thu, 06 Jun 2019 23:39:00 +0200
-Subject: Re: [PATCH] net: ipv4: fib_semantics: fix uninitialized variable
-To:     David Ahern <dsahern@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org
-References: <1559832197-22758-1-git-send-email-info@metux.net>
- <0ba84175-49be-9023-271d-516c93e2d83e@gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <16775959-1eb7-b8de-e4ad-b40da395d871@metux.net>
-Date:   Thu, 6 Jun 2019 23:38:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <0ba84175-49be-9023-271d-516c93e2d83e@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 6 Jun 2019 17:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfFFVqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 17:46:45 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 309C320673;
+        Thu,  6 Jun 2019 21:46:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559857604;
+        bh=e8zSxF2YstjZdXDoPM2QroSTxqWSMLpjdXaDzNM/bHM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dfZnA3LoZI3kcekTvMdg7vm4wyUFToyxp29Scm6Cs7omCJytnHlzwlMXFqlGds2ht
+         tKZ/OehCLO9EzgtHqjvJGedCRwMgeIGQKU+kGulTg4LF9TrwyYbFy3R+yo1Vi1wg+x
+         L5CEq0PQe3DdZ/43QWfXSG4GV8UOuKXGuJHoNWd0=
+Date:   Thu, 6 Jun 2019 14:46:43 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        osalvador@suse.de, mhocko@suse.com
+Subject: Re: [PATCH v9 11/12] libnvdimm/pfn: Fix fsdax-mode namespace
+ info-block zero-fields
+Message-Id: <20190606144643.4f3363db9499ebbf8f76e62e@linux-foundation.org>
+In-Reply-To: <155977193862.2443951.10284714500308539570.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <155977193862.2443951.10284714500308539570.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:22rxMNXXkOaSkI/weParmlfWRyLUi3KHyVCODClKyaos2cXwTnZ
- X92zZAWj8uuUfG9Y695vjEwecQCJ56gVdlHoGN/aUfCGEC4nUbYNY97ARR13y/t42nZLhNT
- 6+PJsY+q0czFDM8H7OU9vMXA1OYN0vktQ7GnulcQGPqgbhYMleizdgJaS7IPLdyh/+WMR6V
- eICkfbe/omCo078eUHyVg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M8JA6Vx3JuA=:CqyXtTBtdORF3nMpdJ/JA7
- 72FrZS+LmdfP6yiIVtp19YrJ6po8Fht/3DuD3ePPYQ57pqnJmXqf6X0xxxQcf39Tsqd6CD8zU
- c/raZGFW/vKJQx/USeiJTYTkkbbBTDV8R5+eTS9Z1nM7H23f54x8gtfhOIOl2KgQnvi25B2lD
- 0Nhvxjll7j33ErQVegBLcDA54zLfWj5/pk/MxiebOVpRlr9zKDjwMgYDliA6VpB7LSytDebQ0
- cb5qMRNe6JUYycxOaRjayHADbvj54MP327oSG+1c/J56uT/D4aDHMZMG1QhUp9KRflfBFB1bH
- fR9Ali6jRWW0GgJ3YvWwv7MUs7d3Z4R/8EnC/FFo1g0wqIIjBDLD1e+clgjAoyVJNFTIoP4vN
- Sa+DlTw8+i9BDK31HnIUDFtn1DjmP9ZZuBQuTbjivBJMq9uoEX6WbRjCp430DJl6AowDXDHag
- J+14nr03x4bSQsYnhiOj84mBRgGnPfmku0iwsHq53bygBuocdkphYxml0BQyXnHQfb01fl2LF
- 4N8uM1STS5tmt0UHXdkupSBiKvRAdpaz1R4R5QA6GRzuYRDJR2JLqLj0Jwv+MpvfVSvKgHhs6
- iCi0mO1ljD2UMoLaMQUkV8HfDSIOaVJErQ9RzHOUGbGKnsCWIGzjt/1P/uLRFa0ftr3fQvtOk
- bWeFUD2VsqKWhqBzddtRGoHDK6Z8qzEGiWCuv0aIf0IQl4YY6IJBaKLebjIhJP6t/wJ45d0s1
- vVQW5CZRz1I1kqZbqHVQ+GaI+z3OssZxnga3Sphk1ywmOjfSKnSYekL5Rzw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.06.19 17:47, David Ahern wrote:
-> 
-> what compiler version?
-> 
-> if tbl is set, then err is set.
-> 
+On Wed, 05 Jun 2019 14:58:58 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
 
-gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+> At namespace creation time there is the potential for the "expected to
+> be zero" fields of a 'pfn' info-block to be filled with indeterminate
+> data. While the kernel buffer is zeroed on allocation it is immediately
+> overwritten by nd_pfn_validate() filling it with the current contents of
+> the on-media info-block location. For fields like, 'flags' and the
+> 'padding' it potentially means that future implementations can not rely
+> on those fields being zero.
+> 
+> In preparation to stop using the 'start_pad' and 'end_trunc' fields for
+> section alignment, arrange for fields that are not explicitly
+> initialized to be guaranteed zero. Bump the minor version to indicate it
+> is safe to assume the 'padding' and 'flags' are zero. Otherwise, this
+> corruption is expected to benign since all other critical fields are
+> explicitly initialized.
+> 
+> Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+The cc:stable in [11/12] seems odd.  Is this independent of the other
+patches?  If so, shouldn't it be a standalone thing which can be
+prioritized?
+
