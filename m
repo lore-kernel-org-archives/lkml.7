@@ -2,59 +2,61 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3044C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A877EC28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A7B20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812B52083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qq8fspWR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i4GhBjo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbfFFJti (ORCPT
+        id S1728039AbfFFJwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:49:38 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:42279 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfFFJth (ORCPT
+        Thu, 6 Jun 2019 05:52:13 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:36857 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfFFJwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:49:37 -0400
-Received: by mail-yb1-f193.google.com with SMTP id c7so694492ybs.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:49:36 -0700 (PDT)
+        Thu, 6 Jun 2019 05:52:12 -0400
+Received: by mail-yw1-f68.google.com with SMTP id t126so624931ywf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:52:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dIuWqahxwYfa+gg7zLducBqFVlvQ5xNUBiX7691YYJI=;
-        b=qq8fspWRrqRd4zZSm3WIi14g0uJacA6l8DkDjMrJY/bMSxeY2EIj0GoZzMXUXP8QoU
-         6C86B8kbB9ZhEK+PAtWX+isJfxsQkWKmYjFAWqO2JDQ/dYLMAI5BGZGx0S19LVPeJq94
-         QU+u2HEv9nrLxTpshbbh99HmPOGIlkROXPehcUXk3Anb14Fgh+r5nRzdLVI77v4wPQYT
-         lz9s1ZSBkQqVp9DESR3lTtAkU2NR9z+JrxvZoUFHHBtlUVtpS6jgAIhpojIJ+QwVddHF
-         y3w7m6xGqYbkZNDokLtGCWDLAH1d8xn3AdHjCmzen9xdJbYGz97LCv8PHHauBFIWYsik
-         IXAg==
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OF/6ZkMdc/RdYDV51lRDRPrAIYbV+QfL4/gwTFmX58o=;
+        b=i4GhBjo22XTIEoTVFapUwK6vtxHp2srk589bcFqG7zA6h9A7QlQy8wk4zcip8ufPkv
+         Wom0pmtc9P0E8pgBGK2uZpFBOvYSULfziXMHjdcl2Cqwha/EgKFSEi4wp8WmHk1I2Cb3
+         HtHBbhoFiPMDqajIz628DOwFKJGvxum1mBMnXEsHvtKHPpkzxvUQ3d8fhUgn6/yuggHV
+         xvbBzu511lKlcEysVXWtNjVoVsDU98d2JSgux2auBYwS09gi962zYd2O47DG5dwMFJd+
+         88wKOuQfDn7OyXbJb2Tjq6RDVaqOKSU2yZq285mMJN49Wyb+wHXed//7aLWqRp+iHQwH
+         M/9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=dIuWqahxwYfa+gg7zLducBqFVlvQ5xNUBiX7691YYJI=;
-        b=tjzs+OnZDETodOqJuWNMIpgpo2wPJRnzvMJjJxzuMP/FcmvePtwQ8gEAoRhj8PlJnO
-         A0V9fvIKQBZAG68KYjN/x9Tu1kEBqG8UmyimvNtyFx3EMwqsJ1/xTdbhS8np5LXnXhg6
-         6kftT58CBJnVe6UsYCzcWAUYdrxex8cmjymAo8555rVlvEJlkCrHSXWguYUC2Cw5Sorp
-         dHEQbAgG5ZE9Esi/4sDyD+xcK9XtmKDSilzwYr92udD8l1d3JL5obr2qI7nEL7IcGB1g
-         JiOAVbEwd6KhIgegElvbOSo2HSSvjYn77lAeTthQszbYnqC/8bLNc09rCWG5OldoGFAI
-         G29g==
-X-Gm-Message-State: APjAAAUovw8oAPGVMm+CuyZmKbk98bethcmxWehT16iIktlJS49xcAkd
-        VqnqAkYIPS43VIMI3LpyiFUDmw==
-X-Google-Smtp-Source: APXvYqwrJDTIobkNOyLW8fbKSaKsQtwcXguk6M+HLUwD9mhc6kEqLYUvnDMOljy2J5eLgh4IlkezEQ==
-X-Received: by 2002:a25:84c5:: with SMTP id x5mr13331854ybm.78.1559814576552;
-        Thu, 06 Jun 2019 02:49:36 -0700 (PDT)
-Received: from localhost.localdomain (li1322-146.members.linode.com. [45.79.223.146])
-        by smtp.gmail.com with ESMTPSA id 85sm357652ywm.64.2019.06.06.02.49.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 02:49:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OF/6ZkMdc/RdYDV51lRDRPrAIYbV+QfL4/gwTFmX58o=;
+        b=FmVzF+gcWz1PwdUV0q9j4UdHeXoZHhXeTU2DDaf9eaJjE7w7ywvTOCWyicSlTfCQG0
+         xIix+16cJzxu7pkLceT5C6LDTHOpW75KIv+XhHlYStqP4iiuYDcUJ6S0PMcKwe90E2g8
+         66Fzww3xl5Xh6udg7YLyKEtLiA1f1N3dGtuTyL9u0lDCKYRK9EuhEeML5APlkzxM7JLb
+         QS8g0QgEBNx90/wncQReGUaX3Ij1iu82lpJEbx5ehtf0T4qqBuWVCQgXM63vuXJ/P1y9
+         LCp0d4ylSwCestsHcMLbmNnU3LxDy9haMlSNUc8OojkHkKEIXYBjWnKJl8hcwS7bmIqv
+         bwBw==
+X-Gm-Message-State: APjAAAXmnWUT29TSeEjgFRdz2En6R6+gzdHcgf27X6DqxW3gDPWQZp8F
+        dl2kqCwhblghEL5L4feDNudshQ==
+X-Google-Smtp-Source: APXvYqzIj6mHr6vIMB/M2RU7ehBrhqLjyy5K3mdgCBcs8U4OXzN7ueQNfKWSr3JXx53EPAHS6jc2aw==
+X-Received: by 2002:a0d:c5c4:: with SMTP id h187mr22411029ywd.450.1559814731356;
+        Thu, 06 Jun 2019 02:52:11 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li1322-146.members.linode.com. [45.79.223.146])
+        by smtp.gmail.com with ESMTPSA id r6sm359910ywd.47.2019.06.06.02.52.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 02:52:10 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 17:52:02 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -70,64 +72,55 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 4/4] perf augmented_raw_syscalls: Document clang configuration
-Date:   Thu,  6 Jun 2019 17:48:45 +0800
-Message-Id: <20190606094845.4800-5-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606094845.4800-1-leo.yan@linaro.org>
-References: <20190606094845.4800-1-leo.yan@linaro.org>
+Subject: Re: [PATCH v1 0/4] perf augmented_raw_syscalls: Support for arm64
+Message-ID: <20190606095202.GA5970@leoy-ThinkPad-X240s>
+References: <20190606075617.14327-1-leo.yan@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606075617.14327-1-leo.yan@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To build this program successfully with clang, there have three
-compiler options need to be specified:
+Hi all,
 
-  - Header file path: tools/perf/include/bpf;
-  - Specify architecture;
-  - Define macro __NR_CPUS__.
+On Thu, Jun 06, 2019 at 03:56:13PM +0800, Leo Yan wrote:
+> When I tried to run the trace on arm64 platform with eBPF program
+> augmented_raw_syscalls, it reports several failures for eBPF program
+> compilation.  So tried to resolve these issues and this patch set is
+> the working result.
+> 
+> 0001 patch lets perf command to exit directly if find eBPF program
+> building failure.
+> 
+> 0002 patch is minor refactoring code to remove duplicate macro.
+> 
+> 0003 patch is to add support arm64 raw syscalls numbers.
 
-This patch add comments to explain the reasons for building failure and
-give two examples for llvm.clang-opt variable, one is for x86_64
-architecture and another is for aarch64 architecture.
+I found minor issues in patch 0003, so sent out v2 for reviewing.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- .../examples/bpf/augmented_raw_syscalls.c     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Sorry for spamming.
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index a3701a4daf2e..fb6987edab2c 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -6,6 +6,25 @@
-  *
-  * perf trace -e tools/perf/examples/bpf/augmented_raw_syscalls.c cat /etc/passwd > /dev/null
-  *
-+ * This program include two header files 'unistd.h' and 'pid_filter.h', which
-+ * are placed in the folder tools/perf/include/bpf, but this folder is not
-+ * included in env $KERNEL_INC_OPTIONS and it leads to compilation failure.
-+ * For building this code, we also need to specify architecture and define macro
-+ * __NR_CPUS__.  To resolve these issues, variable llvm.clang-opt can be set in
-+ * the file ~/.perfconfig:
-+ *
-+ * E.g. Test on a platform with 8 CPUs with x86_64 architecture:
-+ *
-+ *   [llvm]
-+ *		clang-opt = "-D__NR_CPUS__=8 -D__x86_64__ \
-+ *			     -I./tools/perf/include/bpf"
-+ *
-+ * E.g. Test on a platform with 5 CPUs with aarch64 architecture:
-+ *
-+ *   [llvm]
-+ *		clang-opt = "-D__NR_CPUS__=5 -D__aarch64__ \
-+ *			     -I./tools/perf/include/bpf"
-+
-  * This exactly matches what is marshalled into the raw_syscall:sys_enter
-  * payload expected by the 'perf trace' beautifiers.
-  *
--- 
-2.17.1
+Thanks,
+Leo Yan
 
+> 0004 patch is to document clang configuration so that can easily use
+> this program on both x86_64 and aarch64 platforms.
+> 
+> 
+> Leo Yan (4):
+>   perf trace: Exit when build eBPF program failure
+>   perf augmented_raw_syscalls: Remove duplicate macros
+>   perf augmented_raw_syscalls: Support arm64 raw syscalls
+>   perf augmented_raw_syscalls: Document clang configuration
+> 
+>  tools/perf/builtin-trace.c                    |   8 ++
+>  .../examples/bpf/augmented_raw_syscalls.c     | 102 +++++++++++++++++-
+>  2 files changed, 109 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 2.17.1
+> 
