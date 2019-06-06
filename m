@@ -2,102 +2,90 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D68C28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF61C28EB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF5B207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF11D204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:22:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dm+id48i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfFFLUK convert rfc822-to-8bit (ORCPT
+        id S1728162AbfFFLWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:20:10 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:38929 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfFFLUJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:20:09 -0400
-Received: from marcel-macpro.fritz.box (p5B3D2A37.dip0.t-ipconnect.de [91.61.42.55])
-        by mail.holtmann.org (Postfix) with ESMTPSA id B0E3ECF2B4;
-        Thu,  6 Jun 2019 13:28:31 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [5.2.0-rcx] Bluetooth: hci0: unexpected event for opcode
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CADDKRnDimtWTrW8BXHZjLCHYRnpZ1qs5pravPtdNpwE13cWvvg@mail.gmail.com>
-Date:   Thu, 6 Jun 2019 13:20:07 +0200
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <DE393F06-081D-4761-82BA-014CBD3E43A9@holtmann.org>
-References: <CADDKRnDWhX25QPFNXA-uPcM_tD3Bep2ui=D5A2A8A5cZvrbJtA@mail.gmail.com>
- <F99C3F13-D705-4214-ADE8-30676E29360D@holtmann.org>
- <CADDKRnDimtWTrW8BXHZjLCHYRnpZ1qs5pravPtdNpwE13cWvvg@mail.gmail.com>
-To:     =?utf-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Thu, 6 Jun 2019 07:22:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34550 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfFFLWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:22:24 -0400
+Received: from zn.tnic (p200300EC2F1EFA0069BEA28104A317EB.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:fa00:69be:a281:4a3:17eb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 344051EC01AD;
+        Thu,  6 Jun 2019 13:22:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1559820142;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=xc7XgRaBZPknCjJo1rIDVERLBN/P7FUkAHIt/67cwZw=;
+        b=dm+id48iBC88mNIVr2UxAiHkVQoyU+ZubYsESCOUC42epYrUjvcoHuhR7CAqPiMchtbt3t
+        3irUUxE2mTfYXQKRDkv+dGJxKNZ/FTePLWhpk4gBZLBgbqCas5Z6ix9N+/at7UYvQDHrzm
+        eG56JegYO97ImsfAvwWA31sAlo+E/Kk=
+Date:   Thu, 6 Jun 2019 13:22:17 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     James Morse <james.morse@arm.com>
+Cc:     "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190606112217.GE26146@zn.tnic>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+ <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+ <20190531051400.GA2275@cz.tnic>
+ <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+ <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+On Thu, Jun 06, 2019 at 11:33:30AM +0100, James Morse wrote:
+> All these are integration choices between the two IP blocks, done as separate drivers we
+> don't have anywhere to store that information. Even if you don't care about this, making
+> them separate drivers should only be done to make them usable on other platforms,
 
->>> In 5.2.0-rcx I see a new error message on startup probably after
->>> loading the Bluetooth firmware:
->>> [    1.609460] Bluetooth: hci0: unexpected event for opcode 0xfc2f
->>> 
->>>> dmesg | grep Bluetooth
->>> [    0.130969] Bluetooth: Core ver 2.22
->>> [    0.130973] Bluetooth: HCI device and connection manager initialized
->>> [    0.130974] Bluetooth: HCI socket layer initialized
->>> [    0.130975] Bluetooth: L2CAP socket layer initialized
->>> [    0.130976] Bluetooth: SCO socket layer initialized
->>> [    0.374716] Bluetooth: RFCOMM TTY layer initialized
->>> [    0.374718] Bluetooth: RFCOMM socket layer initialized
->>> [    0.374718] Bluetooth: RFCOMM ver 1.11
->>> [    0.374719] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
->>> [    0.374720] Bluetooth: BNEP socket layer initialized
->>> [    0.374721] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
->>> [    0.374722] Bluetooth: HIDP socket layer initialized
->>> [    1.422530] Bluetooth: hci0: read Intel version: 370710018002030d00
->>> [    1.422533] Bluetooth: hci0: Intel Bluetooth firmware file:
->>> intel/ibt-hw-37.7.10-fw-1.80.2.3.d.bseq
->>> [    1.609460] Bluetooth: hci0: unexpected event for opcode 0xfc2f
->>> [    1.625557] Bluetooth: hci0: Intel firmware patch completed and activated
->>> [   21.986125] input: BluetoothMouse3600 Mouse as
->>> /devices/virtual/misc/uhid/0005:045E:0916.0004/input/input15
->>> [   21.986329] input: BluetoothMouse3600 Consumer Control as
->>> /devices/virtual/misc/uhid/0005:045E:0916.0004/input/input16
->>> [   21.986408] hid-generic 0005:045E:0916.0004: input,hidraw3:
->>> BLUETOOTH HID v1.10 Mouse [BluetoothMouse3600] on 80:19:34:4D:31:44
->>> 
->>> 
->>> The error message goes away if I revert following patch:
->>> f80c5dad7b64 Bluetooth: Ignore CC events not matching the last HCI command
->> 
->> if you can send btmon trace (or better btmon -w trace.log) for this event triggering it, then we can look if this is a hardware issue.
-> 
-> The problem is that it happens only once during startup, especially at
-> the very first startup after power-on only. So I can't issue any
-> command.
+... that we can do with a separately integratable object like
+fsl_ddr_edac.c does it, for example, where it is shared between
+two different platform drivers.
 
-try to blacklist btusb.ko module. Create /etc/modprobe.d/blacklist-btusb.conf with the content of "blacklist vc4”. Then once booted, start “btmon -w trace.log” and then “modprobe btusb”. This should give you the initial firmware loading trace.
+-- 
+Regards/Gruss,
+    Boris.
 
-I am just assuming that the module is connected via USB, if not then you need to let me know.
-
->> We have only seen this with Atheros hardware so far, but it might happen for others as well. It indicates that this is an unexpected event. Normally you can ignore this warning since it just indicates an existing issue that we just papered over before. So if everything works as before, just ignore it,
-> 
-> Yes for me BT works as usual so ignoring it would be no problem (but
-> it looks ugly because the error message is painted right on the
-> boot-screen).
-
-The 0xfc2f command is never issued by btusb.c or btintel.c actually. It is a command to apply the BDDATA information used only by Intel AG6xx devices which are UART only. So I am almost certain that this is a bug in the hardware / firmware and the patch above just started to highlight it. The trace will show if that is the case.
-
-Regards
-
-Marcel
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
