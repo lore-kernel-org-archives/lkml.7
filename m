@@ -2,287 +2,77 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CE6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7F7C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09F0208C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NolPoyDj"
+	by mail.kernel.org (Postfix) with ESMTP id 74B1C20665
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfFFVhW (ORCPT
+        id S1728599AbfFFVjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:37:22 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54745 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728483AbfFFVhV (ORCPT
+        Thu, 6 Jun 2019 17:39:07 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:34983 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbfFFVjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:37:21 -0400
-Received: by mail-it1-f195.google.com with SMTP id h20so2382393itk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 14:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+QBdyZj1I7drp/b50HZlmF43JSxnAeWa0jxxMiyIVXc=;
-        b=NolPoyDjYnIQMci7PwsT9RiWgwW+ar1+vnt93teKnZ+fxxJNLXO3YLuOLArf7tOCTZ
-         neucsp0wiztZ64STtyZMYnz0lS0niok/nsimcR0/BPboY/HHGPohUIqIVLGjoKryaGfk
-         xdAEjhPQnEEPaLFpGW/3rtXuLULRKrkaHRARM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+QBdyZj1I7drp/b50HZlmF43JSxnAeWa0jxxMiyIVXc=;
-        b=M7KOFZ3jUgOflRQoVuPCcEwxf9MCF9it+NCRmF52wzKpv6KuQMbwzOYyVCGAHLm7GM
-         E8CK4ZHZS5fJ1Sri56s44kfw6pnaSs56Xd49oyn+eNNCbiumFkGd91L/73geE89ch10G
-         s4/KlS+803RFVL76m7jRSysb0sZf80u1793JfCK+uOxgUJejU4bZAhji/KPcd9l4WLfb
-         80EAYr4fOf6v9fjKSACNlTeX1Di5HhkRPJyGNWmqKrOnYNHbVEgQP0RRuNKpxexuu0F2
-         ipgGnzNSamrDL85IbHK+HWPI7Roax638gfTNo/l0xTWBURYPSnbCqssJZJmBKgeHsy4c
-         NdWA==
-X-Gm-Message-State: APjAAAVmNl7PkYDLhuxeR8779dK29O7IkDC+X9u6GxeacpzrO864Tuxk
-        GCOpQWmDAT0lzQEXq0FCcroz3E+WWWQ=
-X-Google-Smtp-Source: APXvYqw9VhMkSzKNyvgLkCi4y4DyzR2oYZRdh5qmo9dd6RbSsWf8D55uz1QYT+KmqYI7MjyCkTJjVA==
-X-Received: by 2002:a02:ac09:: with SMTP id a9mr15496979jao.48.1559857040120;
-        Thu, 06 Jun 2019 14:37:20 -0700 (PDT)
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
-        by smtp.gmail.com with ESMTPSA id e2sm1382152ith.39.2019.06.06.14.37.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 14:37:18 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id i10so1367314iol.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 14:37:17 -0700 (PDT)
-X-Received: by 2002:a05:6602:2006:: with SMTP id y6mr29144619iod.218.1559857037515;
- Thu, 06 Jun 2019 14:37:17 -0700 (PDT)
+        Thu, 6 Jun 2019 17:39:06 -0400
+Received: from [192.168.1.110] ([77.9.2.22]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M2fDr-1hYB1H1K3D-004FCS; Thu, 06 Jun 2019 23:39:00 +0200
+Subject: Re: [PATCH] net: ipv4: fib_semantics: fix uninitialized variable
+To:     David Ahern <dsahern@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org
+References: <1559832197-22758-1-git-send-email-info@metux.net>
+ <0ba84175-49be-9023-271d-516c93e2d83e@gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <16775959-1eb7-b8de-e4ad-b40da395d871@metux.net>
+Date:   Thu, 6 Jun 2019 23:38:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190603183740.239031-1-dianders@chromium.org>
- <20190603183740.239031-4-dianders@chromium.org> <42fc30b1-adab-7fa8-104c-cbb7855f2032@intel.com>
-In-Reply-To: <42fc30b1-adab-7fa8-104c-cbb7855f2032@intel.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 6 Jun 2019 14:37:03 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UPfCOr-syAbVZ-FjHQy7bgQf5BS5pdV-Bwd3hquRqEGg@mail.gmail.com>
-Message-ID: <CAD=FV=UPfCOr-syAbVZ-FjHQy7bgQf5BS5pdV-Bwd3hquRqEGg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] brcmfmac: sdio: Disable auto-tuning around
- commands expected to fail
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Franky Lin <franky.lin@broadcom.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0ba84175-49be-9023-271d-516c93e2d83e@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:22rxMNXXkOaSkI/weParmlfWRyLUi3KHyVCODClKyaos2cXwTnZ
+ X92zZAWj8uuUfG9Y695vjEwecQCJ56gVdlHoGN/aUfCGEC4nUbYNY97ARR13y/t42nZLhNT
+ 6+PJsY+q0czFDM8H7OU9vMXA1OYN0vktQ7GnulcQGPqgbhYMleizdgJaS7IPLdyh/+WMR6V
+ eICkfbe/omCo078eUHyVg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M8JA6Vx3JuA=:CqyXtTBtdORF3nMpdJ/JA7
+ 72FrZS+LmdfP6yiIVtp19YrJ6po8Fht/3DuD3ePPYQ57pqnJmXqf6X0xxxQcf39Tsqd6CD8zU
+ c/raZGFW/vKJQx/USeiJTYTkkbbBTDV8R5+eTS9Z1nM7H23f54x8gtfhOIOl2KgQnvi25B2lD
+ 0Nhvxjll7j33ErQVegBLcDA54zLfWj5/pk/MxiebOVpRlr9zKDjwMgYDliA6VpB7LSytDebQ0
+ cb5qMRNe6JUYycxOaRjayHADbvj54MP327oSG+1c/J56uT/D4aDHMZMG1QhUp9KRflfBFB1bH
+ fR9Ali6jRWW0GgJ3YvWwv7MUs7d3Z4R/8EnC/FFo1g0wqIIjBDLD1e+clgjAoyVJNFTIoP4vN
+ Sa+DlTw8+i9BDK31HnIUDFtn1DjmP9ZZuBQuTbjivBJMq9uoEX6WbRjCp430DJl6AowDXDHag
+ J+14nr03x4bSQsYnhiOj84mBRgGnPfmku0iwsHq53bygBuocdkphYxml0BQyXnHQfb01fl2LF
+ 4N8uM1STS5tmt0UHXdkupSBiKvRAdpaz1R4R5QA6GRzuYRDJR2JLqLj0Jwv+MpvfVSvKgHhs6
+ iCi0mO1ljD2UMoLaMQUkV8HfDSIOaVJErQ9RzHOUGbGKnsCWIGzjt/1P/uLRFa0ftr3fQvtOk
+ bWeFUD2VsqKWhqBzddtRGoHDK6Z8qzEGiWCuv0aIf0IQl4YY6IJBaKLebjIhJP6t/wJ45d0s1
+ vVQW5CZRz1I1kqZbqHVQ+GaI+z3OssZxnga3Sphk1ywmOjfSKnSYekL5Rzw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 06.06.19 17:47, David Ahern wrote:
+> 
+> what compiler version?
+> 
+> if tbl is set, then err is set.
+> 
 
-On Thu, Jun 6, 2019 at 7:00 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 3/06/19 9:37 PM, Douglas Anderson wrote:
-> > There are certain cases, notably when transitioning between sleep and
-> > active state, when Broadcom SDIO WiFi cards will produce errors on the
-> > SDIO bus.  This is evident from the source code where you can see that
-> > we try commands in a loop until we either get success or we've tried
-> > too many times.  The comment in the code reinforces this by saying
-> > "just one write attempt may fail"
-> >
-> > Unfortunately these failures sometimes end up causing an "-EILSEQ"
-> > back to the core which triggers a retuning of the SDIO card and that
-> > blocks all traffic to the card until it's done.
-> >
-> > Let's disable retuning around the commands we expect might fail.
->
-> It seems to me that re-tuning needs to be prevented before the
-> first access otherwise it might be attempted there,
+gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
 
-By this I think you mean I wasn't starting my section early enough to
-catch the "1st KSO write".  Oops.  Thanks!
-
-
-> and it needs
-> to continue to be prevented during the transition when it might
-> reasonably be expected to fail.
->
-> What about something along these lines:
->
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> index 4e15ea57d4f5..d932780ef56e 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> @@ -664,9 +664,18 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
->         int err = 0;
->         int err_cnt = 0;
->         int try_cnt = 0;
-> +       int need_retune = 0;
-> +       bool retune_release = false;
->
->         brcmf_dbg(TRACE, "Enter: on=%d\n", on);
->
-> +       /* Cannot re-tune if device is asleep */
-> +       if (on) {
-> +               need_retune = sdio_retune_get_needed(bus->sdiodev->func1); // TODO: host->can_retune ? host->need_retune : 0
-> +               sdio_retune_hold_now(bus->sdiodev->func1); // TODO: add sdio_retune_hold_now()
-> +               retune_release = true;
-> +       }
-
-The code below still has retries even for the "!on" case.  That
-implies that you could still get CRC errors from the card in the "!on"
-direction too.  Any reason why we shouldn't just hold retuning even
-for the !on case?
-
-
-> +
->         wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
->         /* 1st KSO write goes to AOS wake up core if device is asleep  */
->         brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
-> @@ -711,8 +720,16 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
->                         err_cnt = 0;
->                 }
->                 /* bail out upon subsequent access errors */
-> -               if (err && (err_cnt++ > BRCMF_SDIO_MAX_ACCESS_ERRORS))
-> -                       break;
-> +               if (err && (err_cnt++ > BRCMF_SDIO_MAX_ACCESS_ERRORS)) {
-> +                       if (!retune_release)
-> +                               break;
-> +                       /*
-> +                        * Allow one more retry with re-tuning released in case
-> +                        * it helps.
-> +                        */
-> +                       sdio_retune_release(bus->sdiodev->func1);
-> +                       retune_release = false;
-
-I would be tempted to wait before adding this logic until we actually
-see that it's needed.  Sure, doing one more transfer probably won't
-really hurt, but until we know that it actually helps it seems like
-we're just adding extra complexity?
-
-
-> +               }
->
->                 udelay(KSO_WAIT_US);
->                 brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val,
-> @@ -727,6 +744,18 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
->         if (try_cnt > MAX_KSO_ATTEMPTS)
->                 brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
->
-> +       if (retune_release) {
-> +               /*
-> +                * CRC errors are not unexpected during the transition but they
-> +                * also trigger re-tuning. Clear that here to avoid an
-> +                * unnecessary re-tune if it wasn't already triggered to start
-> +                * with.
-> +                */
-> +               if (!need_retune)
-> +                       sdio_retune_clear_needed(bus->sdiodev->func1); // TODO: host->need_retune = 0
-> +               sdio_retune_release(bus->sdiodev->func1); // TODO: add sdio_retune_release()
-> +       }
-
-Every time I re-look at this I have to re-figure out all the subtle
-differences between the variables and functions involved here.  Let me
-see if I got everything right:
-
-* need_retune: set to 1 if we can retune and some event happened that
-makes us truly believe that we need to be retuned, like we got a CRC
-error or a timer expired or our host controller told us to retune.
-
-* retune_now: set to 1 it's an OK time to be retuning.  Specifically
-if retune_now is false we won't send any retuning commands but we'll
-still keep track of the need to retune.
-
-* hold_retune: If this gets set to 1 by mmc_retune_hold_now() then a
-future call to mmc_retune_hold() will _not_ schedule a retune by
-setting retune_now (because mmc_retune_hold() will see that
-hold_retune was already 1).  ...and a future call to
-mmc_retune_recheck() between mmc_hold() and mmc_release() will also
-not schedule a retune because hold_retune will be 2 (or generally >
-1).
-
----
-
-So overall trying to summarize what I think are the differences
-between your patch and my patch.
-
-1. If we needed to re-tune _before_ calling brcmf_sdio_kso_control(),
-with your patch we'll make sure that we don't actually attempt to
-retune until brcmf_sdio_kso_control() finishes.
-
-2. If we needed to retune during brcmf_sdio_kso_control() (because a
-timer expired?) then we wouldn't trigger that retune while
-brcmf_sdio_kso_control() is running.
-
-In the case of dw_mmc, which I'm most familiar with, we don't have any
-sort of automated or timed-based retuning.  ...so we'll only re-tune
-when we see the CRC error.  If I'm understanding things correctly then
-that for dw_mmc my solution and yours behave the same.  That means the
-difference is how we deal with other retuning requests, either ones
-that come about because of an interrupt that the host controller
-provided or because of a timer.  Did I get that right?
-
-...and I guess the reason we have to deal specially with these cases
-is because any time that SDIO card is "sleeping" we don't want to
-retune because it won't work.  Right?  NOTE: the solution that would
-come to my mind first to solve this would be to hold the retuning for
-the whole time that the card was sleeping and then release it once the
-card was awake again.  ...but I guess we don't truly need to do that
-because tuning only happens as a side effect of sending a command to
-the card and the only command we send to the card is the "wake up"
-command.  That's why your solution to hold tuning while sending the
-"wake up" command works, right?
-
----
-
-OK, so assuming all the above is correct, I feel like we're actually
-solving two problems and in fact I believe we actually need both our
-approaches to solve everything correctly.  With just your patch in
-place there's a problem because we will clobber any external retuning
-requests that happened while we were waking up the card.  AKA, imagine
-this:
-
-A) brcmf_sdio_kso_control(on=True) gets called; need_retune starts as 0
-
-B) We call sdio_retune_hold_now()
-
-C) A retuning timer goes off or the SD Host controller tells us to retune
-
-D) We get to the end of brcmf_sdio_kso_control() and clear the "retune
-needed" since need_retune was 0 at the start.
-
-...so we dropped the retuning request from C), right?
-
-
-What we truly need is:
-
-1. CRC errors shouldn't trigger a retuning request when we're in
-brcmf_sdio_kso_control()
-
-2. A separate patch that holds any retuning requests while the SDIO
-card is off.  This patch _shouldn't_ do any clearing of retuning
-requests, just defer them.
-
-
-Does that make sense to you?  If so, I can try to code it up...
-
-
--Doug
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
