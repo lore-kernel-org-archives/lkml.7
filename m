@@ -2,155 +2,127 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D94C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86574C28D1B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0692083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E522207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PCZ8xQ+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfFFGyu convert rfc822-to-8bit (ORCPT
+        id S1726732AbfFFGzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:54:50 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41988 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbfFFGyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:54:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 23:54:49 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Jun 2019 23:54:49 -0700
-Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 5 Jun 2019 23:54:49 -0700
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- FMSMSX114.amr.corp.intel.com (10.18.116.8) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 5 Jun 2019 23:54:48 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.137]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.192]) with mapi id 14.03.0415.000;
- Thu, 6 Jun 2019 14:54:46 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-CC:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Subject: RE: [PATCH v2 2/4] iommu: Introduce device fault data
-Thread-Topic: [PATCH v2 2/4] iommu: Introduce device fault data
-Thread-Index: AQHVGhzpdp8RFw2/OU64MEW+KDLfp6aJ93gAgALLAvCAAA3/AIABY4qw
-Date:   Thu, 6 Jun 2019 06:54:46 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19CA6C529@SHSMSX104.ccr.corp.intel.com>
-References: <20190603145749.46347-1-jean-philippe.brucker@arm.com>
-        <20190603145749.46347-3-jean-philippe.brucker@arm.com>
-        <20190603150842.11070cfd@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19CA6A9EE@SHSMSX104.ccr.corp.intel.com>
- <20190605103754.6d8830d7@jacob-builder>
-In-Reply-To: <20190605103754.6d8830d7@jacob-builder>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2NhYzQ0YmUtNjAzMC00OTBmLTg1NTgtZWMzMDM2YWVhYjQ0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRG5NZm1PSmJMUlIyalpCdWFITlVkb3o2ejdOUWp5Z0d5RXBoMVVtV0tjc1lFV21RU00wMXNmajFxZFJ6MkhSRSJ9
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 6 Jun 2019 02:55:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42052 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFGzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:55:43 -0400
+Received: by mail-io1-f68.google.com with SMTP id u19so974244ior.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 23:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HzYHOcm04V7pY89OMe1ayw64K31F1RwMQUnnebF2vQg=;
+        b=PCZ8xQ+zgS+exi65IVAynpf6n2dVQ2aMd8IZrDp05SrkbQi3WQ4ysjYvQ7bwaWkaCs
+         yxrfn82fV2bko0z2eGUAdF/UEchtticxfogCLaowjdt8DdcQGJYkGS2wpSP+R9a88/Vj
+         xwb9ucRn8Y28nfwLDvP5EuTmjhIUah2DFaB8JK4shJkX11tDoNblzipsiZ1rNUKla7WL
+         d3Y1jAUm3echWSkinPSRxj7grvrYAPCeDxKGfASBDjYW3p6lZeoKb6yaeRORtm9d5MSu
+         /gGjtE2ZpU6hpYhKUqAApETWMTbCMMlvK48wgJ1ixCAIqKK/J2Wqy/p0t4/ssQVVkmxl
+         6XWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HzYHOcm04V7pY89OMe1ayw64K31F1RwMQUnnebF2vQg=;
+        b=N4H/vNNNnDen7oMRgH75jzFnqHIS5Fbyvf2y44kREimQwvloE6ArEigl1n3fDibtab
+         Db861f1ht07ZlaHVrR9naTr2WaGvxcIN45FS4Sv8uBEOGrvVSPZJy2Uqu4D2mpraFQEr
+         mrBNwKTgXcfgTNGRu9YTpaWXSMp1WcQbi9MBdZ+t6MX3K8cDpHbai8JJtaT7+GA71qdG
+         Z5KB5qR0D9OeIVKL/7eB8fIxwisQm//ACv36CqmlbEoDTncx8ragyd6EPHJfwpHKdObl
+         R1B2/9h1G8hWxK7/3077FB44s3zkhuAmCXaShgM4/s47+QBEYZDB6XTPbCSLi4DwiujJ
+         Hzqw==
+X-Gm-Message-State: APjAAAUUhr/65ozHzEWTAaiibz+NzZLoWgEapjW3k8Oe+it6V/Yr3qjx
+        3dGkOQ/2CbBx+h0I6w1g2qrTQ999JbssZ6xsjbd1qA==
+X-Google-Smtp-Source: APXvYqzmVB1goVLdL/gBMnVpgzDUq1wp1x/P5RQsZ3Td5fa9metOI9KhI69VTT90C5Ka3qNwhh94GESgCKyvqNrDng4=
+X-Received: by 2002:a5d:9d83:: with SMTP id 3mr25129792ion.65.1559804142376;
+ Wed, 05 Jun 2019 23:55:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com>
+ <CAKv+Gu9QkKwNVpfpQP7uDd2-66jU=qkeA7=0RAoO4TNaSbG+tg@mail.gmail.com> <CAKwvOdnPcjESFrQRR_=cCVag3ZSnC0nBqF7+LFHrcDArT_segA@mail.gmail.com>
+In-Reply-To: <CAKwvOdnPcjESFrQRR_=cCVag3ZSnC0nBqF7+LFHrcDArT_segA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 6 Jun 2019 08:55:29 +0200
+Message-ID: <CAKv+Gu9Leaq_s2kVNzHx+zkdKFXgQVkouN3M56u5nou5WX=cKg@mail.gmail.com>
+Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
+ (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Rolf Eike Beer <eb@emlix.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
-> Sent: Thursday, June 6, 2019 1:38 AM
-> 
-> On Wed, 5 Jun 2019 08:51:45 +0000
-> "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> 
-> > > From: Jacob Pan
-> > > Sent: Tuesday, June 4, 2019 6:09 AM
-> > >
-> > > On Mon,  3 Jun 2019 15:57:47 +0100
-> > > Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
-> > >
-> > > > +/**
-> > > > + * struct iommu_fault_page_request - Page Request data
-> > > > + * @flags: encodes whether the corresponding fields are valid and
-> > > > whether this
-> > > > + *         is the last page in group (IOMMU_FAULT_PAGE_REQUEST_*
-> > > > values)
-> > > > + * @pasid: Process Address Space ID
-> > > > + * @grpid: Page Request Group Index
-> > > > + * @perm: requested page permissions (IOMMU_FAULT_PERM_*
-> values)
-> > > > + * @addr: page address
-> > > > + * @private_data: device-specific private information
-> > > > + */
-> > > > +struct iommu_fault_page_request {
-> > > > +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
-> > > > +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
-> > > > +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
-> > > > +	__u32	flags;
-> > > > +	__u32	pasid;
-> > > > +	__u32	grpid;
-> > > > +	__u32	perm;
-> > > > +	__u64	addr;
-> > > > +	__u64	private_data[2];
-> > > > +};
-> > > > +
-> > >
-> > > Just a thought, for non-identity G-H PASID management. We could
-> > > pass on guest PASID in PRQ to save a lookup in QEMU. In this case,
-> > > QEMU allocate a GPASID for vIOMMU then a host PASID for pIOMMU.
-> > > QEMU has a G->H lookup. When PRQ comes in to the pIOMMU with
-> > > HPASID, IOMMU driver
-> > > can retrieve GPASID from the bind data then report to the guest via
-> > > VFIO. In this case QEMU does not need to do a H->G PASID lookup.
-> > >
-> > > Should we add a gpasid field here? or we can add a flag and field
-> > > later, up to you.
-> > >
-> >
-> > Can private_data serve this purpose? It's better not introducing
-> > gpasid awareness within host IOMMU driver. It is just a user-level
-> > data associated with a PASID when binding happens. Kernel doesn't
-> > care the actual meaning, simply record it and then return back to
-> > user space later upon device fault. Qemu interprets the meaning as
-> > gpasid in its own context. otherwise usages may use it for other
-> > purpose.
-> >
-> private_data was intended for device PRQ with private data, part of the
-> VT-d PRQ descriptor. For vSVA, we can withhold private_data in the host
-> then respond back when page response from the guest matches pending PRQ
-> with the data withheld. But for in-kernel PRQ reporting, private data
-> still might be passed on to any driver who wants to process the PRQ. So
-> we can't re-purpose it.
+On Wed, 5 Jun 2019 at 22:48, Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> On Wed, Jun 5, 2019 at 11:42 AM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> > For the record, this is an example of why I think backporting those
+> > clang enablement patches is a bad idea.
+>
+> There's always a risk involved with backports of any kind; more CI
+> coverage can help us mitigate some of these risks in an automated
+> fashion before we get user reports like this.  I meet with the
+> KernelCI folks weekly, so I'll double check on the coverage of the
+> stable tree's branches.  The 0day folks are also very responsive and
+> I've spoken with them a few times, so I'll try to get to the bottom of
+> why this wasn't reported by either of those.
+>
+> Also, these patches help keep Android, CrOS, and Google internal
+> production kernels closer to their upstream sources.
+>
+> > We can't actually build those
+> > kernels with clang, can we? So what is the point? </grumpy>
+>
+> Here's last night's build:
+> https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/114388434
+>
 
-sure. I just use it as one example to extend.
+If you are saying that plain upstream 4.9-stable defconfig can be
+built with Clang, then I am pleasantly surprised.
 
-> 
-> But for in-kernel VDCM driver, it needs a lookup from guest PASID to
-> host PASID. I thought you wanted to have IOMMU driver provide such
-> service since the knowledge of H-G pasid can be established during
-> bind_gpasid time. In that sense, we _do_ have gpasid awareness.
-> 
+> Also, Android and CrOS have shipped X million devices w/ 4.9 kernels
+> built with Clang.  I think this number will grow at least one order of
+> magnitude imminently.
+>
 
-yes, it makes sense. My original point is that IOMMU driver itself 
-doesn't need to know the actual meaning of this field (then it may
-be reused for different purpose from gpasid), but you are right that
-mdev driver in kernel anyway needs to do G-H translation then 
-explicitly defining it looks reasonable.
+I know that (since you keep reminding me :-)), but obviously, Google
+does not care about changes that regress GCC support.
 
-Thanks
-Kevin 
+> > Alternatively, we can just revert this patch from 4.9
+>
+> That would break at least the above devices next time Android and CrOS
+> pulled from stable.
+>
+> > It would be helpful to get a relocation dump (objdump -r) of
+> > arm64-stub.o to figure out which symbol needs a 'hidden' annotation to
+> > prevent GCC from emitting it as a PIC reference requiring a GOT.
+>
+> Sounds like the best way forward, as well as having more info on which
+> config/toolchain reliably reproduces the issue.
+
+Let me know once you can reproduce it, I will have a look as well.
