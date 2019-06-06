@@ -2,141 +2,113 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BCEC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A0CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B85020868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559839069;
-	bh=SBlCYXjXf9Dmv/1zjLqy5l9A1C3/vFnxMgdVK5+kQww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aHdIXd0ZLV5mVaWrEIX8DwMa49t6a4eHtNfTMUG1drfNIoPmagdZdEnanpIAo15Da
-	 tiuTDpFNGSyIdl62tTHg1JkdkY8TPB9CE7gig4oLZDTudU1MCYXpKngB56L6ZjoRdy
-	 pVhyPY/DGEv0V+HOr7e+9Bdw/H+FLIJrEW+9GqSM=
+	by mail.kernel.org (Postfix) with ESMTP id 6011D20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:41:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uGxZBNrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfFFQht (ORCPT
+        id S1727330AbfFFQlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:37:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfFFQhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:37:48 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D882A206BB;
-        Thu,  6 Jun 2019 16:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559839067;
-        bh=SBlCYXjXf9Dmv/1zjLqy5l9A1C3/vFnxMgdVK5+kQww=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ieLpvDzWcm5ztonnfpaX04Bf5XtKdgUmixTRnLfue8zPzBFlHhb0bdxXJ0QUOI8hC
-         m390QKwAJBsuYwTCBnC6dbDKIrWmrnCmIuIzIC6i23+8X0Jg2W9R3FozjfKP9deUz5
-         OEpzhHSWIZ/ihC8lYmNu8MNLNJEYCpggsMCjdmw0=
-Date:   Thu, 6 Jun 2019 12:37:45 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "will.deacon@arm.com" <will.deacon@arm.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 0/2] Drivers: hv: Move Hyper-V clock/timer code to
- separate clocksource driver
-Message-ID: <20190606163745.GL29739@sasha-vm>
-References: <1558969089-13204-1-git-send-email-mikelley@microsoft.com>
+        Thu, 6 Jun 2019 12:41:24 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44497 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfFFQlY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 12:41:24 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x47so3381387qtk.11;
+        Thu, 06 Jun 2019 09:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qGgWKLVUyf6qVJ+NU9IfZosO/+IoPXVvZ/ps5UGeu24=;
+        b=uGxZBNrHxgZdNcDG6YFfhOi/xD/sPDDtJF3/oIgyNuoBBJ3gSCkwPmRhZwKvIPmzEV
+         5O4lGaoysr4ntjPBXirh8/EIu+oqy3w5wG9GgFVRO9NtBZlurQSlxpiNOaEsflMI6+wR
+         3PmfjqHYlwe5WZnlSPKPwNBwz+ae7O3sbOjtMeiJJ7w6lN/D8x6ptYEGdgBsbuZF7q5z
+         QZ/kTkfm1XWMsFEgk2X24ful9SRsRnq1+No3VXrnmLEdfhrMRueTg4XV/wIbecP275xm
+         93VQydu2CkYwkR8MEPjgW0jEKrSL/mdkIiqqYR5vs3a2Jv9U8cFl/P9rYTkE23F4v3+i
+         Titw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qGgWKLVUyf6qVJ+NU9IfZosO/+IoPXVvZ/ps5UGeu24=;
+        b=PZ3sR2xVZ1QZzdQvfr0uyySmaRxr+g+LUtMORLd0qgo5YgwA/LUSLwNNEtOr4KkJLa
+         A8WFSmAtZPpee6qLLpvKzv71IQMPRVxWEJfu+afKt8uIu5IRbQyTzQmyHbT/OdzPsQ1F
+         WThZwo8pCf+vLc7vJ4eGcBuz7z/S8E4U+OJrh4s7fABElJo6rVnImpdxo0iO8t8sBRNQ
+         1Yn9zjEnJ1hdDV0HotPhCDaVzFvByDUpa8kZWPItF8szZOsLOmLt7lnhm5X3I7PaEZh+
+         0PxU3jba5mAUSrasf3CQu8XnNBtJ1tdQwwmy36ga13LLhcTG9cOyc6cMplAnk9VdnAO7
+         scog==
+X-Gm-Message-State: APjAAAW3hBFDhPmmWOqKApsqVCz7JwEY33LEnq1j8QHENeOEgSkIrwBe
+        s63ak/Zswn3H+L0kGHrmDeRLs+JbZ5ECLOT+M+VpDoVQ
+X-Google-Smtp-Source: APXvYqzq39fh1m/kAw0clUqxX/svZkbL+HECGhzW478Xc72QCUetcoO+HPVlfMPNYaQ50DUO5JnsE/4nkiDZY14+nO8=
+X-Received: by 2002:ac8:25e7:: with SMTP id f36mr29916950qtf.139.1559839283036;
+ Thu, 06 Jun 2019 09:41:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1558969089-13204-1-git-send-email-mikelley@microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190524024459.6875-1-marcos.souza.org@gmail.com>
+In-Reply-To: <20190524024459.6875-1-marcos.souza.org@gmail.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Thu, 6 Jun 2019 09:41:11 -0700
+Message-ID: <CAPhsuW5Ea_bDRwoE7=AamzOsvLMdfQRTPh00iFHNrx8iU5ZOZw@mail.gmail.com>
+Subject: Re: [PATCH] md: md.c: Return -ENODEV when mddev is NULL in rdev_attr_show
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shaohua Li <shli@kernel.org>,
+        "open list:SOFTWARE RAID (Multiple Disks) SUPPORT" 
+        <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 02:59:07PM +0000, Michael Kelley wrote:
->This patch series moves Hyper-V clock/timer code to a separate Hyper-V
->clocksource driver. Previously, Hyper-V clock/timer code and data
->structures were mixed in with other Hyper-V code in the ISA independent
->drivers/hv code as well as in arch dependent code. The new Hyper-V
->clocksource driver is ISA independent, with a just few dependencies on
->arch specific functions. The patch series does not change any behavior
->or functionality -- it only reorganizes the existing code and fixes up
->the linkages. A few places outside of Hyper-V code are fixed up to use
->the new #include file structure.
+On Thu, May 23, 2019 at 7:45 PM Marcos Paulo de Souza
+<marcos.souza.org@gmail.com> wrote:
 >
->This restructuring is in response to Marc Zyngier's review comments
->on supporting Hyper-V running on ARM64, and is a good idea in general.
->It increases the amount of code shared between the x86 and ARM64
->architectures, and reduces the size of the new code for supporting
->Hyper-V on ARM64. A new version of the Hyper-V on ARM64 patches will
->follow once this clocksource restructuring is accepted.
->
->The code is diff'ed against Linux 5.2.0-rc1-next-20190524.
->
->Changes in v3:
->* Removed boolean argument to hv_init_clocksource(). Always call
->sched_clock_register, which is needed on ARM64 but a no-op on x86.
->* Removed separate cpuhp setup in hv_stimer_alloc() and instead
->directly call hv_stimer_init() and hv_stimer_cleanup() from
->corresponding VMbus functions.  This more closely matches original
->code and avoids clocksource stop/restart problems on ARM64 when
->VMbus code denies CPU offlining request.
->
->Changes in v2:
->* Revised commit short descriptions so the distinction between
->the first and second patches is clearer [GregKH]
->* Renamed new clocksource driver files and functions to use
->existing "timer" and "stimer" names instead of introducing
->"syntimer". [Vitaly Kuznetsov]
->* Introduced CONFIG_HYPER_TIMER to fix build problem when
->CONFIG_HYPERV=m [Vitaly Kuznetsov]
->* Added "Suggested-by: Marc Zyngier"
->
->Michael Kelley (2):
->  Drivers: hv: Create Hyper-V clocksource driver from existing
->    clockevents code
->  Drivers: hv: Move Hyper-V clocksource code to new clocksource driver
->
-> MAINTAINERS                          |   2 +
-> arch/x86/entry/vdso/vclock_gettime.c |   1 +
-> arch/x86/entry/vdso/vma.c            |   2 +-
-> arch/x86/hyperv/hv_init.c            |  91 +---------
-> arch/x86/include/asm/hyperv-tlfs.h   |   6 +
-> arch/x86/include/asm/mshyperv.h      |  81 ++-------
-> arch/x86/kernel/cpu/mshyperv.c       |   2 +
-> arch/x86/kvm/x86.c                   |   1 +
-> drivers/clocksource/Makefile         |   1 +
-> drivers/clocksource/hyperv_timer.c   | 321 +++++++++++++++++++++++++++++++++++
-> drivers/hv/Kconfig                   |   3 +
-> drivers/hv/hv.c                      | 156 +----------------
-> drivers/hv/hv_util.c                 |   1 +
-> drivers/hv/hyperv_vmbus.h            |   3 -
-> drivers/hv/vmbus_drv.c               |  42 ++---
-> include/clocksource/hyperv_timer.h   | 105 ++++++++++++
-> 16 files changed, 484 insertions(+), 334 deletions(-)
-> create mode 100644 drivers/clocksource/hyperv_timer.c
-> create mode 100644 include/clocksource/hyperv_timer.h
+> Commit c42d3240990814eec1e4b2b93fa0487fc4873aed
+> ("md: return -ENODEV if rdev has no mddev assigned") changed rdev_attr_store to
+> return -ENODEV when rdev->mddev is NULL, now do the same to rdev_attr_show.
 
-Queued for hyperv-next, thanks!
+nit: checkpatch.pl complains
 
---
+WARNING: Possible unwrapped commit description (prefer a maximum 75
+chars per line)
+#84:
+("md: return -ENODEV if rdev has no mddev assigned") changed rdev_attr_store to
+
+I fixed this in my tree, so no need to resend.
+
 Thanks,
-Sasha
+Song
+
+>
+> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+> ---
+>  drivers/md/md.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 45ffa23fa85d..0b391e7e063b 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -3363,7 +3363,7 @@ rdev_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
+>         if (!entry->show)
+>                 return -EIO;
+>         if (!rdev->mddev)
+> -               return -EBUSY;
+> +               return -ENODEV;
+>         return entry->show(rdev, page);
+>  }
+>
+> --
+> 2.21.0
+>
