@@ -2,144 +2,131 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43818C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D631BC28EB9
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14261208E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDE1206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AReiaJER"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L3+4xlHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbfFFXBN (ORCPT
+        id S1727725AbfFFXGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 19:01:13 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42706 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfFFXBN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 19:01:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id go2so25642plb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 16:01:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=12La436VbNM+cCSd7W2kZMhljrLWHemPkQdkpyh82vY=;
-        b=AReiaJERh9zfxRcBRKv/f5ZBzgNxQuBHCtL/MVHd7MWiPpVT1CnFdhZULF9v76DzvI
-         APLMydZtIIGHUOF8LV9te1yum4VCqoO+JJo8fP8KQK3tcqsZVLtZjJU3eGYyNSQ1T8Sj
-         dPbD4GyBcbK8B2wpKq2m7HnmayAH2ojTkHIhzVJydEe23H3GiltSObE8Vmsh3WBHMTsL
-         UCc6dTDfvgdqwHalbqqL7ixq6ZcHpMDgN7SMcCwQBeJVfHPuhsJfCgSUruUu+0Q9Eubl
-         Yq1eOLubJF54PHrSBAmTqhrTv0L+bf5qtlvG89eMew8LVYpvRULeTKj6Hwc7A8tWVUFH
-         9V5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=12La436VbNM+cCSd7W2kZMhljrLWHemPkQdkpyh82vY=;
-        b=jXmpEFlcMJdt87KidGGZshs69uANZGNAXgEaMkPOL3f0mZJBMmfw4RWpVrJeqMyZXi
-         S/npF5F6m+gYokyswWM9jbViF8DWcfxlPSip1LBZbf3TtJjD6fzLmbIUxFVDlhhEA2At
-         ijpaM18eJx57TjMeUtCWuWK4cGMbYSCgF2dVsjiQNukz1HRA2Thvl5uDC1CegWQmz4Sm
-         YkccHfXeIXpogMAvBuDXVPKQ2AUjrbexkvlveGNC4Mm2nSowpcVdODMgimDmcaHfL8MB
-         7teNb8dk1J8SpJXRPfdwQsE7LdxwIpVzagkbpKTMTUJBjuDyM/+twMA1jB4cEkkCOA0E
-         e/tA==
-X-Gm-Message-State: APjAAAW55DoYHqh2KkTmiZidpdlN64vfkkMwWrYn+DoIygFExCBmMI1U
-        1xGMObf+WTvsUDmiSQYSyNM=
-X-Google-Smtp-Source: APXvYqyJRnNHG/xd1j5UBLUN+f975Gpvky3R4SP3NlglwXTBLeJVJJ23pdeMLMfwRDTHpYXKxwk0/Q==
-X-Received: by 2002:a17:902:694b:: with SMTP id k11mr38505043plt.307.1559862071919;
-        Thu, 06 Jun 2019 16:01:11 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id w190sm198049pgw.51.2019.06.06.16.01.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 16:01:11 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     shengjiu.wang@nxp.com, broonie@kernel.org
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC/RFT PATCH] Revert "ASoC: fsl_esai: ETDR and TX0~5 registers are non volatile"
-Date:   Thu,  6 Jun 2019 16:01:05 -0700
-Message-Id: <20190606230105.4385-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 6 Jun 2019 19:06:16 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56749 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbfFFXGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 19:06:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Kh9J1MNJz9s7h;
+        Fri,  7 Jun 2019 09:06:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559862373;
+        bh=pLn2a/qW8IdhhMvswPDoSSBPx38lhu9GUG7Gp8C0eWM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=L3+4xlHFrYI5lg8BiLW3lssC2pO0jQZa0fR4wIEHc2D++7DCuMmYC1AslPXKMNMv4
+         2IrSWPF7uTH0gq5x9BRIlf1T5w9in3bdDEF1qgDYP1iusgx//wnSVyayosKSsa/U2q
+         O4CrNSBQkIt9pSZWMOee9s+iQJdwUAJssZtPk57tAntrd9ZJJbtPOBYRX5nMI4SJir
+         OrEy8IeEKfjOR4hM5FUEMjqwN9VWRdy+hWko24C2+B6HeLVDcoAWf+ibV/mWWKNY7t
+         nXdUK1T4j1WLfzJNYlDVXPOmYyijLkKJRrAWgbb1HhbbJgcn2xX/vobZDPiFChEcmr
+         m9GGccMIsxhJA==
+Date:   Fri, 7 Jun 2019 09:06:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Shawn Guo <shawnguo@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: linux-next: manual merge of the sunxi tree with the imx-xms tree
+Message-ID: <20190607090606.75fd6e85@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/JYebIKNd66KgcYw8U3+oRV/"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 8973112aa41b8ad956a5b47f2fe17bc2a5cf2645.
+--Sig_/JYebIKNd66KgcYw8U3+oRV/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-ETDR and TX0~5 are TX data registers. There are a couple of reasons
-to revert the change:
-1) Though ETDR and TX0~5 are not volatile but write-only registers,
-   they should not be cached either. According to the definition of
-   "volatile_reg", one should be put in the volatile list if it can
-   not be cached.
-2) When doing regcache_sync(), the operation may accidentally write
-   some "dirty" data into these registers, in case that cached data
-   happen to be different from the default ones. It may also result
-   in a channel shift/swap situation since the number of write-via-
-   sync operations at ETDR would unlikely match the channel number.
+Hi all,
 
-Note: this revert is not a complete revert as it keeps those macros
-of registers remaining in the default value list while the original
-commit also changed other entries in the list. And this patch isn't
-very necessary to Cc stable tree since there has been always a FIFO
-reset operation around the regcache_sync() call, even prior to this
-reverted commit.
+Today's linux-next merge of the sunxi tree got a conflict in:
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-Hi Mark,
-In case there's no objection against the patch, I'd still like to
-wait for a Tested-by from NXP folks before submitting it. Thanks!
+  arch/arm64/configs/defconfig
 
- sound/soc/fsl/fsl_esai.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+between commits:
 
-diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
-index 10d2210c91ef..8f0a86335f73 100644
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -652,16 +652,9 @@ static const struct snd_soc_component_driver fsl_esai_component = {
- };
- 
- static const struct reg_default fsl_esai_reg_defaults[] = {
--	{REG_ESAI_ETDR,	 0x00000000},
- 	{REG_ESAI_ECR,	 0x00000000},
- 	{REG_ESAI_TFCR,	 0x00000000},
- 	{REG_ESAI_RFCR,	 0x00000000},
--	{REG_ESAI_TX0,	 0x00000000},
--	{REG_ESAI_TX1,	 0x00000000},
--	{REG_ESAI_TX2,	 0x00000000},
--	{REG_ESAI_TX3,	 0x00000000},
--	{REG_ESAI_TX4,	 0x00000000},
--	{REG_ESAI_TX5,	 0x00000000},
- 	{REG_ESAI_TSR,	 0x00000000},
- 	{REG_ESAI_SAICR, 0x00000000},
- 	{REG_ESAI_TCR,	 0x00000000},
-@@ -711,10 +704,17 @@ static bool fsl_esai_readable_reg(struct device *dev, unsigned int reg)
- static bool fsl_esai_volatile_reg(struct device *dev, unsigned int reg)
- {
- 	switch (reg) {
-+	case REG_ESAI_ETDR:
- 	case REG_ESAI_ERDR:
- 	case REG_ESAI_ESR:
- 	case REG_ESAI_TFSR:
- 	case REG_ESAI_RFSR:
-+	case REG_ESAI_TX0:
-+	case REG_ESAI_TX1:
-+	case REG_ESAI_TX2:
-+	case REG_ESAI_TX3:
-+	case REG_ESAI_TX4:
-+	case REG_ESAI_TX5:
- 	case REG_ESAI_RX0:
- 	case REG_ESAI_RX1:
- 	case REG_ESAI_RX2:
--- 
-2.17.1
+  0a64ef2d28d1 ("arm64: defconfig: NVMEM_IMX_OCOTP=3Dy for imx8m")
+  c6b1ccce88ae ("defconfig: arm64: enable i.MX8 SCU octop driver")
 
+from the imx-xms tree and commit:
+
+  296bcfa05640 ("arm64: defconfig: add allwinner sid support")
+
+from the sunxi tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/configs/defconfig
+index fa5752a950eb,0dc34e0d4cbc..000000000000
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@@ -426,8 -420,8 +426,9 @@@ CONFIG_UNIPHIER_THERMAL=3D
+  CONFIG_WATCHDOG=3Dy
+  CONFIG_ARM_SP805_WATCHDOG=3Dy
+  CONFIG_S3C2410_WATCHDOG=3Dy
++ CONFIG_SUNXI_WATCHDOG=3Dm
+  CONFIG_IMX2_WDT=3Dy
+ +CONFIG_IMX_SC_WDT=3Dm
+  CONFIG_MESON_GXBB_WATCHDOG=3Dm
+  CONFIG_MESON_WATCHDOG=3Dm
+  CONFIG_RENESAS_WDT=3Dy
+@@@ -757,8 -742,7 +758,9 @@@ CONFIG_PHY_TEGRA_XUSB=3D
+  CONFIG_HISI_PMU=3Dy
+  CONFIG_QCOM_L2_PMU=3Dy
+  CONFIG_QCOM_L3_PMU=3Dy
+ +CONFIG_NVMEM_IMX_OCOTP=3Dy
+ +CONFIG_NVMEM_IMX_OCOTP_SCU=3Dy
++ CONFIG_NVMEM_SUNXI_SID=3Dy
+  CONFIG_QCOM_QFPROM=3Dy
+  CONFIG_ROCKCHIP_EFUSE=3Dy
+  CONFIG_UNIPHIER_EFUSE=3Dy
+
+--Sig_/JYebIKNd66KgcYw8U3+oRV/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz5nF4ACgkQAVBC80lX
+0Gymagf/TJX0zbjTN+3mkVwUolL4X25gDXnE5kOTjese1KsQTve0hXl7zmTfSfCS
+7c7IrcdTVyIiSJVEbV0XstsM9gRXQB0SJ0n8maAxV2efC3xT0j+p8X0hjX1Y+Tdm
+KZwtfmUpRF4RydEpQ5oVPvuSUWcflevTrZoLMKuYjjGZcsMQjfURBHX2smDnCRlY
+ladjjq6ew/htBgwXjSgILj56nDW/GN6eadmY4WhXkCs1TTNCXkK2xDbDz9D97TDw
+aR+Dw8YJAd3opm6xa6bPuq+JE5EIDSGs08R7PnIDJWRazEz55tSK/ujfMgpwyaMm
+uBNROA758bKOJcYUqQw02YC4K8ML/A==
+=+iG3
+-----END PGP SIGNATURE-----
+
+--Sig_/JYebIKNd66KgcYw8U3+oRV/--
