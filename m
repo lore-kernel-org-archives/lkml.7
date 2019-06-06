@@ -2,110 +2,88 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C68C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEB5C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C3220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:46:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z1VhShHb"
+	by mail.kernel.org (Postfix) with ESMTP id 2A5B920872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbfFFMqV (ORCPT
+        id S1727757AbfFFMuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 08:46:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45842 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFMqU (ORCPT
+        Thu, 6 Jun 2019 08:50:09 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50026 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfFFMuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 08:46:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56ChqtW003123;
-        Thu, 6 Jun 2019 12:45:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=suyPrwakIpx4/GT/1pO6R0rUGM7UxiWyf4SfHp3I1Gg=;
- b=z1VhShHb2i7HnW0uk6ZwccsbeHFgBJW4/hx22fhDyqH28AJ8xAcapEeLDVpLjk9rbrMW
- UisNBRZh0n+QqG1pVdBjtjrz1Mxr/rvvYdsTOEuevBWAk0FoGOSTj6HF8fIVUzRI051K
- mb7wXoROtxyO9AHeQFBky8CcvcAMh+oGHExVMojIgLxKzhneo1dr/j9xe6XwHQmJTEMH
- JLOi6Jjyc56J3HJTAEdiryvLWQKNNw3awF7CGTCPufdE975bApnwDw7SP5clqDMbGYWo
- XO/xt7wN8y+m8aZWAhjmwx7VCtLdFqxZKgJw8lNUag1KkZxTNMpW3JuUh5HLiPVb6e9R jw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sugstr6hv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 12:45:50 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56ChtjB099122;
-        Thu, 6 Jun 2019 12:45:50 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2swngje01v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 12:45:49 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56Cjho5021500;
-        Thu, 6 Jun 2019 12:45:43 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 05:45:42 -0700
-Date:   Thu, 6 Jun 2019 15:45:33 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, paul.kocialkowski@bootlin.com,
-        wens@csie.org, mchehab@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH 3/7] media: cedrus: Fix decoding for some H264 videos
-Message-ID: <20190606124533.GN31203@kadam>
-References: <20190530211516.1891-1-jernej.skrabec@siol.net>
- <20190530211516.1891-4-jernej.skrabec@siol.net>
- <20190603115536.j5lan6wtmbxpoe2k@flea>
- <2536664.ljALn0aKaT@jernej-laptop>
+        Thu, 6 Jun 2019 08:50:09 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 32D5380262; Thu,  6 Jun 2019 14:49:57 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 14:50:06 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kangjie Lu <kjlu@umn.edu>,
+        Matthias Schwarzott <zzam@gentoo.org>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 249/276] media: si2165: fix a missing check of
+ return value
+Message-ID: <20190606125006.GB27432@amd>
+References: <20190530030523.133519668@linuxfoundation.org>
+ <20190530030540.713606171@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="CdrF4e02JqNVZeln"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2536664.ljALn0aKaT@jernej-laptop>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=769
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060091
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=802 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060091
+In-Reply-To: <20190530030540.713606171@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 05:37:17PM +0200, Jernej Škrabec wrote:
-> Dne ponedeljek, 03. junij 2019 ob 13:55:36 CEST je Maxime Ripard napisal(a):
-> > int current = 0;
-> > 
-> > while (current < num) {
-> >     int tmp = min(num - current, 32);
-> > 
-> >     cedrus_write(dev, VE_H264_TRIGGER_TYPE, 0x3 | (current << 8))
-                                                       ^^^^^^^
-This should be "tmp << 8" instead of "current << 8" though.
 
+--CdrF4e02JqNVZeln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >     while (...)
-> >        ...
-> > 
-> >     current += tmp;
-> > }
-> 
+Hi!
 
-regards,
-dan carpenter
+> [ Upstream commit 0ab34a08812a3334350dbaf69a018ee0ab3d2ddd ]
+>=20
+> si2165_readreg8() may fail. Looking into si2165_readreg8(), we will find
+> that "val_tmp" will be an uninitialized value when regmap_read() fails.
+> "val_tmp" is then assigned to "val". So if si2165_readreg8() fails,
+> "val" will be a random value. Further use will lead to undefined
+> behaviors. The fix checks if si2165_readreg8() fails, and if so, returns
+> its error code upstream.
+
+Ok, but there's still undefined behaviour in si2165_readreg8, 16 and
+24, where it manipulates and prints uninitialized memory, right?
+
+									Pavel
+								=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--CdrF4e02JqNVZeln
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlz5C/4ACgkQMOfwapXb+vKnbwCgjf8g1YCjHfmt2pq0lnCO8Hbt
+TpYAni4HDZ+1op9LKWmHXuBpGoW0nkXY
+=ukvM
+-----END PGP SIGNATURE-----
+
+--CdrF4e02JqNVZeln--
