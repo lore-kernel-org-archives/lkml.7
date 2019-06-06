@@ -2,30 +2,29 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33DCC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCC1C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E05620673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5312720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfFFOWY (ORCPT
+        id S1729083AbfFFOWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:22:24 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:32887 "EHLO
+        Thu, 6 Jun 2019 10:22:39 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:47743 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728824AbfFFOWV (ORCPT
+        with ESMTP id S1729010AbfFFOWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:22:21 -0400
+        Thu, 6 Jun 2019 10:22:23 -0400
 X-Originating-IP: 2.224.242.101
 Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B6B5120014;
-        Thu,  6 Jun 2019 14:22:17 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 59F3420010;
+        Thu,  6 Jun 2019 14:22:20 +0000 (UTC)
 From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
 To:     laurent.pinchart@ideasonboard.com,
         kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
@@ -36,9 +35,9 @@ Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
         Harsha.ManjulaMallikarjun@in.bosch.com,
         linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 17/20] drm: rcar-du: crtc: Enable and disable CMMs
-Date:   Thu,  6 Jun 2019 16:22:17 +0200
-Message-Id: <20190606142220.1392-18-jacopo+renesas@jmondi.org>
+Subject: [PATCH 18/20] drm: rcar-du: group: Enable DU's CMM extension
+Date:   Thu,  6 Jun 2019 16:22:18 +0200
+Message-Id: <20190606142220.1392-19-jacopo+renesas@jmondi.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
 References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
@@ -49,54 +48,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable/disable the CMM associated with a CRTC at
-atomic_enable()/atomic_disable() time.
+Enable the CMM units through the display unit extensional function control
+group register DEFR7.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-index 9f270a54b164..e6d3df37c827 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-@@ -21,6 +21,7 @@
- #include <drm/drm_plane_helper.h>
- #include <drm/drm_vblank.h>
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+index 9eee47969e77..d252c9bb9809 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+@@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
  
-+#include "rcar_cmm.h"
- #include "rcar_du_crtc.h"
- #include "rcar_du_drv.h"
- #include "rcar_du_encoder.h"
-@@ -523,6 +524,7 @@ static int rcar_du_crtc_get(struct rcar_du_crtc *rcrtc)
- 		goto error_group;
+ 	rcar_du_group_setup_pins(rgrp);
  
- 	rcar_du_crtc_setup(rcrtc);
++	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
++		u32 defr7 = DEFR7_CODE |
++			    (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
++			    (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
 +
- 	rcrtc->initialized = true;
- 
- 	return 0;
-@@ -619,6 +621,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
- 	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
- 		rcar_du_vsp_disable(rcrtc);
- 
-+	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_CMM) && rcrtc->cmm)
-+		rcar_cmm_disable(rcrtc->cmm);
++		rcar_du_group_write(rgrp, DEFR7, defr7);
++	}
 +
- 	/*
- 	 * Select switch sync mode. This stops display operation and configures
- 	 * the HSYNC and VSYNC signals as inputs.
-@@ -686,6 +691,9 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
- 	}
+ 	if (rcdu->info->gen >= 2) {
+ 		rcar_du_group_setup_defr8(rgrp);
+ 		rcar_du_group_setup_didsr(rgrp);
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+index bc87f080b170..fb9964949368 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
++++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+@@ -197,6 +197,11 @@
+ #define DEFR6_MLOS1		(1 << 2)
+ #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
  
- 	rcar_du_crtc_start(rcrtc);
++#define DEFR7			0x000ec
++#define DEFR7_CODE		(0x7779 << 16)
++#define DEFR7_CMME1		BIT(6)
++#define DEFR7_CMME0		BIT(4)
 +
-+	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_CMM) && rcrtc->cmm)
-+		rcar_cmm_enable(rcrtc->cmm);
- }
- 
- static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+ /* -----------------------------------------------------------------------------
+  * R8A7790-only Control Registers
+  */
 -- 
 2.21.0
 
