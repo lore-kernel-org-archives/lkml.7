@@ -2,163 +2,87 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3752C28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C19AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770DB20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5452083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfFFHLK (ORCPT
+        id S1726427AbfFFHNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:11:10 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:35320 "EHLO mx1.emlix.com"
+        Thu, 6 Jun 2019 03:13:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:28833 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFFHLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:11:10 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id C9A44600C2;
-        Thu,  6 Jun 2019 09:11:07 +0200 (CEST)
-From:   Rolf Eike Beer <eb@emlix.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org,
-        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
-Date:   Thu, 06 Jun 2019 09:11:00 +0200
-Message-ID: <2102708.6BiaULqomI@devpool35>
-Organization: emlix GmbH
-In-Reply-To: <CAKwvOdn9g2Z=G_qz84S5xmn2GBNK7T-MWOGYT5C52sP0R=M_-Q@mail.gmail.com>
-References: <779905244.a0lJJiZRjM@devpool35> <CAKwvOdnegLvkAa+-2uc-GM63HLcucWZtN5OoFvocLs50iLNJLg@mail.gmail.com> <CAKwvOdn9g2Z=G_qz84S5xmn2GBNK7T-MWOGYT5C52sP0R=M_-Q@mail.gmail.com>
+        id S1725267AbfFFHNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:13:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 00:13:21 -0700
+X-ExtLoop1: 1
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Jun 2019 00:13:21 -0700
+Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 6 Jun 2019 00:13:21 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ fmsmsx158.amr.corp.intel.com (10.18.116.75) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 6 Jun 2019 00:13:21 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.10]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.6]) with mapi id 14.03.0415.000;
+ Thu, 6 Jun 2019 15:13:19 +0800
+From:   "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>
+CC:     "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Zhang, Rui" <rui.zhang@intel.com>
+Subject: RE: [PATCH 1/3] x86/CPU: Add more Icelake model number
+Thread-Topic: [PATCH 1/3] x86/CPU: Add more Icelake model number
+Thread-Index: AQHVGhI6CBhJKpTmwUOFAEOJmoUocKaNqcuAgACJ/8A=
+Date:   Thu, 6 Jun 2019 07:13:18 +0000
+Message-ID: <E6AF1AFDEA62A94A97508F458CBDD47F7A22F284@SHSMSX101.ccr.corp.intel.com>
+References: <20190603134122.13853-1-kan.liang@linux.intel.com>
+ <20190606063525.GA26146@zn.tnic>
+In-Reply-To: <20190606063525.GA26146@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOWVjY2RkOTUtYmMzZi00NGMzLTk0M2ItYjdlMTQ4N2M1OTU2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWkRuZ0ZUNitFak53SkhSck9aUmgzOVdWeXB4d0p3N0t5aHloWWZsT3NtSk9xemhUZEZWUThFaU9naXVHMng5YyJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart7089195.FZj7tgPdUX"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---nextPart7089195.FZj7tgPdUX
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-
-Nick Desaulniers wrote:
-> On Wed, Jun 5, 2019 at 10:27 AM Nick Desaulniers
->=20
-> <ndesaulniers@google.com> wrote:
-> > On Wed, Jun 5, 2019 at 9:26 AM Greg KH <gregkh@linuxfoundation.org> wro=
-te:
-> > > On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
-> > > > I decided to dig out a toy project which uses a DragonBoard 410c. T=
-his
-> > > > has
-> > > > been "running" with kernel 4.9, which I would keep this way for
-> > > > unrelated
-> > > > reasons. The vanilla 4.9 kernel wasn't bootable back then, but it w=
-as
-> > > > buildable, which was good enough.
-> > > >=20
-> > > > Upgrading the kernel to 4.9.180 caused the boot to suddenly fail:
-> > > >=20
-> > > > aarch64-unknown-linux-gnueabi-ld:
-> > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): in functi=
-on
-> > > > `handle_kernel_image':
-> > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub=
-=2Ec:
-> > > > 63:
-> > > > undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
-> > > > aarch64-unknown-linux-gnueabi-ld:
-> > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): relocation
-> > > > R_AARCH64_ADR_PREL_PG_HI21 against symbol
-> > > > `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally can not
-> > > > be used when making a shared object; recompile with -fPIC
-> > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub=
-=2Ec:
-> > > > 63:
-> > > > (.init.text+0xc): dangerous relocation: unsupported relocation
-> > > > /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target 'vmlin=
-ux'
-> > > > failed -make[1]: *** [vmlinux] Error 1
-> > > >=20
-> > > > This is caused by commit 27b5ebf61818749b3568354c64a8ec2d9cd5ecca f=
-rom
-> > > > linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042be),
-> > > > reverting
-> > > > this commit fixes the build.
-> > > >=20
-> > > > This happens with vanilla binutils 2.32 and gcc 8.3.0 as well as
-> > > > 9.1.0. See
-> > > > the attached .config for reference.
-> > > >=20
-> > > > If you have questions or patches just ping me.
-> > >=20
-> > > Does Linus's latest tree also fail for you (or 5.1)?
-> > >=20
-> > > Nick, do we need to add another fix that is in mainline for this to w=
-ork
-> > > properly?
-> > >=20
-> > > thanks,
-> > >=20
-> > > greg k-h
-> >=20
-> > Doesn't immediately ring any bells for me.
->=20
-> Upstream commits:
-> dd6846d77469 ("arm64: drop linker script hack to hide __efistub_ symbols")
-> 1212f7a16af4 ("scripts/kallsyms: filter arm64's __efistub_ symbols")
->=20
-> Look related to __efistub__ prefixes on symbols and aren't in stable
-> 4.9 (maybe Rolf can try cherry picks of those).
-
-I now have cherry-picked these commits:
-
-dd6846d77469
-fdfb69a72522e97f9105a6d39a5be0a465951ed8
-1212f7a16af4
-56067812d5b0e737ac2063e94a50f76b810d6ca3
-
-The 2 additional ones were needed as dependencies of the others. Nothing of=
-=20
-this has helped.
-
-Eike
-=2D-=20
-Rolf Eike Beer, emlix GmbH, http://www.emlix.com
-=46on +49 551 30664-0, Fax +49 551 30664-11
-Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
-Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
-Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
-=2E: DE 205 198 055
-
-emlix - smart embedded open source
---nextPart7089195.FZj7tgPdUX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCXPi8hAAKCRCr5FH7Xu2t
-/ASKA/0ZByRKigRbwENTAwUqfHXS/Jco9PmokTrfRNv8S/uptVPQMGqmOKBNpdIl
-keSVa2on12JHM7zjZAgKDMMNy4MYenNb3vjqbRZ7VFVoWLvChSCc1FkZlqRygjnP
-gFjS/VrmfrngI63i2/CcCTwL/UWJfl7L7R/GFCPZYwlJ9sb0kw==
-=mekT
------END PGP SIGNATURE-----
-
---nextPart7089195.FZj7tgPdUX--
-
-
-
+PiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgW21haWx0bzpicEBhbGllbjguZGVdDQo+IC4uLg0KPiA+
+IEZyb206IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT4NCj4gPg0KPiA+IEFk
+ZCB0aGUgQ1BVSUQgbW9kZWwgbnVtYmVyIG9mIEljZWxha2UgKElDTCkgZGVza3RvcCBhbmQgc2Vy
+dmVyDQo+ID4gcHJvY2Vzc29ycyB0byB0aGUgSW50ZWwgZmFtaWx5IGxpc3QuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBLYW4gTGlhbmcgPGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+DQo+ID4g
+U2lnbmVkLW9mZi1ieTogUWl1eHUgWmh1byA8cWl1eHUuemh1b0BpbnRlbC5jb20+DQo+IA0KPiBZ
+b3UncmUgc2VuZGluZyB0aGlzIHBhdGNoIGJ1dCBpdCBoYXMgUWl1eHUncyBTT0IgdG9vLiBXaGF0
+J3MgdGhhdCBzdXBwb3NlZCB0byBtZWFuPw0KDQpIaSBCb3JpcywNCg0KRHVyaW5nIGludGVybmFs
+IGNvLXdvcmssIGJhc2VkIG9uIEthbidzIG9yaWdpbmFsIHBhdGNoLCBJIGdvdCB0aGUgIiNkZWZp
+bmUiIGluIHRoZSBJY2UgTGFrZSBncm91cCBzb3J0ZWQgYnkgbW9kZWwgbnVtYmVyKHRoZSBoZWFk
+ZXIgb2YgdGhlIGZpbGUgcmVxdWlyZXMgdGhlIHNvcnRpbmcpIGFuZCBhZGRlZCBteSBTT0IuIERy
+b3BwaW5nIG15IFNPQiBvciBhZGRpbmcgYSB0ZXh0ICJbUWl1eHU6IEdldCB0aGUgbWFjcm9zIGlu
+IHRoZSBJY2UgTGFrZSBncm91cCBzb3J0ZWQgYnkgbW9kZWwgbnVtYmVyLl0iIGF0IHRoZSBlbmQg
+b2YgdGhlIGNvbW1pdCBtZXNzYWdlIC0gd2hpY2ggb25lIGlzIGJldHRlci9jbGVhciBmb3IgeW91
+Pw0KDQpUaGFua3MhDQotUWl1eHUNCg0KDQo=
