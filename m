@@ -2,79 +2,139 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB5CC28D18
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122BCC28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FCA20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EE4208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:43:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bZUzTzWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfFFAlv (ORCPT
+        id S1726671AbfFFAny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 20:41:51 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:58263 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbfFFAlv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 20:41:51 -0400
-Received: from [192.168.1.110] ([77.2.1.21]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M7auL-1hTULY2kpR-0084pb; Thu, 06 Jun 2019 02:41:41 +0200
-Subject: Re: [PATCH] fs: cifs: drop unneeded likely() call around IS_ERR()
-To:     Steve French <smfrench@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
-References: <1559769249-22011-1-git-send-email-info@metux.net>
- <CAH2r5mvzEPj2NXMJW5fOfq0+bbh-pZFnJnL1jEnyFYDt1HJi1A@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <d76ceded-c2fc-beae-d60d-2b4a98623bf0@metux.net>
-Date:   Thu, 6 Jun 2019 00:41:39 +0000
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 5 Jun 2019 20:43:54 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40253 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726541AbfFFAnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 20:43:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45K6NP6ZVyz9s4Y;
+        Thu,  6 Jun 2019 10:43:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559781830;
+        bh=EHcFxfeEAKSYLC4UAySTt2xaqrXLzZzJzzgUUmkoPck=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bZUzTzWgYZBzKhHWQTjQCtNEygnXj/GaPNJOZPlINyIv3eAAouczEHK87gP8Lh83W
+         1EE0x9vsRrIFQAeSc46qNISzib0gVeLIw+dyxOMmRm3zKy5d8zs+FsHCGLj+uFCuv/
+         AaFL5Vz/KwXD1KvC1XkbMFnw58Wk07iexD/WlOrQCHp94e4lPQrJ20q0Bqh4xndOOr
+         dY4LsrdU8DdTJQIF2aRCCTOogOxVmzpAjIRPTZF7BIbcFH7wZGOFKqcETNAaS+IAod
+         lboPQJL5lvlyZT9uth0BlmYB4V7rvs1KiDukhk4KhAgjBbwBXSuIy4nycw7DmKamJD
+         47ZGpmwSwaI+Q==
+Date:   Thu, 6 Jun 2019 10:43:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: linux-next: manual merge of the v4l-dvb tree with Linus' tree
+Message-ID: <20190606104349.49dfb934@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CAH2r5mvzEPj2NXMJW5fOfq0+bbh-pZFnJnL1jEnyFYDt1HJi1A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:9gPXvsujPwWsw652B9AYMdsfz8vfg0YZSoLHXf/ypYnkEMqbhAb
- hzmgNOt3mulkvoYXmU/887n8jXZe5/9bHwXIS1rPcuI1MTVwdFzZWtHdvUoXu5lHt7yyWOn
- n0ABv9uao1hD6HnigyderpzrjEJZOIx97Isx/4T+KbxIq/XBZvTp8JvxaVpnw289fLx1pZ8
- aVc4uChgLugRybPClY0cg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ndy1MvyuMos=:12CNblfygcej00zMQsPu7k
- UgI5zW0YCLR0hCLyFpsSHq90/J/bHUHTJrYR+1KM6lKp/QMmVrfCXWIvw6GSTRgvOnI4TLcYQ
- ARi4P7qx6ixlUqKos6AMCR32oIK+HWyfVkBIVt/1yg7qm7iesT2F0nh5qjXAUPHGdWrU3SZ++
- ix8OOWCHyQ+lZDadBEGVDFmDF8H5ODatpAsAtSXUfVNE7jFDJXLxK5FOgE/duMULUnk+nCkQj
- YIRlxgBHAfSfFpnuA5vJFK7s7PD5oyh3pyHnOibwkJgM0j/NBsOfPTDYRRhA/eq6K49PoL9fI
- QT2dgnpi+Ipdh5YYY7gf0vKXpoDoqBBIF0LXUhoWs9hT2TVuCozXFJmOyIxv5bHNDzPEqEKKb
- l4Eau7ZdCKljrcJ5630SQcRM3RSt5rs1ZLLmNnAcud2LTZogC8L5moBP6C0a+Q0vBgwTxVufA
- 1oD08gJzCAvgW0yhF/j/HWn2IulnsYle77Kt3NEyvEu7YRi72B5rTjktqNTe9DimGPo21lJzr
- aYSFuyxyTZzu5/HpgNaP+IyWKNjVeDS0z1qZqcmv/WP11Dtg2I45lzYQ5q0o1R/SpLmcLpm7E
- N9EiByxq0bpGaBupGeOmdB+zfvWSLfXjtbOx3DMcm7i9LqK57K99811wdkriSsHl1edux+O1D
- 21EMrwAU546USpOI6Ai9dHlTjQKwBNIh5PpONH03WAZlDMZFTdr1x77rXdacIz3+C7+1kszQn
- 7OgAFo0/qkv9Gt52SUJ1E/1tDdwEfDZxOXBuYasxDSAuOPs98Lkve5FHibk=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Oe11bsP0hu.ON7m8r/ymXG5"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.06.19 21:52, Steve French wrote:
-> This duplicates a patch submitted earlier by Kefeng Wang
-> <wangkefeng.wang@huawei.com> which I plan to merge later today into
-> cifs-2.6.git for-next
+--Sig_/Oe11bsP0hu.ON7m8r/ymXG5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Great :)
-Just ignore my patch.
+Hi all,
 
+Today's linux-next merge of the v4l-dvb tree got conflicts in:
 
---mtx
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.h
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.h
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.h
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_intr.c
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_intr.h
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_util.c
+  drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
+  drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+  drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+  drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+  drivers/media/platform/mtk-vcodec/vdec_drv_base.h
+  drivers/media/platform/mtk-vcodec/vdec_drv_if.c
+  drivers/media/platform/mtk-vcodec/vdec_drv_if.h
+  drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h
+  drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+  drivers/media/platform/mtk-vcodec/vdec_vpu_if.h
+  drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
+  drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
+  drivers/media/platform/mtk-vcodec/venc_drv_base.h
+  drivers/media/platform/mtk-vcodec/venc_drv_if.c
+  drivers/media/platform/mtk-vcodec/venc_drv_if.h
+  drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
+  drivers/media/platform/mtk-vcodec/venc_vpu_if.c
+  drivers/media/platform/mtk-vcodec/venc_vpu_if.h
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+between commit:
+
+  1802d0beecaf ("treewide: Replace GPLv2 boilerplate/reference with SPDX - =
+rule 174")
+
+from Linus' tree and commit:
+
+  9293e39c5d7f ("media: mtk-vcodec: replace GPLv2 with SPDX")
+
+from the v4l-dvb tree.
+
+I fixed it up (I just iused the versions from the v4l-dvb tree -
+although I think that they may have gone to far in removing copyright
+notices as well as the license boilerplate) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Oe11bsP0hu.ON7m8r/ymXG5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz4YcUACgkQAVBC80lX
+0GxHTwgAhapoLlcNm/ijbK3nJPCKVqsRXgRCJuFJNRFCOD0SMage0zi9ipz6HfTM
+4RLOF6sCkB8tr06vVgFjeNQX6FjbM0pGhuFMol+S9Z4QZpbFKJFg2TYINaCBJe3B
+JLEur1yCBzpJ2kIpsLDOp5mEyQtirO2+YPc7Stbb6WQDLBGPAkqmUZYmtpwYD4wC
+tllX7pmk+2yMqdrgDCRbpBOunzo9IbxIC8+ewUKslTvfPUTf7uoxp08LRUDQ+MUR
+yp7RaI887ErIxwXoK/G+bBJmxDa23IQszxfoGGgYhibyf9AgTGuMyO/HCRdGDDK4
+8UF0TzxOyIfpXuyZff7eI7oOv9PCZQ==
+=cvIS
+-----END PGP SIGNATURE-----
+
+--Sig_/Oe11bsP0hu.ON7m8r/ymXG5--
