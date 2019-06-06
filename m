@@ -2,406 +2,174 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A6AC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2300AC28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA2B20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7C620684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559815882;
+	bh=RgFqTCtQxeyahkiIup9XEpfTivbvRNqno6S6EXEKSbk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vNycBX2nye/a/AbDEQs3b2akzTH0ZPqTRcX65L1URmdBLTfzWTW5AedbL2I2xCPgR
+	 8ee/FEp86GxQ2BKy+RG/VTotlA3IeSxFr+44blLvy3pwdHxIYQoHEmguf9j6dsmm8W
+	 FI/lKdyb5PoARB38FsiRR/HLitdkBsjBk3A7WdFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfFFKIG (ORCPT
+        id S1728253AbfFFKLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:08:06 -0400
-Received: from regular1.263xmail.com ([211.150.70.196]:41064 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbfFFKIE (ORCPT
+        Thu, 6 Jun 2019 06:11:21 -0400
+Received: from casper.infradead.org ([85.118.1.10]:53770 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfFFKLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:08:04 -0400
-X-Greylist: delayed 481 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Jun 2019 06:08:02 EDT
-Received: from jiaolitao?raisecom.com (unknown [192.168.167.231])
-        by regular1.263xmail.com (Postfix) with ESMTP id A2C1381E;
-        Thu,  6 Jun 2019 17:59:51 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED: 0
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (194.195.37.106.static.bjtelecom.net [106.37.195.194])
-        by smtp.263.net (postfix) whith ESMTP id P11377T140226221557504S1559815148043212_;
-        Thu, 06 Jun 2019 17:59:49 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <461dc0c530c87eed0f1ca3db33067cfe>
-X-RL-SENDER: jiaolitao@raisecom.com
-X-SENDER: 006714@raisecom.com
-X-LOGIN-NAME: jiaolitao@raisecom.com
-X-FST-TO: davem@davemloft.net
-X-SENDER-IP: 106.37.195.194
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 5
-From:   Litao jiao <jiaolitao@raisecom.com>
-To:     davem@davemloft.net
-Cc:     petrm@mellanox.com, idosch@mellanox.com, roopa@cumulusnetworks.com,
-        sd@queasysnail.net, sbrivio@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiaolitao@raisecom.com
-Subject: [PATCH] vxlan: Use FDB_HASH_SIZE hash_locks to reduce contention
-Date:   Thu,  6 Jun 2019 17:57:58 +0800
-Message-Id: <1559815078-5901-1-git-send-email-jiaolitao@raisecom.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 6 Jun 2019 06:11:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ntYG98vIw8SBks2+iwma4fYIuw+qJBNTLrhwVKHXBpE=; b=WzStA+HhR1uA1MUXet6UrpqTpy
+        6OWCYEZ2rzB7yeao3BJZlP9JARMqc03xXe16Pze/mZN+VfJDR3l+j6MblckY71dbh01iCmrk6hyEp
+        +TZ6ORl3qXfMGqCUwdk35jbb0lL+KzwQjxxYAbqa0MIXMzsvMKc2SB5RkSyLfPl64EbpLBN3FGBkH
+        06sOh9Ey2LlY65ZqrAjIDR7ZftncTdYx/5Dbv+f96ihOwBj+QMA+48U3ZdNDs1AsSN5zrKAhrJxS6
+        itveatFisKOxU6ltd2vsRJlfF2MzVklRTyxpj4f2ZXJhq7R6aNn1BeD4lVtW/gyLKbnNjMo9edQBO
+        edOlIAVA==;
+Received: from [179.182.172.34] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYpMM-0005DZ-4y; Thu, 06 Jun 2019 10:11:02 +0000
+Date:   Thu, 6 Jun 2019 07:10:52 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        marex@denx.de, stefan@agner.ch, airlied@linux.ie, daniel@ffwll.ch,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        b.zolnierkie@samsung.com, a.hajda@samsung.com,
+        p.zabel@pengutronix.de, hkallweit1@gmail.com, lee.jones@linaro.org,
+        lgirdwood@gmail.com, broonie@kernel.org, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 0/8] fix warnings for same module names
+Message-ID: <20190606071052.412a766d@coco.lan>
+In-Reply-To: <20190606094657.23612-1-anders.roxell@linaro.org>
+References: <20190606094657.23612-1-anders.roxell@linaro.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The monolithic hash_lock could cause huge contention when
-inserting/deletiing vxlan_fdbs into the fdb_head.
+Em Thu,  6 Jun 2019 11:46:57 +0200
+Anders Roxell <anders.roxell@linaro.org> escreveu:
 
-Use FDB_HASH_SIZE hash_locks to protect insertions/deletions
-of vxlan_fdbs into the fdb_head hash table.
+> Hi,
+> 
+> This patch set addresses warnings that module names are named the
+> same, this may lead to a problem that wrong module gets loaded or if one
+> of the two same-name modules exports a symbol, this can confuse the
+> dependency resolution. and the build may fail.
+> 
+> 
+> Patch "drivers: net: dsa: realtek: fix warning same module names" and
+> "drivers: net: phy: realtek: fix warning same module names" resolves the
+> name clatch realtek.ko.
+> 
+> warning: same module names found:
+>   drivers/net/phy/realtek.ko
+>   drivers/net/dsa/realtek.ko
+> 
+> 
+> Patch  "drivers: (video|gpu): fix warning same module names" resolves
+> the name clatch mxsfb.ko.
+> 
+> warning: same module names found:
+>   drivers/video/fbdev/mxsfb.ko
+>   drivers/gpu/drm/mxsfb/mxsfb.ko
+> 
+> Patch "drivers: media: i2c: fix warning same module names" resolves the
+> name clatch adv7511.ko however, it seams to refer to the same device
+> name in i2c_device_id, does anyone have any guidance how that should be
+> solved?
+> 
+> warning: same module names found:
+>   drivers/gpu/drm/bridge/adv7511/adv7511.ko
+>   drivers/media/i2c/adv7511.ko
+> 
+> 
+> Patch "drivers: media: coda: fix warning same module names" resolves the
+> name clatch coda.ko.
+> 
+> warning: same module names found:
+>   fs/coda/coda.ko
+>   drivers/media/platform/coda/coda.ko
 
-Suggested-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Litao jiao <jiaolitao@raisecom.com>
----
- drivers/net/vxlan.c | 92 ++++++++++++++++++++++++++++++++++-------------------
- include/net/vxlan.h |  2 +-
- 2 files changed, 60 insertions(+), 34 deletions(-)
+Media change look ok, and probably the other patches too, but the
+problem here is: who will apply it and when.
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 5994d54..9f93c5e 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -471,14 +471,19 @@ static u32 eth_vni_hash(const unsigned char *addr, __be32 vni)
- 	return jhash_2words(key, vni, vxlan_salt) & (FDB_HASH_SIZE - 1);
- }
- 
-+static u32 fdb_head_index(struct vxlan_dev *vxlan, const u8 *mac, __be32 vni)
-+{
-+	if (vxlan->cfg.flags & VXLAN_F_COLLECT_METADATA)
-+		return eth_vni_hash(mac, vni);
-+	else
-+		return eth_hash(mac);
-+}
-+
- /* Hash chain to use given mac address */
- static inline struct hlist_head *vxlan_fdb_head(struct vxlan_dev *vxlan,
- 						const u8 *mac, __be32 vni)
- {
--	if (vxlan->cfg.flags & VXLAN_F_COLLECT_METADATA)
--		return &vxlan->fdb_head[eth_vni_hash(mac, vni)];
--	else
--		return &vxlan->fdb_head[eth_hash(mac)];
-+	return &vxlan->fdb_head[fdb_head_index(vxlan, mac, vni)];
- }
- 
- /* Look up Ethernet address in forwarding table */
-@@ -593,8 +598,8 @@ int vxlan_fdb_replay(const struct net_device *dev, __be32 vni,
- 		return -EINVAL;
- 	vxlan = netdev_priv(dev);
- 
--	spin_lock_bh(&vxlan->hash_lock);
- 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
-+		spin_lock_bh(&vxlan->hash_lock[h]);
- 		hlist_for_each_entry(f, &vxlan->fdb_head[h], hlist) {
- 			if (f->vni == vni) {
- 				list_for_each_entry(rdst, &f->remotes, list) {
-@@ -602,14 +607,16 @@ int vxlan_fdb_replay(const struct net_device *dev, __be32 vni,
- 								  f, rdst,
- 								  extack);
- 					if (rc)
--						goto out;
-+						goto unlock;
- 				}
- 			}
- 		}
-+		spin_unlock_bh(&vxlan->hash_lock[h]);
- 	}
-+	return 0;
- 
--out:
--	spin_unlock_bh(&vxlan->hash_lock);
-+unlock:
-+	spin_unlock_bh(&vxlan->hash_lock[h]);
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(vxlan_fdb_replay);
-@@ -625,14 +632,15 @@ void vxlan_fdb_clear_offload(const struct net_device *dev, __be32 vni)
- 		return;
- 	vxlan = netdev_priv(dev);
- 
--	spin_lock_bh(&vxlan->hash_lock);
- 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
-+		spin_lock_bh(&vxlan->hash_lock[h]);
- 		hlist_for_each_entry(f, &vxlan->fdb_head[h], hlist)
- 			if (f->vni == vni)
- 				list_for_each_entry(rdst, &f->remotes, list)
- 					rdst->offloaded = false;
-+		spin_unlock_bh(&vxlan->hash_lock[h]);
- 	}
--	spin_unlock_bh(&vxlan->hash_lock);
-+
- }
- EXPORT_SYMBOL_GPL(vxlan_fdb_clear_offload);
- 
-@@ -1108,6 +1116,7 @@ static int vxlan_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
- 	__be16 port;
- 	__be32 src_vni, vni;
- 	u32 ifindex;
-+	u32 hash_index;
- 	int err;
- 
- 	if (!(ndm->ndm_state & (NUD_PERMANENT|NUD_REACHABLE))) {
-@@ -1126,12 +1135,13 @@ static int vxlan_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
- 	if (vxlan->default_dst.remote_ip.sa.sa_family != ip.sa.sa_family)
- 		return -EAFNOSUPPORT;
- 
--	spin_lock_bh(&vxlan->hash_lock);
-+	hash_index = fdb_head_index(vxlan, addr, src_vni);
-+	spin_lock_bh(&vxlan->hash_lock[hash_index]);
- 	err = vxlan_fdb_update(vxlan, addr, &ip, ndm->ndm_state, flags,
- 			       port, src_vni, vni, ifindex,
- 			       ndm->ndm_flags | NTF_VXLAN_ADDED_BY_USER,
- 			       true, extack);
--	spin_unlock_bh(&vxlan->hash_lock);
-+	spin_unlock_bh(&vxlan->hash_lock[hash_index]);
- 
- 	return err;
- }
-@@ -1179,16 +1189,18 @@ static int vxlan_fdb_delete(struct ndmsg *ndm, struct nlattr *tb[],
- 	__be32 src_vni, vni;
- 	__be16 port;
- 	u32 ifindex;
-+	u32 hash_index;
- 	int err;
- 
- 	err = vxlan_fdb_parse(tb, vxlan, &ip, &port, &src_vni, &vni, &ifindex);
- 	if (err)
- 		return err;
- 
--	spin_lock_bh(&vxlan->hash_lock);
-+	hash_index = fdb_head_index(vxlan, addr, src_vni);
-+	spin_lock_bh(&vxlan->hash_lock[hash_index]);
- 	err = __vxlan_fdb_delete(vxlan, addr, ip, port, src_vni, vni, ifindex,
- 				 true);
--	spin_unlock_bh(&vxlan->hash_lock);
-+	spin_unlock_bh(&vxlan->hash_lock[hash_index]);
- 
- 	return err;
- }
-@@ -1300,8 +1312,10 @@ static bool vxlan_snoop(struct net_device *dev,
- 		f->updated = jiffies;
- 		vxlan_fdb_notify(vxlan, f, rdst, RTM_NEWNEIGH, true, NULL);
- 	} else {
-+		u32 hash_index = fdb_head_index(vxlan, src_mac, vni);
-+
- 		/* learned new entry */
--		spin_lock(&vxlan->hash_lock);
-+		spin_lock(&vxlan->hash_lock[hash_index]);
- 
- 		/* close off race between vxlan_flush and incoming packets */
- 		if (netif_running(dev))
-@@ -1312,7 +1326,7 @@ static bool vxlan_snoop(struct net_device *dev,
- 					 vni,
- 					 vxlan->default_dst.remote_vni,
- 					 ifindex, NTF_SELF, true, NULL);
--		spin_unlock(&vxlan->hash_lock);
-+		spin_unlock(&vxlan->hash_lock[hash_index]);
- 	}
- 
- 	return false;
-@@ -2702,7 +2716,7 @@ static void vxlan_cleanup(struct timer_list *t)
- 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
- 		struct hlist_node *p, *n;
- 
--		spin_lock(&vxlan->hash_lock);
-+		spin_lock(&vxlan->hash_lock[h]);
- 		hlist_for_each_safe(p, n, &vxlan->fdb_head[h]) {
- 			struct vxlan_fdb *f
- 				= container_of(p, struct vxlan_fdb, hlist);
-@@ -2724,7 +2738,7 @@ static void vxlan_cleanup(struct timer_list *t)
- 			} else if (time_before(timeout, next_timer))
- 				next_timer = timeout;
- 		}
--		spin_unlock(&vxlan->hash_lock);
-+		spin_unlock(&vxlan->hash_lock[h]);
- 	}
- 
- 	mod_timer(&vxlan->age_timer, next_timer);
-@@ -2767,12 +2781,13 @@ static int vxlan_init(struct net_device *dev)
- static void vxlan_fdb_delete_default(struct vxlan_dev *vxlan, __be32 vni)
- {
- 	struct vxlan_fdb *f;
-+	u32 hash_index = fdb_head_index(vxlan, all_zeros_mac, vni);
- 
--	spin_lock_bh(&vxlan->hash_lock);
-+	spin_lock_bh(&vxlan->hash_lock[hash_index]);
- 	f = __vxlan_find_mac(vxlan, all_zeros_mac, vni);
- 	if (f)
- 		vxlan_fdb_destroy(vxlan, f, true, true);
--	spin_unlock_bh(&vxlan->hash_lock);
-+	spin_unlock_bh(&vxlan->hash_lock[hash_index]);
- }
- 
- static void vxlan_uninit(struct net_device *dev)
-@@ -2817,9 +2832,10 @@ static void vxlan_flush(struct vxlan_dev *vxlan, bool do_all)
- {
- 	unsigned int h;
- 
--	spin_lock_bh(&vxlan->hash_lock);
- 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
- 		struct hlist_node *p, *n;
-+
-+		spin_lock_bh(&vxlan->hash_lock[h]);
- 		hlist_for_each_safe(p, n, &vxlan->fdb_head[h]) {
- 			struct vxlan_fdb *f
- 				= container_of(p, struct vxlan_fdb, hlist);
-@@ -2829,8 +2845,8 @@ static void vxlan_flush(struct vxlan_dev *vxlan, bool do_all)
- 			if (!is_zero_ether_addr(f->eth_addr))
- 				vxlan_fdb_destroy(vxlan, f, true, true);
- 		}
-+		spin_unlock_bh(&vxlan->hash_lock[h]);
- 	}
--	spin_unlock_bh(&vxlan->hash_lock);
- }
- 
- /* Cleanup timer and forwarding table on shutdown */
-@@ -3014,7 +3030,6 @@ static void vxlan_setup(struct net_device *dev)
- 	dev->max_mtu = ETH_MAX_MTU;
- 
- 	INIT_LIST_HEAD(&vxlan->next);
--	spin_lock_init(&vxlan->hash_lock);
- 
- 	timer_setup(&vxlan->age_timer, vxlan_cleanup, TIMER_DEFERRABLE);
- 
-@@ -3022,8 +3037,10 @@ static void vxlan_setup(struct net_device *dev)
- 
- 	gro_cells_init(&vxlan->gro_cells, dev);
- 
--	for (h = 0; h < FDB_HASH_SIZE; ++h)
-+	for (h = 0; h < FDB_HASH_SIZE; ++h) {
-+		spin_lock_init(&vxlan->hash_lock[h]);
- 		INIT_HLIST_HEAD(&vxlan->fdb_head[h]);
-+	}
- }
- 
- static void vxlan_ether_setup(struct net_device *dev)
-@@ -3917,7 +3934,9 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 
- 	/* handle default dst entry */
- 	if (!vxlan_addr_equal(&conf.remote_ip, &dst->remote_ip)) {
--		spin_lock_bh(&vxlan->hash_lock);
-+		u32 hash_index = fdb_head_index(vxlan, all_zeros_mac, conf.vni);
-+
-+		spin_lock_bh(&vxlan->hash_lock[hash_index]);
- 		if (!vxlan_addr_any(&conf.remote_ip)) {
- 			err = vxlan_fdb_update(vxlan, all_zeros_mac,
- 					       &conf.remote_ip,
-@@ -3928,7 +3947,7 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 					       conf.remote_ifindex,
- 					       NTF_SELF, true, extack);
- 			if (err) {
--				spin_unlock_bh(&vxlan->hash_lock);
-+				spin_unlock_bh(&vxlan->hash_lock[hash_index]);
- 				return err;
- 			}
- 		}
-@@ -3940,7 +3959,7 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 					   dst->remote_vni,
- 					   dst->remote_ifindex,
- 					   true);
--		spin_unlock_bh(&vxlan->hash_lock);
-+		spin_unlock_bh(&vxlan->hash_lock[hash_index]);
- 	}
- 
- 	if (conf.age_interval != vxlan->cfg.age_interval)
-@@ -4195,8 +4214,11 @@ vxlan_fdb_offloaded_set(struct net_device *dev,
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
- 	struct vxlan_rdst *rdst;
- 	struct vxlan_fdb *f;
-+	u32 hash_index;
-+
-+	hash_index = fdb_head_index(vxlan, fdb_info->eth_addr, fdb_info->vni);
- 
--	spin_lock_bh(&vxlan->hash_lock);
-+	spin_lock_bh(&vxlan->hash_lock[hash_index]);
- 
- 	f = vxlan_find_mac(vxlan, fdb_info->eth_addr, fdb_info->vni);
- 	if (!f)
-@@ -4212,7 +4234,7 @@ vxlan_fdb_offloaded_set(struct net_device *dev,
- 	rdst->offloaded = fdb_info->offloaded;
- 
- out:
--	spin_unlock_bh(&vxlan->hash_lock);
-+	spin_unlock_bh(&vxlan->hash_lock[hash_index]);
- }
- 
- static int
-@@ -4221,11 +4243,13 @@ vxlan_fdb_external_learn_add(struct net_device *dev,
- {
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
- 	struct netlink_ext_ack *extack;
-+	u32 hash_index;
- 	int err;
- 
-+	hash_index = fdb_head_index(vxlan, fdb_info->eth_addr, fdb_info->vni);
- 	extack = switchdev_notifier_info_to_extack(&fdb_info->info);
- 
--	spin_lock_bh(&vxlan->hash_lock);
-+	spin_lock_bh(&vxlan->hash_lock[hash_index]);
- 	err = vxlan_fdb_update(vxlan, fdb_info->eth_addr, &fdb_info->remote_ip,
- 			       NUD_REACHABLE,
- 			       NLM_F_CREATE | NLM_F_REPLACE,
-@@ -4235,7 +4259,7 @@ vxlan_fdb_external_learn_add(struct net_device *dev,
- 			       fdb_info->remote_ifindex,
- 			       NTF_USE | NTF_SELF | NTF_EXT_LEARNED,
- 			       false, extack);
--	spin_unlock_bh(&vxlan->hash_lock);
-+	spin_unlock_bh(&vxlan->hash_lock[hash_index]);
- 
- 	return err;
- }
-@@ -4246,9 +4270,11 @@ vxlan_fdb_external_learn_del(struct net_device *dev,
- {
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
- 	struct vxlan_fdb *f;
-+	u32 hash_index;
- 	int err = 0;
- 
--	spin_lock_bh(&vxlan->hash_lock);
-+	hash_index = fdb_head_index(vxlan, fdb_info->eth_addr, fdb_info->vni);
-+	spin_lock_bh(&vxlan->hash_lock[hash_index]);
- 
- 	f = vxlan_find_mac(vxlan, fdb_info->eth_addr, fdb_info->vni);
- 	if (!f)
-@@ -4262,7 +4288,7 @@ vxlan_fdb_external_learn_del(struct net_device *dev,
- 					 fdb_info->remote_ifindex,
- 					 false);
- 
--	spin_unlock_bh(&vxlan->hash_lock);
-+	spin_unlock_bh(&vxlan->hash_lock[hash_index]);
- 
- 	return err;
- }
-diff --git a/include/net/vxlan.h b/include/net/vxlan.h
-index 83b5999..dc1583a 100644
---- a/include/net/vxlan.h
-+++ b/include/net/vxlan.h
-@@ -242,7 +242,7 @@ struct vxlan_dev {
- 	struct vxlan_rdst default_dst;	/* default destination */
- 
- 	struct timer_list age_timer;
--	spinlock_t	  hash_lock;
-+	spinlock_t	  hash_lock[FDB_HASH_SIZE];
- 	unsigned int	  addrcnt;
- 	struct gro_cells  gro_cells;
- 
--- 
-2.7.4
+The way you grouped the changes makes harder for subsystem maintainers
+to pick, as the same patch touches multiple subsystems.
+
+On the other hand, if this gets picked by someone else, it has the
+potential to cause conflicts between linux-next and the maintainer's
+tree.
+
+So, the best would be if you re-arrange this series to submit one
+patch per subsystem.
+
+
+> 
+> 
+> Patch "drivers: net: phy: fix warning same module names" resolves the
+> name clatch asix.ko.
+> 
+> warning: same module names found:
+>   drivers/net/phy/asix.ko
+>   drivers/net/usb/asix.ko
+> 
+> Patch "drivers: mfd: 88pm800: fix warning same module names" and
+> "drivers: regulator: 88pm800: fix warning same module names" resolves
+> the name clatch 88pm800.ko.
+> 
+> warning: same module names found:
+>   drivers/regulator/88pm800.ko
+>   drivers/mfd/88pm800.ko
+> 
+> 
+> Cheers,
+> Anders
+> 
+> Anders Roxell (8):
+>   drivers: net: dsa: realtek: fix warning same module names
+>   drivers: net: phy: realtek: fix warning same module names
+>   drivers: (video|gpu): fix warning same module names
+>   drivers: media: i2c: fix warning same module names
+>   drivers: media: coda: fix warning same module names
+>   drivers: net: phy: fix warning same module names
+>   drivers: mfd: 88pm800: fix warning same module names
+>   drivers: regulator: 88pm800: fix warning same module names
+> 
+>  drivers/gpu/drm/bridge/adv7511/Makefile | 10 +++++-----
+>  drivers/gpu/drm/mxsfb/Makefile          |  4 ++--
+>  drivers/media/i2c/Makefile              |  3 ++-
+>  drivers/media/platform/coda/Makefile    |  4 ++--
+>  drivers/mfd/Makefile                    |  7 +++++--
+>  drivers/net/dsa/Makefile                |  4 ++--
+>  drivers/net/phy/Makefile                |  6 ++++--
+>  drivers/regulator/Makefile              |  3 ++-
+>  drivers/video/fbdev/Makefile            |  3 ++-
+>  9 files changed, 26 insertions(+), 18 deletions(-)
+> 
 
 
 
+Thanks,
+Mauro
