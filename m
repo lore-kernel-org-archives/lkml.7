@@ -2,158 +2,118 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BFDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58023C28EB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9112089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C762083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:52:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gi1S5xuA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nf1Vgu5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbfFFSwP (ORCPT
+        id S1728724AbfFFSwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:52:15 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42981 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbfFFSwO (ORCPT
+        Thu, 6 Jun 2019 14:52:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38370 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbfFFSw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:52:14 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y13so916428lfh.9;
-        Thu, 06 Jun 2019 11:52:12 -0700 (PDT)
+        Thu, 6 Jun 2019 14:52:29 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f97so1279320plb.5;
+        Thu, 06 Jun 2019 11:52:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z8PImz1JnXXd1v4BcQs+3ZR23KtQ/hYSfKKCTbjF08k=;
-        b=Gi1S5xuA9UKUXrvG2FT1MwkkKaTR0i1eD3WmDI6wbKZZsVDt7wMDxd72zaTkdnKcTG
-         Bn/cGIABocmR+X5UgVfWdv+hxjxhU6/ByO7aUMXfVhxQ5oiwn8yvDq7kUF65GyvIUmq4
-         g8m9xV6nI9EbXIu8r3KfRA7pOMED3btCKcnFZlYLSATI3AZ45udPRmRfC8IfKEckjw4C
-         F7xE/RkDaHHINLTxsvgMMSAJMXVXxW/6SeLs0nqSF5G4OVt9/j7GGEe4C80aQNaq6WQY
-         01PdG8TyUKhW2xBEAWrDBQGjFkgULhEa/Q0W27hd3NS30uxsFqlXZBZ7PgtzgQNxyarY
-         nIng==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ShYV+EbWvX524xQNClO0SMbhJ4ngTe/5gGFiTlAJkmg=;
+        b=nf1Vgu5nL4tLoizqDxbhb3lSAkF7+BQSN8P3rCgdFMiMozj7zIgNZFuExpn2BwEuJg
+         Jm8B5wndn617akK85HdovJPPR85poikWLHkpMF2AwuxvpwXN71Uy6fJ2kVVwr+HMpPVS
+         bCQBJQOWaXrpKo/mCuoJAJqgU9y5twDOsVzKl57fw2dJfQRg6766632s8jdCgNGBnSIA
+         DUL+6Z8kYja5TLQtDNh5l3PybMeyuqRS8Kiv4K19H/YnRI5JluI6upg+L5Qwyenkj1KL
+         8ng1EucC4B0QuPX8H50H6AF7yYQdgblWzaXvq/LpYTq50b7p5aSDlCp9TRFy4/+5mfeE
+         cWqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z8PImz1JnXXd1v4BcQs+3ZR23KtQ/hYSfKKCTbjF08k=;
-        b=OK6+lsgCX9VCZuwCVjG3wFnwh7Jkl5d3/zTwnPp+bbwieleaTE5f0xiv6TCjtQLvYk
-         Ms53MSZyV6dvPuVWrQQOAcTt2Op/7qfIA07Rz2GsPKN07eT1Sm8mpuo2XIkaoK4rMeUV
-         HVRMwG3IhZ+oOPIRAubVzEbBoZ5qPqkAznz/gTXx/qTHbVPYFeNZfy7r+ig9C7ixwOUv
-         4hRXeqCdZo0mrfFqratATbOnXFvQ6Mi1iLrykRC4LWNMhCzpNLCh+IxdqhPPtqGbEY/f
-         AQvd3N4I2Jv4ZTUxR83GSVMLuUwWFhEoOC3wqNs/bRItzbOoWxSVIebPAoLt/8/GmRj5
-         V+jg==
-X-Gm-Message-State: APjAAAVR5QrIUa5MSQzPH+Y10p9UFKAqiX1lA1nZClv5JBpud8fDGVvs
-        ErMDMBDa/fnroKkFvj+o55s=
-X-Google-Smtp-Source: APXvYqzLnK2RafyIHBSWtv6ZOXHpj5VhTRezZqTHfceHH/SQk4Rswzzj0YbDWDlkp0qD8FdDqgDPJQ==
-X-Received: by 2002:a19:e05c:: with SMTP id g28mr10039317lfj.167.1559847131867;
-        Thu, 06 Jun 2019 11:52:11 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id p27sm413726lfh.8.2019.06.06.11.52.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ShYV+EbWvX524xQNClO0SMbhJ4ngTe/5gGFiTlAJkmg=;
+        b=BCD/CqsevsC5ZsNL0kLRGifFiH9oY37qKqa7YYH3YLv/+1tCf8DMQLAbhLdz234Zy0
+         Cgu8g5R7+AEH6eWemyvbI+PU7WBHmz4FA44iipxaNN0KhLK6E/SOIKfJdnpxY4iPS8Ki
+         T0RHuupAKuU20toYQtIjaGwb+hh/wzoN8mFKTNm403xN47g30o9Br08u6UX/QpAzfAxU
+         LiO1nrGkzuTK5MI7v5YpeKFZwPZT/v1srJ3XW617S+aocG3iZ6Qf/7vjbw6JCYIR5BRd
+         S+x5NPvfVETwMeIPMZ1NFAJt19pDzUr4s4JuLxhkfvcCFxyYB9OPOuRALQrnLmR5g/Kr
+         BZsA==
+X-Gm-Message-State: APjAAAVoLp3Uou+Wm4ydX/su8pdslbr75/p3g3ts7DKUh5MCwZelf3mi
+        sfIMrhCzKk1yBcHfiqHV0/E=
+X-Google-Smtp-Source: APXvYqyx0gdIdFdS/4/9VKqby1kiCqBbScwjiyBC/xfoXyefv5AaVKvHb4INBDbKvonQF2wCBMlJUw==
+X-Received: by 2002:a17:902:3064:: with SMTP id u91mr52245703plb.244.1559847149252;
+        Thu, 06 Jun 2019 11:52:29 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d10sm6175332pgh.43.2019.06.06.11.52.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 11:52:10 -0700 (PDT)
-Subject: Re: [PATCH V8 14/15] PCI: tegra: Add Tegra194 PCIe support
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com
-Cc:     mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20190526043751.12729-1-vidyas@nvidia.com>
- <20190526043751.12729-15-vidyas@nvidia.com>
- <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
-Message-ID: <cbdac43f-32f7-c992-832b-ed40bef2375b@gmail.com>
-Date:   Thu, 6 Jun 2019 21:52:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 06 Jun 2019 11:52:28 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, jorge.ramirez-ortiz@linaro.org,
+        niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2 5/7] arm64: dts: msm8998-mtp: Add pm8005_s1 regulator
+Date:   Thu,  6 Jun 2019 11:51:03 -0700
+Message-Id: <20190606185103.39788-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
+References: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 19:35, Dmitry Osipenko пишет:
-> 26.05.2019 7:37, Vidya Sagar пишет:
->> Add support for Synopsys DesignWare core IP based PCIe host controller
->> present in Tegra194 SoC.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v7]:
->> * Addressed review comments from Thierry
->>
->> Changes since [v6]:
->> * Removed code around "nvidia,disable-aspm-states" DT property
->> * Refactored code to remove code duplication
->>
->> Changes since [v5]:
->> * Addressed review comments from Thierry
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
->> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
->> * Removed .runtime_suspend() & .runtime_resume() implementations
->>
->> Changes since [v1]:
->> * Made CONFIG_PCIE_TEGRA194 as 'm' by default from its previous 'y' state
->> * Modified code as per changes made to DT documentation
->> * Refactored code to address Bjorn & Thierry's review comments
->> * Added goto to avoid recursion in tegra_pcie_dw_host_init() API
->> * Merged .scan_bus() of dw_pcie_host_ops implementation to tegra_pcie_dw_host_init() API
->>
->>  drivers/pci/controller/dwc/Kconfig         |   10 +
->>  drivers/pci/controller/dwc/Makefile        |    1 +
->>  drivers/pci/controller/dwc/pcie-tegra194.c | 1621 ++++++++++++++++++++
->>  3 files changed, 1632 insertions(+)
->>  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
->>
->> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->> index a6ce1ee51b4c..884112afc11b 100644
->> --- a/drivers/pci/controller/dwc/Kconfig
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -220,6 +220,16 @@ config PCI_MESON
->>  	  and therefore the driver re-uses the DesignWare core functions to
->>  	  implement the driver.
->>  
->> +config PCIE_TEGRA194
->> +	tristate "NVIDIA Tegra194 (and later) PCIe controller"
->> +	depends on (TEGRA_BPMP && ARCH_TEGRA) || COMPILE_TEST
-> 
-> TEGRA_BPMP will be enough here as it depends on other relevant options.
-> 
-> Hence I mean:
-> 
-> 	depends on TEGRA_BPMP || COMPILE_TEST
+The pm8005_s1 is VDD_GFX, and needs to be on to enable the GPU.
+This should be hooked up to the GPU CPR, but we don't have support for that
+yet, so until then, just turn on the regulator and keep it on so that we
+can focus on basic GPU bringup.
 
-Maybe it's worth to even change TEGRA_BPMP to ARCH_TEGRA_194_SOC.
-Although then you'll have to extend it with other platforms later on,
-but probably that's fine.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-> 
->> +	depends on PCI_MSI_IRQ_DOMAIN
-> 
-> You probably want to s/depends on/select/ PCI_MSI_IRQ_DOMAIN, don't you?
-> 
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index f09f3e03f708..108667ce4f31 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -27,6 +27,23 @@
+ 	status = "okay";
+ };
+ 
++&pm8005_lsid1 {
++	pm8005-regulators {
++		compatible = "qcom,pm8005-regulators";
++
++		vdd_s1-supply = <&vph_pwr>;
++
++		pm8005_s1: s1 { /* VDD_GFX supply */
++			regulator-min-microvolt = <524000>;
++			regulator-max-microvolt = <1100000>;
++			regulator-enable-ramp-delay = <500>;
++
++			/* hack until we rig up the gpu consumer */
++			regulator-always-on;
++		};
++	};
++};
++
+ &qusb2phy {
+ 	status = "okay";
+ 
+-- 
+2.17.1
 
-I actually looked up the PCI_MSI_IRQ_DOMAIN and it is correct in your
-case, my bad.
