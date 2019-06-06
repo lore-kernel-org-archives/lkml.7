@@ -2,163 +2,65 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B506C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87334C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6AC6206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559856467;
-	bh=zlket3ku9OYZzbwTvM+SpV7IBp84b5xr+BcW458IxsI=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2Rz4U3pozqNhPpcGNZIEtw5z315qb4auEm2vvze8WJ+LyCzxh92nwPkBQkK75xC2b
-	 PyNIRvL2SHxVmJh2mx7sCS7VoSu/CPUsNWRS7O1jj5cD0Jxa8VURYDiw6QQ2oOCCob
-	 TCaEQ/36yYA0r90eaDTp9wyn/811GfoSW0sfp6yI=
+	by mail.kernel.org (Postfix) with ESMTP id 6367620657
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbfFFV1q (ORCPT
+        id S1728523AbfFFV2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:27:46 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59372 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728452AbfFFV1p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:27:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=iTBpUenYt5TRt0pKN2VQcUXbaHgvcGjOjaOWkyUYusc=; b=ACrAPspd8ob8
-        SUn7J5Coyi9qIqntZ2TxVhuJuOW+cVduSwxFu5B4nnyVH+i5icsnWRzNIf0EzuFRJ2jE4tyCR9K/8
-        XNEFRjkGsHsC/m1yvZpwkAF9+MQOP7Emw/e8XNVKjzeG2M0B94l2/wTWk28iCbL+VzCd7gM3h6RGQ
-        Mubas=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hYzv3-0007Wf-RB; Thu, 06 Jun 2019 21:27:33 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 5E2FE440046; Thu,  6 Jun 2019 22:27:33 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Leilk Liu <leilk.liu@mediatek.com>
-Cc:     devicetree@vger.kernel.org, fparent@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Applied "spi: mediatek: add SPI_LSB_FIRST support" to the spi tree
-In-Reply-To: <1559704024-5369-1-git-send-email-leilk.liu@mediatek.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190606212733.5E2FE440046@finisterre.sirena.org.uk>
-Date:   Thu,  6 Jun 2019 22:27:33 +0100 (BST)
+        Thu, 6 Jun 2019 17:28:13 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:50046 "EHLO smtp-out.xnet.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728490AbfFFV2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 17:28:12 -0400
+Received: from meh.true.cz (meh.true.cz [108.61.167.218])
+        (Authenticated sender: petr@true.cz)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id D9DDD4E5E;
+        Thu,  6 Jun 2019 23:28:09 +0200 (CEST)
+Received: by meh.true.cz (OpenSMTPD) with ESMTP id b2c764d9;
+        Thu, 6 Jun 2019 23:28:07 +0200 (CEST)
+From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+To:     sashal@kernel.org
+Cc:     jason@lakedaemon.net, jhogan@kernel.org, john@phrozen.org,
+        ldir@darbyshire-bryant.me.uk, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, marc.zyngier@arm.com,
+        paul.burton@mips.com, ralf@linux-mips.org, stable@vger.kernel.org,
+        tglx@linutronix.de, ynezz@true.cz,
+        =?UTF-8?q?Karl=20P=C3=A1lsson?= <karlp@etactica.com>
+Subject: Re: [PATCH AUTOSEL 4.9 18/25] MIPS: perf: ath79: Fix perfcount IRQ assignment
+Date:   Thu,  6 Jun 2019 23:28:04 +0200
+Message-Id: <1559856484-8579-1-git-send-email-ynezz@true.cz>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <20190507054123.32514-18-sashal@kernel.org>
+References: <20190507054123.32514-18-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi,
 
-   spi: mediatek: add SPI_LSB_FIRST support
+Karl has reported to me today, that he's experiencing weird reboot hang on his
+devices with 4.9.180 kernel and that he has bisected it down to my backported
+patch.
 
-has been applied to the spi tree at
+I would like to kindly ask you for removal of this patch.  This patch should
+be reverted from all stable kernels up to 5.1, because perf counters were not
+broken on those kernels, and this patch won't work on the ath79 legacy IRQ
+code anyway, it needs new irqchip driver which was enabled on ath79 with
+commit 51fa4f8912c0 ("MIPS: ath79: drop legacy IRQ code").
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+Thanks!
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Cheers,
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 3e582c6e911ffe6c90b9f90324bdf85fc728d0c3 Mon Sep 17 00:00:00 2001
-From: Leilk Liu <leilk.liu@mediatek.com>
-Date: Wed, 5 Jun 2019 11:07:04 +0800
-Subject: [PATCH] spi: mediatek: add SPI_LSB_FIRST support
-
-this patch add SPI_LSB_FIRST feature support.
-
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-mt65xx.c                 | 15 ++++++---------
- include/linux/platform_data/spi-mt65xx.h |  2 --
- 2 files changed, 6 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 0cce6f0ba824..7f4dc1844789 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -131,8 +131,6 @@ static const struct mtk_spi_compatible mt8183_compat = {
-  * supplies it.
-  */
- static const struct mtk_chip_config mtk_default_chip_info = {
--	.rx_mlsb = 1,
--	.tx_mlsb = 1,
- 	.cs_pol = 0,
- 	.sample_sel = 0,
- };
-@@ -203,14 +201,13 @@ static int mtk_spi_prepare_message(struct spi_master *master,
- 		reg_val &= ~SPI_CMD_CPOL;
- 
- 	/* set the mlsbx and mlsbtx */
--	if (chip_config->tx_mlsb)
--		reg_val |= SPI_CMD_TXMSBF;
--	else
-+	if (spi->mode & SPI_LSB_FIRST) {
- 		reg_val &= ~SPI_CMD_TXMSBF;
--	if (chip_config->rx_mlsb)
--		reg_val |= SPI_CMD_RXMSBF;
--	else
- 		reg_val &= ~SPI_CMD_RXMSBF;
-+	} else {
-+		reg_val |= SPI_CMD_TXMSBF;
-+		reg_val |= SPI_CMD_RXMSBF;
-+	}
- 
- 	/* set the tx/rx endian */
- #ifdef __LITTLE_ENDIAN
-@@ -607,7 +604,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
- 
- 	master->auto_runtime_pm = true;
- 	master->dev.of_node = pdev->dev.of_node;
--	master->mode_bits = SPI_CPOL | SPI_CPHA;
-+	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
- 
- 	master->set_cs = mtk_spi_set_cs;
- 	master->prepare_message = mtk_spi_prepare_message;
-diff --git a/include/linux/platform_data/spi-mt65xx.h b/include/linux/platform_data/spi-mt65xx.h
-index ba4e4bb70262..8d5df58a13ef 100644
---- a/include/linux/platform_data/spi-mt65xx.h
-+++ b/include/linux/platform_data/spi-mt65xx.h
-@@ -14,8 +14,6 @@
- 
- /* Board specific platform_data */
- struct mtk_chip_config {
--	u32 tx_mlsb;
--	u32 rx_mlsb;
- 	u32 cs_pol;
- 	u32 sample_sel;
- };
--- 
-2.20.1
-
+Petr
