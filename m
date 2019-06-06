@@ -2,174 +2,184 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0C2C28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5864C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1704D2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:49:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k57U96xj"
+	by mail.kernel.org (Postfix) with ESMTP id 964A820868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfFFKtY (ORCPT
+        id S1727218AbfFFKuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:49:24 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:18957 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfFFKtX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:49:23 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8efb00000>; Thu, 06 Jun 2019 03:49:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 03:49:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 03:49:20 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 10:49:18 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
-Date:   Thu, 6 Jun 2019 11:49:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 06:50:24 -0400
+Received: from foss.arm.com ([217.140.101.70]:45292 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbfFFKuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:50:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA9FFA78;
+        Thu,  6 Jun 2019 03:50:22 -0700 (PDT)
+Received: from e105550-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 383063F690;
+        Thu,  6 Jun 2019 03:50:20 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 11:50:17 +0100
+From:   Morten Rasmussen <morten.rasmussen@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+Message-ID: <20190606105017.GD10919@e105550-lin.cambridge.arm.com>
+References: <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
+ <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
+ <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
+ <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
+ <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
+ <CAKfTPtCR360osDz3oW+XhHT1R12SacAuJ44W_NfFOPWxJFjOPg@mail.gmail.com>
+ <20190606074921.43mbinemk3j565yu@queper01-ThinkPad-T460s>
+ <CAKfTPtA9WDOH3UzU-Qz4AqhLNGkOPo9EFkTHXGqTq7qsrec_JA@mail.gmail.com>
+ <9267b9ed-89b0-7b71-88a2-ca1894d4c497@arm.com>
+ <CAKfTPtAc=aOD=ukuPKhEL_gBSeb9DJaK-oYAPg1MWNcr-6HLQw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559818160; bh=WzzhEJK2De3f43eCu/BsQHMI4/xvHgWD7ruox2mfSOg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k57U96xj4MeWVr4uU7VFDpQyr5ZsS+4muuzcTIAQ1QtIWGfjypzQHPUBi3Fv92EcI
-         LzBIVxGr0iSFMR09zDaT/+vfJQmf7fObPdj0cJpoPZAKdwiH3TkFu5zVaK3gGbVUQd
-         yL/LH5aNtSW0Fqds4Nwcr7gRJVk9J195aBM4yzyAfIdG3+h1T9a6bhmwbgdgM+fSEr
-         5KyHDYOlYrhWwdCtrzJEQhrAgIjNIw5Yx6Nk/cIs0qfQ7F8DD2r3UPsBHtW+LXGiUL
-         HJXIn3J8Fw6s1AHDxhXX+64j+tOhQkuU4aBxqgmYj+O1BSlvNaC6sGgDc9E9rOqlPV
-         CvTDb6pOlE5PQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKfTPtAc=aOD=ukuPKhEL_gBSeb9DJaK-oYAPg1MWNcr-6HLQw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 06, 2019 at 10:44:58AM +0200, Vincent Guittot wrote:
+> On Thu, 6 Jun 2019 at 10:34, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> >
+> > On 6/6/19 10:20 AM, Vincent Guittot wrote:
+> > > On Thu, 6 Jun 2019 at 09:49, Quentin Perret <quentin.perret@arm.com> wrote:
+> > >>
+> > >> Hi Vincent,
+> > >>
+> > >> On Thursday 06 Jun 2019 at 09:05:16 (+0200), Vincent Guittot wrote:
+> > >>> Hi Quentin,
+> > >>>
+> > >>> On Wed, 5 Jun 2019 at 19:21, Quentin Perret <quentin.perret@arm.com> wrote:
+> > >>>>
+> > >>>> On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
+> > >>>>> Quoting Amit Kucheria (2019-05-16 04:54:45)
+> > >>>>>> (cc'ing Andy's correct email address)
+> > >>>>>>
+> > >>>>>> On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >>>>>>>
+> > >>>>>>> Quoting Amit Kucheria (2019-05-13 04:54:12)
+> > >>>>>>>> On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > >>>>>>>>>
+> > >>>>>>>>> On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > >>>>>>>>>>
+> > >>>>>>>>>> The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+> > >>>>>>>>>> ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+> > >>>>>>>>>> that describes this topology.
+> > >>>>>>>>>
+> > >>>>>>>>> This is partly true. There are two groups of gold and silver cores,
+> > >>>>>>>>> but AFAICT they are in a single cluster, not two separate ones. SDM845
+> > >>>>>>>>> is one of the early examples of ARM's Dynamiq architecture.
+> > >>>>>>>>>
+> > >>>>>>>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > >>>>>>>>>
+> > >>>>>>>>> I noticed that this patch sneaked through for this merge window but
+> > >>>>>>>>> perhaps we can whip up a quick fix for -rc2?
+> > >>>>>>>>>
+> > >>>>>>>>
+> > >>>>>>>> And please find attached a patch to fix this up. Andy, since this
+> > >>>>>>>> hasn't landed yet (can we still squash this into the original patch?),
+> > >>>>>>>> I couldn't add a Fixes tag.
+> > >>>>>>>>
+> > >>>>>>>
+> > >>>>>>> I had the same concern. Thanks for catching this. I suspect this must
+> > >>>>>>> cause some problem for IPA given that it can't discern between the big
+> > >>>>>>> and little "power clusters"?
+> > >>>>>>
+> > >>>>>> Both EAS and IPA, I believe. It influences the scheduler's view of the
+> > >>>>>> the topology.
+> > >>>>>
+> > >>>>> And EAS and IPA are OK with the real topology? I'm just curious if
+> > >>>>> changing the topology to reflect reality will be a problem for those
+> > >>>>> two.
+> > >>>>
+> > >>>> FWIW, neither EAS nor IPA depends on this. Not the upstream version of
+> > >>>> EAS at least (which is used in recent Android kernels -- 4.19+).
+> > >>>>
+> > >>>> But doing this is still required for other things in the scheduler (the
+> > >>>> so-called 'capacity-awareness' code). So until we have a better
+> > >>>> solution, this patch is doing the right thing.
+> > >>>
+> > >>> I'm not sure to catch what you mean ?
+> > >>> Which so-called 'capacity-awareness' code are you speaking about ? and
+> > >>> what is the problem ?
+> > >>
+> > >> I'm talking about the wake-up path. ATM select_idle_sibling() is totally
+> > >> unaware of capacity differences. In its current form, this function
+> > >> basically assumes that all CPUs in a given sd_llc have the same
+> > >> capacity, which would be wrong if we had a single MC level for SDM845.
+> > >> So, until select_idle_sibling() is 'fixed' to be capacity-aware, we need
+> > >> two levels of sd for asymetric systems (including DynamIQ) so the
+> > >> wake_cap() story actually works.
+> > >>
+> > >> I hope that clarifies it :)
+> > >
+> > > hmm... does this justifies this wrong topology ?
 
-On 06/06/2019 11:22, Peter Ujfalusi wrote:
+No, it doesn't. It relies heavily on how nested clusters are interpreted
+too, so it is quite fragile.
 
-...
-
->>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>>> well.
->>> Not exactly equal.
->>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->>> multiples of 16]
->>
->> So I think that the key thing to highlight here, is that the as Sameer
->> highlighted above for the Tegra ADMA there are two values that need to
->> be programmed; the DMA client FIFO size and the max burst size. The ADMA
->> has register fields for both of these.
+> > > select_idle_sibling() is called only when system is overloaded and
+> > > scheduler disables the EAS path
+> > > In this case, the scheduler looks either for an idle cpu or for evenly
+> > > spreading the loads
+> > > This is maybe not always optimal and should probably be fixed but
+> > > doesn't justifies a wrong topology description IMHO
+> >
+> > The big/Little cluster detection in wake_cap() doesn't work anymore with
+> > DynamIQ w/o Phanton (DIE) domain. So the decision of going sis() or slow
+> > path is IMHO broken.
 > 
-> How does the ADMA uses the 'client FIFO size' and 'max burst size'
-> values and what is the relation of these values to the peripheral side
-> (ADMAIF)?
+> That's probably not the right thread to discuss this further but i'm
+> not sure to understand why wake_cap() doesn't work as it compares the
+> capacity_orig of local cpu and prev cpu which are the same whatever
+> the sche domainœ
 
-Per Sameer's previous comment, the FIFO size is used by the ADMA to
-determine how much space is available in the FIFO. I assume the burst
-size just limits how much data is transferred per transaction.
+We have had this discussion a couple of times over the last couple of
+years. The story, IIRC, is that when we introduced capacity awareness in
+the wake-up path (wake_cap()) we realised (I think it was actually you)
+that we could use select_idle_sibling() in cases where we know that the
+search space is limited to cpus with sufficient capacity so we didn't
+have to take the long route through find_idlest_cpu(). Back then, big
+and little were grouped by clusters so it was "safe" to use
+select_idle_sibling() on cpu or prev_cpu if they have sufficient
+capacity.
 
->> As you can see from the above the FIFO size can be much greater than the
->> burst size and so ideally both of these values would be passed to the DMA.
->>
->> We could get by with just passing the FIFO size (as the max burst size)
->> and then have the DMA driver set the max burst size depending on this,
->> but this does feel quite correct for this DMA. Hence, ideally, we would
->> like to pass both.
->>
->> We are also open to other ideas.
-> 
-> I can not find public documentation (I think they are walled off by
-> registration), but correct me if I'm wrong:
+With DynamiQ the true topology on many systems is just one cluster and
+hence using select_idle_sibling() there means search space includes all
+cpu types which isn't "safe" if you have a task requiring more capacity
+than can be offered by any cpu in the system. We need to use the
+find_idlest_cpu() path on more cases than we do today.
 
-No unfortunately, you are not wrong here :-(
+All the code is there I think, we just have to tweak some conditions. I
+can try to come up with a simple fix we can discuss and refine as
+necessary.
 
-> ADMAIF - peripheral side
->  - kind of a small DMA for audio preipheral(s)?
-
-Yes this is the interface to the APE (audio processing engine) and data
-sent to the ADMAIF is then sent across a crossbar to one of many
-devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
-configurable depending on the use-case.
-
->  - Variable FIFO size
-
-Yes.
-
->  - sends DMA request to ADMA per words
-
-From Sameer's notes it says the ADMAIF send a signal to the ADMA per
-word, yes.
-
-> ADMA - system DMA
->  - receives the DMA requests from ADMAIF
->  - counts the requests
->  - based on some threshold of the counter it will send/read from ADMAIF?
->   - maxburst number of words probably?
-
-Sounds about right to me.
-
-> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
-> managing that FIFO from the outside, making sure that it does not over
-> or underrun?
-
-Yes.
-
-> And it is the one who sets the pace (in effect the DMA burst size - how
-> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
-
-Yes.
-
-So currently, if you look at the ADMA driver
-(drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
-for the burst, but the FIFO size is hard-coded (see the
-TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
-Ideally, we should not hard-code this but pass it.
-
-Given that there are no current users of the ADMA upstream, we could
-change the usage of the src/dst_maxburst, but being able to set the FIFO
-size as well would be ideal.
-
-Cheers
-Jon
-
--- 
-nvpublic
+Morten
