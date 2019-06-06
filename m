@@ -2,82 +2,81 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA0EC28D1D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945E4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9C820684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C3B20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfFFJ2z (ORCPT
+        id S1727862AbfFFJ3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:28:55 -0400
-Received: from foss.arm.com ([217.140.101.70]:43546 "EHLO foss.arm.com"
+        Thu, 6 Jun 2019 05:29:13 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:46636 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbfFFJ2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:28:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A369341;
-        Thu,  6 Jun 2019 02:28:54 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 952BF3F690;
-        Thu,  6 Jun 2019 02:28:51 -0700 (PDT)
-Subject: Re: [PATCH 07/13] drivers: Add generic match helper by ACPI_COMPANION
- device
-To:     rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-spi@vger.kernel.org, broonie@kernel.org
-References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
- <1559747630-28065-8-git-send-email-suzuki.poulose@arm.com>
- <CAJZ5v0h+maPj-ijKV_vvQBpHD7N-VMiAqSeyztAkiUR9E2WdmQ@mail.gmail.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <1f230eb7-f4e3-ed4e-960d-c3bbb60f0a18@arm.com>
-Date:   Thu, 6 Jun 2019 10:28:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727833AbfFFJ3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:29:13 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hYohm-0001wm-23; Thu, 06 Jun 2019 17:29:06 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hYohb-000735-8z; Thu, 06 Jun 2019 17:28:55 +0800
+Date:   Thu, 6 Jun 2019 17:28:55 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Message-ID: <20190606092855.dfeuvyk5lbvm4zbf@gondor.apana.org.au>
+References: <20190603200301.GM28207@linux.ibm.com>
+ <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
+ <20190606045109.zjfxxbkzq4wb64bj@gondor.apana.org.au>
+ <20190606060511.GA28207@linux.ibm.com>
+ <20190606061438.nyzaeppdbqjt3jbp@gondor.apana.org.au>
+ <20190606090619.GC28207@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0h+maPj-ijKV_vvQBpHD7N-VMiAqSeyztAkiUR9E2WdmQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606090619.GC28207@linux.ibm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 06, 2019 at 02:06:19AM -0700, Paul E. McKenney wrote:
+>
+> Or is your point instead that given the initial value of "a" being
+> zero and the value stored to "a" being one, there is no way that
+> any possible load and store tearing (your slicing and dicing) could
+> possibly mess up the test of the value loaded from "a"?
 
+Exactly.  If you can dream up of a scenario where the compiler can
+get this wrong I'm all ears.
 
-On 06/06/2019 10:17, Rafael J. Wysocki wrote:
-> On Wed, Jun 5, 2019 at 5:14 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->>
->> Add a generic helper to match a device by the acpi device.
+> > But I do concede that in the general RCU case you must have the
+> > READ_ONCE/WRITE_ONCE calls for rcu_dereference/rcu_assign_pointer.
 > 
-> "by its ACPI companion device object", please.
+> OK, good that we are in agreement on this part, at least!  ;-)
 
-Sure.
+Well only because we're allowing crazy compilers that can turn
+a simple word-aligned word assignment (a = b) into two stores.
 
-> 
-> Also, it would be good to combine this patch with the patch(es) that
-> cause device_match_acpi_dev() to be actually used.
-> 
-> Helpers without any users are arguably not useful.
-
-Sure, the helpers will be part of the part2 of the whole series,
-which will actually have the individual subsystems consuming the
-new helpers. For your reference, it is available here :
-
-http://linux-arm.org/git?p=linux-skp.git;a=shortlog;h=refs/heads/driver-cleanup/v2
-
-e.g: 
-http://linux-arm.org/git?p=linux-skp.git;a=commit;h=59534e843e2f214f1f29659993f6e423bef16b28
-
-I could simply pull those patches into this part, if you prefer that.
-However, that would be true for the other patches in the part2.
-I am open to suggestions, on how to split the series.
-
-Cheers
-Suzuki
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
