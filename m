@@ -2,121 +2,228 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B386EC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DA2C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9265B20883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697CA20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkiW/xNC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KGwtj9UC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbfFFRlt (ORCPT
+        id S1730269AbfFFRmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:41:49 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37021 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728879AbfFFRls (ORCPT
+        Thu, 6 Jun 2019 13:42:13 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:55339 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730251AbfFFRmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:41:48 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w13so4517979eds.4;
-        Thu, 06 Jun 2019 10:41:47 -0700 (PDT)
+        Thu, 6 Jun 2019 13:42:13 -0400
+Received: by mail-it1-f195.google.com with SMTP id i21so1292065ita.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:42:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ep+lClRkBZiSpttevvAOjGUX9zV5Sv5RO5bhSwT85Pk=;
-        b=KkiW/xNCXMwCGoC0JNOZVCNnHMbJ/x14FhvcKNzpcJUKcIjeNtiHET8JVhVAjuwMdJ
-         31dggq3pab3WtEQzLRDJY2PiXEeEcQvbLaGQv9goeQNKJQNR1c2kyOFx7liWBwrUWbTP
-         +yLr+kPukq/L9Y0PD88z/gRmmLnkT8h/OoOxrG67otwhdlVEkxvBfxgCFSYWrA3an1WP
-         PzFCAOXYQ0JRM4evxnZXGdDgP5wSOrNpDOFOXkVcQG8HzQf3g/cAf6Xyyf8t4T0Vfsvp
-         nKo42//+mE0Ef85esn1p1MCFrToWh6tX9jBLIJOxLOtHELeomS4yyqF+dS6wfFKLzVr9
-         sX8w==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DF4dQA1gIkFVgXztlpdKk3n/BViiehMxIhYhE4VnkR4=;
+        b=KGwtj9UC89wRdT3HsyRr12bThebYmDfsZJLgMxmjyHJL6J0r1yu8j6LLOkmKKtV8+2
+         LtMASJ9SNxz8cGVSnVadhgYrVuHX5vP5Rj6FzMvKlYbnf1WXI2U6Aq+4d/X5v+enclMW
+         qyPz3cJLedz31HfbmBxP6SozodQSt6dQGgKYp9d0DOR76o0JG3gRD5plHn+vju/Z506J
+         HmQvDw/OvXHk7t1DQeoX5VJOoZLLbMLWvCH0nffebEdvjYK4aVzJqqqcqlBstw8jEq9d
+         dAigjLdXABVs0DH2S5SsWxRv+JXmjNJEQNoaq/ad9dFBxgK3gUbDKzbkR/YWf/oie3Mm
+         YH1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ep+lClRkBZiSpttevvAOjGUX9zV5Sv5RO5bhSwT85Pk=;
-        b=tNsLARheiUV7zuJeWEOsMxahDmN940nrGuqGJ037d96JYuMSt1FS4tENmTG3j7mIhp
-         pjTCkCfyGsQXWIyZyCzZDLXzUtA0W6ux+AcUgpnIuEboIMyl8Wkt4ie9LgpxSZRSWAD0
-         WuILQpProTX0AycOkxQlU5NfDLN5xl25byvQZem49SbD/YaMwfKIHy0WJmmDPr/0R6YY
-         R6l9zcdYoBtR4wHxiu3lk5gpBrDSQlzrEG1iMM61pKnU7uDQ40bEa4MBvU8pSV7qvkte
-         I/FD5sLRVdi77ZOyfsP0q3WJOn1ygUP/TR0LBaA4zDPyN8H9ekYoy05G+MRwtHHUpVGh
-         7KPQ==
-X-Gm-Message-State: APjAAAWumJTqmNUUl1nTIV0dXmLPzxzES7XzREieYSo8KNudm4YwJmwq
-        UjScKyrl4nmiZh8iWnGZVFA=
-X-Google-Smtp-Source: APXvYqzEuo34x7u2AlbsVWYtHPQrMq+07rEWRuM0DtQYflaYgwqqQUbgeZvv9EtRXwXcvI/T8PcrKg==
-X-Received: by 2002:a17:906:13c7:: with SMTP id g7mr43293906ejc.1.1559842906721;
-        Thu, 06 Jun 2019 10:41:46 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id w5sm617172edd.19.2019.06.06.10.41.45
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DF4dQA1gIkFVgXztlpdKk3n/BViiehMxIhYhE4VnkR4=;
+        b=s/tFNn1Hgl3qvRQ3kN403PTMJ+dd+8cQgNS6ffikz+fIJKvpnM4BrmcXC7jwQFI6PE
+         lR0AN0ad7hTYHZWoHr7/UrJVO9XVyRM3S5BvVLcrd81yrH8WsExpgYJNr5ZZ3dkaSZr2
+         AfptzwQvBItwbk5+ROZfh6jM3p9pwhw0kBg2kDtLDY5l/ZHjzRjZ4ejhFagqmAUHCPZx
+         0W9BFJLLNpSx44cRbnGKml3xa0fb3oWUJO6vUQXootFpijQWlf74YCT0jbmY98PxHP/K
+         ZbABhVnbVJ0Gpyl/NGbUn8MzU+m0O+pwPEL12EvTSAf1Y6dpm0OGth7j/sCkrXKt9FlZ
+         m9Rg==
+X-Gm-Message-State: APjAAAVEUFHPwc2Bf67m2JtMrm/bFKz2dM9PJst8HoKri8H9SPlyELEB
+        RhrJECTZNmhRmqzsgDcgfCg4Xw==
+X-Google-Smtp-Source: APXvYqyHNwNKPxbwqRyI0UzRFRYI0LNnqNSA5yyN+XT3MtdTA8IDyJ5LpmKk0rHZQuPmLw0mXxlWnA==
+X-Received: by 2002:a02:a493:: with SMTP id d19mr28473646jam.22.1559842931946;
+        Thu, 06 Jun 2019 10:42:11 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id a7sm855158iok.19.2019.06.06.10.42.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 10:41:46 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] scsi: lpfc: Fix backport of faf5a744f4f8 ("scsi: lpfc: avoid uninitialized variable warning")
-Date:   Thu,  6 Jun 2019 10:41:25 -0700
-Message-Id: <20190606174125.4277-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0.rc3
-In-Reply-To: <20190606165346.GB3249@kroah.com>
-References: <20190606165346.GB3249@kroah.com>
+        Thu, 06 Jun 2019 10:42:11 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Dan Williams <dcbw@redhat.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Miller <davem@davemloft.net>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
+        syadagir@codeaurora.org, abhishek.esse@gmail.com,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org
+References: <20190531035348.7194-1-elder@linaro.org>
+ <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
+ <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
+ <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
+ <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
+ <20190531233306.GB25597@minitux>
+ <d76a710d45dd7df3a28afb12fc62cf14@codeaurora.org>
+ <CAK8P3a0brT0zyZGNWiS2R0RMHHFF2JG=_ixQyvjhj3Ky39o0UA@mail.gmail.com>
+ <040ce9cc-7173-d10a-a82c-5186d2fcd737@linaro.org>
+ <CAK8P3a2U=RzfpVaAgRP1QwPhRpZiBNsG5qdWjzwG=tCKZefYHA@mail.gmail.com>
+ <b26cf34c0d3fa1a7a700cee935244d7a2a7e1388.camel@redhat.com>
+ <CAK8P3a3pQpSpH4q=CL6gr_YzjYgoyD6-eyiLrvnZsqqjpcRxtQ@mail.gmail.com>
+ <0264d7f9a35430201a89c068bb13c84c622af11a.camel@redhat.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+Date:   Thu, 6 Jun 2019 12:42:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0264d7f9a35430201a89c068bb13c84c622af11a.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prior to commit 4c47efc140fa ("scsi: lpfc: Move SCSI and NVME Stats to
-hardware queue structures") upstream, we allocated a cstat structure in
-lpfc_nvme_create_localport. When commit faf5a744f4f8 ("scsi: lpfc: avoid
-uninitialized variable warning") was backported, it was placed after the
-allocation so we leaked memory whenever this function was called and
-that conditional was true (so whenever CONFIG_NVME_FC is disabled).
+On 6/4/19 4:29 PM, Dan Williams wrote:
+> On Tue, 2019-06-04 at 22:04 +0200, Arnd Bergmann wrote:
+>> On Tue, Jun 4, 2019 at 5:18 PM Dan Williams <dcbw@redhat.com> wrote:
+>>> On Tue, 2019-06-04 at 10:13 +0200, Arnd Bergmann wrote:
+>>>> Can you describe what kind of multiplexing is actually going on?
+>>>> I'm still unclear about what we actually use multiple logical
+>>>> interfaces for here, and how they relate to one another.
+>>>
+>>> Each logical interface represents a different "connection" (PDP/EPS
+>>> context) to the provider network with a distinct IP address and
+>>> QoS.
+>>> VLANs may be a suitable analogy but here they are L3+QoS.
+>>>
+>>> In realistic example the main interface (say rmnet0) would be used
+>>> for
+>>> web browsing and have best-effort QoS. A second interface (say
+>>> rmnet1)
+>>> would be used for VOIP and have certain QoS guarantees from both
+>>> the
+>>> modem and the network itself.
+>>>
+>>> QMAP can also aggregate frames for a given channel
+>>> (connection/EPS/PDP
+>>> context/rmnet interface/etc) to better support LTE speeds.
+>>
+>> Thanks, that's a very helpful explanation!
+>>
+>> Is it correct to say then that the concept of having those separate
+>> connections would be required for any proper LTE modem
+>> implementation,
+>> but the QMAP protocol (and based on that, the rmnet implementation)
+>> is Qualcomm specific and shared only among several generations of
+>> modems from that one vendor?
+> 
+> Exactly correct.  This is what Johannes is discussing in his "cellular
+> modem APIs - take 2" thread about how this should all be organized at
+> the driver level and I think we should figure that out before we commit
+> to IPA-with-a-useless-netdev that requires rmnets to be created on top.
+> That may end up being the solution but let's have that discussion.
 
-Move the IS_ENABLED if statement above the allocation since it is not
-needed when the condition is true.
+I looked at Johannes' message and the follow-on discussion.  As I've
+made clear before, my work on this has been focused on the IPA transport,
+and some of this higher-level LTE architecture is new to me.  But it
+seems pretty clear that an abstracted WWAN subsystem is a good plan,
+because these devices represent a superset of what a "normal" netdev
+implements.
 
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/scsi/lpfc/lpfc_nvme.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+HOWEVER I disagree with your suggestion that the IPA code should
+not be committed until after that is all sorted out.  In part it's
+for selfish reasons, but I think there are legitimate reasons to
+commit IPA now *knowing* that it will need to be adapted to fit
+into the generic model that gets defined and developed.  Here
+are some reasons why.
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 099f70798fdd..645ffb5332b4 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -2477,14 +2477,14 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
- 	lpfc_nvme_template.max_sgl_segments = phba->cfg_nvme_seg_cnt + 1;
- 	lpfc_nvme_template.max_hw_queues = phba->cfg_nvme_io_channel;
- 
-+	if (!IS_ENABLED(CONFIG_NVME_FC))
-+		return ret;
-+
- 	cstat = kmalloc((sizeof(struct lpfc_nvme_ctrl_stat) *
- 			phba->cfg_nvme_io_channel), GFP_KERNEL);
- 	if (!cstat)
- 		return -ENOMEM;
- 
--	if (!IS_ENABLED(CONFIG_NVME_FC))
--		return ret;
--
- 	/* localport is allocated from the stack, but the registration
- 	 * call allocates heap memory as well as the private area.
- 	 */
--- 
-2.22.0.rc3
+First, the layer of the IPA code that actually interacts with rmnet
+is very small--less than 3% if you simply do a word count of the
+source files.  Arnd actually suggested eliminating the "ipa_netdev"
+files and merging their content elsewhere.  This suggests two things:
+- The interface to rmnet is isolated, so the effect of whatever
+  updates are made to support a WWAN (rather than netdev) model will
+  be focused
+- The vast majority of the driver has nothing to do with that upper
+  layer, and deals almost exclusively with managing the IPA hardware.
+  The idea of a generic framework isn't minor, but it isn't the
+  main focus of the IPA driver either, so I don't think it should
+  hold it up.
+
+Second, the IPA code has been out for review recently, and has been
+the subject of some detailed discussion in the past few weeks.  Arnd
+especially has invested considerable time in review and discussion.
+Delaying things until after a better generic model is settled on
+(which I'm guessing might be on the order of months) means the IPA
+driver will have to be submitted for review again after that, at
+which point it will no longer be "fresh"; it'll be a bit like
+starting over.
+
+Third, having the code upstream actually means the actual requirements
+for rmnet-over-IPA are clear and explicit.  This might not be a huge
+deal, but I think it's better to devise a generic WWAN scheme that
+can refer to actual code than to do so with assumptions about what
+will work with rmnet (and others).  As far as I know, the upstream
+rmnet has no other upstream back end; IPA will make it "real."
+
+I support the idea of developing a generic WWAN framework, and I
+can assure you I'll be involved enough to perhaps be one of the
+first to implement a new generic scheme.
+
+Optimistically, the IPA code itself hasn't seen much feedback
+for v2; maybe that means it's in good shape?
+
+Anyway, I'd obviously like to get the IPA code accepted sooner
+rather than later, and I think there are good reasons to do that.
+
+					-Alex
+
+>>> You mentioned the need to have a common user space interface
+>> for configuration, and if the above is true, I agree that we should
+>> try
+>> to achieve that, either by ensuring rmnet is generic enough to
+>> cover other vendors (and non-QMAP clients), or by creating a
+>> new user level interface that IPA/rmnet can be adapted to.
+> 
+> I would not suggest making rmnet generic; it's pretty QMAP specific
+> (but QMAP is spoken by many many modems both SoC, USB stick, and PCIe
+> minicard).
+> 
+> Instead, I think what Johannes is discussing is a better approach. A
+> kernel WWAN framework with consistent user API that
+> rmnet/IPA/qmi_wwan/MBIM/QMI/serial/Sierra can all implement.
+> 
+> That wouldn't affect the core packet processing of IPA/rmnet but
+> instead:
+> 
+> 1) when/how an rmnet device actually gets created on top of the IPA (or
+> qmi_wwan) device
+> 
+> AND (one of these two)
+> 
+> a) whether IPA creates a netdev on probe
+> 
+> OR
+> 
+> b) whether there is some "WWAN device" kernel object which userspace
+> interacts with create rmnet channels on top of IPA
+> 
+> Dan
+> 
 
