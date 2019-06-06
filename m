@@ -2,234 +2,115 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CCAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27125C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E9120673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jN+/DOZH"
+	by mail.kernel.org (Postfix) with ESMTP id 0775B20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbfFFPPQ (ORCPT
+        id S1729233AbfFFPP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:15:16 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41267 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728797AbfFFPPP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:15:15 -0400
-Received: by mail-vs1-f67.google.com with SMTP id g24so1422800vso.8;
-        Thu, 06 Jun 2019 08:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=kQRTTvJECutu2MpATeVBjptWlhCDL4BG2w6Brzcdt/Q=;
-        b=jN+/DOZH7TZPyl2XEjjxjBxj6JpdHaUVDgnK27rLaEY3h0qgJ7jipDAhbftXHlhJ04
-         nJ1NR5rsFhPm7UyATt+BpoUDleZxJEULs/crJL5ZRwrrHzVmIeuz+fjZQE55ldJ3KZ1P
-         l7F/YPc4VQ8FZYzAv1Hnm7qc5wGb5TtZlHxWjqaE4HolOQYU2NeLhywiQwYd2jeqbayt
-         OsnBvewg3bIrSPxnq9R80WR2s0VHeq8pdmtfiAwTJabqmL0/Efgo+DPAaU0wc1/kLhle
-         QCQAN6JN2FOZHXmjojPE3KSgx8D69J7qQv5IZ+zL816cMYtmpfpNTYbuaofzQQFvsBn3
-         viYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=kQRTTvJECutu2MpATeVBjptWlhCDL4BG2w6Brzcdt/Q=;
-        b=Gv/MPAvgBAos6wV4qOiyzU4FHTGV9sjvEkQjaQ6hXGoowto8t3rkZC9537ioqGLGWz
-         w4HSXFP4gznmKU45PJxNOVKK3MJBIBu+syfI+LCUelh9P0lS+wEgrBxZL2+atUgdkRsM
-         gE+OoILXGLwxMdXw4oksLadHywN2vYHnjRtqTNw+0wH2iaxpSqKscT/lv/xYtbdjOL7N
-         p0gjKEKJcrWdD+cPNM963Z6Rnr0EiFa9B8nDvepyFu/nP/PzXezABt77QSHgh6Ocz164
-         GdD7sf24lXRGZP15UblbtryODrp2I0hS6JdXCGwXSLgwqtFF5ROe0qpdpl7Km+mzu4BM
-         9nOg==
-X-Gm-Message-State: APjAAAU4LYW/oTvoUFwmhbOrX9U6RtLIjyvYlHQ+vukQg76bqn6OJ2Xl
-        55zk9j963Ui22b23u8+XZQweduFlKCYFZZFsl6UGljZx
-X-Google-Smtp-Source: APXvYqziDYowzJK1iN9yuUzvoAt9Ih1JijajesgqtQa8BGKxKcOFkaxpHCU5yzLcTL8muvv0UOk/XP436QqcTfU5f5Y=
-X-Received: by 2002:a67:f684:: with SMTP id n4mr24630231vso.90.1559834114043;
- Thu, 06 Jun 2019 08:15:14 -0700 (PDT)
+        Thu, 6 Jun 2019 11:15:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36828 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728797AbfFFPP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:15:26 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9EE6430F1BC7;
+        Thu,  6 Jun 2019 15:15:25 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-18.gru2.redhat.com [10.97.112.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D4AC10ABD8D;
+        Thu,  6 Jun 2019 15:15:01 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id 0679E10514E;
+        Thu,  6 Jun 2019 12:14:40 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x56FEaSG003248;
+        Thu, 6 Jun 2019 12:14:36 -0300
+Date:   Thu, 6 Jun 2019 12:14:35 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Haris Okanovic <haris.okanovic@ni.com>
+Subject: Re: [patch 2/3] timers: do not raise softirq unconditionally
+ (spinlockless version)
+Message-ID: <20190606151433.GA3199@amt.cnet>
+References: <20190415201213.600254019@amt.cnet>
+ <20190415201429.427759476@amt.cnet>
+ <20190604062931.GC15459@xz-x1>
 MIME-Version: 1.0
-References: <20190606135219.1086-1-nborisov@suse.com> <20190606135219.1086-2-nborisov@suse.com>
-In-Reply-To: <20190606135219.1086-2-nborisov@suse.com>
-Reply-To: fdmanana@gmail.com
-From:   Filipe Manana <fdmanana@gmail.com>
-Date:   Thu, 6 Jun 2019 16:15:02 +0100
-Message-ID: <CAL3q7H6UaxOV1dahcTE6aWJtWsOcWUfs06NgUFMjWx56fbpWKQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] btrfs: Implement DRW lock
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     linux-btrfs <linux-btrfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, andrea.parri@amarulasolutions.com,
-        peterz@infradead.org, paulmck@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604062931.GC15459@xz-x1>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 06 Jun 2019 15:15:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 2:55 PM Nikolay Borisov <nborisov@suse.com> wrote:
->
-> A (D)ouble (R)eader (W)riter lock is a locking primitive that allows
-> to have multiple readers or multiple writers but not multiple readers
-> and writers holding it concurrently. The code is factored out from
-> the existing open-coded locking scheme used to exclude pending
-> snapshots from nocow writers and vice-versa. Current implementation
-> actually favors Readers (that is snapshot creaters) to writers (nocow
-> writers of the filesystem).
->
-> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-> ---
->  fs/btrfs/Makefile   |  2 +-
->  fs/btrfs/drw_lock.c | 71 +++++++++++++++++++++++++++++++++++++++++++++
->  fs/btrfs/drw_lock.h | 23 +++++++++++++++
->  3 files changed, 95 insertions(+), 1 deletion(-)
->  create mode 100644 fs/btrfs/drw_lock.c
->  create mode 100644 fs/btrfs/drw_lock.h
->
-> diff --git a/fs/btrfs/Makefile b/fs/btrfs/Makefile
-> index ca693dd554e9..dc60127791e6 100644
-> --- a/fs/btrfs/Makefile
-> +++ b/fs/btrfs/Makefile
-> @@ -10,7 +10,7 @@ btrfs-y +=3D super.o ctree.o extent-tree.o print-tree.o=
- root-tree.o dir-item.o \
->            export.o tree-log.o free-space-cache.o zlib.o lzo.o zstd.o \
->            compression.o delayed-ref.o relocation.o delayed-inode.o scrub=
-.o \
->            reada.o backref.o ulist.o qgroup.o send.o dev-replace.o raid56=
-.o \
-> -          uuid-tree.o props.o free-space-tree.o tree-checker.o
-> +          uuid-tree.o props.o free-space-tree.o tree-checker.o drw_lock.=
-o
->
->  btrfs-$(CONFIG_BTRFS_FS_POSIX_ACL) +=3D acl.o
->  btrfs-$(CONFIG_BTRFS_FS_CHECK_INTEGRITY) +=3D check-integrity.o
-> diff --git a/fs/btrfs/drw_lock.c b/fs/btrfs/drw_lock.c
-> new file mode 100644
-> index 000000000000..9681bf7544be
-> --- /dev/null
-> +++ b/fs/btrfs/drw_lock.c
-> @@ -0,0 +1,71 @@
-> +#include "drw_lock.h"
-> +#include "ctree.h"
-> +
-> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock)
-> +{
-> +       atomic_set(&lock->readers, 0);
-> +       percpu_counter_init(&lock->writers, 0, GFP_KERNEL);
-> +       init_waitqueue_head(&lock->pending_readers);
-> +       init_waitqueue_head(&lock->pending_writers);
-> +}
-> +
-> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock)
-> +{
-> +       percpu_counter_destroy(&lock->writers);
-> +}
-> +
-> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock)
-> +{
-> +       if (atomic_read(&lock->readers))
-> +               return false;
-> +
-> +       percpu_counter_inc(&lock->writers);
-> +
-> +       /*
-> +        * Ensure writers count is updated before we check for
-> +        * pending readers
-> +        */
-> +       smp_mb();
-> +       if (atomic_read(&lock->readers)) {
-> +               btrfs_drw_read_unlock(lock);
+On Tue, Jun 04, 2019 at 02:29:31PM +0800, Peter Xu wrote:
+> On Mon, Apr 15, 2019 at 05:12:15PM -0300, Marcelo Tosatti wrote:
+> > Check base->pending_map locklessly and skip raising timer softirq 
+> > if empty.
+> > 
+> > What allows the lockless (and potentially racy against mod_timer) 
+> > check is that mod_timer will raise another timer softirq after
+> > modifying base->pending_map.
+> > 
+> > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+> > 
+> > ---
+> >  kernel/time/timer.c |   18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> > 
+> > Index: linux-rt-devel/kernel/time/timer.c
+> > ===================================================================
+> > --- linux-rt-devel.orig/kernel/time/timer.c	2019-04-15 14:21:02.788704354 -0300
+> > +++ linux-rt-devel/kernel/time/timer.c	2019-04-15 14:22:56.755047354 -0300
+> > @@ -1776,6 +1776,24 @@
+> >  		if (time_before(jiffies, base->clk))
+> >  			return;
+> >  	}
+> > +
+> > +#ifdef CONFIG_PREEMPT_RT_FULL
+> > +/* On RT, irq work runs from softirq */
+> > +	if (irq_work_needs_cpu())
+> > +		goto raise;
+> > +#endif
+> > +	base = this_cpu_ptr(&timer_bases[BASE_STD]);
+> > +	if (!housekeeping_cpu(base->cpu, HK_FLAG_TIMER)) {
+> > +		if (!bitmap_empty(base->pending_map, WHEEL_SIZE))
+> > +			goto raise;
+> > +		base++;
+> 
+> Shall we check against CONFIG_NO_HZ_COMMON?  Otherwise the base could
+> point to something else rather tha the deferred base (NR_BASES==1 if
+> without nohz-common).
+> 
+> I see that run_local_timers() has similar pattern, actually I'm
+> thinking whether we can put things like "base++" to be inside some
+> "if"s of CONFIG_NO_HZ_COMMON to be clear.
+> 
+> Thanks,
+> 
+> -- 
+> Peter Xu
 
-Should be btrfs_drw_write_unlock(lock)
+Hi Peter,
 
-> +               return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock)
-> +{
-> +       while(true) {
+Yes, that is a good point and needs fixing. 
 
-Missing space after 'while'.
+I'll wait for Anna's comments before posting -v2.
 
-Thanks.
-
-> +               if (btrfs_drw_try_write_lock(lock))
-> +                       return;
-> +               wait_event(lock->pending_writers, !atomic_read(&lock->rea=
-ders));
-> +       }
-> +}
-> +
-> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock)
-> +{
-> +       percpu_counter_dec(&lock->writers);
-> +       cond_wake_up(&lock->pending_readers);
-> +}
-> +
-> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock)
-> +{
-> +       atomic_inc(&lock->readers);
-> +       smp_mb__after_atomic();
-> +
-> +       wait_event(lock->pending_readers,
-> +                  percpu_counter_sum(&lock->writers) =3D=3D 0);
-> +}
-> +
-> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock)
-> +{
-> +       /*
-> +        * Atomic RMW operations imply full barrier, so woken up writers
-> +        * are guaranteed to see the decrement
-> +        */
-> +       if (atomic_dec_and_test(&lock->readers))
-> +               wake_up(&lock->pending_writers);
-> +}
-> +
-> +
-> diff --git a/fs/btrfs/drw_lock.h b/fs/btrfs/drw_lock.h
-> new file mode 100644
-> index 000000000000..baff59561c06
-> --- /dev/null
-> +++ b/fs/btrfs/drw_lock.h
-> @@ -0,0 +1,23 @@
-> +#ifndef BTRFS_DRW_LOCK_H
-> +#define BTRFS_DRW_LOCK_H
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/wait.h>
-> +#include <linux/percpu_counter.h>
-> +
-> +struct btrfs_drw_lock {
-> +       atomic_t readers;
-> +       struct percpu_counter writers;
-> +       wait_queue_head_t pending_writers;
-> +       wait_queue_head_t pending_readers;
-> +};
-> +
-> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock);
-> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock);
-> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock);
-> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock);
-> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock);
-> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock);
-> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock);
-> +
-> +#endif
-> --
-> 2.17.1
->
-
-
---=20
-Filipe David Manana,
-
-=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
- right.=E2=80=9D
