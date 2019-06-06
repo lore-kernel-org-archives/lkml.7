@@ -2,162 +2,182 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05364C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26BEC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D053B208C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559831800;
-	bh=QN3c86AsOhqUNNGms5nxThdRVIMwAWzxlEniJHv0Z7I=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=IovOAbvq+XMdv8GUxtjkWU8gQ4Ymv01pZxojHoUd20BIPipxLrX1vCdLosMZC9Idq
-	 hlg2AfSO/WikJDIFQ7EpmBtjXDLxFasbdKr5eE3MR5OCXeSTEMZySphfV88Q64nwLr
-	 lcabZ1QInBKvA2PJ/1KInJjwHs9qNmGPi0v2IdGM=
+	by mail.kernel.org (Postfix) with ESMTP id 82E2E207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCbqy9Il"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfFFOgk (ORCPT
+        id S1728825AbfFFOlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbfFFOgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:36:38 -0400
-Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96FD020684;
-        Thu,  6 Jun 2019 14:36:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559831797;
-        bh=QN3c86AsOhqUNNGms5nxThdRVIMwAWzxlEniJHv0Z7I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QjXfcCXHB9oVQGRYbvr+CazQVQoj8bLOAnyZMtuiwuOO9JgiuPAPj6QLD4fXDG25e
-         /Jig0a6WIqaplQVRqVNx6Pb9fY/dLu0oMQaUqfPf8vemM7sn343qiZcoQJT3tWguZz
-         tac332Hb3ozwqxvbrJspQEMJ7SE5FlZaAoVemx6g=
-Subject: Re: [PATCH v2] ARM: configs: Remove useless UEVENT_HELPER_PATH
-To:     Krzysztof Kozlowski <krzk@kernel.org>, arm@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>
-References: <1559636093-26005-1-git-send-email-krzk@kernel.org>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3ca9b096-e53e-6434-47ee-2c3d59676fd4@kernel.org>
-Date:   Thu, 6 Jun 2019 09:36:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 10:41:01 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43483 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfFFOlA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:41:00 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so360479ios.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qRHFQx4rk/WQV+W1bUpqDxQ0lUZEI/eFyBpWg1hk11Q=;
+        b=sCbqy9Il3Out2uZPEuDkEDVkIvng7aW0ineP0yjFozNXPOloupyWTAbt2WypG90mH2
+         RO8VsxvONEY6+lOd57nEUJshWUBcTFa4IkigR9dm1Tf3DkipfnQEDvxo9Opwgz/kXNUS
+         DmfwsDfBQINnUWZ0Xoz1mLZvPk4JJIu5YNhrczzgp/VL2bPoWMOSqbNGpzr8ixIvUQ6M
+         V9vloCuM2sAIC1VdTIvssvKJA6lBX9B+Tqrhtdc0OZYZB24Z7LzEBoEXD0s6IamPEOWM
+         W5OA0EUvwGXsDqIoNEx40vD+nBZGfdTKV5o4U5ZsLduig2WAsLA4QAk+CITyXaYhUObi
+         8iXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qRHFQx4rk/WQV+W1bUpqDxQ0lUZEI/eFyBpWg1hk11Q=;
+        b=RUOv7P4xc9qH1FtD0eQ47EkKjvQ08SIrL97fBcQkxh2ONSDLbr/JA3nMIh7GxUCfXG
+         bMGQ/LcP2OuIQwcthnUGGoYmUgjgFtO1XoNGMgPeoYnIvMBX/9dVrCFi1iIjoSE4MQyM
+         rNukB2bRMjoMllxYf9dhW/V40dM8zh/w6y8OQcLlp7RAjnUw5st8+NYU1jny6BS5hA/2
+         baI1h0d7mD4wYnTjigxV+RKqsd2Vj6DYQMm7TJfU3PrWo1Ak2YToizgom4IY24Cb0eAq
+         rqVO5SxlU65U8pCCRm9IzbkqatFpkYa/iINZL6hsYuBe2MV8NCRKfMtE1Bfv1q2OXWX3
+         /05A==
+X-Gm-Message-State: APjAAAWo9goFe7e18HLC3ZdaVoSu5XEoN8lUOLVYKtRkimzCLEcVJ4L5
+        8kujTReIKEf5ZoxHc+6MGQN05ODH3fSzb6N3Gf2nmg==
+X-Google-Smtp-Source: APXvYqzKErRjMjB/Lu1mV96B+n+Cf6+/oCq0PF53kEaSxsxhJvuN0Qd+FEtZW9TaI4V1DZGCc+oSBw0knpFzAe36NbU=
+X-Received: by 2002:a6b:e711:: with SMTP id b17mr28649615ioh.3.1559832059117;
+ Thu, 06 Jun 2019 07:40:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1559636093-26005-1-git-send-email-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <0000000000005a4b99058a97f42e@google.com> <b67a0f5d-c508-48a7-7643-b4251c749985@virtuozzo.com>
+ <20190606131334.GA24822@fieldses.org> <275f77ad-1962-6a60-e60b-6b8845f12c34@virtuozzo.com>
+In-Reply-To: <275f77ad-1962-6a60-e60b-6b8845f12c34@virtuozzo.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 6 Jun 2019 16:40:46 +0200
+Message-ID: <CACT4Y+aJQ6J5WdviD+cOmDoHt2Dj=Q4uZ4vHbCfHe+_TCEY6-Q@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in unregister_shrinker
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, bfields@redhat.com,
+        chris@chrisdown.name, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Jeff Layton <jlayton@kernel.org>, laoar.shao@gmail.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-nfs@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yang.shi@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 6, 2019 at 3:43 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>
+> On 06.06.2019 16:13, J. Bruce Fields wrote:
+> > On Thu, Jun 06, 2019 at 10:47:43AM +0300, Kirill Tkhai wrote:
+> >> This may be connected with that shrinker unregistering is forgotten on error path.
+> >
+> > I was wondering about that too.  Seems like it would be hard to hit
+> > reproduceably though: one of the later allocations would have to fail,
+> > then later you'd have to create another namespace and this time have a
+> > later module's init fail.
+>
+> Yes, it's had to bump into this in real life.
+>
+> AFAIU, syzbot triggers such the problem by using fault-injections
+> on allocation places should_failslab()->should_fail(). It's possible
+> to configure a specific slab, so the allocations will fail with
+> requested probability.
+
+No fault injection was involved in triggering of this bug.
+Fault injection is clearly visible in console log as "INJECTING
+FAILURE at this stack track" splats and also for bugs with repros it
+would be noted in the syzkaller repro as "fault_call": N. So somehow
+this bug was triggered as is.
+
+But overall syzkaller can do better then the old probabilistic
+injection. The probabilistic injection tend to both under-test what we
+want to test and also crash some system services. syzkaller uses the
+new "systematic fault injection" that allows to test specifically each
+failure site separately in each syscall separately.
+All kernel testing systems should use it. Also in couple with KASAN,
+KMEMLEAK, LOCKDEP. It's indispensable in finding kernel bugs.
 
 
-On 6/4/19 3:14 AM, Krzysztof Kozlowski wrote:
-> Remove the CONFIG_UEVENT_HELPER_PATH because:
-> 1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
->    CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
->    made default to 'n',
-> 2. It is not recommended (help message: "This should not be used today
->    [...] creates a high system load") and was kept only for ancient
->    userland,
-> 3. Certain userland specifically requests it to be disabled (systemd
->    README: "Legacy hotplug slows down the system and confuses udev").
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
 
-> diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
-> index 6701a975e785..fe2e1e82e233 100644
-> --- a/arch/arm/configs/socfpga_defconfig
-> +++ b/arch/arm/configs/socfpga_defconfig
-> @@ -44,7 +44,6 @@ CONFIG_PCI=y
->  CONFIG_PCI_MSI=y
->  CONFIG_PCIE_ALTERA=y
->  CONFIG_PCIE_ALTERA_MSI=y
-> -CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
->  CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
->  CONFIG_MTD=y
-
-For (socfpga_defconfig):
-
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+> > This is the patch I have, which also fixes a (probably less important)
+> > failure to free the slab cache.
+> >
+> > --b.
+> >
+> > commit 17c869b35dc9
+> > Author: J. Bruce Fields <bfields@redhat.com>
+> > Date:   Wed Jun 5 18:03:52 2019 -0400
+> >
+> >     nfsd: fix cleanup of nfsd_reply_cache_init on failure
+> >
+> >     Make sure everything is cleaned up on failure.
+> >
+> >     Especially important for the shrinker, which will otherwise eventually
+> >     be freed while still referred to by global data structures.
+> >
+> >     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> >
+> > diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> > index ea39497205f0..3dcac164e010 100644
+> > --- a/fs/nfsd/nfscache.c
+> > +++ b/fs/nfsd/nfscache.c
+> > @@ -157,12 +157,12 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
+> >       nn->nfsd_reply_cache_shrinker.seeks = 1;
+> >       status = register_shrinker(&nn->nfsd_reply_cache_shrinker);
+> >       if (status)
+> > -             return status;
+> > +             goto out_nomem;
+> >
+> >       nn->drc_slab = kmem_cache_create("nfsd_drc",
+> >                               sizeof(struct svc_cacherep), 0, 0, NULL);
+> >       if (!nn->drc_slab)
+> > -             goto out_nomem;
+> > +             goto out_shrinker;
+> >
+> >       nn->drc_hashtbl = kcalloc(hashsize,
+> >                               sizeof(*nn->drc_hashtbl), GFP_KERNEL);
+> > @@ -170,7 +170,7 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
+> >               nn->drc_hashtbl = vzalloc(array_size(hashsize,
+> >                                                sizeof(*nn->drc_hashtbl)));
+> >               if (!nn->drc_hashtbl)
+> > -                     goto out_nomem;
+> > +                     goto out_slab;
+> >       }
+> >
+> >       for (i = 0; i < hashsize; i++) {
+> > @@ -180,6 +180,10 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
+> >       nn->drc_hashsize = hashsize;
+> >
+> >       return 0;
+> > +out_slab:
+> > +     kmem_cache_destroy(nn->drc_slab);
+> > +out_shrinker:
+> > +     unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
+> >  out_nomem:
+> >       printk(KERN_ERR "nfsd: failed to allocate reply cache\n");
+> >       return -ENOMEM;
+>
+> Looks OK for me. Feel free to add my reviewed-by if you want.
+>
+> Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/275f77ad-1962-6a60-e60b-6b8845f12c34%40virtuozzo.com.
+> For more options, visit https://groups.google.com/d/optout.
