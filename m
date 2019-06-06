@@ -2,69 +2,137 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C988C28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D88C28D1C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158D420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B172070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lKlkUxF6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZivuuU5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbfFFI5D (ORCPT
+        id S1727584AbfFFI7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:57:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56832 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727538AbfFFI5D (ORCPT
+        Thu, 6 Jun 2019 04:59:01 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38691 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727458AbfFFI7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:57:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6pIxH8GAWp3IuaRt1s0Ws8HzMVWnBdLBFOygcGYJKcU=; b=lKlkUxF6n5+A8+RkC8w0yn6pu
-        EZCes93Ox1IEC+EQcVlLD3OxYSO6GmQO+08/FTFwMODRTs59EkAhBSCyHcavGgCAS/JYhks4Gs5O6
-        tmiVvmkmKSvoxB0DCb7aK/ccAs9+8jsjENkRMTQHjBAAS7S2xqmvZd7ub3bSs6cpaztWCtd4jTE4+
-        KUq6AX1JVodPkV/OjkLZMQLA5Dz0tcVwmUgYeRR0wzECYvAOS8sB0ALRSaTXmVIV4S/kObGriSrju
-        2GsAQS3qCc9P3WX6swBuIQoC1gfV25iwjp6LqNLv9JV3Rf33D405ipKow6x5divdAtLXURTKFeF18
-        /4QpRg6HA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYoCj-0000XC-QQ; Thu, 06 Jun 2019 08:57:01 +0000
-Date:   Thu, 6 Jun 2019 01:57:01 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Loys Ollivier <lollivier@baylibre.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RISC-V: defconfig: enable clocks, serial console
-Message-ID: <20190606085701.GA1369@infradead.org>
-References: <20190605175042.13719-1-khilman@baylibre.com>
+        Thu, 6 Jun 2019 04:59:00 -0400
+Received: by mail-it1-f196.google.com with SMTP id h9so1930306itk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 01:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k5G77k0j63/1dHq8s2sfTu2vMdGLfH/hNCHXcpdGXNs=;
+        b=ZivuuU5W7ouwon2oensR1KO0lnkteogDIK19A1X47Zoe4snPwL4k8a1t5bMf+dLWtT
+         VOolVZmdsbxr315riQpfgCTO9M+BvJkRcvx5Auo/80TgV0IhCbWvFr4sFhIGt5pUCR7p
+         i87b/pz4u4Yr9UP4seBZ2JGEhaw0pLTuN8ocfr/jIWeSd8lpqqKt2h1mjpI1Ynfp2UNC
+         VzR74ww2NeTIOGWs/UfvQLSaHJqdZ/zTI/r8bMHgyGx+cy9FxUNYzVH01iD8Idkz84l3
+         /CRfUU2sfdy/GaQ2TCjNTb/MicRZ9JXaVGcI2tM9o7JlFVeYo7uhrw3d0WAbGh1nRi/7
+         ODlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k5G77k0j63/1dHq8s2sfTu2vMdGLfH/hNCHXcpdGXNs=;
+        b=tb+9NUvK12TswCDdWiRJQG3drajBaqy3jSjcQTX2HdZziIE08yNp6Cx2slWht+Ot5y
+         7WIQQbwNqG5uN/O79TB5hAI92WgofET/WGVezLwzoqGyuDUKmVY4hkbq7p7fI9DLvstX
+         uHJo27bTK1AztzInLWR1SNFPVTpIBfLlT/zdOoMIZnJl8Rr9873tthLqwKTY6XzBHgMI
+         1xcnWXrHJwMBT0NA4pae78ue5nOWhbthFftBKfwzs9gy8PZjwWPMPtILCAhPA3GBwYli
+         MqEzvvYXfhKKWaXFxHBNkp0bVuPHcdMud31T4RckH1Eedw967QSGVMwYQm9bPr+1XDuH
+         03ug==
+X-Gm-Message-State: APjAAAXly1+fmdiAyPXZAqFbJjq+xYrBQwaN926Tsu5rKwIISRQpwG3V
+        mUssn45tDBacii15QJvoF+5VbTzAkUh3TY67deFaOw==
+X-Google-Smtp-Source: APXvYqxs7hWigkDcMTot18j8lPuAqIP8AayWjmmUPBwKknx0qEOV19fRGwdZcJYlzoL4iJVt5cCwDol/sNN/lZCGalk=
+X-Received: by 2002:a24:740f:: with SMTP id o15mr14731071itc.76.1559811539672;
+ Thu, 06 Jun 2019 01:58:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605175042.13719-1-khilman@baylibre.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com>
+ <CAKv+Gu9QkKwNVpfpQP7uDd2-66jU=qkeA7=0RAoO4TNaSbG+tg@mail.gmail.com>
+ <CAKwvOdnPcjESFrQRR_=cCVag3ZSnC0nBqF7+LFHrcDArT_segA@mail.gmail.com>
+ <CAKv+Gu9Leaq_s2kVNzHx+zkdKFXgQVkouN3M56u5nou5WX=cKg@mail.gmail.com> <20190606070807.GA17985@kroah.com>
+In-Reply-To: <20190606070807.GA17985@kroah.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 6 Jun 2019 10:58:45 +0200
+Message-ID: <CAKv+Gu_=aUmN76Wzy5kokgP6hcZPWAwW_7=ekqOawkfg7LPE3g@mail.gmail.com>
+Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
+ (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Rolf Eike Beer <eb@emlix.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 10:50:42AM -0700, Kevin Hilman wrote:
-> Enable PRCI clock driver and serial console by default, so the default
-> upstream defconfig is bootable to a serial console.
-> 
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+On Thu, 6 Jun 2019 at 09:08, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 06, 2019 at 08:55:29AM +0200, Ard Biesheuvel wrote:
+> > On Wed, 5 Jun 2019 at 22:48, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > >
+> > > On Wed, Jun 5, 2019 at 11:42 AM Ard Biesheuvel
+> > > <ard.biesheuvel@linaro.org> wrote:
+> > > > For the record, this is an example of why I think backporting those
+> > > > clang enablement patches is a bad idea.
+> > >
+> > > There's always a risk involved with backports of any kind; more CI
+> > > coverage can help us mitigate some of these risks in an automated
+> > > fashion before we get user reports like this.  I meet with the
+> > > KernelCI folks weekly, so I'll double check on the coverage of the
+> > > stable tree's branches.  The 0day folks are also very responsive and
+> > > I've spoken with them a few times, so I'll try to get to the bottom of
+> > > why this wasn't reported by either of those.
+> > >
+> > > Also, these patches help keep Android, CrOS, and Google internal
+> > > production kernels closer to their upstream sources.
+> > >
+> > > > We can't actually build those
+> > > > kernels with clang, can we? So what is the point? </grumpy>
+> > >
+> > > Here's last night's build:
+> > > https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/114388434
+> > >
+> >
+> > If you are saying that plain upstream 4.9-stable defconfig can be
+> > built with Clang, then I am pleasantly surprised.
+>
+> I know some specific configs can, there's no rule that I know of that
+> 'defconfig' support is required.  But then again, it might also work,
+> try it and see :)
+>
 
-Looks good:
+Well, it is the rule that the arm64 maintainers use.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > > Also, Android and CrOS have shipped X million devices w/ 4.9 kernels
+> > > built with Clang.  I think this number will grow at least one order of
+> > > magnitude imminently.
+> > >
+> >
+> > I know that (since you keep reminding me :-)), but obviously, Google
+> > does not care about changes that regress GCC support.
+>
+> What are you talking about?  Bugs happen all the time, what specifically
+> did "Google" do to break gcc support?  If you are referring to this
+> patch, and it is a regression, of course I will revert it.  But note
+> that gcc and 4.9 works just fine for all of the other users right now,
+> remember we do do a lot of testing of these releases.
+>
+
+Don't get me wrong: I am not blaming Google for this. But having
+strict Documented/ stable-rules, violating them by backporting patches
+that are clearly not bug fixes, and *then* saying 'bugs happen all the
+time' makes no sense to me at all.
