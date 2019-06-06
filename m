@@ -2,277 +2,80 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52603C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1667C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2868F20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8FC2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559843410;
-	bh=WMiN8khMVfY2k+C2UTgA1ksdMhPzmtWk/dznX9kkpTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yPQRv5TbKsR5FXAxXe/L6ZYsaRiiEZzewthM3NGI2k3BFRo+8yQ8Y/yNuYnLsxcDj
-	 PItADL76fLCq8Mxocz22CcBBCmR37i/+jXyGRnQ0LzsKueBU4Wvp9b49oSW1f999S+
-	 PvFAB5QvJEPJLNWasWFx/Nw4NC4L2NVzyin0QOnI=
+	s=default; t=1559843718;
+	bh=UIIZUNstg8kbM37txNcDzUQLjNklk5K0SFR0hwXSG1U=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=iHHXiNdmksiF3jlyFOo/zLPqx3plvDOGUGpBXyhxz3H3fn/vAm+ksQ9u9T1FY4OV5
+	 YGfsdia13irPa+C7uKyAwjRAijpxVXBs4VC5dZwVcUBcqTaqjkyY7VGafku8KpLnoa
+	 hv21nHFGG/epQfMrKbA1ddc4sEEhs20qAn0aBZRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbfFFRuJ (ORCPT
+        id S1728991AbfFFRzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39746 "EHLO mail.kernel.org"
+        Thu, 6 Jun 2019 13:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbfFFRuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:50:09 -0400
-Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
+        id S1728762AbfFFRzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:55:17 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA2120868;
-        Thu,  6 Jun 2019 17:50:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5AB22083E;
+        Thu,  6 Jun 2019 17:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559843407;
-        bh=WMiN8khMVfY2k+C2UTgA1ksdMhPzmtWk/dznX9kkpTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=y6eqiUOcEDhTt5/flE4170FW36V1tzhuJkU03TwK+erRmflXWwMRdbMdWzO94guU2
-         uOabnHeA0WJ6I2ab/91agveZ1X0ld5CVM+TXC6EjPUM9Ok9ZYawbb6W1AUwhhhoVi2
-         5gQsd7ME8TsRcDYwVnINBHWJLIBM3qD9jNCzjz4k=
-Date:   Thu, 6 Jun 2019 19:50:01 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Vitor Soares <Vitor.Soares@synopsys.com>,
-        linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org,
-        bbrezillon@kernel.org, Joao.Pinto@synopsys.com,
-        lorenzo.bianconi83@gmail.com
-Subject: Re: [PATCH v2 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
- LSM6DSO and LSM6DSR
-Message-ID: <20190606175000.GA12547@localhost.localdomain>
-References: <cover.1559831663.git.vitor.soares@synopsys.com>
- <6195f3cd21636a5f85c0107b5c3b217be868a4b9.1559831663.git.vitor.soares@synopsys.com>
- <20190606192131.355c9556@collabora.com>
+        s=default; t=1559843716;
+        bh=UIIZUNstg8kbM37txNcDzUQLjNklk5K0SFR0hwXSG1U=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=VfXKqQhMGKAY5/W6lEfL1Nf44ezQkWcS2B6eelQK/HNZ6PZ4TvtIk9WCGScyX260Y
+         qZ+PA/xXhPvjuOS9LbJZQb9TYd8SGjL0saRxgq9mgb53XXlyN026gnIfXTSMGxFDhX
+         jeoeL1A+PLf3AVO5m+sx3zN30bmGVf0mH+cQFA/w=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Content-Disposition: inline
-In-Reply-To: <20190606192131.355c9556@collabora.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <VI1PR07MB44324648C54773C24E4B186AFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
+References: <VI1PR07MB44324648C54773C24E4B186AFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
+To:     Philippe Mazenauer <philippe.mazenauer@outlook.de>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: Remove unused variable
+Cc:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 06 Jun 2019 10:55:15 -0700
+Message-Id: <20190606175516.A5AB22083E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Philippe Mazenauer (2019-05-21 05:16:14)
+> Variable 'ddrphycfg_parents' is defined static and initialized, but not
+> used in the file.
+>=20
+> ../drivers/clk/mediatek/clk-mt8516.c:234:27: warning: =E2=80=98ddrphycfg_=
+parents=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+>  static const char * const ddrphycfg_parents[] __initconst =3D {
+>                            ^~~~~~~~~~~~~~~~~
+>=20
+> Signed-off-by: Philippe Mazenauer <philippe.mazenauer@outlook.de>
+> ---
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to clk-next
 
-> On Thu,  6 Jun 2019 17:12:04 +0200
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
->=20
-> > For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only=
- in
-> > spi and i2c mode.
-> >=20
-> > The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c support to
-> > them.
-> >=20
-> > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > ---
-> > Changes in v2:
-> >   Add support for LSM6DSR
-> >   Set pm_ops to st_lsm6dsx_pm_ops
-> >=20
-> >  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 ++-
-> >  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
-> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 76 +++++++++++++++++++++=
-++++++++
-> >  3 files changed, 84 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> >=20
-> > diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_ls=
-m6dsx/Kconfig
-> > index 002a423..8115936 100644
-> > --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > @@ -2,11 +2,12 @@
-> > =20
-> >  config IIO_ST_LSM6DSX
-> >  	tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
-> > -	depends on (I2C || SPI)
-> > +	depends on (I2C || SPI || I3C)
-> >  	select IIO_BUFFER
-> >  	select IIO_KFIFO_BUF
-> >  	select IIO_ST_LSM6DSX_I2C if (I2C)
-> >  	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
-> > +	select IIO_ST_LSM6DSX_I3C if (I3C)
-> >  	help
-> >  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
-> >  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
-> > @@ -24,3 +25,8 @@ config IIO_ST_LSM6DSX_SPI
-> >  	tristate
-> >  	depends on IIO_ST_LSM6DSX
-> >  	select REGMAP_SPI
-> > +
-> > +config IIO_ST_LSM6DSX_I3C
-> > +	tristate
-> > +	depends on IIO_ST_LSM6DSX
-> > +	select REGMAP_I3C
-> > diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_l=
-sm6dsx/Makefile
-> > index 28cc673..57cbcd6 100644
-> > --- a/drivers/iio/imu/st_lsm6dsx/Makefile
-> > +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
-> > @@ -5,3 +5,4 @@ st_lsm6dsx-y :=3D st_lsm6dsx_core.o st_lsm6dsx_buffer.o=
- \
-> >  obj-$(CONFIG_IIO_ST_LSM6DSX) +=3D st_lsm6dsx.o
-> >  obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) +=3D st_lsm6dsx_i2c.o
-> >  obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) +=3D st_lsm6dsx_spi.o
-> > +obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) +=3D st_lsm6dsx_i3c.o
-> > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/=
-imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > new file mode 100644
-> > index 0000000..70b70d1
-> > --- /dev/null
-> > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > @@ -0,0 +1,76 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
-> > + *
-> > + * Author: Vitor Soares <vitor.soares@synopsys.com>
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/i3c/device.h>
-> > +#include <linux/i3c/master.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/of.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +#include "st_lsm6dsx.h"
-> > +
-> > +#define NAME_SIZE	32
-> > +
-> > +struct st_lsm6dsx_i3c_data {
-> > +	const char name[NAME_SIZE];
->=20
-> I think I mentioned already that you can simply have
->=20
-> 	const char *name;
->=20
-> > +	enum st_lsm6dsx_hw_id id;
-> > +};
-> > +
-> > +enum st_lsm6dsx_i3c_data_id {
-> > +	ST_LSM6DSO_I3C_DATA_ID,
-> > +	ST_LSM6DSR_I3C_DATA_ID,
-> > +};
-> > +
-> > +static const struct st_lsm6dsx_i3c_data hw_data[] =3D {
-> > +	{ ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
-> > +	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
-> > +};
-> > +
-> > +static const struct regmap_config st_lsm6dsx_i3c_regmap_config =3D {
-> > +	.reg_bits =3D 8,
-> > +	.val_bits =3D 8,
-> > +};
-> > +
-> > +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
-> > +{
-> > +	const struct i3c_device_id *id =3D i3c_get_device_id(i3cdev);
-> > +	const struct st_lsm6dsx_i3c_data *hw_data =3D id->data;
-> > +	struct regmap *regmap;
-> > +
-> > +	regmap =3D devm_regmap_init_i3c(i3cdev, &st_lsm6dsx_i3c_regmap_config=
-);
-> > +	if (IS_ERR(regmap)) {
-> > +		dev_err(&i3cdev->dev, "Failed to register i3c regmap %d\n",
-> > +			(int)PTR_ERR(regmap));
-> > +		return PTR_ERR(regmap);
-> > +	}
-> > +
-> > +	return st_lsm6dsx_probe(&i3cdev->dev, 0, hw_data->id,
-> > +				hw_data->name, regmap);
-> > +}
-> > +
-> > +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] =3D {
-> > +	I3C_DEVICE(0x0104, 0x006C, &hw_data[ST_LSM6DSO_I3C_DATA_ID]),
-> > +	I3C_DEVICE(0x0104, 0x006B, &hw_data[ST_LSM6DSR_I3C_DATA_ID]),
->=20
-> Still find that form counter-intuitive since you'd have to first go
-> look at what's the value of ST_LSM6DSO_I3C_DATA_ID, then go check the
-> entry in hw_data to find what's in there. Too many ways to get things
-> wrong IMHO.
->=20
-> The following form would make it much more obvious/easy to follow:
->=20
-> static const st_lsm6dsx_i3c_data st_lsm6dso_i3c_data =3D {
-> 	ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID,
-> };
->=20
-> static const st_lsm6dsx_i3c_data st_lsm6dsr_i3c_data =3D {
-> 	ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID,
-> };
->=20
-> static const struct i3c_device_id st_lsm6dsx_i3c_ids[] =3D {
-> 	I3C_DEVICE(0x0104, 0x006C, &st_lsm6dso_i3c_data),
-> 	I3C_DEVICE(0x0104, 0x006B, &st_lsm6dsr_i3c_data),
-> };
->=20
-> Note that I don't see why we need to pass both the name and the ID to
-> st_lsm6dsx_probe(). I'd expect the name to be easily deducible from the
-> ID (using a name table whose index would match the ST_XXX_ID).
-
-for spi/i2c we got it for free since spi_device_id/i2c_device_id has a name
-field we can use but we can probably align it to i3c case
-
-Regards,
-Lorenzo
-
->=20
-> If you do this change you would actually get rid of the
-> st_lsm6dsx_i3c_data struct and instead have:
->=20
-> static const struct i3c_device_id st_lsm6dsx_i3c_ids[] =3D {
-> 	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
-> 	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),
-> };
->=20
-> > +	{ /* sentinel */ },
-> > +};
-> > +MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
-> > +
-> > +static struct i3c_driver st_lsm6dsx_driver =3D {
-> > +	.driver =3D {
-> > +		.name =3D "st_lsm6dsx_i3c",
-> > +		.pm =3D &st_lsm6dsx_pm_ops,
-> > +	},
-> > +	.probe =3D st_lsm6dsx_i3c_probe,
-> > +	.id_table =3D st_lsm6dsx_i3c_ids,
-> > +};
-> > +module_i3c_driver(st_lsm6dsx_driver);
-> > +
-> > +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
-> > +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i3c driver");
-> > +MODULE_LICENSE("GPL v2");
->=20
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXPlSRQAKCRA6cBh0uS2t
-rLEbAQDShUoAEBwugEIBvecd1NAaSnzEbNtUq9v4lIoGu7b2cQEAtDgn0/tqxTST
-gXTU+GM/RiETHy0mQguQlbkgs5atkQc=
-=eqnU
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
