@@ -2,118 +2,135 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7EDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C49C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93735206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:48:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fiBqVAL0"
+	by mail.kernel.org (Postfix) with ESMTP id ADF93207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbfFFPs0 (ORCPT
+        id S1729450AbfFFPwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:48:26 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37303 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729156AbfFFPs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:48:26 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56FkhkV020575;
-        Thu, 6 Jun 2019 17:48:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=gGCf28774irLLSKFXYWcYkPoYMFVE7Vt0PR7IMC2LZY=;
- b=fiBqVAL0EjZRJKzxblB62imKyCV/3cHFrVj4nR7fLs+a/s3NvoQw7ufiFo+9e11zwXEP
- u6e+P4AuuRwKzycKkiEs1eRtvV2hvnDVLIjFjmlLeN7lp3wPaNbh14hKEJpJsF4627sB
- XyDc6XL1YvPfTrxEfNpPPLlAS42B2MLCGdT5xuX91wA12Yh8HpnJTKOtk6H32aD2tlrh
- TjxuKeQUbGbUi0N3fAiNYbu0rjZmiMb8ITYZohDjGcc6ro1VlR4gRGGd21uV+pxj+7qX
- WW6n3WuKH84RFDTMDti12vRtU3vZf8YSObvVg6v82gm9spc07XTRLfh4zWYfwEPbozhO vQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sxqxmv5ws-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 06 Jun 2019 17:48:07 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B7A9B31;
-        Thu,  6 Jun 2019 15:48:06 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E6812B23;
-        Thu,  6 Jun 2019 15:48:06 +0000 (GMT)
-Received: from SFHDAG3NODE1.st.com (10.75.127.7) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 6 Jun
- 2019 17:48:06 +0200
-Received: from SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86]) by
- SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86%20]) with mapi id
- 15.00.1347.000; Thu, 6 Jun 2019 17:48:06 +0200
-From:   Erwan LE RAY <erwan.leray@st.com>
-To:     Borut Seljak <borut.seljak@t-2.net>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre TORGUE" <alexandre.torgue@st.com>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] serial: stm32: fix a recursive locking in
- stm32_config_rs485
-Thread-Topic: [PATCH v3] serial: stm32: fix a recursive locking in
- stm32_config_rs485
-Thread-Index: AQHVHFHrSWlGRhgeoU6uFgV0pT5nv6aOpEqA
-Date:   Thu, 6 Jun 2019 15:48:06 +0000
-Message-ID: <e0f8d4b2-a622-3758-473b-b78bd8949323@st.com>
-References: <erwan.leray@st.com> <20190606101901.31151-1-borut.seljak@t-2.net>
-In-Reply-To: <20190606101901.31151-1-borut.seljak@t-2.net>
-Accept-Language: en-US, fr-FR
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E7F0DC97BDB15B4E944187432787DEC1@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 6 Jun 2019 11:52:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47730 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729156AbfFFPwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:52:30 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9FBCF88E57;
+        Thu,  6 Jun 2019 15:52:21 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 344227BE8E;
+        Thu,  6 Jun 2019 15:52:15 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 11:52:13 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     rcampbell@nvidia.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/5] mm/hmm: Clean up some coding style and comments
+Message-ID: <20190606155213.GB8053@redhat.com>
+References: <20190506232942.12623-1-rcampbell@nvidia.com>
+ <20190506232942.12623-3-rcampbell@nvidia.com>
+ <20190606141644.GA2876@ziepe.ca>
+ <20190606142743.GA8053@redhat.com>
+ <20190606154129.GB17373@ziepe.ca>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_11:,,
- signatures=0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190606154129.GB17373@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 06 Jun 2019 15:52:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiA2LzYvMTkgMTI6MTkgUE0sIEJvcnV0IFNlbGphayB3cm90ZToNCj4gUmVtb3ZlIHNwaW5f
-bG9ja19pcnFzYXZlIGluIHN0bTMyX2NvbmZpZ19yczQ4NSwgaXQgY2F1c2UgcmVjdXJzaXZlIGxv
-Y2tpbmcuDQo+IEFscmVhZHkgbG9ja2VkIGluIHVhcnRfc2V0X3JzNDg1X2NvbmZpZy4NCj4NCj4g
-Zml4ZXM6IDFiY2RhMDlkMjkxMDgxICgic2VyaWFsOiBzdG0zMjogYWRkIHN1cHBvcnQgZm9yIFJT
-NDg1IGhhcmR3YXJlIGNvbnRyb2wgbW9kZSIpDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEJvcnV0IFNl
-bGphayA8Ym9ydXQuc2VsamFrQHQtMi5uZXQ+DQoNCkhpIEJvcnV0LA0KDQpUaGFua3MgZm9yIHlv
-dXIgcGF0Y2guDQoNCkFja2VkLWJ5OiBFcndhbiBMZSBSYXkgPGVyd2FuLmxlcmF5QHN0LmNvbT4N
-Cg0KUGxlYXNlIGNvcnJlY3QgYSB0eXBvIGluIGNvbW1pdCBtZXNzYWdlOiAiRml4ZXMiIGluc3Rl
-YWQgImZpeGVzIg0KDQpFcndhbi4NCg0KPiAtLS0NCj4gICBkcml2ZXJzL3R0eS9zZXJpYWwvc3Rt
-MzItdXNhcnQuYyB8IDMgLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgZGVsZXRpb25zKC0pDQo+
-DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3R0eS9zZXJpYWwvc3RtMzItdXNhcnQuYyBiL2RyaXZl
-cnMvdHR5L3NlcmlhbC9zdG0zMi11c2FydC5jDQo+IGluZGV4IGU4ZDdhN2JiNDMzOS4uNWQwNzJl
-YzYxMDcxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3R0eS9zZXJpYWwvc3RtMzItdXNhcnQuYw0K
-PiArKysgYi9kcml2ZXJzL3R0eS9zZXJpYWwvc3RtMzItdXNhcnQuYw0KPiBAQCAtMTA1LDkgKzEw
-NSw3IEBAIHN0YXRpYyBpbnQgc3RtMzJfY29uZmlnX3JzNDg1KHN0cnVjdCB1YXJ0X3BvcnQgKnBv
-cnQsDQo+ICAgCXN0cnVjdCBzdG0zMl91c2FydF9jb25maWcgKmNmZyA9ICZzdG0zMl9wb3J0LT5p
-bmZvLT5jZmc7DQo+ICAgCXUzMiB1c2FydGRpdiwgYmF1ZCwgY3IxLCBjcjM7DQo+ICAgCWJvb2wg
-b3Zlcjg7DQo+IC0JdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gICANCj4gLQlzcGluX2xvY2tfaXJx
-c2F2ZSgmcG9ydC0+bG9jaywgZmxhZ3MpOw0KPiAgIAlzdG0zMl9jbHJfYml0cyhwb3J0LCBvZnMt
-PmNyMSwgQklUKGNmZy0+dWFydF9lbmFibGVfYml0KSk7DQo+ICAgDQo+ICAgCXBvcnQtPnJzNDg1
-ID0gKnJzNDg1Y29uZjsNCj4gQEAgLTE0Nyw3ICsxNDUsNiBAQCBzdGF0aWMgaW50IHN0bTMyX2Nv
-bmZpZ19yczQ4NShzdHJ1Y3QgdWFydF9wb3J0ICpwb3J0LA0KPiAgIAl9DQo+ICAgDQo+ICAgCXN0
-bTMyX3NldF9iaXRzKHBvcnQsIG9mcy0+Y3IxLCBCSVQoY2ZnLT51YXJ0X2VuYWJsZV9iaXQpKTsN
-Cj4gLQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZwb3J0LT5sb2NrLCBmbGFncyk7DQo+ICAgDQo+
-ICAgCXJldHVybiAwOw0KPiAgIH0=
+On Thu, Jun 06, 2019 at 12:41:29PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jun 06, 2019 at 10:27:43AM -0400, Jerome Glisse wrote:
+> > On Thu, Jun 06, 2019 at 11:16:44AM -0300, Jason Gunthorpe wrote:
+> > > On Mon, May 06, 2019 at 04:29:39PM -0700, rcampbell@nvidia.com wrote:
+> > > > From: Ralph Campbell <rcampbell@nvidia.com>
+> > > > 
+> > > > There are no functional changes, just some coding style clean ups and
+> > > > minor comment changes.
+> > > > 
+> > > > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> > > > Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> > > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > > Cc: Ira Weiny <ira.weiny@intel.com>
+> > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > > Cc: Balbir Singh <bsingharora@gmail.com>
+> > > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > > > Cc: Matthew Wilcox <willy@infradead.org>
+> > > > Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > >  include/linux/hmm.h | 71 +++++++++++++++++++++++----------------------
+> > > >  mm/hmm.c            | 51 ++++++++++++++++----------------
+> > > >  2 files changed, 62 insertions(+), 60 deletions(-)
+> > > 
+> > > Applied to hmm.git, thanks
+> > 
+> > Can you hold off, i was already collecting patches and we will
+> > be stepping on each other toe ... for instance i had
+> 
+> I'd really rather not, I have a lot of work to do for this cycle and
+> this part needs to start to move forward now. I can't do everything
+> last minute, sorry.
+> 
+> The patches I picked up all look very safe to move ahead.
+
+I want to post all the patch you need to apply soon, it is really
+painful because they are lot of different branches i have to work
+with if you start pulling patches that differ from the below branch
+then you are making thing ever more difficult for me.
+
+If you hold of i will be posting all the patches in one big set so
+that you can apply all of them in one go and it will be a _lot_
+easier for me that way.
+
+> 
+> > https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.3
+> 
+> I'm aware, and am referring to this tree. You can trivially rebase it
+> on top of hmm.git..
+> 
+> BTW, what were you planning to do with this git branch anyhow?
+
+This is just something i use to do testing and stack-up all patches.
+
+> 
+> As we'd already agreed I will send the hmm patches to Linus on a clean
+> git branch so we can properly collaborate between the various involved
+> trees.
+> 
+> As a tree-runner I very much prefer to take patches directly from the
+> mailing list where everything is public. This is the standard kernel
+> workflow.
+
+Like i said above i want to resend all the patches in one big set.
+
+On process thing it would be easier if we ask Dave/Daniel to merge
+hmm within drm this cycle. Merging with Linus will break drm drivers
+and it seems easier to me to fix all this within the drm tree.
+
+But if you want to do everything with Linus fine.
+
+Cheers,
+Jérôme
