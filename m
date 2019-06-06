@@ -4,152 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D179C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFA4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2252420872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B1320868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UlnRJc85"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hbOr96z/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbfFFTVb (ORCPT
+        id S1729250AbfFFTXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:21:31 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52636 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbfFFTVb (ORCPT
+        Thu, 6 Jun 2019 15:23:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42935 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728504AbfFFTXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:21:31 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56JIs1x159577;
-        Thu, 6 Jun 2019 19:21:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=ZGGJPKfsk3L036pLr1d8EGwGK6t0E9/V4tYTxXtWdSk=;
- b=UlnRJc85OqZweCACVjr2mQuCCbo75VXDxn3xgd26QlcqJODiscULfKzaYDvPbQAW11O6
- G2+kAHoDFWH8H7HWw00UhDZ88W2cOglcbx8QFpkO2EpV+lSkttwnqzcRXFHzICUFY5Kk
- kADzMcVYB0Cs9Poq2Of5CFyampgqvkNCehB3mLkSInXEy6qM+viruJN3vdeLv87ZJFz1
- UmHK9+KH50VqrTf+9OwLdeHa0nSxpWBmXTSVPXX7902Mtbq92EVFho1aDI3UHnOwri11
- QTgDt4TDaFRybK7guvT19bcCjJBMfx1GGLN0oxgr0UVsdl9DLP9Jvq3L97FB9RCiQAWi kQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2suj0qtcgy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 19:21:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56JIbns054295;
-        Thu, 6 Jun 2019 19:19:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2swnhaxgyj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 19:19:06 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56JJ57d012830;
-        Thu, 6 Jun 2019 19:19:06 GMT
-Received: from dhcp-10-132-91-225.usdhcp.oraclecorp.com (/10.132.91.225)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 12:19:05 -0700
-Subject: Re: [PATCH] KVM: nVMX: Rename prepare_vmcs02_*_full to
- prepare_vmcs02_*_extra
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1559834652-105872-1-git-send-email-pbonzini@redhat.com>
- <20190606184117.GJ23169@linux.intel.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <89dd5d66-0d37-ea41-3f6d-72d5a8a9815d@oracle.com>
-Date:   Thu, 6 Jun 2019 12:19:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        Thu, 6 Jun 2019 15:23:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e6so1886435pgd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=+S0wcX87X5waHh8++2TADiUtaixAR2MJn95+UMpUzAk=;
+        b=hbOr96z/lV1V2iEqt9jxbsE6ILd7Bs3hopfYNeYNzpr452iz+JGuknFUGvylLoGbf6
+         PaKmhDAXZZzR+RiA8JzSZtuPTOTt8ZLSVVYCnw5gxbH5RSfZMBUb7NZXKdzNd2qEggev
+         A7ULi3KbHZ+irfw1cDar/VzedEmemzkFTTeGM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=+S0wcX87X5waHh8++2TADiUtaixAR2MJn95+UMpUzAk=;
+        b=KOXjPqzRAp8LBrbdUauiD5zdQrXR+zB1ElvFd6p8jebUIHF9pJk5nlxbq9i6ZXmueN
+         xvkZbGZ9oNNWE3tpMcHeD2QUNZjD7DkYBjuIdl+iWH+q3XK+kNYL0PxmLvDKArzXPT0+
+         zBH3TZoxFyKhc3EZTN4SCPY0lxpXT4uwIIsHsY9L1xhWqGZH05TyMG+AyaYaH7zi672p
+         njYOVcILqCw0Vdteqc7RoV+Q3RITfxcE7yceDKAnUeIdeXFVgtpAl2onKaTSPJ64WBdf
+         PQrYwlR1HuBtBCxWkp9tNgGkDpUXXveiUnLaTFtD4Vtb5okKNLLG0cSB7sQ+wlB9RTzM
+         4rkw==
+X-Gm-Message-State: APjAAAVHaakKbe4p2cSdZvelSPmhUlK61L9G2iv+6oTQSUHQ0hEcGI6F
+        R/ggElvmSTJk6Llio8VAWEjK7w==
+X-Google-Smtp-Source: APXvYqw6/H0bTzmD1NtNFdjKXRgiTyCLyusI7VLYczAQnMPAF5yw1qPTSosMoYo5kE9VEEJioyBovw==
+X-Received: by 2002:a63:2ad2:: with SMTP id q201mr139088pgq.94.1559848980654;
+        Thu, 06 Jun 2019 12:23:00 -0700 (PDT)
+Received: from [10.69.37.149] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j13sm3262132pfh.13.2019.06.06.12.22.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 12:23:00 -0700 (PDT)
+Subject: Re: [PATCH] scsi: lpfc: Fix backport of faf5a744f4f8 ("scsi: lpfc:
+ avoid uninitialized variable warning")
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+References: <20190606165346.GB3249@kroah.com>
+ <20190606174125.4277-1-natechancellor@gmail.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <de9bab03-437f-d4ab-df93-5f36b4216f03@broadcom.com>
+Date:   Thu, 6 Jun 2019 12:22:55 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190606184117.GJ23169@linux.intel.com>
+In-Reply-To: <20190606174125.4277-1-natechancellor@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060128
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 06/06/2019 11:41 AM, Sean Christopherson wrote:
-> On Thu, Jun 06, 2019 at 05:24:12PM +0200, Paolo Bonzini wrote:
->> These function do not prepare the entire state of the vmcs02, only the
->> rarely needed parts.  Rename them to make this clearer.
->>
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->> ---
->>   arch/x86/kvm/vmx/nested.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> index 84438cf23d37..fd8150ef6cce 100644
->> --- a/arch/x86/kvm/vmx/nested.c
->> +++ b/arch/x86/kvm/vmx/nested.c
->> @@ -1955,7 +1955,7 @@ static void prepare_vmcs02_constant_state(struct vcpu_vmx *vmx)
->>   	vmx_set_constant_host_state(vmx);
->>   }
->>   
->> -static void prepare_vmcs02_early_full(struct vcpu_vmx *vmx,
->> +static void prepare_vmcs02_early_extra(struct vcpu_vmx *vmx,
-> Or maybe 'uncommon', 'rare' or 'ext'?  I don't I particularly love any of
-> the names, but they're all better than 'full'.
-
-The big chunk of the work in this function is done via 
-prepare_vmcs02_constant_state(). It seems cleaner to get rid of 
-prepare_vmcs02_early_full(), call prepare_vmcs02_constant_state() 
-directly from prepare_vmcs02_early() and move the three vmcs_write16() 
-calls to prepare_vmcs02_early().
-
+On 6/6/2019 10:41 AM, Nathan Chancellor wrote:
+> Prior to commit 4c47efc140fa ("scsi: lpfc: Move SCSI and NVME Stats to
+> hardware queue structures") upstream, we allocated a cstat structure in
+> lpfc_nvme_create_localport. When commit faf5a744f4f8 ("scsi: lpfc: avoid
+> uninitialized variable warning") was backported, it was placed after the
+> allocation so we leaked memory whenever this function was called and
+> that conditional was true (so whenever CONFIG_NVME_FC is disabled).
 >
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Move the IS_ENABLED if statement above the allocation since it is not
+> needed when the condition is true.
 >
->>   				      struct vmcs12 *vmcs12)
->>   {
->>   	prepare_vmcs02_constant_state(vmx);
->> @@ -1976,7 +1976,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->>   	u64 guest_efer = nested_vmx_calc_efer(vmx, vmcs12);
->>   
->>   	if (vmx->nested.dirty_vmcs12 || vmx->nested.hv_evmcs)
->> -		prepare_vmcs02_early_full(vmx, vmcs12);
->> +		prepare_vmcs02_early_extra(vmx, vmcs12);
->>   
->>   	/*
->>   	 * PIN CONTROLS
->> @@ -2130,7 +2130,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->>   	}
->>   }
->>   
->> -static void prepare_vmcs02_full(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->> +static void prepare_vmcs02_extra(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->>   {
->>   	struct hv_enlightened_vmcs *hv_evmcs = vmx->nested.hv_evmcs;
->>   
->> @@ -2254,7 +2254,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
->>   	struct vcpu_vmx *vmx = to_vmx(vcpu);
->>   
->>   	if (vmx->nested.dirty_vmcs12 || vmx->nested.hv_evmcs) {
->> -		prepare_vmcs02_full(vmx, vmcs12);
->> +		prepare_vmcs02_extra(vmx, vmcs12);
->>   		vmx->nested.dirty_vmcs12 = false;
->>   	}
->>   
->> -- 
->> 1.8.3.1
->>
+> Reported-by: Pavel Machek <pavel@denx.de>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>   drivers/scsi/lpfc/lpfc_nvme.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
+> index 099f70798fdd..645ffb5332b4 100644
+> --- a/drivers/scsi/lpfc/lpfc_nvme.c
+> +++ b/drivers/scsi/lpfc/lpfc_nvme.c
+> @@ -2477,14 +2477,14 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
+>   	lpfc_nvme_template.max_sgl_segments = phba->cfg_nvme_seg_cnt + 1;
+>   	lpfc_nvme_template.max_hw_queues = phba->cfg_nvme_io_channel;
+>   
+> +	if (!IS_ENABLED(CONFIG_NVME_FC))
+> +		return ret;
+> +
+>   	cstat = kmalloc((sizeof(struct lpfc_nvme_ctrl_stat) *
+>   			phba->cfg_nvme_io_channel), GFP_KERNEL);
+>   	if (!cstat)
+>   		return -ENOMEM;
+>   
+> -	if (!IS_ENABLED(CONFIG_NVME_FC))
+> -		return ret;
+> -
+>   	/* localport is allocated from the stack, but the registration
+>   	 * call allocates heap memory as well as the private area.
+>   	 */
+
+Reviewed-by: James Smart <james.smart@broadcom.com>
+
 
