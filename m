@@ -2,384 +2,98 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263B2C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8341C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F075120866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897C420874
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559835114;
+	bh=auxbwT7fReJRZ8phkETElOOGx98Nm3DMKGuBNzqK4tM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ySly9dq5/HpBxMDpTgEAqUef78lQYH3fX02QCbXWegcr4PCSP18/7PmgrMPJ9du71
+	 pSkMsP3+11jkoOkKtS0pcFU6THYfWw3B/koAfjPtYwLbxtDVaQUkviHMEtmcZkR+Vw
+	 eKxoeN1lmoUwqv8280r4YPiHPmyj309tScy85aNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbfFFPag (ORCPT
+        id S1729418AbfFFPbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:30:36 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53940 "EHLO mga01.intel.com"
+        Thu, 6 Jun 2019 11:31:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729342AbfFFP36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:29:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 08:29:57 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Jun 2019 08:29:56 -0700
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, mst@redhat.com, rkrcmar@redhat.com,
-        jmattson@google.com, yu.c.zhang@intel.com
-Cc:     Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v3 3/9] KVM: VMX: Implement functions for SPPT paging setup
-Date:   Thu,  6 Jun 2019 23:28:06 +0800
-Message-Id: <20190606152812.13141-4-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190606152812.13141-1-weijiang.yang@intel.com>
-References: <20190606152812.13141-1-weijiang.yang@intel.com>
+        id S1729045AbfFFPbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:31:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB9A520684;
+        Thu,  6 Jun 2019 15:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559835112;
+        bh=auxbwT7fReJRZ8phkETElOOGx98Nm3DMKGuBNzqK4tM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sls1Ac8ft0yHOcjrqT/Sogzn929Pqs6//tyMW7eH5G0zrT8QLdNQhIS85jv6VxDzz
+         MHZqpcHha72lL1p3LiRLsHd6UO8jnT++nCFM6pgYXW18Vppu62GMNhI2WeA7tVfexV
+         UEPrGRlzojOutRXk5dBStG/hmW9kjs1A9pfGreoY=
+Date:   Thu, 6 Jun 2019 17:31:50 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
+        linux-usb@vger.kernel.org, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/10] usb: Add USB subsystem notifications [ver #3]
+Message-ID: <20190606153150.GB28997@kroah.com>
+References: <20190606143306.GA11294@kroah.com>
+ <Pine.LNX.4.44L0.1906061051310.1641-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1906061051310.1641-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SPPT is a 4-level paging structure similar to EPT, when SPP is
-kicked for target physical page, bit 61 of the corresponding
-EPT enty will be flaged, then SPPT is traversed with the gfn to
-build up entries, the leaf entry of SPPT contains the access
-bitmap for subpages inside the target 4KB physical page, one bit
-per 128-byte subpage.
+On Thu, Jun 06, 2019 at 10:55:24AM -0400, Alan Stern wrote:
+> On Thu, 6 Jun 2019, Greg Kroah-Hartman wrote:
+> 
+> > On Thu, Jun 06, 2019 at 10:24:18AM -0400, Alan Stern wrote:
+> > > On Thu, 6 Jun 2019, David Howells wrote:
+> > > 
+> > > > Add a USB subsystem notification mechanism whereby notifications about
+> > > > hardware events such as device connection, disconnection, reset and I/O
+> > > > errors, can be reported to a monitoring process asynchronously.
+> > > 
+> > > USB I/O errors covers an awfully large and vague field.  Do we really
+> > > want to include them?  I'm doubtful.
+> > 
+> > See the other patch on the linux-usb list that wanted to start adding
+> > KOBJ_CHANGE notifications about USB "i/o errors".
+> 
+> That patch wanted to add notifications only for enumeration failures
+> (assuming you're talking about the patch from Eugeniu Rosca), not I/O
+> errors in general.
 
-SPPT entries are set up in below cases:
-1. the EPT faulted page is SPP protected.
-2. SPP mis-config induced vmexit is handled.
-3. User configures SPP protected pages via SPP IOCTLs.
+Yes, sorry, I was thinking that as a "I/O failed in enumeration" :)
 
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/include/asm/kvm_host.h |   7 +-
- arch/x86/kvm/mmu.c              | 207 ++++++++++++++++++++++++++++++++
- arch/x86/kvm/mmu.h              |   1 +
- include/linux/kvm_host.h        |   3 +
- 4 files changed, 217 insertions(+), 1 deletion(-)
+> > So for "severe" issues, yes, we should do this, but perhaps not for all
+> > of the "normal" things we see when a device is yanked out of the system
+> > and the like.
+> 
+> Then what counts as a "severe" issue?  Anything besides enumeration 
+> failure?
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index c79abe7ca093..98e5158287d5 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -271,7 +271,8 @@ union kvm_mmu_page_role {
- 		unsigned smap_andnot_wp:1;
- 		unsigned ad_disabled:1;
- 		unsigned guest_mode:1;
--		unsigned :6;
-+		unsigned spp:1;
-+		unsigned reserved:5;
- 
- 		/*
- 		 * This is left at the top of the word so that
-@@ -1407,6 +1408,10 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu);
- 
- int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gva_t gva, u64 error_code,
- 		       void *insn, int insn_len);
-+
-+int kvm_mmu_setup_spp_structure(struct kvm_vcpu *vcpu,
-+				u32 access_map, gfn_t gfn);
-+
- void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
- void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
- void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush);
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index d9c7b45d231f..494ad2038f36 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -208,6 +208,11 @@ static const union kvm_mmu_page_role mmu_base_role_mask = {
- 		({ spte = mmu_spte_get_lockless(_walker.sptep); 1; });	\
- 	     __shadow_walk_next(&(_walker), spte))
- 
-+#define for_each_shadow_spp_entry(_vcpu, _addr, _walker)    \
-+	for (shadow_spp_walk_init(&(_walker), _vcpu, _addr);	\
-+	     shadow_walk_okay(&(_walker));			\
-+	     shadow_walk_next(&(_walker)))
-+
- static struct kmem_cache *pte_list_desc_cache;
- static struct kmem_cache *mmu_page_header_cache;
- static struct percpu_counter kvm_total_used_mmu_pages;
-@@ -516,6 +521,11 @@ static int is_shadow_present_pte(u64 pte)
- 	return (pte != 0) && !is_mmio_spte(pte);
- }
- 
-+static int is_spp_shadow_present(u64 pte)
-+{
-+	return pte & PT_PRESENT_MASK;
-+}
-+
- static int is_large_pte(u64 pte)
- {
- 	return pte & PT_PAGE_SIZE_MASK;
-@@ -535,6 +545,11 @@ static bool is_executable_pte(u64 spte)
- 	return (spte & (shadow_x_mask | shadow_nx_mask)) == shadow_x_mask;
- }
- 
-+static bool is_spp_spte(struct kvm_mmu_page *sp)
-+{
-+	return sp->role.spp;
-+}
-+
- static kvm_pfn_t spte_to_pfn(u64 pte)
- {
- 	return (pte & PT64_BASE_ADDR_MASK) >> PAGE_SHIFT;
-@@ -1703,6 +1718,87 @@ int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu)
- 	return 0;
- }
- 
-+static bool __rmap_open_subpage_bit(struct kvm *kvm,
-+				    struct kvm_rmap_head *rmap_head)
-+{
-+	struct rmap_iterator iter;
-+	bool flush = false;
-+	u64 *sptep;
-+	u64 spte;
-+
-+	for_each_rmap_spte(rmap_head, &iter, sptep) {
-+		/*
-+		 * SPP works only when the page is write-protected
-+		 * and SPP bit is set in EPT leaf entry.
-+		 */
-+		flush |= spte_write_protect(sptep, false);
-+		spte = *sptep | PT_SPP_MASK;
-+		flush |= mmu_spte_update(sptep, spte);
-+	}
-+
-+	return flush;
-+}
-+
-+static int kvm_mmu_open_subpage_write_protect(struct kvm *kvm,
-+					      struct kvm_memory_slot *slot,
-+					      gfn_t gfn)
-+{
-+	struct kvm_rmap_head *rmap_head;
-+	bool flush = false;
-+
-+	/*
-+	 * SPP is only supported with 4KB level1 memory page, check
-+	 * if the page is mapped in EPT leaf entry.
-+	 */
-+	rmap_head = __gfn_to_rmap(gfn, PT_PAGE_TABLE_LEVEL, slot);
-+
-+	if (!rmap_head->val)
-+		return -EFAULT;
-+
-+	flush |= __rmap_open_subpage_bit(kvm, rmap_head);
-+
-+	if (flush)
-+		kvm_flush_remote_tlbs(kvm);
-+
-+	return 0;
-+}
-+
-+static bool __rmap_clear_subpage_bit(struct kvm *kvm,
-+				     struct kvm_rmap_head *rmap_head)
-+{
-+	struct rmap_iterator iter;
-+	bool flush = false;
-+	u64 *sptep;
-+	u64 spte;
-+
-+	for_each_rmap_spte(rmap_head, &iter, sptep) {
-+		spte = (*sptep & ~PT_SPP_MASK) | PT_WRITABLE_MASK;
-+		flush |= mmu_spte_update(sptep, spte);
-+	}
-+
-+	return flush;
-+}
-+
-+static int kvm_mmu_clear_subpage_write_protect(struct kvm *kvm,
-+					       struct kvm_memory_slot *slot,
-+					       gfn_t gfn)
-+{
-+	struct kvm_rmap_head *rmap_head;
-+	bool flush = false;
-+
-+	rmap_head = __gfn_to_rmap(gfn, PT_PAGE_TABLE_LEVEL, slot);
-+
-+	if (!rmap_head->val)
-+		return -EFAULT;
-+
-+	flush |= __rmap_clear_subpage_bit(kvm, rmap_head);
-+
-+	if (flush)
-+		kvm_flush_remote_tlbs(kvm);
-+
-+	return 0;
-+}
-+
- bool kvm_mmu_slot_gfn_write_protect(struct kvm *kvm,
- 				    struct kvm_memory_slot *slot, u64 gfn)
- {
-@@ -2410,6 +2506,30 @@ static void clear_sp_write_flooding_count(u64 *spte)
- 	__clear_sp_write_flooding_count(sp);
- }
- 
-+struct kvm_mmu_page *kvm_mmu_get_spp_page(struct kvm_vcpu *vcpu,
-+						 gfn_t gfn,
-+						 unsigned int level)
-+
-+{
-+	struct kvm_mmu_page *sp;
-+	union kvm_mmu_page_role role;
-+
-+	role = vcpu->arch.mmu->mmu_role.base;
-+	role.level = level;
-+	role.direct = true;
-+	role.spp = true;
-+
-+	sp = kvm_mmu_alloc_page(vcpu, true);
-+	sp->gfn = gfn;
-+	sp->role = role;
-+	hlist_add_head(&sp->hash_link,
-+		       &vcpu->kvm->arch.mmu_page_hash
-+		       [kvm_page_table_hashfn(gfn)]);
-+	clear_page(sp->spt);
-+	return sp;
-+}
-+EXPORT_SYMBOL_GPL(kvm_mmu_get_spp_page);
-+
- static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
- 					     gfn_t gfn,
- 					     gva_t gaddr,
-@@ -2536,6 +2656,16 @@ static void shadow_walk_init(struct kvm_shadow_walk_iterator *iterator,
- 				    addr);
- }
- 
-+static void shadow_spp_walk_init(struct kvm_shadow_walk_iterator *iterator,
-+				 struct kvm_vcpu *vcpu, u64 addr)
-+{
-+	iterator->addr = addr;
-+	iterator->shadow_addr = vcpu->arch.mmu->sppt_root;
-+
-+	/* SPP Table is a 4-level paging structure */
-+	iterator->level = 4;
-+}
-+
- static bool shadow_walk_okay(struct kvm_shadow_walk_iterator *iterator)
- {
- 	if (iterator->level < PT_PAGE_TABLE_LEVEL)
-@@ -2586,6 +2716,18 @@ static void link_shadow_page(struct kvm_vcpu *vcpu, u64 *sptep,
- 		mark_unsync(sptep);
- }
- 
-+static void link_spp_shadow_page(struct kvm_vcpu *vcpu, u64 *sptep,
-+				 struct kvm_mmu_page *sp)
-+{
-+	u64 spte;
-+
-+	spte = __pa(sp->spt) | PT_PRESENT_MASK;
-+
-+	mmu_spte_set(sptep, spte);
-+
-+	mmu_page_add_parent_pte(vcpu, sp, sptep);
-+}
-+
- static void validate_direct_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 				   unsigned direct_access)
- {
-@@ -4157,6 +4299,71 @@ static int tdp_page_fault(struct kvm_vcpu *vcpu, gva_t gpa, u32 error_code,
- 	return RET_PF_RETRY;
- }
- 
-+static u64 format_spp_spte(u32 spp_wp_bitmap)
-+{
-+	u64 new_spte = 0;
-+	int i = 0;
-+
-+	/*
-+	 * One 4K page contains 32 sub-pages, in SPP table L4E, old bits
-+	 * are reserved, so we need to transfer u32 subpage write
-+	 * protect bitmap to u64 SPP L4E format.
-+	 */
-+	while (i < 32) {
-+		if (spp_wp_bitmap & (1ULL << i))
-+			new_spte |= 1ULL << (i * 2);
-+
-+		i++;
-+	}
-+
-+	return new_spte;
-+}
-+
-+static void mmu_spp_spte_set(u64 *sptep, u64 new_spte)
-+{
-+	__set_spte(sptep, new_spte);
-+}
-+
-+int kvm_mmu_setup_spp_structure(struct kvm_vcpu *vcpu,
-+				u32 access_map, gfn_t gfn)
-+{
-+	struct kvm_shadow_walk_iterator iter;
-+	struct kvm_mmu_page *sp;
-+	gfn_t pseudo_gfn;
-+	u64 old_spte, spp_spte;
-+	int ret = -EFAULT;
-+
-+	/* direct_map spp start */
-+	if (!VALID_PAGE(vcpu->arch.mmu->sppt_root))
-+		return -EFAULT;
-+
-+	for_each_shadow_spp_entry(vcpu, (u64)gfn << PAGE_SHIFT, iter) {
-+		if (iter.level == PT_PAGE_TABLE_LEVEL) {
-+			spp_spte = format_spp_spte(access_map);
-+			old_spte = mmu_spte_get_lockless(iter.sptep);
-+			if (old_spte != spp_spte) {
-+				mmu_spp_spte_set(iter.sptep, spp_spte);
-+				kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
-+			}
-+
-+			ret = 0;
-+			break;
-+		}
-+
-+		if (!is_spp_shadow_present(*iter.sptep)) {
-+			u64 base_addr = iter.addr;
-+
-+			base_addr &= PT64_LVL_ADDR_MASK(iter.level);
-+			pseudo_gfn = base_addr >> PAGE_SHIFT;
-+			sp = kvm_mmu_get_spp_page(vcpu, pseudo_gfn,
-+						  iter.level - 1);
-+			link_spp_shadow_page(vcpu, iter.sptep, sp);
-+		}
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(kvm_mmu_setup_spp_structure);
- static void nonpaging_init_context(struct kvm_vcpu *vcpu,
- 				   struct kvm_mmu *context)
- {
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 54c2a377795b..ba1e85326713 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -26,6 +26,7 @@
- #define PT_PAGE_SIZE_MASK (1ULL << PT_PAGE_SIZE_SHIFT)
- #define PT_PAT_MASK (1ULL << 7)
- #define PT_GLOBAL_MASK (1ULL << 8)
-+#define PT_SPP_MASK (1ULL << 61)
- #define PT64_NX_SHIFT 63
- #define PT64_NX_MASK (1ULL << PT64_NX_SHIFT)
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 640a03642766..7f904d4d788c 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -847,6 +847,9 @@ int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu);
- bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu);
- int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu);
- 
-+struct kvm_mmu_page *kvm_mmu_get_spp_page(struct kvm_vcpu *vcpu,
-+			gfn_t gfn, unsigned int level);
-+
- #ifndef __KVM_HAVE_ARCH_VM_ALLOC
- /*
-  * All architectures that want to use vzalloc currently also
--- 
-2.17.2
+Not that I can think of at the moment, other than the other recently
+added KOBJ_CHANGE issue.  I'm sure we have other "hard failure" issues
+in the USB stack that people will want exposed over time.
 
+thanks,
+
+greg k-h
