@@ -2,60 +2,60 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D898C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A228C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B09206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B74206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Pbsrk9Yj"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="cJLool9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbfFFLmP (ORCPT
+        id S1728613AbfFFLmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:42:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36848 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbfFFLmO (ORCPT
+        Thu, 6 Jun 2019 07:42:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37340 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbfFFLmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:42:14 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u8so2086229wmm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 04:42:13 -0700 (PDT)
+        Thu, 6 Jun 2019 07:42:17 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v14so2080314wrr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 04:42:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E0BCMKFWF3BD02Wd5RuR4571i9W2UxPN4NomtaxiJf8=;
-        b=Pbsrk9Yj+GWVwYq8M7w1YrRXhvtlv6vWVu9wGO2ulnTXBApJWfu1qhBJU0w4egcivp
-         K12s6a/oKV2js5QGMSzGu0vPgGV/5c+RQd6VxfGpmcDorv19Dq7DhPPIHwS3bPmxcuyM
-         UdxNtuOGe+3vOJwB4afLc4ZS2BYoGJJAV8Ju9z/TZ09ziEqbSZUQ4suyfinpyUIPts0H
-         XCXSbRovSubvBnslVaq/5i4yJ+rn8B3odZtsmGPE6tw0GnoXiDhtGNanBl/M0Lcudl2o
-         WpfZhJ6ZnmLyrOfhSc2CQfNndf/b6w0szz3r0n85RC/lf0QoISyWmUu17iQeg/corFiZ
-         5j/g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FN5439FA2aJXW/IaT+IhmEZap7FlBc8fhF6D/ECpsbQ=;
+        b=cJLool9C/D9O0KvxLY92EDjo0Ot+DqejqsfifBvoKfmO1jUcn6JtFlATCg0g9npw4L
+         PAsNmjkqgRdbGcuSnQK0ysOlFpIMFkAbT7pXqkVgqZ8XGZyd3Q2pm8qedHukSfmgtWFS
+         E9A+3tpJxFtPaic6c1ajSiB1PIqVAHP9kPMTfxUO9Grlbm1aAmXeSkwg5otI/Xtlzsvx
+         LLud5GwcN4n/crq4X6wmzgc68kmfL63ePTh8ahWj+FCxjIWhTWCTzDeZV1DlfCuP8OLu
+         NXXjEcNj1cEvJ/NyIdwJy6eUaA37FIeMD/+gG+DaloQIkbiN9hA5tKhWrAkYdQQnbAhu
+         s0sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E0BCMKFWF3BD02Wd5RuR4571i9W2UxPN4NomtaxiJf8=;
-        b=V7H4snchdeXs8TDhMWiKh9jn6TQ4QYaL1Fsl779zYunSVrHQFFdPlkNGIgNcR9wxGm
-         ejbZQ8gzmHm8+GmVu1f92Z1iF8pcodjZm6SmFhwKT6A9QjNWkXZk6YZQIQz7pAEQz01U
-         O0Z9Dx+JIdZ0arOwmfU/vZzfzq68HjSJVh37FSBm+ah/JTyHBzFf2EFpNWiwSEYS0Dgj
-         5nR5drD1HFNXH1PJNieYhkwmcXm09aRbYIGehPtb82qkn0KRm+1W9fFQOyHx+03tgLu6
-         1DXLJwIWHeEgS4kelJQnL8hEmpXnJb4QkqFane0/0AgcCucePu5J6xA4jo4iCYToMd4E
-         8hGQ==
-X-Gm-Message-State: APjAAAXFxuQ66/tXNUS1edSq4Pycdceow27gUdV5X38N/t2nCSolScLS
-        rz3Thnl0NvywAM9HOvASYuIiHQ==
-X-Google-Smtp-Source: APXvYqxPNSN0F6j5VkPbbj4cfFbydvLOz8MNaSzEUt0WLzskObgGKwkz+sN84m1QBV8OzBFbM7gHLA==
-X-Received: by 2002:a1c:a00f:: with SMTP id j15mr16010739wme.167.1559821332413;
-        Thu, 06 Jun 2019 04:42:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FN5439FA2aJXW/IaT+IhmEZap7FlBc8fhF6D/ECpsbQ=;
+        b=INo/4iu7/qQYLYjjY5uOKyFlsr/udfpsx/3J4hKdnuamSdeYFDr3hkK3FaZ/LzS/nE
+         pWBHsckEc7q3F2MvL7B3EmaIAAsaEJzas2MDgKLk8pWymPAfNM+IikIXmh2/SPfMsO8O
+         sma3Vij2aQ4qglAqbA0BN2LJdvGxBg2ChOm404uwucptALrKPNR/SFY9lDtRltejybzv
+         cv6Q0hywdCO6PnVyFZbRzaQsvtl0AIvVivQ1+1omPhPQdtBaFEr0ZOBna0Nr4YQq8lYp
+         i5RDNlI4rIjsEGniLpoDAUErWrX1N7XPxt44rpEnmWwxNkK9H6Q5mjMRbcYB8iKh+qAk
+         UIqQ==
+X-Gm-Message-State: APjAAAXHeV0IgC0ONn0aKKC15cXvNfWRHhVFntPydXbyDZpG213aFgHI
+        0EPOlyB33KnqQCDgGZRqWbTnLA==
+X-Google-Smtp-Source: APXvYqx8efF0d+5VoImb6jPc6SKdp1km0r2xQYlvz2nWJ4noGst3mu9okDXxkO07JcLqGb3jdHndJQ==
+X-Received: by 2002:adf:9062:: with SMTP id h89mr28561013wrh.20.1559821335451;
+        Thu, 06 Jun 2019 04:42:15 -0700 (PDT)
 Received: from localhost.localdomain (p548C9938.dip0.t-ipconnect.de. [84.140.153.56])
-        by smtp.gmail.com with ESMTPSA id 95sm2002583wrk.70.2019.06.06.04.42.10
+        by smtp.gmail.com with ESMTPSA id 95sm2002583wrk.70.2019.06.06.04.42.14
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 04:42:11 -0700 (PDT)
+        Thu, 06 Jun 2019 04:42:14 -0700 (PDT)
 From:   Christian Brauner <christian@brauner.io>
 To:     davem@davemloft.net, netdev@vger.kernel.org,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
@@ -67,10 +67,12 @@ Cc:     tyhicks@canonical.com, pablo@netfilter.org,
         smbarber@chromium.org, joelhockey@chromium.org,
         ueberall@themenzentrisch.de,
         Christian Brauner <christian@brauner.io>
-Subject: [PATCH RESEND net-next 0/2] br_netfilter: enable in non-initial netns
-Date:   Thu,  6 Jun 2019 13:41:40 +0200
-Message-Id: <20190606114142.15972-1-christian@brauner.io>
+Subject: [PATCH RESEND net-next 2/2] br_netfilter: namespace bridge netfilter sysctls
+Date:   Thu,  6 Jun 2019 13:41:42 +0200
+Message-Id: <20190606114142.15972-3-christian@brauner.io>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190606114142.15972-1-christian@brauner.io>
+References: <20190606114142.15972-1-christian@brauner.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,25 +80,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey everyone,
+Currently, the /proc/sys/net/bridge folder is only created in the initial
+network namespace. This patch ensures that the /proc/sys/net/bridge folder
+is available in each network namespace if the module is loaded and
+disappears from all network namespaces when the module is unloaded.
 
-This is another resend of the same patch series. I have received so many
-requests, pings, and questions that I would really like to push for this
-again.
-
-Over time I have seen multiple reports by users who want to run applications
-(Kubernetes e.g. via [1]) that require the br_netfilter module in
-non-initial network namespaces. There are *a lot* of issues for this. A
-shortlist including ChromeOS and other big users is found below under
-[2]! Even non-devs already tried to get more traction on this by
-commenting on the patchset (cf. [3]).
-
-Currently, the /proc/sys/net/bridge folder is only created in the
-initial network namespace. This patch series ensures that the
-/proc/sys/net/bridge folder is available in each network namespace if
-the module is loaded and disappears from all network namespaces when the
-module is unloaded.
-The patch series also makes the sysctls:
+In doing so the patch makes the sysctls:
 
 bridge-nf-call-arptables
 bridge-nf-call-ip6tables
@@ -105,41 +94,312 @@ bridge-nf-filter-pppoe-tagged
 bridge-nf-filter-vlan-tagged
 bridge-nf-pass-vlan-input-dev
 
-apply per network namespace. This unblocks some use-cases where users
-would like to e.g. not do bridge filtering for bridges in a specific
-network namespace while doing so for bridges located in another network
-namespace.
-The netfilter rules are afaict already per network namespace so it
-should be safe for users to specify whether a bridge device inside their
-network namespace is supposed to go through iptables et al. or not.
-Also, this can already be done by setting an option for each individual
-bridge via Netlink. It should also be possible to do this for all
-bridges in a network namespace via sysctls.
+apply per network namespace. This unblocks some use-cases where users would
+like to e.g. not do bridge filtering for bridges in a specific network
+namespace while doing so for bridges located in another network namespace.
 
-Thanks!
-Christian
+The netfilter rules are afaict already per network namespace so it should
+be safe for users to specify whether bridge devices inside a network
+namespace are supposed to go through iptables et al. or not. Also, this can
+already be done per-bridge by setting an option for each individual bridge
+via Netlink. It should also be possible to do this for all bridges in a
+network namespace via sysctls.
 
-[1]: https://github.com/zimmertr/Bootstrap-Kubernetes-with-Ansible
-[2]: https://bugs.chromium.org/p/chromium/issues/detail?id=878034 
-     https://github.com/lxc/lxd/issues/5193
-     https://discuss.linuxcontainers.org/t/bridge-nf-call-iptables-and-swap-error-on-lxd-with-kubeadm/2204
-     https://github.com/lxc/lxd/issues/3306
-     https://gitlab.com/gitlab-org/gitlab-runner/issues/3705
-     https://ubuntuforums.org/showthread.php?t=2415032
-     https://medium.com/@thomaszimmerman93/hi-im-unable-to-get-kubeadm-init-to-run-due-to-br-netfilter-not-being-loaded-within-the-5642a4ccfece
-[3]: https://lkml.org/lkml/2019/3/7/365
-
-Christian Brauner (2):
-  br_netfilter: add struct netns_brnf
-  br_netfilter: namespace bridge netfilter sysctls
-
- include/net/net_namespace.h          |   3 +
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+---
  include/net/netfilter/br_netfilter.h |   3 +-
- include/net/netns/netfilter.h        |  16 +++
- net/bridge/br_netfilter_hooks.c      | 166 ++++++++++++++++++---------
+ net/bridge/br_netfilter_hooks.c      | 116 ++++++++++++++++++++-------
  net/bridge/br_netfilter_ipv6.c       |   2 +-
- 5 files changed, 134 insertions(+), 56 deletions(-)
+ 3 files changed, 91 insertions(+), 30 deletions(-)
 
+diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
+index 89808ce293c4..302fcd3aade2 100644
+--- a/include/net/netfilter/br_netfilter.h
++++ b/include/net/netfilter/br_netfilter.h
+@@ -42,7 +42,8 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
+ 	return port ? &port->br->fake_rtable : NULL;
+ }
+ 
+-struct net_device *setup_pre_routing(struct sk_buff *skb);
++struct net_device *setup_pre_routing(struct sk_buff *skb,
++				     const struct net *net);
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ int br_validate_ipv6(struct net *net, struct sk_buff *skb);
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index b51c6b49fc6f..02960259e51b 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -68,17 +68,17 @@ static inline __be16 vlan_proto(const struct sk_buff *skb)
+ 		return 0;
+ }
+ 
+-#define IS_VLAN_IP(skb) \
++#define IS_VLAN_IP(skb, net) \
+ 	(vlan_proto(skb) == htons(ETH_P_IP) && \
+-	 init_net.brnf.filter_vlan_tagged)
++	 net->brnf.filter_vlan_tagged)
+ 
+-#define IS_VLAN_IPV6(skb) \
++#define IS_VLAN_IPV6(skb, net) \
+ 	(vlan_proto(skb) == htons(ETH_P_IPV6) && \
+-	 init_net.brnf.filter_vlan_tagged)
++	 net->brnf.filter_vlan_tagged)
+ 
+-#define IS_VLAN_ARP(skb) \
++#define IS_VLAN_ARP(skb, net) \
+ 	(vlan_proto(skb) == htons(ETH_P_ARP) &&	\
+-	 init_net.brnf.filter_vlan_tagged)
++	 net->brnf.filter_vlan_tagged)
+ 
+ static inline __be16 pppoe_proto(const struct sk_buff *skb)
+ {
+@@ -86,15 +86,15 @@ static inline __be16 pppoe_proto(const struct sk_buff *skb)
+ 			    sizeof(struct pppoe_hdr)));
+ }
+ 
+-#define IS_PPPOE_IP(skb) \
++#define IS_PPPOE_IP(skb, net) \
+ 	(skb->protocol == htons(ETH_P_PPP_SES) && \
+ 	 pppoe_proto(skb) == htons(PPP_IP) && \
+-	 init_net.brnf.filter_pppoe_tagged)
++	 net->brnf.filter_pppoe_tagged)
+ 
+-#define IS_PPPOE_IPV6(skb) \
++#define IS_PPPOE_IPV6(skb, net) \
+ 	(skb->protocol == htons(ETH_P_PPP_SES) && \
+ 	 pppoe_proto(skb) == htons(PPP_IPV6) && \
+-	 init_net.brnf.filter_pppoe_tagged)
++	 net->brnf.filter_pppoe_tagged)
+ 
+ /* largest possible L2 header, see br_nf_dev_queue_xmit() */
+ #define NF_BRIDGE_MAX_MAC_HEADER_LENGTH (PPPOE_SES_HLEN + ETH_HLEN)
+@@ -391,12 +391,14 @@ static int br_nf_pre_routing_finish(struct net *net, struct sock *sk, struct sk_
+ 	return 0;
+ }
+ 
+-static struct net_device *brnf_get_logical_dev(struct sk_buff *skb, const struct net_device *dev)
++static struct net_device *brnf_get_logical_dev(struct sk_buff *skb,
++					       const struct net_device *dev,
++					       const struct net *net)
+ {
+ 	struct net_device *vlan, *br;
+ 
+ 	br = bridge_parent(dev);
+-	if (init_net.brnf.pass_vlan_indev == 0 || !skb_vlan_tag_present(skb))
++	if (net->brnf.pass_vlan_indev == 0 || !skb_vlan_tag_present(skb))
+ 		return br;
+ 
+ 	vlan = __vlan_find_dev_deep_rcu(br, skb->vlan_proto,
+@@ -406,7 +408,7 @@ static struct net_device *brnf_get_logical_dev(struct sk_buff *skb, const struct
+ }
+ 
+ /* Some common code for IPv4/IPv6 */
+-struct net_device *setup_pre_routing(struct sk_buff *skb)
++struct net_device *setup_pre_routing(struct sk_buff *skb, const struct net *net)
+ {
+ 	struct nf_bridge_info *nf_bridge = nf_bridge_info_get(skb);
+ 
+@@ -417,7 +419,7 @@ struct net_device *setup_pre_routing(struct sk_buff *skb)
+ 
+ 	nf_bridge->in_prerouting = 1;
+ 	nf_bridge->physindev = skb->dev;
+-	skb->dev = brnf_get_logical_dev(skb, skb->dev);
++	skb->dev = brnf_get_logical_dev(skb, skb->dev, net);
+ 
+ 	if (skb->protocol == htons(ETH_P_8021Q))
+ 		nf_bridge->orig_proto = BRNF_PROTO_8021Q;
+@@ -452,8 +454,9 @@ static unsigned int br_nf_pre_routing(void *priv,
+ 		return NF_DROP;
+ 	br = p->br;
+ 
+-	if (IS_IPV6(skb) || IS_VLAN_IPV6(skb) || IS_PPPOE_IPV6(skb)) {
+-		if (!init_net.brnf.call_ip6tables &&
++	if (IS_IPV6(skb) || IS_VLAN_IPV6(skb, state->net) ||
++	    IS_PPPOE_IPV6(skb, state->net)) {
++		if (!state->net->brnf.call_ip6tables &&
+ 		    !br_opt_get(br, BROPT_NF_CALL_IP6TABLES))
+ 			return NF_ACCEPT;
+ 
+@@ -461,11 +464,12 @@ static unsigned int br_nf_pre_routing(void *priv,
+ 		return br_nf_pre_routing_ipv6(priv, skb, state);
+ 	}
+ 
+-	if (!init_net.brnf.call_iptables &&
++	if (!state->net->brnf.call_iptables &&
+ 	    !br_opt_get(br, BROPT_NF_CALL_IPTABLES))
+ 		return NF_ACCEPT;
+ 
+-	if (!IS_IP(skb) && !IS_VLAN_IP(skb) && !IS_PPPOE_IP(skb))
++	if (!IS_IP(skb) && !IS_VLAN_IP(skb, state->net) &&
++	    !IS_PPPOE_IP(skb, state->net))
+ 		return NF_ACCEPT;
+ 
+ 	nf_bridge_pull_encap_header_rcsum(skb);
+@@ -475,7 +479,7 @@ static unsigned int br_nf_pre_routing(void *priv,
+ 
+ 	if (!nf_bridge_alloc(skb))
+ 		return NF_DROP;
+-	if (!setup_pre_routing(skb))
++	if (!setup_pre_routing(skb, state->net))
+ 		return NF_DROP;
+ 
+ 	nf_bridge = nf_bridge_info_get(skb);
+@@ -498,7 +502,7 @@ static int br_nf_forward_finish(struct net *net, struct sock *sk, struct sk_buff
+ 	struct nf_bridge_info *nf_bridge = nf_bridge_info_get(skb);
+ 	struct net_device *in;
+ 
+-	if (!IS_ARP(skb) && !IS_VLAN_ARP(skb)) {
++	if (!IS_ARP(skb) && !IS_VLAN_ARP(skb, net)) {
+ 
+ 		if (skb->protocol == htons(ETH_P_IP))
+ 			nf_bridge->frag_max_size = IPCB(skb)->frag_max_size;
+@@ -553,9 +557,11 @@ static unsigned int br_nf_forward_ip(void *priv,
+ 	if (!parent)
+ 		return NF_DROP;
+ 
+-	if (IS_IP(skb) || IS_VLAN_IP(skb) || IS_PPPOE_IP(skb))
++	if (IS_IP(skb) || IS_VLAN_IP(skb, state->net) ||
++	    IS_PPPOE_IP(skb, state->net))
+ 		pf = NFPROTO_IPV4;
+-	else if (IS_IPV6(skb) || IS_VLAN_IPV6(skb) || IS_PPPOE_IPV6(skb))
++	else if (IS_IPV6(skb) || IS_VLAN_IPV6(skb, state->net) ||
++		 IS_PPPOE_IPV6(skb, state->net))
+ 		pf = NFPROTO_IPV6;
+ 	else
+ 		return NF_ACCEPT;
+@@ -586,7 +592,7 @@ static unsigned int br_nf_forward_ip(void *priv,
+ 		skb->protocol = htons(ETH_P_IPV6);
+ 
+ 	NF_HOOK(pf, NF_INET_FORWARD, state->net, NULL, skb,
+-		brnf_get_logical_dev(skb, state->in),
++		brnf_get_logical_dev(skb, state->in, state->net),
+ 		parent,	br_nf_forward_finish);
+ 
+ 	return NF_STOLEN;
+@@ -605,18 +611,18 @@ static unsigned int br_nf_forward_arp(void *priv,
+ 		return NF_ACCEPT;
+ 	br = p->br;
+ 
+-	if (!init_net.brnf.call_arptables &&
++	if (!state->net->brnf.call_arptables &&
+ 	    !br_opt_get(br, BROPT_NF_CALL_ARPTABLES))
+ 		return NF_ACCEPT;
+ 
+ 	if (!IS_ARP(skb)) {
+-		if (!IS_VLAN_ARP(skb))
++		if (!IS_VLAN_ARP(skb, state->net))
+ 			return NF_ACCEPT;
+ 		nf_bridge_pull_encap_header(skb);
+ 	}
+ 
+ 	if (arp_hdr(skb)->ar_pln != 4) {
+-		if (IS_VLAN_ARP(skb))
++		if (IS_VLAN_ARP(skb, state->net))
+ 			nf_bridge_push_encap_header(skb);
+ 		return NF_ACCEPT;
+ 	}
+@@ -776,9 +782,11 @@ static unsigned int br_nf_post_routing(void *priv,
+ 	if (!realoutdev)
+ 		return NF_DROP;
+ 
+-	if (IS_IP(skb) || IS_VLAN_IP(skb) || IS_PPPOE_IP(skb))
++	if (IS_IP(skb) || IS_VLAN_IP(skb, state->net) ||
++	    IS_PPPOE_IP(skb, state->net))
+ 		pf = NFPROTO_IPV4;
+-	else if (IS_IPV6(skb) || IS_VLAN_IPV6(skb) || IS_PPPOE_IPV6(skb))
++	else if (IS_IPV6(skb) || IS_VLAN_IPV6(skb, state->net) ||
++		 IS_PPPOE_IPV6(skb, state->net))
+ 		pf = NFPROTO_IPV6;
+ 	else
+ 		return NF_ACCEPT;
+@@ -1060,6 +1068,49 @@ static inline void br_netfilter_sysctl_default(struct netns_brnf *brnf)
+ 	brnf->pass_vlan_indev = 0;
+ }
+ 
++static __net_init int br_netfilter_sysctl_init_net(struct net *net)
++{
++	struct ctl_table *table = brnf_table;
++
++	if (net_eq(net, &init_net))
++		return 0;
++
++	table = kmemdup(table, sizeof(brnf_table), GFP_KERNEL);
++	if (!table)
++		return -ENOMEM;
++
++	table[0].data = &net->brnf.call_arptables;
++	table[1].data = &net->brnf.call_iptables;
++	table[2].data = &net->brnf.call_ip6tables;
++	table[3].data = &net->brnf.filter_vlan_tagged;
++	table[4].data = &net->brnf.filter_pppoe_tagged;
++	table[5].data = &net->brnf.pass_vlan_indev;
++
++	net->brnf.ctl_hdr = register_net_sysctl(net, "net/bridge", table);
++	if (!net->brnf.ctl_hdr) {
++		kfree(table);
++		return -ENOMEM;
++	}
++
++	br_netfilter_sysctl_default(&net->brnf);
++
++	return 0;
++}
++
++static __net_exit void br_netfilter_sysctl_exit_net(struct net *net)
++{
++	if (net_eq(net, &init_net))
++		return;
++
++	unregister_net_sysctl_table(net->brnf.ctl_hdr);
++	kfree(net->brnf.ctl_hdr->ctl_table_arg);
++}
++
++static struct pernet_operations br_netfilter_sysctl_ops = {
++	.init = br_netfilter_sysctl_init_net,
++	.exit = br_netfilter_sysctl_exit_net,
++};
++
+ static int __init br_netfilter_init(void)
+ {
+ 	int ret;
+@@ -1086,6 +1137,14 @@ static int __init br_netfilter_init(void)
+ 		unregister_pernet_subsys(&brnf_net_ops);
+ 		return -ENOMEM;
+ 	}
++
++	ret = register_pernet_subsys(&br_netfilter_sysctl_ops);
++	if (ret < 0) {
++		unregister_netdevice_notifier(&brnf_notifier);
++		unregister_pernet_subsys(&brnf_net_ops);
++		unregister_net_sysctl_table(init_net.brnf.ctl_hdr);
++		return ret;
++	}
+ #endif
+ 	RCU_INIT_POINTER(nf_br_ops, &br_ops);
+ 	printk(KERN_NOTICE "Bridge firewalling registered\n");
+@@ -1099,6 +1158,7 @@ static void __exit br_netfilter_fini(void)
+ 	unregister_pernet_subsys(&brnf_net_ops);
+ #ifdef CONFIG_SYSCTL
+ 	unregister_net_sysctl_table(init_net.brnf.ctl_hdr);
++	unregister_pernet_subsys(&br_netfilter_sysctl_ops);
+ #endif
+ }
+ 
+diff --git a/net/bridge/br_netfilter_ipv6.c b/net/bridge/br_netfilter_ipv6.c
+index 0e63e5dc5ac4..e4e0c836c3f5 100644
+--- a/net/bridge/br_netfilter_ipv6.c
++++ b/net/bridge/br_netfilter_ipv6.c
+@@ -224,7 +224,7 @@ unsigned int br_nf_pre_routing_ipv6(void *priv,
+ 	nf_bridge = nf_bridge_alloc(skb);
+ 	if (!nf_bridge)
+ 		return NF_DROP;
+-	if (!setup_pre_routing(skb))
++	if (!setup_pre_routing(skb, state->net))
+ 		return NF_DROP;
+ 
+ 	nf_bridge = nf_bridge_info_get(skb);
 -- 
 2.21.0
 
