@@ -2,111 +2,107 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AF9C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57C9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752092070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877CE20717
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfFFBPN (ORCPT
+        id S1726638AbfFFBVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 21:15:13 -0400
-Received: from mga17.intel.com ([192.55.52.151]:41484 "EHLO mga17.intel.com"
+        Wed, 5 Jun 2019 21:21:01 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62188 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfFFBPN (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 21:15:13 -0400
+        id S1726541AbfFFBVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 21:21:01 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 18:15:12 -0700
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 18:21:00 -0700
 X-ExtLoop1: 1
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.71]) ([10.239.196.71])
-  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2019 18:15:10 -0700
-Subject: Re: [PATCH v2 4/7] perf diff: Use hists to manage basic blocks per
- symbol
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
- <1559572577-25436-5-git-send-email-yao.jin@linux.intel.com>
- <20190605114417.GB5868@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <d85f2abc-c960-3736-545c-5cbe778c584b@linux.intel.com>
-Date:   Thu, 6 Jun 2019 09:15:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+Received: from likexu-e5-2699-v4.sh.intel.com ([10.239.48.178])
+  by orsmga008.jf.intel.com with ESMTP; 05 Jun 2019 18:20:58 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Eduardo Habkost <ehabkost@redhat.com>,
+        sean.j.christopherson@intel.com, xiaoyao.li@linux.intel.com,
+        linux-kernel@vger.kernel.org, like.xu@intel.com
+Subject: [PATCH v4] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+Date:   Thu,  6 Jun 2019 09:18:45 +0800
+Message-Id: <20190606011845.40223-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190605114417.GB5868@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add support to expose Intel V2 Extended Topology Enumeration Leaf for
+some new systems with multiple software-visible die within each package.
 
+Because unimplemented and unexposed leaves should be explicitly reported
+as zero, there is no need to limit cpuid.0.eax to the maximum value of
+feature configuration but limit it to the highest leaf implemented in
+the current code. A single clamping seems sufficient and cheaper.
 
-On 6/5/2019 7:44 PM, Jiri Olsa wrote:
-> On Mon, Jun 03, 2019 at 10:36:14PM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
->> index 43623fa..d1641da 100644
->> --- a/tools/perf/util/sort.h
->> +++ b/tools/perf/util/sort.h
->> @@ -79,6 +79,9 @@ struct hist_entry_diff {
->>   
->>   		/* HISTC_WEIGHTED_DIFF */
->>   		s64	wdiff;
->> +
->> +		/* PERF_HPP_DIFF__CYCLES */
->> +		s64	cycles;
->>   	};
->>   };
->>   
->> @@ -143,6 +146,9 @@ struct hist_entry {
->>   	struct branch_info	*branch_info;
->>   	long			time;
->>   	struct hists		*hists;
->> +	void			*block_hists;
->> +	int			block_idx;
->> +	int			block_num;
->>   	struct mem_info		*mem_info;
->>   	struct block_info	*block_info;
-> 
-> could you please not add the new block* stuff in here,
-> and instead use the "c2c model" and use yourr own struct
-> on top of hist_entry? we are trying to librarize this
-> stuff and keep only necessary things in here..
-> 
-> you're already using hist_entry_ops, so should be easy
-> 
-> something like:
-> 
-> 	struct block_hist_entry {
-> 		void			*block_hists;
-> 		int			block_idx;
-> 		int			block_num;
-> 		struct block_info	*block_info;
-> 
-> 		struct hist_entry	he;
-> 	};
-> 
-> 
-> 
-> jirka
-> 
+Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
 
-Oh, yes, I should refer to 'c2c_hist_entry'. That avoids to add more 
-stuffs in hist_entry. That's a good idea!
+---
 
-Thanks
-Jin Yao
+==changelog==
+
+v4:
+- Limited cpuid.0.eax to the highest leaf implemented in KVM
+
+v3: https://lkml.org/lkml/2019/5/26/64
+- Refine commit message and comment
+
+v2: https://lkml.org/lkml/2019/4/25/1246
+
+- Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
+- Add comment to handle 0x1f anf 0xb in common code
+- Reduce check time in a descending-break style
+
+v1: https://lkml.org/lkml/2019/4/22/28
+---
+ arch/x86/kvm/cpuid.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index e18a9f9f65b5..f819011e6a13 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -426,7 +426,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 
+ 	switch (function) {
+ 	case 0:
+-		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
++		/* Limited to the highest leaf implemented in KVM. */
++		entry->eax = min(entry->eax, 0x1f);
+ 		break;
+ 	case 1:
+ 		entry->edx &= kvm_cpuid_1_edx_x86_features;
+@@ -546,7 +547,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		entry->edx = edx.full;
+ 		break;
+ 	}
+-	/* function 0xb has additional index. */
++	/*
++	 * Per Intel's SDM, the 0x1f is a superset of 0xb,
++	 * thus they can be handled by common code.
++	 */
++	case 0x1f:
+ 	case 0xb: {
+ 		int i, level_type;
+ 
+-- 
+2.21.0
+
