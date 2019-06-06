@@ -3,105 +3,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E235C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B2FC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6E9207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723A9207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfFFHt5 (ORCPT
+        id S1726922AbfFFHug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:49:57 -0400
-Received: from gate.crashing.org ([63.228.1.57]:49036 "EHLO gate.crashing.org"
+        Thu, 6 Jun 2019 03:50:36 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:35496 "EHLO mx1.emlix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfFFHt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:49:57 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x567nPUG022679;
-        Thu, 6 Jun 2019 02:49:26 -0500
-Message-ID: <c558ca3caac6f0c24a13cd5d7599bf4e861bca62.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna
- Labs Fabric Interrupt Controller Driver
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     "Shenhar, Talel" <talel@amazon.com>, nicolas.ferre@microchip.com,
-        jason@lakedaemon.net, mark.rutland@arm.com,
-        mchehab+samsung@kernel.org, robh+dt@kernel.org,
-        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, dwmw@amazon.co.uk, jonnyc@amazon.com,
-        hhhawa@amazon.com, ronenk@amazon.com, hanochu@amazon.com,
-        barakw@amazon.com
-Date:   Thu, 06 Jun 2019 17:49:25 +1000
-In-Reply-To: <86pnnrgpmm.wl-marc.zyngier@arm.com>
-References: <1559731921-14023-1-git-send-email-talel@amazon.com>
-         <1559731921-14023-3-git-send-email-talel@amazon.com>
-         <fa6e5a95-d9dd-19f6-43e3-3046e0898bda@arm.com>
-         <553d06a4-a6b6-816f-b110-6ef7f300dde4@amazon.com>
-         <0915892c-0e53-8f53-e858-b1c3298a4d35@arm.com>
-         <54df139cc6cfef9202be6b945c968c3040591607.camel@kernel.crashing.org>
-         <86pnnrgpmm.wl-marc.zyngier@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1725769AbfFFHug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:50:36 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id 682CE5FEF4;
+        Thu,  6 Jun 2019 09:50:32 +0200 (CEST)
+From:   Rolf Eike Beer <eb@emlix.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
+Date:   Thu, 06 Jun 2019 09:50:28 +0200
+Message-ID: <1993275.kHlTELq40E@devpool35>
+Organization: emlix GmbH
+In-Reply-To: <8696846.WsthzzWoxp@devpool35>
+References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com> <8696846.WsthzzWoxp@devpool35>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart1591061.3d5M5jyMvB"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 08:05 +0100, Marc Zyngier wrote:
-> 
-> > I disagree Marc. This is a rather bad error which indicates that the
-> > device-tree is probably incorrect (or the HW was wired in a way that
-> > cannot work).
-> 
-> But surely that's something you'll spot pretty quickly.
+--nextPart1591061.3d5M5jyMvB
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Not really. A level/edge mismatch isn't something you can spot that
-quickly, but will cause lost interrupts on load. Since the kernel can
-spot the error pretty much right away, I think that could even be a
-pr_err :)
+Am Donnerstag, 6. Juni 2019, 09:38:41 CEST schrieb Rolf Eike Beer:
+> Greg KH wrote:
+> > On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
+> > > I decided to dig out a toy project which uses a DragonBoard 410c. This
+> > > has
+> > > been "running" with kernel 4.9, which I would keep this way for
+> > > unrelated
+> > > reasons. The vanilla 4.9 kernel wasn't bootable back then, but it was
+> > > buildable, which was good enough.
+> > >=20
+> > > Upgrading the kernel to 4.9.180 caused the boot to suddenly fail:
+> > >=20
+> > > aarch64-unknown-linux-gnueabi-ld:
+> > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): in function
+> > > `handle_kernel_image':
+> > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c=
+:63
+> > > :
+> > > undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
+> > > aarch64-unknown-linux-gnueabi-ld:
+> > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): relocation
+> > > R_AARCH64_ADR_PREL_PG_HI21 against symbol
+> > > `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally can not be
+> > > used when making a shared object; recompile with -fPIC
+> > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c=
+:63
+> > > :
+> > > (.init.text+0xc): dangerous relocation: unsupported relocation
+> > > /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target 'vmlinux'
+> > > failed -make[1]: *** [vmlinux] Error 1
+> > >=20
+> > > This is caused by commit 27b5ebf61818749b3568354c64a8ec2d9cd5ecca from
+> > > linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042be),
+> > > reverting
+> > > this commit fixes the build.
+> > >=20
+> > > This happens with vanilla binutils 2.32 and gcc 8.3.0 as well as 9.1.=
+0.
+> > > See
+> > > the attached .config for reference.
+> > >=20
+> > > If you have questions or patches just ping me.
+> >=20
+> > Does Linus's latest tree also fail for you (or 5.1)?
+>=20
+> 5.1.7 with the same config as before and "make olddefconfig" builds for m=
+e.
 
-> Also, you get
-> a splat from the irq subsystem already, telling you that things went
-> wrong (see __irq_set_trigger). At that stage, you can enable debugging
-> and figure it out.
+Just for the fun of it: both 4.19 and 4.19.48 also work.
 
-Ah returning an error will cause such splat indeed.
+Eike
+=2D-=20
+Rolf Eike Beer, emlix GmbH, http://www.emlix.com
+=46on +49 551 30664-0, Fax +49 551 30664-11
+Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
+Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
+Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
+=2E: DE 205 198 055
 
-> What I'm trying to avoid is the kernel becoming a (pretty bad)
-> validation tool for DTS files.
+emlix - smart embedded open source
+--nextPart1591061.3d5M5jyMvB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Haha, yeah, I don't like it going out of its way to validate them but
-that sort of very obvious sanity checking makes sense.
+-----BEGIN PGP SIGNATURE-----
 
-> > Basically a given FIC can either be entirely level sensitive or
-> > entirely edge sensitive. This catches cases where the DT has routed
-> > a mixed of both to the same FIC. Definitely worth barfing loudly
-> > about rather than trying to understand subtle odd misbehaviours of
-> > the device in the field.
-> 
-> Then, in the interest of not producing incorrect DTs, could the
-> edge/level property be encoded in the FIC description itself, rather
-> than in the interrupt specifiers of the individual devices? It would
-> sidestep the problem altogether. You can still put the wrong one in
-> the FIC node, but it then becomes even more obvious what is going
-> on...
+iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCXPjFxAAKCRCr5FH7Xu2t
+/OBSA/47p/vGbW1UKIGGe/7d+N1E9CRBcLYFYWf5EEgUsLww0G/yCYKscdy6m8g2
+5lyCJtCwrJn7+1nMnTIcmu8oZh5vWR9TsOpXoH2QsRHgcAsp+xFiLvJgemMYysk8
+rZEwzXGe9u5vVieSC2t7bythhrVsHjqOdUJqm+7Lw84dAAbJCw==
+=ZwaA
+-----END PGP SIGNATURE-----
 
-This was Talel original approach internally in fact. I told him to put
-it in the specifier instead :-) The advantage in doing it that way is
-that you get the right flags in the descriptor by default iirc, so the
-right value in /proc/interrupts etc... And it will continue working if
-a future FIC loses that limitation.
+--nextPart1591061.3d5M5jyMvB--
 
-That said, if you feel strongly about it, we can revert to putting a
-global property in the FIC node itself. Let us know what you want.
-
-Cheers,
-Ben.
 
 
