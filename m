@@ -2,326 +2,422 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC3CC28EB8
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28697C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7F420673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD15B20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhtcL6cP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbfFFWZK (ORCPT
+        id S1727253AbfFFW2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 18:25:10 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40793 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfFFWZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 18:25:10 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 15:25:08 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga005.jf.intel.com with ESMTP; 06 Jun 2019 15:25:07 -0700
-Date:   Thu, 6 Jun 2019 15:26:20 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190606222619.GC11698@iweiny-DESK2.sc.intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Thu, 6 Jun 2019 18:28:24 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35468 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfFFW2X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 18:28:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m3so221457wrv.2;
+        Thu, 06 Jun 2019 15:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=K8LRZAGyxTA91e565NC0WdxUL44tT7JJZTxvCh2Q5n0=;
+        b=AhtcL6cP7rZU1yX2Iu9vJzeoGJ0Bnz7Hl/floUOmKa4mZYwItJz8fNrF6Lbc1LB0fp
+         XY2xFcADNY2grLi+jPcrkgawo9jn1qz0FT/Rrx0r/48eRjvUUT7HCSzcZqd9NjNOAgKb
+         yfxFMAP0D9dhfRSmis03kKBUEwaL27NmtfHe6FoSxYedpmN2M4x/QzTDniI+ESEA8aXi
+         Rh/X6EyJJ0OarAYkJzf4t4k9RKjQaxvD3kk+sBMN5OBZBenMJ7zscvopNCMtORWprxdj
+         t7275r0jPEfhxV5JwohNn8pmb8hhTEI+k9Oc8FY/bqh2dVGkvA97qs3mvJFc/tXjTTg+
+         XeLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=K8LRZAGyxTA91e565NC0WdxUL44tT7JJZTxvCh2Q5n0=;
+        b=bloLDXaoFsulK/AjkiwK0KIPHz/hy7VbG5EMErGfzGYHhV7RuxGKYB57dGFmOXqFIS
+         VGoUbUIXZxIt4ey+mfmOvWv1ru/3Jvv3sz0EjFDEAwDmlFzkFBYt5LpSJOfvRuDxGOTv
+         jMK+YTx6YwSbs0vmG8XtpZmHiBreBrU9qLH/jxMCbapkn+iVMWLmYJLAoR8DPuhhgWwb
+         fMan0yMJj6jTxn2l+ILJ0gJTwvCgGzkJn34yVttYSlGodzoW2lY8bbMSUCOmb3nhRkJ3
+         cc6aDygoYy3rzW5ApRZ1NfgoxTFn0F334DYoi/ODDeCANZI8wQt8oF0xMIkWRCjlHryL
+         GWcQ==
+X-Gm-Message-State: APjAAAWskTKriQLo/RikchMbrpVI2K9FEf/N7iSG+nQXlILcw/QDif8D
+        LvfqCB2QuBSymMZh0nT68Gg=
+X-Google-Smtp-Source: APXvYqyvuY1RelhcBhUggjE4fxrjJ4yul8towhNZkJtNFNc5/o2oigiFGX39aGq/51KA5rgSgLsrBw==
+X-Received: by 2002:adf:f50c:: with SMTP id q12mr4506022wro.300.1559860100607;
+        Thu, 06 Jun 2019 15:28:20 -0700 (PDT)
+Received: from localhost.localdomain (5-12-124-26.residential.rdsnet.ro. [5.12.124.26])
+        by smtp.gmail.com with ESMTPSA id v184sm220527wme.10.2019.06.06.15.28.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 15:28:20 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     shawnguo@kernel.org
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH v4] ARM: dts: Introduce the NXP LS1021A-TSN board
+Date:   Fri,  7 Jun 2019 01:28:17 +0300
+Message-Id: <20190606222817.14223-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 03:03:30PM -0700, 'Ira Weiny' wrote:
-> On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
-> > On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > ... V1,000,000   ;-)
-> > > 
-> > > Pre-requisites:
-> > > 	John Hubbard's put_user_pages() patch series.[1]
-> > > 	Jan Kara's ext4_break_layouts() fixes[2]
-> > > 
-> > > Based on the feedback from LSFmm and the LWN article which resulted.  I've
-> > > decided to take a slightly different tack on this problem.
-> > > 
-> > > The real issue is that there is no use case for a user to have RDMA pinn'ed
-> > > memory which is then truncated.  So really any solution we present which:
-> > > 
-> > > A) Prevents file system corruption or data leaks
-> > > ...and...
-> > > B) Informs the user that they did something wrong
-> > > 
-> > > Should be an acceptable solution.
-> > > 
-> > > Because this is slightly new behavior.  And because this is gonig to be
-> > > specific to DAX (because of the lack of a page cache) we have made the user
-> > > "opt in" to this behavior.
-> > > 
-> > > The following patches implement the following solution.
-> > > 
-> > > 1) The user has to opt in to allowing GUP pins on a file with a layout lease
-> > >    (now made visible).
-> > > 2) GUP will fail (EPERM) if a layout lease is not taken
-> > > 3) Any truncate or hole punch operation on a GUP'ed DAX page will fail.
-> > > 4) The user has the option of holding the layout lease to receive a SIGIO for
-> > >    notification to the original thread that another thread has tried to delete
-> > >    their data.  Furthermore this indicates that if the user needs to GUP the
-> > >    file again they will need to retake the Layout lease before doing so.
-> > > 
-> > > 
-> > > NOTE: If the user releases the layout lease or if it has been broken by
-> > > another operation further GUP operations on the file will fail without
-> > > re-taking the lease.  This means that if a user would like to register
-> > > pieces of a file and continue to register other pieces later they would
-> > > be advised to keep the layout lease, get a SIGIO notification, and retake
-> > > the lease.
-> > > 
-> > > NOTE2: Truncation of pages which are not actively pinned will succeed.
-> > > Similar to accessing an mmap to this area GUP pins of that memory may
-> > > fail.
-> > 
-> > So after some through I'm willing accept the fact that pinned DAX pages
-> > will just make truncate / hole punch fail and shove it into a same bucket
-> > of situations like "user can open a file and unlink won't delete it" or
-> > "ETXTBUSY when user is executing a file being truncated".  The problem I
-> > have with this proposal is a lack of visibility from sysadmin POV. For
-> > ETXTBUSY or "unlinked but open file" sysadmin can just do lsof, find the
-> > problematic process and kill it. There's nothing like that with your
-> > proposal since currently once you hold page reference, you can unmap the
-> > file, drop layout lease, close the file, and there's no trace that you're
-> > responsible for the pinned page anymore.
-> 
-> Agreed.  For some "GUP interfaces" one may be able to figure this out but I'm
-> not familiar with any.  For RDMA there has been some additions for tracking
-> resources but I don't think any of that is useful here.  Regardless from a FS
-> POV this is awkward to have to understand all the independent interfaces, so I
-> agree.
-> 
-> > 
-> > So I'd like to actually mandate that you *must* hold the file lease until
-> > you unpin all pages in the given range (not just that you have an option to
-> > hold a lease). And I believe the kernel should actually enforce this. That
-> > way we maintain a sane state that if someone uses a physical location of
-> > logical file offset on disk, he has a layout lease. Also once this is done,
-> > sysadmin has a reasonably easy way to discover run-away RDMA application
-> > and kill it if he wishes so.
-> 
-> Fair enough.
-> 
-> I was kind of heading that direction but had not thought this far forward.  I
-> was exploring how to have a lease remain on the file even after a "lease
-> break".  But that is incompatible with the current semantics of a "layout"
-> lease (as currently defined in the kernel).  [In the end I wanted to get an RFC
-> out to see what people think of this idea so I did not look at keeping the
-> lease.]
-> 
-> Also hitch is that currently a lease is forcefully broken after
-> <sysfs>/lease-break-time.  To do what you suggest I think we would need a new
-> lease type with the semantics you describe.
-> 
-> Previously I had thought this would be a good idea (for other reasons).  But
-> what does everyone think about using a "longterm lease" similar to [1] which
-> has the semantics you proppose?  In [1] I was not sure "longterm" was a good
-> name but with your proposal I think it makes more sense.
-> 
-> > 
-> > The question is on how to exactly enforce that lease is taken until all
-> > pages are unpinned. I belive it could be done by tracking number of
-> > long-term pinned pages within a lease. Gup_longterm could easily increment
-> > the count when verifying the lease exists, gup_longterm users will somehow
-> > need to propagate corresponding 'filp' (struct file pointer) to
-> > put_user_pages_longterm() callsites so that they can look up appropriate
-> > lease to drop reference
-> 
-> I actually think that might be pretty easy.  I actually added a ref count to
-> the longterm lease before.[2]  This was done to be able to take the lease
-> within the GUP code.  We don't need that functionality exactly but that patch
-> implements some of what you propose.  With a ref count on the lease we can
-> refuse to release it until all GUP users have released it.
-> 
-> >
-> > - probably I'd just transition all gup_longterm()
-> > users to a saner API similar to the one we have in mm/frame_vector.c where
-> > we don't hand out page pointers but an encapsulating structure that does
-> > all the necessary tracking.
-> 
-> I'll take a look at that code.  But that seems like a pretty big change.
-> 
-> >
-> > Removing a lease would need to block until all
-> > pins are released - this is probably the most hairy part since we need to
-> > handle a case if application just closes the file descriptor which would
-> > release the lease but OTOH we need to make sure task exit does not deadlock.
-> > Maybe we could block only on explicit lease unlock and just drop the layout
-> > lease on file close and if there are still pinned pages, send SIGKILL to an
-> > application as a reminder it did something stupid...
-> 
-> As presented at LSFmm I'm not opposed to killing a process which does not
-> "follow the rules".  But I'm concerned about how to handle this across a fork.
-> 
-> Limiting the open()/LEASE/GUP/close()/SIGKILL to a specific pid "leak"'s pins
-> to a child through the RDMA context.  This was the major issue Jason had with
-> the SIGBUS proposal.
-> 
-> Always sending a SIGKILL would prevent an RDMA process from doing something
-> like system("ls") (would kill the child unnecessarily).  Are we ok with that?
+The LS1021A-TSN is a development board built by VVDN/Argonboards in
+partnership with NXP.
 
-I might be wrong here.  My memory said it closed all fd's but I'm not finding
-any documentation of that.  Perhaps we could say that the child would be
-required to keep the fd open as well?
+It features the LS1021A SoC and the first-generation SJA1105T Ethernet
+switch for prototyping implementations of a subset of IEEE 802.1 TSN
+standards.
 
-Ira
+It has two regular Ethernet ports and four switched, TSN-capable ports.
 
-> 
-> > 
-> > What do people think about this?
-> 
-> But generally I like the idea of the leases being sticky.  Not sure about the
-> SIGKILL.
-> 
-> Thanks for the review,
-> Ira
-> 
-> [1] https://patchwork.kernel.org/patch/10921171/
-> [2] https://patchwork.kernel.org/patch/10921177/
-> 
-> > 
-> > 								Honza
-> > > 
-> > > 
-> > > A general overview follows for background.
-> > > 
-> > > It should be noted that one solution for this problem is to use RDMA's On
-> > > Demand Paging (ODP).  There are 2 big reasons this may not work.
-> > > 
-> > > 	1) The hardware being used for RDMA may not support ODP
-> > > 	2) ODP may be detrimental to the over all network (cluster or cloud)
-> > > 	   performance
-> > > 
-> > > Therefore, in order to support RDMA to File system pages without On Demand
-> > > Paging (ODP) a number of things need to be done.
-> > > 
-> > > 1) GUP "longterm" users need to inform the other subsystems that they have
-> > >    taken a pin on a page which may remain pinned for a very "long time".[3]
-> > > 
-> > > 2) Any page which is "controlled" by a file system needs to have special
-> > >    handling.  The details of the handling depends on if the page is page cache
-> > >    fronted or not.
-> > > 
-> > >    2a) A page cache fronted page which has been pinned by GUP long term can use a
-> > >    bounce buffer to allow the file system to write back snap shots of the page.
-> > >    This is handled by the FS recognizing the GUP long term pin and making a copy
-> > >    of the page to be written back.
-> > > 	NOTE: this patch set does not address this path.
-> > > 
-> > >    2b) A FS "controlled" page which is not page cache fronted is either easier
-> > >    to deal with or harder depending on the operation the filesystem is trying
-> > >    to do.
-> > > 
-> > > 	2ba) [Hard case] If the FS operation _is_ a truncate or hole punch the
-> > > 	FS can no longer use the pages in question until the pin has been
-> > > 	removed.  This patch set presents a solution to this by introducing
-> > > 	some reasonable restrictions on user space applications.
-> > > 
-> > > 	2bb) [Easy case] If the FS operation is _not_ a truncate or hole punch
-> > > 	then there is nothing which need be done.  Data is Read or Written
-> > > 	directly to the page.  This is an easy case which would currently work
-> > > 	if not for GUP long term pins being disabled.  Therefore this patch set
-> > > 	need not change access to the file data but does allow for GUP pins
-> > > 	after 2ba above is dealt with.
-> > > 
-> > > 
-> > > This patch series and presents a solution for problem 2ba)
-> > > 
-> > > [1] https://github.com/johnhubbard/linux/tree/gup_dma_core
-> > > 
-> > > [2] ext4/dev branch:
-> > > 
-> > > - https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/log/?h=dev
-> > > 
-> > > 	Specific patches:
-> > > 
-> > > 	[2a] ext4: wait for outstanding dio during truncate in nojournal mode
-> > > 
-> > > 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=82a25b027ca48d7ef197295846b352345853dfa8
-> > > 
-> > > 	[2b] ext4: do not delete unlinked inode from orphan list on failed truncate
-> > > 
-> > > 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=ee0ed02ca93ef1ecf8963ad96638795d55af2c14
-> > > 
-> > > 	[2c] ext4: gracefully handle ext4_break_layouts() failure during truncate
-> > > 
-> > > 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=b9c1c26739ec2d4b4fb70207a0a9ad6747e43f4c
-> > > 
-> > > [3] The definition of long time is debatable but it has been established
-> > > that RDMAs use of pages, minutes or hours after the pin is the extreme case
-> > > which makes this problem most severe.
-> > > 
-> > > 
-> > > Ira Weiny (10):
-> > >   fs/locks: Add trace_leases_conflict
-> > >   fs/locks: Export F_LAYOUT lease to user space
-> > >   mm/gup: Pass flags down to __gup_device_huge* calls
-> > >   mm/gup: Ensure F_LAYOUT lease is held prior to GUP'ing pages
-> > >   fs/ext4: Teach ext4 to break layout leases
-> > >   fs/ext4: Teach dax_layout_busy_page() to operate on a sub-range
-> > >   fs/ext4: Fail truncate if pages are GUP pinned
-> > >   fs/xfs: Teach xfs to use new dax_layout_busy_page()
-> > >   fs/xfs: Fail truncate if pages are GUP pinned
-> > >   mm/gup: Remove FOLL_LONGTERM DAX exclusion
-> > > 
-> > >  fs/Kconfig                       |   1 +
-> > >  fs/dax.c                         |  38 ++++++---
-> > >  fs/ext4/ext4.h                   |   2 +-
-> > >  fs/ext4/extents.c                |   6 +-
-> > >  fs/ext4/inode.c                  |  26 +++++--
-> > >  fs/locks.c                       |  97 ++++++++++++++++++++---
-> > >  fs/xfs/xfs_file.c                |  24 ++++--
-> > >  fs/xfs/xfs_inode.h               |   5 +-
-> > >  fs/xfs/xfs_ioctl.c               |  15 +++-
-> > >  fs/xfs/xfs_iops.c                |  14 +++-
-> > >  fs/xfs/xfs_pnfs.c                |  14 ++--
-> > >  include/linux/dax.h              |   9 ++-
-> > >  include/linux/fs.h               |   2 +-
-> > >  include/linux/mm.h               |   2 +
-> > >  include/trace/events/filelock.h  |  35 +++++++++
-> > >  include/uapi/asm-generic/fcntl.h |   3 +
-> > >  mm/gup.c                         | 129 ++++++++++++-------------------
-> > >  mm/huge_memory.c                 |  12 +++
-> > >  18 files changed, 299 insertions(+), 135 deletions(-)
-> > > 
-> > > -- 
-> > > 2.20.1
-> > > 
-> > -- 
-> > Jan Kara <jack@suse.com>
-> > SUSE Labs, CR
-> 
+It also features:
+- One Arduino header
+- One expansion header
+- Two USB 3.0 ports
+- One mini PCIe slot
+- One SATA interface
+- Accelerometer, gyroscope, temperature sensors
+
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+---
+Changes from v3:
+- Not all nodes were alphabetically sorted ("d->i->e" vs "d->e->i")
+
+Changes from v2:
+- Sorted nodes alphabetically
+- Renamed SAI2 codec node into audio-codec
+
+v2 patch available at:
+https://lkml.org/lkml/2019/5/29/998
+
+Changes from v1:
+- Applied Shawn's feedback
+- Introduced QSPI flash node
+
+v1 patch available at:
+https://patchwork.kernel.org/patch/10930451/
+
+ arch/arm/boot/dts/Makefile        |   1 +
+ arch/arm/boot/dts/ls1021a-tsn.dts | 289 ++++++++++++++++++++++++++++++
+ 2 files changed, 290 insertions(+)
+ create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index dab2914fa293..a4eb4ca5e148 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -602,6 +602,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
+ dtb-$(CONFIG_SOC_LS1021A) += \
+ 	ls1021a-moxa-uc-8410a.dtb \
+ 	ls1021a-qds.dtb \
++	ls1021a-tsn.dtb \
+ 	ls1021a-twr.dtb
+ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf500-colibri-eval-v3.dtb \
+diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+new file mode 100644
+index 000000000000..5b7689094b70
+--- /dev/null
++++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+@@ -0,0 +1,289 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright 2016-2018 NXP Semiconductors
++ * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
++ */
++
++/dts-v1/;
++#include "ls1021a.dtsi"
++
++/ {
++	model = "NXP LS1021A-TSN Board";
++
++	sys_mclk: clock-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24576000>;
++	};
++
++	reg_vdda_codec: regulator-3V3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_vddio_codec: regulator-2V5 {
++		compatible = "regulator-fixed";
++		regulator-name = "2P5V";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-always-on;
++	};
++};
++
++&dspi0 {
++	bus-num = <0>;
++	status = "okay";
++
++	/* ADG704BRMZ 1:4 SPI mux/demux */
++	sja1105: ethernet-switch@1 {
++		reg = <0x1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nxp,sja1105t";
++		/* 12 MHz */
++		spi-max-frequency = <12000000>;
++		/* Sample data on trailing clock edge */
++		spi-cpha;
++		/* SPI controller settings for SJA1105 timing requirements */
++		fsl,spi-cs-sck-delay = <1000>;
++		fsl,spi-sck-cs-delay = <1000>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				/* ETH5 written on chassis */
++				label = "swp5";
++				phy-handle = <&rgmii_phy6>;
++				phy-mode = "rgmii-id";
++				reg = <0>;
++			};
++
++			port@1 {
++				/* ETH2 written on chassis */
++				label = "swp2";
++				phy-handle = <&rgmii_phy3>;
++				phy-mode = "rgmii-id";
++				reg = <1>;
++			};
++
++			port@2 {
++				/* ETH3 written on chassis */
++				label = "swp3";
++				phy-handle = <&rgmii_phy4>;
++				phy-mode = "rgmii-id";
++				reg = <2>;
++			};
++
++			port@3 {
++				/* ETH4 written on chassis */
++				label = "swp4";
++				phy-handle = <&rgmii_phy5>;
++				phy-mode = "rgmii-id";
++				reg = <3>;
++			};
++
++			port@4 {
++				/* Internal port connected to eth2 */
++				ethernet = <&enet2>;
++				phy-mode = "rgmii";
++				reg = <4>;
++
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++		};
++	};
++};
++
++&enet0 {
++	tbi-handle = <&tbi0>;
++	phy-handle = <&sgmii_phy2>;
++	phy-mode = "sgmii";
++	status = "okay";
++};
++
++&enet1 {
++	tbi-handle = <&tbi1>;
++	phy-handle = <&sgmii_phy1>;
++	phy-mode = "sgmii";
++	status = "okay";
++};
++
++/* RGMII delays added via PCB traces */
++&enet2 {
++	phy-mode = "rgmii";
++	status = "okay";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
++
++&esdhc {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	/* 3 axis accelerometer */
++	accelerometer@1e {
++		compatible = "fsl,fxls8471";
++		position = <0>;
++		reg = <0x1e>;
++	};
++
++	/* Audio codec (SAI2) */
++	audio-codec@2a {
++		compatible = "fsl,sgtl5000";
++		VDDIO-supply = <&reg_vddio_codec>;
++		VDDA-supply = <&reg_vdda_codec>;
++		#sound-dai-cells = <0>;
++		clocks = <&sys_mclk>;
++		reg = <0x2a>;
++	};
++
++	/* Current sensing circuit for 1V VDDCORE PMIC rail */
++	current-sensor@44 {
++		compatible = "ti,ina220";
++		shunt-resistor = <1000>;
++		reg = <0x44>;
++	};
++
++	/* Current sensing circuit for 12V VCC rail */
++	current-sensor@45 {
++		compatible = "ti,ina220";
++		shunt-resistor = <1000>;
++		reg = <0x45>;
++	};
++
++	/* Thermal monitor - case */
++	temperature-sensor@48 {
++		compatible = "national,lm75";
++		reg = <0x48>;
++	};
++
++	/* Thermal monitor - chip */
++	temperature-sensor@4c {
++		compatible = "ti,tmp451";
++		reg = <0x4c>;
++	};
++
++	eeprom@51 {
++		compatible = "atmel,24c32";
++		reg = <0x51>;
++	};
++
++	/* Unsupported devices:
++	 * - FXAS21002C Gyroscope at 0x20
++	 * - TI ADS7924 4-channel ADC at 0x49
++	 */
++};
++
++&ifc {
++	status = "disabled";
++};
++
++&lpuart0 {
++	status = "okay";
++};
++
++&lpuart3 {
++	status = "okay";
++};
++
++&mdio0 {
++	/* AR8031 */
++	sgmii_phy1: ethernet-phy@1 {
++		reg = <0x1>;
++	};
++
++	/* AR8031 */
++	sgmii_phy2: ethernet-phy@2 {
++		reg = <0x2>;
++	};
++
++	/* BCM5464 quad PHY */
++	rgmii_phy3: ethernet-phy@3 {
++		reg = <0x3>;
++	};
++
++	rgmii_phy4: ethernet-phy@4 {
++		reg = <0x4>;
++	};
++
++	rgmii_phy5: ethernet-phy@5 {
++		reg = <0x5>;
++	};
++
++	rgmii_phy6: ethernet-phy@6 {
++		reg = <0x6>;
++	};
++
++	/* SGMII PCS for enet0 */
++	tbi0: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&mdio1 {
++	/* SGMII PCS for enet1 */
++	tbi1: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&qspi {
++	status = "okay";
++
++	flash@0 {
++		/* Rev. A uses 64MB flash, Rev. B & C use 32MB flash */
++		compatible = "jedec,spi-nor", "s25fl256s1", "s25fl512s";
++		spi-max-frequency = <20000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "RCW";
++				reg = <0x0 0x40000>;
++			};
++
++			partition@40000 {
++				label = "U-Boot";
++				reg = <0x40000 0x300000>;
++			};
++
++			partition@340000 {
++				label = "U-Boot Env";
++				reg = <0x340000 0x100000>;
++			};
++		};
++	};
++};
++
++&sai2 {
++	status = "okay";
++};
++
++&sata {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
+-- 
+2.17.1
+
