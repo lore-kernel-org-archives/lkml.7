@@ -2,274 +2,178 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EFBC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAAAC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61B120868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DAE20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:22:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hx2qusiR"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="LpcH017p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbfFFSTB (ORCPT
+        id S1730543AbfFFSWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:19:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51617 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729335AbfFFSTA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:19:00 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f10so898407wmb.1;
-        Thu, 06 Jun 2019 11:18:57 -0700 (PDT)
+        Thu, 6 Jun 2019 14:22:14 -0400
+Received: from mail-eopbgr810045.outbound.protection.outlook.com ([40.107.81.45]:38592
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727559AbfFFSWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:22:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b+k2WtHJ4cVZt9Xd/W68G1v4UZNKgjAmMbde60rBPBM=;
-        b=hx2qusiRYNhxUEVKIlVw8c7MGSKH6YGDKpZgOwGiiQ9pBLrP4gQr55hRtUgkgTBUNO
-         //GZOIvkGG5GPs2UC4Za9mVq2vWPaz+rQlpuDmT9jYp1xuv+2U6sNQn5p2vb40XWEmNm
-         1JZ0Z0A7dHwQggGMEQI26hv74LIJPjq7oCzXiAMSMD/1sarHYILj3W77Z05JoceFgriT
-         me4JZsKPjc85akgqqqr7BBFQdv4+APaDeS/l291NPVuaJpZYrk7mQUGGHoFgPtvvuef8
-         K+eUfxjDjX4vK2D+f66ryfKrETKxn0/gbiSkLWCSiFTsGi8ZsPmw9j08t18r4OIQQxqV
-         jKQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b+k2WtHJ4cVZt9Xd/W68G1v4UZNKgjAmMbde60rBPBM=;
-        b=gtXs4NE/FJ1q5rvtbtVolgClW7jJitw7/opCXoIUzg8i1EltGQQAQgxMiSmnXJsH/K
-         tbMxelMikzfFY0WT55puT7tvTjoGl/Y5+Mt5RDBVWSOr7sFiliqxxlwMXkhKl5cAxtub
-         1EsMdgoED3gW5ZmV0GDDWMvAn2jYTe0UPkaEaIX+HukXfjRsZCzHm1VbBVtYrpoQRePK
-         eYy80T15SjgDkXZZo/xqKXkZlPKrWT4Y016FQRZVTq28TMsW563QtmkoamVrpAEPeT1u
-         kt+3TvrSjCvL4axHIEhEmRm+PtXNAD6fzOR2l15SdT4+/5aZNWw/QRn9xgjzxjqYfV6W
-         1cFA==
-X-Gm-Message-State: APjAAAUFyfd3/ZvPX3BSKRPW84FWsprN91e75TxKPSp/Dsv1NxPtVGv1
-        gyIpNem14Y64wVwhruOF8OQ=
-X-Google-Smtp-Source: APXvYqxkwNOVeODu4NU7NFYeZ5Rs0vDwjcAeKshndwAj/1gYimmc6c33SVKJC/b/iKAQYkiP8Rr2Hg==
-X-Received: by 2002:a1c:5546:: with SMTP id j67mr985172wmb.80.1559845136928;
-        Thu, 06 Jun 2019 11:18:56 -0700 (PDT)
-Received: from Pali-Latitude.lan ([2001:718:1e03:a01::1ca])
-        by smtp.gmail.com with ESMTPSA id c12sm2638769wmb.1.2019.06.06.11.18.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 11:18:55 -0700 (PDT)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-To:     Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>,
-        Steven Honeyman <stevenhoneyman@gmail.com>,
-        Valdis.Kletnieks@vt.edu,
-        Jochen Eisinger <jochen@penguin-breeder.org>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com,
-        Alex Hung <alex.hung@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5] i2c: i801: Register optional lis3lv02d I2C device on Dell machines
-Date:   Thu,  6 Jun 2019 20:18:45 +0200
-Message-Id: <20190606181845.14091-1-pali.rohar@gmail.com>
-X-Mailer: git-send-email 2.11.0
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sonYqcdLrVVZs4jxWz2LM04hL11uBXmDup0Q2BRmOQQ=;
+ b=LpcH017pBJhBfHTppKchmLvpbJbhyDGDO9Q4PpexaMxtISqrRvdXMCaQVPw1Hrsa22KM4wYDoBfDBTJGa837FNP471u5pO7S5yAUTBQWorRsPJz8SU+EvlwViuqF9R7H7k+U97YAwXj34frhLpzVDBpbcTy5kq5wkLhUU1yw0qk=
+Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.231.93) by
+ CH2PR02MB6021.namprd02.prod.outlook.com (10.255.156.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Thu, 6 Jun 2019 18:22:08 +0000
+Received: from CH2PR02MB6359.namprd02.prod.outlook.com
+ ([fe80::b9dd:11e0:7fca:ba55]) by CH2PR02MB6359.namprd02.prod.outlook.com
+ ([fe80::b9dd:11e0:7fca:ba55%5]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
+ 18:22:07 +0000
+From:   Dragan Cvetic <draganc@xilinx.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: RE: [PATCH V4 04/12] misc: xilinx_sdfec: Add open, close and ioctl
+Thread-Topic: [PATCH V4 04/12] misc: xilinx_sdfec: Add open, close and ioctl
+Thread-Index: AQHVEu5GErREaULonk+tvtDvF1CkjaaOsacAgABQ8tA=
+Date:   Thu, 6 Jun 2019 18:22:07 +0000
+Message-ID: <CH2PR02MB63591C650DB8C7E15D9D3CCDCB170@CH2PR02MB6359.namprd02.prod.outlook.com>
+References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1558784245-108751-5-git-send-email-dragan.cvetic@xilinx.com>
+ <20190606132842.GC7943@kroah.com>
+In-Reply-To: <20190606132842.GC7943@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=draganc@xilinx.com; 
+x-originating-ip: [149.199.80.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b334be30-de8b-4607-eec9-08d6eaabe27c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6021;
+x-ms-traffictypediagnostic: CH2PR02MB6021:
+x-microsoft-antispam-prvs: <CH2PR02MB60210AAA2FE44B9F6F38A457CB170@CH2PR02MB6021.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(366004)(396003)(346002)(376002)(189003)(13464003)(199004)(99286004)(26005)(52536014)(6116002)(3846002)(6436002)(66066001)(74316002)(4326008)(7696005)(14454004)(5660300002)(9686003)(55016002)(25786009)(2906002)(76176011)(478600001)(229853002)(53546011)(6506007)(102836004)(107886003)(8936002)(7736002)(6916009)(76116006)(73956011)(66946007)(486006)(14444005)(446003)(33656002)(256004)(81156014)(71190400001)(316002)(53936002)(71200400001)(66446008)(68736007)(54906003)(476003)(86362001)(6246003)(81166006)(8676002)(66556008)(186003)(305945005)(11346002)(64756008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6021;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5MzkTd5FzxfzGWuPlrUp6S3DdKpeFq+Um9/YzIEaYsyB8dE22WKTbbpqyocHyEFQ0sH4kHTlGuQnSA/H+9PymvLd/gHPaeEr2TtpwFaQdb5f+gcIpPviltAdVqNYYYigYQG3RNKDay2xXFj+Oh5XGIOE8fglIcgz7lLCBSbz0/oeluhCjyfa1jHUjLrSVQk46T77jvwVccFUrX0ibm6rRhM3/bvKxpApPd/6PoLyToc0IM38yHhRiuhTvUqQDviav2duH5nK29fIk5RTa/pdsGFNcMU+yJ+YcAWK+2JVzf3vX+32H88vr6IFg8dL/8n0oVItNY2Qp1MM6t3nVCQRBhAI+Aoa0KKaPa5j1JHyoHcq3EOzeBDVC0b+gUoEidS0w02wc1iog6zxAl7ba6zZotFuWr8CU0k9jYe9zbxuJ5I=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b334be30-de8b-4607-eec9-08d6eaabe27c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 18:22:07.7990
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: draganc@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dell platform team told us that some (DMI whitelisted) Dell Latitude
-machines have ST microelectronics accelerometer at I2C address 0x29.
 
-Presence of that ST microelectronics accelerometer is verified by existence
-of SMO88xx ACPI device which represent that accelerometer. Unfortunately
-ACPI device does not specify I2C address.
 
-This patch registers lis3lv02d device for selected Dell Latitude machines
-at I2C address 0x29 after detection. And for Dell Vostro V131 machine at
-I2C address 0x1d which was manually detected.
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> Sent: Thursday 6 June 2019 14:29
+> To: Dragan Cvetic <draganc@xilinx.com>
+> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
+sts.infradead.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
+l.org; Derek Kiernan <dkiernan@xilinx.com>
+> Subject: Re: [PATCH V4 04/12] misc: xilinx_sdfec: Add open, close and ioc=
+tl
+>=20
+> On Sat, May 25, 2019 at 12:37:17PM +0100, Dragan Cvetic wrote:
+> > +static int xsdfec_dev_open(struct inode *iptr, struct file *fptr)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
+> > +{
+> > +	return 0;
+> > +}
+>=20
+> empty open/close functions are never needed, just drop them.
 
-Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
-conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
-lis3lv02d correctly initialize accelerometer.
+Accepted.
+Will remove them.
 
-Tested on Dell Latitude E6440.
+>=20
+> > +
+> > +static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+> > +			     unsigned long data)
+> > +{
+> > +	struct xsdfec_dev *xsdfec;
+> > +	void __user *arg =3D NULL;
+> > +	int rval =3D -EINVAL;
+> > +
+> > +	xsdfec =3D container_of(fptr->private_data, struct xsdfec_dev, miscde=
+v);
+> > +	if (!xsdfec)
+> > +		return rval;
+>=20
+> It is impossible for container_of() to return NULL, unless something
+> very magical and rare just happened.  It's just doing pointer math, you
+> can never check the return value of it.
 
-Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+Accepted.
+Will remove if statement.
 
----
-Changes since v4:
- * Remove usage of redundant acpi_bus_get_status_handle()
- * Update comment about acpi_get_devices()
+>=20
+> > +
+> > +	if (_IOC_TYPE(cmd) !=3D XSDFEC_MAGIC)
+> > +		return -ENOTTY;
+>=20
+> How can this happen?
 
-Changes since v3:
- * Use char * [] type for list of acpi ids
- * Check that SMO88xx acpi device is present, enabled and functioning
- * Simplify usage of acpi_get_devices()
- * Change i2c to I2C
- * Make dell_lis3lv02d_devices const
+Accepted.
+Will be removed.
 
-Changes since v2:
- * Use explicit list of SMOxx ACPI devices
+>=20
+> > +
+> > +	/* check if ioctl argument is present and valid */
+> > +	if (_IOC_DIR(cmd) !=3D _IOC_NONE) {
+> > +		arg =3D (void __user *)data;
+> > +		if (!arg)
+> > +			return rval;
+> > +	}
+> > +
+> > +	switch (cmd) {
+> > +	default:
+> > +		/* Should not get here */
+> > +		dev_warn(xsdfec->dev, "Undefined SDFEC IOCTL");
+>=20
+> Nice that userspace has a way to fill up the kernel log :(
+>=20
+> Just return the correct error here, don't log it.
 
-Changes since v1:
- * Added Dell Vostro V131 based on Michał Kępień testing
- * Changed DMI product structure to include also i2c address
----
- drivers/i2c/busses/i2c-i801.c       | 117 ++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/dell-smo8800.c |   1 +
- 2 files changed, 118 insertions(+)
+Accepted.
+Will remove log.
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index ac7f7817dc89..2d9f77ea02e4 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -1134,6 +1134,120 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
- 	}
- }
- 
-+/* NOTE: Keep this list in sync with drivers/platform/x86/dell-smo8800.c */
-+static const char *const acpi_smo8800_ids[] = {
-+	"SMO8800",
-+	"SMO8801",
-+	"SMO8810",
-+	"SMO8811",
-+	"SMO8820",
-+	"SMO8821",
-+	"SMO8830",
-+	"SMO8831",
-+};
-+
-+static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
-+					     u32 nesting_level,
-+					     void *context,
-+					     void **return_value)
-+{
-+	struct acpi_device_info *info;
-+	acpi_status status;
-+	char *hid;
-+	int i;
-+
-+	status = acpi_get_object_info(obj_handle, &info);
-+	if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
-+		return AE_OK;
-+
-+	hid = info->hardware_id.string;
-+	if (!hid)
-+		return AE_OK;
-+
-+	for (i = 0; i < ARRAY_SIZE(acpi_smo8800_ids); ++i) {
-+		if (strcmp(hid, acpi_smo8800_ids[i]) == 0) {
-+			*((bool *)return_value) = true;
-+			return AE_CTRL_TERMINATE;
-+		}
-+	}
-+
-+	return AE_OK;
-+}
-+
-+static bool is_dell_system_with_lis3lv02d(void)
-+{
-+	bool found;
-+	const char *vendor;
-+
-+	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
-+	if (strcmp(vendor, "Dell Inc.") != 0)
-+		return false;
-+
-+	/*
-+	 * Check that ACPI device SMO88xx is present and is functioning.
-+	 * Function acpi_get_devices() already filters all ACPI devices
-+	 * which are not present or are not functioning.
-+	 * ACPI device SMO88xx represents our ST microelectronics lis3lv02d
-+	 * accelerometer but unfortunately ACPI does not provide any other
-+	 * information (like I2C address).
-+	 */
-+	found = false;
-+	acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
-+			 (void **)&found);
-+
-+	return found;
-+}
-+
-+/*
-+ * Accelerometer's I2C address is not specified in DMI nor ACPI,
-+ * so it is needed to define mapping table based on DMI product names.
-+ */
-+static const struct {
-+	const char *dmi_product_name;
-+	unsigned short i2c_addr;
-+} dell_lis3lv02d_devices[] = {
-+	/*
-+	 * Dell platform team told us that these Latitude devices have
-+	 * ST microelectronics accelerometer at I2C address 0x29.
-+	 */
-+	{ "Latitude E5250",     0x29 },
-+	{ "Latitude E5450",     0x29 },
-+	{ "Latitude E5550",     0x29 },
-+	{ "Latitude E6440",     0x29 },
-+	{ "Latitude E6440 ATG", 0x29 },
-+	{ "Latitude E6540",     0x29 },
-+	/*
-+	 * Additional individual entries were added after verification.
-+	 */
-+	{ "Vostro V131",        0x1d },
-+};
-+
-+static void register_dell_lis3lv02d_i2c_device(struct i801_priv *priv)
-+{
-+	struct i2c_board_info info;
-+	const char *dmi_product_name;
-+	int i;
-+
-+	dmi_product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
-+	for (i = 0; i < ARRAY_SIZE(dell_lis3lv02d_devices); ++i) {
-+		if (strcmp(dmi_product_name,
-+			   dell_lis3lv02d_devices[i].dmi_product_name) == 0)
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(dell_lis3lv02d_devices)) {
-+		dev_warn(&priv->pci_dev->dev,
-+			 "Accelerometer lis3lv02d is present on SMBus but its"
-+			 " address is unknown, skipping registration\n");
-+		return;
-+	}
-+
-+	memset(&info, 0, sizeof(struct i2c_board_info));
-+	info.addr = dell_lis3lv02d_devices[i].i2c_addr;
-+	strlcpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
-+	i2c_new_device(&priv->adapter, &info);
-+}
-+
- /* Register optional slaves */
- static void i801_probe_optional_slaves(struct i801_priv *priv)
- {
-@@ -1152,6 +1266,9 @@ static void i801_probe_optional_slaves(struct i801_priv *priv)
- 
- 	if (dmi_name_in_vendors("FUJITSU"))
- 		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
-+
-+	if (is_dell_system_with_lis3lv02d())
-+		register_dell_lis3lv02d_i2c_device(priv);
- }
- #else
- static void __init input_apanel_init(void) {}
-diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86/dell-smo8800.c
-index 5cdb09cba077..bfcc1d1b9b96 100644
---- a/drivers/platform/x86/dell-smo8800.c
-+++ b/drivers/platform/x86/dell-smo8800.c
-@@ -198,6 +198,7 @@ static int smo8800_remove(struct acpi_device *device)
- 	return 0;
- }
- 
-+/* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
- static const struct acpi_device_id smo8800_ids[] = {
- 	{ "SMO8800", 0 },
- 	{ "SMO8801", 0 },
--- 
-2.11.0
-
+>=20
+> thanks,
+>=20
+> greg k-h
