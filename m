@@ -2,107 +2,69 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2765FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FFAC28D19
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68122070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pwQVtcio"
+	by mail.kernel.org (Postfix) with ESMTP id 6D9722083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfFFGYq (ORCPT
+        id S1726716AbfFFGZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:24:46 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:18829 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFGYq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:24:46 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8b1ad0000>; Wed, 05 Jun 2019 23:24:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 05 Jun 2019 23:24:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 05 Jun 2019 23:24:45 -0700
-Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 06:24:42 +0000
-Subject: Re: [PATCH V2] drivers: i2c: tegra: fix checkpatch defects
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
- <e9e3d8b0-a76a-81a9-1110-2d07ba1c787f@gmail.com>
- <911e52ed-8f3c-583a-7610-e38723219eca@gmail.com>
- <b86b9104-1754-531f-70b9-3c1a5d347b9b@nvidia.com>
- <2d83ad21-b012-1b3e-fc9a-741972ee3ba9@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <89488516-a064-a1a0-9e3d-8234043201be@nvidia.com>
-Date:   Wed, 5 Jun 2019 23:24:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 02:25:09 -0400
+Received: from verein.lst.de ([213.95.11.211]:47303 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfFFGZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:25:09 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 4448768B05; Thu,  6 Jun 2019 08:24:41 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 08:24:41 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/13] IB/iser: set virt_boundary_mask in the scsi host
+Message-ID: <20190606062441.GB26745@lst.de>
+References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-9-hch@lst.de> <20190605202235.GC3273@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <2d83ad21-b012-1b3e-fc9a-741972ee3ba9@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559802285; bh=A0EKOpcxSf6jypGXzxSbsk+o5ChWWgKynVYpvDClFmY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=pwQVtciofapmmfptkDK4v975iSl9dM6h1y9B6e99JI3ft/ReUACHg7zVsbkQlQUOF
-         rFcOSvvvQSqRz04KQaQ44YA7aWqGlS9dqO4c+mT970umX6oKsYT3h6HsNQaS0QNYyE
-         ue+0SlkOnl+Mlxz5j4+zawMjMp5g0Y1Q15NK066KkCPs4AvUzp7adq8KV0+fhsWr2r
-         wWdVOxr0K0lhr3BG73noS1zpBIM82jQkHNxM3j0MjGr2Km906NLqxIjzFj8YYvcluy
-         qcE2OP79mcjOy8TlAx6gPnw2SzUBC86eLyT1L8Fal1T5pXI+QsFSIfZh4eS6+8SdII
-         igWnHISZCrYFg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605202235.GC3273@ziepe.ca>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 05, 2019 at 05:22:35PM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 05, 2019 at 09:08:31PM +0200, Christoph Hellwig wrote:
+> > This ensures all proper DMA layer handling is taken care of by the
+> > SCSI midlayer.
+> 
+> Maybe not entirely related to this series, but it looks like the SCSI
+> layer is changing the device global dma_set_max_seg_size() - at least
+> in RDMA the dma device is being shared between many users, so we
+> really don't want SCSI to make this value smaller.
+> 
+> Can we do something about this?
 
+We could do something about it as outlined in my mail - pass the
+dma_params explicitly to the dma_map_sg call.  But that isn't really
+suitable for a short term fix and will take a little more time.
 
-On 5/31/19 5:45 AM, Dmitry Osipenko wrote:
-> 31.05.2019 12:04, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->>
->> On 5/30/19 4:43 AM, Dmitry Osipenko wrote:
->>> 30.05.2019 14:36, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> 30.05.2019 9:14, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
->>>>> except for BUG/BUG_ON checks
->>>>
->>>> Please turn the BUG_ON's into WARN_ON's. The machine won't go on fire,
->>>> hence there is absolutely no good reason in making system unusable on =
-a
->>>> software bug. BUG_ON may be more useful for development, but not for a
->>>> casual daily usage.
->> I shall update the patch to remove the BUG/BUG_ON calls.
->=20
-> Please replace them with WARN_ON_ONCE.
->=20
-Based on review of the BUG_ON some were found redundant calls and hence=20
-planned to be removed. Non-trivial BUG_ON planned to be replaced with=20
-WARN_ON_ONCE call.
-
--regards,
-  Bitan
-
+Until we've sorted that out the device paramter needs to be set to
+the smallest value supported.
