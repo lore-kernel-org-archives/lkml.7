@@ -2,124 +2,87 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111F3C46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A8C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBB1208C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="ZRmSoUY4"
+	by mail.kernel.org (Postfix) with ESMTP id 69E5E206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfFFTm0 (ORCPT
+        id S1726878AbfFFTnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:42:26 -0400
-Received: from mail-eopbgr710041.outbound.protection.outlook.com ([40.107.71.41]:58368
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726697AbfFFTmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:42:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ptGQkAb4bWbtSN8BP3oURGNkwJaEs2OAxlwtlFfplkQ=;
- b=ZRmSoUY4mz8+F9AD8oQX0pYiQ75tRI5doVUDsD256Uy0wm/Z8au91iuie1vdZ07f5wXmBD4D7Y1hPtbqkWCdCPPYZ1xenLM/WkW4QFybzWOALBqnjhdmL0lhMIBhEAGvtnTpCWlUcWbD6HpGzB6FJbtyop9AJJj+y03Z+GRFAos=
-Received: from MN2PR05MB6208.namprd05.prod.outlook.com (20.178.241.91) by
- MN2PR05MB6703.namprd05.prod.outlook.com (20.178.249.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Thu, 6 Jun 2019 19:42:21 +0000
-Received: from MN2PR05MB6208.namprd05.prod.outlook.com
- ([fe80::fc2c:24b8:4047:a9a0]) by MN2PR05MB6208.namprd05.prod.outlook.com
- ([fe80::fc2c:24b8:4047:a9a0%2]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
- 19:42:21 +0000
-From:   Ajay Kaher <akaher@vmware.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Stable tree <stable@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>
-Subject: Re: [RFC PATCH stable-4.4] coredump: fix race condition between
- mmget_not_zero()/get_task_mm() and core dumping
-Thread-Topic: [RFC PATCH stable-4.4] coredump: fix race condition between
- mmget_not_zero()/get_task_mm() and core dumping
-Thread-Index: AQHVHJ/0ITirHCq2DkaXsMkoZ1TuYw==
-Date:   Thu, 6 Jun 2019 19:42:20 +0000
-Message-ID: <5756B041-C0A8-4178-9F5B-7CBF7A554E31@vmware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=akaher@vmware.com; 
-x-originating-ip: [2401:4900:3311:e32e:40b3:dd71:b60:71c9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 11c9e4b0-efc3-4dea-e448-08d6eab7174f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR05MB6703;
-x-ms-traffictypediagnostic: MN2PR05MB6703:
-x-microsoft-antispam-prvs: <MN2PR05MB6703BA1F73E6460BFB7E2FCFBB170@MN2PR05MB6703.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(366004)(39860400002)(199004)(189003)(478600001)(486006)(4326008)(66946007)(46003)(316002)(476003)(186003)(14444005)(6116002)(6916009)(102836004)(53936002)(256004)(14454004)(25786009)(86362001)(83716004)(2906002)(6506007)(7416002)(54906003)(71200400001)(71190400001)(81156014)(33656002)(99286004)(2616005)(6512007)(68736007)(8676002)(73956011)(64756008)(76116006)(66446008)(305945005)(36756003)(66556008)(7736002)(5660300002)(66476007)(229853002)(107886003)(6486002)(82746002)(6246003)(81166006)(8936002)(6436002)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6703;H:MN2PR05MB6208.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SosFWyNtuQTqWPRcXv+U7rmCfdaX8rqjjuLPoH0J/CCHP5RZMh5ge8QQYtCbsAe2tgZtqFRDXE+Izpce0GxgWKuM/BWn7GP/3Yj04cL5LiUxbfcO65t3SG/b0/k8wv1q0j7yMiwawHTIYiBksgQWe2jap5JazchZMin3Txs1fYYU215Tn8k6i3d1ZiSXSGznD2GI9I46zmycIO3o9h1n+dJ/0jl+Eh0c7vsrpVDE+ZzXYjJKU6BHR5Cu39RNip/EqvjPCHmQIscdFHyZ7yh6hib2X27MfL6IDeQbdb2QDB/iLn35pvGBaRG6Lis2meTIfimNJQxtM7QSfHsMd9yDeBQJF+XLi9ZGa5hR4Ds/QGyDWXrfavFNykR0dUd6mtSsqr5s3hM5JHEWR+Ai1O/VzxQd1tH5MtZohIDK2GEIQ3A=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D37DEB9F3DAB484E8D5A6904E695BC12@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 6 Jun 2019 15:43:10 -0400
+Received: from www62.your-server.de ([213.133.104.62]:48902 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfFFTnK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 15:43:10 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hYyEa-0002Jo-GE; Thu, 06 Jun 2019 21:39:36 +0200
+Received: from [178.197.249.21] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hYyEa-000LVN-A7; Thu, 06 Jun 2019 21:39:36 +0200
+Subject: Re: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
+ bpf_get_current_cgroup_id() helper
+To:     Roman Gushchin <guro@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Cc:     Kernel Team <Kernel-team@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yonghong Song <yhs@fb.com>
+References: <20190606185911.4089151-1-guro@fb.com>
+ <20190606190752.GA28743@tower.DHCP.thefacebook.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <a604b9eb-4e39-c4ec-0868-bac360bc2fb4@iogearbox.net>
+Date:   Thu, 6 Jun 2019 21:39:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11c9e4b0-efc3-4dea-e448-08d6eab7174f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 19:42:20.9101
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: akaher@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6703
+In-Reply-To: <20190606190752.GA28743@tower.DHCP.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25472/Thu Jun  6 10:09:59 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IEZyb206IEFuZHJlYSBBcmNhbmdlbGkgPGFhcmNhbmdlQHJlZGhhdC5jb20+DQo+DQo+IFVw
-c3RyZWFtIDA0ZjU4NjZlNDFmYjcwNjkwZTI4Mzk3NDg3ZDhiZDhlZWE3ZDcxMmEgY29tbWl0Lg0K
-Pg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBNaWNoYWwgSG9ja28gPG1ob2Nrb0BzdXNlLmNvbT4NCj4g
-LS0tDQo+IEhpLA0KPiB0aGlzIGlzIGJhc2VkIG9uIHRoZSBiYWNrcG9ydCBJIGhhdmUgZG9uZSBm
-b3Igb3V0IDQuNCBiYXNlZCBkaXN0cmlidXRpb24NCj4ga2VybmVsLiBQbGVhc2UgZG91YmxlIGNo
-ZWNrIHRoYXQgSSBoYXZlbid0IG1pc3NlZCBhbnl0aGluZyBiZWZvcmUNCj4gYXBwbHlpbmcgdG8g
-dGhlIHN0YWJsZSB0cmVlLiBJIGhhdmUgYWxzbyBDQ2VkIEpvZWwgZm9yIHRoZSBiaW5kZXIgcGFy
-dA0KPiB3aGljaCBpcyBub3QgaW4gdGhlIGN1cnJlbnQgdXBzdHJlYW0gYW55bW9yZSBidXQgSSBi
-ZWxpZXZlIGl0IG5lZWRzIHRoZQ0KPiBjaGVjayBhcyB3ZWxsLg0KPg0KPiBSZXZpZXcgZmVlZGJh
-Y2sgd2VsY29tZS4NCj4NCj4gZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jIHwgIDYgKysrKysrDQo+
-IGZzL3Byb2MvdGFza19tbXUuYyAgICAgICB8IDE4ICsrKysrKysrKysrKysrKysrKw0KPiBmcy91
-c2VyZmF1bHRmZC5jICAgICAgICAgfCAxMCArKysrKysrKy0tDQo+IGluY2x1ZGUvbGludXgvbW0u
-aCAgICAgICB8IDIxICsrKysrKysrKysrKysrKysrKysrKw0KPiBtbS9odWdlX21lbW9yeS5jICAg
-ICAgICAgfCAgMiArLQ0KPiBtbS9tbWFwLmMgICAgICAgICAgICAgICAgfCAgNyArKysrKystDQo+
-IDYgZmlsZXMgY2hhbmdlZCwgNjAgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4NCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYyBiL2RyaXZlcnMvYW5kcm9pZC9i
-aW5kZXIuYw0KPiBpbmRleCAyNjBjZTBlNjAxODcuLjFmYjFjZGRiZDE5YSAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jDQo+ICsrKyBiL2RyaXZlcnMvYW5kcm9pZC9iaW5k
-ZXIuYw0KPiBAQCAtNTcwLDYgKzU3MCwxMiBAQCBzdGF0aWMgaW50IGJpbmRlcl91cGRhdGVfcGFn
-ZV9yYW5nZShzdHJ1Y3QgYmluZGVyX3Byb2MgKnByb2MsIGludCBhbGxvY2F0ZSwNCj4gDQo+IAlp
-ZiAobW0pIHsNCj4gCQlkb3duX3dyaXRlKCZtbS0+bW1hcF9zZW0pOw0KPiArCQlpZiAoIW1tZ2V0
-X3N0aWxsX3ZhbGlkKG1tKSkgew0KPiArCQkJaWYgKGFsbG9jYXRlID09IDApDQo+ICsJCQkJZ290
-byBmcmVlX3JhbmdlOw0KDQpQbGVhc2UgY3Jvc3MgY2hlY2ssIGZyZWVfcmFuZ2U6IHNob3VsZCBu
-b3QgZW5kLXVwIHdpdGggbW9kaWZpY2F0aW9ucyBpbiB2bWEuDQogDQo+ICsJCQlnb3RvIGVycl9u
-b192bWE7DQo+ICsJCX0NCj4gKw0KPiAJCXZtYSA9IHByb2MtPnZtYTsNCj4gCQlpZiAodm1hICYm
-IG1tICE9IHByb2MtPnZtYV92bV9tbSkgew0KPiAJCQlwcl9lcnIoIiVkOiB2bWEgbW0gYW5kIHRh
-c2sgbW0gbWlzbWF0Y2hcbiIsDQoNCg0K
+On 06/06/2019 09:08 PM, Roman Gushchin wrote:
+> On Thu, Jun 06, 2019 at 11:59:11AM -0700, Roman Gushchin wrote:
+>> Currently bpf_get_current_cgroup_id() is not supported for
+>> CGROUP_SKB programs. An attempt to load such a program generates an
+>> error like this:
+>>     libbpf:
+>>     0: (b7) r6 = 0
+>>     ...
+>>     8: (63) *(u32 *)(r10 -28) = r6
+>>     9: (85) call bpf_get_current_cgroup_id#80
+>>     unknown func bpf_get_current_cgroup_id#80
+>>
+>> There are no particular reasons for denying it,
+>> and we have some use cases where it might be useful.
+> 
+> Ah, sorry, it's not so simple, as we probably need to take
+> the cgroup pointer from the socket, not from current.
+> 
+> So the implementation of the helper should be different
+> for this type of programs.
+> 
+> So I wonder if it's better to introduce a new helper
+> bpf_get_sock_cgroup_id()?
+> 
+> What do you think?
+
+We do have bpf_skb_cgroup_id(), did you give that a try?
+
+Thanks,
+Daniel
