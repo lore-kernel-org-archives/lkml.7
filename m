@@ -2,103 +2,124 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5F5C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365EDC28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DC320868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559806698;
-	bh=c4RvbCOvzAZwo+JHxwzn6l9TERUZJXcjP8N8zi+spgw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yp9J46qeqVqQOwNToOa6hJfa64a6ZmprmZJ2FwqftfHSk56kQ6afe4+NqBMUaxDLt
-	 Ed3AwU4i51s5gzxUX6rpZcToappbBHpFLrsbQmvS/tCY86+rXjUv9JuIGTNWCtxN2V
-	 rQYJZQQ0JgCLazv2cql8ocB9YGeMkUgTdGfOZtgc=
+	by mail.kernel.org (Postfix) with ESMTP id 17BF8207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbfFFHiR (ORCPT
+        id S1726826AbfFFHit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:38:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35996 "EHLO mail.kernel.org"
+        Thu, 6 Jun 2019 03:38:49 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:35430 "EHLO mx1.emlix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725769AbfFFHiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:38:16 -0400
-Received: from localhost.localdomain (unknown [223.93.147.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1725769AbfFFHis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:38:48 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 138492089E;
-        Thu,  6 Jun 2019 07:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559806696;
-        bh=c4RvbCOvzAZwo+JHxwzn6l9TERUZJXcjP8N8zi+spgw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WI3WcSBCqbnqEZawPZOnj8m2qZSaTZmcMlUZ93Ak87D4LT/w0hSxS68WrA7YGhF/d
-         KNO4DzeBiwQWWRCcyQEJb7l6dK3dB//eZ/iCalmYW4gjFUug1NL5dbazzX8WvG8BJy
-         22BQPRfJTGujsLm3sGy5oHY5bqNBblZhtwaqe7rE=
-From:   guoren@kernel.org
-To:     marc.zyngier@arm.com, mark.rutland@arm.com, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, jason@lakedaemon.net,
-        guoren@kernel.org, linux-csky@vger.kernel.org,
-        Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V5 3/3] irqchip/irq-csky-mpintc: Remove unnecessary loop in interrupt handler
-Date:   Thu,  6 Jun 2019 15:37:33 +0800
-Message-Id: <1559806653-11249-4-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559806653-11249-1-git-send-email-guoren@kernel.org>
-References: <1559806653-11249-1-git-send-email-guoren@kernel.org>
+        by mx1.emlix.com (Postfix) with ESMTPS id 30E24602BA;
+        Thu,  6 Jun 2019 09:38:45 +0200 (CEST)
+From:   Rolf Eike Beer <eb@emlix.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
+Date:   Thu, 06 Jun 2019 09:38:41 +0200
+Message-ID: <8696846.WsthzzWoxp@devpool35>
+Organization: emlix GmbH
+In-Reply-To: <20190605162626.GA31164@kroah.com>
+References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart6100540.dV2z5JSdMG"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+--nextPart6100540.dV2z5JSdMG
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-csky_mpintc_handler()
-  ->handle_domain_irq()
-    ->irq_exit()
-      ->invoke_softirq()
-        ->__do_softirq()
-          ->local_irq_enable()
+Greg KH wrote:
+> On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
+> > I decided to dig out a toy project which uses a DragonBoard 410c. This =
+has
+> > been "running" with kernel 4.9, which I would keep this way for unrelat=
+ed
+> > reasons. The vanilla 4.9 kernel wasn't bootable back then, but it was
+> > buildable, which was good enough.
+> >=20
+> > Upgrading the kernel to 4.9.180 caused the boot to suddenly fail:
+> >=20
+> > aarch64-unknown-linux-gnueabi-ld:
+> > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): in function
+> > `handle_kernel_image':
+> > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:6=
+3:
+> > undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
+> > aarch64-unknown-linux-gnueabi-ld:
+> > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): relocation
+> > R_AARCH64_ADR_PREL_PG_HI21 against symbol
+> > `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally can not be
+> > used when making a shared object; recompile with -fPIC
+> > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:6=
+3:
+> > (.init.text+0xc): dangerous relocation: unsupported relocation
+> > /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target 'vmlinux'
+> > failed -make[1]: *** [vmlinux] Error 1
+> >=20
+> > This is caused by commit 27b5ebf61818749b3568354c64a8ec2d9cd5ecca from
+> > linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042be), revert=
+ing
+> > this commit fixes the build.
+> >=20
+> > This happens with vanilla binutils 2.32 and gcc 8.3.0 as well as 9.1.0.
+> > See
+> > the attached .config for reference.
+> >=20
+> > If you have questions or patches just ping me.
+>=20
+> Does Linus's latest tree also fail for you (or 5.1)?
 
-If new interrupt coming, it'll get into interrupt trap before return to
-csky_mpintc_handler(). So there is no need loop in csky_mpintc_handler.
+5.1.7 with the same config as before and "make olddefconfig" builds for me.
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
----
- drivers/irqchip/irq-csky-mpintc.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Eike
+=2D-=20
+Rolf Eike Beer, emlix GmbH, http://www.emlix.com
+=46on +49 551 30664-0, Fax +49 551 30664-11
+Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
+Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
+Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
+=2E: DE 205 198 055
 
-diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
-index 4457722..806ba0e 100644
---- a/drivers/irqchip/irq-csky-mpintc.c
-+++ b/drivers/irqchip/irq-csky-mpintc.c
-@@ -34,7 +34,6 @@ static void __iomem *INTCL_base;
- #define INTCL_PICTLR	0x0
- #define INTCL_CFGR	0x14
- #define INTCL_SIGR	0x60
--#define INTCL_HPPIR	0x68
- #define INTCL_RDYIR	0x6c
- #define INTCL_SENR	0xa0
- #define INTCL_CENR	0xa4
-@@ -75,11 +74,8 @@ static void csky_mpintc_handler(struct pt_regs *regs)
- {
- 	void __iomem *reg_base = this_cpu_read(intcl_reg);
- 
--	do {
--		handle_domain_irq(root_domain,
--				  readl_relaxed(reg_base + INTCL_RDYIR),
--				  regs);
--	} while (readl_relaxed(reg_base + INTCL_HPPIR) & BIT(31));
-+	handle_domain_irq(root_domain,
-+		readl_relaxed(reg_base + INTCL_RDYIR), regs);
- }
- 
- static void csky_mpintc_enable(struct irq_data *d)
--- 
-2.7.4
+emlix - smart embedded open source
+--nextPart6100540.dV2z5JSdMG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCXPjDAQAKCRCr5FH7Xu2t
+/Pl6BACfD5jQd+TumD4sWaBGoQsHiYGBBixaf/rbCWtituWSjO/lhxnHM7JNGGhU
+nwqqGrCEw9HpBR5bUXCTpgfF7C11ZD8nXYlDTwBIBWH7HKYFBaGrub8PXCyiZH9v
+cyC8ctpHj9k/PeZ+tLq+Aie9x4uIlKJVgfTHwAygDH4CD5j5mg==
+=WMEf
+-----END PGP SIGNATURE-----
+
+--nextPart6100540.dV2z5JSdMG--
+
+
 
