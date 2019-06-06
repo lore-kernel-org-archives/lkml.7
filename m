@@ -2,141 +2,107 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E51DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2E7C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482F32083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0696C2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbfFFRac (ORCPT
+        id S1730159AbfFFRbB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:30:32 -0400
-Received: from swift.blarg.de ([138.201.185.127]:37802 "EHLO swift.blarg.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbfFFRab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:30:31 -0400
-X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Jun 2019 13:30:30 EDT
-Received: by swift.blarg.de (Postfix, from userid 1000)
-        id C92E14030F; Thu,  6 Jun 2019 19:24:40 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 19:24:40 +0200
-From:   Max Kellermann <max@blarg.de>
-To:     Justin Piszcz <jpiszcz@lucidpixels.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: 5.1 kernel: khugepaged stuck at 100%
-Message-ID: <20190606172440.GA24838@swift.blarg.de>
-Mail-Followup-To: Justin Piszcz <jpiszcz@lucidpixels.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <002901d5064d$42355ea0$c6a01be0$@lucidpixels.com>
- <20190509111343.rvmy5noqlf4os3zk@box>
- <CAO9zADww2v2ckHsNDwRgiyMr9b3JH1xOOSiRJ0Uh2XZT5c=MEQ@mail.gmail.com>
+        Thu, 6 Jun 2019 13:31:01 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:47542 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbfFFRbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:31:00 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hYwDn-0003iG-8I; Thu, 06 Jun 2019 19:30:39 +0200
+Date:   Thu, 6 Jun 2019 19:30:39 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        kvm ML <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Rik van Riel <riel@surriel.com>, x86-ml <x86@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [5.2 regression] copy_fpstate_to_sigframe() change causing crash
+ in 32-bit process
+Message-ID: <20190606173026.ty7c4cvftrvfrwy3@linutronix.de>
+References: <20190604185358.GA820@sol.localdomain>
+ <20190605140405.2nnpqslnjpfe2ig2@linutronix.de>
+ <20190605173256.GA86462@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAO9zADww2v2ckHsNDwRgiyMr9b3JH1xOOSiRJ0Uh2XZT5c=MEQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190605173256.GA86462@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/16 16:14, Justin Piszcz <jpiszcz@lucidpixels.com> wrote:
-> Kernel: 5.1.2
-> 
-> $ sudo cat /proc/$(pidof khugepaged)/stack
-> [<0>] 0xffffffffffffffff
-> 
-> $ perf top
-> 
->    PerfTop:    3716 irqs/sec  kernel:92.9%  exact: 99.1% lost: 68/68
-> drop: 0/0 [4000Hz cycles],  (all, 12 CPUs)
-> -------------------------------------------------------------------------------
-> 
->     47.53%  [kernel]                 [k] compaction_alloc
->     38.88%  [kernel]                 [k] __pageblock_pfn_to_page
->      6.68%  [kernel]                 [k] nmi
->      0.58%  [kernel]                 [k] __list_del_entry_valid
->      0.48%  [kernel]                 [k] format_decode
->      0.39%  [kernel]                 [k] __rb_insert_augmented
->      0.25%  libdbus-1.so.3.19.9      [.] _dbus_string_hex_decode
->      0.24%  [kernel]                 [k] entry_SYSCALL_64_after_hwframe
->      0.20%  perf                     [.] rb_next
->      0.19%  perf                     [.] __symbols__insert
+On 2019-06-05 10:32:57 [-0700], Eric Biggers wrote:
+> As I said, the commit looks broken to me.  save_fsave_header() reads from
+> tsk->thread.fpu.state.fxsave, which due to that commit isn't being updated with
+> the latest registers.  Am I missing something?  Note the comment you deleted:
 
-I have the same problem (kernel 5.1.7), but over here, it's a PHP
-process, not khugepaged, which is looping inside compaction_alloc.
+So if your system uses fxsr() then that function shouldn't matter. If
+your system uses xsave() (which I believe it does) then the first
+section is the "fxregs state" which is the same as in fxsr's case (see
+struct xregs_state). So it shouldn't make a difference and that is why I
+strongly assumed it is a miss-merge. However it makes a difference…
 
-This is from "perf report":
+So the hunk at the end should make things work again (my FPU test case
+passes). I don't know why we convert things forth and back in the signal
+handler but I think something here is different for xsave's legacy area
+vs fxsave.
 
-   100.00%     0.00%  php-cgi7.0  php-cgi7.0         [.] 0x000055d0e88bc5ee
-            |
-            ---0x55d0e88bc5ee
-               page_fault
-               __do_page_fault
-               handle_mm_fault
-               __handle_mm_fault
-               do_huge_pmd_anonymous_page
-               __alloc_pages_nodemask
-               __alloc_pages_slowpath
-               __alloc_pages_direct_compact
-               try_to_compact_pages
-               compact_zone_order
-               compact_zone
-               migrate_pages
-               compaction_alloc
-               |          
-               |--24.43%--__pageblock_pfn_to_page
-               |          
-                --2.22%--_cond_resched
-                          |          
-                           --0.89%--rcu_all_qs
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 060d6188b4533..c653c9920c5e0 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -62,16 +62,7 @@ static inline int save_fsave_header(struct task_struct *tsk, void __user *buf)
+ 		struct user_i387_ia32_struct env;
+ 		struct _fpstate_32 __user *fp = buf;
+ 
+-		convert_from_fxsr(&env, tsk);
+-
+-		if (__copy_to_user(buf, &env, sizeof(env)) ||
+-		    __put_user(xsave->i387.swd, &fp->status) ||
+-		    __put_user(X86_FXSR_MAGIC, &fp->magic))
+-			return -1;
+-	} else {
+-		struct fregs_state __user *fp = buf;
+-		u32 swd;
+-		if (__get_user(swd, &fp->swd) || __put_user(swd, &fp->status))
++		if (__put_user(X86_FXSR_MAGIC, &fp->magic))
+ 			return -1;
+ 	}
+ 
+@@ -236,9 +227,6 @@ sanitize_restored_xstate(union fpregs_state *state,
+ 		 * reasons.
+ 		 */
+ 		xsave->i387.mxcsr &= mxcsr_feature_mask;
+-
+-		if (ia32_env)
+-			convert_to_fxsr(&state->fxsave, ia32_env);
+ 	}
+ }
+ 
 
-ftrace:
+> - Eric
 
-           <...>-263514 [012] .... 109004.793009: rcu_all_qs <-_cond_resched
-           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
-           <...>-263514 [012] .... 109004.793011: _cond_resched <-compaction_alloc
-
-(Repeating this sequence over and over.)
-
-Nothing useful in /proc/263514/{stack,wchan,syscall}.
-
-What else can I do to collect more information to aid fix this?
-
-Max
+Sebastian
