@@ -2,142 +2,181 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E924C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F70C28D18
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B464207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41987205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="reAxSQwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfFFEGw (ORCPT
+        id S1726501AbfFFEOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 00:06:52 -0400
-Received: from mga05.intel.com ([192.55.52.43]:38644 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbfFFEGw (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 00:06:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 21:06:51 -0700
-X-ExtLoop1: 1
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.71]) ([10.239.196.71])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Jun 2019 21:06:49 -0700
-Subject: Re: [PATCH v2 6/7] perf diff: Print the basic block cycles diff
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
- <1559572577-25436-7-git-send-email-yao.jin@linux.intel.com>
- <20190605114408.GA5868@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <703e4f0d-a32e-df8b-41de-89bcb890e0a5@linux.intel.com>
-Date:   Thu, 6 Jun 2019 12:06:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190605114408.GA5868@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Jun 2019 00:14:44 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:16852 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfFFEOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 00:14:44 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x564E4Qs005398;
+        Thu, 6 Jun 2019 13:14:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x564E4Qs005398
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559794445;
+        bh=eOW16+d0QVQdHAamLUOsKECw5DUQ5PBLfUUOO0b6ZzQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=reAxSQwSioU2yzfjgnrkOgsrJeRIs7XXXhszdvHGP2vZG+gttaqbwOqUbb2zJF/ow
+         VuDDIO0dy6qTjfd2vBOiewvimiYDF/7M9sZ5TTo/ihk9/Fs+gxpk6sGyC88WLqMN/X
+         VImXUPh20VpzfnqyBMWGmEU9RqBA8Tj34liKmpJjkL5nfV4aLnxH2kIbU5ASs6uGau
+         relTlvYRPIT6LHOwJ+crhgDsxhYtwjexB54qt59zFn9INGigelRlxprIh89Z0VwZRr
+         gw57c9u1v1PQwFbxf+A4RLg4jVKAnFJIG00ft5TTxfitr6N0t2lVvX3zFYV8gGcK6u
+         t5rfS+Jzt33yw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     David Laight <David.Laight@aculab.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-snps-arc@lists.infradead.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-stable <stable@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kbuild: use more portable 'command -v' for cc-cross-prefix
+Date:   Thu,  6 Jun 2019 13:13:58 +0900
+Message-Id: <20190606041358.22757-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+To print the pathname that will be used by shell in the current
+environment, 'command -v' is a standardized way. [1]
 
+'which' is also often used in scripts, but it is less portable.
 
-On 6/5/2019 7:44 PM, Jiri Olsa wrote:
-> On Mon, Jun 03, 2019 at 10:36:16PM +0800, Jin Yao wrote:
->> perf record -b ./div
->> perf record -b ./div
->>
->> Following is the default perf diff output
->>
->>   # perf diff
->>
->>   # Event 'cycles'
->>   #
->>   # Baseline  Delta Abs  Shared Object     Symbol
->>   # ........  .........  ................  ....................................
->>   #
->>       49.03%     +0.30%  div               [.] main
->>       16.29%     -0.20%  libc-2.23.so      [.] __random
->>       18.82%     -0.07%  libc-2.23.so      [.] __random_r
->>        8.11%     -0.04%  div               [.] compute_flag
->>        2.25%     +0.01%  div               [.] rand@plt
->>        0.00%     +0.01%  [kernel.vmlinux]  [k] task_tick_fair
->>        5.46%     +0.01%  libc-2.23.so      [.] rand
->>        0.01%     -0.01%  [kernel.vmlinux]  [k] native_irq_return_iret
->>        0.00%     -0.00%  [kernel.vmlinux]  [k] interrupt_entry
->>
->> This patch creates a new computation selection 'cycles'.
->>
->>   # perf diff -c cycles
->>
->>   # Event 'cycles'
->>   #
->>   # Baseline         Block cycles diff [start:end]  Shared Object     Symbol
->>   # ........  ....................................  ................  ....................................
->>   #
->>       49.03%        -9 [         4ef:         520]  div               [.] main
->>       49.03%         0 [         4e8:         4ea]  div               [.] main
->>       49.03%         0 [         4ef:         500]  div               [.] main
->>       49.03%         0 [         4ef:         51c]  div               [.] main
->>       49.03%         0 [         4ef:         535]  div               [.] main
->>       18.82%         0 [       3ac40:       3ac4d]  libc-2.23.so      [.] __random_r
->>       18.82%         0 [       3ac40:       3ac5c]  libc-2.23.so      [.] __random_r
->>       18.82%         0 [       3ac40:       3ac76]  libc-2.23.so      [.] __random_r
->>       18.82%         0 [       3ac40:       3ac88]  libc-2.23.so      [.] __random_r
->>       18.82%         0 [       3ac90:       3ac9c]  libc-2.23.so      [.] __random_r
->>       16.29%        -8 [       3aac0:       3aac0]  libc-2.23.so      [.] __random
->>       16.29%         0 [       3aac0:       3aad2]  libc-2.23.so      [.] __random
->>       16.29%         0 [       3aae0:       3aae7]  libc-2.23.so      [.] __random
->>       16.29%         0 [       3ab03:       3ab0f]  libc-2.23.so      [.] __random
->>       16.29%         0 [       3ab14:       3ab1b]  libc-2.23.so      [.] __random
->>       16.29%         0 [       3ab28:       3ab2e]  libc-2.23.so      [.] __random
->>       16.29%         0 [       3ab4a:       3ab53]  libc-2.23.so      [.] __random
->>        8.11%         0 [         640:         644]  div               [.] compute_flag
->>        8.11%         0 [         649:         659]  div               [.] compute_flag
->>        5.46%         0 [       3af60:       3af60]  libc-2.23.so      [.] rand
->>        5.46%         0 [       3af60:       3af64]  libc-2.23.so      [.] rand
->>        2.25%         0 [         490:         490]  div               [.] rand@plt
->>        0.01%        26 [      c00a27:      c00a27]  [kernel.vmlinux]  [k] native_irq_return_iret
->>        0.00%      -157 [      2bf9f2:      2bfa63]  [kernel.vmlinux]  [k] update_blocked_averages
->>        0.00%       -56 [      2bf980:      2bf9d3]  [kernel.vmlinux]  [k] update_blocked_averages
->>        0.00%        48 [      2bf934:      2bf942]  [kernel.vmlinux]  [k] update_blocked_averages
->>        0.00%         3 [      2bfb38:      2bfb67]  [kernel.vmlinux]  [k] update_blocked_averages
->>        0.00%         0 [      2bf968:      2bf97b]  [kernel.vmlinux]  [k] update_blocked_averages
->>
-> 
-> so what I'd expect would be Baseline column with cycles and another
-> column showing the differrence (in cycles) for given symbol
-> 
->> "[start:end]" indicates the basic block range. The output is sorted
->> by "Baseline" and the basic blocks in the same function are sorted
->> by cycles diff.
-> 
-> hum, why is there multiple basic blocks [start:end] for a symbol?
-> 
-> thanks,
-> jirka
-> 
+When I worked on commit bd55f96fa9fc ("kbuild: refactor cc-cross-prefix
+implementation"), I was eager to use 'command -v' but it did not work.
+(The reason is explained below.)
 
-The basic block is the code between 2 branches (for one branch, for 
-example, jmp, call, ret, interrupt, ...). So it's expected that one 
-function (symbol is function) may contain multiple basic blocks.
+I kept 'which' as before but got rid of '> /dev/null 2>&1' as I
+thought it was no longer needed. Sorry, I was wrong.
 
-The idea is, sorting by baseline to display the hottest functions and 
-the second column shows the cycles diff of blocks in this function 
-(comparing between different perf data files). This would allow to 
-identify performance changes in specific code accurately and effectively.
+It works well on my Ubuntu machine, but Alexey Brodkin reports noisy
+warnings on CentOS7 when 'which' fails to find the given command in
+the PATH environment.
 
-Thanks
-Jin Yao
+  $ which foo
+  which: no foo in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
 
+Given that behavior of 'which' depends on system (and it may not be
+installed by default), I want to try 'command -v' once again.
+
+The specification [1] clearly describes the behavior of 'command -v'
+when the given command is not found:
+
+  Otherwise, no output shall be written and the exit status shall reflect
+  that the name was not found.
+
+However, we need a little magic to use 'command -v' from Make.
+
+$(shell ...) passes the argument to a subshell for execution, and
+returns the standard output of the command.
+
+Here is a trick. GNU Make may optimize this by executing the command
+directly instead of forking a subshell, if no shell special characters
+are found in the command and omitting the subshell will not change the
+behavior.
+
+In this case, no shell special character is used. So, Make will try
+to run it directly. However, 'command' is a shell-builtin command,
+then Make would fail to find it in the PATH environment:
+
+  $ make ARCH=m68k defconfig
+  make: command: Command not found
+  make: command: Command not found
+  make: command: Command not found
+
+In fact, Make has a table of shell-builtin commands because it must
+ask the shell to execute them.
+
+Until recently, 'command' was missing in the table.
+
+This issue was fixed by the following commit:
+
+| commit 1af314465e5dfe3e8baa839a32a72e83c04f26ef
+| Author: Paul Smith <psmith@gnu.org>
+| Date:   Sun Nov 12 18:10:28 2017 -0500
+|
+|     * job.c: Add "command" as a known shell built-in.
+|
+|     This is not a POSIX shell built-in but it's common in UNIX shells.
+|     Reported by Nick Bowler <nbowler@draconx.ca>.
+
+Because the latest release is GNU Make 4.2.1 in 2016, this commit is
+not included in any released versions. (But some distributions may
+have back-ported it.)
+
+We need to trick Make to spawn a subshell. There are various ways to
+do so:
+
+ 1) Use a shell special character '~' as dummy
+
+    $(shell : ~; command -v $(c)gcc)
+
+ 2) Use a variable reference, which always expands to the empty string
+    (suggested by David Laight)
+
+    $(shell command$${x:+} -v $(c)gcc)
+
+ 3) Use redirect
+
+    $(shell command -v $(c)gcc 2>/dev/null)
+
+I chose 3) to not confuse people. The stderr would not be polluted
+anyway, but it will provide extra safety, and is easy to understand.
+
+Tested on Make 3.81, 3.82, 4.0, 4.1, 4.2, 4.2.1
+
+[1] http://pubs.opengroup.org/onlinepubs/9699919799/utilities/command.html
+
+Fixes: bd55f96fa9fc ("kbuild: refactor cc-cross-prefix implementation")
+Cc: linux-stable <stable@vger.kernel.org> # 5.1
+Reported-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Alexey Brodkin <abrodkin@synopsys.com>
+---
+
+Changes in v2:
+  - Use dummy redirect
+
+ scripts/Kbuild.include | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 85d758233483..fd8aa314c156 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -74,8 +74,11 @@ endef
+ # Usage: CROSS_COMPILE := $(call cc-cross-prefix, m68k-linux-gnu- m68k-linux-)
+ # Return first <prefix> where a <prefix>gcc is found in PATH.
+ # If no gcc found in PATH with listed prefixes return nothing
++#
++# Note: 2>/dev/null is here to force Make to invoke a shell. This workaround
++# is needed because this issue was only fixed after GNU Make 4.2.1 release.
+ cc-cross-prefix = $(firstword $(foreach c, $(filter-out -%, $(1)), \
+-					$(if $(shell which $(c)gcc), $(c))))
++			$(if $(shell command -v $(c)gcc 2>/dev/null), $(c))))
+ 
+ # output directory for tests below
+ TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
+-- 
+2.17.1
 
