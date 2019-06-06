@@ -2,130 +2,105 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E5AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DCFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E644820652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDE620652
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="edOUZg3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbfFFRIA convert rfc822-to-8bit (ORCPT
+        id S1729918AbfFFRIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:08:00 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:58594 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbfFFRH7 (ORCPT
+        Thu, 6 Jun 2019 13:08:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45983 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729905AbfFFRII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:07:59 -0400
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 5E45B661177;
-        Thu,  6 Jun 2019 19:07:56 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 6 Jun 2019
- 19:07:55 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Thu, 6 Jun 2019 19:07:55 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "emil.lenngren@gmail.com" <emil.lenngren@gmail.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Richard Weinberger <richard@nod.at>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH] mtd: spinand: Fix max_bad_eraseblocks_per_lun info in memorg
-Thread-Topic: [PATCH] mtd: spinand: Fix max_bad_eraseblocks_per_lun info in
- memorg
-Thread-Index: AQHVHIpiPxYIjYD5lkmpT+H/FkTT7Q==
-Date:   Thu, 6 Jun 2019 17:07:55 +0000
-Message-ID: <20190606170754.6531-1-frieder.schrempf@kontron.de>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Thu, 6 Jun 2019 13:08:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id s11so1873326pfm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=DfWGqMsNhu0Wn9UXa5rpUQbIrk9rtIgPo7mJo0K3Iy0=;
+        b=edOUZg3GANEHsuow5KsriAJk8/6SQssHjNCT4tBBHkNEMs7cc7BSBL3Y5TX+twtruP
+         6TSMfZEm92SNNInMq87/gyoNQ336XCRS8pIlKvho5y7eSZB2ZIoGpjkMaChwJVN6lykR
+         N+iefC9iJuKoXcUKxrzKy8O/cExO4RJci97F4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=DfWGqMsNhu0Wn9UXa5rpUQbIrk9rtIgPo7mJo0K3Iy0=;
+        b=MoHP86kWLYdP3Vq/1+0yFpqt2Vw1OxJlG5ve9M8kgkhwNa8ZBL5uL8Vd/Of6jH8UcX
+         KRUiQdjz6RlzpkHaNleV9M/ND3SzLR+6fUAiWj+jGyUV450qjb67x/n9Z2x9PexInt73
+         G13KQp6n3edfqOz+xw44+juk5B0h+X7CLn/B58AQkoBtgquOZgMCVKH8RwtjwuylaE/I
+         qgWnPlLQ4lN8sxV4s/YGcy+Vf0RbJ0TtRNmrCjnwCOxT0UV/Lyjty/Bqe/VPr1fgLCSp
+         KnExfdRC3OyM1lUvpStdDJWYU5LlC9zCAhKW7qonbep95/UC15pUkV9sWKKSVLwJqOoi
+         NFHA==
+X-Gm-Message-State: APjAAAVdmUloaUFCdPdEvpMsybJ9mRkoJwIYLYMNcoqiGmt5q1wire58
+        mwc5HcHXJMbKFF6eV3sufDr+rA==
+X-Google-Smtp-Source: APXvYqx1MzvkxzqJ8jjRho8uRYT9sXVTCtAk6vNSNa5xM12hkcJ+i72lyJF9dDCi4kO+O6iXQnbySw==
+X-Received: by 2002:aa7:942f:: with SMTP id y15mr55190799pfo.121.1559840887916;
+        Thu, 06 Jun 2019 10:08:07 -0700 (PDT)
+Received: from [10.69.37.149] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x25sm2648197pfm.48.2019.06.06.10.08.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 10:08:07 -0700 (PDT)
+Subject: Re: [PATCH] scsi: lpfc: Avoid unused function warnings
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        YueHaibing <yuehaibing@huawei.com>
+References: <20190606052421.103469-1-natechancellor@gmail.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <27ccc327-3a4b-f489-2b21-b68479e45519@broadcom.com>
+Date:   Thu, 6 Jun 2019 10:08:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 5E45B661177.AF631
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, emil.lenngren@gmail.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com
+In-Reply-To: <20190606052421.103469-1-natechancellor@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-The 1Gb Macronix chip can have a maximum of 20 bad blocks, while
-the 2Gb version has twice as many blocks and therefore the maximum
-number of bad blocks is 40.
 
-The 4Gb GigaDevice GD5F4GQ4xA has twice as many blocks as its 2Gb
-counterpart and therefore a maximum of 80 bad blocks.
+On 6/5/2019 10:24 PM, Nathan Chancellor wrote:
+> When building powerpc pseries_defconfig or powernv_defconfig:
+>
+> drivers/scsi/lpfc/lpfc_nvmet.c:224:1: error: unused function
+> 'lpfc_nvmet_get_ctx_for_xri' [-Werror,-Wunused-function]
+> drivers/scsi/lpfc/lpfc_nvmet.c:246:1: error: unused function
+> 'lpfc_nvmet_get_ctx_for_oxid' [-Werror,-Wunused-function]
+>
+> These functions are only compiled when CONFIG_NVME_TARGET_FC is enabled.
+> Use that same condition so there is no more warning. While the fixes
+> commit did not introduce these functions, it caused these warnings.
+>
+> Fixes: 4064b27417a7 ("scsi: lpfc: Make some symbols static")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>   drivers/scsi/lpfc/lpfc_nvmet.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+>
 
-Fixes: 377e517b5fa5 ("mtd: nand: Add max_bad_eraseblocks_per_lun info to memorg")
-Reported-by: Emil Lenngren <emil.lenngren@gmail.com>
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- drivers/mtd/nand/spi/gigadevice.c | 2 +-
- drivers/mtd/nand/spi/macronix.c   | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Looks fine.
 
-diff --git a/drivers/mtd/nand/spi/gigadevice.c b/drivers/mtd/nand/spi/gigadevice.c
-index e5586390026a..e6c646007cda 100644
---- a/drivers/mtd/nand/spi/gigadevice.c
-+++ b/drivers/mtd/nand/spi/gigadevice.c
-@@ -180,7 +180,7 @@ static const struct spinand_info gigadevice_spinand_table[] = {
- 		     SPINAND_ECCINFO(&gd5fxgq4xa_ooblayout,
- 				     gd5fxgq4xa_ecc_get_status)),
- 	SPINAND_INFO("GD5F4GQ4xA", 0xF4,
--		     NAND_MEMORG(1, 2048, 64, 64, 4096, 40, 1, 1, 1),
-+		     NAND_MEMORG(1, 2048, 64, 64, 4096, 80, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
- 		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
- 					      &write_cache_variants,
-diff --git a/drivers/mtd/nand/spi/macronix.c b/drivers/mtd/nand/spi/macronix.c
-index 6502727049a8..21def3f8fb36 100644
---- a/drivers/mtd/nand/spi/macronix.c
-+++ b/drivers/mtd/nand/spi/macronix.c
-@@ -100,7 +100,7 @@ static int mx35lf1ge4ab_ecc_get_status(struct spinand_device *spinand,
- 
- static const struct spinand_info macronix_spinand_table[] = {
- 	SPINAND_INFO("MX35LF1GE4AB", 0x12,
--		     NAND_MEMORG(1, 2048, 64, 64, 1024, 40, 1, 1, 1),
-+		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
- 		     NAND_ECCREQ(4, 512),
- 		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
- 					      &write_cache_variants,
-@@ -109,7 +109,7 @@ static const struct spinand_info macronix_spinand_table[] = {
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
- 				     mx35lf1ge4ab_ecc_get_status)),
- 	SPINAND_INFO("MX35LF2GE4AB", 0x22,
--		     NAND_MEMORG(1, 2048, 64, 64, 2048, 20, 2, 1, 1),
-+		     NAND_MEMORG(1, 2048, 64, 64, 2048, 40, 2, 1, 1),
- 		     NAND_ECCREQ(4, 512),
- 		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
- 					      &write_cache_variants,
--- 
-2.17.1
+Reviewed-by:  James Smart  <james.smart@broadcom.com>
+
+
