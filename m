@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D845EC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A34AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC2A20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4A620868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y1T25S2A"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ej9cG/WX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbfFFQbt (ORCPT
+        id S1729802AbfFFQcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:31:49 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50282 "EHLO
+        Thu, 6 Jun 2019 12:32:01 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50302 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbfFFQbt (ORCPT
+        with ESMTP id S1726732AbfFFQcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:31:49 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56GVTcM108178;
-        Thu, 6 Jun 2019 11:31:29 -0500
+        Thu, 6 Jun 2019 12:32:01 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56GVaBg108201;
+        Thu, 6 Jun 2019 11:31:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559838689;
-        bh=RXWt2LbpLPn0rXtjpPJnTNrrxvuLwZ56OSKRoHCUfOs=;
+        s=ti-com-17Q1; t=1559838696;
+        bh=1zFy936XzUIi67D9OgTkgxcx0/Qz9tb8yXJIunLl9x0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Y1T25S2AnR2A5R/2Wwtj1COOnzWoOe62AHBTrJnvTlTVQo9acpstmljZdPNJI+9I0
-         2O9PJ6irVjO5Y+8332kE/hKnAW8CCGVB1VPhulyYrNVQT6tN4Mfhvc+OdpcDC8LSCT
-         0e9v7SjaoFXSigQcsFbYToM5C6anMNTd0VdOzXyo=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56GVTlX083105
+        b=Ej9cG/WX5ItexR3oQP0B5Vz41cwtbSNYH3njqC8SQbQcr+av6ELvWnVx8LdPbUN/6
+         ogtzE7Yn1Oyn9aprAkwfatjvEQyu1TBJ4YRUukglQNDhKHn2mQcZ2ZVfsBUDBYWPYN
+         8Oxvg/IR4BKpxlB9+cAIuXpdB8Az9D+P/hplv6Pk=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56GVZ9R007098
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 11:31:29 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 6 Jun 2019 11:31:35 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 11:31:28 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 11:31:35 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 11:31:28 -0500
+ Frontend Transport; Thu, 6 Jun 2019 11:31:35 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56GVRZv045222;
-        Thu, 6 Jun 2019 11:31:28 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56GVYQd045341;
+        Thu, 6 Jun 2019 11:31:35 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Santosh Shilimkar <ssantosh@kernel.org>,
@@ -59,9 +59,9 @@ CC:     Sekhar Nori <nsekhar@ti.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 05/10] ARM: dts: keystone-clocks: add input fixed clocks
-Date:   Thu, 6 Jun 2019 19:30:42 +0300
-Message-ID: <20190606163047.31199-6-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 06/10] ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
+Date:   Thu, 6 Jun 2019 19:30:43 +0300
+Message-ID: <20190606163047.31199-7-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190606163047.31199-1-grygorii.strashko@ti.com>
 References: <20190606163047.31199-1-grygorii.strashko@ti.com>
@@ -73,24 +73,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add set of fixed, external input clocks definitions for TIMI0, TIMI1,
-TSREFCLK clocks. Such clocks can be used as reference clocks for some HW
-modules (as cpts, for example) by configuring corresponding clock muxes.
-For these clocks real frequencies have to be defined in board files.
+Add set of fixed, external input clocks definitions for TSIPCLKA, TSIPCLKB
+clocks. Such clocks can be used as reference clocks for some HW modules (as
+cpts, for example) by configuring corresponding clock muxes. For these
+clocks real frequencies have to be defined in board files.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Acked-by: Richard Cochran <richardcochran@gmail.com>
 ---
- arch/arm/boot/dts/keystone-clocks.dtsi | 27 ++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm/boot/dts/keystone-k2e-clocks.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
-index 457515b0736a..0397c3423d2d 100644
---- a/arch/arm/boot/dts/keystone-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-clocks.dtsi
-@@ -408,4 +408,31 @@ clocks {
+diff --git a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
+index f7592155a740..cf30e007fea3 100644
+--- a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
+@@ -71,4 +71,24 @@ clocks {
  		reg-names = "control", "domain";
- 		domain-id = <0>;
+ 		domain-id = <29>;
  	};
 +
 +	/*
@@ -99,25 +99,18 @@ index 457515b0736a..0397c3423d2d 100644
 +	 * Those clocks can be used as reference clocks for some HW modules
 +	 * (as cpts, for example) by configuring corresponding clock muxes.
 +	 */
-+	timi0: timi0 {
++	tsipclka: tsipclka {
 +		#clock-cells = <0>;
 +		compatible = "fixed-clock";
 +		clock-frequency = <0>;
-+		clock-output-names = "timi0";
++		clock-output-names = "tsipclka";
 +	};
 +
-+	timi1: timi1 {
++	tsipclkb: tsipclkb {
 +		#clock-cells = <0>;
 +		compatible = "fixed-clock";
 +		clock-frequency = <0>;
-+		clock-output-names = "timi1";
-+	};
-+
-+	tsrefclk: tsrefclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <0>;
-+		clock-output-names = "tsrefclk";
++		clock-output-names = "tsipclkb";
 +	};
  };
 -- 
