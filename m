@@ -2,419 +2,143 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3DDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BE3C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E775320673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193EE206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:24:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHFoH1CP"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Yr87OYLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfFFWWs (ORCPT
+        id S1727021AbfFFWYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 18:22:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39770 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729182AbfFFWWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 18:22:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so193272wrt.6;
-        Thu, 06 Jun 2019 15:22:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8HB0xFXnBLxUfHqZ0Zttc4lJLneDgdEO2LsiuqrZzHI=;
-        b=iHFoH1CPPxQMvqhNtNSsB4gT8yIUlYxO6c9xUCJ5QUIiDcD9QRLx4J4IU+NZ/YEbo5
-         Dcqw51z3f+GZ+aIyDYmtxeUmsAOuMhxqdQKtpQZ4K3rsZigN0XAIpAfC1QWyOSgYROft
-         8R+yPCn7F3KKpsZd7hNBXPP1sWE1atsQKeA8SRj4RuzsWrFdQcjd5O523KJA1jFiWlI5
-         nsqPcxcU0NL6tD8a+Oycz/a2R4lB1iIKRUik0/i6fMrruvzLahhvH6XRKwFczDvbPjf+
-         D+SjRUgjyL19OJAQ47oP0EwEoG6Qm6LAvpNhndd15T7apKSm7grur2mSEeIQ2ltVwKuk
-         7T5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8HB0xFXnBLxUfHqZ0Zttc4lJLneDgdEO2LsiuqrZzHI=;
-        b=J73ziY1UNK5uT1sPm+OB1k+tBf/O8tgkm6bk7hVao5DWGeUHLHKGM3Sil2/pqfUA+0
-         boz3SqIhQMI5b8lY5BM2IYVZlW23hnDZlOJWKeNZa87P7O7VSmHvH/qtmn0GmWmhS75G
-         nMytoev7mPnfafK/p9y7DdU21GuYxDZhnHloC2a0yQoQDSgJ+hqRjqeEmdP5Jbw917AJ
-         3PyYqYY7jIb7khEHkk6QDJq/W2Dam6az+BdDIt8Tirb6i/7anpo+Vg3OvNm7jA7ojuSD
-         aQBBu41aQjH5QrLS9JZ+AI1g62deUSiQ+DRKjNKNuTDU6KRc0XlTOzy3bWB966ma8hPB
-         gfBQ==
-X-Gm-Message-State: APjAAAXqK/Bm/DdafMTs5g1moI1oaDInqB38omXLvz98Ltuy42cKVN4v
-        QzltjKkBFcd93+33r+9HgBc=
-X-Google-Smtp-Source: APXvYqznYsxSJmLXAKRuSZLOPDjMkbTahz8S0FO9cJMGM0PrdRtqygVPkhlq8ja3EA3m8zhTTPbdZQ==
-X-Received: by 2002:adf:dd51:: with SMTP id u17mr16859197wrm.218.1559859764610;
-        Thu, 06 Jun 2019 15:22:44 -0700 (PDT)
-Received: from localhost.localdomain (5-12-124-26.residential.rdsnet.ro. [5.12.124.26])
-        by smtp.gmail.com with ESMTPSA id o126sm236436wmo.31.2019.06.06.15.22.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 15:22:43 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v3] ARM: dts: Introduce the NXP LS1021A-TSN board
-Date:   Fri,  7 Jun 2019 01:21:30 +0300
-Message-Id: <20190606222130.27515-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 6 Jun 2019 18:24:23 -0400
+Received: from mail-eopbgr680070.outbound.protection.outlook.com ([40.107.68.70]:15342
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726599AbfFFWYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 18:24:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pZVFPUeUa9e328to5DK/H3iwy0oMcHKEuHMJCgBaPiw=;
+ b=Yr87OYLAcX3ojZgO/NIDqoOqug8eLCG5N11v/YzQ0ZAqeMCXVU+IjyLc8drNS+kAH4KVxxSWHhLKQgmFHPNfWpjA09kr1RTJuMxRSF1aUkPk+oF6/qeqfUb1zlr3IpScX/Yc+cS2yx5xcMUY15uDaqYDwn/t1tO6K2Pgc8vw94U=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4901.namprd05.prod.outlook.com (52.135.235.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.3; Thu, 6 Jun 2019 22:24:17 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::2cb6:a3d1:f675:ced8%3]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
+ 22:24:17 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH 11/15] static_call: Add inline static call infrastructure
+Thread-Topic: [PATCH 11/15] static_call: Add inline static call infrastructure
+Thread-Index: AQHVG6HczY7CfFoeek66Q905fEQkc6aPNeMA
+Date:   Thu, 6 Jun 2019 22:24:17 +0000
+Message-ID: <37CFAEC1-6D36-4A6D-8C44-F85FCFA053AA@vmware.com>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131945.193241464@infradead.org>
+In-Reply-To: <20190605131945.193241464@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0317d6cb-7ae7-48a9-9a38-08d6eacdb6c1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4901;
+x-ms-traffictypediagnostic: BYAPR05MB4901:
+x-microsoft-antispam-prvs: <BYAPR05MB4901199F749E630159D96D02D0170@BYAPR05MB4901.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(366004)(346002)(199004)(189003)(51444003)(102836004)(86362001)(99286004)(14454004)(5660300002)(36756003)(64756008)(53546011)(6506007)(8676002)(66446008)(186003)(81156014)(76176011)(446003)(486006)(66476007)(66066001)(478600001)(26005)(82746002)(11346002)(33656002)(91956017)(73956011)(66946007)(2616005)(76116006)(71190400001)(7416002)(8936002)(6246003)(6436002)(68736007)(476003)(54906003)(3846002)(316002)(81166006)(66556008)(53936002)(2906002)(6512007)(256004)(14444005)(7736002)(25786009)(4326008)(305945005)(229853002)(6486002)(6916009)(83716004)(71200400001)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4901;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rDUGqols91Ji6RaYKuG0+UEsykaf2Zss1pqV/S8shNikS1iHLTSnjpreJBlwU/LA0PS/xicUaZ8ZYGqJs9e2u5fcY5Wb2fDasutPcrszhSbZf7iiM9jweqMi329RAnLJdKdCdlQLUrvSBsVyC+0GFIBaMqlvMDUi3SRbjvIS0IIAYRCiY4sEoLDl2s7bpqnUrYpwpQuY1QfVONOeulckA24kmR89Eq0b27EibPcMQbBLub6LLI0BefvgMeD/0yCjYjB+En9+v81Wuh7QWUsUVVRhyK0CTomTNyUhwdVj17HxnISjzqL8q2vPof/AcyWF0nGYGw6QPP1jbB7cxTqQ68MF2sE0eKDlOrmZbozJPAgtcqhlMZUzyktQJo8JBT5QMYvi4WahJRush8CojpJot98WUcrpD/fHf3SHIL704Aw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2871A09574065941B49A643C022B13CD@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0317d6cb-7ae7-48a9-9a38-08d6eacdb6c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 22:24:17.3151
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4901
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LS1021A-TSN is a development board built by VVDN/Argonboards in
-partnership with NXP.
-
-It features the LS1021A SoC and the first-generation SJA1105T Ethernet
-switch for prototyping implementations of a subset of IEEE 802.1 TSN
-standards.
-
-It has two regular Ethernet ports and four switched, TSN-capable ports.
-
-It also features:
-- One Arduino header
-- One expansion header
-- Two USB 3.0 ports
-- One mini PCIe slot
-- One SATA interface
-- Accelerometer, gyroscope, temperature sensors
-
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
-Changes from v2:
-- Sorted nodes alphabetically
-- Renamed SAI2 codec node into audio-codec
-
-v2 patch available at:
-https://lkml.org/lkml/2019/5/29/998
-
-Changes from v1:
-- Applied Shawn's feedback
-- Introduced QSPI flash node
-
-v1 patch available at:
-https://patchwork.kernel.org/patch/10930451/
-
- arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/ls1021a-tsn.dts | 289 ++++++++++++++++++++++++++++++
- 2 files changed, 290 insertions(+)
- create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914fa293..a4eb4ca5e148 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -602,6 +602,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
-+	ls1021a-tsn.dtb \
- 	ls1021a-twr.dtb
- dtb-$(CONFIG_SOC_VF610) += \
- 	vf500-colibri-eval-v3.dtb \
-diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-new file mode 100644
-index 000000000000..ef4a0b1e4d47
---- /dev/null
-+++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-@@ -0,0 +1,289 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright 2016-2018 NXP Semiconductors
-+ * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
-+ */
-+
-+/dts-v1/;
-+#include "ls1021a.dtsi"
-+
-+/ {
-+	model = "NXP LS1021A-TSN Board";
-+
-+	sys_mclk: clock-mclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24576000>;
-+	};
-+
-+	reg_vdda_codec: regulator-3V3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_vddio_codec: regulator-2V5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2P5V";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&dspi0 {
-+	bus-num = <0>;
-+	status = "okay";
-+
-+	/* ADG704BRMZ 1:4 SPI mux/demux */
-+	sja1105: ethernet-switch@1 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nxp,sja1105t";
-+		/* 12 MHz */
-+		spi-max-frequency = <12000000>;
-+		/* Sample data on trailing clock edge */
-+		spi-cpha;
-+		/* SPI controller settings for SJA1105 timing requirements */
-+		fsl,spi-cs-sck-delay = <1000>;
-+		fsl,spi-sck-cs-delay = <1000>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				/* ETH5 written on chassis */
-+				label = "swp5";
-+				phy-handle = <&rgmii_phy6>;
-+				phy-mode = "rgmii-id";
-+				reg = <0>;
-+			};
-+
-+			port@1 {
-+				/* ETH2 written on chassis */
-+				label = "swp2";
-+				phy-handle = <&rgmii_phy3>;
-+				phy-mode = "rgmii-id";
-+				reg = <1>;
-+			};
-+
-+			port@2 {
-+				/* ETH3 written on chassis */
-+				label = "swp3";
-+				phy-handle = <&rgmii_phy4>;
-+				phy-mode = "rgmii-id";
-+				reg = <2>;
-+			};
-+
-+			port@3 {
-+				/* ETH4 written on chassis */
-+				label = "swp4";
-+				phy-handle = <&rgmii_phy5>;
-+				phy-mode = "rgmii-id";
-+				reg = <3>;
-+			};
-+
-+			port@4 {
-+				/* Internal port connected to eth2 */
-+				ethernet = <&enet2>;
-+				phy-mode = "rgmii";
-+				reg = <4>;
-+
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	/* 3 axis accelerometer */
-+	accelerometer@1e {
-+		compatible = "fsl,fxls8471";
-+		position = <0>;
-+		reg = <0x1e>;
-+	};
-+
-+	/* Audio codec (SAI2) */
-+	audio-codec@2a {
-+		compatible = "fsl,sgtl5000";
-+		VDDIO-supply = <&reg_vddio_codec>;
-+		VDDA-supply = <&reg_vdda_codec>;
-+		#sound-dai-cells = <0>;
-+		clocks = <&sys_mclk>;
-+		reg = <0x2a>;
-+	};
-+
-+	/* Current sensing circuit for 1V VDDCORE PMIC rail */
-+	current-sensor@44 {
-+		compatible = "ti,ina220";
-+		shunt-resistor = <1000>;
-+		reg = <0x44>;
-+	};
-+
-+	/* Current sensing circuit for 12V VCC rail */
-+	current-sensor@45 {
-+		compatible = "ti,ina220";
-+		shunt-resistor = <1000>;
-+		reg = <0x45>;
-+	};
-+
-+	/* Thermal monitor - case */
-+	temperature-sensor@48 {
-+		compatible = "national,lm75";
-+		reg = <0x48>;
-+	};
-+
-+	/* Thermal monitor - chip */
-+	temperature-sensor@4c {
-+		compatible = "ti,tmp451";
-+		reg = <0x4c>;
-+	};
-+
-+	eeprom@51 {
-+		compatible = "atmel,24c32";
-+		reg = <0x51>;
-+	};
-+
-+	/* Unsupported devices:
-+	 * - FXAS21002C Gyroscope at 0x20
-+	 * - TI ADS7924 4-channel ADC at 0x49
-+	 */
-+};
-+
-+&ifc {
-+	status = "disabled";
-+};
-+
-+&enet0 {
-+	tbi-handle = <&tbi0>;
-+	phy-handle = <&sgmii_phy2>;
-+	phy-mode = "sgmii";
-+	status = "okay";
-+};
-+
-+&enet1 {
-+	tbi-handle = <&tbi1>;
-+	phy-handle = <&sgmii_phy1>;
-+	phy-mode = "sgmii";
-+	status = "okay";
-+};
-+
-+/* RGMII delays added via PCB traces */
-+&enet2 {
-+	phy-mode = "rgmii";
-+	status = "okay";
-+
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
-+&esdhc {
-+	status = "okay";
-+};
-+
-+&lpuart0 {
-+	status = "okay";
-+};
-+
-+&lpuart3 {
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	/* AR8031 */
-+	sgmii_phy1: ethernet-phy@1 {
-+		reg = <0x1>;
-+	};
-+
-+	/* AR8031 */
-+	sgmii_phy2: ethernet-phy@2 {
-+		reg = <0x2>;
-+	};
-+
-+	/* BCM5464 quad PHY */
-+	rgmii_phy3: ethernet-phy@3 {
-+		reg = <0x3>;
-+	};
-+
-+	rgmii_phy4: ethernet-phy@4 {
-+		reg = <0x4>;
-+	};
-+
-+	rgmii_phy5: ethernet-phy@5 {
-+		reg = <0x5>;
-+	};
-+
-+	rgmii_phy6: ethernet-phy@6 {
-+		reg = <0x6>;
-+	};
-+
-+	/* SGMII PCS for enet0 */
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
-+	/* SGMII PCS for enet1 */
-+	tbi1: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&qspi {
-+	status = "okay";
-+
-+	flash@0 {
-+		/* Rev. A uses 64MB flash, Rev. B & C use 32MB flash */
-+		compatible = "jedec,spi-nor", "s25fl256s1", "s25fl512s";
-+		spi-max-frequency = <20000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "RCW";
-+				reg = <0x0 0x40000>;
-+			};
-+
-+			partition@40000 {
-+				label = "U-Boot";
-+				reg = <0x40000 0x300000>;
-+			};
-+
-+			partition@340000 {
-+				label = "U-Boot Env";
-+				reg = <0x340000 0x100000>;
-+			};
-+		};
-+	};
-+};
-+
-+&sai2 {
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
--- 
-2.17.1
-
+PiBPbiBKdW4gNSwgMjAxOSwgYXQgNjowOCBBTSwgUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZy
+YWRlYWQub3JnPiB3cm90ZToNCj4gDQo+IEZyb206IEpvc2ggUG9pbWJvZXVmIDxqcG9pbWJvZUBy
+ZWRoYXQuY29tPg0KPiANCj4gQWRkIGluZnJhc3RydWN0dXJlIGZvciBhbiBhcmNoLXNwZWNpZmlj
+IENPTkZJR19IQVZFX1NUQVRJQ19DQUxMX0lOTElORQ0KPiBvcHRpb24sIHdoaWNoIGlzIGEgZmFz
+dGVyIHZlcnNpb24gb2YgQ09ORklHX0hBVkVfU1RBVElDX0NBTEwuICBBdA0KPiBydW50aW1lLCB0
+aGUgc3RhdGljIGNhbGwgc2l0ZXMgYXJlIHBhdGNoZWQgZGlyZWN0bHksIHJhdGhlciB0aGFuIHVz
+aW5nDQo+IHRoZSBvdXQtb2YtbGluZSB0cmFtcG9saW5lcy4NCj4gDQo+IENvbXBhcmVkIHRvIG91
+dC1vZi1saW5lIHN0YXRpYyBjYWxscywgdGhlIHBlcmZvcm1hbmNlIGJlbmVmaXRzIGFyZSBtb3Jl
+DQo+IG1vZGVzdCwgYnV0IHN0aWxsIG1lYXN1cmFibGUuICBTdGV2ZW4gUm9zdGVkdCBkaWQgc29t
+ZSB0cmFjZXBvaW50DQo+IG1lYXN1cmVtZW50czoNCg0KWyBzbmlwIF0NCg0KPiArc3RhdGljIHZv
+aWQgc3RhdGljX2NhbGxfZGVsX21vZHVsZShzdHJ1Y3QgbW9kdWxlICptb2QpDQo+ICt7DQo+ICsJ
+c3RydWN0IHN0YXRpY19jYWxsX3NpdGUgKnN0YXJ0ID0gbW9kLT5zdGF0aWNfY2FsbF9zaXRlczsN
+Cj4gKwlzdHJ1Y3Qgc3RhdGljX2NhbGxfc2l0ZSAqc3RvcCA9IG1vZC0+c3RhdGljX2NhbGxfc2l0
+ZXMgKw0KPiArCQkJCQltb2QtPm51bV9zdGF0aWNfY2FsbF9zaXRlczsNCj4gKwlzdHJ1Y3Qgc3Rh
+dGljX2NhbGxfc2l0ZSAqc2l0ZTsNCj4gKwlzdHJ1Y3Qgc3RhdGljX2NhbGxfa2V5ICprZXksICpw
+cmV2X2tleSA9IE5VTEw7DQo+ICsJc3RydWN0IHN0YXRpY19jYWxsX21vZCAqc2l0ZV9tb2Q7DQo+
+ICsNCj4gKwlmb3IgKHNpdGUgPSBzdGFydDsgc2l0ZSA8IHN0b3A7IHNpdGUrKykgew0KPiArCQlr
+ZXkgPSBzdGF0aWNfY2FsbF9rZXkoc2l0ZSk7DQo+ICsJCWlmIChrZXkgPT0gcHJldl9rZXkpDQo+
+ICsJCQljb250aW51ZTsNCj4gKwkJcHJldl9rZXkgPSBrZXk7DQo+ICsNCj4gKwkJbGlzdF9mb3Jf
+ZWFjaF9lbnRyeShzaXRlX21vZCwgJmtleS0+c2l0ZV9tb2RzLCBsaXN0KSB7DQo+ICsJCQlpZiAo
+c2l0ZV9tb2QtPm1vZCA9PSBtb2QpIHsNCj4gKwkJCQlsaXN0X2RlbCgmc2l0ZV9tb2QtPmxpc3Qp
+Ow0KPiArCQkJCWtmcmVlKHNpdGVfbW9kKTsNCj4gKwkJCQlicmVhazsNCj4gKwkJCX0NCj4gKwkJ
+fQ0KPiArCX0NCg0KSSB0aGluayB0aGF0IGZvciBzYWZldHksIHdoZW4gYSBtb2R1bGUgaXMgcmVt
+b3ZlZCwgYWxsIHRoZSBzdGF0aWMtY2FsbHMNCnNob3VsZCBiZSB0cmF2ZXJzZWQgdG8gY2hlY2sg
+dGhhdCBub25lIG9mIHRoZW0gY2FsbHMgYW55IGZ1bmN0aW9uIGluIHRoZQ0KcmVtb3ZlZCBtb2R1
+bGUuIElmIHRoYXQgaGFwcGVucywgcGVyaGFwcyBpdCBzaG91bGQgYmUgcG9pc29uZWQuDQoNCj4g
+K30NCj4gKw0KPiArc3RhdGljIGludCBzdGF0aWNfY2FsbF9tb2R1bGVfbm90aWZ5KHN0cnVjdCBu
+b3RpZmllcl9ibG9jayAqbmIsDQo+ICsJCQkJICAgICB1bnNpZ25lZCBsb25nIHZhbCwgdm9pZCAq
+ZGF0YSkNCj4gK3sNCj4gKwlzdHJ1Y3QgbW9kdWxlICptb2QgPSBkYXRhOw0KPiArCWludCByZXQg
+PSAwOw0KPiArDQo+ICsJY3B1c19yZWFkX2xvY2soKTsNCj4gKwlzdGF0aWNfY2FsbF9sb2NrKCk7
+DQo+ICsNCj4gKwlzd2l0Y2ggKHZhbCkgew0KPiArCWNhc2UgTU9EVUxFX1NUQVRFX0NPTUlORzoN
+Cj4gKwkJbW9kdWxlX2Rpc2FibGVfcm8obW9kKTsNCj4gKwkJcmV0ID0gc3RhdGljX2NhbGxfYWRk
+X21vZHVsZShtb2QpOw0KPiArCQltb2R1bGVfZW5hYmxlX3JvKG1vZCwgZmFsc2UpOw0KDQpEb2Vz
+buKAmXQgaXQgY2F1c2Ugc29tZSBwYWdlcyB0byBiZSBXK1ggPyBDYW4gaXQgYmUgYXZvaWRlZD8N
+Cg0KPiArCQlpZiAocmV0KSB7DQo+ICsJCQlXQVJOKDEsICJGYWlsZWQgdG8gYWxsb2NhdGUgbWVt
+b3J5IGZvciBzdGF0aWMgY2FsbHMiKTsNCj4gKwkJCXN0YXRpY19jYWxsX2RlbF9tb2R1bGUobW9k
+KTsNCg0KSWYgc3RhdGljX2NhbGxfYWRkX21vZHVsZSgpIHN1Y2NlZWRlZCBpbiBjaGFuZ2luZyBz
+b21lIG9mIHRoZSBjYWxscywgYnV0IG5vdA0KYWxsLCBJIGRvbuKAmXQgdGhpbmsgdGhhdCBzdGF0
+aWNfY2FsbF9kZWxfbW9kdWxlKCkgd2lsbCBjb3JyZWN0bHkgdW5kbw0Kc3RhdGljX2NhbGxfYWRk
+X21vZHVsZSgpLiBUaGUgY29kZSB0cmFuc2Zvcm1hdGlvbnMsIEkgdGhpbmssIHdpbGwgcmVtYWlu
+Lg0KDQo=
