@@ -2,191 +2,113 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CF5C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C81C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B84206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3B2206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559852211;
+	bh=dtO+5DakYD+OBjmih0j/tzf4TsEgQw8kAWSobV34pos=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=wTd9kcfdY2ZcxLPVps96S7lxiUn6yywrGnd/8grLk/TR3vPJaG51al358XBEo+dgC
+	 s/ySyN4HFVLuWqHot/AFGeTaEvMiNMq34rqGl5/2sm3Gee9XB7i1UlR5/70BEOTPpL
+	 pG6PhpgynBR0TeS5yE0N9+Y3JeSTj3Ud5r4nzJ60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbfFFUQb (ORCPT
+        id S1728351AbfFFUQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:16:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:47825 "EHLO mga17.intel.com"
+        Thu, 6 Jun 2019 16:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbfFFUPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:15:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:15:30 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga002.jf.intel.com with ESMTP; 06 Jun 2019 13:15:29 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v7 17/27] mm: Update can_follow_write_pte/pmd for shadow stack
-Date:   Thu,  6 Jun 2019 13:06:36 -0700
-Message-Id: <20190606200646.3951-18-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606200646.3951-1-yu-cheng.yu@intel.com>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+        id S1726816AbfFFUQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:16:47 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4CC4206BB;
+        Thu,  6 Jun 2019 20:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559852206;
+        bh=dtO+5DakYD+OBjmih0j/tzf4TsEgQw8kAWSobV34pos=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=auni+q2MkEs6XpdIx4TVt3rGKVBpTISGYV2lWzplv/HgVbnBkbp+TWJaf1JO/ZbFh
+         sLQaF2cKycyi5+/vb5dOZUwEoYfrbPEXQ7I7HcjVaoqTg/hgvjcaoZi0B7cYf2mxbY
+         vAGlb05B3a4l5vjuwDPvHqrHs18xVWrZOxVNatf4=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190605160043.GA4351@zhanggen-UX430UQ>
+References: <20190531011424.GA4374@zhanggen-UX430UQ> <eb8e2d33-e8f7-93a5-c8bc-98731c0d63b6@suse.cz> <20190605160043.GA4351@zhanggen-UX430UQ>
+To:     Gen Zhang <blackgod016574@gmail.com>, Jiri Slaby <jslaby@suse.cz>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: fix a missing-free bug in clk_cpy_name()
+Cc:     mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Thu, 06 Jun 2019 13:16:45 -0700
+Message-Id: <20190606201646.B4CC4206BB@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-can_follow_write_pte/pmd look for the (RO & DIRTY) PTE/PMD to
-verify an exclusive RO page still exists after a broken COW.
+Quoting Gen Zhang (2019-06-05 09:00:43)
+> On Wed, Jun 05, 2019 at 08:38:00AM +0200, Jiri Slaby wrote:
+> > On 31. 05. 19, 3:14, Gen Zhang wrote:
+> > > In clk_cpy_name(), '*dst_p'('parent->name'and 'parent->fw_name') and =
 
-A shadow stack PTE is RO & PAGE_DIRTY_SW when it is shared,
-otherwise RO & PAGE_DIRTY_HW.
+> > > 'dst' are allcoted by kstrdup_const(). According to doc: "Strings=20
+> > > allocated by kstrdup_const should be freed by kfree_const". So=20
+> > > 'parent->name', 'parent->fw_name' and 'dst' should be freed.
+> > >=20
+> > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > ---
+> > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > index aa51756..85c4d3f 100644
+> > > --- a/drivers/clk/clk.c
+> > > +++ b/drivers/clk/clk.c
+> > > @@ -3435,6 +3435,7 @@ static int clk_cpy_name(const char **dst_p, con=
+st char *src, bool must_exist)
+> > >     if (!dst)
+> > >             return -ENOMEM;
+> > > =20
+> > > +   kfree_const(dst);
+> >=20
+> > So you are now returning a freed pointer in dst_p?
+> Thanks for your reply. I re-examined the code, and this kfree is=20
+> incorrect and it should be deleted.
+> >=20
+> > >     return 0;
+> > >  }
+> > > =20
+> > > @@ -3491,6 +3492,8 @@ static int clk_core_populate_parent_map(struct =
+clk_core *core)
+> > >                             kfree_const(parents[i].name);
+> > >                             kfree_const(parents[i].fw_name);
+> > >                     } while (--i >=3D 0);
+> > > +                   kfree_const(parent->name);
+> > > +                   kfree_const(parent->fw_name);
+> >=20
+> > Both of them were just freed in the loop above, no?
+> for (i =3D 0, parent =3D parents; i < num_parents; i++, parent++)
+> Is 'parent' the same as the one from the loop above?
 
-Introduce pte_exclusive() and pmd_exclusive() to also verify a
-shadow stack PTE is exclusive.
+Yes. Did it change somehow?
 
-Also rename can_follow_write_pte/pmd() to can_follow_write() to
-make their meaning clear; i.e. "Can we write to the page?", not
-"Is the PTE writable?"
+>=20
+> Moreover, should 'parents[i].name' and 'parents[i].fw_name' be freed by
+> kfree_const()?
+>=20
 
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
----
- arch/x86/mm/pgtable.c         | 18 ++++++++++++++++++
- include/asm-generic/pgtable.h |  4 ++++
- mm/gup.c                      |  8 +++++---
- mm/huge_memory.c              |  8 +++++---
- 4 files changed, 32 insertions(+), 6 deletions(-)
+Yes? They're allocated with kstrdup_const() in clk_cpy_name(), or
+they're NULL by virtue of the kcalloc and then kfree_const() does
+nothing.
 
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 8ff54bd978f3..2a89c168df7b 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -913,4 +913,22 @@ inline bool arch_copy_pte_mapping(vm_flags_t vm_flags)
- {
- 	return (vm_flags & VM_SHSTK);
- }
-+
-+inline bool pte_exclusive(pte_t pte, struct vm_area_struct *vma)
-+{
-+	if (vma->vm_flags & VM_SHSTK)
-+		return pte_dirty_hw(pte);
-+	else
-+		return pte_dirty(pte);
-+}
-+
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+inline bool pmd_exclusive(pmd_t pmd, struct vm_area_struct *vma)
-+{
-+	if (vma->vm_flags & VM_SHSTK)
-+		return pmd_dirty_hw(pmd);
-+	else
-+		return pmd_dirty(pmd);
-+}
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- #endif /* CONFIG_X86_INTEL_SHADOW_STACK_USER */
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 4940411b8e1c..3324e30bb07f 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -1192,10 +1192,14 @@ static inline bool arch_has_pfn_modify_check(void)
- #define pte_set_vma_features(pte, vma) pte
- #define pmd_set_vma_features(pmd, vma) pmd
- #define arch_copy_pte_mapping(vma_flags) false
-+#define pte_exclusive(pte, vma) pte_dirty(pte)
-+#define pmd_exclusive(pmd, vma) pmd_dirty(pmd)
- #else
- pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma);
- pmd_t pmd_set_vma_features(pmd_t pmd, struct vm_area_struct *vma);
- bool arch_copy_pte_mapping(vm_flags_t vm_flags);
-+bool pte_exclusive(pte_t pte, struct vm_area_struct *vma);
-+bool pmd_exclusive(pmd_t pmd, struct vm_area_struct *vma);
- #endif
- 
- #endif /* _ASM_GENERIC_PGTABLE_H */
-diff --git a/mm/gup.c b/mm/gup.c
-index ddde097cf9e4..7d11fff1e8c3 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -178,10 +178,12 @@ static int follow_pfn_pte(struct vm_area_struct *vma, unsigned long address,
-  * FOLL_FORCE can write to even unwritable pte's, but only
-  * after we've gone through a COW cycle and they are dirty.
-  */
--static inline bool can_follow_write_pte(pte_t pte, unsigned int flags)
-+static inline bool can_follow_write(pte_t pte, unsigned int flags,
-+				    struct vm_area_struct *vma)
- {
- 	return pte_write(pte) ||
--		((flags & FOLL_FORCE) && (flags & FOLL_COW) && pte_dirty(pte));
-+		((flags & FOLL_FORCE) && (flags & FOLL_COW) &&
-+		 pte_exclusive(pte, vma));
- }
- 
- static struct page *follow_page_pte(struct vm_area_struct *vma,
-@@ -219,7 +221,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 	}
- 	if ((flags & FOLL_NUMA) && pte_protnone(pte))
- 		goto no_page;
--	if ((flags & FOLL_WRITE) && !can_follow_write_pte(pte, flags)) {
-+	if ((flags & FOLL_WRITE) && !can_follow_write(pte, flags, vma)) {
- 		pte_unmap_unlock(ptep, ptl);
- 		return NULL;
- 	}
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index eac1ee2f8985..d65970b9ece6 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1441,10 +1441,12 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
-  * FOLL_FORCE can write to even unwritable pmd's, but only
-  * after we've gone through a COW cycle and they are dirty.
-  */
--static inline bool can_follow_write_pmd(pmd_t pmd, unsigned int flags)
-+static inline bool can_follow_write(pmd_t pmd, unsigned int flags,
-+				    struct vm_area_struct *vma)
- {
- 	return pmd_write(pmd) ||
--	       ((flags & FOLL_FORCE) && (flags & FOLL_COW) && pmd_dirty(pmd));
-+	       ((flags & FOLL_FORCE) && (flags & FOLL_COW) &&
-+		pmd_exclusive(pmd, vma));
- }
- 
- struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
-@@ -1457,7 +1459,7 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
- 
- 	assert_spin_locked(pmd_lockptr(mm, pmd));
- 
--	if (flags & FOLL_WRITE && !can_follow_write_pmd(*pmd, flags))
-+	if (flags & FOLL_WRITE && !can_follow_write(*pmd, flags, vma))
- 		goto out;
- 
- 	/* Avoid dumping huge zero page */
--- 
-2.17.1
+I'm having a hard time following what this patch is trying to fix. It
+looks unnecessary though so I'm going to drop it from the clk review
+queue.
 
