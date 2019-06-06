@@ -2,189 +2,219 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7363DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97E3C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4781320872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEC520866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:37:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tmnQjVCT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kH3cgHAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbfFFMgl (ORCPT
+        id S1728437AbfFFMhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 08:36:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:36480 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfFFMgl (ORCPT
+        Thu, 6 Jun 2019 08:37:43 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:11530 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfFFMhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 08:36:41 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56COEgk181929;
-        Thu, 6 Jun 2019 12:36:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=lkkkxiOaBzEF+ZYZuPKKuq0YiuBz8Pp9BBn1w75FoCs=;
- b=tmnQjVCTpzZLctTUB09JyWgPcckrM/E2Y3Xf/YVGVnXWRAoVnzYCtajB/dhOgXSkIAgt
- Nsd0fskUhEih7bu8yYCGZCv1qa5ppImk8Vjp6iufeYCAqhTkmBDFowU3xuVZk0/idu+u
- qNzbmPq1tEgVMDZsYsjNAT9y3RVJo4FvwDXbIgLt1yxTsrx7UV5ncO2JJuGH9zPGKUGy
- HzVtrqLNaOrWaNe8K3uZwKzL9ETdogUaSFr9PjCX0pvCGPF3OFSeGJPlZr2JCi02hzsm
- JQ8/hwps40O+c6kTZz5f4KcmBs2gLnHnzrY9Mjf5HujcfTcvTJ1ksN2I7+Om6FSJYisx ZQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2sugstr509-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 12:36:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56CYY0p153197;
-        Thu, 6 Jun 2019 12:36:15 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2swnhaqta4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 12:36:14 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x56CaDWr020265;
-        Thu, 6 Jun 2019 12:36:13 GMT
-Received: from [10.30.3.6] (/213.57.127.2)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 05:36:13 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH] KVM: x86: move MSR_IA32_POWER_CTL handling to common code
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <1559824417-74835-1-git-send-email-pbonzini@redhat.com>
-Date:   Thu, 6 Jun 2019 15:36:09 +0300
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        sean.j.christopherson@intel.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <811D43D4-8E85-4681-ABA7-EEA209228164@oracle.com>
-References: <1559824417-74835-1-git-send-email-pbonzini@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060090
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060090
+        Thu, 6 Jun 2019 08:37:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf909010000>; Thu, 06 Jun 2019 05:37:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 05:37:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 05:37:39 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 12:37:33 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+Date:   Thu, 6 Jun 2019 13:37:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559824645; bh=XDB+pL3vyHrmMzTbWjdw9Rj5uSzEedd9KFZI1+sYfj8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kH3cgHAiqWWw4RPnCUokxiiUAT++MyXtdukd+KoocOePoqY0MKijHZzcWaH2HDW10
+         p88IARyCpV4tbno3AsTo9+DB+gu+urBz/ZGVhhZtKDBdz6oTUN3X+RpVK/3krLG3Z4
+         mRJ2+cjuIY5l41VVkjFh2DlCfPvRHLjlpIOxVT1opBYRz+mGiTHLEPWT5OdiqrHpPk
+         wzhEuj6dtxP2CFQ5db8krKHBwGIMGfnnY8xlXybvcHb4VaA0LX8ypiNXCBymDQ4THv
+         0KA8u6f/WVhhvD6a19r1twXhJIXYbEpeWpcVOLs+MkRxQ8Fw81fcU300a1jFn2GuiH
+         0NHN2taLnL9zw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On 6 Jun 2019, at 15:33, Paolo Bonzini <pbonzini@redhat.com> wrote:
->=20
-> Make it available to AMD hosts as well, just in case someone is trying
-> to use an Intel processor's CPUID setup.
+On 06/06/2019 12:54, Peter Ujfalusi wrote:
+> 
+> 
+> On 06/06/2019 13.49, Jon Hunter wrote:
+>>
+>> On 06/06/2019 11:22, Peter Ujfalusi wrote:
+>>
+>> ...
+>>
+>>>>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
+>>>>>> well.
+>>>>> Not exactly equal.
+>>>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
+>>>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
+>>>>> multiples of 16]
+>>>>
+>>>> So I think that the key thing to highlight here, is that the as Sameer
+>>>> highlighted above for the Tegra ADMA there are two values that need to
+>>>> be programmed; the DMA client FIFO size and the max burst size. The ADMA
+>>>> has register fields for both of these.
+>>>
+>>> How does the ADMA uses the 'client FIFO size' and 'max burst size'
+>>> values and what is the relation of these values to the peripheral side
+>>> (ADMAIF)?
+>>
+>> Per Sameer's previous comment, the FIFO size is used by the ADMA to
+>> determine how much space is available in the FIFO. I assume the burst
+>> size just limits how much data is transferred per transaction.
+>>
+>>>> As you can see from the above the FIFO size can be much greater than the
+>>>> burst size and so ideally both of these values would be passed to the DMA.
+>>>>
+>>>> We could get by with just passing the FIFO size (as the max burst size)
+>>>> and then have the DMA driver set the max burst size depending on this,
+>>>> but this does feel quite correct for this DMA. Hence, ideally, we would
+>>>> like to pass both.
+>>>>
+>>>> We are also open to other ideas.
+>>>
+>>> I can not find public documentation (I think they are walled off by
+>>> registration), but correct me if I'm wrong:
+>>
+>> No unfortunately, you are not wrong here :-(
+>>
+>>> ADMAIF - peripheral side
+>>>  - kind of a small DMA for audio preipheral(s)?
+>>
+>> Yes this is the interface to the APE (audio processing engine) and data
+>> sent to the ADMAIF is then sent across a crossbar to one of many
+>> devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
+>> configurable depending on the use-case.
+>>
+>>>  - Variable FIFO size
+>>
+>> Yes.
+>>
+>>>  - sends DMA request to ADMA per words
+>>
+>> From Sameer's notes it says the ADMAIF send a signal to the ADMA per
+>> word, yes.
+>>
+>>> ADMA - system DMA
+>>>  - receives the DMA requests from ADMAIF
+>>>  - counts the requests
+>>>  - based on some threshold of the counter it will send/read from ADMAIF?
+>>>   - maxburst number of words probably?
+>>
+>> Sounds about right to me.
+>>
+>>> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
+>>> managing that FIFO from the outside, making sure that it does not over
+>>> or underrun?
+>>
+>> Yes.
+>>
+>>> And it is the one who sets the pace (in effect the DMA burst size - how
+>>> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
+>>
+>> Yes.
+>>
+>> So currently, if you look at the ADMA driver
+>> (drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
+>> for the burst, but the FIFO size is hard-coded (see the
+>> TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
+>> Ideally, we should not hard-code this but pass it.
+> 
+> Sure, hardcoding is never good ;)
+> 
+>> Given that there are no current users of the ADMA upstream, we could
+>> change the usage of the src/dst_maxburst, but being able to set the FIFO
+>> size as well would be ideal.
+> 
+> Looking at the drivers/dma/tegra210-adma.c for the
+> TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
+> remote FIFO size would fit.
+> There are fields for overflow and starvation(?) thresholds and TX/RX
+> size (assuming word length, 3 == 32bits?).
 
-I=E2=80=99m actually quite surprised that such a setup works properly.
+The TX/RX size are the FIFO size. So 3 equates to a FIFO size of 3 * 64
+bytes.
 
->=20
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Both threshold is set to one, so I assume currently ADMA is
+> pushing/pulling data word by word.
 
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
+That's different. That indicates thresholds when transfers start.
 
-> ---
-> arch/x86/include/asm/kvm_host.h | 1 +
-> arch/x86/kvm/vmx/vmx.c          | 6 ------
-> arch/x86/kvm/vmx/vmx.h          | 2 --
-> arch/x86/kvm/x86.c              | 6 ++++++
-> 4 files changed, 7 insertions(+), 8 deletions(-)
->=20
-> diff --git a/arch/x86/include/asm/kvm_host.h =
-b/arch/x86/include/asm/kvm_host.h
-> index a86026969b19..35e7937cc9ac 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -689,6 +689,7 @@ struct kvm_vcpu_arch {
-> 	u32 virtual_tsc_mult;
-> 	u32 virtual_tsc_khz;
-> 	s64 ia32_tsc_adjust_msr;
-> +	u64 msr_ia32_power_ctl;
-> 	u64 tsc_scaling_ratio;
->=20
-> 	atomic_t nmi_queued;  /* unprocessed asynchronous NMIs */
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index cccf73a91e88..5d903f8909d1 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1695,9 +1695,6 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, =
-struct msr_data *msr_info)
-> 	case MSR_IA32_SYSENTER_ESP:
-> 		msr_info->data =3D vmcs_readl(GUEST_SYSENTER_ESP);
-> 		break;
-> -	case MSR_IA32_POWER_CTL:
-> -		msr_info->data =3D vmx->msr_ia32_power_ctl;
-> -		break;
-> 	case MSR_IA32_BNDCFGS:
-> 		if (!kvm_mpx_supported() ||
-> 		    (!msr_info->host_initiated &&
-> @@ -1828,9 +1825,6 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, =
-struct msr_data *msr_info)
-> 	case MSR_IA32_SYSENTER_ESP:
-> 		vmcs_writel(GUEST_SYSENTER_ESP, data);
-> 		break;
-> -	case MSR_IA32_POWER_CTL:
-> -		vmx->msr_ia32_power_ctl =3D data;
-> -		break;
-> 	case MSR_IA32_BNDCFGS:
-> 		if (!kvm_mpx_supported() ||
-> 		    (!msr_info->host_initiated &&
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 61128b48c503..1cdaa5af8245 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -260,8 +260,6 @@ struct vcpu_vmx {
->=20
-> 	unsigned long host_debugctlmsr;
->=20
-> -	u64 msr_ia32_power_ctl;
-> -
-> 	/*
-> 	 * Only bits masked by msr_ia32_feature_control_valid_bits can =
-be set in
-> 	 * msr_ia32_feature_control. FEATURE_CONTROL_LOCKED is always =
-included
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 145df9778ed0..5ec87ded17db 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -2563,6 +2563,9 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, =
-struct msr_data *msr_info)
-> 			return 1;
-> 		vcpu->arch.smbase =3D data;
-> 		break;
-> +	case MSR_IA32_POWER_CTL:
-> +		vcpu->arch.msr_ia32_power_ctl =3D data;
-> +		break;
-> 	case MSR_IA32_TSC:
-> 		kvm_write_tsc(vcpu, msr_info);
-> 		break;
-> @@ -2822,6 +2825,9 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, =
-struct msr_data *msr_info)
-> 			return 1;
-> 		msr_info->data =3D vcpu->arch.arch_capabilities;
-> 		break;
-> +	case MSR_IA32_POWER_CTL:
-> +		msr_info->data =3D vcpu->arch.msr_ia32_power_ctl;
-> +		break;
-> 	case MSR_IA32_TSC:
-> 		msr_info->data =3D kvm_scale_tsc(vcpu, rdtsc()) + =
-vcpu->arch.tsc_offset;
-> 		break;
-> --=20
-> 1.8.3.1
->=20
+> Not sure what the burst size is used for, my guess would be that it is
+> used on the memory (DDR) side for optimized, more efficient accesses?
 
+That is the actual burst size.
+
+> My guess is that the threshold values are the counter limits, if the DMA
+> request counter reaches it then ADMA would do a threshold limit worth of
+> push/pull to ADMAIF.
+> Or there is another register where the remote FIFO size can be written
+> and ADMA is counting back from there until it reaches the threshold (and
+> pushes/pulling again threshold amount of data) so it keeps the FIFO
+> filled with at least threshold amount of data?
+> 
+> I think in both cases the threshold would be the maxburst.
+> 
+> I suppose you have the patch for adma on how to use the fifo_size
+> parameter? That would help understand what you are trying to achieve better.
+
+Its quite simple, we would just use the FIFO size to set the fields
+TEGRAXXX_ADMA_CH_FIFO_CTRL_TXSIZE/RXSIZE in the
+TEGRAXXX_ADMA_CH_FIFO_CTRL register. That's all.
+
+Jon
+
+-- 
+nvpublic
