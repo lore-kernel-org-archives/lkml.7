@@ -2,123 +2,143 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFA4C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2293BC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B1320868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DD42089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hbOr96z/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfehlKGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfFFTXB (ORCPT
+        id S1729694AbfFFT0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:23:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42935 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbfFFTXB (ORCPT
+        Thu, 6 Jun 2019 15:26:24 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33345 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729335AbfFFT0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:23:01 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e6so1886435pgd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:23:01 -0700 (PDT)
+        Thu, 6 Jun 2019 15:26:23 -0400
+Received: by mail-ot1-f65.google.com with SMTP id p4so3098512oti.0;
+        Thu, 06 Jun 2019 12:26:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=+S0wcX87X5waHh8++2TADiUtaixAR2MJn95+UMpUzAk=;
-        b=hbOr96z/lV1V2iEqt9jxbsE6ILd7Bs3hopfYNeYNzpr452iz+JGuknFUGvylLoGbf6
-         PaKmhDAXZZzR+RiA8JzSZtuPTOTt8ZLSVVYCnw5gxbH5RSfZMBUb7NZXKdzNd2qEggev
-         A7ULi3KbHZ+irfw1cDar/VzedEmemzkFTTeGM=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=//bEoSLNLLHE97BPxRCj2Ov+nlOv5NirkYFgfSUW6IE=;
+        b=tfehlKGsfTi1m7hhM0Xjrl6wu/1FJz5YNvaZjnKEboFeHFs3iFSgzJkRWdCSVxUQwK
+         VwB5xDNIKJGAxswP++nk/enpOXH6PlOVd/C3I9AfnISZHKR6GWlgLskNPRU1h/bNpnqo
+         2JnW7XY7REpC1hYxXeiCTaUPNwn92eJoeTNDKX6EQv0oHvsnJL2QZ0+lZ/t3sGaYOI+/
+         7w6bJjmTKe2MNEgBbHPFvZRtjdzrZBQRFh/HYvKkjCyoWw075tiXM0Qx1QVkY2amPY+w
+         R/vtWSsTe6/xnFN3nup4WWtmib3FF7B5uNi4TEwcEZ6t+gf7OGkesQQYLrz4/vmTG3kT
+         /pIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=+S0wcX87X5waHh8++2TADiUtaixAR2MJn95+UMpUzAk=;
-        b=KOXjPqzRAp8LBrbdUauiD5zdQrXR+zB1ElvFd6p8jebUIHF9pJk5nlxbq9i6ZXmueN
-         xvkZbGZ9oNNWE3tpMcHeD2QUNZjD7DkYBjuIdl+iWH+q3XK+kNYL0PxmLvDKArzXPT0+
-         zBH3TZoxFyKhc3EZTN4SCPY0lxpXT4uwIIsHsY9L1xhWqGZH05TyMG+AyaYaH7zi672p
-         njYOVcILqCw0Vdteqc7RoV+Q3RITfxcE7yceDKAnUeIdeXFVgtpAl2onKaTSPJ64WBdf
-         PQrYwlR1HuBtBCxWkp9tNgGkDpUXXveiUnLaTFtD4Vtb5okKNLLG0cSB7sQ+wlB9RTzM
-         4rkw==
-X-Gm-Message-State: APjAAAVHaakKbe4p2cSdZvelSPmhUlK61L9G2iv+6oTQSUHQ0hEcGI6F
-        R/ggElvmSTJk6Llio8VAWEjK7w==
-X-Google-Smtp-Source: APXvYqw6/H0bTzmD1NtNFdjKXRgiTyCLyusI7VLYczAQnMPAF5yw1qPTSosMoYo5kE9VEEJioyBovw==
-X-Received: by 2002:a63:2ad2:: with SMTP id q201mr139088pgq.94.1559848980654;
-        Thu, 06 Jun 2019 12:23:00 -0700 (PDT)
-Received: from [10.69.37.149] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id j13sm3262132pfh.13.2019.06.06.12.22.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 12:23:00 -0700 (PDT)
-Subject: Re: [PATCH] scsi: lpfc: Fix backport of faf5a744f4f8 ("scsi: lpfc:
- avoid uninitialized variable warning")
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20190606165346.GB3249@kroah.com>
- <20190606174125.4277-1-natechancellor@gmail.com>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <de9bab03-437f-d4ab-df93-5f36b4216f03@broadcom.com>
-Date:   Thu, 6 Jun 2019 12:22:55 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=//bEoSLNLLHE97BPxRCj2Ov+nlOv5NirkYFgfSUW6IE=;
+        b=Er0eb3STw30y/Rei8bkTNeQ6KEByFbisgPBhDfl0ZeM0sT52zO0Dm6l3fH0h1afO14
+         IVzNFXNXAeAjOLdhBhkYBOWk8F26DqO/ttsGnmLcQ4PcRHkkFwLO3KNmlGsq8ULU9fHa
+         JHLeydcnrfMbDsD7knVNSXwQAq3WQzUmLoxxRe0zO4w2faUsU/+nolM10x4XIrasDTdT
+         XkNjFMyR2SesjkrcCQ1Ajjh1SLcXSWnrtZNFhtOVnBLVaxab0EI8k2E32xS4MJJvw67R
+         XuwvkMj1vTG6klsmoTgZG4SYN6FhDdMtaTm3KDQ6O9lE2LTgjITjFzqk6c2lriJ0PC6z
+         kp9Q==
+X-Gm-Message-State: APjAAAWkATjzBd8gafFnxz1eODkQNkDgMZrtw8c8h2cLqYD7Ij4lGq0w
+        njmBDjMoMAtKxmo5B4eM4rbkzNyv
+X-Google-Smtp-Source: APXvYqwL7j7Huo/G41SF8PlkxfC7vQ8YdiJ33WC5yoMAWg0YVvY404CgtKWoG3ue/NITZ97pzuvy4w==
+X-Received: by 2002:a05:6830:1303:: with SMTP id p3mr16235060otq.267.1559849182214;
+        Thu, 06 Jun 2019 12:26:22 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id b12sm922890otk.59.2019.06.06.12.26.20
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 12:26:21 -0700 (PDT)
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+To:     Christoph Hellwig <hch@lst.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+ <dfe6451c93574b61d4bdde4a05c5f8ccf86b31a0.camel@kernel.crashing.org>
+ <20190606093149.GA11598@darkstar.musicnaut.iki.fi>
+ <d87ac9a7faac0d5522cb496d74afc586410fed9c.camel@kernel.crashing.org>
+ <f8df19ffe5b75537045119037459ae9ad4a1de39.camel@kernel.crashing.org>
+ <20190606114325.GA7497@lst.de>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <59528af0-f250-f5e7-50c0-0a163ccfa59c@lwfinger.net>
+Date:   Thu, 6 Jun 2019 14:26:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190606174125.4277-1-natechancellor@gmail.com>
+In-Reply-To: <20190606114325.GA7497@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/2019 10:41 AM, Nathan Chancellor wrote:
-> Prior to commit 4c47efc140fa ("scsi: lpfc: Move SCSI and NVME Stats to
-> hardware queue structures") upstream, we allocated a cstat structure in
-> lpfc_nvme_create_localport. When commit faf5a744f4f8 ("scsi: lpfc: avoid
-> uninitialized variable warning") was backported, it was placed after the
-> allocation so we leaked memory whenever this function was called and
-> that conditional was true (so whenever CONFIG_NVME_FC is disabled).
->
-> Move the IS_ENABLED if statement above the allocation since it is not
-> needed when the condition is true.
->
-> Reported-by: Pavel Machek <pavel@denx.de>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->   drivers/scsi/lpfc/lpfc_nvme.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-> index 099f70798fdd..645ffb5332b4 100644
-> --- a/drivers/scsi/lpfc/lpfc_nvme.c
-> +++ b/drivers/scsi/lpfc/lpfc_nvme.c
-> @@ -2477,14 +2477,14 @@ lpfc_nvme_create_localport(struct lpfc_vport *vport)
->   	lpfc_nvme_template.max_sgl_segments = phba->cfg_nvme_seg_cnt + 1;
->   	lpfc_nvme_template.max_hw_queues = phba->cfg_nvme_io_channel;
+On 6/6/19 6:43 AM, Christoph Hellwig wrote:
+> On Thu, Jun 06, 2019 at 08:57:49PM +1000, Benjamin Herrenschmidt wrote:
+>>> Wow... that's an odd amount. One thing we could possibly do is add code
+>>> to limit the amount of RAM when we detect that device....
+>>
+>> Sent too quickly... I mean that *or* force swiotlb at 30-bits on those systems based
+>> on detecting the presence of that device in the device-tree.
+> 
+> swiotlb doesn't really help you, as these days swiotlb on matters for
+> the dma_map* case.  What would help is a ZONE_DMA that covers these
+> devices.  No need to do the 24-bit x86 does, but 30-bit would do it.
+> 
+> WIP patch for testing below:
+> 
+> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+> index b8286a2013b4..7a367ce87c41 100644
+> --- a/arch/powerpc/include/asm/page.h
+> +++ b/arch/powerpc/include/asm/page.h
+> @@ -319,6 +319,10 @@ struct vm_area_struct;
+>   #endif /* __ASSEMBLY__ */
+>   #include <asm/slice.h>
 >   
-> +	if (!IS_ENABLED(CONFIG_NVME_FC))
-> +		return ret;
-> +
->   	cstat = kmalloc((sizeof(struct lpfc_nvme_ctrl_stat) *
->   			phba->cfg_nvme_io_channel), GFP_KERNEL);
->   	if (!cstat)
->   		return -ENOMEM;
+> +#if 1 /* XXX: pmac?  dynamic discovery? */
+> +#define ARCH_ZONE_DMA_BITS 30
+> +#else
+>   #define ARCH_ZONE_DMA_BITS 31
+> +#endif
 >   
-> -	if (!IS_ENABLED(CONFIG_NVME_FC))
-> -		return ret;
-> -
->   	/* localport is allocated from the stack, but the registration
->   	 * call allocates heap memory as well as the private area.
->   	 */
+>   #endif /* _ASM_POWERPC_PAGE_H */
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index cba29131bccc..2540d3b2588c 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -248,7 +248,8 @@ void __init paging_init(void)
+>   	       (long int)((top_of_ram - total_ram) >> 20));
+>   
+>   #ifdef CONFIG_ZONE_DMA
+> -	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, 0x7fffffffUL >> PAGE_SHIFT);
+> +	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
+> +			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
+>   #endif
+>   	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
+>   #ifdef CONFIG_HIGHMEM
+> 
 
-Reviewed-by: James Smart <james.smart@broadcom.com>
+I am generating a test kernel with this patch.
 
+FYI, the "free" command on my machine shows 1.5+ G of memory. That likely means 
+I have 2G installed.
 
+I have tested a patched kernel in which b43legacy falls back to a 31-bit DMA 
+mask when the 32-bit one failed. That worked, but would likely kill the x86 
+version. Let me know if think a fix in the driver rather than the kernel would 
+be better. I still need to understand why the same setup works in b43 and fails 
+in b43legacy. :(
+
+Larry
