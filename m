@@ -2,114 +2,112 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF65C28D1C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93218C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3401207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h3LHlMdQ"
+	by mail.kernel.org (Postfix) with ESMTP id 75621207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfFFHoG (ORCPT
+        id S1726893AbfFFHoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:44:06 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4157 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFHoG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:44:06 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8c4430001>; Thu, 06 Jun 2019 00:44:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 00:44:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 00:44:04 -0700
-Received: from ngvpn01-171-236.dyn.scz.us.nvidia.com (10.124.1.5) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Thu, 6 Jun 2019 07:44:02 +0000
-Subject: Re: [PATCH 12/16] mm: consolidate the get_user_pages* implementations
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        <linux-mips@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-mm@kvack.org>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190601074959.14036-1-hch@lst.de>
- <20190601074959.14036-13-hch@lst.de>
- <b0b73eae-6d79-b621-ce4e-997ccfbf4446@nvidia.com>
- <20190606062018.GA26745@lst.de>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <f7ccf08d-b269-c5e9-7a86-0b5c6176a7c3@nvidia.com>
-Date:   Thu, 6 Jun 2019 00:44:02 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190606062018.GA26745@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559807044; bh=mMOlfiNeriS8dHk456D4i2uPqqdGUdRNA/UjahArgCQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=h3LHlMdQHamD4aUSwPzeTds3U6FI5EEYLkWJ4CyKjK6e+LboNBSAbcSHpVs2ab/a6
-         z9eQd8NbRaW2yWXClwhhhoDwI/Bg8V5MhP9jYxjADW4on9H1UbzwmFXUvBa2QQc0YP
-         3BZxHfWSY+4OVCEed52WcnU8jW1oCIuqanuBVjnZxsQlD1tSrzhAGFH+mkQujZW9MV
-         3WEIf8zeYJc6hdtRCd3LqEJefWg6Q5t5xgsR/hrqbzz+0tbm21c1EGeCCpOskwezjW
-         2zGjfIhkSG9BX9aupNObBuuWNlgR4cVZm3rSLITraOByP9C918Zm94j22vnCvn0l3v
-         eA+GgKwaIXi4w==
+        Thu, 6 Jun 2019 03:44:24 -0400
+Received: from mga01.intel.com ([192.55.52.88]:24992 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfFFHoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:44:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 00:44:24 -0700
+X-ExtLoop1: 1
+Received: from devel-ww.sh.intel.com ([10.239.48.128])
+  by orsmga005.jf.intel.com with ESMTP; 06 Jun 2019 00:44:21 -0700
+From:   Wei Wang <wei.w.wang@intel.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, ak@linux.intel.com, peterz@infradead.org
+Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
+        like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
+        arei.gonglei@huawei.com, jmattson@google.com
+Subject: [PATCH v6 00/12] Guest LBR Enabling
+Date:   Thu,  6 Jun 2019 15:02:19 +0800
+Message-Id: <1559804551-42271-1-git-send-email-wei.w.wang@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/19 11:20 PM, Christoph Hellwig wrote:
-> On Wed, Jun 05, 2019 at 11:01:17PM -0700, John Hubbard wrote:
->> I started reviewing this one patch, and it's kind of messy figuring out
->> if the code motion preserves everything because of
->> all the consolidation from other places, plus having to move things in
->> and out of the ifdef blocks.  So I figured I'd check and see if this is
->> going to make it past RFC status soon, and if it's going before or after
->> Ira's recent RFC ("RDMA/FS DAX truncate proposal").
-> 
-> I don't like the huge moves either, but I can't really think of any
-> better way to do it.  Proposals welcome, though.
-> 
+Last Branch Recording (LBR) is a performance monitor unit (PMU) feature
+on Intel CPUs that captures branch related info. This patch series enables
+this feature to KVM guests.
 
-One way would be to do it in two patches:
+Here is a conclusion of the fundamental methods that we use:
+1) the LBR feature is enabled per guest via QEMU setting of
+   KVM_CAP_X86_GUEST_LBR;
+2) the LBR stack is passed through to the guest for direct accesses after
+   the guest's first access to any of the lbr related MSRs;
+3) the host will help save/resotre the LBR stack when the vCPU is
+   scheduled out/in.
 
-1) Move the code into gup.c, maybe at the bottom. Surround each function
-or group of functions by whatever ifdefs they need.
+ChangeLog:
+    - perf/x86:
+        - Patch 7:
+                - define "no counter" as a new PERF_EV cap and keep it
+                  used in the kernel, instead of esposing it in the user
+                  ABI (if defined in perf_event_attr)
+                - add a new API, perf_event_create, which can be used to
+                  create a perf event without counter assignment (e.g.
+                  a perf event simply to get the perf core's help of
+                  switching lbr stack on thread switching, please see
+                  patch 8)
+    - KVM/vPMU:
+	- Patch 8: use perf_event_create to create a perf event without
+                   the need of a perf counter
+	- Patch 12: set the GLOBAL_STATUS_COUNTERS_FROZEN bit when
+                   injecting a vPMI.
+previous:
+	https://lkml.org/lkml/2019/2/14/210
 
-2) Move code out of the bottom of gup.c, into the final location.
+Like Xu (1):
+  KVM/x86/vPMU: Add APIs to support host save/restore the guest lbr
+    stack
 
-...but I'm not certain that will be that much better. In the spirit of
-not creating gratuitous work for others, I could try it out and send
-out something if it looks like it's noticeably easier to verify/review.
+Wei Wang (11):
+  perf/x86: fix the variable type of the LBR MSRs
+  perf/x86: add a function to get the lbr stack
+  KVM/x86: KVM_CAP_X86_GUEST_LBR
+  KVM/x86: intel_pmu_lbr_enable
+  KVM/x86/vPMU: tweak kvm_pmu_get_msr
+  KVM/x86: expose MSR_IA32_PERF_CAPABILITIES to the guest
+  perf/x86: no counter allocation support
+  perf/x86: save/restore LBR_SELECT on vCPU switching
+  KVM/x86/lbr: lazy save the guest lbr stack
+  KVM/x86: remove the common handling of the debugctl msr
+  KVM/VMX/vPMU: support to report GLOBAL_STATUS_LBRS_FROZEN
 
-thanks,
+ arch/x86/events/core.c            |  12 ++
+ arch/x86/events/intel/lbr.c       |  43 ++++-
+ arch/x86/events/perf_event.h      |   6 +-
+ arch/x86/include/asm/kvm_host.h   |   5 +
+ arch/x86/include/asm/perf_event.h |  16 ++
+ arch/x86/kvm/cpuid.c              |   2 +-
+ arch/x86/kvm/cpuid.h              |   8 +
+ arch/x86/kvm/pmu.c                |  29 ++-
+ arch/x86/kvm/pmu.h                |  12 +-
+ arch/x86/kvm/pmu_amd.c            |   7 +-
+ arch/x86/kvm/vmx/pmu_intel.c      | 397 +++++++++++++++++++++++++++++++++++++-
+ arch/x86/kvm/vmx/vmx.c            |   4 +-
+ arch/x86/kvm/vmx/vmx.h            |   2 +
+ arch/x86/kvm/x86.c                |  32 +--
+ include/linux/perf_event.h        |  13 ++
+ include/uapi/linux/kvm.h          |   1 +
+ kernel/events/core.c              |  37 ++--
+ 17 files changed, 574 insertions(+), 52 deletions(-)
+
 -- 
-John Hubbard
-NVIDIA
+2.7.4
+
