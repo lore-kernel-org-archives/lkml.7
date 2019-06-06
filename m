@@ -2,87 +2,105 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBEDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1975DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5EF20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED4B20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfFFPdC (ORCPT
+        id S1729464AbfFFPdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:33:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46566 "EHLO mx1.redhat.com"
+        Thu, 6 Jun 2019 11:33:10 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24534 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbfFFPdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:33:01 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D950C550BB;
-        Thu,  6 Jun 2019 15:32:54 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B88DC7D901;
-        Thu,  6 Jun 2019 15:32:46 +0000 (UTC)
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
- <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
- <20190402094320.GM11158@hirez.programming.kicks-ass.net>
- <6AEDE4F2-306A-4DF9-9307-9E3517C68A2B@oracle.com>
- <20190403160112.GK4038@hirez.programming.kicks-ass.net>
- <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
- <20190605204003.GC3402@hirez.programming.kicks-ass.net>
- <6426D627-77EE-471C-B02A-A85271B666E9@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <409b5d52-1f7d-7f60-04c7-e791e069239f@redhat.com>
-Date:   Thu, 6 Jun 2019 11:32:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728916AbfFFPdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:33:09 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 08:33:07 -0700
+X-ExtLoop1: 1
+Received: from harend-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.8])
+  by orsmga006.jf.intel.com with ESMTP; 06 Jun 2019 08:32:56 -0700
+Date:   Thu, 6 Jun 2019 18:32:51 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
+        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
+        "haitao.huang@intel.com" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kai.svahn@intel.com" <kai.svahn@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "kai.huang@intel.com" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>
+Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
+Message-ID: <20190606153230.GA25112@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
+ <20190422215831.GL1236@linux.intel.com>
+ <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com>
+ <20190424002653.GB14422@linux.intel.com>
+ <20190604201232.GA7775@linux.intel.com>
+ <20190605142908.GD11331@linux.intel.com>
+ <20190605145219.GC26328@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <6426D627-77EE-471C-B02A-A85271B666E9@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 06 Jun 2019 15:33:01 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605145219.GC26328@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 11:21 AM, Alex Kogan wrote:
->>> Also, the paravirt code is under arch/x86, while CNA is generic (not
->>> x86-specific).  Do you still want to see CNA-related patching residing
->>> under arch/x86?
->>>
->>> We still need a config option (something like NUMA_AWARE_SPINLOCKS) to
->>> enable CNA patching under this config only, correct?
->> There is the static_call() stuff that could be generic; I posted a new
->> version of that today (x86 only for now, but IIRC there's arm64 patches
->> for that around somewhere too).
-> The static_call technique appears as the more desirable long-term approach, but I think it would be prudent to keep the patches decoupled for now so we can move forward with less entanglements.
-> So unless anyone objects, we will work on plugging into the existing patching for pv.
-> And we will keep that code under arch/x86, but will be open for any suggestion to move it elsewhere.
->
-If you mean making the CNV code depends on PARAVIRT_SPINLOCKS for now,
-that is fine. The code should be under kernel/locking. You shouldn't put
-it somewhere under arch/x86.
+On Wed, Jun 05, 2019 at 07:52:19AM -0700, Sean Christopherson wrote:
+> At this point I don't see the access control stuff impacting the LKM
+> decision.
+> 
+> Irrespetive of the access control thing, there are (at least) two issues
+> with using ACPI to probe the driver:
+> 
+>   - ACPI probing breaks if there are multiple device, i.e. when KVM adds
+>     a raw EPC device.  We could do something like probe the driver via
+>     ACPI but manually load the raw EPC device from core SGX code, but IMO
+>     taking that approach should be a concious decision.
+> 
+>   - ACPI probing means core SGX will consume resources for EPC management
+>     even if there is no end consumer, e.g. the driver refuses to load due
+>     to lack of FLC support.
+> 
+> It would be very helpful for us to make a decision about LKM support
+> sooner rather than later, e.g. to start reworking the core code now and so
+> that I can send RFCs for KVM support.  IMO we're just delaying the
+> inevitable and slowing down upstreaming in the process.
 
--Longman
+I think a good reason to not have LKM is that it can be added after
+reaching the mainline if there ever becomes strong enough reasons to
+do so.
 
+I have similar situation with TPM where TPM core would better be just
+part of the core but since tristate was introduced, it is hard to revert
+that decision.
+
+I would prefer do this update myself rather than taking patches as it
+takes me probably shorter time to implement the change rather than
+reviewing and squashing patches. I'll get it done ASAP.
+
+/Jarkko
