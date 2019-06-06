@@ -2,22 +2,22 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CB5C28D18
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEB6C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971E320717
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E90020717
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfFFCLu (ORCPT
+        id S1726776AbfFFCLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:11:50 -0400
+        Wed, 5 Jun 2019 22:11:52 -0400
 Received: from mga17.intel.com ([192.55.52.151]:61631 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfFFCLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726589AbfFFCLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Jun 2019 22:11:50 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -54,10 +54,12 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         David Rientjes <rientjes@google.com>,
         William Roberts <william.c.roberts@intel.com>,
         Philip Tricca <philip.b.tricca@intel.com>
-Subject: [RFC PATCH v2 0/5] security: x86/sgx: SGX vs. LSM
-Date:   Wed,  5 Jun 2019 19:11:40 -0700
-Message-Id: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH v2 1/5] mm: Introduce vm_ops->may_mprotect()
+Date:   Wed,  5 Jun 2019 19:11:41 -0700
+Message-Id: <20190606021145.12604-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,89 +67,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is the result of a rather absurd amount of discussion over
-how to get SGX to play nice with LSM policies, without having to resort
-to evil shenanigans or put undue burden on userspace.  Discussions are
-still ongoing, e.g. folks are exploring alternatives to changing the
-proposed SGX UAPI, but I wanted to get this updated version of the code
-posted to show a fairly minimal implemenation(from a kernel perspective),
-e.g. the diff stats aren't too scary, especially considering 50% of the
-added lines are comments.
+SGX will use the may_mprotect() hook to prevent userspace from
+circumventing various security checks, e.g. Linux Security Modules.
+Naming it may_mprotect() instead of simply mprotect() is intended to
+reflect the hook's purpose as a way to gate mprotect() as opposed to
+a wholesale replacement.
 
-This series is a delta to Jarkko's ongoing SGX series and applies on
-Jarkko's current master at https://github.com/jsakkine-intel/linux-sgx.git:
+Enclaves are built by copying data from normal memory into the Enclave
+Page Cache (EPC).  Due to the nature of SGX, the EPC is represented by a
+single file that must be MAP_SHARED, i.e. mprotect() only ever sees a
+MAP_SHARED vm_file that references single file path.  Furthermore, all
+enclaves will need read, write and execute pages in the EPC.
 
-  dfc89a83b5bc ("docs: x86/sgx: Document the enclave API")
+As a result, LSM policies cannot be meaningfully applied, e.g. an LSM
+can deny access to the EPC as a whole, but can't deny PROT_EXEC on page
+that originated in a non-EXECUTE file (which is long gone by the time
+mprotect() is called).
 
-The basic gist of the approach is to track an enclave's page protections
-separately from any vmas that map the page, and separate from the hardware
-enforced protections.  The SGX UAPI is modified to require userspace to
-explicitly define the protections for each enclave page, i.e. the ioctl
-to add pages to an enclave is extended to take PROT_{READ,WRITE,EXEC}
-flags.
+By hooking mprotect(), SGX can make explicit LSM upcalls while an
+enclave is being built, i.e. when the kernel has a handle to origin of
+each enclave page, and enforce the result of the LSM policy whenever
+userspace maps the enclave page in the future.
 
-An enclave page's protections are the maximal protections that userspace
-can use to map the page, e.g. mprotect() and mmap() are rejected if the
-protections for the vma would be more permissible than those of the
-associated enclave page.
+Alternatively, SGX could play games with MAY_{READ,WRITE,EXEC}, but
+that approach is quite ugly, e.g. would require userspace to call an
+SGX ioctl() prior to using mprotect() to extend a page's protections.
 
-Tracking protections for an enclave page (in additional to vmas) allows
-SGX to invoke LSM upcalls while the enclave is being built.  This is
-critical to enabling LSMs to implement policies for enclave pages that
-are functionally equivalent to existing policies for normal pages.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ include/linux/mm.h |  2 ++
+ mm/mprotect.c      | 15 +++++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-v1: https://lkml.kernel.org/r/20190531233159.30992-1-sean.j.christopherson@intel.com
-
-v2:
-  - Dropped the patch(es) to extend the SGX UAPI to allow adding multiple
-    enclave pages in a single syscall [Jarkko].
-
-  - Reject ioctl() immediately on LSM denial [Stephen].
-
-  - Rework SELinux code to avoid checking EXEMEM multiple times [Stephen].
-
-  - Adding missing equivalents to existing selinux_file_protect() checks
-    [Stephen].
-
-  - Hold mmap_sem across copy_to_user() to prevent a TOCTOU race when
-    checking the source vma [Stephen].
-
-  - Stubify security_enclave_load() if !CONFIG_SECURITY [Stephen].
-
-  - Make flags a 32-bit field [Andy].
-
-  - Don't validate the SECINFO protection flags against the enclave
-    page's protection flags [Andy].
-
-  - Rename mprotect() hook to may_mprotect() [Andy].
-
-  - Test 'vma->vm_flags & VM_MAYEXEC' instead of manually checking for
-    a noexec path [Jarkko].
-
-  - Drop the SGX defined flags (use PROT_*) [Jarkko].
-
-  - Improve comments and changelogs [Jarkko].
-
-Sean Christopherson (5):
-  mm: Introduce vm_ops->may_mprotect()
-  x86/sgx: Require userspace to define enclave pages' protection bits
-  x86/sgx: Enforce noexec filesystem restriction for enclaves
-  LSM: x86/sgx: Introduce ->enclave_load() hook for Intel SGX
-  security/selinux: Add enclave_load() implementation
-
- arch/x86/include/uapi/asm/sgx.h        |  2 +
- arch/x86/kernel/cpu/sgx/driver/ioctl.c | 57 ++++++++++++++++++---
- arch/x86/kernel/cpu/sgx/driver/main.c  |  5 ++
- arch/x86/kernel/cpu/sgx/encl.c         | 53 ++++++++++++++++++++
- arch/x86/kernel/cpu/sgx/encl.h         |  4 ++
- include/linux/lsm_hooks.h              | 13 +++++
- include/linux/mm.h                     |  2 +
- include/linux/security.h               | 12 +++++
- mm/mprotect.c                          | 15 ++++--
- security/security.c                    |  7 +++
- security/selinux/hooks.c               | 69 ++++++++++++++++++++++++++
- 11 files changed, 228 insertions(+), 11 deletions(-)
-
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 0e8834ac32b7..a697996040ac 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -458,6 +458,8 @@ struct vm_operations_struct {
+ 	void (*close)(struct vm_area_struct * area);
+ 	int (*split)(struct vm_area_struct * area, unsigned long addr);
+ 	int (*mremap)(struct vm_area_struct * area);
++	int (*may_mprotect)(struct vm_area_struct * area, unsigned long start,
++			    unsigned long end, unsigned long prot);
+ 	vm_fault_t (*fault)(struct vm_fault *vmf);
+ 	vm_fault_t (*huge_fault)(struct vm_fault *vmf,
+ 			enum page_entry_size pe_size);
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index bf38dfbbb4b4..18732543b295 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -547,13 +547,20 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
+ 			goto out;
+ 		}
+ 
+-		error = security_file_mprotect(vma, reqprot, prot);
+-		if (error)
+-			goto out;
+-
+ 		tmp = vma->vm_end;
+ 		if (tmp > end)
+ 			tmp = end;
++
++		if (vma->vm_ops && vma->vm_ops->may_mprotect) {
++			error = vma->vm_ops->may_mprotect(vma, nstart, tmp, prot);
++			if (error)
++				goto out;
++		}
++
++		error = security_file_mprotect(vma, reqprot, prot);
++		if (error)
++			goto out;
++
+ 		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
+ 		if (error)
+ 			goto out;
 -- 
 2.21.0
 
