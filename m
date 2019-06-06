@@ -2,126 +2,125 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FF2C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC467C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F54207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D97C208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="hJisxLS2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nu7nnn9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfFFUp5 (ORCPT
+        id S1727023AbfFFUyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:45:57 -0400
-Received: from mail-eopbgr50118.outbound.protection.outlook.com ([40.107.5.118]:33036
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726875AbfFFUp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:45:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KbeRTWr1O24Sl9iaAvq7f504Q+wpFP/ZhfFPd8lz5ec=;
- b=hJisxLS2taV7VlQX2JNb4JUAD9ToUJFwVTkvv6GuKFidAs26MLWKWp+hUTzU6ahCyqtgtZeOxN+BgfWlMWYj7A3ZnTTiqhGLyJDoPXBTTEkOlKKYH71CJRMRfu1qWtqhxY1Ym6r9IPh0+LdmOKmwOroB1CLf037/Z5sfBMOeVNQ=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3433.eurprd02.prod.outlook.com (52.134.70.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Thu, 6 Jun 2019 20:45:52 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
- 20:45:52 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-Subject: Re: [PATCH V4] drivers: i2c: tegra: fix checkpatch defects
-Thread-Topic: [PATCH V4] drivers: i2c: tegra: fix checkpatch defects
-Thread-Index: AQHVHDpwyItVqql7fkeBnaejnwwA46aPGS8A
-Date:   Thu, 6 Jun 2019 20:45:52 +0000
-Message-ID: <8df7648d-c5bd-7179-6368-66dab9b7fa39@axentia.se>
-References: <1559806523-1352-1-git-send-email-bbiswas@nvidia.com>
-In-Reply-To: <1559806523-1352-1-git-send-email-bbiswas@nvidia.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0701CA0083.eurprd07.prod.outlook.com
- (2603:10a6:3:64::27) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6a21b851-dade-483d-8904-08d6eabff700
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3433;
-x-ms-traffictypediagnostic: DB3PR0202MB3433:
-x-microsoft-antispam-prvs: <DB3PR0202MB3433803F4789F7EA37583394BC170@DB3PR0202MB3433.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:854;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(396003)(136003)(346002)(366004)(376002)(189003)(199004)(316002)(6486002)(14454004)(64126003)(4326008)(14444005)(186003)(6436002)(7416002)(31696002)(256004)(26005)(476003)(68736007)(31686004)(2616005)(65826007)(99286004)(52116002)(6512007)(386003)(6506007)(102836004)(53546011)(76176011)(486006)(25786009)(446003)(229853002)(11346002)(66446008)(66556008)(64756008)(2906002)(508600001)(73956011)(86362001)(5660300002)(66946007)(81166006)(81156014)(66476007)(7736002)(66066001)(53936002)(65806001)(65956001)(8676002)(8936002)(71190400001)(71200400001)(6116002)(74482002)(54906003)(6246003)(110136005)(36756003)(58126008)(3846002)(305945005)(2201001)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3433;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ekTSfQ9Pi0l2lPhHk/tnIMGR1nkIRr2zxP2kl213QIm3/6JEst3hTi8Eeohe53v+9tDg2kPlsEhAJATns4yclHswgXOFlgEyS9GQ+j2BOFRajFkT/CK8lxn7R7099jFGFJE9srDunByOcOe5s13Ji7pTiSkBoqCTEQ15neE1JOGDQfePckI2FYL5+EYjCaxD/cJvZbCR2UddcRq/jcG6d0MrWp15Z7VM3pmqOVr/9dbrg88BXDf90uN8l9+PVIFPWnieropTdwbZaDxRi+PGBZ+1Baql3d/iHy38NTO71eIMKHke94ketbpWSdxnti1CKyLc1yVOERSHTAQOM+9t+znpFYSsVYl6W7buXG589Zsi8r44ciSchSdfRX591jn7zSrdPe9+ZVk8yDYoCZeJRkiMdF1wnSlRvCnn8wvAld4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <943E35E38B91464398F28017D5F4F6A1@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 6 Jun 2019 16:54:11 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37112 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfFFUyL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:54:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bh12so1394318plb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 13:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YoJ3njYYHju4gWF0UDBaqx7cQlwNKwpKTA90sZyzSuQ=;
+        b=Nu7nnn9vfPpPz7sJxzqHoDx7JUBZai+/vvUUZYEVShpjf+/WoIFd69vDm490dRtAIC
+         3/H83DydzDP+pAjIcUz9k3WNrfVW0HsVmlqELKBg8gnj0bRoyZo8MVo1UcJiTEVY2SI+
+         pnj0Drye6jfQILs7l22P2xML1Elc79OSNTLn4hgwyOo/QokPL2q6Bmp14mQsmpbNN7Rk
+         iksow+4qEgKgcWET9s4ApvtocM1MVqaHqiuwD9GJmJEWAY6uTTDP42BEuTOpf9/+GPfL
+         WWTAxu5+ByvouWksg97xH8Dg414XiC58pgwqSdUEyZHtgoUsqO/HF76Hq1EUCG95Cvh5
+         cbzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YoJ3njYYHju4gWF0UDBaqx7cQlwNKwpKTA90sZyzSuQ=;
+        b=IyRDWQbWkGBbUFAjIvKtbm30ZhcZT5aYe0H1tMlPSmv/MjB+nWnlIUhFM9NfTue5Zq
+         kLfdeDVrvpuk5tsgkNRWffxnDcDV2wbgsXZ2PhIbN+su35tabHogcESyfL1qVZcXkFVt
+         KWNbTlYHg2LttKcND4kSwHOlToLviZNr5lKgVF1ND/QdgAObQuczTjTmCm5O8cAw6Qev
+         hsZMBBL6FpNzjaOw4G3KN6RH0SHp0+vCz7fX5zeFshuVoQ9VgKM7B7VXawtL0um9H/90
+         nuygm67EBKExEsyJXp58f9yZlsgDbROCBMG12Tu4321h29gBEqWoBE32m37Ki+yYgMlJ
+         wpDg==
+X-Gm-Message-State: APjAAAVVaMrPSmERWZGBlm2PX6Hc/2Kqeeiqxz9XVERNTZ9yWkGbU5D2
+        X7jodXuGg8eHJxz4530n4K5EmQ==
+X-Google-Smtp-Source: APXvYqzzAMglGevfusW7tK60HbnxOfGl1ecbxmkWIc836qB8QYHrsxg3mMGRvfA5XFepfVeRePnaHA==
+X-Received: by 2002:a17:902:2ba9:: with SMTP id l38mr45854802plb.300.1559854450219;
+        Thu, 06 Jun 2019 13:54:10 -0700 (PDT)
+Received: from google.com ([2620:0:1008:1100:dac3:f780:2846:b802])
+        by smtp.gmail.com with ESMTPSA id m5sm60680pgc.84.2019.06.06.13.54.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 13:54:09 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 13:54:06 -0700
+From:   Tom Roeder <tmroeder@google.com>
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     yamada.masahiro@socionext.com, mka@chromium.org,
+        ndesaulniers@google.com, zwisler@chromium.org,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kbuild@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC PATCH] kbuild: Add option to generate a Compilation Database
+Message-ID: <20190606205406.GA120512@google.com>
+References: <20190606203003.112040-1-rrangel@chromium.org>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a21b851-dade-483d-8904-08d6eabff700
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 20:45:52.5533
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3433
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606203003.112040-1-rrangel@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNi0wNiAwOTozNSwgQml0YW4gQmlzd2FzIHdyb3RlOg0KPiBGaXggY2hlY2twYXRj
-aC5wbCB3YXJuaW5nKHMpL2Vycm9yKHMpL2NoZWNrKHMpIGluIGkyYy10ZWdyYS5jDQo+IA0KPiBS
-ZW1vdmUgcmVkdW5kYW50IEJVR19PTiBjYWxscyBvciByZXBsYWNlIHdpdGggV0FSTl9PTl9PTkNF
-DQo+IGFzIG5lZWRlZC4gUmVwbGFjZSBCVUcoKSB3aXRoIGVycm9yIGhhbmRsaW5nIGNvZGUuDQo+
-IERlZmluZSBJMkNfRVJSX1VORVhQRUNURURfU1RBVFVTIGZvciBlcnJvciBoYW5kbGluZy4NCj4g
-DQo+IFNpZ25lZC1vZmYtYnk6IEJpdGFuIEJpc3dhcyA8YmJpc3dhc0BudmlkaWEuY29tPg0KPiAt
-LS0NCj4gIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtdGVncmEuYyB8IDY3ICsrKysrKysrKysrKysr
-KysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2Vy
-dGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJj
-L2J1c3Nlcy9pMmMtdGVncmEuYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtdGVncmEuYw0KPiBp
-bmRleCA3NmI3OTI2Li41NWE1ZDg3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMv
-aTJjLXRlZ3JhLmMNCj4gKysrIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy10ZWdyYS5jDQo+IEBA
-IC03OCw2ICs3OCw3IEBADQo+ICAjZGVmaW5lIEkyQ19FUlJfTk9fQUNLCQkJCTB4MDENCj4gICNk
-ZWZpbmUgSTJDX0VSUl9BUkJJVFJBVElPTl9MT1NUCQkweDAyDQo+ICAjZGVmaW5lIEkyQ19FUlJf
-VU5LTk9XTl9JTlRFUlJVUFQJCTB4MDQNCj4gKyNkZWZpbmUgSTJDX0VSUl9VTkVYUEVDVEVEX1NU
-QVRVUyAgICAgICAgICAgICAgIDB4MDgNCg0KVXNlIHRhYnMgbGlrZSB0aGUgdGhlIHN1cnJvdW5k
-aW5nIGNvZGUuIEFuZCBwZXJoYXBzIGNvbnZlcnQgYWxsDQp0aGVzZSBmbGFncyB0byB1c2UgdGhl
-IEJJVCgpIG1hY3JvPw0KDQo+ICANCj4gICNkZWZpbmUgUEFDS0VUX0hFQURFUjBfSEVBREVSX1NJ
-WkVfU0hJRlQJMjgNCj4gICNkZWZpbmUgUEFDS0VUX0hFQURFUjBfUEFDS0VUX0lEX1NISUZUCQkx
-Ng0KPiBAQCAtMTEyLDcgKzExMyw3IEBADQo+ICAjZGVmaW5lIEkyQ19DTEtFTl9PVkVSUklERQkJ
-CTB4MDkwDQo+ICAjZGVmaW5lIEkyQ19NU1RfQ09SRV9DTEtFTl9PVlIJCQlCSVQoMCkNCj4gIA0K
-PiAtI2RlZmluZSBJMkNfQ09ORklHX0xPQURfVElNRU9VVAkJCTEwMDAwMDANCj4gKyNkZWZpbmUg
-STJDX0NPTkZJR19MT0FEX1RNT1VUCQkJMTAwMDAwMA0KDQpTaW1pbGFyIHRvIHhmZXJfdG0gYWxy
-ZWFkeSBtZW50aW9uZWQgYnkgRG1pdHJ5OyBqdXN0IGtlZXAgaXQgYXMNCi4uLl9USU1FT1VUIGFu
-ZCBpZ25vcmUgY2hlY2twYXRjaCBvbiB0aGlzIGlzc3VlLiBPciBqdWdnbGUgdGhlDQpjb2RlIGlu
-IHNvbWUgb3RoZXIgd2F5IHRvIHBhY2lmeSBjaGVja3BhdGNoLiBFLmcuIGFiYnJldmlhdGUNCkNP
-TkZJRyBpbnN0ZWFkPyBPciBzb21ldGhpbmcuIENPTkYgaXMgd2F5IGVhc2llciB0byByZWFkIHRo
-YW4NClRNT1VUIElNSE8uLi4NCg0KQ2hlZXJzLA0KUGV0ZXINCg==
+On Thu, Jun 06, 2019 at 02:30:03PM -0600, Raul E Rangel wrote:
+> Clang tooling requires a compilation database to figure out the build
+> options for each file. This enables tools like clang-tidy and
+> clang-check.
+> 
+> See https://clang.llvm.org/docs/HowToSetupToolingForLLVM.html for more
+> information.
+
+I'm glad to see someone adding this to the Makefile directly. I added
+scripts/gen_compile_commands.py in b302046 (in Dec 2018) when I was
+working on using clang-check to look for bugs in KVM. That script
+sidesteps the -MJ option because I found that trying to add it as an
+extra option ended up adding entries to the database that didn't work
+properly in some cases. This patch adds -MJ in a different way than I
+was trying, so I hope it doesn't have the same problems.
+
+I would much prefer to have this functionality integrated into the
+Makefile system directly, so if this works with clang-check over all
+files and doesn't lead to spurious entries in the database, I'm all for
+it.
+
+> 
+> Normally cmake is used to generate the compilation database, but the
+> linux kernel uses make. Another option is using
+> [BEAR](https://github.com/rizsotto/Bear) which instruments
+> exec to find clang invocations and generate the database that way.
+> 
+> Clang 4.0.0 added the -MJ option to generate the json for each
+> compilation unit. https://reviews.llvm.org/D27140
+> 
+> This patch takes advantage of the -MJ option. So it only works for
+> Clang.
+> 
+Can you please add details about how this was tested and compare
+coverage with the existing script?
+
+Tom
