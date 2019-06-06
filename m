@@ -2,326 +2,267 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE8AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30EDC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D237920665
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802E520665
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="EXmVmlMa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LaFN5H0K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbfFFOZH (ORCPT
+        id S1728982AbfFFOZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:25:07 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:49246 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbfFFOZG (ORCPT
+        Thu, 6 Jun 2019 10:25:13 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16508 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbfFFOZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:25:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559831106; x=1591367106;
-  h=subject:from:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=rEjq0xdKk1JknlqpDZ/HFtUuPxL/PyV36Pg5yw6K8x8=;
-  b=EXmVmlMaegY/yjcFLRueV4Gp5JnSlor8BoOZugr2ZLfTNcztNjiRFPkP
-   68rCAVKnCb4mGEiDu5eFtpB4aLTEQoi7fL02UIbDNoWqvc2CvSW9zLU/b
-   o+akMIuPyyXPVN3W7NeqsDuq2hULGAnzlE46PhjL091seKWtn0/SDCX+E
-   gl+xu52TDh7bgGhyCXjJ4Gx+2czCsfc6nAq54HVKRni07vHCc5vepM/kz
-   WfPXePAe4R03G/fy6w9R3BRK37mO4pKhlRNzd8aqpNUdEdhMnXUztZqQ1
-   C4yGiB3SvgVNsa93/C7NdjfW8up4G6CFH5OuUQ35ePYDwO1KYZGAHDRmV
-   g==;
-X-IronPort-AV: E=Sophos;i="5.63,559,1557158400"; 
-   d="scan'208";a="216254235"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jun 2019 22:25:05 +0800
-IronPort-SDR: VrOCLdjrLc6PjaHM5gkI3p5FUizjhuNIuhossoynL4RFLaRmAwi0nanpKAvhEWiZJBtbQM6C51
- PbxJ2ci36I4V7DugXaLDF4/qnh7VsdJhBnpdN3DzbQ8ElTX1jF50IX9/HgCmZqQWESqWC1chZ8
- PDapfGA8B1Ftup9mHF4q59Sc1a9p+R5jKpA50D/Vup4CiQxjfw7a5BKF0a4fOvI6WcT+e7Dsrn
- +jLWCnFpo8PJFE6+6KVwmJ5JjACRbV4dnSLKcGtlsSWd/f7XV/E+ISETs5hfo5K5GubREq33B7
- 6Z1GOnBJhFSdnUDwVitRh3SN
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 06 Jun 2019 07:00:00 -0700
-IronPort-SDR: JqEwNtP0feyi0QP+GRXCTEoS3x5m3WoXZziRmFdN3rKtyRAPs9vOm53tX5nskpiktumA46i+W9
- mlxE6e/rQTVqV7TWiQXbfkoerYBZ6MvQzrej7ZXjqM7fzntLr5Z0eTDNYnFVudBcZnZhp3rq7z
- lP4v9BOcGsSQi5wgxrO+KSFYEFnPsfwRUA5b3P2H7K8kBUp0Lg3jmXXdMOwcEl1S5+bdr+k3qz
- 2bGBaWELQYdCXO7MPlSrMWJSWx+E8yDrFw9/SGH1ZUfWvdh9ZLM4/sLFtXhOeJSUoYuM1Appv6
- N1c=
-Received: from unknown (HELO [10.225.105.220]) ([10.225.105.220])
-  by uls-op-cesaip01.wdc.com with ESMTP; 06 Jun 2019 07:25:04 -0700
-Subject: Re: [PATCH v6 4/7] arm: Use common cpu_topology structure and
- functions.
-From:   Atish Patra <atish.patra@wdc.com>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190529211340.17087-1-atish.patra@wdc.com>
- <20190529211340.17087-5-atish.patra@wdc.com>
-Message-ID: <de0dc9f6-8d20-86f3-7d7e-eb8a2a290901@wdc.com>
-Date:   Thu, 6 Jun 2019 07:25:01 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 6 Jun 2019 10:25:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf922380001>; Thu, 06 Jun 2019 07:24:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 07:25:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 07:25:10 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 14:25:05 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+ <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+ <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
+Date:   Thu, 6 Jun 2019 15:25:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190529211340.17087-5-atish.patra@wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559831096; bh=t+tKC+EGTYGC+QMvXfn241RfTbKDiYGV7tALtJGBqB0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=LaFN5H0KNPnS6jBiXARz7+/mBgDuj23yLfHD8ru1kkHNqVLvUlAAkPCpsfk4yh8uU
+         CXwbgHYYJtISocqOlYvuQciSZBGXE7jjvbkzSGagZrdKJW90phXoEV0bTQulU+AtPT
+         7OYegMhoEvBH3nR5GT9o0sObAzXjhcIGSonyYFJDYlsbx8EYsQEL+w0A/yWrrwQsr9
+         ui6abD1umzv8YFcSL3SKb5cBnIp1v0MkJNq10QcUhxvz2efNQwU3xWqG2ArrvkN9fW
+         lZvDANQa33ESmrQsI5eJNMb6Y/AfVlHr2bcCOe4tczU9lZC+wMcijRHc/wl7p0T83e
+         n3RH6B5vCWKGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/19 2:15 PM, Atish Patra wrote:
-> Currently, ARM32 and ARM64 uses different data structures to represent
-> their cpu topologies. Since, we are moving the ARM64 topology to common
-> code to be used by other architectures, we can reuse that for ARM32 as
-> well.
-> 
-> Take this opprtunity to remove the redundant functions from ARM32 and
-> reuse the common code instead.
-> 
-> To: Russell King <linux@armlinux.org.uk>
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
-> Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
-> 
-> ---
-> Hi Russell,
-> Can we get a ACK for this patch ? We are hoping that the entire
-> series can be merged at one go.
-> ---
->   arch/arm/include/asm/topology.h | 20 -----------
->   arch/arm/kernel/topology.c      | 60 ++++-----------------------------
->   drivers/base/arch_topology.c    |  4 ++-
->   include/linux/arch_topology.h   |  6 ++--
->   4 files changed, 11 insertions(+), 79 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
-> index 2a786f54d8b8..8a0fae94d45e 100644
-> --- a/arch/arm/include/asm/topology.h
-> +++ b/arch/arm/include/asm/topology.h
-> @@ -5,26 +5,6 @@
->   #ifdef CONFIG_ARM_CPU_TOPOLOGY
->   
->   #include <linux/cpumask.h>
-> -
-> -struct cputopo_arm {
-> -	int thread_id;
-> -	int core_id;
-> -	int socket_id;
-> -	cpumask_t thread_sibling;
-> -	cpumask_t core_sibling;
-> -};
-> -
-> -extern struct cputopo_arm cpu_topology[NR_CPUS];
-> -
-> -#define topology_physical_package_id(cpu)	(cpu_topology[cpu].socket_id)
-> -#define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
-> -#define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
-> -#define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
-> -
-> -void init_cpu_topology(void);
-> -void store_cpu_topology(unsigned int cpuid);
-> -const struct cpumask *cpu_coregroup_mask(int cpu);
-> -
->   #include <linux/arch_topology.h>
->   
->   /* Replace task scheduler's default frequency-invariant accounting */
-> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-> index 60e375ce1ab2..238f1da0219c 100644
-> --- a/arch/arm/kernel/topology.c
-> +++ b/arch/arm/kernel/topology.c
-> @@ -177,17 +177,6 @@ static inline void parse_dt_topology(void) {}
->   static inline void update_cpu_capacity(unsigned int cpuid) {}
->   #endif
->   
-> - /*
-> - * cpu topology table
-> - */
-> -struct cputopo_arm cpu_topology[NR_CPUS];
-> -EXPORT_SYMBOL_GPL(cpu_topology);
-> -
-> -const struct cpumask *cpu_coregroup_mask(int cpu)
-> -{
-> -	return &cpu_topology[cpu].core_sibling;
-> -}
-> -
->   /*
->    * The current assumption is that we can power gate each core independently.
->    * This will be superseded by DT binding once available.
-> @@ -197,32 +186,6 @@ const struct cpumask *cpu_corepower_mask(int cpu)
->   	return &cpu_topology[cpu].thread_sibling;
->   }
->   
-> -static void update_siblings_masks(unsigned int cpuid)
-> -{
-> -	struct cputopo_arm *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
-> -	int cpu;
-> -
-> -	/* update core and thread sibling masks */
-> -	for_each_possible_cpu(cpu) {
-> -		cpu_topo = &cpu_topology[cpu];
-> -
-> -		if (cpuid_topo->socket_id != cpu_topo->socket_id)
-> -			continue;
-> -
-> -		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
-> -		if (cpu != cpuid)
-> -			cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
-> -
-> -		if (cpuid_topo->core_id != cpu_topo->core_id)
-> -			continue;
-> -
-> -		cpumask_set_cpu(cpuid, &cpu_topo->thread_sibling);
-> -		if (cpu != cpuid)
-> -			cpumask_set_cpu(cpu, &cpuid_topo->thread_sibling);
-> -	}
-> -	smp_wmb();
-> -}
-> -
->   /*
->    * store_cpu_topology is called at boot when only one cpu is running
->    * and with the mutex cpu_hotplug.lock locked, when several cpus have booted,
-> @@ -230,7 +193,7 @@ static void update_siblings_masks(unsigned int cpuid)
->    */
->   void store_cpu_topology(unsigned int cpuid)
->   {
-> -	struct cputopo_arm *cpuid_topo = &cpu_topology[cpuid];
-> +	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
->   	unsigned int mpidr;
->   
->   	/* If the cpu topology has been already set, just return */
-> @@ -250,12 +213,12 @@ void store_cpu_topology(unsigned int cpuid)
->   			/* core performance interdependency */
->   			cpuid_topo->thread_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
->   			cpuid_topo->core_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> -			cpuid_topo->socket_id = MPIDR_AFFINITY_LEVEL(mpidr, 2);
-> +			cpuid_topo->package_id = MPIDR_AFFINITY_LEVEL(mpidr, 2);
->   		} else {
->   			/* largely independent cores */
->   			cpuid_topo->thread_id = -1;
->   			cpuid_topo->core_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> -			cpuid_topo->socket_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> +			cpuid_topo->package_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
->   		}
->   	} else {
->   		/*
-> @@ -265,7 +228,7 @@ void store_cpu_topology(unsigned int cpuid)
->   		 */
->   		cpuid_topo->thread_id = -1;
->   		cpuid_topo->core_id = 0;
-> -		cpuid_topo->socket_id = -1;
-> +		cpuid_topo->package_id = -1;
->   	}
->   
->   	update_siblings_masks(cpuid);
-> @@ -275,7 +238,7 @@ void store_cpu_topology(unsigned int cpuid)
->   	pr_info("CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
->   		cpuid, cpu_topology[cpuid].thread_id,
->   		cpu_topology[cpuid].core_id,
-> -		cpu_topology[cpuid].socket_id, mpidr);
-> +		cpu_topology[cpuid].package_id, mpidr);
->   }
->   
->   static inline int cpu_corepower_flags(void)
-> @@ -298,18 +261,7 @@ static struct sched_domain_topology_level arm_topology[] = {
->    */
->   void __init init_cpu_topology(void)
->   {
-> -	unsigned int cpu;
-> -
-> -	/* init core mask and capacity */
-> -	for_each_possible_cpu(cpu) {
-> -		struct cputopo_arm *cpu_topo = &(cpu_topology[cpu]);
-> -
-> -		cpu_topo->thread_id = -1;
-> -		cpu_topo->core_id =  -1;
-> -		cpu_topo->socket_id = -1;
-> -		cpumask_clear(&cpu_topo->core_sibling);
-> -		cpumask_clear(&cpu_topo->thread_sibling);
-> -	}
-> +	reset_cpu_topology();
->   	smp_wmb();
->   
->   	parse_dt_topology();
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index 5781bb4c457c..797e3cd71bea 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -426,6 +426,7 @@ static int __init parse_dt_topology(void)
->   	of_node_put(cn);
->   	return ret;
->   }
-> +#endif
->   
->   /*
->    * cpu topology table
-> @@ -491,7 +492,7 @@ static void clear_cpu_topology(int cpu)
->   	cpumask_set_cpu(cpu, &cpu_topo->thread_sibling);
->   }
->   
-> -static void __init reset_cpu_topology(void)
-> +void __init reset_cpu_topology(void)
->   {
->   	unsigned int cpu;
->   
-> @@ -526,6 +527,7 @@ __weak int __init parse_acpi_topology(void)
->   	return 0;
->   }
->   
-> +#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
->   void __init init_cpu_topology(void)
->   {
->   	reset_cpu_topology();
-> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-> index d4e76e0a283f..d4311127970d 100644
-> --- a/include/linux/arch_topology.h
-> +++ b/include/linux/arch_topology.h
-> @@ -54,11 +54,9 @@ extern struct cpu_topology cpu_topology[NR_CPUS];
->   void init_cpu_topology(void);
->   void store_cpu_topology(unsigned int cpuid);
->   const struct cpumask *cpu_coregroup_mask(int cpu);
-> -#endif
-> -
-> -#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
->   void update_siblings_masks(unsigned int cpu);
-> -#endif
->   void remove_cpu_topology(unsigned int cpuid);
-> +void reset_cpu_topology(void);
-> +#endif
->   
->   #endif /* _LINUX_ARCH_TOPOLOGY_H_ */
-> 
-Hi Russell,
-Can we get an ACK for ARM if you don't have any objection to the series ?
 
--- 
-Regards,
-Atish
+
+On 06/06/2019 14:45, Dmitry Osipenko wrote:
+> 06.06.2019 15:37, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 06/06/2019 12:54, Peter Ujfalusi wrote:
+>>>
+>>>
+>>> On 06/06/2019 13.49, Jon Hunter wrote:
+>>>>
+>>>> On 06/06/2019 11:22, Peter Ujfalusi wrote:
+>>>>
+>>>> ...
+>>>>
+>>>>>>>> It does sounds like that FIFO_SIZE =3D=3D src/dst_maxburst in your=
+ case as
+>>>>>>>> well.
+>>>>>>> Not exactly equal.
+>>>>>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
+>>>>>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary i=
+n
+>>>>>>> multiples of 16]
+>>>>>>
+>>>>>> So I think that the key thing to highlight here, is that the as Same=
+er
+>>>>>> highlighted above for the Tegra ADMA there are two values that need =
+to
+>>>>>> be programmed; the DMA client FIFO size and the max burst size. The =
+ADMA
+>>>>>> has register fields for both of these.
+>>>>>
+>>>>> How does the ADMA uses the 'client FIFO size' and 'max burst size'
+>>>>> values and what is the relation of these values to the peripheral sid=
+e
+>>>>> (ADMAIF)?
+>>>>
+>>>> Per Sameer's previous comment, the FIFO size is used by the ADMA to
+>>>> determine how much space is available in the FIFO. I assume the burst
+>>>> size just limits how much data is transferred per transaction.
+>>>>
+>>>>>> As you can see from the above the FIFO size can be much greater than=
+ the
+>>>>>> burst size and so ideally both of these values would be passed to th=
+e DMA.
+>>>>>>
+>>>>>> We could get by with just passing the FIFO size (as the max burst si=
+ze)
+>>>>>> and then have the DMA driver set the max burst size depending on thi=
+s,
+>>>>>> but this does feel quite correct for this DMA. Hence, ideally, we wo=
+uld
+>>>>>> like to pass both.
+>>>>>>
+>>>>>> We are also open to other ideas.
+>>>>>
+>>>>> I can not find public documentation (I think they are walled off by
+>>>>> registration), but correct me if I'm wrong:
+>>>>
+>>>> No unfortunately, you are not wrong here :-(
+>>>>
+>>>>> ADMAIF - peripheral side
+>>>>>  - kind of a small DMA for audio preipheral(s)?
+>>>>
+>>>> Yes this is the interface to the APE (audio processing engine) and dat=
+a
+>>>> sent to the ADMAIF is then sent across a crossbar to one of many
+>>>> devices/interfaces (I2S, DMIC, etc). Basically a large mux that is use=
+r
+>>>> configurable depending on the use-case.
+>>>>
+>>>>>  - Variable FIFO size
+>>>>
+>>>> Yes.
+>>>>
+>>>>>  - sends DMA request to ADMA per words
+>>>>
+>>>> From Sameer's notes it says the ADMAIF send a signal to the ADMA per
+>>>> word, yes.
+>>>>
+>>>>> ADMA - system DMA
+>>>>>  - receives the DMA requests from ADMAIF
+>>>>>  - counts the requests
+>>>>>  - based on some threshold of the counter it will send/read from ADMA=
+IF?
+>>>>>   - maxburst number of words probably?
+>>>>
+>>>> Sounds about right to me.
+>>>>
+>>>>> ADMA needs to know the ADMAIF's FIFO size because, it is the one who =
+is
+>>>>> managing that FIFO from the outside, making sure that it does not ove=
+r
+>>>>> or underrun?
+>>>>
+>>>> Yes.
+>>>>
+>>>>> And it is the one who sets the pace (in effect the DMA burst size - h=
+ow
+>>>>> many bytes the DMA jumps between refills) of refills to the ADMAIF's =
+FIFO?
+>>>>
+>>>> Yes.
+>>>>
+>>>> So currently, if you look at the ADMA driver
+>>>> (drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
+>>>> for the burst, but the FIFO size is hard-coded (see the
+>>>> TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions)=
+.
+>>>> Ideally, we should not hard-code this but pass it.
+>>>
+>>> Sure, hardcoding is never good ;)
+>>>
+>>>> Given that there are no current users of the ADMA upstream, we could
+>>>> change the usage of the src/dst_maxburst, but being able to set the FI=
+FO
+>>>> size as well would be ideal.
+>>>
+>>> Looking at the drivers/dma/tegra210-adma.c for the
+>>> TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
+>>> remote FIFO size would fit.
+>>> There are fields for overflow and starvation(?) thresholds and TX/RX
+>>> size (assuming word length, 3 =3D=3D 32bits?).
+>>
+>> The TX/RX size are the FIFO size. So 3 equates to a FIFO size of 3 * 64
+>> bytes.
+>>
+>>> Both threshold is set to one, so I assume currently ADMA is
+>>> pushing/pulling data word by word.
+>>
+>> That's different. That indicates thresholds when transfers start.
+>>
+>>> Not sure what the burst size is used for, my guess would be that it is
+>>> used on the memory (DDR) side for optimized, more efficient accesses?
+>>
+>> That is the actual burst size.
+>>
+>>> My guess is that the threshold values are the counter limits, if the DM=
+A
+>>> request counter reaches it then ADMA would do a threshold limit worth o=
+f
+>>> push/pull to ADMAIF.
+>>> Or there is another register where the remote FIFO size can be written
+>>> and ADMA is counting back from there until it reaches the threshold (an=
+d
+>>> pushes/pulling again threshold amount of data) so it keeps the FIFO
+>>> filled with at least threshold amount of data?
+>>>
+>>> I think in both cases the threshold would be the maxburst.
+>>>
+>>> I suppose you have the patch for adma on how to use the fifo_size
+>>> parameter? That would help understand what you are trying to achieve be=
+tter.
+>>
+>> Its quite simple, we would just use the FIFO size to set the fields
+>> TEGRAXXX_ADMA_CH_FIFO_CTRL_TXSIZE/RXSIZE in the
+>> TEGRAXXX_ADMA_CH_FIFO_CTRL register. That's all.
+>>
+>> Jon
+>>
+>=20
+> Hi,
+>=20
+> If I understood everything correctly, the FIFO buffer is shared among
+> all of the ADMA clients and hence it should be up to the ADMA driver to
+> manage the quotas of the clients. So if there is only one client that
+> uses ADMA at a time, then this client will get a whole FIFO buffer, but
+> once another client starts to use ADMA, then the ADMA driver will have
+> to reconfigure hardware to split the quotas.
+
+The FIFO quotas are managed by the ADMAIF driver (does not exist in
+mainline currently but we are working to upstream this) because it is
+this device that owns and needs to configure the FIFOs. So it is really
+a means to pass the information from the ADMAIF to the ADMA.
+
+Jon
+
+--=20
+nvpublic
