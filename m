@@ -3,68 +3,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25210C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC98C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DF920868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0448E206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfFFPqb (ORCPT
+        id S1729483AbfFFPqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:46:31 -0400
-Received: from ms.lwn.net ([45.79.88.28]:50162 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729344AbfFFPqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:46:30 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 0CCF9737;
-        Thu,  6 Jun 2019 15:46:30 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 09:46:28 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Neil Brown <neilb@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: filesystems: vfs: Render method descriptions
-Message-ID: <20190606094628.0e8775f7@lwn.net>
-In-Reply-To: <20190604002656.30925-1-tobin@kernel.org>
-References: <20190604002656.30925-1-tobin@kernel.org>
-Organization: LWN.net
+        Thu, 6 Jun 2019 11:46:42 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49358 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729185AbfFFPqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:46:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DEC7A78;
+        Thu,  6 Jun 2019 08:46:41 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA3693F690;
+        Thu,  6 Jun 2019 08:46:37 -0700 (PDT)
+Subject: Re: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
+To:     George Hung <ghung.quanta@gmail.com>
+Cc:     linux-edac <linux-edac@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        benjaminfair@google.com, wak@google.com, Avi.Fishman@nuvoton.com,
+        tomer.maimon@nuvoton.com, openbmc@lists.ozlabs.org,
+        Joel Stanley <joel@jms.id.au>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        davem@davemloft.net,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        paulmck@linux.ibm.com, devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20190605141253.38554-1-ghung.quanta@gmail.com>
+ <20190605141253.38554-2-ghung.quanta@gmail.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <066d3d9b-f65e-7689-a3a7-d995e26fcbf3@arm.com>
+Date:   Thu, 6 Jun 2019 16:46:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190605141253.38554-2-ghung.quanta@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  4 Jun 2019 10:26:56 +1000
-"Tobin C. Harding" <tobin@kernel.org> wrote:
+Hi George,
 
-> Currently vfs.rst does not render well into HTML the method descriptions
-> for VFS data structures.  We can improve the HTML output by putting the
-> description string on a new line following the method name.
-> 
-> Suggested-by: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> ---
-> 
-> Jon,
-> 
-> As discussed on LKML; this patch applies on top of the series
-> 
-> 	[PATCH v4 0/9] docs: Convert VFS doc to RST
-> 
-> If it does not apply cleanly to your branch please feel free to ask me
-> to fix it.
+On 05/06/2019 15:12, George Hung wrote:
+> Add device tree documentation for Nuvoton BMC ECC
 
-There was one merge conflict, but nothing too serious.  I've applied it,
-and things look a lot better - thanks!
+(Nit: The DT folk prefer patches adding bindings to come first in the series, before the
+driver that uses them).
 
-jon
+
+> diff --git a/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> new file mode 100644
+> index 000000000000..dd4dac59a5bd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> @@ -0,0 +1,17 @@
+> +Nuvoton NPCM7xx SoC EDAC device driver
+> +
+> +The Nuvoton NPCM7xx SoC supports DDR4 memory with/without ECC and the driver
+> +uses the EDAC framework to implement the ECC detection and corrtection.
+
+The commit message in the driver says this is a Cadence memory controller, can we describe
+what it is here, and give it an additional compatible?
+
+
+Thanks,
+
+James
+
+> +Required properties:
+> +- compatible:	should be "nuvoton,npcm7xx-sdram-edac"
+> +- reg:		Memory controller register set should be <0xf0824000 0x1000>
+> +- interrupts:	should be MC interrupt #25
+> +Example:
+> +
+> +	mc: memory-controller@f0824000 {
+> +		compatible = "nuvoton,npcm7xx-sdram-edac";
+> +		reg = <0xf0824000 0x1000>;
+> +		interrupts = <0 25 4>;
+> +	};
+> 
+
