@@ -2,228 +2,213 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4204BC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD66C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183F32083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:53:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eewjw3Ol"
+	by mail.kernel.org (Postfix) with ESMTP id D91D320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfFFSxO (ORCPT
+        id S1727897AbfFFSyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:53:14 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34938 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfFFSxO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:53:14 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s27so1865130pgl.2;
-        Thu, 06 Jun 2019 11:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2ro+lP/FA6+DcoZSPcQtKQmHJBN8Sm7FF/ObqevYH60=;
-        b=Eewjw3Ol2a+LEZf//XS2vKDBvTdcWff7Q7JQR8xBYqZEwvq1t/j4Q43lJmm2Z9/EWa
-         93x9KQ9LB/e5KZnUE+hvv4zyEj3AutBqjl/sZIzInUpzZSlk6t8GKA/vZh3a7/8kcUw7
-         l1FeSX6uy8MUgsx3X48tBNi9M57IFpXzY5GXZgGnI0uQ2FrwCUNKVIA8ExHQ2b30aUdy
-         WAK+Up8iCgcmq1ATz9fP+Brc+jnrMg24X5vyen+CY5MdJWFMd9FbqdSKZilWUkp3o1Ix
-         TDrtYLMWASDawz27BASogxgMhRYcC49Wj/xWWipaSw0NAhmWoW0v34vUOt5AuVp9/Gzo
-         AeEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2ro+lP/FA6+DcoZSPcQtKQmHJBN8Sm7FF/ObqevYH60=;
-        b=nEQkDWr+fbNHiwYMebJn91kOkcNJxAJo0+oUL4yaSV4GhB9LpwXhceWHg47L+BNcUD
-         f4vAFaj48IfJMBdQQVhUtqt1EsP2f6PTCxqt8RytFvX9RgEzuXgiNXLeXmVSsHXKb0C3
-         fGLGN8DDuZBvEuEM+MhKSBOagIyKav80TfgER4HGTTyItIi9j19tu2F6YyuhVQBN3gD/
-         7KbuoeOU8ilwjphmWpceW2L/ytH8IsxEoygCo5xwI6CaFfDKX9rS+0jxE6ft8WIFlmaT
-         +4UJJxPqB5G7/K/e3+J/i8hrWO0ZeEHTgI23oxT2UFlTSFgLyN+9Nhkzjm474XMWGApM
-         6qkw==
-X-Gm-Message-State: APjAAAVkfn5V7+uxKn7OW8BaiVTigJXB/AUWWWdZOup1E+q0YB3T0gLH
-        8GlsgQDm2ltMpf2zY27NOvT4+Dpl
-X-Google-Smtp-Source: APXvYqyv47+M4mRYCRrl3AG1NtAoIbGfbUEbtEJYpA6xtbiYnPpqIQeshnwrz/JKfxcwahwDvihk1g==
-X-Received: by 2002:a63:1d53:: with SMTP id d19mr32590pgm.152.1559847193090;
-        Thu, 06 Jun 2019 11:53:13 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id j23sm2642925pgb.63.2019.06.06.11.53.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 11:53:12 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org
-Cc:     agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, jorge.ramirez-ortiz@linaro.org,
-        niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2 7/7] drivers: regulator: qcom: add PMS405 SPMI regulator
-Date:   Thu,  6 Jun 2019 11:51:46 -0700
-Message-Id: <20190606185146.39890-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
-References: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
+        Thu, 6 Jun 2019 14:54:13 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52414 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726757AbfFFSyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:54:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A289EA78;
+        Thu,  6 Jun 2019 11:54:12 -0700 (PDT)
+Received: from [10.37.10.101] (unknown [10.37.10.101])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC8583F5AF;
+        Thu,  6 Jun 2019 11:54:07 -0700 (PDT)
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Auger Eric <eric.auger@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        Vincent Stehle <Vincent.Stehle@arm.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+ <20190526161004.25232-27-eric.auger@redhat.com>
+ <20190603163139.70fe8839@x1.home>
+ <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+ <20190605154553.0d00ad8d@jacob-builder>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
+Date:   Thu, 6 Jun 2019 19:54:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190605154553.0d00ad8d@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+On 05/06/2019 23:45, Jacob Pan wrote:
+> On Tue, 4 Jun 2019 18:11:08 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
+> 
+>> Hi Alex,
+>>
+>> On 6/4/19 12:31 AM, Alex Williamson wrote:
+>>> On Sun, 26 May 2019 18:10:01 +0200
+>>> Eric Auger <eric.auger@redhat.com> wrote:
+>>>   
+>>>> This patch registers a fault handler which records faults in
+>>>> a circular buffer and then signals an eventfd. This buffer is
+>>>> exposed within the fault region.
+>>>>
+>>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>>>
+>>>> ---
+>>>>
+>>>> v3 -> v4:
+>>>> - move iommu_unregister_device_fault_handler to vfio_pci_release
+>>>> ---
+>>>>  drivers/vfio/pci/vfio_pci.c         | 49
+>>>> +++++++++++++++++++++++++++++ drivers/vfio/pci/vfio_pci_private.h
+>>>> |  1 + 2 files changed, 50 insertions(+)
+>>>>
+>>>> diff --git a/drivers/vfio/pci/vfio_pci.c
+>>>> b/drivers/vfio/pci/vfio_pci.c index f75f61127277..520999994ba8
+>>>> 100644 --- a/drivers/vfio/pci/vfio_pci.c
+>>>> +++ b/drivers/vfio/pci/vfio_pci.c
+>>>> @@ -30,6 +30,7 @@
+>>>>  #include <linux/vfio.h>
+>>>>  #include <linux/vgaarb.h>
+>>>>  #include <linux/nospec.h>
+>>>> +#include <linux/circ_buf.h>
+>>>>  
+>>>>  #include "vfio_pci_private.h"
+>>>>  
+>>>> @@ -296,6 +297,46 @@ static const struct vfio_pci_regops
+>>>> vfio_pci_fault_prod_regops = { .add_capability =
+>>>> vfio_pci_fault_prod_add_capability, };
+>>>>  
+>>>> +int vfio_pci_iommu_dev_fault_handler(struct iommu_fault_event
+>>>> *evt, void *data) +{
+>>>> +	struct vfio_pci_device *vdev = (struct vfio_pci_device *)
+>>>> data;
+>>>> +	struct vfio_region_fault_prod *prod_region =
+>>>> +		(struct vfio_region_fault_prod
+>>>> *)vdev->fault_pages;
+>>>> +	struct vfio_region_fault_cons *cons_region =
+>>>> +		(struct vfio_region_fault_cons
+>>>> *)(vdev->fault_pages + 2 * PAGE_SIZE);
+>>>> +	struct iommu_fault *new =
+>>>> +		(struct iommu_fault *)(vdev->fault_pages +
+>>>> prod_region->offset +
+>>>> +			prod_region->prod *
+>>>> prod_region->entry_size);
+>>>> +	int prod, cons, size;
+>>>> +
+>>>> +	mutex_lock(&vdev->fault_queue_lock);
+>>>> +
+>>>> +	if (!vdev->fault_abi)
+>>>> +		goto unlock;
+>>>> +
+>>>> +	prod = prod_region->prod;
+>>>> +	cons = cons_region->cons;
+>>>> +	size = prod_region->nb_entries;
+>>>> +
+>>>> +	if (CIRC_SPACE(prod, cons, size) < 1)
+>>>> +		goto unlock;
+>>>> +
+>>>> +	*new = evt->fault;
+>>>> +	prod = (prod + 1) % size;
+>>>> +	prod_region->prod = prod;
+>>>> +	mutex_unlock(&vdev->fault_queue_lock);
+>>>> +
+>>>> +	mutex_lock(&vdev->igate);
+>>>> +	if (vdev->dma_fault_trigger)
+>>>> +		eventfd_signal(vdev->dma_fault_trigger, 1);
+>>>> +	mutex_unlock(&vdev->igate);
+>>>> +	return 0;
+>>>> +
+>>>> +unlock:
+>>>> +	mutex_unlock(&vdev->fault_queue_lock);
+>>>> +	return -EINVAL;
+>>>> +}
+>>>> +
+>>>>  static int vfio_pci_init_fault_region(struct vfio_pci_device
+>>>> *vdev) {
+>>>>  	struct vfio_region_fault_prod *header;
+>>>> @@ -328,6 +369,13 @@ static int vfio_pci_init_fault_region(struct
+>>>> vfio_pci_device *vdev) header = (struct vfio_region_fault_prod
+>>>> *)vdev->fault_pages; header->version = -1;
+>>>>  	header->offset = PAGE_SIZE;
+>>>> +
+>>>> +	ret =
+>>>> iommu_register_device_fault_handler(&vdev->pdev->dev,
+>>>> +
+>>>> vfio_pci_iommu_dev_fault_handler,
+>>>> +					vdev);
+>>>> +	if (ret)
+>>>> +		goto out;
+>>>> +
+>>>>  	return 0;
+>>>>  out:
+>>>>  	kfree(vdev->fault_pages);
+>>>> @@ -570,6 +618,7 @@ static void vfio_pci_release(void *device_data)
+>>>>  	if (!(--vdev->refcnt)) {
+>>>>  		vfio_spapr_pci_eeh_release(vdev->pdev);
+>>>>  		vfio_pci_disable(vdev);
+>>>> +
+>>>> iommu_unregister_device_fault_handler(&vdev->pdev->dev);  
+>>>
+>>>
+>>> But this can fail if there are pending faults which leaves a device
+>>> reference and then the system is broken :(  
+>> This series only features unrecoverable errors and for those the
+>> unregistration cannot fail. Now unrecoverable errors were added I
+>> admit this is confusing. We need to sort this out or clean the
+>> dependencies.
+> As Alex pointed out in 4/29, we can make
+> iommu_unregister_device_fault_handler() never fail and clean up all the
+> pending faults in the host IOMMU belong to that device. But the problem
+> is that if a fault, such as PRQ, has already been injected into the
+> guest, the page response may come back after handler is unregistered
+> and registered again.
 
-The PMS405 has 5 HFSMPS and 13 LDO regulators,
+I'm trying to figure out if that would be harmful in any way. I guess it
+can be a bit nasty if we handle the page response right after having
+injected a new page request that uses the same PRGI. In any other case we
+discard the page response, but here we forward it to the endpoint and:
 
-This commit adds support for one of the 5 HFSMPS regulators (s3) to
-the spmi regulator driver.
+* If the response status is success, endpoint retries the translation. The
+guest probably hasn't had time to handle the new page request and
+translation will fail, which may lead the endpoint to give up (two
+unsuccessful translation requests). Or send a new request
 
-The PMIC HFSMPS 430 regulators have 8 mV step size and a voltage
-control scheme consisting of two  8-bit registers defining a 16-bit
-voltage set point in units of millivolts
+* otherwise the endpoint won't retry the access, and could also disable
+PRI if the status is failure.
 
-S3 controls the cpu voltages (s3 is a buck regulator of type HFS430);
-it is therefore required so we can enable voltage scaling for safely
-running cpufreq.
+> We need a way to reject such page response belong
+> to the previous life of the handler. Perhaps a sync call to the guest
+> with your fault queue eventfd? I am not sure.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/regulator/qcom_spmi-regulator.c | 41 +++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 3 deletions(-)
+We could simply expect the device driver not to send any page response
+after unregistering the fault handler. Is there any reason VFIO would need
+to unregister and re-register the fault handler on a live guest?
 
-diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-index c7880c1d4bcd..975655e787fe 100644
---- a/drivers/regulator/qcom_spmi-regulator.c
-+++ b/drivers/regulator/qcom_spmi-regulator.c
-@@ -105,6 +105,7 @@ enum spmi_regulator_logical_type {
- 	SPMI_REGULATOR_LOGICAL_TYPE_ULT_HO_SMPS,
- 	SPMI_REGULATOR_LOGICAL_TYPE_ULT_LDO,
- 	SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426,
-+	SPMI_REGULATOR_LOGICAL_TYPE_HFS430,
- };
- 
- enum spmi_regulator_type {
-@@ -157,6 +158,7 @@ enum spmi_regulator_subtype {
- 	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL2	= 0x0e,
- 	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL3	= 0x0f,
- 	SPMI_REGULATOR_SUBTYPE_ULT_HF_CTL4	= 0x10,
-+	SPMI_REGULATOR_SUBTYPE_HFS430		= 0x0a,
- };
- 
- enum spmi_common_regulator_registers {
-@@ -302,6 +304,8 @@ enum spmi_common_control_register_index {
- /* Clock rate in kHz of the FTSMPS426 regulator reference clock. */
- #define SPMI_FTSMPS426_CLOCK_RATE		4800
- 
-+#define SPMI_HFS430_CLOCK_RATE			1600
-+
- /* Minimum voltage stepper delay for each step. */
- #define SPMI_FTSMPS426_STEP_DELAY		2
- 
-@@ -515,6 +519,10 @@ static struct spmi_voltage_range ult_pldo_ranges[] = {
- 	SPMI_VOLTAGE_RANGE(0, 1750000, 1750000, 3337500, 3337500, 12500),
- };
- 
-+static struct spmi_voltage_range hfs430_ranges[] = {
-+	SPMI_VOLTAGE_RANGE(0, 320000, 320000, 2040000, 2040000, 8000),
-+};
-+
- static DEFINE_SPMI_SET_POINTS(pldo);
- static DEFINE_SPMI_SET_POINTS(nldo1);
- static DEFINE_SPMI_SET_POINTS(nldo2);
-@@ -530,6 +538,7 @@ static DEFINE_SPMI_SET_POINTS(ult_lo_smps);
- static DEFINE_SPMI_SET_POINTS(ult_ho_smps);
- static DEFINE_SPMI_SET_POINTS(ult_nldo);
- static DEFINE_SPMI_SET_POINTS(ult_pldo);
-+static DEFINE_SPMI_SET_POINTS(hfs430);
- 
- static inline int spmi_vreg_read(struct spmi_regulator *vreg, u16 addr, u8 *buf,
- 				 int len)
-@@ -1397,12 +1406,24 @@ static struct regulator_ops spmi_ftsmps426_ops = {
- 	.set_pull_down		= spmi_regulator_common_set_pull_down,
- };
- 
-+static struct regulator_ops spmi_hfs430_ops = {
-+	/* always on regulators */
-+	.set_voltage_sel	= spmi_regulator_ftsmps426_set_voltage,
-+	.set_voltage_time_sel	= spmi_regulator_set_voltage_time_sel,
-+	.get_voltage		= spmi_regulator_ftsmps426_get_voltage,
-+	.map_voltage		= spmi_regulator_single_map_voltage,
-+	.list_voltage		= spmi_regulator_common_list_voltage,
-+	.set_mode		= spmi_regulator_ftsmps426_set_mode,
-+	.get_mode		= spmi_regulator_ftsmps426_get_mode,
-+};
-+
- /* Maximum possible digital major revision value */
- #define INF 0xFF
- 
- static const struct spmi_regulator_mapping supported_regulators[] = {
- 	/*           type subtype dig_min dig_max ltype ops setpoints hpm_min */
- 	SPMI_VREG(BUCK,  GP_CTL,   0, INF, SMPS,   smps,   smps,   100000),
-+	SPMI_VREG(BUCK,  HFS430,   0, INF, HFS430, hfs430, hfs430,  10000),
- 	SPMI_VREG(LDO,   N300,     0, INF, LDO,    ldo,    nldo1,   10000),
- 	SPMI_VREG(LDO,   N600,     0,   0, LDO,    ldo,    nldo2,   10000),
- 	SPMI_VREG(LDO,   N1200,    0,   0, LDO,    ldo,    nldo2,   10000),
-@@ -1570,7 +1591,8 @@ static int spmi_regulator_init_slew_rate(struct spmi_regulator *vreg)
- 	return ret;
- }
- 
--static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
-+static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg,
-+						   int clock_rate)
- {
- 	int ret;
- 	u8 reg = 0;
-@@ -1587,7 +1609,7 @@ static int spmi_regulator_init_slew_rate_ftsmps426(struct spmi_regulator *vreg)
- 	delay >>= SPMI_FTSMPS426_STEP_CTRL_DELAY_SHIFT;
- 
- 	/* slew_rate has units of uV/us */
--	slew_rate = SPMI_FTSMPS426_CLOCK_RATE * range->step_uV;
-+	slew_rate = clock_rate * range->step_uV;
- 	slew_rate /= 1000 * (SPMI_FTSMPS426_STEP_DELAY << delay);
- 	slew_rate *= SPMI_FTSMPS426_STEP_MARGIN_NUM;
- 	slew_rate /= SPMI_FTSMPS426_STEP_MARGIN_DEN;
-@@ -1739,7 +1761,14 @@ static int spmi_regulator_of_parse(struct device_node *node,
- 			return ret;
- 		break;
- 	case SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS426:
--		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg);
-+		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-+						SPMI_FTSMPS426_CLOCK_RATE);
-+		if (ret)
-+			return ret;
-+		break;
-+	case SPMI_REGULATOR_LOGICAL_TYPE_HFS430:
-+		ret = spmi_regulator_init_slew_rate_ftsmps426(vreg,
-+							SPMI_HFS430_CLOCK_RATE);
- 		if (ret)
- 			return ret;
- 		break;
-@@ -1907,6 +1936,11 @@ static const struct spmi_regulator_data pm8005_regulators[] = {
- 	{ }
- };
- 
-+static const struct spmi_regulator_data pms405_regulators[] = {
-+	{ "s3", 0x1a00, }, /* supply name in the dts only */
-+	{ }
-+};
-+
- static const struct of_device_id qcom_spmi_regulator_match[] = {
- 	{ .compatible = "qcom,pm8005-regulators", .data = &pm8005_regulators },
- 	{ .compatible = "qcom,pm8841-regulators", .data = &pm8841_regulators },
-@@ -1914,6 +1948,7 @@ static const struct of_device_id qcom_spmi_regulator_match[] = {
- 	{ .compatible = "qcom,pm8941-regulators", .data = &pm8941_regulators },
- 	{ .compatible = "qcom,pm8994-regulators", .data = &pm8994_regulators },
- 	{ .compatible = "qcom,pmi8994-regulators", .data = &pmi8994_regulators },
-+	{ .compatible = "qcom,pms405-regulators", .data = &pms405_regulators },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
--- 
-2.17.1
-
+Thanks,
+Jean
