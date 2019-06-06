@@ -2,90 +2,107 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF61C28EB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458D6C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF11D204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1070E204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dm+id48i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lH5XM5ly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfFFLWZ (ORCPT
+        id S1728203AbfFFLWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:22:25 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34550 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfFFLWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:22:24 -0400
-Received: from zn.tnic (p200300EC2F1EFA0069BEA28104A317EB.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:fa00:69be:a281:4a3:17eb])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 344051EC01AD;
-        Thu,  6 Jun 2019 13:22:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1559820142;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=xc7XgRaBZPknCjJo1rIDVERLBN/P7FUkAHIt/67cwZw=;
-        b=dm+id48iBC88mNIVr2UxAiHkVQoyU+ZubYsESCOUC42epYrUjvcoHuhR7CAqPiMchtbt3t
-        3irUUxE2mTfYXQKRDkv+dGJxKNZ/FTePLWhpk4gBZLBgbqCas5Z6ix9N+/at7UYvQDHrzm
-        eG56JegYO97ImsfAvwWA31sAlo+E/Kk=
-Date:   Thu, 6 Jun 2019 13:22:17 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     James Morse <james.morse@arm.com>
-Cc:     "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190606112217.GE26146@zn.tnic>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+        Thu, 6 Jun 2019 07:22:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40575 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfFFLWb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:22:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so2003473wre.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 04:22:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HEs0MSpYL/dt4ruohAAYosuccjeeKQUzYlFrfc+6zvI=;
+        b=lH5XM5lywTiuLbf3TJDU9hyYU1xSAF8s/CUIoBMZ2vJA/FwiFIjtrpP1YExH2Jim5h
+         mJP+e1bdfvUvPo/VdxJToF5787YNEIbsyv4dOl6YX73oBr7BLFsg1o+fUzX5YQwEN1Ik
+         Z6N/oJXYuE2klr2eHuzCSyZFnw1mkQUlcoUrWIhz0F1A/8osMu04SdmKwhhAxa4iVedC
+         kXKCMZL6/cjDb+sIEsrGdMyDHNi161BVk4BUO9RzzY2nVatp2lMmfJRCnVn3jjjuRHrP
+         YXYnWPz/rOb3joaEt05BrcJMmxErb5qvE8g4I59aC4Jwopo1qKjElK2z0QuzoUaHSkF3
+         NoWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HEs0MSpYL/dt4ruohAAYosuccjeeKQUzYlFrfc+6zvI=;
+        b=NlN8eM4U1BzT4E++rTGXrNCx/yu05PFBjEpcb8Rd3ubHpb7MPA22ua8Cv7v07ZrGXJ
+         W5j4KfiWDmNXBMTMLADrE2pDFwOUuEyJ6w+DaPVfUY2sPn0CjIqUxGodjF+9EgNJeJzM
+         9+pWX6R40zcnrUICLtfCH8FkCGzGZjlasCsXq5H+6qrHUKjI+YXqGd54cuZI+t1goeN/
+         iP+Lgu5suOJ8dX7Hwo1k8YJiG9ufhlBrgE/WleE+swoAtaJSyvG5RNkIhK7r69507XtM
+         8G3ksx8HO65P64tQthZC/bpCqIjuMO0baG47e1S9uQTcBWI011DSqQo1rAOO8iEZIxhF
+         l7MA==
+X-Gm-Message-State: APjAAAU2ZunVAbtbP3Z9wpuXflGXoDUS43NiYALAUtkO46AzTGjK0Jx5
+        TSpoIoaW93+dFe1eBSJcVmLH4IMzuI2FIg==
+X-Google-Smtp-Source: APXvYqySGNx3xiNsNDxvwdQWV+8OLNPxIqztO//kuJu9oMKRLpxuvyvrfr7FXa/ozMXLEThD23sD4g==
+X-Received: by 2002:adf:afd0:: with SMTP id y16mr29554545wrd.22.1559820149989;
+        Thu, 06 Jun 2019 04:22:29 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id d10sm1629867wrp.74.2019.06.06.04.22.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 04:22:29 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     vkoul@kernel.org
+Cc:     pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2] soundwire: stream: fix bad unlock balance
+Date:   Thu,  6 Jun 2019 12:22:22 +0100
+Message-Id: <20190606112222.16502-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 11:33:30AM +0100, James Morse wrote:
-> All these are integration choices between the two IP blocks, done as separate drivers we
-> don't have anywhere to store that information. Even if you don't care about this, making
-> them separate drivers should only be done to make them usable on other platforms,
+multi bank switching code takes lock on condition but releases without
+any check resulting in below warning.
+This patch fixes this.
 
-... that we can do with a separately integratable object like
-fsl_ddr_edac.c does it, for example, where it is shared between
-two different platform drivers.
+ =====================================
+ WARNING: bad unlock balance detected!
+ 5.1.0-16506-gc1c383a6f0a2-dirty #1523 Tainted: G        W
+ -------------------------------------
+ aplay/2954 is trying to release lock (&bus->msg_lock) at:
+ do_bank_switch+0x21c/0x480
+ but there are no more locks to release!
 
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/soundwire/stream.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+index ce9cb7fa4724..73c52cd4fec8 100644
+--- a/drivers/soundwire/stream.c
++++ b/drivers/soundwire/stream.c
+@@ -814,7 +814,8 @@ static int do_bank_switch(struct sdw_stream_runtime *stream)
+ 			goto error;
+ 		}
+ 
+-		mutex_unlock(&bus->msg_lock);
++		if (bus->multi_link)
++			mutex_unlock(&bus->msg_lock);
+ 	}
+ 
+ 	return ret;
 -- 
-Regards/Gruss,
-    Boris.
+2.21.0
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
