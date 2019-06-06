@@ -2,430 +2,253 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1099FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79761C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE89E20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C372083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:41:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gu2p9ICS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KHj72P+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbfFFWlL (ORCPT
+        id S1727936AbfFFWlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 18:41:11 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34663 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfFFWlK (ORCPT
+        Thu, 6 Jun 2019 18:41:44 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:44883 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfFFWlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 18:41:10 -0400
-Received: by mail-ed1-f68.google.com with SMTP id c26so25977edt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 15:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JhgexSOQCk69aVM20s4eSvr2Wf1I3NzyL+87Su9CLwA=;
-        b=Gu2p9ICSRNK3e7zFb7NBBVp4Ff1fWLEZnTnzBaOxFQiL8kAo84Tc1N3CPv/kKiyJS3
-         EWITAf0/4yF/XIeuKimpj8+sxz7CpJiLiK6WUcEnu0EIBjRyn4fYENf6SsnTXIM9ZhNw
-         03G+rVbSNoh52i31iN1c0/aUPFQ//NJRo3v959iCh90eFxqnB6H+EUcNvuA6DHHCQeOu
-         UvAFLYHSS0eOMN+mpC+QTUCmd7T0tLzDBtj7jUGsAitK/aqbJs19L2xHt9gaDuPf4zvo
-         Xgvjq5xPpZPbuS5AxtCUO5ZhV0I3eEy4Gxt8BZrwgbPz4eAktdaShWJk5NRkD3ihPqlu
-         ML0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JhgexSOQCk69aVM20s4eSvr2Wf1I3NzyL+87Su9CLwA=;
-        b=Iy3q9WTdLVOT4kxEOFOqFOVLTSmo+/GN6f+fk5pKIbn9uQIahe/u9zToECbdKV9sXk
-         Y6tORjbQIKuoxWKtyHohRZWr/2KfEtL5Lg86I59H4kiQm2A4bMciSI6cMMS0FW/Qx0PO
-         NxX5ZQbzS/eXC8YpzdHbxjVssxQf77Dub+XC264Vor1RaSK3qtAFa6qeKmI0ooZ/snaO
-         okawnMI6I8fxw+cY2hrKdi/Kw4IxAv6TdeKG+xsr5U+uCmwPBJUoTmCot/+Gyt/8HSOu
-         Try0TNircD767rq3yOmRz3/3AYVJPLwSrGHYYDPtbXHAwXRYN0MEh4sD5+Y6UdRWuJUT
-         uT1Q==
-X-Gm-Message-State: APjAAAUYB0FOPQc6lRyElpANgk5Wr+cyQz7kpFXPU+CtojR5TqKP0T2h
-        X8RFWyNmbFF6w90/RECpjYLwIbzy4XY=
-X-Google-Smtp-Source: APXvYqxerrRP5WRy+rml8eMGfURU7CFX2ih4mnTm2wD+X3V2ToEbFqcEecsAb4P/596kEGg6E9fFWw==
-X-Received: by 2002:a17:906:4cc3:: with SMTP id q3mr19346590ejt.27.1559860868078;
-        Thu, 06 Jun 2019 15:41:08 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id j2sm56764ejc.43.2019.06.06.15.41.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 15:41:07 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 19:41:01 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/vkms: Add support for writeback
-Message-ID: <0acd74232d988970668298be0111c485bc68ec87.1559860606.git.rodrigosiqueiramelo@gmail.com>
-References: <cover.1559860606.git.rodrigosiqueiramelo@gmail.com>
+        Thu, 6 Jun 2019 18:41:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1559860904; x=1591396904;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=aN1U0SzatJZ+k6JDjyIC57LaLcrTtGLXNgsVroMrL3U=;
+  b=KHj72P+cBb+4WcmSmnuO2/Zl1Bb2h+eIlXNG/NcNZF6NW/LroSIUgN9o
+   /CUezD14fBfDQFJNKgXaG+aWfPC6GhaFAK4/S5tAWyPMsvj3yZEe1MyNY
+   hJbrXOG1ciNHRzoVKDkggI6+OuYjO8d4Eqez4IOdfELm8+LQy+JbZRANN
+   xtUBIWUJlK/UOx4Dd/awAiMbTT513UstJh/5SezYfNRpsoOig3HaP1SUq
+   YKpeWMGn5sN98PxmXlv74uhRK4bnbXiRu0ar3+9wDoPP31ldGBwWLUZ3y
+   jSAGH1/g9DJxTs9hQVxB47bFfLrNDF7J1Waj/ZZMyWSdSIVJwN2CPyNRP
+   A==;
+X-IronPort-AV: E=Sophos;i="5.63,560,1557158400"; 
+   d="scan'208";a="109984457"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2019 06:41:43 +0800
+IronPort-SDR: GbPomW7WlTTaysCK2XTvWSYqpfpzevHC6so/P4CbyQCAsBccH/NTjTAzZmZ/J1QUJWyj/XQpti
+ eMet97DcoZUXvPhlVBTIIKYZnNUhDy5GTpXHssu93iP+54EbGDnBBCOCpY8LvifzjYNAImVSnG
+ 4j5YFzZgA2TQyXhjErQSUOfxh2fdF1Jvke3DjDLcHHxXVmN/lA0vfqVRwqbAlLF9yF0FuHYNcq
+ Oz6038KZvoE8ijTJRTCaOitDSiluhEwfbzmd5Mkz66fCb79993NXqLP9xnPCpSu9EV/HWKzn2a
+ s/kAu/GiFCtJxag2U1hXykGy
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 06 Jun 2019 15:16:37 -0700
+IronPort-SDR: wNpNjfSTgkTZUQNnwG6O1GwZ9QPYKwbA5biuQmArf8xxHju2RVf/BN1hH3FO+9QFmFDwycXWMg
+ 0MUwQuBqPyZAIyaA+xhSc91wpmXcAFvVpq+7p/8HkzrMQAVH+nIGrS5wN/UQEzpniTUFXRBeio
+ hNkAi99HGw7LLpcOSlkMy0iqUFd/d8oMaXPeUpOjdmqn3GeCInii/VEE9Oivy8KTkwBcCLfdJ9
+ 3WnFAYOKErVpB7xbSMi2H9u6OoVftFN/NHrl+vLmI5ZCD+4bS6D5qVnyTbDuhL1S/rwMnbyiJe
+ BF0=
+Received: from r6220.sdcorp.global.sandisk.com (HELO [192.168.1.6]) ([10.196.157.143])
+  by uls-op-cesaip01.wdc.com with ESMTP; 06 Jun 2019 15:41:43 -0700
+Subject: Re: [v3 PATCH] RISC-V: Add a PE/COFF compliant Image header.
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Zong Li <zong@andestech.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "trini@konsulko.com" <trini@konsulko.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+References: <20190523183516.583-1-atish.patra@wdc.com>
+ <20190605162630.GE30925@lakrids.cambridge.arm.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <f48ddf4c-9934-2b96-7e2f-216571b83a67@wdc.com>
+Date:   Thu, 6 Jun 2019 15:41:38 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ewog5ol6fvorzftb"
-Content-Disposition: inline
-In-Reply-To: <cover.1559860606.git.rodrigosiqueiramelo@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190605162630.GE30925@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/5/19 9:26 AM, Mark Rutland wrote:
+> On Thu, May 23, 2019 at 11:35:16AM -0700, Atish Patra wrote:
+>> Currently, last stage boot loaders such as U-Boot can accept only
+>> uImage which is an unnecessary additional step in automating boot flows.
+>>
+>> Add a PE/COFF compliant image header that boot loaders can parse and
+>> directly load kernel flat Image. The existing booting methods will continue
+>> to work as it is.
+>>
+>> Another goal of this header is to support EFI stub for RISC-V in future.
+>> EFI specification needs PE/COFF image header in the beginning of the kernel
+>> image in order to load it as an EFI application. In order to support
+>> EFI stub, code0 should be replaced with "MZ" magic string and res5(at
+>> offset 0x3c) should point to the rest of the PE/COFF header (which will
+>> be added during EFI support).
+>>
+>> This patch is based on ARM64 boot image header and provides an opprtunity
+>> to combine both ARM64 & RISC-V image headers.
+>>
+>> Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+>>
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>>
+>> ---
+>> I have not sent out corresponding U-Boot patch as all the changes are
+>> compatible with current u-boot support. Once, the kernel header format
+>> is agreed upon, I will update the U-Boot patch.
+>>
+>> Changes from v2->v3
+>> 1. Modified reserved fields to define a header version.
+>> 2. Added header documentation.
+>>
+>> Changes from v1-v2:
+>> 1. Added additional reserved elements to make it fully PE compatible.
+>> ---
+>>   Documentation/riscv/boot-image-header.txt | 50 ++++++++++++++++++
+>>   arch/riscv/include/asm/image.h            | 64 +++++++++++++++++++++++
+>>   arch/riscv/kernel/head.S                  | 32 ++++++++++++
+>>   3 files changed, 146 insertions(+)
+>>   create mode 100644 Documentation/riscv/boot-image-header.txt
+>>   create mode 100644 arch/riscv/include/asm/image.h
+>>
+>> diff --git a/Documentation/riscv/boot-image-header.txt b/Documentation/riscv/boot-image-header.txt
+>> new file mode 100644
+>> index 000000000000..68abc2353cec
+>> --- /dev/null
+>> +++ b/Documentation/riscv/boot-image-header.txt
+>> @@ -0,0 +1,50 @@
+>> +				Boot image header in RISC-V Linux
+>> +			=============================================
+>> +
+>> +Author: Atish Patra <atish.patra@wdc.com>
+>> +Date  : 20 May 2019
+>> +
+>> +This document only describes the boot image header details for RISC-V Linux.
+>> +The complete booting guide will be available at Documentation/riscv/booting.txt.
+>> +
+>> +The following 64-byte header is present in decompressed Linux kernel image.
+>> +
+>> +	u32 code0;		  /* Executable code */
+>> +	u32 code1; 		  /* Executable code */
+>> +	u64 text_offset;	  /* Image load offset, little endian */
+>> +	u64 image_size;		  /* Effective Image size, little endian */
+>> +	u64 flags;		  /* kernel flags, little endian */
+>> +	u32 version;		  /* Version of this header */
+>> +	u32 res1  = 0;		  /* Reserved */
+>> +	u64 res2  = 0;    	  /* Reserved */
+>> +	u64 magic = 0x5643534952; /* Magic number, little endian, "RISCV" */
+>> +	u32 res3;		  /* Reserved for additional RISC-V specific header */
+>> +	u32 res4;		  /* Reserved for PE COFF offset */
+>> +
+>> +This header format is compliant with PE/COFF header and largely inspired from
+>> +ARM64 header. Thus, both ARM64 & RISC-V header can be combined into one common
+>> +header in future.
+>> +
+>> +Notes:
+>> +- This header can also be reused to support EFI stub for RISC-V in future. EFI
+>> +  specification needs PE/COFF image header in the beginning of the kernel image
+>> +  in order to load it as an EFI application. In order to support EFI stub,
+>> +  code0 should be replaced with "MZ" magic string and res5(at offset 0x3c) should
+>> +  point to the rest of the PE/COFF header.
+>> +
+>> +- version field indicate header version number.
+>> +  	Bits 0:15  - Minor version
+>> +	Bits 16:31 - Major version
+>> +
+>> +  This preserves compatibility across newer and older version of the header.
+>> +  The current version is defined as 0.1.
+>> +
+>> +- res3 is reserved for offset to any other additional fields. This makes the
+>> +  header extendible in future. One example would be to accommodate ISA
+>> +  extension for RISC-V in future. For current version, it is set to be zero.
+>> +
+>> +- In current header, the flag field has only one field.
+>> +	Bit 0: Kernel endianness. 1 if BE, 0 if LE.
+>> +
+>> +- Image size is mandatory for boot loader to load kernel image. Booting will
+>> +  fail otherwise.
+>> diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
+>> new file mode 100644
+>> index 000000000000..61c9f20d2f19
+>> --- /dev/null
+>> +++ b/arch/riscv/include/asm/image.h
+>> @@ -0,0 +1,64 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +
+>> +#ifndef __ASM_IMAGE_H
+>> +#define __ASM_IMAGE_H
+>> +
+>> +#define RISCV_IMAGE_MAGIC	"RISCV"
+>> +
+>> +
+>> +#define RISCV_IMAGE_FLAG_BE_SHIFT	0
+>> +#define RISCV_IMAGE_FLAG_BE_MASK	0x1
+>> +
+>> +#define RISCV_IMAGE_FLAG_LE		0
+>> +#define RISCV_IMAGE_FLAG_BE		1
+>> +
+>> +
+>> +#ifdef CONFIG_CPU_BIG_ENDIAN
+>> +#define __HEAD_FLAG_BE		RISCV_IMAGE_FLAG_BE
+>> +#else
+>> +#define __HEAD_FLAG_BE		RISCV_IMAGE_FLAG_LE
+>> +#endif
+>> +
+>> +#define __HEAD_FLAG(field)	(__HEAD_FLAG_##field << \
+>> +				RISCV_IMAGE_FLAG_##field##_SHIFT)
+>> +
+>> +#define __HEAD_FLAGS		(__HEAD_FLAG(BE))
+> 
+> If you have a CONFIG_CPU_BIG_ENDIAN kernel, this will not be
+> little-endian, nor will other fields in your header (e.g. the image
+> size), so I would recommend dropping this for now.
+> 
 
---ewog5ol6fvorzftb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Correct. Thanks for pointing that out.
 
-This patch implements the necessary functions to add writeback support
-for vkms. This feature is useful for testing compositors if you don=E2=80=
-=99t
-have hardware with writeback support.
+> To manage that for the image_size field you'll probably need to play the
+> same linker trick games we play on arm64.
+> 
+> It's probably worth having:
+> 
+> #ifdef CONFIG_CPU_BIG_ENDIAN
+> #error conversion of header fields to LE not yet implemented
+> #endif
+> 
 
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
----
- drivers/gpu/drm/vkms/Makefile         |   9 +-
- drivers/gpu/drm/vkms/vkms_crtc.c      |   5 +
- drivers/gpu/drm/vkms/vkms_drv.c       |  10 ++
- drivers/gpu/drm/vkms/vkms_drv.h       |  12 ++
- drivers/gpu/drm/vkms/vkms_output.c    |   6 +
- drivers/gpu/drm/vkms/vkms_writeback.c | 165 ++++++++++++++++++++++++++
- 6 files changed, 206 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/vkms/vkms_writeback.c
+Sure. I will update the patch.
 
-diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
-index 89f09bec7b23..90eb7acd618d 100644
---- a/drivers/gpu/drm/vkms/Makefile
-+++ b/drivers/gpu/drm/vkms/Makefile
-@@ -1,4 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-only
--vkms-y :=3D vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o v=
-kms_crc.o
-+vkms-y :=3D \
-+	vkms_drv.o \
-+	vkms_plane.o \
-+	vkms_output.o \
-+	vkms_crtc.o \
-+	vkms_gem.o \
-+	vkms_crc.o \
-+	vkms_writeback.o
-=20
- obj-$(CONFIG_DRM_VKMS) +=3D vkms.o
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_c=
-rtc.c
-index 1bbe099b7db8..ce797e265b1b 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -23,6 +23,11 @@ static enum hrtimer_restart vkms_vblank_simulate(struct =
-hrtimer *timer)
- 	if (!ret)
- 		DRM_ERROR("vkms failure on handling vblank");
-=20
-+	if (output->writeback_status =3D=3D WB_START) {
-+		drm_writeback_signal_completion(&output->wb_connector, 0);
-+		output->writeback_status =3D WB_STOP;
-+	}
-+
- 	if (state && output->crc_enabled) {
- 		u64 frame =3D drm_crtc_accurate_vblank_count(crtc);
-=20
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_dr=
-v.c
-index 92296bd8f623..d5917d5a45e3 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -29,6 +29,10 @@ bool enable_cursor;
- module_param_named(enable_cursor, enable_cursor, bool, 0444);
- MODULE_PARM_DESC(enable_cursor, "Enable/Disable cursor support");
-=20
-+int enable_writeback;
-+module_param_named(enable_writeback, enable_writeback, int, 0444);
-+MODULE_PARM_DESC(enable_writeback, "Enable/Disable writeback connector");
-+
- static const struct file_operations vkms_driver_fops =3D {
- 	.owner		=3D THIS_MODULE,
- 	.open		=3D drm_open,
-@@ -123,6 +127,12 @@ static int __init vkms_init(void)
- 		goto out_fini;
- 	}
-=20
-+	vkms_device->output.writeback_status =3D WB_DISABLED;
-+	if (enable_writeback) {
-+		vkms_device->output.writeback_status =3D WB_STOP;
-+		DRM_INFO("Writeback connector enabled");
-+	}
-+
- 	ret =3D vkms_modeset_init(vkms_device);
- 	if (ret)
- 		goto out_fini;
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_dr=
-v.h
-index e81073dea154..ca1f9ee63ec8 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -7,6 +7,7 @@
- #include <drm/drm.h>
- #include <drm/drm_gem.h>
- #include <drm/drm_encoder.h>
-+#include <drm/drm_writeback.h>
- #include <linux/hrtimer.h>
-=20
- #define XRES_MIN    20
-@@ -60,14 +61,22 @@ struct vkms_crtc_state {
- 	u64 frame_end;
- };
-=20
-+enum wb_status {
-+	WB_DISABLED,
-+	WB_START,
-+	WB_STOP,
-+};
-+
- struct vkms_output {
- 	struct drm_crtc crtc;
- 	struct drm_encoder encoder;
- 	struct drm_connector connector;
-+	struct drm_writeback_connector wb_connector;
- 	struct hrtimer vblank_hrtimer;
- 	ktime_t period_ns;
- 	struct drm_pending_vblank_event *event;
- 	bool crc_enabled;
-+	enum wb_status writeback_status;
- 	/* ordered wq for crc_work */
- 	struct workqueue_struct *crc_workq;
- 	/* protects concurrent access to crc_data */
-@@ -141,4 +150,7 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const=
- char *source_name,
- 			   size_t *values_cnt);
- void vkms_crc_work_handle(struct work_struct *work);
-=20
-+/* Writeback */
-+int enable_writeback_connector(struct vkms_device *vkmsdev);
-+
- #endif /* _VKMS_DRV_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms=
-_output.c
-index 1442b447c707..1fc1d4e9585c 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -91,6 +91,12 @@ int vkms_output_init(struct vkms_device *vkmsdev, int in=
-dex)
- 		goto err_attach;
- 	}
-=20
-+	if (vkmsdev->output.writeback_status !=3D WB_DISABLED) {
-+		ret =3D enable_writeback_connector(vkmsdev);
-+		if (ret)
-+			DRM_ERROR("Failed to init writeback connector\n");
-+	}
-+
- 	drm_mode_config_reset(dev);
-=20
- 	return 0;
-diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/v=
-kms_writeback.c
-new file mode 100644
-index 000000000000..f7b962ae5646
---- /dev/null
-+++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-@@ -0,0 +1,165 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include "vkms_drv.h"
-+#include <drm/drm_writeback.h>
-+#include <drm/drm_probe_helper.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
-+
-+static const struct drm_connector_funcs vkms_wb_connector_funcs =3D {
-+	.fill_modes =3D drm_helper_probe_single_connector_modes,
-+	.destroy =3D drm_connector_cleanup,
-+	.reset =3D drm_atomic_helper_connector_reset,
-+	.atomic_duplicate_state =3D drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,
-+};
-+
-+static int vkms_wb_encoder_atomic_check(struct drm_encoder *encoder,
-+					struct drm_crtc_state *crtc_state,
-+					struct drm_connector_state *conn_state)
-+{
-+	struct drm_framebuffer *fb;
-+	const struct drm_display_mode *mode =3D &crtc_state->mode;
-+
-+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-+		return 0;
-+
-+	fb =3D conn_state->writeback_job->fb;
-+	if (fb->width !=3D mode->hdisplay || fb->height !=3D mode->vdisplay) {
-+		DRM_DEBUG_KMS("Invalid framebuffer size %ux%u\n",
-+			      fb->width, fb->height);
-+		return -EINVAL;
-+	}
-+
-+	if (fb->format->format !=3D DRM_FORMAT_XRGB8888) {
-+		struct drm_format_name_buf format_name;
-+
-+		DRM_DEBUG_KMS("Invalid pixel format %s\n",
-+			      drm_get_format_name(fb->format->format,
-+						  &format_name));
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct drm_encoder_helper_funcs vkms_wb_encoder_helper_funcs =
-=3D {
-+	.atomic_check =3D vkms_wb_encoder_atomic_check,
-+};
-+
-+static int vkms_wb_connector_get_modes(struct drm_connector *connector)
-+{
-+	struct drm_device *dev =3D connector->dev;
-+
-+	return drm_add_modes_noedid(connector, dev->mode_config.max_width,
-+				    dev->mode_config.max_height);
-+}
-+
-+static int vkms_wb_prepare_job(struct drm_writeback_connector *wb_connecto=
-r,
-+			       struct drm_writeback_job *job)
-+{
-+	struct vkms_gem_object *vkms_obj;
-+	struct drm_gem_object *gem_obj;
-+	int ret;
-+
-+	if (!job->fb)
-+		return 0;
-+
-+	gem_obj =3D drm_gem_fb_get_obj(job->fb, 0);
-+	ret =3D vkms_gem_vmap(gem_obj);
-+	if (ret) {
-+		DRM_ERROR("vmap failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	vkms_obj =3D drm_gem_to_vkms_gem(gem_obj);
-+	job->priv =3D vkms_obj->vaddr;
-+
-+	return 0;
-+}
-+
-+static void vkms_wb_cleanup_job(struct drm_writeback_connector *connector,
-+				struct drm_writeback_job *job)
-+{
-+	struct drm_gem_object *gem_obj;
-+
-+	if (!job->fb)
-+		return;
-+
-+	gem_obj =3D drm_gem_fb_get_obj(job->fb, 0);
-+	vkms_gem_vunmap(gem_obj);
-+}
-+
-+static void vkms_wb_atomic_commit(struct drm_connector *conn,
-+				  struct drm_connector_state *state)
-+{
-+	struct vkms_device *vkmsdev =3D drm_device_to_vkms_device(conn->dev);
-+	struct vkms_output *output =3D &vkmsdev->output;
-+	struct drm_writeback_connector *wb_conn =3D &output->wb_connector;
-+	struct drm_connector_state *conn_state =3D wb_conn->base.state;
-+	void *priv_data =3D conn_state->writeback_job->priv;
-+	struct vkms_crc_data *primary_data =3D NULL;
-+	struct drm_framebuffer *fb =3D NULL;
-+	struct vkms_gem_object *vkms_obj;
-+	struct drm_gem_object *gem_obj;
-+	struct drm_plane *plane;
-+
-+	if (!conn_state)
-+		return;
-+
-+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb) {
-+		output->writeback_status =3D WB_STOP;
-+		DRM_DEBUG_DRIVER("Disable writeback\n");
-+		return;
-+	}
-+
-+	drm_for_each_plane(plane, &vkmsdev->drm) {
-+		struct vkms_plane_state *vplane_state;
-+		struct vkms_crc_data *plane_data;
-+
-+		vplane_state =3D to_vkms_plane_state(plane->state);
-+		plane_data =3D vplane_state->crc_data;
-+
-+		if (drm_framebuffer_read_refcount(&plane_data->fb) =3D=3D 0)
-+			continue;
-+
-+		if (plane->type =3D=3D DRM_PLANE_TYPE_PRIMARY)
-+			primary_data =3D plane_data;
-+	}
-+
-+	if (!primary_data)
-+		return;
-+
-+	fb =3D &primary_data->fb;
-+	gem_obj =3D drm_gem_fb_get_obj(fb, 0);
-+	vkms_obj =3D drm_gem_to_vkms_gem(gem_obj);
-+
-+	if (!vkms_obj->vaddr || !priv_data)
-+		return;
-+
-+	memcpy(priv_data, vkms_obj->vaddr, vkms_obj->gem.size);
-+	drm_writeback_queue_job(wb_conn, state);
-+	output->writeback_status =3D WB_START;
-+}
-+
-+static const struct drm_connector_helper_funcs vkms_wb_conn_helper_funcs =
-=3D {
-+	.get_modes =3D vkms_wb_connector_get_modes,
-+	.prepare_writeback_job =3D vkms_wb_prepare_job,
-+	.cleanup_writeback_job =3D vkms_wb_cleanup_job,
-+	.atomic_commit =3D vkms_wb_atomic_commit,
-+};
-+
-+int enable_writeback_connector(struct vkms_device *vkmsdev)
-+{
-+	struct drm_writeback_connector *wb =3D &vkmsdev->output.wb_connector;
-+
-+	vkmsdev->output.wb_connector.encoder.possible_crtcs =3D 1;
-+	drm_connector_helper_add(&wb->base, &vkms_wb_conn_helper_funcs);
-+
-+	return drm_writeback_connector_init(&vkmsdev->drm, wb,
-+					    &vkms_wb_connector_funcs,
-+					    &vkms_wb_encoder_helper_funcs,
-+					    vkms_formats,
-+					    ARRAY_SIZE(vkms_formats));
-+}
-+
---=20
-2.21.0
 
---ewog5ol6fvorzftb
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards,
+Atish
 
------BEGIN PGP SIGNATURE-----
+> ... to catch that later.
+> 
+> Thanks,
+> Mark,
+> 
 
-iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAlz5ln0ACgkQWJzP/com
-vP/aSRAAvqLHOXEBF8r6ep6wmjTQhYCq1LUd6oQko0ZZrcIX/Bkso+qVx4hzPbul
-YhGrqVe+SsTtPHGUG2fncUcjNvAgwlYPItFHrpYfwZo+z5zCvmmnNke4ObG5KYf1
-OBFsKcL8NzWLt6/YDY4600m64q0oM3boRI3qkbrdrxTlttz9AKcWN7GSZrjOMM/o
-/2TpoKT1VktEUze8UElEajdghvg/IzUVEmSJzJtsuYo2JwMZaZivyvIjlMy4egNW
-XfIWJctjrmlddHUUUmmDXdzkrks6CqovMUhTjrokCwthRCslbrLAgUAFSATnIJdH
-8m33tJOBSJbmIGUD1g7Y3sR39G88EOk5DQ3cRNvzJRtCXWNzVStMnB9g7eXeTQdX
-6lrsdARuDeYdKcIGzn4+O6BZ6e/YFnBFWVnuvkkZY5YkC6Vg7XopQEIDmLIafeJD
-aITLkW9Enr8NOo7sVbE88nv08ZNy0vLQ+GfdfNZxksFww4Fvz3kO/gONvghrrCMD
-Exwb+BoitMu3O4gUD6FAWon8fOGD5b0MP47nd+fJNZfbRLy+W/JLvhgcu7VAWdjI
-EQmgQSA+pfAzvC81ZGeP2PYNIuRZC2dFyzBhISHOi21D9eKibhEPzxI4Skr+UAM0
-LfYEuaGhXFpSonWpvYZv8yuZZNAS+pDXyJb2vvyR8iAYllVuOUA=
-=WXYt
------END PGP SIGNATURE-----
 
---ewog5ol6fvorzftb--
+-- 
+Regards,
+Atish
