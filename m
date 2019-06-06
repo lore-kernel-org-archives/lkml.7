@@ -2,95 +2,104 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1C2C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265D8C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71EF0206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AFDD/k2/"
+	by mail.kernel.org (Postfix) with ESMTP id 077B120665
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbfFFPhb (ORCPT
+        id S1729512AbfFFPhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:37:31 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41045 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbfFFPha (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:37:30 -0400
-Received: by mail-io1-f65.google.com with SMTP id w25so530169ioc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 08:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=7FsPigjoq8C26eFiFz4PbLbviE4sOu/NaNL8Wv/dWZY=;
-        b=AFDD/k2/le52Hdd/TKthmiFLkpxwsE8wgwm+ToBDcTp5nk5LpKOXg2c5jC8eyqSr8U
-         PbQa5dsh5SDeL6j0empaIJIbULAJcPWpVBbqfwPg+RIvS/9Z4t7qTgc+J2TnzpXamk2f
-         Jk2clgGQMDirG2oKq3gaszEI2ZXgq2nzh2D7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=7FsPigjoq8C26eFiFz4PbLbviE4sOu/NaNL8Wv/dWZY=;
-        b=TbtncAjVFYrMzBFoH6Aro2yrhA9baHmYyyIs7Gwov7/ol6Nmh4EHCXdclUPpDkXbdd
-         hRx9hemEy49k6ONC52g7SuOME80ur7CTy7TLvqVUWe/4PhhibD67OdBWlk/0Z4AtANmb
-         ByhBGd+f65iKHpa157JVtN6voxAOrz84xDBT6ylZjnnX4+ZcIoLKx2BtSoTmdp2sNI8n
-         tLBODGSKpV1xr2E2tIhrPvuEyQiJs7cx6hoaAiodILr02RUSqWnlA2rL4kJRf6RSNIN+
-         s5JDk2FaDhI/67LswaES9fEWc4Lt7LCkoInuxjZJO13YF1S7oFZg3ZsgHPcAoFCWq8lt
-         ziAg==
-X-Gm-Message-State: APjAAAXRhGMk90OSvHNQHqwIO1SAY3qhPhWpIQst8fyzo7oU+x7NPfv4
-        ULTPgz8fqJYMBWllemnQc1aCP/7at1hnRht/ZQmoWA==
-X-Google-Smtp-Source: APXvYqxuIiFVwwy3SZOPoMV5d6L9mjSBqLBwyeJYTl2PURpa5yAIPkIYD/4gZiMQyRghGYi7pdemfpa8qFQTyevPY6Q=
-X-Received: by 2002:a5d:9502:: with SMTP id d2mr14353761iom.2.1559835449946;
- Thu, 06 Jun 2019 08:37:29 -0700 (PDT)
-From:   Kashyap Desai <kashyap.desai@broadcom.com>
-References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-11-hch@lst.de>
-In-Reply-To: <20190605190836.32354-11-hch@lst.de>
+        Thu, 6 Jun 2019 11:37:39 -0400
+Received: from mga18.intel.com ([134.134.136.126]:14081 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729173AbfFFPhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:37:38 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 08:37:37 -0700
+X-ExtLoop1: 1
+Received: from harend-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.8])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Jun 2019 08:37:24 -0700
+Date:   Thu, 6 Jun 2019 18:37:23 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED address
+Message-ID: <20190606153710.GB25112@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-3-sean.j.christopherson@intel.com>
+ <20190604114951.GC30594@linux.intel.com>
+ <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654EDBDE@ORSMSX116.amr.corp.intel.com>
+ <20190605151653.GK11331@linux.intel.com>
+ <5A85C1D7-A159-437E-B42A-3F4254E07305@amacapital.net>
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQNLjZIO2zMn7N+9xPobnDbFSu4o5gI2RJdJo5AtPRA=
-Date:   Thu, 6 Jun 2019 21:07:27 +0530
-Message-ID: <cd713506efb9579d1f69a719d831c28d@mail.gmail.com>
-Subject: RE: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi host
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
-        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
-        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5A85C1D7-A159-437E-B42A-3F4254E07305@amacapital.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> This ensures all proper DMA layer handling is taken care of by the SCSI
-> midlayer.  Note that the effect is global, as the IOMMU merging is based
-> off a
-> paramters in struct device.  We could still turn if off if no PCIe devices
-> are
-> present, but I don't know how to find that out.
->
-> Also remove the bogus nomerges flag, merges do take the virt_boundary into
-> account.
+On Wed, Jun 05, 2019 at 01:14:04PM -0700, Andy Lutomirski wrote:
+> 
+> 
+> > On Jun 5, 2019, at 8:17 AM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> > 
+> >> On Tue, Jun 04, 2019 at 10:10:22PM +0000, Xing, Cedric wrote:
+> >> A bit off topic here. This mmap()/mprotect() discussion reminds me a
+> >> question (guess for Jarkko): Now that vma->vm_file->private_data keeps
+> >> a pointer to the enclave, why do we store it again in vma->vm_private?
+> >> It isn't a big deal but non-NULL vm_private does prevent mprotect()
+> >> from merging adjacent VMAs. 
+> > 
+> > Same semantics as with a regular mmap i.e. you can close the file and
+> > still use the mapping.
+> > 
+> > 
+> 
+> The file should be properly refcounted — vm_file should not go away while it’s mapped.
 
-Hi Christoph, Changes for <megaraid_sas> and <mpt3sas> looks good. We want
-to confirm few sanity before ACK. BTW, what benefit we will see moving
-virt_boundry setting to SCSI mid layer ? Is it just modular approach OR any
-functional fix ?
+Right, makes sense. It is easy one to change essentially just removing
+internal refcount from sgx_encl and using file for the same. I'll update
+this to my tree along with the changes to remove LKM/ACPI bits ASAP.
 
-Kashyap
+/Jarkko
