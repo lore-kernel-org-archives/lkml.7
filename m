@@ -2,108 +2,92 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F80C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702CFC28D1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF2D20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE0B2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:03:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cAtCEzCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfFFKBl (ORCPT
+        id S1728103AbfFFKDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:01:41 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45752 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726972AbfFFKBj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:01:39 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 4A078803EE; Thu,  6 Jun 2019 12:01:27 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 12:01:37 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, broonie@kernel.org,
-        lgirdwood@gmail.com, lee.jones@linaro.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 4/5] dt-bindings: leds: Add LED bindings for the
- LM36274
-Message-ID: <20190606100136.GF975@amd>
-References: <20190605125634.7042-1-dmurphy@ti.com>
- <20190605125634.7042-5-dmurphy@ti.com>
+        Thu, 6 Jun 2019 06:03:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:51288 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726972AbfFFKDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:03:20 -0400
+Received: from zn.tnic (p200300EC2F1EFA00C5555FEB083E0D5D.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:fa00:c555:5feb:83e:d5d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F008C1EC02FE;
+        Thu,  6 Jun 2019 12:03:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1559815398;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=gY7wo5tn+Q6xuDLRFIE/jPyAZiFytadxsFIYa94a7Xg=;
+        b=cAtCEzCXTH50n+mSHu26/2RPN9U0/FM0abQbzcs68cQvcwFuwUoHCIoUi4NOe00kr5G8oW
+        af88+35wfOFlo9OMy23Rug6cKERrEBIeHoi/zS7TZGj2Wwuux0p/EROmUW9QX8eJhjc5Mx
+        w7Yjwi4RLHRtXbEUyf+htu9TVGIX+CI=
+Date:   Thu, 6 Jun 2019 12:03:12 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Hawa, Hanna" <hhhawa@amazon.com>
+Cc:     "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190606100312.GD26146@zn.tnic>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+ <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+ <20190531051400.GA2275@cz.tnic>
+ <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="JcvBIhDvR6w3jUPA"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190605125634.7042-5-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 06, 2019 at 10:53:42AM +0300, Hawa, Hanna wrote:
+> Disagree. The various drivers don't depend on each other.
+> I think we should keep the drivers separated as they are distinct and
+> independent IP blocks.
 
---JcvBIhDvR6w3jUPA
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This topic comes up each time someone submits a new ARM EDAC driver:
+EDAC can't support different drivers because of the limitations it has.
+And a single platform driver works - see altera_edac.
 
-Hi!
+Again, James has a good write up with example how this can work so be
+patient.
 
->  .../devicetree/bindings/leds/leds-lm36274.txt | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.t=
-xt
->=20
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Do=
-cumentation/devicetree/bindings/leds/leds-lm36274.txt
-> new file mode 100644
-> index 000000000000..329393700191
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-> @@ -0,0 +1,82 @@
-> +* Texas Instruments LM36274 4-Channel LCD Backlight Driver w/Integrated =
-Bias
-> +
-> +The LM36274 is an integrated four-channel WLED driver and LCD bias suppl=
-y.
-> +The backlight boost provides the power to bias four parallel LED strings=
- with
-> +up to 29V total output voltage. The 11-bit LED current is programmable v=
-ia
-> +the I2C bus and/or controlled via a logic level PWM input from 60 =CE=BC=
-A to 30 mA.
-> +
-> +Parent device properties are documented in ../mfd/ti_lmu.txt
-> +Regulator properties are documented in ../regulator/lm363x-regulator.txt
+-- 
+Regards/Gruss,
+    Boris.
 
-Should these paths follow the same format as below
-(Documentation/devicetree/bindings)
-
-?
-
-Otherwise looks good.
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---JcvBIhDvR6w3jUPA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlz45IAACgkQMOfwapXb+vIJUwCeLojs/AGqWQF2DQiuVlw1Xz1P
-GqYAni4oAYbSvZ9Ki4SlbbOWLhRVDGHT
-=q2SH
------END PGP SIGNATURE-----
-
---JcvBIhDvR6w3jUPA--
+Good mailing practices for 400: avoid top-posting and trim the reply.
