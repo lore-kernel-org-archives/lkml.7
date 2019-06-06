@@ -2,143 +2,186 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3DDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F33C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4103120673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C639E20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEj3AExP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Cfnogv/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfFFNea (ORCPT
+        id S1728183AbfFFNfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:34:30 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44476 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfFFNe3 (ORCPT
+        Thu, 6 Jun 2019 09:35:24 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:52650 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfFFNfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:34:29 -0400
-Received: by mail-qk1-f195.google.com with SMTP id w187so1402969qkb.11;
-        Thu, 06 Jun 2019 06:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xirkV3DOzB14wA6wGRICAfj7Wrpc/HfyNCjzGeOnGKc=;
-        b=MEj3AExPDyVN4I1G2SW+SUr1+x4qCvqxVBDCxtRWeITMp6cIAYQfV236ccTohX8FSa
-         blnAKNB64m7Swcl3teB3EXi07NlJpTjQlSYIRGL9/Da3zZoUuK2IbMiG2PHPrJCuGxXw
-         MOzttgUPmzjrlcBWHjHpqpS+/TxqpecTt+wkhizn/XoMuGQhgxmojdWqiqMA10RrC7c2
-         UcXzJCWxlShVLjlEplNb6Hj/0towoyDUUdx692AzJumaaco4toerPp7ysWcYCv22Fc7z
-         kQa4L45ydlKnsoK2a1+mf/H4P67wrkyzAJcrTvfMbQ8d3B2MUJ1cx0WPWohOVD9LmJ63
-         f+lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xirkV3DOzB14wA6wGRICAfj7Wrpc/HfyNCjzGeOnGKc=;
-        b=U3Yr2TF1oy4/dL+UmzaaWPDhsgx56PnuVRGZtmujgQSdWrzUzNk+8RWcTmc9HOokf/
-         +wjfFggohXPHKMrgWhqx2t6f9oigxH3kSyVV7zEQd39pdJ3Jg0EUsf5Q8ioWSRJRaAzu
-         Bnwt7RRgRoXnc8b9N6sjkAcYVSMxSkIojDA8ePPZ/X4MHgHPUDdP2B11yqhEzOEpzZrG
-         M0CQwsm7ErZAAKXUOkiydmXCftDSxV4RPjkhRT5vJUjX85M2FbHRWhskp/AkJXIbmzw1
-         fWffV/V0lG9b2DKA5gYqOM8lXqUfylrQqZR5hYbshhoxB3Pm+mPCQ0UcfDkl9P1KJ7Hj
-         uHkA==
-X-Gm-Message-State: APjAAAXSeCfUF26rJy6+FZKm7SArMOQPgJn8UV8nVUEQrWO58L7O77vI
-        4lBDh+xTEaqdUZ0w1L46/8M=
-X-Google-Smtp-Source: APXvYqzTMkdozEtb0Oh5NYEZq7Ry3yMH+jPn44WVyk1YibbMQ0oHHDMxV3Kn/VBJrpsl9dxlXmFWEw==
-X-Received: by 2002:a37:aa4d:: with SMTP id t74mr39408551qke.144.1559828068671;
-        Thu, 06 Jun 2019 06:34:28 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.208.82])
-        by smtp.gmail.com with ESMTPSA id e66sm1062158qtb.55.2019.06.06.06.34.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 06:34:27 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 53B6941149; Thu,  6 Jun 2019 10:34:24 -0300 (-03)
-Date:   Thu, 6 Jun 2019 10:34:24 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] perf trace: Exit when build eBPF program failure
-Message-ID: <20190606133424.GB30166@kernel.org>
-References: <20190606094845.4800-1-leo.yan@linaro.org>
- <20190606094845.4800-2-leo.yan@linaro.org>
- <20190606133019.GA30166@kernel.org>
+        Thu, 6 Jun 2019 09:35:23 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190606133522euoutp017913b75abaf44c742bc9f572f3375e61~ln2mwU5Zk1755617556euoutp01i
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 13:35:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190606133522euoutp017913b75abaf44c742bc9f572f3375e61~ln2mwU5Zk1755617556euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559828122;
+        bh=3M/G3KWFVRvfQVQ8wa9cPwyi0fym0xnczXtfcnAQRG0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Cfnogv/SUNySPtfO1s6wo4wPMFrpvsEWHiOt0LzzzeZk2jAfQANxzICiJJYIDGthu
+         4OuvVJSsRpM4032f9RCnZGWZsn62MWYJlbSvCF2bMLKaeJILjGDdDNWD2XhgYls51+
+         O7Anr7Y78KZRqfVPSSO5iO/nj6ZeEcCXdj+TTua8=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190606133521eucas1p2c06084f280b0af1f5474a0830a049122~ln2mAzf9n1223512235eucas1p2r;
+        Thu,  6 Jun 2019 13:35:21 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 76.19.04325.99619FC5; Thu,  6
+        Jun 2019 14:35:21 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190606133520eucas1p14b8720349f70eceba874d3ff204ef08f~ln2lJiHCi1256112561eucas1p1P;
+        Thu,  6 Jun 2019 13:35:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190606133520eusmtrp1d5ff5cb7f1790f6052802ef3631b0a99~ln2k52IWp2328723287eusmtrp1D;
+        Thu,  6 Jun 2019 13:35:20 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-08-5cf916994751
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 46.6B.04140.89619FC5; Thu,  6
+        Jun 2019 14:35:20 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190606133519eusmtip1ab9099e80e7fcadbbf9caeb0b6f4d20b~ln2kMtXz02303323033eusmtip17;
+        Thu,  6 Jun 2019 13:35:19 +0000 (GMT)
+Subject: Re: [PATCH v8 08/13] drivers: memory: add DMC driver for Exynos5422
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <20a5e3a9-3ac9-2bb6-2c26-fab02d92c2b4@partner.samsung.com>
+Date:   Thu, 6 Jun 2019 15:35:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606133019.GA30166@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURTHuzszO6O0y+xYerCHtPQhA60s8EYlBiKDGuSHooeQU04muZvu
+        qGUWrdnTtIeW5apsQZKsiWmSupHRalm+TUvTXuRSZBqIr7Y0cpwiv/3u+f/PPed/uQzBDVLe
+        TJwxSTQZhXi92p188MzV5pfv6Ypa3VdO44ob5RTuGftCYWtDG4VLRwYQzm0qUuGWCwZ8aeAb
+        gdvb79G49eQQjbvshWo8mt2A8I32OhUua3hH4/70EjWuHzpL4cfdYbj/lxZPPP+Egjl+YjyH
+        5AvMnSRfa3lH85W282o+O+O7mr9YZUP8/eY0frRy6VZml/vGGDE+LkU0rQqKdj+Qa/9IJ7To
+        jjjejhJm9FSTidwYYNfB7dIPKBO5MxxbgiCvtxjJAseOIbhwapkijCJoqetWZSJmtqNjiFTq
+        dxAM3C+glMMwgofvX6vkbg82AvLTMyiZF7C+0DM9OWsi2AoSqmvstHyTmvWHGlui7NGwofDi
+        /BVCZpJdDp8vv5rdYiG7A8ZqK5Hi0cGLfCcpsxsbCc+aOmmZCdYL+pxWlcI+UD1cSMizgC1i
+        oMTyFSk5Q+CH1Uoo7AGDjVW0wouhOTeLVFgCc/atv/5jMHCp6K9nA9Q3dlLyzsRMmHL7KqW8
+        GVw2M1IeRQu9wzplBS3kPLhOKGUNnDvDKe4VUJXVoVLYE+7czaMvI71lTjDLnDCWOWEs/+fe
+        RKQNeYnJkiFWlNYaxcP+kmCQko2x/vsOGSrRzA9s/t04XoPqpvY6EMsg/XwNT7uiOEpIkVIN
+        DgQMoV+gSen4EcVpYoTUo6Lp0B5TcrwoOdAihtR7adLmfdzNsbFCknhQFBNE0z9Vxbh5m1Fr
+        QF6oJoaoCS7OvGalerc7C47mvYz5Gf5Iu2+yLai7u+9ttHZJ4P75ub6tx3Om4kO9Q5aGvhHC
+        KGfG3kEfEz6blePaovXpH+F61k8mBEaGb7p6ItF5LajLR4qIDAjRPXZ4Rq0o2xZx2m9aKH3a
+        OoV3BnsvWq22G4tjnyT+7H+ZqielA8KalYRJEv4Asha4QH0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsVy+t/xu7ozxH7GGJxbwGOxccZ6VovrX56z
+        Wsw/co7VYvXHx4wWk0/NZbI4051r0f/4NbPF+fMb2C3ONr1ht7i8aw6bxefeI4wWM87vY7JY
+        e+Quu8XtxhVsFofftLNa7L/iZXH7N5/FtxOPGB2EPL59ncTiMbvhIovHzll32T02repk8+ht
+        fsfm0bdlFaPH5tPVHp83yQVwROnZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq
+        6dvZpKTmZJalFunbJehlTN71gL3gjGDFoTufmRsYj/J2MXJwSAiYSFx4w9LFyMkhJLCUUWLt
+        kVQQW0JATGLSvu3sELawxJ9rXWwQNa8ZJX62i4HYwgI+EjMbm1lBbBEBTYnrf78D2VwczAIb
+        WSQuvuplAnGEBKYwS1y5tJ4dZBmbgJ7EjlWFIA28Am4SJzsnMoPYLAIqEs8mXGUEsUUFIiRm
+        72pggagRlDg58wmYzSkQKHHs1EWwg5gFzCTmbX7IDGGLS9x6Mp8JwpaX2P52DvMERqFZSNpn
+        IWmZhaRlFpKWBYwsqxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQKjftuxn1t2MHa9Cz7EKMDB
+        qMTDO4PpZ4wQa2JZcWXuIUYJDmYlEd6yCz9ihHhTEiurUovy44tKc1KLDzGaAj03kVlKNDkf
+        mJDySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwugQyXMl+22jQ
+        dGPujKs+ntPWnZ4vGxG5RenBesOrk7bU9VmWrVrZWFon+IJt3w32r16fVnDOn5dsunv/+9/i
+        PNGHLddfYl2/Zo7diTMsp75vnHvjd/zDrfLtrfe4dvUaXIpedvrD+z0n+Ddkv/znf6V99r0F
+        SkcTyp+w779qx/W7KKL6FDdHQZoSS3FGoqEWc1FxIgCfs1vCEAMAAA==
+X-CMS-MailID: 20190606133520eucas1p14b8720349f70eceba874d3ff204ef08f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190605165435eucas1p2fa32f4583f396fdce443b6943ac180d3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190605165435eucas1p2fa32f4583f396fdce443b6943ac180d3
+References: <CGME20190605165435eucas1p2fa32f4583f396fdce443b6943ac180d3@eucas1p2.samsung.com>
+        <20190605165410.14606-1-l.luba@partner.samsung.com>
+        <20190605165410.14606-9-l.luba@partner.samsung.com>
+        <CAJKOXPfKbWpx9AapOudDyEZjDpgtMX-aHPQHRivuVNKaap8EQg@mail.gmail.com>
+        <d5758d38-c0e5-1732-1407-91d602ae5500@partner.samsung.com>
+        <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jun 06, 2019 at 10:30:19AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Jun 06, 2019 at 05:48:42PM +0800, Leo Yan escreveu:
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -3664,6 +3664,14 @@ static int trace__config(const char *var, const char *value, void *arg)
-> >  					       "event selector. use 'perf list' to list available events",
-> >  					       parse_events_option);
-> >  		err = parse_events_option(&o, value, 0);
-> > +
-> > +		/*
-> > +		 * When parse option successfully parse_events_option() will
-> > +		 * return 0, otherwise means the paring failure.  And it
-> > +		 * returns 1 for eBPF program building failure; so adjust the
-> > +		 * err value to -1 for the failure.
-> > +		 */
-> > +		err = err ? -1 : 0;
+On 6/6/19 1:45 PM, Krzysztof Kozlowski wrote:
+> On Thu, 6 Jun 2019 at 12:38, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>> Hi Krzysztof,
+>>>> +/**
+>>>> + * exynos5_dmc_init_clks() - Initialize clocks needed for DMC operation.
+>>>> + * @dmc:       DMC structure containing needed fields
+>>>> + *
+>>>> + * Get the needed clocks defined in DT device, enable and set the right parents.
+>>>> + * Read current frequency and initialize the initial rate for governor.
+>>>> + */
+>>>> +static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
+>>>> +{
+>>>> +       int ret;
+>>>> +       unsigned long target_volt = 0;
+>>>> +       unsigned long target_rate = 0;
+>>>> +
+>>>> +       dmc->fout_spll = devm_clk_get(dmc->dev, "fout_spll");
+>>>> +       if (IS_ERR(dmc->fout_spll))
+>>>> +               return PTR_ERR(dmc->fout_spll);
+>>>> +
+>>>> +       dmc->fout_bpll = devm_clk_get(dmc->dev, "fout_bpll");
+>>>> +       if (IS_ERR(dmc->fout_bpll))
+>>>> +               return PTR_ERR(dmc->fout_bpll);
+>>>> +
+>>>> +       dmc->mout_mclk_cdrex = devm_clk_get(dmc->dev, "mout_mclk_cdrex");
+>>>> +       if (IS_ERR(dmc->mout_mclk_cdrex))
+>>>> +               return PTR_ERR(dmc->mout_mclk_cdrex);
+>>>
+>>> You are not enabling this clock. It is divider so it is fine for him
+>>> but what about its parents? How can you guarantee that parents are
+>>> enabled?
+>> It uses two parents in this configuration:
+>> 1. 'mout_bpll' which is set by the bootloader and is a default mode
+>> 2. 'mout_mx_mspll_ccore' which is used temporary as a 'bypass clock
+>> source' only for the time when BPLL is changing it's settings
+>>
+>> Do you suggest to put a call:
+>>
+>> to make sure the parent is up and running?
+>> OR just move the lines from the end of this function:
+>>          clk_prepare_enable(dmc->fout_bpll);
+>>          clk_prepare_enable(dmc->mout_bpll);
+>> and add:
+>>          ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
+>> then call the clk_get_rate on 'mout_mclk_cdrex'
+>>
 > 
-> I'll rewrite the comment above to make it more succint and fix things
-> like 'paring' (parsing):
+> Ah, It's my mistake. I missed that later you enable its new parent. It's fine.
+OK, so I will leave it as is and just fix the other stuff that you've
+mentioned.
+
+Regards,
+Lukasz
 > 
-> 		/*
-> 		 * parse_events_option() returns !0 to indicate failure
-> 		 * while the perf_config code that calls trace__config()
-> 		 * expects < 0 returns to indicate error, so:
-> 		 */
+> Best regards,
+> Krzysztof
 > 
-> 		 if (err)
-> 		 	err = -1;
-
-Even shorter, please let me know if I can keep your
-Signed-off-by/authorship for this one.
-
-- Arnaldo
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index f7e4e50bddbd..1a2a605cf068 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3703,7 +3703,12 @@ static int trace__config(const char *var, const char *value, void *arg)
- 		struct option o = OPT_CALLBACK('e', "event", &trace->evlist, "event",
- 					       "event selector. use 'perf list' to list available events",
- 					       parse_events_option);
--		err = parse_events_option(&o, value, 0);
-+		/*
-+		 * We can't propagate parse_event_option() return, as it is 1
-+		 * for failure while perf_config() expects -1.
-+		 */
-+		if (parse_events_option(&o, value, 0))
-+			err = -1;
- 	} else if (!strcmp(var, "trace.show_timestamp")) {
- 		trace->show_tstamp = perf_config_bool(var, value);
- 	} else if (!strcmp(var, "trace.show_duration")) {
+> 
