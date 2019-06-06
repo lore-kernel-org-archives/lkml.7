@@ -2,101 +2,105 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AA3C28EB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFFBC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4BE208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hY6sMbtr"
+	by mail.kernel.org (Postfix) with ESMTP id 5397E208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfFFVUK (ORCPT
+        id S1728353AbfFFVVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:20:10 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44065 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfFFVUK (ORCPT
+        Thu, 6 Jun 2019 17:21:53 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34561 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfFFVVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:20:10 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c5so1409151pll.11;
-        Thu, 06 Jun 2019 14:20:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9QlvjOpv9aY/6/qhy+I2l/VtQWPhEL6g5W3ycbCxLbg=;
-        b=hY6sMbtrklI4anmLJhxciTGb2+eS++SqFH6S0wSGbgern4B1mvJ5746/wa7cZbT3cb
-         W3KGTNf3lSM50lI1s/Nv391LIm6szBaZu1B/1tSG6FOwOh7HAtEzpqx39thRar2YEUSP
-         jpTXo7+x4WABtK4VDOWHZZJajkk2Z0RkwswfL+1XdqAxDQUrwXSdIJprUv8+V6r3kue0
-         uO1vO9Fe/aLW8R/1qY8yUWWPhOl0FWL7453geI2qova/pcI2wIKdI44QgSuw6AympdsA
-         CZQGfs/RfejjsOwhjCS05F4IqQusi7Gjz+mclpnQDdzlFZlSfRVI/lI+QeIj83hbr4Ss
-         F/8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9QlvjOpv9aY/6/qhy+I2l/VtQWPhEL6g5W3ycbCxLbg=;
-        b=PruF4Z267V4XZG3Yax0FH2lhx6/8NMX24CsSX2bqkqjJU+Lz4Mx5iYm9NF95x0jm+7
-         QRmr5TRPkHrpiCnfFlwBw/m+ucq1i3RbGVsjfXTDqpuq4MYJyKuK/ppR5YwZQZKZM/iN
-         How/F/s3FarB0yo62DDNUZYbLMnvgO7HZu6RyGBI7Z7BlNbqi052qz664qKcRUmAk6to
-         aFspscuLBoCMv8cK6YsRwgVumJZ1bKM7V8inhFRHn/gG3qAULsyfnFJvH9KyoY8qLsnY
-         vxti6koSbEa4bubdZcpOa2i7okhE/aBrAZeBAFxLyyGaMQt1whXO/y1LTUmp7+CCUQN4
-         DIrA==
-X-Gm-Message-State: APjAAAU1+4emdpF6SkovrDOdXcpV3ReoZ+/JNaWN0JI33MhwkAFoftEe
-        +voLaae4oaEYp1Ig+9cy7nA=
-X-Google-Smtp-Source: APXvYqyn05gUfB1oAEN5JJchgHPbDRjH4TkYRE/NkEZIhq8mgnAtpGvtu8tUt+0JmGgC8bAdl6r5LQ==
-X-Received: by 2002:a17:902:b088:: with SMTP id p8mr9894353plr.335.1559856009469;
-        Thu, 06 Jun 2019 14:20:09 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j37sm90658pgj.58.2019.06.06.14.20.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 14:20:08 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 14:20:08 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mironov.ivan@gmail.com,
-        rasmus.villemoes@prevas.dk
-Subject: Re: [PATCH 6/6] watchdog/hpwdt: Reflect changes
-Message-ID: <20190606212008.GE1299@roeck-us.net>
-References: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
- <1558126783-4877-7-git-send-email-jerry.hoemann@hpe.com>
+        Thu, 6 Jun 2019 17:21:53 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id CDCD23C00DD;
+        Thu,  6 Jun 2019 23:21:49 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id F4M8mMrwGFmg; Thu,  6 Jun 2019 23:21:43 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id C54483C00D1;
+        Thu,  6 Jun 2019 23:21:43 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 6 Jun 2019
+ 23:21:43 +0200
+Date:   Thu, 6 Jun 2019 23:21:40 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     David Howells <dhowells@redhat.com>
+CC:     <viro@zeniv.linux.org.uk>, <raven@themaw.net>,
+        <linux-fsdevel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <keyrings@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH 10/10] Add sample notification program [ver #3]
+Message-ID: <20190606212140.GA25664@vmlxhi-102.adit-jv.com>
+References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
+ <155981421379.17513.13158528501056454772.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1558126783-4877-7-git-send-email-jerry.hoemann@hpe.com>
+In-Reply-To: <155981421379.17513.13158528501056454772.stgit@warthog.procyon.org.uk>
 User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 02:59:43PM -0600, Jerry Hoemann wrote:
-> Bump driver number to reflect recent changes.
-> 
-> Signed-off-by: Jerry Hoemann <jerry.hoemann@hpe.com>
+Hi David,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On Thu, Jun 06, 2019 at 10:43:33AM +0100, David Howells wrote:
+[..]
+> diff --git a/samples/watch_queue/Makefile b/samples/watch_queue/Makefile
+> new file mode 100644
+> index 000000000000..42b694430d0f
+> --- /dev/null
+> +++ b/samples/watch_queue/Makefile
+> @@ -0,0 +1,9 @@
+> +# List of programs to build
+> +hostprogs-y := watch_test
+> +
+> +# Tell kbuild to always build the programs
+> +always := $(hostprogs-y)
+> +
+> +HOSTCFLAGS_watch_test.o += -I$(objtree)/usr/include
 
-> ---
->  drivers/watchdog/hpwdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/hpwdt.c b/drivers/watchdog/hpwdt.c
-> index dc65006..9e02f88 100644
-> --- a/drivers/watchdog/hpwdt.c
-> +++ b/drivers/watchdog/hpwdt.c
-> @@ -26,7 +26,7 @@
->  #include <linux/watchdog.h>
->  #include <asm/nmi.h>
->  
-> -#define HPWDT_VERSION			"2.0.2"
-> +#define HPWDT_VERSION			"2.0.3"
->  #define SECS_TO_TICKS(secs)		((secs) * 1000 / 128)
->  #define TICKS_TO_SECS(ticks)		((ticks) * 128 / 1000)
->  #define HPWDT_MAX_TICKS			65535
+How about arm64? Do you intend to enable cross-compilation?
+
+> +
+> +HOSTLOADLIBES_watch_test += -lkeyutils
+> diff --git a/samples/watch_queue/watch_test.c b/samples/watch_queue/watch_test.c
+> new file mode 100644
+> index 000000000000..893a5380f792
+> --- /dev/null
+> +++ b/samples/watch_queue/watch_test.c
+[..]
+
+> +			asm ("lfence" : : : "memory" );
+[..]
+> +			asm("mfence" ::: "memory");
+
+FWIW, trying to cross-compile it returned:
+
+aarch64-linux-gnu-gcc -I../../usr/include -I../../include  watch_test.c   -o watch_test
+/tmp/ccDXYynm.s: Assembler messages:
+/tmp/ccDXYynm.s:471: Error: unknown mnemonic `lfence' -- `lfence'
+/tmp/ccDXYynm.s:568: Error: unknown mnemonic `mfence' -- `mfence'
+<builtin>: recipe for target 'watch_test' failed
+make: *** [watch_test] Error 1
+
+-- 
+Best Regards,
+Eugeniu.
