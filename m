@@ -2,155 +2,131 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CBEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B846FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C752083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926552083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jK8nfl4i"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dA8vBvHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbfFFR4a (ORCPT
+        id S1730303AbfFFR44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:56:30 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35375 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbfFFR40 (ORCPT
+        Thu, 6 Jun 2019 13:56:56 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46448 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfFFR44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:56:26 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h11so2906770ljb.2;
-        Thu, 06 Jun 2019 10:56:24 -0700 (PDT)
+        Thu, 6 Jun 2019 13:56:56 -0400
+Received: by mail-pl1-f196.google.com with SMTP id e5so1205627pls.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:56:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ypu9yesBsK3nZ3WNQW/z70b8cFn+k8rJ5hY1PK+94RY=;
-        b=jK8nfl4iev447eqDDOo0DHFrAEVpNo92GOvACQbKwq2uank7tOHRXLB9ihq8BgNVn+
-         XaIs1DgsJ3WQ+JIVcjPggv+p6smZ+ia0L4pe85/szO29YD9g7an9ITehaLLAmUc79ZG+
-         krbKRxQlM8KkodCmvgZld8+2kj4OxUJIOfUThNMAX8laR1xhjhmG5b+P2OpV/Va2GOvn
-         PGe/Pa58LdX9ypIh9auGNaGG4hEzKcPTKYMPT9p9pAlx31DiIslvQymDXHnqj9RlFcJ9
-         NDTVrTBbshQ7M7ltdghdv74tuQdXYyn34xYGQkDGnZEHi3pRb234Ni5gqsqsJSTtax4t
-         Cy2w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wg/L+X/jg6qit00t5YFiyAIPQXlMXYdfO4PWqxYv4KM=;
+        b=dA8vBvHVwB5tyIZL6HFsZQA+oM7gbRX2BD/7asX66sUe55DoUOmY3CcZ++I+fKFlFs
+         oRtoMCloCYkyyxraPI/r329rVZdvdMnaYRmrcMERLV9VjuzrrlGBvhJbHs2leafOmQKY
+         x7NgGEAgtwYwYd70a+G1XOdwp/unQ7R3QOhLk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ypu9yesBsK3nZ3WNQW/z70b8cFn+k8rJ5hY1PK+94RY=;
-        b=q4JYcRJ6LgZkYtg6tdoKKd3yj6Qe0ZbQyp8ASuk+GsJDnptIODqWMFc3Go1DxIxndu
-         M+z/fIkzm1MVl5UrgfrLkiJkQLOpryb55yiWcd+giU8GgWyEd3lIcM+Y7V4eu5NImueb
-         3b2snY01nfWyoMFDfGQHRb+7r3c2oONgyEGHVYZhDxyVIOSO31kApVcGj6/lrqb+yIaU
-         /WW56WaGsghB0NeeFHrmEEaQ8KuSKK4+4dQ9n8RlLy3yRC4zsjB5XW1sIU+YZ7xU5+8g
-         Bjxc+e8bjFevg//J4ZNYbkd26hHf2tpQFJpcNFUi9KahW41IQ4l8UAwt7GWfZLOU4LJU
-         sJgw==
-X-Gm-Message-State: APjAAAWmbdMK238nGUDZUC4RkfljhlJd+1s1dKeO/x+WI+IMtnrjjdlH
-        qAI46tYrB2kDUY88GBUqyE+JFtV9
-X-Google-Smtp-Source: APXvYqz7M2NP5kCWR+y8c0p6FMz8K7hG2iEUno+KL37IflNEKBBse9Jre3hDHpZI7QH9xMHDTiZzKQ==
-X-Received: by 2002:a2e:9f52:: with SMTP id v18mr25343396ljk.176.1559843783549;
-        Thu, 06 Jun 2019 10:56:23 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id j7sm513504lji.27.2019.06.06.10.56.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 10:56:22 -0700 (PDT)
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
- <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
- <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
- <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
- <4b098fb6-1a5b-1100-ae16-978a887c9535@nvidia.com>
- <e6741e07-be0c-d16b-36d7-77a3288f0500@gmail.com>
- <a652b103-979d-7910-5e3f-ec4bca3a3a3b@nvidia.com>
- <457eb5e1-40cc-8c0f-e21c-3881c3c04de2@gmail.com>
-Message-ID: <307ade99-757a-ac75-6358-28f8e5dd9596@gmail.com>
-Date:   Thu, 6 Jun 2019 20:56:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wg/L+X/jg6qit00t5YFiyAIPQXlMXYdfO4PWqxYv4KM=;
+        b=HyUhlikbD7fKMbu5yqcRr91of+ekV7jiB7/P0g1FbsIX8+aV8Mzl63eewZ9rAOEQVL
+         pMK5EJg4jdtVauojUWvOzZEUFEAZxNYvUWbr6BGDnd7MTbR7hnP4HEeSRDPJXioBj5AT
+         fapsGsGjUC//B6f4xME3XGhfRQH7dAHFhL0H5shR6cBM0BaGWaxFGHPuBmDAhvxES1Uv
+         q+jcpnw7QsLqVYcjQfca3AHRqtJv1fXUxhkshJw/TeUWFqgOi0SJ/SN1i1VNhIwWSVJo
+         dHGGx1OGZf8qoT2+F5IpDfrJtQUs4uN1f0sUMGIA/etXG07XXku71RTW6R8ONf/X3Gy5
+         E3nA==
+X-Gm-Message-State: APjAAAV1DDtcdRgSC8SB+Pp+l0gCnt2dRhBOuJKEWAL1ITA2LWNITHXc
+        8Y2KPLNp4biNKTOhuAD2fNH5wA==
+X-Google-Smtp-Source: APXvYqwmDqEW/o38wEXDtX8dBjNG0P26I5CKLLWhjKj39nna/Xy2ryhansQqw0pXWqo/EvXbqhoqvg==
+X-Received: by 2002:a17:902:8a83:: with SMTP id p3mr52200787plo.88.1559843815549;
+        Thu, 06 Jun 2019 10:56:55 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id f13sm2645865pfa.182.2019.06.06.10.56.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 10:56:55 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 10:56:54 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Configure BT_HOST_WAKE as
+ wake-up signal on veyron
+Message-ID: <20190606175654.GQ40515@google.com>
+References: <20190605204320.22343-1-mka@chromium.org>
+ <20190605212427.GP40515@google.com>
+ <2828678.vPWIEPrON5@diego>
+ <3394571.WlNFeu2Orz@phil>
 MIME-Version: 1.0
-In-Reply-To: <457eb5e1-40cc-8c0f-e21c-3881c3c04de2@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <3394571.WlNFeu2Orz@phil>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 20:25, Dmitry Osipenko пишет:
-> 06.06.2019 19:53, Jon Hunter пишет:
->>
->> On 06/06/2019 17:44, Dmitry Osipenko wrote:
->>> 06.06.2019 19:32, Jon Hunter пишет:
->>>>
->>>> On 06/06/2019 16:18, Dmitry Osipenko wrote:
->>>>
->>>> ...
->>>>
->>>>>>> If I understood everything correctly, the FIFO buffer is shared among
->>>>>>> all of the ADMA clients and hence it should be up to the ADMA driver to
->>>>>>> manage the quotas of the clients. So if there is only one client that
->>>>>>> uses ADMA at a time, then this client will get a whole FIFO buffer, but
->>>>>>> once another client starts to use ADMA, then the ADMA driver will have
->>>>>>> to reconfigure hardware to split the quotas.
->>>>>>
->>>>>> The FIFO quotas are managed by the ADMAIF driver (does not exist in
->>>>>> mainline currently but we are working to upstream this) because it is
->>>>>> this device that owns and needs to configure the FIFOs. So it is really
->>>>>> a means to pass the information from the ADMAIF to the ADMA.
->>>>>
->>>>> So you'd want to reserve a larger FIFO for an audio channel that has a
->>>>> higher audio rate since it will perform reads more often. You could also
->>>>> prioritize one channel over the others, like in a case of audio call for
->>>>> example.
->>>>>
->>>>> Is the shared buffer smaller than may be needed by clients in a worst
->>>>> case scenario? If you could split the quotas statically such that each
->>>>> client won't ever starve, then seems there is no much need in the
->>>>> dynamic configuration.
->>>>
->>>> Actually, this is still very much relevant for the static case. Even if
->>>> we defined a static configuration of the FIFO mapping in the ADMAIF
->>>> driver we still need to pass this information to the ADMA. I don't
->>>> really like the idea of having it statically defined in two different
->>>> drivers.
->>>
->>> Ah, so you need to apply the same configuration in two places. Correct?
->>>
->>> Are ADMAIF and ADMA really two different hardware blocks? Or you
->>> artificially decoupled the ADMA driver?
->>
->> These are two different hardware modules with their own register sets.
->> Yes otherwise, it would be a lot simpler!
+On Thu, Jun 06, 2019 at 12:46:03PM +0200, Heiko Stuebner wrote:
+> Am Mittwoch, 5. Juni 2019, 23:52:00 CEST schrieb Heiko Stübner:
+> > Am Mittwoch, 5. Juni 2019, 23:24:27 CEST schrieb Matthias Kaehlcke:
+> > > On Wed, Jun 05, 2019 at 11:11:12PM +0200, Heiko Stübner wrote:
+> > > > Am Mittwoch, 5. Juni 2019, 22:43:20 CEST schrieb Matthias Kaehlcke:
+> > > > > This enables wake up on Bluetooth activity when the device is
+> > > > > suspended. The BT_HOST_WAKE signal is only connected on devices
+> > > > > with BT module that are connected through UART.
+> > > > > 
+> > > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > 
+> > > > Housekeeping question, with the two Signed-off-by lines, is Doug the
+> > > > original author, or was this Co-developer-by?
+> > > 
+> > > Good question, it's derived from Doug's patch for CrOS 3.14 and
+> > > https://crrev.com/c/1575556 also from Doug. Let's say I did the
+> > > porting to upstream, but I'm pretty sure Doug spent more time on it.
+> > > 
+> > > Maybe I should resend it with Doug as author and include the original
+> > > commit message, which has more information.
+> > 
+> > It's just that the first Signed-off should be from the original author.
+> > (And the sender the second)
+> > In the co-developed-by case (see Kernel documentation) the order
+> > doesn't matter.
 > 
-> The register sets are indeed separated, but it looks like that ADMAIF is
-> really a part of ADMA that is facing to Audio Crossbar. No? What is the
-> purpose of ADMAIF? Maybe you could amend the ADMA hardware description
-> with the ADMAIF addition until it's too late.
-> 
+> Holding off on this patch till we could clarify the authorship.
 
-Ugh.. I now regret looking at the TRM. That Audio Processor Engine is a
-horrifying beast, it even has FPGA :)
+I'd say let's attribute the authorship to Doug. FTR, the original
+downstream Chrome OS patch is https://crrev.com/c/278190.
+
+Not sure if the information in the commit message of the original
+patch is relevant for the upstream version, in the end it seems LPM
+was never implemented, so it should be sufficient to say what is
+actually done today.
+
+In summary, I propose to take the patch with the current commit
+message, with Doug as the author. Heiko, can you change the authorship
+or should I send a new version?
+
+Doug if you have objections or want updates in the commit message
+(yours tend to be more verbose ;-), holler.
+
+Thanks
+
+Matthias
