@@ -2,182 +2,143 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26BEC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30A9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E2E207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829F820684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCbqy9Il"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N8oLfhfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbfFFOlB (ORCPT
+        id S1728864AbfFFOls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:41:01 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43483 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfFFOlA (ORCPT
+        Thu, 6 Jun 2019 10:41:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35303 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728806AbfFFOls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:41:00 -0400
-Received: by mail-io1-f66.google.com with SMTP id k20so360479ios.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:40:59 -0700 (PDT)
+        Thu, 6 Jun 2019 10:41:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id m24so400407ioo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:41:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qRHFQx4rk/WQV+W1bUpqDxQ0lUZEI/eFyBpWg1hk11Q=;
-        b=sCbqy9Il3Out2uZPEuDkEDVkIvng7aW0ineP0yjFozNXPOloupyWTAbt2WypG90mH2
-         RO8VsxvONEY6+lOd57nEUJshWUBcTFa4IkigR9dm1Tf3DkipfnQEDvxo9Opwgz/kXNUS
-         DmfwsDfBQINnUWZ0Xoz1mLZvPk4JJIu5YNhrczzgp/VL2bPoWMOSqbNGpzr8ixIvUQ6M
-         V9vloCuM2sAIC1VdTIvssvKJA6lBX9B+Tqrhtdc0OZYZB24Z7LzEBoEXD0s6IamPEOWM
-         W5OA0EUvwGXsDqIoNEx40vD+nBZGfdTKV5o4U5ZsLduig2WAsLA4QAk+CITyXaYhUObi
-         8iXw==
+        bh=yUBzruiX0poMVnebHkNCtUzf308xan955Nhmvp3Y24o=;
+        b=N8oLfhfCoP/t5PYG52TcjF2tc8yM9MUIV91XTL1dQyRXANlO4TMjLOYVQCRmv8WS6G
+         dPw0BjG98OS26hm3NjvwDU7LkcKsojQNR+HtJHfn0Uu01UYlMw6RpKw5CnAKrKbgERRc
+         2B9n2VfK+C2+t1MKp0rZkCMTUbOPSMd4tw2wsCq3Lq6LQzBNAOEMbAzcOb/PxPAJyKLf
+         028o5J4GgWK6IRAQT6Ab31TogjeE80cmxwOJdjspx80QtGRG9ICcAFNCpapC7hbZ59bs
+         i24iWVXGStx0+mKUkyKF5GE86Vfs3BkmG5/DCWI3rUSsj1jkzj6Gx8qKJK1N71cii1jt
+         8NHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qRHFQx4rk/WQV+W1bUpqDxQ0lUZEI/eFyBpWg1hk11Q=;
-        b=RUOv7P4xc9qH1FtD0eQ47EkKjvQ08SIrL97fBcQkxh2ONSDLbr/JA3nMIh7GxUCfXG
-         bMGQ/LcP2OuIQwcthnUGGoYmUgjgFtO1XoNGMgPeoYnIvMBX/9dVrCFi1iIjoSE4MQyM
-         rNukB2bRMjoMllxYf9dhW/V40dM8zh/w6y8OQcLlp7RAjnUw5st8+NYU1jny6BS5hA/2
-         baI1h0d7mD4wYnTjigxV+RKqsd2Vj6DYQMm7TJfU3PrWo1Ak2YToizgom4IY24Cb0eAq
-         rqVO5SxlU65U8pCCRm9IzbkqatFpkYa/iINZL6hsYuBe2MV8NCRKfMtE1Bfv1q2OXWX3
-         /05A==
-X-Gm-Message-State: APjAAAWo9goFe7e18HLC3ZdaVoSu5XEoN8lUOLVYKtRkimzCLEcVJ4L5
-        8kujTReIKEf5ZoxHc+6MGQN05ODH3fSzb6N3Gf2nmg==
-X-Google-Smtp-Source: APXvYqzKErRjMjB/Lu1mV96B+n+Cf6+/oCq0PF53kEaSxsxhJvuN0Qd+FEtZW9TaI4V1DZGCc+oSBw0knpFzAe36NbU=
-X-Received: by 2002:a6b:e711:: with SMTP id b17mr28649615ioh.3.1559832059117;
- Thu, 06 Jun 2019 07:40:59 -0700 (PDT)
+        bh=yUBzruiX0poMVnebHkNCtUzf308xan955Nhmvp3Y24o=;
+        b=INXtSwRAeiRGlV/DJRmUlEGjNHfO+kOEpoMhmYi70CCMUh4I+1fTCSNC0VfqSV4xzD
+         MLUzjdqWZFJA45bwaYGWIFoz7MjwqibKGE/OEwm9hVng09Bhp+NYfY7JhUnVGKzVz/do
+         8MV7QRuZOEtvQ9Nzfc4MN6pwzOgE/OlGp5H2/Fmm5Kl38YLFtDNlT7Iz2rS/AF57rbcn
+         SS0Z3umTRusuGbTzjNQ/ueTzxXKjLgRVQCo6OWrpT47qHsCWYy3YKjIQyc8SXj5UVwRc
+         YH8FxoS41Yu1hOQLl5hIp7J8IAj4sNsZBbIpGHF9oIadJYan2dRzhAIXWG4o6sC8I3Ql
+         gqNw==
+X-Gm-Message-State: APjAAAXZ6U2qIYKKgQ9NRVK5LowY60mvVrPOTkUSaTw7V2bipqCFy7sw
+        wSCAu1RhYF18pFMsARDSh3YDFoELkn+yOUhcxM3/Qg==
+X-Google-Smtp-Source: APXvYqz8hOqO9k3wIdvVxhHX1nxpHAKAeuDw82/eM+fgXI+5jTsEKJYqN9UOwv8HWhW3FUMfi6A1SwZfoXGCqRs3Edg=
+X-Received: by 2002:a6b:8d92:: with SMTP id p140mr28286627iod.144.1559832107426;
+ Thu, 06 Jun 2019 07:41:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000005a4b99058a97f42e@google.com> <b67a0f5d-c508-48a7-7643-b4251c749985@virtuozzo.com>
- <20190606131334.GA24822@fieldses.org> <275f77ad-1962-6a60-e60b-6b8845f12c34@virtuozzo.com>
-In-Reply-To: <275f77ad-1962-6a60-e60b-6b8845f12c34@virtuozzo.com>
+References: <000000000000454279058aa80535@google.com>
+In-Reply-To: <000000000000454279058aa80535@google.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 6 Jun 2019 16:40:46 +0200
-Message-ID: <CACT4Y+aJQ6J5WdviD+cOmDoHt2Dj=Q4uZ4vHbCfHe+_TCEY6-Q@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in unregister_shrinker
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, bfields@redhat.com,
-        chris@chrisdown.name, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Jeff Layton <jlayton@kernel.org>, laoar.shao@gmail.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-nfs@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+Date:   Thu, 6 Jun 2019 16:41:36 +0200
+Message-ID: <CACT4Y+bk4=avQpdiHM7BTRjZ+NahivshytP5-eVU7vDCxR2udA@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in usage_accumulate
+To:     syzbot <syzbot+b0d730107e2ca6cb952f@syzkaller.appspotmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yang.shi@linux.alibaba.com
+        bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 3:43 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+On Thu, Jun 6, 2019 at 3:52 PM syzbot
+<syzbot+b0d730107e2ca6cb952f@syzkaller.appspotmail.com> wrote:
 >
-> On 06.06.2019 16:13, J. Bruce Fields wrote:
-> > On Thu, Jun 06, 2019 at 10:47:43AM +0300, Kirill Tkhai wrote:
-> >> This may be connected with that shrinker unregistering is forgotten on error path.
-> >
-> > I was wondering about that too.  Seems like it would be hard to hit
-> > reproduceably though: one of the later allocations would have to fail,
-> > then later you'd have to create another namespace and this time have a
-> > later module's init fail.
+> Hello,
 >
-> Yes, it's had to bump into this in real life.
+> syzbot found the following crash on:
 >
-> AFAIU, syzbot triggers such the problem by using fault-injections
-> on allocation places should_failslab()->should_fail(). It's possible
-> to configure a specific slab, so the allocations will fail with
-> requested probability.
+> HEAD commit:    156c0591 Merge tag 'linux-kselftest-5.2-rc4' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15f2095aa00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b0d730107e2ca6cb952f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a8fb61a00000
 
-No fault injection was involved in triggering of this bug.
-Fault injection is clearly visible in console log as "INJECTING
-FAILURE at this stack track" splats and also for bugs with repros it
-would be noted in the syzkaller repro as "fault_call": N. So somehow
-this bug was triggered as is.
+Looks +bpf related from the repro.
 
-But overall syzkaller can do better then the old probabilistic
-injection. The probabilistic injection tend to both under-test what we
-want to test and also crash some system services. syzkaller uses the
-new "systematic fault injection" that allows to test specifically each
-failure site separately in each syscall separately.
-All kernel testing systems should use it. Also in couple with KASAN,
-KMEMLEAK, LOCKDEP. It's indispensable in finding kernel bugs.
-
-
-
-> > This is the patch I have, which also fixes a (probably less important)
-> > failure to free the slab cache.
-> >
-> > --b.
-> >
-> > commit 17c869b35dc9
-> > Author: J. Bruce Fields <bfields@redhat.com>
-> > Date:   Wed Jun 5 18:03:52 2019 -0400
-> >
-> >     nfsd: fix cleanup of nfsd_reply_cache_init on failure
-> >
-> >     Make sure everything is cleaned up on failure.
-> >
-> >     Especially important for the shrinker, which will otherwise eventually
-> >     be freed while still referred to by global data structures.
-> >
-> >     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> >
-> > diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-> > index ea39497205f0..3dcac164e010 100644
-> > --- a/fs/nfsd/nfscache.c
-> > +++ b/fs/nfsd/nfscache.c
-> > @@ -157,12 +157,12 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
-> >       nn->nfsd_reply_cache_shrinker.seeks = 1;
-> >       status = register_shrinker(&nn->nfsd_reply_cache_shrinker);
-> >       if (status)
-> > -             return status;
-> > +             goto out_nomem;
-> >
-> >       nn->drc_slab = kmem_cache_create("nfsd_drc",
-> >                               sizeof(struct svc_cacherep), 0, 0, NULL);
-> >       if (!nn->drc_slab)
-> > -             goto out_nomem;
-> > +             goto out_shrinker;
-> >
-> >       nn->drc_hashtbl = kcalloc(hashsize,
-> >                               sizeof(*nn->drc_hashtbl), GFP_KERNEL);
-> > @@ -170,7 +170,7 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
-> >               nn->drc_hashtbl = vzalloc(array_size(hashsize,
-> >                                                sizeof(*nn->drc_hashtbl)));
-> >               if (!nn->drc_hashtbl)
-> > -                     goto out_nomem;
-> > +                     goto out_slab;
-> >       }
-> >
-> >       for (i = 0; i < hashsize; i++) {
-> > @@ -180,6 +180,10 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
-> >       nn->drc_hashsize = hashsize;
-> >
-> >       return 0;
-> > +out_slab:
-> > +     kmem_cache_destroy(nn->drc_slab);
-> > +out_shrinker:
-> > +     unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
-> >  out_nomem:
-> >       printk(KERN_ERR "nfsd: failed to allocate reply cache\n");
-> >       return -ENOMEM;
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+b0d730107e2ca6cb952f@syzkaller.appspotmail.com
 >
-> Looks OK for me. Feel free to add my reviewed-by if you want.
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in usage_accumulate+0x9e/0xb0
+> kernel/locking/lockdep.c:1676
+> Read of size 8 at addr ffff8880a59cfed0 by task syz-executor.1/9366
 >
-> Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> CPU: 1 PID: 9366 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #20
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>
+> Allocated by task 0:
+> (stack is not available)
+>
+> Freed by task 0:
+> (stack is not available)
+>
+> The buggy address belongs to the object at ffff8880a59ce6c0
+>   which belongs to the cache kmalloc-4k of size 4096
+> The buggy address is located 2064 bytes to the right of
+>   4096-byte region [ffff8880a59ce6c0, ffff8880a59cf6c0)
+> The buggy address belongs to the page:
+> page:ffffea0002967380 refcount:1 mapcount:0 mapping:ffff8880aa400dc0
+> index:0x0 compound_mapcount: 0
+> flags: 0x1fffc0000010200(slab|head)
+> raw: 01fffc0000010200 ffffea000296a008 ffffea000233fe08 ffff8880aa400dc0
+> raw: 0000000000000000 ffff8880a59ce6c0 0000000100000001 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8880a59cfd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>   ffff8880a59cfe00: fc fc fc fc f1 f1 f1 f1 00 f2 f2 f2 00 f2 f2 f2
+> > ffff8880a59cfe80: 00 f2 f2 f2 00 f2 f2 f2 fc fc fc fc 00 00 00 f2
+>                                                   ^
+>   ffff8880a59cff00: f2 f2 f2 f2 fc fc fc fc 00 00 00 f3 f3 f3 f3 f3
+>   ffff8880a59cff80: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 >
 > --
 > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/275f77ad-1962-6a60-e60b-6b8845f12c34%40virtuozzo.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000454279058aa80535%40google.com.
 > For more options, visit https://groups.google.com/d/optout.
