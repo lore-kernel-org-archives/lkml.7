@@ -2,138 +2,299 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B62C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE23C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155A520693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBBB20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Dn/N9iUb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfFFTiz (ORCPT
+        id S1726773AbfFFTkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:38:55 -0400
-Received: from gateway20.websitewelcome.com ([192.185.70.14]:27474 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726152AbfFFTiy (ORCPT
+        Thu, 6 Jun 2019 15:40:42 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35591 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfFFTkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:38:54 -0400
-X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Jun 2019 15:38:53 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 12AF9400C335E
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 12:50:04 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id YxTNhJBc290onYxTNhKhI4; Thu, 06 Jun 2019 13:50:49 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.120] (port=41340 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hYxTN-002b1Q-8i; Thu, 06 Jun 2019 13:50:49 -0500
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190604232343.GA2475@embeddedor>
- <20190606180557.GA4690@linux-8ccs>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] kernel: module: Use struct_size() helper
-Message-ID: <27e945e1-5791-0d03-4056-22c45b4138d4@embeddedor.com>
-Date:   Thu, 6 Jun 2019 13:50:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 15:40:42 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y6so2470888oix.2;
+        Thu, 06 Jun 2019 12:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VUkpswYzIybLr5sewhlaPDFxgSAlH6oiLrNe/6Vj/Y4=;
+        b=Dn/N9iUbulCQu6csNUyC/Sd/Q29OclRWcXGVVn3cvkGqxy1QpmzlykuZHEjEi8u/uF
+         +E4mfLmAHZ18SJIuP0l6fGggXy5CKBy5e4YzrQlQ6Ql10zvTaQB4GUAKyWtlXeGGC8al
+         TnOW7ehroBj5alYfyLG9gcN5o9OAcjhniAeVtgtgIH70N31ekJSzdH50GMD67+Erpnb7
+         kWJYF4iQ3TZxIeDwiGVB293rQjYRE9ehnt6GclZTuUfHEz7ucBLPAoUuICvmexCqhaTY
+         ohjuvIvSywWGwU7sybu6KvamaVWNU+WXKOEzkAzJr6XPx4UNf7VaKVF2kzWt6tGp3/EI
+         3b3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VUkpswYzIybLr5sewhlaPDFxgSAlH6oiLrNe/6Vj/Y4=;
+        b=JM7En98byk569cfeu2BSIVF+1hVi9GEvlS9ITwyEzVKwU+CyLdQUlpm6vDElTTe2qb
+         /VPipv+fHQdXmIgGv7JNHgMr+GvO3Upu8TY99Y4F/cnC3/E/+Y5zK7C4ji3L0dB6quyk
+         JE6+5VCJnVlMXLrHLqpbJkQ4dPmJR/wFsnHu0Rcr+gFbWTABnkGpEmRi0jgBf0M4KOp6
+         vlp7yFWhpuSnkAnVPbniDg1J+pg5dxXAAuHPnzZAF/77snYqs/fzpgHhz8q2Wta6RWxy
+         GouUShLsxBnL4MVC7nLZBLUS1esC8Qu1/qgFUTryIXT750YqXlK+o//uBcBWlooA3K5D
+         Exnw==
+X-Gm-Message-State: APjAAAXWl3b1yKazbBobgMVa1UUjdF4tJZwlcym650aBKxZNqPJvAmmz
+        sdSTQxFf+pkqMPuxWLwwxQ3DGHkt1NSjYwBqhUY=
+X-Google-Smtp-Source: APXvYqyBhaSoqBuYAPh0SFHkSREbhkUVa6SoyYMKtyObf/ml8cV/SVJ90QjUl5BNaiCLFwiz0/zojjZKJq8zC9p6aKY=
+X-Received: by 2002:aca:f144:: with SMTP id p65mr1253677oih.47.1559850041022;
+ Thu, 06 Jun 2019 12:40:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190606180557.GA4690@linux-8ccs>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.120
-X-Source-L: No
-X-Exim-ID: 1hYxTN-002b1Q-8i
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.127.120]:41340
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-4-glaroque@baylibre.com>
+In-Reply-To: <20190604144714.2009-4-glaroque@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 6 Jun 2019 21:40:29 +0200
+Message-ID: <CAFBinCAecHbXURFMO5z+TuwFMk_h=QMGqWxTou73Vv0q3011fw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] iio: temperature: add a driver for the temperature
+ sensor found in Amlogic Meson G12 SoCs
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     jic23@kernel.org, khilman@baylibre.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jessica,
+Hi Guillaume,
 
-On 6/6/19 1:05 PM, Jessica Yu wrote:
+below are my initial impressions. I will have a closer look once
+there's a decision whether this belongs to the IIO or thermal
+framework.
 
-> Hi Gustavo!
-> 
-> I see you've sent similar cleanup patches elsewhere, do you think you
-> could reword your commit message to be more similar to your patch here
-> for instance:
-> 
->     https://lkml.org/lkml/2019/6/5/856
-> 
-> It does a *much* better job of explaining the motivation and usage of
-> struct_size().
-> 
+On Tue, Jun 4, 2019 at 4:48 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+>
+> The code is based on Amlogic source code. No public datasheet for this.
+the public S922X datasheet from Hardkernel [0] has some documentation
+(starting at page 1106).
 
-Sure thing. :)
+[...]
+> +config MESON_TSENSOR
+> +       tristate "Amlogic Meson temperature sensor Support"
+> +       default ARCH_MESON
+> +       depends on OF && ARCH_MESON
+depends on OF && (ARCH_MESON || COMPILE_TEST)
+so all the nice auto-builders / testing tools will speak up if someone
+tries to break your driver
 
-I'll send v2 with that change, shortly.
+> +       help
+> +         If you say yess here you get support for Meson Temperature sensor
+s/yess/yes/
 
-Thanks
---
-Gustavo
+> +         for G12 SoC Family.
+G12 (which I assume includes G12A and G12B) or G12A?
+
+[...]
+> diff --git a/drivers/iio/temperature/meson_tsensor.c b/drivers/iio/temperature/meson_tsensor.c
+> new file mode 100644
+> index 000000000000..be0a8d073ba3
+> --- /dev/null
+> +++ b/drivers/iio/temperature/meson_tsensor.c
+> @@ -0,0 +1,416 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Amlogic Meson Temperature Sensor
+> + *
+> + * Copyright (C) 2017 Huan Biao <huan.biao@amlogic.com>
+> + * Copyright (C) 2019 Guillaume La Roque <glaroque@baylibre.com>
+> + *
+> + * Register value to celsius temperature formulas:
+> + *     Read_Val            m * U
+> + * U = ---------, Uptat = ---------
+> + *     2^16              1 + n * U
+> + *
+> + * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
+> + *
+> + *  A B m n : calibration parameters
+> + *  u_efuse : fused calibration value, it's a signed 16 bits value
+it's great to have this explained in the docs (instead of having to
+look it up in some out of tree driver, as it's not part of the
+datasheet) - thank you for this!
+
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define TSENSOR_CFG_REG1                       0x4
+> +       #define TSENSOR_CFG_REG1_RSET_VBG       BIT(12)
+> +       #define TSENSOR_CFG_REG1_RSET_ADC       BIT(11)
+> +       #define TSENSOR_CFG_REG1_VCM_EN         BIT(10)
+> +       #define TSENSOR_CFG_REG1_VBG_EN         BIT(9)
+> +       #define TSENSOR_CFG_REG1_OUT_CTL        BIT(6)
+> +       #define TSENSOR_CFG_REG1_FILTER_EN      BIT(5)
+> +       #define TSENSOR_CFG_REG1_DEM_EN         BIT(3)
+> +       #define TSENSOR_CFG_REG1_CH_SEL         GENMASK(1, 0)
+> +       #define TSENSOR_CFG_REG1_ENABLE         \
+> +               (TSENSOR_CFG_REG1_FILTER_EN |   \
+> +                TSENSOR_CFG_REG1_VCM_EN |      \
+> +                TSENSOR_CFG_REG1_VBG_EN |      \
+> +                TSENSOR_CFG_REG1_DEM_EN |      \
+> +                TSENSOR_CFG_REG1_CH_SEL)
+are all of these needed to enabled *and* disable the temperature
+sensor? TSENSOR_CFG_REG1_CH_SEL doesn't seem related when disabling
+the sensor reading (but I don't know since there's no documentation)
+
+> +#define TSENSOR_CFG_REG2                               0x8
+> +       #define TSENSOR_CFG_REG2_HITEMP_EN              BIT(31)
+> +       #define TSENSOR_CFG_REG2_REBOOT_ALL_EN          BIT(30)
+> +       #define TSENSOR_CFG_REG2_REBOOT_TIME            GENMASK(25, 16)
+> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE   \
+> +               (TSENSOR_CFG_REG2_HITEMP_EN |           \
+> +                TSENSOR_CFG_REG2_REBOOT_ALL_EN |       \
+> +                TSENSOR_CFG_REG2_REBOOT_TIME)
+the name mix between TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE and
+TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE_MASK confused me.
+personally I would drop the macros which just bit-wise or multiple
+other macros together
+
+> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE_MASK              \
+> +               (GENMASK(31, 30) | GENMASK(25, 4))
+> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_REG_MASK                 \
+> +               GENMASK(15, 4)
+> +       #define TSENSOR_CFG_REG2_HITEMP_REG_VAL(_reg_val)               \
+> +               (FIELD_PREP(TSENSOR_CFG_REG2_HITEMP_REBOOT_REG_MASK,    \
+> +                           _reg_val) |                                 \
+> +                TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE)
+> +
+> +#define TSENSOR_CFG_REG3               0xC
+I like to use lower-case hex letters
+and I also pad them -> 0x0c in this case because we have for example 0x10 below)
+
+> +#define TSENSOR_CFG_REG4               0x10
+> +#define TSENSOR_CFG_REG5               0x14
+> +#define TSENSOR_CFG_REG6               0x18
+> +#define TSENSOR_CFG_REG7               0x1C
+> +#define TSENSOR_CFG_REG8               0x20
+> +
+> +#define TSENSOR_STAT0                  0x40
+> +
+> +#define TSENSOR_STAT9                  0x64
+> +
+> +#define TSENSOR_READ_TEMP_MASK         GENMASK(15, 0)
+TSENSOR_STAT0_FILTER_OUT would match the naming from the datasheet
+
+> +#define TSENSOR_TEMP_MASK              GENMASK(11, 0)
+>
+> +#define TSENSOR_TRIM_SIGN_MASK         BIT(15)
+> +#define TSENSOR_TRIM_TEMP_MASK         GENMASK(14, 0)
+> +#define TSENSOR_TRIM_VERSION_MASK      GENMASK(31, 24)
+> +
+> +#define TSENSOR_TRIM_VERSION(_version)         \
+> +       FIELD_GET(TSENSOR_TRIM_VERSION_MASK, _version)
+I would drop this and use the FIELD_GET directly where needed (it's
+only one occurrence anyways)
+
+[...]
+> +static int meson_tsensor_enable(struct iio_dev *indio_dev)
+> +{
+> +       struct meson_tsensor *priv = iio_priv(indio_dev);
+> +
+> +       clk_prepare_enable(priv->clk);
+may return an error which you're discarding here
+
+> +       regmap_update_bits(priv->regmap, TSENSOR_CFG_REG1,
+> +                          TSENSOR_CFG_REG1_ENABLE, TSENSOR_CFG_REG1_ENABLE);
+> +
+> +       return 0;
+> +}
+> +
+> +static int meson_tsensor_disable(struct iio_dev *indio_dev)
+> +{
+> +       struct meson_tsensor *priv = iio_priv(indio_dev);
+> +
+> +       regmap_update_bits(priv->regmap, TSENSOR_CFG_REG1,
+> +                          TSENSOR_CFG_REG1_ENABLE, 0);
+> +       clk_disable(priv->clk);
+clk_disable_unprepare as you're calling clk_prepare_enable above?
+
+> +
+> +       return 0;
+make it a void function instead?
+
+> +static const struct regmap_config meson_tsensor_regmap_config_g12a = {
+> +       .reg_bits = 8,
+> +       .val_bits = 32,
+> +       .reg_stride = 4,
+> +       .max_register = TSENSOR_STAT9,
+.fast_io = true
+if you ever need to ACK interrupts from the IRQ handler
+(IIRC fast_io will use a spinlock instead of mutex)
+
+[...]
+> +static const struct of_device_id meson_tsensor_of_match[] = {
+> +       {
+> +               .compatible = "amlogic,meson-g12a-ddr-tsensor",
+> +               .data = &meson_tsensor_g12a_ddr_param,
+> +       },
+> +       {
+> +               .compatible = "amlogic,meson-g12a-cpu-tsensor",
+> +               .data = &meson_tsensor_g12a_cpu_param,
+> +       },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, meson_tsensor_of_match);
+I would move the of_device_id table above the platform_driver definition below
+of_device_get_match_data doesn't need the of_device_id as parameter
+(compared to it's predecessor)
+
+> +static int meson_tsensor_probe(struct platform_device *pdev)
+> +{
+> +       struct meson_tsensor *priv;
+> +       struct iio_dev *indio_dev;
+> +       struct resource *res;
+> +
+> +       int ret;
+> +
+> +       indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*priv));
+> +       if (!indio_dev) {
+> +               dev_err(&pdev->dev, "failed allocating iio device\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       priv = iio_priv(indio_dev);
+> +       priv->data = of_device_get_match_data(&pdev->dev);
+> +       if (!priv->data) {
+> +               dev_err(&pdev->dev, "failed to get match data\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       indio_dev->channels = temperature_channel;
+> +       indio_dev->num_channels = ARRAY_SIZE(temperature_channel);
+> +       indio_dev->name = dev_name(&pdev->dev);
+> +       indio_dev->dev.parent = &pdev->dev;
+> +       indio_dev->dev.of_node = pdev->dev.of_node;
+> +       indio_dev->modes = INDIO_DIRECT_MODE;
+> +       indio_dev->info = &meson_tsensor_iio_info;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       priv->base = devm_ioremap_resource(&pdev->dev, res);
+you're only using priv->base in this function. consider dropping it
+from struct meson_tsensor
+
+
+[0] https://dn.odroid.com/S922X/ODROID-N2/Datasheet/S922X_Public_Datasheet_V0.2.pdf
