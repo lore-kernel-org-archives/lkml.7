@@ -2,154 +2,408 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3550C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA36C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4546920874
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:03:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p3A3rKuH"
+	by mail.kernel.org (Postfix) with ESMTP id 43571208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559783091;
+	bh=y9Y0nBtkXWOsuZydgoYTvSFfbBFosYnVEbiVlseLM8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gw3eq+tdOZc7bXr162GJQhtu2jpdurllzb9qiUingV9YD79r4k0cji3dMQYKt//Y+
+	 fxchp6yUULH7R2wiGq7Qrs9FRRcw/Ag2of0eMQ4QgPKD+8I8ie9fCByUUsz6uDmHiD
+	 SvpEAj0HHpmeGLn4Z+9azfWJ1bQ7Kby3cPDoacpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfFFBDK (ORCPT
+        id S1726715AbfFFBEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 21:03:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39080 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbfFFBCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 21:02:55 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j2so381911pfe.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 18:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CVfY2rC28TUuJiq3uH1wJEhWN7/kC8yOQdwb0MYva/0=;
-        b=p3A3rKuHCefXZWN7fWg4nX9E9dn1cL6KkVkiCyfgemW5z+YDAhDOOzLE2Wt6m3AywB
-         PPWMt5gnn/3cS9b7n/IXqu8mD7tivfsbbGAs0NR1j1euURvrjyAtcN4QZi7A1zWxGAiV
-         gpW2Anv4nHlPa0Z3Ft+nrox4RKEBmzlDe/09UkdUe8lfykT+C+KtqejLv/AlZdNxkt5G
-         V0WX9bxKce6MZXbfnI4TbzUmgHfGxEspgmrh1PHamE+fBA1nkxZZ5ZetzV4VZEQAAydg
-         oGtS0ZFd59yPQU/2+Q3okeTDPCVMUbDg3+PSBxlm9T0qVZNZ05tfFoIikARM3Tc2NUpp
-         zq9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CVfY2rC28TUuJiq3uH1wJEhWN7/kC8yOQdwb0MYva/0=;
-        b=nlvWJnHiYuGK0r/XosZgkkDeXawBr+RGT+uchUzWbjq/8sVyTNJNWSyMZn+wn0ImE9
-         xMhlf5vgZwdQUsxZK9xhmgCGct4/jbpnYZ4CBgmFTNdPSlldMzSVQuaK0YVznT/0IkDB
-         hYS2aLQLaW8Nn1tnsXKdfFEkVWku7qOPtIYOWR9jw+VsyasdJ/CBm4zKE57KSOtFj3JJ
-         J4lClEd7fyL1cefYpiN7P6s+uVoTxoO29hmKu+woA21TtkS/sxfCWFmzidx5HV4AEEE2
-         3H3j7/wBoeiGycljWgKBVxX5+miswdZJ8bnJ0Tttmp53lSHkDT10MvF55yRbmxcB6aQw
-         7QIg==
-X-Gm-Message-State: APjAAAXyktrfG/ZHgSegoaXVx299horQ1hY2QDwo82xDafMOUA0DUK/e
-        v8HoMdElxp8plON/2Z87qYdEmw==
-X-Google-Smtp-Source: APXvYqyCypg6oVvwk6Ue9xlyaT78SEVJA7D+c9VA4Krrku8TKMD49Au/WSck38jKYsQVj/zgTSIYMg==
-X-Received: by 2002:a62:ce07:: with SMTP id y7mr22987027pfg.12.1559782974090;
-        Wed, 05 Jun 2019 18:02:54 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 144sm170856pfy.54.2019.06.05.18.02.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 18:02:53 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH v2 1/3] pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-Date:   Wed,  5 Jun 2019 18:02:47 -0700
-Message-Id: <20190606010249.3538-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190606010249.3538-1-bjorn.andersson@linaro.org>
-References: <20190606010249.3538-1-bjorn.andersson@linaro.org>
+        Wed, 5 Jun 2019 21:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726581AbfFFBEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 21:04:50 -0400
+Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6E4C20872;
+        Thu,  6 Jun 2019 01:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559783088;
+        bh=y9Y0nBtkXWOsuZydgoYTvSFfbBFosYnVEbiVlseLM8g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p31hObTrXcg6hWOauZjRUqsNHUY3x8RpYwXE80eyhKsmjbwDSMshcjY5iLZO52jZh
+         ijE5QnTtbZH0NcmOC3ih2M2UjVHhM1ZwYBXV6/Kitupdfg82xufJEGudb7gpvsx2pC
+         2bIt+2F0W6eqxa00vNo3ud44TnUY5Hx6tS/uce88=
+Date:   Thu, 6 Jun 2019 09:04:31 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2] ARM: dts: Introduce the NXP LS1021A-TSN board
+Message-ID: <20190606010429.GP29853@dragon>
+References: <20190529221222.19276-1-olteanv@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190529221222.19276-1-olteanv@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ufs_reset pin is expected to be wired to the reset pin of the
-primary UFS memory but is pretty much just a general purpose output pinr
+On Thu, May 30, 2019 at 01:12:22AM +0300, Vladimir Oltean wrote:
+> The LS1021A-TSN is a development board built by VVDN/Argonboards in
+> partnership with NXP.
+> 
+> It features the LS1021A SoC and the first-generation SJA1105T Ethernet
+> switch for prototyping implementations of a subset of IEEE 802.1 TSN
+> standards.
+> 
+> It has two regular Ethernet ports and four switched, TSN-capable ports.
+> 
+> It also features:
+> - One Arduino header
+> - One expansion header
+> - Two USB 3.0 ports
+> - One mini PCIe slot
+> - One SATA interface
+> - Accelerometer, gyroscope, temperature sensors
+> 
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> ---
+> Changes from v1:
+> - Applied Shawn's feedback
+> - Introduced QSPI flash node
+> 
+> v1 patch available at:
+> https://patchwork.kernel.org/patch/10930451/
+> 
+>  arch/arm/boot/dts/Makefile        |   1 +
+>  arch/arm/boot/dts/ls1021a-tsn.dts | 288 ++++++++++++++++++++++++++++++
+>  2 files changed, 289 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index dab2914fa293..a4eb4ca5e148 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -602,6 +602,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
+>  dtb-$(CONFIG_SOC_LS1021A) += \
+>  	ls1021a-moxa-uc-8410a.dtb \
+>  	ls1021a-qds.dtb \
+> +	ls1021a-tsn.dtb \
+>  	ls1021a-twr.dtb
+>  dtb-$(CONFIG_SOC_VF610) += \
+>  	vf500-colibri-eval-v3.dtb \
+> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+> new file mode 100644
+> index 000000000000..b05774eac92e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+> @@ -0,0 +1,288 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright 2016-2018 NXP Semiconductors
+> + * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include "ls1021a.dtsi"
+> +
+> +/ {
+> +	model = "NXP LS1021A-TSN Board";
+> +
+> +	sys_mclk: clock-mclk {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <24576000>;
+> +	};
+> +
+> +	reg_vdda_codec: regulator-3V3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3P3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_vddio_codec: regulator-2V5 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "2P5V";
+> +		regulator-min-microvolt = <2500000>;
+> +		regulator-max-microvolt = <2500000>;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&enet0 {
+> +	tbi-handle = <&tbi0>;
+> +	phy-handle = <&sgmii_phy2>;
+> +	phy-mode = "sgmii";
+> +	status = "okay";
+> +};
+> +
+> +&enet1 {
+> +	tbi-handle = <&tbi1>;
+> +	phy-handle = <&sgmii_phy1>;
+> +	phy-mode = "sgmii";
+> +	status = "okay";
+> +};
+> +
+> +/* RGMII delays added via PCB traces */
+> +&enet2 {
+> +	phy-mode = "rgmii";
+> +	status = "okay";
+> +
+> +	fixed-link {
+> +		speed = <1000>;
+> +		full-duplex;
+> +	};
+> +};
+> +
+> +&dspi0 {
+> +	bus-num = <0>;
+> +	status = "okay";
+> +
+> +	/* ADG704BRMZ 1:4 mux/demux */
+> +	sja1105: ethernet-switch@1 {
+> +		reg = <0x1>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "nxp,sja1105t";
+> +		/* 12 MHz */
+> +		spi-max-frequency = <12000000>;
+> +		/* Sample data on trailing clock edge */
+> +		spi-cpha;
+> +		fsl,spi-cs-sck-delay = <1000>;
+> +		fsl,spi-sck-cs-delay = <1000>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				/* ETH5 written on chassis */
+> +				label = "swp5";
+> +				phy-handle = <&rgmii_phy6>;
+> +				phy-mode = "rgmii-id";
+> +				reg = <0>;
+> +			};
+> +
+> +			port@1 {
+> +				/* ETH2 written on chassis */
+> +				label = "swp2";
+> +				phy-handle = <&rgmii_phy3>;
+> +				phy-mode = "rgmii-id";
+> +				reg = <1>;
+> +			};
+> +
+> +			port@2 {
+> +				/* ETH3 written on chassis */
+> +				label = "swp3";
+> +				phy-handle = <&rgmii_phy4>;
+> +				phy-mode = "rgmii-id";
+> +				reg = <2>;
+> +			};
+> +
+> +			port@3 {
+> +				/* ETH4 written on chassis */
+> +				label = "swp4";
+> +				phy-handle = <&rgmii_phy5>;
+> +				phy-mode = "rgmii-id";
+> +				reg = <3>;
+> +			};
+> +
+> +			port@4 {
+> +				/* Internal port connected to eth2 */
+> +				ethernet = <&enet2>;
+> +				phy-mode = "rgmii";
+> +				reg = <4>;
+> +
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&mdio0 {
+> +	/* AR8031 */
+> +	sgmii_phy1: ethernet-phy@1 {
+> +		reg = <0x1>;
+> +	};
+> +
+> +	/* AR8031 */
+> +	sgmii_phy2: ethernet-phy@2 {
+> +		reg = <0x2>;
+> +	};
+> +
+> +	/* BCM5464 quad PHY */
+> +	rgmii_phy3: ethernet-phy@3 {
+> +		reg = <0x3>;
+> +	};
+> +
+> +	rgmii_phy4: ethernet-phy@4 {
+> +		reg = <0x4>;
+> +	};
+> +
+> +	rgmii_phy5: ethernet-phy@5 {
+> +		reg = <0x5>;
+> +	};
+> +
+> +	rgmii_phy6: ethernet-phy@6 {
+> +		reg = <0x6>;
+> +	};
+> +
+> +	/* SGMII PCS for enet0 */
+> +	tbi0: tbi-phy@1f {
+> +		reg = <0x1f>;
+> +		device_type = "tbi-phy";
+> +	};
+> +};
+> +
+> +&mdio1 {
+> +	/* SGMII PCS for enet1 */
+> +	tbi1: tbi-phy@1f {
+> +		reg = <0x1f>;
+> +		device_type = "tbi-phy";
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	/* 3 axis accelerometer */
+> +	accelerometer@1e {
+> +		compatible = "fsl,fxls8471";
+> +		position = <0>;
+> +		reg = <0x1e>;
+> +	};
+> +
+> +	/* Audio codec (SAI2) */
+> +	codec@2a {
 
-Reorder the pins and expose it as gpio 150, so that the UFS driver can
-toggle it.
+audio-codec for node name.
 
-Tested-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+> +		compatible = "fsl,sgtl5000";
+> +		VDDIO-supply = <&reg_vddio_codec>;
+> +		VDDA-supply = <&reg_vdda_codec>;
+> +		#sound-dai-cells = <0>;
+> +		clocks = <&sys_mclk>;
+> +		reg = <0x2a>;
+> +	};
+> +
+> +	/* Current sensing circuit for 1V VDDCORE PMIC rail */
+> +	current-sensor@44 {
+> +		compatible = "ti,ina220";
+> +		shunt-resistor = <1000>;
+> +		reg = <0x44>;
+> +	};
+> +
+> +	/* Current sensing circuit for 12V VCC rail */
+> +	current-sensor@45 {
+> +		compatible = "ti,ina220";
+> +		shunt-resistor = <1000>;
+> +		reg = <0x45>;
+> +	};
+> +
+> +	/* Thermal monitor - case */
+> +	temperature-sensor@48 {
+> +		compatible = "national,lm75";
+> +		reg = <0x48>;
+> +	};
+> +
+> +	/* Thermal monitor - chip */
+> +	temperature-sensor@4c {
+> +		compatible = "ti,tmp451";
+> +		reg = <0x4c>;
+> +	};
+> +
+> +	eeprom@51 {
+> +		compatible = "atmel,24c32";
+> +		reg = <0x51>;
+> +	};
+> +
+> +	/* Unsupported devices:
+> +	 * - FXAS21002C Gyroscope at 0x20
+> +	 * - TI ADS7924 4-channel ADC at 0x49
+> +	 */
+> +};
+> +
+> +&qspi {
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		/* Rev. A uses 64MB flash, Rev. B & C use 32MB flash */
+> +		compatible = "jedec,spi-nor", "s25fl256s1", "s25fl512s";
+> +		spi-max-frequency = <20000000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0>;
+> +
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			partition@0 {
+> +				label = "RCW";
+> +				reg = <0x0 0x40000>;
+> +			};
+> +
+> +			partition@40000 {
+> +				label = "U-Boot";
+> +				reg = <0x40000 0x300000>;
+> +			};
+> +
+> +			partition@340000 {
+> +				label = "U-Boot Env";
+> +				reg = <0x340000 0x100000>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&ifc {
 
-Changes since v1:
-- None
+Please sort all these labelling nodes alphabetically.
 
- .../bindings/pinctrl/qcom,sdm845-pinctrl.txt         |  2 +-
- drivers/pinctrl/qcom/pinctrl-sdm845.c                | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+Shawn
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-index 321bdb9be0d2..7462e3743c68 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-@@ -79,7 +79,7 @@ to specify in a pin configuration subnode:
- 		      gpio0-gpio149
- 		        Supports mux, bias and drive-strength
- 
--		      sdc2_clk, sdc2_cmd, sdc2_data
-+		      sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset
- 		        Supports bias and drive-strength
- 
- - function:
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index c97f20fca5fd..e4e5acade086 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -420,10 +420,10 @@ DECLARE_MSM_GPIO_PINS(147);
- DECLARE_MSM_GPIO_PINS(148);
- DECLARE_MSM_GPIO_PINS(149);
- 
--static const unsigned int sdc2_clk_pins[] = { 150 };
--static const unsigned int sdc2_cmd_pins[] = { 151 };
--static const unsigned int sdc2_data_pins[] = { 152 };
--static const unsigned int ufs_reset_pins[] = { 153 };
-+static const unsigned int ufs_reset_pins[] = { 150 };
-+static const unsigned int sdc2_clk_pins[] = { 151 };
-+static const unsigned int sdc2_cmd_pins[] = { 152 };
-+static const unsigned int sdc2_data_pins[] = { 153 };
- 
- enum sdm845_functions {
- 	msm_mux_gpio,
-@@ -1271,10 +1271,10 @@ static const struct msm_pingroup sdm845_groups[] = {
- 	PINGROUP(147, NORTH, _, _, _, _, _, _, _, _, _, _),
- 	PINGROUP(148, NORTH, _, _, _, _, _, _, _, _, _, _),
- 	PINGROUP(149, NORTH, _, _, _, _, _, _, _, _, _, _),
-+	UFS_RESET(ufs_reset, 0x99f000),
- 	SDC_QDSD_PINGROUP(sdc2_clk, 0x99a000, 14, 6),
- 	SDC_QDSD_PINGROUP(sdc2_cmd, 0x99a000, 11, 3),
- 	SDC_QDSD_PINGROUP(sdc2_data, 0x99a000, 9, 0),
--	UFS_RESET(ufs_reset, 0x99f000),
- };
- 
- static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
-@@ -1284,7 +1284,7 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.nfunctions = ARRAY_SIZE(sdm845_functions),
- 	.groups = sdm845_groups,
- 	.ngroups = ARRAY_SIZE(sdm845_groups),
--	.ngpios = 150,
-+	.ngpios = 151,
- };
- 
- static int sdm845_pinctrl_probe(struct platform_device *pdev)
--- 
-2.18.0
-
+> +	status = "disabled";
+> +};
+> +
+> +&esdhc {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&lpuart0 {
+> +	status = "okay";
+> +};
+> +
+> +&lpuart3 {
+> +	status = "okay";
+> +};
+> +
+> +&sai2 {
+> +	status = "okay";
+> +};
+> +
+> +&sata {
+> +	status = "okay";
+> +};
+> -- 
+> 2.17.1
+> 
