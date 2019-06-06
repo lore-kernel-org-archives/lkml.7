@@ -2,149 +2,125 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB642C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762F8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8647D20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB2420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:13:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FtwT/aVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfFFXLs (ORCPT
+        id S1727565AbfFFXNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 19:11:48 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.96]:46829 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727302AbfFFXLr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 19:11:47 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 896DC49B2
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 18:11:46 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Z1XuhccusYTGMZ1XuhaW8R; Thu, 06 Jun 2019 18:11:46 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.120] (port=54232 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hZ1Xt-000gqI-Gn; Thu, 06 Jun 2019 18:11:45 -0500
-Date:   Thu, 6 Jun 2019 18:11:44 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v2] pinctrl: tb10x: Use flexible-array member and
- struct_size() helper
-Message-ID: <20190606231144.GA1402@embeddedor>
+        Thu, 6 Jun 2019 19:13:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:55483 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbfFFXNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 19:13:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45KhKQ2MJfz9s7h;
+        Fri,  7 Jun 2019 09:13:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559862794;
+        bh=5t2oQc6s+V43RQb10WwGr/fOTSIUUuBYwks8rlJztTU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FtwT/aVYHwYEVJjH/XYZAn+00QxuGkmS6g9kGAYH5ObQBfZcgzSaW85LBI7n22Q66
+         zmBpd7bCyJ6Edx49ZHGW27v64TpDwZFtoRrbGyyNrGAxJC8JQLihv3m07ffwjzONOU
+         ijcIBCRwSkga7RYZWZQxIdstoqPKd6tdN4K62EtZkIMlXiCfYvAH1QTkM0ZhT0LAtg
+         my82gMJ/6u/FaAQ2Mjxa2AGTRKmJGObYmpiNrK9HVO4WkoGppb74FoyESxJ61NWsbn
+         4pXOerOWoJfqYugUFa4CmsTAKnTyKp5+OMp+GchTV4ouATt6VGPc2Qbf5pQhwW1qTE
+         5VQrkr/CUkS3w==
+Date:   Fri, 7 Jun 2019 09:13:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: linux-next: manual merge of the clk tree with Linus' tree
+Message-ID: <20190607091309.7410c584@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.120
-X-Source-L: No
-X-Exim-ID: 1hZ1Xt-000gqI-Gn
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.120]:54232
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/93V4mXoVrrmFNr+q3NtUspS"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the code to use a flexible array member instead of a pointer in
-structure tb10x_pinctrl and use the struct_size() helper:
+--Sig_/93V4mXoVrrmFNr+q3NtUspS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-struct tb10x_pinctrl {
-        ...
-	struct tb10x_of_pinfunc pinfuncs[];
-};
+Hi all,
 
-Also, make use of the struct_size() helper instead of an open-coded
-version in order to avoid any potential type mistakes.
+Today's linux-next merge of the clk tree got a conflict in:
 
-So, replace the following form:
+  drivers/clk/bcm/Kconfig
 
-sizeof(struct tb10x_pinctrl) + of_get_child_count(of_node) * sizeof(struct tb10x_of_pinfunc)
+between commit:
 
-with:
+  ec8f24b7faaf ("treewide: Add SPDX license identifier - Makefile/Kconfig")
 
-struct_size(state, pinfuncs, of_get_child_count(of_node))
+from Linus' tree and commit:
 
-This code was detected with the help of Coccinelle.
+  5d59f12a19e6 ("clk: bcm: Make BCM2835 clock drivers selectable")
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-Changes in v2:
- - Update changelog text.
- - Add Kees' Reviewed-by tag.
+from the clk tree.
 
- drivers/pinctrl/pinctrl-tb10x.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-diff --git a/drivers/pinctrl/pinctrl-tb10x.c b/drivers/pinctrl/pinctrl-tb10x.c
-index 2e90a6d8fb3b..a32badf3f118 100644
---- a/drivers/pinctrl/pinctrl-tb10x.c
-+++ b/drivers/pinctrl/pinctrl-tb10x.c
-@@ -483,22 +483,22 @@ struct tb10x_port {
-  * @base: register set base address.
-  * @pingroups: pointer to an array of the pin groups this driver manages.
-  * @pinfuncgrpcnt: number of pingroups in @pingroups.
-- * @pinfuncs: pointer to an array of pin functions this driver manages.
-  * @pinfuncnt: number of pin functions in @pinfuncs.
-  * @mutex: mutex for exclusive access to a pin controller's state.
-  * @ports: current state of each port.
-  * @gpios: Indicates if a given pin is currently used as GPIO (1) or not (0).
-+ * @pinfuncs: flexible array of pin functions this driver manages.
-  */
- struct tb10x_pinctrl {
- 	struct pinctrl_dev *pctl;
- 	void *base;
- 	const struct tb10x_pinfuncgrp *pingroups;
- 	unsigned int pinfuncgrpcnt;
--	struct tb10x_of_pinfunc *pinfuncs;
- 	unsigned int pinfuncnt;
- 	struct mutex mutex;
- 	struct tb10x_port ports[TB10X_PORTS];
- 	DECLARE_BITMAP(gpios, MAX_PIN + 1);
-+	struct tb10x_of_pinfunc pinfuncs[];
- };
- 
- static inline void tb10x_pinctrl_set_config(struct tb10x_pinctrl *state,
-@@ -771,15 +771,13 @@ static int tb10x_pinctrl_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	state = devm_kzalloc(dev, sizeof(struct tb10x_pinctrl) +
--					of_get_child_count(of_node)
--					* sizeof(struct tb10x_of_pinfunc),
--				GFP_KERNEL);
-+	state = devm_kzalloc(dev, struct_size(state, pinfuncs,
-+					      of_get_child_count(of_node)),
-+			     GFP_KERNEL);
- 	if (!state)
- 		return -ENOMEM;
- 
- 	platform_set_drvdata(pdev, state);
--	state->pinfuncs = (struct tb10x_of_pinfunc *)(state + 1);
- 	mutex_init(&state->mutex);
- 
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--- 
-2.21.0
+--=20
+Cheers,
+Stephen Rothwell
 
+diff --cc drivers/clk/bcm/Kconfig
+index 29ee7b776cd4,0eb281d597fc..000000000000
+--- a/drivers/clk/bcm/Kconfig
++++ b/drivers/clk/bcm/Kconfig
+@@@ -1,4 -1,12 +1,14 @@@
+ +# SPDX-License-Identifier: GPL-2.0-only
+++
++ config CLK_BCM2835
++ 	bool "Broadcom BCM2835 clock support"
++ 	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
++ 	depends on COMMON_CLK
++ 	default ARCH_BCM2835 || ARCH_BRCMSTB
++ 	help
++ 	  Enable common clock framework support for Broadcom BCM2835
++ 	  SoCs.
++=20
+  config CLK_BCM_63XX
+  	bool "Broadcom BCM63xx clock support"
+  	depends on ARCH_BCM_63XX || COMPILE_TEST
+
+--Sig_/93V4mXoVrrmFNr+q3NtUspS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz5ngUACgkQAVBC80lX
+0GyQDgf+LGuzQdp70VRYdrIcUfsg5dDLlS6YY4xflac7gVJXy3w+W+P4XGCxF+nB
+eP6fYlHmATP5yJMA2nmukpX/2unUHcDhrbKKo0hMZenhrkJsjRevNuHG/GuerjbJ
+gicOJR80/VtaFy7fIFPKp2eUfppPqL5MSV7MFZ3k+4/ITT9qcZHCuECxLVVOdZ30
+NAlqNEfKJbA+VGDZ5nt437kMdqy7IoLVJQt1OaVI0ecHambPCCHQrFP/N4Vx6/3d
++XkWRvQSJNzRl7yUNWdHtcLEPtpqtvQW3bN69Cyp2JnQlrzHrs5i+U2S/KnoLekG
+XoN0VqiOa1pZK7StmVf14E5aq/2LRA==
+=q05B
+-----END PGP SIGNATURE-----
+
+--Sig_/93V4mXoVrrmFNr+q3NtUspS--
