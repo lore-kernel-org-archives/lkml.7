@@ -3,107 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5ABFC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47220C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF452083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLrdVkmK"
+	by mail.kernel.org (Postfix) with ESMTP id 2127620866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559833793;
+	bh=SXQbPAaM9RvZp3lW3NXitKVEdsSpDOda2A6XmXtgK9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oQO+TRzW7dDdTiky+tZiwFH6215p+yBViV2e7evgI9MqNZeGdQ6JAA8P3pv/p+fpd
+	 sRj9tTVAJjmy5LfDLTKGgefSZZM11XZoFBpMAoXPnowiS/PyIZxV95auWarttaOiCd
+	 lWbfAkAzNR8qHEfuv9S4g00YRT1oKWgGfiK6cO4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbfFFPG0 (ORCPT
+        id S1729073AbfFFPJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:06:26 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34617 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfFFPGY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:06:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h2so1533083pgg.1;
-        Thu, 06 Jun 2019 08:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Ps7YYNVhpbFuxWvfaSyiDLPbZDo03wQ8e8VV9mh4JZ0=;
-        b=lLrdVkmK1SlH0fVilflJe5AtBWAQjiMWYPS9DL+02DbBRLCW5pJ26Itws3btMdWbYw
-         fymaKr8KaITWDkjnGKaE9T5voVC18R3kYDKX/y0aOsiNxFojo2g/aMT9zXvLqYN0bXFZ
-         RJVXKOsEZEPBE4zNuV+MqLiP9jZfzHSZA8+7pZV/bbDNwpSAKYHW+fNLCHg2Bca92Qn5
-         QEtPf0TJyN41F87LV7HIfpjNEtwbEPUC/Q4a9pPCQXJt2ADqPZjBN+8uZMrQIZHYIosg
-         yAbKMmFw+33yww3ZXiUVNyDvZVbVz4oWsrS/fiW8Dui6GMXrgcSAOt6VV3xDFzbzS9IS
-         //uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Ps7YYNVhpbFuxWvfaSyiDLPbZDo03wQ8e8VV9mh4JZ0=;
-        b=QkhMagzBrtrxl2qai+8aP0BkJVmM44PEK0vbcv2pQDdzglilAL0oTTN0AxZk2BnApV
-         0/Xies2dD/pfts5wpLCFCS1VSuPtFivnh8O3gokLeyRD+UIRXKv57i8jm1qkIv6FzOJF
-         bHdjYaPJ4V8hSggD/vy3rjHrLZmpBaW+J8VCHyhhfCOsoOEWUFh4Y1PZ0c4/vEWhaOkX
-         jgISqAQO77vs0x7mtyE2o0qnLc7nK9QBOewUxt/PA1KZvolcDtxb6hbbZG1ZQlOZpOsU
-         RlrEflsrQBvod2ugfOjcsr1CbiDWYSM6RFWrZDVb2kJy1NTAzc+6qJF+mZx36Dbe848o
-         IZ1Q==
-X-Gm-Message-State: APjAAAUPQoihbSgcjz1Fc9SqVfNWKt5Z9JVKTMEeE15t+L4NgIs5P8PD
-        u5ovOWGJFnqIJDHvMSHJzjo=
-X-Google-Smtp-Source: APXvYqyyeUJzL2Hlqkk588lgJJeRAMqRBTyzo1zmd53TROl0MOXwsD7bVBiCPxYJcH7J0u8DjQmOqA==
-X-Received: by 2002:a63:c20c:: with SMTP id b12mr3620010pgd.3.1559833583482;
-        Thu, 06 Jun 2019 08:06:23 -0700 (PDT)
-Received: from nishad (p3261240-ipngn21201hodogaya.kanagawa.ocn.ne.jp. [153.202.122.240])
-        by smtp.gmail.com with ESMTPSA id y10sm2508493pfm.68.2019.06.06.08.06.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 08:06:22 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 20:36:17 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: hisilicon - Use the correct style for SPDX License
- Identifier
-Message-ID: <20190606150612.GA4002@nishad>
+        Thu, 6 Jun 2019 11:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727309AbfFFPJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:09:52 -0400
+Received: from linux-8ccs (ip5f5ade8c.dynamic.kabel-deutschland.de [95.90.222.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E293F2083E;
+        Thu,  6 Jun 2019 15:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559833791;
+        bh=SXQbPAaM9RvZp3lW3NXitKVEdsSpDOda2A6XmXtgK9A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m8AchtX68ZQEgL43k9PKAyaIxr1puxpZjBpfXaJsM3G9UTVi4Ft5mQBKClINjsF7f
+         /ojTk+8Da4VDAsJvPi5rbkfU5CMy32hmzLpjxaXv6GYYMnzJH7SKeqT4oSt1fRGlAf
+         ablifYRY+8cU+hXFTvzyKkX6LywgYOcx8DdAj2CY=
+Date:   Thu, 6 Jun 2019 17:09:46 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org
+Subject: Re: [PATCH modules 1/2] module: allow arch overrides for .exit
+ section names
+Message-ID: <20190606150946.GA27669@linux-8ccs>
+References: <20190603105726.22436-1-matthias.schiffer@ew.tq-group.com>
+ <20190603105726.22436-2-matthias.schiffer@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190603105726.22436-2-matthias.schiffer@ew.tq-group.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in header file related to Crypto Drivers for Hisilicon
-SEC Engine in Hip06 and Hip07.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
++++ Matthias Schiffer [03/06/19 12:57 +0200]:
+>Some archs like ARM store unwind information for .exit.text in sections
+>with unusual names. As this unwind information refers to .exit.text, it
+>must not be loaded when .exit.text is not loaded (when CONFIG_MODULE_UNLOAD
+>is unset); otherwise, loading a module can fail due to relocation failures.
+>
+>Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+>---
+> include/linux/moduleloader.h | 8 ++++++++
+> kernel/module.c              | 2 +-
+> 2 files changed, 9 insertions(+), 1 deletion(-)
+>
+>diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
+>index 31013c2effd3..cddbd85fb659 100644
+>--- a/include/linux/moduleloader.h
+>+++ b/include/linux/moduleloader.h
+>@@ -5,6 +5,7 @@
+>
+> #include <linux/module.h>
+> #include <linux/elf.h>
+>+#include <linux/string.h>
+>
+> /* These may be implemented by architectures that need to hook into the
+>  * module loader code.  Architectures that don't need to do anything special
+>@@ -93,4 +94,11 @@ void module_arch_freeing_init(struct module *mod);
+> #define MODULE_ALIGN PAGE_SIZE
+> #endif
+>
+>+#ifndef HAVE_ARCH_MODULE_EXIT_SECTION
+>+static inline bool module_exit_section(const char *name)
+>+{
+>+	return strstarts(name, ".exit");
+>+}
+>+#endif
+>+
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
+Hi Matthias,
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/crypto/hisilicon/sec/sec_drv.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For sake of consistency, could we implement this as an arch-overridable
+__weak symbol like the rest of the module arch-overrides in moduleloader.h?
 
-diff --git a/drivers/crypto/hisilicon/sec/sec_drv.h b/drivers/crypto/hisilicon/sec/sec_drv.h
-index 2d2f186674ba..4d9063a8b10b 100644
---- a/drivers/crypto/hisilicon/sec/sec_drv.h
-+++ b/drivers/crypto/hisilicon/sec/sec_drv.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /* Copyright (c) 2016-2017 Hisilicon Limited. */
- 
- #ifndef _SEC_DRV_H_
--- 
-2.17.1
-
+> #endif
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 6e6712b3aaf5..e8e4cd0a471f 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -2924,7 +2924,7 @@ static int rewrite_section_headers(struct load_info *info, int flags)
+>
+> #ifndef CONFIG_MODULE_UNLOAD
+> 		/* Don't load .exit sections */
+>-		if (strstarts(info->secstrings+shdr->sh_name, ".exit"))
+>+		if (module_exit_section(info->secstrings+shdr->sh_name))
+> 			shdr->sh_flags &= ~(unsigned long)SHF_ALLOC;
+> #endif
+> 	}
+>-- 
+>2.17.1
+>
