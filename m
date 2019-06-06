@@ -2,128 +2,168 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A90C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EECDC28EBB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E78C206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D7B207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wanoNWQP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMis4RP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfFFLvV (ORCPT
+        id S1727557AbfFFLw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:51:21 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38248 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfFFLvV (ORCPT
+        Thu, 6 Jun 2019 07:52:29 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36881 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbfFFLw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:51:21 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56BmbV5161383;
-        Thu, 6 Jun 2019 11:51:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=AeEmQlVa60NFeNwlopFn58+AzrkSf/eEmYtRH4FR7F8=;
- b=wanoNWQPZslnUGgXFwf6LLeoE0W1BFVtILJRJkTtvnUjbB+PNN71azhb4E9/zD1Zny+Q
- bxnuG7q/kiKswaMHznGApIHJIO16YdG80p1jFLCJ+0ZmFfrJY56OxqKIfYpKwnXpAbkp
- KdApJTkAcv6s0P5NuAuSN/rmGAK0rPn9bIwAnXUzPhg1L65TS2nUFZ2p9Q7tuSMazHr7
- e831V5NMNGxEF/S+edSeQN35j/vYxt+mVoSuof8oHQkNFjqvwUhy+7Uy5ixWPxC+DDul
- EmxnQj8xv1FZuaRvc4aR1HaOwy99iULejVJXJ4PFcHeO55Y/3hyYs17bMDAljrhf3RQp PQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2suj0qqtk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 11:51:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Bp0WU139886;
-        Thu, 6 Jun 2019 11:51:16 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2swnhcn59j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 11:51:16 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x56BpDCL014710;
-        Thu, 6 Jun 2019 11:51:14 GMT
-Received: from tomti.i.net-space.pl (/10.175.219.193)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 04:51:13 -0700
-Date:   Thu, 6 Jun 2019 13:51:08 +0200
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
-        hpa@zytor.com, kanth.ghatraju@oracle.com, ross.philipson@oracle.com
-Subject: Re: [PATCH RFC 0/2] x86/boot: Introduce the setup_header2
-Message-ID: <20190606115108.sfp2bnu3qzdby4h7@tomti.i.net-space.pl>
-References: <20190524095504.12894-1-daniel.kiper@oracle.com>
- <20190605135031.62grhhxn2pfbkcdg@tomti.i.net-space.pl>
- <20190605140117.GA32106@char.us.oracle.com>
+        Thu, 6 Jun 2019 07:52:29 -0400
+Received: by mail-lf1-f68.google.com with SMTP id m15so1325055lfh.4;
+        Thu, 06 Jun 2019 04:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zPLkA/L+MT2tb0YKXYeABZbn8ju7XPPpKF8Cm5YcWwY=;
+        b=SMis4RP11BWLAtEAe/AcVwMHUFdHYhwm4lgqJj0zCFzDFTUR7sVzRouZ3qKXRmUYja
+         paWnrgCl3cj4x8z7kACumI+8hKt8DF/heg1hG78OwcUf+kh8PwF8tq1byYJX08dsJv3X
+         QntZqBkewrE/dYemVY1O7w4uzEcagcyrOvUwZXu8mO0PiIYvDkXzxMFXvQ9M8M/3+tTL
+         YtLrwo1tl9cfMvGORPD/ehP2dTXD5hz5SwwV4dFwNsGbK1ebEq4nRpeMhGzp3OVR7sLU
+         GRlSDfhjgCV53vo1/T5fuYezWkQAgNFknivUQoNm9rzG0kQ/jRPvIPnz6jvjNW+XGsgI
+         ukeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zPLkA/L+MT2tb0YKXYeABZbn8ju7XPPpKF8Cm5YcWwY=;
+        b=pK9tNXdSLK1mQf0p5OHLhoRf1SCRbl/UaVjeXkZ58rLV+HYrBuxjmlpBJ/KVw1esFp
+         VwSkIZgvzUOTeaBGb5D+p9751jxiqPx/iaT908yi/oqXGHMxV7Ne+ULCI/dS0auRoxHc
+         lQd6zEcyyGxAXIbB0AGwks4ObxhmELFu2JTfRjscYa00V7a0hTtzivzkclCKILCwOJcq
+         Fw9cjzzn/495eS42EbzNcAUSR7cVdHUERuVXz60g6g7JOlU2RBO9rU6uLmi6JKVJ5yx3
+         cdcDBT6dVSiDOuYnBBn5CKV4MW60wWJgi68lOrCzMDjp8TblMHBvryln9x+mreglvj+n
+         6CNQ==
+X-Gm-Message-State: APjAAAWPRLCM8iXqQeOVw4HLaXIhZFcY3XI5SNoEK/t+/Qea9UYy7RGQ
+        2cW4F41RKVyUHxb2OxfEOuQ=
+X-Google-Smtp-Source: APXvYqzmyOkZXWN5lfsLPAhrNTYEgiBO+5rUSrFZxFIShj+qXgIAvp9nzbLNM129xeNZKqbYHpi8hw==
+X-Received: by 2002:ac2:5922:: with SMTP id v2mr23366649lfi.180.1559821946588;
+        Thu, 06 Jun 2019 04:52:26 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id e19sm309810ljj.62.2019.06.06.04.52.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 04:52:25 -0700 (PDT)
+Subject: Re: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
+ <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
+ <9142282b-ab76-53a0-13ce-c43b8adc575f@nvidia.com>
+ <4f14a218-332c-0263-c6c5-73a13b2446f0@gmail.com>
+ <caa17a53-6f29-411b-9a84-58ff019752ff@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d5803f1d-0895-08b8-4851-cd8afad830c6@gmail.com>
+Date:   Thu, 6 Jun 2019 14:52:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605140117.GA32106@char.us.oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=661
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060087
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=752 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060087
+In-Reply-To: <caa17a53-6f29-411b-9a84-58ff019752ff@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 10:01:17AM -0400, Konrad Rzeszutek Wilk wrote:
-> On Wed, Jun 05, 2019 at 03:50:31PM +0200, Daniel Kiper wrote:
-> > On Fri, May 24, 2019 at 11:55:02AM +0200, Daniel Kiper wrote:
-> > > Hi,
-> > >
-> > > This change is needed to properly start the Linux kernel in Intel TXT mode and
-> > > is a part of the TrenchBoot project (https://github.com/TrenchBoot).
->
-> Can you please expand more on this?
->
-> Nice explanation of why, other alternative solutions that didn't work, and so on.
+06.06.2019 8:43, Bitan Biswas пишет:
+> 
+> 
+> On 5/31/19 5:43 AM, Dmitry Osipenko wrote:
+>> 31.05.2019 11:50, Bitan Biswas пишет:
+>>>
+>>>
+>>> On 5/30/19 4:27 AM, Dmitry Osipenko wrote:
+>>>> 30.05.2019 8:55, Bitan Biswas пишет:
+>>>>> Post suspend I2C registers have power on reset values. Before any
+>>>>> transfer initialize I2C registers to prevent I2C transfer timeout
+>>>>> and implement suspend and resume callbacks needed. Fix below errors
+>>>>> post suspend:
+>>>>>
+>>>>> 1) Tegra I2C transfer timeout during jetson tx2 resume:
+>>>>>
+>>>>> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @
+>>>>> 2939, parent: i2c-1
+>>>>> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
+>>>>> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
+>>>>> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
+>>>>> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0
+>>>>> returns -110
+>>>>> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110
+>>>>> after 127152 usecs
+>>>>> [   27.666194] PM: Device 1-0074 failed to resume: error -110
+>>>>>
+>>>>> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+>>>>>
+>>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>>> ---
+>>>>>    drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
+>>>>>    1 file changed, 24 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
+>>>>> b/drivers/i2c/busses/i2c-tegra.c
+>>>>> index ebaa78d..f6a377f 100644
+>>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>>> @@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct
+>>>>> platform_device *pdev)
+>>>>>    }
+>>>>>      #ifdef CONFIG_PM_SLEEP
+>>>>> +static int tegra_i2c_suspend(struct device *dev)
+>>>>> +{
+>>>>> +    struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>>>>> +
+>>>>> +    i2c_mark_adapter_suspended(&i2c_dev->adapter);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int tegra_i2c_resume(struct device *dev)
+>>>>> +{
+>>>>> +    struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
+>>>>> +    ret = tegra_i2c_init(i2c_dev, false);
+>>>>> +    i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAPTER);
+>>>>
+>>>> Why the locking is needed here?
+>>>
+>>> async resume could result in stress test issues if some client accesses
+>>> the i2c instance. This ensures the i2c instance is locked till the
+>>> initialization is complete.
+>>
+>> 1) This doesn't make much sense.. if client could access I2C during of
+>> tegra_i2c_init execution, then what stops it to perform the access
+>> before the lock is taken?
+> Client resumes will start after I2C instance resume because of driver
+> dependency. Since lock is the first call in i2c-tegra I believe I2C
+> calls of client will not start.
 
-OK.
-
-> > > Daniel
-> > >
-> > >  Documentation/x86/boot.txt               | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  arch/x86/Kconfig                         |  7 +++++++
-> > >  arch/x86/boot/Makefile                   |  2 +-
-> > >  arch/x86/boot/compressed/Makefile        |  5 +++--
-> > >  arch/x86/boot/compressed/setup_header2.S | 18 ++++++++++++++++++
-> > >  arch/x86/boot/compressed/sl_stub.S       | 28 ++++++++++++++++++++++++++++
-> > >  arch/x86/boot/header.S                   |  3 ++-
-> > >  arch/x86/boot/tools/build.c              |  8 ++++++++
-> > >  arch/x86/include/uapi/asm/bootparam.h    |  1 +
-> > >  9 files changed, 123 insertions(+), 4 deletions(-)
-> > >
-> > > Daniel Kiper (2):
-> > >       x86/boot: Introduce the setup_header2
-> > >       x86/boot: Introduce dummy MLE header
-> >
-> > Ping?
->
-> Can you add Ingo and Thomas to the To: next time please?
-
-OK.
-
-> Also please drop the second patch.
-
-Why? This is an example how to use the setup_header2.
-
-Daniel
+You're incorrectly assuming that client can start resuming in the middle
+of the controller's resume process. I2C client's resume won't start
+until tegra_i2c_resume() is finished completely. That is because child
+drivers are resumed only after theirs parent is ready and this is
+guaranteed by the drivers core.
