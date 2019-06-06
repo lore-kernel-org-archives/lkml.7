@@ -2,102 +2,89 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D630C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D1EC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C45820872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630FD20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559825754;
+	bh=1hbBwnqN56Y/JMha8383D60Ivnk7r8lWw9qY3990Jx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xwihtt2in1VxAIDVVFwsSgKwZFmnMBUkX/SyG9tK72/yEeEmCk5FCcOy4JQPn7GuD
+	 KynfmJu3ukN8WTi6kMpJwnPrO7/DZHcJZWAQS79y7GwcHOIAZCMECopHyp1Z8O6JRP
+	 OV5Z6Nr/1rKyAF6Peq5xa0X+3CN8dtSUflgfExto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfFFMyA convert rfc822-to-8bit (ORCPT
+        id S1727757AbfFFMzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 08:54:00 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10831 "EHLO mga06.intel.com"
+        Thu, 6 Jun 2019 08:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbfFFMyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 08:54:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 05:53:59 -0700
-X-ExtLoop1: 1
-Received: from xxx.igk.intel.com (HELO xxx) ([10.237.93.170])
-  by orsmga005.jf.intel.com with ESMTP; 06 Jun 2019 05:53:57 -0700
-Date:   Thu, 6 Jun 2019 14:57:44 +0200
-From:   Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        linux-kernel@vger.kernel.org, Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH 02/14] ALSA: hdac: fix memory release for
- SST and SOF drivers
-Message-ID: <20190606145744.4ea389db@xxx>
-In-Reply-To: <190f5c09-e6ae-918e-3fcc-d91a72a895da@linux.intel.com>
-References: <20190605134556.10322-1-amadeuszx.slawinski@linux.intel.com>
- <20190605134556.10322-3-amadeuszx.slawinski@linux.intel.com>
- <190f5c09-e6ae-918e-3fcc-d91a72a895da@linux.intel.com>
+        id S1726040AbfFFMzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 08:55:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41CF12070B;
+        Thu,  6 Jun 2019 12:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559825752;
+        bh=1hbBwnqN56Y/JMha8383D60Ivnk7r8lWw9qY3990Jx8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kQpFEkxj1lVEGqH1VbTPjTunTeW0nCtQANi+nuicZUsJauqdNJ6LrfBOvY7TIppIY
+         0eCdtd/Z5WQjDDJRHCCBROkGkflZjOXduAveM+IdB/jZIqUSAzd2U2Hr64J1rhzKo1
+         vqvI2Y6bl8KdcfE2ZsuiXyq89F78+22vSWcLE70k=
+Date:   Thu, 6 Jun 2019 14:55:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] staging: kpc2000: use __func__ in debug messages in
+ core.c
+Message-ID: <20190606125550.GA11929@kroah.com>
+References: <20190603222916.20698-1-simon@nikanor.nu>
+ <20190603222916.20698-5-simon@nikanor.nu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190603222916.20698-5-simon@nikanor.nu>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 10:06:47 -0500
-Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> wrote:
-
-> On 6/5/19 8:45 AM, Amadeusz Sławiński wrote:
-> > During the integration of HDaudio support, we changed the way in
-> > which we get hdev in snd_hdac_ext_bus_device_init() to use one
-> > preallocated with devm_kzalloc(), however it still left kfree(hdev)
-> > in snd_hdac_ext_bus_device_exit(). It leads to oopses when trying to
-> > rmmod and modprobe. Fix it, by just removing kfree call.
-> > 
-> > SOF also uses some of the snd_hdac_ functions for HDAudio support
-> > but allocated the memory with kzalloc. A matching fix is provided
-> > separately to align all users of the snd_hdac_ library.  
+On Tue, Jun 04, 2019 at 12:29:13AM +0200, Simon Sandstr�m wrote:
+> Fixes checkpatch.pl warning "Prefer using '"%s...", __func__' to using
+> '<function name>', this function's name, in a string".
 > 
-> There are stability issues with this change (already shared in a 
-> separate series) and additional findings reported by Libin so this 
-> should not be applied for now.
+> Signed-off-by: Simon Sandstr�m <simon@nikanor.nu>
+> ---
+>  drivers/staging/kpc2000/kpc2000/core.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
+> diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
+> index a70665a202c3..6d4fc1f37c9f 100644
+> --- a/drivers/staging/kpc2000/kpc2000/core.c
+> +++ b/drivers/staging/kpc2000/kpc2000/core.c
+> @@ -312,8 +312,8 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+>  	unsigned long dma_bar_phys_len;
+>  	u16 regval;
+>  
+> -	dev_dbg(&pdev->dev, "kp2000_pcie_probe(pdev = [%p], id = [%p])\n",
+> -		pdev, id);
+> +	dev_dbg(&pdev->dev, "%s(pdev = [%p], id = [%p])\n",
+> +		__func__, pdev, id);
 
-Yes, as mentioned in cover letter there is pending discussion, I
-provided it for completeness.
+debugging lines that say "called this function!" can all be removed, as
+we have ftrace in the kernel tree, we can use that instead.  I'll take
+this, but feel free to clean them up as follow-on patches.
 
-> > 
-> > Fixes: 6298542fa33b ("ALSA: hdac: remove memory allocation from
-> > snd_hdac_ext_bus_device_init") Reviewed-by: Takashi Iwai
-> > <tiwai@suse.de> Signed-off-by: Amadeusz Sławiński
-> > <amadeuszx.slawinski@linux.intel.com> Signed-off-by: Pierre-Louis
-> > Bossart <pierre-louis.bossart@linux.intel.com> ---
-> >   sound/hda/ext/hdac_ext_bus.c | 1 -
-> >   1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/sound/hda/ext/hdac_ext_bus.c
-> > b/sound/hda/ext/hdac_ext_bus.c index c203af71a099..f33ba58b753c
-> > 100644 --- a/sound/hda/ext/hdac_ext_bus.c
-> > +++ b/sound/hda/ext/hdac_ext_bus.c
-> > @@ -170,7 +170,6 @@ EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_device_init);
-> >   void snd_hdac_ext_bus_device_exit(struct hdac_device *hdev)
-> >   {
-> >   	snd_hdac_device_exit(hdev);
-> > -	kfree(hdev);
-> >   }
-> >   EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_device_exit);
-> >   
-> >   
-> 
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+thanks,
 
+greg k-h
