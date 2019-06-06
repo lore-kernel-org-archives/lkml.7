@@ -2,164 +2,175 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F45C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D5BC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D30A20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="b7Ke+YQB"
+	by mail.kernel.org (Postfix) with ESMTP id 69CFF20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:51:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559832686;
+	bh=QTfNWyei/yIC47IByZ5MJw3oLuT00ADUd6RHFQzHIls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o9n9+h5NbMv2EU4WkUdFm36a4Hy4O10nB985nCU3KEyIg7bqJGv6wvNzbTEhJzR9U
+	 T6xqXNKV62jduPhiJ0G3EqwXgqpAzv4xt9PLD3qB0NdBii3N/pWtvGB/b2tw869dAG
+	 wmR0+8cB5GpXOot2y/Yyo/m8lvh7hHXXaP5o1dqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbfFFOuV (ORCPT
+        id S1728958AbfFFOvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:50:21 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37461 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728938AbfFFOuU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:50:20 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y57so2977129qtk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1KZ92zYILDahESjfhKhGayobjVbu/FpDMrdITCcqxXo=;
-        b=b7Ke+YQBkCx0E3J0pPZLpVAC9+rc5KsP4dWKu6yYwvNpCeAE6ZlL7KwRbHU1HIMTmR
-         2RMPZTyzms2qJ9eSY3qs49MIRBlxAbkWtM+PujgB/sGs5ktaPGkmc4WI8d0QDlNDUPHh
-         sfNgztIs306AZWaamr9shlfnp6NFEcGjvbPp4UGL/kgELIBzA+NK9H2uVuX+vdYT777X
-         BsDBGa52jWe3ot4nZts5c5RUSdmdufhR4MqA97EvW6AppKqL9zcp+ECY2R0nLelNDqrP
-         26RpOweY9H0frhbjZy7FHYcVKISux2zzL6bkUzgsTQOA2nnJ3fssOueO1pAMKFpcNIAX
-         jCVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1KZ92zYILDahESjfhKhGayobjVbu/FpDMrdITCcqxXo=;
-        b=T9U+QthmlynWXMi8pfj7XhDlX0CjErgHZsbVNiHef6n8joS2HbXvyl73bzECP4ktE+
-         jLpBkaRpxZAgMdKVJRUdZaDkq1z0eMdxCDrt+BjHcCxppB1sUwkf1/ll4X8oaPsxDYcN
-         5JH8HpBYBO+iROjtTx0GR6Ss3n73B4Vyl6R8mXYs6j53c4/DmQ6HboqI3VLluLG9NgLS
-         TGFlCgsgn3S2MHzsXQzsCYiur5PX6Qby+tU623CfXrpiWmmWb9fdBaq2s4egalq/Wj0y
-         ypcWNcHd3j9WfmzUXj2h1R+SaOqYqBtZTKayT+9I53550mXBk3xBUjDXFLFC526bw41A
-         sIcw==
-X-Gm-Message-State: APjAAAXQ6geaAVGQKlNeB5878dxIDHDJynTEcXwOSrYWOYnMgubW9pnv
-        EJR4pqzLoiaaQu3tmBALapzaUQ==
-X-Google-Smtp-Source: APXvYqxuH5l+9gMPCGPPkKKitahZmqZNXo76okgbLdEMX4KzOyGog26q61BBeC0cRApFtWnBihOSAQ==
-X-Received: by 2002:aed:2de7:: with SMTP id i94mr41055012qtd.129.1559832619679;
-        Thu, 06 Jun 2019 07:50:19 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id 29sm1219227qty.87.2019.06.06.07.50.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 07:50:19 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hYtic-0001BO-M8; Thu, 06 Jun 2019 11:50:18 -0300
-Date:   Thu, 6 Jun 2019 11:50:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     rcampbell@nvidia.com, Felix Kuehling <Felix.Kuehling@amd.com>,
-        Philip Yang <Philip.Yang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 4/5] mm/hmm: hmm_vma_fault() doesn't always call
- hmm_range_unregister()
-Message-ID: <20190606145018.GA3658@ziepe.ca>
-References: <20190506232942.12623-1-rcampbell@nvidia.com>
- <20190506232942.12623-5-rcampbell@nvidia.com>
+        Thu, 6 Jun 2019 10:51:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728011AbfFFOvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:51:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9C8E20684;
+        Thu,  6 Jun 2019 14:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559832683;
+        bh=QTfNWyei/yIC47IByZ5MJw3oLuT00ADUd6RHFQzHIls=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bYpZf4NqWFpsd6Q4/ET0i9LmZlheHyoLi5ru9RGLAJGGje5OBWpZ5MJMUVwO8051H
+         q59pq5PIjWXua0HYYSl0yxq43mZ/iiSjAB75OvboAUHnWeFyDAz/gF6O7EoaiHYUes
+         o90ATrq6Ykp19T/e9sqSUcA/ZwT4zQQokwwkMy/4=
+Date:   Thu, 6 Jun 2019 16:51:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Guenter Roeck <groeck@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-doc@vger.kernel.org, Enno Luebbers <enno.luebbers@intel.com>,
+        Guido Kiener <guido@kiener-muenchen.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jonathan Corbet <corbet@lwn.net>, Wu Hao <hao.wu@intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Jilayne Lovejoy <opensource@jilayne.com>
+Subject: Re: [PATCH 03/10] mfd / platform: cros_ec: Miscellaneous character
+ device to talk with the EC
+Message-ID: <20190606145121.GA13048@kroah.com>
+References: <20190604152019.16100-1-enric.balletbo@collabora.com>
+ <20190604152019.16100-4-enric.balletbo@collabora.com>
+ <20190604155228.GB9981@kroah.com>
+ <beaf3554bb85974eb118d7722ca55f1823b1850c.camel@collabora.com>
+ <20190604183527.GA20098@kroah.com>
+ <CABXOdTfU9KaBDhQcwvBGWCmVfnd02_ZFmPGtJsCtGQ-iO9A3Qw@mail.gmail.com>
+ <20190604185953.GA2061@kroah.com>
+ <bda48bf80add26153e531912fbfca25071934c94.camel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190506232942.12623-5-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <bda48bf80add26153e531912fbfca25071934c94.camel@collabora.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 04:29:41PM -0700, rcampbell@nvidia.com wrote:
-> From: Ralph Campbell <rcampbell@nvidia.com>
+On Thu, Jun 06, 2019 at 11:01:17AM -0300, Ezequiel Garcia wrote:
+> On Tue, 2019-06-04 at 20:59 +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 04, 2019 at 11:39:21AM -0700, Guenter Roeck wrote:
+> > > On Tue, Jun 4, 2019 at 11:35 AM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > > On Tue, Jun 04, 2019 at 01:58:38PM -0300, Ezequiel Garcia wrote:
+> > > > > Hey Greg,
+> > > > > 
+> > > > > > > + dev_info(&pdev->dev, "Created misc device /dev/%s\n",
+> > > > > > > +          data->misc.name);
+> > > > > > 
+> > > > > > No need to be noisy, if all goes well, your code should be quiet.
+> > > > > > 
+> > > > > 
+> > > > > I sometimes wonder about this being noise or not, so I will slightly
+> > > > > hijack this thread for this discussion.
+> > > > > 
+> > > > > > From a kernel developer point-of-view, or even from a platform
+> > > > > developer or user with a debugging hat point-of-view, having
+> > > > > a "device created" or "device registered" message is often very useful.
+> > > > 
+> > > > For you, yes.  For someone with 30000 devices attached to their system,
+> > > > it is not, and causes booting to take longer than it should be.
+> > > > 
+> > > > > In fact, I wish people would do this more often, so I don't have to
+> > > > > deal with dynamic debug, or hack my way:
+> > > > > 
+> > > > > diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
+> > > > > index 4589631798c9..473549b26bb2 100644
+> > > > > --- a/drivers/media/i2c/ov5647.c
+> > > > > +++ b/drivers/media/i2c/ov5647.c
+> > > > > @@ -603,7 +603,7 @@ static int ov5647_probe(struct i2c_client *client,
+> > > > >         if (ret < 0)
+> > > > >                 goto error;
+> > > > > 
+> > > > > -       dev_dbg(dev, "OmniVision OV5647 camera driver probed\n");
+> > > > > +       dev_info(dev, "OmniVision OV5647 camera driver probed\n");
+> > > > >         return 0;
+> > > > >  error:
+> > > > >         media_entity_cleanup(&sd->entity);
+> > > > > 
+> > > > > In some subsystems, it's even a behavior I'm more or less relying on:
+> > > > > 
+> > > > > $ git grep v4l2_info.*registered drivers/media/ | wc -l
+> > > > > 26
+> > > > > 
+> > > > > And on the downsides, I can't find much. It's just one little line,
+> > > > > that is not even noticed unless you have logging turned on.
+> > > > 
+> > > > Its better to be quiet, which is why the "default driver registration"
+> > > > macros do not have any printk messages in them.  When converting drivers
+> > > > over to it, we made the boot process much more sane, don't try to go and
+> > > > add messages for no good reason back in please.
+> > > > 
+> > > > dynamic debugging can be enabled on a module and line-by-line basis,
+> > > > even from the boot command line.  So if you need debugging, you can
+> > > > always ask someone to just reboot or unload/load the module and get the
+> > > > message that way.
+> > > > 
+> > > 
+> > > Can we by any chance make this an official policy ? I am kind of tired
+> > > having to argue about this over and over again.
+> > 
+> > Sure, but how does anyone make any "official policy" in the kernel?  :)
+> > 
+> > I could just go through and delete all "look ma, a new driver/device!"
+> > messages, but that might be annoying...
+> > 
 > 
-> The helper function hmm_vma_fault() calls hmm_range_register() but is
-> missing a call to hmm_range_unregister() in one of the error paths.
-> This leads to a reference count leak and ultimately a memory leak on
-> struct hmm.
-> 
-> Always call hmm_range_unregister() if hmm_range_register() succeeded.
->
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Balbir Singh <bsingharora@gmail.com>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> ---
->  include/linux/hmm.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Well, I really need to task.
 
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 35a429621e1e..fa0671d67269 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -559,6 +559,7 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
->  		return (int)ret;
->  
->  	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
-> +		hmm_range_unregister(range);
->  		/*
->  		 * The mmap_sem was taken by driver we release it here and
->  		 * returns -EAGAIN which correspond to mmap_sem have been
-> @@ -570,13 +571,13 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
->  
->  	ret = hmm_range_fault(range, block);
->  	if (ret <= 0) {
-> +		hmm_range_unregister(range);
+???
 
-While this seems to be a clear improvement, it seems there is still a
-bug in nouveau_svm.c around here as I see it calls hmm_vma_fault() but
-never calls hmm_range_unregister() for its on stack range - and
-hmm_vma_fault() still returns with the range registered.
+> If it's not an official policy (and won't be anytime soon?),
 
-As hmm_vma_fault() is only used by nouveau and is marked as
-deprecated, I think we need to fix nouveau, either by dropping
-hmm_range_fault(), or by adding the missing unregister to nouveau in
-this patch.
+The ":)" there was that we really have very few "official" policies,
+only things that we all strongly encourage to happen.  And get grumpy if
+we see them in code reviews.  Like I did here.
 
-Also, I see in linux-next that amdgpu_ttm.c has wrongly copied use of
-this deprecated API, including these bugs...
+> then what's preventing Enric from pushing this print on this driver,
+> given he is the one maintaining the code?
 
-amd folks: Can you please push a patch for your driver to stop using
-hmm_vma_fault() and correct the use-after free? Ideally I'd like to
-delete this function this merge cycle from hmm.git
+Given that he wants people to review his code, why would you tell him to
+ignore what people are trying to tell him?
 
-Also if you missed it, I'm running a clean hmm.git that you can pull
-into the AMD tree, if necessary, to get the changes that will go into
-5.3 - if you need/wish to do this please consult with me before making a
-merge commit, thanks. See:
+Again, don't be noisy, it's not hard, and is how things have been
+trending for many years now.
 
- https://lore.kernel.org/lkml/20190524124455.GB16845@ziepe.ca/
+thanks,
 
-So Ralph, you'll need to resend this.
-
-Thanks,
-Jason
+greg k-h
