@@ -2,161 +2,176 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD60AC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D971C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E90C206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE567206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DvbzhHnV";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iPYwgz64"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BjNv3BPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfFFTxu (ORCPT
+        id S1727830AbfFFTxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 6 Jun 2019 15:53:53 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45627 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727240AbfFFTxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 15:53:50 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58728 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727047AbfFFTxt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:53:49 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x56Jn8lV017149;
-        Thu, 6 Jun 2019 12:53:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=mHkPmKD/FxUShckoCuTSy5fmE4KzeRaEM1SI9dqQF9A=;
- b=DvbzhHnVaPkyARPutuVjxcuGBI9Th+vmigZN1jCxR94Knx/LuYQl1StNgnxq0Ips0a6c
- cafnEMn7PTCkOGmdEn+n8tOHYf7D5uvSFfhbGN7NYPnxB4IUlubQaoNQuScNLpOZclV3
- pfIMg7sPkFiswDmVHCzqwSMLcISgwaKVgac= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2sy71g0m7p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 06 Jun 2019 12:53:28 -0700
-Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
- ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Jun 2019 12:53:27 -0700
-Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
- ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Jun 2019 12:53:27 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Jun 2019 12:53:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mHkPmKD/FxUShckoCuTSy5fmE4KzeRaEM1SI9dqQF9A=;
- b=iPYwgz64sZ5U1Aq597Cz8GzHr2I6InFoB3SsKsbVDyga5B0xFP1RG0wRey8eqgrMlhYex9Jq53JiHO0WkuP6IJOG22kwtkGU3nmJ4guDPy4lbc9e/kgtfNUps7S+PDLrNUaXP5yRIt0g3e9SPcaDC7w/OEVM9f7SZIH0tS/DWT8=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB3091.namprd15.prod.outlook.com (20.178.221.214) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Thu, 6 Jun 2019 19:53:25 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::251b:ff54:1c67:4e5f]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::251b:ff54:1c67:4e5f%7]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
- 19:53:25 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-CC:     Alexei Starovoitov <ast@kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45KbvF48Xvz9sDX;
+        Fri,  7 Jun 2019 05:53:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559850827;
+        bh=d6SJxU0/ScjlRTFzNoaL9FcILbaOOHmHAty3CZ/Vh/M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BjNv3BPoFFPjmA7YQV4rHasyQ0759LKCjrVwNHart/HO5uj6qphC7gz5KmZdB56+B
+         +HwcAvXphavYyjktKp2nK/jcsCuzQMXr5tqUTMfnT+ev0DFZx39i29fZZF8dgmZc/X
+         +9wCz+J4sHwuFLYcUDhILzckHTzdJn0r+exASPB5apFMQMHzlQXGO7rv4vH9K294gK
+         DO22P0PGbGBiNs9bXbMEll8eNKCkiScDLyAPZh+OSYddhH9pzQnsx+RyjoatvzPYzs
+         e6q3RHbjuSYXsBnUkV4GqSVVxHyycbvDTvvdYsR/a32WxXzAqT9enp//v76sEKQZFE
+         jQf8GDy1+/pRA==
+Date:   Fri, 7 Jun 2019 05:53:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jerome Glisse <jglisse@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
- bpf_get_current_cgroup_id() helper
-Thread-Topic: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
- bpf_get_current_cgroup_id() helper
-Thread-Index: AQHVHJn5xFnlIJGy00O8LdScbBruEqaOh76AgAB+MYCAAAPXgA==
-Date:   Thu, 6 Jun 2019 19:53:25 +0000
-Message-ID: <20190606195317.GA22965@tower.DHCP.thefacebook.com>
-References: <20190606185911.4089151-1-guro@fb.com>
- <20190606190752.GA28743@tower.DHCP.thefacebook.com>
- <a604b9eb-4e39-c4ec-0868-bac360bc2fb4@iogearbox.net>
-In-Reply-To: <a604b9eb-4e39-c4ec-0868-bac360bc2fb4@iogearbox.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1601CA0003.namprd16.prod.outlook.com
- (2603:10b6:300:da::13) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::d13]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9d8d0dca-6e25-491e-8516-08d6eab8a2ed
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB3091;
-x-ms-traffictypediagnostic: BN8PR15MB3091:
-x-microsoft-antispam-prvs: <BN8PR15MB30912D0C32B8E5B6F0C5EF99BE170@BN8PR15MB3091.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(136003)(346002)(396003)(54094003)(199004)(189003)(102836004)(33656002)(9686003)(6506007)(386003)(53546011)(6512007)(478600001)(73956011)(53936002)(66946007)(66476007)(66556008)(64756008)(66446008)(6246003)(14454004)(4326008)(7736002)(305945005)(6486002)(6436002)(25786009)(81156014)(81166006)(8676002)(8936002)(76176011)(68736007)(52116002)(229853002)(54906003)(99286004)(86362001)(2906002)(446003)(256004)(11346002)(186003)(486006)(476003)(46003)(1076003)(6916009)(5660300002)(316002)(71200400001)(71190400001)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3091;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7aVdQhVrbLJWhidndTt7yvPiOqLspKeumR8b9TjJvP1r+qMlm2gLHj6/FY0L1vRK6wi/+CdVzTR1l089e5FeP/jL1z44bA8vQWPJ8Mh3ABqm39ePg/ROCATjjZg6fg0TrTtcYqVxOLvoGz1nvMxbtJ+IssZfKdrTLcqsXMRsh0tQ0xJ/OpeihR8qIH4uwS6Q/e4mSU8SCo85+9GK/yL3Gdlayl5/f7qKu5N8554N2aXZNY6GSRs6qSZ1CxoykELU+/R5eZEM3pppgzeaizZcAUCCWl5TVJKKm/lIh4kdv8LH1mKXJU9KHALWMNs/3AmMKzZmXe370YrjWjzpdbZJHhrA0fo7H39qS839NxJZEcTLjcVNKasYwb9qHKhG3oEwhG1ewZUq0nVpi/iIlDHaMaAghd24QCp3DhUEcwO8ahI=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <ADAE58DE5AB08F4982D94507975F0950@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: RFC: Run a dedicated hmm.git for 5.3
+Message-ID: <20190607055334.2bdea125@canb.auug.org.au>
+In-Reply-To: <20190606152543.GE17392@mellanox.com>
+References: <20190523155207.GC5104@redhat.com>
+        <20190523163429.GC12159@ziepe.ca>
+        <20190523173302.GD5104@redhat.com>
+        <20190523175546.GE12159@ziepe.ca>
+        <20190523182458.GA3571@redhat.com>
+        <20190523191038.GG12159@ziepe.ca>
+        <20190524064051.GA28855@infradead.org>
+        <20190524124455.GB16845@ziepe.ca>
+        <20190525155210.8a9a66385ac8169d0e144225@linux-foundation.org>
+        <20190527191247.GA12540@ziepe.ca>
+        <20190606152543.GE17392@mellanox.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d8d0dca-6e25-491e-8516-08d6eab8a2ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 19:53:25.1039
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3091
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=722 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060133
-X-FB-Internal: deliver
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/l+KwJlP++eQB4BpW/9k.220"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 09:39:35PM +0200, Daniel Borkmann wrote:
-> On 06/06/2019 09:08 PM, Roman Gushchin wrote:
-> > On Thu, Jun 06, 2019 at 11:59:11AM -0700, Roman Gushchin wrote:
-> >> Currently bpf_get_current_cgroup_id() is not supported for
-> >> CGROUP_SKB programs. An attempt to load such a program generates an
-> >> error like this:
-> >>     libbpf:
-> >>     0: (b7) r6 =3D 0
-> >>     ...
-> >>     8: (63) *(u32 *)(r10 -28) =3D r6
-> >>     9: (85) call bpf_get_current_cgroup_id#80
-> >>     unknown func bpf_get_current_cgroup_id#80
-> >>
-> >> There are no particular reasons for denying it,
-> >> and we have some use cases where it might be useful.
+--Sig_/l+KwJlP++eQB4BpW/9k.220
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Jason,
+
+On Thu, 6 Jun 2019 15:25:49 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Mon, May 27, 2019 at 04:12:47PM -0300, Jason Gunthorpe wrote:
+> > On Sat, May 25, 2019 at 03:52:10PM -0700, Andrew Morton wrote: =20
+> > > On Fri, 24 May 2019 09:44:55 -0300 Jason Gunthorpe <jgg@ziepe.ca> wro=
+te:
+> > >  =20
+> > > > Now that -mm merged the basic hmm API skeleton I think running like
+> > > > this would get us quickly to the place we all want: comprehensive i=
+n tree
+> > > > users of hmm.
+> > > >=20
+> > > > Andrew, would this be acceptable to you? =20
+> > >=20
+> > > Sure.  Please take care not to permit this to reduce the amount of
+> > > exposure and review which the core HMM pieces get. =20
 > >=20
-> > Ah, sorry, it's not so simple, as we probably need to take
-> > the cgroup pointer from the socket, not from current.
+> > Certainly, thanks all
 > >=20
-> > So the implementation of the helper should be different
-> > for this type of programs.
+> > Jerome: I started a HMM branch on v5.2-rc2 in the rdma.git here:
 > >=20
-> > So I wonder if it's better to introduce a new helper
-> > bpf_get_sock_cgroup_id()?
-> >=20
-> > What do you think?
+> > git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=3D=
+hmm =20
 >=20
-> We do have bpf_skb_cgroup_id(), did you give that a try?
+> I did a first round of collecting patches for hmm.git
+>=20
+> Andrew, I'm checking linux-next and to stay co-ordinated, I see the
+> patches below are in your tree and now also in hmm.git. Can you please
+> drop them from your tree?=20
+>=20
+> 5b693741de2ace mm/hmm.c: suppress compilation warnings when CONFIG_HUGETL=
+B_PAGE is not set
+> b2870fb882599a mm/hmm.c: only set FAULT_FLAG_ALLOW_RETRY for non-blocking
+> dff7babf8ae9f1 mm/hmm.c: support automatic NUMA balancing
+>=20
+> I checked that the other two patches in -next also touching hmm.c are
+> best suited to go through your tree:
+>=20
+> a76b9b318a7180 mm/devm_memremap_pages: fix final page put race
+> fc64c058d01b98 mm/memremap: rename and consolidate SECTION_SIZE
+>=20
+> StephenR: Can you pick up the hmm branch from rdma.git for linux-next for
+> this cycle? As above we are moving the patches from -mm to hmm.git, so
+> there will be a conflict in -next until Andrew adjusts his tree,
+> thanks!
 
-It also isn't supported for CGROUP_SKB, but other than that looks
-exactly what I need.
+I have added the hmm branch from today with currently just you as the
+contact.  I also removed the three commits above from Andrew's tree.
 
-Thank you for pointing at it!
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
+
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
+
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/l+KwJlP++eQB4BpW/9k.220
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz5bz4ACgkQAVBC80lX
+0Gz42ggAjd2XdELh29gxYaa3AGGZx68tH5E3qcBVYvxP3IEAfi0bUSvxNXFhstk6
+YaxWX9oxbApTS2Uj3++jezF4Xjj2Y73HGUjGLQ3Otw3Mnqcf6jXCMx8Z++gM7yyC
+VCZzpR+3xAuAY21M7Ov9ZplyOO2h0UgAm8zaMi5hxEyGVAKjncUBDg4Y0qrh0UAl
+AnZKxV4zQyp4/PvVuYFQa+g8igqB+cGfBLY36wP0k2p3f7btC0m1JSgADRiqg0lA
+reZ+53oVo8c90IhdJp2lysklnxwDvfGMcl5S93eBGYfT0TdJ0XWriIgIy+uwt6mx
+VsgPHJUvyidpJbGyRC/m2LJnhvk19w==
+=dJb7
+-----END PGP SIGNATURE-----
+
+--Sig_/l+KwJlP++eQB4BpW/9k.220--
