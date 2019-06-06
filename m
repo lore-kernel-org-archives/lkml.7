@@ -2,163 +2,175 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAA4C28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D548CC28D1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4477F20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B431320693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfFFJmG (ORCPT
+        id S1728062AbfFFJmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:42:06 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38035 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbfFFJmF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:42:05 -0400
-Received: by mail-io1-f69.google.com with SMTP id h4so1166191iol.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:42:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=C/QbVAlBAgg/UuzgwU/C8xKEj8HudJCp6V+oPIiI0Pw=;
-        b=izXWIHk7M5s0gYegUSzzsaqmPr3uZQ5OolUw7kLiLzuCj1hFMnfxsXXdxOn4Tjlqf2
-         1aLxIPTHxbgLIGuHDrUIaJt9N7gT+Og5Ppc3KAEWjqqW7FYWz0qXqxfuD8eCsDNnn7ar
-         fLX5y+fAm7FJOkbnOUe78/hCmXcZPzFwxOx5ZxcA2zDuo9LKo3H46HwiqzvitIExIiyL
-         q8E9LWVhoH5T26y3ApCCNy1kHU1oDOsSjydlorapXGrTmAm85mNfYO1JLt3ku9qR8KCZ
-         t4N0rCJDZ8nlrHS3J5MCD6XZiYvKgskW161e4bQnGN9EFQaxoxIpkI3vtwb3GpQ0/Zxq
-         Xatw==
-X-Gm-Message-State: APjAAAUFT1VwboGOOf/DHQJEzFaf71M60Wafg+uKhejvPNBOjLF5LfWk
-        CIVMXWrq5k6xkn0uRRJcRy2VaiARC7LS4b8+9EKJ0swoNpg4
-X-Google-Smtp-Source: APXvYqwOJhbXNCC7cvoLr6vQcA/kxUlviAaQhZZvu32rd1jGFllr0Y6eLPIl4tji7avmxMkEpWSCCnddXjEUxekPkABZErr6e8LK
+        Thu, 6 Jun 2019 05:42:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35716 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbfFFJmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:42:20 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C4F3730BC586;
+        Thu,  6 Jun 2019 09:42:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E424278380;
+        Thu,  6 Jun 2019 09:42:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 01/10] security: Override creds in __fput() with last
+ fputter's creds [ver #3]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Casey Schaufler <casey@schaufler-ca.com>, dhowells@redhat.com,
+        raven@themaw.net, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-block@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 06 Jun 2019 10:42:10 +0100
+Message-ID: <155981413016.17513.10540579988392555403.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
+References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:8f:: with SMTP id t15mr12219147itj.107.1559814124560;
- Thu, 06 Jun 2019 02:42:04 -0700 (PDT)
-Date:   Thu, 06 Jun 2019 02:42:04 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cf6a70058aa48695@google.com>
-Subject: KMSAN: uninit-value in rt2500usb_bbp_read
-From:   syzbot <syzbot+a106a5b084a6890d2607@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com,
-        helmut.schaa@googlemail.com, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, sgruszka@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 06 Jun 2019 09:42:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+So that the LSM can see the credentials of the last process to do an fput()
+on a file object when the file object is being dismantled, do the following
+steps:
 
-syzbot found the following crash on:
+ (1) Cache the current credentials in file->f_fput_cred at the point the
+     file object's reference count reaches zero.
 
-HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=12f8b01ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
-dashboard link: https://syzkaller.appspot.com/bug?extid=a106a5b084a6890d2607
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f746f2a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153072d2a00000
+ (2) In __fput(), use override_creds() to apply those credentials to the
+     dismantling process.  This is necessary so that if we're dismantling a
+     unix socket that has semi-passed fds still in it, their fputs will
+     pick up the same credentials if they're reduced to zero at that point.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a106a5b084a6890d2607@syzkaller.appspotmail.com
+     Note that it's probably not strictly necessary to take an extra ref on
+     the creds here (which override_creds() does).
 
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-usb 1-1: reset high-speed USB device number 2 using dummy_hcd
-usb 1-1: device descriptor read/64, error -71
-ieee80211 phy3: rt2x00usb_vendor_request: Error - Vendor Request 0x09  
-failed for offset 0x0000 with error -71
-ieee80211 phy3: rt2x00usb_vendor_request: Error - Vendor Request 0x07  
-failed for offset 0x04d0 with error -71
-==================================================================
-BUG: KMSAN: uninit-value in rt2500usb_regbusy_read  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:116 [inline]
-BUG: KMSAN: uninit-value in rt2500usb_bbp_read+0x174/0x640  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
-CPU: 1 PID: 4943 Comm: kworker/1:2 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-  rt2500usb_regbusy_read drivers/net/wireless/ralink/rt2x00/rt2500usb.c:116  
-[inline]
-  rt2500usb_bbp_read+0x174/0x640  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
-  rt2500usb_validate_eeprom  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1387 [inline]
-  rt2500usb_probe_hw+0x3b1/0x2230  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1764
-  rt2x00lib_probe_dev+0xb81/0x3090  
-drivers/net/wireless/ralink/rt2x00/rt2x00dev.c:1427
-  rt2x00usb_probe+0x7c7/0xf70  
-drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:837
-  rt2500usb_probe+0x50/0x60  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1977
-  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:254
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+ (3) Destroy the fput creds in file_free_rcu().
 
-Local variable description: ----reg.i.i@rt2500usb_bbp_read
-Variable was created at:
-  rt2500usb_register_read_lock  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:72 [inline]
-  rt2500usb_regbusy_read drivers/net/wireless/ralink/rt2x00/rt2500usb.c:115  
-[inline]
-  rt2500usb_bbp_read+0xa4/0x640  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:172
-  rt2500usb_validate_eeprom  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1387 [inline]
-  rt2500usb_probe_hw+0x3b1/0x2230  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1764
-==================================================================
+This additionally makes the creds available to:
 
+	fsnotify
+	eventpoll
+	file locking
+	->fasync, ->release file ops
+	superblock destruction
+	mountpoint destruction
 
+This allows various notifications about object cleanups/destructions to
+carry appropriate credentials for the LSM to approve/disapprove them based
+on the process that caused them, even if indirectly.
+
+Note that this means that someone looking at /proc/<pid>/fd/<n> may end up
+being inadvertently noted as the subject of a cleanup message if the
+process they're looking at croaks whilst they're looking at it.
+
+Further, kernel services like nfsd and cachefiles may be seen as the
+fputter and may not have a system credential.  In cachefiles's case, it may
+appear that cachefilesd caused the notification.
+
+Suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Casey Schaufler <casey@schaufler-ca.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+ fs/file_table.c    |   12 ++++++++++++
+ include/linux/fs.h |    1 +
+ 2 files changed, 13 insertions(+)
+
+diff --git a/fs/file_table.c b/fs/file_table.c
+index 3f9c1b452c1d..9bf2be45b7f9 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -46,6 +46,7 @@ static void file_free_rcu(struct rcu_head *head)
+ 	struct file *f = container_of(head, struct file, f_u.fu_rcuhead);
+ 
+ 	put_cred(f->f_cred);
++	put_cred(f->f_fput_cred);
+ 	kmem_cache_free(filp_cachep, f);
+ }
+ 
+@@ -252,6 +253,7 @@ struct file *alloc_file_clone(struct file *base, int flags,
+  */
+ static void __fput(struct file *file)
+ {
++	const struct cred *saved_cred;
+ 	struct dentry *dentry = file->f_path.dentry;
+ 	struct vfsmount *mnt = file->f_path.mnt;
+ 	struct inode *inode = file->f_inode;
+@@ -262,6 +264,12 @@ static void __fput(struct file *file)
+ 
+ 	might_sleep();
+ 
++	/* Set the creds of whoever triggered the last fput for the LSM.  Note
++	 * that this has to be made available to further fputs, say on fds
++	 * trapped in a unix socket.
++	 */
++	saved_cred = override_creds(file->f_fput_cred);
++
+ 	fsnotify_close(file);
+ 	/*
+ 	 * The function eventpoll_release() should be the first called
+@@ -293,6 +301,8 @@ static void __fput(struct file *file)
+ 	if (unlikely(mode & FMODE_NEED_UNMOUNT))
+ 		dissolve_on_fput(mnt);
+ 	mntput(mnt);
++
++	revert_creds(saved_cred);
+ out:
+ 	file_free(file);
+ }
+@@ -334,6 +344,7 @@ void fput_many(struct file *file, unsigned int refs)
+ 	if (atomic_long_sub_and_test(refs, &file->f_count)) {
+ 		struct task_struct *task = current;
+ 
++		file->f_fput_cred = get_current_cred();
+ 		if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
+ 			init_task_work(&file->f_u.fu_rcuhead, ____fput);
+ 			if (!task_work_add(task, &file->f_u.fu_rcuhead, true))
+@@ -368,6 +379,7 @@ void __fput_sync(struct file *file)
+ 	if (atomic_long_dec_and_test(&file->f_count)) {
+ 		struct task_struct *task = current;
+ 		BUG_ON(!(task->flags & PF_KTHREAD));
++		file->f_fput_cred = get_current_cred();
+ 		__fput(file);
+ 	}
+ }
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f1c74596cd77..db05738b1951 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -943,6 +943,7 @@ struct file {
+ 	loff_t			f_pos;
+ 	struct fown_struct	f_owner;
+ 	const struct cred	*f_cred;
++	const struct cred	*f_fput_cred;	/* Who did the last fput() (for LSM) */
+ 	struct file_ra_state	f_ra;
+ 
+ 	u64			f_version;
+
