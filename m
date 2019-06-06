@@ -3,160 +3,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5B0C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29983C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D08207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72F32070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSyEVJWQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r1DfGkAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfFFMGx (ORCPT
+        id S1727383AbfFFMJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 08:06:53 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36439 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbfFFMGx (ORCPT
+        Thu, 6 Jun 2019 08:09:40 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52876 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbfFFMJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 08:06:53 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q26so1355174lfc.3;
-        Thu, 06 Jun 2019 05:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=R7ZNJlaqp8GSpG9iatV9CsosxNubuXEWB8hYZg3ZABo=;
-        b=KSyEVJWQEAGeNjkM0M25ea194Kr78Z0HoM1QpSkVGhD2e7pB9J2vbVJ/G4sCHXMCFn
-         DDmW8pFDKIQugaRdyOHf3C+AvfcyKJyHELE4j/JzZUxBBidg1v5uB6kYRRzO88wHQbrK
-         oa6eUu57sSpximL+edAi8vlcsrWLz/728il0PtWj1d+HOUf31d81lt0VSIwQKK+yzEOk
-         dPefFCB+ZTLKVs73eGPukGyf6l0nCxpDp0rsDY28b+7aDcuFWi/GUsgLzCSh7hEwzjfi
-         sbXOMaGbm6pviz3ab4z34mJmcvZhzu6fsMOCsEns9VmA3u6oHQCO3rf5YvSqN80zELZ8
-         PoDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R7ZNJlaqp8GSpG9iatV9CsosxNubuXEWB8hYZg3ZABo=;
-        b=e5EA9v6fkEaTqYFIjYyqByCquWiYwXiCKYh4jL0LcdHmrKjof8iL8i4ePjY9WUbQPU
-         jTEiNvEHc3XOafVBmVWHkYJXhNKLwv3gYl50uv4P1SG5xTUwPNzgXk0Sv0V6215TR2iL
-         2HI9L0Y2CzSvOKT9o//sdkxpeZVAd/3dQJ3XH0kNXuVJ1ZWZAEGquRzg5+UZ5I56gJbY
-         VzQf7Wem9A4npHpdGkLJi6ktBi3lXMkFjLy/KqMsp2/oj+ab4LRwJCTt60VDnZjNL77z
-         4lTcmWIS6JNuWM3IGDGqPftDK2kzj4LbhCcVp6YpGF3DBXYoo/RRGrSsZissMrTdl2Ma
-         uZ/g==
-X-Gm-Message-State: APjAAAVG2zUCZkg1kEKbawZFdulmP0lLUw0ArRMJ/osuWkhTbjBhkd0/
-        VciDAFcPlrPsVS8+c5rM075u7HAr
-X-Google-Smtp-Source: APXvYqxO+aCdvSb2nD0dOik+RwlSYkhPGiPvJpNMWZMh2EeMXfs6t6PoEUMrsGEKeXF5z7iiVWJ13A==
-X-Received: by 2002:ac2:5446:: with SMTP id d6mr23084965lfn.138.1559822810432;
-        Thu, 06 Jun 2019 05:06:50 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id 1sm304424ljt.78.2019.06.06.05.06.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 05:06:49 -0700 (PDT)
-Subject: Re: [PATCH V2] i2c: busses: tegra: Add suspend-resume support
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559800475-5446-1-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bf93e88f-cbed-3bb0-223a-74ad0b08aa9e@gmail.com>
-Date:   Thu, 6 Jun 2019 15:06:48 +0300
+        Thu, 6 Jun 2019 08:09:40 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56C91JO022739;
+        Thu, 6 Jun 2019 07:09:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559822941;
+        bh=qcyIk2SJUn0ZdZwR3JN8S2jqhxldDWKzw9rcIaBM9CY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=r1DfGkAVMqtciddhXYiHl8QMDCTU/qQpAicziLVILpa8KpKMbqfJui+zeGvjT4GhI
+         SRIUt7L4kK40Egrm6VBGerre2yXhaPVNVfse9pVcPFFgH48VDmZQS81BByHg2rQ+AW
+         Ur+7hqcX1lzzJRn97RNTxSDJFv61OFNPHcT3PnlA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56C910S073346
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 6 Jun 2019 07:09:01 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
+ 2019 07:09:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 6 Jun 2019 07:09:00 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56C8u4P076209;
+        Thu, 6 Jun 2019 07:08:56 -0500
+Subject: Re: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
+To:     Pawel Laszczak <pawell@cadence.com>, <devicetree@vger.kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <felipe.balbi@linux.intel.com>,
+        <linux-usb@vger.kernel.org>, <hdegoede@redhat.com>,
+        <heikki.krogerus@linux.intel.com>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <jbergsagel@ti.com>,
+        <nsekhar@ti.com>, <nm@ti.com>, <sureshp@cadence.com>,
+        <peter.chen@nxp.com>, <jpawar@cadence.com>, <kurahul@cadence.com>
+References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+ <1559729030-16390-2-git-send-email-pawell@cadence.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
+Date:   Thu, 6 Jun 2019 15:08:55 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1559800475-5446-1-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1559729030-16390-2-git-send-email-pawell@cadence.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 8:54, Bitan Biswas пишет:
-> Post suspend I2C registers have power on reset values. Before any
-> transfer initialize I2C registers to prevent I2C transfer timeout
-> and implement suspend and resume callbacks needed. Fix below errors
-> post suspend:
+Pawel,
+
+On 05/06/2019 13:03, Pawel Laszczak wrote:
+> This patch aim at documenting USB related dt-bindings for the
+> Cadence USBSS-DRD controller.
 > 
-> 1) Tegra I2C transfer timeout during jetson tx2 resume:
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, parent: i2c-1
-> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
-> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
-> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
-> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns -110
-> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 after 127152 usecs
-> [   27.666194] PM: Device 1-0074 failed to resume: error -110
-> 
-> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
-> 
-> Remove i2c bus lock-unlock calls in resume callback as i2c_mark_adapter_*
-> (suspended-resumed) help ensure i2c core calls from client are not
-> executed before i2c-tegra resume.
-> 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
 > ---
->  drivers/i2c/busses/i2c-tegra.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
 > 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index ebaa78d..76b7926 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -1687,7 +1687,30 @@ static int tegra_i2c_remove(struct platform_device *pdev)
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> +static int tegra_i2c_suspend(struct device *dev)
-> +{
-> +	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> new file mode 100644
+> index 000000000000..1d2b449e3cb4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> @@ -0,0 +1,30 @@
+> +Binding for the Cadence USBSS-DRD controller
 > +
-> +	i2c_mark_adapter_suspended(&i2c_dev->adapter);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra_i2c_resume(struct device *dev)
-> +{
-> +	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = tegra_i2c_init(i2c_dev, false);
-> +	if (ret)
-> +		return ret;
+> +Required properties:
+> +  - reg: Physical base address and size of the controller's register areas.
+> +	 Controller has 3 different regions:
+> +	 region 1 - HOST registers area
+> +	 region 2 - DEVICE registers area
+> +	 region 3 - OTG/DRD registers area
+> +  - reg-names - register memory area names:
+> +	"xhci" - for HOST registers space
+> +	"dev" - for DEVICE registers space
+> +	"otg" - for OTG/DRD registers space
+> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
+> +  - interrupts: Interrupts used by cdns3 controller.
 
-We're expecting that tegra_i2c_init returns a error code on a failure
-and nothing else, hence it will be a bit more expressive to name the
-returned variable as "err". There is nothing wrong with yours variant,
-this is just a very minor recommendation from me. Please note that a bit
-more wise choice of the names makes easier to follow the code for other
-people and hence results in a cleaner code.
+Since we are requesting 3 separate named interrupts in code we need to
+mention them here.
 
 > +
-> +	i2c_mark_adapter_resumed(&i2c_dev->adapter);
-
-Please add a blank line here for a better readability and to make the
-patch consistent. You added the blank line in a similar case of
-tegra_i2c_suspend() and this makes it inconsistent.
-
-> +	return 0;
-> +}
+> +Optional properties:
+> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
+> +                   "full-speed"; refer to usb/generic.txt
+> + - dr_mode: Should be one of "host", "peripheral" or "otg".
+> + - phys: reference to the USB PHY
 > +
->  static const struct dev_pm_ops tegra_i2c_pm = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
->  	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
->  			   NULL)
->  };
+> +Example:
+> +	usb@f3000000 {
+> +		compatible = "cdns,usb3-1.0.1";
+> +		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
+
+This example won't work as code requests for 3 separate interrupts.
+
+> +		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
+> +			0xf3010000 0x10000	/* memory area for DEVICE registers */
+> +			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
+> +		reg-names = "xhci", "dev", "otg";
+> +	};
 > 
+
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
