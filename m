@@ -2,105 +2,105 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFFBC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8533FC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5397E208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD99207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:22:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8XX0OP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfFFVVx (ORCPT
+        id S1728380AbfFFVWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:21:53 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34561 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFFVVx (ORCPT
+        Thu, 6 Jun 2019 17:22:21 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39984 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfFFVWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:21:53 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id CDCD23C00DD;
-        Thu,  6 Jun 2019 23:21:49 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id F4M8mMrwGFmg; Thu,  6 Jun 2019 23:21:43 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id C54483C00D1;
-        Thu,  6 Jun 2019 23:21:43 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 6 Jun 2019
- 23:21:43 +0200
-Date:   Thu, 6 Jun 2019 23:21:40 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     David Howells <dhowells@redhat.com>
-CC:     <viro@zeniv.linux.org.uk>, <raven@themaw.net>,
-        <linux-fsdevel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <keyrings@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH 10/10] Add sample notification program [ver #3]
-Message-ID: <20190606212140.GA25664@vmlxhi-102.adit-jv.com>
-References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
- <155981421379.17513.13158528501056454772.stgit@warthog.procyon.org.uk>
+        Thu, 6 Jun 2019 17:22:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so1418924pla.7;
+        Thu, 06 Jun 2019 14:22:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RBQnY16OoiSU9x2fTbRylbra8bvQfhJHveZ7KsLfXLE=;
+        b=r8XX0OP59OQafz2qMA3prFHhtITzIOlZ9tRNin1PaPA5CRz3/Rmq6Gp1R0CCilbiQ5
+         9ah41993Yr8w0VBOaqbMcaz5gZrghaXz7dd9TfCi2k0ctANR7Vl7VwL/QtH8BoZL0Ojf
+         gAcrDEb4VAuNbzVkL0jjpJzoTmWhj5x4WywG7yijizhplmGQFUkxWAIWZib+N1nvF4C+
+         Oks7Dnca+eP8AhqzRHkpXPdFTIEOvRncvW1kFuJrqwUlC86oBSFN1oSRlYashgjYO3AD
+         DsFuIRvZzlRrlXmDCjqkNCYlTAAMpmoYRWH5rkTSO+dji/GWII3FLXGZ8+9FtDs3XmbF
+         AuOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RBQnY16OoiSU9x2fTbRylbra8bvQfhJHveZ7KsLfXLE=;
+        b=NiubWLt12uUebtJ81r7DBcqT+v97M2VdlGTHjQfRgSXwH8QE26x2yFcRLILefGQsK4
+         Xek48nIkv109K7EfWk6Bx6Bx7AEtBIHZat8/0uohMda0whaBhJpgiChxdIZuLmQKGbUW
+         rMzfEUL619TdnX7b3MMChrsBM/OrDjTL84TFnvvESMCfsfPslMOHXTngXFkY1yDX/lF5
+         HDOHEc7P6Ls50iFEkVL9dvoU03FTWo1IRPg2YH2XQfyPp2cus9W78p01XwZT+ue7eyAo
+         xhPDreN9mLe2boKlPUhnijKWDXif9j4FcKWV4jBykDSMU9AJ/kjkf4i7tLcGmj/lVgtj
+         67uA==
+X-Gm-Message-State: APjAAAXtvW4MsU4WjwPv4+BvDCKCQw7iXpcmrrkxV2p0gCVWzKmnt/M0
+        U1bRxcjuBXUZrd48x+/UBGQ=
+X-Google-Smtp-Source: APXvYqxBi6parEcN6dotMYwWVEm/YadS+PaoRNAtjRDPTr29165cicwhTFOnicMr2GAtIb9XE0WQNA==
+X-Received: by 2002:a17:902:2a69:: with SMTP id i96mr43521459plb.108.1559856140254;
+        Thu, 06 Jun 2019 14:22:20 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k3sm88985pgo.81.2019.06.06.14.22.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 14:22:19 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 14:22:18 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watchdog: meson_wdt: update with SPDX Licence identifier
+Message-ID: <20190606212218.GA1578@roeck-us.net>
+References: <20190520142847.442-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155981421379.17513.13158528501056454772.stgit@warthog.procyon.org.uk>
+In-Reply-To: <20190520142847.442-1-narmstrong@baylibre.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Mon, May 20, 2019 at 04:28:47PM +0200, Neil Armstrong wrote:
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-On Thu, Jun 06, 2019 at 10:43:33AM +0100, David Howells wrote:
-[..]
-> diff --git a/samples/watch_queue/Makefile b/samples/watch_queue/Makefile
-> new file mode 100644
-> index 000000000000..42b694430d0f
-> --- /dev/null
-> +++ b/samples/watch_queue/Makefile
-> @@ -0,0 +1,9 @@
-> +# List of programs to build
-> +hostprogs-y := watch_test
-> +
-> +# Tell kbuild to always build the programs
-> +always := $(hostprogs-y)
-> +
-> +HOSTCFLAGS_watch_test.o += -I$(objtree)/usr/include
+This change has been applied system-wide.
 
-How about arm64? Do you intend to enable cross-compilation?
+Guenter
 
-> +
-> +HOSTLOADLIBES_watch_test += -lkeyutils
-> diff --git a/samples/watch_queue/watch_test.c b/samples/watch_queue/watch_test.c
-> new file mode 100644
-> index 000000000000..893a5380f792
-> --- /dev/null
-> +++ b/samples/watch_queue/watch_test.c
-[..]
-
-> +			asm ("lfence" : : : "memory" );
-[..]
-> +			asm("mfence" ::: "memory");
-
-FWIW, trying to cross-compile it returned:
-
-aarch64-linux-gnu-gcc -I../../usr/include -I../../include  watch_test.c   -o watch_test
-/tmp/ccDXYynm.s: Assembler messages:
-/tmp/ccDXYynm.s:471: Error: unknown mnemonic `lfence' -- `lfence'
-/tmp/ccDXYynm.s:568: Error: unknown mnemonic `mfence' -- `mfence'
-<builtin>: recipe for target 'watch_test' failed
-make: *** [watch_test] Error 1
-
--- 
-Best Regards,
-Eugeniu.
+> ---
+>  drivers/watchdog/meson_wdt.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/watchdog/meson_wdt.c b/drivers/watchdog/meson_wdt.c
+> index 01889cef81e1..3389f4c02603 100644
+> --- a/drivers/watchdog/meson_wdt.c
+> +++ b/drivers/watchdog/meson_wdt.c
+> @@ -1,12 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+>  /*
+>   *      Meson Watchdog Driver
+>   *
+>   *      Copyright (c) 2014 Carlo Caione
+> - *
+> - *      This program is free software; you can redistribute it and/or
+> - *      modify it under the terms of the GNU General Public License
+> - *      as published by the Free Software Foundation; either version
+> - *      2 of the License, or (at your option) any later version.
+>   */
+>  
+>  #include <linux/clk.h>
