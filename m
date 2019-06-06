@@ -2,212 +2,382 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7199EC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B70CC28EB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B78B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iTUYgu6T";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="mwdKQ72r"
+	by mail.kernel.org (Postfix) with ESMTP id 3481720B1F
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbfFFUPM (ORCPT
+        id S1728949AbfFFUPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:15:12 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35744 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727082AbfFFUPK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:15:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:47825 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbfFFUPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 16:15:10 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x56KCw7x014690;
-        Thu, 6 Jun 2019 13:14:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=uFxS+HpbQdPGuyT6DMQGXVowWYrSTxP801cJs+y+7PE=;
- b=iTUYgu6TweW47DLGYfU7MsGvhT3JAGxf6NtshBOvsnWXjIBMVLhcNs6Eh4fok3BxQMgh
- 7vHSis8lo86bI6eRx5eO2wVKc88bjVhfmm8gqr8H8VWnjS18K2RYtJQzwRYioHyXyEVC
- FYxfe1bQ5Le+6vnUB68qADnxki+kkIAK0SI= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2sy0e8a4ae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 06 Jun 2019 13:14:40 -0700
-Received: from prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 6 Jun 2019 13:14:38 -0700
-Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
- prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 6 Jun 2019 13:14:38 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Jun 2019 13:14:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uFxS+HpbQdPGuyT6DMQGXVowWYrSTxP801cJs+y+7PE=;
- b=mwdKQ72rcvWIW66SxyPUtEwnImhYcVTPGfk/8CKAPFJWbi3wPUCe2p3MgzgGjuV72mgwKsBMSDgZ4xFlTJ1bVvo7siBrpc++HLdCTG0ci0CJlfwTRUqi6e7O3EeMaypX2Oaxw7AhFELkxoFLx8k5Vy56RDe224jhdaCR167+Iis=
-Received: from MW2PR1501MB1993.namprd15.prod.outlook.com (52.132.149.157) by
- MW2PR1501MB2076.namprd15.prod.outlook.com (52.132.150.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Thu, 6 Jun 2019 20:14:36 +0000
-Received: from MW2PR1501MB1993.namprd15.prod.outlook.com
- ([fe80::ede1:f275:2869:8156]) by MW2PR1501MB1993.namprd15.prod.outlook.com
- ([fe80::ede1:f275:2869:8156%7]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
- 20:14:36 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Vaneet Narang <v.narang@samsung.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "dsterba@suse.cz" <dsterba@suse.cz>,
-        Maninder Singh <maninder1.s@samsung.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "joe@perches.com" <joe@perches.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>,
-        PANKAJ MISHRA <pankaj.m@samsung.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
-Subject: Re: (2) [PATCH 1/4] zstd: pass pointer rathen than structure to
- functions
-Thread-Topic: (2) [PATCH 1/4] zstd: pass pointer rathen than structure to
- functions
-Thread-Index: AQHVHKR2hpo9a2qp3EKL1BeVjcuANQ==
-Date:   Thu, 6 Jun 2019 20:14:36 +0000
-Message-ID: <673B6F9E-5BB7-4EB2-9E6C-A44E09367ADE@fb.com>
-References: <20190605143219.248ca514546f69946aa2e07e@linux-foundation.org>
- <1559552526-4317-1-git-send-email-maninder1.s@samsung.com>
- <1559552526-4317-2-git-send-email-maninder1.s@samsung.com>
- <20190604154326.8868a10f896c148a0ce804d1@linux-foundation.org>
- <20190605115703.GY15290@twin.jikos.cz> <20190605123253.GZ15290@suse.cz>
- <CGME20190603090232epcas5p1630d0584e8a1aa9495edc819605664fc@epcms5p1>
- <20190606141019epcms5p1e9c394d2c2ef37506c8004fe48edd29f@epcms5p1>
-In-Reply-To: <20190606141019epcms5p1e9c394d2c2ef37506c8004fe48edd29f@epcms5p1>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::2:d31d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e05348c2-aaad-448b-6171-08d6eabb98d7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MW2PR1501MB2076;
-x-ms-traffictypediagnostic: MW2PR1501MB2076:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MW2PR1501MB2076D0452B066B0CD3E0E074AB170@MW2PR1501MB2076.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(346002)(39860400002)(366004)(396003)(189003)(199004)(36756003)(102836004)(83716004)(6486002)(14454004)(53546011)(6436002)(6506007)(229853002)(71200400001)(6306002)(71190400001)(53936002)(6512007)(6246003)(33656002)(5660300002)(476003)(8676002)(81156014)(81166006)(46003)(54906003)(99286004)(6916009)(8936002)(966005)(486006)(4326008)(11346002)(2616005)(446003)(76176011)(7416002)(25786009)(305945005)(7736002)(316002)(6116002)(186003)(66446008)(64756008)(68736007)(66946007)(2906002)(66476007)(82746002)(66556008)(86362001)(73956011)(76116006)(478600001)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR1501MB2076;H:MW2PR1501MB1993.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0Ho0cIqxZ0tDcOjYbG4ND7gqgsV+/JPgqOotwFq58vGBfEMwtI23QqYuPjQZ0bnhkaURqrD+RFOoR1LiaEteOyjtWEQSUR5w8p1jgR6OApW2zpr1/kyXB3p72agRZB4jxPYMIxBMzMXXdkFnv82xQQbkxSQkAz5E1Wx+0z/IOgnuIPnbcBwn11AVvbUV48Dho7irF+NqesErsNHAaHJ4bY4zOiSvy6o5/tzAatHhy/9Me4RzanE8HPHElG2iarrJ8CVZfDHpyRzwP9Bokb+t7dbHe+h/Ei6s3hRRyQrsnhHYjRLFa+yhVeJzxSA1mXdBTAIVupdC7tPKH2sNLlS5DqZ9xMY4NUK6C6aDLjnzwA8X/iws/XNtSBhMCGAxpx8knf2eyU9cgxNhiS8fpTl3ToSavjGLlOKEAFdm/t5Meuo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F6236908BE37D04F92F6F255008B1A8C@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e05348c2-aaad-448b-6171-08d6eabb98d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 20:14:36.1471
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: terrelln@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR1501MB2076
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060136
-X-FB-Internal: deliver
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:15:09 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jun 2019 13:15:08 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v7 01/27] Documentation/x86: Add CET description
+Date:   Thu,  6 Jun 2019 13:06:20 -0700
+Message-Id: <20190606200646.3951-2-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Explain how CET works and the no_cet_shstk/no_cet_ibt kernel
+parameters.
 
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+---
+ .../admin-guide/kernel-parameters.txt         |   6 +
+ Documentation/x86/index.rst                   |   1 +
+ Documentation/x86/intel_cet.rst               | 268 ++++++++++++++++++
+ 3 files changed, 275 insertions(+)
+ create mode 100644 Documentation/x86/intel_cet.rst
 
-> On Jun 6, 2019, at 7:10 AM, Vaneet Narang <v.narang@samsung.com> wrote:
->=20
-> Hi Andrew / David,
->=20
-> =20
->>>  > > -        ZSTD_parameters params =3D ZSTD_getParams(level, src_len,=
- 0);
->>>  > > +        static ZSTD_parameters params;
->>>  >=20
->>>  > > +
->>>  > > +        params =3D ZSTD_getParams(level, src_len, 0);
->>>  >=20
->>>  > No thats' broken, the params can't be static as it depends on level =
-and
->>>  > src_len. What happens if there are several requests in parallel with
->>>  > eg. different levels?
->=20
-> There is no need to make static for btrfs. We can keep it as a stack vari=
-able.
-> This patch set  focussed on reducing stack usage of zstd compression when=
- triggered
-> through zram. ZRAM internally uses crypto and currently crpto uses fixed =
-level and also
-> not dependent upon source length.
-
-Can we measure the performance of these patches on btrfs and/or zram? See t=
-he benchmarks
-I ran on my original patch to btrfs for reference https://lore.kernel.org/p=
-atchwork/patch/802866/.
-
-I don't expect a speed difference, but I think it is worth measuring.
-
-> crypto/zstd.c: =20
-> static ZSTD_parameters zstd_params(void)
-> {
->        return ZSTD_getParams(ZSTD_DEF_LEVEL, 0, 0);
-> }
->=20
->=20
-> Actually high stack usage problem with zstd compression patch gets exploi=
-ted more incase of=20
-> shrink path which gets triggered randomly from any call flow in case of l=
-ow memory and adds overhead
-> of more than 2000 byte of stack and results in stack overflow.
->=20
-> Stack usage of alloc_page in case of low memory
->=20
->   72   HUF_compressWeights_wksp+0x140/0x200 =20
->   64   HUF_writeCTable_wksp+0xdc/0x1c8     =20
->   88   HUF_compress4X_repeat+0x214/0x450    =20
->  208   ZSTD_compressBlock_internal+0x224/0x137c
->  136   ZSTD_compressContinue_internal+0x210/0x3b0
->  192   ZSTD_compressCCtx+0x6c/0x144
->  144   zstd_compress+0x40/0x58
->   32   crypto_compress+0x2c/0x34
->   32   zcomp_compress+0x3c/0x44
->   80   zram_bvec_rw+0x2f8/0xa7c
->   64   zram_rw_page+0x104/0x170
->   48   bdev_write_page+0x80/0xb4
->  112   __swap_writepage+0x160/0x29c
->   24   swap_writepage+0x3c/0x58
->  160   shrink_page_list+0x788/0xae0
->  128   shrink_inactive_list+0x210/0x4a8
->  184   shrink_zone+0x53c/0x7c0
->  160   try_to_free_pages+0x2fc/0x7cc
->   80   __alloc_pages_nodemask+0x534/0x91c
->=20
-> Thanks & Regards,
-> Vaneet Narang=20
-> =20
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 138f6664b2e2..b9b054f6c732 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2906,6 +2906,12 @@
+ 			noexec=on: enable non-executable mappings (default)
+ 			noexec=off: disable non-executable mappings
+ 
++	no_cet_ibt	[X86-64] Disable indirect branch tracking for user-mode
++			applications
++
++	no_cet_shstk	[X86-64] Disable shadow stack support for user-mode
++			applications
++
+ 	nosmap		[X86,PPC]
+ 			Disable SMAP (Supervisor Mode Access Prevention)
+ 			even if it is supported by processor.
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index ae36fc5fc649..47822ac02fe0 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -21,6 +21,7 @@ x86-specific Documentation
+    pat
+    protection-keys
+    intel_mpx
++   intel_cet
+    amd-memory-encryption
+    pti
+    mds
+diff --git a/Documentation/x86/intel_cet.rst b/Documentation/x86/intel_cet.rst
+new file mode 100644
+index 000000000000..dac83bbf8a24
+--- /dev/null
++++ b/Documentation/x86/intel_cet.rst
+@@ -0,0 +1,268 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=========================================
++Control-flow Enforcement Technology (CET)
++=========================================
++
++[1] Overview
++============
++
++Control-flow Enforcement Technology (CET) provides protection against
++return/jump-oriented programming (ROP) attacks.  It can be setup to
++protect both the kernel and applications.  In the first phase,
++only the user-mode protection is implemented in 64-bit mode; 32-bit
++applications are supported in compatibility mode.
++
++CET introduces shadow stack (SHSTK) and indirect branch tracking
++(IBT).  SHSTK is a secondary stack allocated from memory and cannot
++be directly modified by applications.  When executing a CALL, the
++processor pushes a copy of the return address to SHSTK.  Upon
++function return, the processor pops the SHSTK copy and compares it
++to the one from the program stack.  If the two copies differ, the
++processor raises a control-protection exception.  IBT verifies all
++indirect CALL/JMP targets are intended as marked by the compiler
++with 'ENDBR' opcodes (see CET instructions below).
++
++There are two kernel configuration options:
++
++    INTEL_X86_SHADOW_STACK_USER, and
++    INTEL_X86_BRANCH_TRACKING_USER.
++
++To build a CET-enabled kernel, Binutils v2.31 and GCC v8.1 or later
++are required.  To build a CET-enabled application, GLIBC v2.28 or
++later is also required.
++
++There are two command-line options for disabling CET features:
++
++    no_cet_shstk - disables SHSTK, and
++    no_cet_ibt - disables IBT.
++
++At run time, /proc/cpuinfo shows the availability of SHSTK and IBT.
++
++[2] CET assembly instructions
++=============================
++
++RDSSP %r
++    Read the SHSTK pointer into %r.
++
++INCSSP %r
++    Unwind (increment) the SHSTK pointer (0 ~ 255) steps as indicated
++    in the operand register.  The GLIBC longjmp uses INCSSP to unwind
++    the SHSTK until that matches the program stack.  When it is
++    necessary to unwind beyond 255 steps, longjmp divides and repeats
++    the process.
++
++RSTORSSP (%r)
++    Switch to the SHSTK indicated in the 'restore token' pointed by
++    the operand register and replace the 'restore token' with a new
++    token to be saved (with SAVEPREVSSP) for the outgoing SHSTK.
++
++::
++
++                               Before RSTORSSP
++
++             Incoming SHSTK                   Current/Outgoing SHSTK
++
++        |----------------------|             |----------------------|
++ addr=x |                      |       ssp-> |                      |
++        |----------------------|             |----------------------|
++ (%r)-> | rstor_token=(x|Lg)   |    addr=y-8 |                      |
++        |----------------------|             |----------------------|
++
++                               After RSTORSSP
++
++        |----------------------|             |----------------------|
++        |                      |             |                      |
++        |----------------------|             |----------------------|
++  ssp-> | rstor_token=(y|Bz|Lg)|    addr=y-8 |                      |
++        |----------------------|             |----------------------|
++
++    note:
++        1. Only valid addresses and restore tokens can be on the
++           user-mode SHSTK.
++        2. A token is always of type u64 and must align to u64.
++        3. The incoming SHSTK pointer in a rstor_token must point to
++           immediately above the token.
++        4. 'Lg' is bit[0] of a rstor_token indicating a 64-bit SHSTK.
++        5. 'Bz' is bit[1] of a rstor_token indicating the token is to
++           be used only for the next SAVEPREVSSP and invalid for the
++           RSTORSSP.
++
++SAVEPREVSSP
++    Store the SHSTK 'restore token' pointed by
++        (current_SHSTK_pointer + 8).
++
++::
++
++                             After SAVEPREVSSP
++
++        |----------------------|             |----------------------|
++  ssp-> |                      |             |                      |
++        |----------------------|             |----------------------|
++        | rstor_token=(y|Bz|Lg)|    addr=y-8 | rstor_token(y|Lg)    |
++        |----------------------|             |----------------------|
++
++WRUSS %r0, (%r1)
++    Write the value in %r0 to the SHSTK address pointed by (%r1).
++    This is a kernel-mode only instruction.
++
++ENDBR
++    The compiler inserts an ENDBR at all valid branch targets.  Any
++    CALL/JMP to a target without an ENDBR triggers a control
++    protection fault.
++
++[3] Application Enabling
++========================
++
++An application's CET capability is marked in its ELF header and can
++be verified from the following command output, in the
++NT_GNU_PROPERTY_TYPE_0 field:
++
++    readelf -n <application>
++
++If an application supports CET and is statically linked, it will run
++with CET protection.  If the application needs any shared libraries,
++the loader checks all dependencies and enables CET only when all
++requirements are met.
++
++[4] Legacy Libraries
++====================
++
++GLIBC provides a few tunables for backward compatibility.
++
++GLIBC_TUNABLES=glibc.tune.hwcaps=-SHSTK,-IBT
++    Turn off SHSTK/IBT for the current shell.
++
++GLIBC_TUNABLES=glibc.tune.x86_shstk=<on, permissive>
++    This controls how dlopen() handles SHSTK legacy libraries:
++        on: continue with SHSTK enabled;
++        permissive: continue with SHSTK off.
++
++[5] CET system calls
++====================
++
++The following arch_prctl() system calls are added for CET:
++
++arch_prctl(ARCH_X86_CET_STATUS, unsigned long *addr)
++    Return CET feature status.
++
++    The parameter 'addr' is a pointer to a user buffer.
++    On returning to the caller, the kernel fills the following
++    information:
++
++    *addr = SHSTK/IBT status
++    *(addr + 1) = SHSTK base address
++    *(addr + 2) = SHSTK size
++
++arch_prctl(ARCH_X86_CET_DISABLE, unsigned long features)
++    Disable SHSTK and/or IBT specified in 'features'.  Return -EPERM
++    if CET is locked.
++
++arch_prctl(ARCH_X86_CET_LOCK)
++    Lock in CET feature.
++
++arch_prctl(ARCH_X86_CET_ALLOC_SHSTK, unsigned long *addr)
++    Allocate a new SHSTK and put a restore token at top.
++
++    The parameter 'addr' is a pointer to a user buffer and indicates
++    the desired SHSTK size to allocate.  On returning to the caller,
++    the kernel fills *addr with the base address of the new SHSTK.
++
++arch_prctl(ARCH_X86_CET_SET_LEGACY_BITMAP, unsigned long *addr)
++    Setup an IBT legacy code bitmap.
++
++    The parameter 'addr' is a pointer to a user buffer that has the
++    following information:
++
++    *addr = IBT bitmap base address
++    *(addr + 1) = IBT bitmap size
++
++Note:
++  There is no CET enabling arch_prctl function.  By design, CET is
++  enabled automatically if the binary and the system can support it.
++
++  The parameters passed are always unsigned 64-bit.  When an ia32
++  application passing pointers, it should only use the lower 32 bits.
++
++[6] The implementation of the SHSTK
++===================================
++
++SHSTK size
++----------
++
++A task's SHSTK is allocated from memory to a fixed size of
++RLIMIT_STACK.  A compat-mode thread's SHSTK size is 1/4 of
++RLIMIT_STACK.  The smaller 32-bit thread SHSTK allows more threads to
++share a 32-bit address space.
++
++Signal
++------
++
++The main program and its signal handlers use the same SHSTK.  Because
++the SHSTK stores only return addresses, a large SHSTK will cover the
++condition that both the program stack and the sigaltstack run out.
++
++The kernel creates a restore token at the SHSTK restoring address and
++verifies that token when restoring from the signal handler.
++
++Fork
++----
++
++The SHSTK's vma has VM_SHSTK flag set; its PTEs are required to be
++read-only and dirty.  When a SHSTK PTE is not present, RO, and dirty,
++a SHSTK access triggers a page fault with an additional SHSTK bit set
++in the page fault error code.
++
++When a task forks a child, its SHSTK PTEs are copied and both the
++parent's and the child's SHSTK PTEs are cleared of the dirty bit.
++Upon the next SHSTK access, the resulting SHSTK page fault is handled
++by page copy/re-use.
++
++When a pthread child is created, the kernel allocates a new SHSTK for
++the new thread.
++
++Setjmp/Longjmp
++--------------
++
++Longjmp unwinds SHSTK until it matches the program stack.
++
++Ucontext
++--------
++
++In GLIBC, getcontext/setcontext is implemented in similar way as
++setjmp/longjmp.
++
++When makecontext creates a new ucontext, a new SHSTK is allocated for
++that context with ARCH_X86_CET_ALLOC_SHSTK the syscall.  The kernel
++creates a restore token at the top of the new SHSTK and the user-mode
++code switches to the new SHSTK with the RSTORSSP instruction.
++
++[7] The management of read-only & dirty PTEs for SHSTK
++======================================================
++
++A RO and dirty PTE exists in the following cases:
++
++(a) A page is modified and then shared with a fork()'ed child;
++(b) A R/O page that has been COW'ed;
++(c) A SHSTK page.
++
++The processor only checks the dirty bit for (c).  To prevent the use
++of non-SHSTK memory as SHSTK, we use a spare bit of the 64-bit PTE as
++DIRTY_SW for (a) and (b) above.  This results to the following PTE
++settings:
++
++Modified PTE:             (R/W + DIRTY_HW)
++Modified and shared PTE:  (R/O + DIRTY_SW)
++R/O PTE, COW'ed:          (R/O + DIRTY_SW)
++SHSTK PTE:                (R/O + DIRTY_HW)
++SHSTK PTE, COW'ed:        (R/O + DIRTY_HW)
++SHSTK PTE, shared:        (R/O + DIRTY_SW)
++
++Note that DIRTY_SW is only used in R/O PTEs but not R/W PTEs.
++
++[8] The implementation of IBT
++=============================
++
++The kernel provides IBT support in mmap() of the legacy code bit map.
++However, the management of the bitmap is done in the GLIBC or the
++application.
+-- 
+2.17.1
 
