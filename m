@@ -2,132 +2,100 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1732C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C804DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1688208CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPDkSTVe"
+	by mail.kernel.org (Postfix) with ESMTP id 9CE4A2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfFFIzd (ORCPT
+        id S1727536AbfFFIzz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:55:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55317 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbfFFIzd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:55:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so1227498wmj.5;
-        Thu, 06 Jun 2019 01:55:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=1/TKE/QmlgGH1FFbgu8/s1F6UVtd/Yfiy+F2mc9SqpQ=;
-        b=lPDkSTVeuBYLJ/kHz0jbAmaDqBJE2OPHrYYUwCgZE6l8zE1YHN+vLSe2UegG1UW/yY
-         xnJMAAV6BnzK1GZ+t6r4u0AEvH2+okmVbHxjcfb9OvGETwGbwDJEBZRf9R/lNf6qtZlg
-         BPnjUevyK22LpLZwLbkZzqIM0yBfPi9hfrbWZBwfY9De5UMfI/+UckNmaVSlLYmkrj7E
-         omwCs8EVNrqlplW2/vRGowMeSFyA+Shobq7O5D77ORVqkhfh3h+c1WmNEDcggXc2dIFw
-         NoiPLnJcpxbU92zhuu+4kruD2YBlx+uLFruFzd/Hqa/0m3vbQnUlp/AqukwEvzOPD9R+
-         e4OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=1/TKE/QmlgGH1FFbgu8/s1F6UVtd/Yfiy+F2mc9SqpQ=;
-        b=EVt2QLsymmKW+Q6RpR+1zviHUBTGAb6u2HpaBxayvechr7HL45XG9hdF9JOuQJd57x
-         9UY43tAbTWyNmtlkfbPt1PQack8apPGqL2bXbDOk+tEaDUa5O0Sk5QHIrYC4T9q3texm
-         Ro/RPtZLZSoUWuyiEjWstDAgXXOEgiBDNVtHfeMa0JYLRmfViFo373U2P5NpHigOG3xa
-         bCu2/vcRi4yMHcNgDD/lSP67vN3w0QaAUDQc2kFkSXhswVD1Nt7vyeX0iNGzDoqu+bMW
-         qhZvBMlHN4vl420HgYgtjkqhcnIj5AEuwlGefJc0ca+vW5wT6m/4sCtsFU8ZUBTPaXjy
-         rDRg==
-X-Gm-Message-State: APjAAAXLUnRudPg/ryuKdAiDV6W+RRAbEzsUBYW0Jy5vPFJu7Ezteal3
-        B1cgEkbq5C54bI1d3rnhE59mMniq
-X-Google-Smtp-Source: APXvYqw4/5UTPoHuSXJ/gNhhaP0vPWP4gK+OiS1arZxQOQm+S2/Ac66Ejla9Ht6CnkxKiL5lvYuWTA==
-X-Received: by 2002:a7b:c94a:: with SMTP id i10mr22767614wml.97.1559811331099;
-        Thu, 06 Jun 2019 01:55:31 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([108.61.173.19])
-        by smtp.gmail.com with ESMTPSA id r131sm1077565wmf.4.2019.06.06.01.55.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 01:55:30 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 16:55:24 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org
-Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] selinux: lsm: fix a missing-check bug in
- selinux_sb_eat_lsm_o pts()
-Message-ID: <20190606085524.GA21119@zhanggen-UX430UQ>
+        Thu, 6 Jun 2019 04:55:55 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:35932 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727175AbfFFIzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:55:54 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id A8B845FEF3;
+        Thu,  6 Jun 2019 10:55:52 +0200 (CEST)
+From:   Rolf Eike Beer <eb@emlix.com>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
+Subject: [PATCH v3] scripts: use pkg-config to locate libcrypto
+Date:   Thu, 06 Jun 2019 10:55:52 +0200
+Message-ID: <20538915.Wj2CyUsUYa@devpool35>
+Organization: emlix GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
-returns NULL when fails. So 'arg' should be checked. And 'mnt_opts' 
-should be freed when error.
+From 71e19be4247fbaa2540dfb321e2b148234680a13 Mon Sep 17 00:00:00 2001
+From: Rolf Eike Beer <eb@emlix.com>
+Date: Thu, 22 Nov 2018 16:40:49 +0100
+Subject: [PATCH] scripts: use pkg-config to locate libcrypto
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
+Otherwise build fails if the headers are not in the default location. While at
+it also ask pkg-config for the libs, with fallback to the existing value.
+
+Signed-off-by: Rolf Eike Beer <eb@emlix.com>
+Cc: stable@vger.kernel.org # 4.19.x
 ---
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 3ec702c..13479cd 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -2616,10 +2616,11 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 	char *from = options;
- 	char *to = options;
- 	bool first = true;
-+	int rc;
+ scripts/Makefile | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+v2: add CRYPTO_LIBS and CRYPTO_CFLAGS
+v3: fix fallback -lcrypto
+
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 9d442ee050bd..9489c3b550df 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -8,7 +8,11 @@
+ # conmakehash:   Create chartable
+ # conmakehash:	 Create arrays for initializing the kernel console tables
  
- 	while (1) {
- 		int len = opt_len(from);
--		int token, rc;
-+		int token;
- 		char *arg = NULL;
++PKG_CONFIG?= pkg-config
++
+ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
++CRYPTO_LIBS = $(shell $(PKG_CONFIG) --libs libcrypto 2> /dev/null || echo -lcrypto)
++CRYPTO_CFLAGS = $(shell $(PKG_CONFIG) --cflags libcrypto 2> /dev/null)
  
- 		token = match_opt_prefix(from, len, &arg);
-@@ -2635,15 +2636,15 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 						*q++ = c;
- 				}
- 				arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
-+				if (!arg) {
-+					rc = -ENOMEM;
-+					goto free_opt;
-+				}
- 			}
- 			rc = selinux_add_opt(token, arg, mnt_opts);
- 			if (unlikely(rc)) {
- 				kfree(arg);
--				if (*mnt_opts) {
--					selinux_free_mnt_opts(*mnt_opts);
--					*mnt_opts = NULL;
--				}
--				return rc;
-+				goto free_opt;
- 			}
- 		} else {
- 			if (!first) {	// copy with preceding comma
-@@ -2661,6 +2662,12 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 	}
- 	*to = '\0';
- 	return 0;
-+free_opt:
-+	if (*mnt_opts) {
-+		selinux_free_mnt_opts(*mnt_opts);
-+		*mnt_opts = NULL;
-+	}
-+	return rc;
- }
+ hostprogs-$(CONFIG_BUILD_BIN2C)  += bin2c
+ hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
+@@ -23,8 +27,9 @@ hostprogs-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE) += insert-sys-cert
  
- static int selinux_sb_remount(struct super_block *sb, void *mnt_opts)
+ HOSTCFLAGS_sortextable.o = -I$(srctree)/tools/include
+ HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
+-HOSTLDLIBS_sign-file = -lcrypto
+-HOSTLDLIBS_extract-cert = -lcrypto
++HOSTLDLIBS_sign-file = $(CRYPTO_LIBS)
++HOSTCFLAGS_extract-cert.o = $(CRYPTO_CFLAGS)
++HOSTLDLIBS_extract-cert = $(CRYPTO_LIBS)
+ 
+ always		:= $(hostprogs-y) $(hostprogs-m)
+ 
+-- 
+2.21.0
+
+
+-- 
+Rolf Eike Beer, emlix GmbH, http://www.emlix.com
+Fon +49 551 30664-0, Fax +49 551 30664-11
+Gothaer Platz 3, 37083 Göttingen, Germany
+Sitz der Gesellschaft: Göttingen, Amtsgericht Göttingen HR B 3160
+Geschäftsführung: Heike Jordan, Dr. Uwe Kracke – Ust-IdNr.: DE 205 198 055
+
+emlix - smart embedded open source
+
+
