@@ -2,144 +2,370 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82C7C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCD9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA2121019
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:24:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uiDCHxun"
+	by mail.kernel.org (Postfix) with ESMTP id 1554F20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:25:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559827523;
+	bh=dp7g/H+79z/b4Sr+YnW8NJAD90DROpv/HAND1DJpnck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nr4jT0YDZjZszlQ/nhowmo5Uf5wL/seps63nL4NuJdJ+xlSvWP2ZPUiQJEIh5ge5K
+	 m/15DDkYkgdAoc3TcKZKgHirmy0snQksPXzsWRquwP0HvZ0da40UP2a7zrNliBOwTx
+	 3QW55qGjMB5p6dovbqLIMcXpsaC34Qh9Ck4xSYt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfFFNY3 (ORCPT
+        id S1728149AbfFFNZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:24:29 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:32916 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfFFNY0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:24:26 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y17so178690lfe.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 06:24:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6VvTa7jh68L3DqECLfvU6eht3kypptvrGe0C/l1sSc4=;
-        b=uiDCHxunpTNbqoX1mCPCc8NRtAIhuavvzV1/rBDjSRtFp905kfqhuGjHe/rUedN9K5
-         0xBIrMo7AGUF0PmrIHJo9fuIvNx1CFaQPXG/lo0aiW4PqJt8AiaHpM+UdhYEuT8A62qs
-         DfSr/4TJlRgV9m47Wi0ybWIZhFhGA41W33F2ZSRxYZoUh8aQPxfUfv1JkThX8oSKVtw4
-         w1ZIwOkswXwQ1Z5xzdPkFKz6ERgWcnllkrH7XvMztVaMfXC1EcLcte6rgJiFyCThf5EB
-         7DM2MW85VFs1QkeVBxZWMjaxjxBt3AOsclZlzBR35bbQ4pwglzLe5yEVnuo94NsghcNq
-         2A5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=6VvTa7jh68L3DqECLfvU6eht3kypptvrGe0C/l1sSc4=;
-        b=K967FSXXWyfalnS45iv8nOAJWcDTLeuIGZjomgcOesaFaDXgC+rLVPwsLZ9FpLBLxC
-         3UMYsudSyHZ9lpZz6fqbdxfimP5D81bXMi7r5YZxiUTUxSz7NMYkvzi7fCiz1VxukjxI
-         mtsGx2sGIaQ/b9WQvE5fP4SY+DIir2+B0bK7FxcSQb2pVQs1RYckSm2+D/bMLtzZdnze
-         OIRlxaOURtHPmndH2YEapCCDRkCSEm6CE1ryE4+Ks+jx26V+cuCyBHqc927ZBT82aQsC
-         F4kF62uo08Gw5S2SHCCjgGzd9mou/03PbIpmyna4UU/+FrSjDSIT12/Ydpvr1K772cGm
-         jTFg==
-X-Gm-Message-State: APjAAAWrQ1fFOXW0r/Q3jvdNn1Y56KkpXyvz2z6FKCITbu7AEAN/mZMn
-        eiW8m9EhunoCJxt0tVM0Q0zcgQ==
-X-Google-Smtp-Source: APXvYqzpJq7TzVxEfvmb01lE+tYNlzx0SO/56Qk6uSDDEMENTbe/6nYs+ELEhHe89+3LJcMFQ+tfBA==
-X-Received: by 2002:ac2:569c:: with SMTP id 28mr10407708lfr.147.1559827464872;
-        Thu, 06 Jun 2019 06:24:24 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id w1sm394155ljm.81.2019.06.06.06.24.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 06:24:24 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 16:24:22 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     David Miller <davem@davemloft.net>, grygorii.strashko@ti.com,
-        hawk@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-Subject: Re: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP support
-Message-ID: <20190606132420.GA12429@khorivan>
-Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
-        David Miller <davem@davemloft.net>, grygorii.strashko@ti.com,
-        hawk@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-References: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
- <20190605.121450.2198491088032558315.davem@davemloft.net>
- <20190606100850.72a48a43@carbon>
+        Thu, 6 Jun 2019 09:25:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727234AbfFFNZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 09:25:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997C620866;
+        Thu,  6 Jun 2019 13:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559827520;
+        bh=dp7g/H+79z/b4Sr+YnW8NJAD90DROpv/HAND1DJpnck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QZw7oLnA9JXkcfkQAe8weiwNqXZjf3cpoNhfBKK7qH0efI9qGEEePX/x6XXRNO+D6
+         IxCjI2UOkQXHJpqMbQZH/ldV8n31gHNCJHk89neX4A+6CteSwfnBsTYCcD2W8KrkAZ
+         Pz3kuo9I2ZEY6MA7Z15zLQ3g3f6wuk3zZ2bK6LGk=
+Date:   Thu, 6 Jun 2019 15:25:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc:     arnd@arndb.de, michal.simek@xilinx.com,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Derek Kiernan <derek.kiernan@xilinx.com>
+Subject: Re: [PATCH V4 02/12] misc: xilinx-sdfec: add core driver
+Message-ID: <20190606132517.GA7943@kroah.com>
+References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1558784245-108751-3-git-send-email-dragan.cvetic@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606100850.72a48a43@carbon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1558784245-108751-3-git-send-email-dragan.cvetic@xilinx.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 10:08:50AM +0200, Jesper Dangaard Brouer wrote:
->On Wed, 05 Jun 2019 12:14:50 -0700 (PDT)
->David Miller <davem@davemloft.net> wrote:
->
->> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> Date: Wed,  5 Jun 2019 16:20:02 +0300
->>
->> > This patchset adds XDP support for TI cpsw driver and base it on
->> > page_pool allocator. It was verified on af_xdp socket drop,
->> > af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
->>
->> Jesper et al., please give this a good once over.
->
->The issue with merging this, is that I recently discovered two bug with
->page_pool API, when using DMA-mappings, which result in missing
->DMA-unmap's.  These bugs are not "exposed" yet, but will get exposed
->now with this drivers.
->
->The two bugs are:
->
->#1: in-flight packet-pages can still be on remote drivers TX queue,
->while XDP RX driver manage to unregister the page_pool (waiting 1 RCU
->period is not enough).
->
->#2: this patchset also introduce page_pool_unmap_page(), which is
->called before an XDP frame travel into networks stack (as no callback
->exist, yet).  But the CPUMAP redirect *also* needs to call this, else we
->"leak"/miss DMA-unmap.
->
->I do have a working prototype, that fixes these two bugs.  I guess, I'm
->under pressure to send this to the list soon...
+On Sat, May 25, 2019 at 12:37:15PM +0100, Dragan Cvetic wrote:
+> Implements an platform driver that matches with xlnx,
+> sd-fec-1.1 device tree node and registers as a character
+> device, including:
+> - SD-FEC driver binds to sdfec DT node.
+> - creates and initialise an initial driver dev structure.
+> - add the driver in Linux build and Kconfig.
+> 
+> Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
+> Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+> ---
+>  drivers/misc/Kconfig             |  12 ++++
+>  drivers/misc/Makefile            |   1 +
+>  drivers/misc/xilinx_sdfec.c      | 136 +++++++++++++++++++++++++++++++++++++++
+>  include/uapi/misc/xilinx_sdfec.h |  44 +++++++++++++
+>  4 files changed, 193 insertions(+)
+>  create mode 100644 drivers/misc/xilinx_sdfec.c
+>  create mode 100644 include/uapi/misc/xilinx_sdfec.h
+> 
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 6a0365b..15d93a7 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -480,6 +480,18 @@ config PCI_ENDPOINT_TEST
+>             Enable this configuration option to enable the host side test driver
+>             for PCI Endpoint.
+>  
+> +config XILINX_SDFEC
+> +	tristate "Xilinx SDFEC 16"
+> +	help
 
-In particular "cpsw" case no dma unmap issue and if no changes in page_pool
-API then no changes to the driver required. page_pool_unmap_page() is
-used here for consistency reasons with attention that it can be
-inherited/reused by other SoCs for what it can be relevant.
+No dependancies at all?  Nice!  Let's see what 0-day has to say about it :)
 
-One potential change as you mentioned is with dropping page_pool_destroy() that,
-now, can look like:
+> +	  This option enables support for the Xilinx SDFEC (Soft Decision
+> +	  Forward Error Correction) driver. This enables a char driver
+> +	  for the SDFEC.
+> +
+> +	  You may select this driver if your design instantiates the
+> +	  SDFEC(16nm) hardened block. To compile this as a module choose M.
+> +
+> +	  If unsure, say N.
+> +
+>  config MISC_RTSX
+>  	tristate
+>  	default MISC_RTSX_PCI || MISC_RTSX_USB
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index b9affcd..29fd1d7 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -49,6 +49,7 @@ obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
+>  obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
+>  obj-$(CONFIG_SRAM)		+= sram.o
+>  obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
+> +obj-$(CONFIG_XILINX_SDFEC)	+= xilinx_sdfec.o
+>  obj-y				+= mic/
+>  obj-$(CONFIG_GENWQE)		+= genwqe/
+>  obj-$(CONFIG_ECHO)		+= echo/
+> diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+> new file mode 100644
+> index 0000000..c437f78
+> --- /dev/null
+> +++ b/drivers/misc/xilinx_sdfec.c
+> @@ -0,0 +1,136 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Xilinx SDFEC
+> + *
+> + * Copyright (C) 2019 Xilinx, Inc.
+> + *
+> + * Description:
+> + * This driver is developed for SDFEC16 (Soft Decision FEC 16nm)
+> + * IP. It exposes a char device interface in sysfs and supports file
+> + * operations like  open(), close() and ioctl().
 
-@@ -571,7 +571,6 @@ static void cpsw_destroy_rx_pool(struct cpsw_priv *priv, int ch)
-                return;
- 
-        xdp_rxq_info_unreg(&priv->xdp_rxq[ch]);
--       page_pool_destroy(priv->page_pool[ch]);
-        priv->page_pool[ch] = NULL;
- }
+There are no "char device interfaces in sysfs".  What are you trying to
+say here?
 
-From what I know there is ongoing change for adding switchdev to cpsw that can
-change a lot and can require more work to rebase / test this patchset, so I want
-to believe it can be merged before this.
+> + */
+> +
+> +#include <linux/miscdevice.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/poll.h>
+> +#include <linux/slab.h>
+> +#include <linux/clk.h>
+> +
+> +#include <uapi/misc/xilinx_sdfec.h>
+> +
+> +static atomic_t xsdfec_ndevs = ATOMIC_INIT(0);
 
--- 
-Regards,
-Ivan Khoronzhuk
+why an atomic variable?  What are you using this for?  Why not an idr?
+
+> +
+> +/**
+> + * struct xsdfec_dev - Driver data for SDFEC
+> + * @regs: device physical base address
+> + * @dev: pointer to device struct
+> + * @config: Configuration of the SDFEC device
+> + * @open_count: Count of char device being opened
+
+Ugh ugh ugh.  Don't try to count the number of times open is called.
+It's pointless and almost always wrong.  And it doesn't stop anyone from
+really accessing the device "twice".  If they do stupid things like
+that, they deserve the errors that it will cause...
+
+> + * @miscdev: Misc device handle
+> + * @irq_lock: Driver spinlock
+
+locks what?  The irq?
+
+> + *
+> + * This structure contains necessary state for SDFEC driver to operate
+> + */
+> +struct xsdfec_dev {
+> +	void __iomem *regs;
+> +	struct device *dev;
+
+Is this the parent pointer?  Or something else?
+
+> +	struct xsdfec_config config;
+> +	atomic_t open_count;
+> +	struct miscdevice miscdev;
+> +	/* Spinlock to protect state_updated and stats_updated */
+> +	spinlock_t irq_lock;
+> +};
+> +
+> +static const struct file_operations xsdfec_fops = {
+> +	.owner = THIS_MODULE,
+> +};
+
+empty fops?
+
+> +
+> +#define NAMEBUF_SIZE ((size_t)32)
+
+what is this for?
+
+> +static int xsdfec_probe(struct platform_device *pdev)
+> +{
+> +	struct xsdfec_dev *xsdfec;
+> +	struct device *dev;
+> +	struct resource *res;
+> +	int err;
+> +	char buf[NAMEBUF_SIZE];
+> +
+> +	xsdfec = devm_kzalloc(&pdev->dev, sizeof(*xsdfec), GFP_KERNEL);
+> +	if (!xsdfec)
+> +		return -ENOMEM;
+> +
+> +	xsdfec->dev = &pdev->dev;
+> +	xsdfec->config.fec_id = atomic_read(&xsdfec_ndevs);
+> +	spin_lock_init(&xsdfec->irq_lock);
+> +
+> +	dev = xsdfec->dev;
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	xsdfec->regs = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(xsdfec->regs)) {
+> +		dev_err(dev, "Unable to map resource");
+
+doesn't this call already print an error?
+
+> +		err = PTR_ERR(xsdfec->regs);
+> +		goto err_xsdfec_dev;
+> +	}
+> +
+> +	/* Save driver private data */
+> +	platform_set_drvdata(pdev, xsdfec);
+> +
+> +	snprintf(buf, NAMEBUF_SIZE, "xsdfec%d", xsdfec->config.fec_id);
+> +	xsdfec->miscdev.minor = MISC_DYNAMIC_MINOR;
+> +	xsdfec->miscdev.name = buf;
+> +	xsdfec->miscdev.fops = &xsdfec_fops;
+> +	xsdfec->miscdev.parent = dev;
+> +	err = misc_register(&xsdfec->miscdev);
+> +	if (err) {
+> +		dev_err(dev, "Unable to register device");
+
+Print the error number that was returned to you?
+
+> +		goto err_xsdfec_dev;
+> +	}
+> +
+> +	atomic_set(&xsdfec->open_count, 1);
+> +	dev_info(dev, "XSDFEC%d Probe Successful", xsdfec->config.fec_id);
+
+No need to be noisy when things work correctly, just keep on going.
+
+> +	atomic_inc(&xsdfec_ndevs);
+> +	return 0;
+> +
+> +	/* Failure cleanup */
+> +err_xsdfec_dev:
+> +	return err;
+
+You cleaned up nothing, not good at all :(
+
+> +}
+> +
+> +static int xsdfec_remove(struct platform_device *pdev)
+> +{
+> +	struct xsdfec_dev *xsdfec;
+> +
+> +	xsdfec = platform_get_drvdata(pdev);
+> +	if (!xsdfec)
+> +		return -ENODEV;
+
+How can this be null?
+
+> +
+> +	misc_deregister(&xsdfec->miscdev);
+> +	atomic_dec(&xsdfec_ndevs);
+> +	return 0;
+
+You free nothing?
+
+You are leaking resources like crazy here, this is not ok at all.
+
+> +}
+> +
+> +static const struct of_device_id xsdfec_of_match[] = {
+> +	{
+> +		.compatible = "xlnx,sd-fec-1.1",
+> +	},
+> +	{ /* end of table */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, xsdfec_of_match);
+> +
+> +static struct platform_driver xsdfec_driver = {
+> +	.driver = {
+> +		.name = "xilinx-sdfec",
+> +		.of_match_table = xsdfec_of_match,
+> +	},
+> +	.probe = xsdfec_probe,
+> +	.remove =  xsdfec_remove,
+> +};
+> +
+> +module_platform_driver(xsdfec_driver);
+> +
+> +MODULE_AUTHOR("Xilinx, Inc");
+> +MODULE_DESCRIPTION("Xilinx SD-FEC16 Driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
+> new file mode 100644
+> index 0000000..1b8a63f
+> --- /dev/null
+> +++ b/include/uapi/misc/xilinx_sdfec.h
+> @@ -0,0 +1,44 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +/*
+> + * Xilinx SD-FEC
+> + *
+> + * Copyright (C) 2016 - 2017 Xilinx, Inc.
+> + *
+> + * Description:
+> + * This driver is developed for SDFEC16 IP. It provides a char device
+> + * in sysfs and supports file operations like open(), close() and ioctl().
+> + */
+> +#ifndef __XILINX_SDFEC_H__
+> +#define __XILINX_SDFEC_H__
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * enum xsdfec_state - State.
+> + * @XSDFEC_INIT: Driver is initialized.
+> + * @XSDFEC_STARTED: Driver is started.
+> + * @XSDFEC_STOPPED: Driver is stopped.
+> + * @XSDFEC_NEEDS_RESET: Driver needs to be reset.
+> + * @XSDFEC_PL_RECONFIGURE: Programmable Logic needs to be recofigured.
+> + *
+> + * This enum is used to indicate the state of the driver.
+> + */
+> +enum xsdfec_state {
+> +	XSDFEC_INIT = 0,
+> +	XSDFEC_STARTED,
+> +	XSDFEC_STOPPED,
+> +	XSDFEC_NEEDS_RESET,
+> +	XSDFEC_PL_RECONFIGURE,
+> +};
+
+This is not used in this patch, why have it?
+
+> +
+> +/**
+> + * struct xsdfec_config - Configuration of SD-FEC core.
+> + * @fec_id: ID of SD-FEC instance. ID is limited to the number of active
+> + *          SD-FEC's in the FPGA and is related to the driver instance
+> + *          Minor number.
+> + */
+> +struct xsdfec_config {
+> +	__s32 fec_id;
+
+Why signed?
+
+And you are NOT tieing this to the minor number at all, don't lie in the
+comment, that is only going to cause you major problems.
+
+Why does userspace care about this structure?
+
+Do I need to really review the rest of this series?
+
+thanks,
+
+greg k-h
