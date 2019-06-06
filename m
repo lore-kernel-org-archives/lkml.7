@@ -2,89 +2,104 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AADC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E13C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACC9206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB659206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4gI9njC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfFFIJE (ORCPT
+        id S1727072AbfFFIJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:09:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53822 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFIJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:09:03 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5CA3A308626C;
-        Thu,  6 Jun 2019 08:09:02 +0000 (UTC)
-Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 23D1917C40;
-        Thu,  6 Jun 2019 08:08:51 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 10:08:50 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     ivan.khoronzhuk@linaro.org, grygorii.strashko@ti.com,
-        hawk@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, brouer@redhat.com
-Subject: Re: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP
- support
-Message-ID: <20190606100850.72a48a43@carbon>
-In-Reply-To: <20190605.121450.2198491088032558315.davem@davemloft.net>
-References: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
-        <20190605.121450.2198491088032558315.davem@davemloft.net>
+        Thu, 6 Jun 2019 04:09:11 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34144 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFIJL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:09:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h2so918056pgg.1;
+        Thu, 06 Jun 2019 01:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ky+FTpxo6a36SL4K0iIgUU/tHa/3+eYpA5PzCdmnJx4=;
+        b=t4gI9njCjaOZKLyGot/fIzUaOn3Rz5FSDAHZc7kpLyfVfz63VhR/wj6Wt+pUDeONID
+         hQtYhsLP1U4146+eg8kD6RuDxVUiGqvRhef6S41jo2OdVwfZIzcRkATYWUDCdCKP1/h0
+         qWOOkzh+rnht3fMwENXxDNsLg2b6+00H2Q9tzrD5GOfzq0c5hX+25Ud4FnUeLiMPmbSr
+         fQkY1UpwJGacCivsbqjo4H+NI+P9F91bJNPsUH7M00w3nU9TPtuDWtjD+Eh2rQdjGtYW
+         Zga47v/nmbDglnpHzG2gqOjuOj/xOd13wSSFCt5dYBhZkKWHTjZ4RP1+MLKnHMDPy0yH
+         1g8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ky+FTpxo6a36SL4K0iIgUU/tHa/3+eYpA5PzCdmnJx4=;
+        b=Uf8HBZ2sVqdnhBrBiegJFDg5TXZ9CAfVPNL0419eCRxJvSnvN+1Ocoj+SqpFFDAc7u
+         C22wXw7+lof865MWkmqA02lR9qwOyP1Nn0iSGDJSLiwyPDp7CcScBOWL8uC+NPJ2bE5R
+         p6xqobZztYOneYnPcr0+duxLc6n4MSE6+Hjw08T20Ql9r0REitdPqJJ6OftQqiPEpFOL
+         KUIf9kFcgNdEJNosgycZ4CfO7fTmd75DBI5LqP58yS3x5HZHSZrn5DkYlWnn3RE206Hn
+         sZ3WqdkqyfdUaovWKpIkf2CAp3EIBNSTR2c7xJJDrAaRXaoPUU8W/gvTt8SZj+qgCkF9
+         od2g==
+X-Gm-Message-State: APjAAAV/70v7aDEPGyj5tMU/a4RmJOIBE4r3bGItYvgsngKmN1JUDGl/
+        /ozP3WZ1m1VABEV+a/pJraenV29sSYA=
+X-Google-Smtp-Source: APXvYqwrbAzQkk3ogvSRciqvHC8EJIsJFylvt2mkuD3j8jx7DoH9GP/4hjDNi6RTpEHjcPF89eeCMQ==
+X-Received: by 2002:a63:2ac9:: with SMTP id q192mr2229673pgq.144.1559808549768;
+        Thu, 06 Jun 2019 01:09:09 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id y10sm1133287pfm.68.2019.06.06.01.09.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 01:09:09 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 08:09:09 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/5] Input: hv: Remove dependencies on PAGE_SIZE for ring
+ buffer
+Message-ID: <68e9744aa7b2d4e463e48f4422f6b19c38e55bab.1559807514.git.m.maya.nakamura@gmail.com>
+References: <cover.1559807514.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 06 Jun 2019 08:09:03 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1559807514.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 05 Jun 2019 12:14:50 -0700 (PDT)
-David Miller <davem@davemloft.net> wrote:
+Define the ring buffer size as a constant expression because it should
+not depend on the guest page size.
 
-> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> Date: Wed,  5 Jun 2019 16:20:02 +0300
-> 
-> > This patchset adds XDP support for TI cpsw driver and base it on
-> > page_pool allocator. It was verified on af_xdp socket drop,
-> > af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.  
-> 
-> Jesper et al., please give this a good once over.
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+---
+ drivers/input/serio/hyperv-keyboard.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The issue with merging this, is that I recently discovered two bug with
-page_pool API, when using DMA-mappings, which result in missing
-DMA-unmap's.  These bugs are not "exposed" yet, but will get exposed
-now with this drivers.  
-
-The two bugs are:
-
-#1: in-flight packet-pages can still be on remote drivers TX queue,
-while XDP RX driver manage to unregister the page_pool (waiting 1 RCU
-period is not enough).
-
-#2: this patchset also introduce page_pool_unmap_page(), which is
-called before an XDP frame travel into networks stack (as no callback
-exist, yet).  But the CPUMAP redirect *also* needs to call this, else we
-"leak"/miss DMA-unmap.
-
-I do have a working prototype, that fixes these two bugs.  I guess, I'm
-under pressure to send this to the list soon...
-
+diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
+index 7935e52b5435..a3480dbfadd2 100644
+--- a/drivers/input/serio/hyperv-keyboard.c
++++ b/drivers/input/serio/hyperv-keyboard.c
+@@ -83,8 +83,8 @@ struct synth_kbd_keystroke {
+ 
+ #define HK_MAXIMUM_MESSAGE_SIZE 256
+ 
+-#define KBD_VSC_SEND_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
+-#define KBD_VSC_RECV_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
++#define KBD_VSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
++#define KBD_VSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
+ 
+ #define XTKBD_EMUL0     0xe0
+ #define XTKBD_EMUL1     0xe1
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+2.17.1
+
