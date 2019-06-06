@@ -2,193 +2,134 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE06C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283BDC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7617A20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4002083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gYqqAHLr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rPkLfvqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfFFFno (ORCPT
+        id S1726609AbfFFFoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 01:43:44 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14040 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFFFno (ORCPT
+        Thu, 6 Jun 2019 01:44:08 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34695 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFFFoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 01:43:44 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8a80d0000>; Wed, 05 Jun 2019 22:43:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 05 Jun 2019 22:43:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 05 Jun 2019 22:43:42 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 05:43:39 +0000
-Subject: Re: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
- <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
- <9142282b-ab76-53a0-13ce-c43b8adc575f@nvidia.com>
- <4f14a218-332c-0263-c6c5-73a13b2446f0@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <caa17a53-6f29-411b-9a84-58ff019752ff@nvidia.com>
-Date:   Wed, 5 Jun 2019 22:43:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 01:44:07 -0400
+Received: by mail-oi1-f196.google.com with SMTP id u64so758127oib.1;
+        Wed, 05 Jun 2019 22:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tk6GyDs0VS64a3+zCzYjeMCP8j+xybcK7R+DofWfXTQ=;
+        b=rPkLfvqs+b9szsegsJkefc+GolU/hypqfn7qndNQlXpKxrMu+qJOxR3hQhuGjkBtiP
+         gi0p0YvHL9enmgSyZaIwDGsMccxH+J847m5eY1lGCDCtdnfsou4DUsb2+bSzwpfyFq/l
+         YW/JKyFEnJSc/5KCqOi0Wp0xhEKesDhQ5AqLtJgXruCpU6sUC3CJOnsX2vSJl8LbcU4T
+         yEO/u4Glk9PEV2TW8JzlMo2vLKi6fEeYSPfoDB7XeRCNwiq8vuZFTk2d4da5nnGdIk7M
+         3mSOuyJg+1VkENKegFNqE0K63VFXYgk27YPXT5/f9mLwgaMXZ6MA860l4/RibM0j2geN
+         /SXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tk6GyDs0VS64a3+zCzYjeMCP8j+xybcK7R+DofWfXTQ=;
+        b=t/T5t/dvMUh6HrbvWvls9aAs+zyPmzLkfXfZMOzGhnNb/eatS2dNwvOxFTHzs9JMum
+         T0w0lEHuJ5PIFQ3SoNax13+XFqGBwQjkQ+r0ck+UXvnl+hYMgJbSlwfI4GURRcNhD5ka
+         ro1lpUs7fmawEoagYDtSCPc0YQ4zBACxA82KFkFQs4V5qWGcCnUnLaCyC2i/kDsoMt46
+         QTyZLD9owcy8UNOudXxkna4P9pW4lbJj+oRgmlHQ/N3Tz+I3OftvvboKbVNAbLT8XOrq
+         E+NZVV66bmMKSwgLWzrzbsCqCpvNDQLkhpDfGChwVlKpPsUvrItg5CrjzAeKPkIySA1P
+         B3Gw==
+X-Gm-Message-State: APjAAAUPXa7cDpQKI1wUPcsQhjqEtTumSTDy/dMaVfw8vcVK7cpAzlhI
+        q+UlGAiCuV/GvQUbrfJAkHtK71afW0ZLKTxwjuZMZg==
+X-Google-Smtp-Source: APXvYqxUe7s92029jMIpWaoTI3EgsZO7a8sHg9UZv3yF+SwRVLlLTb2K7J2cTZDYaeLfPYs0+Ib1zyXQO1P6qWQ2bRg=
+X-Received: by 2002:aca:51ce:: with SMTP id f197mr7245969oib.33.1559799847126;
+ Wed, 05 Jun 2019 22:44:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4f14a218-332c-0263-c6c5-73a13b2446f0@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559799821; bh=GE4p/vNNji/ezHHwZOaHDuH9S3e2H9hCagygywOKcME=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gYqqAHLrmwQ5AEHYn1VMWyqe+igo0+6oE4x0eX43U88GDpI1+wRnq+DFvBMOceaFO
-         lFvLPjv7qgng5rb8JZdByXhDvHcEr1jMbGIyYKNYUjfAtGjPC7KPFQIzyVgXkcMkp7
-         PmEPTd4JbRacOsHdNC/EfsiLG4Zz4NuJjWhxSz1KtXk8VGRFg4eo7AGwEuFEAO65s6
-         KH+w7DxWR/yOZ1Y0j14jvyNS91zpf5shU8SvtNzxbATvOgpfGJLAA7GrBGzCCQ8dGD
-         b+iQpz4sLueC9HJ1UVLFfeHHQ5FvSD2seERCpM4hvCFdQfu1YRHVGIdEPbxOYSwSCv
-         LvzNnTi13Txfw==
+References: <1559729351-20244-1-git-send-email-wanpengli@tencent.com>
+ <1559729351-20244-2-git-send-email-wanpengli@tencent.com> <505fc388-2223-146f-ae8a-824169078a17@redhat.com>
+In-Reply-To: <505fc388-2223-146f-ae8a-824169078a17@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 6 Jun 2019 13:44:32 +0800
+Message-ID: <CANRm+Cz+xqfBQXoxc30SpsBdTKfer+YJW=oV14fBvpmX=kFQYA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] KVM: LAPIC: Make lapic timer unpinned when timer is
+ injected by posted-interrupt
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 5 Jun 2019 at 21:04, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 05/06/19 12:09, Wanpeng Li wrote:
+> > +static inline bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> > +{
+> > +     return (kvm_x86_ops->pi_inject_timer_enabled(vcpu) &&
+> > +             kvm_mwait_in_guest(vcpu->kvm));
+> > +}
+> > +
+>
+> Here you need to check kvm_halt_in_guest, not kvm_mwait_in_guest,
+> because you need to go through kvm_apic_expired if the guest needs to be
+> woken up from kvm_vcpu_block.
+>
+> There is a case when you get to kvm_vcpu_block with kvm_halt_in_guest,
+> which is when the guest disables asynchronous page faults.  Currently,
+> timer interrupts are delivered while apf.halted = true, with this change
 
+You are right. I check it in v2 2/3.
 
-On 5/31/19 5:43 AM, Dmitry Osipenko wrote:
-> 31.05.2019 11:50, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->>
->> On 5/30/19 4:27 AM, Dmitry Osipenko wrote:
->>> 30.05.2019 8:55, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Post suspend I2C registers have power on reset values. Before any
->>>> transfer initialize I2C registers to prevent I2C transfer timeout
->>>> and implement suspend and resume callbacks needed. Fix below errors
->>>> post suspend:
->>>>
->>>> 1) Tegra I2C transfer timeout during jetson tx2 resume:
->>>>
->>>> [=C2=A0=C2=A0 27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x=
-1b0 @
->>>> 2939, parent: i2c-1
->>>> [=C2=A0=C2=A0 27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
->>>> [=C2=A0=C2=A0 27.639162] pca953x 1-0074: Unable to sync registers 0x3-=
-0x5. -110
->>>> [=C2=A0=C2=A0 27.645336] pca953x 1-0074: Failed to sync GPIO dir regis=
-ters: -110
->>>> [=C2=A0=C2=A0 27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x=
-1b0
->>>> returns -110
->>>> [=C2=A0=C2=A0 27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 retu=
-rned -110
->>>> after 127152 usecs
->>>> [=C2=A0=C2=A0 27.666194] PM: Device 1-0074 failed to resume: error -11=
-0
->>>>
->>>> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
->>>>
->>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->>>> ---
->>>>  =C2=A0 drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
->>>>  =C2=A0 1 file changed, 24 insertions(+)
->>>>
->>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
->>>> b/drivers/i2c/busses/i2c-tegra.c
->>>> index ebaa78d..f6a377f 100644
->>>> --- a/drivers/i2c/busses/i2c-tegra.c
->>>> +++ b/drivers/i2c/busses/i2c-tegra.c
->>>> @@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct
->>>> platform_device *pdev)
->>>>  =C2=A0 }
->>>>  =C2=A0 =C2=A0 #ifdef CONFIG_PM_SLEEP
->>>> +static int tegra_i2c_suspend(struct device *dev)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(=
-dev);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 i2c_mark_adapter_suspended(&i2c_dev->adapter);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>> +}
->>>> +
->>>> +static int tegra_i2c_resume(struct device *dev)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(=
-dev);
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAP=
-TER);
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra_i2c_init(i2c_dev, false);
->>>> +=C2=A0=C2=A0=C2=A0 i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_AD=
-APTER);
->>>
->>> Why the locking is needed here?
->>
->> async resume could result in stress test issues if some client accesses
->> the i2c instance. This ensures the i2c instance is locked till the
->> initialization is complete.
->=20
-> 1) This doesn't make much sense.. if client could access I2C during of
-> tegra_i2c_init execution, then what stops it to perform the access
-> before the lock is taken?
-Client resumes will start after I2C instance resume because of driver=20
-dependency. Since lock is the first call in i2c-tegra I believe I2C=20
-calls of client will not start.
+> they wouldn't.  I would just disable KVM_REQ_APF_HALT in
+> kvm_can_do_async_pf if kvm_halt_in_guest is true, let me send a patch
+> for that later.
+>
+> When you do this, I think you don't need the
+> kvm_x86_ops->pi_inject_timer_enabled check at all, because if we know
 
->=20
-> 2) The whole point of the i2c_mark_adapter_* API is to catch those
-> faulty clients that have a broken suspend-resume sequence. Client will
-> get a -ESHUTDOWN on trying to issue I2C transfer while controller is
-> marked as suspended.
-i2c lock bus calls were used in the resume callback implementation that=20
-was reverted few months back. Hence, these were added in this patch=20
-which should be more like a revert-of-revert .
+I still keep check mwait and apicv in v2, since w/o mwait exposed, the
+emulated timer can't be offload(thanks to preemption timer is
+disabled). In addition,  w/o posted-interrupt, we can't avoid the
+timer fire vmexit.
 
-But I feel probably your point also makes sense. Old resume callback did=20
-not have i2c_mark_adapter_* calls. Based on the i2c_adapter_mark_* API=20
-documentation it should be taking care that core i2c calls from client=20
-are not started. I plan to update the patch and remove the lock-unlock=20
-guards in resume callback.
+> that the vCPU cannot be asleep in kvm_vcpu_block, then we can inject the
+> timer interrupt immediately with __apic_accept_irq (if APICv is
+> disabled, it will set IRR and do kvm_make_request + kvm_vcpu_kick).
+>
+> You can keep the module parameter, mostly for debugging reasons, but
+> please move it from kvm-intel to kvm, and add something like
+>
+> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> index 123ea07a3f3b..1cc7973c382e 100644
+> --- a/kernel/sched/isolation.c
+> +++ b/kernel/sched/isolation.c
+> @@ -14,6 +14,11 @@
+>  static cpumask_var_t housekeeping_mask;
+>  static unsigned int housekeeping_flags;
+>
+> +bool housekeeping_enabled(enum hk_flags flags)
+> +{
+> +       return !!(housekeeping_flags & flags);
+> +}
+> +
+>  int housekeeping_any_cpu(enum hk_flags flags)
+>  {
+>         if (static_branch_unlikely(&housekeeping_overridden))
+>
+> so that the default for the module parameter can be
+> housekeeping_enabled(HK_FLAG_TIMER).
 
+Agreed. Thanks for the quick review. :)
 
->=20
-> 3) Please don't use async suspend-resume where it doesn't make sense.
-This is a system wide setting. /sys/power/pm_async by default is 1 and=20
-there is no driver specific change in this patch to choose async=20
-suspend-resume.
-
->=20
-> Corollary: you should drop the locking because it doesn't do anything
-> useful.
->=20
-I did some basic suspend resume tests and do not see any problems=20
-removing the i2c_lock_bus call you pointed out.
-
--Thanks,
-  Bitan
-
+Regards,
+Wanpeng Li
