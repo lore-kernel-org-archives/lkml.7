@@ -2,422 +2,114 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28697C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1ADC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD15B20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:28:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhtcL6cP"
+	by mail.kernel.org (Postfix) with ESMTP id 1B08420673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfFFW2Y (ORCPT
+        id S1729375AbfFFWaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 18:28:24 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35468 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbfFFW2X (ORCPT
+        Thu, 6 Jun 2019 18:30:00 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:41593 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727297AbfFFW36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 18:28:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m3so221457wrv.2;
-        Thu, 06 Jun 2019 15:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=K8LRZAGyxTA91e565NC0WdxUL44tT7JJZTxvCh2Q5n0=;
-        b=AhtcL6cP7rZU1yX2Iu9vJzeoGJ0Bnz7Hl/floUOmKa4mZYwItJz8fNrF6Lbc1LB0fp
-         XY2xFcADNY2grLi+jPcrkgawo9jn1qz0FT/Rrx0r/48eRjvUUT7HCSzcZqd9NjNOAgKb
-         yfxFMAP0D9dhfRSmis03kKBUEwaL27NmtfHe6FoSxYedpmN2M4x/QzTDniI+ESEA8aXi
-         Rh/X6EyJJ0OarAYkJzf4t4k9RKjQaxvD3kk+sBMN5OBZBenMJ7zscvopNCMtORWprxdj
-         t7275r0jPEfhxV5JwohNn8pmb8hhTEI+k9Oc8FY/bqh2dVGkvA97qs3mvJFc/tXjTTg+
-         XeLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K8LRZAGyxTA91e565NC0WdxUL44tT7JJZTxvCh2Q5n0=;
-        b=bloLDXaoFsulK/AjkiwK0KIPHz/hy7VbG5EMErGfzGYHhV7RuxGKYB57dGFmOXqFIS
-         VGoUbUIXZxIt4ey+mfmOvWv1ru/3Jvv3sz0EjFDEAwDmlFzkFBYt5LpSJOfvRuDxGOTv
-         jMK+YTx6YwSbs0vmG8XtpZmHiBreBrU9qLH/jxMCbapkn+iVMWLmYJLAoR8DPuhhgWwb
-         fMan0yMJj6jTxn2l+ILJ0gJTwvCgGzkJn34yVttYSlGodzoW2lY8bbMSUCOmb3nhRkJ3
-         cc6aDygoYy3rzW5ApRZ1NfgoxTFn0F334DYoi/ODDeCANZI8wQt8oF0xMIkWRCjlHryL
-         GWcQ==
-X-Gm-Message-State: APjAAAWskTKriQLo/RikchMbrpVI2K9FEf/N7iSG+nQXlILcw/QDif8D
-        LvfqCB2QuBSymMZh0nT68Gg=
-X-Google-Smtp-Source: APXvYqyvuY1RelhcBhUggjE4fxrjJ4yul8towhNZkJtNFNc5/o2oigiFGX39aGq/51KA5rgSgLsrBw==
-X-Received: by 2002:adf:f50c:: with SMTP id q12mr4506022wro.300.1559860100607;
-        Thu, 06 Jun 2019 15:28:20 -0700 (PDT)
-Received: from localhost.localdomain (5-12-124-26.residential.rdsnet.ro. [5.12.124.26])
-        by smtp.gmail.com with ESMTPSA id v184sm220527wme.10.2019.06.06.15.28.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 15:28:20 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v4] ARM: dts: Introduce the NXP LS1021A-TSN board
-Date:   Fri,  7 Jun 2019 01:28:17 +0300
-Message-Id: <20190606222817.14223-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 6 Jun 2019 18:29:58 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 868484EA85D;
+        Fri,  7 Jun 2019 08:29:50 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hZ0sP-0000g2-35; Fri, 07 Jun 2019 08:28:53 +1000
+Date:   Fri, 7 Jun 2019 08:28:53 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190606222853.GD14308@dread.disaster.area>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=-fIxr7oOWDDygYgkAT8A:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LS1021A-TSN is a development board built by VVDN/Argonboards in
-partnership with NXP.
+On Thu, Jun 06, 2019 at 03:03:30PM -0700, Ira Weiny wrote:
+> On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
+> > On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
+> > So I'd like to actually mandate that you *must* hold the file lease until
+> > you unpin all pages in the given range (not just that you have an option to
+> > hold a lease). And I believe the kernel should actually enforce this. That
+> > way we maintain a sane state that if someone uses a physical location of
+> > logical file offset on disk, he has a layout lease. Also once this is done,
+> > sysadmin has a reasonably easy way to discover run-away RDMA application
+> > and kill it if he wishes so.
+> 
+> Fair enough.
+> 
+> I was kind of heading that direction but had not thought this far forward.  I
+> was exploring how to have a lease remain on the file even after a "lease
+> break".  But that is incompatible with the current semantics of a "layout"
+> lease (as currently defined in the kernel).  [In the end I wanted to get an RFC
+> out to see what people think of this idea so I did not look at keeping the
+> lease.]
+> 
+> Also hitch is that currently a lease is forcefully broken after
+> <sysfs>/lease-break-time.  To do what you suggest I think we would need a new
+> lease type with the semantics you describe.
 
-It features the LS1021A SoC and the first-generation SJA1105T Ethernet
-switch for prototyping implementations of a subset of IEEE 802.1 TSN
-standards.
+That just requires a flag when gaining the layout lease to say it is
+an "unbreakable layout lease". That gives the kernel the information
+needed to determine whether it should attempt to break the lease on
+truncate or just return ETXTBSY....
 
-It has two regular Ethernet ports and four switched, TSN-capable ports.
+i.e. it allows gup-pinning applications that want to behave nicely
+with other users to drop their gup pins and release the lease when
+something else wants to truncate/hole punch the file rather than
+have truncate return an error. e.g. to allow apps to cleanly interop
+with other breakable layout leases (e.g. pNFS) on the same
+filesystem.
 
-It also features:
-- One Arduino header
-- One expansion header
-- Two USB 3.0 ports
-- One mini PCIe slot
-- One SATA interface
-- Accelerometer, gyroscope, temperature sensors
+FWIW, I'd also like to see the "truncate fails when unbreakable
+layout lease is held" behaviour to be common across all
+filesystem/storage types, not be confined to DAX only. i.e. truncate
+should return ETXTBSY when an unbreakable layout lease is held
+by an application, not just when "DAX+gup-pinned" is triggered....
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
-Changes from v3:
-- Not all nodes were alphabetically sorted ("d->i->e" vs "d->e->i")
+Whatever we decide, the behaviour of truncate et al needs to be
+predictable, consistent and easily discoverable...
 
-Changes from v2:
-- Sorted nodes alphabetically
-- Renamed SAI2 codec node into audio-codec
+Cheers,
 
-v2 patch available at:
-https://lkml.org/lkml/2019/5/29/998
-
-Changes from v1:
-- Applied Shawn's feedback
-- Introduced QSPI flash node
-
-v1 patch available at:
-https://patchwork.kernel.org/patch/10930451/
-
- arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/ls1021a-tsn.dts | 289 ++++++++++++++++++++++++++++++
- 2 files changed, 290 insertions(+)
- create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914fa293..a4eb4ca5e148 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -602,6 +602,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
-+	ls1021a-tsn.dtb \
- 	ls1021a-twr.dtb
- dtb-$(CONFIG_SOC_VF610) += \
- 	vf500-colibri-eval-v3.dtb \
-diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-new file mode 100644
-index 000000000000..5b7689094b70
---- /dev/null
-+++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-@@ -0,0 +1,289 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright 2016-2018 NXP Semiconductors
-+ * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
-+ */
-+
-+/dts-v1/;
-+#include "ls1021a.dtsi"
-+
-+/ {
-+	model = "NXP LS1021A-TSN Board";
-+
-+	sys_mclk: clock-mclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24576000>;
-+	};
-+
-+	reg_vdda_codec: regulator-3V3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_vddio_codec: regulator-2V5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2P5V";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&dspi0 {
-+	bus-num = <0>;
-+	status = "okay";
-+
-+	/* ADG704BRMZ 1:4 SPI mux/demux */
-+	sja1105: ethernet-switch@1 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nxp,sja1105t";
-+		/* 12 MHz */
-+		spi-max-frequency = <12000000>;
-+		/* Sample data on trailing clock edge */
-+		spi-cpha;
-+		/* SPI controller settings for SJA1105 timing requirements */
-+		fsl,spi-cs-sck-delay = <1000>;
-+		fsl,spi-sck-cs-delay = <1000>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				/* ETH5 written on chassis */
-+				label = "swp5";
-+				phy-handle = <&rgmii_phy6>;
-+				phy-mode = "rgmii-id";
-+				reg = <0>;
-+			};
-+
-+			port@1 {
-+				/* ETH2 written on chassis */
-+				label = "swp2";
-+				phy-handle = <&rgmii_phy3>;
-+				phy-mode = "rgmii-id";
-+				reg = <1>;
-+			};
-+
-+			port@2 {
-+				/* ETH3 written on chassis */
-+				label = "swp3";
-+				phy-handle = <&rgmii_phy4>;
-+				phy-mode = "rgmii-id";
-+				reg = <2>;
-+			};
-+
-+			port@3 {
-+				/* ETH4 written on chassis */
-+				label = "swp4";
-+				phy-handle = <&rgmii_phy5>;
-+				phy-mode = "rgmii-id";
-+				reg = <3>;
-+			};
-+
-+			port@4 {
-+				/* Internal port connected to eth2 */
-+				ethernet = <&enet2>;
-+				phy-mode = "rgmii";
-+				reg = <4>;
-+
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&enet0 {
-+	tbi-handle = <&tbi0>;
-+	phy-handle = <&sgmii_phy2>;
-+	phy-mode = "sgmii";
-+	status = "okay";
-+};
-+
-+&enet1 {
-+	tbi-handle = <&tbi1>;
-+	phy-handle = <&sgmii_phy1>;
-+	phy-mode = "sgmii";
-+	status = "okay";
-+};
-+
-+/* RGMII delays added via PCB traces */
-+&enet2 {
-+	phy-mode = "rgmii";
-+	status = "okay";
-+
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
-+&esdhc {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	/* 3 axis accelerometer */
-+	accelerometer@1e {
-+		compatible = "fsl,fxls8471";
-+		position = <0>;
-+		reg = <0x1e>;
-+	};
-+
-+	/* Audio codec (SAI2) */
-+	audio-codec@2a {
-+		compatible = "fsl,sgtl5000";
-+		VDDIO-supply = <&reg_vddio_codec>;
-+		VDDA-supply = <&reg_vdda_codec>;
-+		#sound-dai-cells = <0>;
-+		clocks = <&sys_mclk>;
-+		reg = <0x2a>;
-+	};
-+
-+	/* Current sensing circuit for 1V VDDCORE PMIC rail */
-+	current-sensor@44 {
-+		compatible = "ti,ina220";
-+		shunt-resistor = <1000>;
-+		reg = <0x44>;
-+	};
-+
-+	/* Current sensing circuit for 12V VCC rail */
-+	current-sensor@45 {
-+		compatible = "ti,ina220";
-+		shunt-resistor = <1000>;
-+		reg = <0x45>;
-+	};
-+
-+	/* Thermal monitor - case */
-+	temperature-sensor@48 {
-+		compatible = "national,lm75";
-+		reg = <0x48>;
-+	};
-+
-+	/* Thermal monitor - chip */
-+	temperature-sensor@4c {
-+		compatible = "ti,tmp451";
-+		reg = <0x4c>;
-+	};
-+
-+	eeprom@51 {
-+		compatible = "atmel,24c32";
-+		reg = <0x51>;
-+	};
-+
-+	/* Unsupported devices:
-+	 * - FXAS21002C Gyroscope at 0x20
-+	 * - TI ADS7924 4-channel ADC at 0x49
-+	 */
-+};
-+
-+&ifc {
-+	status = "disabled";
-+};
-+
-+&lpuart0 {
-+	status = "okay";
-+};
-+
-+&lpuart3 {
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	/* AR8031 */
-+	sgmii_phy1: ethernet-phy@1 {
-+		reg = <0x1>;
-+	};
-+
-+	/* AR8031 */
-+	sgmii_phy2: ethernet-phy@2 {
-+		reg = <0x2>;
-+	};
-+
-+	/* BCM5464 quad PHY */
-+	rgmii_phy3: ethernet-phy@3 {
-+		reg = <0x3>;
-+	};
-+
-+	rgmii_phy4: ethernet-phy@4 {
-+		reg = <0x4>;
-+	};
-+
-+	rgmii_phy5: ethernet-phy@5 {
-+		reg = <0x5>;
-+	};
-+
-+	rgmii_phy6: ethernet-phy@6 {
-+		reg = <0x6>;
-+	};
-+
-+	/* SGMII PCS for enet0 */
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
-+	/* SGMII PCS for enet1 */
-+	tbi1: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&qspi {
-+	status = "okay";
-+
-+	flash@0 {
-+		/* Rev. A uses 64MB flash, Rev. B & C use 32MB flash */
-+		compatible = "jedec,spi-nor", "s25fl256s1", "s25fl512s";
-+		spi-max-frequency = <20000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "RCW";
-+				reg = <0x0 0x40000>;
-+			};
-+
-+			partition@40000 {
-+				label = "U-Boot";
-+				reg = <0x40000 0x300000>;
-+			};
-+
-+			partition@340000 {
-+				label = "U-Boot Env";
-+				reg = <0x340000 0x100000>;
-+			};
-+		};
-+	};
-+};
-+
-+&sai2 {
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
+Dave.
 -- 
-2.17.1
-
+Dave Chinner
+david@fromorbit.com
