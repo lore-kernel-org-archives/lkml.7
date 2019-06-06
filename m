@@ -2,74 +2,117 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A5AC28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AD3C28CC6
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A649B2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DE920866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfFFCD4 (ORCPT
+        id S1726821AbfFFCET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:03:56 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:44224 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfFFCDz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 22:03:55 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 52AD8144EB8B8;
-        Wed,  5 Jun 2019 19:03:55 -0700 (PDT)
-Date:   Wed, 05 Jun 2019 19:03:53 -0700 (PDT)
-Message-Id: <20190605.190353.1269004280892262456.davem@davemloft.net>
-To:     gustavo@embeddedor.com
-Cc:     jiri@mellanox.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib: objagg: Use struct_size() in kzalloc()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190605144516.GA3383@embeddedor>
-References: <20190605144516.GA3383@embeddedor>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 05 Jun 2019 19:03:55 -0700 (PDT)
+        Wed, 5 Jun 2019 22:04:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:61296 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbfFFCET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 22:04:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 19:04:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,557,1549958400"; 
+   d="scan'208";a="182148358"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Jun 2019 19:04:17 -0700
+Date:   Wed, 5 Jun 2019 19:04:17 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 8/9] LSM: x86/sgx: Introduce ->enclave_load() hook
+ for Intel SGX
+Message-ID: <20190606020417.GL26328@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-9-sean.j.christopherson@intel.com>
+ <CALCETrXf3ujAn6uOwWMU8SRZOvBRb8ALvo_LQvwxc899mrakwQ@mail.gmail.com>
+ <20190604203649.GC7775@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654EDB7D@ORSMSX116.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654EDB7D@ORSMSX116.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date: Wed, 5 Jun 2019 09:45:16 -0500
+On Tue, Jun 04, 2019 at 02:43:09PM -0700, Xing, Cedric wrote:
+> > From: Christopherson, Sean J
+> > Sent: Tuesday, June 04, 2019 1:37 PM
+> > 
+> > On Tue, Jun 04, 2019 at 01:29:10PM -0700, Andy Lutomirski wrote:
+> > > On Fri, May 31, 2019 at 4:32 PM Sean Christopherson
+> > > <sean.j.christopherson@intel.com> wrote:
+> > > >  static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long
+> > > > addr, diff --git a/include/linux/lsm_hooks.h
+> > > > b/include/linux/lsm_hooks.h index 47f58cfb6a19..0562775424a0 100644
+> > > > --- a/include/linux/lsm_hooks.h
+> > > > +++ b/include/linux/lsm_hooks.h
+> > > > @@ -1446,6 +1446,14 @@
+> > > >   * @bpf_prog_free_security:
+> > > >   *     Clean up the security information stored inside bpf prog.
+> > > >   *
+> > > > + * Security hooks for Intel SGX enclaves.
+> > > > + *
+> > > > + * @enclave_load:
+> > > > + *     On success, returns 0 and optionally adjusts @allowed_prot
+> > > > + *     @vma: the source memory region of the enclave page being
+> > loaded.
+> > > > + *     @prot: the initial protection of the enclave page.
+> > >
+> > > What do you mean "initial"?  The page is always mapped PROT_NONE when
+> > > this is called, right?  I feel like I must be missing something here.
+> > 
+> > Initial protection in the EPCM.  Yet another reason to ignore SECINFO.
+> 
+> I know you guys are talking in the background that all pages are mmap()'ed
+> PROT_NONE. But that's an unnecessary limitation.
 
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct objagg_stats {
-> 	...
->         struct objagg_obj_stats_info stats_info[];
-> };
-> 
-> size = sizeof(*objagg_stats) + sizeof(objagg_stats->stats_info[0]) * count;
-> instance = kzalloc(size, GFP_KERNEL);
-> 
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
-> 
-> instance = kzalloc(struct_size(instance, stats_info, count), GFP_KERNEL);
-> 
-> Notice that, in this case, variable alloc_size is not necessary, hence it
-> is removed.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Not all pages have to be mmap()'d PROT_NONE, only pages that do not have
+an associated enclave page.
 
-Applied.
+> And @prot here should be @target_vma->vm_flags&(VM_READ|VM_WRITE|VM_EXEC). 
+
+I don't follow, there is no target_vma at this point.
