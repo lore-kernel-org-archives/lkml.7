@@ -2,105 +2,124 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCABC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929BDC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769252064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="rkRXhFjo"
+	by mail.kernel.org (Postfix) with ESMTP id 5CBE9206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbfFFWOA (ORCPT
+        id S1729114AbfFFWS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 18:14:00 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45707 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729013AbfFFWOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 18:14:00 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j19so52385qtr.12
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 15:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=wnCP9LHM/9q0T5YeodyvkG+3NIqd4AJlc0R/psluHCw=;
-        b=rkRXhFjoWZ55fC7yOH0kqTaTRrdB3k1BaYHKrXwOKlqO3Lj8E6y/3m1kxlPHJqvDuB
-         HNe1HZo/hCsDKBHtjOvQROjpjNuFhCqgVO7E1LX8Q5+Geiicmg9mBwYI+ORkSAoVoy4I
-         1ZkXqeaN2WWOdhlzsnngXpW4Ia72ASBbOYQfvxQ+rQFbMv+LQztxgzoK43w8G5eDI9fP
-         tucUOZ4RXAh9xTMuR0M2NH9GcDV14lib62h28GA9yhBw2zzDbJEnjjaB+5ihjRKTMKUe
-         cbO26PuTtbkDvEHYWS6DX3xlj4q6Ht1GFJ/IshA9ckkHTGXw9/wN9eD+chib8Npf95xN
-         9FZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=wnCP9LHM/9q0T5YeodyvkG+3NIqd4AJlc0R/psluHCw=;
-        b=c0NJUT91YkfXclOfcNnAgJzBswI1dqd4S5l5yyQqyMMqlO54km4T3RtD677GV8/KrP
-         vHmN3vFsmofqbHC9wrZyC2+mDillxY8qXvYWdCZUIpSoE7pKyf3bfpNGRS8ChOYlLdrD
-         a15aKpSR0Rj65lKdA/a3euB22/ZdOo+A1Wq7rDrTAwEbLhXle1B1jiXp+xkNDR0m6n75
-         VdHA6OyVEmVSNZV69BhgQ2Gxk1eUTIuRtBffkeKOYopqVi34BTPLLCQbpZXdQE9pb7vQ
-         hoJUGMeVTvrmsEaaYTervBAcihGKdxzoLVxrmoW1XH2YbE4YCbcZ2U8GQ+Bca4u+2M3W
-         MSFA==
-X-Gm-Message-State: APjAAAWeKTO8s7uMj9cQfs/iqiVlOkMYkmL2rkUB8mLTU3dXN56hLAqI
-        7GnCpSeu3xkrpmLu4sjWkO+FwA==
-X-Google-Smtp-Source: APXvYqw1rzC6OTnpZ+39/hsG12pO3JpYun3yNbCTLHGF4Q6Fiw2lxqwEaCapVXUEIan7qToQI0uIKg==
-X-Received: by 2002:ac8:2e84:: with SMTP id h4mr42663472qta.267.1559859238493;
-        Thu, 06 Jun 2019 15:13:58 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id s23sm187901qtj.56.2019.06.06.15.13.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 15:13:58 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 15:13:46 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Matt Mullins <mmullins@fb.com>
-Cc:     <hall@fb.com>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Ingo Molnar" <mingo@redhat.com>, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH bpf] bpf: fix nested bpf tracepoints with per-cpu data
-Message-ID: <20190606151346.6a9ed27e@cakuba.netronome.com>
-In-Reply-To: <20190606185427.7558-1-mmullins@fb.com>
-References: <a6a31da39debb8bde6ca5085b0f4e43a96a88ea5.camel@fb.com>
-        <20190606185427.7558-1-mmullins@fb.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 6 Jun 2019 18:18:58 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41329 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726837AbfFFWS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 18:18:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 15:18:57 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by orsmga004.jf.intel.com with ESMTP; 06 Jun 2019 15:18:56 -0700
+Message-ID: <93ee5b103b8261d2b50de89f8658d133639a9af5.camel@intel.com>
+Subject: Re: [PATCH v7 04/27] x86/fpu/xstate: Introduce XSAVES system states
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Thu, 06 Jun 2019 15:10:55 -0700
+In-Reply-To: <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+         <20190606200646.3951-5-yu-cheng.yu@intel.com>
+         <0a2f8b9b-b96b-06c8-bae0-b78b2ca3b727@intel.com>
+         <5EE146A8-6C8C-4C5D-B7C0-AB8AD1012F1E@amacapital.net>
+         <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Jun 2019 11:54:27 -0700, Matt Mullins wrote:
-> BPF_PROG_TYPE_RAW_TRACEPOINTs can be executed nested on the same CPU, as
-> they do not increment bpf_prog_active while executing.
+On Thu, 2019-06-06 at 15:08 -0700, Dave Hansen wrote:
 > 
-> This enables three levels of nesting, to support
->   - a kprobe or raw tp or perf event,
->   - another one of the above that irq context happens to call, and
->   - another one in nmi context
-> (at most one of which may be a kprobe or perf event).
+> On 6/6/19 3:04 PM, Andy Lutomirski wrote:
+> > > But, that seems broken.  If we have supervisor state, we can't 
+> > > always defer the load until return to userspace, so we'll never?? 
+> > > have TIF_NEED_FPU_LOAD.  That would certainly be true for 
+> > > cet_kernel_state.
+> > 
+> > Ugh. I was sort of imagining that we would treat supervisor state
 > 
-> Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sample_data")
-
-No comment on the code, but you're definitely missing a sign-off.
-
-> ---
-> This is more lines of code, but possibly less intrusive than the
-> per-array-element approach.
+>  completely separately from user state.  But can you maybe give
+> examples of exactly what you mean?
+> > 
+> > > It seems like we actually need three classes of XSAVE states: 1. 
+> > > User state
+> > 
+> > This is FPU, XMM, etc, right?
 > 
-> I don't necessarily like that I duplicated the nest_level logic in two
-> places, but I don't see a way to unify them:
->   - kprobes' bpf_perf_event_output doesn't use bpf_raw_tp_regs, and does
->     use the perf_sample_data,
->   - raw tracepoints' bpf_get_stackid uses bpf_raw_tp_regs, but not
->     the perf_sample_data, and
->   - raw tracepoints' bpf_perf_event_output uses both...
+> Yep.
+> 
+> > > 2. Supervisor state that affects user mode
+> > 
+> > User CET?
+> 
+> Yep.
+> 
+> > > 3. Supervisor state that affects kernel mode
+> > 
+> > Like supervisor CET?  If we start doing supervisor shadow stack, the 
+> > context switches will be real fun.  We may need to handle this in 
+> > asm.
+> 
+> Yeah, that's what I was thinking.
+> 
+> I have the feeling Yu-cheng's patches don't comprehend this since
+> Sebastian's patches went in after he started working on shadow stacks.
+> 
+> > Where does PKRU fit in?  Maybe we can treat it as #3?
+> 
+> I thought Sebastian added specific PKRU handling to make it always
+> eager.  It's actually user state that affect kernel mode. :)
 
+For CET user states, we need to restore before making changes.  If they are not
+being changed (i.e. signal handling and syscalls), then they are restored only
+before going back to user-mode.
+
+For CET kernel states, we only need to make small changes in the way similar to
+the PKRU handling, right?  We'll address it when sending CET kernel-mode
+patches.
+
+I will put in more comments as suggested by Dave in earlier emails.
+
+Yu-cheng
