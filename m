@@ -2,121 +2,80 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70043C46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924ABC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4943C20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559812674;
-	bh=UHeE9D1r0uIl8z+ihicEA4KPlsequelmViuEOx87T4Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aEXK/kEXEEr769zi++7FI/5qJcnvhf/Ze8UAp09caKm4n7EfbelVPNuu18/EmJSTS
-	 66MIu3OdChOxuqyIBS8HMbzAoLPYIUh351TmnWIWVllOj6ZT6lYZVSybr1fuUJLRU1
-	 YaZ06XQvxNIGt20LptYXLy96uM09v4dSYZWahk2E=
+	by mail.kernel.org (Postfix) with ESMTP id 5F5B12083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfFFJRx (ORCPT
+        id S1727769AbfFFJUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:17:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38168 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfFFJRx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:17:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id d17so1295315oth.5;
-        Thu, 06 Jun 2019 02:17:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yENjbVk39/wwzHKltPutprMF9DY/I7doCf7SfJRKgi8=;
-        b=It0+PNjNfu9hf2ysUWEID6Ddo/m/1ROgFUoYE1BzrlLq1DJ5ICLUptAs/Pvj/erwj+
-         UqPr/gflG5rGdX7/0PPxU2RFl1kwNKHDppX43EErtLJR+qVApumfyK/udXI3KAejv1TW
-         8C0nI32rC54+RrXSCPswTrHerCC2U/nxouNXmtaekQpDOqNfQZI3aHpdAYlTgwBYaXzH
-         8AoEaxdW5Ahpgl//1QP0UsZ2ErEf0QqVejAl4bbzUxGZA68TvulAPqvnJ4uHUHeaM1Ur
-         TqoT3tevRVuMPx9VPnuDnwgy4OX5itVymAiFKe3i/m22zfoon8vWi0ZPphDO0LHq0H4N
-         dqOQ==
-X-Gm-Message-State: APjAAAUSvZfFIX3ZzKGjUi8A+mKzOUI+WVogM3tf8JjbojLj+lOoNmWV
-        16qm9v0ICsVT54R+gBWM0mdYtVpOf4o9ZlO/BCs=
-X-Google-Smtp-Source: APXvYqwpqt4Y2D/ykZ/hJu7b0Xpsn+y8x9Q8fDqgKz20jFQNzEUdq+RPWEe2mZF6bzoomXq7tP+vR0+dQ/lk+sV4jGk=
-X-Received: by 2002:a05:6830:150:: with SMTP id j16mr14282814otp.262.1559812672475;
- Thu, 06 Jun 2019 02:17:52 -0700 (PDT)
+        Thu, 6 Jun 2019 05:20:01 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48042 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727540AbfFFJUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:20:01 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8B9DE754B11790C956AC;
+        Thu,  6 Jun 2019 17:19:57 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 6 Jun 2019 17:19:46 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     JC Kuo <jckuo@nvidia.com>, Kishon Vijay Abraham I <kishon@ti.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+CC:     YueHaibing <yuehaibing@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] phy: tegra: xusb: Remove set but not used variable 'priv'
+Date:   Thu, 6 Jun 2019 09:27:46 +0000
+Message-ID: <20190606092746.80310-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com> <1559747630-28065-8-git-send-email-suzuki.poulose@arm.com>
-In-Reply-To: <1559747630-28065-8-git-send-email-suzuki.poulose@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 6 Jun 2019 11:17:41 +0200
-Message-ID: <CAJZ5v0h+maPj-ijKV_vvQBpHD7N-VMiAqSeyztAkiUR9E2WdmQ@mail.gmail.com>
-Subject: Re: [PATCH 07/13] drivers: Add generic match helper by ACPI_COMPANION device
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 5:14 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> Add a generic helper to match a device by the acpi device.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-"by its ACPI companion device object", please.
+drivers/phy/tegra/xusb-tegra210.c: In function 'tegra210_hsic_phy_power_on':
+drivers/phy/tegra/xusb-tegra210.c:1236:31: warning:
+ variable 'priv' set but not used [-Wunused-but-set-variable]
 
-Also, it would be good to combine this patch with the patch(es) that
-cause device_match_acpi_dev() to be actually used.
+It's never used, so can be removed
 
-Helpers without any users are arguably not useful.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/phy/tegra/xusb-tegra210.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
->
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: linux-acpi@vger.kernel.org
-> Cc: linux-spi@vger.kernel.org
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/base/core.c    | 6 ++++++
->  include/linux/device.h | 1 +
->  2 files changed, 7 insertions(+)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index b827ca1..597095b 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3346,3 +3346,9 @@ int device_match_devt(struct device *dev, const void *pdevt)
->         return dev->devt == *(dev_t *)pdevt;
->  }
->  EXPORT_SYMBOL_GPL(device_match_devt);
-> +
-> +int device_match_acpi_dev(struct device *dev, const void *adev)
-> +{
-> +       return ACPI_COMPANION(dev) == adev;
-> +}
-> +EXPORT_SYMBOL(device_match_acpi_dev);
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index f315692..a03b50d 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -166,6 +166,7 @@ void subsys_dev_iter_exit(struct subsys_dev_iter *iter);
->  int device_match_of_node(struct device *dev, const void *np);
->  int device_match_fwnode(struct device *dev, const void *fwnode);
->  int device_match_devt(struct device *dev, const void *pdevt);
-> +int device_match_acpi_dev(struct device *dev, const void *adev);
->
->  int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
->                      int (*fn)(struct device *dev, void *data));
-> --
-> 2.7.4
->
+diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+index eb754baa8d71..4076b22c4087 100644
+--- a/drivers/phy/tegra/xusb-tegra210.c
++++ b/drivers/phy/tegra/xusb-tegra210.c
+@@ -1233,13 +1233,10 @@ static int tegra210_hsic_phy_power_on(struct phy *phy)
+ 	struct tegra_xusb_hsic_lane *hsic = to_hsic_lane(lane);
+ 	struct tegra_xusb_hsic_pad *pad = to_hsic_pad(lane->pad);
+ 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
+-	struct tegra210_xusb_padctl *priv;
+ 	unsigned int index = lane->index;
+ 	u32 value;
+ 	int err;
+ 
+-	priv = to_tegra210_xusb_padctl(padctl);
+-
+ 	err = regulator_enable(pad->supply);
+ 	if (err)
+ 		return err;
+
+
+
