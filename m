@@ -2,80 +2,133 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A5EC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49138C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5562089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F479206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="JXj2zIOF"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JK8En4/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfFFTrU (ORCPT
+        id S1727593AbfFFTvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:47:20 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43615 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfFFTrT (ORCPT
+        Thu, 6 Jun 2019 15:51:19 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40960 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbfFFTvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:47:19 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i8so3099590oth.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:47:19 -0700 (PDT)
+        Thu, 6 Jun 2019 15:51:17 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c11so2256579qkk.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8wGfAmKyoK9bVApTeJ1ikTLIPBAYdTrgDhJ6H/YeNVg=;
-        b=JXj2zIOFKEDcuxGqOXtaHzoMslRkH8F57wmo6Zg/C6Z48YMAJJzLyoK0y6q78VFXce
-         sdIPp8OqGlBPq3V7mf87QV2UbHH7BIm1Fc3aHqwzCA+oljMlGYlHfkc3TI0I484O1K1S
-         OXOMxDp8X8FWBYd/ysRIABwzI1ccbF3aeS12gtq8RJ0gFh57xBlSAoFVpPOzPKUEw+nG
-         KtQmVAhtVZFxD6tK91fpiuOjaUaptaq/Q5Ev9mslUgwgexLbnMK5+ugOd7rQ7C1RqPlX
-         xDPvBzguKkH0bAG2BPJA6lYOrrj/kAtz+rZsKRLu43r3SFAQxC7HLLwcCN35PWjP9wmm
-         z7tg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fVbv7ZkCU0XRJ9jD+fxd4ieH6waXD3NIwch6tKZrfLk=;
+        b=JK8En4/CLh0QaNpMzjO2iMeOMpfrAAx/gr5SgNV/sb4SY2gHe/v8MOPkfC/9wPWIZ9
+         ZL8QsvlzUZu3/QV2sR8DriCxzBeBuTLKUUPKPgdfpcAKVXgCaQb7rGQ3TRW8g1PxMby9
+         +wxeHaZK6IN3egjgnP9IJZ+w011avGG0F3y8TTnoGrINoPzy0TddWA78C+1Q+KMGIdzz
+         92AxUAVNZWhAkEVYstL8INWhYQ829J/YpWO2ZbVyA8ZS8ksWZ7LFyB1R04yWWmr5UAZu
+         N8V2QVFH6XXSPdpk/99Edhk0JJ7bEpSx2FL6IQyeiD+YQVzMZEgvotOVmE8xHx4nh57Z
+         Aq3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8wGfAmKyoK9bVApTeJ1ikTLIPBAYdTrgDhJ6H/YeNVg=;
-        b=T2hm4KBzA7a81YEmRbvfUEGZx78vd4yivlXxv/Lqfhz8/Is5y8EydJnxdUFqmXzh3B
-         8SGTBKzxZIYTi3ZJVqFth9mbFdWWshxIz/YGKRo0v6cH6kHHVSP71r1c4SdR7jgseTs5
-         RAc2xUGPwO7j5zszQwGD/plBwLPqqETOWRGZtsGUo6N1dxvTxSZlo1ryfHJRt2HKqfVE
-         Mgdy6xTFxuyOFZ+LAh1YsKNDk2N1eNaIgH2ggjjTG6hJhIr40rriO5G+tL/s+3LYi8Xa
-         4oRpg/6fy5WUNb2pwZ5z9d11mfiokQjlRl5WlR5r0Rjgov440jk+qYQiF+BLMc0TvqzA
-         spTw==
-X-Gm-Message-State: APjAAAWjlk8UisVOvzj1pISgZiV7KvNYwCPNYzk6T2jGtvkoKK9U3N5S
-        0Nd+mafbNJmHys0flIov0YIZGTgKXxqPqslLCHKuGdVx
-X-Google-Smtp-Source: APXvYqzuT2RwZC2LIrDFehW31R9jvGbrmRuApk42Pg+UA3g4byiNms1PcIULKfXunwPAiHdFS6Np+7uvtr1uGqZj/+s=
-X-Received: by 2002:a9d:14a:: with SMTP id 68mr15424609otu.96.1559850438867;
- Thu, 06 Jun 2019 12:47:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fVbv7ZkCU0XRJ9jD+fxd4ieH6waXD3NIwch6tKZrfLk=;
+        b=kK/LdxxmmfktwC3dmrexLpl8aVBKrNIXWkl/lm/DIn4eHkXASUFQ1jGWyIkkLrqpIa
+         3bo5AzVSEToU/fnbjPAOgfrxv5Yp3cZjjQGlRF8FDVejl79Tjf8z5DXp/aMxQ3IblVi6
+         KnR9XpAVEr07YVzgzkIPnCjyIgejaIxVEoL30T1LhQrced0GCGn/AqtaJpVLTWan7698
+         t0uJWB2IPgb4Vawd6TsaXFWFfvhFd5cn7I23kWmdzFjYwYryn57mdb7pdS2UgN1xCMEr
+         1ZZ7f+fJ6xDt+9lFH0Lav78IFEpX6NEGQ5PNyIwlP6iJ7jFqQt4YbbLqoWzpSHONmYwF
+         ApRg==
+X-Gm-Message-State: APjAAAXMilTBtLBDXW+/ThRqVM655uDBGYgx+YU4ZPTPFyMWOGPvcvdW
+        iOmvw6q2GEc4qz5cgTxhHwwv+Q==
+X-Google-Smtp-Source: APXvYqzyssiuyqvk956epvDv1OTyC6TvGNp+K2MqufTjNzhdzVN0pIMcZor/PXhzGoG5BWQnFWZbfw==
+X-Received: by 2002:a37:a9c3:: with SMTP id s186mr41012233qke.190.1559850676118;
+        Thu, 06 Jun 2019 12:51:16 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id t197sm1415555qke.2.2019.06.06.12.51.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 12:51:15 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hYyPr-00081O-0q; Thu, 06 Jun 2019 16:51:15 -0300
+Date:   Thu, 6 Jun 2019 16:51:15 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jan Kara <jack@suse.cz>
+Cc:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190606195114.GA30714@ziepe.ca>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
 MIME-Version: 1.0
-References: <20190603094740.12255-1-narmstrong@baylibre.com> <20190603094740.12255-3-narmstrong@baylibre.com>
-In-Reply-To: <20190603094740.12255-3-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 6 Jun 2019 21:47:07 +0200
-Message-ID: <CAFBinCAR47VuoDoWerX4YZ4=v2G4+L0MW9kP0bEhrLWaWOPdfA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] arm64: dts: meson-g12a-x96-max: add 32k clock to
- bluetooth node
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606104203.GF7433@quack2.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 11:48 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> The 32k low power clock is necessary for the bluetooth part of the
-> combo module to initialize correctly, simply add the same clock we
-> use for the sdio pwrseq.
->
-> Fixes: c5c9c7cff269 ("arm64: dts: meson-g12a-x96-max: Enable BT Module")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-with the correct fixes tag:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
+
+> So I'd like to actually mandate that you *must* hold the file lease until
+> you unpin all pages in the given range (not just that you have an option to
+> hold a lease). And I believe the kernel should actually enforce this. That
+> way we maintain a sane state that if someone uses a physical location of
+> logical file offset on disk, he has a layout lease. Also once this is done,
+> sysadmin has a reasonably easy way to discover run-away RDMA application
+> and kill it if he wishes so.
+> 
+> The question is on how to exactly enforce that lease is taken until all
+> pages are unpinned. I belive it could be done by tracking number of
+> long-term pinned pages within a lease. Gup_longterm could easily increment
+> the count when verifying the lease exists, gup_longterm users will somehow
+> need to propagate corresponding 'filp' (struct file pointer) to
+> put_user_pages_longterm() callsites so that they can look up appropriate
+> lease to drop reference - probably I'd just transition all gup_longterm()
+> users to a saner API similar to the one we have in mm/frame_vector.c where
+> we don't hand out page pointers but an encapsulating structure that does
+> all the necessary tracking. Removing a lease would need to block until all
+> pins are released - this is probably the most hairy part since we need to
+> handle a case if application just closes the file descriptor which
+> would
+
+I think if you are going to do this then the 'struct filp' that
+represents the lease should be held in the kernel (ie inside the RDMA
+umem) until the kernel is done with it.
+
+Actually does someone have a pointer to this userspace lease API, I'm
+not at all familiar with it, thanks
+
+And yes, a better output format from GUP would be great..
+
+> Maybe we could block only on explicit lease unlock and just drop the layout
+> lease on file close and if there are still pinned pages, send SIGKILL to an
+> application as a reminder it did something stupid...
+
+Which process would you SIGKILL? At least for the rdma case a FD is
+holding the GUP, so to do the put_user_pages() the kernel needs to
+close the FD. I guess it would have to kill every process that has the
+FD open? Seems complicated...
+
+Regards,
+Jason
