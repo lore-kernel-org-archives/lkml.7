@@ -2,277 +2,164 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E446FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2B9C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31B520693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCF020868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AvsxlwIe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fjWTs+v9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfFFJpj (ORCPT
+        id S1727952AbfFFJrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:45:39 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:36672 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbfFFJpi (ORCPT
+        Thu, 6 Jun 2019 05:47:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42817 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727734AbfFFJrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:45:38 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190606094536euoutp0182254e029b52b9d69979abe183b17406~lkt-WPFSf2745827458euoutp01W
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 09:45:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190606094536euoutp0182254e029b52b9d69979abe183b17406~lkt-WPFSf2745827458euoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559814336;
-        bh=zlH3bBR+P5usikNeVLM4OUrjiDC3GlD+c/+OesvzOXY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=AvsxlwIeublOHcpV5Y3fAJ4lHGV/4BDxYRiTgiFnCxZGNNDtq6MLpyPKmR8se6CiF
-         PL4UyA9YzM+aacuvjdsvwgukQCWP55Q1jAorICEfp77Re+6z81iPINIWXChXiQg0UE
-         Txv/n0es18sLfQfB9cZqSqw+wY3K5NkUycLHPF0o=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190606094535eucas1p21392aea13994213ba173148e9e5276ed~lkt_j-XDV1315313153eucas1p2z;
-        Thu,  6 Jun 2019 09:45:35 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 02.AD.04325.EB0E8FC5; Thu,  6
-        Jun 2019 10:45:34 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190606094534eucas1p1be0cda6cbc7979bf097767af27e900ed~lkt9yQ7xf0128601286eucas1p18;
-        Thu,  6 Jun 2019 09:45:34 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190606094534eusmtrp27c34e32c8a83661a7e8592f7a5a34f87~lkt9iZir72910529105eusmtrp29;
-        Thu,  6 Jun 2019 09:45:34 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-38-5cf8e0beb573
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 25.85.04146.DB0E8FC5; Thu,  6
-        Jun 2019 10:45:33 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190606094533eusmtip22dc030ca4f624ee0d41b75c281cafe94~lkt8lwnaq1858418584eusmtip2G;
-        Thu,  6 Jun 2019 09:45:33 +0000 (GMT)
-Subject: Re: [PATCH v8 02/13] clk: samsung: add new clocks for DMC for
- Exynos5422 SoC
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <f070ab98-10bb-7ad4-f794-cfde9a75ddce@partner.samsung.com>
-Date:   Thu, 6 Jun 2019 11:45:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Thu, 6 Jun 2019 05:47:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y13so1050160lfh.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:47:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZUJtTHTXNxu11uFgApSggUR6FUDtGDSUrwD5+2c4fw4=;
+        b=fjWTs+v9sRcacPTkE7/eRu/9lwuTPBz6IVARKm6m4Eq7OW7fr63Dg12tQgHVVCRbol
+         X9xJuP/JqN3cXHjJiC6f8ejkT+eMEcvNjqmDsSgH22spBK04YFEiIlwrHageUyfQp0xt
+         Dr0W1fN4Dhoc4Vs0e2dMfi84pDucPLYspHEx1qyBDNLoCiJIDHxXk89F7LxCZQIsKONd
+         8my/z5+M+Fr/vICw5e12GUeEZWFVwbkdPpr56GF9RuHraCzJOfRPTERnTkxQX5WMo6cS
+         EP4xY+CInGYsGcd/8/b+F6qjYG5PezinP4T3p0CCu/MDQ46QsZOu/D1w+p5MJ3axD+dR
+         KU2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZUJtTHTXNxu11uFgApSggUR6FUDtGDSUrwD5+2c4fw4=;
+        b=ZjBzMetQUWw66501b01WgBUf5MfBkwDDq8oPOSxIijGcCuHxDoa8qMoE4u8RdQw+9b
+         hh0Rnf2Nvh2dU69/IQ4PxkqZ4b0BAXJP8wFoyyLYYyuHBxQ9qQORIMkf4Z84bUw6Lx+z
+         xgJBCG4iWV8x9uCWQJrOPVakAf4FnHBHQeu94x6VxZPko0mse6kh6e8HpVaEScmPLPe9
+         aoIqQVJnVVSlnugXIaPos7EQ5XAs4NLrQT6+JtBfL/itGtBCq7xtzvJHD+sfVCUC4vrX
+         Htetc+L3ucEICx/MJnMbWWLj2TCSngUG8g9Q47MkaGjviOMHwwYuzVo3DvO3WDP06lpH
+         Xw6w==
+X-Gm-Message-State: APjAAAUIeTif2M/9xIXQnTvjfafdPNhpZVBROyJ+H41bQyAcksOeh1pm
+        hEdYK7lagVSOwKGGz704bvlJkQ==
+X-Google-Smtp-Source: APXvYqyfSm4WZqLlK2FuAsUFqx7p2Ew9DH+2Np2QIeyhi9dQlGG8JR0BxiRPugpDfNWGd0YdYSALPA==
+X-Received: by 2002:ac2:5609:: with SMTP id v9mr15271221lfd.27.1559814426775;
+        Thu, 06 Jun 2019 02:47:06 -0700 (PDT)
+Received: from localhost (c-1c3670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.28])
+        by smtp.gmail.com with ESMTPSA id e8sm241763lfc.27.2019.06.06.02.47.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 02:47:06 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        marex@denx.de, stefan@agner.ch, airlied@linux.ie, daniel@ffwll.ch,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        b.zolnierkie@samsung.com, a.hajda@samsung.com, mchehab@kernel.org,
+        p.zabel@pengutronix.de, hkallweit1@gmail.com, lee.jones@linaro.org,
+        lgirdwood@gmail.com, broonie@kernel.org, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
+        linux-media@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH 0/8] fix warnings for same module names
+Date:   Thu,  6 Jun 2019 11:46:57 +0200
+Message-Id: <20190606094657.23612-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPfW3QUH+6+g3NXPuogNxtr_uOtWKOwbgPwBVdqn4Y7a_Q@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUhUURTGu/OWeUpj18nyUFExFGWhVvbHlaIFoh4lklApZdTUPNRy1Oal
-        2QKpRZZrWOg0jlaQCy6Y4+AykZVabuVCkq0gaaSmljlpYU45von873fO+c79zgeXo5RDzCIu
-        LOK0oItQh6tYZ7ry2a82z9qen8Hrulo2kHJ9GUO6rZ8ZcruhjSHFo72I3GjJkZHnyVqS3vuF
-        Iu3t9+XkRcKQnLy0GFkyltqAiL69VkZKGz7Iybv4QpbUDyUy5FHXbvJu0oWMN31E25T8+I8M
-        ms+O66T5GsMHOW8qusbyqZdGWD7NXIT4itbz/Jhp6V7uoPNmjRAeFiPovLccdQ69ZL6Loqwb
-        YyfTstk4dMMzCTlxgDdCvq1YnoScOSUuRHBV/14mFVYEuWWPHZMxBJnxTfS/lZTxPMegAMHn
-        kk5GKoYRZJj6Z1TzcSA0pV9BdnbDHtA9NTEjonA5DVXVlul1jmOxF1QXnbJrFHgnpExmyOxM
-        4xWQ8NTI2nkBDgJrjQlJGldovtU3874TDoAnjd8oO1PYHd723ZZJvAyqho2U3QvwLQ7e2zpY
-        6ewdMNjdJ5d4Pgw2mh28BP7USMuARYhLvYskvgC96TkOzSaob7Sn5KYNPKDM4i21t0NJZzyy
-        twG7wOthV+kEF8iozKKktgKuXlFK6tVgTulwGC2EgpJM+XWkMswKZpgVxjArjOG/7x1EFyF3
-        IVrUhgiiT4RwxktUa8XoiBCv45FaE5r+g622xh/VqPb3sTqEOaSaq4DyiWAlo44Rz2rrEHCU
-        yk0R0/EzWKnQqM+eE3SRR3TR4YJYhxZztMpdcX5OzyElDlGfFk4KQpSg+zeVcU6L4pD+uO+J
-        5QmplydGwGdUvXj/vQAfTa7MttWo3WeJKvBvycKTPX57tj4s1u3anxMUVvbgkU5/c8r2inkd
-        e7P4jan0Qtbhr0397KeCpMyLrYWJvl15HgHG5rUlU7nJMVObazUrD1RGB44yvgPx/t/5xNh5
-        npzGr82iGvDMWZO/aluFTUWLoer1ayidqP4LU0UxXX8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42I5/e/4Pd29D37EGPS8trDYOGM9q8X1L89Z
-        LeYfOcdqsfrjY0aLyafmMlmc6c616H/8mtni/PkN7BZnm96wW1zeNYfN4nPvEUaLGef3MVms
-        PXKX3eJ24wo2i8Nv2lkt9l/xsrj9m8/i24lHjA5CHt++TmLxmN1wkcVj56y77B6bVnWyefQ2
-        v2Pz6NuyitFj8+lqj8+b5AI4ovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV
-        9O1sUlJzMstSi/TtEvQymrcsZCz4YlLxu282WwPjZN0uRk4OCQETiZ5vS9m7GLk4hASWMkps
-        OXKGFSIhJjFp33Z2CFtY4s+1LjaIoteMEi2r7rCAJIQFwiVO9LcxgtgiApoS1/9+ZwUpYhbY
-        yCJx8VUvE0THBCaJthlXmbsYOTjYBPQkdqwqBGngFXCT6Pk9iQnEZhFQkWg6OocNxBYViJCY
-        vauBBaJGUOLkzCdgNqdAoMTB4x+YQWxmAXWJP/MuQdniEreezGeCsOUltr+dwzyBUWgWkvZZ
-        SFpmIWmZhaRlASPLKkaR1NLi3PTcYkO94sTc4tK8dL3k/NxNjMDY33bs5+YdjJc2Bh9iFOBg
-        VOLhldj4PUaINbGsuDL3EKMEB7OSCG/ZhR8xQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwP
-        TEt5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYnXk9I4LK+0P3
-        lvr+mbnqyEzno8da3VlqQ2VX6v/0u65w96LYZo/H3qHvpFWLnRdsNj7o0LOQueqnEMOcvImL
-        1H8KcU7dsPL6oV+q+3yZm7z9Rbc8tJJg03DRn7qBLyQmbdfnpezezx/PXr+52MDnhPWWrS4v
-        D39Ov6iXleg5wenoyuWNJw83KbEUZyQaajEXFScCACeZCC0TAwAA
-X-CMS-MailID: 20190606094534eucas1p1be0cda6cbc7979bf097767af27e900ed
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61
-References: <CGME20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61@eucas1p1.samsung.com>
-        <20190605165410.14606-1-l.luba@partner.samsung.com>
-        <20190605165410.14606-3-l.luba@partner.samsung.com>
-        <CAJKOXPfW3QUH+6+g3NXPuogNxtr_uOtWKOwbgPwBVdqn4Y7a_Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 9a7532004606875744eb67ad2ce17197ba2fe61e Mon Sep 17 00:00:00 2001
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Date: Tue, 15 Jan 2019 17:12:16 +0100
-Subject: [PATCH 02/13] clk: samsung: add new clocks for DMC for Exynos5422 SoC
+Hi,
 
-This patch provides support for clocks needed for Dynamic Memory Controller
-in Exynos5422 SoC. It adds CDREX base register addresses, new DIV, MUX and
-GATE entries.
+This patch set addresses warnings that module names are named the
+same, this may lead to a problem that wrong module gets loaded or if one
+of the two same-name modules exports a symbol, this can confuse the
+dependency resolution. and the build may fail.
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
-Regarding the discussions of clocks mapped to the same registers,
-this is a fix which adds the needed flag 'NOCACHE'.
-It also has the ACK from Krzysztof.
 
-Regards,
-Lukasz
+Patch "drivers: net: dsa: realtek: fix warning same module names" and
+"drivers: net: phy: realtek: fix warning same module names" resolves the
+name clatch realtek.ko.
 
- drivers/clk/samsung/clk-exynos5420.c | 61 +++++++++++++++++++++++++---
- 1 file changed, 55 insertions(+), 6 deletions(-)
+warning: same module names found:
+  drivers/net/phy/realtek.ko
+  drivers/net/dsa/realtek.ko
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 34cce3c5898f..514e16310227 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -134,6 +134,8 @@
- #define SRC_CDREX		0x20200
- #define DIV_CDREX0		0x20500
- #define DIV_CDREX1		0x20504
-+#define GATE_BUS_CDREX0		0x20700
-+#define GATE_BUS_CDREX1		0x20704
- #define KPLL_LOCK		0x28000
- #define KPLL_CON0		0x28100
- #define SRC_KFC			0x28200
-@@ -248,6 +250,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
- 	DIV_CDREX1,
- 	SRC_KFC,
- 	DIV_KFC0,
-+	GATE_BUS_CDREX0,
-+	GATE_BUS_CDREX1,
- };
- 
- static const unsigned long exynos5800_clk_regs[] __initconst = {
-@@ -425,6 +429,9 @@ PNAME(mout_group13_5800_p)	= { "dout_osc_div", "mout_sw_aclkfl1_550_cam" };
- PNAME(mout_group14_5800_p)	= { "dout_aclk550_cam", "dout_sclk_sw" };
- PNAME(mout_group15_5800_p)	= { "dout_osc_div", "mout_sw_aclk550_cam" };
- PNAME(mout_group16_5800_p)	= { "dout_osc_div", "mout_mau_epll_clk" };
-+PNAME(mout_mx_mspll_ccore_phy_p) = { "sclk_bpll", "mout_sclk_dpll",
-+					"mout_sclk_mpll", "ff_dout_spll2",
-+					"mout_sclk_spll", "mout_sclk_epll"};
- 
- /* fixed rate clocks generated outside the soc */
- static struct samsung_fixed_rate_clock
-@@ -450,7 +457,7 @@ static const struct samsung_fixed_factor_clock
- static const struct samsung_fixed_factor_clock
- 		exynos5800_fixed_factor_clks[] __initconst = {
- 	FFACTOR(0, "ff_dout_epll2", "mout_sclk_epll", 1, 2, 0),
--	FFACTOR(0, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
-+	FFACTOR(CLK_FF_DOUT_SPLL2, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
- };
- 
- static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
-@@ -472,11 +479,14 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
- 	MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
- 	MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
- 
-+	MUX(CLK_MOUT_MX_MSPLL_CCORE_PHY, "mout_mx_mspll_ccore_phy",
-+		mout_mx_mspll_ccore_phy_p, SRC_TOP7, 0, 3),
-+
- 	MUX(CLK_MOUT_MX_MSPLL_CCORE, "mout_mx_mspll_ccore",
--			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 2),
-+			mout_mx_mspll_ccore_p, SRC_TOP7, 16, 3),
- 	MUX_F(CLK_MOUT_MAU_EPLL, "mout_mau_epll_clk", mout_mau_epll_clk_5800_p,
- 			SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
--	MUX(0, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
-+	MUX(CLK_SCLK_BPLL, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
- 	MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
- 
- 	MUX(0, "mout_aclk550_cam", mout_group3_5800_p, SRC_TOP8, 16, 3),
-@@ -648,7 +658,7 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
- 
- 	MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
- 	MUX(CLK_MOUT_VPLL, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
--	MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
-+	MUX(CLK_MOUT_SCLK_SPLL, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
- 	MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
- 	MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
- 	MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
-@@ -806,8 +816,21 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
- 			"mout_aclk400_disp1", DIV_TOP2, 4, 3),
- 
- 	/* CDREX Block */
--	DIV(CLK_DOUT_PCLK_CDREX, "dout_pclk_cdrex", "dout_aclk_cdrex1",
--			DIV_CDREX0, 28, 3),
-+	/*
-+	 * The three clocks below are controlled using the same register and
-+	 * bits. They are put into one because there is a need of
-+	 * synchronization between the BUS and DREXs (two external memory
-+	 * interfaces).
-+	 * They are put here to show this HW assumption and for clock
-+	 * information summary completeness.
-+	 */
-+	DIV_F(CLK_DOUT_PCLK_CDREX, "dout_pclk_cdrex", "dout_aclk_cdrex1",
-+			DIV_CDREX0, 28, 3, CLK_GET_RATE_NOCACHE, 0),
-+	DIV_F(CLK_DOUT_PCLK_DREX0, "dout_pclk_drex0", "dout_cclk_drex0",
-+			DIV_CDREX0, 28, 3, CLK_GET_RATE_NOCACHE, 0),
-+	DIV_F(CLK_DOUT_PCLK_DREX1, "dout_pclk_drex1", "dout_cclk_drex0",
-+			DIV_CDREX0, 28, 3, CLK_GET_RATE_NOCACHE, 0),
-+
- 	DIV_F(CLK_DOUT_SCLK_CDREX, "dout_sclk_cdrex", "mout_mclk_cdrex",
- 			DIV_CDREX0, 24, 3, CLK_SET_RATE_PARENT, 0),
- 	DIV(CLK_DOUT_ACLK_CDREX1, "dout_aclk_cdrex1", "dout_clk2x_phy0",
-@@ -1170,6 +1193,32 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 			GATE_TOP_SCLK_ISP, 12, CLK_SET_RATE_PARENT, 0),
- 
- 	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
-+
-+	/* CDREX */
-+	GATE(CLK_CLKM_PHY0, "clkm_phy0", "dout_sclk_cdrex",
-+			GATE_BUS_CDREX0, 0, 0, 0),
-+	GATE(CLK_CLKM_PHY1, "clkm_phy1", "dout_sclk_cdrex",
-+			GATE_BUS_CDREX0, 1, 0, 0),
-+	GATE(0, "mx_mspll_ccore_phy", "mout_mx_mspll_ccore_phy",
-+			SRC_MASK_TOP7, 0, CLK_IGNORE_UNUSED, 0),
-+
-+	GATE(CLK_ACLK_PPMU_DREX1_1, "aclk_ppmu_drex1_1", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 12, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX1_0, "aclk_ppmu_drex1_0", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 13, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX0_1, "aclk_ppmu_drex0_1", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 14, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_ACLK_PPMU_DREX0_0, "aclk_ppmu_drex0_0", "dout_aclk_cdrex1",
-+			GATE_BUS_CDREX1, 15, CLK_IGNORE_UNUSED, 0),
-+
-+	GATE(CLK_PCLK_PPMU_DREX1_1, "pclk_ppmu_drex1_1", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 26, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX1_0, "pclk_ppmu_drex1_0", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 27, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX0_1, "pclk_ppmu_drex0_1", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 28, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_PCLK_PPMU_DREX0_0, "pclk_ppmu_drex0_0", "dout_pclk_cdrex",
-+			GATE_BUS_CDREX1, 29, CLK_IGNORE_UNUSED, 0),
- };
- 
- static const struct samsung_div_clock exynos5x_disp_div_clks[] __initconst = {
+
+Patch  "drivers: (video|gpu): fix warning same module names" resolves
+the name clatch mxsfb.ko.
+
+warning: same module names found:
+  drivers/video/fbdev/mxsfb.ko
+  drivers/gpu/drm/mxsfb/mxsfb.ko
+
+Patch "drivers: media: i2c: fix warning same module names" resolves the
+name clatch adv7511.ko however, it seams to refer to the same device
+name in i2c_device_id, does anyone have any guidance how that should be
+solved?
+
+warning: same module names found:
+  drivers/gpu/drm/bridge/adv7511/adv7511.ko
+  drivers/media/i2c/adv7511.ko
+
+
+Patch "drivers: media: coda: fix warning same module names" resolves the
+name clatch coda.ko.
+
+warning: same module names found:
+  fs/coda/coda.ko
+  drivers/media/platform/coda/coda.ko
+
+
+Patch "drivers: net: phy: fix warning same module names" resolves the
+name clatch asix.ko.
+
+warning: same module names found:
+  drivers/net/phy/asix.ko
+  drivers/net/usb/asix.ko
+
+Patch "drivers: mfd: 88pm800: fix warning same module names" and
+"drivers: regulator: 88pm800: fix warning same module names" resolves
+the name clatch 88pm800.ko.
+
+warning: same module names found:
+  drivers/regulator/88pm800.ko
+  drivers/mfd/88pm800.ko
+
+
+Cheers,
+Anders
+
+Anders Roxell (8):
+  drivers: net: dsa: realtek: fix warning same module names
+  drivers: net: phy: realtek: fix warning same module names
+  drivers: (video|gpu): fix warning same module names
+  drivers: media: i2c: fix warning same module names
+  drivers: media: coda: fix warning same module names
+  drivers: net: phy: fix warning same module names
+  drivers: mfd: 88pm800: fix warning same module names
+  drivers: regulator: 88pm800: fix warning same module names
+
+ drivers/gpu/drm/bridge/adv7511/Makefile | 10 +++++-----
+ drivers/gpu/drm/mxsfb/Makefile          |  4 ++--
+ drivers/media/i2c/Makefile              |  3 ++-
+ drivers/media/platform/coda/Makefile    |  4 ++--
+ drivers/mfd/Makefile                    |  7 +++++--
+ drivers/net/dsa/Makefile                |  4 ++--
+ drivers/net/phy/Makefile                |  6 ++++--
+ drivers/regulator/Makefile              |  3 ++-
+ drivers/video/fbdev/Makefile            |  3 ++-
+ 9 files changed, 26 insertions(+), 18 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
