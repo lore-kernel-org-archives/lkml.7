@@ -2,30 +2,31 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B269AC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B9CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96151206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083722083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbfFFURn (ORCPT
+        id S1729708AbfFFURm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:17:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:42894 "EHLO mga07.intel.com"
+        Thu, 6 Jun 2019 16:17:42 -0400
+Received: from mga01.intel.com ([192.55.52.88]:12262 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729512AbfFFURj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:17:39 -0400
+        id S1727724AbfFFURe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:17:34 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:17:30 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:17:31 -0700
 X-ExtLoop1: 1
 Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Jun 2019 13:17:29 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 06 Jun 2019 13:17:31 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -52,74 +53,42 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v7 00/14] Control-flow Enforcement: Branch Tracking, PTRACE
-Date:   Thu,  6 Jun 2019 13:09:12 -0700
-Message-Id: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+Subject: [PATCH v7 06/14] x86/cet/ibt: ELF header parsing for IBT
+Date:   Thu,  6 Jun 2019 13:09:18 -0700
+Message-Id: <20190606200926.4029-7-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The previous version of CET Branch Tracking/PTRACE patches is here:
+Look in .note.gnu.property of an ELF file and check if Indirect
+Branch Tracking needs to be enabled for the task.
 
-  https://lkml.org/lkml/2018/11/20/203
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+---
+ arch/x86/kernel/process_64.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Summary of changes from v6:
-
-  Rebase to v5.2-rc3.
-
-  Add Branch Tracking in the signal handling routines.
-
-  Fix Branch Tracking (and Shadow Stack) for vsyscall (patch #12):
-    This patch can be dropped if we expect CET blocking vsyscall.
-
-  Include H.J. Lu's patch to discard .note.gnu.property in the kernel.
-
-H.J. Lu (4):
-  x86/vdso: Insert endbr32/endbr64 to vDSO
-  x86/vdso/32: Add ENDBR32 to __kernel_vsyscall entry point
-  x86/vsyscall/64: Add ENDBR64 to vsyscall entry points
-  x86: Discard .note.gnu.property sections
-
-Yu-cheng Yu (10):
-  x86/cet/ibt: Add Kconfig option for user-mode Indirect Branch Tracking
-  x86/cet/ibt: User-mode indirect branch tracking support
-  x86/cet/ibt: Add IBT legacy code bitmap setup function
-  x86/cet/ibt: Handle signals for IBT
-  mm/mmap: Add IBT bitmap size to address space limit check
-  x86/cet/ibt: ELF header parsing for IBT
-  x86/cet/ibt: Add arch_prctl functions for IBT
-  x86/cet/ibt: Add ENDBR to op-code-map
-  x86/vsyscall/64: Fixup shadow stack and branch tracking for vsyscall
-  x86/cet: Add PTRACE interface for CET
-
- arch/x86/Kconfig                              | 16 ++++
- arch/x86/Makefile                             |  7 ++
- arch/x86/entry/vdso/Makefile                  | 12 ++-
- arch/x86/entry/vdso/vdso-layout.lds.S         |  1 +
- arch/x86/entry/vdso/vdso32/system_call.S      |  3 +
- arch/x86/entry/vsyscall/vsyscall_64.c         | 28 +++++++
- arch/x86/entry/vsyscall/vsyscall_emu_64.S     |  9 +++
- arch/x86/include/asm/cet.h                    |  8 ++
- arch/x86/include/asm/disabled-features.h      |  8 +-
- arch/x86/include/asm/fpu/regset.h             |  7 +-
- arch/x86/include/asm/mmu_context.h            | 10 +++
- arch/x86/include/uapi/asm/prctl.h             |  2 +
- arch/x86/kernel/cet.c                         | 80 +++++++++++++++++++
- arch/x86/kernel/cet_prctl.c                   | 21 +++++
- arch/x86/kernel/cpu/common.c                  | 17 ++++
- arch/x86/kernel/fpu/regset.c                  | 41 ++++++++++
- arch/x86/kernel/process_64.c                  |  6 ++
- arch/x86/kernel/ptrace.c                      | 16 ++++
- arch/x86/kernel/vmlinux.lds.S                 | 11 ++-
- arch/x86/lib/x86-opcode-map.txt               | 13 ++-
- include/uapi/linux/elf.h                      |  1 +
- mm/mmap.c                                     | 19 ++++-
- .../arch/x86/include/asm/disabled-features.h  |  8 +-
- tools/objtool/arch/x86/lib/x86-opcode-map.txt | 13 ++-
- 24 files changed, 345 insertions(+), 12 deletions(-)
-
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 5fa0d9ab18f1..16dae646f633 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -856,6 +856,12 @@ int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
+ 		if (r < 0)
+ 			return r;
+ 	}
++
++	if (cpu_feature_enabled(X86_FEATURE_IBT)) {
++		if (property & GNU_PROPERTY_X86_FEATURE_1_IBT)
++			r = cet_setup_ibt();
++	}
++
+ 	return r;
+ }
+ #endif
 -- 
 2.17.1
 
