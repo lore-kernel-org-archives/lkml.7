@@ -2,153 +2,187 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FE8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF04C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FB320652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FC720652
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHu69qMA"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="J4dVqirl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfFFIBJ (ORCPT
+        id S1726922AbfFFIBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:01:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51080 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfFFIBI (ORCPT
+        Thu, 6 Jun 2019 04:01:17 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:45550 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfFFIBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:01:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f204so1374665wme.0;
-        Thu, 06 Jun 2019 01:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TB7C9wcf8PFXwPAACMih5rxgrGoAW/VScanIebs1BEE=;
-        b=PHu69qMAbjuoGKnHcOkjYV0QDj5qj2uNYwYpwOOhY/jPUKDrZKOV4IcdjK5+6/0LVp
-         S6FlqnnxddlwLCqItW+UmQ/boYbv3a5zdcQVgPn3sYLnOFffMukGT3VgL4tAqxStsLMg
-         6o4pKu68RCb0t6Pw3yEHGIhvOXCC30Qpoek8bb2qB7YV3Ix/nWa/F5+nxplCp1u1Okai
-         /rxpqfCK+fm+BcvH8Zq3Q2tDRr9Hi1bVTdzWA0o69teOWCZ7KL/AllXxfTapKHVmrWZm
-         VhC225X6ryPBYMPZ6D3Cz28aOGGrG0Ape/VDTQW/K4fvE4kXIeKqBGaT5dAiK2JJyzzg
-         OnqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TB7C9wcf8PFXwPAACMih5rxgrGoAW/VScanIebs1BEE=;
-        b=mHwz6UCQYxvxaLqglvnk1FdT4VcyXNkXEGjEtuHZrcgdT5DInE1jp1O2LHRJZ/4dEC
-         MY+M7RBu+j7agAZJTJ0ogvXYE1dFrC6ydFNSGZXTy+Vf8kEvHF7eJlrK/57AUq82rgP6
-         inRYh+Gf/E8SN0SuoOHjvq1DQXXBe+36j5HS7DRj2xrq55RN4E6P8xFn1yfyUJaPaRsF
-         B9xRf6TnkNLboD5LsU2lMLfzns79gctxDsw1RcMj+A1AqrAR8+7TvGgwDVD5NApVBFdg
-         BlQf67u4zhcKmPCkZC81qLyWj6vsD+YVMF46kmrGLbG49SspxO9mrGJ6CkehF8iAeQ26
-         Zfgw==
-X-Gm-Message-State: APjAAAVuD0/uv1ssb/Qw2DdKv48MTsX/l71jQUv8yv7mi81VB82TcOOe
-        8PuwYBz4Qx91crdZgV2yfuk=
-X-Google-Smtp-Source: APXvYqyKS/M2cbCYiNH11Voj4grF6S9NQ7iS9OtU5ZsrzC4u3leDfYNhY6itcXuAF0oO06fN03yJCA==
-X-Received: by 2002:a1c:a186:: with SMTP id k128mr16870281wme.125.1559808065906;
-        Thu, 06 Jun 2019 01:01:05 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([108.61.173.19])
-        by smtp.gmail.com with ESMTPSA id o13sm1260908wra.92.2019.06.06.01.01.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 01:01:05 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 16:00:59 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Douglas Gilbert <dgilbert@interlog.com>
-Cc:     Jiri Slaby <jslaby@suse.cz>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sg: Fix a double-fetch bug in drivers/scsi/sg.c
-Message-ID: <20190606080059.GA7919@zhanggen-UX430UQ>
-References: <20190523023855.GA17852@zhanggen-UX430UQ>
- <d7cb94f3-f136-62ff-3067-b3e5f6ac63ce@suse.cz>
- <da6f10b8-3b9a-f8d6-33c4-0d8f5711bb23@interlog.com>
+        Thu, 6 Jun 2019 04:01:16 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190606080114euoutp0278f89e0afc47fcfbd5c7875b22280497~ljS4I-VZg0297502975euoutp024
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 08:01:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190606080114euoutp0278f89e0afc47fcfbd5c7875b22280497~ljS4I-VZg0297502975euoutp024
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559808074;
+        bh=MAN58sTDz07tsLX8C4vgD27ti2cafy/nMvtO+uKybQw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=J4dVqirl/Wr/Fh/zjEuv+l0vKC17E4O/vtvvE5hx9/WXHmA7m8gnxOMghjZ0r3vv4
+         h9CUAfMPXzr8ZcsYFqb4WPKuL+TZdKsq9KfWf6jkxYUm6eR2T0UQQsLEmwuz+d9hRd
+         Oq8k6FwBtmtD6IHP470DbJSFSS+FAtN1VnF9tft8=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190606080114eucas1p240801a4725f31c59eb76659d8820b91e~ljS3fcY9F0719807198eucas1p2L;
+        Thu,  6 Jun 2019 08:01:14 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 43.75.04377.948C8FC5; Thu,  6
+        Jun 2019 09:01:13 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190606080113eucas1p13327c9bf0596dd2c744f776097153856~ljS2qt3t21310413104eucas1p1x;
+        Thu,  6 Jun 2019 08:01:13 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190606080112eusmtrp149b65493e76b2ab5da42abc6b123dc11~ljS2a-qkd1821018210eusmtrp1e;
+        Thu,  6 Jun 2019 08:01:12 +0000 (GMT)
+X-AuditID: cbfec7f4-5632c9c000001119-b7-5cf8c84957ac
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D2.B1.04140.848C8FC5; Thu,  6
+        Jun 2019 09:01:12 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190606080112eusmtip140c235a6cb15654cc48c0e0e95a858bc~ljS1oYSpx2518925189eusmtip1f;
+        Thu,  6 Jun 2019 08:01:11 +0000 (GMT)
+Subject: Re: [PATCH v3 02/15] drm/bridge: tc358767: Simplify polling in
+ tc_main_link_setup()
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     Archit Taneja <architt@codeaurora.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <90e382a9-6613-64e8-1916-30000ef7654a@samsung.com>
+Date:   Thu, 6 Jun 2019 10:00:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da6f10b8-3b9a-f8d6-33c4-0d8f5711bb23@interlog.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190605070507.11417-3-andrew.smirnov@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHKsWRmVeSWpSXmKPExsWy7djPc7qeJ37EGLx6b2TR3GFr0XSogdWi
+        qeMtq8WPK4dZLA7uOc5kceXrezaLB3NvMll0TlzCbnF51xw2i7v3TrBYrJ9/i82B2+NyXy+T
+        x4Op/5k8ds66y+4xu2Mmq8f97uNMHv1/DTyO39jO5PF5k5zHualnmQI4o7hsUlJzMstSi/Tt
+        ErgyDrUkFjQJVLy/Gt/A2MPbxcjJISFgInH3RAdzFyMXh5DACkaJAz9eskE4Xxgl7jQcZwap
+        EhL4zCjx8FMyTMfeRe2sEEXLGSXufX7NDuG8ZZR4v/8vC0iVsECcxOmb+9hBbBGBAIlPTTvB
+        xjILfGWSOHBpIhNIgk1AU+Lv5ptsIDavgJ3E9YWLwOIsAioS614sBLNFBSIk7h/bwApRIyhx
+        cuYTsAWcQPXN39eCnccsIC/RvHU2lC0ucevJfCaQZRICj9gl9n25yQxxt4vEi45HbBC2sMSr
+        41vYIWwZidOTe1gg7HqJ+ytamCGaOxgltm7YCdVsLXH4+EWgKziANmhKrN+lD2JKCDhKbH/K
+        DWHySdx4KwhxAp/EpG3TmSHCvBIdbUIQMxQl7p/dCjVPXGLpha9sExiVZiF5bBaSZ2YheWYW
+        wtoFjCyrGMVTS4tz01OLjfJSy/WKE3OLS/PS9ZLzczcxAlPZ6X/Hv+xg3PUn6RCjAAejEg+v
+        xMbvMUKsiWXFlbmHGCU4mJVEeBNvf4kR4k1JrKxKLcqPLyrNSS0+xCjNwaIkzlvN8CBaSCA9
+        sSQ1OzW1ILUIJsvEwSnVwFj895DV0fzm3IIHuyNCLUuC7pQyZ/84/PeS2ASXQ2GnVtfME+zl
+        qDrGdv+v9seqUzsjDvf1XEjYYut4pG3L+/ptJVbVgQ3PpM9v8+I33Z7WNyusMnnx22VHj30N
+        iIxM0z03kXfpilAhjTWeIVU1v2yWr9xY9fVvtZPmG/vZ+aXvdLeq7l0YMkuJpTgj0VCLuag4
+        EQDboClrYQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRmVeSWpSXmKPExsVy+t/xu7oeJ37EGDzeY2bR3GFr0XSogdWi
+        qeMtq8WPK4dZLA7uOc5kceXrezaLB3NvMll0TlzCbnF51xw2i7v3TrBYrJ9/i82B2+NyXy+T
+        x4Op/5k8ds66y+4xu2Mmq8f97uNMHv1/DTyO39jO5PF5k5zHualnmQI4o/RsivJLS1IVMvKL
+        S2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyDrUkFjQJVLy/Gt/A2MPb
+        xcjJISFgIrF3UTtrFyMXh5DAUkaJhf9+MEEkxCV2z3/LDGELS/y51sUGUfSaUWLG6WUsIAlh
+        gTiJ0zf3sYPYIgJ+El3zDjCBFDELfGeSmLh8LwtEx1FGiWPLZoFVsQloSvzdfJMNxOYVsJO4
+        vnAR2DoWARWJdS8WgtmiAhESZ96vYIGoEZQ4OfMJmM0JVN/8fS3YScwC6hJ/5l2CsuUlmrfO
+        hrLFJW49mc80gVFoFpL2WUhaZiFpmYWkZQEjyypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzA
+        CN527OeWHYxd74IPMQpwMCrx8Eps/B4jxJpYVlyZe4hRgoNZSYQ38faXGCHelMTKqtSi/Pii
+        0pzU4kOMpkDPTWSWEk3OByaXvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUw
+        fUwcnFINjKU3OxlSWI43F1478PaZjunbUrUpVkEVf3YGP84V0rzhzGzry6ou/zCeb2JbqH6r
+        6r6tcftLY+b3iShy8QbmFd/zCD8kYPgstoA71LMtQWal3JqiA0+m5HhwHX940G5XhsTqO0Iv
+        87fUxRVeU/duiHtkErS4a+vRL6rVL3jUDNpVTs4/X66gxFKckWioxVxUnAgAPUXuD/YCAAA=
+X-CMS-MailID: 20190606080113eucas1p13327c9bf0596dd2c744f776097153856
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190605070527epcas1p36d630a4be138dd07791047c4d45a716f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190605070527epcas1p36d630a4be138dd07791047c4d45a716f
+References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
+        <CGME20190605070527epcas1p36d630a4be138dd07791047c4d45a716f@epcas1p3.samsung.com>
+        <20190605070507.11417-3-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 01:07:25PM -0400, Douglas Gilbert wrote:
-> On 2019-06-05 2:00 a.m., Jiri Slaby wrote:
-> >On 23. 05. 19, 4:38, Gen Zhang wrote:
-> >>In sg_write(), the opcode of the command is fetched the first time from
-> >>the userspace by __get_user(). Then the whole command, the opcode
-> >>included, is fetched again from userspace by __copy_from_user().
-> >>However, a malicious user can change the opcode between the two fetches.
-> >>This can cause inconsistent data and potential errors as cmnd is used in
-> >>the following codes.
-> >>
-> >>Thus we should check opcode between the two fetches to prevent this.
-> >>
-> >>Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> >>---
-> >>diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-> >>index d3f1531..a2971b8 100644
-> >>--- a/drivers/scsi/sg.c
-> >>+++ b/drivers/scsi/sg.c
-> >>@@ -694,6 +694,8 @@ sg_write(struct file *filp, const char __user *buf, size_t count, loff_t * ppos)
-> >>  	hp->flags = input_size;	/* structure abuse ... */
-> >>  	hp->pack_id = old_hdr.pack_id;
-> >>  	hp->usr_ptr = NULL;
-> >>+	if (opcode != cmnd[0])
-> >>+		return -EINVAL;
-> >
-> >Isn't it too early to check cmnd which is copied only here:
-> >
-> >>  	if (__copy_from_user(cmnd, buf, cmd_size))
-> >>  		return -EFAULT;
-> >>  	/*
-> >>---
-> >>
-> 
-> Hi,
-> Yes, it is too early. It needs to be after that __copy_from_user(cmnd,
-> buf, cmd_size) call.
-Yes, it is.
-> 
-> To put this in context, this is a very old interface; dating from 1992
-> and deprecated for almost 20 years. The fact that the first byte of
-> the SCSI cdb needs to be read first to work out that size of the
-> following SCSI command and optionally the offset of a data-out
-> buffer that may follow the command; is one reason why that interface
-> was replaced. Also the implementation did not handle SCSI variable
-> length cdb_s.
-> 
-> Then there is the question of whether this double-fetch is exploitable?
-> I cannot think of an example, but there might be (e.g. turning a READ
-> command into a WRITE). But the "double-fetch" issue may be more wide
-> spread. The replacement interface passes the command and data-in/-out as
-> pointers while their corresponding lengths are placed in the newer
-> interface structure. This assumes that the cdb and data-out won't
-> change in the user space between when the write(2) is called and
-> before or while the driver, using those pointers, reads the data.
-> All drivers that use pointers to pass data have this "feature".
-> 
-> Also I'm looking at this particular double-fetch from the point of view
-> of the driver rewrite I have done and is currently in the early stages
-> of review [linux-scsi list: "[PATCH 00/19] sg: v4 interface, rq sharing
-> + multiple rqs"] and this problem is more difficult to fix since the
-> full cdb read is delayed to a common point further along the submit
-> processing path. To detect a change in cbd[0] my current code would
-> need to be altered to carry cdb[0] through to that common point. So
-> is it worth it for such an old, deprecated and replaced interface??
-> What cdb/user_permissions checking that is done, is done _after_
-> the full cdb is read. So trying to get around a user exclusion of
-> say WRITE(10) by first using the first byte of READ(10), won't succeed.
-> 
-> Doug Gilbert
-> 
-Thanks for your explaination. I guess this patch should be dropped for
-the above reasons.
+On 05.06.2019 09:04, Andrey Smirnov wrote:
+> Replace explicit polling loop with equivalent call to
+> tc_poll_timeout() for brevity. No functional change intended.
+>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Archit Taneja <architt@codeaurora.org>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Cory Tusar <cory.tusar@zii.aero>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/gpu/drm/bridge/tc358767.c | 15 +++++----------
+>  1 file changed, 5 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+> index fb8a1942ec54..5e1e73a91696 100644
+> --- a/drivers/gpu/drm/bridge/tc358767.c
+> +++ b/drivers/gpu/drm/bridge/tc358767.c
+> @@ -774,7 +774,6 @@ static int tc_main_link_enable(struct tc_data *tc)
+>  	struct device *dev = tc->dev;
+>  	unsigned int rate;
+>  	u32 dp_phy_ctrl;
+> -	int timeout;
+>  	u32 value;
+>  	int ret;
+>  	u8 tmp[8];
+> @@ -831,15 +830,11 @@ static int tc_main_link_enable(struct tc_data *tc)
+>  	dp_phy_ctrl &= ~(DP_PHY_RST | PHY_M1_RST | PHY_M0_RST);
+>  	tc_write(DP_PHY_CTRL, dp_phy_ctrl);
+>  
+> -	timeout = 1000;
+> -	do {
+> -		tc_read(DP_PHY_CTRL, &value);
+> -		udelay(1);
+> -	} while ((!(value & PHY_RDY)) && (--timeout));
+> -
+> -	if (timeout == 0) {
+> -		dev_err(dev, "timeout waiting for phy become ready");
+> -		return -ETIMEDOUT;
+> +	ret = tc_poll_timeout(tc, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 1, 1000);
+> +	if (ret) {
+> +		if (ret == -ETIMEDOUT)
+> +			dev_err(dev, "timeout waiting for phy become ready");
+> +		return ret;
 
-Thanks
-Gen
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+ --
+Regards
+Andrzej
+
+
+>  	}
+>  
+>  	/* Set misc: 8 bits per color */
+
+
