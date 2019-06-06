@@ -2,268 +2,516 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9442CC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F8BC28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9DE206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022C0206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mTaj61pl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BnUKsuMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfFFLjP (ORCPT
+        id S1728414AbfFFLkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:39:15 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34541 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfFFLjP (ORCPT
+        Thu, 6 Jun 2019 07:40:18 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37087 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfFFLkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:39:15 -0400
-Received: by mail-lj1-f195.google.com with SMTP id j24so1699457ljg.1;
-        Thu, 06 Jun 2019 04:39:12 -0700 (PDT)
+        Thu, 6 Jun 2019 07:40:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 22so2075591wmg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 04:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fAkJU08ms+SwqDvzgHFBCBahPQgVkQBQ7T8qQDxV/3k=;
-        b=mTaj61plSD+ivbAkbLVyauHMjS9XXV2TPajWp7QI3ZkuZ+nqFmx3P7ksNVEdfOwG6b
-         8uV34TnZhrcRr3p6fOM/A90hi3COqqB8p6vyTfCDp4p+03YIpvqZP/N7+LUXeaM+0QbM
-         kIhrENAZHx7JOJ+5q0/dyS2luZHrWbRiOdvXtxzZzwBt6hPYgC9FlJaMyjfXQwNJ5h7f
-         Vl6L00322pg8qBgfwtxkxD+DUSY2aGQtb1PxStyf5iGPuHZfTQF5TqTs2kXyeSE9zvNU
-         K8iqKv1lqklGTG3c+2z2ARiUoy9Gmy+LJUxj1AsFnF1T4d6upQvIAbYZSKJzr03lNnBF
-         0/Vw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e0R8k9uuYiHNf++gBM8GyQ5qs2s614duInFddvobUmc=;
+        b=BnUKsuMMHO/D9QLdQaLeF1PFMHf+XImtJQHcaYOFM2WkfdjjxZkokc5xc2rUaOeTyP
+         oNs/FKLVx1LvGvVN/oHCcaTzO5qyANM7TUvBQ7ZGYKp0DtH4b+mYpDyfaG3+0UZNW8J/
+         4lQBuD6v1BXWJ+fjxUKz7L3wSw4Nharci3WeIDoIzhDJV3zJbilIF3wrIjJYqK3HCF6J
+         B55Wk2OdKCss1lGRKwztJOO2XCCn4vGPo8KEqI5TzY5CMN5xTJaWoW5w3ujwkyKc1TiW
+         bzA++/eHtsTZ/OolUrgLJloPSbt9ry5yo1g16CqbLoXoM/kBTqK27WncUk0renQBpZ7F
+         pREg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=fAkJU08ms+SwqDvzgHFBCBahPQgVkQBQ7T8qQDxV/3k=;
-        b=J21dmm+pRU3XKGmzCslYP7PB2QSaaXJxxmxgL82uZvV3OaQd8NXi+jVg/ptPqvu7Hz
-         9/qKLxNsdiyMLl5STEijQIGj0uzEkJIYaKDKGVW8nAZ/D5KlGHTljs2Z/b2DlIB+Nf42
-         UoVpQAO0vEIkSH02QfORnJj5IXWVPmEJ+WcZEarCay2VKnK9vXJz+ubkTwmZpVqE9aJ2
-         9z6Q4AomztxjMtjb+4m99Od+FOfW0BF8WyEg/JZZuo/JoqNGPmw2K+UApqci8T+or4R6
-         fkHt4nUJXo7IdtGheXNI4jMaSmfXQYZqv+zpGqUCD0btaOcIpcmygiT8jpt5OQU6UHrI
-         Mw/g==
-X-Gm-Message-State: APjAAAVfR6gQEjabyX28fBNpLhbOCCxmLkfGRL9cWiKrYm9B0mM40Zsh
-        LJQ9HXLNmN2HhVeGPyZkLswRY5ij
-X-Google-Smtp-Source: APXvYqyrFTMEgoOwD9o4ETc5j5pb8Fu2wLRWmA+Zt3R7ENzMQv4NU+V11IYbY0cyoO7QP3+wC+csfA==
-X-Received: by 2002:a2e:970a:: with SMTP id r10mr4644898lji.115.1559821151768;
-        Thu, 06 Jun 2019 04:39:11 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id k12sm279282lfm.90.2019.06.06.04.39.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 04:39:10 -0700 (PDT)
-Subject: Re: [PATCH V4] drivers: i2c: tegra: fix checkpatch defects
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559806523-1352-1-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bbe8ef0e-fdef-613c-9758-6525b60e5992@gmail.com>
-Date:   Thu, 6 Jun 2019 14:39:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        bh=e0R8k9uuYiHNf++gBM8GyQ5qs2s614duInFddvobUmc=;
+        b=pBOYWNoqvzEyGX4NHgznAtSOhH/APA9aZDSeu+c82voZLmtAJ5/Ec4+F41svmiD0EM
+         97lLkQA6gn/7/5I869jA6JhC6NdMfJl0w47t5VAOzpJBGZZJLZCfh2gvagIAJRW8LTym
+         YwnUoWymSIZLk6mCyyR17hV25z/AwmSy3nwS4WPdOkw4H/MYAkBowE1OghtC894x/dtK
+         hAFNbLltO9U6zG5h+fqRVv9k43HEI3rYIUnk75PA+ONVzPvpC6igEWjy9TrABdW3oQFP
+         DM0pfHVuvkyoWaKyKdIZXnNLwXbMe80JjB8Fr90unm/j9KZspV0qV1MDXaxYRYv2C8IQ
+         sLdw==
+X-Gm-Message-State: APjAAAWr755C+PzqVf8D22UALvrhPzNwXrDT5GJXq0hBDXJAOm8u+LjG
+        LWXbMHCX2+zCHqVr8cWZu/N2r0xyrN53Kw==
+X-Google-Smtp-Source: APXvYqzuBpwPG6Z2CMYLnXfC9jp1lNGSWq01t/trN7hK7UJqIRkXDX1om/nUYPY0gi1KYwvBvSCAYQ==
+X-Received: by 2002:a1c:6154:: with SMTP id v81mr25510351wmb.92.1559821213660;
+        Thu, 06 Jun 2019 04:40:13 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id 67sm1474611wmd.38.2019.06.06.04.40.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 04:40:12 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     broonie@kernel.org
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] ASoC: msm8916-wcd-digital: Add sidetone support
+Date:   Thu,  6 Jun 2019 12:40:02 +0100
+Message-Id: <20190606114002.17251-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1559806523-1352-1-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 10:35, Bitan Biswas пишет:
-> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
-> 
-> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
-> as needed. Replace BUG() with error handling code.
-> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
-> 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 67 +++++++++++++++++++++++-------------------
->  1 file changed, 37 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 76b7926..55a5d87 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -78,6 +78,7 @@
->  #define I2C_ERR_NO_ACK				0x01
->  #define I2C_ERR_ARBITRATION_LOST		0x02
->  #define I2C_ERR_UNKNOWN_INTERRUPT		0x04
-> +#define I2C_ERR_UNEXPECTED_STATUS               0x08
->  
->  #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->  #define PACKET_HEADER0_PACKET_ID_SHIFT		16
-> @@ -112,7 +113,7 @@
->  #define I2C_CLKEN_OVERRIDE			0x090
->  #define I2C_MST_CORE_CLKEN_OVR			BIT(0)
->  
-> -#define I2C_CONFIG_LOAD_TIMEOUT			1000000
-> +#define I2C_CONFIG_LOAD_TMOUT			1000000
->  
->  #define I2C_MST_FIFO_CONTROL			0x0b4
->  #define I2C_MST_FIFO_CONTROL_RX_FLUSH		BIT(0)
-> @@ -280,6 +281,7 @@ struct tegra_i2c_dev {
->  	u32 bus_clk_rate;
->  	u16 clk_divisor_non_hs_mode;
->  	bool is_multimaster_mode;
-> +	/* xfer_lock: lock to serialize transfer submission and processing */
->  	spinlock_t xfer_lock;
->  	struct dma_chan *tx_dma_chan;
->  	struct dma_chan *rx_dma_chan;
-> @@ -306,7 +308,7 @@ static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
->   * to the I2C block inside the DVC block
->   */
->  static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
-> -	unsigned long reg)
-> +					unsigned long reg)
->  {
->  	if (i2c_dev->is_dvc)
->  		reg += (reg >= I2C_TX_FIFO) ? 0x10 : 0x40;
-> @@ -314,7 +316,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
->  }
->  
->  static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
-> -	unsigned long reg)
-> +		       unsigned long reg)
->  {
->  	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
->  
-> @@ -329,13 +331,13 @@ static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
->  }
->  
->  static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
-> -	unsigned long reg, int len)
-> +			unsigned long reg, int len)
->  {
->  	writesl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
->  }
->  
->  static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
-> -	unsigned long reg, int len)
-> +		       unsigned long reg, int len)
->  {
->  	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
->  }
-> @@ -486,7 +488,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
->  			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
->  			return -ETIMEDOUT;
->  		}
-> -		msleep(1);
-> +		usleep_range(1000, 2000);
->  	}
->  	return 0;
->  }
-> @@ -525,7 +527,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	 * prevent overwriting past the end of buf
->  	 */
->  	if (rx_fifo_avail > 0 && buf_remaining > 0) {
-> -		BUG_ON(buf_remaining > 3);
->  		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
->  		val = cpu_to_le32(val);
->  		memcpy(buf, &val, buf_remaining);
-> @@ -533,7 +534,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->  		rx_fifo_avail--;
->  	}
->  
-> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
->  	i2c_dev->msg_buf_remaining = buf_remaining;
->  	i2c_dev->msg_buf = buf;
->  
-> @@ -591,7 +591,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	 * boundary and fault.
->  	 */
->  	if (tx_fifo_avail > 0 && buf_remaining > 0) {
-> -		BUG_ON(buf_remaining > 3);
->  		memcpy(&val, buf, buf_remaining);
->  		val = le32_to_cpu(val);
->  
-> @@ -680,10 +679,11 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
->  		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
->  		if (in_interrupt())
->  			err = readl_poll_timeout_atomic(addr, val, val == 0,
-> -					1000, I2C_CONFIG_LOAD_TIMEOUT);
-> +							1000,
-> +							I2C_CONFIG_LOAD_TMOUT);
->  		else
-> -			err = readl_poll_timeout(addr, val, val == 0,
-> -					1000, I2C_CONFIG_LOAD_TIMEOUT);
-> +			err = readl_poll_timeout(addr, val, val == 0, 1000,
-> +						 I2C_CONFIG_LOAD_TMOUT);
->  
->  		if (err) {
->  			dev_warn(i2c_dev->dev,
-> @@ -858,16 +858,21 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->  		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
->  			if (i2c_dev->msg_buf_remaining)
->  				tegra_i2c_empty_rx_fifo(i2c_dev);
-> -			else
-> -				BUG();
-> +			else {
-> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
-> +				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
-> +				goto err;
-> +			}
->  		}
->  
->  		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-> -			if (i2c_dev->msg_buf_remaining)
-> -				tegra_i2c_fill_tx_fifo(i2c_dev);
-> -			else
-> +			if (i2c_dev->msg_buf_remaining) {
-> +				if (tegra_i2c_fill_tx_fifo(i2c_dev))
-> +					goto err;
-> +			} else {
->  				tegra_i2c_mask_irq(i2c_dev,
->  						   I2C_INT_TX_FIFO_DATA_REQ);
-> +			}
->  		}
->  	}
->  
-> @@ -885,7 +890,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->  	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->  		if (i2c_dev->is_curr_dma_xfer)
->  			i2c_dev->msg_buf_remaining = 0;
-> -		BUG_ON(i2c_dev->msg_buf_remaining);
-> +		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
->  		complete(&i2c_dev->msg_complete);
->  	}
->  	goto done;
-> @@ -1024,7 +1029,7 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
->  }
->  
->  static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
-> -	struct i2c_msg *msg, enum msg_end_type end_state)
-> +			      struct i2c_msg *msg, enum msg_end_type end_state)
->  {
->  	u32 packet_header;
->  	u32 int_mask;
-> @@ -1034,7 +1039,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
->  	u32 *buffer = NULL;
->  	int err = 0;
->  	bool dma;
-> -	u16 xfer_time = 100;
-> +	u16 xfer_tm = 100;
+This patch adds sidetone support via one of the 3 RX Mix paths
+using IIR1 and IIR2.
+IIR1 can be feed by any Decimators or RX paths, and IIRx can also be
+looped back to RX mixers to provide sidetone functionality.
+Two IIR filters are used for Side tone equalization and each filter
+is 5 stage.
 
-Why xfer_time is renamed? It is much more important to keep code
-readable rather than to satisfy checkpatch. You should *not* follow
-checkpatch recommendations where they do not make much sense. The
-xfer_tm is a less intuitive naming and hence it harms readability of the
-code. Hence it is better to have "lines over 80 chars" in this
-particular case.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ sound/soc/codecs/msm8916-wcd-digital.c | 353 +++++++++++++++++++++++++
+ 1 file changed, 353 insertions(+)
 
-Also, please don't skip review comments. I already pointed out the above
-in the answer to previous version of the patch.
+diff --git a/sound/soc/codecs/msm8916-wcd-digital.c b/sound/soc/codecs/msm8916-wcd-digital.c
+index a63961861e55..ec00893ca92a 100644
+--- a/sound/soc/codecs/msm8916-wcd-digital.c
++++ b/sound/soc/codecs/msm8916-wcd-digital.c
+@@ -187,6 +187,43 @@
+ #define MSM8916_WCD_DIGITAL_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
+ 				     SNDRV_PCM_FMTBIT_S32_LE)
+ 
++/* Codec supports 2 IIR filters */
++enum {
++	IIR1 = 0,
++	IIR2,
++	IIR_MAX,
++};
++
++/* Codec supports 5 bands */
++enum {
++	BAND1 = 0,
++	BAND2,
++	BAND3,
++	BAND4,
++	BAND5,
++	BAND_MAX,
++};
++
++#define WCD_IIR_FILTER_SIZE	(sizeof(u32)*BAND_MAX)
++
++#define WCD_IIR_FILTER_CTL(xname, iidx, bidx) \
++{       .iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
++	.info = wcd_iir_filter_info, \
++	.get = msm8x16_wcd_get_iir_band_audio_mixer, \
++	.put = msm8x16_wcd_put_iir_band_audio_mixer, \
++	.private_value = (unsigned long)&(struct wcd_iir_filter_ctl) { \
++		.iir_idx = iidx, \
++		.band_idx = bidx, \
++		.bytes_ext = {.max = WCD_IIR_FILTER_SIZE, }, \
++	} \
++}
++
++struct wcd_iir_filter_ctl {
++	unsigned int iir_idx;
++	unsigned int band_idx;
++	struct soc_bytes_ext bytes_ext;
++};
++
+ struct msm8916_wcd_digital_priv {
+ 	struct clk *ahbclk, *mclk;
+ };
+@@ -298,6 +335,200 @@ static SOC_ENUM_SINGLE_DECL(rx2_dcb_cutoff_enum, LPASS_CDC_RX2_B4_CTL, 0,
+ static SOC_ENUM_SINGLE_DECL(rx3_dcb_cutoff_enum, LPASS_CDC_RX3_B4_CTL, 0,
+ 			    dc_blocker_cutoff_text);
+ 
++static int msm8x16_wcd_codec_set_iir_gain(struct snd_soc_dapm_widget *w,
++		struct snd_kcontrol *kcontrol, int event)
++{
++	struct snd_soc_component *component =
++			snd_soc_dapm_to_component(w->dapm);
++	int value = 0, reg = 0;
++
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		if (w->shift == 0)
++			reg = LPASS_CDC_IIR1_GAIN_B1_CTL;
++		else if (w->shift == 1)
++			reg = LPASS_CDC_IIR2_GAIN_B1_CTL;
++		value = snd_soc_component_read32(component, reg);
++		snd_soc_component_write(component, reg, value);
++		break;
++	default:
++		pr_err("%s: event = %d not expected\n", __func__, event);
++	}
++	return 0;
++}
++
++static int msm8x16_wcd_get_iir_enable_audio_mixer(
++					struct snd_kcontrol *kcontrol,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++			snd_soc_kcontrol_component(kcontrol);
++	struct soc_mixer_control *mixer =
++			(struct soc_mixer_control *)kcontrol->private_value;
++	int iir_idx = mixer->reg;
++	int band_idx = mixer->shift;
++
++	ucontrol->value.integer.value[0] =
++		(snd_soc_component_read32(component,
++			    (LPASS_CDC_IIR1_CTL + 64 * iir_idx)) &
++		(1 << band_idx)) != 0;
++
++	return 0;
++}
++
++static int msm8x16_wcd_put_iir_enable_audio_mixer(
++					struct snd_kcontrol *kcontrol,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++			snd_soc_kcontrol_component(kcontrol);
++	struct soc_mixer_control *mixer =
++			(struct soc_mixer_control *)kcontrol->private_value;
++	int iir_idx = mixer->reg;
++	int band_idx = mixer->shift;
++	int value = ucontrol->value.integer.value[0];
++
++	/* Mask first 5 bits, 6-8 are reserved */
++	snd_soc_component_update_bits(component,
++		(LPASS_CDC_IIR1_CTL + 64 * iir_idx),
++			    (1 << band_idx), (value << band_idx));
++
++	return 0;
++}
++
++static uint32_t get_iir_band_coeff(struct snd_soc_component *component,
++				   int iir_idx, int band_idx,
++				   int coeff_idx)
++{
++	uint32_t value = 0;
++
++	/* Address does not automatically update if reading */
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
++		((band_idx * BAND_MAX + coeff_idx)
++		* sizeof(uint32_t)) & 0x7F);
++
++	value |= snd_soc_component_read32(component,
++		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx));
++
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
++		((band_idx * BAND_MAX + coeff_idx)
++		* sizeof(uint32_t) + 1) & 0x7F);
++
++	value |= (snd_soc_component_read32(component,
++		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx)) << 8);
++
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
++		((band_idx * BAND_MAX + coeff_idx)
++		* sizeof(uint32_t) + 2) & 0x7F);
++
++	value |= (snd_soc_component_read32(component,
++		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx)) << 16);
++
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
++		((band_idx * BAND_MAX + coeff_idx)
++		* sizeof(uint32_t) + 3) & 0x7F);
++
++	/* Mask bits top 2 bits since they are reserved */
++	value |= ((snd_soc_component_read32(component,
++		 (LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx)) & 0x3f) << 24);
++	return value;
++
++}
++
++static int msm8x16_wcd_get_iir_band_audio_mixer(
++					struct snd_kcontrol *kcontrol,
++					struct snd_ctl_elem_value *ucontrol)
++{
++
++	struct snd_soc_component *component =
++			snd_soc_kcontrol_component(kcontrol);
++	struct wcd_iir_filter_ctl *ctl =
++			(struct wcd_iir_filter_ctl *)kcontrol->private_value;
++	struct soc_bytes_ext *params = &ctl->bytes_ext;
++	int iir_idx = ctl->iir_idx;
++	int band_idx = ctl->band_idx;
++	u32 coeff[BAND_MAX];
++
++	coeff[0] = get_iir_band_coeff(component, iir_idx, band_idx, 0);
++	coeff[1] = get_iir_band_coeff(component, iir_idx, band_idx, 1);
++	coeff[2] = get_iir_band_coeff(component, iir_idx, band_idx, 2);
++	coeff[3] = get_iir_band_coeff(component, iir_idx, band_idx, 3);
++	coeff[4] = get_iir_band_coeff(component, iir_idx, band_idx, 4);
++
++	memcpy(ucontrol->value.bytes.data, &coeff[0], params->max);
++
++	return 0;
++}
++
++static void set_iir_band_coeff(struct snd_soc_component *component,
++				int iir_idx, int band_idx,
++				uint32_t value)
++{
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx),
++		(value & 0xFF));
++
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx),
++		(value >> 8) & 0xFF);
++
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx),
++		(value >> 16) & 0xFF);
++
++	/* Mask top 2 bits, 7-8 are reserved */
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx),
++		(value >> 24) & 0x3F);
++}
++
++static int msm8x16_wcd_put_iir_band_audio_mixer(
++					struct snd_kcontrol *kcontrol,
++					struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++			snd_soc_kcontrol_component(kcontrol);
++	struct wcd_iir_filter_ctl *ctl =
++			(struct wcd_iir_filter_ctl *)kcontrol->private_value;
++	struct soc_bytes_ext *params = &ctl->bytes_ext;
++	int iir_idx = ctl->iir_idx;
++	int band_idx = ctl->band_idx;
++	u32 coeff[BAND_MAX];
++
++	memcpy(&coeff[0], ucontrol->value.bytes.data, params->max);
++
++	/* Mask top bit it is reserved */
++	/* Updates addr automatically for each B2 write */
++	snd_soc_component_write(component,
++		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
++		(band_idx * BAND_MAX * sizeof(uint32_t)) & 0x7F);
++
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[0]);
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[1]);
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[2]);
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[3]);
++	set_iir_band_coeff(component, iir_idx, band_idx, coeff[4]);
++
++	return 0;
++}
++
++static int wcd_iir_filter_info(struct snd_kcontrol *kcontrol,
++				struct snd_ctl_elem_info *ucontrol)
++{
++	struct wcd_iir_filter_ctl *ctl =
++		(struct wcd_iir_filter_ctl *)kcontrol->private_value;
++	struct soc_bytes_ext *params = &ctl->bytes_ext;
++
++	ucontrol->type = SNDRV_CTL_ELEM_TYPE_BYTES;
++	ucontrol->count = params->max;
++
++	return 0;
++}
++
+ static const struct snd_kcontrol_new msm8916_wcd_digital_snd_controls[] = {
+ 	SOC_SINGLE_S8_TLV("RX1 Digital Volume", LPASS_CDC_RX1_VOL_CTL_B2_CTL,
+ 			  -128, 127, digital_gain),
+@@ -322,6 +553,73 @@ static const struct snd_kcontrol_new msm8916_wcd_digital_snd_controls[] = {
+ 	SOC_SINGLE("RX1 Mute Switch", LPASS_CDC_RX1_B6_CTL, 0, 1, 0),
+ 	SOC_SINGLE("RX2 Mute Switch", LPASS_CDC_RX2_B6_CTL, 0, 1, 0),
+ 	SOC_SINGLE("RX3 Mute Switch", LPASS_CDC_RX3_B6_CTL, 0, 1, 0),
++
++	SOC_SINGLE_EXT("IIR1 Enable Band1", IIR1, BAND1, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR1 Enable Band2", IIR1, BAND2, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR1 Enable Band3", IIR1, BAND3, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR1 Enable Band4", IIR1, BAND4, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR1 Enable Band5", IIR1, BAND5, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR2 Enable Band1", IIR2, BAND1, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR2 Enable Band2", IIR2, BAND2, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR2 Enable Band3", IIR2, BAND3, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR2 Enable Band4", IIR2, BAND4, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	SOC_SINGLE_EXT("IIR2 Enable Band5", IIR2, BAND5, 1, 0,
++	msm8x16_wcd_get_iir_enable_audio_mixer,
++	msm8x16_wcd_put_iir_enable_audio_mixer),
++	WCD_IIR_FILTER_CTL("IIR1 Band1", IIR1, BAND1),
++	WCD_IIR_FILTER_CTL("IIR1 Band2", IIR1, BAND2),
++	WCD_IIR_FILTER_CTL("IIR1 Band3", IIR1, BAND3),
++	WCD_IIR_FILTER_CTL("IIR1 Band4", IIR1, BAND4),
++	WCD_IIR_FILTER_CTL("IIR1 Band5", IIR1, BAND5),
++	WCD_IIR_FILTER_CTL("IIR2 Band1", IIR2, BAND1),
++	WCD_IIR_FILTER_CTL("IIR2 Band2", IIR2, BAND2),
++	WCD_IIR_FILTER_CTL("IIR2 Band3", IIR2, BAND3),
++	WCD_IIR_FILTER_CTL("IIR2 Band4", IIR2, BAND4),
++	WCD_IIR_FILTER_CTL("IIR2 Band5", IIR2, BAND5),
++
++	SOC_SINGLE_SX_TLV("IIR1 INP1 Volume",
++			  LPASS_CDC_IIR1_GAIN_B1_CTL,
++			0,  -84, 40, digital_gain),
++	SOC_SINGLE_SX_TLV("IIR1 INP2 Volume",
++			  LPASS_CDC_IIR1_GAIN_B2_CTL,
++			0,  -84, 40, digital_gain),
++	SOC_SINGLE_SX_TLV("IIR1 INP3 Volume",
++			  LPASS_CDC_IIR1_GAIN_B3_CTL,
++			0,  -84, 40, digital_gain),
++	SOC_SINGLE_SX_TLV("IIR1 INP4 Volume",
++			  LPASS_CDC_IIR1_GAIN_B4_CTL,
++			0,  -84,	40, digital_gain),
++	SOC_SINGLE_SX_TLV("IIR2 INP1 Volume",
++			  LPASS_CDC_IIR2_GAIN_B1_CTL,
++			0,  -84, 40, digital_gain),
++	SOC_SINGLE_SX_TLV("IIR2 INP2 Volume",
++			  LPASS_CDC_IIR2_GAIN_B2_CTL,
++			0,  -84, 40, digital_gain),
++	SOC_SINGLE_SX_TLV("IIR2 INP3 Volume",
++			  LPASS_CDC_IIR2_GAIN_B3_CTL,
++			0,  -84, 40, digital_gain),
++	SOC_SINGLE_SX_TLV("IIR2 INP4 Volume",
++			  LPASS_CDC_IIR2_GAIN_B4_CTL,
++			0,  -84, 40, digital_gain),
++
+ };
+ 
+ static int msm8916_wcd_digital_enable_interpolator(
+@@ -448,6 +746,24 @@ static int msm8916_wcd_digital_enable_dmic(struct snd_soc_dapm_widget *w,
+ 	return 0;
+ }
+ 
++static const char * const iir_inp1_text[] = {
++	"ZERO", "DEC1", "DEC2", "RX1", "RX2", "RX3"
++};
++
++static const struct soc_enum iir1_inp1_mux_enum =
++	SOC_ENUM_SINGLE(LPASS_CDC_CONN_EQ1_B1_CTL,
++		0, 6, iir_inp1_text);
++
++static const struct soc_enum iir2_inp1_mux_enum =
++	SOC_ENUM_SINGLE(LPASS_CDC_CONN_EQ2_B1_CTL,
++		0, 6, iir_inp1_text);
++
++static const struct snd_kcontrol_new iir1_inp1_mux =
++	SOC_DAPM_ENUM("IIR1 INP1 Mux", iir1_inp1_mux_enum);
++
++static const struct snd_kcontrol_new iir2_inp1_mux =
++	SOC_DAPM_ENUM("IIR2 INP1 Mux", iir2_inp1_mux_enum);
++
+ static const struct snd_soc_dapm_widget msm8916_wcd_digital_dapm_widgets[] = {
+ 	/*RX stuff */
+ 	SND_SOC_DAPM_AIF_IN("I2S RX1", NULL, 0, SND_SOC_NOPM, 0, 0),
+@@ -534,6 +850,17 @@ static const struct snd_soc_dapm_widget msm8916_wcd_digital_dapm_widgets[] = {
+ 	SND_SOC_DAPM_MIC("Digital Mic1", NULL),
+ 	SND_SOC_DAPM_MIC("Digital Mic2", NULL),
+ 
++
++
++	/* Sidetone */
++	SND_SOC_DAPM_MUX("IIR1 INP1 MUX", SND_SOC_NOPM, 0, 0, &iir1_inp1_mux),
++	SND_SOC_DAPM_PGA_E("IIR1", LPASS_CDC_CLK_SD_CTL, 0, 0, NULL, 0,
++		msm8x16_wcd_codec_set_iir_gain, SND_SOC_DAPM_POST_PMU),
++
++	SND_SOC_DAPM_MUX("IIR2 INP1 MUX", SND_SOC_NOPM, 0, 0, &iir2_inp1_mux),
++	SND_SOC_DAPM_PGA_E("IIR2", LPASS_CDC_CLK_SD_CTL, 1, 0, NULL, 0,
++		msm8x16_wcd_codec_set_iir_gain, SND_SOC_DAPM_POST_PMU),
++
+ };
+ 
+ static int msm8916_wcd_digital_get_clks(struct platform_device *pdev,
+@@ -708,10 +1035,14 @@ static const struct snd_soc_dapm_route msm8916_wcd_digital_audio_map[] = {
+ 	{"RX1 MIX1 INP1", "RX1", "I2S RX1"},
+ 	{"RX1 MIX1 INP1", "RX2", "I2S RX2"},
+ 	{"RX1 MIX1 INP1", "RX3", "I2S RX3"},
++	{"RX1 MIX1 INP1", "IIR1", "IIR1"},
++	{"RX1 MIX1 INP1", "IIR2", "IIR2"},
+ 
+ 	{"RX1 MIX1 INP2", "RX1", "I2S RX1"},
+ 	{"RX1 MIX1 INP2", "RX2", "I2S RX2"},
+ 	{"RX1 MIX1 INP2", "RX3", "I2S RX3"},
++	{"RX1 MIX1 INP2", "IIR1", "IIR1"},
++	{"RX1 MIX1 INP2", "IIR2", "IIR2"},
+ 
+ 	{"RX1 MIX1 INP3", "RX1", "I2S RX1"},
+ 	{"RX1 MIX1 INP3", "RX2", "I2S RX2"},
+@@ -725,13 +1056,18 @@ static const struct snd_soc_dapm_route msm8916_wcd_digital_audio_map[] = {
+ 	{"RX2 MIX1", NULL, "RX2 MIX1 INP2"},
+ 	{"RX2 MIX1", NULL, "RX2 MIX1 INP3"},
+ 
++
+ 	{"RX2 MIX1 INP1", "RX1", "I2S RX1"},
+ 	{"RX2 MIX1 INP1", "RX2", "I2S RX2"},
+ 	{"RX2 MIX1 INP1", "RX3", "I2S RX3"},
++	{"RX2 MIX1 INP1", "IIR1", "IIR1"},
++	{"RX2 MIX1 INP1", "IIR2", "IIR2"},
+ 
+ 	{"RX2 MIX1 INP2", "RX1", "I2S RX1"},
+ 	{"RX2 MIX1 INP2", "RX2", "I2S RX2"},
+ 	{"RX2 MIX1 INP2", "RX3", "I2S RX3"},
++	{"RX2 MIX1 INP1", "IIR1", "IIR1"},
++	{"RX2 MIX1 INP1", "IIR2", "IIR2"},
+ 
+ 	{"RX2 MIX1 INP3", "RX1", "I2S RX1"},
+ 	{"RX2 MIX1 INP3", "RX2", "I2S RX2"},
+@@ -748,10 +1084,27 @@ static const struct snd_soc_dapm_route msm8916_wcd_digital_audio_map[] = {
+ 	{"RX3 MIX1 INP1", "RX1", "I2S RX1"},
+ 	{"RX3 MIX1 INP1", "RX2", "I2S RX2"},
+ 	{"RX3 MIX1 INP1", "RX3", "I2S RX3"},
++	{"RX3 MIX1 INP1", "IIR1", "IIR1"},
++	{"RX3 MIX1 INP1", "IIR2", "IIR2"},
+ 
+ 	{"RX3 MIX1 INP2", "RX1", "I2S RX1"},
+ 	{"RX3 MIX1 INP2", "RX2", "I2S RX2"},
+ 	{"RX3 MIX1 INP2", "RX3", "I2S RX3"},
++	{"RX3 MIX1 INP2", "IIR1", "IIR1"},
++	{"RX3 MIX1 INP2", "IIR2", "IIR2"},
++
++	{"RX1 MIX2 INP1", "IIR1", "IIR1"},
++	{"RX2 MIX2 INP1", "IIR1", "IIR1"},
++	{"RX1 MIX2 INP1", "IIR2", "IIR2"},
++	{"RX2 MIX2 INP1", "IIR2", "IIR2"},
++
++	{"IIR1", NULL, "IIR1 INP1 MUX"},
++	{"IIR1 INP1 MUX", "DEC1", "DEC1 MUX"},
++	{"IIR1 INP1 MUX", "DEC2", "DEC2 MUX"},
++
++	{"IIR2", NULL, "IIR2 INP1 MUX"},
++	{"IIR2 INP1 MUX", "DEC1", "DEC1 MUX"},
++	{"IIR2 INP1 MUX", "DEC2", "DEC2 MUX"},
+ 
+ 	{"RX3 MIX1 INP3", "RX1", "I2S RX1"},
+ 	{"RX3 MIX1 INP3", "RX2", "I2S RX2"},
+-- 
+2.21.0
+
