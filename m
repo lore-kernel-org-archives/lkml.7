@@ -2,111 +2,107 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA0FC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0DEC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF7772070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B427720872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eNckrlJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbfFFLbW (ORCPT
+        id S1728500AbfFFLbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:31:22 -0400
-Received: from foss.arm.com ([217.140.101.70]:45846 "EHLO foss.arm.com"
+        Thu, 6 Jun 2019 07:31:38 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:26129 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfFFLbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:31:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61922A78;
-        Thu,  6 Jun 2019 04:31:21 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA95C3F246;
-        Thu,  6 Jun 2019 04:31:19 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 12:31:17 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will.deacon@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH V2 4/4] arm64/mm: Drop local variable vm_fault_t from
- __do_page_fault()
-Message-ID: <20190606113117.GC37821@lakrids.cambridge.arm.com>
-References: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
- <1559544085-7502-5-git-send-email-anshuman.khandual@arm.com>
- <20190604145612.GM6610@arrakis.emea.arm.com>
- <1d89177a-e7af-ac4e-1a04-e8b750c2c768@arm.com>
- <20190606112739.GB56860@arrakis.emea.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606112739.GB56860@arrakis.emea.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        id S1727296AbfFFLbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:31:38 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45KNlp6rxYzB09ZH;
+        Thu,  6 Jun 2019 13:31:34 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=eNckrlJg; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 69r4J1NL1uvP; Thu,  6 Jun 2019 13:31:34 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45KNlp5gPtzB09ZF;
+        Thu,  6 Jun 2019 13:31:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1559820694; bh=EkT6MLTyLoWlWTZ1LfczJS2L/RcVxXFmqO5SUzS0rqg=;
+        h=From:Subject:To:Cc:Date:From;
+        b=eNckrlJghjx+Jw7II7lbZTuyXhbRw0loJZzikKQx8KBOTwwImbpl1MpNeQS2XcCx+
+         R6tUufCdVAXR8PpNXgSFJPUdOsf9d/A3aVKKlcAA3RjLGreggabGkT0r5c5i05CqJA
+         QHFTumDge7vpJuXzrxzfnCxJvBjFyjfm363xa3CQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 08D088B894;
+        Thu,  6 Jun 2019 13:31:36 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id MwOSCRWVUvK8; Thu,  6 Jun 2019 13:31:35 +0200 (CEST)
+Received: from po16838vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B61BA8B891;
+        Thu,  6 Jun 2019 13:31:35 +0200 (CEST)
+Received: by po16838vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 5623468CFD; Thu,  6 Jun 2019 11:31:35 +0000 (UTC)
+Message-Id: <cover.1559819372.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v1 0/5] Additional fixes on Talitos driver
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Date:   Thu,  6 Jun 2019 11:31:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 12:27:40PM +0100, Catalin Marinas wrote:
-> On Thu, Jun 06, 2019 at 10:24:01AM +0530, Anshuman Khandual wrote:
-> > On 06/04/2019 08:26 PM, Catalin Marinas wrote:
-> > > On Mon, Jun 03, 2019 at 12:11:25PM +0530, Anshuman Khandual wrote:
-> > >> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> > >> index 4bb65f3..41fa905 100644
-> > >> --- a/arch/arm64/mm/fault.c
-> > >> +++ b/arch/arm64/mm/fault.c
-> > >> @@ -397,37 +397,29 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
-> > >>  static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
-> > >>  			   unsigned int mm_flags, unsigned long vm_flags)
-> > >>  {
-> > >> -	struct vm_area_struct *vma;
-> > >> -	vm_fault_t fault;
-> > >> +	struct vm_area_struct *vma = find_vma(mm, addr);
-> > >>  
-> > >> -	vma = find_vma(mm, addr);
-> > >> -	fault = VM_FAULT_BADMAP;
-> > >>  	if (unlikely(!vma))
-> > >> -		goto out;
-> > >> -	if (unlikely(vma->vm_start > addr))
-> > >> -		goto check_stack;
-> > >> +		return VM_FAULT_BADMAP;
-> > >>  
-> > >>  	/*
-> > >>  	 * Ok, we have a good vm_area for this memory access, so we can handle
-> > >>  	 * it.
-> > >>  	 */
-> > >> -good_area:
-> > >> +	if (unlikely(vma->vm_start > addr)) {
-> > >> +		if (!(vma->vm_flags & VM_GROWSDOWN))
-> > >> +			return VM_FAULT_BADMAP;
-> > >> +		if (expand_stack(vma, addr))
-> > >> +			return VM_FAULT_BADMAP;
-> > >> +	}
-> > > 
-> > > You could have a single return here:
-> > > 
-> > > 	if (unlikely(vma->vm_start > addr) &&
-> > > 	    (!(vma->vm_flags & VM_GROWSDOWN) || expand_stack(vma, addr)))
-> > > 		return VM_FAULT_BADMAP;
-> > > 
-> > > Not sure it's any clearer though.
-> > 
-> > TBH the proposed one seems clearer as it separates effect (vma->vm_start > addr)
-> > from required permission check (vma->vm_flags & VM_GROWSDOWN) and required action
-> > (expand_stack(vma, addr)). But I am happy to change as you have mentioned if that
-> > is preferred.
-> 
-> Not bothered really. You can leave them as in your proposal (I was just
-> seeing the VM_GROWSDOWN check tightly coupled with the expand_stack(),
-> it's fine either way).
+This series is the last set of fixes for the Talitos driver.
 
-Personally, I find it clearer as separate statements, so I'd suggest
-keeping it as per Anshuman's proposal.
+We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
+SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
 
-Thanks,
-Mark.
+[    3.385197] bus: 'platform': really_probe: probing driver talitos with device ff020000.crypto
+[    3.450982] random: fast init done
+[   12.252548] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
+[   12.262226] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
+[   43.310737] Bug in SEC1, padding ourself
+[   45.603318] random: crng init done
+[   54.612333] talitos ff020000.crypto: fsl,sec1.2 algorithms registered in /proc/crypto
+[   54.620232] driver: 'talitos': driver_bound: bound to device 'ff020000.crypto'
+
+[    1.193721] bus: 'platform': really_probe: probing driver talitos with device b0030000.crypto
+[    1.229197] random: fast init done
+[    2.714920] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos)
+[    2.724312] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos-hsna)
+[    4.482045] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos)
+[    4.490940] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
+[    4.500280] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos)
+[    4.509727] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
+[    6.631781] random: crng init done
+[   11.521795] talitos b0030000.crypto: fsl,sec2.2 algorithms registered in /proc/crypto
+[   11.529803] driver: 'talitos': driver_bound: bound to device 'b0030000.crypto'
+
+Christophe Leroy (5):
+  crypto: talitos - fix ECB and CBC algs ivsize
+  crypto: talitos - move struct talitos_edesc into talitos.h
+  crypto: talitos - fix hash on SEC1.
+  crypto: talitos - eliminate unneeded 'done' functions at build time
+  crypto: talitos - drop icv_ool
+
+ drivers/crypto/talitos.c | 104 ++++++++++++++++++++---------------------------
+ drivers/crypto/talitos.h |  28 +++++++++++++
+ 2 files changed, 72 insertions(+), 60 deletions(-)
+
+-- 
+2.13.3
+
