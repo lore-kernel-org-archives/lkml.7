@@ -2,120 +2,143 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE3DC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D41C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B0920868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D80F20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qETdpu1f"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M/+40rgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfFFQaz (ORCPT
+        id S1729693AbfFFQbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:30:55 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38314 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfFFQaz (ORCPT
+        Thu, 6 Jun 2019 12:31:09 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50110 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfFFQbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:30:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v11so1655289pgl.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 09:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=HUlzUdoZEuwBcIsFcfZEEwizXh8qoMoVTwGXgk651gw=;
-        b=qETdpu1fq3YKAf+PIZM1StDrgV04HFfNxDbOwFwICih/0OGyExQlCsDvVUOYGpik2Y
-         2gjJfDYHyR1f73PJKlKkPLUz0l0GTn/HYutjpmDgQis3C/fLVHDiMPAHQWe5abO1CxR5
-         gzEYFYbOrID4vQAzWHjf9Km7CDWQ+YgyDk6XU59IjAjlriBoJDBeFpD1qYriONA0b96g
-         as+fClyo/e/mPDsvW3CinLUXehamtCIGCz+GWe39ZTYfBfsTJCpXWi5sbo6KcpZH4vfU
-         65XNfvzv4dThucKEFN8kGfxpVv32WFy2ilzisbYA6jRwPLAp4Ty+WQbW+p7s0mzzxyfP
-         PCOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=HUlzUdoZEuwBcIsFcfZEEwizXh8qoMoVTwGXgk651gw=;
-        b=stFt/BA650tMARcfM5U4Q0stSxNNxn82segxLPm+YX6uFN1U3IZWdyamkTcCFLPxJA
-         wtiW8NaOI07gZRg4pdOMsZ6KjpLH8C/43T6X25h4DFdv81KgvLdvmQ/4OfHTxlNL9jNC
-         kF1PC+ztQeabULJKhvGGu+3AJTjfnuknsLtoFhJc1daSjww5Kv3SOPy4g3beXlfRdquK
-         ZXoXgwZIiSJUnTMFZAYFMzKVilSkzdj6rdStIGgm/BygCrAd2sQ9wY1diaX0emwDLSy/
-         jiOH9JdYvrXifGlTEGxmxlVReeUrdrmo2sy3LSSFhiBYTnqSPOS2cqJbFZWI9kvHgwgD
-         8Ang==
-X-Gm-Message-State: APjAAAWKEQMqYyZiSZQcUnU4epMdZmCqZjBSKn0JL32G7av3gtttqS1+
-        cR1eSkHAMperKIq161RSNuvfhg==
-X-Google-Smtp-Source: APXvYqwWK98UYLF0wDJKBybt9Rv8pjx46kTpnSnQ3dBiL60FgKPLRXlPXhLbIuisO9V+PN/eTZZzkQ==
-X-Received: by 2002:a62:2983:: with SMTP id p125mr13170922pfp.154.1559838654627;
-        Thu, 06 Jun 2019 09:30:54 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id g8sm2370035pgd.29.2019.06.06.09.30.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 09:30:53 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/meson: fix G12A HDMI PLL settings for 4K60 1000/1001 variations
-In-Reply-To: <20190605125320.8708-1-narmstrong@baylibre.com>
-References: <20190605125320.8708-1-narmstrong@baylibre.com>
-Date:   Thu, 06 Jun 2019 09:30:52 -0700
-Message-ID: <7hh892fzgj.fsf@baylibre.com>
+        Thu, 6 Jun 2019 12:31:09 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56GUwAQ108009;
+        Thu, 6 Jun 2019 11:30:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559838658;
+        bh=MXa33xhQsD/O4PCRwHx6hc+kme91RbO7C14UFiMrnmY=;
+        h=From:To:CC:Subject:Date;
+        b=M/+40rgEismw2eyuGbCucD/OFuCOcEuObIEBxksoQI8QkNKrd7U6hJz2N9feGlUp1
+         hdVZIEWZlAypWLaLYLK7GpkXkDGujdhCxYm405wyM2iLwyAX5WVwVS7KkzMrq5O4j/
+         b3HK/MSes6aSvkTQRBT4zPmWhM/a90aUr3uLIY1o=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56GUwIl006832
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 6 Jun 2019 11:30:58 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
+ 2019 11:30:58 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 6 Jun 2019 11:30:58 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56GUv0A054737;
+        Thu, 6 Jun 2019 11:30:57 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Wingman Kwok <w-kwok2@ti.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 00/10] net: ethernet: ti: netcp: update and enable cpts support
+Date:   Thu, 6 Jun 2019 19:30:37 +0300
+Message-ID: <20190606163047.31199-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Hi
 
-> The Amlogic G12A HDMI PLL needs some specific settings to lock with
-> different fractional values for the 5,4GHz mode.
->
-> Handle the 1000/1001 variation fractional case here to avoid having
-> the PLL in an non lockable state.
->
-> Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/gpu/drm/meson/meson_vclk.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
-> index 44250eff8a3f..83fc2fc82001 100644
-> --- a/drivers/gpu/drm/meson/meson_vclk.c
-> +++ b/drivers/gpu/drm/meson/meson_vclk.c
-> @@ -553,8 +553,17 @@ void meson_hdmi_pll_set_params(struct meson_drm *priv, unsigned int m,
->  
->  		/* G12A HDMI PLL Needs specific parameters for 5.4GHz */
->  		if (m >= 0xf7) {
-> -			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4, 0xea68dc00);
-> -			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5, 0x65771290);
-> +			if (frac < 0x10000) {
-> +				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4,
-> +							0x6a685c00);
-> +				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5,
-> +							0x11551293);
-> +			} else {
-> +				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4,
-> +							0xea68dc00);
-> +				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5,
-> +							0x65771290);
-> +			}
->  			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL6, 0x39272000);
->  			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL7, 0x55540000);
->  		} else {
+The Keystone 2 66AK2HK/E/L 1G Ethernet Switch Subsystems contains The
+Common Platform Time Sync (CPTS) module which is in general compatible with
+CPTS module found on TI AM3/4/5 SoCs. So, the basic support for
+Keystone 2 CPTS is available by default, but not documented and has never been
+enabled inconfig files.
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+The Keystone 2 CPTS module supports also some additional features like time
+sync reference (RFTCLK) clock selection through CPTS_RFTCLK_SEL register
+(offset: x08) in CPTS module, which can modelled as multiplexer clock
+(this was discussed some time ago [1]).
 
-nit: this is continuing with more magic constants, and it would be nice
-to have them converted to #define'd bitfields.  But since that isn't a
-new problem in this patch, it's fine to cleanup later.
+This series adds missed binding documentation for Keystone 2 66AK2HK/E/L
+CPTS module and enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs with possiblity
+to select CPTS reference clock.
 
-Kevin
+Patch 1: adds the CPTS binding documentation. CPTS bindings are defined in the
+way that allows CPTS properties to be grouped under "cpts" sub-node.
+It also defines "cpts-refclk-mux" clock for CPTS RFTCLK selection.
+Patches 2-3: implement CPTS properties grouping under "cpts" sub-node with
+backward compatibility support.
+Patch 4: adds support for time sync reference (RFTCLK) clock selection from DT
+by adding support for "cpts-refclk-mux" multiplexer clock.
+Patches 5-9: DT CPTS nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
+Patch 10: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
+
+I grouped all patches in one series for better illustration of the changes,
+but in general Pateches 1-4 are netdev matarieal (first) and other patches
+are platform specific.
+
+Series can be found at:
+ git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
+branch:
+ net-next-k2e-cpts-refclk
+
+Changes in v2:
+ - do reverse christmas tree in cpts_of_mux_clk_setup()
+ - add ack from Richard Cochran
+
+v1: https://lkml.org/lkml/2019/6/1/77
+
+[1] https://www.spinics.net/lists/netdev/msg408931.html
+
+Grygorii Strashko (10):
+  dt-bindings: doc: net: keystone-netcp: document cpts
+  net: ethernet: ti: cpts: use devm_get_clk_from_child
+  net: ethernet: ti: netcp_ethss: add support for child cpts node
+  net: ethernet: ti: cpts: add support for ext rftclk selection
+  ARM: dts: keystone-clocks: add input fixed clocks
+  ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
+  ARM: dts: k2e-netcp: add cpts refclk_mux node
+  ARM: dts: k2hk-netcp: add cpts refclk_mux node
+  ARM: dts: k2l-netcp: add cpts refclk_mux node
+  ARM: configs: keystone: enable cpts
+
+ .../bindings/net/keystone-netcp.txt           | 44 ++++++++++
+ arch/arm/boot/dts/keystone-clocks.dtsi        | 27 ++++++
+ arch/arm/boot/dts/keystone-k2e-clocks.dtsi    | 20 +++++
+ arch/arm/boot/dts/keystone-k2e-netcp.dtsi     | 21 ++++-
+ arch/arm/boot/dts/keystone-k2hk-netcp.dtsi    | 20 ++++-
+ arch/arm/boot/dts/keystone-k2l-netcp.dtsi     | 20 ++++-
+ arch/arm/configs/keystone_defconfig           |  1 +
+ drivers/net/ethernet/ti/cpts.c                | 88 ++++++++++++++++++-
+ drivers/net/ethernet/ti/cpts.h                |  2 +-
+ drivers/net/ethernet/ti/netcp_ethss.c         |  9 +-
+ 10 files changed, 240 insertions(+), 12 deletions(-)
+
+-- 
+2.17.1
+
