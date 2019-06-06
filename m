@@ -2,165 +2,78 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C35C28EB6
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3331C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864BB206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:55:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTpIPwBk"
+	by mail.kernel.org (Postfix) with ESMTP id 840A0206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfFFKzk (ORCPT
+        id S1727532AbfFFK5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:55:40 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39801 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfFFKzk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:55:40 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 196so1148585pgc.6;
-        Thu, 06 Jun 2019 03:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u11NQoOcVc3KEqCmRt6p0L2NADGM3isejFoGnzfSN6E=;
-        b=CTpIPwBkWIu2kbKtsD3xwmvvC02dqEo8yUPXjFCyPCiFjWT6ZsYSdkZ+PG/g/sHnzG
-         K0FStLpYv8QELGLHzuLfljfsgIOfG2+tXg2xXxXGCT5Ef0Ddr3HTXjBABHo+olQBUr6i
-         yrAkl7JZ1oDPOYV0awiDLxXbJRZ/opHNKYDGXzRlEKvxEFDU3t82lbRx8kkk9DsdYifg
-         gcNFM/9e8MLK7KWachFnFSyZftwWG+TTOJRIwCMHGm0NhsjA6vvuvZ4i8nfuX8lLTWdC
-         hxnPC2qH7xNqp1BJoN55t/CADJPg5EnCdSKUEBx1dJAoPGtc2cduOY/TaycxMNz7L+00
-         Q83w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u11NQoOcVc3KEqCmRt6p0L2NADGM3isejFoGnzfSN6E=;
-        b=eJeHODtCnAj71NEsKkucccCmtZNUxUnFsCyNxpCGcY3Tc2G9MDKKxNw2J+1ucf9inW
-         Wk4JVYLTTl1HlwUX95GCSBCmVZ6g0Ely6Z92/2m3xs0OlNdL69R4YyYRNXxqlz+uBLhV
-         k2ZBb5AnwpP5d0ZXdmVsGs6LZYacDKar+lFP7hDPSc3oQ7vCfmt1a4XkqDSLNjSZLjyO
-         aQ0UmRGg3xnYbFHktUyC9V9673S4hyk+hMsexWvXRGjctKzzL4kSVfVdxNrINs1DwkSj
-         NlQgiJQlNICv2TrAkq751akSjzJguO0yPkhYf2LyjNwZXgy2yWx/sHy/AHfhhroFLxtC
-         Zx6w==
-X-Gm-Message-State: APjAAAXafwRqKNoPMSyEH9h/pBdF6HTZYo8PR9Bf1DIlvoPiPCu/1Sgq
-        aeAp/pccH0MeYnFhnybuJJf+7QPn
-X-Google-Smtp-Source: APXvYqxaHotpQRxzvgbbRzCQ3B2/0ascc5stHMR6qrAPogQfvs7zpzAUQYHshwy0iPahV5QnhUp2MA==
-X-Received: by 2002:a62:b609:: with SMTP id j9mr38392045pff.145.1559818539414;
-        Thu, 06 Jun 2019 03:55:39 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id d10sm4340213pgh.43.2019.06.06.03.55.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 06 Jun 2019 03:55:38 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH v2 4/3] KVM: LAPIC: add advance timer support to pi_inject_timer
-Date:   Thu,  6 Jun 2019 18:55:33 +0800
-Message-Id: <1559818533-20529-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559799086-13912-4-git-send-email-wanpengli@tencent.com>
-References: <1559799086-13912-4-git-send-email-wanpengli@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Jun 2019 06:57:20 -0400
+Received: from gate.crashing.org ([63.228.1.57]:37546 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbfFFK5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:57:20 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x56Aus22032180;
+        Thu, 6 Jun 2019 05:56:55 -0500
+Message-ID: <d87ac9a7faac0d5522cb496d74afc586410fed9c.camel@kernel.crashing.org>
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 06 Jun 2019 20:56:54 +1000
+In-Reply-To: <20190606093149.GA11598@darkstar.musicnaut.iki.fi>
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+         <dfe6451c93574b61d4bdde4a05c5f8ccf86b31a0.camel@kernel.crashing.org>
+         <20190606093149.GA11598@darkstar.musicnaut.iki.fi>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Thu, 2019-06-06 at 12:31 +0300, Aaro Koskinen wrote:
+> Hi,
+> 
+> On Thu, Jun 06, 2019 at 10:54:51AM +1000, Benjamin Herrenschmidt
+> wrote:
+> > On Thu, 2019-06-06 at 01:50 +0300, Aaro Koskinen wrote:
+> > > Hi,
+> > > 
+> > > When upgrading from v5.0 -> v5.1 on G4 PowerBook, I noticed WLAN
+> > > does
+> > > not work anymore:
+> > > 
+> > > [   42.004303] b43legacy-phy0: Loading firmware version 0x127,
+> > > patch level 14 (2005-04-18 02:36:27)
+> > > [   42.184837] b43legacy-phy0 debug: Chip initialized
+> > > [   42.184873] b43legacy-phy0 ERROR: The machine/kernel does not
+> > > support the required 30-bit DMA mask
+> > > 
+> > > The same happens with the current mainline.
+> > 
+> > How much RAM do you have ?
+> 
+> The system has 1129 MB RAM. Booting with mem=1G makes it work.
 
-Wait before calling posted-interrupt deliver function directly to add 
-advance timer support to pi_inject_timer.
+Wow... that's an odd amount. One thing we could possibly do is add code
+to limit the amount of RAM when we detect that device....
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c   | 6 ++++--
- arch/x86/kvm/lapic.h   | 2 +-
- arch/x86/kvm/svm.c     | 2 +-
- arch/x86/kvm/vmx/vmx.c | 2 +-
- 4 files changed, 7 insertions(+), 5 deletions(-)
+Cheers,
+Ben.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index a3e4ca8..9581817 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1470,6 +1470,8 @@ static void apic_timer_expired(struct kvm_lapic *apic)
- 		return;
- 
- 	if (unlikely(can_posted_interrupt_inject_timer(apic->vcpu))) {
-+		if (apic->lapic_timer.timer_advance_ns)
-+			kvm_wait_lapic_expire(vcpu, true);
- 		kvm_apic_inject_pending_timer_irqs(apic);
- 		return;
- 	}
-@@ -1561,7 +1563,7 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
- 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
- }
- 
--void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-+void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu, bool pi_inject)
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	u64 guest_tsc, tsc_deadline;
-@@ -1569,7 +1571,7 @@ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- 	if (apic->lapic_timer.expired_tscdeadline == 0)
- 		return;
- 
--	if (!lapic_timer_int_injected(vcpu))
-+	if (!lapic_timer_int_injected(vcpu) && !pi_inject)
- 		return;
- 
- 	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index f974a3d..16f0500 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -220,7 +220,7 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
- 
- bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
- 
--void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
-+void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu, bool pi_inject);
- 
- bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
- 			struct kvm_vcpu **dest_vcpu);
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 302cb40..049ba64 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5648,7 +5648,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	if (lapic_in_kernel(vcpu) &&
- 		vcpu->arch.apic->lapic_timer.timer_advance_ns)
--		kvm_wait_lapic_expire(vcpu);
-+		kvm_wait_lapic_expire(vcpu, false);
- 
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index da24f18..302bac4 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6447,7 +6447,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	if (lapic_in_kernel(vcpu) &&
- 		vcpu->arch.apic->lapic_timer.timer_advance_ns)
--		kvm_wait_lapic_expire(vcpu);
-+		kvm_wait_lapic_expire(vcpu, false);
- 
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
--- 
-2.7.4
 
