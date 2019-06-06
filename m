@@ -2,95 +2,133 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC234C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35202C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED9020872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0152220866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dAlpqFAE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pD2wunXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfFFAed (ORCPT
+        id S1726633AbfFFAkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 20:34:33 -0400
-Received: from ozlabs.org ([203.11.71.1]:39681 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbfFFAed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 20:34:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45K69g0rTrz9s3l;
-        Thu,  6 Jun 2019 10:34:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559781271;
-        bh=tq3+bNdoKDR+n9hVF1HK/+s0rAY2G/RUg5oBu0MDm+s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dAlpqFAEPcABugq5Cc7gs1c2Xfjj/CxaNfttoWi/GwD/C75WhMOnEU8tuV4TRO21O
-         nH20DpQ6R5R5PW1BpcttNautrP4ldPuUenZRKGfBydT65Kqjfn4y5ScEVcYkC7m7UL
-         cTh/Vq53G7Cg/jh6eVv+7z+kWguXI/4Tea507VubtCzCM/aFm/EkOZ9I7H3PyhDgn2
-         jnOtQ7HJXAUxeQQloN9F8dcwwvQJaPnOPMDUVpEEYD1rHLSIwszJ42QhsRuILynesj
-         vj15ZCtbq4GZ588bXHzFeyquRLbxYkFSMRqQs8qVUduNQHGcWGjoHHzET8K6+JnWDx
-         JuosxXVQnzSPw==
-Date:   Thu, 6 Jun 2019 10:34:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Wed, 5 Jun 2019 20:40:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38954 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbfFFAkD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 20:40:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so351612pfe.6
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 17:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2j6AeMQyqlvFrN/cZ76T3pXgzcnOXpcF30PXkUvG5XQ=;
+        b=pD2wunXYqvfYwPLkqvphd1Nzp5oBP1ZJMlmbllJSDRqtIDW6GMm+JLMRRA0rbZiS1C
+         +9pX2xQxEuN9NhtiVlPu2Jxh6vHv5pnFnYTwBGb5uvtA1DL8+Rf4kviOf5xc77dpWKSB
+         rf8bStUliSESYC80DHlCn8Zkpe6fr6yqjkblYLgaVy0mUYWGe2eSvbKU5FdYiCayUKmB
+         IS2+/HgohoC/dtOAoPVklaNzTd/4lnl4tVjaA8ytHMG8vSWNF8tHI4lhaEMgn3r1eDai
+         XQyeR/zl4UZGvJsyrPL5pR5yxascYYXBmP2ViQI/Xs2NIXa0Fz4whXJebVBrtj4cuJto
+         4/pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2j6AeMQyqlvFrN/cZ76T3pXgzcnOXpcF30PXkUvG5XQ=;
+        b=Mi91B/x7BMpmaXH4t8JhHsmP5TmoGuNARYRMkviVnp4NfRZbFXEBdugNczwexzX264
+         CFgVTvp5Dg1DF3vnwuoMLplXlPIScTo8PcnwttaGPBQjhCzA3+RoXhxqnwQbF8zlhEd5
+         plDVH+v5K+acDFarnQ9Gifiex9o2XRVM1pmlAlQkYwsky+pRdf4ch0+/+TgvgIEFCPsS
+         x06B6CcfHl5unwKg8wkLFpO2OlLwDLo8FA5oK1jQGWKrFyMkxPOdasZ57qRjpV21LLra
+         R+n/pPktInHCIwVUCEbGbyY0OnHrPsUlolbAP3NODP6hB8XvN/On6Xt7D04WdZr9ax6Z
+         qqww==
+X-Gm-Message-State: APjAAAUmjSDOg8pUTlyHQG/szzSLvz4WrABqVWAk/l88cSu3QjQK6rHM
+        4HZlRT80DwigtcoDn/jUeOjoMA==
+X-Google-Smtp-Source: APXvYqzvXQ5ewa5JC1Giq17eXL/bIpyul2XvnitexIdi7NKOYgS8rm1aWJkbpisCuaALbZ2LP5zfhA==
+X-Received: by 2002:a62:e511:: with SMTP id n17mr43614480pff.181.1559781602896;
+        Wed, 05 Jun 2019 17:40:02 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v28sm89656pga.65.2019.06.05.17.40.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 17:40:02 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 17:39:59 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Subject: linux-next: build warning after merge of the hwmon-staging tree
-Message-ID: <20190606103430.74fd20f2@canb.auug.org.au>
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
+Message-ID: <20190606003959.GM4814@minitux>
+References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
+ <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
+ <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+ <20190605060154.GJ22737@tuxbook-pro>
+ <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/9Cdgb7hx.tTijwoz1+CEvz9"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9Cdgb7hx.tTijwoz1+CEvz9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed 05 Jun 02:32 PDT 2019, Avri Altman wrote:
 
-Hi all,
+> > 
+> > On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
+> > 
+> > > Hi,
+> > >
+> > > >
+> > > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
+> > > > <bjorn.andersson@linaro.org> wrote:
+> > > > >
+> > > > > This series exposes the ufs_reset line as a gpio, adds support for ufshcd to
+> > > > > acquire and toggle this and then adds this to SDM845 MTP.
+> > > > >
+> > > > > Bjorn Andersson (3):
+> > > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
+> > > > >   scsi: ufs: Allow resetting the UFS device
+> > > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
+> > > >
+> > > > Adding similar change as in sdm845-mtp to the not yet upstream
+> > > > blueline dts, I validated this allows my micron UFS pixel3 to boot.
+> > > >
+> > > > Tested-by: John Stultz <john.stultz@linaro.org>
+> > > Maybe ufs_hba_variant_ops would be the proper place to add this?
+> > >
+> > 
+> > Are you saying that these memories only need a reset when they are
+> > paired with the Qualcomm host controller?
+> ufs_hba_variant_ops is for vendors to implement their own vops,
+> and as you can see, many of them do.
+> Adding hw_reset to that template seems like the proper way
+> to do what you are doing.
+> 
 
-After merging the hwmon-staging tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+Right, but the vops is operations related to the UFS controller, this
+property relates to the memory connected.
 
-drivers/hwmon/pmbus/adm1275.c: In function 'adm1275_write_pmon_config':
-drivers/hwmon/pmbus/adm1275.c:179:23: warning: unused variable 'data' [-Wun=
-used-variable]
-  struct adm1275_data *data =3D to_adm1275_data(info);
-                       ^~~~
+E.g I have a Hynix memory and John have a Micron memory that needs this
+reset and my assumption is that these memories will need their RESET pin
+toggled regardless of which controller they are connected to.
 
-Introduced by commit
-
-  438318513375 ("hwmon: (pmbus/adm1275) support PMBUS_VIRT_*_SAMPLES")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/9Cdgb7hx.tTijwoz1+CEvz9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz4X5YACgkQAVBC80lX
-0Gy3pggAg48LSZEwJebd/U5f1t5qtcKCS8AFR0oh8ih2l9IH1GUJI06zuANxEsNO
-i1dN13XbK74e5HbG+4WtG9ga3NZnLBmpHUAzKcPlsjN8UxFxwwuIvnzv3hpDo0Z6
-ArPolFacivIY3T2suBIY2vBZ5pK9747ZSqpLs20ylgbsovN1x45c3c5sFlMPe77F
-JJ5ahPFfkBwfppLqZlETugnAwIsQVELsx1ttC2uW2CC4HP9CdVp8JxqbisK5qGXR
-6tYGGGwgwc0ZGclFSJWCXDuah/Bc3e+TRQmbmFTCxNupE3nLQvJdiKrZP0qUJUPq
-E+BssmFMpTOyG7dTxxp8Di5WxpaULQ==
-=jaZm
------END PGP SIGNATURE-----
-
---Sig_/9Cdgb7hx.tTijwoz1+CEvz9--
+Regards,
+Bjorn
