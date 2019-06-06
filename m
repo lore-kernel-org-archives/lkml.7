@@ -2,259 +2,96 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7476DC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83662C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C9B2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pilbngbV"
+	by mail.kernel.org (Postfix) with ESMTP id 66F5720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfFFPSc (ORCPT
+        id S1729270AbfFFPSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:18:32 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46599 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728797AbfFFPSb (ORCPT
+        Thu, 6 Jun 2019 11:18:35 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:51237 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729015AbfFFPSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:18:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m15so2397630ljg.13;
-        Thu, 06 Jun 2019 08:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zganTXzGCAlCIG4B+Z6nsgpPSrckVMIn28Z8kXj6FaQ=;
-        b=pilbngbVqls5PRAUuLpzsNVPRCzHu7WarDvx5rknLivMcwOsUEQFfHcEJm3YhCilQF
-         VnABV+e8ArA+YfAs6bmKpoT8+MuMzD7wCvUneJ48O4dyy6Gvunxpo7+hCgC9SuLF4NC6
-         pUewazcUtQNGYUnPJCqtKWcfMoj6crZKz9QOrmaJCOsTy/hCr/3XOEaNESZFPHIgcazV
-         jJClUMDpYnNxLmqsxE4WgrmPNqcyVt3ZmG57ssz10xxUpRpTdIaRPwPn71PP3G3EDP44
-         n1Lc7YN3WrvkufPDgkY1MOlIA+/b+TxamlUliwcO2XwYIuLV1fNLgXIAHrX6/Z8bN2ac
-         hq4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zganTXzGCAlCIG4B+Z6nsgpPSrckVMIn28Z8kXj6FaQ=;
-        b=A5MfXV5I1u5NAx5vw6ElvqpyeyksBZyEDW5r389hV5TlOKn5KW43GRjhutUKKexRHt
-         A2TLAZmR1iWQp4RNYrrZzq9aerf3Yr1khdmhw0Xt3eXfcatFkvLdqUqDoyOVQRVs1oSG
-         TtP4/Hl7gwwJdxnr11rleK+veGEdjE3HbbCJemmAwhLi2W80tX4ZWntAyzKSnOPoXNAL
-         uv8Uqf92DFW9h46IZiSB3L8kSKIZAEfhw/ltf+QfliryP4trNtesYyrHoBC0+dMm5E59
-         ZpYcvZ5r812ekJsU35axopMRyvyDn5oNTOj7D7TfiQBjUFkygm7rB4aqwRDd4B2p3Iqw
-         /vPQ==
-X-Gm-Message-State: APjAAAWvXgYhePygws+LnMCix1SdQoDqEJYE1aLQRZdipQq1T61meKNu
-        TEQTNEafp28+JzKM1ifoMNmxNqBq
-X-Google-Smtp-Source: APXvYqyKOdQR2BvrXuiAUx7T/tHptr8rIovzj1eO15rezkB1x4Mj6R7XmGXobp64nwYFqzGjtqKPxw==
-X-Received: by 2002:a2e:9e8e:: with SMTP id f14mr686517ljk.120.1559834308018;
-        Thu, 06 Jun 2019 08:18:28 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id f30sm338671lfa.48.2019.06.06.08.18.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 08:18:27 -0700 (PDT)
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
- <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
- <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
-Date:   Thu, 6 Jun 2019 18:18:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 11:18:33 -0400
+X-UUID: 5fb22adf88d34f0fb2e5dba7a463049b-20190606
+X-UUID: 5fb22adf88d34f0fb2e5dba7a463049b-20190606
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 972181061; Thu, 06 Jun 2019 23:18:24 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 6 Jun 2019 23:18:22 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 6 Jun 2019 23:18:22 +0800
+Message-ID: <1559834302.3339.1.camel@mtkswgap22>
+Subject: Re: [PATCH v3 1/2] mt76: mt7615: enable support for mesh
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Sebastian Gottschall <s.gottschall@newmedia-net.de>
+CC:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Chih-Min Chen <chih-min.Chen@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 6 Jun 2019 23:18:22 +0800
+In-Reply-To: <a0a6f631-2eb1-87cc-5653-338c6126690c@newmedia-net.de>
+References: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
+         <a0a6f631-2eb1-87cc-5653-338c6126690c@newmedia-net.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-In-Reply-To: <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 17:25, Jon Hunter пишет:
+On Thu, 2019-06-06 at 12:14 +0200, Sebastian Gottschall wrote:
+> in addition you should take care about this problem which is raised up 
+> if SAE is used. since AES-CMAC required tid to be non zero
 > 
-> 
-> On 06/06/2019 14:45, Dmitry Osipenko wrote:
->> 06.06.2019 15:37, Jon Hunter пишет:
->>>
->>> On 06/06/2019 12:54, Peter Ujfalusi wrote:
->>>>
->>>>
->>>> On 06/06/2019 13.49, Jon Hunter wrote:
->>>>>
->>>>> On 06/06/2019 11:22, Peter Ujfalusi wrote:
->>>>>
->>>>> ...
->>>>>
->>>>>>>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>>>>>>>> well.
->>>>>>>> Not exactly equal.
->>>>>>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->>>>>>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->>>>>>>> multiples of 16]
->>>>>>>
->>>>>>> So I think that the key thing to highlight here, is that the as Sameer
->>>>>>> highlighted above for the Tegra ADMA there are two values that need to
->>>>>>> be programmed; the DMA client FIFO size and the max burst size. The ADMA
->>>>>>> has register fields for both of these.
->>>>>>
->>>>>> How does the ADMA uses the 'client FIFO size' and 'max burst size'
->>>>>> values and what is the relation of these values to the peripheral side
->>>>>> (ADMAIF)?
->>>>>
->>>>> Per Sameer's previous comment, the FIFO size is used by the ADMA to
->>>>> determine how much space is available in the FIFO. I assume the burst
->>>>> size just limits how much data is transferred per transaction.
->>>>>
->>>>>>> As you can see from the above the FIFO size can be much greater than the
->>>>>>> burst size and so ideally both of these values would be passed to the DMA.
->>>>>>>
->>>>>>> We could get by with just passing the FIFO size (as the max burst size)
->>>>>>> and then have the DMA driver set the max burst size depending on this,
->>>>>>> but this does feel quite correct for this DMA. Hence, ideally, we would
->>>>>>> like to pass both.
->>>>>>>
->>>>>>> We are also open to other ideas.
->>>>>>
->>>>>> I can not find public documentation (I think they are walled off by
->>>>>> registration), but correct me if I'm wrong:
->>>>>
->>>>> No unfortunately, you are not wrong here :-(
->>>>>
->>>>>> ADMAIF - peripheral side
->>>>>>  - kind of a small DMA for audio preipheral(s)?
->>>>>
->>>>> Yes this is the interface to the APE (audio processing engine) and data
->>>>> sent to the ADMAIF is then sent across a crossbar to one of many
->>>>> devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
->>>>> configurable depending on the use-case.
->>>>>
->>>>>>  - Variable FIFO size
->>>>>
->>>>> Yes.
->>>>>
->>>>>>  - sends DMA request to ADMA per words
->>>>>
->>>>> From Sameer's notes it says the ADMAIF send a signal to the ADMA per
->>>>> word, yes.
->>>>>
->>>>>> ADMA - system DMA
->>>>>>  - receives the DMA requests from ADMAIF
->>>>>>  - counts the requests
->>>>>>  - based on some threshold of the counter it will send/read from ADMAIF?
->>>>>>   - maxburst number of words probably?
->>>>>
->>>>> Sounds about right to me.
->>>>>
->>>>>> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
->>>>>> managing that FIFO from the outside, making sure that it does not over
->>>>>> or underrun?
->>>>>
->>>>> Yes.
->>>>>
->>>>>> And it is the one who sets the pace (in effect the DMA burst size - how
->>>>>> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
->>>>>
->>>>> Yes.
->>>>>
->>>>> So currently, if you look at the ADMA driver
->>>>> (drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
->>>>> for the burst, but the FIFO size is hard-coded (see the
->>>>> TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
->>>>> Ideally, we should not hard-code this but pass it.
->>>>
->>>> Sure, hardcoding is never good ;)
->>>>
->>>>> Given that there are no current users of the ADMA upstream, we could
->>>>> change the usage of the src/dst_maxburst, but being able to set the FIFO
->>>>> size as well would be ideal.
->>>>
->>>> Looking at the drivers/dma/tegra210-adma.c for the
->>>> TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
->>>> remote FIFO size would fit.
->>>> There are fields for overflow and starvation(?) thresholds and TX/RX
->>>> size (assuming word length, 3 == 32bits?).
->>>
->>> The TX/RX size are the FIFO size. So 3 equates to a FIFO size of 3 * 64
->>> bytes.
->>>
->>>> Both threshold is set to one, so I assume currently ADMA is
->>>> pushing/pulling data word by word.
->>>
->>> That's different. That indicates thresholds when transfers start.
->>>
->>>> Not sure what the burst size is used for, my guess would be that it is
->>>> used on the memory (DDR) side for optimized, more efficient accesses?
->>>
->>> That is the actual burst size.
->>>
->>>> My guess is that the threshold values are the counter limits, if the DMA
->>>> request counter reaches it then ADMA would do a threshold limit worth of
->>>> push/pull to ADMAIF.
->>>> Or there is another register where the remote FIFO size can be written
->>>> and ADMA is counting back from there until it reaches the threshold (and
->>>> pushes/pulling again threshold amount of data) so it keeps the FIFO
->>>> filled with at least threshold amount of data?
->>>>
->>>> I think in both cases the threshold would be the maxburst.
->>>>
->>>> I suppose you have the patch for adma on how to use the fifo_size
->>>> parameter? That would help understand what you are trying to achieve better.
->>>
->>> Its quite simple, we would just use the FIFO size to set the fields
->>> TEGRAXXX_ADMA_CH_FIFO_CTRL_TXSIZE/RXSIZE in the
->>> TEGRAXXX_ADMA_CH_FIFO_CTRL register. That's all.
->>>
->>> Jon
->>>
->>
->> Hi,
->>
->> If I understood everything correctly, the FIFO buffer is shared among
->> all of the ADMA clients and hence it should be up to the ADMA driver to
->> manage the quotas of the clients. So if there is only one client that
->> uses ADMA at a time, then this client will get a whole FIFO buffer, but
->> once another client starts to use ADMA, then the ADMA driver will have
->> to reconfigure hardware to split the quotas.
-> 
-> The FIFO quotas are managed by the ADMAIF driver (does not exist in
-> mainline currently but we are working to upstream this) because it is
-> this device that owns and needs to configure the FIFOs. So it is really
-> a means to pass the information from the ADMAIF to the ADMA.
+> WARNING: CPU: 2 PID: 15324 at 
+> /home/seg/DEV/mt7621/src/router/private/compat-wireless-2017-09-03/net/mac80211/key.c:1096 
+> mt76_wcid_key_setup+0x58/0x9c [mt76]
+> Modules linked in: shortcut_fe gcm ghash_generic ctr gf128mul mt7615e 
+> mt76 mac80211 compat
+> CPU: 2 PID: 15324 Comm: wpa_supplicant Tainted: G        W 4.14.123 #106
+> Stack : 00000000 87c2d000 00000000 8007d8b4 80480000 80482b9c 80610000 
+> 805a4390
+>          8057e2b4 854fb99c 87ed045c 805e4767 80578288 00000001 854fb940 
+> 805e9f78
+>          00000000 00000000 80640000 00000000 81147bb8 00000584 00000007 
+> 00000000
+>          00000000 80650000 80650000 20202020 80000000 00000000 80610000 
+> 872b9fe0
+>          872a2b14 00000448 00000000 87c2d000 00000010 8022d660 00000008 
+> 80640008
+>          ...
+> Call Trace:
+> [<800153e0>] show_stack+0x58/0x100
+> [<8042e83c>] dump_stack+0x9c/0xe0
+> [<800349f0>] __warn+0xe4/0x144
+> [<8003468c>] warn_slowpath_null+0x1c/0x30
+> [<872b9fe0>] mt76_wcid_key_setup+0x58/0x9c [mt76]
+> [<87611690>] mt7615_eeprom_init+0x7b4/0xe9c [mt7615e]
+> ---[ end trace e24aeb4b542e0dea ]---
 
-So you'd want to reserve a larger FIFO for an audio channel that has a
-higher audio rate since it will perform reads more often. You could also
-prioritize one channel over the others, like in a case of audio call for
-example.
+This is fixed by Lorenzo's patch -
+https://patchwork.kernel.org/patch/10976191/
 
-Is the shared buffer smaller than may be needed by clients in a worst
-case scenario? If you could split the quotas statically such that each
-client won't ever starve, then seems there is no much need in the
-dynamic configuration.
+Thanks.
+Ryder
+
