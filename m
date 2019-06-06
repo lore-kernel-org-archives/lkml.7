@@ -2,190 +2,131 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716DDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03801C46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBB920866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07E220866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vIu0FvNl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zzYruU5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfFFJBg (ORCPT
+        id S1727679AbfFFJBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:01:36 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40494 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727538AbfFFJBf (ORCPT
+        Thu, 6 Jun 2019 05:01:41 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:37449 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfFFJBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:01:35 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p11so1534793wre.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:01:34 -0700 (PDT)
+        Thu, 6 Jun 2019 05:01:40 -0400
+Received: by mail-it1-f195.google.com with SMTP id x22so570048itl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:01:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Pt64RIcODeQjneq8j3TjAtIiNmyobDs0m2HCif4NPjg=;
-        b=vIu0FvNlqJvgl8zP64XtXNAaPJgxxguxSD89gPSXVdcqwbaYlQfkljhRw7+PJANJc0
-         ll6HngdXaMicahymLrcQ0KY6bsbAHZekqwiMQMKAfOo4vraXPqxYL1gInpEWC9qX5wDc
-         aQsxWFC5n7LCYyRFUZnYjUuHd9iZnE5Qh5TtzI4Yfhdnye5PttAIFjhkVzbbGqFGPtn4
-         nPjduUdH6GTqNE4ZxmZ9zeS210qPYYFVd2pkKaRKtg6TFFQvBVRZa7AYFe1C7q30mExQ
-         Cfyo/gDIFGqnhmcZ89HzuIUZRLUicghXpF5xUTSqrr/+s4D5xQMb8oVDi/YNnvzB88dH
-         YB1A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dv2WG1P4LjGl9htxi8ki1M85cFA09s4aSi2ztouswF0=;
+        b=zzYruU5/yv3X3MlFghh/z+xye0n/tQWAIaEqAwbUGoDidiM9qML6aHBOgqhV64UbjT
+         RPSYJHLYgx82k45AhD85pqDyd/wsfRBQQGaqe6jJqGAKjdnRiidIdTB8+n7ZRLnpp6Cb
+         004JCYY+4uRtsRlkJClJ+DmEhhfgLjT2NpaD3bxEM54y2NB1NEpwCx/z4igTkr8cOHdZ
+         aCynjpFrCtSVugnDA6MKNsWNgQ8WB9b/w27bzJtgkf75OY8NnK0vPhxTeK2YoYRuqPJj
+         7CW4QZL7KTco3/9La0nnjcaQMuDNIylHUVsg+XqO3xwuMhlQk+H0D8CAdMG05y4FrzRl
+         d2dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Pt64RIcODeQjneq8j3TjAtIiNmyobDs0m2HCif4NPjg=;
-        b=o9cTEGwMwAtGanEco2paEXu5ScNu1gKvvZfhcNHkppkIWl+Eag7vcrfloCxiU+Qxtg
-         lrgOsNPVCTL0mEH0NICsOjEsgHrNeedUrjwKiqSDFrVH8nDMhTU60DYTW8IatWqgzQsf
-         LsWf6kZjwjgGPXhyX9G+TElfUzZ0dHJ8S1p/vY661vA7/uZo1ejBl05barwzuHZkAuhU
-         w5c6vR/92oRangcNVa32Fee4kavwa282ygBHRkZ0AB5t56vXYlYi61Z4KnPE1vJplKc6
-         4UlGW260K/d0DAKudRThCDTRDj9CvMyZro7h8j3JHiXYbEBFGoXBOrmEy2u8nWt2CCxO
-         id7A==
-X-Gm-Message-State: APjAAAXNxAngZMnqX4Oz4EhhIm4qX2uylcO/r44MD8s5HPwja44cTN0F
-        58K6E++zqYzgthdKI0WgGWcNJw==
-X-Google-Smtp-Source: APXvYqzkd/PdWRtcbIEiYEQp2fiPjq2nWUapdFwgv5uaReCAlrAWUdTwO3vabnQnHmzLFxDos0ttOQ==
-X-Received: by 2002:adf:dd91:: with SMTP id x17mr17413345wrl.291.1559811693630;
-        Thu, 06 Jun 2019 02:01:33 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id y2sm1390830wra.58.2019.06.06.02.01.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 02:01:32 -0700 (PDT)
-Subject: Re: [PATCH 02/13] bus_find_device: Unify the match callback with
- class_find_device
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Corey Minyard <minyard@acm.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Kershner <david.kershner@unisys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>,
-        Felipe Balbi <balbi@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Len Brown <lenb@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
- <1559747630-28065-3-git-send-email-suzuki.poulose@arm.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <958acbca-5322-d079-2d88-591ed3d12ed7@linaro.org>
-Date:   Thu, 6 Jun 2019 10:01:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dv2WG1P4LjGl9htxi8ki1M85cFA09s4aSi2ztouswF0=;
+        b=Jz3zcpy0Lw/GKU63pFru0Bs2OYavvelUM3MUk0g572MYZ5XcaAsKo/IwrbgWVWCHsa
+         5lwY5DaendrRrtTPnweDs0Bv/uQg9e4xg28JFhpdyI6RBnjKhW33RAhp8I9LYKpxqrTs
+         cbaV/Q7KwToiVMPb90JMxIrkp5FYpYseH0O//Vgmk8kuIiFcEDAx/PDcf4EDV2wskFix
+         oantSAq2yG/l1sH3cu7u8d+wK4CGZ5SIe39sip3z6QOFQR+FIArSkq/ILIevMGBZ0y9n
+         /mZA4IFsQEHgCw9x6ghoaKV/gmHuF/loFqlW8eO0WbsckspNC2LCydmExx/YDEisBFnp
+         0e5g==
+X-Gm-Message-State: APjAAAWUygK8YEvFsljfxwyOaa+muDSygQA6AzJ8BjG1p+f6ismCiEsA
+        zwdeKDYicDNXtSPMGVRgi4+0Szc0Ozwb73FG7cMU0w==
+X-Google-Smtp-Source: APXvYqwToJWtoVVGRYuxXLAxq/qFM4S6nRzLQkRyaXZ8ORDXXXZqh/aB/0OMI7vljblumoE5aJmqEm+rvCIjADZ+owU=
+X-Received: by 2002:a05:660c:44a:: with SMTP id d10mr9193730itl.153.1559811699927;
+ Thu, 06 Jun 2019 02:01:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1559747630-28065-3-git-send-email-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com>
+ <8696846.WsthzzWoxp@devpool35> <1993275.kHlTELq40E@devpool35>
+In-Reply-To: <1993275.kHlTELq40E@devpool35>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 6 Jun 2019 11:01:26 +0200
+Message-ID: <CAKv+Gu9oq+LseNvB9h1u+Q7QVOJFJwm_RyE1dMRgeVuL6D9fNQ@mail.gmail.com>
+Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
+ (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
+To:     Rolf Eike Beer <eb@emlix.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 6 Jun 2019 at 09:50, Rolf Eike Beer <eb@emlix.com> wrote:
+>
+> Am Donnerstag, 6. Juni 2019, 09:38:41 CEST schrieb Rolf Eike Beer:
+> > Greg KH wrote:
+> > > On Wed, Jun 05, 2019 at 05:19:40PM +0200, Rolf Eike Beer wrote:
+> > > > I decided to dig out a toy project which uses a DragonBoard 410c. This
+> > > > has
+> > > > been "running" with kernel 4.9, which I would keep this way for
+> > > > unrelated
+> > > > reasons. The vanilla 4.9 kernel wasn't bootable back then, but it was
+> > > > buildable, which was good enough.
+> > > >
+> > > > Upgrading the kernel to 4.9.180 caused the boot to suddenly fail:
+> > > >
+> > > > aarch64-unknown-linux-gnueabi-ld:
+> > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): in function
+> > > > `handle_kernel_image':
+> > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:63
+> > > > :
+> > > > undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_'
+> > > > aarch64-unknown-linux-gnueabi-ld:
+> > > > ./drivers/firmware/efi/libstub/lib.a(arm64- stub.stub.o): relocation
+> > > > R_AARCH64_ADR_PREL_PG_HI21 against symbol
+> > > > `__efistub__GLOBAL_OFFSET_TABLE_' which may bind externally can not be
+> > > > used when making a shared object; recompile with -fPIC
+> > > > /tmp/e2/build/linux-4.9.139/drivers/firmware/efi/libstub/arm64-stub.c:63
+> > > > :
+> > > > (.init.text+0xc): dangerous relocation: unsupported relocation
+> > > > /tmp/e2/build/linux-4.9.139/Makefile:1001: recipe for target 'vmlinux'
+> > > > failed -make[1]: *** [vmlinux] Error 1
+> > > >
+> > > > This is caused by commit 27b5ebf61818749b3568354c64a8ec2d9cd5ecca from
+> > > > linux-4.9.y (which is 91ee5b21ee026c49e4e7483de69b55b8b47042be),
+> > > > reverting
+> > > > this commit fixes the build.
+> > > >
+> > > > This happens with vanilla binutils 2.32 and gcc 8.3.0 as well as 9.1.0.
+> > > > See
+> > > > the attached .config for reference.
+> > > >
+> > > > If you have questions or patches just ping me.
+> > >
+> > > Does Linus's latest tree also fail for you (or 5.1)?
+> >
+> > 5.1.7 with the same config as before and "make olddefconfig" builds for me.
+>
+> Just for the fun of it: both 4.19 and 4.19.48 also work.
+>
 
+Thanks Rolf
 
-On 05/06/2019 16:13, Suzuki K Poulose wrote:
-> There is an arbitrary difference between the prototypes of
-> bus_find_device() and class_find_device() preventing their callers
-> from passing the same pair of data and match() arguments to both of
-> them, which is the const qualifier used in the prototype of
-> class_find_device().  If that qualifier is also used in the
-> bus_find_device() prototype, it will be possible to pass the same
-> match() callback function to both bus_find_device() and
-> class_find_device(), which will allow some optimizations to be made in
-> order to avoid code duplication going forward.  Also with that, constify
-> the "data" parameter as it is passed as a const to the match function.
-> 
-> For this reason, change the prototype of bus_find_device() to match
-> the prototype of class_find_device() and adjust its callers to use the
-> const qualifier in accordance with the new prototype of it.
-> 
-> Cc: Alexander Shishkin<alexander.shishkin@linux.intel.com>
-> Cc: Andrew Lunn<andrew@lunn.ch>
-> Cc: Andreas Noever<andreas.noever@gmail.com>
-> Cc: Arnd Bergmann<arnd@arndb.de>
-> Cc: Bjorn Helgaas<bhelgaas@google.com>
-> Cc: Corey Minyard<minyard@acm.org>
-> Cc: Christian Borntraeger<borntraeger@de.ibm.com>
-> Cc: David Kershner<david.kershner@unisys.com>
-> Cc: "David S. Miller"<davem@davemloft.net>
-> Cc: David Airlie<airlied@linux.ie>
-> Cc: Felipe Balbi<balbi@kernel.org>
-> Cc: Frank Rowand<frowand.list@gmail.com>
-> Cc: Grygorii Strashko<grygorii.strashko@ti.com>
-> Cc: Harald Freudenberger<freude@linux.ibm.com>
-> Cc: Hartmut Knaack<knaack.h@gmx.de>
-> Cc: Heiko Stuebner<heiko@sntech.de>
-> Cc: Jason Gunthorpe<jgg@ziepe.ca>
-> Cc: Jonathan Cameron<jic23@kernel.org>
-> Cc: Jonathan Cameron<jic23@kernel.org>
-> Cc: "James E.J. Bottomley"<jejb@linux.ibm.com>
-> Cc: Len Brown<lenb@kernel.org>
-> Cc: Mark Brown<broonie@kernel.org>
-> Cc: Michael Ellerman<mpe@ellerman.id.au>
-> Cc: Michael Jamet<michael.jamet@intel.com>
-> Cc: "Martin K. Petersen"<martin.petersen@oracle.com>
-> Cc: Peter Oberparleiter<oberpar@linux.ibm.com>
-> Cc: Rob Herring<robh+dt@kernel.org>
-> Cc: Sebastian Ott<sebott@linux.ibm.com>
-> Cc: Srinivas Kandagatla<srinivas.kandagatla@linaro.org>
-> Cc: Yehezkel Bernat<YehezkelShB@gmail.com>
-> Cc: Wolfram Sang<wsa@the-dreams.de>
-> Cc:rafael@kernel.org
-> Cc: Greg Kroah-Hartman<gregkh@linuxfoundation.org>
-> Signed-off-by: Suzuki K Poulose<suzuki.poulose@arm.com>
-> ---
->   arch/powerpc/platforms/pseries/ibmebus.c           | 4 ++--
->   drivers/acpi/acpi_lpss.c                           | 4 ++--
->   drivers/acpi/sleep.c                               | 2 +-
->   drivers/acpi/utils.c                               | 4 ++--
->   drivers/base/bus.c                                 | 6 +++---
->   drivers/base/devcon.c                              | 2 +-
->   drivers/char/ipmi/ipmi_si_platform.c               | 2 +-
->   drivers/firmware/efi/dev-path-parser.c             | 4 ++--
->   drivers/gpu/drm/drm_mipi_dsi.c                     | 2 +-
->   drivers/hwtracing/coresight/coresight.c            | 6 +++---
->   drivers/hwtracing/coresight/of_coresight.c         | 2 +-
->   drivers/hwtracing/intel_th/core.c                  | 5 ++---
->   drivers/i2c/i2c-core-acpi.c                        | 4 ++--
->   drivers/i2c/i2c-core-of.c                          | 4 ++--
->   drivers/iio/inkern.c                               | 2 +-
->   drivers/infiniband/hw/hns/hns_roce_hw_v1.c         | 2 +-
->   drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c | 2 +-
->   drivers/net/ethernet/ti/cpsw-phy-sel.c             | 4 ++--
->   drivers/net/ethernet/ti/davinci_emac.c             | 2 +-
->   drivers/net/ethernet/toshiba/tc35815.c             | 4 ++--
->   drivers/nvmem/core.c                               | 2 +-
-
-
-For NVMEM changes,
-
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
-
---srini
+Could you please check whether patch
+60f38de7a8d4e816100ceafd1b382df52527bd50 applies cleanly, and whether
+it fixes the problem? Thanks.
