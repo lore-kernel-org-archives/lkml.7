@@ -2,186 +2,94 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A02CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F00CC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365C920866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C4A2083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbfFFOxO convert rfc822-to-8bit (ORCPT
+        id S1728954AbfFFOym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:53:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54386 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727559AbfFFOxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:53:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A5498AFE3;
-        Thu,  6 Jun 2019 14:53:11 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 16:53:09 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>,
-        Steven Honeyman <stevenhoneyman@gmail.com>,
-        Valdis.Kletnieks@vt.edu,
-        Jochen Eisinger <jochen@penguin-breeder.org>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com,
-        Alex Hung <alex.hung@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4] i2c: i801: Register optional lis3lv02d I2C device on
- Dell machines
-Message-ID: <20190606165309.4a3c81c0@endymion>
-In-Reply-To: <20190604223303.31945-1-pali.rohar@gmail.com>
-References: <20190604223303.31945-1-pali.rohar@gmail.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+        Thu, 6 Jun 2019 10:54:42 -0400
+Received: from relay.sw.ru ([185.231.240.75]:36108 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727559AbfFFOym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:54:42 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hYtmX-0000ch-5P; Thu, 06 Jun 2019 17:54:21 +0300
+Subject: Re: KASAN: use-after-free Read in unregister_shrinker
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, bfields@redhat.com,
+        chris@chrisdown.name, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        guro@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Jeff Layton <jlayton@kernel.org>, laoar.shao@gmail.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-nfs@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yang.shi@linux.alibaba.com
+References: <0000000000005a4b99058a97f42e@google.com>
+ <b67a0f5d-c508-48a7-7643-b4251c749985@virtuozzo.com>
+ <20190606131334.GA24822@fieldses.org>
+ <275f77ad-1962-6a60-e60b-6b8845f12c34@virtuozzo.com>
+ <CACT4Y+aJQ6J5WdviD+cOmDoHt2Dj=Q4uZ4vHbCfHe+_TCEY6-Q@mail.gmail.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <00ec828a-0dcb-ca70-e938-ca26a6a8b675@virtuozzo.com>
+Date:   Thu, 6 Jun 2019 17:54:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <CACT4Y+aJQ6J5WdviD+cOmDoHt2Dj=Q4uZ4vHbCfHe+_TCEY6-Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pali,
+On 06.06.2019 17:40, Dmitry Vyukov wrote:
+> On Thu, Jun 6, 2019 at 3:43 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>
+>> On 06.06.2019 16:13, J. Bruce Fields wrote:
+>>> On Thu, Jun 06, 2019 at 10:47:43AM +0300, Kirill Tkhai wrote:
+>>>> This may be connected with that shrinker unregistering is forgotten on error path.
+>>>
+>>> I was wondering about that too.  Seems like it would be hard to hit
+>>> reproduceably though: one of the later allocations would have to fail,
+>>> then later you'd have to create another namespace and this time have a
+>>> later module's init fail.
+>>
+>> Yes, it's had to bump into this in real life.
+>>
+>> AFAIU, syzbot triggers such the problem by using fault-injections
+>> on allocation places should_failslab()->should_fail(). It's possible
+>> to configure a specific slab, so the allocations will fail with
+>> requested probability.
+> 
+> No fault injection was involved in triggering of this bug.
+> Fault injection is clearly visible in console log as "INJECTING
+> FAILURE at this stack track" splats and also for bugs with repros it
+> would be noted in the syzkaller repro as "fault_call": N. So somehow
+> this bug was triggered as is.
+> 
+> But overall syzkaller can do better then the old probabilistic
+> injection. The probabilistic injection tend to both under-test what we
+> want to test and also crash some system services. syzkaller uses the
+> new "systematic fault injection" that allows to test specifically each
+> failure site separately in each syscall separately.
 
-On Wed,  5 Jun 2019 00:33:03 +0200, Pali Rohár wrote:
-> Dell platform team told us that some (DMI whitelisted) Dell Latitude
-> machines have ST microelectronics accelerometer at I2C address 0x29.
-> 
-> Presence of that ST microelectronics accelerometer is verified by existence
-> of SMO88xx ACPI device which represent that accelerometer. Unfortunately
-> ACPI device does not specify I2C address.
-> 
-> This patch registers lis3lv02d device for selected Dell Latitude machines
-> at I2C address 0x29 after detection. And for Dell Vostro V131 machine at
-> I2C address 0x1d which was manually detected.
-> 
-> Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
-> conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
-> lis3lv02d correctly initialize accelerometer.
-> 
-> Tested on Dell Latitude E6440.
-> 
-> Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
-> 
-> ---
-> Changes since v3:
->  * Use char * [] type for list of acpi ids
->  * Check that SMO88xx acpi device is present, enabled and functioning
->  * Simplify usage of acpi_get_devices()
->  * Change i2c to I2C
->  * Make dell_lis3lv02d_devices const
-> 
-> Changes since v2:
->  * Use explicit list of SMOxx ACPI devices
-> 
-> Changes since v1:
->  * Added Dell Vostro V131 based on Michał Kępień testing
->  * Changed DMI product structure to include also i2c address
-> ---
->  drivers/i2c/busses/i2c-i801.c       | 123 ++++++++++++++++++++++++++++++++++++
->  drivers/platform/x86/dell-smo8800.c |   1 +
->  2 files changed, 124 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index ac7f7817dc89..9060d4b16f4f 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -1134,6 +1134,126 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
->  	}
->  }
->  
-> +/* NOTE: Keep this list in sync with drivers/platform/x86/dell-smo8800.c */
-> +static const char *const acpi_smo8800_ids[] = {
-> +	"SMO8800",
-> +	"SMO8801",
-> +	"SMO8810",
-> +	"SMO8811",
-> +	"SMO8820",
-> +	"SMO8821",
-> +	"SMO8830",
-> +	"SMO8831",
-> +};
-> +
-> +static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
-> +					     u32 nesting_level,
-> +					     void *context,
-> +					     void **return_value)
-> +{
-> +	struct acpi_device_info *info;
-> +	unsigned long long sta;
-> +	acpi_status status;
-> +	char *hid;
-> +	int i;
-> +
-> +	status = acpi_bus_get_status_handle(obj_handle, &sta);
-> +	if (!ACPI_SUCCESS(status))
-> +		return AE_OK;
-> +	if (!(sta & (ACPI_STA_DEVICE_PRESENT |
-> +		     ACPI_STA_DEVICE_ENABLED |
-> +		     ACPI_STA_DEVICE_FUNCTIONING)))
-> +		return AE_OK;
+Oho! Interesting.
 
-This is testing that *either* bit is set. Is it what you intend to
-achieve, or would you rather want to ensure that *all* these bits are
-set?
-
-> +
-> +	status = acpi_get_object_info(obj_handle, &info);
-> +	if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
-> +		return AE_OK;
-> +
-> +	hid = info->hardware_id.string;
-> +	if (!hid)
-> +		return AE_OK;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(acpi_smo8800_ids); ++i) {
-> +		if (strcmp(hid, acpi_smo8800_ids[i]) == 0) {
-> +			*((bool *)return_value) = true;
-> +			return AE_CTRL_TERMINATE;
-> +		}
-> +	}
-> +
-> +	return AE_OK;
-> +}
-> +
-> +static bool is_dell_system_with_lis3lv02d(void)
-> +{
-> +	bool found;
-> +	const char *vendor;
-> +
-> +	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
-> +	if (strcmp(vendor, "Dell Inc.") != 0)
-> +		return false;
-> +
-> +	/*
-> +	 * Check that ACPI device SMO88xx exists and is enabled. That ACPI
-> +	 * device represent our ST microelectronics lis3lv02d accelerometer but
-> +	 * unfortunately without any other information (like I2C address).
-> +	 */
-> +	found = false;
-> +	acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
-> +				  (void **)&found);
-
-Alignment is incorrect now - but don't resend just for this.
-
-> +
-> +	return found;
-> +}
-> (...)
-
-Everything else looks good to me now. Has the latest version of your
-patch been tested on real hardware?
-
--- 
-Jean Delvare
-SUSE L3 Support
+> All kernel testing systems should use it. Also in couple with KASAN,
+> KMEMLEAK, LOCKDEP. It's indispensable in finding kernel bugs.
