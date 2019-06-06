@@ -2,285 +2,148 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE29C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CE5C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6EB208C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C5620868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="g6ABHGiJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFN7rlmI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbfFFSCc (ORCPT
+        id S1730398AbfFFSDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:02:32 -0400
-Received: from mail.efficios.com ([167.114.142.138]:45028 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfFFSCc (ORCPT
+        Thu, 6 Jun 2019 14:03:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39646 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbfFFSDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:02:32 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id B3BDC242834;
-        Thu,  6 Jun 2019 14:02:30 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id hdAWPYAsPizK; Thu,  6 Jun 2019 14:02:29 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id C9C7C242829;
-        Thu,  6 Jun 2019 14:02:29 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C9C7C242829
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1559844149;
-        bh=vdoUni7TtB4T+sY7n7rv0ImmEBFxotDrIUJTIkh7Mhk=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=g6ABHGiJnJ5X9tr3URBXcnTB3lYzGxF3UfgTIZXOc+svJNX8VCg+9GdkMslJNmVxX
-         T2kZSyW755/dGqXDZ7rPqKkKXPTSj2yo/5Fvp4eysdTVreH9UZP24V9Y6CrWiszfJZ
-         K/nQjCRSkwxYhbNFWPjNqGnCDwrZ0Tzggq8ESWxz4sEWRQ09Q2oQ8wbWdTy5GMBN/p
-         ohklr0it5+O4x0XacTT/lcU8CB5tyIy+f1EFfsrq0+CGrrd6wxlLMNjlpkmvyHUyO8
-         LmHO6YUsg3pVsEG+W4Y45tBM4RsBYlbpil887CAl9r68asoc6rbSq6qvR6AL6WVEhH
-         XMB4peqYdpqnA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id o2TYGXsURVSJ; Thu,  6 Jun 2019 14:02:29 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id A85F6242819;
-        Thu,  6 Jun 2019 14:02:29 -0400 (EDT)
-Date:   Thu, 6 Jun 2019 14:02:29 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@arm.linux.org.uk>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>, shuah <shuah@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Message-ID: <1975020343.35751.1559844149532.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190503193858.9676-1-mathieu.desnoyers@efficios.com>
-References: <20190429152803.7719-9-mathieu.desnoyers@efficios.com> <20190503193858.9676-1-mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2 for 5.2 08/12] rseq/selftests: arm: use udf
- instruction for RSEQ_SIG
+        Thu, 6 Jun 2019 14:03:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so1977662pfe.6;
+        Thu, 06 Jun 2019 11:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=vL/yJFjtKE26N8WppeIL8DymV0OTQcN/8h3vh7inQew=;
+        b=IFN7rlmIbyt4XlgxMONME0XVhDVkFm4/1VckRnhxVZgALeXceWARI58K7ZtGHpKwOy
+         L5Kr/+0Y6h16yPS6wINB6v5GwmzYnv8/ROmq8FDfXI2OChdFeehg5PTa+6E9rn07F1/c
+         86Bjl/RxTuS9675ElTVkQ08H1BugEjAEStdtVAFSEjn0vuy2IL1eeIigSXH53HnEmEiq
+         O6i/7I3Z30JHDLj6OZHCCYg49GCvhr+8x838/5cttfZtDVtgyFT6LKL92FY4YEHRFFAg
+         9NpjqI95GwWz7JrVJ2Vw4C8hvOYaqyfeKSUBWYLP0SIBqpnWSWHbOGeaVCQl9zRtEeDg
+         HQbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=vL/yJFjtKE26N8WppeIL8DymV0OTQcN/8h3vh7inQew=;
+        b=FfeP4oI6FbzcPEBgNw1/zXbxaI7M26EDyBDJFjgjnrgw5FchJID1TibeUOwMc7/wRm
+         IcA9TGA1lo0sSrdr8C3MOKPUtyBATiXb+IkcljQ10UMaBhGIPDPTCr9A+6poVcLtws/C
+         E0GPyEGzKy+0wFW/gT+VOYVosfls3TKpaEDnApQct7+EbPjsFJFBdb2g6EtAqLKk2zqS
+         bC78E4+4lQaPrA7Xt/T6Z3zKspulqB5DaI8euRiSopxfyxTPkC825lgiQWTB/whPeVi1
+         knUInvh8GaztguXc5MpUuc0Ama+Ii6ZO4EyZwrO64qvhd3CSNbdUbMF/Nd5X2sjfn1Xl
+         pLSg==
+X-Gm-Message-State: APjAAAUkkyzO3E+okDaSeLO3s7uufceCeZuEb38eaOFVrJNfFmHxsmVg
+        Q7A2mmCRVdzXCOefP6DJmEw=
+X-Google-Smtp-Source: APXvYqyfjbd021wZbVjBB+70qJRPXGTgTljHe/nVnBfkUy4Y3ButrRqFGUdwG5ulgCJppMyvpTGiDA==
+X-Received: by 2002:a62:1a93:: with SMTP id a141mr54671966pfa.72.1559844220056;
+        Thu, 06 Jun 2019 11:03:40 -0700 (PDT)
+Received: from [172.26.126.80] ([2620:10d:c090:180::1:627e])
+        by smtp.gmail.com with ESMTPSA id h2sm2125014pgs.17.2019.06.06.11.03.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 11:03:39 -0700 (PDT)
+From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
+To:     "Ilya Maximets" <i.maximets@samsung.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
+        "Magnus Karlsson" <magnus.karlsson@intel.com>
+Subject: Re: [PATCH] net: Fix hang while unregistering device bound to xdp
+ socket
+Date:   Thu, 06 Jun 2019 11:03:38 -0700
+X-Mailer: MailMate (1.12.5r5635)
+Message-ID: <4414B6B6-3FE2-4CF2-A67A-159FCF6B9ECF@gmail.com>
+In-Reply-To: <20190606124014.23231-1-i.maximets@samsung.com>
+References: <CGME20190606124020eucas1p2007396ae8f23a426a17e0e5481636187@eucas1p2.samsung.com>
+ <20190606124014.23231-1-i.maximets@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/selftests: arm: use udf instruction for RSEQ_SIG
-Thread-Index: YcGezvm7ivFdjjSZdlA+YYoxUnlhzQ==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 3, 2019, at 3:38 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+On 6 Jun 2019, at 5:40, Ilya Maximets wrote:
 
-> Use udf as the guard instruction for the restartable sequence abort
-> handler.
-> 
-> Previously, the chosen signature was not a valid instruction, based
-> on the assumption that it could always sit in a literal pool. However,
-> there are compilation environments in which literal pools are not
-> available, for instance execute-only code. Therefore, we need to
-> choose a signature value that is also a valid instruction.
-> 
-> Handle compiling with -mbig-endian on ARMv6+, which generates binaries
-> with mixed code vs data endianness (little endian code, big endian
-> data).
-> 
-> Else mismatch between code endianness for the generated signatures and
-> data endianness for the RSEQ_SIG parameter passed to the rseq
-> registration will trigger application segmentation faults when the
-> kernel try to abort rseq critical sections.
-> 
-> Prior to ARMv6, -mbig-endian generates big-endian code and data, so
-> endianness should not be reversed in that case.
-
-And of course it cannot be that easy. This breaks when building in
-thumb mode (-mthumb). Output from librseq arm32 build [1] (code similar
-to what is found in the rseq selftests):
-
-  CC       rseq.lo
-/tmp/ccu6Jw1b.s: Assembler messages:
-/tmp/ccu6Jw1b.s:297: Error: cannot determine Thumb instruction size. Use .inst.n/.inst.w instead
-/tmp/ccu6Jw1b.s:490: Error: cannot determine Thumb instruction size. Use .inst.n/.inst.w instead
-Makefile:460: recipe for target 'rseq.lo' failed
-
-This appears to be caused by a missing .arm directive in RSEQ_SIG_DATA.
-Fixing with:
-
--               asm volatile ("b 2f\n\t"                                \
-+               asm volatile (".arm\n\t"                                \
-+                             "b 2f\n\t"                                \
-
-gets the build to go further, but breaks at:
-
-  CC       basic_percpu_ops_test.o
-/tmp/ccpHOMHZ.s: Assembler messages:
-/tmp/ccpHOMHZ.s:148: Error: misaligned branch destination
-/tmp/ccpHOMHZ.s:956: Error: misaligned branch destination
-Makefile:378: recipe for target 'basic_percpu_ops_test.o' failed
-
-I suspect it's caused by the change from:
-
--               ".word " __rseq_str(RSEQ_SIG) "\n\t"                    \
-
-to
-
-+               ".arm\n\t"                                              \
-+               ".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"               \
-
-which changes the mode from thumb to arm for the rest of the
-inline asm within __RSEQ_ASM_DEFINE_ABORT. Better yet, there appears
-to be no way to save the arm/thumb state and restore it afterwards.
-
-I'm really starting to wonder if we should go our of our way to try
-to get this signature to be a valid instruction on arm32. Perhaps
-we should consider going back to use ".word" on arm32 so it ensures
-it uses data endianness (which matches the parameter received by the
-sys_rseq system call), let objdump and friends print it as a literal
-pool (which it is), and just choose an instruction which has little
-chances to appear for the cases we care about between ARM32 BE, LE
-and THUMB. Perhaps a 32-bit palindrome ? Bonus points if this is a
-trap instruction in common configurations for odd-cases-debugging
-purposes.
-
-Thoughts ?
-
-Thanks,
-
-Mathieu
-
-[1] https://github.com/compudj/librseq
-
-
-> 
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> CC: Peter Zijlstra <peterz@infradead.org>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Joel Fernandes <joelaf@google.com>
-> CC: Catalin Marinas <catalin.marinas@arm.com>
-> CC: Dave Watson <davejwatson@fb.com>
-> CC: Will Deacon <will.deacon@arm.com>
-> CC: Shuah Khan <shuah@kernel.org>
-> CC: Andi Kleen <andi@firstfloor.org>
-> CC: linux-kselftest@vger.kernel.org
-> CC: "H . Peter Anvin" <hpa@zytor.com>
-> CC: Chris Lameter <cl@linux.com>
-> CC: Russell King <linux@arm.linux.org.uk>
-> CC: Michael Kerrisk <mtk.manpages@gmail.com>
-> CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
-> CC: Paul Turner <pjt@google.com>
-> CC: Boqun Feng <boqun.feng@gmail.com>
-> CC: Josh Triplett <josh@joshtriplett.org>
-> CC: Steven Rostedt <rostedt@goodmis.org>
-> CC: Ben Maurer <bmaurer@fb.com>
-> CC: linux-api@vger.kernel.org
-> CC: Andy Lutomirski <luto@amacapital.net>
-> CC: Andrew Morton <akpm@linux-foundation.org>
-> CC: Linus Torvalds <torvalds@linux-foundation.org>
+> Device that bound to XDP socket will not have zero refcount until the
+> userspace application will not close it. This leads to hang inside
+> 'netdev_wait_allrefs()' if device unregistering requested:
+>
+>   # ip link del p1
+>   < hang on recvmsg on netlink socket >
+>
+>   # ps -x | grep ip
+>   5126  pts/0    D+   0:00 ip link del p1
+>
+>   # journalctl -b
+>
+>   Jun 05 07:19:16 kernel:
+>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+>
+>   Jun 05 07:19:27 kernel:
+>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+>   ...
+>
+> Fix that by counting XDP references for the device and failing
+> RTM_DELLINK with EBUSY if device is still in use by any XDP socket.
+>
+> With this change:
+>
+>   # ip link del p1
+>   RTNETLINK answers: Device or resource busy
+>
+> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
 > ---
-> Changes since v1:
-> - Fix checkpatch error and warning.
-> 
-> ---
-> tools/testing/selftests/rseq/rseq-arm.h | 52 +++++++++++++++++++++++++++++++--
-> 1 file changed, 50 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/rseq/rseq-arm.h
-> b/tools/testing/selftests/rseq/rseq-arm.h
-> index 5f262c54364f..84f28f147fb6 100644
-> --- a/tools/testing/selftests/rseq/rseq-arm.h
-> +++ b/tools/testing/selftests/rseq/rseq-arm.h
-> @@ -5,7 +5,54 @@
->  * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->  */
-> 
-> -#define RSEQ_SIG	0x53053053
-> +/*
-> + * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
-> + * value 0x5de3. This traps if user-space reaches this instruction by mistake,
-> + * and the uncommon operand ensures the kernel does not move the instruction
-> + * pointer to attacker-controlled code on rseq abort.
-> + *
-> + * The instruction pattern in the A32 instruction set is:
-> + *
-> + * e7f5def3    udf    #24035    ; 0x5de3
-> + *
-> + * This translates to the following instruction pattern in the T16 instruction
-> + * set:
-> + *
-> + * little endian:
-> + * def3        udf    #243      ; 0xf3
-> + * e7f5        b.n    <7f5>
-> + *
-> + * pre-ARMv6 big endian code:
-> + * e7f5        b.n    <7f5>
-> + * def3        udf    #243      ; 0xf3
-> + *
-> + * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
-> + * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
-> + * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
-> + * (which match), so there is no need to reverse the endianness of the data
-> + * representation of the signature. However, the choice between BE32 and BE8
-> + * is done by the linker, so we cannot know whether code and data endianness
-> + * will be mixed before the linker is invoked.
-> + */
-> +
-> +#define RSEQ_SIG_CODE	0xe7f5def3
-> +
-> +#ifndef __ASSEMBLER__
-> +
-> +#define RSEQ_SIG_DATA							\
-> +	({								\
-> +		int sig;						\
-> +		asm volatile ("b 2f\n\t"				\
-> +			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
-> +			      "2:\n\t"					\
-> +			      "ldr %[sig], 1b\n\t"			\
-> +			      : [sig] "=r" (sig));			\
-> +		sig;							\
-> +	})
-> +
-> +#define RSEQ_SIG	RSEQ_SIG_DATA
-> +
-> +#endif
-> 
-> #define rseq_smp_mb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
-> #define rseq_smp_rmb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
-> @@ -78,7 +125,8 @@ do {									\
-> 		__rseq_str(table_label) ":\n\t"				\
-> 		".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
-> 		".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, "
-> 		__rseq_str(abort_ip) ", 0x0\n\t" \
-> -		".word " __rseq_str(RSEQ_SIG) "\n\t"			\
-> +		".arm\n\t"						\
-> +		".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"		\
-> 		__rseq_str(label) ":\n\t"				\
-> 		teardown						\
-> 		"b %l[" __rseq_str(abort_label) "]\n\t"
-> --
-> 2.11.0
+>
+> Another option could be to force closing all the corresponding AF_XDP
+> sockets, but I didn't figure out how to do this properly yet.
+>
+>  include/linux/netdevice.h | 25 +++++++++++++++++++++++++
+>  net/core/dev.c            | 10 ++++++++++
+>  net/core/rtnetlink.c      |  6 ++++++
+>  net/xdp/xsk.c             |  7 ++++++-
+>  4 files changed, 47 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 44b47e9df94a..24451cfc5590 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -1705,6 +1705,7 @@ enum netdev_priv_flags {
+>   *	@watchdog_timer:	List of timers
+>   *
+>   *	@pcpu_refcnt:		Number of references to this device
+> + *	@pcpu_xdp_refcnt:	Number of XDP socket references to this device
+>   *	@todo_list:		Delayed register/unregister
+>   *	@link_watch_list:	XXX: need comments on this one
+>   *
+> @@ -1966,6 +1967,7 @@ struct net_device {
+>  	struct timer_list	watchdog_timer;
+>
+>  	int __percpu		*pcpu_refcnt;
+> +	int __percpu		*pcpu_xdp_refcnt;
+>  	struct list_head	todo_list;
 
+
+I understand the intention here, but don't think that putting a XDP reference
+into the generic netdev structure is the right way of doing this.  Likely the
+NETDEV_UNREGISTER notifier should be used so the socket and umem unbinds from
+the device.
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Jonathan
