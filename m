@@ -2,122 +2,91 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DCEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448E0C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 016C62083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19DC72083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="1GFYjUK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbfFFO5Q (ORCPT
+        id S1729135AbfFFO5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:57:16 -0400
-Received: from gateway36.websitewelcome.com ([192.185.193.119]:27197 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728011AbfFFO5Q (ORCPT
+        Thu, 6 Jun 2019 10:57:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33418 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729107AbfFFO53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:57:16 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 86B84400C9911
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 09:18:11 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id YtpLhxlA84FKpYtpLhHVBS; Thu, 06 Jun 2019 09:57:15 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.120] (port=43322 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hYtpK-000MlG-DQ; Thu, 06 Jun 2019 09:57:14 -0500
-Date:   Thu, 6 Jun 2019 09:57:13 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     qat-linux@intel.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] crypto: qat - use struct_size() helper
-Message-ID: <20190606145713.GA16636@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.120
-X-Source-L: No
-X-Exim-ID: 1hYtpK-000MlG-DQ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.120]:43322
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Thu, 6 Jun 2019 10:57:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h17so1526086pgv.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:57:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=YAu2DH9Gh0ZQ6HRYIfl6NOBT9O8LotQbvARXbdHVaps=;
+        b=1GFYjUK0Nf7MEISI0XlC9f3t4uGI4rDrxgMVMYNhf1TgM8/gH35ijWtVCk1M7MtRG1
+         aEJNRIzbEEekpsV4XhSx9mVGlQvzHxu6OoDZq67iCBrFrUMDndZ1cWMv6qUM4gzIJbiU
+         BkjVRFs1DTAM6qZhmH1EVu1m8577MVEZ6d3sfTAosJNHuLui7yzr8nqgnn1KmLqNXx1L
+         vAxMANQZx3WrTFrCMd4dfHKDU5d1uQ6jJK01oel0e/47WrhV/2sWrQ6w/a5+JwDr8OV2
+         k8iI4E1O2I83xA5gVHncyZHbFBqCH9QsBwF8kNUMpA/nhj8CapLbH3J3GByfBvxOXPcx
+         67pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=YAu2DH9Gh0ZQ6HRYIfl6NOBT9O8LotQbvARXbdHVaps=;
+        b=tvF7qC3JzCXPG+wRsdYYcABgk8llJ/zDIzBkRde1rNiOYeL0tZwNDKtVRX2fdO1CEQ
+         RukRUoDvsIyViHS8SUf2IbsWiPYLI0yVHTC5mgi3PpID4q22XUdAyJjQ7iARw0kP6z4a
+         uNuFtesZUtx0DXOZuHOGoAjbU9ei4P7HX9U04/OKnQUywue2jcAcKj5Sm4BmVPgu5yka
+         aAkZaZ3N2FxkymR4zwOQLqljOt8OY2jwSd7Ug+b8S1SG6/0l2VOsgLFijJ1NFnXYCf6s
+         Bwf4OzD42LVtKXESOBo+Uo43+GFGi+WB3H/0+0IDz+DpL+ZZF3rnhmGUINRIeXljKNPz
+         rHBw==
+X-Gm-Message-State: APjAAAVWHGH6PCYvm3JVg1ow1yXX0m2lRc5zXpUnkrJ6Xf9mM3syvPgk
+        tB/V5WNkbv2O0dY049BOUT1rKg==
+X-Google-Smtp-Source: APXvYqz2nsMn6R+fC1rJyJ4Xnm/YQ1YKlQjcALKsq3+NEISAAm7q7sQLrssURMnK0K3bFhGsZ1lWAQ==
+X-Received: by 2002:a17:90a:bb94:: with SMTP id v20mr317916pjr.88.1559833049146;
+        Thu, 06 Jun 2019 07:57:29 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:3cf4:ba16:ce9b:b777? ([2601:646:c200:1ef2:3cf4:ba16:ce9b:b777])
+        by smtp.gmail.com with ESMTPSA id j22sm2261397pfn.121.2019.06.06.07.57.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 07:57:28 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 01/10] security: Override creds in __fput() with last fputter's creds [ver #3]
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <155981413016.17513.10540579988392555403.stgit@warthog.procyon.org.uk>
+Date:   Thu, 6 Jun 2019 07:57:27 -0700
+Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
+        raven@themaw.net, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-block@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <176F8189-3BE9-4B8C-A4D5-8915436338FB@amacapital.net>
+References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk> <155981413016.17513.10540579988392555403.stgit@warthog.procyon.org.uk>
+To:     David Howells <dhowells@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
 
-struct qat_alg_buf_list {
-	...
-        struct qat_alg_buf bufers[];
-} __packed __aligned(64);
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+> On Jun 6, 2019, at 2:42 AM, David Howells <dhowells@redhat.com> wrote:
+>=20
+> So that the LSM can see the credentials of the last process to do an fput(=
+)
+> on a file object when the file object is being dismantled, do the followin=
+g
+> steps:
+>=20
 
-So, replace the following form:
-
-sizeof(struct qat_alg_buf_list) + ((1 + n) * sizeof(struct qat_alg_buf))
-
-with:
-
-struct_size(bufl, bufers, n + 1)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/crypto/qat/qat_common/qat_algs.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/crypto/qat/qat_common/qat_algs.c b/drivers/crypto/qat/qat_common/qat_algs.c
-index 2842b2cdaa90..b50eb55f8f57 100644
---- a/drivers/crypto/qat/qat_common/qat_algs.c
-+++ b/drivers/crypto/qat/qat_common/qat_algs.c
-@@ -717,8 +717,7 @@ static int qat_alg_sgl_to_bufl(struct qat_crypto_instance *inst,
- 	dma_addr_t blp;
- 	dma_addr_t bloutp = 0;
- 	struct scatterlist *sg;
--	size_t sz_out, sz = sizeof(struct qat_alg_buf_list) +
--			((1 + n) * sizeof(struct qat_alg_buf));
-+	size_t sz_out, sz = struct_size(bufl, bufers, n + 1);
- 
- 	if (unlikely(!n))
- 		return -EINVAL;
-@@ -755,8 +754,7 @@ static int qat_alg_sgl_to_bufl(struct qat_crypto_instance *inst,
- 		struct qat_alg_buf *bufers;
- 
- 		n = sg_nents(sglout);
--		sz_out = sizeof(struct qat_alg_buf_list) +
--			((1 + n) * sizeof(struct qat_alg_buf));
-+		sz_out = struct_size(buflout, bufers, n + 1);
- 		sg_nctr = 0;
- 		buflout = kzalloc_node(sz_out, GFP_ATOMIC,
- 				       dev_to_node(&GET_DEV(inst->accel_dev)));
--- 
-2.21.0
-
+I still maintain that this is a giant design error. Can someone at least com=
+e up with a single valid use case that isn=E2=80=99t entirely full of bugs?=
