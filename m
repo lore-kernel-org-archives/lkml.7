@@ -2,166 +2,127 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF1AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386A1C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951B5208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0AB208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HfDVpn9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfFFU4e (ORCPT
+        id S1727664AbfFFU5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:56:34 -0400
-Received: from mga01.intel.com ([192.55.52.88]:14942 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727606AbfFFU4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:56:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:56:22 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Jun 2019 13:56:22 -0700
-Received: from [10.251.1.101] (kliang2-mobl.ccr.corp.intel.com [10.251.1.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id ADA56580416;
-        Thu,  6 Jun 2019 13:56:21 -0700 (PDT)
-Subject: Re: [PATCH V3 2/5] perf header: Add die information in CPU topology
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     jolsa@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        ak@linux.intel.com
-References: <1559688644-106558-1-git-send-email-kan.liang@linux.intel.com>
- <1559688644-106558-2-git-send-email-kan.liang@linux.intel.com>
- <20190606191210.GG21245@kernel.org> <20190606200826.GI21245@kernel.org>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <5afed22a-f7c4-63da-5603-8732b02ee2ab@linux.intel.com>
-Date:   Thu, 6 Jun 2019 16:56:20 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 16:57:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45358 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727271AbfFFU5U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:57:20 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so3785839wre.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 13:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yc3mIWAOmzHLsJR8ETFapoAFaIyvxuHseTv4ycdMJAA=;
+        b=HfDVpn9rD1xoy6TiwTnp55C660rqvMS7UbuxsqaxbKuxOVCCCyXf/NFuK0R6wNw5e1
+         iT3FG4KKohgCds+EzsVs/xOqcJyfiSv8LJyESbdXog9CfwvnSHw0iIr0OivkDwgcSLLe
+         VwaiURO5zaRUphb3Ux5P5ACJDJmGKk8GXEm29+xKm+ez9IMjXq1gtadxcb7GmbZ+gFaV
+         57nEgBaUd2Blq/aAreHgJzRoUPDudyyrqeClz3UeC2IV8KO9moXT17A51wgrOCxH0vMF
+         hXFMwWz6+B+qJpI4kFc0lI2XJW3WqYS4rzlLoJvoS3KJU0Voy9EmP4uk5NsdfT+58Ju6
+         rwwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yc3mIWAOmzHLsJR8ETFapoAFaIyvxuHseTv4ycdMJAA=;
+        b=CZw7GipXJF6yatJftqzOLfDwOpXTSF0FlEtKfO0kwsx8hgvXwiJ+97oTsQKOIm0QFX
+         4mfBcK33IkOOyIW1l2HIkBBlerNoUyq8PRI+CsKrS5RgpovtD9UchCEhrxBG5XdWJwev
+         NXTBzkaMhfodT12mdWl6Xd+NX3qCB5vk0wylckoSD9yw4fhxCvvrenCAQH8JCh+ocXVD
+         +69JZMyfZMIG7Y/V5CVZ+bMfBtXco6Ae47seWHWyUlT5TmwoSAe9Fdre5t6CcTetSk1x
+         ejvHsgR4umn1mTpDzYaeuv5grOwtdI2h2yySRqjQuF6mSinNyd/303zrFOjo2frZriSR
+         LhCQ==
+X-Gm-Message-State: APjAAAVEdTT77qWNhF4RVLfGEgpggtR1dvAqOcidPooJWAHdkcyyj74Q
+        TaD2x4Js8qmbeyYlZI1pBVQZHRp2YjA=
+X-Google-Smtp-Source: APXvYqwXj2etJ/M3sp849BOhuQAtV/gHqw0dA6C4Q5N+pFvKjsOwzoiYWXPOc4OBixtAveLznLnCSQ==
+X-Received: by 2002:a5d:4e46:: with SMTP id r6mr15283767wrt.290.1559854638401;
+        Thu, 06 Jun 2019 13:57:18 -0700 (PDT)
+Received: from ?IPv6:2a02:587:1936:1900:9d54:196a:5d8d:4379? ([2a02:587:1936:1900:9d54:196a:5d8d:4379])
+        by smtp.googlemail.com with ESMTPSA id x11sm45119wmg.23.2019.06.06.13.57.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 13:57:17 -0700 (PDT)
+Subject: Re: [PATCH] Revert "media: hfi_parser: don't trick gcc with a wrong
+ expected size"
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "open list:QUALCOMM VENUS VIDEO ACCELERATOR DRIVER" 
+        <linux-media@vger.kernel.org>,
+        "open list:QUALCOMM VENUS VIDEO ACCELERATOR DRIVER" 
+        <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190605201941.4150-1-jonathan@marek.ca>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <59d458b5-8c29-1c66-ea39-b678889e25cc@linaro.org>
+Date:   Thu, 6 Jun 2019 23:57:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190606200826.GI21245@kernel.org>
+In-Reply-To: <20190605201941.4150-1-jonathan@marek.ca>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jonathan,
 
+I sent a fix for that here [1] and Mauro already taken it.
 
-On 6/6/2019 4:08 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Jun 06, 2019 at 04:12:10PM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Tue, Jun 04, 2019 at 03:50:41PM -0700, kan.liang@linux.intel.com escreveu:
->>> From: Kan Liang <kan.liang@linux.intel.com>
->>>
->>> With the new CPUID.1F, a new level type of CPU topology, 'die', is
->>> introduced. The 'die' information in CPU topology should be added in
->>> perf header.
->>>
->>> To be compatible with old perf.data, the patch checks the section size
->>> before reading the die information. The new info is added at the end of
->>> the cpu_topology section, the old perf tool ignores the extra data.
->>> It never reads data crossing the section boundary.
->>>
->>> The new perf tool with the patch can be used on legacy kernel. Add a
->>> new function has_die_topology() to check if die topology information is
->>> supported by kernel. The function only check X86 and CPU 0. Assuming
->>> other CPUs have same topology.
->>
->> You're changing the header, how would a new tool handle an old perf.data
->> where this 'die_id' is not present? What about an old tool dealing with
->> a perf.data with this die_id?
->>
->> I couldn't see any provision for that, am I missing something?
->>
->> /me goes to read tools/perf/util/cputopo.c ...
->>
->> Yeah, its just the description on the perf.data doc file that confused
->> me, I'll clarify that after finishing reviewing/applying this patchkit.
+regards,
+Stan
+
+[1] https://patchwork.kernel.org/patch/10963369/
+
+On 5.06.19 г. 23:19 ч., Jonathan Marek wrote:
+> This reverts commit ded716267196862809e5926072adc962a611a1e3.
 > 
-> So I have this on top, please check.
->
-
-It looks good to me.
-
-Thanks,
-Kan
-
-> - Arnaldo
+> This change doesn't make any sense and breaks the driver.
 > 
-> commit a9396a70fc7101c108e1c91fa1771557bbbb57a1
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Thu Jun 6 17:03:18 2019 -0300
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+>   drivers/media/platform/qcom/venus/hfi_helper.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->      perf data: Fix perf.data documentation for HEADER_CPU_TOPOLOGY
->      
->      The 'die' info isn't in the same array as core and socket ids, and we
->      missed the 'dies' string list, that comes right after the 'core' +
->      'socket' id variable length array, followed by the VLA for the dies.
->      
->      Cc: Adrian Hunter <adrian.hunter@intel.com>
->      Cc: Andi Kleen <ak@linux.intel.com>
->      Cc: Jiri Olsa <jolsa@kernel.org>
->      Cc: Kan Liang <kan.liang@linux.intel.com>
->      Cc: Namhyung Kim <namhyung@kernel.org>
->      Cc: Peter Zijlstra <peterz@infradead.org>
->      Fixes: c9cb12c5ba08 ("perf header: Add die information in CPU topology")
->      Link: https://lkml.kernel.org/n/tip-nubi6mxp2n8ofvlx7ph6k3h6@git.kernel.org
->      Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-> index de78183f6881..5f54feb19977 100644
-> --- a/tools/perf/Documentation/perf.data-file-format.txt
-> +++ b/tools/perf/Documentation/perf.data-file-format.txt
-> @@ -151,20 +151,35 @@ struct {
+> diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
+> index 34ea503a9842..15804ad7e65d 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_helper.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_helper.h
+> @@ -569,7 +569,7 @@ struct hfi_capability {
 >   
->   	HEADER_CPU_TOPOLOGY = 13,
->   
-> -String lists defining the core and CPU threads topology.
-> -The string lists are followed by a variable length array
-> -which contains core_id, die_id (for x86) and socket_id of each cpu.
-> -The number of entries can be determined by the size of the
-> -section minus the sizes of both string lists.
-> -
->   struct {
-> +	/*
-> +	 * First revision of HEADER_CPU_TOPOLOGY
-> +	 *
-> +	 * See 'struct perf_header_string_list' definition earlier
-> +	 * in this file.
-> +	 */
-> +
->          struct perf_header_string_list cores; /* Variable length */
->          struct perf_header_string_list threads; /* Variable length */
-> +
-> +       /*
-> +        * Second revision of HEADER_CPU_TOPOLOGY, older tools
-> +        * will not consider what comes next
-> +        */
-> +
->          struct {
->   	      uint32_t core_id;
-> -	      uint32_t die_id;
->   	      uint32_t socket_id;
->          } cpus[nr]; /* Variable length records */
-> +       /* 'nr' comes from previously processed HEADER_NRCPUS's nr_cpu_avail */
-> +
-> +        /*
-> +	 * Third revision of HEADER_CPU_TOPOLOGY, older tools
-> +	 * will not consider what comes next
-> +	 */
-> +
-> +	struct perf_header_string_list dies; /* Variable length */
-> +	uint32_t die_id[nr_cpus_avail]; /* from previously processed HEADER_NR_CPUS, VLA */
+>   struct hfi_capabilities {
+>   	u32 num_capabilities;
+> -	struct hfi_capability *data;
+> +	struct hfi_capability data[1];
 >   };
 >   
->   Example:
+>   #define HFI_DEBUG_MSG_LOW	0x01
+> @@ -726,7 +726,7 @@ struct hfi_profile_level {
+>   
+>   struct hfi_profile_level_supported {
+>   	u32 profile_count;
+> -	struct hfi_profile_level *profile_level;
+> +	struct hfi_profile_level profile_level[1];
+>   };
+>   
+>   struct hfi_quality_vs_speed {
 > 
