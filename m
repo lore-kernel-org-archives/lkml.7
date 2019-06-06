@@ -2,128 +2,209 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6395C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4ABC46470
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C82620868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EDB20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bcTBAfzN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R41Gv9bZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbfFFQcn (ORCPT
+        id S1727973AbfFFQdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:32:43 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17548 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfFFQcm (ORCPT
+        Thu, 6 Jun 2019 12:33:12 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36459 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbfFFQdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:32:42 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf940290002>; Thu, 06 Jun 2019 09:32:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 09:32:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 09:32:41 -0700
-Received: from [10.21.132.143] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 16:32:39 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
- <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
- <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
- <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4b098fb6-1a5b-1100-ae16-978a887c9535@nvidia.com>
-Date:   Thu, 6 Jun 2019 17:32:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 12:33:12 -0400
+Received: by mail-pg1-f196.google.com with SMTP id a3so1667062pgb.3;
+        Thu, 06 Jun 2019 09:33:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pqdbmB1dnJKNCDs65kjh4SPmSv2ZQrq68dZ7BpdF/vU=;
+        b=R41Gv9bZ88zH69TMWSwO6pEEIr4xdB0Gbkp/5JpcZozK56B0aMTCXzOJNnQuM+4bdO
+         4ABlsOWJxqfdZET7RkngDLizWiyaTR7J7YjPUV/X0kOq0PcxlLT252p3uU/xNSZQ2QeM
+         HGs4S8UrKCOIcdmtqSMTaJHlIqqQPIWIkITzxHo63I4tynyGu3x5JzrylpTA1HDyEaO1
+         EVWJD2EH0QDjhsPqOZrjulzzdcIA6A/mMGyxNOOoSp5sRUkBjx3dB6CJ0K5and/t3gcZ
+         Rh9sv+QfMekCm+rVfjAsBWxVCulW3mU9LrQhVe29sgMVV5JopnZ/GnDrDOIgh19Gr/dp
+         eX3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pqdbmB1dnJKNCDs65kjh4SPmSv2ZQrq68dZ7BpdF/vU=;
+        b=O2ktVJKpKyryzEZN+RvbNFpP0q4mA8lSZbnlI9xtAOqAibzU58PHMvtBUVJIhmZhKr
+         6UPSFqdEd0QMKzPwc4+QRJbhnomXOLI+luNjlRZ0HkhlzXVNEXdggIRMP7Pyv4BBaKb0
+         T0gPXJCiDRcZNLcgpHjCl6XGklN0nar4kS0QR7/YeiFLxPto2yIYL9wmZ3Z/jt/jWen/
+         y7CnaKlSFgJkTtnykuheeRd/gDHnCsFlJAGDHxPBXI/fxwWT5bMSJoIPy/O/a3WJhCv+
+         xFZ/rmIDbNyjB/xdo8fA+F5CDrHYxgkSA0scM5exkvuIAsYbHirrqTcfA+9AevnrMG3O
+         WQUw==
+X-Gm-Message-State: APjAAAV/qe4DDDQoub05ecALanUEs2FyUSRMHbQStmbDZ+0h4o0LG2rc
+        fx77E6xj8Zx0TBbZSUk4T3qHvq3L
+X-Google-Smtp-Source: APXvYqwDov8LVCDSSisaES0FKrleZb0l0NQfmPduue9Xl9iMm6Ig4RK9igDn+svdZsMk/Sc0WZqKYA==
+X-Received: by 2002:a17:90a:195e:: with SMTP id 30mr763313pjh.116.1559838791160;
+        Thu, 06 Jun 2019 09:33:11 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n66sm4567695pfn.52.2019.06.06.09.33.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 09:33:09 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 09:33:08 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH] drivers: hwmon: i5k_amb: simplify probing / device
+ identification
+Message-ID: <20190606163308.GA29829@roeck-us.net>
+References: <1559833233-25723-1-git-send-email-info@metux.net>
+ <1559833233-25723-2-git-send-email-info@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559838761; bh=k8u67P195ByQ7NwcJoTWbUMcfVgkrN8EE1wBTc4lo2Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bcTBAfzNv7bqbRwB6bN21BDIGn8RjgA/UQZsXULBJ1EfkcaiOJvxj/hkXbRLyqAnm
-         JRcmH7ROBIyqb1/32m03N3zKHyuE9xfbuoJdho52dOJ9Ic0PvVpr9CZTd+xGoTB8le
-         aU3QrutiN7vjLgRJ+BfEgaHrmH4ORIoCBF/BArqIwBC2RqIPfdbB6Np07bDwSS47N/
-         rtyiTigJGXJgXuE/xvn5cpuXhokNpk5+8ftoYNSdXTxnd6wBO6WFWFqqHy1NiGfw0d
-         M/JYZOwrZ5QMJaamn3Zrdo9rKOdiZXWJABDTX8NDF2rwMmvcx6b8dz07DsbzQPkXDN
-         NK2+k2D5O6cXw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559833233-25723-2-git-send-email-info@metux.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 06/06/2019 16:18, Dmitry Osipenko wrote:
-
-...
-
->>> If I understood everything correctly, the FIFO buffer is shared among
->>> all of the ADMA clients and hence it should be up to the ADMA driver to
->>> manage the quotas of the clients. So if there is only one client that
->>> uses ADMA at a time, then this client will get a whole FIFO buffer, but
->>> once another client starts to use ADMA, then the ADMA driver will have
->>> to reconfigure hardware to split the quotas.
->>
->> The FIFO quotas are managed by the ADMAIF driver (does not exist in
->> mainline currently but we are working to upstream this) because it is
->> this device that owns and needs to configure the FIFOs. So it is really
->> a means to pass the information from the ADMAIF to the ADMA.
+On Thu, Jun 06, 2019 at 05:00:33PM +0200, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
 > 
-> So you'd want to reserve a larger FIFO for an audio channel that has a
-> higher audio rate since it will perform reads more often. You could also
-> prioritize one channel over the others, like in a case of audio call for
-> example.
+> Simpilify the probing by putting all chip-specific data directly
+> into the pci match table, removing the redundant chipset_ids table.
 > 
-> Is the shared buffer smaller than may be needed by clients in a worst
-> case scenario? If you could split the quotas statically such that each
-> client won't ever starve, then seems there is no much need in the
-> dynamic configuration.
+> Signed-off-by: Enrico Weigelt <info@metux.net>
+> ---
 
-Actually, this is still very much relevant for the static case. Even if
-we defined a static configuration of the FIFO mapping in the ADMAIF
-driver we still need to pass this information to the ADMA. I don't
-really like the idea of having it statically defined in two different
-drivers.
+You don't need the introductory e-mail for a single patch.
+Just add the extra comments here.
 
-Jon
+>  drivers/hwmon/i5k_amb.c | 45 +++++++++++++++++++++++----------------------
+>  1 file changed, 23 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
+> index b09c39a..f06c40f 100644
+> --- a/drivers/hwmon/i5k_amb.c
+> +++ b/drivers/hwmon/i5k_amb.c
+> @@ -414,15 +414,15 @@ static int i5k_amb_add(void)
+>  }
+>  
+>  static int i5k_find_amb_registers(struct i5k_amb_data *data,
+> -					    unsigned long devid)
+> +				  const struct pci_device_id *devid)
+>  {
+>  	struct pci_dev *pcidev;
+>  	u32 val32;
+>  	int res = -ENODEV;
+>  
+>  	/* Find AMB register memory space */
+> -	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL,
+> -				devid,
+> +	pcidev = pci_get_device(devid->vendor,
+> +				devid->device,
+>  				NULL);
+>  	if (!pcidev)
+>  		return -ENODEV;
+> @@ -447,14 +447,18 @@ static int i5k_find_amb_registers(struct i5k_amb_data *data,
+>  	return res;
+>  }
+>  
+> -static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+> +static int i5k_channel_probe(u16 *amb_present,
+> +			     const struct pci_device_id *devid,
+> +			     int next)
 
--- 
-nvpublic
+'next' is a bit misleading. Something like "offset" or "id_offset" might be
+better. A better option would be to not change the function parameters and
+generate dev_id when the function is called. After all, the change in this
+function is not really necessary and can be handled in calling code.
+
+>  {
+>  	struct pci_dev *pcidev;
+>  	u16 val16;
+>  	int res = -ENODEV;
+>  
+>  	/* Copy the DIMM presence map for these two channels */
+> -	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL, dev_id, NULL);
+> +	pcidev = pci_get_device(devid->vendor,
+> +				(unsigned long)devid->driver_data + next,
+> +				NULL);
+>  	if (!pcidev)
+>  		return -ENODEV;
+>  
+> @@ -473,23 +477,20 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+>  	return res;
+>  }
+>  
+> -static struct {
+> -	unsigned long err;
+> -	unsigned long fbd0;
+> -} chipset_ids[]  = {
+> -	{ PCI_DEVICE_ID_INTEL_5000_ERR, PCI_DEVICE_ID_INTEL_5000_FBD0 },
+> -	{ PCI_DEVICE_ID_INTEL_5400_ERR, PCI_DEVICE_ID_INTEL_5400_FBD0 },
+> -	{ 0, 0 }
+> -};
+> -
+> -#ifdef MODULE
+>  static const struct pci_device_id i5k_amb_ids[] = {
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5000_ERR) },
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5400_ERR) },
+> +	{
+> +		.vendor		= PCI_VENDOR_ID_INTEL,
+> +		.device		= PCI_DEVICE_ID_INTEL_5000_ERR,
+> +		.driver_data	= PCI_DEVICE_ID_INTEL_5000_FBD0,
+> +	},
+> +	{
+> +		.vendor		= PCI_VENDOR_ID_INTEL,
+> +		.device		= PCI_DEVICE_ID_INTEL_5400_ERR,
+> +		.driver_data	= PCI_DEVICE_ID_INTEL_5400_FBD0,
+
+Why not use PCI_DEVICE_DATA() ?
+
+> +	},
+>  	{ 0, }
+>  };
+>  MODULE_DEVICE_TABLE(pci, i5k_amb_ids);
+> -#endif
+>  
+>  static int i5k_amb_probe(struct platform_device *pdev)
+>  {
+> @@ -504,22 +505,22 @@ static int i5k_amb_probe(struct platform_device *pdev)
+>  	/* Figure out where the AMB registers live */
+>  	i = 0;
+>  	do {
+> -		res = i5k_find_amb_registers(data, chipset_ids[i].err);
+> +		res = i5k_find_amb_registers(data, &i5k_amb_ids[i]);
+>  		if (res == 0)
+>  			break;
+>  		i++;
+> -	} while (chipset_ids[i].err);
+> +	} while (i5k_amb_ids[i].device);
+>  
+>  	if (res)
+>  		goto err;
+>  
+>  	/* Copy the DIMM presence map for the first two channels */
+> -	res = i5k_channel_probe(&data->amb_present[0], chipset_ids[i].fbd0);
+> +	res = i5k_channel_probe(&data->amb_present[0], &i5k_amb_ids[i], 0);
+>  	if (res)
+>  		goto err;
+>  
+>  	/* Copy the DIMM presence map for the optional second two channels */
+> -	i5k_channel_probe(&data->amb_present[2], chipset_ids[i].fbd0 + 1);
+> +	i5k_channel_probe(&data->amb_present[2], &i5k_amb_ids[i], 1);
+>  
+>  	/* Set up resource regions */
+>  	reso = request_mem_region(data->amb_base, data->amb_len, DRVNAME);
+> -- 
+> 1.9.1
+> 
