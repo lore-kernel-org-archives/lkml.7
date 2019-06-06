@@ -2,198 +2,112 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055B5C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25D8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D050020872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B17D20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UDAQv/GI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OLd0Rm33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbfFFSuS (ORCPT
+        id S1729713AbfFFSuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:50:18 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:13057 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbfFFSuR (ORCPT
+        Thu, 6 Jun 2019 14:50:23 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42832 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728243AbfFFSuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:50:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf960590000>; Thu, 06 Jun 2019 11:50:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 11:50:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 11:50:15 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 18:50:15 +0000
-Subject: Re: [PATCH 1/5] mm/hmm: Update HMM documentation
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20190506232942.12623-1-rcampbell@nvidia.com>
- <20190506232942.12623-2-rcampbell@nvidia.com>
- <20190606140239.GA21778@ziepe.ca>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <e1fad454-ac9b-4069-1bc8-8149c72655ca@nvidia.com>
-Date:   Thu, 6 Jun 2019 11:50:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Thu, 6 Jun 2019 14:50:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so1841258pgd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 11:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Bnwpy6cjzfBrajWkrs7wHMOESAxVWwnH8hnTtDte0U=;
+        b=OLd0Rm33yAfl3TLExw0ekB2qn1paxAdhV4VDB8wnSqif91RFuDfuCA5tjaNvDRofFO
+         lZ4YsmYWYWZSCjgsqULVqL/HPuCpsBud/F08K35cILFVIZp7N+ottB/wjxYA74au0Dj/
+         auCI94TAm4MWNiHWmyOhgqAAnUWG3FzrAu/q4WoDk+z9mOl2QBaBQPqJSNdlz3NJsEea
+         LeIOQOUx9pB3yELO9rSRom3kzFEQhSZXiPpS0hi/1Oju61CuIfaRgfyt1IRe2MyZfQjP
+         6lEQaOaKi2VPpGQzW+ZW22x/6us4+BiyyG4Dy2qcLH+1GeMLdsqQNPPrI+o3YIeEHJL6
+         xQig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Bnwpy6cjzfBrajWkrs7wHMOESAxVWwnH8hnTtDte0U=;
+        b=gI0APeFjoB90v2a4HpGp3rH9KnjzyrjowBHaf4lQ4DiOzIQ+/bvuhx3c1jb/aR/A3H
+         l+SypV0cjPgq7SaIDAXTtNcoLKES3DNIHfMhh7pAYj+HJVz69x9S9XgMbciuiomwDORe
+         bL3jB0LEB7X4usuhbsbAa1Jp+RNbu8LTR35dh/M5rIi16G4FjG+kSI8PcjjRv1ZXoBqR
+         0ecA8wPyC304wMkj7teJodwy3bHL4BGalf2d9PVgOMp2kvfwh5T+tJ10hDEcd2+F8F33
+         kEzzupJggK6g8Umge+hBbSKTDlB2Lh1TGZqeFuD3OAVWb76nnRO7GfEzgqmId1UVY/f3
+         Slwg==
+X-Gm-Message-State: APjAAAU5N5pgVpnf92q5y6G/Eu5cN+d+EYAYqyCcCV2MlxuotX+2thSt
+        BWvbXu5Zsta6XibOrSExXIhMwdiS6Lv+50Y3XlqbgQ==
+X-Google-Smtp-Source: APXvYqzdCLWgxj960/YUfQPhcpvzx0x+9Dh/oSxDWTDDNRlN23xXNdcpcn7jogMNWxlL1xvQwoCq4LGl2oezajjRk1g=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr1283296pjs.73.1559847021932;
+ Thu, 06 Jun 2019 11:50:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190606140239.GA21778@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559847001; bh=lnWmoYy7kAn4bLm7t9cFbOMXhWsLoa4EfFFlm+lwmig=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=UDAQv/GI8zoEqSn7mrswFwJ98G2U/yQQD/Aj0+YO7Qf5+Xr8LIE45i/9Kf0DT9xG3
-         JPPWSe0ZAVdjMHx+2C0ISnDMM3NkNkQqa5NXSEs50jcCB4GiVbS7uUaIN4pcELz3g+
-         MfSt7NTboICB1mkUbEx3mzD15NkILVLfyY7W7hCxGsr/Vew7TUf7Kead9IDlmuVFZ6
-         0g3htFBOh79b75YZGU+BAEjA89isoq7X+Uy0Kb8zWa5u3BVH/ZZ7h3FAU9N5uKCy4N
-         M3lK8+o+d2kh73ZkQKQwz0Fm+222atCS0/SR5UcSUSCqkOPa9W54dbdognW0U2lnZN
-         46ZaurvMxolKw==
+References: <20190606051227.90944-1-natechancellor@gmail.com>
+In-Reply-To: <20190606051227.90944-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 6 Jun 2019 11:50:10 -0700
+Message-ID: <CAKwvOdnswiifrvSrBcAnc4Br8nhxJRUAL0yNM6T6=4xScHXf5g@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: rt1011: Mark format integer literals as unsigned
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Shuming Fan <shumingf@realtek.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bard Liao <bardliao@realtek.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 5, 2019 at 10:13 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> sound/soc/codecs/rt1011.c:1291:12: warning: integer literal is too large
+> to be represented in type 'long', interpreting as 'unsigned long' per
+> C89; this literal will have type 'long long' in C99 onwards
+> [-Wc99-compat]
+>                 format = 2147483648; /* 2^24 * 128 */
 
-On 6/6/19 7:02 AM, Jason Gunthorpe wrote:
-> On Mon, May 06, 2019 at 04:29:38PM -0700, rcampbell@nvidia.com wrote:
->> From: Ralph Campbell <rcampbell@nvidia.com>
->>
->> Update the HMM documentation to reflect the latest API and make a few mi=
-nor
->> wording changes.
->>
->> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
->> Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
->> Cc: John Hubbard <jhubbard@nvidia.com>
->> Cc: Ira Weiny <ira.weiny@intel.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Balbir Singh <bsingharora@gmail.com>
->> Cc: Dan Carpenter <dan.carpenter@oracle.com>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> Cc: Souptick Joarder <jrdr.linux@gmail.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->>   Documentation/vm/hmm.rst | 139 ++++++++++++++++++++-------------------
->>   1 file changed, 73 insertions(+), 66 deletions(-)
->=20
-> Okay, lets start picking up hmm patches in to the new shared hmm.git,
-> as promised I will take responsibility to send these to Linus. The
-> tree is here:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=3Dhm=
-m
->=20
-> This looks fine to me with one minor comment:
->=20
->> diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
->> index ec1efa32af3c..7c1e929931a0 100644
->> +++ b/Documentation/vm/hmm.rst
->>  =20
->> @@ -151,21 +151,27 @@ registration of an hmm_mirror struct::
->>  =20
->>    int hmm_mirror_register(struct hmm_mirror *mirror,
->>                            struct mm_struct *mm);
->> - int hmm_mirror_register_locked(struct hmm_mirror *mirror,
->> -                                struct mm_struct *mm);
->>  =20
->> -
->> -The locked variant is to be used when the driver is already holding mma=
-p_sem
->> -of the mm in write mode. The mirror struct has a set of callbacks that =
-are used
->> +The mirror struct has a set of callbacks that are used
->>   to propagate CPU page tables::
->>  =20
->>    struct hmm_mirror_ops {
->> +     /* release() - release hmm_mirror
->> +      *
->> +      * @mirror: pointer to struct hmm_mirror
->> +      *
->> +      * This is called when the mm_struct is being released.
->> +      * The callback should make sure no references to the mirror occur
->> +      * after the callback returns.
->> +      */
->=20
-> This is not quite accurate (at least, as the other series I sent
-> intends), the struct hmm_mirror is valid up until
-> hmm_mirror_unregister() is called - specifically it remains valid
-> after the release() callback.
->=20
-> I will revise it (and the hmm.h comment it came from) to read the
-> below. Please let me know if you'd like something else:
->=20
-> 	/* release() - release hmm_mirror
-> 	 *
-> 	 * @mirror: pointer to struct hmm_mirror
-> 	 *
-> 	 * This is called when the mm_struct is being released.  The callback
-> 	 * must ensure that all access to any pages obtained from this mirror
-> 	 * is halted before the callback returns. All future access should
-> 	 * fault.
-> 	 */
->=20
-> The key task for release is to fence off all device access to any
-> related pages as the mm is about to recycle them and the device must
-> not cause a use-after-free.
->=20
-> I applied it to hmm.git
->=20
-> Thanks,
-> Jason
->=20
+This number's bitpattern is a leading one followed by 31 zeros.
+`format` is declared as `unsigned int`, and literals in C are signed
+unless suffixed, so this patch LGTM.  Maybe a macro declaring such a
+bitpattern would improve readability over the existing magic constant
+and comment?
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Yes, I agree this is better.
+>                          ^
+> sound/soc/codecs/rt1011.c:2123:13: warning: integer literal is too large
+> to be represented in type 'long', interpreting as 'unsigned long' per
+> C89; this literal will have type 'long long' in C99 onwards
+> [-Wc99-compat]
+>                         format = 2147483648; /* 2^24 * 128 */
+>                                  ^
+> 2 warnings generated.
+>
+> Mark the integer literals as unsigned explicitly so that if the kernel
+> does ever bump the C standard it uses, the behavior is consitent.
 
-Also, I noticed the sample code for hmm_range_register() is wrong.
-If you could merge this minor change into this patch, that
-would be appreciated.
+s/consitent/consistent/
 
-diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
-index dc8fe4241a18..b5fb9bc02aa2 100644
---- a/Documentation/vm/hmm.rst
-+++ b/Documentation/vm/hmm.rst
-@@ -245,7 +245,7 @@ The usage pattern is::
-              hmm_range_wait_until_valid(&range, TIMEOUT_IN_MSEC);
-              goto again;
-            }
--          hmm_mirror_unregister(&range);
-+          hmm_range_unregister(&range);
-            return ret;
-        }
-        take_lock(driver->update);
-@@ -257,7 +257,7 @@ The usage pattern is::
+:set spell
 
-        // Use pfns array content to update device page table
-
--      hmm_mirror_unregister(&range);
-+      hmm_range_unregister(&range);
-        release_lock(driver->update);
-        up_read(&mm->mmap_sem);
-        return 0;
+:P
+-- 
+Thanks,
+~Nick Desaulniers
