@@ -2,126 +2,111 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11608C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6379BC28EB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C4F208C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A231208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:14:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=concurrentrt.onmicrosoft.com header.i=@concurrentrt.onmicrosoft.com header.b="pXXIskcM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZygxiJgz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfFFVLr (ORCPT
+        id S1728047AbfFFVOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:11:47 -0400
-Received: from mail-eopbgr680091.outbound.protection.outlook.com ([40.107.68.91]:13792
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725267AbfFFVLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:11:46 -0400
+        Thu, 6 Jun 2019 17:14:03 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45227 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbfFFVOD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 17:14:03 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w34so2024531pga.12;
+        Thu, 06 Jun 2019 14:14:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=concurrentrt.onmicrosoft.com; s=selector1-concurrentrt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ga2w1lvislvs/1ugMXQXPRQsUJmQCa3G+UvlfkS/Cj0=;
- b=pXXIskcMU6eh1vbo+torp6zCjOEl0BzblbLWPS3Xt0nAFiaPMMl7mdJ3+zCU8Qh4j77rWiaOjelpgVoHlWp9vsoqhEgdMk4kbBBDNPE+Wc7oh3pEE5LoIHakZV4BEEBQs+dwgR9Ejxy6PZPJPLuP9CXneYFmlsYdvuvXb96wZn8=
-Received: from DM6PR11MB2570.namprd11.prod.outlook.com (20.176.99.12) by
- DM6PR11MB3420.namprd11.prod.outlook.com (20.177.219.225) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Thu, 6 Jun 2019 21:11:43 +0000
-Received: from DM6PR11MB2570.namprd11.prod.outlook.com
- ([fe80::91ec:580:13d5:fe72]) by DM6PR11MB2570.namprd11.prod.outlook.com
- ([fe80::91ec:580:13d5:fe72%7]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
- 21:11:43 +0000
-From:   Joe Korty <Joe.Korty@concurrent-rt.com>
-To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Alistair Strachan <astrachan@google.com>
-Subject: [BUG 4.4.178] x86_64 compat mode futexes broken
-Thread-Topic: [BUG 4.4.178] x86_64 compat mode futexes broken
-Thread-Index: AQHVHKxw/Uv5M9zAE0qNS0uTrHGe4g==
-Date:   Thu, 6 Jun 2019 21:11:43 +0000
-Message-ID: <20190606211140.GA52454@zipoli.concurrent-rt.com>
-Reply-To: Joe Korty <Joe.Korty@concurrent-rt.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR11CA0066.namprd11.prod.outlook.com
- (2603:10b6:404:f7::28) To DM6PR11MB2570.namprd11.prod.outlook.com
- (2603:10b6:5:c6::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Joe.Korty@concurrent-rt.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.220.59.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4f9b85b1-dad5-431a-0399-08d6eac39344
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR11MB3420;
-x-ms-traffictypediagnostic: DM6PR11MB3420:
-x-microsoft-antispam-prvs: <DM6PR11MB3420D249707E5C1E6E0BAD51A0170@DM6PR11MB3420.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(39840400004)(376002)(396003)(199004)(189003)(25786009)(2351001)(6486002)(486006)(316002)(7736002)(86362001)(71200400001)(476003)(3450700001)(5660300002)(8676002)(44832011)(8936002)(54906003)(53936002)(1730700003)(99286004)(43066004)(4326008)(2906002)(6916009)(26005)(81166006)(5640700003)(68736007)(71190400001)(81156014)(256004)(66556008)(73956011)(64756008)(66476007)(66446008)(14444005)(6506007)(386003)(14454004)(66946007)(33656002)(102836004)(72206003)(508600001)(66066001)(6116002)(186003)(6512007)(2501003)(3846002)(305945005)(6436002)(1076003)(52116002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR11MB3420;H:DM6PR11MB2570.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: concurrent-rt.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BptdrQIAedtDhww6anPnNGqX5UkfEiCRcvpROGAJ3TFnR2Q7OkyE05XvQsXNA8Xn2SOncFCi6cqFLZVpzT4TmY3qgyM9KqUcKzSonihbSO1eNSFBe7ITapWVUVsYLzL9t74atfN1OvScLwzo1mPfZ1rDguQfVm41Q4RGBMzaw/VzTokBPY6ywdQV/6YxXRJq4DisQDdSDVC8NK2TMq0hxVDDxbP1VOpjjykgwHS5nHteofJXZW2SgLz4TqP446YjLZ2TbnJLrrN8dHU3BDldFiOG1bES+HrKOKfs4wmrVknNhzzQszVqYc5n8b5SgPoou56xelldkB+Im7Bd+4kpnT7JJX5IvfGCGul81oIiUOnrRwHEqNpkgK3mHVwS96L70C1/4EvOiXZMh1fkQnEHYEr3fb2ab6s8+RkV4Te5qRo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E2662EFE61A369469ED068D1758CAA63@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f52tpv1WD74Ax5kl9cRY3NuWmR2GDKh3GDLDw7CLojg=;
+        b=ZygxiJgzK6wW63rvs+Zm62oqJZT/v8GXAYyjAZ+Ml8LUg3NRmnQZZbMSY/S4onClJ2
+         MkPLtsZ+zyPMs/F8BwBl5LqIhCkDpLTx/NwGlNtV9RAjSnhlWzKzreM2fZCwslifQeiq
+         Mde06+0zI1bX+605ITvKPHRrmDO+jVXPP0fXa6pMzjN5i4R2AQO1+KCOpJYxNB81nA6s
+         KAaEdJlKbd7SMaWB2jsR6lNyvtWYvf1MRaac+HeBgq7+fXtZm1VxM30uTsaenC8fa150
+         0UoQDDsyDpL0aUchm8r7tjpDbPj3W9yrBuHuxyjPkni24iFLROtk/VTH2RWcG5oH+RMW
+         cplA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f52tpv1WD74Ax5kl9cRY3NuWmR2GDKh3GDLDw7CLojg=;
+        b=aTLkhM6mNjvj3cC4lawvmHJtP9wtzzizO3EHWELUJsxUlid87q9//75GmYEkB2NYdi
+         WXHryAbzI9D1eEcq4Am7ImxxHY1fDJtDDO1//lJlbgCXrfIpJHH5z97nPPlVDvhapFlD
+         9APPdDUR+2uw/MpDeW8xpGe9UWb4+V6byvOtgKNaDxf72+YajYfYNCdHv298Df27pX7b
+         Ls5Bz23bnsySnkyQpqHixOfINAwQfOl5/Yon6nN9kUZFm0S//0yJ10x8m8AdlViRlSXS
+         5i06dk0RLi429AeE7TLYidjVFfGC/CVzVeSF72hVm9+geVbRPI1fCLFZQpIgsFlCW2zW
+         Tw1g==
+X-Gm-Message-State: APjAAAVEhvJcpkjY5PEraNmw/xOg6QChQ5wSmAkU4l4TLU5lXfisAZ5j
+        7RyOCxywWnXG/Pa4zRBrPoY=
+X-Google-Smtp-Source: APXvYqxPffMYASARwWQ8nHX5F4OQgoE9h3T/Ycgs5FveqCFJlhIfcnerwixue5QgxJqurc58KUmAGQ==
+X-Received: by 2002:a62:3287:: with SMTP id y129mr49409484pfy.101.1559855642500;
+        Thu, 06 Jun 2019 14:14:02 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s9sm17202pjp.7.2019.06.06.14.14.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 14:14:01 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 14:14:00 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jerry Hoemann <jerry.hoemann@hpe.com>
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mironov.ivan@gmail.com,
+        rasmus.villemoes@prevas.dk
+Subject: Re: [PATCH 1/6] watchdog/hpwdt: Stop hpwdt on unregister.
+Message-ID: <20190606211400.GA856@roeck-us.net>
+References: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
+ <1558126783-4877-2-git-send-email-jerry.hoemann@hpe.com>
 MIME-Version: 1.0
-X-OriginatorOrg: concurrent-rt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f9b85b1-dad5-431a-0399-08d6eac39344
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 21:11:43.2892
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 38747689-e6b0-4933-86c0-1116ee3ef93e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Joe.Korty@concurrent-rt.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3420
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558126783-4877-2-git-send-email-jerry.hoemann@hpe.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Starting with 4.4.178, the LTP test
+On Fri, May 17, 2019 at 02:59:38PM -0600, Jerry Hoemann wrote:
+> Have the WD core stop the watchdog on unregister instead of explicitly
+> calling hpwdt_stop() in hpwdt_exit().
+> 
+> Signed-off-by: Jerry Hoemann <jerry.hoemann@hpe.com>
 
-  pthread_cond_wait/2-3
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-when compiled on x86_64 with 'gcc -m32', started failing.  It generates thi=
-s log output:
-
-  [16:18:38]Implementation supports the MONOTONIC CLOCK but option is disab=
-led in test.          =20
-  [16:18:38]Test starting
-  [16:18:38] Process-shared primitive will be tested
-  [16:18:38] Alternative clock for cond will be tested
-  [16:18:38]Test 2-3.c FAILED: The child did not own the mutex inside the c=
-leanup handler
-
-A git bisection between 4.4.177..178 shows that this commit is the culprit:
-
-  Git-Commit: 79739ad2d0ac5787a15a1acf7caaf34cd95bbf3c
-  Author: Alistair Strachan <astrachan@google.com>
-  Subject: [PATCH] x86: vdso: Use $LD instead of $CC to link
-
-And, indeed, when I back this patch out of 4.4.178 proper, the above test
-passes again.
-
-Please consider backing this patch out of linux-4.4.y, and from master, and=
- from
-any other linux branch it has been backported to.
-
-PS: In backing it out of 4.4.178, I first backed out
-
-   7c45b45fd6e928c9ce275c32f6fa98d317e6f5ee
-  =20
-This is a follow-on vdso patch which collides with the
-patch we are interested in removing.  As it claims to be
-only removing redundant code, it probably should never
-have been backported in the first place.
-
-Signed-off-by: Joe Korty <joe.korty@concurrent-rt.com>
-
+> ---
+>  drivers/watchdog/hpwdt.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/watchdog/hpwdt.c b/drivers/watchdog/hpwdt.c
+> index ef30c7e..8c49f13 100644
+> --- a/drivers/watchdog/hpwdt.c
+> +++ b/drivers/watchdog/hpwdt.c
+> @@ -310,6 +310,7 @@ static int hpwdt_init_one(struct pci_dev *dev,
+>  	if (retval != 0)
+>  		goto error_init_nmi_decoding;
+>  
+> +	watchdog_stop_on_unregister(&hpwdt_dev);
+>  	watchdog_set_nowayout(&hpwdt_dev, nowayout);
+>  	if (watchdog_init_timeout(&hpwdt_dev, soft_margin, NULL))
+>  		dev_warn(&dev->dev, "Invalid soft_margin: %d.\n", soft_margin);
+> @@ -350,9 +351,6 @@ static int hpwdt_init_one(struct pci_dev *dev,
+>  
+>  static void hpwdt_exit(struct pci_dev *dev)
+>  {
+> -	if (!nowayout)
+> -		hpwdt_stop();
+> -
+>  	watchdog_unregister_device(&hpwdt_dev);
+>  	hpwdt_exit_nmi_decoding();
+>  	pci_iounmap(dev, pci_mem_addr);
