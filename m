@@ -2,120 +2,110 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CEBC28CC6
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29F2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0351B2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTuCSGE8"
+	by mail.kernel.org (Postfix) with ESMTP id 8C6952083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfFFCCK (ORCPT
+        id S1726714AbfFFCCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:02:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41442 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfFFCCJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 22:02:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q17so461411pfq.8;
-        Wed, 05 Jun 2019 19:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VyKAAyyKF/StTl6Cc7Bhi0hP4Fbpr1Wnyb227vQxupA=;
-        b=lTuCSGE8jGdHt1mpj8oE5y0pNaeqonUE94Pp4sA/I3REVC7LDjhxZGajzIRthAJO9Y
-         E1/KCnJbDAhiYGjZ0jeuf27dZG7ikrXgA3qZqXlGdI5zmDJSS3diC8XzgaLwE86WqVKT
-         DfPLFcyzUu6ZeVFRi3h0JOEt/fjr0h99BkH1V2wyU0xHsVlBZV3qIYfkzvmAIkMQXQGn
-         GnLDYuks2zgsat+9WE/IdQjuQwMyJk4GonhMW6LAOOZZ7YucZMDl18z9+LxQTC6DPXI1
-         uhcv3L9Mu7gbSgXc2umbMenT9iQyJs9leOiMLiIs5Sau+QLwsZr9SUPf9q67VoXmYtDe
-         8A4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VyKAAyyKF/StTl6Cc7Bhi0hP4Fbpr1Wnyb227vQxupA=;
-        b=dSatX4DioFEk4cZxVFJiNjOR3t0Gr7EtyadR8gTg92gUKWieX2ufou0TsdMzJwmjal
-         Gz8FOqu2Kosx40euBUTcMlMIU6sv2bsiqLs+uLHMSGh7PnXorvrUlDUYAYUzaUdldSVk
-         /KkAWw/823w06oARLFA5/4FqWDl+VXqJ01SDg+UsKcHh7pSG/3n090HbdcSLwlB8cydi
-         oFaBB6NZyvdfGvOsFv/cm9TPBD6xe/mCYVOpRqRo5A669UoMPdG90E+uofzkuKaDCqmx
-         WjZKh/WXI0oze+vdZ95L52LbekMO9muyaEpEbjJisqxViTV+Ax4aeG9unCpJk66NjTc7
-         Y7sw==
-X-Gm-Message-State: APjAAAWHpz3OBdTVUKIlY7KoltbIgnOn96xTedPfzm9YQzbld9thbRjw
-        ZIObhlUZdVji2vNlNub+YQQ=
-X-Google-Smtp-Source: APXvYqzOgkLxlVaBoCV6UwBu57yiXAf6/1tBbA/MUmQ/Fq6F3ju9AQm2TVNVsXzsM6YQZdPCsdhJiw==
-X-Received: by 2002:a63:db47:: with SMTP id x7mr860524pgi.259.1559786528992;
-        Wed, 05 Jun 2019 19:02:08 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id o66sm247961pje.8.2019.06.05.19.02.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 19:02:08 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, marc.w.gonzalez@free.fr,
-        jcrouse@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2 3/3] arm64: dts: qcom: msm8998: Add gpucc node
-Date:   Wed,  5 Jun 2019 19:00:27 -0700
-Message-Id: <20190606020027.2441-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606015844.2285-1-jeffrey.l.hugo@gmail.com>
-References: <20190606015844.2285-1-jeffrey.l.hugo@gmail.com>
+        Wed, 5 Jun 2019 22:02:54 -0400
+Received: from mga09.intel.com ([134.134.136.24]:64242 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbfFFCCy (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 22:02:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 19:02:53 -0700
+X-ExtLoop1: 1
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.71]) ([10.239.196.71])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Jun 2019 19:02:48 -0700
+Subject: Re: [PATCH v2 6/7] perf diff: Print the basic block cycles diff
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
+ <1559572577-25436-7-git-send-email-yao.jin@linux.intel.com>
+ <20190605114442.GE5868@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <049ff34b-b171-9c28-6e78-2e7b84ac30c8@linux.intel.com>
+Date:   Thu, 6 Jun 2019 10:02:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190605114442.GE5868@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MSM8998 GPU Clock Controller DT node.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 574be78a936e..cf00bfeec6b3 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/clock/qcom,gpucc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -763,6 +764,20 @@
- 			reg = <0x1f40000 0x20000>;
- 		};
- 
-+		gpucc: clock-controller@5065000 {
-+			compatible = "qcom,gpucc-msm8998";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			reg = <0x05065000 0x9000>;
-+
-+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GPLL0_OUT_MAIN>;
-+			clock-names = "xo",
-+				      "gpll0";
-+		};
-+
-+
- 		apcs_glb: mailbox@9820000 {
- 			compatible = "qcom,msm8998-apcs-hmss-global";
- 			reg = <0x17911000 0x1000>;
--- 
-2.17.1
+On 6/5/2019 7:44 PM, Jiri Olsa wrote:
+> On Mon, Jun 03, 2019 at 10:36:16PM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>> -				break;
+>>   			return setup_compute_opt(option);
+>>   		}
+>>   
+>> @@ -949,6 +953,14 @@ hist_entry__cmp_wdiff(struct perf_hpp_fmt *fmt,
+>>   }
+>>   
+>>   static int64_t
+>> +hist_entry__cmp_cycles(struct perf_hpp_fmt *fmt __maybe_unused,
+>> +		       struct hist_entry *left __maybe_unused,
+>> +		       struct hist_entry *right __maybe_unused)
+>> +{
+>> +	return 0;
+>> +}
+> 
+> we have hist_entry__cmp_nop for that
+> 
+> SNIP
+> 
+>>   	default:
+>>   		BUG_ON(1);
+>>   	}
+>> @@ -1407,6 +1452,12 @@ static int hpp__color_wdiff(struct perf_hpp_fmt *fmt,
+>>   	return __hpp__color_compare(fmt, hpp, he, COMPUTE_WEIGHTED_DIFF);
+>>   }
+>>   
+>> +static int hpp__color_cycles(struct perf_hpp_fmt *fmt,
+>> +			     struct perf_hpp *hpp, struct hist_entry *he)
+>> +{
+>> +	return __hpp__color_compare(fmt, hpp, he, COMPUTE_CYCLES);
+>> +}
+>> +
+>>   static void
+>>   hpp__entry_unpair(struct hist_entry *he, int idx, char *buf, size_t size)
+>>   {
+>> @@ -1608,6 +1659,10 @@ static void data__hpp_register(struct data__file *d, int idx)
+>>   		fmt->color = hpp__color_delta;
+>>   		fmt->sort  = hist_entry__cmp_delta_abs;
+>>   		break;
+>> +	case PERF_HPP_DIFF__CYCLES:
+>> +		fmt->color = hpp__color_cycles;
+>> +		fmt->sort  = hist_entry__cmp_cycles;
+> 
+> also please explain in comment why it's nop
+> 
+> jirka
+> 
 
+Got it, I will update the patch.
+
+Thanks
+Jin Yao
