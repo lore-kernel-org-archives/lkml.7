@@ -2,130 +2,313 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E587C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDD6C28EBB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50AC520717
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C51214AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:17:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CQ2czUJO"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ILt6rmZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfFFXPq (ORCPT
+        id S1727670AbfFFXRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 19:15:46 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:36369 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfFFXPq (ORCPT
+        Thu, 6 Jun 2019 19:17:35 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:28164 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFFXRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 19:15:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559862945; x=1591398945;
-  h=subject:to:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=aM8dRNNhCuRSED8C8Oc74ThBFAMLPPJJcz08vPpy1+I=;
-  b=CQ2czUJOVLMn7qWm2TiKGrHpHNaO4Uu7cVL3wENYJxz4T7G4+af3dRWX
-   bQPTSUeUNIUuIPbWA6BM3vNXxOzv7YTALRpgks04i9vL0Kum6Nws/obYO
-   ZsNc48Hdm2MVeIPOUX/cff1s4WVc98SLLCcjRszaIKEgfdJaKwz2rC8me
-   yVXfQXzIEl8moSISyd0TDDRFK6Tvn0BzjSx09ZilWTs4/zF1YC6yn0Kd7
-   t+JOtmV55n/40e+pCY5rZ/W+epgHhrf6wvNpX9nhWN5VUqB/KBXFWf3Y6
-   aGRG4skAXPJcKr4D0Ng3B7Icq3rSAEhIxUf7QTHMEVrSGa4kqxCkHoUMz
-   A==;
-X-IronPort-AV: E=Sophos;i="5.63,561,1557158400"; 
-   d="scan'208";a="111270892"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2019 07:15:45 +0800
-IronPort-SDR: kEO1784+QzgnuqkNf70d1plcSSs6uGI73eVQs8qoaPvix+NH3DEec8alJxZbxZ5AWPumrWGGRu
- bb9HlGfH6sNhGo6Vj8RjQxtsFRzZd44OQkKaf5poqlJv/qKpa8hucNGiBEUhSlIS3/LmZiSkiO
- b9ykXE69subHL9btlPQT2/xCRsQc/x2S/y07CLWdZN+R/8na0WBkQWAvBQzZoFWwEOclw1mtYO
- XNPiO/pIrWOw0YwlqPJYLe76VPRvqzy6kTSqDHx9SY6B8OEybn4D3ugFRg0FfjpKjf2amloMJs
- s893fAs1hcWiW2Wuy8CCinyp
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP; 06 Jun 2019 15:50:38 -0700
-IronPort-SDR: 0uzpy0OABTK631+vt4PZaTzOPuv2jsT7PoBTW3gy3XUetZx0y2iO3qy3RNG4yzWbP+iflJwaiu
- SqLPpZQtX8WBzIM8av0SjkTox/5maoWyh+useQzNBzpojpFn7NecUrxchJO4Tfc7aXFmzHKFAe
- ++84UCZ34X5TH4mYA0hcISQgbwDDWOlTIvDliZH1XE9djkNlVysBDi8lIMmzu1B/ImnXEjVyM+
- 4fQH8bF5LKrEx20xECan36vYzuoi/y5wFfAnXcTNGTfCs5VExDPXOm3Wx33efC57J9mhaUobdi
- 6c8=
-Received: from r6220.sdcorp.global.sandisk.com (HELO [192.168.1.6]) ([10.196.157.143])
-  by uls-op-cesaip02.wdc.com with ESMTP; 06 Jun 2019 16:15:45 -0700
-Subject: Re: [PATCH v3 0/5] arch: riscv: add board and SoC DT file support
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-References: <20190602080500.31700-1-paul.walmsley@sifive.com>
- <7h36kogchx.fsf@baylibre.com>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <05010310-baa2-c711-cb54-96a9138f582a@wdc.com>
-Date:   Thu, 6 Jun 2019 16:15:40 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 6 Jun 2019 19:17:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559863054; x=1591399054;
+  h=to:from:cc:subject:message-id:date:mime-version:
+   content-transfer-encoding;
+  bh=4uyj4VvjwVuZUR34SxoHmEVzGoZJqgQBVlrePgPuIGM=;
+  b=ILt6rmZgKX7T8QHoluCztTkdNKVb34AXVGSWFJn5HzlgNvETQozOIbQh
+   q1ppVRVNKwFdo3O8KP4TmUUOOOMx8RkXEIeNpEY2Ijq2OxGDC/kkjYhr0
+   YQq9yzabggpM+KTYgGMb/BMKM1jPIgxr4ix5pgaFBD/8UvrEz+fouS2pr
+   w=;
+X-IronPort-AV: E=Sophos;i="5.60,561,1549929600"; 
+   d="scan'208";a="809063749"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 06 Jun 2019 23:17:31 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 0FF5EA2154;
+        Thu,  6 Jun 2019 23:17:31 +0000 (UTC)
+Received: from EX13D07EUB001.ant.amazon.com (10.43.166.214) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 6 Jun 2019 23:17:30 +0000
+Received: from [10.85.96.144] (10.43.160.91) by EX13D07EUB001.ant.amazon.com
+ (10.43.166.214) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 6 Jun
+ 2019 23:17:24 +0000
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>
+From:   Zeev Zilberman <zeev@amazon.com>
+CC:     <benh@kernel.crashing.org>, <ronenk@amazon.com>,
+        Hanna Hawa <hhhawa@amazon.com>,
+        "Aerov, Vladimir" <vaerov@amazon.com>, <barakw@amazon.com>,
+        <dwmw@amazon.co.uk>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <talel@amazon.com>
+Subject: [PATCH 1/1] irqchip/gic: Add support for Amazon Graviton variant of
+ GICv3+GICv2m
+Message-ID: <7f74e9e2-83d4-a69b-aef8-4964b3e43745@amazon.com>
+Date:   Fri, 7 Jun 2019 02:17:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <7h36kogchx.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.160.91]
+X-ClientProxiedBy: EX13D16UWB003.ant.amazon.com (10.43.161.194) To
+ EX13D07EUB001.ant.amazon.com (10.43.166.214)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/19 10:37 AM, Kevin Hilman wrote:
-> Hi Paul,
-> 
-> Paul Walmsley <paul.walmsley@sifive.com> writes:
-> 
->> Add support for building flattened DT files from DT source files under
->> arch/riscv/boot/dts.  Follow existing kernel precedent from other SoC
->> architectures.  Start our board support by adding initial support for
->> the SiFive FU540 SoC and the first development board that uses it, the
->> SiFive HiFive Unleashed A00.
->>
->> This third version of the patch set adds I2C data for the chip,
->> incorporates all remaining changes that riscv-pk was making
->> automatically, and addresses a comment from Rob Herring
->> <robh@kernel.org>.
->>
->> Boot-tested on v5.2-rc1 on a HiFive Unleashed A00 board, using the
->> BBL and open-source FSBL, with modifications to pass in the DTB
->> file generated by these patches.
-> 
-> Tested this series on top of v5.2-rc3 on HiFive Unleashed board using
-> OpenSBI + mainline u-boot (master branch as of today).
-> 
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> 
->> This patch series can be found, along with the PRCI patch set
->> and the DT macro prerequisite patch, at:
->>
->> https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1
-> 
-> nit: I only see this series in that branch, not any of the prerequisite
-> patches you mentioned, which made me assume I could this series alone on
-> top of v5.2-rc3, which worked just fine.
-> 
+The patch adds support for Amazon Graviton custom variant of GICv2m, where
+hw irq is encoded using the MSI message address, as opposed to standard
+GICv2m, where hw irq is encoded in the MSI message data.
+In addition, the Graviton flavor of GICv2m is used along GICv3 (and not
+GICv2).
 
-I tried only this series on top of v5.2-rc3. Kernel boots file with DT 
-updated via U-Boot. But networking didn't come up.
-
-Do you have networking up after the boot? If yes, can you please share 
-the config.
-
-> Kevin
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-
-
+Signed-off-by: Zeev Zilberman <zeev@amazon.com>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index 3c77ab6..eeed19f 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -56,6 +56,7 @@
+ 
+ /* List of flags for specific v2m implementation */
+ #define GICV2M_NEEDS_SPI_OFFSET		0x00000001
++#define GICV2M_GRAVITON_ADDRESS_ONLY	0x00000002
+ 
+ static LIST_HEAD(v2m_nodes);
+ static DEFINE_SPINLOCK(v2m_lock);
+@@ -98,15 +99,26 @@ static struct msi_domain_info gicv2m_msi_domain_info = {
+ 	.chip	= &gicv2m_msi_irq_chip,
+ };
+ 
++static phys_addr_t gicv2m_get_msi_addr(struct v2m_data *v2m, int hwirq)
++{
++	if (v2m->flags & GICV2M_GRAVITON_ADDRESS_ONLY)
++		return v2m->res.start | ((hwirq - 32) << 3);
++	else
++		return v2m->res.start + V2M_MSI_SETSPI_NS;
++}
++
+ static void gicv2m_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+ 	struct v2m_data *v2m = irq_data_get_irq_chip_data(data);
+-	phys_addr_t addr = v2m->res.start + V2M_MSI_SETSPI_NS;
++	phys_addr_t addr = gicv2m_get_msi_addr(v2m, data->hwirq);
+ 
+ 	msg->address_hi = upper_32_bits(addr);
+ 	msg->address_lo = lower_32_bits(addr);
+-	msg->data = data->hwirq;
+ 
++	if (v2m->flags & GICV2M_GRAVITON_ADDRESS_ONLY)
++		msg->data = 0;
++	else
++		msg->data = data->hwirq;
+ 	if (v2m->flags & GICV2M_NEEDS_SPI_OFFSET)
+ 		msg->data -= v2m->spi_offset;
+ 
+@@ -188,7 +200,7 @@ static int gicv2m_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 	hwirq = v2m->spi_start + offset;
+ 
+ 	err = iommu_dma_prepare_msi(info->desc,
+-				    v2m->res.start + V2M_MSI_SETSPI_NS);
++				    gicv2m_get_msi_addr(v2m, hwirq));
+ 	if (err)
+ 		return err;
+ 
+@@ -307,7 +319,7 @@ static int gicv2m_allocate_domains(struct irq_domain *parent)
+ 
+ static int __init gicv2m_init_one(struct fwnode_handle *fwnode,
+ 				  u32 spi_start, u32 nr_spis,
+-				  struct resource *res)
++				  struct resource *res, u32 flags)
+ {
+ 	int ret;
+ 	struct v2m_data *v2m;
+@@ -320,6 +332,7 @@ static int __init gicv2m_init_one(struct fwnode_handle *fwnode,
+ 
+ 	INIT_LIST_HEAD(&v2m->entry);
+ 	v2m->fwnode = fwnode;
++	v2m->flags = flags;
+ 
+ 	memcpy(&v2m->res, res, sizeof(struct resource));
+ 
+@@ -334,7 +347,14 @@ static int __init gicv2m_init_one(struct fwnode_handle *fwnode,
+ 		v2m->spi_start = spi_start;
+ 		v2m->nr_spis = nr_spis;
+ 	} else {
+-		u32 typer = readl_relaxed(v2m->base + V2M_MSI_TYPER);
++		u32 typer;
++
++		/* Graviton should always have explicit spi_start/nr_spis */
++		if (v2m->flags & GICV2M_GRAVITON_ADDRESS_ONLY) {
++			ret = -EINVAL;
++			goto err_iounmap;
++		}
++		typer = readl_relaxed(v2m->base + V2M_MSI_TYPER);
+ 
+ 		v2m->spi_start = V2M_MSI_TYPER_BASE_SPI(typer);
+ 		v2m->nr_spis = V2M_MSI_TYPER_NUM_SPI(typer);
+@@ -355,18 +375,21 @@ static int __init gicv2m_init_one(struct fwnode_handle *fwnode,
+ 	 *
+ 	 * Broadom NS2 GICv2m implementation has an erratum where the MSI data
+ 	 * is 'spi_number - 32'
++	 *
++	 * Reading that register fails on the Graviton implementation
+ 	 */
+-	switch (readl_relaxed(v2m->base + V2M_MSI_IIDR)) {
+-	case XGENE_GICV2M_MSI_IIDR:
+-		v2m->flags |= GICV2M_NEEDS_SPI_OFFSET;
+-		v2m->spi_offset = v2m->spi_start;
+-		break;
+-	case BCM_NS2_GICV2M_MSI_IIDR:
+-		v2m->flags |= GICV2M_NEEDS_SPI_OFFSET;
+-		v2m->spi_offset = 32;
+-		break;
++	if (!(v2m->flags & GICV2M_GRAVITON_ADDRESS_ONLY)) {
++		switch (readl_relaxed(v2m->base + V2M_MSI_IIDR)) {
++		case XGENE_GICV2M_MSI_IIDR:
++			v2m->flags |= GICV2M_NEEDS_SPI_OFFSET;
++			v2m->spi_offset = v2m->spi_start;
++			break;
++		case BCM_NS2_GICV2M_MSI_IIDR:
++			v2m->flags |= GICV2M_NEEDS_SPI_OFFSET;
++			v2m->spi_offset = 32;
++			break;
++		}
+ 	}
+-
+ 	v2m->bm = kcalloc(BITS_TO_LONGS(v2m->nr_spis), sizeof(long),
+ 			  GFP_KERNEL);
+ 	if (!v2m->bm) {
+@@ -419,7 +442,8 @@ static int __init gicv2m_of_init(struct fwnode_handle *parent_handle,
+ 			pr_info("DT overriding V2M MSI_TYPER (base:%u, num:%u)\n",
+ 				spi_start, nr_spis);
+ 
+-		ret = gicv2m_init_one(&child->fwnode, spi_start, nr_spis, &res);
++		ret = gicv2m_init_one(&child->fwnode, spi_start, nr_spis,
++				      &res, 0);
+ 		if (ret) {
+ 			of_node_put(child);
+ 			break;
+@@ -451,6 +475,29 @@ static struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
+ 	return data->fwnode;
+ }
+ 
++#ifdef CONFIG_ACPI
++static bool acpi_check_amazon_graviton_quirks(void)
++{
++	static struct acpi_table_madt *madt;
++	acpi_status status;
++	bool rc = false;
++
++#define ACPI_AMZN_OEM_ID		"AMAZON"
++
++	status = acpi_get_table(ACPI_SIG_MADT, 0,
++				(struct acpi_table_header **)&madt);
++
++	if (ACPI_FAILURE(status) || !madt)
++		return rc;
++	rc = !memcmp(madt->header.oem_id, ACPI_AMZN_OEM_ID, ACPI_OEM_ID_SIZE);
++	acpi_put_table((struct acpi_table_header *)madt);
++
++	return rc;
++}
++#else
++static inline bool acpi_check_amazon_graviton_quirks(void) { return false; }
++#endif
++
+ static int __init
+ acpi_parse_madt_msi(union acpi_subtable_headers *header,
+ 		    const unsigned long end)
+@@ -460,6 +507,7 @@ acpi_parse_madt_msi(union acpi_subtable_headers *header,
+ 	u32 spi_start = 0, nr_spis = 0;
+ 	struct acpi_madt_generic_msi_frame *m;
+ 	struct fwnode_handle *fwnode;
++	u32 flags = 0;
+ 
+ 	m = (struct acpi_madt_generic_msi_frame *)header;
+ 	if (BAD_MADT_ENTRY(m, end))
+@@ -469,6 +517,13 @@ acpi_parse_madt_msi(union acpi_subtable_headers *header,
+ 	res.end = m->base_address + SZ_4K - 1;
+ 	res.flags = IORESOURCE_MEM;
+ 
++	if (acpi_check_amazon_graviton_quirks()) {
++		pr_info("applying Amazon Graviton quirk\n");
++		res.end = res.start + SZ_8K - 1;
++		flags |= GICV2M_GRAVITON_ADDRESS_ONLY;
++		gicv2m_msi_domain_info.flags &= ~MSI_FLAG_MULTI_PCI_MSI;
++	}
++
+ 	if (m->flags & ACPI_MADT_OVERRIDE_SPI_VALUES) {
+ 		spi_start = m->spi_base;
+ 		nr_spis = m->spi_count;
+@@ -483,7 +538,7 @@ acpi_parse_madt_msi(union acpi_subtable_headers *header,
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = gicv2m_init_one(fwnode, spi_start, nr_spis, &res);
++	ret = gicv2m_init_one(fwnode, spi_start, nr_spis, &res, flags);
+ 	if (ret)
+ 		irq_domain_free_fwnode(fwnode);
+ 
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index f44cd89..1282f81 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1343,6 +1343,9 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 	if (gic_dist_supports_lpis()) {
+ 		its_init(handle, &gic_data.rdists, gic_data.domain);
+ 		its_cpu_init();
++	} else {
++		if (IS_ENABLED(CONFIG_ARM_GIC_V2M))
++			gicv2m_init(handle, gic_data.domain);
+ 	}
+ 
+ 	if (gic_prio_masking_enabled()) {
+diff --git a/include/linux/irqchip/arm-gic-common.h b/include/linux/irqchip/arm-gic-common.h
+index 9a1a479..62a8821 100644
+--- a/include/linux/irqchip/arm-gic-common.h
++++ b/include/linux/irqchip/arm-gic-common.h
+@@ -39,4 +39,9 @@ struct gic_kvm_info {
+ 
+ const struct gic_kvm_info *gic_get_kvm_info(void);
+ 
++struct irq_domain;
++struct fwnode_handle;
++int gicv2m_init(struct fwnode_handle *parent_handle,
++		struct irq_domain *parent);
++
+ #endif /* __LINUX_IRQCHIP_ARM_GIC_COMMON_H */
+diff --git a/include/linux/irqchip/arm-gic.h b/include/linux/irqchip/arm-gic.h
+index 0f049b3..7bd3bc6 100644
+--- a/include/linux/irqchip/arm-gic.h
++++ b/include/linux/irqchip/arm-gic.h
+@@ -160,9 +160,6 @@ int gic_of_init_child(struct device *dev, struct gic_chip_data **gic, int irq);
+  */
+ void gic_init(void __iomem *dist , void __iomem *cpu);
+ 
+-int gicv2m_init(struct fwnode_handle *parent_handle,
+-		struct irq_domain *parent);
+-
+ void gic_send_sgi(unsigned int cpu_id, unsigned int irq);
+ int gic_get_cpu_id(unsigned int cpu);
+ void gic_migrate_target(unsigned int new_cpu_id);
 -- 
-Regards,
-Atish
+2.7.4
