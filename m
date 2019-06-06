@@ -2,139 +2,102 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32948C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05008C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B67820872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB00020872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:19:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elYAqTKj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oD872j0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbfFFTS5 (ORCPT
+        id S1729106AbfFFTTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:18:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39329 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbfFFTS4 (ORCPT
+        Thu, 6 Jun 2019 15:19:45 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]:37071 "EHLO
+        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728504AbfFFTTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:18:56 -0400
-Received: by mail-io1-f65.google.com with SMTP id r185so1110210iod.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:18:56 -0700 (PDT)
+        Thu, 6 Jun 2019 15:19:44 -0400
+Received: by mail-qt1-f182.google.com with SMTP id y57so4058420qtk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:19:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k1YXtpNCDOosbHBL0TL+M3WAkRwQkUQShRW6iv3pI/E=;
-        b=elYAqTKjzYWFPW2KclIE/7D7+zcK6oEV+i0XXHhZSP+U/FvV2qo6zHq3e8SpKTkBiW
-         pIhAHacyghUD4KEMdqoLklkIrGkgpAj5uBTVBQWI3nthQV0FAt/Wy380lL7ZvZubJvDi
-         nskJjdPKBrSBrS7G2PXp/+dxi2HhqiOISv7sGMxfmWWc3f3zic/cQOWUc1FmMkG2Va+g
-         bsfB7JpSfvq8BIiF03CQddwQhGD551SvzJj8MZ499QH1qbBv/ZD4PRr4wkvcc8nkqwc1
-         8CxZP880ZxXM3Bm/h4Vm7ykkkBw/5WnCzk3i65N+KGqcyOwODonNdFFP13QpnHb9+pHJ
-         sWPw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2oS5QNLHGlJv3yS1XyyZhPfR0aQYy6cC8m3Y2LuoN4U=;
+        b=oD872j0ckEfzVVFQVCmfBjtoZOeaNs++his5eoMg5PjTNF7yLnceoZjgdQDCTYkDDi
+         U5ZE0+oiQ2AHoN/3VL0ixAYoRiMQR5nBzBwjjEWq7ekox4Vrpc0K7ZrixZ0jjjdUATE2
+         D1a0bVBctCVysjRltlusKJr79C8odIw3wgv8LSTEFwOi9Z5/pI351qHbSoEEco8tg8rz
+         OLdwc/FPbs2I8le2RfETGtWSODwSgcxWb4EBBaO2p9T9MNcQ7YQs79GpX8EVhIXt9U1Q
+         266wGP/xSRioMC0GtY5w0mnFJLKMQCx/hOlubYe2fGyvTHwHVqa+AeGqXLtTBqIFAGjM
+         9hgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k1YXtpNCDOosbHBL0TL+M3WAkRwQkUQShRW6iv3pI/E=;
-        b=JezaVDMXB0nXkqKEq7crO7EdvVxV75jw6XHmiQoyyvePtf13v0xXN20iesAXWeJ7ct
-         9yrZ/VpxQMzHsE2pnvhIj0SCJK20c4WmABP04F3AYIv0C8GNYGloKzNzxyIl5Te7zz8o
-         FFiEntnW4sbHagZDe54mLjGchqVX5bw5sfFNzxgJpxvBNX7SSGMkimakCkXYW7XxQO5N
-         vp8lzVJqQ0+zl2nWNmLjM09k9MNtqlm77GtMNMLIpJCc4QwHPyViXnZlaoAg+vBiIAi9
-         eZNik6lWuK+JSZsBvrxd076Fg/djEdwBNnnydaRdweN5/WI1C8/QJqC5PS7P1kLahyIt
-         GrKw==
-X-Gm-Message-State: APjAAAX7Y+YjC5m0wJxn9SEk1Ag3F+dAS933b57kMPbyTdsM2gnfatAQ
-        bsy7tlny0CAw0DOyn4L9OdVPp8i6JrW85Ujoogk=
-X-Google-Smtp-Source: APXvYqylaDDGA4PraZOekHKWe7NpeljwK6OKqIM9Pmn2Ow5JNBpDQZ0QcDvmd4FBcWWrCHgBFNyVCSfHaSkhO8aIlms=
-X-Received: by 2002:a6b:f607:: with SMTP id n7mr7233987ioh.263.1559848735945;
- Thu, 06 Jun 2019 12:18:55 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2oS5QNLHGlJv3yS1XyyZhPfR0aQYy6cC8m3Y2LuoN4U=;
+        b=ruLmw5LpYDoEDHGApzo15NCZiFEstUS151FR2Pj1nqSWhw7VbrCIaH8UW122eiME83
+         lBuvQxvRWMHplM2v8gK7X25reEYWCiW3ys8CLFuP7pTErH6fngHHHpVxovyLcIaQ+mOs
+         CbAljDwHTcbbmv6k8HSeK7YblkustBu7K9RnS/sGqmAxaDy4CZdDj0JVtdUn8aMIsuld
+         mV8hfpSwbj2WFc2a6zMGJtIWaNQeykGdTEw3b7gyn8qx+qHJon82iIf+6w8TmSdjG+xq
+         H3mbcpj9DJEhdMD+h6JL7vYmVBR1yNdiyVlfCC/7OEEqXpcyc/CQapEeRbi4wD0jwH7W
+         zlZQ==
+X-Gm-Message-State: APjAAAWFt3izwtWRIxTJgC0EJ+aD/15lgrjYTmINaZOwvTu92GUo539j
+        /gATWEzzV3xBkGpL9cJsnV0=
+X-Google-Smtp-Source: APXvYqx7Imnl8WlP7WPtMnHGaDETa1iIdLlD5ktDlqTrh1dejzjRzship7BRay7fzSIyLa8+RiNElw==
+X-Received: by 2002:aed:3535:: with SMTP id a50mr43101741qte.237.1559848783662;
+        Thu, 06 Jun 2019 12:19:43 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.209.167])
+        by smtp.gmail.com with ESMTPSA id t6sm1543517qti.30.2019.06.06.12.19.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 12:19:43 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7727A41149; Thu,  6 Jun 2019 16:19:30 -0300 (-03)
+Date:   Thu, 6 Jun 2019 16:19:30 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     kan.liang@linux.intel.com, jolsa@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        ak@linux.intel.com
+Subject: Re: [PATCH V3 1/5] perf cpumap: Retrieve die id information
+Message-ID: <20190606191930.GH21245@kernel.org>
+References: <1559688644-106558-1-git-send-email-kan.liang@linux.intel.com>
+ <20190605090907.GC23116@krava>
 MIME-Version: 1.0
-References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
- <CGME20190605070528epcas1p1d9b1d1b09ffaafa511936ed3ded29097@epcas1p1.samsung.com>
- <20190605070507.11417-4-andrew.smirnov@gmail.com> <3c50e3e2-9fb8-6962-9988-32d14aa429b0@samsung.com>
-In-Reply-To: <3c50e3e2-9fb8-6962-9988-32d14aa429b0@samsung.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 6 Jun 2019 12:18:44 -0700
-Message-ID: <CAHQ1cqExJuKHcXBPszkMymzZg4r4nRKAoySPXLrCurOCoco9-g@mail.gmail.com>
-Subject: Re: [PATCH v3 03/15] drm/bridge: tc358767: Simplify polling in tc_link_training()
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Archit Taneja <architt@codeaurora.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605090907.GC23116@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 1:08 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->
-> On 05.06.2019 09:04, Andrey Smirnov wrote:
-> > Replace explicit polling in tc_link_training() with equivalent call to
-> > tc_poll_timeout() for simplicity. No functional change intended (not
-> > including slightly altered debug output).
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Archit Taneja <architt@codeaurora.org>
-> > Cc: Andrzej Hajda <a.hajda@samsung.com>
-> > Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Cc: Cory Tusar <cory.tusar@zii.aero>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-kernel@vger.kernel.org
+Em Wed, Jun 05, 2019 at 11:09:07AM +0200, Jiri Olsa escreveu:
+> On Tue, Jun 04, 2019 at 03:50:40PM -0700, kan.liang@linux.intel.com wrote:
+> > From: Kan Liang <kan.liang@linux.intel.com>
+> > 
+> > There is no function to retrieve die id information of a given CPU.
+> > 
+> > Add cpu_map__get_die_id() to retrieve die id information.
+> > 
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > > ---
-> >  drivers/gpu/drm/bridge/tc358767.c | 15 ++++++---------
-> >  1 file changed, 6 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-> > index 5e1e73a91696..115cffc55a96 100644
-> > --- a/drivers/gpu/drm/bridge/tc358767.c
-> > +++ b/drivers/gpu/drm/bridge/tc358767.c
-> > @@ -748,22 +748,19 @@ static int tc_set_video_mode(struct tc_data *tc,
-> >
-> >  static int tc_wait_link_training(struct tc_data *tc)
-> >  {
-> > -     u32 timeout = 1000;
-> >       u32 value;
-> >       int ret;
-> >
-> > -     do {
-> > -             udelay(1);
-> > -             tc_read(DP0_LTSTAT, &value);
-> > -     } while ((!(value & LT_LOOPDONE)) && (--timeout));
-> > -
-> > -     if (timeout == 0) {
-> > +     ret = tc_poll_timeout(tc, DP0_LTSTAT, LT_LOOPDONE,
-> > +                           LT_LOOPDONE, 1, 1000);
-> > +     if (ret) {
-> >               dev_err(tc->dev, "Link training timeout waiting for LT_LOOPDONE!\n");
-> > -             return -ETIMEDOUT;
-> > +             return ret;
-> >       }
->
->
-> Inconsistent coding, in previous patch you check (ret == -ETIMEDOUT) but
-> not here. To simplify the code you can assume that tc_poll_timeout < 0,
-> means timeout, in such case please adjust previous patch.
->
+> > 
+> > No changes since V2.
+> 
+> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> for the whole patchset
 
-Sure, will do.
+Thanks, applied.
 
-Thanks,
-Andrey Smirnov
+- Arnaldo
