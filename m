@@ -2,98 +2,229 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AF3C28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54B3C28EB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771442083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B802083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:53:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="6XBo5BA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbfFFJxI (ORCPT
+        id S1728249AbfFFJxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:53:08 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:45472 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbfFFJxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:53:08 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 2758320D88;
-        Thu,  6 Jun 2019 11:53:06 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id D0DB520AC3;
-        Thu,  6 Jun 2019 11:53:05 +0200 (CEST)
-To:     Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: Race between MMIO writes and level IRQs
-Message-ID: <459c9bd7-becd-e704-cc13-213770f17018@free.fr>
-Date:   Thu, 6 Jun 2019 11:53:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Thu, 6 Jun 2019 05:53:12 -0400
+Received: from mail-eopbgr30072.outbound.protection.outlook.com ([40.107.3.72]:61314
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728156AbfFFJxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:53:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4JZlSiz+JY1dHgj+22zaOKvssBfFHl8ggVgLHnpAPlU=;
+ b=6XBo5BA5LfedW4jVw3yEsXzCOOwxIyZY9YyVYydpOrkjjFhUxji1eSEtI4NWtxVSj01f9WuZjUg5eNzWwbfuUXwLa1tGrojlRnyvKQZY4aNSsMaIwACXIq5g+qvquw5DKl7cI31OBT7F9hzQcC7gNrN+bODZ921o8ncVdK2TB28=
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com (52.133.246.150) by
+ VI1PR08MB4285.eurprd08.prod.outlook.com (20.179.25.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Thu, 6 Jun 2019 09:53:05 +0000
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::e9f4:59c8:9be1:910b]) by VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::e9f4:59c8:9be1:910b%4]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
+ 09:53:05 +0000
+From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: [PATCH v2 1/2] drm/komeda: Adds SMMU support
+Thread-Topic: [PATCH v2 1/2] drm/komeda: Adds SMMU support
+Thread-Index: AQHVHE2jgCxyyug5F0W/iN7/994R9A==
+Date:   Thu, 6 Jun 2019 09:53:05 +0000
+Message-ID: <1559814765-18455-2-git-send-email-lowry.li@arm.com>
+References: <1559814765-18455-1-git-send-email-lowry.li@arm.com>
+In-Reply-To: <1559814765-18455-1-git-send-email-lowry.li@arm.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jun  6 11:53:06 2019 +0200 (CEST)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR02CA0169.apcprd02.prod.outlook.com
+ (2603:1096:201:1f::29) To VI1PR08MB5488.eurprd08.prod.outlook.com
+ (2603:10a6:803:137::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Lowry.Li@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e17603c3-d4ef-4a4c-577d-08d6ea64c5c1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB4285;
+x-ms-traffictypediagnostic: VI1PR08MB4285:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VI1PR08MB4285B013BE5BFBCA8B1765579F170@VI1PR08MB4285.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:313;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(136003)(396003)(346002)(189003)(199004)(52116002)(6486002)(66066001)(2201001)(4326008)(386003)(6436002)(6116002)(86362001)(3846002)(446003)(76176011)(102836004)(8676002)(2616005)(55236004)(99286004)(476003)(305945005)(7736002)(25786009)(14454004)(53936002)(6512007)(486006)(316002)(68736007)(6636002)(186003)(6506007)(36756003)(50226002)(110136005)(2906002)(71200400001)(71190400001)(2501003)(26005)(11346002)(5660300002)(8936002)(81156014)(72206003)(256004)(81166006)(14444005)(5024004)(66556008)(64756008)(66446008)(66476007)(73956011)(478600001)(54906003)(66946007)(473944003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB4285;H:VI1PR08MB5488.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: i6E4MGIGtrM7w9gTN2pvNQ4hX/lhr6XlZxF1etMadUXGTZ4KWUMqkheTt0GRcl33xz9vMmdjWO/HlE48ISITmCzihTsPgYyF4sgb9Lmeb6OC6Rvwmp/SUtAV99Nq3QKJ8Dzsbe217ctTO97OaQR9THUTTR71UDn/RoOWA6Np9qbgfmF29LC0az3H5Dfm4PP5NMcF4MUIJja29+kXO02H21ObUmLbTn7qaEQha7jjBnsGmueaXS9ti9IZPm2+t3OoHOrWf9GBKrbLldNQAqVTY4CHzCqcAr6dvuOp3PtymnlhL4HpZy+B9yzkeltnSFla3aSejr/fuVWC3R3kqvCCfUjdS8fo+7Sek3fcDjDExEqE35cBZmYe/35uLCcBQVzEmBXw/UoMWFKhgvFZIFATjuVr+h2teh4m1vkyW2+Hlto=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e17603c3-d4ef-4a4c-577d-08d6ea64c5c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 09:53:05.7417
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lowry.Li@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4285
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone,
-
-There's something about interrupts I have never quite understood,
-which I'd like to clear up once and for all. What I'm about to write
-will probably sound trivial to anyone's who's already figured it out,
-but I need to walk through it.
-
-Consider a device, living on some peripheral bus, with an interrupt
-line flowing from the device into some kind of interrupt controller.
-
-I.e. there are two "communication channels"
-1) the peripheral bus, and 2) the "out-of-band" interrupt line.
-
-At some point, the device requires the CPU to do $SOMETHING. It sends
-a signal over the interrupt line (either a pulse for edge interrupts,
-or keeping the line high for level interrupts). After some time, the
-CPU will "take the interrupt", mask all(?) interrupts, and jump to the
-proper interrupt service routine (ISR).
-
-The CPU does whatever it's supposed to do, and then needs to inform
-the device that "yes, the work is done, stop pestering me". Typically,
-this is done by writing some value to one of the device's registers.
-
-AFAICT, this is the part where things can go wrong:
-
-The CPU issues the magic MMIO write, which will take some time to reach
-the device over the peripheral bus. Meanwhile, the device maintains the
-IRQ signal (assuming a level interrupt). Once the CPU leaves the ISR, the
-framework will unmask IRQs. If the write has not yet reached the device,
-the CPU will be needlessly interrupted again.
-
-Basically, there's a race between the MMIO write and the IRQ unmasking.
-We'd like to be able to guarantee that the MMIO write is complete before
-unmasking interrupts, right?
-
-Some people use memory barriers, but my understanding is that this is
-not sufficient. The memory barrier may guarantee that the MMIO write
-has left the CPU "domain", but not that it has reached the device.
-
-Am I mistaken?
-
-So it looks like the only surefire way to guarantee that the MMIO write
-has reached the device is to read the value back from the device?
-
-Tangential: is this one of the issues solved by MSI?
-https://en.wikipedia.org/wiki/Message_Signaled_Interrupts#Advantages
-
-Regards.
-
+RnJvbTogIkxvd3J5IExpIChBcm0gVGVjaG5vbG9neSBDaGluYSkiIDxMb3dyeS5MaUBhcm0uY29t
+Pg0KDQpBZGRzIGlvbW11X2Nvbm5lY3QgYW5kIGRpc2Nvbm5lY3QgZm9yIFNNTVUgc3VwcG9ydCwg
+YW5kIGNvbmZpZ3VyZXMNClRCVSB0cmFuc2xhdGlvbiBvbmNlIFNNTVUgaGFzIGJlZW4gYXR0YWNo
+ZWQgdG8gdGhlIGRpc3BsYXkgZGV2aWNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBMb3dyeSBMaSAoQXJt
+IFRlY2hub2xvZ3kgQ2hpbmEpIDxsb3dyeS5saUBhcm0uY29tPg0KLS0tDQogLi4uL2dwdS9kcm0v
+YXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMgfCAgNSArKysNCiBkcml2ZXJz
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfZGV2LmMgICB8IDQ5ICsrKysrKysr
+KysrKysrKysrKysrKysNCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVk
+YV9kZXYuYyAgICB8IDE4ICsrKysrKysrDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tv
+bWVkYS9rb21lZGFfZGV2LmggICAgfCAgNyArKysrDQogLi4uL2RybS9hcm0vZGlzcGxheS9rb21l
+ZGEva29tZWRhX2ZyYW1lYnVmZmVyLmMgICAgfCAgMiArDQogLi4uL2RybS9hcm0vZGlzcGxheS9r
+b21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmggICAgfCAgMiArDQogNiBmaWxlcyBjaGFuZ2VkLCA4
+MyBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3Bs
+YXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3Bs
+YXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMNCmluZGV4IDRlMjZhODAuLjRhNDhkZDYgMTAw
+NjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29t
+cG9uZW50LmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3
+MV9jb21wb25lbnQuYw0KQEAgLTIxNSw2ICsyMTUsOCBAQCBzdGF0aWMgdm9pZCBkNzFfbGF5ZXJf
+dXBkYXRlKHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjLA0KIAltYWxpZHBfd3JpdGUzMihyZWcs
+IExBWUVSX0ZNVCwga2ZiLT5mb3JtYXRfY2Fwcy0+aHdfaWQpOw0KIAltYWxpZHBfd3JpdGUzMihy
+ZWcsIEJMS19JTl9TSVpFLCBIVl9TSVpFKHN0LT5oc2l6ZSwgc3QtPnZzaXplKSk7DQogDQorCWlm
+IChrZmItPmlzX3ZhKQ0KKwkJY3RybCB8PSBMX1RCVV9FTjsNCiAJbWFsaWRwX3dyaXRlMzJfbWFz
+ayhyZWcsIEJMS19DT05UUk9MLCBjdHJsX21hc2ssIGN0cmwpOw0KIH0NCiANCkBAIC0zNDgsNiAr
+MzUwLDkgQEAgc3RhdGljIHZvaWQgZDcxX3diX2xheWVyX3VwZGF0ZShzdHJ1Y3Qga29tZWRhX2Nv
+bXBvbmVudCAqYywNCiAJCQkgICAgICAgZmItPnBpdGNoZXNbaV0gJiAweEZGRkYpOw0KIAl9DQog
+DQorCWlmIChrZmItPmlzX3ZhKQ0KKwkJY3RybCB8PSBMV19UQlVfRU47DQorDQogCW1hbGlkcF93
+cml0ZTMyKHJlZywgTEFZRVJfRk1ULCBrZmItPmZvcm1hdF9jYXBzLT5od19pZCk7DQogCW1hbGlk
+cF93cml0ZTMyKHJlZywgQkxLX0lOX1NJWkUsIEhWX1NJWkUoc3QtPmhzaXplLCBzdC0+dnNpemUp
+KTsNCiAJbWFsaWRwX3dyaXRlMzIocmVnLCBCTEtfSU5QVVRfSUQwLCB0b19kNzFfaW5wdXRfaWQo
+JnN0YXRlLT5pbnB1dHNbMF0pKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
+c3BsYXkva29tZWRhL2Q3MS9kNzFfZGV2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkv
+a29tZWRhL2Q3MS9kNzFfZGV2LmMNCmluZGV4IDhlNjgyYzcuLjFiOWU3MzQgMTAwNjQ0DQotLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfZGV2LmMNCisrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9kZXYuYw0KQEAgLTUx
+Nyw2ICs1MTcsNTMgQEAgc3RhdGljIHZvaWQgZDcxX2luaXRfZm10X3RibChzdHJ1Y3Qga29tZWRh
+X2RldiAqbWRldikNCiAJdGFibGUtPm5fZm9ybWF0cyA9IEFSUkFZX1NJWkUoZDcxX2Zvcm1hdF9j
+YXBzX3RhYmxlKTsNCiB9DQogDQorc3RhdGljIGludCBkNzFfY29ubmVjdF9pb21tdShzdHJ1Y3Qg
+a29tZWRhX2RldiAqbWRldikNCit7DQorCXN0cnVjdCBkNzFfZGV2ICpkNzEgPSBtZGV2LT5jaGlw
+X2RhdGE7DQorCXUzMiBfX2lvbWVtICpyZWcgPSBkNzEtPmdjdV9hZGRyOw0KKwl1MzIgY2hlY2tf
+Yml0cyA9IChkNzEtPm51bV9waXBlbGluZXMgPT0gMikgPw0KKwkJCSBHQ1VfU1RBVFVTX1RDUzAg
+fCBHQ1VfU1RBVFVTX1RDUzEgOiBHQ1VfU1RBVFVTX1RDUzA7DQorCWludCBpLCByZXQ7DQorDQor
+CWlmICghZDcxLT5pbnRlZ3JhdGVzX3RidSkNCisJCXJldHVybiAtMTsNCisNCisJbWFsaWRwX3dy
+aXRlMzJfbWFzayhyZWcsIEJMS19DT05UUk9MLCAweDcsIFRCVV9DT05ORUNUX01PREUpOw0KKw0K
+KwlyZXQgPSBkcF93YWl0X2NvbmQoaGFzX2JpdHMoY2hlY2tfYml0cywgbWFsaWRwX3JlYWQzMihy
+ZWcsIEJMS19TVEFUVVMpKSwNCisJCQkxMDAsIDEwMDAsIDEwMDApOw0KKwlpZiAocmV0IDw9IDAp
+IHsNCisJCURSTV9FUlJPUigiY29ubmVjdCB0byBUQ1UgdGltZW91dCFcbiIpOw0KKwkJbWFsaWRw
+X3dyaXRlMzJfbWFzayhyZWcsIEJMS19DT05UUk9MLCAweDcsIElOQUNUSVZFX01PREUpOw0KKwkJ
+cmV0dXJuIC1FVElNRURPVVQ7DQorCX0NCisNCisJZm9yIChpID0gMDsgaSA8IGQ3MS0+bnVtX3Bp
+cGVsaW5lczsgaSsrKQ0KKwkJbWFsaWRwX3dyaXRlMzJfbWFzayhkNzEtPnBpcGVzW2ldLT5scHVf
+YWRkciwgTFBVX1RCVV9DT05UUk9MLA0KKwkJCQkgICAgTFBVX1RCVV9DVFJMX1RMQlBFTiwgTFBV
+X1RCVV9DVFJMX1RMQlBFTik7DQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgaW50IGQ3MV9k
+aXNjb25uZWN0X2lvbW11KHN0cnVjdCBrb21lZGFfZGV2ICptZGV2KQ0KK3sNCisJc3RydWN0IGQ3
+MV9kZXYgKmQ3MSA9IG1kZXYtPmNoaXBfZGF0YTsNCisJdTMyIF9faW9tZW0gKnJlZyA9IGQ3MS0+
+Z2N1X2FkZHI7DQorCXUzMiBjaGVja19iaXRzID0gKGQ3MS0+bnVtX3BpcGVsaW5lcyA9PSAyKSA/
+DQorCQkJIEdDVV9TVEFUVVNfVENTMCB8IEdDVV9TVEFUVVNfVENTMSA6IEdDVV9TVEFUVVNfVENT
+MDsNCisJaW50IHJldDsNCisNCisJbWFsaWRwX3dyaXRlMzJfbWFzayhyZWcsIEJMS19DT05UUk9M
+LCAweDcsIFRCVV9ESVNDT05ORUNUX01PREUpOw0KKw0KKwlyZXQgPSBkcF93YWl0X2NvbmQoKCht
+YWxpZHBfcmVhZDMyKHJlZywgQkxLX1NUQVRVUykgJiBjaGVja19iaXRzKSA9PSAwKSwNCisJCQkx
+MDAsIDEwMDAsIDEwMDApOw0KKwlpZiAocmV0IDwgMCkgew0KKwkJRFJNX0VSUk9SKCJkaXNjb25u
+ZWN0IGZyb20gVENVIHRpbWVvdXQhXG4iKTsNCisJCW1hbGlkcF93cml0ZTMyX21hc2socmVnLCBC
+TEtfQ09OVFJPTCwgMHg3LCBJTkFDVElWRV9NT0RFKTsNCisJfQ0KKw0KKwlyZXR1cm4gcmV0Ow0K
+K30NCisNCiBzdGF0aWMgc3RydWN0IGtvbWVkYV9kZXZfZnVuY3MgZDcxX2NoaXBfZnVuY3MgPSB7
+DQogCS5pbml0X2Zvcm1hdF90YWJsZSA9IGQ3MV9pbml0X2ZtdF90YmwsDQogCS5lbnVtX3Jlc291
+cmNlcwk9IGQ3MV9lbnVtX3Jlc291cmNlcywNCkBAIC01MjcsNiArNTc0LDggQEAgc3RhdGljIHZv
+aWQgZDcxX2luaXRfZm10X3RibChzdHJ1Y3Qga29tZWRhX2RldiAqbWRldikNCiAJLm9uX29mZl92
+YmxhbmsJPSBkNzFfb25fb2ZmX3ZibGFuaywNCiAJLmNoYW5nZV9vcG1vZGUJPSBkNzFfY2hhbmdl
+X29wbW9kZSwNCiAJLmZsdXNoCQk9IGQ3MV9mbHVzaCwNCisJLmNvbm5lY3RfaW9tbXUJPSBkNzFf
+Y29ubmVjdF9pb21tdSwNCisJLmRpc2Nvbm5lY3RfaW9tbXUgPSBkNzFfZGlzY29ubmVjdF9pb21t
+dSwNCiB9Ow0KIA0KIHN0cnVjdCBrb21lZGFfZGV2X2Z1bmNzICoNCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYuYyBiL2RyaXZlcnMvZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5jDQppbmRleCBjOTJlMTYxLi5lODBl
+NjczIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21l
+ZGFfZGV2LmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRh
+X2Rldi5jDQpAQCAtMjUzLDYgKzI1MywxOSBAQCBzdHJ1Y3Qga29tZWRhX2RldiAqa29tZWRhX2Rl
+dl9jcmVhdGUoc3RydWN0IGRldmljZSAqZGV2KQ0KIAlkZXYtPmRtYV9wYXJtcyA9ICZtZGV2LT5k
+bWFfcGFybXM7DQogCWRtYV9zZXRfbWF4X3NlZ19zaXplKGRldiwgRE1BX0JJVF9NQVNLKDMyKSk7
+DQogDQorCW1kZXYtPmlvbW11ID0gaW9tbXVfZ2V0X2RvbWFpbl9mb3JfZGV2KG1kZXYtPmRldik7
+DQorCWlmICghbWRldi0+aW9tbXUpDQorCQlEUk1fSU5GTygiY29udGludWUgd2l0aG91dCBJT01N
+VSBzdXBwb3J0IVxuIik7DQorDQorCWlmIChtZGV2LT5pb21tdSAmJiBtZGV2LT5mdW5jcy0+Y29u
+bmVjdF9pb21tdSkgew0KKwkJZXJyID0gbWRldi0+ZnVuY3MtPmNvbm5lY3RfaW9tbXUobWRldik7
+DQorCQlpZiAoZXJyKSB7DQorCQkJbWRldi0+aW9tbXUgPSBOVUxMOw0KKwkJCURSTV9FUlJPUigi
+Y29ubmVjdCBpb21tdSBmYWlsZWQuXG4iKTsNCisJCQlnb3RvIGVycl9jbGVhbnVwOw0KKwkJfQ0K
+Kwl9DQorDQogCWVyciA9IHN5c2ZzX2NyZWF0ZV9ncm91cCgmZGV2LT5rb2JqLCAma29tZWRhX3N5
+c2ZzX2F0dHJfZ3JvdXApOw0KIAlpZiAoZXJyKSB7DQogCQlEUk1fRVJST1IoImNyZWF0ZSBzeXNm
+cyBncm91cCBmYWlsZWQuXG4iKTsNCkBAIC0yODIsNiArMjk1LDExIEBAIHZvaWQga29tZWRhX2Rl
+dl9kZXN0cm95KHN0cnVjdCBrb21lZGFfZGV2ICptZGV2KQ0KIAlkZWJ1Z2ZzX3JlbW92ZV9yZWN1
+cnNpdmUobWRldi0+ZGVidWdmc19yb290KTsNCiAjZW5kaWYNCiANCisJaWYgKG1kZXYtPmlvbW11
+ICYmIG1kZXYtPmZ1bmNzLT5kaXNjb25uZWN0X2lvbW11KQ0KKwkJaWYgKG1kZXYtPmZ1bmNzLT5k
+aXNjb25uZWN0X2lvbW11KG1kZXYpKQ0KKwkJCURSTV9FUlJPUigiZGlzY29ubmVjdCBpb21tdSBm
+YWlsZWQuXG4iKTsNCisJbWRldi0+aW9tbXUgPSBOVUxMOw0KKw0KIAlmb3IgKGkgPSAwOyBpIDwg
+bWRldi0+bl9waXBlbGluZXM7IGkrKykgew0KIAkJa29tZWRhX3BpcGVsaW5lX2Rlc3Ryb3kobWRl
+diwgbWRldi0+cGlwZWxpbmVzW2ldKTsNCiAJCW1kZXYtPnBpcGVsaW5lc1tpXSA9IE5VTEw7DQpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2
+LmggYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYuaA0KaW5k
+ZXggODNhY2U3MS4uZGFjMWVkYSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlz
+cGxheS9rb21lZGEva29tZWRhX2Rldi5oDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3Bs
+YXkva29tZWRhL2tvbWVkYV9kZXYuaA0KQEAgLTkyLDYgKzkyLDEwIEBAIHN0cnVjdCBrb21lZGFf
+ZGV2X2Z1bmNzIHsNCiAJaW50ICgqZW51bV9yZXNvdXJjZXMpKHN0cnVjdCBrb21lZGFfZGV2ICpt
+ZGV2KTsNCiAJLyoqIEBjbGVhbnVwOiBjYWxsIHRvIGNoaXAgdG8gY2xlYW51cCBrb21lZGFfZGV2
+LT5jaGlwIGRhdGEgKi8NCiAJdm9pZCAoKmNsZWFudXApKHN0cnVjdCBrb21lZGFfZGV2ICptZGV2
+KTsNCisJLyoqIEBjb25uZWN0X2lvbW11OiBPcHRpb25hbCwgY29ubmVjdCB0byBleHRlcm5hbCBp
+b21tdSAqLw0KKwlpbnQgKCpjb25uZWN0X2lvbW11KShzdHJ1Y3Qga29tZWRhX2RldiAqbWRldik7
+DQorCS8qKiBAZGlzY29ubmVjdF9pb21tdTogT3B0aW9uYWwsIGRpc2Nvbm5lY3QgdG8gZXh0ZXJu
+YWwgaW9tbXUgKi8NCisJaW50ICgqZGlzY29ubmVjdF9pb21tdSkoc3RydWN0IGtvbWVkYV9kZXYg
+Km1kZXYpOw0KIAkvKioNCiAJICogQGlycV9oYW5kbGVyOg0KIAkgKg0KQEAgLTE4NCw2ICsxODgs
+OSBAQCBzdHJ1Y3Qga29tZWRhX2RldiB7DQogCSAqLw0KIAl2b2lkICpjaGlwX2RhdGE7DQogDQor
+CS8qKiBAaW9tbXU6IGlvbW11IGRvbWFpbiAqLw0KKwlzdHJ1Y3QgaW9tbXVfZG9tYWluICppb21t
+dTsNCisNCiAJLyoqIEBkZWJ1Z2ZzX3Jvb3Q6IHJvb3QgZGlyZWN0b3J5IG9mIGtvbWVkYSBkZWJ1
+Z2ZzICovDQogCXN0cnVjdCBkZW50cnkgKmRlYnVnZnNfcm9vdDsNCiB9Ow0KZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmMg
+Yi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5j
+DQppbmRleCBkNTgyMmEzLi4zNjBhYjcwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYw0KKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYw0KQEAgLTIwMSw2ICsy
+MDEsOCBAQCBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyICoNCiAJCWdvdG8gZXJyX2NsZWFudXA7DQog
+CX0NCiANCisJa2ZiLT5pc192YSA9IG1kZXYtPmlvbW11ID8gdHJ1ZSA6IGZhbHNlOw0KKw0KIAly
+ZXR1cm4gJmtmYi0+YmFzZTsNCiANCiBlcnJfY2xlYW51cDoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5oIGIvZHJpdmVy
+cy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuaA0KaW5kZXgg
+NmNiYjJmNi4uZjQwNDZlMiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
+eS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmgNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0v
+ZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmgNCkBAIC0yMSw2ICsyMSw4IEBAIHN0
+cnVjdCBrb21lZGFfZmIgew0KIAkgKiBleHRlbmRzIGRybV9mb3JtYXRfaW5mbyBmb3Iga29tZWRh
+IHNwZWNpZmljIGluZm9ybWF0aW9uDQogCSAqLw0KIAljb25zdCBzdHJ1Y3Qga29tZWRhX2Zvcm1h
+dF9jYXBzICpmb3JtYXRfY2FwczsNCisJLyoqIEBpc192YTogaWYgc21tdSBpcyBlbmFibGVkLCBp
+dCB3aWxsIGJlIHRydWUgKi8NCisJYm9vbCBpc192YTsNCiAJLyoqIEBhbGlnbmVkX3c6IGFsaWdu
+ZWQgZnJhbWUgYnVmZmVyIHdpZHRoICovDQogCXUzMiBhbGlnbmVkX3c7DQogCS8qKiBAYWxpZ25l
+ZF9oOiBhbGlnbmVkIGZyYW1lIGJ1ZmZlciBoZWlnaHQgKi8NCi0tIA0KMS45LjENCg0K
