@@ -2,122 +2,176 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26130C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875C0C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDECF20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGep7+d0"
+	by mail.kernel.org (Postfix) with ESMTP id 57DE02070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfFFDLj (ORCPT
+        id S1726608AbfFFDRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 23:11:39 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34269 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfFFDLj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 23:11:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c85so578114pfc.1;
-        Wed, 05 Jun 2019 20:11:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=byYiJvNP4AxdA2O/8mxFX8VRov3AhPWtzZd3XGwmlWg=;
-        b=lGep7+d0NNYi/YAvvVgwhuv40j6jvzY2L4a4KGYUwhLgxTMlMMwWvkut09fFpbN4tA
-         tdT3FNqqXz+MUA5ZnksOUb8Izvmwu6OfKBVGZIBlqodfxernYkrz9/rBo22cHiIl08MW
-         tAXaJL+NedxDWUUqdLDruCLCraLV9hhDyUo4wSUH0AfZtYPw4CNymuS7SvaawG9NS8BD
-         t/RdKk1JtDrgSvTWNDOpi+dCxhGSigruuxyr8A9nrnOEvcRGSbUp57P8EJUiiBf3MewN
-         GwwRjDWpjjCUdW2A/9LoMe0kWQLWlOkJLALE13vrDdL0sGdE5k8RJ8RFJg6gbVpgtfZi
-         qj+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=byYiJvNP4AxdA2O/8mxFX8VRov3AhPWtzZd3XGwmlWg=;
-        b=a+vljzX1UaERm4B/kopE+VBYNrw0+VXRcvUjq1j6QkVNByoN1RmXoyNymV33osjrkI
-         m7PMe1Qc3Q23HzMoySBbj2twnrymviW25rnxuWptlkxFuyLwlUGYLIOf3I4smKAjZi4c
-         /Hkj3t/oAV+4mxiT/HflEby50BfllaOq1JbibsUI3PAY5F1ByONEIWxItcUYo64StPCQ
-         J++C0Asn2YPW/gnmvVnBN2lA1Wj0KnLLq0/Yo/H+0dUyrHPZymMS1UCuUUZ+8+67BmC5
-         tf4nUQBEfPW+jWjYfhW9hDEe95UrplHNNY4bBDGZrzONkyaAbt6IhwAWWK0KmdBqv7vz
-         Zc9A==
-X-Gm-Message-State: APjAAAVGPtosNKLqmq9a+tzQmmn5zFG9PdNIOnZKbWOPYSI4F0FfO0zB
-        qKxYFoMkux9DDZSxQQcsG4Q=
-X-Google-Smtp-Source: APXvYqy0rvpd15LSjyqjmCQ4NDFc+S4YFjV824Gdn7DHQzju5dPXxF8WJY+++qEgI1EtEvmHWKJ1XQ==
-X-Received: by 2002:a17:90a:2e87:: with SMTP id r7mr46756167pjd.112.1559790698793;
-        Wed, 05 Jun 2019 20:11:38 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id s2sm346080pfe.105.2019.06.05.20.11.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 20:11:37 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 20:11:35 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
-Message-ID: <20190606031135.6lyydjb6hqfeuzt3@localhost>
-References: <20190604170756.14338-1-olteanv@gmail.com>
- <20190604.202258.1443410652869724565.davem@davemloft.net>
- <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
- <CA+h21hrJYm4GLn+LpJ623_dpgxE2z-k3xTMD=z1QQ9WqXg7zrQ@mail.gmail.com>
- <20190605174547.b4rwbfrzjqzujxno@localhost>
- <CA+h21hqdmu3+YQVMXyvckrUjXW7mstjG1MDafWGy4qFHB9zdtg@mail.gmail.com>
+        Wed, 5 Jun 2019 23:17:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17671 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726454AbfFFDRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 23:17:16 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A40754191C74A36B4DEA;
+        Thu,  6 Jun 2019 11:17:08 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Jun 2019
+ 11:16:58 +0800
+Subject: Re: [Question] panic when write file cpuset.cpus
+To:     <tj@kernel.org>, <lizefan@huawei.com>, <hannes@cmpxchg.org>,
+        <cgroups@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yi.zhang@huawei.com>
+References: <0efc2890-5cb4-2700-8de4-304e72b7dbb4@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <e97ef832-37de-a3f5-0cd4-4c93d97008ac@huawei.com>
+Date:   Thu, 6 Jun 2019 11:16:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hqdmu3+YQVMXyvckrUjXW7mstjG1MDafWGy4qFHB9zdtg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <0efc2890-5cb4-2700-8de4-304e72b7dbb4@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 09:08:54PM +0300, Vladimir Oltean wrote:
-> Currently I'm using a cyclecounter, but I *will* need actual PHC
-> manipulations for the time-based shaping and policing features that
-> the switch has in hardware.
+K0NjIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCg0KT24gMjAxOS82LzYgMTE6MDQs
+IENoZW4gWmhvdSB3cm90ZToNCj4gSGkgYWxsLA0KPiANCj4gSSBoaXQgdGhlIGZvbGxvd2lu
+ZyBpc3N1ZSBpbiBsaW51eCA0LjQgd2hpY2ggaXMgaGFyZCB0byByZXByb2R1Y2UuDQo+IA0K
+PiBbMjAxOTA1MjcyMjExMDZdW2JzcF9wY2lfZGV2aWNlX2dldF9iYXJdLS0tIHBCYXNlUGh5
+QWRkciA6M2EwMDgwMDAwMDAsIGxlbjo0MDAwMDAwICAtLS0NCj4gWzIwMTkwNTI3MjIxMTA2
+XVVuYWJsZSB0byBoYW5kbGUga2VybmVsIHBhZ2luZyByZXF1ZXN0IGF0IHZpcnR1YWwgYWRk
+cmVzcyAxMDAwMDAwMTANCj4gWzIwMTkwNTI3MjIxMTA3XXBnZCA9IGZmZmZmZmQzYzY5NmIw
+MDANCj4gWzIwMTkwNTI3MjIxMTA3XVsxMDAwMDAwMTBdICpwZ2Q9MDAwMDAwMDAwMDAwMDAw
+MCwgKnB1ZD0wMDAwMDAwMDAwMDAwMDAwDQo+IFsyMDE5MDUyNzIyMTEwN11JbnRlcm5hbCBl
+cnJvcjogT29wczogOTYwMDAwMDUgWyMxXSBQUkVFTVBUIFNNUA0KPiBbMjAxOTA1MjcyMjEx
+MDddTW9kdWxlcyBsaW5rZWQgaW46IGxpbnV4X3VzZXJfYmRlKE8pIGxpbnV4X2tlcm5lbF9i
+ZGUoTykgY21hYyhPKSBuc2UoTykgcHAoTykgdG0oTykgbGZlKE8pIHRpcGMoTykgcGNpZV9h
+ZXJfaGlzaShPKSBicmRfZHJ2X2xwdShPKSBoaTE2MXhfZ2xmKE8pIGhpMTYxeF9nbGMoTykg
+Y2hpcF9zZGtfYWRwdChPKSBib25kaW5nKE8pIG1lbWVudihPKSBpb2Zfc2FsKE8pIGlvZl9k
+bG9nKE8pIGlvZl9kZXZlbnQoTykgaW9mX2lvbW0oTykgZHJ2X2JzcF9waWMoTykgYnNwX2Nv
+bW1vbihPKSBwcmFtZGlzayhPKSBic3BfcHJvYyhPKSBrZGNfdWlvX2xvZyhPKSB2cnBfZW52
+X2xvZ19hcmVhKE8pIGRydl9ic3BfZm1lYShPKSBEcnZfTGFzdFdkc19LKE8pIERydl9DcHVE
+ZnhJbmZvX0soTykgRHJ2X0NwdURmeF9LKE8pIHY4X2RmeF9jcHUoTykgRHJ2X0RmeF9LKE8p
+IERydl9DcHVSZWdJbmplY3RfSyhPKSBEcnZfUmVzZXRDYXVzZV9LKE8pIERydl9LYm94X0so
+TykgZW52X2NvcmUoTykgaW9mX2RhdGEoTykgRHJ2X0wyZmx1c2hfSyhPKSBhcm02NF9jYWNo
+ZV9kZngoTykgbW1hcGRldihPKSBkcnZfZXh0ZXJuX2ludChPKSBpcnFfbW9uaXRvcihPKSBk
+cnZfYnNwX2F2cyhPKSBEcnZfUG1idXNfSyhPKSBEcnZfU21jX0soTykgYnNwX3NhbChPKSBE
+cnZfSXBzZWNfSyhPKSBEcnZfVHNlbnNvcl9LKE8pIHBjaV9oaXNpKE8pIHNlcmRlcyhPKSBE
+cnZfQ2hlY2tCb290X0soTykgRHJ2X0RqdGFnX0soTykgYWRkcl93aW4oTykgaW9mX2NiYihP
+KSBEcnZfSTJjX0soTykgaG5zX3Vpb19lbmV0KE8pIGhuc19lbmV0X2RydihPKSBobnNfZHNh
+ZihPKSBobmFlKE8pIGhuc19tZGlvKE8pIG1kaW8oTykgRHJ2X0Zsb3dDdHJsX0soTykgRHJ2
+X0dwaW9fSyhPKSBEcnZfU3lzQ2xrX0soTykgcGh5c21hcF9vZihPKSBtYXBfcm9tKE8pIGNm
+aV9jbWRzZXRfMDAwMihPKSBjZmlfcHJvYmUoTykgY2ZpX3V0aWwoTykgZ2VuX3Byb2JlKE8p
+IGNoaXByZWcoTykgcnNtKE8pIHJ0b3Nfc25hcHNob3QoTykgcnRvc19rYm94X3BhbmljKE8p
+IGJzcF93ZHQoTykgZHJ2X2JzcF9kZHIoTykgYnNwX3JlZyhPKSBEcnZfRHRzX0soTykgRHJ2
+X1N5c0N0bF9LKE8pIGFybV9zYWxfaXNzdShPKSBrc2VjdXJlYyhQTykgZXh0NCBqYmQyIGV4
+dDIgbWJjYWNoZSBvZnBhcnQgaTJjX2RldiBpMmNfY29yZSB1aW8gbmFuZCBuYW5kX2VjYyBu
+YW5kX2lkcyBjbWRsaW5lcGFydCBtdGRibG9jayBtdGRfYmxrZGV2cyBtdGQNCj4gWzIwMTkw
+NTI3MjIxMTA3XUNQVTogMiBQSUQ6IDI2NTYgQ29tbTogbW9uaXRvciBUYWludGVkOiBQICAg
+ICAgICBXICBPICAgIDQuNC4xNzEgIzENCj4gWzIwMTkwNTI3MjIxMTA3XUhhcmR3YXJlIG5h
+bWU6IEhpc2lsaWNvbiBjaGlwNl8xNiBQcm9kdWN0IEJvYXJkIChEVCkNCj4gWzIwMTkwNTI3
+MjIxMTA3XXRhc2s6IGZmZmZmZmQzYmY4MWMyNTAgdGFzay5zdGFjazogZmZmZmZmZDNiZmYw
+YzAwMA0KPiBbMjAxOTA1MjcyMjExMDddUEMgaXMgYXQgcmJfZXJhc2UrMHgxNC8weDMyMA0K
+PiBbMjAxOTA1MjcyMjExMDddTFIgaXMgYXQgZXJhc2VfaGVhZGVyKzB4NTAvMHg1NA0KPiBb
+MjAxOTA1MjcyMjExMDddcGMgOiBbPGZmZmZmZjgwMDg0NmU1Mjg+XSBsciA6IFs8ZmZmZmZm
+ODAwODNkMjQ2OD5dIHBzdGF0ZTogMDAwMDAxNDUNCj4gWzIwMTkwNTI3MjIxMTA3XXNwIDog
+ZmZmZmZmZDNiZmYwZjlhMA0KPiBbMjAxOTA1MjcyMjExMDddeDI5OiBmZmZmZmZkM2JmZjBm
+OWEwIHgyODogZmZmZmZmNjlmZThiMTk4MA0KPiBbMjAxOTA1MjcyMjExMDddeDI3OiAwMDAw
+MDAwMDAwMDAwMDAxIHgyNjogZmZmZmZmODAwOGU3ZTM0MA0KPiBbMjAxOTA1MjcyMjExMDdd
+eDI1OiBmZmZmZmY4MDA4ZTA1MDAwIHgyNDogZmZmZmZmODAwOGUzMmUyOA0KPiBbMjAxOTA1
+MjcyMjExMDddeDIzOiBmZmZmZmZkM2MwNTQyNTAwIHgyMjogZmZmZmZmODAwOGUzMjAwMA0K
+PiBbMjAxOTA1MjcyMjExMDddeDIxOiBmZmZmZmY4MDA4ZTA1MDAwIHgyMDogZmZmZmZmZDNj
+MDU0MmYwMA0KPiBbMjAxOTA1MjcyMjExMDddeDE5OiBmZmZmZmZkM2MwNTQyZmI4IHgxODog
+MDAwMDAwMDAwMDAwMDAwZg0KPiBbMjAxOTA1MjcyMjExMDddeDE3OiAwMDAwMDA3ZjliZDIw
+ZTEwIHgxNjogZmZmZmZmODAwODM2NzEwOA0KPiBbMjAxOTA1MjcyMjExMDddeDE1OiAwMDAw
+MDAwMDAwMDAxZmVlIHgxNDogMDAwMDAwMDAwMDAwMDAwMA0KPiBbMjAxOTA1MjcyMjExMDdd
+eDEzOiAwMDAwMDAwMDAwMDAwMDAwIHgxMjogMDAwMDAwMDAwMDAwMDAwMA0KPiBbMjAxOTA1
+MjcyMjExMDddeDExOiAwMDAwMDAwMDAwMDAwMDAxIHgxMDogMDAwMDAwMDAwMDAwMDAwMQ0K
+PiBbMjAxOTA1MjcyMjExMDddeDkgOiAwMDAwMDAwMDAwMDAwMDAxIHg4IDogZmZmZmZmODAw
+ODk0NjIyZA0KPiBbMjAxOTA1MjcyMjExMDddeDcgOiBmZmZmZmZkM2M2NWRkN2QwIHg2IDog
+MDAwMDAwMDAwMDAwMDAwMA0KPiBbMjAxOTA1MjcyMjExMDddeDUgOiBmZmZmZmZkM2JmODFh
+NzQwIHg0IDogMDAwMDAwMDAwMDAwMDAwMA0KPiBbMjAxOTA1MjcyMjExMDddeDMgOiAwMDAw
+MDAwMTAwMDAwMDAxIHgyIDogMDAwMDAwMDEwMDAwMDAwMA0KPiBbMjAxOTA1MjcyMjExMDdd
+eDEgOiBmZmZmZmZkM2MwNTQyNTUwIHgwIDogZmZmZmZmZDNjMDU0MmY1OA0KPiBbMjAxOTA1
+MjcyMjExMDddUHJvY2VzcyBtb25pdG9yIChwaWQ6IDI2NTYsIHN0YWNrIGxpbWl0ID0gMHhm
+ZmZmZmZkM2JmZjBjMDAwKQ0KPiBbMjAxOTA1MjcyMjExMDddDQo+IFsyMDE5MDUyNzIyMTEw
+N11bPGZmZmZmZjgwMDg0NmU1Mjg+XSByYl9lcmFzZSsweDE0LzB4MzIwDQo+IFsyMDE5MDUy
+NzIyMTEwN11bPGZmZmZmZjgwMDgzZDJmNWM+XSBkcm9wX3N5c2N0bF90YWJsZSsweDE3Yy8w
+eDFkNA0KPiBbMjAxOTA1MjcyMjExMDddWzxmZmZmZmY4MDA4M2QyZjg0Pl0gZHJvcF9zeXNj
+dGxfdGFibGUrMHgxYTQvMHgxZDQNCj4gWzIwMTkwNTI3MjIxMTA3XVs8ZmZmZmZmODAwODNk
+MzA1MD5dIHVucmVnaXN0ZXJfc3lzY3RsX3RhYmxlKzB4OWMvMHhhOA0KPiBbMjAxOTA1Mjcy
+MjExMDddWzxmZmZmZmY4MDA4M2QzMDE0Pl0gdW5yZWdpc3Rlcl9zeXNjdGxfdGFibGUrMHg2
+MC8weGE4DQo+IFsyMDE5MDUyNzIyMTEwN11bPGZmZmZmZjgwMDgyNWI4ODA+XSBwYXJ0aXRp
+b25fc2NoZWRfZG9tYWlucysweDY0LzB4MzM4DQo+IFsyMDE5MDUyNzIyMTEwN11bPGZmZmZm
+ZjgwMDgyYmQzN2M+XSByZWJ1aWxkX3NjaGVkX2RvbWFpbnNfbG9ja2VkKzB4ZTAvMHgzYzAN
+Cj4gWzIwMTkwNTI3MjIxMTA3XVs8ZmZmZmZmODAwODJiZTU5MD5dIGNwdXNldF93cml0ZV9y
+ZXNtYXNrKzB4Mjg4LzB4OGNjCQ0KPiBbMjAxOTA1MjcyMjExMDddWzxmZmZmZmY4MDA4MmI1
+NjAwPl0gY2dyb3VwX2ZpbGVfd3JpdGUrMHg2NC8weDEyOA0KPiBbMjAxOTA1MjcyMjExMDdd
+WzxmZmZmZmY4MDA4M2RhYTUwPl0ga2VybmZzX2ZvcF93cml0ZSsweDE1Yy8weDFhYw0KPiBb
+MjAxOTA1MjcyMjExMDddWzxmZmZmZmY4MDA4MzY1YzljPl0gX192ZnNfd3JpdGUrMHg2MC8w
+eDEyNA0KPiBbMjAxOTA1MjcyMjExMDddWzxmZmZmZmY4MDA4MzY2NjZjPl0gdmZzX3dyaXRl
+KzB4YjAvMHgxODQNCj4gWzIwMTkwNTI3MjIxMTA3XVs8ZmZmZmZmODAwODM2NzE3ND5dIFN5
+U193cml0ZSsweDZjLzB4Y2MNCj4gWzIwMTkwNTI3MjIxMTA3XVs8ZmZmZmZmODAwODIwMmNi
+OD5dIF9fc3lzX3RyYWNlX3JldHVybisweDAvMHg0DQo+IA0KPiANCj4gVGhlIGRpc2Fzc2Vt
+YmxlciBhbmQgdGhlIHNvdXJjZSBjb2RlIGFib3V0IHRoZSBiYWNrdHJhY2UgYXJlIGFzIGJl
+bG93Og0KPiANCj4gcmJfZXJhc2UoKS0+X19yYl9lcmFzZV9hdWdtZW50ZWQoKS0+X19yYl9j
+aGFuZ2VfY2hpbGQoKQ0KPiBfX3JiX2VyYXNlX2F1Z21lbnRlZCgpOg0KPiBmZmZmZmY4MDA4
+NDZlNTE0OiAgICAgICBhOTQwOTAwNiAgICAgICAgbGRwICAgICB4NiwgeDQsIFt4MCwgIzhd
+DQo+IGZmZmZmZjgwMDg0NmU1MTg6ICAgICAgIGI1MDAwMjQ0ICAgICAgICBjYm56ICAgIHg0
+LCBmZmZmZmY4MDA4NDZlNTYwIDxyYl9lcmFzZSsweDRjPg0KPiBmZmZmZmY4MDA4NDZlNTFj
+OiAgICAgICBmOTQwMDAwMyAgICAgICAgbGRyICAgICB4MywgW3gwXQ0KPiBfX3JiX2NoYW5n
+ZV9jaGlsZCgpOg0KPiBmZmZmZmY4MDA4NDZlNTIwOiAgICAgICBmMjdlZjQ2MiAgICAgICAg
+YW5kcyAgICB4MiwgeDMsICMweGZmZmZmZmZmZmZmZmZmZmMNCj4gZmZmZmZmODAwODQ2ZTUy
+NDogICAgICAgNTQwMDAxNDAgICAgICAgIGIuZXEgICAgZmZmZmZmODAwODQ2ZTU0YyA8cmJf
+ZXJhc2UrMHgzOD4gIC8vIGIubm9uZQ0KPiBmZmZmZmY4MDA4NDZlNTI4OiAgICAgICBmOTQw
+MDg0NCAgICAgICAgbGRyICAgICB4NCwgW3gyLCAjMTZdDQo+IGZmZmZmZjgwMDg0NmU1MmM6
+ICAgICAgIGViMDQwMDFmICAgICAgICBjbXAgICAgIHgwLCB4NA0KPiANCj4gZmZmZmZmODAw
+ODQ2ZTUzMDogICAgICAgNTQwMDAwYTEgICAgICAgIGIubmUgICAgZmZmZmZmODAwODQ2ZTU0
+NCA8cmJfZXJhc2UrMHgzMD4gIC8vIGIuYW55DQo+IF9fd3JpdGVfb25jZV9zaXplKCk6DQo+
+IGZmZmZmZjgwMDg0NmU1MzQ6ICAgICAgIGY5MDAwODQ2ICAgICAgICBzdHIgICAgIHg2LCBb
+eDIsICMxNl0NCj4gDQo+IHJiX2VyYXNlKCktPl9fcmJfZXJhc2VfYXVnbWVudGVkKCktPl9f
+cmJfY2hhbmdlX2NoaWxkKCkNCj4gc3RhdGljIF9fYWx3YXlzX2lubGluZSBzdHJ1Y3QgcmJf
+bm9kZSAqDQo+IF9fcmJfZXJhc2VfYXVnbWVudGVkKHN0cnVjdCByYl9ub2RlICpub2RlLCBz
+dHJ1Y3QgcmJfcm9vdCAqcm9vdCwNCj4gCQkgICAgIGNvbnN0IHN0cnVjdCByYl9hdWdtZW50
+X2NhbGxiYWNrcyAqYXVnbWVudCkNCj4gew0KPiAJLi4uDQo+IAlpZiAoIXRtcCkgew0KPiAJ
+CS4uLg0KPiAJCXBjID0gbm9kZS0+X19yYl9wYXJlbnRfY29sb3I7DQo+IAkJcGFyZW50ID0g
+X19yYl9wYXJlbnQocGMpOw0KPiAJCV9fcmJfY2hhbmdlX2NoaWxkKG5vZGUsIGNoaWxkLCBw
+YXJlbnQsIHJvb3QpOw0KPiAJLi4uDQo+IH0NCj4gc3RhdGljIGlubGluZSB2b2lkDQo+IF9f
+cmJfY2hhbmdlX2NoaWxkKHN0cnVjdCByYl9ub2RlICpvbGQsIHN0cnVjdCByYl9ub2RlICpu
+ZXcsDQo+IAkJICBzdHJ1Y3QgcmJfbm9kZSAqcGFyZW50LCBzdHJ1Y3QgcmJfcm9vdCAqcm9v
+dCkNCj4gew0KPiAJaWYgKHBhcmVudCkgew0KPiAJCWlmIChwYXJlbnQtPnJiX2xlZnQgPT0g
+b2xkKQ0KPiAJCQlXUklURV9PTkNFKHBhcmVudC0+cmJfbGVmdCwgbmV3KTsNCj4gCQllbHNl
+DQo+IAkJCVdSSVRFX09OQ0UocGFyZW50LT5yYl9yaWdodCwgbmV3KTsNCj4gCX0gZWxzZQ0K
+PiAJCVdSSVRFX09OQ0Uocm9vdC0+cmJfbm9kZSwgbmV3KTsNCj4gfQ0KPiANCj4gDQo+IFdo
+ZW4gcGFuaWMsIHRoZSB4MCBpcyBmZmZmZmZkM2MwNTQyZjU4IHdoaWNoIGluZGljYXRlcyB0
+aGUgZmlyc3QgcGFyYW1ldGVyIG9mIGZ1bmN0aW9uIF9fcmJfZXJhc2VfYXVnbWVudGVkLg0K
+PiANCj4gMmYzOCAgYzA1NDI1MDAgZmZmZmZmZDMgYzA1NDJmNTggZmZmZmZmZDMgMDAwMDAw
+MDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDANCj4gMmY1OCAgMDAwMDAwMDEgMDAwMDAw
+MDEgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgYzA1NDJmMDAgZmZmZmZm
+ZDMNCj4gMmY3OCAgYzA1NDJmZjggZmZmZmZmZDMgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAw
+MDAgMDAwMDQxNmQgMDAwMDAwMDAgMDAwMDAwMDANCj4gDQo+IHgwIGlzIHRoZSAic3RydWN0
+IHJiX25vZGUgKm5vZGUiLCB0aGF0IGlzLCB0aGUgY29udGVudCBvZiB0aGUgbm9kZSBpczoN
+Cj4gc3RydWN0IHJiX25vZGUgew0KPiAJdW5zaWduZWQgbG9uZyAgX19yYl9wYXJlbnRfY29s
+b3I7ICAgICAgICAgICAgIDAwMDAwMDAxMDAwMDAwMDENCj4gCXN0cnVjdCByYl9ub2RlICpy
+Yl9yaWdodDsgICAgICAgICAgICAgICAgICAgICBmZmZmZmZkM2MwNTQyNTU4DQo+IAlzdHJ1
+Y3QgcmJfbm9kZSAqcmJfbGVmdDsgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwMDAwMDAw
+MDAwMA0KPiB9IF9fYXR0cmlidXRlX18oKGFsaWduZWQoc2l6ZW9mKGxvbmcpKSkpOw0KPiAN
+Cj4gVGhlIHZhbHVlIG9mIF9fcmJfcGFyZW50X2NvbG9yIGlzIDAwMDAwMDAxMDAwMDAwMDEg
+YW5kIHRoZSBwYXJlbnQgYWRkcmVzcyBpcyAwMDAwMDAwMTAwMDAwMDAwLiBHZW5lcmFsbHks
+IHRoZSBwYXJlbnQNCj4gYWRkcmVzcyBzaG91bGQgYmUgTlVMTCBvciBhIHZhbGlkIGFkZHJl
+c3MuDQo+IA0KPiANCj4gSXMgdGhlcmUgYW55IGlkZWEgYWJvdXQgdGhpcyBpc3N1ZT8NCj4g
+DQo+IFRoYW5rcywNCj4gQ2hlbiBaaG91DQo+IA0KPiANCj4gDQo+IA0KPiANCg==
 
-Okay.
-
-> On the other hand I get much tighter sync
-> offset using the free-running counter than with hardware-corrected
-> timestamps.
-
-Why?  The time stamps come from the very same counter, don't they?
-
-> So as far as I see it, I'll need to have two sets of
-> operations.
-
-I doubt very much that this will work well.
-
-> How should I design such a dual-PHC device driver? Just register two
-> separate clocks, one for the timestamping counter, the other for the
-> scheduling/policing PTP clock, and have phc2sys keep them in sync
-> externally to the driver?
-
-But how would phc2sys do this?  By comparing clock_gettime() values?
-That would surely introduce unnecessary time error.
-
-> Or implement the hardware corrections
-> alongside the timecounter ones, and expose a single PHC (and for
-> clock_gettime, just pick one of the time sources)?
-
-I would implement the hardware clock and drop the timecounter
-altogether.
-
-HTH,
-Richard
