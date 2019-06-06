@@ -2,143 +2,122 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB2DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26130C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7642070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDECF20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:11:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGep7+d0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfFFDJE (ORCPT
+        id S1726697AbfFFDLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 23:09:04 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57426 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726427AbfFFDJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 23:09:04 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8114E8DD1A5B94991531;
-        Thu,  6 Jun 2019 11:09:02 +0800 (CST)
-Received: from euler.huawei.com (10.175.104.193) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 6 Jun 2019 11:08:47 +0800
-From:   Wei Li <liwei391@huawei.com>
-To:     <rostedt@goodmis.org>, <mingo@redhat.com>
-CC:     <huawei.libin@huawei.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ftrace: fix NULL pointer dereference in free_ftrace_func_mapper()
-Date:   Thu, 6 Jun 2019 11:17:54 +0800
-Message-ID: <20190606031754.10798-1-liwei391@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 5 Jun 2019 23:11:39 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34269 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfFFDLj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 23:11:39 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c85so578114pfc.1;
+        Wed, 05 Jun 2019 20:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=byYiJvNP4AxdA2O/8mxFX8VRov3AhPWtzZd3XGwmlWg=;
+        b=lGep7+d0NNYi/YAvvVgwhuv40j6jvzY2L4a4KGYUwhLgxTMlMMwWvkut09fFpbN4tA
+         tdT3FNqqXz+MUA5ZnksOUb8Izvmwu6OfKBVGZIBlqodfxernYkrz9/rBo22cHiIl08MW
+         tAXaJL+NedxDWUUqdLDruCLCraLV9hhDyUo4wSUH0AfZtYPw4CNymuS7SvaawG9NS8BD
+         t/RdKk1JtDrgSvTWNDOpi+dCxhGSigruuxyr8A9nrnOEvcRGSbUp57P8EJUiiBf3MewN
+         GwwRjDWpjjCUdW2A/9LoMe0kWQLWlOkJLALE13vrDdL0sGdE5k8RJ8RFJg6gbVpgtfZi
+         qj+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=byYiJvNP4AxdA2O/8mxFX8VRov3AhPWtzZd3XGwmlWg=;
+        b=a+vljzX1UaERm4B/kopE+VBYNrw0+VXRcvUjq1j6QkVNByoN1RmXoyNymV33osjrkI
+         m7PMe1Qc3Q23HzMoySBbj2twnrymviW25rnxuWptlkxFuyLwlUGYLIOf3I4smKAjZi4c
+         /Hkj3t/oAV+4mxiT/HflEby50BfllaOq1JbibsUI3PAY5F1ByONEIWxItcUYo64StPCQ
+         J++C0Asn2YPW/gnmvVnBN2lA1Wj0KnLLq0/Yo/H+0dUyrHPZymMS1UCuUUZ+8+67BmC5
+         tf4nUQBEfPW+jWjYfhW9hDEe95UrplHNNY4bBDGZrzONkyaAbt6IhwAWWK0KmdBqv7vz
+         Zc9A==
+X-Gm-Message-State: APjAAAVGPtosNKLqmq9a+tzQmmn5zFG9PdNIOnZKbWOPYSI4F0FfO0zB
+        qKxYFoMkux9DDZSxQQcsG4Q=
+X-Google-Smtp-Source: APXvYqy0rvpd15LSjyqjmCQ4NDFc+S4YFjV824Gdn7DHQzju5dPXxF8WJY+++qEgI1EtEvmHWKJ1XQ==
+X-Received: by 2002:a17:90a:2e87:: with SMTP id r7mr46756167pjd.112.1559790698793;
+        Wed, 05 Jun 2019 20:11:38 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id s2sm346080pfe.105.2019.06.05.20.11.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Jun 2019 20:11:37 -0700 (PDT)
+Date:   Wed, 5 Jun 2019 20:11:35 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
+Message-ID: <20190606031135.6lyydjb6hqfeuzt3@localhost>
+References: <20190604170756.14338-1-olteanv@gmail.com>
+ <20190604.202258.1443410652869724565.davem@davemloft.net>
+ <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
+ <CA+h21hrJYm4GLn+LpJ623_dpgxE2z-k3xTMD=z1QQ9WqXg7zrQ@mail.gmail.com>
+ <20190605174547.b4rwbfrzjqzujxno@localhost>
+ <CA+h21hqdmu3+YQVMXyvckrUjXW7mstjG1MDafWGy4qFHB9zdtg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.193]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqdmu3+YQVMXyvckrUjXW7mstjG1MDafWGy4qFHB9zdtg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mapper may be NULL when called from register_ftrace_function_probe()
-with probe->data == NULL.
+On Wed, Jun 05, 2019 at 09:08:54PM +0300, Vladimir Oltean wrote:
+> Currently I'm using a cyclecounter, but I *will* need actual PHC
+> manipulations for the time-based shaping and policing features that
+> the switch has in hardware.
 
-This issue can be reproduced as follow (it may be coverd by compiler
-optimization sometime):
+Okay.
 
-/ # cat /sys/kernel/debug/tracing/set_ftrace_filter 
-#### all functions enabled ####
-/ # echo foo_bar:dump > /sys/kernel/debug/tracing/set_ftrace_filter 
-[  206.949100] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[  206.952402] Mem abort info:
-[  206.952819]   ESR = 0x96000006
-[  206.955326]   Exception class = DABT (current EL), IL = 32 bits
-[  206.955844]   SET = 0, FnV = 0
-[  206.956272]   EA = 0, S1PTW = 0
-[  206.956652] Data abort info:
-[  206.957320]   ISV = 0, ISS = 0x00000006
-[  206.959271]   CM = 0, WnR = 0
-[  206.959938] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000419f3a000
-[  206.960483] [0000000000000000] pgd=0000000411a87003, pud=0000000411a83003, pmd=0000000000000000
-[  206.964953] Internal error: Oops: 96000006 [#1] SMP
-[  206.971122] Dumping ftrace buffer:
-[  206.973677]    (ftrace buffer empty)
-[  206.975258] Modules linked in:
-[  206.976631] Process sh (pid: 281, stack limit = 0x(____ptrval____))
-[  206.978449] CPU: 10 PID: 281 Comm: sh Not tainted 5.2.0-rc1+ #17
-[  206.978955] Hardware name: linux,dummy-virt (DT)
-[  206.979883] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  206.980499] pc : free_ftrace_func_mapper+0x2c/0x118
-[  206.980874] lr : ftrace_count_free+0x68/0x80
-[  206.982539] sp : ffff0000182f3ab0
-[  206.983102] x29: ffff0000182f3ab0 x28: ffff8003d0ec1700 
-[  206.983632] x27: ffff000013054b40 x26: 0000000000000001 
-[  206.984000] x25: ffff00001385f000 x24: 0000000000000000 
-[  206.984394] x23: ffff000013453000 x22: ffff000013054000 
-[  206.984775] x21: 0000000000000000 x20: ffff00001385fe28 
-[  206.986575] x19: ffff000013872c30 x18: 0000000000000000 
-[  206.987111] x17: 0000000000000000 x16: 0000000000000000 
-[  206.987491] x15: ffffffffffffffb0 x14: 0000000000000000 
-[  206.987850] x13: 000000000017430e x12: 0000000000000580 
-[  206.988251] x11: 0000000000000000 x10: cccccccccccccccc 
-[  206.988740] x9 : 0000000000000000 x8 : ffff000013917550 
-[  206.990198] x7 : ffff000012fac2e8 x6 : ffff000012fac000 
-[  206.991008] x5 : ffff0000103da588 x4 : 0000000000000001 
-[  206.991395] x3 : 0000000000000001 x2 : ffff000013872a28 
-[  206.991771] x1 : 0000000000000000 x0 : 0000000000000000 
-[  206.992557] Call trace:
-[  206.993101]  free_ftrace_func_mapper+0x2c/0x118
-[  206.994827]  ftrace_count_free+0x68/0x80
-[  206.995238]  release_probe+0xfc/0x1d0
-[  206.995555]  register_ftrace_function_probe+0x4a8/0x868
-[  206.995923]  ftrace_trace_probe_callback.isra.4+0xb8/0x180
-[  206.996330]  ftrace_dump_callback+0x50/0x70
-[  206.996663]  ftrace_regex_write.isra.29+0x290/0x3a8
-[  206.997157]  ftrace_filter_write+0x44/0x60
-[  206.998971]  __vfs_write+0x64/0xf0
-[  206.999285]  vfs_write+0x14c/0x2f0
-[  206.999591]  ksys_write+0xbc/0x1b0
-[  206.999888]  __arm64_sys_write+0x3c/0x58
-[  207.000246]  el0_svc_common.constprop.0+0x408/0x5f0
-[  207.000607]  el0_svc_handler+0x144/0x1c8
-[  207.000916]  el0_svc+0x8/0xc
-[  207.003699] Code: aa0003f8 a9025bf5 aa0103f5 f946ea80 (f9400303) 
-[  207.008388] ---[ end trace 7b6d11b5f542bdf1 ]---
-[  207.010126] Kernel panic - not syncing: Fatal exception
-[  207.011322] SMP: stopping secondary CPUs
-[  207.013956] Dumping ftrace buffer:
-[  207.014595]    (ftrace buffer empty)
-[  207.015632] Kernel Offset: disabled
-[  207.017187] CPU features: 0x002,20006008
-[  207.017985] Memory Limit: none
-[  207.019825] ---[ end Kernel panic - not syncing: Fatal exception ]---
+> On the other hand I get much tighter sync
+> offset using the free-running counter than with hardware-corrected
+> timestamps.
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
----
- kernel/trace/ftrace.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Why?  The time stamps come from the very same counter, don't they?
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a12aff849c04..7e2488da69ac 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -4221,10 +4221,13 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
- 	struct ftrace_func_entry *entry;
- 	struct ftrace_func_map *map;
- 	struct hlist_head *hhd;
--	int size = 1 << mapper->hash.size_bits;
--	int i;
-+	int size, i;
-+
-+	if (!mapper)
-+		return;
- 
- 	if (free_func && mapper->hash.count) {
-+		size = 1 << mapper->hash.size_bits;
- 		for (i = 0; i < size; i++) {
- 			hhd = &mapper->hash.buckets[i];
- 			hlist_for_each_entry(entry, hhd, hlist) {
--- 
-2.17.1
+> So as far as I see it, I'll need to have two sets of
+> operations.
 
+I doubt very much that this will work well.
+
+> How should I design such a dual-PHC device driver? Just register two
+> separate clocks, one for the timestamping counter, the other for the
+> scheduling/policing PTP clock, and have phc2sys keep them in sync
+> externally to the driver?
+
+But how would phc2sys do this?  By comparing clock_gettime() values?
+That would surely introduce unnecessary time error.
+
+> Or implement the hardware corrections
+> alongside the timecounter ones, and expose a single PHC (and for
+> clock_gettime, just pick one of the time sources)?
+
+I would implement the hardware clock and drop the timecounter
+altogether.
+
+HTH,
+Richard
