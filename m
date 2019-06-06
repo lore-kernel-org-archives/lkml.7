@@ -5,136 +5,136 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CDDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32948C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD44208CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B67820872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MlguHHFV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elYAqTKj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfFFTQt (ORCPT
+        id S1729057AbfFFTS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:16:49 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33865 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbfFFTQt (ORCPT
+        Thu, 6 Jun 2019 15:18:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39329 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728504AbfFFTS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:16:49 -0400
-Received: by mail-oi1-f196.google.com with SMTP id u64so2431795oib.1;
-        Thu, 06 Jun 2019 12:16:49 -0700 (PDT)
+        Thu, 6 Jun 2019 15:18:56 -0400
+Received: by mail-io1-f65.google.com with SMTP id r185so1110210iod.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:18:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wGZZja4pj4ztNwQ9lR3/UUwJOv78Qh9P9Xjpyh0RQ78=;
-        b=MlguHHFVeVF5g8EuutoY2+4e4/Pw0Jksvx2WO+YX4EXH/vrWpw8vSrRkHDsQ5pCprF
-         VOOrYSbElvFQPDJ1pyFaOT1ZJsULnLmMJqy1IsxnVZdQ2TX7jIHv0e0ss70lh5ntGrCr
-         9h5SGrKKopTt92DtlXKrgLixrRZN3HTlEp/DsazX5SMtFLNu/HDahe78SQy0E27BH+bd
-         RxBmkb4hwXMColZk5JNlqwaiHmrUdxk+iPbBcJNiYM0JuHJkuGRnqrkSb2EDhX3CPXFR
-         5vgsiGzCykpZt901hiOso3ha0jcf1ibamJ27d0TLyi7mkiDkAOrclJVHjLg6ZD6sw/qp
-         a+1g==
+        bh=k1YXtpNCDOosbHBL0TL+M3WAkRwQkUQShRW6iv3pI/E=;
+        b=elYAqTKjzYWFPW2KclIE/7D7+zcK6oEV+i0XXHhZSP+U/FvV2qo6zHq3e8SpKTkBiW
+         pIhAHacyghUD4KEMdqoLklkIrGkgpAj5uBTVBQWI3nthQV0FAt/Wy380lL7ZvZubJvDi
+         nskJjdPKBrSBrS7G2PXp/+dxi2HhqiOISv7sGMxfmWWc3f3zic/cQOWUc1FmMkG2Va+g
+         bsfB7JpSfvq8BIiF03CQddwQhGD551SvzJj8MZ499QH1qbBv/ZD4PRr4wkvcc8nkqwc1
+         8CxZP880ZxXM3Bm/h4Vm7ykkkBw/5WnCzk3i65N+KGqcyOwODonNdFFP13QpnHb9+pHJ
+         sWPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wGZZja4pj4ztNwQ9lR3/UUwJOv78Qh9P9Xjpyh0RQ78=;
-        b=fHE53kWwp2M1AzeSg+QyuS5oCN8RL/wxiFyWqbL1Jjejw2/1uuXXlncvLX7JdWjhX8
-         vMnLS+YP5J26ZWxAygTXaos5vjhpoMKIVhb31F4NX+82rmcLbBb7lPmLBLwtRdQV23CY
-         fRD62P1AzCIMUAzF9aN8eJGZSdlYk8JzCzFJ7cJtuqEoeijrFWYyz+CpHsmtRmOx4FRe
-         era8uIjj3pG8UiN2my5OLsCotTj11G4a3KL0bx/XSYUYpzF1uuBy21/1uEYjqLeSerGr
-         5G4iQH2biJFyTCiQwvd7nJz331G5Y/3MJOO7+L3X/geF2l5J4HxZ6r3+NHotqIXETwxq
-         vzbg==
-X-Gm-Message-State: APjAAAXzEEZMYcU73JLCaV1dm5SU4GUn8PJr1G1slm/CrqBIVO1bE41S
-        W+qrRVvWRDOcFpvWuq0V7fr8VQbGzmyTbejIq07weLQN
-X-Google-Smtp-Source: APXvYqzC9WxN3NamhIGFHT81BAmrC45+rcidscjDt+KRt+ASEEUVD3u5cHxp97h+S4hAPTzsUEsNS5LmM87cdCqMsVQ=
-X-Received: by 2002:aca:3545:: with SMTP id c66mr1176682oia.129.1559848608679;
- Thu, 06 Jun 2019 12:16:48 -0700 (PDT)
+        bh=k1YXtpNCDOosbHBL0TL+M3WAkRwQkUQShRW6iv3pI/E=;
+        b=JezaVDMXB0nXkqKEq7crO7EdvVxV75jw6XHmiQoyyvePtf13v0xXN20iesAXWeJ7ct
+         9yrZ/VpxQMzHsE2pnvhIj0SCJK20c4WmABP04F3AYIv0C8GNYGloKzNzxyIl5Te7zz8o
+         FFiEntnW4sbHagZDe54mLjGchqVX5bw5sfFNzxgJpxvBNX7SSGMkimakCkXYW7XxQO5N
+         vp8lzVJqQ0+zl2nWNmLjM09k9MNtqlm77GtMNMLIpJCc4QwHPyViXnZlaoAg+vBiIAi9
+         eZNik6lWuK+JSZsBvrxd076Fg/djEdwBNnnydaRdweN5/WI1C8/QJqC5PS7P1kLahyIt
+         GrKw==
+X-Gm-Message-State: APjAAAX7Y+YjC5m0wJxn9SEk1Ag3F+dAS933b57kMPbyTdsM2gnfatAQ
+        bsy7tlny0CAw0DOyn4L9OdVPp8i6JrW85Ujoogk=
+X-Google-Smtp-Source: APXvYqylaDDGA4PraZOekHKWe7NpeljwK6OKqIM9Pmn2Ow5JNBpDQZ0QcDvmd4FBcWWrCHgBFNyVCSfHaSkhO8aIlms=
+X-Received: by 2002:a6b:f607:: with SMTP id n7mr7233987ioh.263.1559848735945;
+ Thu, 06 Jun 2019 12:18:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-2-glaroque@baylibre.com>
-In-Reply-To: <20190604144714.2009-2-glaroque@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 6 Jun 2019 21:16:37 +0200
-Message-ID: <CAFBinCBN4QC2tPDEQmTW_c+PP5yu2qoK5M1eSye=SmvpieKWQg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] Documentation: dt-bindings: add the Amlogic Meson
- Temperature Sensor
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     jic23@kernel.org, khilman@baylibre.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
+References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
+ <CGME20190605070528epcas1p1d9b1d1b09ffaafa511936ed3ded29097@epcas1p1.samsung.com>
+ <20190605070507.11417-4-andrew.smirnov@gmail.com> <3c50e3e2-9fb8-6962-9988-32d14aa429b0@samsung.com>
+In-Reply-To: <3c50e3e2-9fb8-6962-9988-32d14aa429b0@samsung.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Thu, 6 Jun 2019 12:18:44 -0700
+Message-ID: <CAHQ1cqExJuKHcXBPszkMymzZg4r4nRKAoySPXLrCurOCoco9-g@mail.gmail.com>
+Subject: Re: [PATCH v3 03/15] drm/bridge: tc358767: Simplify polling in tc_link_training()
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Archit Taneja <architt@codeaurora.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guillaume,
-
-thank you for working on this!
-
-On Tue, Jun 4, 2019 at 4:47 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
+On Thu, Jun 6, 2019 at 1:08 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
 >
-> This adds the devicetree binding documentation for the Temperature
-> Sensor found in the Amlogic Meson G12 SoCs.
-> Currently only the G12A SoCs are supported.
-so G12B is not supported (yet)?
-
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  .../iio/temperature/amlogic,meson-tsensor.txt | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
+> On 05.06.2019 09:04, Andrey Smirnov wrote:
+> > Replace explicit polling in tc_link_training() with equivalent call to
+> > tc_poll_timeout() for simplicity. No functional change intended (not
+> > including slightly altered debug output).
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Archit Taneja <architt@codeaurora.org>
+> > Cc: Andrzej Hajda <a.hajda@samsung.com>
+> > Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > Cc: Cory Tusar <cory.tusar@zii.aero>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/gpu/drm/bridge/tc358767.c | 15 ++++++---------
+> >  1 file changed, 6 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+> > index 5e1e73a91696..115cffc55a96 100644
+> > --- a/drivers/gpu/drm/bridge/tc358767.c
+> > +++ b/drivers/gpu/drm/bridge/tc358767.c
+> > @@ -748,22 +748,19 @@ static int tc_set_video_mode(struct tc_data *tc,
+> >
+> >  static int tc_wait_link_training(struct tc_data *tc)
+> >  {
+> > -     u32 timeout = 1000;
+> >       u32 value;
+> >       int ret;
+> >
+> > -     do {
+> > -             udelay(1);
+> > -             tc_read(DP0_LTSTAT, &value);
+> > -     } while ((!(value & LT_LOOPDONE)) && (--timeout));
+> > -
+> > -     if (timeout == 0) {
+> > +     ret = tc_poll_timeout(tc, DP0_LTSTAT, LT_LOOPDONE,
+> > +                           LT_LOOPDONE, 1, 1000);
+> > +     if (ret) {
+> >               dev_err(tc->dev, "Link training timeout waiting for LT_LOOPDONE!\n");
+> > -             return -ETIMEDOUT;
+> > +             return ret;
+> >       }
 >
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> new file mode 100644
-> index 000000000000..d064db0e9cac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/amlogic,meson-tsensor.txt
-> @@ -0,0 +1,31 @@
-> +* Amlogic Meson Temperature Sensor
-> +
-> +Required properties:
-> +- compatible:  depending on the SoC and the position of the sensor,
-> +               this should be one of:
-> +               - "amlogic,meson-g12a-cpu-tsensor" for the CPU G12A SoC sensor
-> +               - "amlogic,meson-g12a-ddr-tsensor" for the DDR G12A SoC sensor
-> +               followed by the common :
-> +               - "amlogic,meson-g12a-tsensor" for G12A SoC family
-> +- reg:         the physical base address and length of the registers
-> +- interrupts:  the interrupt indicating end of sampling
-> +- clocks:      phandle identifier for the reference clock of temperature sensor
-> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
-have you considered using the thermal framework [0] instead of the iio
-framework (see below)?
+>
+> Inconsistent coding, in previous patch you check (ret == -ETIMEDOUT) but
+> not here. To simplify the code you can assume that tc_poll_timeout < 0,
+> means timeout, in such case please adjust previous patch.
+>
 
-> +- amlogic,ao-secure: phandle to the ao-secure syscon
-the driver has some "u_efuse_off" access. do we need to get some
-calibration values from the AO syscon or can we also fetch it from the
-eFuse? you can look at arch/arm/boot/dts/meson8.dtsi where I'm passing
-the temperature sensor calibration data to the SAR ADC (there's no
-dedicated temperature sensor IP block prior to G12A) while reading the
-data from the eFuse
+Sure, will do.
 
-> +Optional properties:
-> +- amlogic,critical-temperature: temperature value in milli degrees Celsius
-> +       to set automatic reboot on too high temperature
-as far as I can tell the thermal framework supports multiple trip
-points. I'm seeing this as a benefit because the hardware can raise
-interrupts at four different temperatures (defined by the driver)
-
-> +Example:
-> +       cpu_temp: temperature-sensor@ff634800 {
-> +               compatible = "amlogic,meson-g12a-cpu-tsensor",
-> +                            "amlogic,meson-g12a-tsensor";
-> +               reg = <0x0 0xff634800 0x0 0x50>;
-> +               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-> +               clocks = <&clkc CLKID_TS>;
-> +               status = "okay";
-as far as I know the dt-bindings should not have a status property in
-the examples
-
-
-Martin
+Thanks,
+Andrey Smirnov
