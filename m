@@ -2,94 +2,151 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A411C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D892C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD65C20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A2920652
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:35:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndP56wM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfFFQe5 convert rfc822-to-8bit (ORCPT
+        id S1727450AbfFFQfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:34:57 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:40843 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727157AbfFFQe5 (ORCPT
+        Thu, 6 Jun 2019 12:35:55 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:51100 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfFFQfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:34:57 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-111-wSjFIz9gN-O0BTNia_e76w-1; Thu, 06 Jun 2019 17:34:53 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
- 6 Jun 2019 17:34:52 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 6 Jun 2019 17:34:52 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'paulmck@linux.ibm.com'" <paulmck@linux.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: single copy atomicity for double load/stores on 32-bit systems
-Thread-Topic: single copy atomicity for double load/stores on 32-bit systems
-Thread-Index: AQHVHExZF0f//oAV60q3cSBNG5qc66aO0bMg
-Date:   Thu, 6 Jun 2019 16:34:52 +0000
-Message-ID: <8d1666df180d4d01aaebb5d41370b338@AcuMS.aculab.com>
-References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
- <20190531082112.GH2623@hirez.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA2307501A2522B5B@us01wembx1.internal.synopsys.com>
- <20190603201324.GN28207@linux.ibm.com>
- <CAMuHMdW-8Jt80mSyHTYmj6354-3f1=Vp_8dY-Nite1ERpUCFew@mail.gmail.com>
- <20190606094340.GD28207@linux.ibm.com>
-In-Reply-To: <20190606094340.GD28207@linux.ibm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 6 Jun 2019 12:35:54 -0400
+Received: by mail-it1-f196.google.com with SMTP id a186so996480itg.0;
+        Thu, 06 Jun 2019 09:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kZVofKIX8cuevQT7Eo8t89U9uZvINfNqGUyEDzkiDB8=;
+        b=ndP56wM7bylQINUrjIQ9Ij5CE71JfnJe0DB5gosPulnzn3aE4r5QN3rTOy7WFQK6jn
+         C/Z0LF8GPKjaraty0LCA8Vxhoy4a5Z3JtA+ElqmXPo8GeU+M3OeJTe3JmDeStEw91rYS
+         eviNeXiUJqwQ+zFFkygjdmWjxO942+BEbSdBYYBxxm5YzSeaRFj/Tl/n470l4anL1T8S
+         R66T726U1G37tThzShIXtRsSjo52297Hf5sy0IgMcwg5VExLcdAPsgT1R6tqwSSEjc31
+         O0qFBDdoExVgT18QuUyD6XNjF3Izh0tS+D/oWH5ZJtMVuvwpPqc+qZbl61m5joLHB5CO
+         yRkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kZVofKIX8cuevQT7Eo8t89U9uZvINfNqGUyEDzkiDB8=;
+        b=DDWTd/howMjRri98+VZUnckQCs2DQYgzJINm1f1zunZLxKcoiTzsH2d9vJC/sm4pIA
+         hhRmO0RsbWjQLs4pgtR6V3MxaXrq3v1oR3iB3XnmY7NMsK5YCSzxbf3AWI/6yiYvfVwl
+         leB+ofrXlZvD6cWjU0Zj75+CfWeO65s6uO5FYM8hporE0pN/2NFNuAIzyWjcYr/6jkwD
+         DCkNBYbIMB5zE+Rw1EokeG++SmCXm3vf+qUVCse5SoEKCjeqLTUuRJ6kPZEe993DGDP0
+         PYGlQLXHHQaechtCNqQ1EvTzcpuIwyXBGdC8U1MZnuY40JeMkNz4d/qNScJNrZjrIPUy
+         KWxQ==
+X-Gm-Message-State: APjAAAXOcfycX2uOsre4hSjjpfPzkvtgqIXshVpKckde46pnDnpbc2PD
+        VuQlvgb6OlmSGbk19uf/zFY=
+X-Google-Smtp-Source: APXvYqy5UJ1Ew/Rn199zv3Jda6+BDkgik9cm4AqeLCU1a8gIDZAzg15i4BGv0jZa74ArwP9AjTV/LA==
+X-Received: by 2002:a02:1a86:: with SMTP id 128mr32154721jai.95.1559838953406;
+        Thu, 06 Jun 2019 09:35:53 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id 20sm798893iog.62.2019.06.06.09.35.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 09:35:53 -0700 (PDT)
+Subject: Re: [PATCH V8 14/15] PCI: tegra: Add Tegra194 PCIe support
+To:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com
+Cc:     mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20190526043751.12729-1-vidyas@nvidia.com>
+ <20190526043751.12729-15-vidyas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
+Date:   Thu, 6 Jun 2019 19:35:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MC-Unique: wSjFIz9gN-O0BTNia_e76w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190526043751.12729-15-vidyas@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney
-> Sent: 06 June 2019 10:44
-...
-> But m68k is !SMP-only, correct?  If so, the only issues would be
-> interactions with interrupt handlers and the like, and doesn't current
-> m68k hardware use exact interrupts?  Or is it still possible to interrupt
-> an m68k in the middle of an instruction like it was in the bad old days?
+26.05.2019 7:37, Vidya Sagar пишет:
+> Add support for Synopsys DesignWare core IP based PCIe host controller
+> present in Tegra194 SoC.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v7]:
+> * Addressed review comments from Thierry
+> 
+> Changes since [v6]:
+> * Removed code around "nvidia,disable-aspm-states" DT property
+> * Refactored code to remove code duplication
+> 
+> Changes since [v5]:
+> * Addressed review comments from Thierry
+> 
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
+> * Removed .runtime_suspend() & .runtime_resume() implementations
+> 
+> Changes since [v1]:
+> * Made CONFIG_PCIE_TEGRA194 as 'm' by default from its previous 'y' state
+> * Modified code as per changes made to DT documentation
+> * Refactored code to address Bjorn & Thierry's review comments
+> * Added goto to avoid recursion in tegra_pcie_dw_host_init() API
+> * Merged .scan_bus() of dw_pcie_host_ops implementation to tegra_pcie_dw_host_init() API
+> 
+>  drivers/pci/controller/dwc/Kconfig         |   10 +
+>  drivers/pci/controller/dwc/Makefile        |    1 +
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 1621 ++++++++++++++++++++
+>  3 files changed, 1632 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index a6ce1ee51b4c..884112afc11b 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -220,6 +220,16 @@ config PCI_MESON
+>  	  and therefore the driver re-uses the DesignWare core functions to
+>  	  implement the driver.
+>  
+> +config PCIE_TEGRA194
+> +	tristate "NVIDIA Tegra194 (and later) PCIe controller"
+> +	depends on (TEGRA_BPMP && ARCH_TEGRA) || COMPILE_TEST
 
-Hardware interrupts were always on instruction boundaries, the
-mid-instruction interrupts would only happen for page faults (etc).
+TEGRA_BPMP will be enough here as it depends on other relevant options.
 
-There were SMP m68k systems (but I can't remember one).
-It was important to continue from a mid-instruction trap on the
-same cpu - unless you could guarantee that all the cpus had
-exactly the same version of the microcode.
+Hence I mean:
 
-In any case you could probably use the 'cmp2' instruction
-for an atomic 64bit write.
-OTOH setting that up was such a PITA it was always easier
-to disable interrupts.
+	depends on TEGRA_BPMP || COMPILE_TEST
 
-	David
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+> +	depends on PCI_MSI_IRQ_DOMAIN
 
+You probably want to s/depends on/select/ PCI_MSI_IRQ_DOMAIN, don't you?
+
+-- 
+Dmitry
