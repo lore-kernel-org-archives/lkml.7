@@ -2,79 +2,174 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B654DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0C2C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C73D2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1704D2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k57U96xj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfFFKqI convert rfc822-to-8bit (ORCPT
+        id S1727089AbfFFKtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:46:08 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37648 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfFFKqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:46:07 -0400
-Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hYpuG-0003im-27; Thu, 06 Jun 2019 12:46:04 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on veyron
-Date:   Thu, 06 Jun 2019 12:46:03 +0200
-Message-ID: <3394571.WlNFeu2Orz@phil>
-In-Reply-To: <2828678.vPWIEPrON5@diego>
-References: <20190605204320.22343-1-mka@chromium.org> <20190605212427.GP40515@google.com> <2828678.vPWIEPrON5@diego>
+        Thu, 6 Jun 2019 06:49:24 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18957 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFFKtX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:49:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf8efb00000>; Thu, 06 Jun 2019 03:49:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 03:49:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 03:49:20 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 10:49:18 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+Date:   Thu, 6 Jun 2019 11:49:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559818160; bh=WzzhEJK2De3f43eCu/BsQHMI4/xvHgWD7ruox2mfSOg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=k57U96xj4MeWVr4uU7VFDpQyr5ZsS+4muuzcTIAQ1QtIWGfjypzQHPUBi3Fv92EcI
+         LzBIVxGr0iSFMR09zDaT/+vfJQmf7fObPdj0cJpoPZAKdwiH3TkFu5zVaK3gGbVUQd
+         yL/LH5aNtSW0Fqds4Nwcr7gRJVk9J195aBM4yzyAfIdG3+h1T9a6bhmwbgdgM+fSEr
+         5KyHDYOlYrhWwdCtrzJEQhrAgIjNIw5Yx6Nk/cIs0qfQ7F8DD2r3UPsBHtW+LXGiUL
+         HJXIn3J8Fw6s1AHDxhXX+64j+tOhQkuU4aBxqgmYj+O1BSlvNaC6sGgDc9E9rOqlPV
+         CvTDb6pOlE5PQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 5. Juni 2019, 23:52:00 CEST schrieb Heiko Stübner:
-> Am Mittwoch, 5. Juni 2019, 23:24:27 CEST schrieb Matthias Kaehlcke:
-> > On Wed, Jun 05, 2019 at 11:11:12PM +0200, Heiko Stübner wrote:
-> > > Am Mittwoch, 5. Juni 2019, 22:43:20 CEST schrieb Matthias Kaehlcke:
-> > > > This enables wake up on Bluetooth activity when the device is
-> > > > suspended. The BT_HOST_WAKE signal is only connected on devices
-> > > > with BT module that are connected through UART.
-> > > > 
-> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > 
-> > > Housekeeping question, with the two Signed-off-by lines, is Doug the
-> > > original author, or was this Co-developer-by?
-> > 
-> > Good question, it's derived from Doug's patch for CrOS 3.14 and
-> > https://crrev.com/c/1575556 also from Doug. Let's say I did the
-> > porting to upstream, but I'm pretty sure Doug spent more time on it.
-> > 
-> > Maybe I should resend it with Doug as author and include the original
-> > commit message, which has more information.
+
+On 06/06/2019 11:22, Peter Ujfalusi wrote:
+
+...
+
+>>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
+>>>> well.
+>>> Not exactly equal.
+>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
+>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
+>>> multiples of 16]
+>>
+>> So I think that the key thing to highlight here, is that the as Sameer
+>> highlighted above for the Tegra ADMA there are two values that need to
+>> be programmed; the DMA client FIFO size and the max burst size. The ADMA
+>> has register fields for both of these.
 > 
-> It's just that the first Signed-off should be from the original author.
-> (And the sender the second)
-> In the co-developed-by case (see Kernel documentation) the order
-> doesn't matter.
+> How does the ADMA uses the 'client FIFO size' and 'max burst size'
+> values and what is the relation of these values to the peripheral side
+> (ADMAIF)?
 
-Holding off on this patch till we could clarify the authorship.
+Per Sameer's previous comment, the FIFO size is used by the ADMA to
+determine how much space is available in the FIFO. I assume the burst
+size just limits how much data is transferred per transaction.
 
+>> As you can see from the above the FIFO size can be much greater than the
+>> burst size and so ideally both of these values would be passed to the DMA.
+>>
+>> We could get by with just passing the FIFO size (as the max burst size)
+>> and then have the DMA driver set the max burst size depending on this,
+>> but this does feel quite correct for this DMA. Hence, ideally, we would
+>> like to pass both.
+>>
+>> We are also open to other ideas.
+> 
+> I can not find public documentation (I think they are walled off by
+> registration), but correct me if I'm wrong:
 
-Heiko
+No unfortunately, you are not wrong here :-(
 
+> ADMAIF - peripheral side
+>  - kind of a small DMA for audio preipheral(s)?
 
+Yes this is the interface to the APE (audio processing engine) and data
+sent to the ADMAIF is then sent across a crossbar to one of many
+devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
+configurable depending on the use-case.
+
+>  - Variable FIFO size
+
+Yes.
+
+>  - sends DMA request to ADMA per words
+
+From Sameer's notes it says the ADMAIF send a signal to the ADMA per
+word, yes.
+
+> ADMA - system DMA
+>  - receives the DMA requests from ADMAIF
+>  - counts the requests
+>  - based on some threshold of the counter it will send/read from ADMAIF?
+>   - maxburst number of words probably?
+
+Sounds about right to me.
+
+> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
+> managing that FIFO from the outside, making sure that it does not over
+> or underrun?
+
+Yes.
+
+> And it is the one who sets the pace (in effect the DMA burst size - how
+> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
+
+Yes.
+
+So currently, if you look at the ADMA driver
+(drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
+for the burst, but the FIFO size is hard-coded (see the
+TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
+Ideally, we should not hard-code this but pass it.
+
+Given that there are no current users of the ADMA upstream, we could
+change the usage of the src/dst_maxburst, but being able to set the FIFO
+size as well would be ideal.
+
+Cheers
+Jon
+
+-- 
+nvpublic
