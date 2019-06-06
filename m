@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CF1C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D5DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD762083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0DA520684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:37:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WwN1QI01"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="b7m3H/Xg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfFFPhK (ORCPT
+        id S1729476AbfFFPhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:37:10 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:41252 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728871AbfFFPhH (ORCPT
+        Thu, 6 Jun 2019 11:37:13 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:41264 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729448AbfFFPhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:37:07 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        Thu, 6 Jun 2019 11:37:10 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4CA32C0B7D;
-        Thu,  6 Jun 2019 15:37:18 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 96018C0B81;
+        Thu,  6 Jun 2019 15:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1559835438; bh=7GB4v+Viwpyg1QsfezOTpg30VWWaMej3TpuKytixbUs=;
+        t=1559835440; bh=evCeM7m+wEZrH4vGhwpv02k3yRyahFmlmUvNVtGsfDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WwN1QI01kdmP7Sp0ohR1901FTOp+cG240dugDp+qyx0m2cBfggEJYp5BONvjakE1c
-         cZIrDxHKri8t0ms8/IMk+L9AfYGs6Afj/wk1gKeKgaH15bXpWKaYzncxyQsLh2bdCu
-         WCJk5NllIxOvc75sJjAo3kpcNR/32lUGOScr8K0Ikf7SS5Waogk3fw41oLXJJvpVkv
-         /lAM3s31PvJb51UXNYbD1b2HfVYjtPpGHI3X6QzTobD7hH5SUZmAN0xkjJJNU7ehXv
-         Pui0lgxVQl0XY5HGr0qrAnfZ/pWKA/f7nOFZzMNlrOKnF2uzMXik83DJjuC9RMiFJG
-         9yVTdDjqGqc+g==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 2C25BA022E;
-        Thu,  6 Jun 2019 15:37:06 +0000 (UTC)
+        b=b7m3H/XgkC/+WU1sEjD6eDOgADERYI7a3JYqP+b3Kb8pEDYNuWSR3NAw1yBJO+QTD
+         Q7FbnUfzEt+yTVkMCi8lEUmMMNWwr5P1CCjTwuiZh4HuI7F38Nsi9NbdJcpJisdtbK
+         J3lsWkoBGJzcdWJdr5E/0Py9nUUcMuUsQfMTTr8/jHaU+QFrBgzgiHh1hz0D5vPIEH
+         E74qVrIv4M0BzOpLmGwwcLoiGK4J5SO4IQiGHp97hQEvHPqh8HfG+isK7KGTUXB905
+         v9+DaYcK0h1Cs04DKPsc52NZzLp9Te8NJky5A8O9jbK6NlxOQYiMz4lLJp96JYnRhW
+         1z7dD48lVkd1A==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 813B9A005C;
+        Thu,  6 Jun 2019 15:37:07 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 1803F3F1FF;
-        Thu,  6 Jun 2019 17:37:06 +0200 (CEST)
+        by de02.synopsys.com (Postfix) with ESMTP id 65A4D3F204;
+        Thu,  6 Jun 2019 17:37:07 +0200 (CEST)
 From:   Luis Oliveira <Luis.Oliveira@synopsys.com>
 To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Joao.Pinto@synopsys.com,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [PATCH V2 1/2] reset: Add DesignWare IP support to simple reset
-Date:   Thu,  6 Jun 2019 17:36:27 +0200
-Message-Id: <1559835388-2578-2-git-send-email-luis.oliveira@synopsys.com>
+        Luis Oliveira <Luis.Oliveira@synopsys.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH V2 2/2] dt-bindings: Document the DesignWare IP reset bindings
+Date:   Thu,  6 Jun 2019 17:36:28 +0200
+Message-Id: <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
 References: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
@@ -60,50 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-
-The reset-simple driver can be now used on DesignWare IPs by
-default by selecting the following compatible strings:
- - snps,dw-high-reset for active high resets inputs
- - snps,dw-low-reset for active low resets inputs
+This adds documentation of device tree bindings for the
+DesignWare IP reset controller.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
 ---
 Changelog
-- no changes
+- Add active low configuration example
+- Fix compatible string in the active high example
 
- drivers/reset/Kconfig        | 2 +-
- drivers/reset/reset-simple.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/reset/snps,dw-reset.txt    | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/snps,dw-reset.txt
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d506d32..ac85fd2 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -118,7 +118,7 @@ config RESET_QCOM_PDC
- 
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
-+	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARC
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 77fbba3..79e73be 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -129,6 +129,9 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "aspeed,ast2400-lpc-reset" },
- 	{ .compatible = "aspeed,ast2500-lpc-reset" },
-+	{ .compatible = "snps,dw-high-reset" },
-+	{ .compatible = "snps,dw-low-reset",
-+		.data = &reset_simple_active_low },
- 	{ /* sentinel */ },
- };
- 
+diff --git a/Documentation/devicetree/bindings/reset/snps,dw-reset.txt b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+new file mode 100644
+index 0000000..85f3301
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+@@ -0,0 +1,30 @@
++Synopsys DesignWare Reset controller
++=======================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++Required properties:
++
++- compatible: should be one of the following.
++	"snps,dw-high-reset" - for active high configuration
++	"snps,dw-low-reset" - for active low configuration
++
++- reg: physical base address of the controller and length of memory mapped
++	region.
++
++- #reset-cells: must be 1.
++
++example:
++
++	dw_rst_1: reset-controller@0000 {
++		  compatible = "snps,dw-high-reset";
++	 	  reg = <0x0000 0x4>;
++		  #reset-cells = <1>;
++	};
++
++	dw_rst_2: reset-controller@1000 {i
++		  compatible = "snps,dw-low-reset";
++		  reg = <0x1000 0x8>;
++		  #reset-cells = <1>;
++	};
 -- 
 2.7.4
 
