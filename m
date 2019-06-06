@@ -2,144 +2,114 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA408C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C18C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26A520684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6130B20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AN2CNz7C"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="g7fnb/zh";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HZaFc5gR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfFFJfQ (ORCPT
+        id S1727842AbfFFJi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:35:16 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40624 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbfFFJfQ (ORCPT
+        Thu, 6 Jun 2019 05:38:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52412 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbfFFJiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:35:16 -0400
-Received: by mail-io1-f65.google.com with SMTP id n5so138529ioc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HHp49uQlU5yIys64xH4zvS9Cue2SVr3RQK/YgKDpiRc=;
-        b=AN2CNz7CPqZzivrS99g5nvwP/o/SgLHBsg/4sHt3Gs4l8ZE8woyNIea7FNZ+ZLVBs9
-         10My5n58np8Mog6V4seZA5WseaRXJL42mH3XFJho3fx5KAEGrLvh/B3CRxP75+hoXCZs
-         yutgAOz6DZfYnD+C1SCiox4cawVPPNLBMCf9t8dwKI04O4kGiCd7c2Jjr/n8fqgzSIiS
-         H1/AVWlWmtVtxOGX+Qm4cp0uMl8cAUWzNzyeVJwTJsegYoFIkG0U2hJ8qyVYHuOjZlDV
-         WqbmmgQgR4GOiTE/hNEAD0H0E1uqB+MqNjm+3CN5fKeF1BIthAwuYe+Q8cxB4XWQ0DyS
-         PWVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HHp49uQlU5yIys64xH4zvS9Cue2SVr3RQK/YgKDpiRc=;
-        b=DBlfNdRUQRrkM9TgYxkwdptbJTYFN5XZKbyNsBOHnSJuEe8tySF4q3df3v2bgy+50x
-         u1LxLYf8GBVNvbUwRnASN+OEWm7GpxIPCx/1zDUFfFe1Kr+PtZuFVZvKhYW4qwUiteJX
-         v2ggUFuXfRVwcweT/PWpk5nquymPzA/M3mZPhiGtxe7VOLFI6nBzIN6RIeHv47jE1iVz
-         bVmy51hpxue5sk43EzBGHMO1W99K23+99+1D2yx19HPkr/45nKX1wCy02VSOvgdKI+ZN
-         AiILPYBG6bDomPCDnb9dHvZV6SG/vqx1pe0g5CzC3gf0hqpBsXrrILrddbRgLj64GZen
-         0YSQ==
-X-Gm-Message-State: APjAAAU32IYQoQwTuLUj62Hk7R28AVgFy0SOmpEDLdYFshZ4UtR+BSDp
-        iJ8dGYAzOvtuXjyXYingrU63141+Si3KuyFfv385e/j5EBeaRw==
-X-Google-Smtp-Source: APXvYqwYiF7FPCLPAO+cIFA18Sip3ZuB6prYvOwBxGiLac3826Dt6ufVgilOW70nYctUeU+5al9/Hx5B739dM7xe0tI=
-X-Received: by 2002:a6b:e608:: with SMTP id g8mr5429025ioh.88.1559813714855;
- Thu, 06 Jun 2019 02:35:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <779905244.a0lJJiZRjM@devpool35> <20190605162626.GA31164@kroah.com>
- <CAKv+Gu9QkKwNVpfpQP7uDd2-66jU=qkeA7=0RAoO4TNaSbG+tg@mail.gmail.com>
- <CAKwvOdnPcjESFrQRR_=cCVag3ZSnC0nBqF7+LFHrcDArT_segA@mail.gmail.com>
- <CAKv+Gu9Leaq_s2kVNzHx+zkdKFXgQVkouN3M56u5nou5WX=cKg@mail.gmail.com>
- <20190606070807.GA17985@kroah.com> <CAKv+Gu_=aUmN76Wzy5kokgP6hcZPWAwW_7=ekqOawkfg7LPE3g@mail.gmail.com>
-In-Reply-To: <CAKv+Gu_=aUmN76Wzy5kokgP6hcZPWAwW_7=ekqOawkfg7LPE3g@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 6 Jun 2019 11:34:54 +0200
-Message-ID: <CAKv+Gu9qg0K44hWtKH9vycxhUF4e2zB87kLqw33Jt+Shc1+9HQ@mail.gmail.com>
-Subject: Re: Building arm64 EFI stub with -fpie breaks build of 4.9.x
- (undefined reference to `__efistub__GLOBAL_OFFSET_TABLE_')
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Rolf Eike Beer <eb@emlix.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Jun 2019 05:38:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D266E60FEB; Thu,  6 Jun 2019 09:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559813904;
+        bh=tsqL//XVJSyHPsn4WnbGr5Qz0DMSjGS8jSJVKedC0gA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=g7fnb/zhTz/exA2ecO/+qVG4B7WFy4UzhxYZr3rIkg6w9Nn3h7mfU4NSYmFlH16D6
+         eLBg6HARf3cEifaVGm5kv9fU5ZnbAjNvJSS/l2RX0JTwh4iO/0RXIBGC0EGL19rFKh
+         J0cZg9qFglVCw/uurYFaJf5FObBPn0R/4UD8USN0=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E43CF60255;
+        Thu,  6 Jun 2019 09:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559813903;
+        bh=tsqL//XVJSyHPsn4WnbGr5Qz0DMSjGS8jSJVKedC0gA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HZaFc5gRGbuyS+uPsJOXHvLIc16i7lWVrelWKdHiOZCIZaJ4IaH5XQmk2kk0ESAPW
+         U+3D/41cvMHrA6AUO1xd2+JccF7soEZuOWpO6yUNgcetn9eBp4GSHHLtMFujXvIc5i
+         HI5X7MWbx0zNSxgpjkLk03sMqLf1mXFd5is10zpc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E43CF60255
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] f2fs: fix is_idle() check for discard type
+Date:   Thu,  6 Jun 2019 15:08:13 +0530
+Message-Id: <1559813893-23452-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Jun 2019 at 10:58, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> On Thu, 6 Jun 2019 at 09:08, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Jun 06, 2019 at 08:55:29AM +0200, Ard Biesheuvel wrote:
-> > > On Wed, 5 Jun 2019 at 22:48, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > > >
-> > > > On Wed, Jun 5, 2019 at 11:42 AM Ard Biesheuvel
-> > > > <ard.biesheuvel@linaro.org> wrote:
-> > > > > For the record, this is an example of why I think backporting those
-> > > > > clang enablement patches is a bad idea.
-> > > >
-> > > > There's always a risk involved with backports of any kind; more CI
-> > > > coverage can help us mitigate some of these risks in an automated
-> > > > fashion before we get user reports like this.  I meet with the
-> > > > KernelCI folks weekly, so I'll double check on the coverage of the
-> > > > stable tree's branches.  The 0day folks are also very responsive and
-> > > > I've spoken with them a few times, so I'll try to get to the bottom of
-> > > > why this wasn't reported by either of those.
-> > > >
-> > > > Also, these patches help keep Android, CrOS, and Google internal
-> > > > production kernels closer to their upstream sources.
-> > > >
-> > > > > We can't actually build those
-> > > > > kernels with clang, can we? So what is the point? </grumpy>
-> > > >
-> > > > Here's last night's build:
-> > > > https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/114388434
-> > > >
-> > >
-> > > If you are saying that plain upstream 4.9-stable defconfig can be
-> > > built with Clang, then I am pleasantly surprised.
-> >
-> > I know some specific configs can, there's no rule that I know of that
-> > 'defconfig' support is required.  But then again, it might also work,
-> > try it and see :)
-> >
->
-> Well, it is the rule that the arm64 maintainers use.
->
-> > > > Also, Android and CrOS have shipped X million devices w/ 4.9 kernels
-> > > > built with Clang.  I think this number will grow at least one order of
-> > > > magnitude imminently.
-> > > >
-> > >
-> > > I know that (since you keep reminding me :-)), but obviously, Google
-> > > does not care about changes that regress GCC support.
-> >
-> > What are you talking about?  Bugs happen all the time, what specifically
-> > did "Google" do to break gcc support?  If you are referring to this
-> > patch, and it is a regression, of course I will revert it.  But note
-> > that gcc and 4.9 works just fine for all of the other users right now,
-> > remember we do do a lot of testing of these releases.
-> >
->
-> Don't get me wrong: I am not blaming Google for this. But having
-> strict Documented/ stable-rules, violating them by backporting patches
-> that are clearly not bug fixes, and *then* saying 'bugs happen all the
-> time' makes no sense to me at all.
+The discard thread should issue upto dpolicy->max_requests at once
+and wait for all those discard requests at once it reaches
+dpolicy->max_requests. It should then sleep for dpolicy->min_interval
+timeout before issuing the next batch of discard requests. But in the
+current code of is_idle(), it checks for dcc_info->queued_discard and
+aborts issuing the discard batch of max_requests. This
+dcc_info->queued_discard will be true always once one discard command
+is issued.
 
-BTW I hit the same issue immediately building 4.9.180 defconfig +
-CONFIG_RANDOMIZE_BASE=y, using my distro GCC (6.3.0), so I'd say the
-testing coverage is not sufficient.
+It is thus resulting into this type of discard request pattern -
+
+- Issue discard request#1
+- is_idle() returns false, discard thread waits for request#1 and then
+  sleeps for min_interval 50ms.
+- Issue discard request#2
+- is_idle() returns false, discard thread waits for request#2 and then
+  sleeps for min_interval 50ms.
+- and so on for all other discard requests, assuming f2fs is idle w.r.t
+  other conditions.
+
+With this fix, the pattern will look like this -
+
+- Issue discard request#1
+- Issue discard request#2
+  and so on upto max_requests of 8
+- Issue discard request#8
+- wait for min_interval 50ms.
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+ fs/f2fs/f2fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 95adedb..ea34fef 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2209,7 +2209,7 @@ static inline bool is_idle(struct f2fs_sb_info *sbi, int type)
+ 		get_pages(sbi, F2FS_DIO_WRITE))
+ 		return false;
+ 
+-	if (SM_I(sbi) && SM_I(sbi)->dcc_info &&
++	if (type != DISCARD_TIME && SM_I(sbi) && SM_I(sbi)->dcc_info &&
+ 			atomic_read(&SM_I(sbi)->dcc_info->queued_discard))
+ 		return false;
+ 
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
