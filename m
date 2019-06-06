@@ -2,82 +2,143 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA35C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE25C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C812089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559845782;
-	bh=OoC4nuWJqWE5iN/x6Gw9nBBptIg/ze0etoB1mALTSr8=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=Ka5Gja+P8YwYkoMer+7DdgToZ44fJPafRuigFr2uXqTz8/0hSC4X7McOLu75PjTlg
-	 SVR8dQ+q5nZn9pfDJaKU3CPj8DGJcNxni49vV+O7K4uDNEH3i/gHIwHuusT5dbswFq
-	 Hn1mQmQPmGDH1yke8icvLSeD3APjcbSqTtKwE9uU=
+	by mail.kernel.org (Postfix) with ESMTP id 5EAA12089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAlI2KM0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbfFFS3m (ORCPT
+        id S1730663AbfFFS3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730630AbfFFS3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:29:41 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0D8C20872;
-        Thu,  6 Jun 2019 18:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559845781;
-        bh=OoC4nuWJqWE5iN/x6Gw9nBBptIg/ze0etoB1mALTSr8=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=P94sqtESM6b3xMQNPs2CjFLVowQJbk6VUGVSpv8guH7GwtldZ6lxKUVT+sP2mIDVj
-         iwvC1wIFrZn6j796btdt+p6I/JHv9PyFivw6RXrRx8dq91v3LSpB9w5J/Sc8Xsn0QG
-         lWrA74hFBsg/O/8mabbl8C3pIsOAZlwnyBQNQmmE=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 6 Jun 2019 14:29:54 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44423 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729165AbfFFS3x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:29:53 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x47so3804314qtk.11;
+        Thu, 06 Jun 2019 11:29:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VDyWzmRCEFjiSNNaRnKgaThnkb6qt5FoNhaBpkNRo4o=;
+        b=AAlI2KM0uk4kE32HxvkLoOpHYXsGwTmmS3guDD0J9itTCOT6EA1N308hWHCK6p1paf
+         hXwv9mzUL7eVRRjl9LVk2FPptt5QYiUu6AmVQyXYVNYYZnsP2Q7nk6fhdiFK3E0YtFOF
+         hDSsyKUbrWsQ/w+amz1hTw34jj+O3oSjUy7CMFCRs2NKPxM/ZBOViJFwcsAHTSCJrmIp
+         ZcV1xsGbC39xQYk0EcD7iG2S1vRg61MUF/PnpRP/0Fo/W9tDLRi/gyfnyN7koKIYsUkL
+         ZJrvGlnj6+fYdGO9e2EHTA3xFR3QM7er5dSgLvkfIUDMqBQ3vGFvBxdnUPcD6LQBkurK
+         nrXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VDyWzmRCEFjiSNNaRnKgaThnkb6qt5FoNhaBpkNRo4o=;
+        b=OstfW8VTnnlEVel9NlPNLnzcHCADNxwYvBQ44TDhDaPWS450hjNGvCNO8K3YyLxzJ/
+         gLZVHqlzcp3uNRVFnhrmbnLjAkctH4+y5F+NNYJJ+PbhvaOENmTQijQB5yRwosK34DjJ
+         7UtMF0tw3/ejaRM6TKFC4afFpHh3HmiSBPtxMPwSJ3jmMFFM+SBzNr+nDJaAciw0lg/v
+         J/g9hJ+J1urldyM/SlJGrOtmrhYcOLxU7DiS7OY3HL+WbCEUPi3vkG1DBlqYf8CzYqXx
+         fk9p3GIWLeDipiXhxnua7mkzjdHtPVMSzHZd7fWJ+epIbxV6nX7K5pRqwNHCXH//WiV7
+         uNOA==
+X-Gm-Message-State: APjAAAW7M3nNBG71QMSDWQyMN9z9YR034LU4CCh4Ub2fMLktid0tcqGo
+        kAwrURwAm82evJtJjpEBslE=
+X-Google-Smtp-Source: APXvYqxSQs6DlT2QSTIZfamR7F6e/5KiLWc1qKb6vFB+/5MPiN3QfN7IcRBzokNHwN+mLuffT0AfyQ==
+X-Received: by 2002:ac8:1855:: with SMTP id n21mr38568496qtk.311.1559845791966;
+        Thu, 06 Jun 2019 11:29:51 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.209.167])
+        by smtp.gmail.com with ESMTPSA id x7sm1581941qth.37.2019.06.06.11.29.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 11:29:51 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 36B6341149; Thu,  6 Jun 2019 15:29:41 -0300 (-03)
+Date:   Thu, 6 Jun 2019 15:29:41 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] perf augmented_raw_syscalls: Document clang
+ configuration
+Message-ID: <20190606182941.GE21245@kernel.org>
+References: <20190606094845.4800-1-leo.yan@linaro.org>
+ <20190606094845.4800-5-leo.yan@linaro.org>
+ <20190606140800.GF30166@kernel.org>
+ <20190606143532.GD5970@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1559132773-12884-1-git-send-email-abel.vesa@nxp.com>
-References: <1559132773-12884-1-git-send-email-abel.vesa@nxp.com>
-To:     Abel Vesa <abel.vesa@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RESEND v2 00/18] clk: imx: Switch the imx6 and imx7 to clk_hw based API
-Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-User-Agent: alot/0.8.1
-Date:   Thu, 06 Jun 2019 11:29:40 -0700
-Message-Id: <20190606182940.F0D8C20872@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606143532.GD5970@leoy-ThinkPad-X240s>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Abel Vesa (2019-05-29 05:26:38)
-> Resend for the following:
->=20
-> https://lkml.org/lkml/2019/5/2/170
+Em Thu, Jun 06, 2019 at 10:35:32PM +0800, Leo Yan escreveu:
+> On Thu, Jun 06, 2019 at 11:08:00AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Jun 06, 2019 at 05:48:45PM +0800, Leo Yan escreveu:
+> > > To build this program successfully with clang, there have three
+> > > compiler options need to be specified:
+> > > 
+> > >   - Header file path: tools/perf/include/bpf;
+> > >   - Specify architecture;
+> > >   - Define macro __NR_CPUS__.
+> > 
+> > So, this shouldn't be needed, all of this is supposed to be done
+> > automagically, have you done a 'make -C tools/perf install'?
+> 
+> I missed the up operation.  But after git pulled the lastest code base
+> from perf/core branch and used the command 'make -C tools/perf
+> install', I still saw the eBPF build failure.
+> 
+> Just now this issue is fixed after I removed the config
+> 'clang-bpf-cmd-template' from ~/.perfconfig;  the reason is I followed
+> up the Documentation/perf-config.txt to set the config as below:
+> 
+>   clang-bpf-cmd-template = "$CLANG_EXEC -D__KERNEL__ $CLANG_OPTIONS \
+>                           $KERNEL_INC_OPTIONS -Wno-unused-value \
+>                           -Wno-pointer-sign -working-directory \
+>                           $WORKING_DIR -c $CLANG_SOURCE -target bpf \
+>                           -O2 -o -"
+> 
+> In fact, util/llvm-utils.c has updated the default configuration as
+> below:
+> 
+>   #define CLANG_BPF_CMD_DEFAULT_TEMPLATE                          \
+>                 "$CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS "\
+>                 "-DLINUX_VERSION_CODE=$LINUX_VERSION_CODE "     \
+>                 "$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
+>                 "-Wno-unused-value -Wno-pointer-sign "          \
+>                 "-working-directory $WORKING_DIR "              \
+>                 "-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
+> 
+> Maybe should update Documentation/perf-config.txt to tell users the
+> real default value of clang-bpf-cmd-template?
 
-What's left after this series to convert over to clk_hw based APIs? I'm
-happy to see this merge as long as we eventually delete the clk based
-versions of the code in the imx driver so that we can complete the task.
+Sure, if you fell like doing this, please update and also please figure
+out when the this changed and add a Fixes: that cset,
 
-I took a look over everything and nothing stuck out, so:
+Its great that you're going thru the docs and making sure the
+differences are noted so that we update the docs, thanks a lot!
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-
-for the series.
-
+- Arnaldo
