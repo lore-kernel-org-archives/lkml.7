@@ -2,140 +2,79 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621F1C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B654DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35AAC2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:45:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oWdP9WZF"
+	by mail.kernel.org (Postfix) with ESMTP id 8C73D2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfFFKpQ (ORCPT
+        id S1727296AbfFFKqI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:45:16 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:44654 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfFFKpQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:45:16 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56AdBIo121846;
-        Thu, 6 Jun 2019 10:44:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=rlTNItZ+vRzH1C5J9n3DIzZYXoQt0JFY3F5NEZCvtS8=;
- b=oWdP9WZFGCHw1qxWUhunX2JomZIVQPQhXJ2qwjvgRnbfY6feGLqv4FAbh8QZTqO9x2Lv
- GnyEYOdVNPpZYKVuC18tIW66GsQL6erL2HQrQj7ewltvSjVh93QhEEWh+D+N1Cxm/Qd5
- okGibrOrohrLg+bAMOd7POOERxAJ818UIs8/sQ5GYRMgtcU98fkMWnDBfFKQQmYfP/dQ
- AM+PnfG0Wzru10foVzr8RFpORFxWERTa8rIpEmYfwG+8Fad3tpZUYMme6iheDeaS3Gud
- eJJOotZ8HZcAh8A7NNppd9IllLw/YGG2GNSN2eflBbPmoizY+KDlF7SfhC/NpoeFVOmk Tg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2suevdqw7u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 10:44:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Aifb8006245;
-        Thu, 6 Jun 2019 10:44:42 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2swnhcmdqm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 10:44:41 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56AidWx000959;
-        Thu, 6 Jun 2019 10:44:39 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 03:44:38 -0700
-Date:   Thu, 6 Jun 2019 13:44:28 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] bpf: remove redundant assignment to err
-Message-ID: <20190606104428.GK31203@kadam>
-References: <20190603170247.9951-1-colin.king@canonical.com>
- <20190603102140.70fee157@cakuba.netronome.com>
- <276525bd-dd79-052e-7663-9acc92621853@canonical.com>
- <20190603104930.466a306b@cakuba.netronome.com>
- <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
+        Thu, 6 Jun 2019 06:46:08 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:37648 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbfFFKqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:46:07 -0400
+Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hYpuG-0003im-27; Thu, 06 Jun 2019 12:46:04 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on veyron
+Date:   Thu, 06 Jun 2019 12:46:03 +0200
+Message-ID: <3394571.WlNFeu2Orz@phil>
+In-Reply-To: <2828678.vPWIEPrON5@diego>
+References: <20190605204320.22343-1-mka@chromium.org> <20190605212427.GP40515@google.com> <2828678.vPWIEPrON5@diego>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060078
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 07:07:20PM +0100, Colin Ian King wrote:
-> On 03/06/2019 18:49, Jakub Kicinski wrote:
-> > On Mon, 3 Jun 2019 18:39:16 +0100, Colin Ian King wrote:
-> >> On 03/06/2019 18:21, Jakub Kicinski wrote:
-> >>> On Mon,  3 Jun 2019 18:02:47 +0100, Colin King wrote:  
-> >>>> From: Colin Ian King <colin.king@canonical.com>
-> >>>>
-> >>>> The variable err is assigned with the value -EINVAL that is never
-> >>>> read and it is re-assigned a new value later on.  The assignment is
-> >>>> redundant and can be removed.
-> >>>>
-> >>>> Addresses-Coverity: ("Unused value")
-> >>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >>>> ---
-> >>>>  kernel/bpf/devmap.c | 2 +-
-> >>>>  kernel/bpf/xskmap.c | 2 +-
-> >>>>  2 files changed, 2 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-> >>>> index 5ae7cce5ef16..a76cc6412fc4 100644
-> >>>> --- a/kernel/bpf/devmap.c
-> >>>> +++ b/kernel/bpf/devmap.c
-> >>>> @@ -88,7 +88,7 @@ static u64 dev_map_bitmap_size(const union bpf_attr *attr)
-> >>>>  static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
-> >>>>  {
-> >>>>  	struct bpf_dtab *dtab;
-> >>>> -	int err = -EINVAL;
-> >>>> +	int err;
-> >>>>  	u64 cost;  
-> >>>
-> >>> Perhaps keep the variables ordered longest to shortest?  
-> >>
-> >> Is that a required coding standard?
+Am Mittwoch, 5. Juni 2019, 23:52:00 CEST schrieb Heiko Stübner:
+> Am Mittwoch, 5. Juni 2019, 23:24:27 CEST schrieb Matthias Kaehlcke:
+> > On Wed, Jun 05, 2019 at 11:11:12PM +0200, Heiko Stübner wrote:
+> > > Am Mittwoch, 5. Juni 2019, 22:43:20 CEST schrieb Matthias Kaehlcke:
+> > > > This enables wake up on Bluetooth activity when the device is
+> > > > suspended. The BT_HOST_WAKE signal is only connected on devices
+> > > > with BT module that are connected through UART.
+> > > > 
+> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > 
+> > > Housekeeping question, with the two Signed-off-by lines, is Doug the
+> > > original author, or was this Co-developer-by?
 > > 
-> > For networking code, yes.  Just look around the files you're changing
-> > and see for yourself.
+> > Good question, it's derived from Doug's patch for CrOS 3.14 and
+> > https://crrev.com/c/1575556 also from Doug. Let's say I did the
+> > porting to upstream, but I'm pretty sure Doug spent more time on it.
+> > 
+> > Maybe I should resend it with Doug as author and include the original
+> > commit message, which has more information.
 > 
-> Ah, informal coding standards. Great. Won't this end up with more diff
-> churn?
+> It's just that the first Signed-off should be from the original author.
+> (And the sender the second)
+> In the co-developed-by case (see Kernel documentation) the order
+> doesn't matter.
 
-Everyone knows that netdev uses reverse Christmas tree declarations...
+Holding off on this patch till we could clarify the authorship.
 
-regards,
-dan carpenter
+
+Heiko
+
 
