@@ -2,140 +2,119 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E855AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C2CC28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C333820868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:46:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QOd09oAc"
+	by mail.kernel.org (Postfix) with ESMTP id 2732820883
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559843302;
+	bh=qxJXaHSpX6G/vQYp0vNXcqf+c/7Ggd4r9q6++tXx/nE=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=DA2TWAvFEemboKhkRvwdmDiOjR6KFr67oRgu8SZ9UWBiVqzN1rKTBWqHJKLzYXihN
+	 eAenTyXdBpFU6IwS/CeFZfw5aQHK9ldkEBAQYcbTFdsz7Tt+WPESm+vGScXv/G59Eo
+	 nZ2diQsju5gFJA3b6mjgahhj+emdVkSAhjAqPBy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbfFFRqv (ORCPT
+        id S1730293AbfFFRsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:46:51 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47026 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728508AbfFFRqv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:46:51 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Hhvif072138;
-        Thu, 6 Jun 2019 17:46:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=K9srEZiZd0rW2duwRjHGphiLjca6oC+0bR+oc5JeQGA=;
- b=QOd09oAcPNhJAlco1nn4lB5UETyxGss2cdwCGa5UsjyPmiC0kdBvJY0TxPJBW8Yumo9P
- SZzwCm6Qr4NfsPtWMURyRSj2eSCMt/zzqo0zn9+j5lV3MgWShJHtGtbYq5ntq0TJMWGu
- DFM5r8ZjqjLpJGiXtYq7d0JZ24UHIbAKmct2cVaa2+mhCPyaO2hPzdEqzoKaeJNi4j0O
- bJoqqxtQpHadj2/pLqKMrElvWhjzOF6EhwbZLq5yA+yathikPCpq1KVLkiEeSN59b3s9
- InfpRvjr8MiaZEYXTL7Ya16KoLJ49Y7rNF6pKkqw9tj32Akguouk8L0OY8BeR1lMV+dc mw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2sugstt0ev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 17:46:47 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56HkgeC096062;
-        Thu, 6 Jun 2019 17:46:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2swnhcty9k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 17:46:46 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56Hkj8L016972;
-        Thu, 6 Jun 2019 17:46:45 GMT
-Received: from tomti.i.net-space.pl (/10.175.219.193)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 10:46:45 -0700
-Date:   Thu, 6 Jun 2019 19:46:41 +0200
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
-        hpa@zytor.com, kanth.ghatraju@oracle.com, ross.philipson@oracle.com
-Subject: Re: [PATCH RFC 0/2] x86/boot: Introduce the setup_header2
-Message-ID: <20190606174641.lletcnrk6x3yqahh@tomti.i.net-space.pl>
-References: <20190524095504.12894-1-daniel.kiper@oracle.com>
- <20190605135031.62grhhxn2pfbkcdg@tomti.i.net-space.pl>
- <20190605140117.GA32106@char.us.oracle.com>
- <20190606115108.sfp2bnu3qzdby4h7@tomti.i.net-space.pl>
- <20190606173046.GI3252@char.us.oracle.com>
+        Thu, 6 Jun 2019 13:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727961AbfFFRsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:48:20 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9747720868;
+        Thu,  6 Jun 2019 17:48:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559843299;
+        bh=qxJXaHSpX6G/vQYp0vNXcqf+c/7Ggd4r9q6++tXx/nE=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=QrEKNot6jJmWjc64RDPVQh7xHmqY9EAhQ9SyYY2yOrdpERHsihoHjxdFWBUtf3sty
+         5gL/nNAtgmtq5Y6LeEMYYhwYlNr5wM4gd1xBPyiHkDcBkdAcdflT5oZbbNzk4/ZPux
+         4PRlrVRmQLwsevK5BmXx8Q13MSs3mIqAK2Jh0PUs=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606173046.GI3252@char.us.oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=731
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=768 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060119
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <VI1PR07MB4432F4F275BC445289FF3D9CFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
+References: <VI1PR07MB4432F4F275BC445289FF3D9CFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
+To:     Philippe Mazenauer <philippe.mazenauer@outlook.de>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: armada-xp: Remove unused variables
+Cc:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 06 Jun 2019 10:48:18 -0700
+Message-Id: <20190606174819.9747720868@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 01:30:46PM -0400, Konrad Rzeszutek Wilk wrote:
-> On Thu, Jun 06, 2019 at 01:51:08PM +0200, Daniel Kiper wrote:
-> > On Wed, Jun 05, 2019 at 10:01:17AM -0400, Konrad Rzeszutek Wilk wrote:
-> > > On Wed, Jun 05, 2019 at 03:50:31PM +0200, Daniel Kiper wrote:
-> > > > On Fri, May 24, 2019 at 11:55:02AM +0200, Daniel Kiper wrote:
-> > > > > Hi,
-> > > > >
-> > > > > This change is needed to properly start the Linux kernel in Intel TXT mode and
-> > > > > is a part of the TrenchBoot project (https://github.com/TrenchBoot).
-> > >
-> > > Can you please expand more on this?
-> > >
-> > > Nice explanation of why, other alternative solutions that didn't work, and so on.
-> >
-> > OK.
-> >
-> > > > > Daniel
-> > > > >
-> > > > >  Documentation/x86/boot.txt               | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  arch/x86/Kconfig                         |  7 +++++++
-> > > > >  arch/x86/boot/Makefile                   |  2 +-
-> > > > >  arch/x86/boot/compressed/Makefile        |  5 +++--
-> > > > >  arch/x86/boot/compressed/setup_header2.S | 18 ++++++++++++++++++
-> > > > >  arch/x86/boot/compressed/sl_stub.S       | 28 ++++++++++++++++++++++++++++
-> > > > >  arch/x86/boot/header.S                   |  3 ++-
-> > > > >  arch/x86/boot/tools/build.c              |  8 ++++++++
-> > > > >  arch/x86/include/uapi/asm/bootparam.h    |  1 +
-> > > > >  9 files changed, 123 insertions(+), 4 deletions(-)
-> > > > >
-> > > > > Daniel Kiper (2):
-> > > > >       x86/boot: Introduce the setup_header2
-> > > > >       x86/boot: Introduce dummy MLE header
-> > > >
-> > > > Ping?
-> > >
-> > > Can you add Ingo and Thomas to the To: next time please?
-> >
-> > OK.
-> >
-> > > Also please drop the second patch.
-> >
-> > Why? This is an example how to use the setup_header2.
->
-> If you are going to post it as non-RFC (which I suspect you will
-> for the next), then why post a patch that is not to be checked in?
+Quoting Philippe Mazenauer (2019-05-21 01:58:41)
+> Variables 'mv98dx3236_gating_desc' and 'mv98dx3236_coreclks' are
+> declared static and initialized, but are not used in the file.
+>=20
+> ../drivers/clk/mvebu/armada-xp.c:213:41: warning: =E2=80=98mv98dx3236_gat=
+ing_desc=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+>  static const struct clk_gating_soc_desc mv98dx3236_gating_desc[] __initc=
+onst =3D {
+>                                          ^~~~~~~~~~~~~~~~~~~~~~
+> ../drivers/clk/mvebu/armada-xp.c:171:38: warning: =E2=80=98mv98dx3236_cor=
+eclks=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+>  static const struct coreclk_soc_desc mv98dx3236_coreclks =3D {
+>                                       ^~~~~~~~~~~~~~~~~~~
+>=20
+> Signed-off-by: Philippe Mazenauer <philippe.mazenauer@outlook.de>
+> ---
 
-Nope, this will be an RFC. And the second patch is an example. I hope
-that it eases understanding how all pieces fit together. If the idea
-is approved then first patch will be posted with full Intel TXT
-implementation and second patch will contain fully fledged MLE header.
+The patch is base64 encoded.... Sigh outlook!
 
-Daniel
+>  drivers/clk/mvebu/armada-xp.c | 14 --------------
+>  1 file changed, 14 deletions(-)
+>=20
+> diff --git a/drivers/clk/mvebu/armada-xp.c b/drivers/clk/mvebu/armada-xp.c
+> index fa1568279c23..2ae24a5debd0 100644
+> --- a/drivers/clk/mvebu/armada-xp.c
+> +++ b/drivers/clk/mvebu/armada-xp.c
+> @@ -168,11 +168,6 @@ static const struct coreclk_soc_desc axp_coreclks =
+=3D {
+>         .num_ratios =3D ARRAY_SIZE(axp_coreclk_ratios),
+>  };
+> =20
+> -static const struct coreclk_soc_desc mv98dx3236_coreclks =3D {
+> -       .get_tclk_freq =3D mv98dx3236_get_tclk_freq,
+> -       .get_cpu_freq =3D mv98dx3236_get_cpu_freq,
+> -};
+> -
+>  /*
+>   * Clock Gating Control
+>   */
+> @@ -210,15 +205,6 @@ static const struct clk_gating_soc_desc axp_gating_d=
+esc[] __initconst =3D {
+>         { }
+>  };
+> =20
+> -static const struct clk_gating_soc_desc mv98dx3236_gating_desc[] __initc=
+onst =3D {
+> -       { "ge1", NULL, 3, 0 },
+> -       { "ge0", NULL, 4, 0 },
+> -       { "pex00", NULL, 5, 0 },
+> -       { "sdio", NULL, 17, 0 },
+> -       { "xor0", NULL, 22, 0 },
+> -       { }
+> -};
+> -
+>  static void __init axp_clk_init(struct device_node *np)
+>  {
+>         struct device_node *cgnp =3D
