@@ -2,92 +2,181 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAB6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5685C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9013E2083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3EB208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbfFFReZ (ORCPT
+        id S1728829AbfFFRfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:34:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33886 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726924AbfFFReZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:34:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5384EAE4D;
-        Thu,  6 Jun 2019 17:34:24 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 19:34:21 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 01/12] mm/sparsemem: Introduce struct mem_section_usage
-Message-ID: <20190606173421.GD31194@linux>
-References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155977187407.2443951.16503493275720588454.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Thu, 6 Jun 2019 13:35:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59740 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbfFFRfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:35:46 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E47C82605F9;
+        Thu,  6 Jun 2019 18:35:43 +0100 (BST)
+Date:   Thu, 6 Jun 2019 19:35:40 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] i3c: fix i2c and i3c scl rate by bus mode
+Message-ID: <20190606193540.680d391b@collabora.com>
+In-Reply-To: <13D59CF9CEBAF94592A12E8AE55501350AABE7FC@DE02WEMBXB.internal.synopsys.com>
+References: <cover.1559821227.git.vitor.soares@synopsys.com>
+        <47de89f2335930df0ed6903be9afe6de4f46e503.1559821228.git.vitor.soares@synopsys.com>
+        <20190606161844.4a6b759c@collabora.com>
+        <13D59CF9CEBAF94592A12E8AE55501350AABE7FC@DE02WEMBXB.internal.synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155977187407.2443951.16503493275720588454.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 02:57:54PM -0700, Dan Williams wrote:
-> Towards enabling memory hotplug to track partial population of a
-> section, introduce 'struct mem_section_usage'.
-> 
-> A pointer to a 'struct mem_section_usage' instance replaces the existing
-> pointer to a 'pageblock_flags' bitmap. Effectively it adds one more
-> 'unsigned long' beyond the 'pageblock_flags' (usemap) allocation to
-> house a new 'subsection_map' bitmap.  The new bitmap enables the memory
-> hot{plug,remove} implementation to act on incremental sub-divisions of a
-> section.
-> 
-> The default SUBSECTION_SHIFT is chosen to keep the 'subsection_map' no
-> larger than a single 'unsigned long' on the major architectures.
-> Alternatively an architecture can define ARCH_SUBSECTION_SHIFT to
-> override the default PMD_SHIFT. Note that PowerPC needs to use
-> ARCH_SUBSECTION_SHIFT to workaround PMD_SHIFT being a non-constant
-> expression on PowerPC.
-> 
-> The primary motivation for this functionality is to support platforms
-> that mix "System RAM" and "Persistent Memory" within a single section,
-> or multiple PMEM ranges with different mapping lifetimes within a single
-> section. The section restriction for hotplug has caused an ongoing saga
-> of hacks and bugs for devm_memremap_pages() users.
-> 
-> Beyond the fixups to teach existing paths how to retrieve the 'usemap'
-> from a section, and updates to usemap allocation path, there are no
-> expected behavior changes.
-> 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On Thu, 6 Jun 2019 17:16:55 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Thu, Jun 06, 2019 at 15:18:44
+> 
+> > On Thu,  6 Jun 2019 16:00:01 +0200
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > Currently the I3C framework limits SCL frequency to FM speed when
+> > > dealing with a mixed slow bus, even if all I2C devices are FM+ capable.
+> > > 
+> > > The core was also not accounting for I3C speed limitations when
+> > > operating in mixed slow mode and was erroneously using FM+ speed as the
+> > > max I2C speed when operating in mixed fast mode.
+> > > 
+> > > Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
+> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > Cc: Boris Brezillon <bbrezillon@kernel.org>
+> > > Cc: <stable@vger.kernel.org>
+> > > Cc: <linux-kernel@vger.kernel.org>
+> > > ---
+> > > Changes in v2:
+> > >   Enhance commit message
+> > >   Add dev_warn() in case user-defined i2c rate doesn't match LVR constraint
+> > >   Add dev_warn() in case user-defined i3c rate lower than i2c rate.
+> > > 
+> > >  drivers/i3c/master.c | 61 +++++++++++++++++++++++++++++++++++++++++-----------
+> > >  1 file changed, 48 insertions(+), 13 deletions(-)
+> > > 
+> > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> > > index 5f4bd52..8cd5824 100644
+> > > --- a/drivers/i3c/master.c
+> > > +++ b/drivers/i3c/master.c
+> > > @@ -91,6 +91,12 @@ void i3c_bus_normaluse_unlock(struct i3c_bus *bus)
+> > >  	up_read(&bus->lock);
+> > >  }
+> > >  
+> > > +static struct i3c_master_controller *
+> > > +i3c_bus_to_i3c_master(struct i3c_bus *i3cbus)
+> > > +{
+> > > +	return container_of(i3cbus, struct i3c_master_controller, bus);
+> > > +}
+> > > +
+> > >  static struct i3c_master_controller *dev_to_i3cmaster(struct device *dev)
+> > >  {
+> > >  	return container_of(dev, struct i3c_master_controller, dev);
+> > > @@ -565,20 +571,48 @@ static const struct device_type i3c_masterdev_type = {
+> > >  	.groups	= i3c_masterdev_groups,
+> > >  };
+> > >  
+> > > -int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode)
+> > > +int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
+> > > +		     unsigned long max_i2c_scl_rate)
+> > >  {
+> > > -	i3cbus->mode = mode;
+> > >  
+> > > -	if (!i3cbus->scl_rate.i3c)
+> > > -		i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+> > > +	struct i3c_master_controller *master = i3c_bus_to_i3c_master(i3cbus);
+> > >  
+> > > -	if (!i3cbus->scl_rate.i2c) {
+> > > -		if (i3cbus->mode == I3C_BUS_MODE_MIXED_SLOW)
+> > > -			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
+> > > -		else
+> > > -			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
+> > > +	i3cbus->mode = mode;
+> > > +
+> > > +	switch (i3cbus->mode) {
+> > > +	case I3C_BUS_MODE_PURE:
+> > > +		if (!i3cbus->scl_rate.i3c)
+> > > +			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+> > > +		break;
+> > > +	case I3C_BUS_MODE_MIXED_FAST:
+> > > +		if (!i3cbus->scl_rate.i3c)
+> > > +			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+> > > +		if (!i3cbus->scl_rate.i2c)
+> > > +			i3cbus->scl_rate.i2c = max_i2c_scl_rate;
+> > > +		break;
+> > > +	case I3C_BUS_MODE_MIXED_SLOW:
+> > > +		if (!i3cbus->scl_rate.i2c)
+> > > +			i3cbus->scl_rate.i2c = max_i2c_scl_rate;
+> > > +		if (!i3cbus->scl_rate.i3c ||
+> > > +		    i3cbus->scl_rate.i3c > i3cbus->scl_rate.i2c)
+> > > +			i3cbus->scl_rate.i3c = i3cbus->scl_rate.i2c;
+> > > +		break;
+> > > +	default:
+> > > +		return -EINVAL;
+> > >  	}
+> > >  
+> > > +	if (i3cbus->scl_rate.i3c < i3cbus->scl_rate.i2c)
+> > > +		dev_warn(&master->dev,
+> > > +			 "i3c-scl-hz=%ld lower than i2c-scl-hz=%ld\n",
+> > > +			 i3cbus->scl_rate.i3c, i3cbus->scl_rate.i2c);
+> > > +
+> > > +	if (i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_SCL_RATE &&
+> > > +	    i3cbus->scl_rate.i2c != I3C_BUS_I2C_FM_PLUS_SCL_RATE &&
+> > > +	    i3cbus->mode != I3C_BUS_MODE_PURE)  
+> > 
+> > If you are so strict, there's clearly no point exposing an i2c-scl-hz
+> > property. I'm still not convinced having an i2c rate that's slower than
+> > what the I2C/I3C spec defines as the *typical* rate is a bad thing,   
+> 
+> I'm not been strictive, I just inform the user about that case.
 
--- 
-Oscar Salvador
-SUSE L3
+Then use dev_debug() and don't make the trace conditional on
+i2c_rate != typical_rate. The only case where we should warn users
+is i2c_rate > typical_rate, because that might lead to malfunctions.
+
+> 
+> > just
+> > like I'm not convinced having an I3C rate that's slower than the I2C
+> > one is a problem (it's definitely a weird situation, but there's nothing
+> > preventing that in the spec).  
+> 
+> You agree that there is no point for case where i3c rate < i2c rate yet 
+> you are not convinced.
+
+I didn't say that, there might be use cases where one wants to slow
+down the I3C bus to be able to probe it or use a slower rate when
+things do not work properly. It's rather unlikely to happen, but I
+don't think it deserves a warning message when that's the case.
+
+> Do you thing that will be users for this case?
+> 
+> Anyway, this isn't a high requirement for me. The all point of this patch 
+> is to introduce the limited bus configuration.
+
+And yet, you keep insisting (and ignoring my feedback) on that point :P.
