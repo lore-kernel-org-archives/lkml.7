@@ -2,128 +2,107 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC4EC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2765FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B42420868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559802127;
-	bh=APfyBG2fyrPz68QqYZ1pqp6URdwzAiGlAVa4nP58yZw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z9ba8ThbRZNTAoB1dKhP0xXaW8/EF4yC0xPlUfEukBepFWQJu5JlQy9PCuiwhTP4A
-	 +C612pjVQ70BGQzLx+KNxri8/nzGz68myDRycLaprikz4p93/kjlO3xu7GqoGmzmEA
-	 5aK0wy+95HmCfHz8CbK2UrWGPBD+4Z/NGe2m/e+s=
+	by mail.kernel.org (Postfix) with ESMTP id E68122070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pwQVtcio"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfFFGWG (ORCPT
+        id S1726541AbfFFGYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:22:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfFFGWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:22:06 -0400
-Received: from localhost (unknown [106.200.230.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AACE52083D;
-        Thu,  6 Jun 2019 06:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559802125;
-        bh=APfyBG2fyrPz68QqYZ1pqp6URdwzAiGlAVa4nP58yZw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AgIZqJBcKNmUDG+OlyFyWa6p1X88k6vww3vudl+DfBf72LOMikPCA+kmsldhxbB7c
-         JAT6lwaI0LqnJf0YpTAmdmX6mL44JNHhGxv76MEu80S9FKKk/7zm+BngWqh2aWYLgk
-         nqg8WY9RctYK0zcY6J2zgfvVzgkcYE+jXrFYfZMk=
-Date:   Thu, 6 Jun 2019 11:48:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: Add Dragonboard 845c
-Message-ID: <20190606061857.GA9160@vkoul-mobl.Dlink>
-References: <20190606043851.18050-1-bjorn.andersson@linaro.org>
+        Thu, 6 Jun 2019 02:24:46 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18829 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFGYq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:24:46 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf8b1ad0000>; Wed, 05 Jun 2019 23:24:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 05 Jun 2019 23:24:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 05 Jun 2019 23:24:45 -0700
+Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 06:24:42 +0000
+Subject: Re: [PATCH V2] drivers: i2c: tegra: fix checkpatch defects
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559196850-7007-1-git-send-email-bbiswas@nvidia.com>
+ <e9e3d8b0-a76a-81a9-1110-2d07ba1c787f@gmail.com>
+ <911e52ed-8f3c-583a-7610-e38723219eca@gmail.com>
+ <b86b9104-1754-531f-70b9-3c1a5d347b9b@nvidia.com>
+ <2d83ad21-b012-1b3e-fc9a-741972ee3ba9@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <89488516-a064-a1a0-9e3d-8234043201be@nvidia.com>
+Date:   Wed, 5 Jun 2019 23:24:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606043851.18050-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <2d83ad21-b012-1b3e-fc9a-741972ee3ba9@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559802285; bh=A0EKOpcxSf6jypGXzxSbsk+o5ChWWgKynVYpvDClFmY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=pwQVtciofapmmfptkDK4v975iSl9dM6h1y9B6e99JI3ft/ReUACHg7zVsbkQlQUOF
+         rFcOSvvvQSqRz04KQaQ44YA7aWqGlS9dqO4c+mT970umX6oKsYT3h6HsNQaS0QNYyE
+         ue+0SlkOnl+Mlxz5j4+zawMjMp5g0Y1Q15NK066KkCPs4AvUzp7adq8KV0+fhsWr2r
+         wWdVOxr0K0lhr3BG73noS1zpBIM82jQkHNxM3j0MjGr2Km906NLqxIjzFj8YYvcluy
+         qcE2OP79mcjOy8TlAx6gPnw2SzUBC86eLyT1L8Fal1T5pXI+QsFSIfZh4eS6+8SdII
+         igWnHISZCrYFg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-06-19, 21:38, Bjorn Andersson wrote:
-> This adds an initial dts for the Dragonboard 845. Supported
-> functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
-> (host), microSD-card and Bluetooth.
-> 
-> Initializing the SMMU is clearing the mapping used for the splash screen
-> framebuffer, which causes the board to reboot. This can be worked around
-> using:
-> 
->   fastboot oem select-display-panel none
 
-I was able to boot db845c on v5.2-rc1 with this patch :)
- 
-I found some nits, nevertheless this looks good, so:
- 
-Tested-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> @@ -0,0 +1,556 @@
-> +// SPDX-License-Identifier: GPL-2.0
+On 5/31/19 5:45 AM, Dmitry Osipenko wrote:
+> 31.05.2019 12:04, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>>
+>> On 5/30/19 4:43 AM, Dmitry Osipenko wrote:
+>>> 30.05.2019 14:36, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 30.05.2019 9:14, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
+>>>>> except for BUG/BUG_ON checks
+>>>>
+>>>> Please turn the BUG_ON's into WARN_ON's. The machine won't go on fire,
+>>>> hence there is absolutely no good reason in making system unusable on =
+a
+>>>> software bug. BUG_ON may be more useful for development, but not for a
+>>>> casual daily usage.
+>> I shall update the patch to remove the BUG/BUG_ON calls.
+>=20
+> Please replace them with WARN_ON_ONCE.
+>=20
+Based on review of the BUG_ON some were found redundant calls and hence=20
+planned to be removed. Non-trivial BUG_ON planned to be replaced with=20
+WARN_ON_ONCE call.
 
-No copyright?
+-regards,
+  Bitan
 
-> +	pcie0_3p3v_dual: vldo-3v3-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VLDO_3V3";
-> +
-> +		vin-supply = <&vbat>;
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pcie0_pwren_state>;
-> +	};
-> +
-> +	gpio_keys {
-
-Rest of this file is sorted but this isn't, so this should be after dc12v
-
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-
-does this require address cell, we don't have range property here?
-
-> +		#size-cells = <0>;
-> +		autorepeat;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vol_up_pin_a>;
-> +
-> +		vol-up {
-> +			label = "Volume Up";
-> +			linux,code = <KEY_VOLUMEUP>;
-> +			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	leds {
-
-This one as well..
-
--- 
-~Vinod
