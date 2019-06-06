@@ -2,109 +2,128 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDBDC28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A90C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E61E206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E78C206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wanoNWQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfFFLr7 (ORCPT
+        id S1728405AbfFFLvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:47:59 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:42595 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727263AbfFFLr7 (ORCPT
+        Thu, 6 Jun 2019 07:51:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38248 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfFFLvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:47:59 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id Yqs5hzKus3qlsYqs9hmPS4; Thu, 06 Jun 2019 13:47:57 +0200
-Subject: Re: [PATCH 4.19 262/276] media: saa7146: avoid high stack usage with
- clang
-To:     Pavel Machek <pavel@denx.de>, pavel@ucw.cz
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <20190530030523.133519668@linuxfoundation.org>
- <20190530030541.589347419@linuxfoundation.org> <20190606114439.GA27432@amd>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <bf6e478e-8993-8b99-7061-79616785b982@xs4all.nl>
-Date:   Thu, 6 Jun 2019 13:47:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 07:51:21 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56BmbV5161383;
+        Thu, 6 Jun 2019 11:51:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=AeEmQlVa60NFeNwlopFn58+AzrkSf/eEmYtRH4FR7F8=;
+ b=wanoNWQPZslnUGgXFwf6LLeoE0W1BFVtILJRJkTtvnUjbB+PNN71azhb4E9/zD1Zny+Q
+ bxnuG7q/kiKswaMHznGApIHJIO16YdG80p1jFLCJ+0ZmFfrJY56OxqKIfYpKwnXpAbkp
+ KdApJTkAcv6s0P5NuAuSN/rmGAK0rPn9bIwAnXUzPhg1L65TS2nUFZ2p9Q7tuSMazHr7
+ e831V5NMNGxEF/S+edSeQN35j/vYxt+mVoSuof8oHQkNFjqvwUhy+7Uy5ixWPxC+DDul
+ EmxnQj8xv1FZuaRvc4aR1HaOwy99iULejVJXJ4PFcHeO55Y/3hyYs17bMDAljrhf3RQp PQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2suj0qqtk0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 11:51:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Bp0WU139886;
+        Thu, 6 Jun 2019 11:51:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2swnhcn59j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 11:51:16 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x56BpDCL014710;
+        Thu, 6 Jun 2019 11:51:14 GMT
+Received: from tomti.i.net-space.pl (/10.175.219.193)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Jun 2019 04:51:13 -0700
+Date:   Thu, 6 Jun 2019 13:51:08 +0200
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
+        hpa@zytor.com, kanth.ghatraju@oracle.com, ross.philipson@oracle.com
+Subject: Re: [PATCH RFC 0/2] x86/boot: Introduce the setup_header2
+Message-ID: <20190606115108.sfp2bnu3qzdby4h7@tomti.i.net-space.pl>
+References: <20190524095504.12894-1-daniel.kiper@oracle.com>
+ <20190605135031.62grhhxn2pfbkcdg@tomti.i.net-space.pl>
+ <20190605140117.GA32106@char.us.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20190606114439.GA27432@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGNkpSF/LKKl1EbbPpwSZeOpmJU0JtjvAbuHp6TgtAdbfxHvD6hn+AThWsvmkBlX4TM+9M4209YgjqIwIUcsgws2qI97mXfJUR3xkzoo6WNNyxG+Ywx3
- qaT3UZB6nROWXMS9A9FOPN1P2bxs8Qf0+yeo1MJrIs1CcAKOhs5go0w70kZWoFH8o28TzEBJF6BaXje3jwpg2eOTSUSNtVvPNMuli8SgM/PXS8q/Fvox7kA9
- c0wXeSAMYeQMGX5u6OYws8xpSX811a4+vnRlX7faCzxvGOXe9b0DCYk8uwgEbOWQKtWOYGLU3Hf+E4cjz44qol0FCv7blPr0dltqW/KaQLx86iVuAriINQRZ
- fTm0gstz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605140117.GA32106@char.us.oracle.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=661
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906060087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=752 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906060087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 1:44 PM, Pavel Machek wrote:
-> Hi!
-> 
->> Two saa7146/hexium files contain a construct that causes a warning
->> when built with clang:
->>
->> drivers/media/pci/saa7146/hexium_orion.c:210:12: error: stack frame size of 2272 bytes in function 'hexium_probe'
->>       [-Werror,-Wframe-larger-than=]
->> static int hexium_probe(struct saa7146_dev *dev)
->>            ^
->> drivers/media/pci/saa7146/hexium_gemini.c:257:12: error: stack frame size of 2304 bytes in function 'hexium_attach'
->>       [-Werror,-Wframe-larger-than=]
->> static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_data *info)
->>            ^
->>
->> This one happens regardless of KASAN, and the problem is that a
->> constructor to initialize a dynamically allocated structure leads
->> to a copy of that structure on the stack, whereas gcc initializes
->> it in place.
->>
->> Link: https://bugs.llvm.org/show_bug.cgi?id=40776
-> 
->> --- a/drivers/media/pci/saa7146/hexium_gemini.c
->> +++ b/drivers/media/pci/saa7146/hexium_gemini.c
->> @@ -270,9 +270,8 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
->>  	/* enable i2c-port pins */
->>  	saa7146_write(dev, MC1, (MASK_08 | MASK_24 | MASK_10 | MASK_26));
->>  
->> -	hexium->i2c_adapter = (struct i2c_adapter) {
->> -		.name = "hexium gemini",
->> -	};
->> +	strscpy(hexium->i2c_adapter.name, "hexium gemini",
->> +		sizeof(hexium->i2c_adapter.name));
->>  	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
->>  	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
->>  		DEB_S("cannot register i2c-device. skipping.\n");
-> 
-> As a sideeffect, this removes zero-initialization from
-> hexium->i2c_adapter.
-> 
-> Is that intended / correct?
+On Wed, Jun 05, 2019 at 10:01:17AM -0400, Konrad Rzeszutek Wilk wrote:
+> On Wed, Jun 05, 2019 at 03:50:31PM +0200, Daniel Kiper wrote:
+> > On Fri, May 24, 2019 at 11:55:02AM +0200, Daniel Kiper wrote:
+> > > Hi,
+> > >
+> > > This change is needed to properly start the Linux kernel in Intel TXT mode and
+> > > is a part of the TrenchBoot project (https://github.com/TrenchBoot).
+>
+> Can you please expand more on this?
+>
+> Nice explanation of why, other alternative solutions that didn't work, and so on.
 
-It's correct, the hexium struct that contains the i2c_adapter is zeroed with
-kzalloc, so there is no need to zero it again.
+OK.
 
-Regards,
+> > > Daniel
+> > >
+> > >  Documentation/x86/boot.txt               | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > >  arch/x86/Kconfig                         |  7 +++++++
+> > >  arch/x86/boot/Makefile                   |  2 +-
+> > >  arch/x86/boot/compressed/Makefile        |  5 +++--
+> > >  arch/x86/boot/compressed/setup_header2.S | 18 ++++++++++++++++++
+> > >  arch/x86/boot/compressed/sl_stub.S       | 28 ++++++++++++++++++++++++++++
+> > >  arch/x86/boot/header.S                   |  3 ++-
+> > >  arch/x86/boot/tools/build.c              |  8 ++++++++
+> > >  arch/x86/include/uapi/asm/bootparam.h    |  1 +
+> > >  9 files changed, 123 insertions(+), 4 deletions(-)
+> > >
+> > > Daniel Kiper (2):
+> > >       x86/boot: Introduce the setup_header2
+> > >       x86/boot: Introduce dummy MLE header
+> >
+> > Ping?
+>
+> Can you add Ingo and Thomas to the To: next time please?
 
-	Hans
+OK.
 
-> 
-> [I tried looked at saa7146_i2c_adapter_prepare(), and that does not
-> initialize all the fields, either.]
-> 
-> Best regards,
-> 									Pavel
-> 
+> Also please drop the second patch.
 
+Why? This is an example how to use the setup_header2.
+
+Daniel
