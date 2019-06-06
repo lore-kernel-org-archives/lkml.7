@@ -2,184 +2,138 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5864C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55035C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964A820868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA87208CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:51:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GSZG8tnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfFFKuY (ORCPT
+        id S1727299AbfFFKvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:50:24 -0400
-Received: from foss.arm.com ([217.140.101.70]:45292 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfFFKuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:50:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA9FFA78;
-        Thu,  6 Jun 2019 03:50:22 -0700 (PDT)
-Received: from e105550-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 383063F690;
-        Thu,  6 Jun 2019 03:50:20 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 11:50:17 +0100
-From:   Morten Rasmussen <morten.rasmussen@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Message-ID: <20190606105017.GD10919@e105550-lin.cambridge.arm.com>
-References: <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
- <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
- <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
- <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com>
- <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
- <CAKfTPtCR360osDz3oW+XhHT1R12SacAuJ44W_NfFOPWxJFjOPg@mail.gmail.com>
- <20190606074921.43mbinemk3j565yu@queper01-ThinkPad-T460s>
- <CAKfTPtA9WDOH3UzU-Qz4AqhLNGkOPo9EFkTHXGqTq7qsrec_JA@mail.gmail.com>
- <9267b9ed-89b0-7b71-88a2-ca1894d4c497@arm.com>
- <CAKfTPtAc=aOD=ukuPKhEL_gBSeb9DJaK-oYAPg1MWNcr-6HLQw@mail.gmail.com>
+        Thu, 6 Jun 2019 06:51:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40754 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFFKvf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:51:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56An497115142;
+        Thu, 6 Jun 2019 10:51:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=CYdJIrBU83khStvSGVg8ySuKn6WPb/kbQ9bMGPSCHnc=;
+ b=GSZG8tnYFAcH0V8tG4YkdSsjjld/zZCLtpm1Ujt/QdqJ9BBwlR9lR8poTAQgxfG9BCAW
+ SHtrAZFWpYRTkml/xdOmDCl5NAz6QcKXf39DHB+vN8RcdyBvYHBSf+IobnHdO9E+Bj4B
+ pYICfwUIKzxhiqKwc8GV1FFy3fMUrcIxotPoMPdmqFcmOKAR0L00Uj1LVbL0c9xOWVyl
+ Vd7WpTu8EZPIG+I6x4uEEw++49QhBNcWOASuvuHYBmkWM1HzcsqA+XwwhxQ6llaDocFh
+ T1EwzxQgsiin1KV+FSxLgbCJ9gfuiK8aK6jAipVAyTvSXgAkbL2yWEJoROeqswH6zjsT Xg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2suj0qqjvd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 10:51:18 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56AofFx017801;
+        Thu, 6 Jun 2019 10:51:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2swnhcmfv8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 10:51:17 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x56ApGXE022658;
+        Thu, 6 Jun 2019 10:51:16 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Jun 2019 03:51:15 -0700
+Date:   Thu, 6 Jun 2019 13:51:08 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Carmeli Tamir <carmeli.tamir@gmail.com>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: emxx_udc: fix warning "sum of probable
+ bitmasks, consider |"
+Message-ID: <20190606105108.GL31203@kadam>
+References: <20190603185412.GA11183@hari-Inspiron-1545>
+ <20190603190457.GA6487@kroah.com>
+ <20190605063443.GA5248@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKfTPtAc=aOD=ukuPKhEL_gBSeb9DJaK-oYAPg1MWNcr-6HLQw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190605063443.GA5248@hari-Inspiron-1545>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906060079
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906060079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 10:44:58AM +0200, Vincent Guittot wrote:
-> On Thu, 6 Jun 2019 at 10:34, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> >
-> > On 6/6/19 10:20 AM, Vincent Guittot wrote:
-> > > On Thu, 6 Jun 2019 at 09:49, Quentin Perret <quentin.perret@arm.com> wrote:
-> > >>
-> > >> Hi Vincent,
-> > >>
-> > >> On Thursday 06 Jun 2019 at 09:05:16 (+0200), Vincent Guittot wrote:
-> > >>> Hi Quentin,
-> > >>>
-> > >>> On Wed, 5 Jun 2019 at 19:21, Quentin Perret <quentin.perret@arm.com> wrote:
-> > >>>>
-> > >>>> On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
-> > >>>>> Quoting Amit Kucheria (2019-05-16 04:54:45)
-> > >>>>>> (cc'ing Andy's correct email address)
-> > >>>>>>
-> > >>>>>> On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >>>>>>>
-> > >>>>>>> Quoting Amit Kucheria (2019-05-13 04:54:12)
-> > >>>>>>>> On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > >>>>>>>>>
-> > >>>>>>>>> On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > >>>>>>>>>>
-> > >>>>>>>>>> The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > >>>>>>>>>> ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > >>>>>>>>>> that describes this topology.
-> > >>>>>>>>>
-> > >>>>>>>>> This is partly true. There are two groups of gold and silver cores,
-> > >>>>>>>>> but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > >>>>>>>>> is one of the early examples of ARM's Dynamiq architecture.
-> > >>>>>>>>>
-> > >>>>>>>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > >>>>>>>>>
-> > >>>>>>>>> I noticed that this patch sneaked through for this merge window but
-> > >>>>>>>>> perhaps we can whip up a quick fix for -rc2?
-> > >>>>>>>>>
-> > >>>>>>>>
-> > >>>>>>>> And please find attached a patch to fix this up. Andy, since this
-> > >>>>>>>> hasn't landed yet (can we still squash this into the original patch?),
-> > >>>>>>>> I couldn't add a Fixes tag.
-> > >>>>>>>>
-> > >>>>>>>
-> > >>>>>>> I had the same concern. Thanks for catching this. I suspect this must
-> > >>>>>>> cause some problem for IPA given that it can't discern between the big
-> > >>>>>>> and little "power clusters"?
-> > >>>>>>
-> > >>>>>> Both EAS and IPA, I believe. It influences the scheduler's view of the
-> > >>>>>> the topology.
-> > >>>>>
-> > >>>>> And EAS and IPA are OK with the real topology? I'm just curious if
-> > >>>>> changing the topology to reflect reality will be a problem for those
-> > >>>>> two.
-> > >>>>
-> > >>>> FWIW, neither EAS nor IPA depends on this. Not the upstream version of
-> > >>>> EAS at least (which is used in recent Android kernels -- 4.19+).
-> > >>>>
-> > >>>> But doing this is still required for other things in the scheduler (the
-> > >>>> so-called 'capacity-awareness' code). So until we have a better
-> > >>>> solution, this patch is doing the right thing.
-> > >>>
-> > >>> I'm not sure to catch what you mean ?
-> > >>> Which so-called 'capacity-awareness' code are you speaking about ? and
-> > >>> what is the problem ?
-> > >>
-> > >> I'm talking about the wake-up path. ATM select_idle_sibling() is totally
-> > >> unaware of capacity differences. In its current form, this function
-> > >> basically assumes that all CPUs in a given sd_llc have the same
-> > >> capacity, which would be wrong if we had a single MC level for SDM845.
-> > >> So, until select_idle_sibling() is 'fixed' to be capacity-aware, we need
-> > >> two levels of sd for asymetric systems (including DynamIQ) so the
-> > >> wake_cap() story actually works.
-> > >>
-> > >> I hope that clarifies it :)
-> > >
-> > > hmm... does this justifies this wrong topology ?
-
-No, it doesn't. It relies heavily on how nested clusters are interpreted
-too, so it is quite fragile.
-
-> > > select_idle_sibling() is called only when system is overloaded and
-> > > scheduler disables the EAS path
-> > > In this case, the scheduler looks either for an idle cpu or for evenly
-> > > spreading the loads
-> > > This is maybe not always optimal and should probably be fixed but
-> > > doesn't justifies a wrong topology description IMHO
-> >
-> > The big/Little cluster detection in wake_cap() doesn't work anymore with
-> > DynamIQ w/o Phanton (DIE) domain. So the decision of going sis() or slow
-> > path is IMHO broken.
+On Wed, Jun 05, 2019 at 12:04:43PM +0530, Hariprasad Kelam wrote:
+> On Mon, Jun 03, 2019 at 09:04:57PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 04, 2019 at 12:24:12AM +0530, Hariprasad Kelam wrote:
+> > > Knowing the fact that operator '|' is faster than '+'.
+> > > Its better we replace + with | in this case.
+> > > 
+> > > Issue reported by coccicheck
+> > > drivers/staging/emxx_udc/emxx_udc.h:94:34-35: WARNING: sum of probable
+> > > bitmasks, consider |
+> > > 
+> > > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> > > ---
+> > >  drivers/staging/emxx_udc/emxx_udc.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/staging/emxx_udc/emxx_udc.h b/drivers/staging/emxx_udc/emxx_udc.h
+> > > index b8c3dee..88d6bda 100644
+> > > --- a/drivers/staging/emxx_udc/emxx_udc.h
+> > > +++ b/drivers/staging/emxx_udc/emxx_udc.h
+> > > @@ -91,7 +91,7 @@ int vbus_irq;
+> > >  #define BIT30		0x40000000
+> > >  #define BIT31		0x80000000
+> > 
+> > All of those BITXX defines should be removed and the "real" BIT(X) macro
+> > used instead.
+> Yes will send separate patch  to address this.
+> > 
+> > > -#define TEST_FORCE_ENABLE		(BIT18 + BIT16)
+> > > +#define TEST_FORCE_ENABLE		(BIT18 | BIT16)
+> > 
+> > It really doesn't matter, a good compiler will have already turned this
+> > into a constant value so you really do not know if this is less/faster
+> > code or not, right?
+> > 
+> > Did you look at the output to verify this actually changed anything?
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> That's probably not the right thread to discuss this further but i'm
-> not sure to understand why wake_cap() doesn't work as it compares the
-> capacity_orig of local cpu and prev cpu which are the same whatever
-> the sche domainœ
+> Ok . Treating this as false postive from coccicheck.
 
-We have had this discussion a couple of times over the last couple of
-years. The story, IIRC, is that when we introduced capacity awareness in
-the wake-up path (wake_cap()) we realised (I think it was actually you)
-that we could use select_idle_sibling() in cases where we know that the
-search space is limited to cpus with sufficient capacity so we didn't
-have to take the long route through find_idlest_cpu(). Back then, big
-and little were grouped by clusters so it was "safe" to use
-select_idle_sibling() on cpu or prev_cpu if they have sufficient
-capacity.
+I liked the patch.  | is way more normal and readable than +.  It's just
+the commit message was bogus.
 
-With DynamiQ the true topology on many systems is just one cluster and
-hence using select_idle_sibling() there means search space includes all
-cpu types which isn't "safe" if you have a task requiring more capacity
-than can be offered by any cpu in the system. We need to use the
-find_idlest_cpu() path on more cases than we do today.
+I would be very surprised if this coccicheck found anything that wasn't
+a compile time constant like this.
 
-All the code is there I think, we just have to tweak some conditions. I
-can try to come up with a simple fix we can discuss and refine as
-necessary.
+regards,
+dan carpenter
 
-Morten
