@@ -2,124 +2,128 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929BDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FD3C46470
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBE9206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E642064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfFFWS6 (ORCPT
+        id S1729137AbfFFWVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 18:18:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41329 "EHLO mga18.intel.com"
+        Thu, 6 Jun 2019 18:21:18 -0400
+Received: from mga03.intel.com ([134.134.136.65]:65321 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbfFFWS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 18:18:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726066AbfFFWVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 18:21:17 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 15:18:57 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 15:21:16 -0700
 X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga004.jf.intel.com with ESMTP; 06 Jun 2019 15:18:56 -0700
-Message-ID: <93ee5b103b8261d2b50de89f8658d133639a9af5.camel@intel.com>
-Subject: Re: [PATCH v7 04/27] x86/fpu/xstate: Introduce XSAVES system states
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Thu, 06 Jun 2019 15:10:55 -0700
-In-Reply-To: <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
-         <20190606200646.3951-5-yu-cheng.yu@intel.com>
-         <0a2f8b9b-b96b-06c8-bae0-b78b2ca3b727@intel.com>
-         <5EE146A8-6C8C-4C5D-B7C0-AB8AD1012F1E@amacapital.net>
-         <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-IronPort-AV: E=Sophos;i="5.63,560,1557212400"; 
+   d="scan'208";a="182472132"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Jun 2019 15:21:16 -0700
+Date:   Thu, 6 Jun 2019 15:22:28 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606195114.GA30714@ziepe.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 15:08 -0700, Dave Hansen wrote:
+On Thu, Jun 06, 2019 at 04:51:15PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
 > 
-> On 6/6/19 3:04 PM, Andy Lutomirski wrote:
-> > > But, that seems broken.  If we have supervisor state, we can't 
-> > > always defer the load until return to userspace, so we'll never?? 
-> > > have TIF_NEED_FPU_LOAD.  That would certainly be true for 
-> > > cet_kernel_state.
+> > So I'd like to actually mandate that you *must* hold the file lease until
+> > you unpin all pages in the given range (not just that you have an option to
+> > hold a lease). And I believe the kernel should actually enforce this. That
+> > way we maintain a sane state that if someone uses a physical location of
+> > logical file offset on disk, he has a layout lease. Also once this is done,
+> > sysadmin has a reasonably easy way to discover run-away RDMA application
+> > and kill it if he wishes so.
 > > 
-> > Ugh. I was sort of imagining that we would treat supervisor state
+> > The question is on how to exactly enforce that lease is taken until all
+> > pages are unpinned. I belive it could be done by tracking number of
+> > long-term pinned pages within a lease. Gup_longterm could easily increment
+> > the count when verifying the lease exists, gup_longterm users will somehow
+> > need to propagate corresponding 'filp' (struct file pointer) to
+> > put_user_pages_longterm() callsites so that they can look up appropriate
+> > lease to drop reference - probably I'd just transition all gup_longterm()
+> > users to a saner API similar to the one we have in mm/frame_vector.c where
+> > we don't hand out page pointers but an encapsulating structure that does
+> > all the necessary tracking. Removing a lease would need to block until all
+> > pins are released - this is probably the most hairy part since we need to
+> > handle a case if application just closes the file descriptor which
+> > would
 > 
->  completely separately from user state.  But can you maybe give
-> examples of exactly what you mean?
-> > 
-> > > It seems like we actually need three classes of XSAVE states: 1. 
-> > > User state
-> > 
-> > This is FPU, XMM, etc, right?
-> 
-> Yep.
-> 
-> > > 2. Supervisor state that affects user mode
-> > 
-> > User CET?
-> 
-> Yep.
-> 
-> > > 3. Supervisor state that affects kernel mode
-> > 
-> > Like supervisor CET?  If we start doing supervisor shadow stack, the 
-> > context switches will be real fun.  We may need to handle this in 
-> > asm.
-> 
-> Yeah, that's what I was thinking.
-> 
-> I have the feeling Yu-cheng's patches don't comprehend this since
-> Sebastian's patches went in after he started working on shadow stacks.
-> 
-> > Where does PKRU fit in?  Maybe we can treat it as #3?
-> 
-> I thought Sebastian added specific PKRU handling to make it always
-> eager.  It's actually user state that affect kernel mode. :)
+> I think if you are going to do this then the 'struct filp' that
+> represents the lease should be held in the kernel (ie inside the RDMA
+> umem) until the kernel is done with it.
 
-For CET user states, we need to restore before making changes.  If they are not
-being changed (i.e. signal handling and syscalls), then they are restored only
-before going back to user-mode.
+Yea there seems merit to this.  I'm still not resolving how this helps track
+who has the pin across a fork.
 
-For CET kernel states, we only need to make small changes in the way similar to
-the PKRU handling, right?  We'll address it when sending CET kernel-mode
-patches.
+> 
+> Actually does someone have a pointer to this userspace lease API, I'm
+> not at all familiar with it, thanks
 
-I will put in more comments as suggested by Dave in earlier emails.
+man fcntl
+	search for SETLEASE
 
-Yu-cheng
+But I had to add the F_LAYOUT lease type.  (Personally I'm for calling it
+F_LONGTERM at this point.  I don't think LAYOUT is compatible with what we are
+proposing here.)
+
+Anyway, yea would be a libc change at lease for man page etc...  But again I
+want to get some buy in before going through all that.
+
+> 
+> And yes, a better output format from GUP would be great..
+> 
+> > Maybe we could block only on explicit lease unlock and just drop the layout
+> > lease on file close and if there are still pinned pages, send SIGKILL to an
+> > application as a reminder it did something stupid...
+> 
+> Which process would you SIGKILL? At least for the rdma case a FD is
+> holding the GUP, so to do the put_user_pages() the kernel needs to
+> close the FD. I guess it would have to kill every process that has the
+> FD open? Seems complicated...
+
+Tending to agree...  But I'm still not opposed to killing bad actors...  ;-)
+
+NOTE: Jason I think you need to be more clear about the FD you are speaking of.
+I believe you mean the FD which refers to the RMDA context.  That is what I
+called it in my other email.
+
+Ira
+
+> 
+> Regards,
+> Jason
