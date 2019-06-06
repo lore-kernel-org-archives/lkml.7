@@ -2,137 +2,118 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF49C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8039C28D1B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A787320652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C60720652
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQbewRil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfFFH71 (ORCPT
+        id S1726805AbfFFIAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:59:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55304 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725769AbfFFH70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:59:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 36976AF9A;
-        Thu,  6 Jun 2019 07:59:24 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 09:59:23 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
-        linux-ia64@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net
-Subject: Re: [RFC] printk: Introduce per context console loglevel.
-Message-ID: <20190606075923.suhcxfu7yprhdp7i@pathway.suse.cz>
-References: <20190528002412.1625-1-dima@arista.com>
- <20190528041500.GB26865@jagdpanzerIV>
- <20190528044619.GA3429@jagdpanzerIV>
- <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
- <82605abd-14d9-376a-446c-48475ae305dc@i-love.sakura.ne.jp>
- <c265f674-e293-332b-a037-895025354a69@i-love.sakura.ne.jp>
+        Thu, 6 Jun 2019 04:00:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39471 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfFFIAR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:00:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so1004558pfe.6;
+        Thu, 06 Jun 2019 01:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=7w8grN6Jf3tef1Ky0Ozizi80VlqAjKUQXZ1TYmC2bF4=;
+        b=JQbewRilIfujSoeqXSHpPlbYwRe56mt2fMQsJOKRBH8xkCHJ4kRlfVsUY6m61IAu4g
+         PBIUDG3SsSq7lKh/rujQvk/dCauQKEbkh+WuuMZyL44nSGdINuTpQFNXm4O3MKAoFXQ0
+         jhZW44hgQzFwzf8GEqcb7rAxs+/5dfxyygTq8T7rPrNt6rGIKrKP3rHa9WOMLN6eftR/
+         ItuA9eebbh2Xryy+ufP7figAzOHhb32zEB2CqKWi2N/TjQRinKktixLoGA/RXbVflyNd
+         vy72WDCALPvpOsbHI1PuV3BL/1B5oTC/6AvErZu7TihFVrOcNmoYCP0i1i56LTPs2SHG
+         BdYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7w8grN6Jf3tef1Ky0Ozizi80VlqAjKUQXZ1TYmC2bF4=;
+        b=jW/Zaq0z7GAMunhgGIqlY8qX1v58cOCI3JtcnMWELYc0HGNxzb6seVmW010Ur5tFq4
+         e4ef4FvSnnC8iWHaXtfRUiSinZVv0BLgDuzOPlVJXAnTpv2ubMAbfDdHO3d09m7UsQbS
+         BApVYqXfuRukEraKkjKyJtsS3LBVtGTFyIB6qZsOavJY+BxOfeStuS/9+PECyiuD7tyz
+         RtpFGW14waA133vjMsCer8S4mfhke6gYiHW9MJkjO6j5u9NLDe41xGovZPr/+ynSCP7u
+         cXyrKDUTvD0yhf6EFErHa5L6fBzFJIK9TKN69ViXgqMVE/VdK+gxDHzp3L6E5HQiIIQ2
+         FcZQ==
+X-Gm-Message-State: APjAAAU6b5KkhB0mTKf8KL3rw4OeEMcqYf2uw2M3Pwp1AUEujlYYjYW0
+        DJGv7PR3cZWvaGXCkCIAAXwO+nmrSBQ=
+X-Google-Smtp-Source: APXvYqzWmcIYGfLSXfIy7t9xgDhYYUo+JJ7EIW+npf701Gjeu5zeVQQyC6kUmrlNMFDzKDe+nqQHDQ==
+X-Received: by 2002:a65:48c3:: with SMTP id o3mr2172233pgs.351.1559808016233;
+        Thu, 06 Jun 2019 01:00:16 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id i5sm977527pjj.8.2019.06.06.01.00.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 01:00:16 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 08:00:15 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] hv: Remove dependencies on guest page size
+Message-ID: <cover.1559807514.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c265f674-e293-332b-a037-895025354a69@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 2019-06-02 15:13:35, Tetsuo Handa wrote:
-> Dmitry Safonov proposed KERN_UNSUPPRESSED loglevel which pretends as if
-> ignore_loglevel was specified for per printk() basis, for we can fail to
-> apply temporarily manipulated console loglevel because console loglevel
-> is evaluated when the message is printed to consoles rather than when
-> the message is stored into the buffer [1].
-> 
-> Temporary manipulation of console loglevel for SysRq is applied to only
-> the header line.
+The Linux guest page size and hypervisor page size concepts are
+different, even though they happen to be the same value on x86. Hyper-V
+code mixes up the two, so this patchset begins to address that by
+creating and using a set of Hyper-V specific page definitions.
 
-We should ask why this this is handled this way.
+A major benefit of those new definitions is that they support non-x86
+architectures, such as ARM64, that use different page sizes. On ARM64,
+the guest page size may not be 4096, and Hyper-V always runs with a page
+size of 4096.
 
-My understanding is to give user feedback that something is going
-to happen when the system is not responsive and sysrq is the last
-chance to get some information, sync, and reboot.
+In this patchset, the first two patches lay the foundation for the
+others, creating definitions and preparing for allocation of memory with
+the size and alignment that Hyper-V expects as a page. Patch 3 applies
+the page size definition where the guest VM and Hyper-V communicate, and
+where the code intends to use the Hyper-V page size. The last two
+patches set the ring buffer size to a fixed value, removing the
+dependency on the guest page size.
 
-Maybe, it is not needed these days when the console loglevel
-might be manipulated by sysrq as well.
+This is the initial set of changes to the Hyper-V code, and future
+patches will make additional changes using the same foundation, for
+example, replace __vmalloc() and related functions when Hyper-V pages
+are intended.
 
-> At first I though that we also want to apply temporary
-> manipulation of console loglevel for SysRq to the body lines, for showing
-> only the header line is hardly helpful. But I realized that we should not
-> force showing the body lines because some users might be triggering SysRq
->  from /proc and reading via syslog rather than via console output. Users
-> who need to read via console output should be able to manipulate console
-> loglevel by triggering SysRq from console.
+Changes in v2:
+- [PATCH 2/5] Replace with a new patch.
 
-Sounds reasonable.
+Maya Nakamura (5):
+  x86: hv: hyperv-tlfs.h: Create and use Hyper-V page definitions
+  x86: hv: hv_init.c: Add functions to allocate/deallocate page for
+    Hyper-V
+  hv: vmbus: Replace page definition with Hyper-V specific one
+  HID: hv: Remove dependencies on PAGE_SIZE for ring buffer
+  Input: hv: Remove dependencies on PAGE_SIZE for ring buffer
 
-> Since we currently defer storing of the messages from NMI context and
-> recursive context, we would need to explicitly pass KERN_UNSUPPRESSED.
-> But Sergey Senozhatsky thinks that it might be fine to automatically
-> apply KERN_UNSUPPRESSED to printk() from NMI context and recursive
-> context, for messages from these contexts are likely important [2].
+ arch/x86/hyperv/hv_init.c             | 14 ++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h    | 12 +++++++++++-
+ drivers/hid/hid-hyperv.c              |  4 ++--
+ drivers/hv/hyperv_vmbus.h             |  8 ++++----
+ drivers/input/serio/hyperv-keyboard.c |  4 ++--
+ 5 files changed, 33 insertions(+), 9 deletions(-)
 
-I do not agree with this. Nobody cared about printk() deadlocks in NMI
-for a long time. The idea was that people just should not print
-anything there.
+-- 
+2.17.1
 
-Reality shown that people just printed from this context and we needed
-to make printk() safe there.
-
-IMHO, expecting that all messages in NMI context are super important
-is a similar mistake.
-
-Also sysrq-l prints all backtraces from NMI context. It is huge
-amount of output. People might want just store it into the logbuffer.
-It is the same as with sysrq-t mentioned above.
-
-> Then, we could avoid explicitly passing KERN_UNSUPPRESSED, by introducing
-> per context console loglevel.
-> 
-> This patch introduces per CPU console loglevel (for in_nmi(), in_irq() and
-> in_serving_softirq()) and per thread console loglevel (for in_task()), and
-> replaces temporary manipulation of global console_loglevel with temporary
-> manipulation of per context console_loglevel based on an assumption that
-> users who are temporarily manipulating global console_loglevel needs to
-> apply it to only current context. (Note that triggering SysRq-t from /proc
-> runs in in_task() context, and it should not disable preemption because it
-> may take long period. Thus, per thread console loglevel is used.)
-
-This is too generic and complicated.
-
-Only the single pr_info() in __handle_sysrq() seems to be called with
-interrupts enabled. And it happens only when it is triggered via
-/proc/sysrq-trigger. Manipulating the console loglevel is
-questionable there.
-
-Using the existing printk_context is good enough.
-
-Also the final output is either LOG_ALWAYS_CON or LOG_NEVER_CON.
-The API should not pretend that it supports any loglevel granularity.
-
-If we end up with the two states, the API should consist of three
-functions, e.g.
-
-   int set_console_verbose(unsigned long *flags);
-   int set_console_quiet(unsigned long *flags);
-   restore_console_loglevel(int loglevel, unsigned long flags);
-
-Where the first two functions should return the original loglevel
-and irqflags.
-
-Best Regards,
-Petr
