@@ -2,149 +2,173 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D881C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694E7C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1316320684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F1C20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiUYU8vh"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="sclCZ8jw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfFFPcV (ORCPT
+        id S1729424AbfFFPce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:32:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45353 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729045AbfFFPcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:32:21 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so2872809wre.12;
-        Thu, 06 Jun 2019 08:32:19 -0700 (PDT)
+        Thu, 6 Jun 2019 11:32:34 -0400
+Received: from mail-eopbgr760057.outbound.protection.outlook.com ([40.107.76.57]:6083
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729300AbfFFPcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:32:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HX3M9WP/yryEwh7vX9+9JslPgp+IEmjuwN20Escc6kI=;
-        b=EiUYU8vhWxjAAxHOvDowkjzPhStcE3hELrYCWJ27QKnAI3cJFbwKgtz7SyV1Nlh3G7
-         aKbxXLDNqFCQSrvPmzI/x3zqIs0RocRokH+TItX8e6zy93V4TnYyK/nIP2w2Y6S7lRVo
-         oZJ4TEeNTAS/ojkuEzag0RiCf4oljXXX0x2UYQCurM8wg06qcdiQEy4if80rprzE6bxU
-         SF6cJPZYyqtGEpnSdRQA6IUtwIspXawWvs1aJfxPF+HOkXeQWSXbgX0pIGKa/VFQ8tlQ
-         pzv9iGs8JLuDdIXwcI5hSvQC4MriQbkxesUfvwPoK6G4JUCi/wGL16z5n3RcdBgnCrVT
-         fEVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HX3M9WP/yryEwh7vX9+9JslPgp+IEmjuwN20Escc6kI=;
-        b=UYjgwLOgIz+h36gk6C625AoevCIxXiuHNhYHAGaZGsdQ5o+UdUwBUnotpQYOWqg+6x
-         eNHDqahnTc1o2wcET2a7jWSL9NtSJ2ELO1rjavMzIMD9MfC2eOqG4zApAgM7q12oL8Hk
-         KH7N/oMYbs9DSDy3y+emap2sctTveeULzJVMMDiY1vAxXYTlLTb0XmQt9q//fehN6Oe2
-         9kAiycEXt58uRmmibC4vuLvWJXFZyWC8u5cMhRB6VuXLoegwGzdQApsG+ag5+9HAFbeZ
-         04YgKeDSxQeKC/NLyDsYzPcPPKrt69NMCEzkphqfpOCABav7f4mOjHWvf6MHg/Yfztuc
-         i6wQ==
-X-Gm-Message-State: APjAAAUiypPM1X5SjUtWiT5Iqc+N5dSs87JAFaf4L5pHLcCOK91YvUPx
-        7Rsy3usGdQ+SF1LZuvX+t2o=
-X-Google-Smtp-Source: APXvYqxRHVyiOMsBJdAL9QEQxw+Px16GqdTmA3UJBr61U49dfLm6pC0vNkSsniND2XvWP2wLGn5EWw==
-X-Received: by 2002:adf:9dcc:: with SMTP id q12mr3836539wre.93.1559835139048;
-        Thu, 06 Jun 2019 08:32:19 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id c129sm2082954wma.27.2019.06.06.08.32.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 08:32:18 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 17:32:16 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V8 05/15] PCI: dwc: Add ext config space capability
- search API
-Message-ID: <20190606153216.GA3338@ulmo>
-References: <20190526043751.12729-1-vidyas@nvidia.com>
- <20190526043751.12729-6-vidyas@nvidia.com>
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VYl/CbMfK8hFh2jQmGfgzfeKvhGxljMbptGVZV3ik2w=;
+ b=sclCZ8jwVcY49ijr1dUKcf5aefdK55Vd5icOsMYZRXSQlFJTRUULilFhsBPFIjJuHnHTcDoVWPN18BcHP6foZoSv4LUbbPGbOhZF053l2O4Y3tyCgmFV9vxYF/ZYmKgXnWC/CcRn7sPPSjNBM2/CKAd6+NL2eeTg163mZDTQsU0=
+Received: from BYAPR02MB5591.namprd02.prod.outlook.com (20.177.230.89) by
+ BYAPR02MB4582.namprd02.prod.outlook.com (52.135.239.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Thu, 6 Jun 2019 15:32:27 +0000
+Received: from BYAPR02MB5591.namprd02.prod.outlook.com
+ ([fe80::2c0d:4fbd:2c4:31b6]) by BYAPR02MB5591.namprd02.prod.outlook.com
+ ([fe80::2c0d:4fbd:2c4:31b6%5]) with mapi id 15.20.1943.023; Thu, 6 Jun 2019
+ 15:32:27 +0000
+From:   Anurag Kumar Vulisha <anuragku@xilinx.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+Subject: RE: [PATCH] usb: dwc3: gadget: Correct the logic for finding last SG
+ entry
+Thread-Topic: [PATCH] usb: dwc3: gadget: Correct the logic for finding last SG
+ entry
+Thread-Index: AQHVFi8wapUkz2GgO0KPkbPlYU1PoKaMvgMAgAH+Z2A=
+Date:   Thu, 6 Jun 2019 15:32:26 +0000
+Message-ID: <BYAPR02MB559181C009B74446A797838DA7170@BYAPR02MB5591.namprd02.prod.outlook.com>
+References: <1559141985-17104-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <87y32gcvc1.fsf@linux.intel.com>
+In-Reply-To: <87y32gcvc1.fsf@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anuragku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d1100a4a-327e-474c-00c8-08d6ea942e4a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR02MB4582;
+x-ms-traffictypediagnostic: BYAPR02MB4582:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR02MB458274ABE81F848F7539B6F4A7170@BYAPR02MB4582.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39860400002)(346002)(136003)(366004)(51444003)(189003)(199004)(13464003)(5660300002)(52536014)(14454004)(478600001)(54906003)(81166006)(81156014)(86362001)(8676002)(110136005)(316002)(476003)(6246003)(66946007)(99286004)(256004)(33656002)(305945005)(14444005)(76176011)(7696005)(446003)(11346002)(73956011)(76116006)(25786009)(486006)(68736007)(7736002)(6506007)(186003)(6436002)(71190400001)(71200400001)(74316002)(26005)(9686003)(53936002)(4326008)(6116002)(3846002)(8936002)(55016002)(2906002)(229853002)(102836004)(66066001)(66446008)(66556008)(66476007)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4582;H:BYAPR02MB5591.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rFS78Zut16j9aMJlFtq3KtBNGF+c5mu0+z5VdJiLunH2nY95UvrQW+OQ4aE94j7sNIcGPww2wYFcRO6z3mCqwHakZBkWrOelLQGqrDYWWGOGxD8OKkDlwmp+LNFr7JBLWnw8MoIWTzG76aqic/+vc6uBB8z4fcGDOu3unW980Sj4XosS1w9pZawWdfNkKYS57WFi16sfoDSo4uzDEWZ696Eve4Wnp0iMUMv3+emJD3qgEjEbXPB6nEFIWbKUowKcw8MKhgoOvu/hmLFF9Cf7XtBsihadUBOwcGDnS/I6wJFtM5uc1LxfnGoMiRzYF5CFWYZIdx/lUCgkIRDDv3QIwmYoAo7l28Yt+hjDmYTXhYYfaabCPxmP6zliTFOJAPdXTn1dsl4hE7wIQqE2V34peaEAi1ih5Pynqch9egBvUwc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Content-Disposition: inline
-In-Reply-To: <20190526043751.12729-6-vidyas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1100a4a-327e-474c-00c8-08d6ea942e4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 15:32:27.0406
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anuragku@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4582
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Felipe,
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>-----Original Message-----
+>From: Felipe Balbi [mailto:balbi@kernel.org]
+>Sent: Wednesday, June 5, 2019 1:34 PM
+>To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Greg Kroah-Hartman
+><gregkh@linuxfoundation.org>
+>Cc: linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org;
+>v.anuragkumar@gmail.com; Anurag Kumar Vulisha <anuragku@xilinx.com>
+>Subject: Re: [PATCH] usb: dwc3: gadget: Correct the logic for finding last=
+ SG
+>entry
+>
+>
+>Hi,
+>
+>Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com> writes:
+>> As a process of preparing TRBs usb_gadget_map_request_by_dev() is
+>> called from dwc3_prepare_trbs() for mapping the request. This will
+>> call dma_map_sg() if req->num_sgs are greater than 0. dma_map_sg()
+>> will map the sg entries in sglist and return the number of mapped SGs.
+>> As a part of mapping, some sg entries having contigous memory may be
+>> merged together into a single sg (when IOMMU used). So, the number of
+>> mapped sg entries may not be equal to the number of orginal sg entries
+>> in the request (req->num_sgs).
+>>
+>> As a part of preparing the TRBs, dwc3_prepare_one_trb_sg() iterates
+>> over the sg entries present in the sglist and calls sg_is_last() to
+>> identify whether the sg entry is last and set IOC bit for the last sg
+>> entry. The
+>> sg_is_last() determines last sg if SG_END is set in sg->page_link.
+>> When IOMMU used, dma_map_sg() merges 2 or more sgs into a single sg
+>> and it doesn't retain the page_link properties. Because of this reason
+>> the
+>> sg_is_last() may not find SG_END and thus resulting in IOC bit never
+>> getting set.
+>>
+>> For example:
+>>
+>> Consider a request having 8 sg entries with each entry having a length
+>> of
+>> 4096 bytes. Assume that sg1 & sg2, sg3 & sg4, sg5 & sg6, sg7 & sg8 are
+>> having contigous memory regions.
+>>
+>> Before calling dma_map_sg():
+>>             sg1-->sg2-->sg3-->sg4-->sg6-->sg7-->sg8
+>> dma_length: 4K    4K    4K    4K    4K    4K    4K
+>> SG_END:     False False False False False False True
+>> num_sgs =3D 8
+>> num_mapped_sgs =3D 0
+>>
+>> The dma_map_sg() merges sg1 & sg2 memory regions into sg1-
+>>dma_address.
+>> Similarly sg3 & sg4 into sg2->dma_address, sg5 & sg6 into the
+>> sg3->dma_address and sg6 & sg8 into sg4->dma_address. Here the
+>memory
+>> regions are merged but the page_link properties like SG_END are not
+>> retained into the merged sgs.
+>
+>isn't this a bug in the scatterlist mapping code? Why doesn't it keep
+>SG_END?
+>
 
-On Sun, May 26, 2019 at 10:07:41AM +0530, Vidya Sagar wrote:
-> Add extended configuration space capability search API using struct dw_pc=
-ie *
-> pointer
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
-> Changes since [v7]:
-> * Changed data types of return and arguments to be inline with data being=
- returned
->   and passed.
->=20
-> Changes since [v6]:
-> * None
->=20
-> Changes since [v5]:
-> * None
->=20
-> Changes since [v4]:
-> * None
->=20
-> Changes since [v3]:
-> * None
->=20
-> Changes since [v2]:
-> * None
->=20
-> Changes since [v1]:
-> * This is a new patch in v2 series
->=20
->  drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h |  1 +
->  2 files changed, 42 insertions(+)
+Thanks for providing your comment.
+I don't think it is a bug, instead I feel some enhancement needs to be done=
+ in
+dma-mapping code. SG_END represents the last sg entry in the sglist and it =
+is
+correctly getting set to the last sg entry. The issue happens only when 2 o=
+r more
+sg entry pages are merged into contiguous dma-able address and sg_is_last()
+is used to find the last sg entry with valid dma address. I think that alon=
+g with
+sg_is_last() a new flag (SG_DMA_END) and function (something like sg_dma_is=
+_last() )
+needs to be added into dma-mapping code for identifying the last valid sg e=
+ntry
+with valid dma address. So that we can make use of that function instead of=
+ sg_is_last().
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz5MfsACgkQ3SOs138+
-s6GApw//TPvpvgBzP5P9ZA+voryvcGrZFDGOvZN3Ue1+gcsGJLKWkkyfdki8Xn4K
-pkOboAWOYl3FVFstorO6OlL+sToBPM7KSW3d1y8Xf4lCJG6pl6Wguq01rQiL+lgC
-SiHzhKaumTJ6cIiZICbExS0cnWwgNvglaMRV1enwe3SfAdqpiSBJYsJy/OFgUHMX
-e8P0PX0CY6pK+lGGi610SRhzorXOne+ukTGgm+qrAU/9XsJWkF9uwyaJF7BprSfq
-fjPGMQlZ+ezB9sZn+RAJT8qZpNsovOTLDWV6P4b+bR6hBbHNM3uOFlnpOUsKfiLL
-YJIBU00ZlbIIOMMCK/78Xg2i9GsndiLKmAF8XYeNcGKfHOyivoABLViL4eL98yZl
-VMEUTSMw97RhAoZ9DgD5M5ESFEAbD0qvy5GoGW7OcJ3JyvJam6hr2nFDIqyAuq5G
-W5w/opznB6oYuiyvTWbH2BYTKdpZv1IMZTLRsq1o8yQHCRt/L7GemvXGWm+7UhNJ
-hPIFoLR7bvYE/wHvnplHw72iXh55j3/Ku2oBCgs9Ikx8Q64XWDSJQBwqNXwT5pW4
-2qcCVbs9kcdOmuhadUJNE+Aeyz32+7GC9JS5PIrtgvCrS9GlYWg6pjGDqMy4lzJ0
-fVfLAxMTiKwPO9jr2SOY8TIfObb7fXzKGB31sBPvCV2tRUpK0OE=
-=DlKq
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
+Thanks,
+Anurag Kumar Vulisha
