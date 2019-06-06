@@ -2,109 +2,104 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61077C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CB8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498B720883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F95B20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:46:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WeBqzF3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbfFFRmY (ORCPT
+        id S1730170AbfFFRqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:42:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:37402 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729080AbfFFRmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:42:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 10:42:23 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2019 10:42:22 -0700
-Message-ID: <5f92e89a5823a3265fa0b389a19452ba995e9406.camel@intel.com>
-Subject: Re: [PATCH 4/8] arm64: Basic Branch Target Identification support
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Martin <Dave.Martin@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-arch@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Paul Elliott <paul.elliott@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kristina =?UTF-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Thu, 06 Jun 2019 10:34:22 -0700
-In-Reply-To: <20190606172345.GD28398@e103592.cambridge.arm.com>
-References: <1558693533-13465-1-git-send-email-Dave.Martin@arm.com>
-         <1558693533-13465-5-git-send-email-Dave.Martin@arm.com>
-         <20190524130217.GA15566@lakrids.cambridge.arm.com>
-         <20190524145306.GZ28398@e103592.cambridge.arm.com>
-         <20190606171155.GI56860@arrakis.emea.arm.com>
-         <20190606172345.GD28398@e103592.cambridge.arm.com>
+        Thu, 6 Jun 2019 13:46:33 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51304 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728508AbfFFRqd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:46:33 -0400
+Received: by mail-it1-f195.google.com with SMTP id m3so1354738itl.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:46:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qz2I4X9GaAXvmz/sLko1GhCrkN2RVZDS/uq3/GgGWKw=;
+        b=WeBqzF3rTxNvMQjuMxaTFtVaTF2Qcmcji5WVNJBH2XDIAgDoPoFPqKHhsbA80a1T/g
+         iX3lu78hr/MGJu633GktouF23C54stn+e1gS0wjCRw7Jymr5IvW9VjFOxPiJZ4JDCH4J
+         6eZxXm3zb5XSf0dooMEkh0yyBvdv101x0lg1RDiBDRr+Fs0BSVSfBlIUtKFGlp6hzz8s
+         TipbuicIHi59EXBykjs2qIOehK1o/Oi+cmw/bp9SvKgh+3/fFKydI8kJLx4gnR1RJepJ
+         UWeHS6cNz8hOolVqO8Pvg00aZT58u4EjtFq9k/QfsA0uk+8OauQE0buYenO0PhQJGoxG
+         t4wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qz2I4X9GaAXvmz/sLko1GhCrkN2RVZDS/uq3/GgGWKw=;
+        b=LxkioGX7yHHg2IsTosJ8dt0vW29kFjRSXQUelhSCc981AHG0h4w85LDEzEvR7Nemph
+         MdBVVSMgjAwpTOV//3lAgHRP0oYt1btB9uo7QAGoVVUb5immnHsCXfnxvP2EftkjFNhD
+         bzDLGmvZNJspaUAI1kYMRARmBy1KYcG86Dpc4q4EnMMK+MCL4sMZTXy0ZjM4+ZFvCujS
+         I1PQiFZFFQx7qzaa9d0ic/HOrPhkKhqce0yPdGp9lZ8YEp6Iw9/PdXFffLVhZkehAI4e
+         UL6bPVAFw2aBO9Se0WnkLUf5y2dxuy7inTbAeY6h1RqoGgALq43FQHucWzqpC8Ux7o4K
+         1RSA==
+X-Gm-Message-State: APjAAAVVG57eG/Dlx9NahbOlEuu0xhDup1fLOZSecL5urVbngopNnWBl
+        VSiGD4Lo28207kYMVPLwXoZnwMbMestUZZu+Y0QyDA==
+X-Google-Smtp-Source: APXvYqzMDF8+xZ8hHFPgNsp5xk4fvprBhv1fYIYIVIlmDbWgg9IZ2+9n8iZQIseVkbVKv2d6DbxaQcPn14weuLrVSFg=
+X-Received: by 2002:a24:f34a:: with SMTP id t10mr962173iti.129.1559843192356;
+ Thu, 06 Jun 2019 10:46:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <1559837807-15447-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1559837807-15447-1-git-send-email-suzuki.poulose@arm.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 6 Jun 2019 11:46:21 -0600
+Message-ID: <CANLsYkyv-BTFMosM05eicugzGmuYfkGWDEFo+vApX1q-qfUsOA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] coresight: Do not call smp_processor_id from
+ pre-emptible contexts
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 18:23 +0100, Dave Martin wrote:
-> On Thu, Jun 06, 2019 at 06:11:56PM +0100, Catalin Marinas wrote:
-> > On Fri, May 24, 2019 at 03:53:06PM +0100, Dave P Martin wrote:
-> > > On Fri, May 24, 2019 at 02:02:17PM +0100, Mark Rutland wrote:
-> > > > On Fri, May 24, 2019 at 11:25:29AM +0100, Dave Martin wrote:
-> > > > >  #endif /* _UAPI__ASM_HWCAP_H */
-> > > > > diff --git a/arch/arm64/include/uapi/asm/mman.h
-> > > > > b/arch/arm64/include/uapi/asm/mman.h
-> > > > > new file mode 100644
-> > > > > index 0000000..4776b43
-> > > > > --- /dev/null
-> > > > > +++ b/arch/arm64/include/uapi/asm/mman.h
-> > > > > @@ -0,0 +1,9 @@
-> > > > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > > > > +#ifndef _UAPI__ASM_MMAN_H
-> > > > > +#define _UAPI__ASM_MMAN_H
-> > > > > +
-> > > > > +#include <asm-generic/mman.h>
-> > > > > +
-> > > > > +#define PROT_BTI_GUARDED	0x10		/* BTI guarded
-> > > > > page */
-> > > > 
-> > > > From prior discussions, I thought this would be PROT_BTI, without the
-> > > > _GUARDED suffix. Do we really need that?
-> > > > 
-> > > > AFAICT, all other PROT_* definitions only have a single underscore, and
-> > > > the existing arch-specific flags are PROT_ADI on sparc, and PROT_SAO on
-> > > > powerpc.
-> > > 
-> > > No strong opinon.  I was trying to make the name less obscure, but I'm
-> > > equally happy with PROT_BTI if people prefer that.
-> > 
-> > I prefer PROT_BTI as well. We are going to add a PROT_MTE at some point
-> > (and a VM_ARM64_MTE in the high VMA flag bits).
-> 
-> Ack.
-> 
-> Some things need attention, so I need to respin this series anyway.
-> 
-> skip_faulting_instruction() and kprobes/uprobes may need looking at,
-> plus I want to simply the ELF parsing (at least to skip some cost for
-> arm64).
+On Thu, 6 Jun 2019 at 10:17, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> We have a few places where we call smp_processor_id() from preemptible
+> contexts during the perf buffer handling. We do this to figure out the
+> numa node for the allocation in case the event is not CPU bound. Instead
+> use NUMA_NO_NODE to avoid a splat.
+>
+>
+> Changes since v3:
+>  - No function changes. Fix the commit description
+> Changes since V2:
+>  - Use NUMA_NO_NODE instead of numa_node_id() for event->cpu == -1. (Robin Murphy)
+>
+>
+> Suzuki K Poulose (4):
+>   coresight: tmc-etr: Do not call smp_processor_id() from preemptible
+>   coresight: tmc-etr: alloc_perf_buf: Do not call smp_processor_id from
+>     preemptible
+>   coresight: tmc-etf: Do not call smp_processor_id from preemptible
+>   coresight: etb10: Do not call smp_processor_id from preemptible
+>
+>  drivers/hwtracing/coresight/coresight-etb10.c   |  6 ++----
+>  drivers/hwtracing/coresight/coresight-tmc-etf.c |  6 ++----
+>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 13 ++++---------
+>  3 files changed, 8 insertions(+), 17 deletions(-)
 
-Can we add a case in the 'consistency checks for the interpreter' (right above
-where you add arch_parse_property()) for PT_NOTE?  That way you can still use
-part of the same parser.
+And this set.
 
-Yu-cheng
+Thanks,
+Mathieu
 
+>
+> --
+> 2.7.4
+>
