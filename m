@@ -2,124 +2,105 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DC0C46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CC9C28D1C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E922083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C87120883
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:22:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FDFex7CL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbfFFJVn (ORCPT
+        id S1727824AbfFFJWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:21:43 -0400
-Received: from foss.arm.com ([217.140.101.70]:43480 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727737AbfFFJVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:21:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73209341;
-        Thu,  6 Jun 2019 02:21:42 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 494063F690;
-        Thu,  6 Jun 2019 02:21:41 -0700 (PDT)
-Subject: Re: [PATCH 01/13] acpi: utils: Cleanup acpi_dev_match_cb
-To:     rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org
-References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
- <1559747630-28065-2-git-send-email-suzuki.poulose@arm.com>
- <CAJZ5v0iRfsLDezWAnr+PcOKOGYQuFFX3bTyhvxoqJ4mN6sGOYA@mail.gmail.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <8490ee64-0d7b-dd9a-b269-129ed4611fc2@arm.com>
-Date:   Thu, 6 Jun 2019 10:21:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 05:22:55 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9725 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfFFJWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:22:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf8db6d0000>; Thu, 06 Jun 2019 02:22:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 02:22:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 02:22:53 -0700
+Received: from localhost.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 09:22:51 +0000
+From:   Abhishek Sahu <abhsahu@nvidia.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lukas@wunner.de>, Abhishek Sahu <abhsahu@nvidia.com>
+Subject: [PATCH v2 0/2] PCI: device link quirk for NVIDIA GPU
+Date:   Thu, 6 Jun 2019 14:52:23 +0530
+Message-ID: <20190606092225.17960-1-abhsahu@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0iRfsLDezWAnr+PcOKOGYQuFFX3bTyhvxoqJ4mN6sGOYA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559812973; bh=tbKkyt/K+Dnc3K8ZzvLUciqyYeSlK6VCzexvmG6DFYI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=FDFex7CLIRxqr57Z/OXaVJqWJjyJ56OrvQ/EqAw6golwcjsu47mZWVwx86CVBWZOA
+         hLnYwQgSRN4IWC0GHkiuYZrJXioH0OmQLQddzXDaXB9kmCX32NYzh3hET33bzOX6Kj
+         BUEFTTpFfYK3avCaEAcVy2edJrItBzjSZVIWDrAuptu/kz2cKBWu01difNn1qFWRw5
+         geHIKZedkSS+ieV1nQWvQBLNBUtkTW5g+BPl4gqCoHagf1Z3fDdkvQEtubepEOBTIE
+         ZqUq7MTR8YiYoJEOLYWqCztXmREMhg45+URLvDutFi98zLshe6Ap0uOBN4Xb9IEbro
+         FVzQTzDbReJjA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+* v2:
 
-On 06/06/2019 10:14, Rafael J. Wysocki wrote:
-> On Wed, Jun 5, 2019 at 5:14 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->>
->> acpi_dev_match_cb match function modifies the "data" argument
->> to pass on a result which could be easily deduced from the result
->> of the bus_find_device() call at the caller site. Clean this
->> up in preparation to convert the "match" argument for bus_find_device
->> to accept a "const" data pointer, similar to class_find_device. This
->> would allow consolidating the match routines for these two APIs.
-> 
-> This changelog can be improved IMO.
+1. Make the pci device link helper function generic which can be
+   used for other multi-function PCI devices also.
+2. Minor changes in comments and commit logs.
 
-I agree. Will update it.
+* v1:
 
-> 
-> In fact, the final goal here is to pass (const void *) as the second
-> argument to acpi_dev_match_cb() (which you could do right away in this
-> patch if I'm not mistaken) which is because you want to modify the
-> prototype of bus_find_device().
-> 
-> So why don't you write something like this in the changelog:
-> 
-> "The prototype of bus_find_device() will be unified with that of
-> class_find_device() subsequently, but for this purpose the callback
-> functions passed to it need to take (const void *) as the second
-> argument.  Consequently, they cannot modify the memory pointed to by
-> that argument which currently is not the case for acpi_dev_match_cb().
-> However, acpi_dev_match_cb() really need not modify the "match" object
-> passed to it, because acpi_dev_get_first_match_dev() which uses it via
-> bus_find_device() can easily convert the result of bus_find_device()
-> into the pointer to return.
+NVIDIA Turing GPU [1] has hardware support for USB Type-C and
+VirtualLink [2]. The Turing GPU is a multi-function PCI device
+which has the following four functions:
 
-Sure.
+	- VGA display controller (Function 0)
+	- Audio controller (Function 1)
+	- USB xHCI Host controller (Function 2)
+	- USB Type-C USCI controller (Function 3)
 
-> For this reason, update acpi_dev_match_cb() to avoid the redundant
-> memory updates and change the type of its second argument to (const
-> void *)."
+Currently NVIDIA and Nouveau GPU drivers only manage function 0.
+Rest of the functions are managed by other drivers. These functions
+internally in the hardware are tightly coupled. When function 0 goes
+in runtime suspended state, then it will do power gating for most of
+the hardware blocks. Some of these hardware blocks are used by
+the other PCI functions, which leads to functional failure. In the
+mainline kernel, the device link is present between
+function 0 and function 1.  This patch series deals with creating
+a similar kind of device link between function 0 and
+functions 2 and 3.
 
-We can't do that quite yet, until we unify the prototype of the
-bus_find_device().
+[1] https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/technologies/turing-architecture/NVIDIA-Turing-Architecture-Whitepaper.pdf
+[2] https://en.wikipedia.org/wiki/VirtualLink
 
->>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Cc: Len Brown <lenb@kernel.org>
->> Cc: linux-acpi@vger.kernel.org
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   drivers/acpi/utils.c | 7 +------
->>   1 file changed, 1 insertion(+), 6 deletions(-)
->>
->> diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
->> index 7def63a..1391b63 100644
->> --- a/drivers/acpi/utils.c
->> +++ b/drivers/acpi/utils.c
->> @@ -725,8 +725,6 @@ bool acpi_dev_found(const char *hid)
->>   EXPORT_SYMBOL(acpi_dev_found);
->>
->>   struct acpi_dev_match_info {
->> -       const char *dev_name;
->> -       struct acpi_device *adev;
->>          struct acpi_device_id hid[2];
->>          const char *uid;
->>          s64 hrv;
->> @@ -746,9 +744,6 @@ static int acpi_dev_match_cb(struct device *dev, void *data)
-> 
-> And why not to change the type of the second arg to "const void *data" here?
+Abhishek Sahu (2):
+  PCI: Code reorganization for creating device link
+  PCI: Create device link for NVIDIA GPU
 
-Because, that would conflict with what bus_find_device() expects now. We make
-the change only later. Since this change was a bit more intrusive than simply
-changing the type of the parameter, I kept it as a preparatory patch.
+ drivers/pci/quirks.c | 79 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 59 insertions(+), 20 deletions(-)
 
-Thanks for the review !
+-- 
+2.17.1
 
-Suzuki
