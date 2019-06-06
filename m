@@ -2,164 +2,139 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8439C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9525C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA672083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A202520883
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:29:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lE5PJjM0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qlYdtrGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbfFFR0V (ORCPT
+        id S1728280AbfFFR3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:26:21 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49491 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730055AbfFFR0U (ORCPT
+        Thu, 6 Jun 2019 13:29:30 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:52902 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfFFR33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:26:20 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x56HPK5g2066843
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 6 Jun 2019 10:25:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x56HPK5g2066843
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559841921;
-        bh=m4AlyVwXpZA6r6w7UbdCGAzUMcLMnUoq15ImttvhGn8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=lE5PJjM03xymRMzb4SFs9dmPHVkLeLDwE8aU2fwwzRIRovPRyqCcriJesZ8sJEsPs
-         QLNoteQwH1Oqj3o7hebpAnA3PqZlO3iyvsCiGarHCZx31hdvv59JghyVIYw+OsqHY+
-         dfbtCRm16POpRwZyHLw/nqkxzExkhLZ8/XQnh9k55P/5iqh1g/wwtCgaROYqvk1xQ9
-         wObSupDEoL6bpJfkkOmHCvNF6XObZ3eDm0bMPF5vzB9tX9upaXgS9NhU3K/sdGnn3W
-         sQGMp5dBlDB/QRW59jfQblAdj6HFFFlKniwwqUND12hdAcGViBGVlgJvjfFBVruwQ+
-         3dofqJyVe0kHg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x56HPI5t2066840;
-        Thu, 6 Jun 2019 10:25:18 -0700
-Date:   Thu, 6 Jun 2019 10:25:18 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Hugh Dickins <tipbot@zytor.com>
-Message-ID: <tip-b81ff1013eb8eef2934ca7e8cf53d553c1029e84@git.kernel.org>
-Cc:     akpm@linux-foundation.org, pavel@ucw.cz, jannh@google.com,
-        hughd@google.com, dave.hansen@linux.intel.com, x86@kernel.org,
-        mingo@redhat.com, rppt@linux.ibm.com, tglx@linutronix.de,
-        linux-mm@kvack.org, bp@suse.de, mingo@kernel.org,
-        chris@chris-wilson.co.uk, linux-kernel@vger.kernel.org,
-        riel@surriel.com, hpa@zytor.com, bigeasy@linutronix.de,
-        aarcange@redhat.com
-Reply-To: hughd@google.com, jannh@google.com, pavel@ucw.cz,
-          akpm@linux-foundation.org, mingo@redhat.com,
-          dave.hansen@linux.intel.com, x86@kernel.org,
-          chris@chris-wilson.co.uk, mingo@kernel.org, bp@suse.de,
-          tglx@linutronix.de, rppt@linux.ibm.com, linux-mm@kvack.org,
-          bigeasy@linutronix.de, aarcange@redhat.com, hpa@zytor.com,
-          riel@surriel.com, linux-kernel@vger.kernel.org
-In-Reply-To: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
-References: <20190529072540.g46j4kfeae37a3iu@linutronix.de>
-        <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/fpu: Use fault_in_pages_writeable() for
- pre-faulting
-Git-Commit-ID: b81ff1013eb8eef2934ca7e8cf53d553c1029e84
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 6 Jun 2019 13:29:29 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56HOuSi079163;
+        Thu, 6 Jun 2019 17:29:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=TDbZF773jSoChjtiU4YTRwsZq9wLcLVh4IoX023ZDqI=;
+ b=qlYdtrGtNkq/DGUy1Fy3cE4F0JRT0pOjWdfM8BHHilOnc5DY5/X9rfnKM49nW5kQFteu
+ GFiEcgizfyig8KGU+oQpIam15N7jiieMQWzwZ6a6UfacUBZDVSrVAc7QppkbZeXwAvMb
+ xNZpbZZ1HZRtZDfKfRRIdtyzCUzgDF9zPea5IGl4UdvQJ5Hbn9fa9uIFo5Iq3CtZupKr
+ Jpmw83HtEHf/OcRaVL6deHde9JZhTt1TU+rkW5A+jYhyyNXQYCNf7nZmF/nKdw93sF3q
+ PHsmqEEksyw814FM9w7R3BqBMCsY/eNlJtmApp4T37nMOFwu8WP4ZHeyLi9pvJsqOBop dw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2suevdt5eq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 17:29:24 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56HS4eo085739;
+        Thu, 6 Jun 2019 17:29:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2swngjju6b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 17:29:24 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56HTMoW005092;
+        Thu, 6 Jun 2019 17:29:22 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Jun 2019 10:29:22 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 6EC486A0125; Thu,  6 Jun 2019 13:30:46 -0400 (EDT)
+Date:   Thu, 6 Jun 2019 13:30:46 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Daniel Kiper <daniel.kiper@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
+        hpa@zytor.com, kanth.ghatraju@oracle.com, ross.philipson@oracle.com
+Subject: Re: [PATCH RFC 0/2] x86/boot: Introduce the setup_header2
+Message-ID: <20190606173046.GI3252@char.us.oracle.com>
+References: <20190524095504.12894-1-daniel.kiper@oracle.com>
+ <20190605135031.62grhhxn2pfbkcdg@tomti.i.net-space.pl>
+ <20190605140117.GA32106@char.us.oracle.com>
+ <20190606115108.sfp2bnu3qzdby4h7@tomti.i.net-space.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190606115108.sfp2bnu3qzdby4h7@tomti.i.net-space.pl>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=723
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906060117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=817 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906060117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b81ff1013eb8eef2934ca7e8cf53d553c1029e84
-Gitweb:     https://git.kernel.org/tip/b81ff1013eb8eef2934ca7e8cf53d553c1029e84
-Author:     Hugh Dickins <hughd@google.com>
-AuthorDate: Wed, 29 May 2019 09:25:40 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Thu, 6 Jun 2019 19:15:17 +0200
+On Thu, Jun 06, 2019 at 01:51:08PM +0200, Daniel Kiper wrote:
+> On Wed, Jun 05, 2019 at 10:01:17AM -0400, Konrad Rzeszutek Wilk wrote:
+> > On Wed, Jun 05, 2019 at 03:50:31PM +0200, Daniel Kiper wrote:
+> > > On Fri, May 24, 2019 at 11:55:02AM +0200, Daniel Kiper wrote:
+> > > > Hi,
+> > > >
+> > > > This change is needed to properly start the Linux kernel in Intel TXT mode and
+> > > > is a part of the TrenchBoot project (https://github.com/TrenchBoot).
+> >
+> > Can you please expand more on this?
+> >
+> > Nice explanation of why, other alternative solutions that didn't work, and so on.
+> 
+> OK.
+> 
+> > > > Daniel
+> > > >
+> > > >  Documentation/x86/boot.txt               | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  arch/x86/Kconfig                         |  7 +++++++
+> > > >  arch/x86/boot/Makefile                   |  2 +-
+> > > >  arch/x86/boot/compressed/Makefile        |  5 +++--
+> > > >  arch/x86/boot/compressed/setup_header2.S | 18 ++++++++++++++++++
+> > > >  arch/x86/boot/compressed/sl_stub.S       | 28 ++++++++++++++++++++++++++++
+> > > >  arch/x86/boot/header.S                   |  3 ++-
+> > > >  arch/x86/boot/tools/build.c              |  8 ++++++++
+> > > >  arch/x86/include/uapi/asm/bootparam.h    |  1 +
+> > > >  9 files changed, 123 insertions(+), 4 deletions(-)
+> > > >
+> > > > Daniel Kiper (2):
+> > > >       x86/boot: Introduce the setup_header2
+> > > >       x86/boot: Introduce dummy MLE header
+> > >
+> > > Ping?
+> >
+> > Can you add Ingo and Thomas to the To: next time please?
+> 
+> OK.
+> 
+> > Also please drop the second patch.
+> 
+> Why? This is an example how to use the setup_header2.
 
-x86/fpu: Use fault_in_pages_writeable() for pre-faulting
+If you are going to post it as non-RFC (which I suspect you will
+for the next), then why post a patch that is not to be checked in?
 
-Since commit
+It just takes people time up.
 
-   d9c9ce34ed5c8 ("x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails")
 
-get_user_pages_unlocked() pre-faults user's memory if a write generates
-a page fault while the handler is disabled.
-
-This works in general and uncovered a bug as reported by Mike
-Rapoport¹. It has been pointed out that this function may be fragile
-and a simple pre-fault as in fault_in_pages_writeable() would be a
-better solution. Better as in taste and simplicity: that write (as
-performed by the alternative function) performs exactly the same
-faulting of memory as before. This was suggested by Hugh Dickins and
-Andrew Morton.
-
-Use fault_in_pages_writeable() for pre-faulting user's stack.
-
-  [ bigeasy: Write commit message. ]
-  [ bp: Massage some. ]
-
-¹ https://lkml.kernel.org/r/1557844195-18882-1-git-send-email-rppt@linux.ibm.com
-
-Fixes: d9c9ce34ed5c8 ("x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails")
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: linux-mm <linux-mm@kvack.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190529072540.g46j4kfeae37a3iu@linutronix.de
-Link: https://lkml.kernel.org/r/1557844195-18882-1-git-send-email-rppt@linux.ibm.com
----
- arch/x86/kernel/fpu/signal.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 5a8d118bc423..060d6188b453 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/compat.h>
- #include <linux/cpu.h>
-+#include <linux/pagemap.h>
- 
- #include <asm/fpu/internal.h>
- #include <asm/fpu/signal.h>
-@@ -189,15 +190,7 @@ retry:
- 	fpregs_unlock();
- 
- 	if (ret) {
--		int aligned_size;
--		int nr_pages;
--
--		aligned_size = offset_in_page(buf_fx) + fpu_user_xstate_size;
--		nr_pages = DIV_ROUND_UP(aligned_size, PAGE_SIZE);
--
--		ret = get_user_pages_unlocked((unsigned long)buf_fx, nr_pages,
--					      NULL, FOLL_WRITE);
--		if (ret == nr_pages)
-+		if (!fault_in_pages_writeable(buf_fx, fpu_user_xstate_size))
- 			goto retry;
- 		return -EFAULT;
- 	}
+> 
+> Daniel
