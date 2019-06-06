@@ -2,83 +2,114 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE18CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE279C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C47208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D6A208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:06:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDCKEI/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbfFFUDk (ORCPT
+        id S1728374AbfFFUG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:03:40 -0400
-Received: from sauhun.de ([88.99.104.3]:36742 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbfFFUDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:03:40 -0400
-Received: from localhost (p5486CDEB.dip0.t-ipconnect.de [84.134.205.235])
-        by pokefinder.org (Postfix) with ESMTPSA id 4ED692C35BF;
-        Thu,  6 Jun 2019 22:03:38 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 22:03:37 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH 22/57] drivers: i2c: Use generic helper to match
- device by acpi_dev
-Message-ID: <20190606200337.GA8739@kunai>
-References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
- <1559577023-558-23-git-send-email-suzuki.poulose@arm.com>
+        Thu, 6 Jun 2019 16:06:28 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40989 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfFFUG2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:06:28 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p15so5050592eds.8;
+        Thu, 06 Jun 2019 13:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fKoBABNUkCBeoWcN3BB4mAKSq62cz70yQSacxGxsGFc=;
+        b=NDCKEI/RYiZCejraQ4pA3/blft0AGjyUEblNUUYKerTg8wmYi8n93ZXUNAUpJCKF3z
+         20X0CM2nsNucYryIixtGheZZNLlIk7HbS+1JTXdITy8utZREwu9KjGSE63vkSpB7890K
+         VDQAkCjGnSDYE3bS74Q+dbwBlWsQqX+dNOWBiUt5pMEvXRV63aufujwZsed+3BJq3vbb
+         ZlfAqHz3TlzljUxZACUgRZARSB2qug1H3SO4ou+4sa9S4bkgyupCoeAE3bN/pbRq+1zG
+         eiZHVv6/Kdsev1X8QP2yTRePtDdx1rmuqvTvM/xfBTp0Vb+gQrusWhynOXMOrd7N1FkP
+         1zWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fKoBABNUkCBeoWcN3BB4mAKSq62cz70yQSacxGxsGFc=;
+        b=DEL2VMEXXK5J8q9BrwTsDaxQw8TxhNjBCmSvn5DTQ6s1PvZGQFuiVFeMc3wvyetQQS
+         IqUhK4AvoCz4VNHgyWNTXoD1UEx8IPu5Xot9KWqQqVZN+vCp0N6SM1L9FmfPgbn5EtUh
+         saQT9AwxSDO/896IqwZjcreENq+LSpcc9cY5FmnW9R4aEfwDWSJliG+GKlAAqrf87/BK
+         O1WqelbqrP8fnwMzsWkduyERoHX3vsLaCCDQ4epmPYzeL4pLAzkVIXdF2wMVJEmq6WuL
+         MIhCb9BR62jq9B8c/PNsk2k0/u/64kdKDugRP7kvTqDyEInsrVYpNeaay0kxy0gmQCQN
+         YJDQ==
+X-Gm-Message-State: APjAAAXvSDeFwA11sRvEI6qbomrQ5PeglnkKRvan8q/rOB8d/yWJmIDN
+        VegDh2+ecNWZzvRPDTKCtcI=
+X-Google-Smtp-Source: APXvYqx7REg+H//KW6T/w1Ar/5mEf3ZqsGGG5JRSRXtG5RKWIoZSD9VJF2oR+CPvdQkvfQak4CXcVw==
+X-Received: by 2002:a17:906:3551:: with SMTP id s17mr42857015eja.19.1559851586295;
+        Thu, 06 Jun 2019 13:06:26 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id c21sm1735ejk.79.2019.06.06.13.06.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 13:06:25 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 13:06:23 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] vhost: Don't use defined in VHOST_ARCH_CAN_ACCEL_UACCESS
+ definition
+Message-ID: <20190606200623.GA12580@archlinux-epyc>
+References: <20190606161223.67979-1-natechancellor@gmail.com>
+ <20190606142606-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559577023-558-23-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190606142606-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 06, 2019 at 02:28:55PM -0400, Michael S. Tsirkin wrote:
+> I'd prefer just changing the definition.
+> ifdefs have a disadvantage that it's easy to get
+> wrong code if you forget to include a header.
+> 
+> I queued the below - pls confirm it works for you.
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fine by me, I figured that might be preferred (since clang will warn if
+VHOST_ARCH_CAN_ACCEL_UACCESS is not defined so you'd know if the header
+was forgotten). Thank you for the fix :)
 
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 
-> -	dev = bus_find_device(&i2c_bus_type, NULL, adev,
-> -			      i2c_acpi_find_match_device);
-> +	dev = bus_find_device(&i2c_bus_type, NULL, adev, device_match_acpi_dev);
-
-In general, this looks like a nice cleanup which I am in favour of.
-However, I didn't understand why ACPI uses bus_find_device() but OF has
-a seperate helper bus_find_device_by_of_node(). Why this inconsistency
-of having a seperate helper here and not there?
-
-
---Nq2Wo0NMKNjxTN9z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlz5cZQACgkQFA3kzBSg
-KbYI6RAAmuWimkzjk/bPvsyMSJT3Pdc1H0CMg9BNC6Bd2OqG7K4a1PfRpVueZddY
-5OVWpmoHhEjXBFHDqI7inEhQ61ecuwlOeM0qIJEq5uU7CQKrEjgOc2BWp1AeiEr0
-+5YvEVnIdSikPDL6M+W2fWGiyAt1hgxM+Dg9M4qmuQhU9EvJnvTuA3bw5/ld4Jtb
-tx9MaBAwvuzXwIwHN+95neWe7uTB5jrB3Asiuj3F2R48aOytMQgFLVKL+bLAziJM
-JJabLD0K7L91r1hSPnNBpHmcHGL/MfaUFoEA/Ne2l4bucK6c1ni9y42UF8owI51u
-y8UT3l+1iANReVlZZ6Wqc3tQtNV4R+8uUq6sA/so3Uq/tO3FPLLoXNbv/Vq5HZU/
-UKWeAUkLGdBJ+9kL8XheUPVFL7OxHlab61DmvRDKnrQwZI0Q0FuVFhWEXdeAXI0c
-wnBcPzhTVb05mmym6z59aMcLWEQVo+uZzlNPAWpm2NMUaHWtGji1/tXdWJWKSU4H
-zucPjBz4Co0DAr4h/kLfmaLhvuV3dlxLtbMyZxytTPmERbXJu1kVJJURG8fxUviK
-QZvGDKbuRpHvyU7bzV/qvtSgBFjKkt9cpnMBe1x0OylV3R7hB5dInbuwfOQcEa6v
-loX4SLD9M8rMN4Z9c5CYd0BnR8Fe3DiVqU1IVO2CEh/5lkmvT0U=
-=7meo
------END PGP SIGNATURE-----
-
---Nq2Wo0NMKNjxTN9z--
+> 
+> 
+> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> index c5d950cf7627..819296332913 100644
+> --- a/drivers/vhost/vhost.h
+> +++ b/drivers/vhost/vhost.h
+> @@ -95,8 +95,11 @@ struct vhost_uaddr {
+>  	bool write;
+>  };
+>  
+> -#define VHOST_ARCH_CAN_ACCEL_UACCESS defined(CONFIG_MMU_NOTIFIER) && \
+> -	ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
+> +#if defined(CONFIG_MMU_NOTIFIER) && ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
+> +#define VHOST_ARCH_CAN_ACCEL_UACCESS 1
+> +#else
+> +#define VHOST_ARCH_CAN_ACCEL_UACCESS 0
+> +#endif
+>  
+>  /* The virtqueue structure describes a queue attached to a device. */
+>  struct vhost_virtqueue {
