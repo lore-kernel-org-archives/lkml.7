@@ -2,79 +2,82 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB8EC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9D2C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7B120673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD4420684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559831590;
+	bh=/2jJJ5oG2cISFINJKQe1EgAmoS+dF35UJQdmAaBdaNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PzX4h1MmT6ZvZQ25SI1TwBAbxCFaEKao62LO5RqR3B0jou4WKItvBoLJyxY0Is0pC
+	 YGT2ufMSccwd11v67jCqZEHWdkK6VwCAsQ2qQF3fxx+EYdC1hAMCgNuSW4qcla9Wo8
+	 aZcPzIFvzpVYYipyiJemR1PKEK5kTwQRzkOqhYG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbfFFObW (ORCPT
+        id S1728864AbfFFOdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:31:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49950 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727133AbfFFObQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:31:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CFB4CAFE0;
-        Thu,  6 Jun 2019 14:31:14 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     stefan.wahren@i2se.com, linux-kernel@vger.kernel.org
-Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
-        sboyd@kernel.org, eric@anholt.net, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
-        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        mturquette@baylibre.com, linux-pm@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v2 7/7] arm64: defconfig: enable cpufreq support for RPi3
-Date:   Thu,  6 Jun 2019 16:23:00 +0200
-Message-Id: <20190606142255.29454-8-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190606142255.29454-1-nsaenzjulienne@suse.de>
-References: <20190606142255.29454-1-nsaenzjulienne@suse.de>
+        Thu, 6 Jun 2019 10:33:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727133AbfFFOdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:33:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E4620673;
+        Thu,  6 Jun 2019 14:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559831588;
+        bh=/2jJJ5oG2cISFINJKQe1EgAmoS+dF35UJQdmAaBdaNA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vIL9tsxaJCJ6vmzNR4W5rYK5l1deky/3ctGG8Pold6Jk8WI2e71x0lSPFlLVWy+5X
+         6OjNoesUKJ2twjzicbxxgesIRYfRAal2qoLQEa9SfsYJ294nTr71ci0Jj4ufRCNZ/q
+         zVNjY+QFddmc9uFjoz911UcJn2YsMRxZVjUM77VY=
+Date:   Thu, 6 Jun 2019 16:33:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
+        linux-usb@vger.kernel.org, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/10] usb: Add USB subsystem notifications [ver #3]
+Message-ID: <20190606143306.GA11294@kroah.com>
+References: <155981420247.17513.18371208824032389940.stgit@warthog.procyon.org.uk>
+ <Pine.LNX.4.44L0.1906061020000.1641-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1906061020000.1641-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables both the new firmware clock driver and cpufreq driver
-available for the RPi3 family of boards.
+On Thu, Jun 06, 2019 at 10:24:18AM -0400, Alan Stern wrote:
+> On Thu, 6 Jun 2019, David Howells wrote:
+> 
+> > Add a USB subsystem notification mechanism whereby notifications about
+> > hardware events such as device connection, disconnection, reset and I/O
+> > errors, can be reported to a monitoring process asynchronously.
+> 
+> USB I/O errors covers an awfully large and vague field.  Do we really
+> want to include them?  I'm doubtful.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+See the other patch on the linux-usb list that wanted to start adding
+KOBJ_CHANGE notifications about USB "i/o errors".
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4d583514258c..3b7baffb3087 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -82,6 +82,7 @@ CONFIG_CPUFREQ_DT=y
- CONFIG_ACPI_CPPC_CPUFREQ=m
- CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
- CONFIG_ARM_SCPI_CPUFREQ=y
-+CONFIG_ARM_RASPBERRYPI_CPUFREQ=y
- CONFIG_ARM_TEGRA186_CPUFREQ=y
- CONFIG_ARM_SCPI_PROTOCOL=y
- CONFIG_RASPBERRYPI_FIRMWARE=y
-@@ -639,6 +640,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
- CONFIG_COMMON_CLK_S2MPS11=y
- CONFIG_CLK_QORIQ=y
- CONFIG_COMMON_CLK_PWM=y
-+CONFIG_CLK_RASPBERRYPI=y
- CONFIG_CLK_IMX8MQ=y
- CONFIG_CLK_IMX8QXP=y
- CONFIG_TI_SCI_CLK=y
--- 
-2.21.0
+So for "severe" issues, yes, we should do this, but perhaps not for all
+of the "normal" things we see when a device is yanked out of the system
+and the like.
 
+thanks,
+
+greg k-h
