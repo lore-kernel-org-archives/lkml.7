@@ -2,152 +2,196 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D483EC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7F8C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE29A20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965272083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ZChRgcFw"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QxBi4qVw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y7AV8mb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbfFFP1R (ORCPT
+        id S1729346AbfFFP1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:27:17 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:47512 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729077AbfFFP1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:27:17 -0400
-X-IronPort-AV: E=Sophos;i="5.60,559,1549926000"; 
-   d="scan'208";a="7729995"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 06 Jun 2019 17:27:15 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 06 Jun 2019 17:27:15 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 06 Jun 2019 17:27:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1559834835; x=1591370835;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=umqEwzb8oK5WtqI9yBT0F9jXzaGIhXB44Au/hCBtBs8=;
-  b=ZChRgcFw7UzOc9rbXEfwLchuZ0/ellpXnHkPlHEpklCREXdKLBLabKEJ
-   6t03FegynYm2nVJvI1eJchD58VDBuWvCbkSps4rny6tMGvV3smC2c4kTc
-   T/Xk2gl1hHt6Vfq8QDWvPjVuitT5wrIhHAb8PNnFwNcNHsv+uHFSBLCQm
-   2pGrVHlkP7xLYCtdsLYyjyzRyeGg/iJALy6AQWF8YUfnZ5cm89GLrT0cz
-   KI6iZn00QI0TB1ENhJ0ELOEgnGbQgw95evctYzDh/mXEglNaDYT1LFHSN
-   SZjzC34zR2d40ERgt+0T8AWC7V1C9MPX2St3MlmiVfEr+dCSWUIEltyB2
-   w==;
-X-IronPort-AV: E=Sophos;i="5.60,559,1549926000"; 
-   d="scan'208";a="7729994"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 06 Jun 2019 17:27:15 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 7FB7C280074;
-        Thu,  6 Jun 2019 17:27:21 +0200 (CEST)
-Message-ID: <004bda07469769f8a6e0609efd0327f184307493.camel@ew.tq-group.com>
-Subject: Re: [PATCH modules 1/2] module: allow arch overrides for .exit
- section names
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org
-Date:   Thu, 06 Jun 2019 17:27:12 +0200
-In-Reply-To: <20190606150946.GA27669@linux-8ccs>
-References: <20190603105726.22436-1-matthias.schiffer@ew.tq-group.com>
-         <20190603105726.22436-2-matthias.schiffer@ew.tq-group.com>
-         <20190606150946.GA27669@linux-8ccs>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Jun 2019 11:27:50 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:47449 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728565AbfFFP1u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:27:50 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 5D1AB220C9;
+        Thu,  6 Jun 2019 11:27:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 06 Jun 2019 11:27:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=xYXa16oaIxYe9YeoyZG2PW5G95x
+        +tUDhZwJ3LaMVdZU=; b=QxBi4qVwNfyPBfX7SYAwBMBXUBRSIDHODyOjpUsbsi9
+        TB92ihsGC86WXd4iQbJKn7Y3G9MFs99FB65yqW6vho9E/EkaxQoio5d33REJWjDZ
+        Rg/KrgFCzU4P23ibKsgpIRuSCbpYqio/jpsXrZH6LQN/a5eJNKPnliVnPvtq9668
+        +3HD1XalprI5yGHLpQQqqDOLxHA9C5Jz/Itt7b58NBkFUr9ktUwj3211uhBETHtR
+        f1oaNt5Z76AQs1FfT4cdRwA49qgZufY5EKz8tk5xRpIpzJbkp0LySz2BXglB4QIe
+        ej3V9FDeiAQXmdBrAYkhTwLIV8phbi0tEd/Spt/5LwA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=xYXa16
+        oaIxYe9YeoyZG2PW5G95x+tUDhZwJ3LaMVdZU=; b=Y7AV8mb33I7EHfAoYkhvCA
+        OV9CvDvwxaJiD5Wd/idFXvO4D5AQhBBOjq0wu+L1KnQtZdZN1ZxtWLllYWCiVvuI
+        ATh4SnuPbk67MPf3HXRKA48wKZa9Q+enFoNenQwlCZxC78dL77tluVFcD6TfK4zq
+        ahCwQ5ZKgyGnK8gG/8ZAYdAJpfk9OzEf0q1iKLYLqxgVMh9Z0lJZRXR4qHsp4lyf
+        18n1HHVmDoSqC51Ib8u0nmD08aSUWUKkBrQkYkncEEhnAytT9QlibLyc4uz0AEZv
+        qoqyrHx6g3BUlojLPxAZzjoJTOLP6WwAJKHOX2059JRdjBVt5QZiPRA0+nQiIQjQ
+        ==
+X-ME-Sender: <xms:9TD5XPUB43vH2bvn5h--WOuFhGaTAjA0rFEAHPo2h-hj5z4h-R05Gw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeggedgledtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:9TD5XE9cBovlGkXe7i-34_X3Lzy1Ff54Rhkd_v-9o6Xp3ZrY5g7_lQ>
+    <xmx:9TD5XE5Y6kWUkleTFSbwHkBLjGMOBTAEoune6hg226YbrLp-1JQoEQ>
+    <xmx:9TD5XFlvgOXNicmupwssAcFBK-J6JtyDkKF3AfHj_g3FOdCL4j_QZQ>
+    <xmx:9TD5XDQH0G6pepUshmrsWQQBNzYe6kJ7tIWOZdoBI5PsJBtCxneqkA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9198F8005A;
+        Thu,  6 Jun 2019 11:27:48 -0400 (EDT)
+Date:   Thu, 6 Jun 2019 17:27:46 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Rolf Eike Beer <eb@emlix.com>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
+ =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
+ =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
+Message-ID: <20190606152746.GB21921@kroah.com>
+References: <259986242.BvXPX32bHu@devpool35>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <259986242.BvXPX32bHu@devpool35>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 17:09 +0200, Jessica Yu wrote:
-> +++ Matthias Schiffer [03/06/19 12:57 +0200]:
-> > Some archs like ARM store unwind information for .exit.text in
-> > sections
-> > with unusual names. As this unwind information refers to
-> > .exit.text, it
-> > must not be loaded when .exit.text is not loaded (when
-> > CONFIG_MODULE_UNLOAD
-> > is unset); otherwise, loading a module can fail due to relocation
-> > failures.
-> > 
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > >
-> > ---
-> > include/linux/moduleloader.h | 8 ++++++++
-> > kernel/module.c              | 2 +-
-> > 2 files changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/moduleloader.h
-> > b/include/linux/moduleloader.h
-> > index 31013c2effd3..cddbd85fb659 100644
-> > --- a/include/linux/moduleloader.h
-> > +++ b/include/linux/moduleloader.h
-> > @@ -5,6 +5,7 @@
-> > 
-> > #include <linux/module.h>
-> > #include <linux/elf.h>
-> > +#include <linux/string.h>
-> > 
-> > /* These may be implemented by architectures that need to hook into
-> > the
-> >  * module loader code.  Architectures that don't need to do
-> > anything special
-> > @@ -93,4 +94,11 @@ void module_arch_freeing_init(struct module
-> > *mod);
-> > #define MODULE_ALIGN PAGE_SIZE
-> > #endif
-> > 
-> > +#ifndef HAVE_ARCH_MODULE_EXIT_SECTION
-> > +static inline bool module_exit_section(const char *name)
-> > +{
-> > +	return strstarts(name, ".exit");
-> > +}
-> > +#endif
-> > +
+On Thu, Jun 06, 2019 at 03:16:03PM +0200, Rolf Eike Beer wrote:
+> I have at least these 2 instances:
 > 
-> Hi Matthias,
 > 
-> For sake of consistency, could we implement this as an arch-
-> overridable
-> __weak symbol like the rest of the module arch-overrides in
-> moduleloader.h?
-
-Fine with me - making such a tiny function inlineable just seemed more
-appropriate to me. I can send a v2 tomorrow.
-
-
+> In file included from /tmp/e2/build/linux-4.9.180/include/drm/drm_vma_manager.h:28,
+>                  from /tmp/e2/build/linux-4.9.180/include/drm/drmP.h:78,
+>                  from /tmp/e2/build/linux-4.9.180/include/drm/drm_modeset_helper.h:26,
+>                  from /tmp/e2/build/linux-4.9.180/include/drm/drm_atomic_helper.h:33,
+>                  from /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:24:
+> /tmp/e2/build/linux-4.9.180/include/linux/module.h:138:7: error: 'cleanup_module' specifies less restrictive attribute than its target 'tilcdc_drm_fini': 'cold' [-Werror=missing-attributes]
+>   138 |  void cleanup_module(void) __attribute__((alias(#exitfn)));
+>       |       ^~~~~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:757:1: note: in expansion of macro 'module_exit'
+>   757 | module_exit(tilcdc_drm_fini);
+>       | ^~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:748:20: note: 'cleanup_module' target declared here
+>   748 | static void __exit tilcdc_drm_fini(void)
+>       |                    ^~~~~~~~~~~~~~~
+> In file included from /tmp/e2/build/linux-4.9.180/include/drm/drm_vma_manager.h:28,
+>                  from /tmp/e2/build/linux-4.9.180/include/drm/drmP.h:78,
+>                  from /tmp/e2/build/linux-4.9.180/include/drm/drm_modeset_helper.h:26,
+>                  from /tmp/e2/build/linux-4.9.180/include/drm/drm_atomic_helper.h:33,
+>                  from /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:24:
+> /tmp/e2/build/linux-4.9.180/include/linux/module.h:132:6: error: 'init_module' specifies less restrictive attribute than its target 'tilcdc_drm_init': 'cold' [-Werror=missing-attributes]
+>   132 |  int init_module(void) __attribute__((alias(#initfn)));
+>       |      ^~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:756:1: note: in expansion of macro 'module_init'
+>   756 | module_init(tilcdc_drm_init);
+>       | ^~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/drivers/gpu/drm/tilcdc/tilcdc_drv.c:740:19: note: 'init_module' target declared here
+>   740 | static int __init tilcdc_drm_init(void)
+>       |                   ^~~~~~~~~~~~~~~
 > 
-> > #endif
-> > diff --git a/kernel/module.c b/kernel/module.c
-> > index 6e6712b3aaf5..e8e4cd0a471f 100644
-> > --- a/kernel/module.c
-> > +++ b/kernel/module.c
-> > @@ -2924,7 +2924,7 @@ static int rewrite_section_headers(struct
-> > load_info *info, int flags)
-> > 
-> > #ifndef CONFIG_MODULE_UNLOAD
-> > 		/* Don't load .exit sections */
-> > -		if (strstarts(info->secstrings+shdr->sh_name, ".exit"))
-> > +		if (module_exit_section(info->secstrings+shdr-
-> > >sh_name))
-> > 			shdr->sh_flags &= ~(unsigned long)SHF_ALLOC;
-> > #endif
-> > 	}
-> > -- 
-> > 2.17.1
-> > 
+> 
+> 
+> In file included from /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:17:
+> /tmp/e2/build/linux-4.9.180/include/linux/module.h:138:7: error: 'cleanup_module' specifies less restrictive attribute than its target 'mpc52xx_lpbfifo_driver_exit': 'cold' [-Werror=missing-attributes]
+>   138 |  void cleanup_module(void) __attribute__((alias(#exitfn)));
+>       |       ^~~~~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/include/linux/device.h:1360:1: note: in expansion of macro 'module_exit'
+>  1360 | module_exit(__driver##_exit);
+>       | ^~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/include/linux/platform_device.h:228:2: note: in expansion of macro 'module_driver'
+>   228 |  module_driver(__platform_driver, platform_driver_register, \
+>       |  ^~~~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:1: note: in expansion of macro 'module_platform_driver'
+>   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
+>       | ^~~~~~~~~~~~~~~~~~~~~~
+> In file included from /tmp/e2/build/linux-4.9.180/arch/powerpc/include/asm/io.h:27,
+>                  from /tmp/e2/build/linux-4.9.180/include/linux/io.h:25,
+>                  from /tmp/e2/build/linux-4.9.180/include/linux/irq.h:24,
+>                  from /tmp/e2/build/linux-4.9.180/arch/powerpc/include/asm/hardirq.h:5,
+>                  from /tmp/e2/build/linux-4.9.180/include/linux/hardirq.h:8,
+>                  from /tmp/e2/build/linux-4.9.180/include/linux/interrupt.h:12,
+>                  from /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:12:
+> /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:24: note: 'cleanup_module' target declared here
+>   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
+>       |                        ^~~~~~~~~~~~~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/include/linux/device.h:1356:20: note: in definition of macro 'module_driver'
+>  1356 | static void __exit __driver##_exit(void) \
+>       |                    ^~~~~~~~
+> /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:1: note: in expansion of macro 'module_platform_driver'
+>   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
+>       | ^~~~~~~~~~~~~~~~~~~~~~
+> In file included from /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:17:
+> /tmp/e2/build/linux-4.9.180/include/linux/module.h:132:6: error: 'init_module' specifies less restrictive attribute than its target 'mpc52xx_lpbfifo_driver_init': 'cold' [-Werror=missing-attributes]
+>   132 |  int init_module(void) __attribute__((alias(#initfn)));
+>       |      ^~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/include/linux/device.h:1355:1: note: in expansion of macro 'module_init'
+>  1355 | module_init(__driver##_init); \
+>       | ^~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/include/linux/platform_device.h:228:2: note: in expansion of macro 'module_driver'
+>   228 |  module_driver(__platform_driver, platform_driver_register, \
+>       |  ^~~~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:1: note: in expansion of macro 'module_platform_driver'
+>   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
+>       | ^~~~~~~~~~~~~~~~~~~~~~
+> In file included from /tmp/e2/build/linux-4.9.180/arch/powerpc/include/asm/io.h:27,
+>                  from /tmp/e2/build/linux-4.9.180/include/linux/io.h:25,
+>                  from /tmp/e2/build/linux-4.9.180/include/linux/irq.h:24,
+>                  from /tmp/e2/build/linux-4.9.180/arch/powerpc/include/asm/hardirq.h:5,
+>                  from /tmp/e2/build/linux-4.9.180/include/linux/hardirq.h:8,
+>                  from /tmp/e2/build/linux-4.9.180/include/linux/interrupt.h:12,
+>                  from /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:12:
+> /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:24: note: 'init_module' target declared here
+>   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
+>       |                        ^~~~~~~~~~~~~~~~~~~~~~
+> /tmp/e2/build/linux-4.9.180/include/linux/device.h:1351:19: note: in definition of macro 'module_driver'
+>  1351 | static int __init __driver##_init(void) \
+>       |                   ^~~~~~~~
+> /tmp/e2/build/linux-4.9.180/arch/powerpc/platforms/52xx/mpc52xx_lpbfifo.c:581:1: note: in expansion of macro 'module_platform_driver'
+>   581 | module_platform_driver(mpc52xx_lpbfifo_driver);
+>       | ^~~~~~~~~~~~~~~~~~~~~~
+> 
+> 
+> So this needs a6e60d84989fa0e91db7f236eda40453b0e44afa, which needs 
+> c0d9782f5b6d7157635ae2fd782a4b27d55a6013, which can't be applied cleanly 
+> because a3f8a30f3f0079c7edfc72e329eee8594fb3e3cb is missing in 4.9.
+> 
+> I have applied a6e60d84989fa0e91db7f236eda40453b0e44afa and modified it to 
+> directly use __attribute__((__copy__(initfn))) and (exitfn), which fixes the 
+> build for me.
 
+I just added some patches for gcc9 to 4.14 and 4.19, are you really
+going to want to build it on 4.9?
+
+If so, I can try to fix this up...
+
+thanks,
+
+greg k-h
