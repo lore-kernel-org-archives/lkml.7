@@ -2,111 +2,248 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57FFC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65976C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9DA208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559844363;
-	bh=bMlplyiH+PKr+bX7ZgbQvU1nviSGlkJZkRJ8OqOqy/o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VaebYC3Tk6yIsEGGH0/Hs31M26WiiAJaO6qmYybpUGkjbx6ioZ3v4oLGr99itd19/
-	 /xJRBDfj6MsJGFJcTyMIkSQSL1FigLhyo7maAo8T4itM6Lq1byryU9QwluE1FKjJ3A
-	 G8yHhNKO4YgTnbJ18ad4YZei8beWNo0bPbsw5wU0=
+	by mail.kernel.org (Postfix) with ESMTP id 3973421019
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfFFSGC (ORCPT
+        id S1730348AbfFFSGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbfFFSGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:06:02 -0400
-Received: from linux-8ccs (ip5f5ade8c.dynamic.kabel-deutschland.de [95.90.222.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475B920868;
-        Thu,  6 Jun 2019 18:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559844362;
-        bh=bMlplyiH+PKr+bX7ZgbQvU1nviSGlkJZkRJ8OqOqy/o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ceO0L12vc87mtQrwEEUDdAGEHtNt3f5ie5LUMzPUn/paO6ytZXNyCfaNl7OdHSAdS
-         mgojHde4I0uhLmkXypwuy8LC4MA8MpkW2dIJAIwyTju20Q1pNgWll0C3QTynwiw6YO
-         ywCud39RrIz3zfYK8JwrS0evskkxT0qBxkL+6Dh4=
-Date:   Thu, 6 Jun 2019 20:05:57 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel: module: Use struct_size() helper
-Message-ID: <20190606180557.GA4690@linux-8ccs>
-References: <20190604232343.GA2475@embeddedor>
+        Thu, 6 Jun 2019 14:06:25 -0400
+Received: from 15.mo1.mail-out.ovh.net ([188.165.38.232]:39919 "EHLO
+        15.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbfFFSGY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:06:24 -0400
+X-Greylist: delayed 4200 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Jun 2019 14:06:22 EDT
+Received: from player697.ha.ovh.net (unknown [10.109.146.32])
+        by mo1.mail-out.ovh.net (Postfix) with ESMTP id B87E317B22F
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 17:39:19 +0200 (CEST)
+Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
+        (Authenticated sender: sebastien.szymanski@armadeus.com)
+        by player697.ha.ovh.net (Postfix) with ESMTPSA id D6299697A73E;
+        Thu,  6 Jun 2019 15:38:59 +0000 (UTC)
+From:   =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>
+To:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>
+Subject: [PATCH v2 2/3] media: imx7-media-csi: add i.MX6UL support
+Date:   Thu,  6 Jun 2019 17:38:24 +0200
+Message-Id: <20190606153825.8183-2-sebastien.szymanski@armadeus.com>
+X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
+References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190604232343.GA2475@embeddedor>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 3721943620884780228
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrudeggedgledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Gustavo A. R. Silva [04/06/19 18:23 -0500]:
->Make use of the struct_size() helper instead of an open-coded version
->in order to avoid any potential type mistakes, in particular in the
->context in which this code is being used.
->
->So, replace the following form:
->
->sizeof(*sect_attrs) + nloaded * sizeof(sect_attrs->attrs[0]
->
->with:
->
->struct_size(sect_attrs, attrs, nloaded)
->
->This code was detected with the help of Coccinelle.
->
->Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L support
+to imx7-media-csi driver.
 
-Hi Gustavo!
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+---
 
-I see you've sent similar cleanup patches elsewhere, do you think you
-could reword your commit message to be more similar to your patch here
-for instance:
+Changes for v2:
+ - rebase on top of linuxtv/master
+ - mention i.MX6UL/L in header and Kconfig help text
+ - rename csi_type to csi_soc_id
 
-	https://lkml.org/lkml/2019/6/5/856
+ drivers/staging/media/imx/Kconfig          |  4 +-
+ drivers/staging/media/imx/imx7-media-csi.c | 62 ++++++++++++++++------
+ 2 files changed, 49 insertions(+), 17 deletions(-)
 
-It does a *much* better job of explaining the motivation and usage of
-struct_size().
+diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/media/imx/Kconfig
+index ad3d7df6bb3c..8b6dc42c39e0 100644
+--- a/drivers/staging/media/imx/Kconfig
++++ b/drivers/staging/media/imx/Kconfig
+@@ -22,11 +22,11 @@ config VIDEO_IMX_CSI
+ 	  A video4linux camera sensor interface driver for i.MX5/6.
+ 
+ config VIDEO_IMX7_CSI
+-	tristate "i.MX7 Camera Sensor Interface driver"
++	tristate "i.MX6UL/L / i.MX7 Camera Sensor Interface driver"
+ 	depends on VIDEO_IMX_MEDIA && VIDEO_DEV && I2C
+ 	default y
+ 	help
+ 	  Enable support for video4linux camera sensor interface driver for
+-	  i.MX7.
++	  i.MX6UL/L or i.MX7.
+ endmenu
+ endif
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index 9101566f3f67..902bdce594cf 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * V4L2 Capture CSI Subdev for Freescale i.MX7 SOC
++ * V4L2 Capture CSI Subdev for Freescale i.MX6UL/L / i.MX7 SOC
+  *
+  * Copyright (c) 2019 Linaro Ltd
+  *
+@@ -152,6 +152,11 @@
+ #define CSI_CSICR18		0x48
+ #define CSI_CSICR19		0x4c
+ 
++enum csi_soc_id {
++	IMX7,
++	IMX6UL
++};
++
+ struct imx7_csi {
+ 	struct device *dev;
+ 	struct v4l2_subdev sd;
+@@ -191,6 +196,7 @@ struct imx7_csi {
+ 	bool is_init;
+ 	bool is_streaming;
+ 	bool is_csi2;
++	enum csi_soc_id soc_id;
+ 
+ 	struct completion last_eof_completion;
+ };
+@@ -548,6 +554,14 @@ static int imx7_csi_pad_link_validate(struct v4l2_subdev *sd,
+ 	if (ret)
+ 		return ret;
+ 
++	if (csi->soc_id == IMX6UL) {
++		mutex_lock(&csi->lock);
++		csi->is_csi2 = false;
++		mutex_unlock(&csi->lock);
++
++		return 0;
++	}
++
+ 	ret = imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
+ 	if (ret) {
+ 		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
+@@ -757,6 +771,7 @@ static int imx7_csi_configure(struct imx7_csi *csi)
+ 	struct v4l2_pix_format *out_pix = &vdev->fmt.fmt.pix;
+ 	__u32 in_code = csi->format_mbus[IMX7_CSI_PAD_SINK].code;
+ 	u32 cr1, cr18;
++	int width = out_pix->width;
+ 
+ 	if (out_pix->field == V4L2_FIELD_INTERLACED) {
+ 		imx7_csi_deinterlace_enable(csi, true);
+@@ -766,15 +781,27 @@ static int imx7_csi_configure(struct imx7_csi *csi)
+ 		imx7_csi_buf_stride_set(csi, 0);
+ 	}
+ 
+-	imx7_csi_set_imagpara(csi, out_pix->width, out_pix->height);
++	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
++
++	if (!csi->is_csi2) {
++		if (out_pix->pixelformat == V4L2_PIX_FMT_UYVY ||
++		    out_pix->pixelformat == V4L2_PIX_FMT_YUYV)
++			width *= 2;
++
++		imx7_csi_set_imagpara(csi, width, out_pix->height);
++
++		cr18 |= (BIT_BASEADDR_SWITCH_EN | BIT_BASEADDR_SWITCH_SEL |
++			BIT_BASEADDR_CHG_ERR_EN);
++		imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
+ 
+-	if (!csi->is_csi2)
+ 		return 0;
++	}
++
++	imx7_csi_set_imagpara(csi, width, out_pix->height);
+ 
+ 	cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
+ 	cr1 &= ~BIT_GCLK_MODE;
+ 
+-	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
+ 	cr18 &= BIT_MIPI_DATA_FORMAT_MASK;
+ 	cr18 |= BIT_DATA_FROM_MIPI;
+ 
+@@ -809,11 +836,9 @@ static void imx7_csi_enable(struct imx7_csi *csi)
+ {
+ 	imx7_csi_sw_reset(csi);
+ 
+-	if (csi->is_csi2) {
+-		imx7_csi_dmareq_rff_enable(csi);
+-		imx7_csi_hw_enable_irq(csi);
+-		imx7_csi_hw_enable(csi);
+-	}
++	imx7_csi_dmareq_rff_enable(csi);
++	imx7_csi_hw_enable_irq(csi);
++	imx7_csi_hw_enable(csi);
+ }
+ 
+ static void imx7_csi_disable(struct imx7_csi *csi)
+@@ -1166,19 +1191,32 @@ static int imx7_csi_parse_endpoint(struct device *dev,
+ 	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
+ }
+ 
++static const struct of_device_id imx7_csi_of_match[] = {
++	{ .compatible = "fsl,imx7-csi", .data = (void *)IMX7 },
++	{ .compatible = "fsl,imx6ul-csi", .data = (void *)IMX6UL },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
++
+ static int imx7_csi_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *node = dev->of_node;
+ 	struct imx_media_dev *imxmd;
+ 	struct imx7_csi *csi;
++	const struct of_device_id *of_id;
+ 	int ret;
+ 
++	of_id = of_match_node(imx7_csi_of_match, node);
++	if (!of_id)
++		return -ENODEV;
++
+ 	csi = devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
+ 	if (!csi)
+ 		return -ENOMEM;
+ 
+ 	csi->dev = dev;
++	csi->soc_id = (enum csi_soc_id)of_id->data;
+ 
+ 	csi->mclk = devm_clk_get(&pdev->dev, "mclk");
+ 	if (IS_ERR(csi->mclk)) {
+@@ -1294,12 +1332,6 @@ static int imx7_csi_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id imx7_csi_of_match[] = {
+-	{ .compatible = "fsl,imx7-csi" },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
+-
+ static struct platform_driver imx7_csi_driver = {
+ 	.probe = imx7_csi_probe,
+ 	.remove = imx7_csi_remove,
+-- 
+2.19.2
 
-Thank you!
-
-Jessica
-
->---
-> kernel/module.c | 3 +--
-> 1 file changed, 1 insertion(+), 2 deletions(-)
->
->diff --git a/kernel/module.c b/kernel/module.c
->index 80c7c09584cf..3f3bb090fbf4 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -1492,8 +1492,7 @@ static void add_sect_attrs(struct module *mod, const struct load_info *info)
-> 	for (i = 0; i < info->hdr->e_shnum; i++)
-> 		if (!sect_empty(&info->sechdrs[i]))
-> 			nloaded++;
->-	size[0] = ALIGN(sizeof(*sect_attrs)
->-			+ nloaded * sizeof(sect_attrs->attrs[0]),
->+	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
-> 			sizeof(sect_attrs->grp.attrs[0]));
-> 	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.attrs[0]);
-> 	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
->-- 
->2.21.0
->
