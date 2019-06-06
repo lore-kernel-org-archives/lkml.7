@@ -2,104 +2,171 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EAEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07463C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F2F20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E554E208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfFFSlT (ORCPT
+        id S1727493AbfFFSmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:41:19 -0400
-Received: from mga05.intel.com ([192.55.52.43]:26420 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfFFSlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:41:18 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 11:41:18 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga004.jf.intel.com with ESMTP; 06 Jun 2019 11:41:17 -0700
-Date:   Thu, 6 Jun 2019 11:41:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: nVMX: Rename prepare_vmcs02_*_full to
- prepare_vmcs02_*_extra
-Message-ID: <20190606184117.GJ23169@linux.intel.com>
-References: <1559834652-105872-1-git-send-email-pbonzini@redhat.com>
+        Thu, 6 Jun 2019 14:42:08 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:54961 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfFFSmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:42:07 -0400
+Received: by mail-it1-f199.google.com with SMTP id k8so732450itd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 11:42:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Au0D6mWcBFLKUduxTVlVaH1XnraoVojjfsk4fIvDRzM=;
+        b=LQ65Yke5g12kvtyGi5kk+nj8/n63Xl0UROI0bUxSFsMTUaP6kL+2v/dyqJxqFcKBek
+         A4euqlFlwFZkINO4CO//wWmdlB79JK2bMyGHGL0hKIVkCh+JF3zseyARtoT74+wnk7yD
+         3hyz3chOiV1XGF/80HO/cpP8SxG0Lu7zrWJRt+WZbB43lLl+8FXZnDxNQusmFSTWFn97
+         WdSdyuWhL2m+lU4iodNmdsHrdAS29Vg9F+CBorlKoyX53QxJCxv836otAsCZEPAgWTeB
+         cfPxD0+zxf67b4ZFMkGyJGY0aVtpmQFFfhyRm4HLVFDFK/UnS+cPPcqK/hVYNRetaFU5
+         i5JQ==
+X-Gm-Message-State: APjAAAUQO4OB1C1i8ofUIhP689fyGQ9d55j+oh2iA9eqBwnn5m04D0GD
+        fz0l8I5UnUsE2+sBcWIEY5xirAhir8QUV8rPDOA0jxBDRaVK
+X-Google-Smtp-Source: APXvYqxdfSZuYPUaJoBWPh9eTAKeQEExjBtyzx4VX+hcrua191r4RurLFA9Cr8P/Ib5Z621X804gHa8CaE+1prR9rVKfI87EMaJq
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559834652-105872-1-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Received: by 2002:a24:f801:: with SMTP id a1mr1278395ith.113.1559846526704;
+ Thu, 06 Jun 2019 11:42:06 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 11:42:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000020e6b9058aac120b@google.com>
+Subject: KASAN: use-after-free Read in blk_mq_free_rqs
+From:   syzbot <syzbot+784281a934c3f71eb71a@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 05:24:12PM +0200, Paolo Bonzini wrote:
-> These function do not prepare the entire state of the vmcs02, only the
-> rarely needed parts.  Rename them to make this clearer.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 84438cf23d37..fd8150ef6cce 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -1955,7 +1955,7 @@ static void prepare_vmcs02_constant_state(struct vcpu_vmx *vmx)
->  	vmx_set_constant_host_state(vmx);
->  }
->  
-> -static void prepare_vmcs02_early_full(struct vcpu_vmx *vmx,
-> +static void prepare_vmcs02_early_extra(struct vcpu_vmx *vmx,
+Hello,
 
-Or maybe 'uncommon', 'rare' or 'ext'?  I don't I particularly love any of
-the names, but they're all better than 'full'.
+syzbot found the following crash on:
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+HEAD commit:    9221dced Merge tag 'for-linus-20190601' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b3b772a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1fa7e451a5cac069
+dashboard link: https://syzkaller.appspot.com/bug?extid=784281a934c3f71eb71a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149089aaa00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b24edea00000
 
->  				      struct vmcs12 *vmcs12)
->  {
->  	prepare_vmcs02_constant_state(vmx);
-> @@ -1976,7 +1976,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->  	u64 guest_efer = nested_vmx_calc_efer(vmx, vmcs12);
->  
->  	if (vmx->nested.dirty_vmcs12 || vmx->nested.hv_evmcs)
-> -		prepare_vmcs02_early_full(vmx, vmcs12);
-> +		prepare_vmcs02_early_extra(vmx, vmcs12);
->  
->  	/*
->  	 * PIN CONTROLS
-> @@ -2130,7 +2130,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->  	}
->  }
->  
-> -static void prepare_vmcs02_full(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
-> +static void prepare_vmcs02_extra(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
->  {
->  	struct hv_enlightened_vmcs *hv_evmcs = vmx->nested.hv_evmcs;
->  
-> @@ -2254,7 +2254,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  
->  	if (vmx->nested.dirty_vmcs12 || vmx->nested.hv_evmcs) {
-> -		prepare_vmcs02_full(vmx, vmcs12);
-> +		prepare_vmcs02_extra(vmx, vmcs12);
->  		vmx->nested.dirty_vmcs12 = false;
->  	}
->  
-> -- 
-> 1.8.3.1
-> 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+784281a934c3f71eb71a@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in blk_mq_free_rqs+0x49f/0x4b0  
+block/blk-mq.c:2049
+Read of size 8 at addr ffff88809b5c0b10 by task kworker/1:1/22
+
+CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.2.0-rc2+ #17
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events __blk_release_queue
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  blk_mq_free_rqs+0x49f/0x4b0 block/blk-mq.c:2049
+  blk_mq_sched_free_tags block/blk-mq-sched.c:453 [inline]
+  blk_mq_sched_tags_teardown+0x126/0x210 block/blk-mq-sched.c:485
+  blk_mq_exit_sched+0x1fa/0x2d0 block/blk-mq-sched.c:557
+  elevator_exit+0x70/0xa0 block/elevator.c:185
+  blk_exit_queue block/blk-sysfs.c:853 [inline]
+  __blk_release_queue+0x127/0x330 block/blk-sysfs.c:895
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 8904:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+  kmem_cache_alloc_trace+0x151/0x750 mm/slab.c:3555
+  kmalloc include/linux/slab.h:547 [inline]
+  kzalloc include/linux/slab.h:742 [inline]
+  loop_add+0x51/0x8d0 drivers/block/loop.c:1973
+  loop_control_ioctl drivers/block/loop.c:2157 [inline]
+  loop_control_ioctl+0x165/0x360 drivers/block/loop.c:2139
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8905:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3432 [inline]
+  kfree+0xcf/0x220 mm/slab.c:3755
+  loop_remove+0xa1/0xd0 drivers/block/loop.c:2078
+  loop_control_ioctl drivers/block/loop.c:2173 [inline]
+  loop_control_ioctl+0x320/0x360 drivers/block/loop.c:2139
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88809b5c0900
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 528 bytes inside of
+  1024-byte region [ffff88809b5c0900, ffff88809b5c0d00)
+The buggy address belongs to the page:
+page:ffffea00026d7000 refcount:1 mapcount:0 mapping:ffff8880aa400ac0  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0002411188 ffffea000290c088 ffff8880aa400ac0
+raw: 0000000000000000 ffff88809b5c0000 0000000100000007 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88809b5c0a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88809b5c0a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88809b5c0b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                          ^
+  ffff88809b5c0b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88809b5c0c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
