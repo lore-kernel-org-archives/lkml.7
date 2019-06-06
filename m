@@ -2,83 +2,145 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8999C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F88EC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C63206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:54:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="JfdsVdvs"
+	by mail.kernel.org (Postfix) with ESMTP id 57B8E206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559850897;
+	bh=CwGMuE+WEe/QCirkYuKg8095g413T6AAKaG29fZ0SGQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KzPJ/wdRwfSFokY9mZc079FkKAovsF9ECX02swOYCX5lVGdi+trehvcx6EnGI4ukH
+	 +NMwGOll1j/en47LycsodF3ZUs4mDOPtV1OdzvMolNfWwDQDKgmimKdb2FEErSTq5E
+	 TF4iFA/f3Q1kiMQPAX465NScGSTKtLbk/vBN2noY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfFFTyo (ORCPT
+        id S1728009AbfFFTy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:54:44 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38970 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbfFFTyo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:54:44 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m202so2480491oig.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:54:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KSoI84zbFfjJh+yucOPwxT6kilJj6MAJP+rtvhtzHSI=;
-        b=JfdsVdvsUGgY9HlTxARM693KrJ3d3LOhodM05kVM/jqD2yctg/yUCsdNDvltCR/9o2
-         bOn0L2jTGRvvPmte2dhpruXCv1vsV6NcePYUNiSH+8NbGnjxW8H+HpNz73Jss8GI7Qen
-         cbhhmflFI0OToHaa1Pvq86yQY167iVJTH5audBJA9tVchznxATtih6JS7zzjNbXUffu+
-         hkxsrmKCKotcHvUpUJIIUwQqn8kkfCGzpe71UDYrkFq79XBSXjZVyacCoYWvgvlxqekz
-         y3TF8Nk0nTFY+cJKspYmD2v0wVA7gpGzQ6h5SgPF0ztjl4i45nc/qPvJrN13fEmGOuJK
-         Ae1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KSoI84zbFfjJh+yucOPwxT6kilJj6MAJP+rtvhtzHSI=;
-        b=Pkha8T9VQtMFcQ94btr42tOys4N7SoaIYFVA78fUH8gyxPatHpowMO35oXrnH4hso+
-         ToHn9ZK+g+WHA8cvGaiwuutSyv9OUHUePy9YnQzgtg/OYQe55wkLlKf6xAwiOO7KD8vw
-         9ad0YEHgfxT9zdInjyrl3kr6QTZoeOW2GE9IT6mnY16k6HyC5WWTWa+Qyt/UvdJkjIjX
-         pN8UlNCyaE6SyiX1hZ85tfMtoS8nrMXWsrCoGv/IxI0Nm4qtaBth9yXBQj0MuuK1pNXX
-         0grs8e/1WVS+gv3HP27/itY/4eWq6+EYBf5Vfvbzv+C0mQ79Jpw1Gr9FS2MXaokMD8PW
-         4S3Q==
-X-Gm-Message-State: APjAAAUhKg8KYKmxL+y50oEa7Fy9eE2/mpFpp1hp9t5fhn7LjLvyUNqO
-        iRegmXBkHbr6W5tqHGqen9ZlMScUW1DWqGgL8pI=
-X-Google-Smtp-Source: APXvYqyw70dr2fyJDIqlurnAqWsemlv1vzvsRBlsbzDIcPAIal/g3gva1/cOrXlnngTXqo0jEtGlY7jBnw/bVGVCAps=
-X-Received: by 2002:aca:4403:: with SMTP id r3mr1320040oia.39.1559850883385;
- Thu, 06 Jun 2019 12:54:43 -0700 (PDT)
+        Thu, 6 Jun 2019 15:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727962AbfFFTyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 15:54:53 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CF4121479
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 19:54:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559850891;
+        bh=CwGMuE+WEe/QCirkYuKg8095g413T6AAKaG29fZ0SGQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eQwvwcju3KjnhZ83Kd4AaOrth9m4z53DeQp6LenCs72nKfO38LO/vJA0nqcu6QMbU
+         IyPfe96L/vuzq7/JfV6upFI4P0etLFkwpz5qGPi/yaOXQubr8y2/C6sq3/jpxnxEym
+         ChcrDS8gGZxAFu/JAu4djfMGvCRA3Sr95xzJmlqw=
+Received: by mail-wr1-f54.google.com with SMTP id x17so3657650wrl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:54:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAURcgptJ/7WBx66S0HU80KSshcf0MSy14Y5mNVL+gOUqZ5LoXUr
+        Xfu1X/q+3c1p7J4uiNbWcOlKsexLGFlN+eEya9s3Kg==
+X-Google-Smtp-Source: APXvYqyekhKavJMx5MB3Z2AxY4A/CobI1nxE7fayLLS4V4kYzZ+R4ThNtJeafKr4gLEMwMxes/0kV7JtVkKhH1VwAnQ=
+X-Received: by 2002:a5d:6207:: with SMTP id y7mr12434458wru.265.1559850890024;
+ Thu, 06 Jun 2019 12:54:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190603094740.12255-1-narmstrong@baylibre.com> <20190603094740.12255-4-narmstrong@baylibre.com>
-In-Reply-To: <20190603094740.12255-4-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 6 Jun 2019 21:54:32 +0200
-Message-ID: <CAFBinCA0vy2eB+LCVDokeoEkkeu0A1VQQsTFwdBJoh3a6EAyOg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] arm64: dts: meson-g12a-sei510: bump bluetooth bus
- speed to 2Mbaud/s
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <b91710d8-cd2d-6b93-8619-130b9d15983d@tycho.nsa.gov>
+ <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
+ <3813.1559827003@warthog.procyon.org.uk> <8382af23-548c-f162-0e82-11e308049735@tycho.nsa.gov>
+ <0eb007c5-b4a0-9384-d915-37b0e5a158bf@schaufler-ca.com> <c82052e5-ca11-67b5-965e-8f828081f31c@tycho.nsa.gov>
+ <07e92045-2d80-8573-4d36-643deeaff9ec@schaufler-ca.com>
+In-Reply-To: <07e92045-2d80-8573-4d36-643deeaff9ec@schaufler-ca.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 6 Jun 2019 12:54:38 -0700
+X-Gmail-Original-Message-ID: <CALCETrVuNRPgEzv-XY4M9m6sEsCiRHxPenN_MpcMYc1h26vVwQ@mail.gmail.com>
+Message-ID: <CALCETrVuNRPgEzv-XY4M9m6sEsCiRHxPenN_MpcMYc1h26vVwQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 00/10] Mount, FS, Block and Keyrings notifications
+ [ver #3]
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 11:48 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Thu, Jun 6, 2019 at 11:56 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
 >
-> Setting to 2Mbaud/s is the nominal bus speed for common usages.
+> On 6/6/2019 10:16 AM, Stephen Smalley wrote:
+> > On 6/6/19 12:43 PM, Casey Schaufler wrote:
+> >> ...
+> >> I don't agree. That is, I don't believe it is sufficient.
+> >> There is no guarantee that being able to set a watch on an
+> >> object implies that every process that can trigger the event
+> >> can send it to you.
+> >>
+> >>     Watcher has Smack label W
+> >>     Triggerer has Smack label T
+> >>     Watched object has Smack label O
+> >>
+> >>     Relevant Smack rules are
+> >>
+> >>     W O rw
+> >>     T O rw
+> >>
+> >> The watcher will be able to set the watch,
+> >> the triggerer will be able to trigger the event,
+> >> but there is nothing that would allow the watcher
+> >> to receive the event. This is not a case of watcher
+> >> reading the watched object, as the event is delivered
+> >> without any action by watcher.
+> >
+> > You are allowing arbitrary information flow between T and W above.  Who cares about notifications?
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> I do. If Watched object is /dev/null no data flow is possible.
+> There are many objects on a modern Linux system for which this
+> is true. Even if it's "just a file" the existence of one path
+> for data to flow does not justify ignoring the rules for other
+> data paths.
 
-I tested with this speed when I updated the meson_uart driver back
-then to allow higher baud rates [0]
-so I don't see a reason why this shouldn't work
+Aha!
 
+Even ignoring security, writes to things like /dev/null should
+probably not trigger notifications to people who are watching
+/dev/null.  (There are probably lots of things like this: /dev/zero,
+/dev/urandom, etc.)  David, are there any notification types that have
+this issue in your patchset?  If so, is there a straightforward way to
+fix it?  Generically, it seems like maybe writes to device nodes
+shouldn't trigger notifications since, despite the fact that different
+openers of a device node share an inode, there isn't necessarily any
+connection between them.
 
-[0] https://patchwork.kernel.org/patch/9517907/
+Casey, if this is fixed in general, do you have another case where the
+right to write and the right to read do not imply the right to
+communicate?
+
+> An analogy is that two processes with different UIDs can open a file,
+> but still can't signal each other.
+
+What do you mean "signal"?  If two processes with different UIDs can
+open the same file for read and write, then they can communicate with
+each other in many ways.  For example, one can write to the file and
+the other can read it.  One can take locks and the other can read the
+lock state.  They can both map it and use any number of memory access
+side channels to communicate.  But, of course, they can't send each
+other signals with kill().
+
+If, however, one of these processes is using some fancy mechanism
+(inotify, dnotify, kqueue, fanotify, whatever) to watch the file, and
+the other one writes it, then it seems inconsistent to lie to the
+watching process and say that the file wasn't written because some
+security policy has decided to allow the write, allow the read, but
+suppress this particular notification.  Hence my request for a real
+example: when would it make sense to do this?
