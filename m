@@ -2,105 +2,121 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38421C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32AEC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0877B20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559840707;
-	bh=uHOnF18rQ1x4hUh7PQwXCuloLsMPslXGMYzeeFg/e18=;
-	h=In-Reply-To:References:To:Subject:From:Cc:Date:List-ID:From;
-	b=e5rAI2ANS//Nay7gygxaI+vAImOffwxusphtOtY1Cm0GsZjtl4N21R6ODz3MLu887
-	 ZhFPnwom9rKdth+o6x7QT/j7mO7pdvDlBM2SSk6ImRfCTZV8O8GjsplTiigN4h+yrE
-	 CuLQRUsiWRTFrse0t9VBKJppjA3Mc6iWiIDGEvKA=
+	by mail.kernel.org (Postfix) with ESMTP id CD63820868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:05:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sfE6alK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbfFFRFG (ORCPT
+        id S1728169AbfFFRFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:05:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFRFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:05:06 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39C5B20693;
-        Thu,  6 Jun 2019 17:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559840705;
-        bh=uHOnF18rQ1x4hUh7PQwXCuloLsMPslXGMYzeeFg/e18=;
-        h=In-Reply-To:References:To:Subject:From:Cc:Date:From;
-        b=LJouhF834bm0oyjp4K3HMzEfmeO/CynTLHON+s66xYLMS9rlFer55d4RIjFRsHe0h
-         sKukE1s08fJcwj3HnI+19EmuFXk7pOcCRuTS5VjlCZQhSB64usa6fFp9BL+hN4jdCs
-         OtnljmrrtAcwblV5a0vLj2vb6pEVb4Bf3VNMrNAA=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 6 Jun 2019 13:05:16 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:45168 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFRFP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:05:15 -0400
+Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EEB0333B;
+        Thu,  6 Jun 2019 19:05:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1559840714;
+        bh=CVBp/IEh5vhwWYspt56rtYg6AI6x08afKyjXhCh6rY0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sfE6alK/3GMjn1/8cjiAuGj3QPlcibWcDobcOFwCRqgDelqvyoohMySGecYgxNmQO
+         iPhTHx7tQnCZO0Q4sj6Q0NL+SIMTlKQgVK9aWG9Kb090OdUuhFSHCq2Ch6Qj4DVcJz
+         c3rxvD59HbczAdda50K4chnkVolcIU/dFnj2hDhQ=
+Date:   Thu, 6 Jun 2019 20:04:59 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/20] arm64: dts: renesas: r8a7796: Add CMM units
+Message-ID: <20190606170459.GP12825@pendragon.ideasonboard.com>
+References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
+ <20190606142220.1392-10-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190606142255.29454-6-nsaenzjulienne@suse.de>
-References: <20190606142255.29454-1-nsaenzjulienne@suse.de> <20190606142255.29454-6-nsaenzjulienne@suse.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org, stefan.wahren@i2se.com
-Subject: Re: [PATCH v2 5/7] clk: raspberrypi: register platform device for raspberrypi-cpufreq
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
-        eric@anholt.net, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
-        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        mturquette@baylibre.com, linux-pm@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-User-Agent: alot/0.8.1
-Date:   Thu, 06 Jun 2019 10:05:04 -0700
-Message-Id: <20190606170505.39C5B20693@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190606142220.1392-10-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Nicolas Saenz Julienne (2019-06-06 07:22:58)
-> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-rasp=
-berrypi.c
-> index b1365cf19f3a..052296b5fbe4 100644
-> --- a/drivers/clk/bcm/clk-raspberrypi.c
-> +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> @@ -63,6 +63,8 @@ struct raspberrypi_firmware_prop {
->         __le32 disable_turbo;
->  } __packed;
-> =20
-> +static struct platform_device *rpi_cpufreq;
+Hi Jacopo,
 
-Why can't this be stored in platform driver data?
+Thank you for the patch.
 
-> +
->  static int raspberrypi_clock_property(struct rpi_firmware *firmware, u32=
- tag,
->                                       u32 clk, u32 *val)
->  {
-> @@ -285,6 +287,17 @@ static int raspberrypi_clk_probe(struct platform_dev=
-ice *pdev)
->                 return ret;
->         }
-> =20
-> +       rpi_cpufreq =3D platform_device_register_data(dev, "raspberrypi-c=
-pufreq",
-> +                                                   -1, NULL, 0);
-> +
-> +       return 0;
-> +}
-> +
-> +static int raspberrypi_clk_remove(struct platform_device *pdev)
-> +{
-> +       platform_device_unregister(rpi_cpufreq);
-> +       rpi_cpufreq =3D NULL;
+On Thu, Jun 06, 2019 at 04:22:09PM +0200, Jacopo Mondi wrote:
+> Add CMM units to Renesas R-Car M3-W device tree and reference them from
+> the Display Unit they are connected to.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-This assignment to NULL looks unnecessary.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
+> ---
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 25 ++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> index cdf784899cf8..2e1891d9d322 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> @@ -2610,6 +2610,30 @@
+>  			renesas,fcp = <&fcpvi0>;
+>  		};
+>  
+> +		cmm0: cmm@fea40000 {
+> +			compatible = "renesas,cmm-gen3";
+> +			reg = <0 0xfea40000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 711>;
+> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +			resets = <&cpg 711>;
+> +		};
 > +
->         return 0;
->  }
-> =20
+> +		cmm1: cmm@fea50000 {
+> +			compatible = "renesas,cmm-gen3";
+> +			reg = <0 0xfea50000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 710>;
+> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +			resets = <&cpg 710>;
+> +		};
+> +
+> +		cmm2: cmm@fea60000 {
+> +			compatible = "renesas,cmm-gen3";
+> +			reg = <0 0xfea60000 0 0x1000>;
+> +			clocks = <&cpg CPG_MOD 709>;
+> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +			resets = <&cpg 709>;
+> +		};
+> +
+>  		csi20: csi2@fea80000 {
+>  			compatible = "renesas,r8a7796-csi2";
+>  			reg = <0 0xfea80000 0 0x10000>;
+> @@ -2763,6 +2787,7 @@
+>  			status = "disabled";
+>  
+>  			vsps = <&vspd0 &vspd1 &vspd2>;
+> +			cmms = <&cmm0 &cmm1 &cmm2>;
+>  
+>  			ports {
+>  				#address-cells = <1>;
+
+-- 
+Regards,
+
+Laurent Pinchart
