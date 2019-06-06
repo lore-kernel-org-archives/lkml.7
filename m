@@ -2,103 +2,132 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62125C28D1C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1732C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B122070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1688208CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPDkSTVe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfFFIyM (ORCPT
+        id S1727519AbfFFIzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:54:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37502 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727420AbfFFIyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:54:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E56C8AD56;
-        Thu,  6 Jun 2019 08:54:10 +0000 (UTC)
-Message-ID: <1559811234.21928.9.camel@suse.com>
-Subject: Re: KASAN: use-after-free Read in device_del
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+93f2f45b19519b289613@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, syzkaller-bugs@googlegroups.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Date:   Thu, 06 Jun 2019 10:53:54 +0200
-In-Reply-To: <000000000000fa11f3058a69d67b@google.com>
-References: <000000000000fa11f3058a69d67b@google.com>
-Content-Type: multipart/mixed; boundary="=-WHPQrjiUrTPTkJwCTFpN"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Thu, 6 Jun 2019 04:55:33 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55317 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfFFIzd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:55:33 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so1227498wmj.5;
+        Thu, 06 Jun 2019 01:55:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=1/TKE/QmlgGH1FFbgu8/s1F6UVtd/Yfiy+F2mc9SqpQ=;
+        b=lPDkSTVeuBYLJ/kHz0jbAmaDqBJE2OPHrYYUwCgZE6l8zE1YHN+vLSe2UegG1UW/yY
+         xnJMAAV6BnzK1GZ+t6r4u0AEvH2+okmVbHxjcfb9OvGETwGbwDJEBZRf9R/lNf6qtZlg
+         BPnjUevyK22LpLZwLbkZzqIM0yBfPi9hfrbWZBwfY9De5UMfI/+UckNmaVSlLYmkrj7E
+         omwCs8EVNrqlplW2/vRGowMeSFyA+Shobq7O5D77ORVqkhfh3h+c1WmNEDcggXc2dIFw
+         NoiPLnJcpxbU92zhuu+4kruD2YBlx+uLFruFzd/Hqa/0m3vbQnUlp/AqukwEvzOPD9R+
+         e4OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=1/TKE/QmlgGH1FFbgu8/s1F6UVtd/Yfiy+F2mc9SqpQ=;
+        b=EVt2QLsymmKW+Q6RpR+1zviHUBTGAb6u2HpaBxayvechr7HL45XG9hdF9JOuQJd57x
+         9UY43tAbTWyNmtlkfbPt1PQack8apPGqL2bXbDOk+tEaDUa5O0Sk5QHIrYC4T9q3texm
+         Ro/RPtZLZSoUWuyiEjWstDAgXXOEgiBDNVtHfeMa0JYLRmfViFo373U2P5NpHigOG3xa
+         bCu2/vcRi4yMHcNgDD/lSP67vN3w0QaAUDQc2kFkSXhswVD1Nt7vyeX0iNGzDoqu+bMW
+         qhZvBMlHN4vl420HgYgtjkqhcnIj5AEuwlGefJc0ca+vW5wT6m/4sCtsFU8ZUBTPaXjy
+         rDRg==
+X-Gm-Message-State: APjAAAXLUnRudPg/ryuKdAiDV6W+RRAbEzsUBYW0Jy5vPFJu7Ezteal3
+        B1cgEkbq5C54bI1d3rnhE59mMniq
+X-Google-Smtp-Source: APXvYqw4/5UTPoHuSXJ/gNhhaP0vPWP4gK+OiS1arZxQOQm+S2/Ac66Ejla9Ht6CnkxKiL5lvYuWTA==
+X-Received: by 2002:a7b:c94a:: with SMTP id i10mr22767614wml.97.1559811331099;
+        Thu, 06 Jun 2019 01:55:31 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([108.61.173.19])
+        by smtp.gmail.com with ESMTPSA id r131sm1077565wmf.4.2019.06.06.01.55.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 01:55:30 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 16:55:24 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org
+Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] selinux: lsm: fix a missing-check bug in
+ selinux_sb_eat_lsm_o pts()
+Message-ID: <20190606085524.GA21119@zhanggen-UX430UQ>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In selinux_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul(). It
+returns NULL when fails. So 'arg' should be checked. And 'mnt_opts' 
+should be freed when error.
 
---=-WHPQrjiUrTPTkJwCTFpN
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-Am Montag, den 03.06.2019, 04:41 -0700 schrieb syzbot:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1684d87ca00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=193d8457178b3229
-> dashboard link: https://syzkaller.appspot.com/bug?extid=93f2f45b19519b289613
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-
-Will this do?
-
-	Regards
-		Oliver
-
---=-WHPQrjiUrTPTkJwCTFpN
-Content-Disposition: attachment;
-	filename*0=0001-usb-hso-initialize-so-that-we-can-tear-down-in-the-e.pat;
-	filename*1=ch
-Content-Transfer-Encoding: base64
-Content-Type: text/x-patch;
-	name="0001-usb-hso-initialize-so-that-we-can-tear-down-in-the-e.patch";
-	charset="UTF-8"
-
-RnJvbSA2ODY3YWJjMTcwMWYxODg5MmQzMmU4YWVhZjY0NDkwMWU5YmNiZjgyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
-OiBXZWQsIDUgSnVuIDIwMTkgMTM6NDk6MjEgKzAyMDAKU3ViamVjdDogW1BBVENIXSB1c2I6IGhz
-bzogaW5pdGlhbGl6ZSBzbyB0aGF0IHdlIGNhbiB0ZWFyIGRvd24gaW4gdGhlIGVycm9yCiBjYXNl
-CgpJbml0dWFsaXphdGlvbiBtdXN0IGZvbGxvdyB0aGUgc2VxdWVuY2Ugc3R1ZmYgaXMgdW5kb25l
-IGluIGNhc2UKd2UgYmFpbCBvdXQuIFRodXMgdGhlIHBhcmVudCBwb2ludGVyIG11c3QgYmUgc2V0
-IGVhcmxpZXIuCgpTaWduZWQtb2ZmLWJ5OiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29t
-PgotLS0KIGRyaXZlcnMvbmV0L3VzYi9oc28uYyB8IDYgKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwg
-MyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0
-L3VzYi9oc28uYyBiL2RyaXZlcnMvbmV0L3VzYi9oc28uYwppbmRleCA2YTBlY2RkZmYzMTAuLjRk
-OTEwMGZiOWY2ZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvdXNiL2hzby5jCisrKyBiL2RyaXZl
-cnMvbmV0L3VzYi9oc28uYwpAQCAtMjY1Myw2ICsyNjUzLDkgQEAgc3RhdGljIHN0cnVjdCBoc29f
-ZGV2aWNlICpoc29fY3JlYXRlX2J1bGtfc2VyaWFsX2RldmljZSgKIAkJCQkgICAgIEJVTEtfVVJC
-X1RYX1NJWkUpKQogCQlnb3RvIGV4aXQ7CiAKKwkvKiBhbmQgcmVjb3JkIHRoaXMgc2VyaWFsICov
-CisJc2V0X3NlcmlhbF9ieV9pbmRleChzZXJpYWwtPm1pbm9yLCBzZXJpYWwpOworCiAJc2VyaWFs
-LT5pbl9lbmRwID0gaHNvX2dldF9lcChpbnRlcmZhY2UsIFVTQl9FTkRQT0lOVF9YRkVSX0JVTEss
-CiAJCQkJICAgICBVU0JfRElSX0lOKTsKIAlpZiAoIXNlcmlhbC0+aW5fZW5kcCkgewpAQCAtMjY2
-OSw5ICsyNjcyLDYgQEAgc3RhdGljIHN0cnVjdCBoc29fZGV2aWNlICpoc29fY3JlYXRlX2J1bGtf
-c2VyaWFsX2RldmljZSgKIAogCXNlcmlhbC0+d3JpdGVfZGF0YSA9IGhzb19zdGRfc2VyaWFsX3dy
-aXRlX2RhdGE7CiAKLQkvKiBhbmQgcmVjb3JkIHRoaXMgc2VyaWFsICovCi0Jc2V0X3NlcmlhbF9i
-eV9pbmRleChzZXJpYWwtPm1pbm9yLCBzZXJpYWwpOwotCiAJLyogc2V0dXAgdGhlIHByb2MgZGly
-cyBhbmQgZmlsZXMgaWYgbmVlZGVkICovCiAJaHNvX2xvZ19wb3J0KGhzb19kZXYpOwogCi0tIAoy
-LjE2LjQKCg==
-
-
---=-WHPQrjiUrTPTkJwCTFpN--
-
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Fixes: 99dbbb593fe6 ("selinux: rewrite selinux_sb_eat_lsm_opts()")
+---
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 3ec702c..13479cd 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2616,10 +2616,11 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+ 	char *from = options;
+ 	char *to = options;
+ 	bool first = true;
++	int rc;
+ 
+ 	while (1) {
+ 		int len = opt_len(from);
+-		int token, rc;
++		int token;
+ 		char *arg = NULL;
+ 
+ 		token = match_opt_prefix(from, len, &arg);
+@@ -2635,15 +2636,15 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+ 						*q++ = c;
+ 				}
+ 				arg = kmemdup_nul(arg, q - arg, GFP_KERNEL);
++				if (!arg) {
++					rc = -ENOMEM;
++					goto free_opt;
++				}
+ 			}
+ 			rc = selinux_add_opt(token, arg, mnt_opts);
+ 			if (unlikely(rc)) {
+ 				kfree(arg);
+-				if (*mnt_opts) {
+-					selinux_free_mnt_opts(*mnt_opts);
+-					*mnt_opts = NULL;
+-				}
+-				return rc;
++				goto free_opt;
+ 			}
+ 		} else {
+ 			if (!first) {	// copy with preceding comma
+@@ -2661,6 +2662,12 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
+ 	}
+ 	*to = '\0';
+ 	return 0;
++free_opt:
++	if (*mnt_opts) {
++		selinux_free_mnt_opts(*mnt_opts);
++		*mnt_opts = NULL;
++	}
++	return rc;
+ }
+ 
+ static int selinux_sb_remount(struct super_block *sb, void *mnt_opts)
