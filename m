@@ -2,59 +2,127 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1F8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB085C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00EF320868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78D520868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:40:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbfFFRj0 (ORCPT
+        id S1730181AbfFFRky convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:39:26 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:54682 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728646AbfFFRjZ (ORCPT
+        Thu, 6 Jun 2019 13:40:54 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:39121 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728879AbfFFRkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:39:25 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D6B7014DD4FB6;
-        Thu,  6 Jun 2019 10:39:24 -0700 (PDT)
-Date:   Thu, 06 Jun 2019 10:39:24 -0700 (PDT)
-Message-Id: <20190606.103924.1369913278652387015.davem@davemloft.net>
-To:     maxime.chevallier@bootlin.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com
-Subject: Re: [PATCH net] net: mvpp2: Use strscpy to handle stat strings
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190606084256.3703-1-maxime.chevallier@bootlin.com>
-References: <20190606084256.3703-1-maxime.chevallier@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 06 Jun 2019 10:39:25 -0700 (PDT)
+        Thu, 6 Jun 2019 13:40:53 -0400
+Received: from marcel-macpro.fritz.box (p5B3D2A37.dip0.t-ipconnect.de [91.61.42.55])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 3C52ECF2B8;
+        Thu,  6 Jun 2019 19:49:15 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [5.2.0-rcx] Bluetooth: hci0: unexpected event for opcode
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CADDKRnDUD_wLUS-+2_1k37RVF+D=sWQ4wncK9agcEOnEsjUHgQ@mail.gmail.com>
+Date:   Thu, 6 Jun 2019 19:40:51 +0200
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?utf-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <5BCB56DB-6140-4151-B45C-1CE8ECEFAB23@holtmann.org>
+References: <CADDKRnDWhX25QPFNXA-uPcM_tD3Bep2ui=D5A2A8A5cZvrbJtA@mail.gmail.com>
+ <F99C3F13-D705-4214-ADE8-30676E29360D@holtmann.org>
+ <CADDKRnDimtWTrW8BXHZjLCHYRnpZ1qs5pravPtdNpwE13cWvvg@mail.gmail.com>
+ <DE393F06-081D-4761-82BA-014CBD3E43A9@holtmann.org>
+ <CADDKRnDUD_wLUS-+2_1k37RVF+D=sWQ4wncK9agcEOnEsjUHgQ@mail.gmail.com>
+To:     =?utf-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Date: Thu,  6 Jun 2019 10:42:56 +0200
+Hi Joerg,
 
-> Use a safe strscpy call to copy the ethtool stat strings into the
-> relevant buffers, instead of a memcpy that will be accessing
-> out-of-bound data.
+>>>>> In 5.2.0-rcx I see a new error message on startup probably after
+>>>>> loading the Bluetooth firmware:
+>>>>> [    1.609460] Bluetooth: hci0: unexpected event for opcode 0xfc2f
+>>>>> 
+>>>>>> dmesg | grep Bluetooth
+>>>>> [    0.130969] Bluetooth: Core ver 2.22
+>>>>> [    0.130973] Bluetooth: HCI device and connection manager initialized
+>>>>> [    0.130974] Bluetooth: HCI socket layer initialized
+>>>>> [    0.130975] Bluetooth: L2CAP socket layer initialized
+>>>>> [    0.130976] Bluetooth: SCO socket layer initialized
+>>>>> [    0.374716] Bluetooth: RFCOMM TTY layer initialized
+>>>>> [    0.374718] Bluetooth: RFCOMM socket layer initialized
+>>>>> [    0.374718] Bluetooth: RFCOMM ver 1.11
+>>>>> [    0.374719] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+>>>>> [    0.374720] Bluetooth: BNEP socket layer initialized
+>>>>> [    0.374721] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+>>>>> [    0.374722] Bluetooth: HIDP socket layer initialized
+>>>>> [    1.422530] Bluetooth: hci0: read Intel version: 370710018002030d00
+>>>>> [    1.422533] Bluetooth: hci0: Intel Bluetooth firmware file:
+>>>>> intel/ibt-hw-37.7.10-fw-1.80.2.3.d.bseq
+>>>>> [    1.609460] Bluetooth: hci0: unexpected event for opcode 0xfc2f
+>>>>> [    1.625557] Bluetooth: hci0: Intel firmware patch completed and activated
+>>>>> [   21.986125] input: BluetoothMouse3600 Mouse as
+>>>>> /devices/virtual/misc/uhid/0005:045E:0916.0004/input/input15
+>>>>> [   21.986329] input: BluetoothMouse3600 Consumer Control as
+>>>>> /devices/virtual/misc/uhid/0005:045E:0916.0004/input/input16
+>>>>> [   21.986408] hid-generic 0005:045E:0916.0004: input,hidraw3:
+>>>>> BLUETOOTH HID v1.10 Mouse [BluetoothMouse3600] on 80:19:34:4D:31:44
+>>>>> 
+>>>>> 
+>>>>> The error message goes away if I revert following patch:
+>>>>> f80c5dad7b64 Bluetooth: Ignore CC events not matching the last HCI command
+>>>> 
+>>>> if you can send btmon trace (or better btmon -w trace.log) for this event triggering it, then we can look if this is a hardware issue.
+>>> 
+>>> The problem is that it happens only once during startup, especially at
+>>> the very first startup after power-on only. So I can't issue any
+>>> command.
+>> 
+>> try to blacklist btusb.ko module. Create /etc/modprobe.d/blacklist-btusb.conf with the content of "blacklist vc4”.
 > 
-> Fixes: 118d6298f6f0 ("net: mvpp2: add ethtool GOP statistics")
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> I hhink you mean "blacklist btusb"
+> 
+>> Then once booted, start “btmon -w trace.log” and then “modprobe btusb”. This should give you the initial firmware loading trace.
+>> 
+>> I am just assuming that the module is connected via USB, if not then you need to let me know.
+>> 
+>>>> We have only seen this with Atheros hardware so far, but it might happen for others as well. It indicates that this is an unexpected event. Normally you can ignore this warning since it just indicates an existing issue that we just papered over before. So if everything works as before, just ignore it,
+>>> 
+>>> Yes for me BT works as usual so ignoring it would be no problem (but
+>>> it looks ugly because the error message is painted right on the
+>>> boot-screen).
+>> 
+>> The 0xfc2f command is never issued by btusb.c or btintel.c actually. It is a command to apply the BDDATA information used only by Intel AG6xx devices which are UART only. So I am almost certain that this is a bug in the hardware / firmware and the patch above just started to highlight it. The trace will show if that is the case.
+> 
+> Done!. Here comes trace.log.
 
-Applied and queued up for -stable.
+so this is the culprit command.
+
+< HCI Command: Intel Write BD Data (0x3f|0x002f) plen 80
+        Address: 00:00:00:00:00:00 (OUI 00-00-00)
+        ...
+> HCI Event: Command Status (0x0f) plen 4
+      Intel Write BD Data (0x3f|0x002f) ncmd 1
+        Status: Success (0x00)
+> HCI Event: Vendor (0xff) plen 2
+      Intel Write BD Data Complete (0x19)
+        Status: Success (0x00)
+
+There is actually nothing wrong with it and the firmware bseq file clearly says that it is expecting a command status followed by the vendor event. The driver however for simplicity reasons is using __hci_cmd_sync_ev and just waiting for the vendor event since the command status doesn’t offer any useful information in the success case.
+
+Now I think that in the case of __hci_cmd_sync_ev with an extra event expected, we should not print this error when receiving the command status since that is clearly a valid response. How to achieve that, I don’t know yet. Maybe Joao Paulo has an idea.
+
+Regards
+
+Marcel
+
