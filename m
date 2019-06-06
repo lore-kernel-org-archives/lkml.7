@@ -2,133 +2,111 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB13FC28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003FFC28EB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B1F20874
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kdhMAv/S"
+	by mail.kernel.org (Postfix) with ESMTP id C9907207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559815066;
+	bh=XH+qyuLG3h1Zuv0+YbIDecMVGDK3Yf4lc2GyNXDmgCk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SbNBAzz0b1CepFu9PlA2hHvFJhrd+uhBaBB1LPoMBp9+7SSABfdLDs3BAu4OVB5H+
+	 6O9fteF/qsTgn8KC7lWeHSNtZRRtRNRm9i5/wUQWePSbCW0486eWkweilc0JZhsUgm
+	 V+vDrKd77ofy6jm31IzQwcu8XxltnDHMDPPOYaxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfFFJ4P (ORCPT
+        id S1728188AbfFFJ5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:56:15 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46520 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbfFFJ4L (ORCPT
+        Thu, 6 Jun 2019 05:57:46 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41783 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbfFFJ5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:56:11 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x569u3Vm078863;
-        Thu, 6 Jun 2019 04:56:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559814963;
-        bh=e23WnTYvUjw9k/zJtezvgJoxPPb3ZOXliq0JWnFHfqk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=kdhMAv/SIp7Oz5pW85x+hEflM9hQV60bFXhGgLRwlWb9Cck0v6eujqxbF6mwIdtrn
-         5/l6frjbKgqM1wJyEMs+bnGLIVTQUTf+ftfoxdrwEye8eBlVUrljr0yMBD+v8alu1m
-         CrdX+c8aJvsjnP1QAOZ5RbMdlNoSL/EbS1tvY5QM=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x569u35f054665
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 04:56:03 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 04:56:03 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 04:56:03 -0500
-Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x569thsu016817;
-        Thu, 6 Jun 2019 04:55:59 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <t-kristo@ti.com>, <nm@ti.com>, <robh+dt@kernel.org>
-CC:     <lokeshvutla@ti.com>, <bgolaszewski@baylibre.com>,
-        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <j-keerthy@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC RESEND PATCH v2 4/4] arm64: dts: ti: am654-base-board: Add gpio_keys node
-Date:   Thu, 6 Jun 2019 15:26:20 +0530
-Message-ID: <20190606095620.6211-5-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606095620.6211-1-j-keerthy@ti.com>
-References: <20190606095620.6211-1-j-keerthy@ti.com>
+        Thu, 6 Jun 2019 05:57:45 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 107so1370732otj.8;
+        Thu, 06 Jun 2019 02:57:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XH+qyuLG3h1Zuv0+YbIDecMVGDK3Yf4lc2GyNXDmgCk=;
+        b=G7VrrbtpCxh/rN1JAhQrEvmREQYuCw3NR5KRlDQ7GRse0x1joem1ncsm764VVo2r9h
+         IwVIWi9AOseuQ5tqTkH0G4nQGZsolIMHZhW07QsrZjWsKaUi7/2L71LXExdv5XrWFyv8
+         VboxH9tM9U3k85DA8puxNAm85EaOUGbGLEQ+KoTLjuIhznA7uvC2WLyfEVPXgTnvAyPV
+         1duwsDrhlMYcXpmOhPoTifhX/L5JpOXVEOCyW0/D0ouXj4Xhn4iFRz4t6M4Wubautshl
+         aK82DCBJu/juTLxMdKKzxcWX9CgnbAcu41Ak6Qlp5Uk5inI8ZBJrK7ehwBvzLpsPcxym
+         r7Cw==
+X-Gm-Message-State: APjAAAWBWgKpnAbfrJ3xvUFEt2fDCCI/dTA/MzDKLHhtKzBe3pVYSGXh
+        DwrB1OfLeZIWU2H3FMRNCK5HyXc6JmipdmBIbQI=
+X-Google-Smtp-Source: APXvYqy5nqB0n3eU73l8b059KjjRZ1IWKzGCTX8XEy5gMjkUWBhjcYRq934pC1uevpc9TibD4eCiQLkvJ8Ih4I4t1Ik=
+X-Received: by 2002:a9d:6b98:: with SMTP id b24mr13628927otq.189.1559815065036;
+ Thu, 06 Jun 2019 02:57:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
+ <1559747630-28065-8-git-send-email-suzuki.poulose@arm.com>
+ <CAJZ5v0h+maPj-ijKV_vvQBpHD7N-VMiAqSeyztAkiUR9E2WdmQ@mail.gmail.com> <1f230eb7-f4e3-ed4e-960d-c3bbb60f0a18@arm.com>
+In-Reply-To: <1f230eb7-f4e3-ed4e-960d-c3bbb60f0a18@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 6 Jun 2019 11:57:33 +0200
+Message-ID: <CAJZ5v0i0WP88+vTEheSTfAoSi5nEdjaLs4KOGxXK3_AoPhPrhg@mail.gmail.com>
+Subject: Re: [PATCH 07/13] drivers: Add generic match helper by ACPI_COMPANION device
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are 2 push buttons: SW5 and SW6 that are basically connected to
-WKUP_GPIO0_24 and WKUP_GPIO0_27 respectively. Add the respective
-nodes and the pinctrl data to set the mode to GPIO and Input.
+On Thu, Jun 6, 2019 at 11:28 AM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+>
+>
+> On 06/06/2019 10:17, Rafael J. Wysocki wrote:
+> > On Wed, Jun 5, 2019 at 5:14 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> >>
+> >> Add a generic helper to match a device by the acpi device.
+> >
+> > "by its ACPI companion device object", please.
+>
+> Sure.
+>
+> >
+> > Also, it would be good to combine this patch with the patch(es) that
+> > cause device_match_acpi_dev() to be actually used.
+> >
+> > Helpers without any users are arguably not useful.
+>
+> Sure, the helpers will be part of the part2 of the whole series,
+> which will actually have the individual subsystems consuming the
+> new helpers. For your reference, it is available here :
+>
+> http://linux-arm.org/git?p=linux-skp.git;a=shortlog;h=refs/heads/driver-cleanup/v2
+>
+> e.g:
+> http://linux-arm.org/git?p=linux-skp.git;a=commit;h=59534e843e2f214f1f29659993f6e423bef16b28
+>
+> I could simply pull those patches into this part, if you prefer that.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- .../arm64/boot/dts/ti/k3-am654-base-board.dts | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Not really.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index cf1aa276a1ea..ea50b6e36eff 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -6,6 +6,7 @@
- /dts-v1/;
- 
- #include "k3-am654.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	compatible =  "ti,am654-evm", "ti,am654";
-@@ -33,6 +34,25 @@
- 			no-map;
- 		};
- 	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&push_button_pins_default>;
-+
-+		sw5 {
-+			label = "GPIO Key USER1";
-+			linux,code = <BTN_0>;
-+			gpios = <&wkup_gpio0 24 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		sw6 {
-+			label = "GPIO Key USER2";
-+			linux,code = <BTN_1>;
-+			gpios = <&wkup_gpio0 27 GPIO_ACTIVE_LOW>;
-+		};
-+	};
- };
- 
- &wkup_pmx0 {
-@@ -42,6 +62,13 @@
- 			AM65X_WKUP_IOPAD(0x00e4, PIN_INPUT, 0) /* (AD6) WKUP_I2C0_SDA */
- 		>;
- 	};
-+
-+	push_button_pins_default: push_button__pins_default {
-+		pinctrl-single,pins = <
-+			AM65X_WKUP_IOPAD(0x0030, PIN_INPUT, 7) /* (R5) WKUP_GPIO0_24 */
-+			AM65X_WKUP_IOPAD(0x003c, PIN_INPUT, 7) /* (P2) WKUP_GPIO0_27 */
-+		>;
-+	};
- };
- 
- &main_pmx0 {
--- 
-2.17.1
+I'd rather do it the other way around: push the introduction of the
+helpers to part 2.
 
+> However, that would be true for the other patches in the part2.
+> I am open to suggestions, on how to split the series.
+
+You can introduce each helper along with its users in one patch.
+
+This way the total number of patches will be reduced and they will be
+easier to review IMO.
