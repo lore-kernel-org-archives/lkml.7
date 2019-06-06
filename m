@@ -2,143 +2,171 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE25C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB4DC28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAA12089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:29:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAlI2KM0"
+	by mail.kernel.org (Postfix) with ESMTP id 4455020872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbfFFS3y (ORCPT
+        id S1729274AbfFFSbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:29:54 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44423 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729165AbfFFS3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:29:53 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x47so3804314qtk.11;
-        Thu, 06 Jun 2019 11:29:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VDyWzmRCEFjiSNNaRnKgaThnkb6qt5FoNhaBpkNRo4o=;
-        b=AAlI2KM0uk4kE32HxvkLoOpHYXsGwTmmS3guDD0J9itTCOT6EA1N308hWHCK6p1paf
-         hXwv9mzUL7eVRRjl9LVk2FPptt5QYiUu6AmVQyXYVNYYZnsP2Q7nk6fhdiFK3E0YtFOF
-         hDSsyKUbrWsQ/w+amz1hTw34jj+O3oSjUy7CMFCRs2NKPxM/ZBOViJFwcsAHTSCJrmIp
-         ZcV1xsGbC39xQYk0EcD7iG2S1vRg61MUF/PnpRP/0Fo/W9tDLRi/gyfnyN7koKIYsUkL
-         ZJrvGlnj6+fYdGO9e2EHTA3xFR3QM7er5dSgLvkfIUDMqBQ3vGFvBxdnUPcD6LQBkurK
-         nrXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VDyWzmRCEFjiSNNaRnKgaThnkb6qt5FoNhaBpkNRo4o=;
-        b=OstfW8VTnnlEVel9NlPNLnzcHCADNxwYvBQ44TDhDaPWS450hjNGvCNO8K3YyLxzJ/
-         gLZVHqlzcp3uNRVFnhrmbnLjAkctH4+y5F+NNYJJ+PbhvaOENmTQijQB5yRwosK34DjJ
-         7UtMF0tw3/ejaRM6TKFC4afFpHh3HmiSBPtxMPwSJ3jmMFFM+SBzNr+nDJaAciw0lg/v
-         J/g9hJ+J1urldyM/SlJGrOtmrhYcOLxU7DiS7OY3HL+WbCEUPi3vkG1DBlqYf8CzYqXx
-         fk9p3GIWLeDipiXhxnua7mkzjdHtPVMSzHZd7fWJ+epIbxV6nX7K5pRqwNHCXH//WiV7
-         uNOA==
-X-Gm-Message-State: APjAAAW7M3nNBG71QMSDWQyMN9z9YR034LU4CCh4Ub2fMLktid0tcqGo
-        kAwrURwAm82evJtJjpEBslE=
-X-Google-Smtp-Source: APXvYqxSQs6DlT2QSTIZfamR7F6e/5KiLWc1qKb6vFB+/5MPiN3QfN7IcRBzokNHwN+mLuffT0AfyQ==
-X-Received: by 2002:ac8:1855:: with SMTP id n21mr38568496qtk.311.1559845791966;
-        Thu, 06 Jun 2019 11:29:51 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.209.167])
-        by smtp.gmail.com with ESMTPSA id x7sm1581941qth.37.2019.06.06.11.29.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 11:29:51 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 36B6341149; Thu,  6 Jun 2019 15:29:41 -0300 (-03)
-Date:   Thu, 6 Jun 2019 15:29:41 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] perf augmented_raw_syscalls: Document clang
- configuration
-Message-ID: <20190606182941.GE21245@kernel.org>
-References: <20190606094845.4800-1-leo.yan@linaro.org>
- <20190606094845.4800-5-leo.yan@linaro.org>
- <20190606140800.GF30166@kernel.org>
- <20190606143532.GD5970@leoy-ThinkPad-X240s>
+        Thu, 6 Jun 2019 14:31:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42872 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726849AbfFFSbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:31:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A10C1AE4D;
+        Thu,  6 Jun 2019 18:31:49 +0000 (UTC)
+Message-ID: <50edadb7b1b1d74c605d73d48518b5e20638b51a.camel@suse.de>
+Subject: Re: [PATCH v2 4/7] cpufreq: add driver for Raspbery Pi
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>, stefan.wahren@i2se.com
+Cc:     f.fainelli@gmail.com, linux-pm@vger.kernel.org,
+        mturquette@baylibre.com, ptesarik@suse.com,
+        linux-kernel@vger.kernel.org, mbrugger@suse.de, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, ssuloev@orpaltech.com
+Date:   Thu, 06 Jun 2019 20:31:47 +0200
+In-Reply-To: <20190606182335.1D15F20872@mail.kernel.org>
+References: <20190606142255.29454-1-nsaenzjulienne@suse.de>
+         <20190606142255.29454-5-nsaenzjulienne@suse.de>
+         <20190606170949.4A46720652@mail.kernel.org>
+         <eb72a26b55cf17c29df6a7fd3c5def08182e00af.camel@suse.de>
+         <20190606173609.2C3952083D@mail.kernel.org>
+         <153579ddd7e6bd1e5c860a7a01115e47c78a1442.camel@suse.de>
+         <20190606182335.1D15F20872@mail.kernel.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-PCYUiltwEYfTM8wgpO12"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606143532.GD5970@leoy-ThinkPad-X240s>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jun 06, 2019 at 10:35:32PM +0800, Leo Yan escreveu:
-> On Thu, Jun 06, 2019 at 11:08:00AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Jun 06, 2019 at 05:48:45PM +0800, Leo Yan escreveu:
-> > > To build this program successfully with clang, there have three
-> > > compiler options need to be specified:
-> > > 
-> > >   - Header file path: tools/perf/include/bpf;
-> > >   - Specify architecture;
-> > >   - Define macro __NR_CPUS__.
-> > 
-> > So, this shouldn't be needed, all of this is supposed to be done
-> > automagically, have you done a 'make -C tools/perf install'?
-> 
-> I missed the up operation.  But after git pulled the lastest code base
-> from perf/core branch and used the command 'make -C tools/perf
-> install', I still saw the eBPF build failure.
-> 
-> Just now this issue is fixed after I removed the config
-> 'clang-bpf-cmd-template' from ~/.perfconfig;  the reason is I followed
-> up the Documentation/perf-config.txt to set the config as below:
-> 
->   clang-bpf-cmd-template = "$CLANG_EXEC -D__KERNEL__ $CLANG_OPTIONS \
->                           $KERNEL_INC_OPTIONS -Wno-unused-value \
->                           -Wno-pointer-sign -working-directory \
->                           $WORKING_DIR -c $CLANG_SOURCE -target bpf \
->                           -O2 -o -"
-> 
-> In fact, util/llvm-utils.c has updated the default configuration as
-> below:
-> 
->   #define CLANG_BPF_CMD_DEFAULT_TEMPLATE                          \
->                 "$CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS "\
->                 "-DLINUX_VERSION_CODE=$LINUX_VERSION_CODE "     \
->                 "$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
->                 "-Wno-unused-value -Wno-pointer-sign "          \
->                 "-working-directory $WORKING_DIR "              \
->                 "-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
-> 
-> Maybe should update Documentation/perf-config.txt to tell users the
-> real default value of clang-bpf-cmd-template?
 
-Sure, if you fell like doing this, please update and also please figure
-out when the this changed and add a Fixes: that cset,
+--=-PCYUiltwEYfTM8wgpO12
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Its great that you're going thru the docs and making sure the
-differences are noted so that we update the docs, thanks a lot!
+On Thu, 2019-06-06 at 11:23 -0700, Stephen Boyd wrote:
+> Quoting Nicolas Saenz Julienne (2019-06-06 11:10:04)
+> > On Thu, 2019-06-06 at 10:36 -0700, Stephen Boyd wrote:
+> > > Quoting Nicolas Saenz Julienne (2019-06-06 10:22:16)
+> > > > Hi Stephen,
+> > > > Thanks for the review.
+> > > >=20
+> > > > On Thu, 2019-06-06 at 10:09 -0700, Stephen Boyd wrote:
+> > > > > Quoting Nicolas Saenz Julienne (2019-06-06 07:22:56)
+> > > > > > diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c
+> > > > > > b/drivers/cpufreq/raspberrypi-cpufreq.c
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..99b59d5a50aa
+> > > > > > --- /dev/null
+> > > > > > +++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+> > > > > [...]
+> > > > > > +
+> > > > > > +/*
+> > > > > > + * Since the driver depends on clk-raspberrypi, which may retu=
+rn
+> > > > > > EPROBE_DEFER,
+> > > > > > + * all the activity is performed in the probe, which may be de=
+fered
+> > > > > > as
+> > > > > > well.
+> > > > > > + */
+> > > > > > +static struct platform_driver raspberrypi_cpufreq_driver =3D {
+> > > > > > +       .driver =3D {
+> > > > > > +               .name =3D "raspberrypi-cpufreq",
+> > > > > > +       },
+> > > > > > +       .probe          =3D raspberrypi_cpufreq_probe,
+> > > > > > +       .remove         =3D raspberrypi_cpufreq_remove,
+> > > > > > +};
+> > > > > > +module_platform_driver(raspberrypi_cpufreq_driver);
+> > > > >=20
+> > > > > How does this driver probe? Do you have a node in DT named
+> > > > > raspberrypi-cpufreq that matches and probes this? I would think t=
+his
+> > > > > would follow the drivers/cpufreq/cpufreq-dt-platdev.c design wher=
+e
+> > > > > it's
+> > > > > an initcall that probes the board compatible string.
+> > > > >=20
+> > > > > Or, if it depends on clk-raspberrypi probing, maybe it could crea=
+te
+> > > > > the
+> > > > > platform device in that drivers probe function.
+> > > >=20
+> > > > Well you just reviewed that patch :)
+> > >=20
+> > > Ok. So what's your plan?
+> >=20
+> > So as discussed previously with the RPi mantainers, they preferred for =
+the
+> > platform device for raspberrypi-clk to be created by the firmware inter=
+face
+> > driver. IIRC Stefan said it was more flexible and the approach used wit=
+h
+> > RPi's
+> > hwmon driver already. Also, it's not really clear whether this driver r=
+eally
+> > fits the device tree as it wouldn't be describing hardware.
+> >=20
+> > As far as raspberrypi-cpufreq is concerned the max and min frequencies =
+are
+> > configurable in the firmware. So we can't really integrate cpufreq into=
+ the
+> > device tree as we need to create the opp table dynamically. Hence the
+> > dedicated
+> > driver. On top of that the CPU might not have a clock during the init
+> > process,
+> > as both the firmware interface and raspberrypi-clk can be compiled as
+> > modules.
+> > So I decided the simplest solution was to create the raspberrypi-cpufre=
+q
+> > platform device at the end of raspberrypi-clk's probe.
+> >=20
+> > Once raspberrypi-cpufreq is loaded it queries the min/max frequencies,
+> > populates the CPU's opp table and creates an instance of cpufreq-dt. Wh=
+ich
+> > finally can operate, without the need of any dt info, as opp tables are
+> > populated and CPUs have a clock.
+> >=20
+> > I hope this makes it a little more clear :).
+> >=20
+>=20
+> Yes, thanks. I see that largely follows the commit description so it
+> looks OK to me.
+>=20
 
-- Arnaldo
+Thanks!
+
+
+--=-PCYUiltwEYfTM8wgpO12
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz5XBMACgkQlfZmHno8
+x/7vFwgAnjzWaIFSw0AxW4nf31cfoR9r+HpJidC2eUQM6yOtUWsHYyQkO2rYhnko
+wEZ2B2agV3Ya0AE4xD4gklrTm5J2E/Wsd1jVX4SBWvlCuiKFSEad4zG0xeR+HvRP
+gMOArg11sPi4INEfqaDANfQyPoMdD9f7qVGlytyV5Fb2028FCJwVMe7VlXbTj2/K
+WdD5dIU/VXIEqqV5SelI5CoXt2J52kGDVg6+rIM/3fu+KNdUE/WS5sstEdKUksAF
+JxDel6WB/mVepEQ3lMDX0X22ThhqR984OJYPiIFfHzVafoN+1A1lGeWHa2DmcSyM
+QtCewkj8IzG0h6bz4O+0yyfFnqjZTA==
+=aEU8
+-----END PGP SIGNATURE-----
+
+--=-PCYUiltwEYfTM8wgpO12--
+
