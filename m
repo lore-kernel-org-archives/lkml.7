@@ -2,105 +2,103 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2CDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62125C28D1C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DAC2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:53:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="SWwsdcCJ"
+	by mail.kernel.org (Postfix) with ESMTP id 44B122070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfFFIxn (ORCPT
+        id S1727506AbfFFIyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:53:43 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:62501 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfFFIxn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:53:43 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x568qm01005372;
-        Thu, 6 Jun 2019 17:52:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x568qm01005372
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559811169;
-        bh=pZ4HBFAh5BtsZWFsg7wyba7v0h5C2a1XnrOWlBArZ2c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SWwsdcCJoFRGyTO417deZc3agtRGUaLTCfCX7qbigFxKX/OhtekU/eoC3QZq/rEN3
-         ZbhbTxFHpqVsvui8UIwuANeKsVZe0VAzt7IQp4LTMxAmChYxRJEiM6QQHS0U1tHGSw
-         +1VhZAEk85yUVjW9zbjcwB2HyJT1id7m2E4u93G9VfQVVO6yRiWVmwDeYqTHzXr5n3
-         67HiKpovypkUzYiOZ2uo8BLoh5CJdH6O0tvw+baq7uTgP/wg8igXEOn9/NuALprb2m
-         CESNGX8KGAK1YV3cB/Ykm8q4RaXWKoaAEu5etB+rzM6bIRcHuk0B726esUfdkTXd0N
-         qDB/GfUcOGa0A==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] hwmon: (smsc47m1) fix (suspicious) outside array bounds warnings
-Date:   Thu,  6 Jun 2019 17:52:42 +0900
-Message-Id: <20190606085242.31347-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 6 Jun 2019 04:54:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37502 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727420AbfFFIyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:54:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E56C8AD56;
+        Thu,  6 Jun 2019 08:54:10 +0000 (UTC)
+Message-ID: <1559811234.21928.9.camel@suse.com>
+Subject: Re: KASAN: use-after-free Read in device_del
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+93f2f45b19519b289613@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, syzkaller-bugs@googlegroups.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Date:   Thu, 06 Jun 2019 10:53:54 +0200
+In-Reply-To: <000000000000fa11f3058a69d67b@google.com>
+References: <000000000000fa11f3058a69d67b@google.com>
+Content-Type: multipart/mixed; boundary="=-WHPQrjiUrTPTkJwCTFpN"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kbuild test robot reports outside array bounds warnings.
 
-This is reproducible for ARCH=sh allmodconfig with the kernel.org
-toolchains available at:
+--=-WHPQrjiUrTPTkJwCTFpN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/x86_64-gcc-8.1.0-nolibc-sh4-linux.tar.xz
+Am Montag, den 03.06.2019, 04:41 -0700 schrieb syzbot:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1684d87ca00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=193d8457178b3229
+> dashboard link: https://syzkaller.appspot.com/bug?extid=93f2f45b19519b289613
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
 
-  CC [M]  drivers/hwmon/smsc47m1.o
-drivers/hwmon/smsc47m1.c: In function 'fan_div_store':
-drivers/hwmon/smsc47m1.c:370:49: warning: array subscript [0, 2] is outside array bounds of 'u8[3]' {aka 'unsigned char[3]'} [-Warray-bounds]
-  tmp = 192 - (old_div * (192 - data->fan_preload[nr])
-                                ~~~~~~~~~~~~~~~~~^~~~
-drivers/hwmon/smsc47m1.c:372:19: warning: array subscript [0, 2] is outside array bounds of 'u8[3]' {aka 'unsigned char[3]'} [-Warray-bounds]
-  data->fan_preload[nr] = clamp_val(tmp, 0, 191);
-  ~~~~~~~~~~~~~~~~~^~~~
-drivers/hwmon/smsc47m1.c:373:53: warning: array subscript [0, 2] is outside array bounds of 'const u8[3]' {aka 'const unsigned char[3]'} [-Warray-bounds]
-  smsc47m1_write_value(data, SMSC47M1_REG_FAN_PRELOAD[nr],
-                             ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+Will this do?
 
-Looking at the code, I believe these are false positives.
+	Regards
+		Oliver
 
-While it is ridiculous to patch our driver to make the insane
-compiler happy, clarifying the unreachable path will be helpful
-not only for compilers but also for humans.
+--=-WHPQrjiUrTPTkJwCTFpN
+Content-Disposition: attachment;
+	filename*0=0001-usb-hso-initialize-so-that-we-can-tear-down-in-the-e.pat;
+	filename*1=ch
+Content-Transfer-Encoding: base64
+Content-Type: text/x-patch;
+	name="0001-usb-hso-initialize-so-that-we-can-tear-down-in-the-e.patch";
+	charset="UTF-8"
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+RnJvbSA2ODY3YWJjMTcwMWYxODg5MmQzMmU4YWVhZjY0NDkwMWU5YmNiZjgyIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
+OiBXZWQsIDUgSnVuIDIwMTkgMTM6NDk6MjEgKzAyMDAKU3ViamVjdDogW1BBVENIXSB1c2I6IGhz
+bzogaW5pdGlhbGl6ZSBzbyB0aGF0IHdlIGNhbiB0ZWFyIGRvd24gaW4gdGhlIGVycm9yCiBjYXNl
+CgpJbml0dWFsaXphdGlvbiBtdXN0IGZvbGxvdyB0aGUgc2VxdWVuY2Ugc3R1ZmYgaXMgdW5kb25l
+IGluIGNhc2UKd2UgYmFpbCBvdXQuIFRodXMgdGhlIHBhcmVudCBwb2ludGVyIG11c3QgYmUgc2V0
+IGVhcmxpZXIuCgpTaWduZWQtb2ZmLWJ5OiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29t
+PgotLS0KIGRyaXZlcnMvbmV0L3VzYi9oc28uYyB8IDYgKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwg
+MyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0
+L3VzYi9oc28uYyBiL2RyaXZlcnMvbmV0L3VzYi9oc28uYwppbmRleCA2YTBlY2RkZmYzMTAuLjRk
+OTEwMGZiOWY2ZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvdXNiL2hzby5jCisrKyBiL2RyaXZl
+cnMvbmV0L3VzYi9oc28uYwpAQCAtMjY1Myw2ICsyNjUzLDkgQEAgc3RhdGljIHN0cnVjdCBoc29f
+ZGV2aWNlICpoc29fY3JlYXRlX2J1bGtfc2VyaWFsX2RldmljZSgKIAkJCQkgICAgIEJVTEtfVVJC
+X1RYX1NJWkUpKQogCQlnb3RvIGV4aXQ7CiAKKwkvKiBhbmQgcmVjb3JkIHRoaXMgc2VyaWFsICov
+CisJc2V0X3NlcmlhbF9ieV9pbmRleChzZXJpYWwtPm1pbm9yLCBzZXJpYWwpOworCiAJc2VyaWFs
+LT5pbl9lbmRwID0gaHNvX2dldF9lcChpbnRlcmZhY2UsIFVTQl9FTkRQT0lOVF9YRkVSX0JVTEss
+CiAJCQkJICAgICBVU0JfRElSX0lOKTsKIAlpZiAoIXNlcmlhbC0+aW5fZW5kcCkgewpAQCAtMjY2
+OSw5ICsyNjcyLDYgQEAgc3RhdGljIHN0cnVjdCBoc29fZGV2aWNlICpoc29fY3JlYXRlX2J1bGtf
+c2VyaWFsX2RldmljZSgKIAogCXNlcmlhbC0+d3JpdGVfZGF0YSA9IGhzb19zdGRfc2VyaWFsX3dy
+aXRlX2RhdGE7CiAKLQkvKiBhbmQgcmVjb3JkIHRoaXMgc2VyaWFsICovCi0Jc2V0X3NlcmlhbF9i
+eV9pbmRleChzZXJpYWwtPm1pbm9yLCBzZXJpYWwpOwotCiAJLyogc2V0dXAgdGhlIHByb2MgZGly
+cyBhbmQgZmlsZXMgaWYgbmVlZGVkICovCiAJaHNvX2xvZ19wb3J0KGhzb19kZXYpOwogCi0tIAoy
+LjE2LjQKCg==
 
-Changes in v2:
- - Use unreachable() instead of WARN_ON()
- - Mention that the report seems suspicious
 
- drivers/hwmon/smsc47m1.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/hwmon/smsc47m1.c b/drivers/hwmon/smsc47m1.c
-index cc6aca6e436c..6d366c9cb906 100644
---- a/drivers/hwmon/smsc47m1.c
-+++ b/drivers/hwmon/smsc47m1.c
-@@ -351,6 +351,8 @@ static ssize_t fan_div_store(struct device *dev,
- 		tmp |= data->fan_div[2] << 4;
- 		smsc47m1_write_value(data, SMSC47M2_REG_FANDIV3, tmp);
- 		break;
-+	default:
-+		unreachable();
- 	}
- 
- 	/* Preserve fan min */
--- 
-2.17.1
+--=-WHPQrjiUrTPTkJwCTFpN--
 
