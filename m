@@ -2,117 +2,134 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19DAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CC7C28EBA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94DA8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A38420684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oGpZKv7v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYVyDjB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfFFXKw (ORCPT
+        id S1727233AbfFFXLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 19:10:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43810 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfFFXKv (ORCPT
+        Thu, 6 Jun 2019 19:11:35 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40949 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfFFXLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 19:10:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WrR8a0nd7OqHeGMYq59lvGgYOhTcXv05lY92PTWM2CQ=; b=oGpZKv7v1449BYsCbjNBM23I59
-        AeS10K3WrsuNY4wsvrv1v35sohJrGMRvaGQEKNq3MdRM8lvHiWBOBBBoPxXt+FXCQN5Fnem47OjSY
-        Qzwa3F1vokFNDVeBNOtxbdTgUvwUk7VOD/k/FinOC44l2cTTG0crQ1sWOAIpg3/Jiq9Y4yiW0I9Aw
-        WGO/zPFTdSE6bCX6qM5sF9XMPGXawRE5EctHBBcCVoct1Leh53VSTvD20ebDJhUzjIzEeDd4v3a1q
-        zUAlixJtXCC1UQp7bOmgCiTpB1DT/LPw8z15jOb8ERhJ/KtT9nqL0MQW22vuzZ1QlwiEUEPuabx4m
-        BH/G2evQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hZ1Wn-0007f1-Gj; Thu, 06 Jun 2019 23:10:37 +0000
-Subject: Re: [PATCH v2 2/3] media: imx7-media-csi: add i.MX6UL support
-To:     =?UTF-8?Q?S=c3=a9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>
-References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
- <20190606153825.8183-2-sebastien.szymanski@armadeus.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <92ca6e6e-2ebd-cec4-4f75-2674fd2c3d99@infradead.org>
-Date:   Thu, 6 Jun 2019 16:10:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 19:11:35 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r18so91420edo.7;
+        Thu, 06 Jun 2019 16:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QEUnkE6Im8einmZj2C6MIq4PTwm8bjOQ1E1LQ2F5/1Q=;
+        b=iYVyDjB27ZoY2J+fA/C4YM+TJgoVpnrkcjDB56OyGXRumXAtq/rIt8zYaszUOEfjp1
+         iPAboJAJVTnITpR9DNOFQtSeD0c6dqkLPEGmQmdkMBlU09vEmrZqFwAPm6uv1Hl5xgkq
+         RFeZRXsei4Cc6qaXjjzR19dokNaTAcwuk3E3husnIII9AlycYH/HFNwBjqenSlgFOAwb
+         n1jnQkUAaQHPJfLnrY43VBExrRNH+UN9OyfAMk4fAuur0zlxdmCQ4oXh03j3h6TPRNMn
+         GdsN3RA49FTjxKEnDS0j5IG79Yyz+2GasCYISZe801tgVCjmOOuDCFoYMCqdiSL61bpN
+         jLdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QEUnkE6Im8einmZj2C6MIq4PTwm8bjOQ1E1LQ2F5/1Q=;
+        b=TOO33hjXeIoKO1zs2DF9NxFt05gjpCj+WuuCzjXV0svHKcjHn8cT1mhQQDHnhZhnXr
+         VkCxR4+cB6CXenEuCw1U4UaLPBZkLBLn8ZNfBffHmnMj8QDlDWtFQ+z1LAmM9tOoIrwT
+         qgkzEAl9Drsv8cknuPMf8pAAv/iricoB3WOtracCO2W0LsRJLTHVSS8CDo8x7OAwJuGT
+         eKm+Fi7mFkR03G5wpweEasxsz26arl5qcDddIhTWHQXEBYc8Ww3qrCWVsLvBGrxD8/XA
+         e57mtZRVJkAXzj4HcMmisLa4vmcHnksMPrKvpFpV8fZONpX+msnrQkKbQUp2LLPgteNb
+         pBxw==
+X-Gm-Message-State: APjAAAVnHz/Xdj3Dc3CKGwdpxvF/PVKfFKlIQuHb5fufDa2MiN7HpJaX
+        F9HfHtILvpLy/cJuI5N9zdc=
+X-Google-Smtp-Source: APXvYqzN7vH2/T1J4iZHUGpAwwlzUurd20U6+aeJE3pXfxKOhkrG4L0EgT0PfhZ6Ggh/Kh0AdX1QSA==
+X-Received: by 2002:a50:f5c2:: with SMTP id x2mr6609917edm.13.1559862693382;
+        Thu, 06 Jun 2019 16:11:33 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id a17sm72898edt.63.2019.06.06.16.11.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 16:11:32 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 16:11:30 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Joe Korty <Joe.Korty@concurrent-rt.com>
+Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alistair Strachan <astrachan@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [BUG 4.4.178] x86_64 compat mode futexes broken
+Message-ID: <20190606231130.GA69331@archlinux-epyc>
+References: <20190606211140.GA52454@zipoli.concurrent-rt.com>
 MIME-Version: 1.0
-In-Reply-To: <20190606153825.8183-2-sebastien.szymanski@armadeus.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606211140.GA52454@zipoli.concurrent-rt.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 8:38 AM, Sébastien Szymanski wrote:
-> i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L support
-> to imx7-media-csi driver.
+On Thu, Jun 06, 2019 at 09:11:43PM +0000, Joe Korty wrote:
+> Starting with 4.4.178, the LTP test
 > 
-> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-> ---
+>   pthread_cond_wait/2-3
 > 
-> Changes for v2:
->  - rebase on top of linuxtv/master
->  - mention i.MX6UL/L in header and Kconfig help text
->  - rename csi_type to csi_soc_id
+> when compiled on x86_64 with 'gcc -m32', started failing.  It generates this log output:
 > 
->  drivers/staging/media/imx/Kconfig          |  4 +-
->  drivers/staging/media/imx/imx7-media-csi.c | 62 ++++++++++++++++------
->  2 files changed, 49 insertions(+), 17 deletions(-)
+>   [16:18:38]Implementation supports the MONOTONIC CLOCK but option is disabled in test.           
+>   [16:18:38]Test starting
+>   [16:18:38] Process-shared primitive will be tested
+>   [16:18:38] Alternative clock for cond will be tested
+>   [16:18:38]Test 2-3.c FAILED: The child did not own the mutex inside the cleanup handler
 > 
-> diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/media/imx/Kconfig
-> index ad3d7df6bb3c..8b6dc42c39e0 100644
-> --- a/drivers/staging/media/imx/Kconfig
-> +++ b/drivers/staging/media/imx/Kconfig
-> @@ -22,11 +22,11 @@ config VIDEO_IMX_CSI
->  	  A video4linux camera sensor interface driver for i.MX5/6.
->  
->  config VIDEO_IMX7_CSI
-> -	tristate "i.MX7 Camera Sensor Interface driver"
-> +	tristate "i.MX6UL/L / i.MX7 Camera Sensor Interface driver"
->  	depends on VIDEO_IMX_MEDIA && VIDEO_DEV && I2C
->  	default y
 
-Hi,
-I realize that this "default y" is not part of this patch set, but we have
-pretty strong guidance that a driver should not default to 'y' unless it is
-needed for a system to boot.  If this driver is optional, then please drop
-the 2 occurrences of "default y" in this Kconfig file.
+What is the exact build command + test case command? I'd like to
+reproduce this myself.
 
-thanks.
->  	help
->  	  Enable support for video4linux camera sensor interface driver for
-> -	  i.MX7.
-> +	  i.MX6UL/L or i.MX7.
->  endmenu
->  endif
+> A git bisection between 4.4.177..178 shows that this commit is the culprit:
+> 
+>   Git-Commit: 79739ad2d0ac5787a15a1acf7caaf34cd95bbf3c
+>   Author: Alistair Strachan <astrachan@google.com>
+>   Subject: [PATCH] x86: vdso: Use $LD instead of $CC to link
+> 
 
+Have you tested 4.4.180? There were two subsequent fixes to this patch
+in 4.4:
 
--- 
-~Randy
+485d15db01ca ("kbuild: simplify ld-option implementation")
+07d35512e494 ("x86/vdso: Pass --eh-frame-hdr to the linker")
+
+> And, indeed, when I back this patch out of 4.4.178 proper, the above test
+> passes again.
+> 
+> Please consider backing this patch out of linux-4.4.y, and from master, and from
+> any other linux branch it has been backported to.
+> 
+
+So this is broken in mainline too?
+
+> PS: In backing it out of 4.4.178, I first backed out
+> 
+>    7c45b45fd6e928c9ce275c32f6fa98d317e6f5ee
+>    
+> This is a follow-on vdso patch which collides with the
+> patch we are interested in removing.  As it claims to be
+> only removing redundant code, it probably should never
+> have been backported in the first place.
+
+While it is redundant for ld.bfd, it causes a build failure with the
+release version of ld.lld:
+
+https://github.com/ClangBuiltLinux/linux/issues/31
+
+Cheers,
+Nathan
