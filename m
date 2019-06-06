@@ -2,121 +2,115 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687BAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8001AC28D1B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A27220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5575C20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ITG5F6Pn"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="A4Tz+HeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfFFHxc (ORCPT
+        id S1726820AbfFFHxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:53:32 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38335 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFHxc (ORCPT
+        Thu, 6 Jun 2019 03:53:53 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:43781 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFHxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:53:32 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x567qvZX1883397
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 6 Jun 2019 00:52:57 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x567qvZX1883397
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559807578;
-        bh=fQ2bnxPL1VkezneG+glmF6X17iRoO7R+D2CFWkkdWtw=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=ITG5F6Pn/rNzihSr1KcBLcqxeLjn12VVIHicDw8yM7uhA2jd7pcS+liVfrTg8xS/6
-         jNgTtcAd8Q3hW2+YWxlx4j3SXUgIpI+J3dP8ZVFtrqRYAZv7bHmU6vFpwfe6JCjB1H
-         A8kN+RpQLsMKRT+eyiNqDW/3dNfLMY/eodKKigIOcd43YYJSwebqRoJLsaXYOKB+v1
-         eNrLrPgghzXrsNlYBRdqENYZKCNnt1LTppnuvqebp0z+SU5DPXEwgEUaqK2H+vkLqo
-         DvT1y5WCC7HY7/wz8OqDUxt7pqt6zlJ7sa7P+4eB/vugLy373j8adw6yZbbYm8m139
-         zvCyaKfxCgZMw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x567quHG1883394;
-        Thu, 6 Jun 2019 00:52:56 -0700
-Date:   Thu, 6 Jun 2019 00:52:56 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-e35faeb64146f2015f2aec14b358ae508e4066db@git.kernel.org>
-Cc:     tony.luck@intel.com, hpa@zytor.com, mingo@redhat.com,
-        qiuxu.zhuo@intel.com, rajneesh.bhardwaj@linux.intel.com,
-        bp@suse.de, x86@kernel.org, kan.liang@linux.intel.com,
-        mingo@kernel.org, andriy.shevchenko@linux.intel.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        tglx@linutronix.de
-Reply-To: bp@suse.de, x86@kernel.org, tony.luck@intel.com, hpa@zytor.com,
-          qiuxu.zhuo@intel.com, mingo@redhat.com,
-          rajneesh.bhardwaj@linux.intel.com,
-          andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, tglx@linutronix.de,
-          kan.liang@linux.intel.com, mingo@kernel.org
-In-Reply-To: <20190603134122.13853-1-kan.liang@linux.intel.com>
-References: <20190603134122.13853-1-kan.liang@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/CPU: Add more Icelake model numbers
-Git-Commit-ID: e35faeb64146f2015f2aec14b358ae508e4066db
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 6 Jun 2019 03:53:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1559807632; x=1591343632;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=4rKMDgk0idWhZbYe/MH2P9996yrzfb/TgPhooH3LB20=;
+  b=A4Tz+HeUgJv+KhXGNR8ov3D9CQ6eB32ywTpXglB2b28lRirIIKm9ImXv
+   jbuhUf6jZ+hOe03o1tKfzletybDDgEL0DbJPB/68Im6kcG6bBgDUjfUwy
+   sr4aE32vZpViHiflo1WsSLiT9O62N1DiqMEgNQAgbwMOPfHMv1uxIBsui
+   A=;
+X-IronPort-AV: E=Sophos;i="5.60,558,1549929600"; 
+   d="scan'208";a="399612691"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-3714e498.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 06 Jun 2019 07:53:49 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2b-3714e498.us-west-2.amazon.com (Postfix) with ESMTPS id 0F26AA27E5;
+        Thu,  6 Jun 2019 07:53:49 +0000 (UTC)
+Received: from EX13D21UWB001.ant.amazon.com (10.43.161.108) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 6 Jun 2019 07:53:48 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D21UWB001.ant.amazon.com (10.43.161.108) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 6 Jun 2019 07:53:48 +0000
+Received: from [10.107.3.17] (10.107.3.17) by mail-relay.amazon.com
+ (10.43.161.249) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Thu, 6 Jun 2019 07:53:43 +0000
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+To:     Borislav Petkov <bp@alien8.de>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "james.morse@arm.com" <james.morse@arm.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+ <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+ <20190531051400.GA2275@cz.tnic>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+Date:   Thu, 6 Jun 2019 10:53:42 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190531051400.GA2275@cz.tnic>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e35faeb64146f2015f2aec14b358ae508e4066db
-Gitweb:     https://git.kernel.org/tip/e35faeb64146f2015f2aec14b358ae508e4066db
-Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Mon, 3 Jun 2019 06:41:20 -0700
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Thu, 6 Jun 2019 09:42:36 +0200
 
-x86/CPU: Add more Icelake model numbers
 
-Add the CPUID model numbers of Icelake (ICL) desktop and server
-processors to the Intel family list.
+On 5/31/2019 8:14 AM, Borislav Petkov wrote:
+> On Fri, May 31, 2019 at 01:15:33AM +0000, Herrenschmidt, Benjamin wrote:
+>> This isn't terribly helpful, there's nothing telling anybody which of
+>> those files corresponds to an ARM SoC :-)
+> 
+> drivers/edac/altera_edac.c is one example.
+> 
+> Also, James and I have a small writeup on how an arm driver should look
+> like, we just need to polish it up and post it.
+> 
+> James?
+> 
+>> That said ...
+>>
+>> You really want a single EDAC driver that contains all the stuff for
+>> the caches, the memory controller, etc... ?
+> 
+> Yap.
 
- [ Qiuxu: Sort the macros by model number. ]
+Disagree. The various drivers don't depend on each other.
+I think we should keep the drivers separated as they are distinct and 
+independent IP blocks.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Cc: rui.zhang@intel.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190603134122.13853-1-kan.liang@linux.intel.com
----
- arch/x86/include/asm/intel-family.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 9f15384c504a..310118805f57 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -52,6 +52,9 @@
- 
- #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
- 
-+#define INTEL_FAM6_ICELAKE_X		0x6A
-+#define INTEL_FAM6_ICELAKE_XEON_D	0x6C
-+#define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
- #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
- 
- /* "Small Core" Processors (Atom) */
+> 
