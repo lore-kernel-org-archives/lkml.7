@@ -2,134 +2,446 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AE2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417B9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D722083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scdo9fwo"
+	by mail.kernel.org (Postfix) with ESMTP id E9B9A20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559785029;
+	bh=HXQXWCIOFNBXcHkDWz5g3maJSD2bDpycPPbzZqiERlA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zet6RxW3Jd693e6fftoXrSImud/LmdPQizPliIM7HMveRVbtjVrfJVVwvcIkeQ8Mg
+	 snMsRzqy0Idw0or52AmiygeZB2B8lZgYHdXYLrG0gzkrs94nz7NsQUSfV4MT7BWuTE
+	 wSP3DUuug1YqlZ+J/YQMbVurrQWXkNWL9rfP0AmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfFFBfc (ORCPT
+        id S1726711AbfFFBhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 21:35:32 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42455 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfFFBfc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 21:35:32 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e6so342990pgd.9;
-        Wed, 05 Jun 2019 18:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/QxdqYoMgOzIx2YVy8fAWt2ho9RD+sHh6bkx2lXobUc=;
-        b=scdo9fwoyDWgCiLeWlCocSXX8chUMiPIhNZpPAKowgNRzG1R8Dy3x9SE1CgkbzhNZg
-         fmn2MgtKtuOpBhYiXDg9XQWSwYYUN3IKiZFis/6tPpYO5ZDsQRzwAgZSk5YZEGRgN/Q4
-         RIFqN8t5eeVdCbwTLNoq+Eo67lyVOaGWdGmjTtSsDNfg0do+c9V2dmJhKLAyj1+e068c
-         joRs4TFnzFp7+xJt8KNcjMKcJNWwonPRqapKoAUDJaxpD96pKaPCnDxhpuuASdDLIPLm
-         mbFyvZ1iABUiT+x15uEyJ8nFulDQwix1CtIo0CtzkHZ03rI7YKG9jQc5sw9WQfsqHmqw
-         NdhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/QxdqYoMgOzIx2YVy8fAWt2ho9RD+sHh6bkx2lXobUc=;
-        b=nGi7gvRP16LUBTrqB2KyAsJlreLHFXBYWdZ5SbUOhCOl/u9xH6zmYrSoa8ocOyPGrC
-         Sy198jvimRgLVpwuhr4loSmuS5E80ga3BmKtYwFQWf+VrmDrz908FuJlf50B/C4CZvqW
-         XWLMb1LppDVJ+56kLu00OAFIijWzkjefZ9SdOQDoeGunCnNul6A/8yrkOzWxNskYUztO
-         i1hBYNByz1O5iQNJqqwUd0bl8hZ3klBIdcHXL9bBMy5lM2kTdVkpV45HFyM21Qm5zNBq
-         peYuVPrcnTC6P4G/6QlUmKY9Hj8B5A+jcybVmtxM9rOk/VX2Ilnw36Cop43XmEcs9MCN
-         OP8A==
-X-Gm-Message-State: APjAAAVlcZPuD/9/LkxBct7tVnWCv4oGbkVSTtqEPBRyp4jMG5zuIsPZ
-        xBK7Lzjthp/fYbwchMoFqKFrBdjK
-X-Google-Smtp-Source: APXvYqzdoP302oG1MIvKL5EugKA3mai1ZTWLgs0PUz/RmS2qaC9g2Xw2XdozsJg1A7y5V6ZBxA3hVQ==
-X-Received: by 2002:a62:3287:: with SMTP id y129mr44663628pfy.101.1559784931144;
-        Wed, 05 Jun 2019 18:35:31 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a22sm188409pfn.173.2019.06.05.18.35.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 18:35:29 -0700 (PDT)
-Subject: Re: [PATCH 3/3] drivers: hwmon: i5k_amb: remove unnecessary #ifdef
- MODULE
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, jdelvare@suse.com, khalid@gonehiking.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        aacraid@microsemi.com, linux-pm@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <1559397700-15585-1-git-send-email-info@metux.net>
- <1559397700-15585-4-git-send-email-info@metux.net>
- <20190601224946.GA6483@roeck-us.net>
- <e91fabd4-a7a4-3afa-9f3a-95a6d90e8c7b@metux.net>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <b830e977-88a6-7780-a048-08d8847fc325@roeck-us.net>
-Date:   Wed, 5 Jun 2019 18:35:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 5 Jun 2019 21:37:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbfFFBhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 21:37:07 -0400
+Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE172083E;
+        Thu,  6 Jun 2019 01:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559785026;
+        bh=HXQXWCIOFNBXcHkDWz5g3maJSD2bDpycPPbzZqiERlA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JwXzOdFoeAv26TPTbXgc6pLZYvUDuXltoVags/NfK65oP35Vu04hl1YZ0y3GFbz+k
+         yABJ4UzyntgwzeLVX3CO5vGVUQZ7/YyUVIVZSNEAhIJPD/pQ79Lmj1ugag4NxekfNj
+         uVP7Nm5r1mO57sIFuzdg/DsObfKtVyYd2LvetsNo=
+Date:   Thu, 6 Jun 2019 09:36:49 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: Introduce the NXP LS1021A-TSN board
+Message-ID: <20190606013647.GQ29853@dragon>
+References: <20190529221222.19276-1-olteanv@gmail.com>
+ <20190606010429.GP29853@dragon>
+ <CA+h21hr1ykigbEhVuqMMgcxNaiqDhiNuZiNURwHqOwEooU6jDQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e91fabd4-a7a4-3afa-9f3a-95a6d90e8c7b@metux.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hr1ykigbEhVuqMMgcxNaiqDhiNuZiNURwHqOwEooU6jDQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/19 4:59 PM, Enrico Weigelt, metux IT consult wrote:
-> On 01.06.19 22:49, Guenter Roeck wrote:
->> On Sat, Jun 01, 2019 at 04:01:40PM +0200, Enrico Weigelt, metux IT consult wrote:
->>> The MODULE_DEVICE_TABLE() macro already checks for MODULE defined,
->>> so the extra check here is not necessary.
->>>
->>> Signed-off-by: Enrico Weigelt <info@metux.net>
->>> ---
->>>   drivers/hwmon/i5k_amb.c | 2 --
->>>   1 file changed, 2 deletions(-)
->>>
->>> diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
->>> index b09c39a..b674c2f 100644
->>> --- a/drivers/hwmon/i5k_amb.c
->>> +++ b/drivers/hwmon/i5k_amb.c
->>> @@ -482,14 +482,12 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
->>>       { 0, 0 }
->>>   };
->>> -#ifdef MODULE
->>>   static const struct pci_device_id i5k_amb_ids[] = {
->>>       { PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5000_ERR) },
->>>       { PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5400_ERR) },
->>>       { 0, }
->>>   };
->>>   MODULE_DEVICE_TABLE(pci, i5k_amb_ids);
->>> -#endif
->>
->> I'd rather know what this table is used for in the first place.
+On Thu, Jun 06, 2019 at 04:15:00AM +0300, Vladimir Oltean wrote:
+> On Thu, 6 Jun 2019 at 04:04, Shawn Guo <shawnguo@kernel.org> wrote:
+> >
+> > On Thu, May 30, 2019 at 01:12:22AM +0300, Vladimir Oltean wrote:
+> > > The LS1021A-TSN is a development board built by VVDN/Argonboards in
+> > > partnership with NXP.
+> > >
+> > > It features the LS1021A SoC and the first-generation SJA1105T Ethernet
+> > > switch for prototyping implementations of a subset of IEEE 802.1 TSN
+> > > standards.
+> > >
+> > > It has two regular Ethernet ports and four switched, TSN-capable ports.
+> > >
+> > > It also features:
+> > > - One Arduino header
+> > > - One expansion header
+> > > - Two USB 3.0 ports
+> > > - One mini PCIe slot
+> > > - One SATA interface
+> > > - Accelerometer, gyroscope, temperature sensors
+> > >
+> > > Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> > > ---
+> > > Changes from v1:
+> > > - Applied Shawn's feedback
+> > > - Introduced QSPI flash node
+> > >
+> > > v1 patch available at:
+> > > https://patchwork.kernel.org/patch/10930451/
+> > >
+> > >  arch/arm/boot/dts/Makefile        |   1 +
+> > >  arch/arm/boot/dts/ls1021a-tsn.dts | 288 ++++++++++++++++++++++++++++++
+> > >  2 files changed, 289 insertions(+)
+> > >  create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
+> > >
+> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > > index dab2914fa293..a4eb4ca5e148 100644
+> > > --- a/arch/arm/boot/dts/Makefile
+> > > +++ b/arch/arm/boot/dts/Makefile
+> > > @@ -602,6 +602,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
+> > >  dtb-$(CONFIG_SOC_LS1021A) += \
+> > >       ls1021a-moxa-uc-8410a.dtb \
+> > >       ls1021a-qds.dtb \
+> > > +     ls1021a-tsn.dtb \
+> > >       ls1021a-twr.dtb
+> > >  dtb-$(CONFIG_SOC_VF610) += \
+> > >       vf500-colibri-eval-v3.dtb \
+> > > diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+> > > new file mode 100644
+> > > index 000000000000..b05774eac92e
+> > > --- /dev/null
+> > > +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+> > > @@ -0,0 +1,288 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/* Copyright 2016-2018 NXP Semiconductors
+> > > + * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +#include "ls1021a.dtsi"
+> > > +
+> > > +/ {
+> > > +     model = "NXP LS1021A-TSN Board";
+> > > +
+> > > +     sys_mclk: clock-mclk {
+> > > +             compatible = "fixed-clock";
+> > > +             #clock-cells = <0>;
+> > > +             clock-frequency = <24576000>;
+> > > +     };
+> > > +
+> > > +     reg_vdda_codec: regulator-3V3 {
+> > > +             compatible = "regulator-fixed";
+> > > +             regulator-name = "3P3V";
+> > > +             regulator-min-microvolt = <3300000>;
+> > > +             regulator-max-microvolt = <3300000>;
+> > > +             regulator-always-on;
+> > > +     };
+> > > +
+> > > +     reg_vddio_codec: regulator-2V5 {
+> > > +             compatible = "regulator-fixed";
+> > > +             regulator-name = "2P5V";
+> > > +             regulator-min-microvolt = <2500000>;
+> > > +             regulator-max-microvolt = <2500000>;
+> > > +             regulator-always-on;
+> > > +     };
+> > > +};
+> > > +
+> > > +&enet0 {
+> > > +     tbi-handle = <&tbi0>;
+> > > +     phy-handle = <&sgmii_phy2>;
+> > > +     phy-mode = "sgmii";
+> > > +     status = "okay";
+> > > +};
+> > > +
+> > > +&enet1 {
+> > > +     tbi-handle = <&tbi1>;
+> > > +     phy-handle = <&sgmii_phy1>;
+> > > +     phy-mode = "sgmii";
+> > > +     status = "okay";
+> > > +};
+> > > +
+> > > +/* RGMII delays added via PCB traces */
+> > > +&enet2 {
+> > > +     phy-mode = "rgmii";
+> > > +     status = "okay";
+> > > +
+> > > +     fixed-link {
+> > > +             speed = <1000>;
+> > > +             full-duplex;
+> > > +     };
+> > > +};
+> > > +
+> > > +&dspi0 {
+> > > +     bus-num = <0>;
+> > > +     status = "okay";
+> > > +
+> > > +     /* ADG704BRMZ 1:4 mux/demux */
+> > > +     sja1105: ethernet-switch@1 {
+> > > +             reg = <0x1>;
+> > > +             #address-cells = <1>;
+> > > +             #size-cells = <0>;
+> > > +             compatible = "nxp,sja1105t";
+> > > +             /* 12 MHz */
+> > > +             spi-max-frequency = <12000000>;
+> > > +             /* Sample data on trailing clock edge */
+> > > +             spi-cpha;
+> > > +             fsl,spi-cs-sck-delay = <1000>;
+> > > +             fsl,spi-sck-cs-delay = <1000>;
+> > > +
+> > > +             ports {
+> > > +                     #address-cells = <1>;
+> > > +                     #size-cells = <0>;
+> > > +
+> > > +                     port@0 {
+> > > +                             /* ETH5 written on chassis */
+> > > +                             label = "swp5";
+> > > +                             phy-handle = <&rgmii_phy6>;
+> > > +                             phy-mode = "rgmii-id";
+> > > +                             reg = <0>;
+> > > +                     };
+> > > +
+> > > +                     port@1 {
+> > > +                             /* ETH2 written on chassis */
+> > > +                             label = "swp2";
+> > > +                             phy-handle = <&rgmii_phy3>;
+> > > +                             phy-mode = "rgmii-id";
+> > > +                             reg = <1>;
+> > > +                     };
+> > > +
+> > > +                     port@2 {
+> > > +                             /* ETH3 written on chassis */
+> > > +                             label = "swp3";
+> > > +                             phy-handle = <&rgmii_phy4>;
+> > > +                             phy-mode = "rgmii-id";
+> > > +                             reg = <2>;
+> > > +                     };
+> > > +
+> > > +                     port@3 {
+> > > +                             /* ETH4 written on chassis */
+> > > +                             label = "swp4";
+> > > +                             phy-handle = <&rgmii_phy5>;
+> > > +                             phy-mode = "rgmii-id";
+> > > +                             reg = <3>;
+> > > +                     };
+> > > +
+> > > +                     port@4 {
+> > > +                             /* Internal port connected to eth2 */
+> > > +                             ethernet = <&enet2>;
+> > > +                             phy-mode = "rgmii";
+> > > +                             reg = <4>;
+> > > +
+> > > +                             fixed-link {
+> > > +                                     speed = <1000>;
+> > > +                                     full-duplex;
+> > > +                             };
+> > > +                     };
+> > > +             };
+> > > +     };
+> > > +};
+> > > +
+> > > +&mdio0 {
+> > > +     /* AR8031 */
+> > > +     sgmii_phy1: ethernet-phy@1 {
+> > > +             reg = <0x1>;
+> > > +     };
+> > > +
+> > > +     /* AR8031 */
+> > > +     sgmii_phy2: ethernet-phy@2 {
+> > > +             reg = <0x2>;
+> > > +     };
+> > > +
+> > > +     /* BCM5464 quad PHY */
+> > > +     rgmii_phy3: ethernet-phy@3 {
+> > > +             reg = <0x3>;
+> > > +     };
+> > > +
+> > > +     rgmii_phy4: ethernet-phy@4 {
+> > > +             reg = <0x4>;
+> > > +     };
+> > > +
+> > > +     rgmii_phy5: ethernet-phy@5 {
+> > > +             reg = <0x5>;
+> > > +     };
+> > > +
+> > > +     rgmii_phy6: ethernet-phy@6 {
+> > > +             reg = <0x6>;
+> > > +     };
+> > > +
+> > > +     /* SGMII PCS for enet0 */
+> > > +     tbi0: tbi-phy@1f {
+> > > +             reg = <0x1f>;
+> > > +             device_type = "tbi-phy";
+> > > +     };
+> > > +};
+> > > +
+> > > +&mdio1 {
+> > > +     /* SGMII PCS for enet1 */
+> > > +     tbi1: tbi-phy@1f {
+> > > +             reg = <0x1f>;
+> > > +             device_type = "tbi-phy";
+> > > +     };
+> > > +};
+> > > +
+> > > +&i2c0 {
+> > > +     status = "okay";
+> > > +
+> > > +     /* 3 axis accelerometer */
+> > > +     accelerometer@1e {
+> > > +             compatible = "fsl,fxls8471";
+> > > +             position = <0>;
+> > > +             reg = <0x1e>;
+> > > +     };
+> > > +
+> > > +     /* Audio codec (SAI2) */
+> > > +     codec@2a {
+> >
+> > audio-codec for node name.
+> >
+> > > +             compatible = "fsl,sgtl5000";
+> > > +             VDDIO-supply = <&reg_vddio_codec>;
+> > > +             VDDA-supply = <&reg_vdda_codec>;
+> > > +             #sound-dai-cells = <0>;
+> > > +             clocks = <&sys_mclk>;
+> > > +             reg = <0x2a>;
+> > > +     };
+> > > +
+> > > +     /* Current sensing circuit for 1V VDDCORE PMIC rail */
+> > > +     current-sensor@44 {
+> > > +             compatible = "ti,ina220";
+> > > +             shunt-resistor = <1000>;
+> > > +             reg = <0x44>;
+> > > +     };
+> > > +
+> > > +     /* Current sensing circuit for 12V VCC rail */
+> > > +     current-sensor@45 {
+> > > +             compatible = "ti,ina220";
+> > > +             shunt-resistor = <1000>;
+> > > +             reg = <0x45>;
+> > > +     };
+> > > +
+> > > +     /* Thermal monitor - case */
+> > > +     temperature-sensor@48 {
+> > > +             compatible = "national,lm75";
+> > > +             reg = <0x48>;
+> > > +     };
+> > > +
+> > > +     /* Thermal monitor - chip */
+> > > +     temperature-sensor@4c {
+> > > +             compatible = "ti,tmp451";
+> > > +             reg = <0x4c>;
+> > > +     };
+> > > +
+> > > +     eeprom@51 {
+> > > +             compatible = "atmel,24c32";
+> > > +             reg = <0x51>;
+> > > +     };
+> > > +
+> > > +     /* Unsupported devices:
+> > > +      * - FXAS21002C Gyroscope at 0x20
+> > > +      * - TI ADS7924 4-channel ADC at 0x49
+> > > +      */
+> > > +};
+> > > +
+> > > +&qspi {
+> > > +     status = "okay";
+> > > +
+> > > +     flash@0 {
+> > > +             /* Rev. A uses 64MB flash, Rev. B & C use 32MB flash */
+> > > +             compatible = "jedec,spi-nor", "s25fl256s1", "s25fl512s";
+> > > +             spi-max-frequency = <20000000>;
+> > > +             #address-cells = <1>;
+> > > +             #size-cells = <1>;
+> > > +             reg = <0>;
+> > > +
+> > > +             partitions {
+> > > +                     compatible = "fixed-partitions";
+> > > +                     #address-cells = <1>;
+> > > +                     #size-cells = <1>;
+> > > +
+> > > +                     partition@0 {
+> > > +                             label = "RCW";
+> > > +                             reg = <0x0 0x40000>;
+> > > +                     };
+> > > +
+> > > +                     partition@40000 {
+> > > +                             label = "U-Boot";
+> > > +                             reg = <0x40000 0x300000>;
+> > > +                     };
+> > > +
+> > > +                     partition@340000 {
+> > > +                             label = "U-Boot Env";
+> > > +                             reg = <0x340000 0x100000>;
+> > > +                     };
+> > > +             };
+> > > +     };
+> > > +};
+> > > +
+> > > +&ifc {
+> >
+> > Please sort all these labelling nodes alphabetically.
+> >
 > 
-> Seems it's really just used for the module loader, while actual probing
-> is using a different table. IMHO, the worst thing my patch could do is
-> introducing a warning on unused variable (IMHO shouldn't happen when
-> it's static const).
+> Hi Shawn,
 > 
+> It's not entirely clear to me which nodes you mean.
 
-You are wrong. You'll need __maybe_unused qualifiers for those variables
-to avoid the warning.
+I should have put this comment at a better place, i.e. &dspi0 which
+breaks the order in the first place.
 
-Guenter
+&dspi0 {
+	...
+};
 
-> I've just rewritten it to move everything into i5k_amb_ids ... just need
-> to run build tests on it (unfortunately can't run-test, as I don't have
-> that device).
-> 
-> 
-> --mtx
-> 
+&enet0 {
+	...
+};
 
+&enet1 {
+	...
+};
+
+&enet2 {
+	...
+};
+
+&esdhc {
+	...
+};
+
+...
+
+
+Shawn
+
+> >
+> > > +     status = "disabled";
+> > > +};
+> > > +
+> > > +&esdhc {
+> > > +     status = "okay";
+> > > +};
+> > > +
+> > > +&uart0 {
+> > > +     status = "okay";
+> > > +};
+> > > +
+> > > +&lpuart0 {
+> > > +     status = "okay";
+> > > +};
+> > > +
+> > > +&lpuart3 {
+> > > +     status = "okay";
+> > > +};
+> > > +
+> > > +&sai2 {
+> > > +     status = "okay";
+> > > +};
+> > > +
+> > > +&sata {
+> > > +     status = "okay";
+> > > +};
+> > > --
+> > > 2.17.1
+> > >
