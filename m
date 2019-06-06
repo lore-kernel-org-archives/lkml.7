@@ -2,151 +2,173 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC48C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D35C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19F22083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:58:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZCo7O2C8"
+	by mail.kernel.org (Postfix) with ESMTP id 57FE32083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbfFFO6h (ORCPT
+        id S1729015AbfFFPBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:58:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43628 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfFFO6g (ORCPT
+        Thu, 6 Jun 2019 11:01:07 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:43315 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727309AbfFFPBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:58:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r18so2758199wrm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QujUueqFUx2/VSrL+HZmRN292Qq0Dhoh8CSUM41nf2A=;
-        b=ZCo7O2C8yP4nwdUG6GBa7j3UmhQfPthiEWab3oypsGCItJN5tuZZ11EJ9UiZiiFdnG
-         x96ys34BGhcW3sNOsQ+lWZMOb12EMkuf3pSGBDJYQbwmNyfKoGfI80RFTli7u2DGBg/9
-         XJ80NBhRd+O0no3dkGRaqslAStOx+NFMDbunqpAnSqal3hJj2KsoYOlp91q6PmT2NqvE
-         3/JXvNTUENLYhCoaZasLzE6P99EByMOe86MhrtudILbtxuWaXYU0By8UwXKHDuZaXg3X
-         HXny8/I/wPSsTthKpSupdSaz4scGB6yuXsSsiAeQepzVx1uf+XTkuUlOcYAqE1NOimjJ
-         BXwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QujUueqFUx2/VSrL+HZmRN292Qq0Dhoh8CSUM41nf2A=;
-        b=RLTVJl8HDQDw4EOdknNpmkhySNh10jQDAcpn7/JaCU32mistdGtnweoEuT1fQRanRA
-         ebg4+N8B+qc/AoVcpfj4psgAyqPprbVuTIRKqYfxRzM3FGJNj3T11vZUHr6etAhF+b77
-         XrJsqJYkGCjTxOlKoz9TxOlfC3WC+bcexBgdkx+tBIOUxeHbj5yHkyV7sSIHK8Hegalm
-         FAIMQbBoCGbuYPMdlSUijEJ+KZVGuFQXF7qTRBjHUeI01fmAWU0Bbig0rOxylGqY3a/m
-         i5PTdV+yo04rCpDFG7lS/6CfQjGNcy8wTs8iXgX9aDmy/McrlnyiVZnYIxzNh7yQ0Wct
-         XLxQ==
-X-Gm-Message-State: APjAAAVcVpaRtPhD1IB3AuoHeLUvp2BkAwZzTV/NcbeNBs3FlTpsyZZe
-        yPV1Swso0XMXnORkSO+g9GYnD5vziFB4ww==
-X-Google-Smtp-Source: APXvYqzZxEOJPWQeIL+UsyHAq9cz1Yc6pAWJ9MgF/JfNneHwBH0kgD+JhRh8xYlf8ptsNnwIVBVw6Q==
-X-Received: by 2002:a5d:518c:: with SMTP id k12mr30386901wrv.322.1559833114696;
-        Thu, 06 Jun 2019 07:58:34 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id z17sm1983993wru.21.2019.06.06.07.58.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 07:58:34 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH v2] soundwire: stream: fix bad unlock balance
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        vkoul@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190606112222.16502-1-srinivas.kandagatla@linaro.org>
- <9427a73a-e09a-4a9c-7690-271d2e2e1024@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <f13c82d2-94a4-9517-bcf6-95aa40c6a42f@linaro.org>
-Date:   Thu, 6 Jun 2019 15:58:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <9427a73a-e09a-4a9c-7690-271d2e2e1024@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 6 Jun 2019 11:01:07 -0400
+Received: from orion.localdomain ([77.9.2.22]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MeTkC-1h0wZg2fC8-00aSbg; Thu, 06 Jun 2019 17:00:40 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org
+Subject: [PATCH] drivers: hwmon: i5k_amb: simplify probing / device identification
+Date:   Thu,  6 Jun 2019 17:00:33 +0200
+Message-Id: <1559833233-25723-2-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1559833233-25723-1-git-send-email-info@metux.net>
+References: <1559833233-25723-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:xgFb+Inj4aDfp/gYDygJhDlwg0GJKj5xkP7T34yrBOq4ZvRzA53
+ JLjb9bcWg51SPxqYWxL5dMXSM6hYzLLt9NyGZtX2l/rqDIFftl+5b63t4Eyrp/YFdi7Fxzm
+ Ht/3l+fat4JzwHxoyPUc2qj44dW5IJJEOHp5B9Dqd7QWzxeR/rNFN9KdAUY14/HawE5/m6b
+ U698vPPHR7jbqh7k5n9pQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1ofB2UevWLU=:fod3Z4yAxcFPc2s76E9TE2
+ la2+cS3nXw03X1N1bw5dsk+Ecyhs6pSDSog2f6povlnvcBI/vA42TRJtXgc8cBfythb5SWafF
+ PEyZvS9ubxR0QAMjzInmHFiEmaNWR2Oi74oErAZmkrmUxVdYggs01gUYJh4lU7D06c8P60Nij
+ cXFT8Twcrlv9FboyJb1QcSECx/kKf3TOYajEu25zKyFUQW+x7eVd1hsZ7fv777xr05ohp8bJm
+ EoxVf1bnAal8HHxRa0z/8MCu+FLPcn6m9IIR3twmDWuwkc/ejrXxsaq3GvHoEJAvFg7m+ZLcG
+ UpCAx8yzllf3cHinidaE/4dlP1XxJ6uVC37uCZMqJJPEl2d8DYF6b7Y2kTzehYvOc1OCZDIPG
+ 0CbVkweNiZSP8Sr6Jz7PfGVXFIcmE1hWgZHo5lS5hoR1vgztCgOj+S/6yB8DRbXXCbWE/Y+XU
+ Z6bExlJTwC77Vti58xmzgLy4QpH4MnDqfPApu4jzuTFTaRwZwhVxTRwyOeBojg7NxQ7tOdvVY
+ 3Drn3caShIg6WI4XeoWX/llhUCbO/nrgbZZeoAGsh/94Eh0ifkvtcug8m6R8KdqlfL0E0uU70
+ JXkosQ6cWHjLFKDwUyls9TEn4GR9OaBcwZtyH+avw9vR7zxtDb+tFopktbP0nZS1ktEoJ+muU
+ VAj67BWKRP2FwHxj49bx2LK42Dgrl1+vDIi4ydXgKppZJ+5irqiltDOb+1w/LJdt5yVElboQg
+ 4W5E8TT4oYt/+uh2IToKtmgJAcnLGGIkkr1aPQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Enrico Weigelt <info@metux.net>
 
+Simpilify the probing by putting all chip-specific data directly
+into the pci match table, removing the redundant chipset_ids table.
 
-On 06/06/2019 15:28, Pierre-Louis Bossart wrote:
-> On 6/6/19 6:22 AM, Srinivas Kandagatla wrote:
->> multi bank switching code takes lock on condition but releases without
->> any check resulting in below warning.
->> This patch fixes this.
-> 
-> 
-> Question to make sure we are talking about the same thing: multi-link 
-> bank switching is a capability beyond the scope of the SoundWire spec 
-> which requires hardware support to synchronize links and as Sanyog 
-> hinted at in a previous email follow a different flow for bank switches.
-> 
-> You would not use the multi-link mode if you have different links that 
-> can operate independently and have no synchronization requirement. You 
-> would conversely use the multi-link mode if you have two devices on the 
-> same type on different links and want audio to be rendered at the same 
-> time.
-> 
-> Can you clarify if indeed you were using the full-blown multi-link mode 
-> with hardware synchronization or a regular single-link operation? I am 
-> not asking for details of your test hardware, just trying to reconstruct 
-> the program flow leading to this problem.
-> 
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ drivers/hwmon/i5k_amb.c | 45 +++++++++++++++++++++++----------------------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
 
-Am testing on a regular single link, which hits this path.
+diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
+index b09c39a..f06c40f 100644
+--- a/drivers/hwmon/i5k_amb.c
++++ b/drivers/hwmon/i5k_amb.c
+@@ -414,15 +414,15 @@ static int i5k_amb_add(void)
+ }
+ 
+ static int i5k_find_amb_registers(struct i5k_amb_data *data,
+-					    unsigned long devid)
++				  const struct pci_device_id *devid)
+ {
+ 	struct pci_dev *pcidev;
+ 	u32 val32;
+ 	int res = -ENODEV;
+ 
+ 	/* Find AMB register memory space */
+-	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL,
+-				devid,
++	pcidev = pci_get_device(devid->vendor,
++				devid->device,
+ 				NULL);
+ 	if (!pcidev)
+ 		return -ENODEV;
+@@ -447,14 +447,18 @@ static int i5k_find_amb_registers(struct i5k_amb_data *data,
+ 	return res;
+ }
+ 
+-static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
++static int i5k_channel_probe(u16 *amb_present,
++			     const struct pci_device_id *devid,
++			     int next)
+ {
+ 	struct pci_dev *pcidev;
+ 	u16 val16;
+ 	int res = -ENODEV;
+ 
+ 	/* Copy the DIMM presence map for these two channels */
+-	pcidev = pci_get_device(PCI_VENDOR_ID_INTEL, dev_id, NULL);
++	pcidev = pci_get_device(devid->vendor,
++				(unsigned long)devid->driver_data + next,
++				NULL);
+ 	if (!pcidev)
+ 		return -ENODEV;
+ 
+@@ -473,23 +477,20 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+ 	return res;
+ }
+ 
+-static struct {
+-	unsigned long err;
+-	unsigned long fbd0;
+-} chipset_ids[]  = {
+-	{ PCI_DEVICE_ID_INTEL_5000_ERR, PCI_DEVICE_ID_INTEL_5000_FBD0 },
+-	{ PCI_DEVICE_ID_INTEL_5400_ERR, PCI_DEVICE_ID_INTEL_5400_FBD0 },
+-	{ 0, 0 }
+-};
+-
+-#ifdef MODULE
+ static const struct pci_device_id i5k_amb_ids[] = {
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5000_ERR) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_5400_ERR) },
++	{
++		.vendor		= PCI_VENDOR_ID_INTEL,
++		.device		= PCI_DEVICE_ID_INTEL_5000_ERR,
++		.driver_data	= PCI_DEVICE_ID_INTEL_5000_FBD0,
++	},
++	{
++		.vendor		= PCI_VENDOR_ID_INTEL,
++		.device		= PCI_DEVICE_ID_INTEL_5400_ERR,
++		.driver_data	= PCI_DEVICE_ID_INTEL_5400_FBD0,
++	},
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, i5k_amb_ids);
+-#endif
+ 
+ static int i5k_amb_probe(struct platform_device *pdev)
+ {
+@@ -504,22 +505,22 @@ static int i5k_amb_probe(struct platform_device *pdev)
+ 	/* Figure out where the AMB registers live */
+ 	i = 0;
+ 	do {
+-		res = i5k_find_amb_registers(data, chipset_ids[i].err);
++		res = i5k_find_amb_registers(data, &i5k_amb_ids[i]);
+ 		if (res == 0)
+ 			break;
+ 		i++;
+-	} while (chipset_ids[i].err);
++	} while (i5k_amb_ids[i].device);
+ 
+ 	if (res)
+ 		goto err;
+ 
+ 	/* Copy the DIMM presence map for the first two channels */
+-	res = i5k_channel_probe(&data->amb_present[0], chipset_ids[i].fbd0);
++	res = i5k_channel_probe(&data->amb_present[0], &i5k_amb_ids[i], 0);
+ 	if (res)
+ 		goto err;
+ 
+ 	/* Copy the DIMM presence map for the optional second two channels */
+-	i5k_channel_probe(&data->amb_present[2], chipset_ids[i].fbd0 + 1);
++	i5k_channel_probe(&data->amb_present[2], &i5k_amb_ids[i], 1);
+ 
+ 	/* Set up resource regions */
+ 	reso = request_mem_region(data->amb_base, data->amb_len, DRVNAME);
+-- 
+1.9.1
 
-> It could also be that your commit message was meant to say:
-> "the msg lock is taken for multi-link cases only but released 
-> unconditionally, leading to an unlock balance warning for single-link 
-> usages"?
-Yes.
-Vinod can update comment while applying this patch?
-If not I can respin with correct log.
-
-thanks,
-srini
-
-> 
-> Thanks!
-> 
->>
->>   =====================================
->>   WARNING: bad unlock balance detected!
->>   5.1.0-16506-gc1c383a6f0a2-dirty #1523 Tainted: G        W
->>   -------------------------------------
->>   aplay/2954 is trying to release lock (&bus->msg_lock) at:
->>   do_bank_switch+0x21c/0x480
->>   but there are no more locks to release!
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/soundwire/stream.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
->> index ce9cb7fa4724..73c52cd4fec8 100644
->> --- a/drivers/soundwire/stream.c
->> +++ b/drivers/soundwire/stream.c
->> @@ -814,7 +814,8 @@ static int do_bank_switch(struct 
->> sdw_stream_runtime *stream)
->>               goto error;
->>           }
->> -        mutex_unlock(&bus->msg_lock);
->> +        if (bus->multi_link)
->> +            mutex_unlock(&bus->msg_lock);
->>       }
->>       return ret;
->>
-> 
