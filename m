@@ -2,112 +2,82 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4C2C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA0EC28D1D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1B420684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CM8zwYbr"
+	by mail.kernel.org (Postfix) with ESMTP id 4A9C820684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfFFJ1e (ORCPT
+        id S1727831AbfFFJ2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:27:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43801 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbfFFJ1d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:27:33 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r18so1608575wrm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U91ywhdMkGQGI1rWUGWuzywxMAyROzIgAQcdcL6gXPY=;
-        b=CM8zwYbruz7kaEk84Fz7h7aKVLQGOob0uwZVhJ3EHhXCinrSbwCyuj/+5ToxvtENaY
-         jVl4XOB/vXttvU1PSqf3D+F0ZCWDu13LlfdnboF3udUDRsBemSlf1hp0InJV12WS/MA3
-         jA2UQ1fJ2Z6n14ERXQf8giSEQwztrM/aMkVS2+xyo1JfVWWbW0gxrEj3JkAG6v2kB564
-         BvVtxsrQh5onwMjeG6rDvD/py7e6VonCImocerR2w5zdamN3yDrDXqFhQv+ama3KYey5
-         AhbuzvXDJ1DPh+M5yTb7iPF9iLnNT8TgdwXQKmziI7VEcrcQPxZWIkmDpWcqM6ET/XXI
-         eqZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U91ywhdMkGQGI1rWUGWuzywxMAyROzIgAQcdcL6gXPY=;
-        b=KiVfDRjtZLVz9kYS9IKRI8yyHOfx4oAs2KO0SWw4G4YEElTCviPoZt3Iq6xQfItsoV
-         2YY3vmNkcB5yQoT2Sa2xvM396llWBRsFcd5jksirJTsKd+e1e0wJVxk3AZTpcfzYQx7S
-         Zq69DPjAKcoWvUSpt7KenmixeqdbP37QrFd0OJW6k9qlw32lIeybrv6Vc7U9ZPX8rqah
-         h63jwBaoCIji09ULmcu6N/KGzNZqZU2ZawjxgiaKq0CwH6/mdk3wHzzAEAyltNQcpKSx
-         a5yNt/YTQ3dr9BCtv4OfHlbH7naXehdJnO3I0x8bTKJeqOy3Nt8Y8t9NeZ9/mH5U7pPo
-         odCA==
-X-Gm-Message-State: APjAAAUV/RVOosxuRru3Q9m8NnqbK/civQSs710c+m/8P3RQem72M7+1
-        +OiYlr7F9uh/7h5Zn49TpEY=
-X-Google-Smtp-Source: APXvYqy19J5e1eE29L4WFZZfy93GbyufZjIvVJC86krHXtfPLnJhP8uzDSWMEtq0COUvAd2UjFK7fw==
-X-Received: by 2002:a5d:474a:: with SMTP id o10mr2462654wrs.157.1559813252343;
-        Thu, 06 Jun 2019 02:27:32 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([108.61.173.19])
-        by smtp.gmail.com with ESMTPSA id f10sm1575712wrg.24.2019.06.06.02.27.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 02:27:31 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 17:27:25 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, dm-devel@redhat.com,
-        agk@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: dm-init: fix 2 incorrect use of kstrndup()
-Message-ID: <20190606092725.GA21792@zhanggen-UX430UQ>
-References: <20190529013320.GA3307@zhanggen-UX430UQ>
- <fcf2c3c0-e479-9e74-59d5-79cd2a0bade6@acm.org>
- <20190529152443.GA4076@zhanggen-UX430UQ>
- <20190530161103.GA30026@redhat.com>
+        Thu, 6 Jun 2019 05:28:55 -0400
+Received: from foss.arm.com ([217.140.101.70]:43546 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727359AbfFFJ2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:28:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A369341;
+        Thu,  6 Jun 2019 02:28:54 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 952BF3F690;
+        Thu,  6 Jun 2019 02:28:51 -0700 (PDT)
+Subject: Re: [PATCH 07/13] drivers: Add generic match helper by ACPI_COMPANION
+ device
+To:     rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-spi@vger.kernel.org, broonie@kernel.org
+References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
+ <1559747630-28065-8-git-send-email-suzuki.poulose@arm.com>
+ <CAJZ5v0h+maPj-ijKV_vvQBpHD7N-VMiAqSeyztAkiUR9E2WdmQ@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <1f230eb7-f4e3-ed4e-960d-c3bbb60f0a18@arm.com>
+Date:   Thu, 6 Jun 2019 10:28:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530161103.GA30026@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAJZ5v0h+maPj-ijKV_vvQBpHD7N-VMiAqSeyztAkiUR9E2WdmQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 12:11:03PM -0400, Mike Snitzer wrote:
-> On Wed, May 29 2019 at 11:24am -0400,
-> Gen Zhang <blackgod016574@gmail.com> wrote:
-> 
-> > On Wed, May 29, 2019 at 05:23:53AM -0700, Bart Van Assche wrote:
-> > > On 5/28/19 6:33 PM, Gen Zhang wrote:
-> > > > In drivers/md/dm-init.c, kstrndup() is incorrectly used twice.
-> > > > 
-> > > > It should be: char *kstrndup(const char *s, size_t max, gfp_t gfp);
-> > > 
-> > > Should the following be added to this patch?
-> > > 
-> > > Fixes: 6bbc923dfcf5 ("dm: add support to directly boot to a mapped
-> > > device") # v5.1.
-> > > Cc: stable
-> > > 
-> > > Thanks,
-> > > 
-> > > Bart.
-> > Personally, I am not quite sure about this question, because I am not 
-> > the maintainer of this part.
-> 
-> Yes, it should have the tags Bart suggested.
-> 
-> I'll take care it.
-> 
-> Thanks,
-> Mike
-Hi,
-Is there any updates about this patch? I want to check if it is apllied
-beacause I have to write it down in my paper and the deadline is close.
 
-Thanks
-Gen
+
+On 06/06/2019 10:17, Rafael J. Wysocki wrote:
+> On Wed, Jun 5, 2019 at 5:14 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> Add a generic helper to match a device by the acpi device.
+> 
+> "by its ACPI companion device object", please.
+
+Sure.
+
+> 
+> Also, it would be good to combine this patch with the patch(es) that
+> cause device_match_acpi_dev() to be actually used.
+> 
+> Helpers without any users are arguably not useful.
+
+Sure, the helpers will be part of the part2 of the whole series,
+which will actually have the individual subsystems consuming the
+new helpers. For your reference, it is available here :
+
+http://linux-arm.org/git?p=linux-skp.git;a=shortlog;h=refs/heads/driver-cleanup/v2
+
+e.g: 
+http://linux-arm.org/git?p=linux-skp.git;a=commit;h=59534e843e2f214f1f29659993f6e423bef16b28
+
+I could simply pull those patches into this part, if you prefer that.
+However, that would be true for the other patches in the part2.
+I am open to suggestions, on how to split the series.
+
+Cheers
+Suzuki
