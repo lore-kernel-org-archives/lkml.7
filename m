@@ -2,104 +2,114 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC98C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7264AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0448E206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BD820657
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="olv0nqRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfFFPqm (ORCPT
+        id S1729516AbfFFPri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:46:42 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49358 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729185AbfFFPqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:46:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DEC7A78;
-        Thu,  6 Jun 2019 08:46:41 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA3693F690;
-        Thu,  6 Jun 2019 08:46:37 -0700 (PDT)
-Subject: Re: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
-To:     George Hung <ghung.quanta@gmail.com>
-Cc:     linux-edac <linux-edac@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        benjaminfair@google.com, wak@google.com, Avi.Fishman@nuvoton.com,
-        tomer.maimon@nuvoton.com, openbmc@lists.ozlabs.org,
-        Joel Stanley <joel@jms.id.au>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        davem@davemloft.net,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20190605141253.38554-1-ghung.quanta@gmail.com>
- <20190605141253.38554-2-ghung.quanta@gmail.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <066d3d9b-f65e-7689-a3a7-d995e26fcbf3@arm.com>
-Date:   Thu, 6 Jun 2019 16:46:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 11:47:38 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45882 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729185AbfFFPrh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:47:37 -0400
+Received: by mail-pf1-f196.google.com with SMTP id s11so1736039pfm.12;
+        Thu, 06 Jun 2019 08:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NfifDdL+NpCO8qPZ1Q4+MMf9WNKJ6AKEbZR6EHDrCsM=;
+        b=olv0nqRUK9PV5cAJt8TjQa/fI6j8FDIWsOM0MUzfdeBXhSfGVgEIVByYGCkLjwtgk+
+         +pGDQd+d39un0hq1WxQ46aDqE2upjHH+eJEpqGggIehYndps9BvDkdqGdtNigdZPMNnp
+         xy9fTUnFVz+i8paHHEfSALaMX8art72kUgkd6E0Lt6SuWDooCZRmXoYvh40lz7OglTh+
+         WVNvGLXYg4I7RuosFCBH9wT0VIqjyyit8rLYFyOuvcijM7TFR9deJRS8CQOGzhOambs0
+         eQlqiMQmPaBTuNwyb25OuoUXBq3ao4zpNxl1A8c0srkJteNezNg4il06U0xTNTXvFbkj
+         Pvsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NfifDdL+NpCO8qPZ1Q4+MMf9WNKJ6AKEbZR6EHDrCsM=;
+        b=FS0CRnbsvoI9Jbj9XHHgvytA7rXDE3eMpCfP9jByePxJW2VcMkGSH7kcJVxnH4UbrF
+         H6SZAbPCNSnsrSimvTBJgWZmBcoKTewg0bc7UmcqolzszKgPBuVAehX3fv1j+E5rE+hM
+         +kqUudb352m5F+pZyJ8EPgbdEyza5wEDoKNmObFePolLh3WRGmoA0s8KmVSIF0OrfPBC
+         LV7AZrk+NoM5cKsYv7mVmmv9kvEroQy2PHrYjXuoheTL4kCpYiayCGtbiO2FGignEzC4
+         cgFkooow1OpP0Y0slkEwUB3OIf+0/Whnqlm60vSn60bBi4POPnMmo1BKFrRu8gnLVy8D
+         p/uA==
+X-Gm-Message-State: APjAAAUElNFT5hEBG0axbk2zF9gmudOT7E+qpRwUWIWzk51VXYd6jI9p
+        YtPzS4/UXI0SQwRiEbAB/m3/f++BZYc=
+X-Google-Smtp-Source: APXvYqw8iqwBtgu4kHw/IqFnUk5XYB2C8guVbizPQGLMCgaOX2UvyGGjIhC6POUFeiQg0wkXP1cuMw==
+X-Received: by 2002:a62:fb0a:: with SMTP id x10mr31141215pfm.224.1559836057029;
+        Thu, 06 Jun 2019 08:47:37 -0700 (PDT)
+Received: from [172.27.227.242] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id u16sm2262264pje.6.2019.06.06.08.47.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 08:47:36 -0700 (PDT)
+Subject: Re: [PATCH] net: ipv4: fib_semantics: fix uninitialized variable
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org
+References: <1559832197-22758-1-git-send-email-info@metux.net>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <0ba84175-49be-9023-271d-516c93e2d83e@gmail.com>
+Date:   Thu, 6 Jun 2019 09:47:34 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190605141253.38554-2-ghung.quanta@gmail.com>
+In-Reply-To: <1559832197-22758-1-git-send-email-info@metux.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi George,
-
-On 05/06/2019 15:12, George Hung wrote:
-> Add device tree documentation for Nuvoton BMC ECC
-
-(Nit: The DT folk prefer patches adding bindings to come first in the series, before the
-driver that uses them).
-
-
-> diff --git a/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
-> new file mode 100644
-> index 000000000000..dd4dac59a5bd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
-> @@ -0,0 +1,17 @@
-> +Nuvoton NPCM7xx SoC EDAC device driver
-> +
-> +The Nuvoton NPCM7xx SoC supports DDR4 memory with/without ECC and the driver
-> +uses the EDAC framework to implement the ECC detection and corrtection.
-
-The commit message in the driver says this is a Cadence memory controller, can we describe
-what it is here, and give it an additional compatible?
-
-
-Thanks,
-
-James
-
-> +Required properties:
-> +- compatible:	should be "nuvoton,npcm7xx-sdram-edac"
-> +- reg:		Memory controller register set should be <0xf0824000 0x1000>
-> +- interrupts:	should be MC interrupt #25
-> +Example:
-> +
-> +	mc: memory-controller@f0824000 {
-> +		compatible = "nuvoton,npcm7xx-sdram-edac";
-> +		reg = <0xf0824000 0x1000>;
-> +		interrupts = <0 25 4>;
-> +	};
+On 6/6/19 8:43 AM, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+> 
+> fix an uninitialized variable:
+> 
+>   CC      net/ipv4/fib_semantics.o
+> net/ipv4/fib_semantics.c: In function 'fib_check_nh_v4_gw':
+> net/ipv4/fib_semantics.c:1027:12: warning: 'err' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>    if (!tbl || err) {
+>             ^~
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
+> ---
+>  net/ipv4/fib_semantics.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
+> index b804106..bfa49a8 100644
+> --- a/net/ipv4/fib_semantics.c
+> +++ b/net/ipv4/fib_semantics.c
+> @@ -964,7 +964,7 @@ static int fib_check_nh_v4_gw(struct net *net, struct fib_nh *nh, u32 table,
+>  {
+>  	struct net_device *dev;
+>  	struct fib_result res;
+> -	int err;
+> +	int err = 0;
+>  
+>  	if (nh->fib_nh_flags & RTNH_F_ONLINK) {
+>  		unsigned int addr_type;
 > 
 
+what compiler version?
+
+if tbl is set, then err is set.
