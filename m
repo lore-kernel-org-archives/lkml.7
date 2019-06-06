@@ -2,88 +2,120 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226B4C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A1CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB1420866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3811620866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfFFOpK (ORCPT
+        id S1728920AbfFFOqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:45:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:47094 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728690AbfFFOpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:45:09 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z23so2153345ote.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:45:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=csaYIwXQEBX950eZ96n2wzROQkFVAMhN8cg2KCdNjEI=;
-        b=hs+BATWLiFbiQebOGmOr9QTkJAy7cMUAmSCT0q8fEBTUvssUvmBZS8UB/Dme1ywsk+
-         EJwfy7m5OxkajELDnII/8c8PDCeuxAadSxkJfNudidBxNNbjVJFQCi8IajeboTJgSNu/
-         QMfxEfjmzXDK/k/nXtfWqGZxtvEq4V0jmDeAXnkGoUmgFC/qpM1n7/v0nDL6hOQ9BpkM
-         FwfUlY4jXr5w/dcln1lwKpS/xMJ5PGuGjiD0oZYt1reOYjYo69qkrWTn4ItfbJdW0qsl
-         QIYL2fLOeLuPxFKRcyCzVD39qipfur5al2R0RseFOimDXvuiFPbS35D2cVk8HJBJieB3
-         RiYg==
-X-Gm-Message-State: APjAAAUVnvAsyVB22Sgqeok8OGehxDL2ZLJqyvexl4NfAzzCj8YrWrn2
-        H/5YDr8F6nZCQ0a03Ra7ykq5N5Qh9oXXbypqeXMyouG6YwM=
-X-Google-Smtp-Source: APXvYqzOiNSsDsz1tD3ucAPIfuAw+X51u3KUPDzK8U3WMrZ8VztMqbCKvv2H9Im2Ar2t1P4QYr7//APmNuZpKQS1yQM=
-X-Received: by 2002:a9d:704f:: with SMTP id x15mr15024571otj.297.1559832308563;
- Thu, 06 Jun 2019 07:45:08 -0700 (PDT)
+        Thu, 6 Jun 2019 10:46:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57544 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727603AbfFFOqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:46:20 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 09BF03082B5A;
+        Thu,  6 Jun 2019 14:46:19 +0000 (UTC)
+Received: from krava (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B5EA95C68C;
+        Thu,  6 Jun 2019 14:46:15 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 16:46:14 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     ufo19890607 <ufo19890607@gmail.com>, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org,
+        milian.wolff@kdab.com, arnaldo.melo@gmail.com,
+        yuzhoujian@didichuxing.com, adrian.hunter@intel.com,
+        wangnan0@huawei.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, acme@redhat.com
+Subject: Re: [PATCH] perf record: Add support to collect callchains from
+ kernel or user space only.
+Message-ID: <20190606144614.GC12056@krava>
+References: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
+ <20190606142644.GA21245@kernel.org>
 MIME-Version: 1.0
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 6 Jun 2019 16:44:57 +0200
-Message-ID: <CAHc6FU6XnohtY0q365cxhx3-mAQqTCyHdL61XV1Z2wbTQL_EPg@mail.gmail.com>
-Subject: [GET PULL] Revert "gfs2: Replace gl_revokes with a GLF flag"
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     cluster-devel <cluster-devel@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bob Peterson <rpeterso@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606142644.GA21245@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 06 Jun 2019 14:46:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Jun 06, 2019 at 11:26:44AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, May 30, 2019 at 02:29:22PM +0100, ufo19890607 escreveu:
+> > From: yuzhoujian <yuzhoujian@didichuxing.com>
+> > 
+> > One can just record callchains in the kernel or user space with
+> > this new options. We can use it together with "--all-kernel" options.
+> > This two options is used just like print_stack(sys) or print_ustack(usr)
+> > for systemtap.
+> > 
+> > Show below is the usage of this new option combined with "--all-kernel"
+> > options.
+> > 	1. Configure all used events to run in kernel space and just
+> > collect kernel callchains.
+> > 	$ perf record -a -g --all-kernel --kernel-callchains
+> > 	2. Configure all used events to run in kernel space and just
+> > collect user callchains.
+> > 	$ perf record -a -g --all-kernel --user-callchains
+> > 
+> > Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
+> > ---
+> >  tools/perf/Documentation/perf-record.txt | 6 ++++++
+> >  tools/perf/builtin-record.c              | 4 ++++
+> >  tools/perf/perf.h                        | 2 ++
+> >  tools/perf/util/evsel.c                  | 4 ++++
+> >  4 files changed, 16 insertions(+)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> > index de269430720a..b647eb3db0c6 100644
+> > --- a/tools/perf/Documentation/perf-record.txt
+> > +++ b/tools/perf/Documentation/perf-record.txt
+> > @@ -490,6 +490,12 @@ Configure all used events to run in kernel space.
+> >  --all-user::
+> >  Configure all used events to run in user space.
+> >  
+> > +--kernel-callchains::
+> > +Collect callchains from kernel space.
+> 
+> Ok, changing this to:
+> 
+> Collect callchains only from kernel space. I.e. this option sets
+> perf_event_attr.exclude_callchain_user to 1,
+> perf_event_attr.exclude_callchain_kernel to 0.
+> 
+> > +
+> > +--user-callchains::
+> > +Collect callchains from user space.
+> 
+> And this one to:
+> Collect callchains only from user space. I.e. this option sets
+> 
+> perf_event_attr.exclude_callchain_kernel to 1,
+> perf_event_attr.exclude_callchain_user to 0.
+> 
+> 
+> So that the user don't try using:
+> 
+>     pref record --user-callchains --kernel-callchains
+> 
+> expecting to get both user and kernel callchains and instead gets
+> nothing.
 
-could you please pull the following revert? The patch turned out to be broken.
+good catch.. we should add the logic to keep both (default)
+in this case.. so do nothing ;-)
 
-Thank you very much,
-Andreas
-
-The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
-
-  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
-tags/gfs2-v5.2.fixes
-
-for you to fetch changes up to 638803d4568121d73a266e440530f880ffa2dacc:
-
-  Revert "gfs2: Replace gl_revokes with a GLF flag" (2019-06-06 16:29:26 +0200)
-
-----------------------------------------------------------------
-Revert commit "gfs2: Replace gl_revokes with a GLF flag".
-
-----------------------------------------------------------------
-Bob Peterson (1):
-      Revert "gfs2: Replace gl_revokes with a GLF flag"
-
- fs/gfs2/glock.c  |  4 ++--
- fs/gfs2/incore.h |  2 +-
- fs/gfs2/log.c    |  4 +---
- fs/gfs2/lops.c   | 33 +++++++++------------------------
- fs/gfs2/main.c   |  1 +
- fs/gfs2/super.c  |  2 +-
- 6 files changed, 15 insertions(+), 31 deletions(-)
+jirka
