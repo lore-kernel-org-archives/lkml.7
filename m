@@ -2,93 +2,99 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF469C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80780C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB49F20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410BF206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="RLesCpt3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbfFFPmV (ORCPT
+        id S1729463AbfFFPmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:42:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55028 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfFFPmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:42:20 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0BB2830C31B7;
-        Thu,  6 Jun 2019 15:42:16 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B2AF5F7D8;
-        Thu,  6 Jun 2019 15:42:10 +0000 (UTC)
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-From:   Waiman Long <longman@redhat.com>
-To:     Alex Kogan <alex.kogan@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        dave.dice@oracle.com, Rahul Yadav <rahul.x.yadav@oracle.com>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
- <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
- <20190402094320.GM11158@hirez.programming.kicks-ass.net>
- <6AEDE4F2-306A-4DF9-9307-9E3517C68A2B@oracle.com>
- <20190403160112.GK4038@hirez.programming.kicks-ass.net>
- <C0BC44A5-875C-4BED-A616-D380F6CF25D5@oracle.com>
- <20190605204003.GC3402@hirez.programming.kicks-ass.net>
- <6426D627-77EE-471C-B02A-A85271B666E9@oracle.com>
- <409b5d52-1f7d-7f60-04c7-e791e069239f@redhat.com>
-Organization: Red Hat
-Message-ID: <dc79105d-3f4d-d940-0313-cec9b3cf0680@redhat.com>
-Date:   Thu, 6 Jun 2019 11:42:09 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 11:42:32 -0400
+Received: from mail-pg1-f177.google.com ([209.85.215.177]:34788 "EHLO
+        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729137AbfFFPmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:42:32 -0400
+Received: by mail-pg1-f177.google.com with SMTP id h2so1590896pgg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 08:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ZawA+iZOSJAZNtAUyoJ3pGc/N5S/i87IWFfgocy0e+s=;
+        b=RLesCpt3QeyWEIityCf0prUXi0LRvr0YMT/HyZcUK86bCo5bvZOmir/9zeekSwtEJ3
+         tMmnodU5jetOGs7/jE1WKnIWyyl6exkggpGq0cZctOt0K3MLrBn+ueiy43oGPG5d/I7r
+         dJO3VE82qQWYGkL+2V3ss/I8DaSATaouxHEvStXqE+lG1eP/P4e9OLNLPRDrnuLL0hGs
+         9jzbUZgkSKsFRuT5kHjdsAMnE7Qw7GKrRB9X+BFaQ37BYGsytof+PGsJFaKzQE0RAckY
+         uc4MH7D5JdTzuGmeyu9Kn5uwJj3711Og+VZ5JDhQjLTC3DHiZ7JoqLncIwa6YdyOddoI
+         fRhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ZawA+iZOSJAZNtAUyoJ3pGc/N5S/i87IWFfgocy0e+s=;
+        b=EIo8HNF2ZLBzo/ZNr5vIoA94lDupMf51c2m50kj+G1pLU/DX0HyFtjVy9F/Q6ZZxvm
+         9nTTkz85vxpc7pIpq55NG/poeT2Noc5yq2kdSdAjJ0kTsctS7oTsR5uuDwwTmOIa8xWb
+         Pga/Yhrjaxd9Agm+/u7PcyO/fkvRtLm/0PMDx4CRpS4Swvb09l4++noOZNlJABVpWeyx
+         J6CdE478OBm+X0/wylr8JMc/ZOardAEJeWtxoQxPCpCt6ugztZbUOAoWFqgdCcveyTVh
+         AdIWR1n2UsWFxWt4SmOxqRkwrVo8WeWgt8k5egYwPeA7iVk9LjTU3fAw6f9sEO0O1veh
+         eaHQ==
+X-Gm-Message-State: APjAAAWVH0MdiGe7rCZZWU2IoYpfjSD3BvkcHT3y6bpd2sMaoN0hDcqd
+        x6XzMofKa7m0/HhzdB1tzxso8m6GQfOy/Q==
+X-Google-Smtp-Source: APXvYqx4kogHKk/c2Boqg6sX1qyQ7RBmEFL2JMtOpkKE1hecf4opydsz9GCyAfdl1db+YN88h61G2Q==
+X-Received: by 2002:a17:90a:a415:: with SMTP id y21mr501016pjp.75.1559835751297;
+        Thu, 06 Jun 2019 08:42:31 -0700 (PDT)
+Received: from brauner.io ([172.56.30.175])
+        by smtp.gmail.com with ESMTPSA id 85sm2373269pgb.52.2019.06.06.08.42.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 08:42:30 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 17:42:25 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC]: Convention for naming syscall revisions
+Message-ID: <20190606154224.7lln4zp6v3ey4icq@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <409b5d52-1f7d-7f60-04c7-e791e069239f@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 06 Jun 2019 15:42:20 +0000 (UTC)
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 11:32 AM, Waiman Long wrote:
-> On 6/6/19 11:21 AM, Alex Kogan wrote:
->>>> Also, the paravirt code is under arch/x86, while CNA is generic (not
->>>> x86-specific).  Do you still want to see CNA-related patching residing
->>>> under arch/x86?
->>>>
->>>> We still need a config option (something like NUMA_AWARE_SPINLOCKS) to
->>>> enable CNA patching under this config only, correct?
->>> There is the static_call() stuff that could be generic; I posted a new
->>> version of that today (x86 only for now, but IIRC there's arm64 patches
->>> for that around somewhere too).
->> The static_call technique appears as the more desirable long-term approach, but I think it would be prudent to keep the patches decoupled for now so we can move forward with less entanglements.
->> So unless anyone objects, we will work on plugging into the existing patching for pv.
->> And we will keep that code under arch/x86, but will be open for any suggestion to move it elsewhere.
->>
-> If you mean making the CNV code depends on PARAVIRT_SPINLOCKS for now,
-> that is fine. The code should be under kernel/locking. You shouldn't put
-> it somewhere under arch/x86.
+Hey everyone,
 
-I mean the core CNV code should be under kernel/locking. The paravirt
-specific code, however, should be close to the current paravirt code
-which is under arch/x86.
+I hope this is not going to start a trash fire.
 
--Longman
+While working on a new clone version I tried to find out what the
+current naming conventions for syscall revisions is. I was told and
+seemed to be able to confirm through the syscall list that revisions of
+syscalls are for the most part (for examples see [1]) named after the
+number of arguments and not for the number of revisions. But some also
+seem to escape that logic (e.g. clone2).
 
+In any case, I would like to document *a* convention for syscall
+revisions on https://www.kernel.org/doc/ . So what shall it be:
+- number of args
+- number of revision
+?
+
+Christian
+
+[1]: - accept4(/* 4 args */)
+     - dup2(/* 2 args */)
+     - dup3(/* 3 args */)
+     - eventfd2(/* 2 args */)
+     - pipe2(/* 2 args */)
+     - pselect6(/* 6 args, including structs */)
+     - signalfd4(/* 4 args, one of them a struct */)
+     - umount2(/* 2 args */)
+     - wait3(/* 3 args, one of them a struct */)
+     - wait4(/* 4 args, one of them a struct */)
