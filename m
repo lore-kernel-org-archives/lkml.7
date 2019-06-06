@@ -2,184 +2,207 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21BCC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7C9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F6F20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E471220652
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:11:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RQX9Zmd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbfFFRKt (ORCPT
+        id S1729969AbfFFRLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:10:49 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20370 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727512AbfFFRKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:10:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 10:10:47 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2019 10:10:46 -0700
-Date:   Thu, 6 Jun 2019 10:11:58 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190606171158.GB11374@iweiny-DESK2.sc.intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <c559c2ce-50dc-d143-5741-fe3d21d0305c@nvidia.com>
+        Thu, 6 Jun 2019 13:11:30 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40757 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727512AbfFFRL3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:11:29 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d30so1709749pgm.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=RCCjbZWfEuhDbIeAIpWgax0k0rY3XOyq9KErPV874w4=;
+        b=RQX9Zmd7Ya0CO1A5hU/4D9dIT22w59V6XzJvApJdP+FGeMxmEJEUajaDdYMScR+7FO
+         6LP+oX4K23otZ8pw7ZaTgHfdUR/5SJHAozY5T+vMbVjGkMDHyPA2AnInUTrZZUf2ZB6H
+         cupN8da+xYoz7g+x6dd59J0XIsHg+n3XBqTaR4V0kdiiCWY1OXga6TBK3BXtYEuhU8Pv
+         O9GZIp4WYP5U4nde+l06o1BLj3ygXyrVUai2+/y5FQajV4RbYQsu59UNEujIuLRUy5tB
+         ss+g1KXATzztltf/6Iv8K3PUVFnDFu9bf/as33ism4ujknnqKSLf0DWR8qe8nPPMVx6C
+         0Jng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=RCCjbZWfEuhDbIeAIpWgax0k0rY3XOyq9KErPV874w4=;
+        b=FYAIUgNooWC9lc/E3pVURJKyzz+pjjnK97unrqssHs+Q82qiXYWGvpPPTsY6Yl1TBs
+         O6+uD7+bs0w93Fj5UBgOLsR34xO+kSRcAEZGr+MQ/McMqUg5r5MEQgFNhgqwt7KpCWle
+         f9lTEcPUDWvrFCPirugqtCHiPDH7gozpXbZwf7ujNUo1XpE+LFV2yy1aUuqUrPwwlK9A
+         gZ1bxtQxL+5kwZv4NcQjbD8E2m0/Tri1sSnB/V0VHAwGr+YotwA9dEyuK9sqdVHhk8Z3
+         mtlFw/fsAfGqybocGxqsd163WukPNWnduUVav8+eVtXXN/9ZH7J3YKXSHEx7PZFUlTBg
+         ivww==
+X-Gm-Message-State: APjAAAXOnsPFx5ePwheB9JmfG0DuQGVNINvwE9DlvZASEPCLtRMPUtlI
+        aPtGMZ5lhlmKYHnpOJXIS0SSfQ==
+X-Google-Smtp-Source: APXvYqzDEcNItKsI90UQVxfUSnXTWlpL13u+ek16QryxLZB/K5zFkxlS5RhK+PwwS6ep3GViFH4ZCA==
+X-Received: by 2002:a63:f10e:: with SMTP id f14mr4221110pgi.226.1559841088435;
+        Thu, 06 Jun 2019 10:11:28 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id 16sm2415912pfo.65.2019.06.06.10.11.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 10:11:27 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com
+Cc:     jernej.skrabec@siol.net, Neil Armstrong <narmstrong@baylibre.com>,
+        maxime.ripard@bootlin.com, jonas@kwiboo.se,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 4/5] drm/meson: Add YUV420 output support
+In-Reply-To: <20190520133753.23871-5-narmstrong@baylibre.com>
+References: <20190520133753.23871-1-narmstrong@baylibre.com> <20190520133753.23871-5-narmstrong@baylibre.com>
+Date:   Thu, 06 Jun 2019 10:11:26 -0700
+Message-ID: <7hmuiuej0h.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c559c2ce-50dc-d143-5741-fe3d21d0305c@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 10:52:12PM -0700, John Hubbard wrote:
-> On 6/5/19 6:45 PM, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ... V1,000,000   ;-)
-> > 
-> > Pre-requisites:
-> > 	John Hubbard's put_user_pages() patch series.[1]
-> > 	Jan Kara's ext4_break_layouts() fixes[2]
-> > 
-> > Based on the feedback from LSFmm and the LWN article which resulted.  I've
-> > decided to take a slightly different tack on this problem.
-> > 
-> > The real issue is that there is no use case for a user to have RDMA pinn'ed
-> > memory which is then truncated.  So really any solution we present which:
-> > 
-> > A) Prevents file system corruption or data leaks
-> > ...and...
-> > B) Informs the user that they did something wrong
-> > 
-> > Should be an acceptable solution.
-> > 
-> > Because this is slightly new behavior.  And because this is gonig to be
-> > specific to DAX (because of the lack of a page cache) we have made the user
-> > "opt in" to this behavior.
-> > 
-> > The following patches implement the following solution.
-> > 
-> > 1) The user has to opt in to allowing GUP pins on a file with a layout lease
-> >    (now made visible).
-> > 2) GUP will fail (EPERM) if a layout lease is not taken
-> > 3) Any truncate or hole punch operation on a GUP'ed DAX page will fail.
-> > 4) The user has the option of holding the layout lease to receive a SIGIO for
-> >    notification to the original thread that another thread has tried to delete
-> >    their data.  Furthermore this indicates that if the user needs to GUP the
-> >    file again they will need to retake the Layout lease before doing so.
-> > 
-> > 
-> > NOTE: If the user releases the layout lease or if it has been broken by another
-> > operation further GUP operations on the file will fail without re-taking the
-> > lease.  This means that if a user would like to register pieces of a file and
-> > continue to register other pieces later they would be advised to keep the
-> > layout lease, get a SIGIO notification, and retake the lease.
-> > 
-> > NOTE2: Truncation of pages which are not actively pinned will succeed.  Similar
-> > to accessing an mmap to this area GUP pins of that memory may fail.
-> > 
-> 
-> Hi Ira,
-> 
-> Wow, great to see this. This looks like basically the right behavior, IMHO.
-> 
-> 1. We'll need man page additions, to explain it. In fact, even after a quick first
-> pass through, I'm vague on two points:
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Of course.  But I was not going to go through and attempt to write man pages
-and other docs without some agreement on the final mechanisms.  This works
-which was the basic requirement I had to send an RFC.  :-D  But yes man pages
-and updates to headers etc all have to be done.
+> This patch adds support for the YUV420 output from the Amlogic Meson SoCs
+> Video Processing Unit to the HDMI Controller.
+>
+> The YUV420 is obtained by generating a YUV444 pixel stream like
+> the classic HDMI display modes, but then the Video Encoder output
+> can be configured to down-sample the YUV444 pixel stream to a YUV420
+> stream.
+> In addition if pixel stream down-sampling, the Y Cb Cr components must
+> also be mapped differently to align with the HDMI2.0 specifications.
+>
+> This mode needs a different clock generation scheme since the TMDS PHY
+> clock must match the 10x ration with the YUV420 pixel clock, but
 
-> 
-> a) I'm not sure how this actually provides "opt-in to new behavior", because I 
-> don't see any CONFIG_* or boot time choices, and it looks like the new behavior 
-> just is there. That is, if user space doesn't set F_LAYOUT on a range, 
-> GUP FOLL_LONGTERM will now fail, which is new behavior. (Did I get that right?)
+s/ration/ratio/
 
-The opt in is at run time.  Currently GUP FOLL_LONGTERM is _not_ _allowed_ on
-the FS DAX pages at all.  So the default behavior is the same, GUP fails.  (Or
-specifically ibv_reg_mr() fails.  This fails as before, not change there.
+> the video encoder must run at 2x the pixel clock.
+>
+> This patch adds the TMDS PHY clock value in all the video clock setup
+> in order to better support these specific uses cases and switch
+> to the Common Clock framework for clocks handling in the future.
+>
+> When 420 is needed, it calls drm_bridge_format_set() for notify the
+> bridge the input format has changed to YUV420.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-The Opt in is that if a user knows what is involved they can take the lease and
-the GUP will not fail.  This comes with the price of knowing that other
-processes can't truncate those pages in use.
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 
-> 
-> b) Truncate and hole punch behavior, with and without user space having a SIGIO
-> handler. (I'm sure this is obvious after another look through, but it might go
-> nicely in a man page.)
+with a couple very minor nits to cleanup below...
 
-Sorry this was not clear.  There are 2 points for this patch set which requires
-the use of catching SIGIO.
+> ---
+>  drivers/gpu/drm/meson/meson_dw_hdmi.c   | 100 +++++++++++++++++++-----
+>  drivers/gpu/drm/meson/meson_vclk.c      |  93 ++++++++++++++++------
+>  drivers/gpu/drm/meson/meson_vclk.h      |   7 +-
+>  drivers/gpu/drm/meson/meson_venc.c      |   6 +-
+>  drivers/gpu/drm/meson/meson_venc.h      |  11 +++
+>  drivers/gpu/drm/meson/meson_venc_cvbs.c |   3 +-
+>  6 files changed, 174 insertions(+), 46 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> index 779da21143b9..5d67e2beba58 100644
+> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+> @@ -159,6 +159,7 @@ struct meson_dw_hdmi {
+>  	struct regulator *hdmi_supply;
+>  	u32 irq_stat;
+>  	struct dw_hdmi *hdmi;
+> +	unsigned long input_bus_format;
+>  };
+>  #define encoder_to_meson_dw_hdmi(x) \
+>  	container_of(x, struct meson_dw_hdmi, encoder)
+> @@ -308,6 +309,10 @@ static void meson_hdmi_phy_setup_mode(struct meson_dw_hdmi *dw_hdmi,
+>  	struct meson_drm *priv = dw_hdmi->priv;
+>  	unsigned int pixel_clock = mode->clock;
+>  
+> +	/* For 420, pixel clock is half unlike venc clock */
+> +	if (dw_hdmi->input_bus_format == MEDIA_BUS_FMT_UYYVYY8_0_5X24)
+> +		pixel_clock /= 2;
+> +
+>  	if (dw_hdmi_is_compatible(dw_hdmi, "amlogic,meson-gxl-dw-hdmi") ||
+>  	    dw_hdmi_is_compatible(dw_hdmi, "amlogic,meson-gxm-dw-hdmi")) {
+>  		if (pixel_clock >= 371250) {
+> @@ -383,25 +388,36 @@ static void dw_hdmi_set_vclk(struct meson_dw_hdmi *dw_hdmi,
+>  {
+>  	struct meson_drm *priv = dw_hdmi->priv;
+>  	int vic = drm_match_cea_mode(mode);
+> +	unsigned int phy_freq;
+>  	unsigned int vclk_freq;
+>  	unsigned int venc_freq;
+>  	unsigned int hdmi_freq;
+>  
+>  	vclk_freq = mode->clock;
+>  
+> +	/* For 420, pixel clock is half unlike venc clock */
 
-1) If an application _actually_ does (somehow, somewhere, in some unforseen use
-   case) want to allow a truncate to happen.  They can catch the SIGIO, finish
-   their use of the pages, and release them.  As long as they can do this within
-   the <sysfs>/lease-time-break time they are ok and the truncate can proceed.
+minor grammar nit: put a comma after "half" (here and several other
+places in the patch)
 
-2) This is a bit more subtle and something I almost delayed sending these out
-   for.  Currently the implementation of a lease break actually removes the
-   lease from the file.  I did not want this to happen and I was thinking of
-   delaying this patch set to implement something which keeps the lease around
-   but I figured I should get something out for comments.  Jan has proposed
-   something along these lines and I agree with him so I'm going to ask you to
-   read my response to him about the details.
+[...]
 
-   Anyway so the key here is that currently an app needs the SIGIO to retake
-   the lease if they want to map the file again or in parts based on usage.
-   For example, they may only want to map some of the file for when they are
-   using it and then map another part later.  Without the SIGIO they would lose
-   their lease or would have to just take the lease for each GUP pin (which
-   adds overhead).  Like I said I did not like this but I left it to get
-   something which works out.
+> @@ -722,17 +773,29 @@ static void meson_venc_hdmi_encoder_mode_set(struct drm_encoder *encoder,
+>  	struct meson_dw_hdmi *dw_hdmi = encoder_to_meson_dw_hdmi(encoder);
+>  	struct meson_drm *priv = dw_hdmi->priv;
+>  	int vic = drm_match_cea_mode(mode);
+> +	unsigned int ycrcb_map = MESON_VENC_MAP_CB_Y_CR;
+> +	bool yuv420_mode = false;
+>  
+>  	DRM_DEBUG_DRIVER("\"%s\" vic %d\n", mode->name, vic);
+>  
+> +	if (dw_hdmi->input_bus_format == MEDIA_BUS_FMT_UYYVYY8_0_5X24) {
+> +		ycrcb_map = MESON_VENC_MAP_CR_Y_CB;
+> +		yuv420_mode = true;
+> +	}
+> +
+>  	/* VENC + VENC-DVI Mode setup */
+> -	meson_venc_hdmi_mode_set(priv, vic, mode);
+> +	meson_venc_hdmi_mode_set(priv, vic, ycrcb_map, yuv420_mode, mode);
+>  
+>  	/* VCLK Set clock */
+>  	dw_hdmi_set_vclk(dw_hdmi, mode);
+>  
+> -	/* Setup YUV444 to HDMI-TX, no 10bit diphering */
+> -	writel_relaxed(0, priv->io_base + _REG(VPU_HDMI_FMT_CTRL));
+> +	if (dw_hdmi->input_bus_format == MEDIA_BUS_FMT_UYYVYY8_0_5X24)
+> +		/* Setup YUV420 to HDMI-TX, no 10bit diphering */
+> +		writel_relaxed(2 | (2 << 2),
 
-> 
-> 2. It *seems* like ext4, xfs are taken care of here, not just for the DAX case,
-> but for general RDMA on them? Or is there more that must be done?
+nit: #define'd bitfields would be better, IIUC, I see these named as
+"use average" and "Convert to 420" in the datasheet.
 
-This is limited to DAX.  All the functionality is limited to *_devmap or "is
-DAX" cases.  I'm still thinking that page cache backed files can have a better
-solution for the user.
+[...]
 
-> 
-> 3. Christophe Hellwig's unified gup patchset wreaks havoc in gup.c, and will
-> conflict violently, as I'm sure you noticed. :)
+> @@ -1508,8 +1510,8 @@ void meson_venc_hdmi_mode_set(struct meson_drm *priv, int vic,
+>  	writel_relaxed((use_enci ? 1 : 2) |
+>  		       (mode->flags & DRM_MODE_FLAG_PHSYNC ? 1 << 2 : 0) |
+>  		       (mode->flags & DRM_MODE_FLAG_PVSYNC ? 1 << 3 : 0) |
+> -		       4 << 5 |
+> -		       (venc_repeat ? 1 << 8 : 0) |
+> +		       (ycrcb_map << 5) |
+> +		       (venc_repeat || yuv420_mode ? 1 << 8 : 0) |
 
-Yep...  But I needed to get the conversation started on this idea.
+Lots of magic constants here, but I guess there's no new ones, so it's
+just a(nother) reminder for a future readability cleanup.
 
-Thanks for the feedback!
-Ira
+>  		       (hdmi_repeat ? 1 << 12 : 0),
+>  		       priv->io_base + _REG(VPU_HDMI_SETTING));
+>  
 
-> 
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
-> 
+Kevin
