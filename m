@@ -2,52 +2,83 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4ACC28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0EAC28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6AF220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2BB20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 03:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfFFD3D convert rfc822-to-8bit (ORCPT
+        id S1726659AbfFFDee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 23:29:03 -0400
-Received: from b17.quest2playy.biz ([198.210.47.17]:54827 "EHLO
-        b17.quest2playy.biz" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726454AbfFFD3C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 23:29:02 -0400
-Reply-To: "Loan Grant" <Loan@mfigc.info>
-From:   "Loan Grant" <Loan@eib.org>
+        Wed, 5 Jun 2019 23:34:34 -0400
+Received: from ozlabs.ru ([107.173.13.209]:53092 "EHLO ozlabs.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726331AbfFFDee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 23:34:34 -0400
+X-Greylist: delayed 514 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Jun 2019 23:34:34 EDT
+Received: from fstn1-p1.ozlabs.ibm.com (localhost [IPv6:::1])
+        by ozlabs.ru (Postfix) with ESMTP id 4315FAE80017;
+        Wed,  5 Jun 2019 23:25:59 -0400 (EDT)
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
 To:     linux-kernel@vger.kernel.org
-Subject: Re: Loan grant @affordable rate
-Date:   5 Jun 2019 20:29:01 -0700
-Message-ID: <20190605202901.43597C90655E71B6@eib.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-doc@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Subject: PCI: Correct the resource_alignment parameter example
+Date:   Thu,  6 Jun 2019 13:25:57 +1000
+Message-Id: <20190606032557.107542-1-aik@ozlabs.ru>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dear,
+The option description requires an order and so does the option
+parsing code, however the example uses a size, fix this.
 
-We are a large Company based in Istanbul Turkey and we offers flexible loans and funding for all projects for as low as 2% interest rate  per annum for a period of 5-15 yrs .
+Fixes: 8b078c603249 ("PCI: Update "pci=resource_alignment" documentation")
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-We invite you to partner with us and benefit in our new Loan and Project funding program.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 2b8ee90bb644..dcb53d64ad74 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3340,27 +3340,28 @@
+ 		resource_alignment=
+ 				Format:
+ 				[<order of align>@]<pci_dev>[; ...]
+ 				Specifies alignment and device to reassign
+ 				aligned memory resources. How to
+ 				specify the device is described above.
+ 				If <order of align> is not specified,
+ 				PAGE_SIZE is used as alignment.
+ 				PCI-PCI bridge can be specified, if resource
+ 				windows need to be expanded.
+ 				To specify the alignment for several
+ 				instances of a device, the PCI vendor,
+ 				device, subvendor, and subdevice may be
+-				specified, e.g., 4096@pci:8086:9c22:103c:198f
++				specified, e.g., 12@pci:8086:9c22:103c:198f
++				for the 4096 alignment.
+ 		ecrc=		Enable/disable PCIe ECRC (transaction layer
+ 				end-to-end CRC checking).
+ 				bios: Use BIOS/firmware settings. This is the
+ 				the default.
+ 				off: Turn ECRC off
+ 				on: Turn ECRC on.
+ 		hpiosize=nn[KMG]	The fixed amount of bus space which is
+ 				reserved for hotplug bridge's IO window.
+ 				Default size is 256 bytes.
+ 		hpmemsize=nn[KMG]	The fixed amount of bus space which is
+ 				reserved for hotplug bridge's memory window.
+ 				Default size is 2 megabytes.
+ 		hpbussize=nn	The minimum amount of additional bus numbers
+-- 
+2.17.1
 
-We can approve a loan/funding for up to USD$1 Billion or more depending on the nature of business so If you need loan/ funding and for more details Send us email to customers email address only at: Loan@mfigc.info
-
-Note: We  also pay 1% agents fee for each client referred to us by agent therefore if you know any one who need genuine loan you can refer to us and get 1%.
-
-This is a Guaranteed loan/Funding  and please reply only to this email address at: Loan@mfigc.info
-
-Regards
-Haider Dawber
-Istanbul-Turkey
-Email: Loan@mfigc.info
