@@ -2,105 +2,81 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8533FC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E154C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD99207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8XX0OP5"
+	by mail.kernel.org (Postfix) with ESMTP id 643E2208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfFFVWV (ORCPT
+        id S1728408AbfFFV0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:22:21 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39984 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFFVWU (ORCPT
+        Thu, 6 Jun 2019 17:26:02 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:59597 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfFFV0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:22:20 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so1418924pla.7;
-        Thu, 06 Jun 2019 14:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RBQnY16OoiSU9x2fTbRylbra8bvQfhJHveZ7KsLfXLE=;
-        b=r8XX0OP59OQafz2qMA3prFHhtITzIOlZ9tRNin1PaPA5CRz3/Rmq6Gp1R0CCilbiQ5
-         9ah41993Yr8w0VBOaqbMcaz5gZrghaXz7dd9TfCi2k0ctANR7Vl7VwL/QtH8BoZL0Ojf
-         gAcrDEb4VAuNbzVkL0jjpJzoTmWhj5x4WywG7yijizhplmGQFUkxWAIWZib+N1nvF4C+
-         Oks7Dnca+eP8AhqzRHkpXPdFTIEOvRncvW1kFuJrqwUlC86oBSFN1oSRlYashgjYO3AD
-         DsFuIRvZzlRrlXmDCjqkNCYlTAAMpmoYRWH5rkTSO+dji/GWII3FLXGZ8+9FtDs3XmbF
-         AuOg==
+        Thu, 6 Jun 2019 17:26:01 -0400
+Received: by mail-it1-f199.google.com with SMTP id h133so81277ith.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 14:26:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RBQnY16OoiSU9x2fTbRylbra8bvQfhJHveZ7KsLfXLE=;
-        b=NiubWLt12uUebtJ81r7DBcqT+v97M2VdlGTHjQfRgSXwH8QE26x2yFcRLILefGQsK4
-         Xek48nIkv109K7EfWk6Bx6Bx7AEtBIHZat8/0uohMda0whaBhJpgiChxdIZuLmQKGbUW
-         rMzfEUL619TdnX7b3MMChrsBM/OrDjTL84TFnvvESMCfsfPslMOHXTngXFkY1yDX/lF5
-         HDOHEc7P6Ls50iFEkVL9dvoU03FTWo1IRPg2YH2XQfyPp2cus9W78p01XwZT+ue7eyAo
-         xhPDreN9mLe2boKlPUhnijKWDXif9j4FcKWV4jBykDSMU9AJ/kjkf4i7tLcGmj/lVgtj
-         67uA==
-X-Gm-Message-State: APjAAAXtvW4MsU4WjwPv4+BvDCKCQw7iXpcmrrkxV2p0gCVWzKmnt/M0
-        U1bRxcjuBXUZrd48x+/UBGQ=
-X-Google-Smtp-Source: APXvYqxBi6parEcN6dotMYwWVEm/YadS+PaoRNAtjRDPTr29165cicwhTFOnicMr2GAtIb9XE0WQNA==
-X-Received: by 2002:a17:902:2a69:: with SMTP id i96mr43521459plb.108.1559856140254;
-        Thu, 06 Jun 2019 14:22:20 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k3sm88985pgo.81.2019.06.06.14.22.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 14:22:19 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 14:22:18 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog: meson_wdt: update with SPDX Licence identifier
-Message-ID: <20190606212218.GA1578@roeck-us.net>
-References: <20190520142847.442-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=8FLsmzT5fuRYDlPRpXfsHV8R+x45zmFIlbaKQu+jQrU=;
+        b=EgMLq99Tu3/zbZh4ecOb1uL9C0UMlJgx4nZ8AADsnAg+cV4idtVAcbxnGX74/9R8S4
+         B2EpT1pxOdeOnnorCGl1lElQwxyF7vNElxuIsV6vL/h91sZMHC1eE0mplEb3vOW8NpAv
+         G2IevDPQfJsxTnA0Arjaiz66Y1ligZEy1cRLnoQ/Lyzp+3U6Vjuze5AyPTrOCrNrpSfk
+         2q90BpFUF2C9DXi/SYbSt0HKeA4npXqDzzn+ZU6OxQaiqlW0P+Rq1HOTgPztANYjYbEd
+         zyArhU2g6dFfcN+sEAT/4ImMgztb0uGsfcTt4BRpt/K3MSROQmMEFQEnga2KdyG1XXtV
+         aUmA==
+X-Gm-Message-State: APjAAAVpsRwSQRU7lP1GuEgp5GyHxEYH/ovsHjkHQAnUCzYsZ4icRZzd
+        nbBShKkMffNIc2ZdKCZcNgfMAuwGQlpo4TrwSKVIXNRNuFrl
+X-Google-Smtp-Source: APXvYqxl7JOalyt2i6XIsXn7vQ0MIDr2sMsgZJhOcVtzOU7sAoQq0Rfvs8Y/n2P0+sXCktgx3+s7D4eQfn486z0A1OdlZGHlD5Za
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520142847.442-1-narmstrong@baylibre.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Received: by 2002:a6b:1488:: with SMTP id 130mr29049755iou.304.1559856360982;
+ Thu, 06 Jun 2019 14:26:00 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 14:26:00 -0700
+In-Reply-To: <0000000000004945f1058aa80556@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004c11d6058aae5c30@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in corrupted (2)
+From:   syzbot <syzbot+9a901acbc447313bfe3e@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, ast@kernel.org, cai@lca.pw,
+        crecklin@redhat.com, daniel@iogearbox.net, dvyukov@google.com,
+        john.fastabend@gmail.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 04:28:47PM +0200, Neil Armstrong wrote:
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+syzbot has bisected this bug to:
 
-This change has been applied system-wide.
+commit d40b0116c94bd8fc2b63aae35ce8e66bb53bba42
+Author: Daniel Borkmann <daniel@iogearbox.net>
+Date:   Thu Aug 16 19:49:08 2018 +0000
 
-Guenter
+     bpf, sockmap: fix leakage of smap_psock_map_entry
 
-> ---
->  drivers/watchdog/meson_wdt.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/watchdog/meson_wdt.c b/drivers/watchdog/meson_wdt.c
-> index 01889cef81e1..3389f4c02603 100644
-> --- a/drivers/watchdog/meson_wdt.c
-> +++ b/drivers/watchdog/meson_wdt.c
-> @@ -1,12 +1,8 @@
-> +// SPDX-License-Identifier: GPL-2.0+
->  /*
->   *      Meson Watchdog Driver
->   *
->   *      Copyright (c) 2014 Carlo Caione
-> - *
-> - *      This program is free software; you can redistribute it and/or
-> - *      modify it under the terms of the GNU General Public License
-> - *      as published by the Free Software Foundation; either version
-> - *      2 of the License, or (at your option) any later version.
->   */
->  
->  #include <linux/clk.h>
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1137e90ea00000
+start commit:   156c0591 Merge tag 'linux-kselftest-5.2-rc4' of git://git...
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1337e90ea00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1537e90ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
+dashboard link: https://syzkaller.appspot.com/bug?extid=9a901acbc447313bfe3e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a4b01ea00000
+
+Reported-by: syzbot+9a901acbc447313bfe3e@syzkaller.appspotmail.com
+Fixes: d40b0116c94b ("bpf, sockmap: fix leakage of smap_psock_map_entry")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
