@@ -2,137 +2,101 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E3BC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9127C46470
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE96E207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:36:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="LcmEO5cc";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="r85ctanC"
+	by mail.kernel.org (Postfix) with ESMTP id CBAB320868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfFFGgb (ORCPT
+        id S1726454AbfFFGhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:36:31 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:12850 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFGga (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:36:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559803027; x=1591339027;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=GROh4qCTdCjDOeNTyHdfWCyNWpdwRCHJ5JXYERWlgu0=;
-  b=LcmEO5ccA5R3PSpAdvlFBX9D2Rl46oBQQBrXh17CJIgev0B9pPavXGo0
-   tBGbmgFz8CAvjZuqhX0VLnhFmUjobZHV6cM1n+/lUHjugGnODX3cgcudw
-   6owL02qnvaAk0pAn5LIbVaLzgzZYsgtlUzQZP/Hca/HnJT9OuMbIafd5B
-   tBVWtFO4by7q209gB7JbPUrG5puAD7KmQUFOsJq0/n8XJcEHU1xiTJ3/3
-   ECAJbQ6l/Ara4fOSmJNi92FzhvgZIByFvGBib9HU9+uv0IoDSN7KOSnoF
-   V+ZscA37J1Ll4TxucJv2pz9gOMAeQmkKNQZtk3PWu8Qg8gMvsB4DCpRa/
-   w==;
-X-IronPort-AV: E=Sophos;i="5.63,558,1557158400"; 
-   d="scan'208";a="209549030"
-Received: from mail-dm3nam03lp2051.outbound.protection.outlook.com (HELO NAM03-DM3-obe.outbound.protection.outlook.com) ([104.47.41.51])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jun 2019 14:37:05 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sdhSAoDoPtdHbdxwUQZniSOsm6I76sfh9IxmQMqTqks=;
- b=r85ctanC0fsTOgTMTSpXJQeucLOZXrTbELDDxPuNqbha/lpON5SeAUkdliMS2/TiDpilTRrdLy5eE17SFFhymJljpvIVaLoThnm1777p6y8tvW70XnBxHwvqiODJbqk0aKFfOAS+91ySGcU+qXrjzgYB2BMee7KmAI/8e4YTtU8=
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
- SN6PR04MB4158.namprd04.prod.outlook.com (52.135.71.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.21; Thu, 6 Jun 2019 06:36:22 +0000
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::6d99:14d9:3fa:f530]) by SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::6d99:14d9:3fa:f530%6]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
- 06:36:22 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-CC:     Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [PATCH v2 2/3] scsi: ufs: Allow resetting the UFS device
-Thread-Topic: [PATCH v2 2/3] scsi: ufs: Allow resetting the UFS device
-Thread-Index: AQHVHAOW/gPfCB+BCUqDoLF2sKUkJqaOK2sA
-Date:   Thu, 6 Jun 2019 06:36:22 +0000
-Message-ID: <SN6PR04MB4925FC3F1001326AA218DF21FC170@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190606010249.3538-1-bjorn.andersson@linaro.org>
- <20190606010249.3538-3-bjorn.andersson@linaro.org>
-In-Reply-To: <20190606010249.3538-3-bjorn.andersson@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41b35a9c-4567-4f04-99d2-08d6ea494a7d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4158;
-x-ms-traffictypediagnostic: SN6PR04MB4158:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB4158EF452179F86E542F9400FC170@SN6PR04MB4158.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(346002)(396003)(376002)(366004)(189003)(199004)(73956011)(76116006)(66446008)(66556008)(64756008)(66476007)(86362001)(66946007)(99286004)(14454004)(7416002)(74316002)(5660300002)(4326008)(6246003)(478600001)(68736007)(52536014)(256004)(102836004)(72206003)(305945005)(25786009)(71190400001)(71200400001)(7696005)(4744005)(6506007)(66066001)(53936002)(76176011)(186003)(2906002)(8676002)(81156014)(81166006)(8936002)(26005)(3846002)(55016002)(486006)(9686003)(110136005)(54906003)(6116002)(33656002)(7736002)(316002)(476003)(446003)(11346002)(6436002)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4158;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: O5fXCumXJe8xh/1Hp2CY2EBrpkx9FbkYVpUAE8hwX2oD97nmXB9OQQ0b2zUuSuc0Y74A4G7oDbiORHOKwzTvoJQBNdWu0fqHv/EJuCj1GxdCyBQ7Et4lq6ky9OSZMrO2NZBO39uc22jBHDaQ3LV8lgDeTwiwOVFCvj86kSEJHKY0OjHwDblXP1KDw72uW0lVZoEz3fq+SZLRFeXxcEm0fCIzAY8oKEMBvpUuNKUIX4HHTkMohViLzpa33wd8OlpA6cJJFFZeGKsLc8wO3nJ2clndAtDjhnoBxcIWVDwkR/3woM1l05coO5GOBjaIPZWgp+Tb3OK0llWSyV+fNLjJvQ64bKg/WK8VVRDjUZc1ZS4Xz2oofqjvqSgJZcWjM8DmF1dvi4VXj7cwVEMqzSSUxU0NtajthYpOGAPhpCX9GPw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Jun 2019 02:37:33 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:37922 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfFFGhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:37:33 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hYm1g-0006bn-NT; Thu, 06 Jun 2019 14:37:28 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hYm1c-0003k2-At; Thu, 06 Jun 2019 14:37:24 +0800
+Date:   Thu, 6 Jun 2019 14:37:24 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
+Message-ID: <20190606063724.n77z7gaf32tmyxng@gondor.apana.org.au>
+References: <20190529202728.GA35103@gmail.com>
+ <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
+ <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au>
+ <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
+ <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
+ <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au>
+ <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
+ <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41b35a9c-4567-4f04-99d2-08d6ea494a7d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 06:36:22.1322
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Avri.Altman@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4158
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->  static int ufshcd_hba_init(struct ufs_hba *hba)
+On Thu, May 30, 2019 at 04:31:09PM +0200, Ard Biesheuvel wrote:
+>
+> This might work:
+>
+> diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+> index c0ece44f303b..3d313d2a279a 100644
+> --- a/drivers/crypto/caam/caamalg.c
+> +++ b/drivers/crypto/caam/caamalg.c
+> @@ -1661,7 +1661,8 @@ static int aead_decrypt(struct aead_request *req)
+>   * allocate and map the skcipher extended descriptor for skcipher
+>   */
+>  static struct skcipher_edesc *skcipher_edesc_alloc(struct
+> skcipher_request *req,
+> -                                                  int desc_bytes)
+> +                                                  int desc_bytes,
+> +                                                  u8 const *input_iv)
 >  {
->  	int err;
-> @@ -7425,9 +7460,15 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
->  	if (err)
->  		goto out_disable_vreg;
->=20
-> +	err =3D ufshcd_init_device_reset(hba);
-> +	if (err)
-> +		goto out_disable_variant;
-> +
->  	hba->is_powered =3D true;
->  	goto out;
->=20
-> +out_disable_variant:
-> +	ufshcd_vops_setup_regulators(hba, false);
-Is this necessary?
-ufshcd_vops_setup_regulators() was just called as part of ufshcd_variant_hb=
-a_init
+>         struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+>         struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+> @@ -1745,7 +1746,7 @@ static struct skcipher_edesc
+> *skcipher_edesc_alloc(struct skcipher_request *req,
+>         /* Make sure IV is located in a DMAable area */
+>         if (ivsize) {
+>                 iv = (u8 *)edesc->hw_desc + desc_bytes + sec4_sg_bytes;
+> -               memcpy(iv, req->iv, ivsize);
+> +               memcpy(iv, input_iv, ivsize);
+> 
+>                 iv_dma = dma_map_single(jrdev, iv, ivsize, DMA_TO_DEVICE);
+>                 if (dma_mapping_error(jrdev, iv_dma)) {
+
+Hi Ard:
+
+I presume you will be submitting this patch at some point?  When
+you do please base it on top of your other one which I'm about to
+merge.
 
 Thanks,
-Avri
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
