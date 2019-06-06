@@ -2,208 +2,193 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A846C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE06C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086CA20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7617A20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:43:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gYqqAHLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfFFFmv (ORCPT
+        id S1726567AbfFFFno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 01:42:51 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:29517 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725267AbfFFFmu (ORCPT
+        Thu, 6 Jun 2019 01:43:44 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14040 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFFFno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 01:42:50 -0400
-X-UUID: 9c3da1f7682a4564842f2f6a9a9598ad-20190606
-X-UUID: 9c3da1f7682a4564842f2f6a9a9598ad-20190606
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 520499542; Thu, 06 Jun 2019 13:42:43 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 6 Jun 2019 13:42:39 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 6 Jun 2019 13:42:37 +0800
-Message-ID: <1559799757.20098.6.camel@mtksdaap41>
-Subject: Re: [PATCH v3, 06/27] drm/mediatek: add mutex mod into ddp private
- data
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 6 Jun 2019 13:42:37 +0800
-In-Reply-To: <1559734986-7379-7-git-send-email-yongqiang.niu@mediatek.com>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1559734986-7379-7-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 6 Jun 2019 01:43:44 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf8a80d0000>; Wed, 05 Jun 2019 22:43:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 05 Jun 2019 22:43:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 05 Jun 2019 22:43:42 -0700
+Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 05:43:39 +0000
+Subject: Re: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
+ <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
+ <9142282b-ab76-53a0-13ce-c43b8adc575f@nvidia.com>
+ <4f14a218-332c-0263-c6c5-73a13b2446f0@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <caa17a53-6f29-411b-9a84-58ff019752ff@nvidia.com>
+Date:   Wed, 5 Jun 2019 22:43:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+In-Reply-To: <4f14a218-332c-0263-c6c5-73a13b2446f0@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559799821; bh=GE4p/vNNji/ezHHwZOaHDuH9S3e2H9hCagygywOKcME=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=gYqqAHLrmwQ5AEHYn1VMWyqe+igo0+6oE4x0eX43U88GDpI1+wRnq+DFvBMOceaFO
+         lFvLPjv7qgng5rb8JZdByXhDvHcEr1jMbGIyYKNYUjfAtGjPC7KPFQIzyVgXkcMkp7
+         PmEPTd4JbRacOsHdNC/EfsiLG4Zz4NuJjWhxSz1KtXk8VGRFg4eo7AGwEuFEAO65s6
+         KH+w7DxWR/yOZ1Y0j14jvyNS91zpf5shU8SvtNzxbATvOgpfGJLAA7GrBGzCCQ8dGD
+         b+iQpz4sLueC9HJ1UVLFfeHHQ5FvSD2seERCpM4hvCFdQfu1YRHVGIdEPbxOYSwSCv
+         LvzNnTi13Txfw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
 
-On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> except mutex mod, mutex mod reg,mutex sof reg,
-> and mutex sof id will be ddp private data
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 53 +++++++++++++++++++++++-----------
->  1 file changed, 36 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index 579ce28..ae94d44 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -41,12 +41,12 @@
->  #define DISP_REG_CONFIG_DSI_SEL			0x050
->  #define DISP_REG_CONFIG_DPI_SEL			0x064
->  
-> -#define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
-> -#define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
-> -#define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
-> -#define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
-> -#define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
-> -#define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
-> +#define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
-> +#define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
-> +#define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
-> +#define DISP_REG_MUTEX_MOD(n)			(0x2c + 0x20 * (n))
-> +#define DISP_REG_MUTEX_SOF(n)			(0x30 + 0x20 * (n))
-> +#define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
 
-You add 'tab' because of "add mutex mod register offset into ddp private
-data" not "add mutex mod into ddp private data", so move this to the
-related patch.
+On 5/31/19 5:43 AM, Dmitry Osipenko wrote:
+> 31.05.2019 11:50, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>>
+>> On 5/30/19 4:27 AM, Dmitry Osipenko wrote:
+>>> 30.05.2019 8:55, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Post suspend I2C registers have power on reset values. Before any
+>>>> transfer initialize I2C registers to prevent I2C transfer timeout
+>>>> and implement suspend and resume callbacks needed. Fix below errors
+>>>> post suspend:
+>>>>
+>>>> 1) Tegra I2C transfer timeout during jetson tx2 resume:
+>>>>
+>>>> [=C2=A0=C2=A0 27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x=
+1b0 @
+>>>> 2939, parent: i2c-1
+>>>> [=C2=A0=C2=A0 27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
+>>>> [=C2=A0=C2=A0 27.639162] pca953x 1-0074: Unable to sync registers 0x3-=
+0x5. -110
+>>>> [=C2=A0=C2=A0 27.645336] pca953x 1-0074: Failed to sync GPIO dir regis=
+ters: -110
+>>>> [=C2=A0=C2=A0 27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x=
+1b0
+>>>> returns -110
+>>>> [=C2=A0=C2=A0 27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 retu=
+rned -110
+>>>> after 127152 usecs
+>>>> [=C2=A0=C2=A0 27.666194] PM: Device 1-0074 failed to resume: error -11=
+0
+>>>>
+>>>> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+>>>>
+>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
+>>>>  =C2=A0 1 file changed, 24 insertions(+)
+>>>>
+>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
+>>>> b/drivers/i2c/busses/i2c-tegra.c
+>>>> index ebaa78d..f6a377f 100644
+>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>> @@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct
+>>>> platform_device *pdev)
+>>>>  =C2=A0 }
+>>>>  =C2=A0 =C2=A0 #ifdef CONFIG_PM_SLEEP
+>>>> +static int tegra_i2c_suspend(struct device *dev)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(=
+dev);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 i2c_mark_adapter_suspended(&i2c_dev->adapter);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>> +}
+>>>> +
+>>>> +static int tegra_i2c_resume(struct device *dev)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(=
+dev);
+>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_ADAP=
+TER);
+>>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra_i2c_init(i2c_dev, false);
+>>>> +=C2=A0=C2=A0=C2=A0 i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_AD=
+APTER);
+>>>
+>>> Why the locking is needed here?
+>>
+>> async resume could result in stress test issues if some client accesses
+>> the i2c instance. This ensures the i2c instance is locked till the
+>> initialization is complete.
+>=20
+> 1) This doesn't make much sense.. if client could access I2C during of
+> tegra_i2c_init execution, then what stops it to perform the access
+> before the lock is taken?
+Client resumes will start after I2C instance resume because of driver=20
+dependency. Since lock is the first call in i2c-tegra I believe I2C=20
+calls of client will not start.
 
-Regards,
-CK
+>=20
+> 2) The whole point of the i2c_mark_adapter_* API is to catch those
+> faulty clients that have a broken suspend-resume sequence. Client will
+> get a -ESHUTDOWN on trying to issue I2C transfer while controller is
+> marked as suspended.
+i2c lock bus calls were used in the resume callback implementation that=20
+was reverted few months back. Hence, these were added in this patch=20
+which should be more like a revert-of-revert .
 
->  
->  #define INT_MUTEX				BIT(1)
->  
-> @@ -147,12 +147,16 @@ struct mtk_disp_mutex {
->  	bool claimed;
->  };
->  
-> +struct mtk_ddp_data {
-> +	const unsigned int *mutex_mod;
-> +};
-> +
->  struct mtk_ddp {
->  	struct device			*dev;
->  	struct clk			*clk;
->  	void __iomem			*regs;
->  	struct mtk_disp_mutex		mutex[10];
-> -	const unsigned int		*mutex_mod;
-> +	const struct mtk_ddp_data	*data;
->  };
->  
->  static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
-> @@ -202,6 +206,18 @@ struct mtk_ddp {
->  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
->  };
->  
-> +static const struct mtk_ddp_data mt2701_ddp_driver_data = {
-> +	.mutex_mod = mt2701_mutex_mod,
-> +};
-> +
-> +static const struct mtk_ddp_data mt2712_ddp_driver_data = {
-> +	.mutex_mod = mt2712_mutex_mod,
-> +};
-> +
-> +static const struct mtk_ddp_data mt8173_ddp_driver_data = {
-> +	.mutex_mod = mt8173_mutex_mod,
-> +};
-> +
->  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
->  				    enum mtk_ddp_comp_id next,
->  				    unsigned int *addr)
-> @@ -464,15 +480,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
->  		reg = MUTEX_SOF_DPI1;
->  		break;
->  	default:
-> -		if (ddp->mutex_mod[id] < 32) {
-> +		if (ddp->data->mutex_mod[id] < 32) {
->  			offset = DISP_REG_MUTEX_MOD(mutex->id);
->  			reg = readl_relaxed(ddp->regs + offset);
-> -			reg |= 1 << ddp->mutex_mod[id];
-> +			reg |= 1 << ddp->data->mutex_mod[id];
->  			writel_relaxed(reg, ddp->regs + offset);
->  		} else {
->  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
->  			reg = readl_relaxed(ddp->regs + offset);
-> -			reg |= 1 << (ddp->mutex_mod[id] - 32);
-> +			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
->  			writel_relaxed(reg, ddp->regs + offset);
->  		}
->  		return;
-> @@ -502,15 +518,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
->  			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
->  		break;
->  	default:
-> -		if (ddp->mutex_mod[id] < 32) {
-> +		if (ddp->data->mutex_mod[id] < 32) {
->  			offset = DISP_REG_MUTEX_MOD(mutex->id);
->  			reg = readl_relaxed(ddp->regs + offset);
-> -			reg &= ~(1 << ddp->mutex_mod[id]);
-> +			reg &= ~(1 << ddp->data->mutex_mod[id]);
->  			writel_relaxed(reg, ddp->regs + offset);
->  		} else {
->  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
->  			reg = readl_relaxed(ddp->regs + offset);
-> -			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
-> +			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
->  			writel_relaxed(reg, ddp->regs + offset);
->  		}
->  		break;
-> @@ -585,7 +601,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
->  		return PTR_ERR(ddp->regs);
->  	}
->  
-> -	ddp->mutex_mod = of_device_get_match_data(dev);
-> +	ddp->data = of_device_get_match_data(dev);
->  
->  	platform_set_drvdata(pdev, ddp);
->  
-> @@ -598,9 +614,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id ddp_driver_dt_match[] = {
-> -	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
-> -	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
-> -	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
-> +	{ .compatible = "mediatek,mt2701-disp-mutex",
-> +	  .data = &mt2701_ddp_driver_data},
-> +	{ .compatible = "mediatek,mt2712-disp-mutex",
-> +	  .data = &mt2712_ddp_driver_data},
-> +	{ .compatible = "mediatek,mt8173-disp-mutex",
-> +	  .data = &mt8173_ddp_driver_data},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
+But I feel probably your point also makes sense. Old resume callback did=20
+not have i2c_mark_adapter_* calls. Based on the i2c_adapter_mark_* API=20
+documentation it should be taking care that core i2c calls from client=20
+are not started. I plan to update the patch and remove the lock-unlock=20
+guards in resume callback.
 
+
+>=20
+> 3) Please don't use async suspend-resume where it doesn't make sense.
+This is a system wide setting. /sys/power/pm_async by default is 1 and=20
+there is no driver specific change in this patch to choose async=20
+suspend-resume.
+
+>=20
+> Corollary: you should drop the locking because it doesn't do anything
+> useful.
+>=20
+I did some basic suspend resume tests and do not see any problems=20
+removing the i2c_lock_bus call you pointed out.
+
+-Thanks,
+  Bitan
 
