@@ -2,100 +2,138 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2E0C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B62C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D462053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559849657;
-	bh=Bp9xchL8n3xgevCioLqnZ63AUKcEYYQAzSzsygrBl6U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EnM7oQo8CX0GhQ/p2bT++RdDkGlQk/U4/SzLRFpZEb/5KiSpkedAxrVUUDU+onNQy
-	 b+ZOTs3T0esN4cTnC2/kqngeqICfDscNbAiHHBOAHb01LEXkqrRlLFzCst90jIBxyi
-	 RXftl+pzvFxmCQHcQuRyWk7l8WOtrtDBNBp9RzZY=
+	by mail.kernel.org (Postfix) with ESMTP id 155A520693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfFFTeR (ORCPT
+        id S1726674AbfFFTiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbfFFTeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:34:14 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B790E20B7C
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 19:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559849654;
-        bh=Bp9xchL8n3xgevCioLqnZ63AUKcEYYQAzSzsygrBl6U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HO604baqNXqdV732MJGVIuAhse5+ZFoSM5Cc0+2Fn/Ht+x4OWlMx5PGxpQjuhnWoS
-         +5SGAibaql+Dy5Y2lXYd+TCXM2PP/XUh2keaEDA+zVknERXfBQhrqM5U8gIKyqt0mE
-         /xX8R4yDLByF0tIfKTWY8lYeF4L8I6C1xdq0ZN7E=
-Received: by mail-wr1-f45.google.com with SMTP id n4so3633046wrs.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:34:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAU1jfFzOdsw3fB6hoofMxhRsZ6FVtH8kbxc6MALkL198uYD0UQ7
-        DHt3CmwRYZDy0SSy6z8JdJVYVvgjHLwUu+sNWw+ZqQ==
-X-Google-Smtp-Source: APXvYqyO0ntp0Z78do7NHqcK5WkwMIKd2ggjzZIlWltFYH5IsItDZMYnUyFRT0pbmOUPFNCMQaXV3mrI0CbuFbD87wc=
-X-Received: by 2002:adf:ef48:: with SMTP id c8mr9349668wrp.352.1559849652241;
- Thu, 06 Jun 2019 12:34:12 -0700 (PDT)
+        Thu, 6 Jun 2019 15:38:55 -0400
+Received: from gateway20.websitewelcome.com ([192.185.70.14]:27474 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726152AbfFFTiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 15:38:54 -0400
+X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Jun 2019 15:38:53 EDT
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 12AF9400C335E
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 12:50:04 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id YxTNhJBc290onYxTNhKhI4; Thu, 06 Jun 2019 13:50:49 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.120] (port=41340 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hYxTN-002b1Q-8i; Thu, 06 Jun 2019 13:50:49 -0500
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190604232343.GA2475@embeddedor>
+ <20190606180557.GA4690@linux-8ccs>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] kernel: module: Use struct_size() helper
+Message-ID: <27e945e1-5791-0d03-4056-22c45b4138d4@embeddedor.com>
+Date:   Thu, 6 Jun 2019 13:50:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
- <155981413016.17513.10540579988392555403.stgit@warthog.procyon.org.uk>
- <176F8189-3BE9-4B8C-A4D5-8915436338FB@amacapital.net> <11031.1559833574@warthog.procyon.org.uk>
- <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com> <e434a62a-d92a-c6e2-cda1-309ac99d4d5c@schaufler-ca.com>
-In-Reply-To: <e434a62a-d92a-c6e2-cda1-309ac99d4d5c@schaufler-ca.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 6 Jun 2019 12:34:00 -0700
-X-Gmail-Original-Message-ID: <CALCETrVc=PpCjSC-pjcjr0WMKtgVXWijwB3FX+tSp5VOH2bCpg@mail.gmail.com>
-Message-ID: <CALCETrVc=PpCjSC-pjcjr0WMKtgVXWijwB3FX+tSp5VOH2bCpg@mail.gmail.com>
-Subject: Re: [PATCH 01/10] security: Override creds in __fput() with last
- fputter's creds [ver #3]
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190606180557.GA4690@linux-8ccs>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.120
+X-Source-L: No
+X-Exim-ID: 1hYxTN-002b1Q-8i
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.127.120]:41340
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 12:09 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
->
-> On 6/6/2019 10:18 AM, Andy Lutomirski wrote:
-> > On Thu, Jun 6, 2019 at 8:06 AM David Howells <dhowells@redhat.com> wrote:
-> >> Andy Lutomirski <luto@amacapital.net> wrote:
+Hi Jessica,
 
-> > Casey, I think you need to state your requirement in a way that's well
-> > defined, and I think you need to make a compelling case that your
-> > requirement is indeed worth dictating the design of parts of the
-> > kernel outside LSM.
->
-> Err, no, I don't believe so. There's a whole lot more
-> going on in this discussion than just what's going on
-> within the LSMs. Using examples from the LSMs makes it
-> easier, because their policies are better defined than
-> the "legacy" policies are. The most important part of the
-> discussion is about ensuring that the event mechanism
-> doesn't circumvent the legacy policies. Yes, I understand
-> that you don't know what that means, or has to do with
-> anything.
->
->
+On 6/6/19 1:05 PM, Jessica Yu wrote:
 
-Indeed, I do not know what you have in mind about making sure this
-mechanism doesn't circumvent legacy policies.  Can you elaborate?
+> Hi Gustavo!
+> 
+> I see you've sent similar cleanup patches elsewhere, do you think you
+> could reword your commit message to be more similar to your patch here
+> for instance:
+> 
+>     https://lkml.org/lkml/2019/6/5/856
+> 
+> It does a *much* better job of explaining the motivation and usage of
+> struct_size().
+> 
 
---Andy
+Sure thing. :)
+
+I'll send v2 with that change, shortly.
+
+Thanks
+--
+Gustavo
