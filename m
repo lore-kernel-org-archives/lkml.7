@@ -2,135 +2,197 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485C5C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6833FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205BD2053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA71206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stIiNeN9"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="P/sKyPeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbfFFUMD (ORCPT
+        id S1728738AbfFFUOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:12:03 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41667 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfFFUMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:12:02 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 107so3173852otj.8;
-        Thu, 06 Jun 2019 13:12:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZplH1ueYIFTxbhcNaq6d9TNtLXhmYa3vn9NLw27k9Lg=;
-        b=stIiNeN9hdh/mk6PIsJUOcTV5NamnY+Y+K3zQGA/YUbAsxjwv51CGIsZSrrY1ygC5u
-         Ndjv8UvipwdJcvPnTGbXklxessOCWoR2PVsRgn7tauT5lgtngZvoq0M5wzWL7bpi+g9N
-         XdwMm8VvjAqoO3mCTAqphKPLlYiLz7IABHFHrfYUGnBPM8P1Wd0eWhQJWHzUz4Z2bgQq
-         2DwHS6Z2slz5m7Tq6KXezIEwPtYEhG/fj5ic/eCici/bSdauJ1rFG44EgZ55tfYqAAfr
-         Bspd6Y2TT//5MgX+Hb8pqXXVcU7WnLCRyajfW6952doLGSTff8CYoBhTEP+0DjqoAG8E
-         bXtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZplH1ueYIFTxbhcNaq6d9TNtLXhmYa3vn9NLw27k9Lg=;
-        b=Cl3oEWk1xcCSVjdvqwMw/NaC3j9M6bZQUhJuYaPFMdGfs0LR0pQVHXkHgJoDwNT8zK
-         KYxVQtptksJCd8bq2WgrHNWUPrvH7iQquPxwmG5sNafz5FvQzx8tddYC+uPM11HjCYyH
-         xVINBhSwaHdJxSHG7VFFkVxDOgsSomZPLe8Sj1Um7Bp65rKfVgBtOyMC/G+rUq/PmAgE
-         WFnJPj044z+/qzd7EUf1u9B/ILdSNF8TQUO3eP+ugnlSRbsW4IawRXK8RojQjSBQG7/4
-         eYSuNN3fITJKBQrMYJWxTsQW8g+8fjU0c+4y2CyRDcV1gcB8O5ZYLgrEH5Xq1W+yPTe9
-         jzcQ==
-X-Gm-Message-State: APjAAAUXT2CxGlwuMuZuyuwGZFBMjLlW+xmoz2e5u7MjPwQK0ZE/nYJY
-        1pF2DR6ptTqkz5yqJfgN9ocypUUm
-X-Google-Smtp-Source: APXvYqz5aiOuHakWTOD3QUBMVJRMbspstMuG5nak7/mBIuhot/sBvNQAywuKuD4N3fv4rPTfgxvGyA==
-X-Received: by 2002:a9d:2f69:: with SMTP id h96mr15834204otb.366.1559851921100;
-        Thu, 06 Jun 2019 13:12:01 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id a15sm2187otl.20.2019.06.06.13.11.56
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 13:11:56 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Christoph Hellwig <hch@lst.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
- <dfe6451c93574b61d4bdde4a05c5f8ccf86b31a0.camel@kernel.crashing.org>
- <20190606093149.GA11598@darkstar.musicnaut.iki.fi>
- <d87ac9a7faac0d5522cb496d74afc586410fed9c.camel@kernel.crashing.org>
- <f8df19ffe5b75537045119037459ae9ad4a1de39.camel@kernel.crashing.org>
- <20190606114325.GA7497@lst.de>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <1a9e2b2f-b388-bc13-3b90-9d6b4038073b@lwfinger.net>
-Date:   Thu, 6 Jun 2019 15:11:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190606114325.GA7497@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 6 Jun 2019 16:14:30 -0400
+Received: from mail-eopbgr70052.outbound.protection.outlook.com ([40.107.7.52]:33090
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727082AbfFFUO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:14:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B0E1HjKonCXrDe+jQccFfs3o6VLpAeGk115hcbiJ6RA=;
+ b=P/sKyPeQd8+u0095tKNbmGYczgZzYfHTXRhvj//J9+jI1W27r0v87NNNAZeGwdU53HEOLmSmbdiPt7fTRJ1Dd3JRy0PxQHyFtJ8v39L1P80lNipcXPVMPWd3NR8Hcf0ptw0skl16Sx4vbTEo9TZYpumBwJoChZnESFvQbn7zR5E=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5214.eurprd05.prod.outlook.com (20.178.12.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Thu, 6 Jun 2019 20:14:24 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
+ 20:14:24 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull RDMA subsystem changes
+Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
+Thread-Index: AQHVHKRvaslonjpP+0u/K3AsBbZRRw==
+Date:   Thu, 6 Jun 2019 20:14:24 +0000
+Message-ID: <20190606201420.GA9763@ziepe.ca>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR13CA0013.namprd13.prod.outlook.com
+ (2603:10b6:208:160::26) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ae9ddb0-5a1c-493a-339b-08d6eabb9195
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(49563074)(7193020);SRVR:VI1PR05MB5214;
+x-ms-traffictypediagnostic: VI1PR05MB5214:
+x-microsoft-antispam-prvs: <VI1PR05MB52142C352E2145DE879C1890CF170@VI1PR05MB5214.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1169;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39840400004)(346002)(366004)(199004)(189003)(66616009)(14454004)(478600001)(68736007)(1076003)(256004)(36756003)(14444005)(6116002)(3846002)(486006)(99936001)(476003)(2906002)(54906003)(8936002)(4326008)(64756008)(66946007)(66556008)(66446008)(7736002)(53936002)(8676002)(81156014)(66476007)(186003)(305945005)(26005)(9686003)(6512007)(102836004)(73956011)(71200400001)(6486002)(6436002)(386003)(25786009)(6506007)(5660300002)(52116002)(66066001)(316002)(99286004)(81166006)(110136005)(86362001)(33656002)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5214;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4IAviXQAa+A1qZ9TDNaNlZ7WS04mYsGZm7BlHFHVo89214R1FgLx+yCrB208Ky2Z1zNPI5j4eQqtfyz8Iv2WXY4cj7163z+ICwTfZVHNurWMWs06AzsYMg4KhS5yM+3Fp/km1s9+sRTUGasrjnxCZvKpQxnmpbR9PrjJhBVq5daEAzgCYmREZLXpBvxeMlCJC7XaeV0JGtPTLAFQiTaqFmlm6zw9u3Es+BsYLXuQlp1StlXWxSI6j3nz7QXNLAAc8ukRfXa+QJ5KnlJEbU8lbt7oU7IqiexjNRq/hoyhsifn867yK2JOUuBBpviPCOSK/mEVo6rzq5Q/6y783S4s+c52VcZfJ9kigiaAO5rmRKoggEzpBGEl+Q3y9+BzQmrjAMHPRXYQYdBvo9MLY2+x/DApzJcyJN6MGCUsuWlh+tQ=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ae9ddb0-5a1c-493a-339b-08d6eabb9195
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 20:14:24.4610
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 6:43 AM, Christoph Hellwig wrote:
-> On Thu, Jun 06, 2019 at 08:57:49PM +1000, Benjamin Herrenschmidt wrote:
->>> Wow... that's an odd amount. One thing we could possibly do is add code
->>> to limit the amount of RAM when we detect that device....
->>
->> Sent too quickly... I mean that *or* force swiotlb at 30-bits on those systems based
->> on detecting the presence of that device in the device-tree.
-> 
-> swiotlb doesn't really help you, as these days swiotlb on matters for
-> the dma_map* case.  What would help is a ZONE_DMA that covers these
-> devices.  No need to do the 24-bit x86 does, but 30-bit would do it.
-> 
-> WIP patch for testing below:
-> 
-> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-> index b8286a2013b4..7a367ce87c41 100644
-> --- a/arch/powerpc/include/asm/page.h
-> +++ b/arch/powerpc/include/asm/page.h
-> @@ -319,6 +319,10 @@ struct vm_area_struct;
->   #endif /* __ASSEMBLY__ */
->   #include <asm/slice.h>
->   
-> +#if 1 /* XXX: pmac?  dynamic discovery? */
-> +#define ARCH_ZONE_DMA_BITS 30
-> +#else
->   #define ARCH_ZONE_DMA_BITS 31
-> +#endif
->   
->   #endif /* _ASM_POWERPC_PAGE_H */
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index cba29131bccc..2540d3b2588c 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -248,7 +248,8 @@ void __init paging_init(void)
->   	       (long int)((top_of_ram - total_ram) >> 20));
->   
->   #ifdef CONFIG_ZONE_DMA
-> -	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, 0x7fffffffUL >> PAGE_SHIFT);
-> +	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
-> +			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
->   #endif
->   	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
->   #ifdef CONFIG_HIGHMEM
-> 
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This trial patch failed.
+Hi Linus,
 
-Larry
+Things are looking pretty quiet here in RDMA, not too many bug fixes rolling
+in right now. Here is the first batch of proposed rc fixes.
 
+Thanks,
+Jason
+
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+
+for you to fetch changes up to 4f240dfec6bcc852b124ea7c419fb590949fbd4c:
+
+  RDMA/efa: Remove MAYEXEC flag check from mmap flow (2019-05-29 13:13:03 -0300)
+
+----------------------------------------------------------------
+5.2 First rc pull request
+
+The usual driver bug fixes and fixes for a couple of regressions introduced in
+5.2:
+
+- Fix a race on bootup with RDMA device renaming and srp. SRP also needs to
+  rename its internal sys files
+
+- Fix a memory leak in hns
+
+- Don't leak resources in efa on certain error unwinds
+
+- Don't panic in certain error unwinds in ib_register_device
+
+- Various small user visible bug fix patches for the hfi and efa drivers
+
+- Fix the 32 bit compilation break
+
+----------------------------------------------------------------
+Gal Pressman (2):
+      RDMA/uverbs: Pass udata on uverbs error unwind
+      RDMA/efa: Remove MAYEXEC flag check from mmap flow
+
+Jason Gunthorpe (1):
+      RDMA/core: Clear out the udata before error unwind
+
+Kamal Heib (1):
+      RDMA/core: Fix panic when port_data isn't initialized
+
+Kamenee Arumugam (1):
+      IB/hfi1: Validate page aligned for a given virtual address
+
+Leon Romanovsky (2):
+      RDMA/srp: Rename SRP sysfs name after IB device rename trigger
+      RDMA/hns: Fix PD memory leak for internal allocation
+
+Michal Kubecek (1):
+      mlx5: avoid 64-bit division
+
+Mike Marciniszyn (3):
+      IB/rdmavt: Fix alloc_qpn() WARN_ON()
+      IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
+      IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
+
+ drivers/infiniband/core/device.c              | 49 +++++++++++++++++++--------
+ drivers/infiniband/core/rdma_core.h           |  2 ++
+ drivers/infiniband/core/uverbs_cmd.c          | 30 +++++++++++-----
+ drivers/infiniband/core/uverbs_std_types_cq.c |  2 +-
+ drivers/infiniband/core/uverbs_std_types_mr.c |  2 +-
+ drivers/infiniband/hw/efa/efa_verbs.c         |  1 -
+ drivers/infiniband/hw/hfi1/chip.c             |  1 +
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c     |  3 ++
+ drivers/infiniband/hw/hfi1/verbs.c            |  2 --
+ drivers/infiniband/hw/hns/hns_roce_hw_v1.c    |  1 +
+ drivers/infiniband/hw/mlx5/cmd.c              |  9 +++--
+ drivers/infiniband/hw/mlx5/main.c             |  2 +-
+ drivers/infiniband/hw/qib/qib_verbs.c         |  2 --
+ drivers/infiniband/sw/rdmavt/mr.c             |  2 ++
+ drivers/infiniband/sw/rdmavt/qp.c             |  3 +-
+ drivers/infiniband/ulp/srp/ib_srp.c           | 18 +++++++++-
+ include/rdma/ib_verbs.h                       |  1 +
+ 17 files changed, 95 insertions(+), 35 deletions(-)
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAlz5dBkACgkQOG33FX4g
+mxqKzA/6A4oEKSMyJt3TMx2Z6sJoHYWqibV/AZsra4wgA0rzGPdV3cpIwg7qeccD
+dMAecHl6GILXs3dCZVKs/C5cLL9YDBBpwFWlVR4eu4BppeDA9dKt66rI2a+JFbUb
+taSjmTnNUAiBWG9HhZAy2KQMARgNcvwQ+4z5USMzUXclDTTQ3w2s4hjtxDrxOb2V
+24Xnep5VGS7ca0wNocypa1SwbilRR0Z+3axHbKvMFXT0LsJsDf52VRcX2JaxMNXG
+7L/HKI78PVQLiz0Y8qJjTiiHeM8RDpgrf8pEIa+XnUKXvTn5YoVDI8RwOyZ3qC9G
+5dLVOXOAvvJ8pLRXGwsAwvxwqHkV2EbbsODXqwXx8tqlvID7ENVMn3sZDIc9l9cp
+j3aEuh1mL3iQLxuLz9Ye2cWgUEEzrQkpIGfI25lV5VFZ/G1h77aUIANkB561jWM+
+TiVMo3/2qbY/KBQ8M7chYCx+EgrCisd6Yw4l7ghbVR5q69RMWdhNT7QP9frblva4
+p1kRW2FyQcstLol87jQJn5eSngU9lF9W4C+o28mG97Nn6pIFX7pivTwrRFi9A6LE
+5OvTvYjB7kuJNNtGmG/H1DWLBv7TIw/0Xp9X/bJs2ULG9tjYuS17gNhmH0YnX2NK
+tY59L6/d849+9Nn+28uOOoB76cugQHG6qFe2e5TzuqZMAFmxKbI=
+=FV44
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
