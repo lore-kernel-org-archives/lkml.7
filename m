@@ -2,67 +2,95 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D11C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170A9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2566E20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E064E20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C0XtFCHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbfFFRCo (ORCPT
+        id S1727673AbfFFRED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:02:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56414 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726379AbfFFRCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:02:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 853E7AD1D;
-        Thu,  6 Jun 2019 17:02:42 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 19:02:39 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 04/12] mm/sparsemem: Convert kmalloc_section_memmap()
- to populate_section_memmap()
-Message-ID: <20190606170239.GB31194@linux>
-References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155977189139.2443951.460884430946346998.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Thu, 6 Jun 2019 13:04:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38986 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfFFRED (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:04:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nuCiH7vt3Q92Rwmy7C7c/3Ld69OjA8cidRQEKNLNiEw=; b=C0XtFCHsc8M6vzDTzFa76F4I5P
+        0T6k57QI7ay8qLNDvHhGl7tTESoFa/ab3BSi88Iyux4VyrnZMUlXX8CqvDGKEO5fKKaIlgRWSFIqF
+        aIaBdW45oznA7Em0xqL+uBqMJb1gRDhw7sNX/jLQ4+REij5D9EQ8wnsGZ8Hn7ANTHLmnJVgW5TzPH
+        U6n7h6tQYU7Ea4alyZITuRMzPME6okr7XZSE1Cfls8mO48TKqmVbOg+AIiGCFaos2e9IbPRpE9otw
+        d/Dk9LqYm4ASuK2/6A1vv7knbv9uiEmGi/t/9KJUydrFpq8CSX2yKURwqt1C7ZbxZIJHgjpNvnXkR
+        Jx8d6Z6A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYvns-00047Q-LV; Thu, 06 Jun 2019 17:03:52 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1AEBA2022711B; Thu,  6 Jun 2019 19:03:50 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 19:03:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jorgen Hansen <jhansen@vmware.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, Vishnu DASA <vdasa@vmware.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] VMCI: Fixup atomic64_t abuse
+Message-ID: <20190606170350.GL3419@hirez.programming.kicks-ass.net>
+References: <20190606093428.GF3402@hirez.programming.kicks-ass.net>
+ <BC2D213B-89E4-4C14-A093-AC61EAB56830@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <155977189139.2443951.460884430946346998.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BC2D213B-89E4-4C14-A093-AC61EAB56830@vmware.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 02:58:21PM -0700, Dan Williams wrote:
-> Allow sub-section sized ranges to be added to the memmap.
-> populate_section_memmap() takes an explict pfn range rather than
-> assuming a full section, and those parameters are plumbed all the way
-> through to vmmemap_populate(). There should be no sub-section usage in
-> current deployments. New warnings are added to clarify which memmap
-> allocation paths are sub-section capable.
+On Thu, Jun 06, 2019 at 03:54:24PM +0000, Jorgen Hansen wrote:
 > 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> > On 6 Jun 2019, at 11:34, Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > 
+> > The VMCI driver is abusing atomic64_t and atomic_t, there is no actual
+> > atomic RmW operations around.
+> > 
+> > Rewrite the code to use a regular u64 with READ_ONCE() and
+> > WRITE_ONCE() and a cast to 'unsigned long'. This fully preserves
+> > whatever broken there was (it's not endian-safe for starters, and also
+> > looks to be missing ordering).
+> 
+> Thanks for the cleanup.
+> 
+> This code is only intended for use with the vmci device driver, and
+> that is X86 only, so during the original upstreaming no effort was
+> made to make this work correctly on anything else.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Even x86 needs compiler barriers to ensure the compiler emits the
+instructions in the expected order.
 
--- 
-Oscar Salvador
-SUSE L3
+> We’ll be updating the vmci device driver to work on other
+> architectures soonish, so will be adding barriers to enforce ordering
+> as well at that point. If you want to leave your patch as is, we can
+> address the type casting then.
+
+You might want to have a look at smp_store_release() and
+smp_load_acquire() I suppose.
