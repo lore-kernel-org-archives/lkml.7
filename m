@@ -2,239 +2,171 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4E3C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65669C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F80F2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1FC2067C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="26rWKdQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfFFNpA (ORCPT
+        id S1728603AbfFFNpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 6 Jun 2019 09:45:01 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33110 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726877AbfFFNpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 09:45:00 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:40092 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfFFNpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:45:00 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hYshJ-00031p-HE; Thu, 06 Jun 2019 09:44:56 -0400
-Date:   Thu, 6 Jun 2019 09:44:26 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Paul Wise <pabs3@bonedaddy.net>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jakub Wilk <jwilk@jwilk.net>
-Subject: Re: [PATCH v3] coredump: Split pipe command whitespace before
- expanding template
-Message-ID: <20190606134426.GD29521@hmswarspite.think-freely.org>
-References: <20190521003756.5236-1-pabs3@bonedaddy.net>
- <20190528051142.24939-1-pabs3@bonedaddy.net>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=sVhxnuTEL+ASO8R37ZHCwQE4/QWOi4bshU6Rq9FdZC4=; b=26rWKdQreTTF7+VEn7aEMEjhr7
+        P2Q5uT7VzDHA0TBoOd6hQ8KZo9YfeTEb4vcqLvg/LS9WwBU5UpjdbF82NDDL//Yc0BNu6uc5f8a0F
+        XYO1giz9jk+OgwmPpuHg2tSqB0si1SXLz06rxH1w5BvctFO+tAI0pAVbs1H/jlejo77s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hYshI-0006Hm-0s; Thu, 06 Jun 2019 15:44:52 +0200
+Date:   Thu, 6 Jun 2019 15:44:52 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 net-next] net: stmmac: move reset gpio parse & request
+ to stmmac_mdio_register
+Message-ID: <20190606134452.GD19590@lunn.ch>
+References: <20190606182244.422e187f@xhacker.debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528051142.24939-1-pabs3@bonedaddy.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190606182244.422e187f@xhacker.debian>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 28, 2019 at 01:11:42PM +0800, Paul Wise wrote:
-> Save the offsets of the start of each argument to avoid having to
-> update pointers to each argument after every corename krealloc and
-> to avoid having to duplicate the memory for the dump command.
+On Thu, Jun 06, 2019 at 10:31:56AM +0000, Jisheng Zhang wrote:
+> Move the reset gpio dt parse and request to stmmac_mdio_register(),
+> thus makes the mdio code straightforward.
 > 
-> Executable names containing spaces were previously being expanded from
-> %e or %E and then split in the middle of the filename. This is incorrect
-> behaviour since an argument list can represent arguments with spaces.
-> 
-> The splitting could lead to extra arguments being passed to the core dump
-> handler that it might have interpreted as options or ignored completely.
-> 
-> Core dump handlers that are not aware of this Linux kernel issue will be
-> using %e or %E without considering that it may be split and so they will
-> be vulnerable to processes with spaces in their names breaking their
-> argument list. If their internals are otherwise well written, such as
-> if they are written in shell but quote arguments, they will work better
-> after this change than before. If they are not well written, then there
-> is a slight chance of breakage depending on the details of the code but
-> they will already be fairly broken by the split filenames.
-> 
-> Core dump handlers that are aware of this Linux kernel issue will be
-> placing %e or %E as the last item in their core_pattern and then
-> aggregating all of the remaining arguments into one, separated by
-> spaces. Alternatively they will be obtaining the filename via other
-> methods. Both of these will be compatible with the new arrangement.
-> 
-> A side effect from this change is that unknown template types
-> (for example %z) result in an empty argument to the dump handler
-> instead of the argument being dropped. This is a desired change as:
-> 
-> It is easier for dump handlers to process empty arguments than dropped
-> ones, especially if they are written in shell or don't pass each template
-> item with a preceding command-line option in order to differentiate
-> between individual template types. Most core_patterns in the wild do not
-> use options so they can confuse different template types (especially
-> numeric ones) if an earlier one gets dropped in old kernels. If the
-> kernel introduces a new template type and a core_pattern uses it, the
-> core dump handler might not expect that the argument can be dropped in
-> old kernels.
-> 
-> For example, this can result in security issues when %d is dropped in old
-> kernels. This happened with the corekeeper package in Debian and resulted
-> in the interface between corekeeper and Linux having to be rewritten to
-> use command-line options to differentiate between template types.
-> 
-> The core_pattern for most core dump handlers is written by the handler
-> author who would generally not insert unknown template types so this
-> change should be compatible with all the core dump handlers that exist.
-> 
-> Fixes: 74aadce98605
-> Reported-by: Jakub Wilk <jwilk@jwilk.net>
-> Reported-in: https://bugs.debian.org/924398
-> Reported-by: Paul Wise <pabs3@bonedaddy.net>
-> Reported-in: https://lore.kernel.org/linux-fsdevel/c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net/
-> Suggested-by: Jakub Wilk <jwilk@jwilk.net>
-> Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
-> ---
->  fs/coredump.c | 44 +++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 39 insertions(+), 5 deletions(-)
-> 
-> Changelog:
-> v3 Adjust footer fields, drop obvious comment
-> v2 Fix build failure due to typo after variable renaming
-> 
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index e42e17e55bfd..b1ea7dfbd149 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -7,6 +7,7 @@
->  #include <linux/stat.h>
->  #include <linux/fcntl.h>
->  #include <linux/swap.h>
-> +#include <linux/ctype.h>
->  #include <linux/string.h>
->  #include <linux/init.h>
->  #include <linux/pagemap.h>
-> @@ -187,11 +188,13 @@ static int cn_print_exe_file(struct core_name *cn)
->   * name into corename, which must have space for at least
->   * CORENAME_MAX_SIZE bytes plus one byte for the zero terminator.
->   */
-> -static int format_corename(struct core_name *cn, struct coredump_params *cprm)
-> +static int format_corename(struct core_name *cn, struct coredump_params *cprm,
-> +			   size_t **argv, int *argc)
->  {
->  	const struct cred *cred = current_cred();
->  	const char *pat_ptr = core_pattern;
->  	int ispipe = (*pat_ptr == '|');
-> +	bool was_space = false;
->  	int pid_in_pattern = 0;
->  	int err = 0;
->  
-> @@ -201,12 +204,35 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm)
->  		return -ENOMEM;
->  	cn->corename[0] = '\0';
->  
-> -	if (ispipe)
-> +	if (ispipe) {
-> +		int argvs = sizeof(core_pattern) / 2;
-> +		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
-> +		if (!(*argv))
-> +			return -ENOMEM;
-> +		(*argv)[(*argc)++] = 0;
->  		++pat_ptr;
-> +	}
->  
->  	/* Repeat as long as we have more pattern to process and more output
->  	   space */
->  	while (*pat_ptr) {
-> +		/*
-> +		 * Split on spaces before doing template expansion so that
-> +		 * %e and %E don't get split if they have spaces in them
-> +		 */
-> +		if (ispipe) {
-> +			if (isspace(*pat_ptr)) {
-> +				was_space = true;
-> +				pat_ptr++;
-> +				continue;
-> +			} else if (was_space) {
-> +				was_space = false;
-> +				err = cn_printf(cn, "%c", '\0');
-> +				if (err)
-> +					return err;
-> +				(*argv)[(*argc)++] = cn->used;
-> +			}
-> +		}
->  		if (*pat_ptr != '%') {
->  			err = cn_printf(cn, "%c", *pat_ptr++);
->  		} else {
-> @@ -546,6 +572,8 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  	struct cred *cred;
->  	int retval = 0;
->  	int ispipe;
-> +	size_t *argv = NULL;
-> +	int argc = 0;
->  	struct files_struct *displaced;
->  	/* require nonrelative corefile path and be extra careful */
->  	bool need_suid_safe = false;
-> @@ -592,9 +620,10 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  
->  	old_cred = override_creds(cred);
->  
-> -	ispipe = format_corename(&cn, &cprm);
-> +	ispipe = format_corename(&cn, &cprm, &argv, &argc);
->  
->  	if (ispipe) {
-> +		int argi;
->  		int dump_count;
->  		char **helper_argv;
->  		struct subprocess_info *sub_info;
-> @@ -637,12 +666,16 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  			goto fail_dropcount;
->  		}
->  
-> -		helper_argv = argv_split(GFP_KERNEL, cn.corename, NULL);
-> +		helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
-> +					    GFP_KERNEL);
->  		if (!helper_argv) {
->  			printk(KERN_WARNING "%s failed to allocate memory\n",
->  			       __func__);
->  			goto fail_dropcount;
->  		}
-> +		for (argi = 0; argi < argc; argi++)
-> +			helper_argv[argi] = cn.corename + argv[argi];
-> +		helper_argv[argi] = NULL;
->  
->  		retval = -ENOMEM;
->  		sub_info = call_usermodehelper_setup(helper_argv[0],
-> @@ -652,7 +685,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  			retval = call_usermodehelper_exec(sub_info,
->  							  UMH_WAIT_EXEC);
->  
-> -		argv_free(helper_argv);
-> +		kfree(helper_argv);
->  		if (retval) {
->  			printk(KERN_INFO "Core dump to |%s pipe failed\n",
->  			       cn.corename);
-> @@ -766,6 +799,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  	if (ispipe)
->  		atomic_dec(&core_dump_count);
->  fail_unlock:
-> +	kfree(argv);
->  	kfree(cn.corename);
->  	coredump_finish(mm, core_dumped);
->  	revert_creds(old_cred);
-> -- 
-> 2.20.1
-> 
-> 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> This patch also replace stack var mdio_bus_data with data to simplify
+> the code.
 
+Hi Jisheng
+
+Please split this into two patches.
+
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+> Since v1:
+>  - rebase on the latest net-next tree
+> 
+>  .../net/ethernet/stmicro/stmmac/stmmac_mdio.c | 58 ++++++++-----------
+>  1 file changed, 25 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> index 093a223fe408..7d1562ec1149 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> @@ -250,28 +250,7 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+>  	struct stmmac_mdio_bus_data *data = priv->plat->mdio_bus_data;
+>  
+>  #ifdef CONFIG_OF
+> -	if (priv->device->of_node) {
+> -		if (data->reset_gpio < 0) {
+> -			struct device_node *np = priv->device->of_node;
+> -
+> -			if (!np)
+> -				return 0;
+> -
+> -			data->reset_gpio = of_get_named_gpio(np,
+> -						"snps,reset-gpio", 0);
+> -			if (data->reset_gpio < 0)
+> -				return 0;
+> -
+> -			data->active_low = of_property_read_bool(np,
+> -						"snps,reset-active-low");
+> -			of_property_read_u32_array(np,
+> -				"snps,reset-delays-us", data->delays, 3);
+> -
+> -			if (devm_gpio_request(priv->device, data->reset_gpio,
+> -					      "mdio-reset"))
+> -				return 0;
+> -		}
+> -
+> +	if (gpio_is_valid(data->reset_gpio)) {
+>  		gpio_direction_output(data->reset_gpio,
+>  				      data->active_low ? 1 : 0);
+>  		if (data->delays[0])
+> @@ -313,24 +292,38 @@ int stmmac_mdio_register(struct net_device *ndev)
+>  	int err = 0;
+>  	struct mii_bus *new_bus;
+>  	struct stmmac_priv *priv = netdev_priv(ndev);
+> -	struct stmmac_mdio_bus_data *mdio_bus_data = priv->plat->mdio_bus_data;
+> +	struct stmmac_mdio_bus_data *data = priv->plat->mdio_bus_data;
+>  	struct device_node *mdio_node = priv->plat->mdio_node;
+>  	struct device *dev = ndev->dev.parent;
+>  	int addr, found, max_addr;
+>  
+> -	if (!mdio_bus_data)
+> +	if (!data)
+>  		return 0;
+>  
+>  	new_bus = mdiobus_alloc();
+>  	if (!new_bus)
+>  		return -ENOMEM;
+>  
+> -	if (mdio_bus_data->irqs)
+> -		memcpy(new_bus->irq, mdio_bus_data->irqs, sizeof(new_bus->irq));
+> +	if (data->irqs)
+> +		memcpy(new_bus->irq, data->irqs, sizeof(new_bus->irq));
+>  
+>  #ifdef CONFIG_OF
+> -	if (priv->device->of_node)
+> -		mdio_bus_data->reset_gpio = -1;
+> +	if (priv->device->of_node) {
+> +		struct device_node *np = priv->device->of_node;
+> +
+> +		data->reset_gpio = of_get_named_gpio(np, "snps,reset-gpio", 0);
+> +		if (gpio_is_valid(data->reset_gpio)) {
+> +			data->active_low = of_property_read_bool(np,
+> +						"snps,reset-active-low");
+> +			of_property_read_u32_array(np,
+> +				"snps,reset-delays-us", data->delays, 3);
+> +
+> +			devm_gpio_request(priv->device, data->reset_gpio,
+> +					  "mdio-reset");
+> +		}
+> +	} else {
+> +		data->reset_gpio = -1;
+> +	}
+
+This seems like a good candidate to be a small helper
+function. Quoting the coding style:
+
+6) Functions
+------------
+
+Functions should be short and sweet, and do just one thing.  They should
+fit on one or two screenfuls of text (the ISO/ANSI screen size is 80x24,
+as we all know), and do one thing and do that well.
+
+stmmac_mdio_register() is not short and sweet, and this is making it
+bigger.
+
+	Andrew
