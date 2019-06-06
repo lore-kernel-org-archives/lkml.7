@@ -2,177 +2,108 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A7AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8217C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1937B2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:32:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="T1TwHoTQ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="df6kiH5i"
+	by mail.kernel.org (Postfix) with ESMTP id BD3BA20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfFFGcU (ORCPT
+        id S1726631AbfFFGdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:32:20 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:51466 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfFFGcT (ORCPT
+        Thu, 6 Jun 2019 02:33:35 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:46165 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725766AbfFFGde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:32:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559802740; x=1591338740;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ebaA4IwcctmtX6EvJcI+FohW8pc9ALJiXy6YHR3ny2I=;
-  b=T1TwHoTQ4J7JRofov2TxphJMILBpqpGhIaLXGMOuN9o1+WysVQ2daQZJ
-   mqdgaEICur4vkaACpv3VAAybtan1Vg32kW6vRPrWwLwrB8No2f8oPcEEv
-   dfQG5KFdtHbOgv7rMLaY2/tMegFbG9x1+PdtPsp0HD7+6845eNNYX/fGl
-   axv2zOLO/+yEluqIBPn3MbAwC6uOGPHG/I/1BnaxrPLkXEr9hs8mKhHlh
-   fo8dVO0k/OxXEk1qW/3+vRQwflgGKxPTcMPmQg/SW1IGQa2+ZxJYPAAOR
-   +Q4mCpsFceHEwL+DHvWaMgbu2uw2wWbD7KQobMiqsHcOgiLwRUhqoRWZJ
-   A==;
-X-IronPort-AV: E=Sophos;i="5.63,558,1557158400"; 
-   d="scan'208";a="109916908"
-Received: from mail-dm3nam03lp2051.outbound.protection.outlook.com (HELO NAM03-DM3-obe.outbound.protection.outlook.com) ([104.47.41.51])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jun 2019 14:32:18 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+aAGpDL2fIiqLgap8rHKwiHc7yqVAxZwG0hlactOhrc=;
- b=df6kiH5iPsvtDyxj+8PfhFCFfRyI+V222twjJvS8lfT0KX85J1+ZecI+HTPfPfzBu8PJlzSxHMHQrpBmRcOWK6fYRextrwDFMEFSwSrt36UzQP0b5hBoQUZL2/eYDkrPWYaDv22AlNyC2hVL3SmB/3YkNVqxZSRg4ehGmLKZsAY=
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
- SN6PR04MB4349.namprd04.prod.outlook.com (52.135.72.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Thu, 6 Jun 2019 06:32:15 +0000
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::6d99:14d9:3fa:f530]) by SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::6d99:14d9:3fa:f530%6]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
- 06:32:15 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [PATCH 0/3] (Qualcomm) UFS device reset support
-Thread-Topic: [PATCH 0/3] (Qualcomm) UFS device reset support
-Thread-Index: AQHVGqYAlQFsNx0blUeatbYnjFKLiqaMDImAgACCvoCAAAPGAIAAOZnggAD+y4CAAGBH8A==
-Date:   Thu, 6 Jun 2019 06:32:15 +0000
-Message-ID: <SN6PR04MB49255AF3D92E655E1BBD75AEFC170@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
- <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
- <20190605060154.GJ22737@tuxbook-pro>
- <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
- <20190606003959.GM4814@minitux>
-In-Reply-To: <20190606003959.GM4814@minitux>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0278664b-7e2d-414f-12bf-08d6ea48b7a6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR04MB4349;
-x-ms-traffictypediagnostic: SN6PR04MB4349:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB434991222811C9904BDF96EAFC170@SN6PR04MB4349.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(39860400002)(376002)(346002)(136003)(189003)(199004)(66066001)(53936002)(6436002)(9686003)(14454004)(52536014)(8936002)(478600001)(2906002)(33656002)(6916009)(68736007)(7696005)(81166006)(55016002)(81156014)(54906003)(72206003)(74316002)(229853002)(99286004)(6116002)(102836004)(3846002)(76176011)(8676002)(7736002)(7416002)(186003)(6506007)(25786009)(71200400001)(71190400001)(446003)(476003)(486006)(4326008)(11346002)(73956011)(66946007)(256004)(14444005)(66556008)(66446008)(64756008)(6246003)(53546011)(66476007)(26005)(86362001)(305945005)(76116006)(316002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4349;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1ZURo+fkpKIoPJNpnvlFsYOiygUhixpJm98K/Bd/0WIVClv6E2gBKAWSo4F/VWmo4fjgT5d5ZHCOLTCnZF5EgELRS6SYl1oKDiBQYxK5QjWZfzE++HFEfTJt2ZyiT1QU0wKHSpNoQLyjHOFaD3Wzbr5Sx66ICUOaok2oeF7MhJqArygdoCO1p8iSK7FmYW7u3jefXqLlhYUQFaMzPmeY1QgUlQxcffq+CuLVJ4XAYFOJi5ZdI6DbGv+L6se5ldz3DfGkHt2FfRHZON+GdWv/9TC5a72rtoWfwPGlyfJCeL/6P1nqKIaO8kIjYoWGRByUsriLWlnCBk67EeGmK9cya5Z/rOSw0ODsQoAwTRrmEHSBCgiuZBNW4NyxoXRMepayATF+5K0cgdNQFq0XGXt1c45we1bVrut4LPAu6pPscn4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Jun 2019 02:33:34 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id Ylxghf5RAsDWyYlxkh2OZE; Thu, 06 Jun 2019 08:33:32 +0200
+Subject: Re: [PATCH 1/2] media: v4l2-core: Shifting signed 32-bit value by 31
+ bits error
+To:     Shuah Khan <skhan@linuxfoundation.org>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com,
+        niklas.soderlund+renesas@ragnatech.se, ezequiel@collabora.com,
+        paul.kocialkowski@bootlin.com
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1559764506.git.skhan@linuxfoundation.org>
+ <bac3ee3b10de409b6cdf7286e0e84737e63662ee.1559764506.git.skhan@linuxfoundation.org>
+ <8cc03625-f41d-6009-d50c-823e5f498dca@infradead.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <7819cae4-58e5-cbe1-ac9d-bca00d390066@xs4all.nl>
+Date:   Thu, 6 Jun 2019 08:33:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0278664b-7e2d-414f-12bf-08d6ea48b7a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 06:32:15.8083
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Avri.Altman@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4349
+In-Reply-To: <8cc03625-f41d-6009-d50c-823e5f498dca@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCqAYO0ihncoGTKo329zWC1gdF8JaulHT0j0v6Ht2YI9jDKe/bIL9y8zuDYshGhhsoJruWi7+oE6lfPUkqfGjs2tK2nOIA8V3IL4WiXLj69/z6uNJi5/
+ WSKSzH7fScCdAvKixvxNEICWsXr1rLUYZHsJlBUCmq3Fzs3uemD0L/VM7QBj7QP1EKnIxdi1BoaY0JIcNRnSnTdznKPRUj4ZRGgunZXvkFZ3zdrZJCyugYgD
+ xgObuEYnLaPVjNdqgavrta/HVJZ6x3gku4A5GOhl2LDHQhdJwk9W/qyBdDLU99s72A+hkh4Tav6sc1xRYmP5LKlxa36IuqBHpTS2gf6I4pi13GBfGclTTKof
+ RhgFPdNggOnHd7SRjp14ITZbpt9Fe5sDSDo9D4+mwgj5Z7e3ObdVFPkKj+pM48BLMhvD0tBaCyWjkJHYSldxtVQ9DDAWUDboYXayMuAcPQgwpYxOCLM6Je6V
+ MOXhcd1ALgt1Qnwm3XolI4mppki8N/R5WFjwwA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> On Wed 05 Jun 02:32 PDT 2019, Avri Altman wrote:
->=20
-> > >
-> > > On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
-> > >
-> > > > Hi,
-> > > >
-> > > > >
-> > > > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
-> > > > > <bjorn.andersson@linaro.org> wrote:
-> > > > > >
-> > > > > > This series exposes the ufs_reset line as a gpio, adds support =
-for ufshcd
-> to
-> > > > > > acquire and toggle this and then adds this to SDM845 MTP.
-> > > > > >
-> > > > > > Bjorn Andersson (3):
-> > > > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-> > > > > >   scsi: ufs: Allow resetting the UFS device
-> > > > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
-> > > > >
-> > > > > Adding similar change as in sdm845-mtp to the not yet upstream
-> > > > > blueline dts, I validated this allows my micron UFS pixel3 to boo=
-t.
-> > > > >
-> > > > > Tested-by: John Stultz <john.stultz@linaro.org>
-> > > > Maybe ufs_hba_variant_ops would be the proper place to add this?
-> > > >
-> > >
-> > > Are you saying that these memories only need a reset when they are
-> > > paired with the Qualcomm host controller?
-> > ufs_hba_variant_ops is for vendors to implement their own vops,
-> > and as you can see, many of them do.
-> > Adding hw_reset to that template seems like the proper way
-> > to do what you are doing.
-> >
->=20
-> Right, but the vops is operations related to the UFS controller, this
-> property relates to the memory connected.
-This is not entirely accurate. Those are vendor/board specific,
-As the original commit log indicates:
-" vendor/board specific and hence determined with
- the help of compatible property in device tree."
+On 6/6/19 5:22 AM, Randy Dunlap wrote:
+> On 6/5/19 2:53 PM, Shuah Khan wrote:
+>> Fix the following cppcheck error:
+>>
+>> Checking drivers/media/v4l2-core/v4l2-ioctl.c ...
+>> [drivers/media/v4l2-core/v4l2-ioctl.c:1370]: (error) Shifting signed 32-bit value by 31 bits is undefined behaviour
+>>
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>> ---
+>>  drivers/media/v4l2-core/v4l2-ioctl.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+>> index 6859bdac86fe..333e387bafeb 100644
+>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+>> @@ -1364,7 +1364,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>>  					(char)((fmt->pixelformat >> 8) & 0x7f),
+>>  					(char)((fmt->pixelformat >> 16) & 0x7f),
+>>  					(char)((fmt->pixelformat >> 24) & 0x7f),
+>> -					(fmt->pixelformat & (1 << 31)) ? "-BE" : "");
+>> +					(fmt->pixelformat & BIT(31)) ? "-BE" : "");
+>>  			break;
+>>  		}
+>>  	}
+>>
+> 
+> If this builds, I guess #define BIT(x) got pulled in indirectly
+> since bits.h nor bitops.h is currently #included in that source file.
+> 
+> Documentation/process/submit-checklist.rst rule #1 says:
+> 1) If you use a facility then #include the file that defines/declares
+>    that facility.  Don't depend on other header files pulling in ones
+>    that you use.
+> 
+> Please add #include <linux/bits or bitops.h>
+> 
 
-I would rather have this new vop:
-void    (*device_reset)(struct ufs_hba *), Or whatever,=20
-actively set in ufs_hba_variant_ops, rather than ufshcd_init_device_reset
-failing as part of the default init flow.
+I'm not sure about this patch. '1 << 31' is used all over in the kernel,
+including in public headers (e.g. media.h, videodev2.h).
 
-Thanks,
-Avri
+It seems arbitrary to change it only here, but not anywhere else.
 
->=20
-> E.g I have a Hynix memory and John have a Micron memory that needs this
-> reset and my assumption is that these memories will need their RESET pin
-> toggled regardless of which controller they are connected to.
->=20
-> Regards,
-> Bjorn
+In this particular example for the fourcc handling I would prefer to just
+use '1U << 31', both in v4l2-ioctl.c and videodev2.h.
+
+A separate patch doing the same for MEDIA_ENT_ID_FLAG_NEXT in media.h would
+probably be a good idea either: that way the public API at least will do
+the right thing.
+
+Regards,
+
+	Hans
