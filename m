@@ -2,143 +2,236 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2293BC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A6EC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9DD42089E
+	by mail.kernel.org (Postfix) with ESMTP id B32A520868
 	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfehlKGs"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TuvpXNtL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfFFT0Y (ORCPT
+        id S1729330AbfFFTXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:26:24 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33345 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729335AbfFFT0X (ORCPT
+        Thu, 6 Jun 2019 15:23:32 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50801 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729053AbfFFTXb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:26:23 -0400
-Received: by mail-ot1-f65.google.com with SMTP id p4so3098512oti.0;
-        Thu, 06 Jun 2019 12:26:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=//bEoSLNLLHE97BPxRCj2Ov+nlOv5NirkYFgfSUW6IE=;
-        b=tfehlKGsfTi1m7hhM0Xjrl6wu/1FJz5YNvaZjnKEboFeHFs3iFSgzJkRWdCSVxUQwK
-         VwB5xDNIKJGAxswP++nk/enpOXH6PlOVd/C3I9AfnISZHKR6GWlgLskNPRU1h/bNpnqo
-         2JnW7XY7REpC1hYxXeiCTaUPNwn92eJoeTNDKX6EQv0oHvsnJL2QZ0+lZ/t3sGaYOI+/
-         7w6bJjmTKe2MNEgBbHPFvZRtjdzrZBQRFh/HYvKkjCyoWw075tiXM0Qx1QVkY2amPY+w
-         R/vtWSsTe6/xnFN3nup4WWtmib3FF7B5uNi4TEwcEZ6t+gf7OGkesQQYLrz4/vmTG3kT
-         /pIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=//bEoSLNLLHE97BPxRCj2Ov+nlOv5NirkYFgfSUW6IE=;
-        b=Er0eb3STw30y/Rei8bkTNeQ6KEByFbisgPBhDfl0ZeM0sT52zO0Dm6l3fH0h1afO14
-         IVzNFXNXAeAjOLdhBhkYBOWk8F26DqO/ttsGnmLcQ4PcRHkkFwLO3KNmlGsq8ULU9fHa
-         JHLeydcnrfMbDsD7knVNSXwQAq3WQzUmLoxxRe0zO4w2faUsU/+nolM10x4XIrasDTdT
-         XkNjFMyR2SesjkrcCQ1Ajjh1SLcXSWnrtZNFhtOVnBLVaxab0EI8k2E32xS4MJJvw67R
-         XuwvkMj1vTG6klsmoTgZG4SYN6FhDdMtaTm3KDQ6O9lE2LTgjITjFzqk6c2lriJ0PC6z
-         kp9Q==
-X-Gm-Message-State: APjAAAWkATjzBd8gafFnxz1eODkQNkDgMZrtw8c8h2cLqYD7Ij4lGq0w
-        njmBDjMoMAtKxmo5B4eM4rbkzNyv
-X-Google-Smtp-Source: APXvYqwL7j7Huo/G41SF8PlkxfC7vQ8YdiJ33WC5yoMAWg0YVvY404CgtKWoG3ue/NITZ97pzuvy4w==
-X-Received: by 2002:a05:6830:1303:: with SMTP id p3mr16235060otq.267.1559849182214;
-        Thu, 06 Jun 2019 12:26:22 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id b12sm922890otk.59.2019.06.06.12.26.20
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 12:26:21 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Christoph Hellwig <hch@lst.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
- <dfe6451c93574b61d4bdde4a05c5f8ccf86b31a0.camel@kernel.crashing.org>
- <20190606093149.GA11598@darkstar.musicnaut.iki.fi>
- <d87ac9a7faac0d5522cb496d74afc586410fed9c.camel@kernel.crashing.org>
- <f8df19ffe5b75537045119037459ae9ad4a1de39.camel@kernel.crashing.org>
- <20190606114325.GA7497@lst.de>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <59528af0-f250-f5e7-50c0-0a163ccfa59c@lwfinger.net>
-Date:   Thu, 6 Jun 2019 14:26:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 15:23:31 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x56JMDPp2102928
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 6 Jun 2019 12:22:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x56JMDPp2102928
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1559848934;
+        bh=B9H4CNnwxmfVdYMXYG4y49g0B29mcFnXNGsdvhYtCvA=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=TuvpXNtL/hgp3bfk7h1qNIBbqYctJ2aEmY/KydNewBwwmHsc/7lp7Ofqf1A83rBOY
+         kKr5MiK01i/77FH4c6pTj9fH/PkQ/6Qokh7fGOSOKY0oqcgL2ISzvda9AcPjdE684I
+         iTVZ7qlpVcMgUz7jVfRdPL+dlDbj6RZCpQUiiGAlcynlp3CUffKWgGuzQqWhUqRPVj
+         272Dslgc8YCADDUkqPGCb0yJFN+6g19eybwNVhAhwhTQvEMGP/Re7SdFw5e3G8fdGu
+         QdyRig2jPIIwsjr5K5QlJWqT/e/A6pMA2snqbJdTR6qzzblliJ5hQ0l++SJhhNIoNF
+         1YgfSPG9Cm5Pw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x56JMCWL2102925;
+        Thu, 6 Jun 2019 12:22:12 -0700
+Date:   Thu, 6 Jun 2019 12:22:12 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Kairui Song <tipbot@zytor.com>
+Message-ID: <tip-6bbeb276b71f06c5267bfd154629b1bec82e7136@git.kernel.org>
+Cc:     mingo@redhat.com, lijiang@redhat.com,
+        penguin-kernel@I-love.SAKURA.ne.jp, dirk.vandermerwe@netronome.com,
+        x86@kernel.org, bhe@redhat.com, bp@suse.de, hpa@zytor.com,
+        tglx@linutronix.de, kasong@redhat.com,
+        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
+        mingo@kernel.org
+Reply-To: kirill.shutemov@linux.intel.com, lijiang@redhat.com,
+          mingo@redhat.com, linux-kernel@vger.kernel.org,
+          kasong@redhat.com, bp@suse.de, tglx@linutronix.de, hpa@zytor.com,
+          mingo@kernel.org, bhe@redhat.com, dirk.vandermerwe@netronome.com,
+          x86@kernel.org, penguin-kernel@I-love.SAKURA.ne.jp
+In-Reply-To: <20190429002318.GA25400@MiWiFi-R3L-srv>
+References: <20190429002318.GA25400@MiWiFi-R3L-srv>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/boot] x86/kexec: Add the EFI system tables and ACPI tables
+ to the ident map
+Git-Commit-ID: 6bbeb276b71f06c5267bfd154629b1bec82e7136
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190606114325.GA7497@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 6:43 AM, Christoph Hellwig wrote:
-> On Thu, Jun 06, 2019 at 08:57:49PM +1000, Benjamin Herrenschmidt wrote:
->>> Wow... that's an odd amount. One thing we could possibly do is add code
->>> to limit the amount of RAM when we detect that device....
->>
->> Sent too quickly... I mean that *or* force swiotlb at 30-bits on those systems based
->> on detecting the presence of that device in the device-tree.
-> 
-> swiotlb doesn't really help you, as these days swiotlb on matters for
-> the dma_map* case.  What would help is a ZONE_DMA that covers these
-> devices.  No need to do the 24-bit x86 does, but 30-bit would do it.
-> 
-> WIP patch for testing below:
-> 
-> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-> index b8286a2013b4..7a367ce87c41 100644
-> --- a/arch/powerpc/include/asm/page.h
-> +++ b/arch/powerpc/include/asm/page.h
-> @@ -319,6 +319,10 @@ struct vm_area_struct;
->   #endif /* __ASSEMBLY__ */
->   #include <asm/slice.h>
->   
-> +#if 1 /* XXX: pmac?  dynamic discovery? */
-> +#define ARCH_ZONE_DMA_BITS 30
-> +#else
->   #define ARCH_ZONE_DMA_BITS 31
-> +#endif
->   
->   #endif /* _ASM_POWERPC_PAGE_H */
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index cba29131bccc..2540d3b2588c 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -248,7 +248,8 @@ void __init paging_init(void)
->   	       (long int)((top_of_ram - total_ram) >> 20));
->   
->   #ifdef CONFIG_ZONE_DMA
-> -	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, 0x7fffffffUL >> PAGE_SHIFT);
-> +	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
-> +			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
->   #endif
->   	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
->   #ifdef CONFIG_HIGHMEM
-> 
+Commit-ID:  6bbeb276b71f06c5267bfd154629b1bec82e7136
+Gitweb:     https://git.kernel.org/tip/6bbeb276b71f06c5267bfd154629b1bec82e7136
+Author:     Kairui Song <kasong@redhat.com>
+AuthorDate: Mon, 29 Apr 2019 08:23:18 +0800
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Thu, 6 Jun 2019 20:13:48 +0200
 
-I am generating a test kernel with this patch.
+x86/kexec: Add the EFI system tables and ACPI tables to the ident map
 
-FYI, the "free" command on my machine shows 1.5+ G of memory. That likely means 
-I have 2G installed.
+Currently, only the whole physical memory is identity-mapped for the
+kexec kernel and the regions reserved by firmware are ignored.
 
-I have tested a patched kernel in which b43legacy falls back to a 31-bit DMA 
-mask when the 32-bit one failed. That worked, but would likely kill the x86 
-version. Let me know if think a fix in the driver rather than the kernel would 
-be better. I still need to understand why the same setup works in b43 and fails 
-in b43legacy. :(
+However, the recent addition of RSDP parsing in the decompression stage
+and especially:
 
-Larry
+  33f0df8d843d ("x86/boot: Search for RSDP in the EFI tables")
+
+which tries to access EFI system tables and to dig out the RDSP address
+from there, becomes a problem because in certain configurations, they
+might not be mapped in the kexec'ed kernel's address space.
+
+What is more, this problem doesn't appear on all systems because the
+kexec kernel uses gigabyte pages to build the identity mapping. And
+the EFI system tables and ACPI tables can, depending on the system
+configuration, end up being mapped as part of all physical memory, if
+they share the same 1 GB area with the physical memory.
+
+Therefore, make sure they're always mapped.
+
+ [ bp: productize half-baked patch:
+   - rewrite commit message.
+   - correct the map_acpi_tables() function name in the !ACPI case. ]
+
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Cc: dyoung@redhat.com
+Cc: fanc.fnst@cn.fujitsu.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: j-nomura@ce.jp.nec.com
+Cc: kexec@lists.infradead.org
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Lianbo Jiang <lijiang@redhat.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190429002318.GA25400@MiWiFi-R3L-srv
+---
+ arch/x86/kernel/machine_kexec_64.c | 75 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index ceba408ea982..3c77bdf7b32a 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -18,6 +18,7 @@
+ #include <linux/io.h>
+ #include <linux/suspend.h>
+ #include <linux/vmalloc.h>
++#include <linux/efi.h>
+ 
+ #include <asm/init.h>
+ #include <asm/pgtable.h>
+@@ -29,6 +30,43 @@
+ #include <asm/setup.h>
+ #include <asm/set_memory.h>
+ 
++#ifdef CONFIG_ACPI
++/*
++ * Used while adding mapping for ACPI tables.
++ * Can be reused when other iomem regions need be mapped
++ */
++struct init_pgtable_data {
++	struct x86_mapping_info *info;
++	pgd_t *level4p;
++};
++
++static int mem_region_callback(struct resource *res, void *arg)
++{
++	struct init_pgtable_data *data = arg;
++	unsigned long mstart, mend;
++
++	mstart = res->start;
++	mend = mstart + resource_size(res) - 1;
++
++	return kernel_ident_mapping_init(data->info, data->level4p, mstart, mend);
++}
++
++static int
++map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
++{
++	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
++	struct init_pgtable_data data;
++
++	data.info = info;
++	data.level4p = level4p;
++	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
++	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
++				   &data, mem_region_callback);
++}
++#else
++static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
++#endif
++
+ #ifdef CONFIG_KEXEC_FILE
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 		&kexec_bzImage64_ops,
+@@ -36,6 +74,31 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ };
+ #endif
+ 
++static int
++map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
++{
++#ifdef CONFIG_EFI
++	unsigned long mstart, mend;
++
++	if (!efi_enabled(EFI_BOOT))
++		return 0;
++
++	mstart = (boot_params.efi_info.efi_systab |
++			((u64)boot_params.efi_info.efi_systab_hi<<32));
++
++	if (efi_enabled(EFI_64BIT))
++		mend = mstart + sizeof(efi_system_table_64_t);
++	else
++		mend = mstart + sizeof(efi_system_table_32_t);
++
++	if (!mstart)
++		return 0;
++
++	return kernel_ident_mapping_init(info, level4p, mstart, mend);
++#endif
++	return 0;
++}
++
+ static void free_transition_pgtable(struct kimage *image)
+ {
+ 	free_page((unsigned long)image->arch.p4d);
+@@ -159,6 +222,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 			return result;
+ 	}
+ 
++	/*
++	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
++	 * not covered by pfn_mapped.
++	 */
++	result = map_efi_systab(&info, level4p);
++	if (result)
++		return result;
++
++	result = map_acpi_tables(&info, level4p);
++	if (result)
++		return result;
++
+ 	return init_transition_pgtable(image, level4p);
+ }
+ 
