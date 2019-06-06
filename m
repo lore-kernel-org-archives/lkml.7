@@ -2,109 +2,151 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1629C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D972C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1FC206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:43:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G526VcO+"
+	by mail.kernel.org (Postfix) with ESMTP id 417A72083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfFFPng (ORCPT
+        id S1729368AbfFFPqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:43:36 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44177 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729137AbfFFPnf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:43:35 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t16so1730736pfe.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 08:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BfrnQRYKGFgPxF9NSnQflkQWl1ljH2e27gVbldpoCtM=;
-        b=G526VcO+jFeP1Kp96oisydppUTR325SAabfAj6XffQwSmnnk1fpfZq2JNrtma3sq9V
-         bUQ+A75ziJPPn7hBRksbtk+T6Y9IgGhi5PQaRPJHuJDgvXlkHzG69IUtJZT2vxcD+jqE
-         t/h4GMZ5MtaRvM/RjnGdut6SKYqwSYoKWOciJ1uayYOVVUbw5tYFWmPuKRdIl1WHJfwW
-         /L6d8b274D1jaWJ8kXV1ogOTs61jy5TB7/STFsPpt+jchl+bIVBKyDB09fNNGZjkYCsF
-         VsJ5Y8KS/bPkMbj69HoTBAUL4pgmylrnY2BrgmEpPlDSmvY1EYT46qNmYRFSNpPSKn/4
-         LIeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BfrnQRYKGFgPxF9NSnQflkQWl1ljH2e27gVbldpoCtM=;
-        b=hQebzBfIgsVeKbob1d3quZ6MBr1Fu1xImV62lsoaHA34uGL7G5bFAtZS4UHUOdRUsO
-         aHt2aIg2tyxlE96EhrsqujFai4UXAj3SGEwuYG8y6UkiQanA2az/rr3qBUpd06NXQKmm
-         pIlN2VpRwESiGrOIITbMjvDGN7eH2/IXHrcCy773k6/w8vGAsvQaw3Sos90dCsRGTbes
-         7wOaJYqb+/W1/coNnHOtzp6B0bHDhxElqH381FO7l4DB9R8gF5hHJIav2D96ba7TMcmy
-         M2s1qTVAmLAyWz/t37x0fFyfPTPnncdmvuFyTpZltrj5Y3QTfwXIwDyyrffKKSlRn+6L
-         A8HA==
-X-Gm-Message-State: APjAAAWfrrEUiwqHAA+GtLHE8ZPudk88OldN4FiyOxUFyODPpGc/SeuB
-        8U5i7IS6nbsKdlAq52ewecQl/g==
-X-Google-Smtp-Source: APXvYqx+sT+/LQuM4S09B7Xt9KV37NrCwBh8IBko+fhwQpGMCytJTR8ZRG5FS309mJBurHzccGKhDA==
-X-Received: by 2002:a62:386:: with SMTP id 128mr55122544pfd.10.1559835814740;
-        Thu, 06 Jun 2019 08:43:34 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v64sm4919401pfv.172.2019.06.06.08.43.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 08:43:34 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 08:43:32 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] remoteproc: debug: fix va dump format in carveout list
-Message-ID: <20190606154332.GB23094@builder>
-References: <1559835519-8165-1-git-send-email-arnaud.pouliquen@st.com>
+        Thu, 6 Jun 2019 11:46:21 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35506 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729185AbfFFPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:46:21 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4D16868F10A3783AD570;
+        Thu,  6 Jun 2019 23:46:18 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Jun 2019
+ 23:46:14 +0800
+Date:   Thu, 6 Jun 2019 16:46:00 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <peter.wang@mediatek.com>, <kuohong.wang@mediatek.com>,
+        <jg_poxu@mediatek.com>, <stanley.chu@mediatek.com>
+Subject: Re: [PATCH 3/4] iio: adc: mediatek: SET_LATE_SYSTEM_SLEEP_PM_OPS
+ support
+Message-ID: <20190606164600.000060b3@huawei.com>
+In-Reply-To: <1559041196.12867.3.camel@mtkswgap22>
+References: <1557994247-16739-1-git-send-email-chun-hung.wu@mediatek.com>
+        <1557994247-16739-4-git-send-email-chun-hung.wu@mediatek.com>
+        <20190518113527.5210b0bf@archlinux>
+        <1558332205.11080.6.camel@mtkswgap22>
+        <7838dcae-8a69-0297-718b-a061b14a456d@gmail.com>
+        <1559041196.12867.3.camel@mtkswgap22>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559835519-8165-1-git-send-email-arnaud.pouliquen@st.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 06 Jun 08:38 PDT 2019, Arnaud Pouliquen wrote:
+On Tue, 28 May 2019 18:59:56 +0800
+Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
 
-> Standardize dump presentation for va, dma and da dumps by adding
-> "0x" prefix for virtual address.
+> Hi Matthias:
 > 
-> Fixes: 276ec9934231("remoteproc: replace "%p" with "%pK"")
+>   Thanks for your suggestion, I think device_links is a good way to
+> make dependency of module's suspend/resume order.
 > 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-
-Applied
+> Hi Jonathan:
+> 
+>   Is it ok to keep using late_suspend and early_resume, or do you think
+> it's better to use device_links?
+I think device links would be preferable as the reasoning becomes explicit.
+As I understand them they are also a less fragile solution.
 
 Thanks,
-Bjorn
 
-> ---
->  drivers/remoteproc/remoteproc_debugfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Jonathan
+
 > 
-> diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
-> index 6da934b8dc4b..91d3a75f0b41 100644
-> --- a/drivers/remoteproc/remoteproc_debugfs.c
-> +++ b/drivers/remoteproc/remoteproc_debugfs.c
-> @@ -298,7 +298,7 @@ static int rproc_carveouts_show(struct seq_file *seq, void *p)
->  	list_for_each_entry(carveout, &rproc->carveouts, node) {
->  		seq_puts(seq, "Carveout memory entry:\n");
->  		seq_printf(seq, "\tName: %s\n", carveout->name);
-> -		seq_printf(seq, "\tVirtual address: %pK\n", carveout->va);
-> +		seq_printf(seq, "\tVirtual address: 0x%pK\n", carveout->va);
->  		seq_printf(seq, "\tDMA address: %pad\n", &carveout->dma);
->  		seq_printf(seq, "\tDevice address: 0x%x\n", carveout->da);
->  		seq_printf(seq, "\tLength: 0x%x Bytes\n\n", carveout->len);
-> -- 
-> 2.7.4
+> Thanks,
+> Chun-Hung
+> On Wed, 2019-05-22 at 18:28 +0200, Matthias Brugger wrote:
+> > 
+> > On 20/05/2019 08:03, Chun-Hung Wu wrote:  
+> > > Hi Jonathan:
+> > > 
+> > >   Thanks for the prompt reply,
+> > > 
+> > > On Sat, 2019-05-18 at 11:35 +0100, Jonathan Cameron wrote:  
+> > >> On Thu, 16 May 2019 16:10:46 +0800
+> > >> Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+> > >>  
+> > >>>   Move suspend/resume to late_suspend and
+> > >>> early_resume to gurantee users can use auxadc  
+> > >> guarantee
+> > >>  
+> > > will fix it in next version.  
+> > >>> driver at suspend/resume stage.  
+> > >> No problem with the patch content, but we need a reason why they may
+> > >> want to do so?  
+> > > Our thermal drivers uses auxadc at suspend/resume stage.
+> > > In order to avoid auxadc suspended prior to thermal driver,
+> > > we move auxadc to late_suspend and early_resume.
+> > >   
+> > 
+> > That sounds like a user of device_links [1] to me.
+> > 
+> > [1] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
+> >   
+> > > Thanks,
+> > > Chun-Hung  
+> > >>
+> > >> Thanks,
+> > >>
+> > >> Jonathan  
+> > >>>
+> > >>> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> > >>> ---
+> > >>>  drivers/iio/adc/mt6577_auxadc.c | 7 ++++---
+> > >>>  1 file changed, 4 insertions(+), 3 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
+> > >>> index e1bdcc0..58d7cb2 100644
+> > >>> --- a/drivers/iio/adc/mt6577_auxadc.c
+> > >>> +++ b/drivers/iio/adc/mt6577_auxadc.c
+> > >>> @@ -326,9 +326,10 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
+> > >>>  	return 0;
+> > >>>  }
+> > >>>  
+> > >>> -static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
+> > >>> -			 mt6577_auxadc_suspend,
+> > >>> -			 mt6577_auxadc_resume);
+> > >>> +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
+> > >>> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(mt6577_auxadc_suspend,
+> > >>> +				     mt6577_auxadc_resume)
+> > >>> +};
+> > >>>  
+> > >>>  static const struct of_device_id mt6577_auxadc_of_match[] = {
+> > >>>  	{ .compatible = "mediatek,mt2701-auxadc", .data = &mt8173_compat},  
+> > >>  
+> > > 
+> > >   
 > 
+> 
+
+
