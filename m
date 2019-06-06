@@ -2,98 +2,128 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CD3C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6395C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC0920652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C82620868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dJwaayAr"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bcTBAfzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfFFQcd (ORCPT
+        id S1729726AbfFFQcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:32:33 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54348 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfFFQca (ORCPT
+        Thu, 6 Jun 2019 12:32:43 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17548 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfFFQcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:32:30 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56GW32H064811;
-        Thu, 6 Jun 2019 11:32:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559838723;
-        bh=vve9U+wzc4vCwKL4B0UU+JLqKTIC0YBQuBU2TPamO4Y=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=dJwaayArfJ8bsC3MRaRqoyl0uJugrygIEQ9F6wehuBIPzmW6hDLAQR7xRGHlYYhDA
-         DVT90EdiDCF3yV3ydP5kc8Fu3uYa+FeHScZoRmb00AvSSLNDuGQCVlV35tMusCIZTe
-         2OlD906SZgbUVU5xWiBmZcPVx8h8d/xXomt/i1fE=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56GW305083755
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 11:32:03 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 11:32:03 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 11:32:03 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56GW2J6056400;
-        Thu, 6 Jun 2019 11:32:03 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Wingman Kwok <w-kwok2@ti.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 10/10] ARM: configs: keystone: enable cpts
-Date:   Thu, 6 Jun 2019 19:30:47 +0300
-Message-ID: <20190606163047.31199-11-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606163047.31199-1-grygorii.strashko@ti.com>
-References: <20190606163047.31199-1-grygorii.strashko@ti.com>
+        Thu, 6 Jun 2019 12:32:42 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf940290002>; Thu, 06 Jun 2019 09:32:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 09:32:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 09:32:41 -0700
+Received: from [10.21.132.143] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 16:32:39 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+ <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+ <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
+ <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
+ <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4b098fb6-1a5b-1100-ae16-978a887c9535@nvidia.com>
+Date:   Thu, 6 Jun 2019 17:32:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559838761; bh=k8u67P195ByQ7NwcJoTWbUMcfVgkrN8EE1wBTc4lo2Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bcTBAfzNv7bqbRwB6bN21BDIGn8RjgA/UQZsXULBJ1EfkcaiOJvxj/hkXbRLyqAnm
+         JRcmH7ROBIyqb1/32m03N3zKHyuE9xfbuoJdho52dOJ9Ic0PvVpr9CZTd+xGoTB8le
+         aU3QrutiN7vjLgRJ+BfEgaHrmH4ORIoCBF/BArqIwBC2RqIPfdbB6Np07bDwSS47N/
+         rtyiTigJGXJgXuE/xvn5cpuXhokNpk5+8ftoYNSdXTxnd6wBO6WFWFqqHy1NiGfw0d
+         M/JYZOwrZ5QMJaamn3Zrdo9rKOdiZXWJABDTX8NDF2rwMmvcx6b8dz07DsbzQPkXDN
+         NK2+k2D5O6cXw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable CPTS support which is present in Network Coprocessor Gigabit
-Ethernet (GbE) Switch Subsystem.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
----
- arch/arm/configs/keystone_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 06/06/2019 16:18, Dmitry Osipenko wrote:
 
-diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-index 72fee57aad2f..0b2281407ecf 100644
---- a/arch/arm/configs/keystone_defconfig
-+++ b/arch/arm/configs/keystone_defconfig
-@@ -136,6 +136,7 @@ CONFIG_BLK_DEV_SD=y
- CONFIG_NETDEVICES=y
- CONFIG_TI_KEYSTONE_NETCP=y
- CONFIG_TI_KEYSTONE_NETCP_ETHSS=y
-+CONFIG_TI_CPTS=y
- CONFIG_MARVELL_PHY=y
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
+...
+
+>>> If I understood everything correctly, the FIFO buffer is shared among
+>>> all of the ADMA clients and hence it should be up to the ADMA driver to
+>>> manage the quotas of the clients. So if there is only one client that
+>>> uses ADMA at a time, then this client will get a whole FIFO buffer, but
+>>> once another client starts to use ADMA, then the ADMA driver will have
+>>> to reconfigure hardware to split the quotas.
+>>
+>> The FIFO quotas are managed by the ADMAIF driver (does not exist in
+>> mainline currently but we are working to upstream this) because it is
+>> this device that owns and needs to configure the FIFOs. So it is really
+>> a means to pass the information from the ADMAIF to the ADMA.
+> 
+> So you'd want to reserve a larger FIFO for an audio channel that has a
+> higher audio rate since it will perform reads more often. You could also
+> prioritize one channel over the others, like in a case of audio call for
+> example.
+> 
+> Is the shared buffer smaller than may be needed by clients in a worst
+> case scenario? If you could split the quotas statically such that each
+> client won't ever starve, then seems there is no much need in the
+> dynamic configuration.
+
+Actually, this is still very much relevant for the static case. Even if
+we defined a static configuration of the FIFO mapping in the ADMAIF
+driver we still need to pass this information to the ADMA. I don't
+really like the idea of having it statically defined in two different
+drivers.
+
+Jon
+
 -- 
-2.17.1
-
+nvpublic
