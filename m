@@ -2,111 +2,129 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4547BC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A5EC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A24C20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E098720693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbfFFQ40 (ORCPT
+        id S1727609AbfFFQ5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:56:26 -0400
-Received: from smtprelay0058.hostedemail.com ([216.40.44.58]:56548 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725267AbfFFQ4Z (ORCPT
+        Thu, 6 Jun 2019 12:57:21 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.125]:11849 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726551AbfFFQ5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:56:25 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 58A02180A8CDF;
-        Thu,  6 Jun 2019 16:56:24 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: nut86_1a1703edf4d45
-X-Filterd-Recvd-Size: 3676
-Received: from XPS-9350 (unknown [172.58.75.111])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  6 Jun 2019 16:56:19 +0000 (UTC)
-Message-ID: <8ce6c5322918828db16134b45d7b0d6b208f943d.camel@perches.com>
-Subject: Re: [PATCH 2/5] mm/hmm: Clean up some coding style and comments
-From:   Joe Perches <joe@perches.com>
-To:     Jerome Glisse <jglisse@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     rcampbell@nvidia.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Thu, 06 Jun 2019 09:55:49 -0700
-In-Reply-To: <20190606155213.GB8053@redhat.com>
-References: <20190506232942.12623-1-rcampbell@nvidia.com>
-         <20190506232942.12623-3-rcampbell@nvidia.com>
-         <20190606141644.GA2876@ziepe.ca> <20190606142743.GA8053@redhat.com>
-         <20190606154129.GB17373@ziepe.ca> <20190606155213.GB8053@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Thu, 6 Jun 2019 12:57:20 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 968468156
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 11:57:19 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id YvhXhXJvUYTGMYvhXhVFxg; Thu, 06 Jun 2019 11:57:19 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.120] (port=37080 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hYvhT-001Sel-Iz; Thu, 06 Jun 2019 11:57:19 -0500
+Subject: Re: [PATCH] md: raid10: Use struct_size() in kmalloc()
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     Shaohua Li <shli@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190604224418.GA23187@embeddedor>
+ <CAPhsuW5cBSsQemfBOyJ_kPLFbaiES8Koh2cvpy9AV4dMB68OJA@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <03101042-c490-09fd-be81-dc76b4e364eb@embeddedor.com>
+Date:   Thu, 6 Jun 2019 11:57:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW5cBSsQemfBOyJ_kPLFbaiES8Koh2cvpy9AV4dMB68OJA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.120
+X-Source-L: No
+X-Exim-ID: 1hYvhT-001Sel-Iz
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.127.120]:37080
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 11:52 -0400, Jerome Glisse wrote:
-> On Thu, Jun 06, 2019 at 12:41:29PM -0300, Jason Gunthorpe wrote:
-> > On Thu, Jun 06, 2019 at 10:27:43AM -0400, Jerome Glisse wrote:
-> > > On Thu, Jun 06, 2019 at 11:16:44AM -0300, Jason Gunthorpe wrote:
-> > > > On Mon, May 06, 2019 at 04:29:39PM -0700, rcampbell@nvidia.com wrote:
-> > > > > From: Ralph Campbell <rcampbell@nvidia.com>
-> > > > > 
-> > > > > There are no functional changes, just some coding style clean ups and
-> > > > > minor comment changes.
-> > > > > 
-> > > > > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> > > > > Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-> > > > > Cc: John Hubbard <jhubbard@nvidia.com>
-> > > > > Cc: Ira Weiny <ira.weiny@intel.com>
-> > > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > > > Cc: Balbir Singh <bsingharora@gmail.com>
-> > > > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> > > > > Cc: Matthew Wilcox <willy@infradead.org>
-> > > > > Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> > > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > >  include/linux/hmm.h | 71 +++++++++++++++++++++++----------------------
-> > > > >  mm/hmm.c            | 51 ++++++++++++++++----------------
-> > > > >  2 files changed, 62 insertions(+), 60 deletions(-)
-> > > > 
-> > > > Applied to hmm.git, thanks
-> > > 
-> > > 
-> > > Can you hold off, i was already collecting patches and we will
-> > > be stepping on each other toe ... for instance i had
-> > 
-> > I'd really rather not, I have a lot of work to do for this cycle and
-> > this part needs to start to move forward now. I can't do everything
-> > last minute, sorry.
-> > 
-> > The patches I picked up all look very safe to move ahead.
+
+
+On 6/6/19 11:51 AM, Song Liu wrote:
+
 > 
-> I want to post all the patch you need to apply soon, it is really
-> painful because they are lot of different branches i have to work
-> with if you start pulling patches that differ from the below branch
-> then you are making thing ever more difficult for me.
+> Applied to my md-next tree.
 > 
-> If you hold of i will be posting all the patches in one big set so
-> that you can apply all of them in one go and it will be a _lot_
-> easier for me that way.
 
-Easier for you is not necessarily easier for a community.
-Publish early and often.
+Great. :)
 
-
-
+Thanks, Song.
+--
+Gustavo
