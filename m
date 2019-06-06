@@ -2,69 +2,116 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D051C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142BAC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22AB220717
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559798977;
-	bh=lfy7XYZEqNVPl0M+Vu4rwTcIFUoArYGLzGD2CzlpLpM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zzYrtwb/pqZ1/QMGewrbImZe6v49xjUsw9xXdsKsSXm+srMYo8dvjUW1na/p3MVTR
-	 CWLzx+lIRsnxzsQaHi2Fm4d7ZhMswYSGiFV94GKikBSMInrkPzEJJoCTz2G5tNRMAy
-	 yUGSTmdEhSxHx2kbCW7Ca11WKSc0sZAtTmR+XCa8=
+	by mail.kernel.org (Postfix) with ESMTP id DCAC520717
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQYvZbyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfFFF3g (ORCPT
+        id S1726551AbfFFFbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 01:29:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33424 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726014AbfFFF3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 01:29:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D4851AE04;
-        Thu,  6 Jun 2019 05:29:34 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 07:29:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz, rientjes@google.com,
-        khalid.aziz@oracle.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Remove VM_BUG_ON in __alloc_pages_node
-Message-ID: <20190606052933.GA8575@dhcp22.suse.cz>
-References: <20190605060229.GA9468@bharath12345-Inspiron-5559>
- <20190605070312.GB15685@dhcp22.suse.cz>
- <20190605130727.GA25529@bharath12345-Inspiron-5559>
- <20190605142246.GH15685@dhcp22.suse.cz>
- <20190605155501.GA5786@bharath12345-Inspiron-5559>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605155501.GA5786@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 6 Jun 2019 01:31:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39404 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfFFFbd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 01:31:33 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 196so669509pgc.6;
+        Wed, 05 Jun 2019 22:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KfZrwgIDaqBuX8IJizb1+AcI1AFU6VOtdglxmDzVgSE=;
+        b=MQYvZbyLDVyY6CJoZZMgZDaRVGPiaS3QbI/cec0BsjLUG7enV0s1mT1YNa0nLJbovj
+         CKmd0zRFVdswMvqiSLPco2/ORmH+cO/K3ZLQ69ZrqmphuxLimlIGTAKojaPQu3i92G/7
+         kbhYCcx63jZp+17oxvDua5uwYq+t0et0FFeOSWWTbT1zd+fjU6doO/wokup42KZp4Ngy
+         Goxjdej0BlbCcaBM36MQevVSvwND/ecwAA8MFN0FqJMEdmUP32UAzu/eQVcM6Z+JOLkx
+         82jFarXbVcHZkBZ0s7NEMw6pQgG1UBrSiNoyqqnYdMJ2dsI4gBKkcZvh0BKlShNaNArh
+         dlhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KfZrwgIDaqBuX8IJizb1+AcI1AFU6VOtdglxmDzVgSE=;
+        b=tmSe0rDHgzomuge3Ifl5+kj50E0vI3bg1QpH763bPw36/7cvAt5Z0Dyp5ph1zpQCq+
+         /WJrnwSqXlkwZ7ZyK88z1LpBC/MUvGzpzVohrvN5y4DtmoC8kgK4arAbjR4iXjSLgdKF
+         We/z822U9xRBnymd6h2zRyTgNTRro60E1t0wu74AkF4dHKZpBrH+9CDz4cukfbTSOtT3
+         eP7Ec4v68BCOF52EmiojYTbmFvtAi+wy0yO5+72XlldajRmBgPWOWxVybVHgCcUkW1jD
+         XMPM0X3OY8Y+TfQuSlC6wZEJgz1a4B42uoFPRM+mgLuMEtzjXHgGWr6NAxyfQmryTGmW
+         UGIA==
+X-Gm-Message-State: APjAAAXamdyGjLSp4yLs4i7O3lpO3e/OH/bPoInk7jARSeqbzjZy+qmE
+        Fr/CygZRhdGsXxZKbn9w/tbCTTwe
+X-Google-Smtp-Source: APXvYqya5AvHx54xkJPbOQphNF6Kwy4EUSVFKcguQ1TyDa/rIMiRUcKM3NULilszbOByaXz+L6SPEg==
+X-Received: by 2002:a63:6848:: with SMTP id d69mr1720684pgc.0.1559799092578;
+        Wed, 05 Jun 2019 22:31:32 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id f11sm721547pjg.1.2019.06.05.22.31.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 05 Jun 2019 22:31:32 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v2 0/3] KVM: LAPIC: Implement Exitless Timer
+Date:   Thu,  6 Jun 2019 13:31:23 +0800
+Message-Id: <1559799086-13912-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05-06-19 21:25:01, Bharath Vedartham wrote:
-> IMO the reason why a lot of failures must not have occured in the past
-> might be because the programs which use it use stuff like cpu_to_node or
-> have checks for nid.
-> If one day we do get a program which passes an invalid node id without
-> VM_BUG_ON enabled, it might get weird.
+Dedicated instances are currently disturbed by unnecessary jitter due 
+to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+There is no hardware virtual timer on Intel for guest like ARM. Both 
+programming timer in guest and the emulated timer fires incur vmexits.
+This patchset tries to avoid vmexit which is incurred by the emulated 
+timer fires in dedicated instance scenario. 
 
-It will blow up on a NULL NODE_DATA and it will be quite obvious what
-that was so I wouldn't lose any sleep over that. I do not think we have
-any directly user controlable way to provide a completely ad-hoc numa
-node for an allocation.
+When nohz_full is enabled in dedicated instances scenario, the unpinned 
+timer will be moved to the nearest busy housekeepers after commit 444969223c8
+("sched/nohz: Fix affine unpinned timers mess"). However, KVM always makes 
+lapic timer pinned to the pCPU which vCPU residents, the reason is explained 
+by commit 61abdbe0 (kvm: x86: make lapic hrtimer pinned). Actually, these 
+emulated timers can be offload to the housekeeping cpus since APICv 
+is really common in recent years. The guest timer interrupt is injected by 
+posted-interrupt which is delivered by housekeeping cpu once the emulated 
+timer fires. 
+
+The host admin should fine tuned, e.g. dedicated instances scenario w/ 
+nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
+for housekeeping, disable mwait/hlt/pause vmexits to occupy the pCPUs, 
+fortunately preemption timer is disabled after mwait is exposed to 
+guest which makes emulated timer offload can be possible. 
+3%~5% redis performance benefit can be observed on Skylake server.
+
+v1 -> v2:
+ * check vcpu_halt_in_guest
+ * move module parameter from kvm-intel to kvm
+ * add housekeeping_enabled
+ * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
+
+Wanpeng Li (3):
+  KVM: LAPIC: Make lapic timer unpinned when timer is injected by
+    posted-interrupt
+  KVM: LAPIC: lapic timer interrupt is injected by posted interrupt
+  KVM: LAPIC: Ignore timer migration when lapic timer is injected by
+    posted-interrupt
+
+ arch/x86/kvm/lapic.c            | 55 ++++++++++++++++++++++++++++++++---------
+ arch/x86/kvm/x86.c              |  5 ++++
+ arch/x86/kvm/x86.h              |  7 ++++++
+ include/linux/sched/isolation.h |  2 ++
+ kernel/sched/isolation.c        |  6 +++++
+ 5 files changed, 63 insertions(+), 12 deletions(-)
 
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
