@@ -2,134 +2,328 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD9CC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA0CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64BC620693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293BE20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:12:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWozMkV0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DGqIi3Cz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbfFFQMW (ORCPT
+        id S1729611AbfFFQMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:12:22 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45715 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbfFFQMW (ORCPT
+        Thu, 6 Jun 2019 12:12:49 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46557 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729230AbfFFQMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:12:22 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s11so1780990pfm.12;
-        Thu, 06 Jun 2019 09:12:22 -0700 (PDT)
+        Thu, 6 Jun 2019 12:12:48 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h10so4083219edi.13;
+        Thu, 06 Jun 2019 09:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8Zc8qJqb674XuWLoPig1e9WRoBoqYfsMdfDerD1Y84I=;
-        b=hWozMkV01JYUjz28wuRy7Z0qFH8zGaqnld1tOMo+U4GaOm5s4ac3WzIF/yF105TzXu
-         Ncfw0a2ed1CzP+sss6HMA8UGTJ+1o7CLg+4MTNqiD7oktPdu+/HjiXy40N9eNqn6lOwW
-         +1BIiK1/D43/k73x2S6wUGm+q5MTVV/Ygb33OXVlEhbMgxq86cFfJ4vCxborERCA5dlr
-         Lttm/Pi2itibF6CZJbzgNj9wdh3SOc9yphBA2GC6N1Zizr4/7/7MT724OCmEztigcPZb
-         995iBzTfECIadcZtlG9jnaAeieC2KLU4hhUsSxvQBWTXsLyYFaeuWxCChDbrduBbBZH/
-         /gYA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EeQzPWyfLPLO499adlJDfan1bRvgZPmICT/SWNrNy4s=;
+        b=DGqIi3CzTNVbmH4KLoxDMJJFD9ZQtkCXlV4NXk2BU4uD11S1XJP0IPDSaYOutEGYNq
+         LRbla4IHK4SYvx7fQ5PHKsJlcDxqGO5CTTxO3L7AAoALo+E3cJzi6+kFuII2lGf2FWW4
+         bEuVX5IRZiQ1AiKUJHS6oXFJJ05Xkt35JX66OSLPurafDr/K9endoL2s75UEe4D5IucQ
+         WNPiRFde+iM66YsjvNK/tn6gmCIjtPmFE4Cr39gokqQPzFYr9/RfCFqnucqmDOAchDfM
+         4fiiNTHrbXEcPqUfithvcHQ+aOBU0WR7chTD6jxM+gUgEfNEWCfFuXsTKm+aLz0YWp52
+         Fvmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8Zc8qJqb674XuWLoPig1e9WRoBoqYfsMdfDerD1Y84I=;
-        b=KoMBEyruTb2KHIR4Sw1ze5bzMpsbhFONopYQKbioB5WYGb0BSw2skZFQllCM7BNzNN
-         i/9kzkVndJYevLOwqH5rGHhYN+/CXIeb8NvWGV8KnqEo4Pf5gzX91oacySgslZia1Ffb
-         GP2WJoUI/C9EPE/J6eaqcvst8DiBTCTAIZAjn0RExPJME5PgiFtTduCSS3ymH5cQkPrd
-         Zl9xU3LVqTSK4b1Jld1oX5AkJxIaBC5CwjSv8vtkV0Pv+Vk3cPbES/dPxYsZSYRgULzE
-         vl0VkZYFLabn013MRh74SoUNc0vA0Qa/69+dbs9EmeZexoeLUTSzH13SPRxkjuEo6+pY
-         SRoA==
-X-Gm-Message-State: APjAAAU2BluWHW+8tT8Em6CS9uCkijv2XmTe4EHyZPKFHPmj5UB8ocMy
-        VL+MUbqx3qmZ4DDgVYPtLDE=
-X-Google-Smtp-Source: APXvYqyd/bWJhSZ+sgeAGgA3nldsQkOQqnMaAuK5ExRbXjQLzAVGgeJlCiL1GYX6yDfSKPPWtURJog==
-X-Received: by 2002:a63:cc43:: with SMTP id q3mr4037399pgi.438.1559837541829;
-        Thu, 06 Jun 2019 09:12:21 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id j7sm7894239pjb.26.2019.06.06.09.12.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EeQzPWyfLPLO499adlJDfan1bRvgZPmICT/SWNrNy4s=;
+        b=j2W+jOcvFbayTUnBpT7IcPGON2Z1g8H+HvdV0rtRSAejPw/XD9WL7tjq/3rUC6mwQc
+         TnRV+Ij7/jR3UanqSiSfaCyViy5dRIY3yRV3auSQhB1fOFOB2XVOrNUhK5tuul63wNQt
+         yypVcpj1TNG4yXUamAOMLRWtx9rJDiXB5wl2KRxAutTtXGn/FY4YQ02nj5vGoW+5cXvD
+         i3iEaBrwXl97REs6Kp5v/A45XnF/MCeqHiGzcyhtCBodMZKCI2X27lafGHnbEKGC4+5e
+         H3pVC//nEmMjZvG51PO+V0tnRNnvJzc70XHR5pz1/GxUlBDJS4kgRJmwSoE1g8TNMDsq
+         PPYg==
+X-Gm-Message-State: APjAAAXxxYZgxwUqMcsF+hi2Gn7+X0sVK33YVINy1LhYo34GFj/BXtHy
+        j/LJVgubeEUkZdWIeEwMfqE=
+X-Google-Smtp-Source: APXvYqwjT5SoA+Z3tcVtWM2YamSgc73QnqumrWKnk+jYUOUvINGwYgA/8651jWG3tRGedByFd9J4UQ==
+X-Received: by 2002:a50:90c6:: with SMTP id d6mr30149485eda.19.1559837565859;
+        Thu, 06 Jun 2019 09:12:45 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id d6sm407203ejb.31.2019.06.06.09.12.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 09:12:21 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     bjorn.andersson@linaro.org, benjamin.tissoires@redhat.com,
-        dmitry.torokhov@gmail.com, jikos@kernel.org, lee.jones@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org,
-        david.brown@linaro.org, hdegoede@redhat.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v5 0/3] Basic DT support for Lenovo Miix 630
-Date:   Thu,  6 Jun 2019 09:10:55 -0700
-Message-Id: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 06 Jun 2019 09:12:45 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] vhost: Don't use defined in VHOST_ARCH_CAN_ACCEL_UACCESS definition
+Date:   Thu,  6 Jun 2019 09:12:23 -0700
+Message-Id: <20190606161223.67979-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc3
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Lenovo Miix 630 is one of three ARM based (specifically Qualcomm
-MSM8998) laptops that comes with Windows, and seems to have a dedicated
-following of folks intrested to get Linux up and running on it.
+Clang warns:
 
-This series adds support for the basic functionality this is validated
-towork using devicetree.  Although the laptops do feed ACPI to Windows,
-the existing MSM8998 support in mainline is DT based, so DT provides a
-quick path to functionality while ACPI support is investigated.
+  drivers/vhost/vhost.c:2085:5: warning: macro expansion producing
+  'defined' has undefined behavior [-Wexpansion-to-defined]
+  #if VHOST_ARCH_CAN_ACCEL_UACCESS
+      ^
+  drivers/vhost/vhost.h:98:38: note: expanded from macro
+  'VHOST_ARCH_CAN_ACCEL_UACCESS'
+  #define VHOST_ARCH_CAN_ACCEL_UACCESS defined(CONFIG_MMU_NOTIFIER) && \
+                                       ^
 
-The three devices are very similar, but do have differences in the set
-of peripherals supported, so the idea is that the vast majority of the
-support for all three can live in a common include, which should reduce
-overall duplication.  Adding support for the other two devices as a
-follow on should involve minimal work.
+Rework VHOST_ARCH_CAN_ACCEL_UACCESS to be defined under those conditions
+so that the meaning of the code doesn't change and clang no longer
+warns.
 
-The bleeding edge work for these laptops and work in progress can be
-found at https://github.com/aarch64-laptops/prebuilt
+Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+Link: https://github.com/ClangBuiltLinux/linux/issues/508
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/vhost/vhost.c | 44 +++++++++++++++++++++----------------------
+ drivers/vhost/vhost.h |  7 ++++---
+ 2 files changed, 26 insertions(+), 25 deletions(-)
 
-v5:
--Split out elan_i2c changes into their own patch
--Use a static list of strings to match
--Fixed typo of "whitelist"
--Dropped incorrect thermal zones
--Dropped tags from Bjorn and Lee since the functional should be
-identical, but the code is structured different
-
-v4:
--Changed the hid-quirks ELAN handling around per Benjamin Tissoires
--Dropped new DT binding
-
-v3:
--Changed "clam" to "clamshell"
--Defined a dt binding for the combo Elan keyboard + touchpad device
--Adjusted the HID quirk to be correct for dt boot
--Removed extranious comment in board dts
--Fixed board level compatible
-
-v2:
--Changed "cls" to "clam" since feedback indicated "cls" is too opaque,
-but
-"clamshell" is a mouthfull.  "clam" seems to be a happy medium.
-
-Jeffrey Hugo (3):
-  Input: elan_i2c: Add comment about link between elan_i2c and
-    hid-quirks
-  HID: quirks: Refactor ELAN 400 and 401 handling
-  arm64: dts: qcom: Add Lenovo Miix 630
-
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/msm8998-clamshell.dtsi      | 240 ++++++++++++++++++
- .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 +++
- drivers/hid/hid-quirks.c                      |  78 +++++-
- drivers/input/mouse/elan_i2c_core.c           |   4 +
- 5 files changed, 342 insertions(+), 11 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index dc9301d31f12..cc56d08b4275 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -299,7 +299,7 @@ static void vhost_vq_meta_reset(struct vhost_dev *d)
+ 		__vhost_vq_meta_reset(d->vqs[i]);
+ }
+ 
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ static void vhost_map_unprefetch(struct vhost_map *map)
+ {
+ 	kfree(map->pages);
+@@ -483,7 +483,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+ 	vq->iotlb = NULL;
+ 	vq->invalidate_count = 0;
+ 	__vhost_vq_meta_reset(vq);
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	vhost_reset_vq_maps(vq);
+ #endif
+ }
+@@ -635,7 +635,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+ 	INIT_LIST_HEAD(&dev->read_list);
+ 	INIT_LIST_HEAD(&dev->pending_list);
+ 	spin_lock_init(&dev->iotlb_lock);
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	vhost_init_maps(dev);
+ #endif
+ 
+@@ -726,7 +726,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+ 	if (err)
+ 		goto err_cgroup;
+ 
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	err = mmu_notifier_register(&dev->mmu_notifier, dev->mm);
+ 	if (err)
+ 		goto err_mmu_notifier;
+@@ -734,7 +734,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+ 
+ 	return 0;
+ 
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ err_mmu_notifier:
+ 	vhost_dev_free_iovecs(dev);
+ #endif
+@@ -828,7 +828,7 @@ static void vhost_clear_msg(struct vhost_dev *dev)
+ 	spin_unlock(&dev->iotlb_lock);
+ }
+ 
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ static void vhost_setup_uaddr(struct vhost_virtqueue *vq,
+ 			      int index, unsigned long uaddr,
+ 			      size_t size, bool write)
+@@ -959,12 +959,12 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+ 		dev->worker = NULL;
+ 	}
+ 	if (dev->mm) {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 		mmu_notifier_unregister(&dev->mmu_notifier, dev->mm);
+ #endif
+ 		mmput(dev->mm);
+ 	}
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	for (i = 0; i < dev->nvqs; i++)
+ 		vhost_uninit_vq_maps(dev->vqs[i]);
+ #endif
+@@ -1196,7 +1196,7 @@ static inline void __user *__vhost_get_user(struct vhost_virtqueue *vq,
+ 
+ static inline int vhost_put_avail_event(struct vhost_virtqueue *vq)
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_used *used;
+ 
+@@ -1224,7 +1224,7 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+ 				 struct vring_used_elem *head, int idx,
+ 				 int count)
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_used *used;
+ 	size_t size;
+@@ -1252,7 +1252,7 @@ static inline int vhost_put_used(struct vhost_virtqueue *vq,
+ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+ 
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_used *used;
+ 
+@@ -1278,7 +1278,7 @@ static inline int vhost_put_used_flags(struct vhost_virtqueue *vq)
+ static inline int vhost_put_used_idx(struct vhost_virtqueue *vq)
+ 
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_used *used;
+ 
+@@ -1342,7 +1342,7 @@ static void vhost_dev_unlock_vqs(struct vhost_dev *d)
+ static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+ 				      __virtio16 *idx)
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_avail *avail;
+ 
+@@ -1367,7 +1367,7 @@ static inline int vhost_get_avail_idx(struct vhost_virtqueue *vq,
+ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+ 				       __virtio16 *head, int idx)
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_avail *avail;
+ 
+@@ -1393,7 +1393,7 @@ static inline int vhost_get_avail_head(struct vhost_virtqueue *vq,
+ static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+ 					__virtio16 *flags)
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_avail *avail;
+ 
+@@ -1418,7 +1418,7 @@ static inline int vhost_get_avail_flags(struct vhost_virtqueue *vq,
+ static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+ 				       __virtio16 *event)
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_avail *avail;
+ 
+@@ -1441,7 +1441,7 @@ static inline int vhost_get_used_event(struct vhost_virtqueue *vq,
+ static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+ 				     __virtio16 *idx)
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_used *used;
+ 
+@@ -1466,7 +1466,7 @@ static inline int vhost_get_used_idx(struct vhost_virtqueue *vq,
+ static inline int vhost_get_desc(struct vhost_virtqueue *vq,
+ 				 struct vring_desc *desc, int idx)
+ {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	struct vhost_map *map;
+ 	struct vring_desc *d;
+ 
+@@ -1825,7 +1825,7 @@ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
+ 	return true;
+ }
+ 
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ static void vhost_vq_map_prefetch(struct vhost_virtqueue *vq)
+ {
+ 	struct vhost_map __rcu *map;
+@@ -1846,7 +1846,7 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
+ 	unsigned int num = vq->num;
+ 
+ 	if (!vq->iotlb) {
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 		vhost_vq_map_prefetch(vq);
+ #endif
+ 		return 1;
+@@ -2061,7 +2061,7 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
+ 
+ 	mutex_lock(&vq->mutex);
+ 
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	/* Unregister MMU notifer to allow invalidation callback
+ 	 * can access vq->uaddrs[] without holding a lock.
+ 	 */
+@@ -2082,7 +2082,7 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
+ 		BUG();
+ 	}
+ 
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	vhost_setup_vq_uaddr(vq);
+ 
+ 	if (d->mm)
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index c5d950cf7627..d9f36c479fa7 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -95,8 +95,9 @@ struct vhost_uaddr {
+ 	bool write;
+ };
+ 
+-#define VHOST_ARCH_CAN_ACCEL_UACCESS defined(CONFIG_MMU_NOTIFIER) && \
+-	ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
++#if defined(CONFIG_MMU_NOTIFIER) && ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
++#define VHOST_ARCH_CAN_ACCEL_UACCESS
++#endif
+ 
+ /* The virtqueue structure describes a queue attached to a device. */
+ struct vhost_virtqueue {
+@@ -109,7 +110,7 @@ struct vhost_virtqueue {
+ 	struct vring_avail __user *avail;
+ 	struct vring_used __user *used;
+ 
+-#if VHOST_ARCH_CAN_ACCEL_UACCESS
++#ifdef VHOST_ARCH_CAN_ACCEL_UACCESS
+ 	/* Read by memory accessors, modified by meta data
+ 	 * prefetching, MMU notifier and vring ioctl().
+ 	 * Synchonrized through mmu_lock (writers) and RCU (writers
 -- 
-2.17.1
+2.22.0.rc3
 
