@@ -2,196 +2,89 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FDCC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AADC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D865A20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JuqzY1c5"
+	by mail.kernel.org (Postfix) with ESMTP id 0ACC9206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfFFIIZ (ORCPT
+        id S1727056AbfFFIJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:08:25 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:57708 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFIIZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:08:25 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190606080823euoutp01ee36c428a88b0caf6297ae85bba25cb4~ljZG7A6T30575805758euoutp01M
-        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 08:08:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190606080823euoutp01ee36c428a88b0caf6297ae85bba25cb4~ljZG7A6T30575805758euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559808503;
-        bh=c/gerDQkcKR8doaPOF0H2AdLIDtd5igL1h7NJQn+Cg4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=JuqzY1c5ncxoHFrWEZGP41Ka6uDPwslGI3Wl10FncruPZThIErCR8D+wXCmrefd6r
-         l8ANAV5b1oNcPryHuAJKKHFAksV9cd0oEsn48x10JiUiNziBDJEa64jNL1Zwkqe8Ls
-         HJdSaFKb8JhBS2AhBAeHF0BnA1UkpSK2ja028/GM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190606080822eucas1p1432240c660a37266918c666787721582~ljZGPoVAq1908319083eucas1p1D;
-        Thu,  6 Jun 2019 08:08:22 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 85.32.04298.5F9C8FC5; Thu,  6
-        Jun 2019 09:08:21 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190606080821eucas1p2cbab58ec759edf9a4f8254fe46ee1289~ljZFSHpTj2100821008eucas1p2D;
-        Thu,  6 Jun 2019 08:08:21 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190606080820eusmtrp22d482888c6fc3ed84794be49eb99e983~ljZFCjFib0559905599eusmtrp2M;
-        Thu,  6 Jun 2019 08:08:20 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-38-5cf8c9f52db4
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id B9.A2.04140.4F9C8FC5; Thu,  6
-        Jun 2019 09:08:20 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190606080819eusmtip2fc6bdfc496506998a20b632dad1af733~ljZD1KUff2890928909eusmtip2N;
-        Thu,  6 Jun 2019 08:08:19 +0000 (GMT)
-Subject: Re: [PATCH v3 03/15] drm/bridge: tc358767: Simplify polling in
- tc_link_training()
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     Archit Taneja <architt@codeaurora.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <3c50e3e2-9fb8-6962-9988-32d14aa429b0@samsung.com>
-Date:   Thu, 6 Jun 2019 10:08:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Thu, 6 Jun 2019 04:09:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53822 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfFFIJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:09:03 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5CA3A308626C;
+        Thu,  6 Jun 2019 08:09:02 +0000 (UTC)
+Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23D1917C40;
+        Thu,  6 Jun 2019 08:08:51 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 10:08:50 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     ivan.khoronzhuk@linaro.org, grygorii.strashko@ti.com,
+        hawk@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP
+ support
+Message-ID: <20190606100850.72a48a43@carbon>
+In-Reply-To: <20190605.121450.2198491088032558315.davem@davemloft.net>
+References: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
+        <20190605.121450.2198491088032558315.davem@davemloft.net>
 MIME-Version: 1.0
-In-Reply-To: <20190605070507.11417-4-andrew.smirnov@gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH/d3X7rTJdRoeLJRGBUn5iKAbmWQlXDJKCCpyUUuvVuqM3dQs
-        KFHTaZaPsHC6jNDyEfnKcmJZU1oilqmVD0wRS6zMUlcaTXO7Sv73Oef7/Z1zvvCjcXkn6Uaf
-        Vp/jNWpVlIKyJx6/nH2zydw6o/SZ1m9lk7U72CRjIskmacdJdqa7mWBfNJowtts8QbFD+l6M
-        Tc8plrBdDYUUO/DxFcFWFvVROx24ruvXMG4obx7jDLoBCVegzSe5wasmjMuy+HCmnicYN1Xj
-        zr3Oa8eCpUft/cL4qNNxvMbb/4T9qYm/KeTZWeZ8S/8rPBGNyDKQlAZmC3xLKcQykD0tZ0oR
-        3BgdocRiGoEldX6xmELQmPmRXHrytjJHIgr3Ebz5k0WKxTiCwrJ5zOpyZpRw+0GKjV2YYJhM
-        MthG4YwZg+edOTaBYjaApbaXsrKM8Yfu1q+4lQlmLTxK00usvJI5AoMvq0jR4wSt+SOElaUL
-        /uKbFbY5OOMByXUFuMiu0DdSZEsEzLgEtB9yCfHuPTBW20GJ7AxfTI8kIq+GeUMRJvJlGCxN
-        wcXHWgR1VQZcFLZDs+ntwhX0woYNUNngLbYDoKdxBrO2gXGEnnEn8QZHyH18CxfbMtCmykX3
-        Ghhsr1sc6AolHWYqGyl0y5LplqXRLUuj+7/3DiLKkSsfK0RH8IKvmo/3ElTRQqw6wis0JroG
-        Lfy0tjnTZD0yd540IoZGihUyqP6tlJOqOCEh2oiAxhUuMlX/tFIuC1MlXOA1Mcc1sVG8YESr
-        aELhKrtoNxQiZyJU5/hInj/La5ZUjJa6JaIk+FmurmjSrT+TPlq461fc3PZ9CY4ebetKq70J
-        y6FA9VhkWvj6wL0d4K7MbJvWtulqw0Pkx8I8mw/M7P4s7fmRfTc0K22YvfLhcFS8A2ac3SbU
-        f08vnrAQfvtrvTYPB4zZPX32KeheS9hYZPm79w8P+sXpm+yCDCWXNvaVzbZ/DlIQwimVryeu
-        EVT/AKvm/6xlAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCIsWRmVeSWpSXmKPExsVy+t/xe7pfTv6IMTg3zdSiucPWoulQA6tF
-        U8dbVosfVw6zWBzcc5zJ4srX92wWD+beZLLonLiE3eLyrjlsFnfvnWCxWD//FpsDt8flvl4m
-        jwdT/zN57Jx1l91jdsdMVo/73ceZPPr/Gngcv7GdyePzJjmPc1PPMgVwRunZFOWXlqQqZOQX
-        l9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlvP/TwlrwU6DiyO0TzA2M
-        T3i7GDk5JARMJC6un8jexcjFISSwlFFi5/yvrBAJcYnd898yQ9jCEn+udbGB2EICrxkl2no0
-        QGxhgRiJeWtamEBsEQE/ia55B5hABjELfGeSmLh8LwvE1KOMEhfOrmEEqWIT0JT4u/km2CRe
-        ATuJKydfg21gEVCR2NI+lx3EFhWIkDjzfgULRI2gxMmZT8BsTqD6JdNWg21jFlCX+DPvEjOE
-        LS/RvHU2lC0ucevJfKYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl
-        5+duYgTG8LZjP7fsYOx6F3yIUYCDUYmHV2Lj9xgh1sSy4srcQ4wSHMxKIryJt7/ECPGmJFZW
-        pRblxxeV5qQWH2I0BXpuIrOUaHI+ML3klcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1O
-        TS1ILYLpY+LglGpgXFS/dINlzEXz47P/Wy2bGuG+5YTn2fAzr7Qrn3cwatfUPzuZ23HBuC5r
-        0zzF1unbBfY1fglYOv1/8OS2YN1zlW4ebbM4BCYejlvoZrVz5efJl5RVVBg/6r1s2yrDsqdn
-        d0tu9dt8nezAlOy2y+FTQywrz5lZ2oq8rW47u32OK2P4gb/8P8y/KrEUZyQaajEXFScCAKTo
-        M9P3AgAA
-X-CMS-MailID: 20190606080821eucas1p2cbab58ec759edf9a4f8254fe46ee1289
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190605070528epcas1p1d9b1d1b09ffaafa511936ed3ded29097
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190605070528epcas1p1d9b1d1b09ffaafa511936ed3ded29097
-References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
-        <CGME20190605070528epcas1p1d9b1d1b09ffaafa511936ed3ded29097@epcas1p1.samsung.com>
-        <20190605070507.11417-4-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 06 Jun 2019 08:09:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.06.2019 09:04, Andrey Smirnov wrote:
-> Replace explicit polling in tc_link_training() with equivalent call to
-> tc_poll_timeout() for simplicity. No functional change intended (not
-> including slightly altered debug output).
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Archit Taneja <architt@codeaurora.org>
-> Cc: Andrzej Hajda <a.hajda@samsung.com>
-> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Cory Tusar <cory.tusar@zii.aero>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/gpu/drm/bridge/tc358767.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-> index 5e1e73a91696..115cffc55a96 100644
-> --- a/drivers/gpu/drm/bridge/tc358767.c
-> +++ b/drivers/gpu/drm/bridge/tc358767.c
-> @@ -748,22 +748,19 @@ static int tc_set_video_mode(struct tc_data *tc,
->  
->  static int tc_wait_link_training(struct tc_data *tc)
->  {
-> -	u32 timeout = 1000;
->  	u32 value;
->  	int ret;
->  
-> -	do {
-> -		udelay(1);
-> -		tc_read(DP0_LTSTAT, &value);
-> -	} while ((!(value & LT_LOOPDONE)) && (--timeout));
-> -
-> -	if (timeout == 0) {
-> +	ret = tc_poll_timeout(tc, DP0_LTSTAT, LT_LOOPDONE,
-> +			      LT_LOOPDONE, 1, 1000);
-> +	if (ret) {
->  		dev_err(tc->dev, "Link training timeout waiting for LT_LOOPDONE!\n");
-> -		return -ETIMEDOUT;
-> +		return ret;
->  	}
+On Wed, 05 Jun 2019 12:14:50 -0700 (PDT)
+David Miller <davem@davemloft.net> wrote:
 
+> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> Date: Wed,  5 Jun 2019 16:20:02 +0300
+> 
+> > This patchset adds XDP support for TI cpsw driver and base it on
+> > page_pool allocator. It was verified on af_xdp socket drop,
+> > af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.  
+> 
+> Jesper et al., please give this a good once over.
 
-Inconsistent coding, in previous patch you check (ret == -ETIMEDOUT) but
-not here. To simplify the code you can assume that tc_poll_timeout < 0,
-means timeout, in such case please adjust previous patch.
+The issue with merging this, is that I recently discovered two bug with
+page_pool API, when using DMA-mappings, which result in missing
+DMA-unmap's.  These bugs are not "exposed" yet, but will get exposed
+now with this drivers.  
 
+The two bugs are:
 
-Beside this:
+#1: in-flight packet-pages can still be on remote drivers TX queue,
+while XDP RX driver manage to unregister the page_pool (waiting 1 RCU
+period is not enough).
 
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+#2: this patchset also introduce page_pool_unmap_page(), which is
+called before an XDP frame travel into networks stack (as no callback
+exist, yet).  But the CPUMAP redirect *also* needs to call this, else we
+"leak"/miss DMA-unmap.
 
- --
-Regards
-Andrzej
+I do have a working prototype, that fixes these two bugs.  I guess, I'm
+under pressure to send this to the list soon...
 
-
->  
-> -	return (value >> 8) & 0x7;
-> +	tc_read(DP0_LTSTAT, &value);
->  
-> +	return (value >> 8) & 0x7;
->  err:
->  	return ret;
->  }
-
-
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
