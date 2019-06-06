@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEB6C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10023C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E90020717
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42F720717
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfFFCLw (ORCPT
+        id S1726794AbfFFCL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:11:52 -0400
-Received: from mga17.intel.com ([192.55.52.151]:61631 "EHLO mga17.intel.com"
+        Wed, 5 Jun 2019 22:11:56 -0400
+Received: from mga17.intel.com ([192.55.52.151]:61633 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfFFCLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 22:11:50 -0400
+        id S1726724AbfFFCLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 22:11:51 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 19:11:49 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 19:11:50 -0700
 X-ExtLoop1: 1
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.36])
   by orsmga004.jf.intel.com with ESMTP; 05 Jun 2019 19:11:49 -0700
@@ -54,9 +54,9 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         David Rientjes <rientjes@google.com>,
         William Roberts <william.c.roberts@intel.com>,
         Philip Tricca <philip.b.tricca@intel.com>
-Subject: [RFC PATCH v2 1/5] mm: Introduce vm_ops->may_mprotect()
-Date:   Wed,  5 Jun 2019 19:11:41 -0700
-Message-Id: <20190606021145.12604-2-sean.j.christopherson@intel.com>
+Subject: [RFC PATCH v2 3/5] x86/sgx: Enforce noexec filesystem restriction for enclaves
+Date:   Wed,  5 Jun 2019 19:11:43 -0700
+Message-Id: <20190606021145.12604-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190606021145.12604-1-sean.j.christopherson@intel.com>
 References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
@@ -67,80 +67,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGX will use the may_mprotect() hook to prevent userspace from
-circumventing various security checks, e.g. Linux Security Modules.
-Naming it may_mprotect() instead of simply mprotect() is intended to
-reflect the hook's purpose as a way to gate mprotect() as opposed to
-a wholesale replacement.
-
-Enclaves are built by copying data from normal memory into the Enclave
-Page Cache (EPC).  Due to the nature of SGX, the EPC is represented by a
-single file that must be MAP_SHARED, i.e. mprotect() only ever sees a
-MAP_SHARED vm_file that references single file path.  Furthermore, all
-enclaves will need read, write and execute pages in the EPC.
-
-As a result, LSM policies cannot be meaningfully applied, e.g. an LSM
-can deny access to the EPC as a whole, but can't deny PROT_EXEC on page
-that originated in a non-EXECUTE file (which is long gone by the time
-mprotect() is called).
-
-By hooking mprotect(), SGX can make explicit LSM upcalls while an
-enclave is being built, i.e. when the kernel has a handle to origin of
-each enclave page, and enforce the result of the LSM policy whenever
-userspace maps the enclave page in the future.
-
-Alternatively, SGX could play games with MAY_{READ,WRITE,EXEC}, but
-that approach is quite ugly, e.g. would require userspace to call an
-SGX ioctl() prior to using mprotect() to extend a page's protections.
+Do not allow an enclave page to be mapped with PROT_EXEC if the source
+vma does not have VM_MAYEXEC.  This effectively enforces noexec as
+do_mmap() clears VM_MAYEXEC if the vma is being loaded from a noexec
+path, i.e. prevents executing a file by loading it into an enclave.
+Checking noexec indirectly by way of VM_MAYEXEC naturally handles any
+other cases that clear VM_MAYEXEC to deny execute permissions.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- include/linux/mm.h |  2 ++
- mm/mprotect.c      | 15 +++++++++++----
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/sgx/driver/ioctl.c | 47 +++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0e8834ac32b7..a697996040ac 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -458,6 +458,8 @@ struct vm_operations_struct {
- 	void (*close)(struct vm_area_struct * area);
- 	int (*split)(struct vm_area_struct * area, unsigned long addr);
- 	int (*mremap)(struct vm_area_struct * area);
-+	int (*may_mprotect)(struct vm_area_struct * area, unsigned long start,
-+			    unsigned long end, unsigned long prot);
- 	vm_fault_t (*fault)(struct vm_fault *vmf);
- 	vm_fault_t (*huge_fault)(struct vm_fault *vmf,
- 			enum page_entry_size pe_size);
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index bf38dfbbb4b4..18732543b295 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -547,13 +547,20 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- 			goto out;
- 		}
+diff --git a/arch/x86/kernel/cpu/sgx/driver/ioctl.c b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+index ef5c2ce0f37b..44b2d73de7c3 100644
+--- a/arch/x86/kernel/cpu/sgx/driver/ioctl.c
++++ b/arch/x86/kernel/cpu/sgx/driver/ioctl.c
+@@ -577,6 +577,44 @@ static int sgx_encl_add_page(struct sgx_encl *encl, unsigned long addr,
+ 	return ret;
+ }
  
--		error = security_file_mprotect(vma, reqprot, prot);
--		if (error)
--			goto out;
++static int sgx_encl_page_copy(void *dst, unsigned long src, unsigned long prot)
++{
++	struct vm_area_struct *vma;
++	int ret;
++
++	if (!(prot & VM_EXEC))
++		return 0;
++
++	/* Hold mmap_sem across copy_from_user() to avoid a TOCTOU race. */
++	down_read(&current->mm->mmap_sem);
++
++	vma = find_vma(current->mm, src);
++	if (!vma) {
++		ret = -EFAULT;
++		goto out;
++	}
++
++	/*
++	 * Query VM_MAYEXEC as an indirect path_noexec() check (see do_mmap()),
++	 * but with some future proofing against other cases that may deny
++	 * execute permissions.
++	 */
++	if (!(vma->vm_flags & VM_MAYEXEC)) {
++		ret = -EACCES;
++		goto out;
++	}
++
++	if (copy_from_user(dst, (void __user *)src, PAGE_SIZE))
++		ret = -EFAULT;
++	else
++		ret = 0;
++
++out:
++	up_read(&current->mm->mmap_sem);
++
++	return ret;
++}
++
+ /**
+  * sgx_ioc_enclave_add_page - handler for %SGX_IOC_ENCLAVE_ADD_PAGE
+  *
+@@ -616,13 +654,12 @@ static long sgx_ioc_enclave_add_page(struct file *filep, unsigned int cmd,
+ 
+ 	data = kmap(data_page);
+ 
+-	if (copy_from_user((void *)data, (void __user *)addp->src, PAGE_SIZE)) {
+-		ret = -EFAULT;
+-		goto out;
+-	}
 -
- 		tmp = vma->vm_end;
- 		if (tmp > end)
- 			tmp = end;
+ 	prot = addp->flags & (PROT_READ | PROT_WRITE | PROT_EXEC);
+ 
++	ret = sgx_encl_page_copy(data, addp->src, prot);
++	if (ret)
++		goto out;
 +
-+		if (vma->vm_ops && vma->vm_ops->may_mprotect) {
-+			error = vma->vm_ops->may_mprotect(vma, nstart, tmp, prot);
-+			if (error)
-+				goto out;
-+		}
-+
-+		error = security_file_mprotect(vma, reqprot, prot);
-+		if (error)
-+			goto out;
-+
- 		error = mprotect_fixup(vma, &prev, nstart, tmp, newflags);
- 		if (error)
- 			goto out;
+ 	ret = sgx_encl_add_page(encl, addp->addr, data, &secinfo, addp->mrmask,
+ 				prot);
+ 	if (ret)
 -- 
 2.21.0
 
