@@ -2,145 +2,161 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F24C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD60AC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D734206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E90C206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+cqBcIV"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DvbzhHnV";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iPYwgz64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfFFTxl (ORCPT
+        id S1727779AbfFFTxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:53:41 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:50910 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbfFFTxl (ORCPT
+        Thu, 6 Jun 2019 15:53:50 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58728 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727047AbfFFTxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:53:41 -0400
-Received: by mail-it1-f194.google.com with SMTP id a186so1973993itg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:53:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QvRzAt8oUa+QOs8oktnGNElZis2955KPPjFl8TJj1Sc=;
-        b=N+cqBcIV8wCw3ILXUCLZHVe/s4oVuQ8zay6aGrYPCg/Q0/LfbnGZ3xrbjVNC2YrE+E
-         gSa1nR+/Nq1cCJ7Jznj/Mh+Brk11hVeOkfmo7Mu9L8hig5pyoGV3hzJCKKy15b2Ux4YT
-         zAAWOLCfUwPmGNGUKX5hvU8UhLJUAuxnsWIb0vjJMTLwE9WVVid8S/axVQwSWwX/zwPe
-         y0b8JzAyRKGSbTtq2I4s4PrRaPLbKrmGieixcUCvQN3oCK9J8zhbUjhFim3HibPIkckH
-         W6ktf0tSNKqYlGcNECmzAZgznIdXds66vzYJebSmZfwWa8gCf3MmmOyqUZ2k3M+KpybO
-         +vOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QvRzAt8oUa+QOs8oktnGNElZis2955KPPjFl8TJj1Sc=;
-        b=pp6YcxNZVaV+BE4ayY1rCFEW5rc6onGvuTSAfODd6VwcJSD9m/bRnShZKtKQ8PREtd
-         5kFsAcioJggYnHTu1kP66z1LtyHawUEJ97YhO8dOo7KMSSlsfuZ+sLeiSGnPcyuwutdu
-         1HE5bD81ZvuzcHLMQEphboBbc+hdVfXAFTL66ovgt7Reo1cCLSoUag3wUoP7gFZRV2pi
-         gqg1WxEkPGzRkiFdhWatFshPiBLh1ZqYRBUlsbiGoiPlJaDcMFP3P6OBVD/38i0ludPN
-         r1WQaUtzfq2XJVBgOiIFQUX0TKSLCcMVdsHi+9adbIFP1Sa2WD29xtDrmirVVCXyNb8+
-         a56w==
-X-Gm-Message-State: APjAAAUwWkNjbcwQVfN2pVgrEBHyI/q74k494hqdcPUjryNRN1M5FuPg
-        zuZDIia3l7cShObn9EPrcfXgEzM+i11LQ3IbSQg=
-X-Google-Smtp-Source: APXvYqy7pWNl4Q+X7LS21yrTMp4Kqd7zvq75fu/BksKKF+n8OdJGBkq6cgEp1ESBftQ0uehnGbsNv9eC+vjhoHPBetU=
-X-Received: by 2002:a24:97d2:: with SMTP id k201mr1379721ite.151.1559850820180;
- Thu, 06 Jun 2019 12:53:40 -0700 (PDT)
+        Thu, 6 Jun 2019 15:53:49 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x56Jn8lV017149;
+        Thu, 6 Jun 2019 12:53:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=mHkPmKD/FxUShckoCuTSy5fmE4KzeRaEM1SI9dqQF9A=;
+ b=DvbzhHnVaPkyARPutuVjxcuGBI9Th+vmigZN1jCxR94Knx/LuYQl1StNgnxq0Ips0a6c
+ cafnEMn7PTCkOGmdEn+n8tOHYf7D5uvSFfhbGN7NYPnxB4IUlubQaoNQuScNLpOZclV3
+ pfIMg7sPkFiswDmVHCzqwSMLcISgwaKVgac= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2sy71g0m7p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 06 Jun 2019 12:53:28 -0700
+Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 6 Jun 2019 12:53:27 -0700
+Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
+ ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 6 Jun 2019 12:53:27 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 6 Jun 2019 12:53:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mHkPmKD/FxUShckoCuTSy5fmE4KzeRaEM1SI9dqQF9A=;
+ b=iPYwgz64sZ5U1Aq597Cz8GzHr2I6InFoB3SsKsbVDyga5B0xFP1RG0wRey8eqgrMlhYex9Jq53JiHO0WkuP6IJOG22kwtkGU3nmJ4guDPy4lbc9e/kgtfNUps7S+PDLrNUaXP5yRIt0g3e9SPcaDC7w/OEVM9f7SZIH0tS/DWT8=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB3091.namprd15.prod.outlook.com (20.178.221.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Thu, 6 Jun 2019 19:53:25 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::251b:ff54:1c67:4e5f]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::251b:ff54:1c67:4e5f%7]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
+ 19:53:25 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
+ bpf_get_current_cgroup_id() helper
+Thread-Topic: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
+ bpf_get_current_cgroup_id() helper
+Thread-Index: AQHVHJn5xFnlIJGy00O8LdScbBruEqaOh76AgAB+MYCAAAPXgA==
+Date:   Thu, 6 Jun 2019 19:53:25 +0000
+Message-ID: <20190606195317.GA22965@tower.DHCP.thefacebook.com>
+References: <20190606185911.4089151-1-guro@fb.com>
+ <20190606190752.GA28743@tower.DHCP.thefacebook.com>
+ <a604b9eb-4e39-c4ec-0868-bac360bc2fb4@iogearbox.net>
+In-Reply-To: <a604b9eb-4e39-c4ec-0868-bac360bc2fb4@iogearbox.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR1601CA0003.namprd16.prod.outlook.com
+ (2603:10b6:300:da::13) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::d13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9d8d0dca-6e25-491e-8516-08d6eab8a2ed
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB3091;
+x-ms-traffictypediagnostic: BN8PR15MB3091:
+x-microsoft-antispam-prvs: <BN8PR15MB30912D0C32B8E5B6F0C5EF99BE170@BN8PR15MB3091.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(136003)(346002)(396003)(54094003)(199004)(189003)(102836004)(33656002)(9686003)(6506007)(386003)(53546011)(6512007)(478600001)(73956011)(53936002)(66946007)(66476007)(66556008)(64756008)(66446008)(6246003)(14454004)(4326008)(7736002)(305945005)(6486002)(6436002)(25786009)(81156014)(81166006)(8676002)(8936002)(76176011)(68736007)(52116002)(229853002)(54906003)(99286004)(86362001)(2906002)(446003)(256004)(11346002)(186003)(486006)(476003)(46003)(1076003)(6916009)(5660300002)(316002)(71200400001)(71190400001)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3091;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7aVdQhVrbLJWhidndTt7yvPiOqLspKeumR8b9TjJvP1r+qMlm2gLHj6/FY0L1vRK6wi/+CdVzTR1l089e5FeP/jL1z44bA8vQWPJ8Mh3ABqm39ePg/ROCATjjZg6fg0TrTtcYqVxOLvoGz1nvMxbtJ+IssZfKdrTLcqsXMRsh0tQ0xJ/OpeihR8qIH4uwS6Q/e4mSU8SCo85+9GK/yL3Gdlayl5/f7qKu5N8554N2aXZNY6GSRs6qSZ1CxoykELU+/R5eZEM3pppgzeaizZcAUCCWl5TVJKKm/lIh4kdv8LH1mKXJU9KHALWMNs/3AmMKzZmXe370YrjWjzpdbZJHhrA0fo7H39qS839NxJZEcTLjcVNKasYwb9qHKhG3oEwhG1ewZUq0nVpi/iIlDHaMaAghd24QCp3DhUEcwO8ahI=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <ADAE58DE5AB08F4982D94507975F0950@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
- <CGME20190605070535epcas2p36fee13315966e45d425c073162aa1aae@epcas2p3.samsung.com>
- <20190605070507.11417-7-andrew.smirnov@gmail.com> <28ddfb42-db9a-f095-9230-d324db5ee483@samsung.com>
-In-Reply-To: <28ddfb42-db9a-f095-9230-d324db5ee483@samsung.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 6 Jun 2019 12:53:28 -0700
-Message-ID: <CAHQ1cqGEe9cT18UNtjkRDACrwYr8YRJ3Ec6eGaR8Qp+-QgqTdQ@mail.gmail.com>
-Subject: Re: [PATCH v3 06/15] drm/bridge: tc358767: Simplify AUX data read
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Archit Taneja <architt@codeaurora.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d8d0dca-6e25-491e-8516-08d6eab8a2ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 19:53:25.1039
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3091
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=722 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906060133
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 3:59 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->
-> On 05.06.2019 09:04, Andrey Smirnov wrote:
-> > Simplify AUX data read by removing index arithmetic and shifting with
-> > a helper functions that does three things:
-> >
-> >     1. Fetch data from up to 4 32-bit registers from the chip
-> >     2. Optionally fix data endianness (not needed on LE hosts)
-> >     3. Copy read data into user provided array.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Archit Taneja <architt@codeaurora.org>
-> > Cc: Andrzej Hajda <a.hajda@samsung.com>
-> > Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> > Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Cc: Cory Tusar <cory.tusar@zii.aero>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/gpu/drm/bridge/tc358767.c | 40 +++++++++++++++++++++----------
-> >  1 file changed, 27 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-> > index e197ce0fb166..da47d81e7109 100644
-> > --- a/drivers/gpu/drm/bridge/tc358767.c
-> > +++ b/drivers/gpu/drm/bridge/tc358767.c
-> > @@ -321,6 +321,29 @@ static int tc_aux_get_status(struct tc_data *tc, u8 *reply)
-> >       return 0;
-> >  }
-> >
-> > +static int tc_aux_read_data(struct tc_data *tc, void *data, size_t size)
-> > +{
-> > +     u32 auxrdata[DP_AUX_MAX_PAYLOAD_BYTES / sizeof(u32)];
-> > +     int ret, i, count = DIV_ROUND_UP(size, sizeof(u32));
-> > +
-> > +     ret = regmap_bulk_read(tc->regmap, DP0_AUXRDATA(0), auxrdata, count);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     for (i = 0; i < count; i++) {
-> > +             /*
-> > +              * Our regmap is configured as LE for register data,
-> > +              * so we need undo any byte swapping that might have
-> > +              * happened to preserve original byte order.
-> > +              */
-> > +             le32_to_cpus(&auxrdata[i]);
-> > +     }
-> > +
-> > +     memcpy(data, auxrdata, size);
-> > +
-> > +     return size;
-> > +}
-> > +
->
->
-> Hmm, cannot we just use regmap_raw_read?
+On Thu, Jun 06, 2019 at 09:39:35PM +0200, Daniel Borkmann wrote:
+> On 06/06/2019 09:08 PM, Roman Gushchin wrote:
+> > On Thu, Jun 06, 2019 at 11:59:11AM -0700, Roman Gushchin wrote:
+> >> Currently bpf_get_current_cgroup_id() is not supported for
+> >> CGROUP_SKB programs. An attempt to load such a program generates an
+> >> error like this:
+> >>     libbpf:
+> >>     0: (b7) r6 =3D 0
+> >>     ...
+> >>     8: (63) *(u32 *)(r10 -28) =3D r6
+> >>     9: (85) call bpf_get_current_cgroup_id#80
+> >>     unknown func bpf_get_current_cgroup_id#80
+> >>
+> >> There are no particular reasons for denying it,
+> >> and we have some use cases where it might be useful.
+> >=20
+> > Ah, sorry, it's not so simple, as we probably need to take
+> > the cgroup pointer from the socket, not from current.
+> >=20
+> > So the implementation of the helper should be different
+> > for this type of programs.
+> >=20
+> > So I wonder if it's better to introduce a new helper
+> > bpf_get_sock_cgroup_id()?
+> >=20
+> > What do you think?
+>=20
+> We do have bpf_skb_cgroup_id(), did you give that a try?
 
-I'll give it a try in v4.
+It also isn't supported for CGROUP_SKB, but other than that looks
+exactly what I need.
 
-Thanks,
-Andrey Smirnov
+Thank you for pointing at it!
