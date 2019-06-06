@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99238C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E30C28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5BB20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7833420872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfFFIXi (ORCPT
+        id S1727422AbfFFIXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:23:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41896 "EHLO huawei.com"
+        Thu, 6 Jun 2019 04:23:35 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41894 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727237AbfFFIWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727236AbfFFIWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 04:22:47 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AC9614C0498A27C8117C;
+        by Forcepoint Email with ESMTP id B13CE1AC1713FA364F00;
         Thu,  6 Jun 2019 16:22:43 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
@@ -30,12 +29,11 @@ From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
+        <linuxarm@huawei.com>, Xiaofei Tan <tanxiaofei@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/12] net: hns3: make HW GRO handling compliant with SW GRO
-Date:   Thu, 6 Jun 2019 16:20:58 +0800
-Message-ID: <1559809267-53805-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 01/12] net: hns3: log detail error info of ROCEE ECC and AXI errors
+Date:   Thu, 6 Jun 2019 16:20:56 +0800
+Message-ID: <1559809267-53805-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559809267-53805-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559809267-53805-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,139 +46,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-Currently when a GRO packet is assembled by HW, the checksum is
-modified to reflect the entire packet by HW and skb->ip_summed is
-set to CHECKSUM_UNNECESSARY, which is not compliant with SW GRO.
+This patch logs detail error info of ROCEE ECC and AXI errors for
+debug purpose, and remove unnecessary reset for ROCEE overflow
+errors.
 
-This patch sets up skb's network and transport header, sets the
-GRO packet's checksum according to pseudo header and set the
-skb->ip_summed to CHECKSUM_PARTIAL.
-
-This patch also use gso_size to distinguish GRO packet from
-normal packet, use eth_type_vlan to check the VLAN type and set
-the SKB_GSO_TCP_FIXEDID according to BD info during HW GRO info
-processing.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 44 +++++++++++++++++--------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  2 +
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 87 ++++++++++++++++++++--
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |  1 +
+ 3 files changed, 83 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 0501b78..c37509e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -17,6 +17,7 @@
- #include <linux/sctp.h>
- #include <linux/vermagic.h>
- #include <net/gre.h>
-+#include <net/ip6_checksum.h>
- #include <net/pkt_cls.h>
- #include <net/tcp.h>
- #include <net/vxlan.h>
-@@ -2384,13 +2385,13 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
- 	}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+index 61cb10d..5e6c749 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+@@ -268,6 +268,8 @@ enum hclge_opcode_type {
+ 	HCLGE_CONFIG_ROCEE_RAS_INT_EN	= 0x1580,
+ 	HCLGE_QUERY_CLEAR_ROCEE_RAS_INT = 0x1581,
+ 	HCLGE_ROCEE_PF_RAS_INT_CMD	= 0x1584,
++	HCLGE_QUERY_ROCEE_ECC_RAS_INFO_CMD	= 0x1585,
++	HCLGE_QUERY_ROCEE_AXI_RAS_INFO_CMD	= 0x1586,
+ 	HCLGE_IGU_EGU_TNL_INT_EN	= 0x1803,
+ 	HCLGE_IGU_COMMON_INT_EN		= 0x1806,
+ 	HCLGE_TM_QCN_MEM_INT_CFG	= 0x1A14,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+index 784512d..64defd3 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+@@ -1388,6 +1388,66 @@ static int hclge_handle_all_ras_errors(struct hclge_dev *hdev)
+ 	return ret;
  }
  
--static int hns3_gro_complete(struct sk_buff *skb)
-+static int hns3_gro_complete(struct sk_buff *skb, u32 l234info)
++static int hclge_log_rocee_axi_error(struct hclge_dev *hdev)
++{
++	struct device *dev = &hdev->pdev->dev;
++	struct hclge_desc desc[3];
++	int ret;
++
++	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_QUERY_ROCEE_AXI_RAS_INFO_CMD,
++				   true);
++	hclge_cmd_setup_basic_desc(&desc[1], HCLGE_QUERY_ROCEE_AXI_RAS_INFO_CMD,
++				   true);
++	hclge_cmd_setup_basic_desc(&desc[2], HCLGE_QUERY_ROCEE_AXI_RAS_INFO_CMD,
++				   true);
++	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
++	desc[1].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
++
++	ret = hclge_cmd_send(&hdev->hw, &desc[0], 3);
++	if (ret) {
++		dev_err(dev, "failed(%d) to query ROCEE AXI error sts\n", ret);
++		return ret;
++	}
++
++	dev_info(dev, "AXI1: %08X %08X %08X %08X %08X %08X\n",
++		 le32_to_cpu(desc[0].data[0]), le32_to_cpu(desc[0].data[1]),
++		 le32_to_cpu(desc[0].data[2]), le32_to_cpu(desc[0].data[3]),
++		 le32_to_cpu(desc[0].data[4]), le32_to_cpu(desc[0].data[5]));
++	dev_info(dev, "AXI2: %08X %08X %08X %08X %08X %08X\n",
++		 le32_to_cpu(desc[1].data[0]), le32_to_cpu(desc[1].data[1]),
++		 le32_to_cpu(desc[1].data[2]), le32_to_cpu(desc[1].data[3]),
++		 le32_to_cpu(desc[1].data[4]), le32_to_cpu(desc[1].data[5]));
++	dev_info(dev, "AXI3: %08X %08X %08X %08X\n",
++		 le32_to_cpu(desc[2].data[0]), le32_to_cpu(desc[2].data[1]),
++		 le32_to_cpu(desc[2].data[2]), le32_to_cpu(desc[2].data[3]));
++
++	return 0;
++}
++
++static int hclge_log_rocee_ecc_error(struct hclge_dev *hdev)
++{
++	struct device *dev = &hdev->pdev->dev;
++	struct hclge_desc desc[2];
++	int ret;
++
++	ret = hclge_cmd_query_error(hdev, &desc[0],
++				    HCLGE_QUERY_ROCEE_ECC_RAS_INFO_CMD,
++				    HCLGE_CMD_FLAG_NEXT, 0, 0);
++	if (ret) {
++		dev_err(dev, "failed(%d) to query ROCEE ECC error sts\n", ret);
++		return ret;
++	}
++
++	dev_info(dev, "ECC1: %08X %08X %08X %08X %08X %08X\n",
++		 le32_to_cpu(desc[0].data[0]), le32_to_cpu(desc[0].data[1]),
++		 le32_to_cpu(desc[0].data[2]), le32_to_cpu(desc[0].data[3]),
++		 le32_to_cpu(desc[0].data[4]), le32_to_cpu(desc[0].data[5]));
++	dev_info(dev, "ECC2: %08X %08X %08X\n", le32_to_cpu(desc[1].data[0]),
++		 le32_to_cpu(desc[1].data[1]), le32_to_cpu(desc[1].data[2]));
++
++	return 0;
++}
++
+ static int hclge_log_rocee_ovf_error(struct hclge_dev *hdev)
  {
- 	__be16 type = skb->protocol;
- 	struct tcphdr *th;
- 	int depth = 0;
+ 	struct device *dev = &hdev->pdev->dev;
+@@ -1456,19 +1516,33 @@ hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
  
--	while (type == htons(ETH_P_8021Q)) {
-+	while (eth_type_vlan(type)) {
- 		struct vlan_hdr *vh;
+ 	status = le32_to_cpu(desc[0].data[0]);
  
- 		if ((depth + VLAN_HLEN) > skb_headlen(skb))
-@@ -2401,10 +2402,24 @@ static int hns3_gro_complete(struct sk_buff *skb)
- 		depth += VLAN_HLEN;
+-	if (status & HCLGE_ROCEE_RERR_INT_MASK) {
+-		dev_warn(dev, "ROCEE RAS AXI rresp error\n");
+-		reset_type = HNAE3_FUNC_RESET;
+-	}
++	if (status & HCLGE_ROCEE_AXI_ERR_INT_MASK) {
++		if (status & HCLGE_ROCEE_RERR_INT_MASK)
++			dev_warn(dev, "ROCEE RAS AXI rresp error\n");
++
++		if (status & HCLGE_ROCEE_BERR_INT_MASK)
++			dev_warn(dev, "ROCEE RAS AXI bresp error\n");
+ 
+-	if (status & HCLGE_ROCEE_BERR_INT_MASK) {
+-		dev_warn(dev, "ROCEE RAS AXI bresp error\n");
+ 		reset_type = HNAE3_FUNC_RESET;
++
++		ret = hclge_log_rocee_axi_error(hdev);
++		if (ret) {
++			dev_err(dev, "failed(%d) to process axi error\n", ret);
++			/* reset everything for now */
++			return HNAE3_GLOBAL_RESET;
++		}
  	}
  
-+	skb_set_network_header(skb, depth);
+ 	if (status & HCLGE_ROCEE_ECC_INT_MASK) {
+ 		dev_warn(dev, "ROCEE RAS 2bit ECC error\n");
+ 		reset_type = HNAE3_GLOBAL_RESET;
 +
- 	if (type == htons(ETH_P_IP)) {
-+		const struct iphdr *iph = ip_hdr(skb);
-+
- 		depth += sizeof(struct iphdr);
-+		skb_set_transport_header(skb, depth);
-+		th = tcp_hdr(skb);
-+		th->check = ~tcp_v4_check(skb->len - depth, iph->saddr,
-+					  iph->daddr, 0);
- 	} else if (type == htons(ETH_P_IPV6)) {
-+		const struct ipv6hdr *iph = ipv6_hdr(skb);
-+
- 		depth += sizeof(struct ipv6hdr);
-+		skb_set_transport_header(skb, depth);
-+		th = tcp_hdr(skb);
-+		th->check = ~tcp_v6_check(skb->len - depth, &iph->saddr,
-+					  &iph->daddr, 0);
- 	} else {
- 		netdev_err(skb->dev,
- 			   "Error: FW GRO supports only IPv4/IPv6, not 0x%04x, depth: %d\n",
-@@ -2412,13 +2427,16 @@ static int hns3_gro_complete(struct sk_buff *skb)
- 		return -EFAULT;
++		ret = hclge_log_rocee_ecc_error(hdev);
++		if (ret) {
++			dev_err(dev, "failed(%d) to process ecc error\n", ret);
++			/* reset everything for now */
++			return HNAE3_GLOBAL_RESET;
++		}
  	}
  
--	th = (struct tcphdr *)(skb->data + depth);
- 	skb_shinfo(skb)->gso_segs = NAPI_GRO_CB(skb)->count;
- 	if (th->cwr)
- 		skb_shinfo(skb)->gso_type |= SKB_GSO_TCP_ECN;
- 
--	skb->ip_summed = CHECKSUM_UNNECESSARY;
-+	if (l234info & BIT(HNS3_RXD_GRO_FIXID_B))
-+		skb_shinfo(skb)->gso_type |= SKB_GSO_TCP_FIXEDID;
- 
-+	skb->csum_start = (unsigned char *)th - skb->head;
-+	skb->csum_offset = offsetof(struct tcphdr, check);
-+	skb->ip_summed = CHECKSUM_PARTIAL;
- 	return 0;
- }
- 
-@@ -2656,18 +2674,20 @@ static int hns3_set_gro_and_checksum(struct hns3_enet_ring *ring,
- 				     struct sk_buff *skb, u32 l234info,
- 				     u32 bd_base_info, u32 ol_info)
- {
--	u16 gro_count;
- 	u32 l3_type;
- 
--	gro_count = hnae3_get_field(l234info, HNS3_RXD_GRO_COUNT_M,
--				    HNS3_RXD_GRO_COUNT_S);
-+	skb_shinfo(skb)->gso_size = hnae3_get_field(bd_base_info,
-+						    HNS3_RXD_GRO_SIZE_M,
-+						    HNS3_RXD_GRO_SIZE_S);
- 	/* if there is no HW GRO, do not set gro params */
--	if (!gro_count) {
-+	if (!skb_shinfo(skb)->gso_size) {
- 		hns3_rx_checksum(ring, skb, l234info, bd_base_info, ol_info);
- 		return 0;
+ 	if (status & HCLGE_ROCEE_OVF_INT_MASK) {
+@@ -1478,7 +1552,6 @@ hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
+ 			/* reset everything for now */
+ 			return HNAE3_GLOBAL_RESET;
+ 		}
+-		reset_type = HNAE3_FUNC_RESET;
  	}
  
--	NAPI_GRO_CB(skb)->count = gro_count;
-+	NAPI_GRO_CB(skb)->count = hnae3_get_field(l234info,
-+						  HNS3_RXD_GRO_COUNT_M,
-+						  HNS3_RXD_GRO_COUNT_S);
- 
- 	l3_type = hnae3_get_field(l234info, HNS3_RXD_L3ID_M,
- 				  HNS3_RXD_L3ID_S);
-@@ -2678,11 +2698,7 @@ static int hns3_set_gro_and_checksum(struct hns3_enet_ring *ring,
- 	else
- 		return -EFAULT;
- 
--	skb_shinfo(skb)->gso_size = hnae3_get_field(bd_base_info,
--						    HNS3_RXD_GRO_SIZE_M,
--						    HNS3_RXD_GRO_SIZE_S);
--
--	return  hns3_gro_complete(skb);
-+	return  hns3_gro_complete(skb, l234info);
- }
- 
- static void hns3_set_rx_skb_rss_type(struct hns3_enet_ring *ring,
+ 	/* clear error status */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
+index 81d115a..6684733 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
+@@ -94,6 +94,7 @@
+ #define HCLGE_ROCEE_RAS_CE_INT_EN_MASK		0x1
+ #define HCLGE_ROCEE_RERR_INT_MASK		BIT(0)
+ #define HCLGE_ROCEE_BERR_INT_MASK		BIT(1)
++#define HCLGE_ROCEE_AXI_ERR_INT_MASK		GENMASK(1, 0)
+ #define HCLGE_ROCEE_ECC_INT_MASK		BIT(2)
+ #define HCLGE_ROCEE_OVF_INT_MASK		BIT(3)
+ #define HCLGE_ROCEE_OVF_ERR_INT_MASK		0x10000
 -- 
 2.7.4
 
