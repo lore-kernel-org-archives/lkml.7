@@ -2,185 +2,110 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8A6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A0DC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C512083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358102083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="lXEEOxeG"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="iCmlnLrg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="194SDOaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbfFFS4N (ORCPT
+        id S1727905AbfFFS7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:56:13 -0400
-Received: from sonic309-27.consmr.mail.gq1.yahoo.com ([98.137.65.153]:41845
-        "EHLO sonic309-27.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727120AbfFFS4L (ORCPT
+        Thu, 6 Jun 2019 14:59:07 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:51985 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726762AbfFFS7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:56:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559847369; bh=NlyGDPUSIm+l2WtCwHE5ubPlB5te+dHeUApEhOctwXU=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=lXEEOxeG/6LmeDGYwm0a86zYDqvYPMHOrllLSJpdVaBpvS994scNyDK/9DGsEJMwppf3iLPTafw6D9PWywydOwXZbC7//fSsQpvu9kU2FVF3j8/VPz3IYgVCuLp2yK5f7yCJfqGjXNMcwt7x9PRSoo5ir9O2hVSuCyYc+V06bwR3wMxBeWMqO4QAYFOF1FYpmyRosRWvaJeWOVJi1AVgFHPOEvtCkIpFuOMQQ+ENnOBCAe80olc6LJEd3ClZ3Ti7ve3PaKf6/BrjtctObI8gSnqAqO7DSSCuzG0s9TCsa1Ktzop3S4PqdEG3lNgdTt149NEghQn3dGhw19qnEzm9jw==
-X-YMail-OSG: x_CT2iAVM1ns7rIv4O7BHZqMxa2ifhggjbDHMCkABzAYL6UF7XXXefOTZCeSoOo
- tZvZ.hNqnLH9tGliu6JLsoe6W7lrtBZA1AAN1Qjdly1W2.wkyFAtjVZf2ohVm6a51O4NRTUh1rtN
- _hfgI1bCKNHjjWcPr0f8jLsORlaunjYR6W2zmeSPxD1uupuYVS399Pku10nARq2zVpGzZ_dhWUs0
- 5aLe4aIEpVemA6GtHLoeLw7BlNgnSJ23ETJrmQQMGbvAJ8dNP.MCDj6XKI6YSJOvjLgB0uC_nLNs
- KawlMdlnHzQFgSAFnuMj9WDSwOdIpFR8zMsg109UzuItusRQHB0E4xwI2alSEMSQ2P1.M8oI3qmO
- hkUDW9D8C6xwNr6iZDm2izUdjOleJMaHtgYH0pc8rLqWqour.BOSjaa.a_svNhoZMasqPfCI8gIv
- EmG2V8faXiyl3CJnIfcxgwqalGz69X099HGdiv3HJhWoOfcSMej7VZj7J_MhU7MLoDuzWCZgQ_Hm
- Z8U2HDOWEGybXBMH3nnYlrQl34jcCldOgAB7aOyvTVhDZWnO6lCy6cHHU926VNJbhroxcBHNOZJM
- SCc10M8CvBafBDw_MPYvr4JVB.tXXfeU5YfF_xWISoE5DfUNGDgU38AS7mrI4ddB0Yv59O.dVVI9
- T85gmYL3YFOIB2HwP5CVjCH4g7W9ZPUR54TtMXwhAVCdsWH9n9rqLtKx1KGekhwFWW_DpX9Nzbsh
- Y.2wM4dhGZitn5dwQLtTOFYcCqNfSo4phmPwejIddFf89E.LUCi9jrLkqDYIgyrjzcCVNsjJaTPg
- .wxNv6Bmpeu.nVlHqVVOsSr10hXa_ocnwd5Yk0jvUt8eAwY6TC5IkVYcy7Y2cCcC2C4Tqz2FqMOY
- SoAPmm6jOUhcFDP_3rKTG95Jl8kJ8aeyk1VUrprVmfICKf97mDQUvNS_7.uNakmu6mOUTx80V_Rm
- LAZOnKKZCqfOyuMhqrD5WUAV2Hv.c2y.fpjlr39YMvioUZxMG.qVfn9vf4g9.0P02FtWITJSDSpS
- _NqZqJUKrXz6jCufxZG0TQ3hFLwSIZ6t9BrK4KY7n53wQOrAfYFsY4FjsS9IooTTkyYp.c6vBMiB
- O.NPL5hNIcXdO6G2xWGsn3oZEYXBCKjQ9T3AAYHx8DfUxU2NISoAlcs29TQo_q0YBDeCJZ00O3KW
- c7OGXkLrppFRgTuj_cUA.PzID7Shv0ZzYNKpaCRPnFVo9R4SIkBRfzzOB3JF6gOoaQ.qwh9JcFVI
- 38M_zW9P1JZXqwwy_2nl0tKScEL8-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Thu, 6 Jun 2019 18:56:09 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp418.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 75f9577105f271864dda01fe6e35d536;
-          Thu, 06 Jun 2019 18:56:07 +0000 (UTC)
-Subject: Re: [RFC][PATCH 00/10] Mount, FS, Block and Keyrings notifications
- [ver #3]
-To:     Stephen Smalley <sds@tycho.nsa.gov>,
-        David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        casey@schaufler-ca.com
-References: <b91710d8-cd2d-6b93-8619-130b9d15983d@tycho.nsa.gov>
- <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
- <3813.1559827003@warthog.procyon.org.uk>
- <8382af23-548c-f162-0e82-11e308049735@tycho.nsa.gov>
- <0eb007c5-b4a0-9384-d915-37b0e5a158bf@schaufler-ca.com>
- <c82052e5-ca11-67b5-965e-8f828081f31c@tycho.nsa.gov>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <07e92045-2d80-8573-4d36-643deeaff9ec@schaufler-ca.com>
-Date:   Thu, 6 Jun 2019 11:56:07 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 14:59:07 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id D481F21B74;
+        Thu,  6 Jun 2019 14:59:03 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 06 Jun 2019 14:59:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=lfVVPYYE1zv8TPS6RZylhPPQeAB
+        r/4SHxam1e1BQ+X4=; b=iCmlnLrgVPO1ZUWYo3Ggic1AWJmeSjmpEGe7KnI/8T4
+        +tXaunSDf/9OiKqK8g/Z6/yDAG/wjs4RzzCzLw+hOWHdeEhKggV1Tgam4xZQ27QL
+        qtZpMCu4u2RMYchy06qJ+j/2gHirVYlzfDx7kLE46fExO6SlYcwGoNgsyZmwNu9C
+        6hyFYPeKMGQNLU5+nCwI47sb5NGnUaFM1ZLEW6+i6UzDDKzwsH2vmfHJT8BBrOf9
+        YnvbntTMw304XleX32Dwd8U7p0yHA7aAYYMF7SiOPf9S/EYw1B7zWmjr7kTIMjvb
+        yu4vx5ebdrMzEINmsL+7hwhpp/CyuwtOmJDEk4zOm5Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lfVVPY
+        YE1zv8TPS6RZylhPPQeABr/4SHxam1e1BQ+X4=; b=194SDOaqYobC0CsuIt+2jK
+        Wj0HWqAJxIviRefNsECqxnxvSnlwHaQogNAGsV/bWwlLBo1OCmKNAYX2ffiPDlez
+        tuCNTmhewFvVvDKBerMQgIndZzNazJeqSMnGgBQIin/tT2lgmakSn2JDC3+TLnvU
+        Z+T43/cJ5ztKx8MXQLLXWRlMzlBlGIsFIq9+aK2NaYzzWKiBw0mum0fY/3L1KG9x
+        95urwGUWd9zhtRNgr68YXHqVh+IcJTc3nNzZcA6xTGnn0WTp4OWMxWcE3HJM8Xl4
+        EyPcMaQEyUAG282eutxbQpihxkJciATNF1ve4LL3/SmggvKnM65yFFUcU+kVvXyg
+        ==
+X-ME-Sender: <xms:d2L5XBfeMwlYGwz9hC2V3EKRYt4ivOZdCxhM0k4fKRtwmRKYIM_Qfw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeggedgudeffecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:d2L5XPJ6MzNiHPBBKqPSXV_858uT_Vc3K3Iy4AP6WSE1AjND0NA0oA>
+    <xmx:d2L5XGHjeVAU-PkMgr82QdI4UeOLF4SxOiKgG1hfKNSmMsgq5XroXA>
+    <xmx:d2L5XP5KY94tsqMRwicGkSf9-4d4AQn04KL7IUHRbar-6l0yQsEQqA>
+    <xmx:d2L5XLzNQCU5xjN2HXb9B8EOyZhr1mM6Cn3pcWg4jx_0vC94E7CgBw>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E28EB80060;
+        Thu,  6 Jun 2019 14:59:02 -0400 (EDT)
+Date:   Thu, 6 Jun 2019 20:59:00 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Rolf Eike Beer <eb@emlix.com>, stable@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
+ =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
+ =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
+Message-ID: <20190606185900.GA19937@kroah.com>
+References: <259986242.BvXPX32bHu@devpool35>
+ <20190606152746.GB21921@kroah.com>
+ <20190606152902.GC21921@kroah.com>
+ <CANiq72nfFqYkiYgKJ1UZV3Mx2C3wzu_7TRtXFn=iafNt+Oc_2g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <c82052e5-ca11-67b5-965e-8f828081f31c@tycho.nsa.gov>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72nfFqYkiYgKJ1UZV3Mx2C3wzu_7TRtXFn=iafNt+Oc_2g@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/2019 10:16 AM, Stephen Smalley wrote:
-> On 6/6/19 12:43 PM, Casey Schaufler wrote:
->> ...
->> I don't agree. That is, I don't believe it is sufficient.
->> There is no guarantee that being able to set a watch on an
->> object implies that every process that can trigger the event
->> can send it to you.
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0Watcher has Smack label W
->> =C2=A0=C2=A0=C2=A0=C2=A0Triggerer has Smack label T
->> =C2=A0=C2=A0=C2=A0=C2=A0Watched object has Smack label O
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0Relevant Smack rules are
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0W O rw
->> =C2=A0=C2=A0=C2=A0=C2=A0T O rw
->>
->> The watcher will be able to set the watch,
->> the triggerer will be able to trigger the event,
->> but there is nothing that would allow the watcher
->> to receive the event. This is not a case of watcher
->> reading the watched object, as the event is delivered
->> without any action by watcher.
->
-> You are allowing arbitrary information flow between T and W above.=C2=A0=
- Who cares about notifications?
+On Thu, Jun 06, 2019 at 08:25:28PM +0200, Miguel Ojeda wrote:
+> On Thu, Jun 6, 2019 at 5:29 PM Greg KH <greg@kroah.com> wrote:
+> >
+> > And if you want this, you should look at how the backports to 4.14.y
+> > worked, they did not include a3f8a30f3f00 ("Compiler Attributes: use
+> > feature checks instead of version checks"), as that gets really messy...
+> 
+> I am confused -- I interpreted Rolf's message as reporting that he
+> already successfully built 4.9 by applying a6e60d84989f
+> ("include/linux/module.h: copy __init/__exit attrs to
+> init/cleanup_module") and manually fixing it up. But maybe I am
+> completely wrong... :-)
 
-I do. If Watched object is /dev/null no data flow is possible.
-There are many objects on a modern Linux system for which this
-is true. Even if it's "just a file" the existence of one path
-for data to flow does not justify ignoring the rules for other
-data paths.
+"manually fixing it up" means "hacked it to pieces" to me, I have no
+idea what the end result really was :)
 
->
-> How is it different from W and T mapping the same file as a shared mapp=
-ing and communicating by reading and writing the shared memory?=C2=A0 You=
- aren't performing a permission check directly between W and T there.
+If someone wants to send me some patches I can actually apply, that
+would be best...
 
-In this case there is one object O, two subjects, W and T and two accesse=
-s.
+thanks,
 
-	W open O
-	T open O
-
-They fiddle about with the data in O.
-
-In the event case, there are two objects, O and W, two subjects W and T, =
-and
-three accesses.
-
-	W watch O
-	T trigger O
-	T write-event W
-
-You can't wave away the flow of data. Different objects are involved.
-
-An analogy is that two processes with different UIDs can open a file,
-but still can't signal each other. Different mechanisms have different
-policies. I'm not saying that's good, but it's the context we're in.
-
-
+greg k-h
