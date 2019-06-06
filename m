@@ -2,81 +2,67 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945E4C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274C4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C3B20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0404720868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfFFJ3N (ORCPT
+        id S1727865AbfFFJbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:29:13 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:46636 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbfFFJ3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:29:13 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hYohm-0001wm-23; Thu, 06 Jun 2019 17:29:06 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hYohb-000735-8z; Thu, 06 Jun 2019 17:28:55 +0800
-Date:   Thu, 6 Jun 2019 17:28:55 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: Re: rcu_read_lock lost its compiler barrier
-Message-ID: <20190606092855.dfeuvyk5lbvm4zbf@gondor.apana.org.au>
-References: <20190603200301.GM28207@linux.ibm.com>
- <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
- <20190606045109.zjfxxbkzq4wb64bj@gondor.apana.org.au>
- <20190606060511.GA28207@linux.ibm.com>
- <20190606061438.nyzaeppdbqjt3jbp@gondor.apana.org.au>
- <20190606090619.GC28207@linux.ibm.com>
+        Thu, 6 Jun 2019 05:31:53 -0400
+Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:58050 "EHLO
+        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbfFFJbx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:31:53 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-64-161-nat.elisa-mobile.fi [85.76.64.161])
+        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 9530B2002D;
+        Thu,  6 Jun 2019 12:31:49 +0300 (EEST)
+Date:   Thu, 6 Jun 2019 12:31:49 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+Message-ID: <20190606093149.GA11598@darkstar.musicnaut.iki.fi>
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+ <dfe6451c93574b61d4bdde4a05c5f8ccf86b31a0.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606090619.GC28207@linux.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <dfe6451c93574b61d4bdde4a05c5f8ccf86b31a0.camel@kernel.crashing.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 02:06:19AM -0700, Paul E. McKenney wrote:
->
-> Or is your point instead that given the initial value of "a" being
-> zero and the value stored to "a" being one, there is no way that
-> any possible load and store tearing (your slicing and dicing) could
-> possibly mess up the test of the value loaded from "a"?
+Hi,
 
-Exactly.  If you can dream up of a scenario where the compiler can
-get this wrong I'm all ears.
-
-> > But I do concede that in the general RCU case you must have the
-> > READ_ONCE/WRITE_ONCE calls for rcu_dereference/rcu_assign_pointer.
+On Thu, Jun 06, 2019 at 10:54:51AM +1000, Benjamin Herrenschmidt wrote:
+> On Thu, 2019-06-06 at 01:50 +0300, Aaro Koskinen wrote:
+> > Hi,
+> > 
+> > When upgrading from v5.0 -> v5.1 on G4 PowerBook, I noticed WLAN does
+> > not work anymore:
+> > 
+> > [   42.004303] b43legacy-phy0: Loading firmware version 0x127, patch level 14 (2005-04-18 02:36:27)
+> > [   42.184837] b43legacy-phy0 debug: Chip initialized
+> > [   42.184873] b43legacy-phy0 ERROR: The machine/kernel does not support the required 30-bit DMA mask
+> > 
+> > The same happens with the current mainline.
 > 
-> OK, good that we are in agreement on this part, at least!  ;-)
+> How much RAM do you have ?
 
-Well only because we're allowing crazy compilers that can turn
-a simple word-aligned word assignment (a = b) into two stores.
+The system has 1129 MB RAM. Booting with mem=1G makes it work.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+A.
