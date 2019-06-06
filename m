@@ -2,81 +2,109 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6157CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7CFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED9E20883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E9D320673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:26:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FJuXAdBC";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FJuXAdBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfFFH0V (ORCPT
+        id S1726787AbfFFH0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:26:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59490 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFH0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:26:21 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 6 Jun 2019 03:26:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39766 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFH0p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:26:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4DEEE60A50; Thu,  6 Jun 2019 07:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559806004;
+        bh=NDsCQMTGQ/205TvP8GN/bfYntCpZX3vSnLmqhd7phZU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FJuXAdBCAyIr6a5dicjbm+9nCUzJ5rZ5rs1MuZXE8IGOyXz6d6Ton4CdUGm5a9mGB
+         AxV0HgLck2MWvIMlNRzziMbk9D72DaD+804BKZAqwigTq57KMNnICh6KmQRBIQkLRo
+         ZQ2s3q/7XYNrf92bdOBV9hXWPnR4Lz0LwTYfwqX4=
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C44B58553D;
-        Thu,  6 Jun 2019 07:26:06 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 9FBC12E054;
-        Thu,  6 Jun 2019 07:26:01 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  6 Jun 2019 09:26:05 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 09:25:59 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, dbueso@suse.de,
-        axboe@kernel.dk, dave@stgolabs.net, e@80x24.org, jbaron@akamai.com,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        omar.kilani@gmail.com, tglx@linutronix.de, stable@vger.kernel.org,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@ACULAB.COM>
-Subject: Re: [PATCH -mm 1/1] signal: simplify
- set_user_sigmask/restore_user_sigmask
-Message-ID: <20190606072559.GA27021@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190529161157.GA27659@redhat.com>
- <20190604134117.GA29963@redhat.com>
- <20190605155801.GA25165@redhat.com>
- <20190605155833.GB25165@redhat.com>
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B47026030E;
+        Thu,  6 Jun 2019 07:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559806004;
+        bh=NDsCQMTGQ/205TvP8GN/bfYntCpZX3vSnLmqhd7phZU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FJuXAdBCAyIr6a5dicjbm+9nCUzJ5rZ5rs1MuZXE8IGOyXz6d6Ton4CdUGm5a9mGB
+         AxV0HgLck2MWvIMlNRzziMbk9D72DaD+804BKZAqwigTq57KMNnICh6KmQRBIQkLRo
+         ZQ2s3q/7XYNrf92bdOBV9hXWPnR4Lz0LwTYfwqX4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B47026030E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f47.google.com with SMTP id h9so1893626edr.0;
+        Thu, 06 Jun 2019 00:26:43 -0700 (PDT)
+X-Gm-Message-State: APjAAAV9gH1y+zWVyrLixCxkRgFPUzaQRdW9p3UTkjB55vY6iRVbP5rQ
+        ZDkw4a7yIDhZaP6/hIbforLxWorT7SkWThcB6Yc=
+X-Google-Smtp-Source: APXvYqyMq3bs4ifWOpS2YPWjKkNYwVf2WG4sbHxz909RdciIk0qvBUaCxk6b4HbsrDV2PXnemFBIcDPA2cuVtPEjle0=
+X-Received: by 2002:a17:906:3fc8:: with SMTP id k8mr1736996ejj.2.1559806002530;
+ Thu, 06 Jun 2019 00:26:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190605155833.GB25165@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 06 Jun 2019 07:26:21 +0000 (UTC)
+References: <20190606043851.18050-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190606043851.18050-1-bjorn.andersson@linaro.org>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Thu, 6 Jun 2019 12:56:31 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iG66C-6ySw81bVsxbWqP+qCza0+QxuQ4Z-MXqB6DV2KZg@mail.gmail.com>
+Message-ID: <CAFp+6iG66C-6ySw81bVsxbWqP+qCza0+QxuQ4Z-MXqB6DV2KZg@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: Add Dragonboard 845c
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05, Oleg Nesterov wrote:
+Hi Bjorn,
+
+On Thu, Jun 6, 2019 at 10:10 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> +int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize)
->  {
-> -	if (!usigmask)
-> -		return 0;
-> +	sigset_t *kmask;
+> This adds an initial dts for the Dragonboard 845. Supported
+> functionality includes Debug UART, UFS, USB-C (peripheral), USB-A
+> (host), microSD-card and Bluetooth.
+>
+> Initializing the SMMU is clearing the mapping used for the splash screen
+> framebuffer, which causes the board to reboot. This can be worked around
+> using:
+>
+>   fastboot oem select-display-panel none
 
-Typo, this obviously should be
+This works well with your SMR handoff RFC series too?
 
-	sigset_t kmask;
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-I'll send v2.
+Patch looks good, so
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 
+Best Regards
+Vivek
 
-Dear Kbuild Test Robot, thank you very much,
-
-Oleg.
-
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
