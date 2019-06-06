@@ -2,127 +2,128 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C26AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64263C28EB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CF3208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B437208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:18:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQAZ7N8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfFFVRo (ORCPT
+        id S1728215AbfFFVR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:17:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727915AbfFFVRo (ORCPT
+        Thu, 6 Jun 2019 17:17:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33731 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727187AbfFFVR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:17:44 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56L7Lfo115217
-        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 17:17:43 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sy7xef5a2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 17:17:42 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 6 Jun 2019 22:17:41 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 6 Jun 2019 22:17:38 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x56LHbXc27066732
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Jun 2019 21:17:37 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A6B5B2064;
-        Thu,  6 Jun 2019 21:17:37 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B183B2065;
-        Thu,  6 Jun 2019 21:17:37 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.216.200])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Jun 2019 21:17:36 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D275D16C362C; Thu,  6 Jun 2019 14:17:36 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 14:17:36 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: single copy atomicity for double load/stores on 32-bit systems
-Reply-To: paulmck@linux.ibm.com
-References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
- <20190531082112.GH2623@hirez.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA2307501A2522B5B@us01wembx1.internal.synopsys.com>
- <20190603201324.GN28207@linux.ibm.com>
- <CAMuHMdW-8Jt80mSyHTYmj6354-3f1=Vp_8dY-Nite1ERpUCFew@mail.gmail.com>
- <20190606094340.GD28207@linux.ibm.com>
- <8d1666df180d4d01aaebb5d41370b338@AcuMS.aculab.com>
+        Thu, 6 Jun 2019 17:17:59 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g21so1425152plq.0;
+        Thu, 06 Jun 2019 14:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mP7r3Ph0TJUeY2QgBywLa5kKt0/iqIMTXJw+IqZdG5c=;
+        b=QQAZ7N8H8c+5Ltu+ZGIdxyDkMMoKCiVPm/qiYn/zzSn25b2uU7hCOD6mZNfokt2ms8
+         YPclSKzjHC4oTggIKEBy7liIzJ04zM7X6ylCESyJWmj6kvjTetXr0izfzYGs9T3OdGuG
+         5/r0CZuH/W6Na2nPhB0DgbFu3RKGQYdtrzrevm6dBW2/B9RDKldxsPDT4+/uNnWQM5c9
+         T/hYcfAxmIGyGWtoGYpE+gzQyQmZ11Bxzpe6wKvXrby9WYbLcRM52p0fbB29e42EC2jO
+         2fc/xkACsf/zHoKWsbrpkH7JL5oQgyvTDJoZYUx+gZaHfljmNquU5eIBL5+FSjfx2pca
+         hGVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mP7r3Ph0TJUeY2QgBywLa5kKt0/iqIMTXJw+IqZdG5c=;
+        b=cWZDXvfEyiNXr4BcSkb40Buh0QFCnzhuuSvishqJC3H5yeMHUN9LWlOK8GxMjtaa+w
+         +JOyN4R2vO1AkdIu4gP7u9FPe4K8N9/qxvauruIifsoFvfZ6ynkhfNsYBRIODxlljGco
+         eoGMo+48A9zSqPbp3jsPcuE2fEf1J6z17gjheDMslnwVlo2r4IjeRWgmexSJUPmh2c2e
+         k2iTjCr2C3+hfGPAoa4Bw7ZSJex5+7pW0ToR234awn10RT5CiIIsxspsAx1B/U3w7uqS
+         ld5WKmM2PjKc7iuoneRqGYcwaOEBbpmyFgfJZ7sWro3/WZPPSgnEwScuLaNufmp57nb9
+         IJbA==
+X-Gm-Message-State: APjAAAXlKRG7JIFggIspXexge8i7u186yRmQGTCsjlp5U0OBmHI2x/Pk
+        k3DHp6T0EwR+GSWAHzkfqTKZQmxw
+X-Google-Smtp-Source: APXvYqwlJWejDjPLp4Du0ku4Rl3EB2/0dNED2aE2CibduvXmMGSH6zDuhXMYSg0oMeJbJgkKe1ZfCg==
+X-Received: by 2002:a17:902:b18f:: with SMTP id s15mr53750306plr.44.1559855878548;
+        Thu, 06 Jun 2019 14:17:58 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v23sm61897pff.185.2019.06.06.14.17.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 14:17:58 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 14:17:57 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jerry Hoemann <jerry.hoemann@hpe.com>
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mironov.ivan@gmail.com,
+        rasmus.villemoes@prevas.dk
+Subject: Re: [PATCH 2/6] watchdog/hpwdt: Advertize max_hw_heartbeat_ms
+Message-ID: <20190606211757.GA1299@roeck-us.net>
+References: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
+ <1558126783-4877-3-git-send-email-jerry.hoemann@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8d1666df180d4d01aaebb5d41370b338@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060621-2213-0000-0000-0000039B2E67
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011224; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01214223; UDB=6.00638248; IPR=6.00995302;
- MB=3.00027212; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-06 21:17:40
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060621-2214-0000-0000-00005EBF501D
-Message-Id: <20190606211736.GW28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=988 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060143
+In-Reply-To: <1558126783-4877-3-git-send-email-jerry.hoemann@hpe.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 04:34:52PM +0000, David Laight wrote:
-> From: Paul E. McKenney
-> > Sent: 06 June 2019 10:44
-> ...
-> > But m68k is !SMP-only, correct?  If so, the only issues would be
-> > interactions with interrupt handlers and the like, and doesn't current
-> > m68k hardware use exact interrupts?  Or is it still possible to interrupt
-> > an m68k in the middle of an instruction like it was in the bad old days?
+On Fri, May 17, 2019 at 02:59:39PM -0600, Jerry Hoemann wrote:
+> Set max_hw_heartbeat_ms instead of max_timeout so that user client can
+> set timeout range in excess of what the underlying hardware supports.
 > 
-> Hardware interrupts were always on instruction boundaries, the
-> mid-instruction interrupts would only happen for page faults (etc).
+> Signed-off-by: Jerry Hoemann <jerry.hoemann@hpe.com>
 
-OK, !SMP should be fine, then.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> There were SMP m68k systems (but I can't remember one).
-> It was important to continue from a mid-instruction trap on the
-> same cpu - unless you could guarantee that all the cpus had
-> exactly the same version of the microcode.
-
-Yuck!  ;-)
-
-> In any case you could probably use the 'cmp2' instruction
-> for an atomic 64bit write.
-> OTOH setting that up was such a PITA it was always easier
-> to disable interrupts.
-
-Unless I am forgetting something, given that m68k is a 32-bit system,
-we should be OK without an atomic 64-bit write.
-
-							Thanx, Paul
-
+> ---
+>  drivers/watchdog/hpwdt.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/watchdog/hpwdt.c b/drivers/watchdog/hpwdt.c
+> index 8c49f13..9f7a370 100644
+> --- a/drivers/watchdog/hpwdt.c
+> +++ b/drivers/watchdog/hpwdt.c
+> @@ -62,9 +62,9 @@
+>  static int hpwdt_start(struct watchdog_device *wdd)
+>  {
+>  	int control = 0x81 | (pretimeout ? 0x4 : 0);
+> -	int reload = SECS_TO_TICKS(wdd->timeout);
+> +	int reload = SECS_TO_TICKS(min(wdd->timeout, wdd->max_hw_heartbeat_ms/1000));
+>  
+> -	dev_dbg(wdd->parent, "start watchdog 0x%08x:0x%02x\n", reload, control);
+> +	dev_dbg(wdd->parent, "start watchdog 0x%08x:0x%08x:0x%02x\n", wdd->timeout, reload, control);
+>  	iowrite16(reload, hpwdt_timer_reg);
+>  	iowrite8(control, hpwdt_timer_con);
+>  
+> @@ -91,9 +91,9 @@ static int hpwdt_stop_core(struct watchdog_device *wdd)
+>  
+>  static int hpwdt_ping(struct watchdog_device *wdd)
+>  {
+> -	int reload = SECS_TO_TICKS(wdd->timeout);
+> +	int reload = SECS_TO_TICKS(min(wdd->timeout, wdd->max_hw_heartbeat_ms/1000));
+>  
+> -	dev_dbg(wdd->parent, "ping  watchdog 0x%08x\n", reload);
+> +	dev_dbg(wdd->parent, "ping  watchdog 0x%08x:0x%08x\n", wdd->timeout, reload);
+>  	iowrite16(reload, hpwdt_timer_reg);
+>  
+>  	return 0;
+> @@ -208,9 +208,9 @@ static int hpwdt_pretimeout(unsigned int ulReason, struct pt_regs *regs)
+>  	.info		= &ident,
+>  	.ops		= &hpwdt_ops,
+>  	.min_timeout	= 1,
+> -	.max_timeout	= HPWDT_MAX_TIMER,
+>  	.timeout	= DEFAULT_MARGIN,
+>  	.pretimeout	= PRETIMEOUT_SEC,
+> +	.max_hw_heartbeat_ms	= HPWDT_MAX_TIMER * 1000,
+>  };
+>  
+>  
