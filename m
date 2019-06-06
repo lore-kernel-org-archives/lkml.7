@@ -2,72 +2,101 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFDAC28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCA6C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4545E208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559853363;
-	bh=jzmBb+CPxKYoIpOqOYW+9YL8iX62mvJWYHT6yTA/VXI=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=mo3pMD1N3jEzGegIHvybYPNvtCA2g10SxD8X5dAZXfXetf3CfTCg9w+i6Tgzu6w18
-	 976rz6L+gKWsYWTuWjfK0APD7/pJn2G+Tv70vLn7fbDnuVSl4gRAswAgYwLgZBEnSH
-	 WnEuHLrZGc7mMIcdEo0Ki+C4/wlB/AP7KmXQYtxU=
+	by mail.kernel.org (Postfix) with ESMTP id 1F8E8206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfFFUgC (ORCPT
+        id S1727606AbfFFUmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbfFFUgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:36:02 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B133208C0;
-        Thu,  6 Jun 2019 20:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559853361;
-        bh=jzmBb+CPxKYoIpOqOYW+9YL8iX62mvJWYHT6yTA/VXI=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=ocSbNKa0g3JAc3T+Gmp5iicjxRVMKkA/1XCCElps/QttkP2+lR3G8MoweQ9ThVmpI
-         xqtRD1gx0w6cA+uUkFkbcGWPbqHaktXhxdOqtoWouD/MSWE3jkhSso9k3mf4DDv5oS
-         OrcL+48xwervdrxa+DmlMy2BVwRsewMM1D3rvAGk=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 6 Jun 2019 16:42:39 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:39445 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFFUmi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:42:38 -0400
+Received: from [192.168.1.110] ([77.9.2.22]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MsI0I-1ggb6G29BC-00tjwj; Thu, 06 Jun 2019 22:41:38 +0200
+Subject: Re: [PATCH net-next] net: Drop unlikely before IS_ERR(_OR_NULL)
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        netdev@vger.kernel.org, linux-sctp@vger.kernel.org
+References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
+ <20190605142428.84784-3-wangkefeng.wang@huawei.com>
+ <20190605091319.000054e9@intel.com>
+ <721a48ce-c09a-a35e-86ae-eac5eec26668@huawei.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <37cbb3d8-bec8-4dd7-ba1f-31a2919316ca@metux.net>
+Date:   Thu, 6 Jun 2019 22:41:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190509202956.6320-3-f.fainelli@gmail.com>
-References: <20190509202956.6320-1-f.fainelli@gmail.com> <20190509202956.6320-3-f.fainelli@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: bcm: Allow CLK_BCM2835 for ARCH_BRCMSTB
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, wahrenst@gmx.net,
-        eric@anholt.net, stefan.wahren@i2se.com
-User-Agent: alot/0.8.1
-Date:   Thu, 06 Jun 2019 13:36:00 -0700
-Message-Id: <20190606203601.9B133208C0@mail.kernel.org>
+In-Reply-To: <721a48ce-c09a-a35e-86ae-eac5eec26668@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:pagADH4vxjoMgAeXBVQOtnRLYCAOD23dxJjVP31ezD5G4gsXRJl
+ IPf4GGUspGV0Wew2LBbkhWOLzwqu3s9hBmkUoCldow0jMrDx/paEta5YHx1nf47mJHGCLJ8
+ xFo1DjfxZlDMqHsaif8SurlPSDbwKN9yuSabInMOGFhmSDh8v2hrEpCKJi0/K3/C8ojGqW8
+ cOxFkanD02JRD2hw5YmPw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yJg8HQSN4KI=:dWStSaB4teSzQlqTv/xoCO
+ W35oNQGJLqSNaxNTV/GPRu8jAcUlli059kE5mTvvL9KLc5ZVLn43qrTGAAuxIZ11RRzcdCgHg
+ P7c9aI+uAJ9cEFpZuzLzCJpcRIRYMWYTk5GIBYJr9L8R6yEQl4PLNrmqIroFTd/5M3HY3vqVs
+ WfU7IlKOWpsqt1WFLW4x1RlH/yQ9ajmZ4qQ4wU5gbq7ujuK4/iMti414RZ2kk4q0k9TodkTyF
+ RmSqSPhTMdzsQ6TOUC0oNPpwykMwMMm2qna8Kd7D8E4TqOOIJt/6yssuzaFGFZDT7A4tlZh9Q
+ It+0ocQNTavPGosDFXmpyFGG8XQKDzr+BxLMYfK0D0OKXgkwJkrBmG5IbzOV4aSeWLZi/OuBC
+ TsdAOCEL2yG9uWUVYTU8yt77QlsQJAXGBqf1nxiGtTOtA49YRimBIDbTTzLHoUtsZPF7/9v5u
+ LRG9XyaRBk+U/CEVNh7oN37BOwqTwg0zdGKxN/r3ppLCkTaaZU0o0KK+p05+uyWP+UQ1uTU8R
+ TKkhrY9UAGm546yIUohMOGpxm0V/PgIt0TVZ989OweSaJKbrpI2sBz+jM61xiv0XrYPxgZgQT
+ R26NnndXHTKjw95zS9VepiFXfUOt6/U3kMd+be3lw5oEut2Wgh/aI9RZW+e0eEW9c0VibTnhK
+ aStrqc6SH0/WbNJEI6qxWUhTUsQhkmuodoYQOpoyPMrMSd/UnqyZMTdmFiBIMYytOqulO3pD4
+ Z9vDAb0PRY2vao2VwtU2zNvy5o/TvzHYbtiBPvqkN5Ij6b6RSfV3EHtE/D4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Florian Fainelli (2019-05-09 13:29:56)
-> ARCH_BRCMSTB needs to use the BCM2835 clock driver for chips like
-> BCM7211 which adopted that clock controller, make that possible and the
-> driver default to be enabled for ARCH_BRCMSTB.
->=20
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+On 06.06.19 03:39, Kefeng Wang wrote:
 
-Applied to clk-next
+Hi folks,
 
+> There is no different in assembly output (only check the x86/arm64), and
+> the Enrico Weigelt have finished a cocci script to do this cleanup.
+
+I haven't compared the assembly output, just logically deduced from the
+macro. If I understand it correctly, the likely()/unlikely() macros
+just add a hint to the compiler, which branch it should optimize harder.
+
+No idea what the compiler's actually doing, but I believe its things
+like optimized shortcut evaluation and avoiding jumps to likely
+branches.
+
+>> I'm not sure in the end that the change is worth it, so would like you
+>> to prove it is, unless davem overrides me. :-)
+
+Depends on what you count as worthy ;-)
+
+This patch just makes a source a bit more compact / easier to read.
+But shouldn't have any actual consequence on the generated binary.
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
