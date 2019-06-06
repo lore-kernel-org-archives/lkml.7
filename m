@@ -2,188 +2,180 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CCAC28D1C
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31DFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC0E207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36BA2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559810070;
+	bh=EcbYfjSTzXWvDR617LT1wi89npTHFV8aCjNConeyuT4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=onocag7DFMD/AMqbFf2/wcKLdO/gsJSxGQ5P6QIWb0uOu6JTejTmu/fiHV4YzwWjl
+	 Of6kJ0aiUBCup9YyFQqC9H/l/XJgHmgElfSwtHho0VzOAAlw/ZpJ9TjQsZT6guZ7Rz
+	 wEHkcqI3oRRIOv624FpPuU8vdlkmKVFMJuJXcSAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfFFIeT (ORCPT
+        id S1727306AbfFFIea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:34:19 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:47300 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725267AbfFFIeT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:34:19 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 6 Jun 2019 04:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfFFIe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:34:29 -0400
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 88CFF634C7F;
-        Thu,  6 Jun 2019 11:34:07 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hYnqZ-0000Te-La; Thu, 06 Jun 2019 11:34:07 +0300
-Date:   Thu, 6 Jun 2019 11:34:07 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Eugen.Hristev@microchip.com
-Cc:     hverkuil@xs4all.nl, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] media: atmel: atmel-sama5d2-isc: fixed checkpatch
- warnings
-Message-ID: <20190606083407.av2ifw4lr5w3pdxi@valkosipuli.retiisi.org.uk>
-References: <1559806756-16683-1-git-send-email-eugen.hristev@microchip.com>
- <1559806756-16683-2-git-send-email-eugen.hristev@microchip.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 89917208CB;
+        Thu,  6 Jun 2019 08:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559810067;
+        bh=EcbYfjSTzXWvDR617LT1wi89npTHFV8aCjNConeyuT4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=p8U8I4iTbQmL82QiduasZTkkzU7lzXG6fQ8mCia6+fWcuiA0i03g1KxDVzaj1U6Gq
+         lM5hTEaGIza5dyz0jw4Ss47I5FRbzg0JVE6bToOZ/yK/rlDUAFv3qjOtne21zIO5x0
+         9J1jHGGoa/kDd4ba9o5TBXy8Q8tUsoRU7u5nvfSc=
+Received: by mail-lf1-f45.google.com with SMTP id u10so146484lfm.12;
+        Thu, 06 Jun 2019 01:34:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAWqSWV03Z/DaKP5Gu2uC+CFsS2tC/lPoz681SaTyntlmJDZn4KV
+        um1PVLAiFfhentF6D6FQJp6lOYkNOvgrkaIeQMU=
+X-Google-Smtp-Source: APXvYqxCK50/XvWyFZNIDlxjsI9e+qKPGpstgWIbikf4y07C0N2yTXtYTSW0Xf0OiGYm6g5kM9c4YO3XXtTB7Q5yntc=
+X-Received: by 2002:a19:4f50:: with SMTP id a16mr22500135lfk.24.1559810065749;
+ Thu, 06 Jun 2019 01:34:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559806756-16683-2-git-send-email-eugen.hristev@microchip.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <CGME20190605165428eucas1p11849754e0d0aa8f8d445ceb0cd6c2f61@eucas1p1.samsung.com>
+ <20190605165410.14606-1-l.luba@partner.samsung.com> <20190605165410.14606-3-l.luba@partner.samsung.com>
+In-Reply-To: <20190605165410.14606-3-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 6 Jun 2019 10:34:14 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfW3QUH+6+g3NXPuogNxtr_uOtWKOwbgPwBVdqn4Y7a_Q@mail.gmail.com>
+Message-ID: <CAJKOXPfW3QUH+6+g3NXPuogNxtr_uOtWKOwbgPwBVdqn4Y7a_Q@mail.gmail.com>
+Subject: Re: [PATCH v8 02/13] clk: samsung: add new clocks for DMC for
+ Exynos5422 SoC
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugen,
-
-On Thu, Jun 06, 2019 at 07:43:47AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Checkpatch complaining that locks do not have comments,
-> unaligned code and macro reuse of same argument in to_isc_clk.
-> Fixed them by renaming, realigning and adding struct comments
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+On Wed, 5 Jun 2019 at 18:54, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> This patch provides support for clocks needed for Dynamic Memory Controller
+> in Exynos5422 SoC. It adds CDREX base register addresses, new DIV, MUX and
+> GATE entries.
+>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > ---
-> Changes in v3:
-> - new patch, addresses the checkpatch issues that Hans asked to fix
-> 
->  drivers/media/platform/atmel/atmel-isc.h         | 51 +++++++++++++++++++++---
->  drivers/media/platform/atmel/atmel-sama5d2-isc.c |  4 +-
->  2 files changed, 48 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/media/platform/atmel/atmel-isc.h b/drivers/media/platform/atmel/atmel-isc.h
-> index 0bd5dff..6ff9fa8 100644
-> --- a/drivers/media/platform/atmel/atmel-isc.h
-> +++ b/drivers/media/platform/atmel/atmel-isc.h
-> @@ -24,14 +24,14 @@ struct isc_clk {
->  	struct clk_hw   hw;
->  	struct clk      *clk;
->  	struct regmap   *regmap;
-> -	spinlock_t	lock;
-> +	spinlock_t	lock;	/* synchronize access to clock registers */
-
-You probably want to serialise the access, not synchronise it (i.e. happen
-at the same time). So, s/synchronise/serialise/ ?
-
-Same on the isc_device fields below.
-
-With that,
-
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
->  	u8		id;
->  	u8		parent_id;
->  	u32		div;
->  	struct device	*dev;
+>  drivers/clk/samsung/clk-exynos5420.c | 57 ++++++++++++++++++++++++++--
+>  1 file changed, 53 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 34cce3c5898f..eecbfcc6b3cf 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -134,6 +134,8 @@
+>  #define SRC_CDREX              0x20200
+>  #define DIV_CDREX0             0x20500
+>  #define DIV_CDREX1             0x20504
+> +#define GATE_BUS_CDREX0                0x20700
+> +#define GATE_BUS_CDREX1                0x20704
+>  #define KPLL_LOCK              0x28000
+>  #define KPLL_CON0              0x28100
+>  #define SRC_KFC                        0x28200
+> @@ -248,6 +250,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
+>         DIV_CDREX1,
+>         SRC_KFC,
+>         DIV_KFC0,
+> +       GATE_BUS_CDREX0,
+> +       GATE_BUS_CDREX1,
 >  };
->  
-> -#define to_isc_clk(hw) container_of(hw, struct isc_clk, hw)
-> +#define to_isc_clk(v) container_of(v, struct isc_clk, hw)
->  
->  struct isc_buffer {
->  	struct vb2_v4l2_buffer  vb;
-> @@ -146,6 +146,47 @@ struct isc_ctrls {
->  
->  #define ISC_PIPE_LINE_NODE_NUM	11
->  
-> +/*
-> + * struct isc_device - ISC device driver data/config struct
-> + * @regmap:		Register map
-> + * @hclock:		Hclock clock input (refer datasheet)
-> + * @ispck:		iscpck clock (refer datasheet)
-> + * @isc_clks:		ISC clocks
-> + *
-> + * @dev:		Registered device driver
-> + * @v4l2_dev:		v4l2 registered device
-> + * @video_dev:		registered video device
-> + *
-> + * @vb2_vidq:		video buffer 2 video queue
-> + * @dma_queue_lock:	lock to synchronize the dma buffer queue
-> + * @dma_queue:		the queue for dma buffers
-> + * @cur_frm:		current isc frame/buffer
-> + * @sequence:		current frame number
-> + * @stop:		true if isc is not streaming, false if streaming
-> + * @comp:		completion reference that signals frame completion
-> + *
-> + * @fmt:		current v42l format
-> + * @user_formats:	list of formats that are supported and agreed with sd
-> + * @num_user_formats:	how many formats are in user_formats
-> + *
-> + * @config:		current ISC format configuration
-> + * @try_config:		the current ISC try format , not yet activated
-> + *
-> + * @ctrls:		holds information about ISC controls
-> + * @do_wb_ctrl:		control regarding the DO_WHITE_BALANCE button
-> + * @awb_work:		workqueue reference for autowhitebalance histogram
-> + *			analysis
-> + *
-> + * @lock:		lock for synchronizing userspace file operations
-> + *			with ISC operations
-> + * @awb_lock:		lock for synchronizing awb work queue operations
-> + *			with DMA/buffer operations
-> + *
-> + * @pipeline:		configuration of the ISC pipeline
-> + *
-> + * @current_subdev:	current subdevice: the sensor
-> + * @subdev_entities:	list of subdevice entitites
-> + */
->  struct isc_device {
->  	struct regmap		*regmap;
->  	struct clk		*hclock;
-> @@ -157,7 +198,7 @@ struct isc_device {
->  	struct video_device	video_dev;
->  
->  	struct vb2_queue	vb2_vidq;
-> -	spinlock_t		dma_queue_lock;
-> +	spinlock_t		dma_queue_lock; /* sync access to dma queue */
->  	struct list_head	dma_queue;
->  	struct isc_buffer	*cur_frm;
->  	unsigned int		sequence;
-> @@ -175,8 +216,8 @@ struct isc_device {
->  	struct v4l2_ctrl	*do_wb_ctrl;
->  	struct work_struct	awb_work;
->  
-> -	struct mutex		lock;
-> -	spinlock_t		awb_lock;
-> +	struct mutex		lock; /* sync access to file operations */
-> +	spinlock_t		awb_lock; /* sync access to DMA buffers from awb work queue */
->  
->  	struct regmap_field	*pipeline[ISC_PIPE_LINE_NODE_NUM];
->  
-> diff --git a/drivers/media/platform/atmel/atmel-sama5d2-isc.c b/drivers/media/platform/atmel/atmel-sama5d2-isc.c
-> index 69faaaf..299243f 100644
-> --- a/drivers/media/platform/atmel/atmel-sama5d2-isc.c
-> +++ b/drivers/media/platform/atmel/atmel-sama5d2-isc.c
-> @@ -87,8 +87,8 @@ static int isc_parse_dt(struct device *dev, struct isc_device *isc)
->  			break;
->  		}
->  
-> -		subdev_entity = devm_kzalloc(dev,
-> -					  sizeof(*subdev_entity), GFP_KERNEL);
-> +		subdev_entity = devm_kzalloc(dev, sizeof(*subdev_entity),
-> +					     GFP_KERNEL);
->  		if (!subdev_entity) {
->  			of_node_put(rem);
->  			ret = -ENOMEM;
-> -- 
-> 2.7.4
-> 
+>
+>  static const unsigned long exynos5800_clk_regs[] __initconst = {
+> @@ -425,6 +429,9 @@ PNAME(mout_group13_5800_p)  = { "dout_osc_div", "mout_sw_aclkfl1_550_cam" };
+>  PNAME(mout_group14_5800_p)     = { "dout_aclk550_cam", "dout_sclk_sw" };
+>  PNAME(mout_group15_5800_p)     = { "dout_osc_div", "mout_sw_aclk550_cam" };
+>  PNAME(mout_group16_5800_p)     = { "dout_osc_div", "mout_mau_epll_clk" };
+> +PNAME(mout_mx_mspll_ccore_phy_p) = { "sclk_bpll", "mout_sclk_dpll",
+> +                                       "mout_sclk_mpll", "ff_dout_spll2",
+> +                                       "mout_sclk_spll", "mout_sclk_epll"};
+>
+>  /* fixed rate clocks generated outside the soc */
+>  static struct samsung_fixed_rate_clock
+> @@ -450,7 +457,7 @@ static const struct samsung_fixed_factor_clock
+>  static const struct samsung_fixed_factor_clock
+>                 exynos5800_fixed_factor_clks[] __initconst = {
+>         FFACTOR(0, "ff_dout_epll2", "mout_sclk_epll", 1, 2, 0),
+> -       FFACTOR(0, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
+> +       FFACTOR(CLK_FF_DOUT_SPLL2, "ff_dout_spll2", "mout_sclk_spll", 1, 2, 0),
+>  };
+>
+>  static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
+> @@ -472,11 +479,14 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
+>         MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
+>         MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
+>
+> +       MUX(CLK_MOUT_MX_MSPLL_CCORE_PHY, "mout_mx_mspll_ccore_phy",
+> +               mout_mx_mspll_ccore_phy_p, SRC_TOP7, 0, 3),
+> +
+>         MUX(CLK_MOUT_MX_MSPLL_CCORE, "mout_mx_mspll_ccore",
+> -                       mout_mx_mspll_ccore_p, SRC_TOP7, 16, 2),
+> +                       mout_mx_mspll_ccore_p, SRC_TOP7, 16, 3),
+>         MUX_F(CLK_MOUT_MAU_EPLL, "mout_mau_epll_clk", mout_mau_epll_clk_5800_p,
+>                         SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
+> -       MUX(0, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
+> +       MUX(CLK_SCLK_BPLL, "sclk_bpll", mout_bpll_p, SRC_TOP7, 24, 1),
+>         MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
+>
+>         MUX(0, "mout_aclk550_cam", mout_group3_5800_p, SRC_TOP8, 16, 3),
+> @@ -648,7 +658,7 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
+>
+>         MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
+>         MUX(CLK_MOUT_VPLL, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
+> -       MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
+> +       MUX(CLK_MOUT_SCLK_SPLL, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
+>         MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
+>         MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
+>         MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
+> @@ -806,8 +816,21 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
+>                         "mout_aclk400_disp1", DIV_TOP2, 4, 3),
+>
+>         /* CDREX Block */
+> +       /*
+> +        * The three clocks below are controlled using the same register and
+> +        * bits. They are put into one because there is a need of
+> +        * synchronization between the BUS and DREXs (two external memory
+> +        * interfaces).
+> +        * They are put here to show this HW assumption and for clock
+> +        * information summary completeness.
+> +        */
+>         DIV(CLK_DOUT_PCLK_CDREX, "dout_pclk_cdrex", "dout_aclk_cdrex1",
+>                         DIV_CDREX0, 28, 3),
+> +       DIV(CLK_DOUT_PCLK_DREX0, "dout_pclk_drex0", "dout_cclk_drex0",
+> +                       DIV_CDREX0, 28, 3),
+> +       DIV(CLK_DOUT_PCLK_DREX1, "dout_pclk_drex1", "dout_cclk_drex0",
+> +                       DIV_CDREX0, 28, 3),
 
--- 
-Sakari Ailus
+Offline discussion with Marek and Sylwester suggested to add NOCACHE
+for the two clocks using the same bits. Otherwise I am fine:
+
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Best regards,
+Krzysztof
