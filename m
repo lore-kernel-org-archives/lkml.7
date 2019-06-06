@@ -2,215 +2,135 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC7DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5685C28D1B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEDC52083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0A420872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:10:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qOHNq0OJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfFFHKC (ORCPT
+        id S1726849AbfFFHKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:10:02 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:30692 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFFHKA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:10:00 -0400
-Received-SPF: SoftFail (esa2.microchip.iphmx.com: domain of
-  kelvin.cao@microchip.com is inclined to not designate
-  208.19.100.22 as permitted sender) identity=mailfrom;
-  client-ip=208.19.100.22; receiver=esa2.microchip.iphmx.com;
-  envelope-from="kelvin.cao@microchip.com";
-  x-sender="kelvin.cao@microchip.com"; x-conformance=spf_only;
-  x-record-type="v=spf1"; x-record-text="v=spf1 mx
-  a:ushub1.microchip.com a:smtpout.microchip.com
-  a:mx1.microchip.iphmx.com a:mx2.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@smtp.microsemi.com) identity=helo;
-  client-ip=208.19.100.22; receiver=esa2.microchip.iphmx.com;
-  envelope-from="kelvin.cao@microchip.com";
-  x-sender="postmaster@smtp.microsemi.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=kelvin.cao@microchip.com; spf=None smtp.helo=postmaster@smtp.microsemi.com; dmarc=fail (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,558,1557212400"; 
-   d="scan'208";a="36174409"
-Received: from unknown (HELO smtp.microsemi.com) ([208.19.100.22])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Jun 2019 00:09:59 -0700
-Received: from AVMBX3.microsemi.net (10.100.34.33) by AVMBX2.microsemi.net
- (10.100.34.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 6 Jun 2019
- 00:09:58 -0700
-Received: from AVMBX3.microsemi.net (10.100.34.33) by AVMBX3.microsemi.net
- (10.100.34.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 6 Jun 2019
- 00:09:58 -0700
-Received: from NTB-Peer.microsemi.net (10.188.116.183) by avmbx3.microsemi.net
- (10.100.34.33) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 6 Jun 2019 00:09:55 -0700
-From:   Kelvin Cao <kelvin.cao@microchip.com>
-To:     <kurt.schwemmer@microsemi.com>, <logang@deltatee.com>,
-        <jdmason@kudzu.us>, <dave.jiang@intel.com>, <allenbh@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     <kelvin.cao@microchip.com>, <kelvincao@outlook.com>
-Subject: [PATCH 3/3] ntb_hw_switchtec: Fix setup MW with failure bug
-Date:   Thu, 6 Jun 2019 15:09:44 +0800
-Message-ID: <1559804984-24698-4-git-send-email-kelvin.cao@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559804984-24698-1-git-send-email-kelvin.cao@microchip.com>
-References: <1559804984-24698-1-git-send-email-kelvin.cao@microchip.com>
+        Thu, 6 Jun 2019 03:10:10 -0400
+Received: from mail-eopbgr50076.outbound.protection.outlook.com ([40.107.5.76]:35297
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbfFFHKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:10:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5A2Yp4IQbJFiax/+usUSdkY0IdyO9D6rI74ULukINbs=;
+ b=qOHNq0OJF+2rPmIKUT37c/1TFCadbB1Ynxx9QjKLUkZuJY7wwnYCcxtf6TCse06n3l2Kj/P6gV/TR+Loa4emxcyhgI3oOVPjssBk7tGsUr8j+4vRv/MpjxU1BI91KYi9xbR8Yq49j2NruyJqda4ubeuOz2C1fm9RJ0UoutNbwuo=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3821.eurprd04.prod.outlook.com (52.134.16.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Thu, 6 Jun 2019 07:10:06 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1943.023; Thu, 6 Jun 2019
+ 07:10:06 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+CC:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
+Thread-Topic: [PATCH] crypto: gcm - fix cacheline sharing
+Thread-Index: AQHVHDJUFTzexZfnZkK5jYnCMHmb4A==
+Date:   Thu, 6 Jun 2019 07:10:06 +0000
+Message-ID: <VI1PR0402MB3485A016A2E5FDEE57EBF48198170@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
+ <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
+ <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au>
+ <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
+ <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
+ <20190606063724.n77z7gaf32tmyxng@gondor.apana.org.au>
+ <CAKv+Gu-YtKRsUYMMD_PNoFvrPpmwTD7fJNs64Q-34L8-TvucqA@mail.gmail.com>
+ <20190606064603.lvde6dproqi3vwcq@gondor.apana.org.au>
+ <CAKv+Gu-DokZ179_Gx8_20v_pQ3w_CARKdO0xdsO8CRZJG1uOqA@mail.gmail.com>
+ <20190606065757.4agqd4poer4rexri@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [78.96.98.22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f0f05391-8976-4a4e-246a-08d6ea4e00ff
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3821;
+x-ms-traffictypediagnostic: VI1PR0402MB3821:
+x-microsoft-antispam-prvs: <VI1PR0402MB38216E7292CD69CB4982095298170@VI1PR0402MB3821.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(366004)(396003)(376002)(189003)(199004)(25786009)(6436002)(81166006)(99286004)(4326008)(66476007)(2906002)(8676002)(81156014)(64756008)(66556008)(8936002)(66446008)(52536014)(54906003)(476003)(7696005)(5660300002)(446003)(256004)(73956011)(76116006)(91956017)(66946007)(71200400001)(14444005)(71190400001)(66066001)(7736002)(305945005)(86362001)(186003)(6246003)(26005)(33656002)(68736007)(53546011)(55016002)(6506007)(110136005)(9686003)(102836004)(486006)(3846002)(6116002)(76176011)(53936002)(74316002)(229853002)(478600001)(44832011)(316002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3821;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /uNQQeDFRAPWMU3ZRN6uylGKi/BfzRyFRy6Eo3PPeC9ryoX8LRkCDqMMGwahks4rW8uhI50+WIrzpzoLBMy7JEzpogKVB90UM0ao4jTaa3js+B3Zy/Bu8IuUr/thFxKEpkfJBq+gEuF7OKAX09i0LfHBGcpU7oJUwayQV+zDq5JIyKLtvI/z71gnj5V4qy6cFuDDtJcDni3fsIcVkDG8tuyC9HSKWCdTVWaHuPooYLFwtyY6Ot9o4E9xuXWv6j40KK7pGnvQMiLRudlGXRQsJN1/eOSXmw8/6wVlV7RESOKIkb0DynB0DwjHNBELSIWKqypgqir0sV8R7rooxG8U0+oFWBN+n8RWGrv3ai8Vx/t5ZWBlrhIvywIN/c072O+/IoP+wjWUVs4O+XSvzm6e2e1VoPF4O8FXyLmumrnPEhc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0f05391-8976-4a4e-246a-08d6ea4e00ff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 07:10:06.2384
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3821
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joey Zhang <joey.zhang@microchip.com>
-
-Switchtec does not support setting multiple MWs simultaneously. The
-driver takes a hardware lock to ensure that two peers are not doing this
-simultaneously and it fails if someone else takes the lock. In most
-cases, this is fine as clients only setup the MWs once on one side of
-the link.
-
-However, there's a race condition when a re-initialization is caused by
-a link event. The driver will re-setup the shared memory window
-asynchronously and this races with the client setting up it's memory
-windows on the link up event.
-
-To fix this we ensure do the entire initialization in a work queue and
-signal the client once it's done.
-
-Signed-off-by: Joey Zhang <joey.zhang@microchip.com>
-Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
----
- drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 66 ++++++++++++++++++++--------------
- 1 file changed, 39 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-index 6cf15c18..fffff9a 100644
---- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-+++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-@@ -95,7 +95,8 @@ struct switchtec_ntb {
- 	bool link_is_up;
- 	enum ntb_speed link_speed;
- 	enum ntb_width link_width;
--	struct work_struct link_reinit_work;
-+	struct work_struct check_link_status_work;
-+	bool link_force_down;
- };
- 
- static struct switchtec_ntb *ntb_sndev(struct ntb_dev *ntb)
-@@ -494,33 +495,11 @@ enum switchtec_msg {
- 
- static int switchtec_ntb_reinit_peer(struct switchtec_ntb *sndev);
- 
--static void link_reinit_work(struct work_struct *work)
--{
--	struct switchtec_ntb *sndev;
--
--	sndev = container_of(work, struct switchtec_ntb, link_reinit_work);
--
--	switchtec_ntb_reinit_peer(sndev);
--}
--
--static void switchtec_ntb_check_link(struct switchtec_ntb *sndev,
--				     enum switchtec_msg msg)
-+static void switchtec_ntb_link_status_update(struct switchtec_ntb *sndev)
- {
- 	int link_sta;
- 	int old = sndev->link_is_up;
- 
--	if (msg == MSG_LINK_FORCE_DOWN) {
--		schedule_work(&sndev->link_reinit_work);
--
--		if (sndev->link_is_up) {
--			sndev->link_is_up = 0;
--			ntb_link_event(&sndev->ntb);
--			dev_info(&sndev->stdev->dev, "ntb link forced down\n");
--		}
--
--		return;
--	}
--
- 	link_sta = sndev->self_shared->link_sta;
- 	if (link_sta) {
- 		u64 peer = ioread64(&sndev->peer_shared->magic);
-@@ -545,6 +524,38 @@ static void switchtec_ntb_check_link(struct switchtec_ntb *sndev,
- 	}
- }
- 
-+static void check_link_status_work(struct work_struct *work)
-+{
-+	struct switchtec_ntb *sndev;
-+
-+	sndev = container_of(work, struct switchtec_ntb,
-+			     check_link_status_work);
-+
-+	if (sndev->link_force_down) {
-+		sndev->link_force_down = false;
-+		switchtec_ntb_reinit_peer(sndev);
-+
-+		if (sndev->link_is_up) {
-+			sndev->link_is_up = 0;
-+			ntb_link_event(&sndev->ntb);
-+			dev_info(&sndev->stdev->dev, "ntb link forced down\n");
-+		}
-+
-+		return;
-+	}
-+
-+	switchtec_ntb_link_status_update(sndev);
-+}
-+
-+static void switchtec_ntb_check_link(struct switchtec_ntb *sndev,
-+				      enum switchtec_msg msg)
-+{
-+	if (msg == MSG_LINK_FORCE_DOWN)
-+		sndev->link_force_down = true;
-+
-+	schedule_work(&sndev->check_link_status_work);
-+}
-+
- static void switchtec_ntb_link_notification(struct switchtec_dev *stdev)
- {
- 	struct switchtec_ntb *sndev = stdev->sndev;
-@@ -577,7 +588,7 @@ static int switchtec_ntb_link_enable(struct ntb_dev *ntb,
- 	sndev->self_shared->link_sta = 1;
- 	switchtec_ntb_send_msg(sndev, LINK_MESSAGE, MSG_LINK_UP);
- 
--	switchtec_ntb_check_link(sndev, MSG_CHECK_LINK);
-+	switchtec_ntb_link_status_update(sndev);
- 
- 	return 0;
- }
-@@ -591,7 +602,7 @@ static int switchtec_ntb_link_disable(struct ntb_dev *ntb)
- 	sndev->self_shared->link_sta = 0;
- 	switchtec_ntb_send_msg(sndev, LINK_MESSAGE, MSG_LINK_DOWN);
- 
--	switchtec_ntb_check_link(sndev, MSG_CHECK_LINK);
-+	switchtec_ntb_link_status_update(sndev);
- 
- 	return 0;
- }
-@@ -844,7 +855,8 @@ static int switchtec_ntb_init_sndev(struct switchtec_ntb *sndev)
- 	sndev->ntb.topo = NTB_TOPO_SWITCH;
- 	sndev->ntb.ops = &switchtec_ntb_ops;
- 
--	INIT_WORK(&sndev->link_reinit_work, link_reinit_work);
-+	INIT_WORK(&sndev->check_link_status_work, check_link_status_work);
-+	sndev->link_force_down = false;
- 
- 	sndev->self_partition = sndev->stdev->partition;
- 
--- 
-2.7.4
-
+On 6/6/2019 9:58 AM, Herbert Xu wrote:=0A=
+> On Thu, Jun 06, 2019 at 08:53:10AM +0200, Ard Biesheuvel wrote:=0A=
+>>=0A=
+>> That same patch 'fixes' CBC, since CBC was never broken to begin with.=
+=0A=
+>> The CTS driver does not have something like the auth_tag sharing the=0A=
+>> same cacheline with the IV, so CBC has always worked fine.=0A=
+> =0A=
+> CBC is broken.  Any crypto API user is allowed to place the IV=0A=
+> in the same position relative to the src/dst buffer.  So the driver=0A=
+> must deal with it.=0A=
+> =0A=
+That's the theory.=0A=
+In practice we haven't encountered any issue so far, but yes this case has =
+to be=0A=
+handled properly.=0A=
+=0A=
+> It's just that the CTR/ghash combo happened to expose this first.=0A=
+> =0A=
+Yes, and that's what the patch is fixing.=0A=
+=0A=
+>> So I guess what you are after is a patch that, instead of dodging the=0A=
+>> issue by limiting the copy to CBC, does not perform the copy at all=0A=
+>> while anything is mapped for DMA? Then we can leave it up to the NXP=0A=
+>> engineers to fix CTR mode.=0A=
+> =0A=
+> Right, we definitely need to fix it for CBC, probably in the way that=0A=
+> you suggested.=0A=
+> =0A=
+Not really.=0A=
+I am in favor of using the HW to update the IV, which would work for all=0A=
+skcipher algorithms.=0A=
+I have the fix ready, will send it in a couple of days.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
