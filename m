@@ -2,143 +2,156 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F238C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EA6C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794752083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:21:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dkVnKPIn"
+	by mail.kernel.org (Postfix) with ESMTP id BE091208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfFFRVE (ORCPT
+        id S1730099AbfFFRVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:21:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40823 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFFRVE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:21:04 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so1184753pla.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:21:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=yHBg5dE04dtDIltMCPcU1SBSHTz4a6xaAKj9AjlTGWg=;
-        b=dkVnKPInjIYUZkmVMG+i5hsGsaWB5UP+LZiFEDcOG7nEpXOeTcZ391s51nL8lZ3VpP
-         DBv2voHpc+ivQMjILXgVOa3MmtmYlSHFFXs2RtMz5Kxs4Soisp9RjGQkBsSP+/dHZ6An
-         qbOQUUcI/0d5zq6smczBJ08Aauw8AGw6mabBAkuVZ4tjDUk32dVe7QmrHAWnR3coMLvV
-         f4DoxfxyxJ0NalMrvTY0OaE0vRsSiycp+JlzrnZ0M/AyTjFlILVo69C3lNjYJSAZC1zx
-         p2ly5iZiaZDI6V5zqjR6S8Nm5wihG2qnjlnxkFjoKZwJjfI/asxiEviLnJNxFaBWPCzJ
-         cwmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=yHBg5dE04dtDIltMCPcU1SBSHTz4a6xaAKj9AjlTGWg=;
-        b=th3xPrCLDAr+N7XEShXE0IGpl7ImAAmJ7bajYQ775IZNwrS5QTuei26daIGv9Yo9dy
-         AD4IJfCu+WC5qMKeYFxjNrOM31TBvAuQZZbTpBciwhwPvZeWDIxAN6JnKus6jnsmvRFb
-         xdPTf5Y1nLJsdGy0Zge6hPnXF6mtW02bVMtIZrdrR6Y/sfHQ8TTz0vmxvLto1at2kyWx
-         HX8yDwsF69KgsVWY3tfo5AQZCBMtSs+FLrdOLfL9GVDXbvZrau7RedPxocXn3R7NktTs
-         t2sUucYo/RLnOZVU40rIYZmd+VYgr5IT5lwVVk4nyHG6ER62BaKqAoAaVNI2rxrzw5cv
-         GwUw==
-X-Gm-Message-State: APjAAAVB779cLww0QEti5lpgPSK5Q0jIFJvzf/wOM5wZDm44GR4Hui/i
-        H9+CE/kIl7/u1XsZdaXRul8ZUzU196w34Q==
-X-Google-Smtp-Source: APXvYqz9FTgOnqAVmD9RgITOH+hgFZ8TEfRDstuuMirabwn9vUhS/xlEhPK5HTsbJbp4dxTnDRcs5Q==
-X-Received: by 2002:a17:902:2947:: with SMTP id g65mr50235856plb.115.1559841663354;
-        Thu, 06 Jun 2019 10:21:03 -0700 (PDT)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id 137sm4700573pfz.116.2019.06.06.10.21.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 10:21:02 -0700 (PDT)
-From:   bsegall@google.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Xunlei Pang <xlpang@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Phil Auld <pauld@redhat.com>
-Subject: [PATCH v2] sched/fair: don't push cfs_bandwith slack timers forward
-References: <xm26ef47yeyh.fsf@bsegall-linux.svl.corp.google.com>
-        <eafe846f-d83c-b2f3-4458-45e3ae6e5823@linux.alibaba.com>
-Date:   Thu, 06 Jun 2019 10:21:01 -0700
-In-Reply-To: <eafe846f-d83c-b2f3-4458-45e3ae6e5823@linux.alibaba.com> (Xunlei
-        Pang's message of "Thu, 6 Jun 2019 22:11:29 +0800")
-Message-ID: <xm26a7euy6iq.fsf_-_@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Thu, 6 Jun 2019 13:21:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60334 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbfFFRVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:21:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ADFCEABD0;
+        Thu,  6 Jun 2019 17:21:12 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 19:21:10 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 07/12] mm/sparsemem: Prepare for sub-section ranges
+Message-ID: <20190606172110.GC31194@linux>
+References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155977191770.2443951.1506588644989416699.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155977191770.2443951.1506588644989416699.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a cfs_rq sleeps and returns its quota, we delay for 5ms before
-waking any throttled cfs_rqs to coalesce with other cfs_rqs going to
-sleep, as this has to be done outside of the rq lock we hold.
+On Wed, Jun 05, 2019 at 02:58:37PM -0700, Dan Williams wrote:
+> Prepare the memory hot-{add,remove} paths for handling sub-section
+> ranges by plumbing the starting page frame and number of pages being
+> handled through arch_{add,remove}_memory() to
+> sparse_{add,remove}_one_section().
+> 
+> This is simply plumbing, small cleanups, and some identifier renames. No
+> intended functional changes.
+> 
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  include/linux/memory_hotplug.h |    5 +-
+>  mm/memory_hotplug.c            |  114 +++++++++++++++++++++++++---------------
+>  mm/sparse.c                    |   15 ++---
+>  3 files changed, 81 insertions(+), 53 deletions(-)
+> 
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 79e0add6a597..3ab0282b4fe5 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -348,9 +348,10 @@ extern int add_memory_resource(int nid, struct resource *resource);
+>  extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+>  		unsigned long nr_pages, struct vmem_altmap *altmap);
+>  extern bool is_memblock_offlined(struct memory_block *mem);
+> -extern int sparse_add_one_section(int nid, unsigned long start_pfn,
+> -				  struct vmem_altmap *altmap);
+> +extern int sparse_add_section(int nid, unsigned long pfn,
+> +		unsigned long nr_pages, struct vmem_altmap *altmap);
+>  extern void sparse_remove_one_section(struct mem_section *ms,
+> +		unsigned long pfn, unsigned long nr_pages,
+>  		unsigned long map_offset, struct vmem_altmap *altmap);
+>  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
+>  					  unsigned long pnum);
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 4b882c57781a..399bf78bccc5 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -252,51 +252,84 @@ void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
+>  }
+>  #endif /* CONFIG_HAVE_BOOTMEM_INFO_NODE */
+>  
+> -static int __meminit __add_section(int nid, unsigned long phys_start_pfn,
+> -				   struct vmem_altmap *altmap)
+> +static int __meminit __add_section(int nid, unsigned long pfn,
+> +		unsigned long nr_pages,	struct vmem_altmap *altmap)
+>  {
+>  	int ret;
+>  
+> -	if (pfn_valid(phys_start_pfn))
+> +	if (pfn_valid(pfn))
+>  		return -EEXIST;
+>  
+> -	ret = sparse_add_one_section(nid, phys_start_pfn, altmap);
+> +	ret = sparse_add_section(nid, pfn, nr_pages, altmap);
+>  	return ret < 0 ? ret : 0;
+>  }
+>  
+> +static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
+> +		const char *reason)
+> +{
+> +	/*
+> +	 * Disallow all operations smaller than a sub-section and only
+> +	 * allow operations smaller than a section for
+> +	 * SPARSEMEM_VMEMMAP. Note that check_hotplug_memory_range()
+> +	 * enforces a larger memory_block_size_bytes() granularity for
+> +	 * memory that will be marked online, so this check should only
+> +	 * fire for direct arch_{add,remove}_memory() users outside of
+> +	 * add_memory_resource().
+> +	 */
+> +	unsigned long min_align;
+> +
+> +	if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP))
+> +		min_align = PAGES_PER_SUBSECTION;
+> +	else
+> +		min_align = PAGES_PER_SECTION;
+> +	if (!IS_ALIGNED(pfn, min_align)
+> +			|| !IS_ALIGNED(nr_pages, min_align)) {
+> +		WARN(1, "Misaligned __%s_pages start: %#lx end: #%lx\n",
+> +				reason, pfn, pfn + nr_pages - 1);
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
 
-The current code waits for 5ms without any sleeps, instead of waiting
-for 5ms from the first sleep, which can delay the unthrottle more than
-we want. Switch this around so that we can't push this forward forever.
 
-This requires an extra flag rather than using hrtimer_active, since we
-need to start a new timer if the current one is in the process of
-finishing.
+This caught my eye.
+Back in patch#4 "Convert kmalloc_section_memmap() to populate_section_memmap()",
+you placed a mis-usage check for !CONFIG_SPARSEMEM_VMEMMAP in
+populate_section_memmap().
 
-Signed-off-by: Ben Segall <bsegall@google.com>
-Reviewed-by: Xunlei Pang <xlpang@linux.alibaba.com>
----
- kernel/sched/fair.c  | 7 +++++++
- kernel/sched/sched.h | 1 +
- 2 files changed, 8 insertions(+)
+populate_section_memmap() gets called from sparse_add_one_section(), which means
+that we should have passed this check, otherwise we cannot go further and call
+__add_section().
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8213ff6e365d..2ead252cfa32 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4729,6 +4729,11 @@ static void start_cfs_slack_bandwidth(struct cfs_bandwidth *cfs_b)
- 	if (runtime_refresh_within(cfs_b, min_left))
- 		return;
- 
-+	/* don't push forwards an existing deferred unthrottle */
-+	if (cfs_b->slack_started)
-+		return;
-+	cfs_b->slack_started = true;
-+
- 	hrtimer_start(&cfs_b->slack_timer,
- 			ns_to_ktime(cfs_bandwidth_slack_period),
- 			HRTIMER_MODE_REL);
-@@ -4782,6 +4787,7 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
- 
- 	/* confirm we're still not at a refresh boundary */
- 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
-+	cfs_b->slack_started = false;
- 	if (cfs_b->distribute_running) {
- 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
- 		return;
-@@ -4920,6 +4926,7 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
- 	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	cfs_b->slack_timer.function = sched_cfs_slack_timer;
- 	cfs_b->distribute_running = 0;
-+	cfs_b->slack_started = false;
- }
- 
- static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index efa686eeff26..60219acda94b 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -356,6 +356,7 @@ struct cfs_bandwidth {
- 	u64			throttled_time;
- 
- 	bool                    distribute_running;
-+	bool                    slack_started;
- #endif
- };
- 
+So, unless I am missing something it seems to me that the check from patch#4 could go?
+And I think the same applies to depopulate_section_memmap()?
+
+Besides that, it looks good to me:
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
 -- 
-2.22.0.rc1.257.g3120a18244-goog
-
+Oscar Salvador
+SUSE L3
