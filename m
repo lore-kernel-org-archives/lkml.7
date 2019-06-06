@@ -2,135 +2,80 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0861FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846F9C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D67752083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:44:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="VlocscIl"
+	by mail.kernel.org (Postfix) with ESMTP id 62CBC207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfFFIo3 (ORCPT
+        id S1727420AbfFFIoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:44:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38206 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727182AbfFFIo2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:44:28 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d18so1482903wrs.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 01:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=THwh6PEFB0S8Bkrg5GfNlp+3ZmR5izUnobK9xrlz/xk=;
-        b=VlocscIlXrXwXXtxerX9ivwj6pk4yDu67JX91ydwnNcYn7miZhFGFsXyV0K8UKur0V
-         XOqQTS/jcKTiOUA0ZPXkLBRojLu/eHVzve0KE/h7mWRce83xjng2XUreMGB5FmvbKBQv
-         zXKU/P2HhuXZ/lrsR2sDBaK4Ob6D6poOJfk6k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=THwh6PEFB0S8Bkrg5GfNlp+3ZmR5izUnobK9xrlz/xk=;
-        b=KAlcRrlzxdVc47GNwEutQsyyUfcSUhixh7ks16zhT7gTfm1nNZE/bheT5pfHfZFFCR
-         lJA8Dxb+lmXsnvfUL/Ki10nKtXNdPF+ZmFCHwWCgur5OePkIyqxU7mFAnq2QQWT7k7XH
-         9rgot3TRsAhvsoL1hVA6rXCPBsQkP1C008oD5cQHGHDs8hQIMRd6XRzwcuh+Lseq8TuN
-         yVfr3z+qVB5ykwEC2Z04fEVJ5oS+LhWRj3vYaDisaQF9fGCpU35YYqQdtOu0yVCUy4hi
-         cGz+LUqG+jyo4jxEleaKjRMNKjRzPePThxLlUB4Lwx+BzWab9bzn8R5imoTR8GbBb5HQ
-         PZeQ==
-X-Gm-Message-State: APjAAAU/Uo+7EA3PXrkIN+MQr9zvCZOSmYRkxv3AaFmoJF/2OzIo5gfH
-        WLcJkq0tB3tPV1Kcr6qr5E4zLVUGxbqXyg==
-X-Google-Smtp-Source: APXvYqx6oWHNuTxCzsF/rApg13L9JJVVUStzvxw3D/47tNMLA6KGin8oUAQfsg/f3HlBraFLbNyZ7A==
-X-Received: by 2002:a5d:618d:: with SMTP id j13mr6377313wru.195.1559810667227;
-        Thu, 06 Jun 2019 01:44:27 -0700 (PDT)
-Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id q9sm1281432wmq.9.2019.06.06.01.44.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 01:44:26 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 10:44:21 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     torvalds@linux-foundation.org, mingo@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        peterz@infradead.org, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:locking/core] Documentation/atomic_t.txt: Clarify pure
- non-rmw usage
-Message-ID: <20190606084421.GA5523@andrea>
-References: <20190524115231.GN2623@hirez.programming.kicks-ass.net>
- <tip-fff9b6c7d26943a8eb32b58364b7ec6b9369746a@git.kernel.org>
+        Thu, 6 Jun 2019 04:44:39 -0400
+Received: from mga09.intel.com ([134.134.136.24]:59677 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfFFIoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:44:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 01:44:38 -0700
+X-ExtLoop1: 1
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga006.jf.intel.com with ESMTP; 06 Jun 2019 01:44:37 -0700
+Received: from fmsmsx118.amr.corp.intel.com (10.18.116.18) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 6 Jun 2019 01:44:37 -0700
+Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
+ fmsmsx118.amr.corp.intel.com (10.18.116.18) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 6 Jun 2019 01:44:37 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.10]) by
+ SHSMSX104.ccr.corp.intel.com ([169.254.5.137]) with mapi id 14.03.0415.000;
+ Thu, 6 Jun 2019 16:44:35 +0800
+From:   "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Zhang, Rui" <rui.zhang@intel.com>
+Subject: RE: [PATCH 1/3] x86/CPU: Add more Icelake model number
+Thread-Topic: [PATCH 1/3] x86/CPU: Add more Icelake model number
+Thread-Index: AQHVGhI6CBhJKpTmwUOFAEOJmoUocKaNqcuAgACJ/8D//4ZDgIAAl0QA
+Date:   Thu, 6 Jun 2019 08:44:34 +0000
+Message-ID: <E6AF1AFDEA62A94A97508F458CBDD47F7A22F2E7@SHSMSX101.ccr.corp.intel.com>
+References: <20190603134122.13853-1-kan.liang@linux.intel.com>
+ <20190606063525.GA26146@zn.tnic>
+ <E6AF1AFDEA62A94A97508F458CBDD47F7A22F284@SHSMSX101.ccr.corp.intel.com>
+ <20190606073336.GB26146@zn.tnic>
+In-Reply-To: <20190606073336.GB26146@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDAzMDRhNjktMmQ1MS00M2YwLWEwZDUtOTk2ZWZiMmZlZjBjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZlEweFhoT0FNNldBdWRYSWZRblM5WDFQb3BHUHpOVFo3eUNzcktzNFVJSXhJRG9jdjNQZTlnczlkaTN5cmk2SSJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tip-fff9b6c7d26943a8eb32b58364b7ec6b9369746a@git.kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 06:46:54AM -0700, tip-bot for Peter Zijlstra wrote:
-> Commit-ID:  fff9b6c7d26943a8eb32b58364b7ec6b9369746a
-> Gitweb:     https://git.kernel.org/tip/fff9b6c7d26943a8eb32b58364b7ec6b9369746a
-> Author:     Peter Zijlstra <peterz@infradead.org>
-> AuthorDate: Fri, 24 May 2019 13:52:31 +0200
-> Committer:  Ingo Molnar <mingo@kernel.org>
-> CommitDate: Mon, 3 Jun 2019 12:32:57 +0200
-> 
-> Documentation/atomic_t.txt: Clarify pure non-rmw usage
-> 
-> Clarify that pure non-RMW usage of atomic_t is pointless, there is
-> nothing 'magical' about atomic_set() / atomic_read().
-> 
-> This is something that seems to confuse people, because I happen upon it
-> semi-regularly.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Acked-by: Will Deacon <will.deacon@arm.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lkml.kernel.org/r/20190524115231.GN2623@hirez.programming.kicks-ass.net
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-
-I'd appreciate if you could Cc: me in future changes to this doc.
-(as currently suggested by get_maintainer.pl).
-
-This is particularly annoying when you spend time to review such
-changes:
-
-  https://lkml.kernel.org/r/20190528111558.GA9106@andrea
-
-Thanks,
-  Andrea
-
-
-> ---
->  Documentation/atomic_t.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-> index dca3fb0554db..89eae7f6b360 100644
-> --- a/Documentation/atomic_t.txt
-> +++ b/Documentation/atomic_t.txt
-> @@ -81,9 +81,11 @@ Non-RMW ops:
->  
->  The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
->  implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
-> -smp_store_release() respectively.
-> +smp_store_release() respectively. Therefore, if you find yourself only using
-> +the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
-> +and are doing it wrong.
->  
-> -The one detail to this is that atomic_set{}() should be observable to the RMW
-> +A subtle detail of atomic_set{}() is that it should be observable to the RMW
->  ops. That is:
->  
->    C atomic-set
+PiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgW21haWx0bzpicEBhbGllbjguZGVdDQo+PiAuLi4NCj4+
+IERyb3BwaW5nIG15IFNPQiBvciBhZGRpbmcgYSB0ZXh0ICJbUWl1eHU6IEdldCB0aGUgbWFjcm9z
+IGluIHRoZSBJY2UgTGFrZSBncm91cCBzb3J0ZWQgYnkNCj4gPiBtb2RlbCBudW1iZXIuXSIgYXQg
+dGhlIGVuZCBvZiB0aGUgY29tbWl0IG1lc3NhZ2UgLSB3aGljaCBvbmUgaXMgYmV0dGVyL2NsZWFy
+IGZvciB5b3U/DQo+IA0KPiBJJ2xsIGFkZCB0aGF0IG5vdGUgd2hlbiBhcHBseWluZy4NCj4gDQo+
+IFRoeC4NCg0KVGhhbmtzIEJvcmlzIQ0KLVFpdXh1DQo=
