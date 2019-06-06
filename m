@@ -2,250 +2,134 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD0EC28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3CBC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA28F20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7912089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:04:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q8uBqHnU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQT4WuDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfFFMEh (ORCPT
+        id S1728766AbfFFMEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 08:04:37 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51964 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfFFMEf (ORCPT
+        Thu, 6 Jun 2019 08:04:43 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36265 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728675AbfFFMEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 08:04:35 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56C4Q8r021326;
-        Thu, 6 Jun 2019 07:04:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559822666;
-        bh=AvzxyZQyViAqtwQYq7pnaktuRRb4B8pnvEPR+rdnJvU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Q8uBqHnU3UExbGChb9DO4sjnnhugmJsFrBP9iCTlHMLDf+xbcSW6AE99IIiCiqDJF
-         Q9S3YKLmZfzTaVwlDUpPnzpF3UlZaqnM1sXs8nwWQdT/D+pe7ihHLHIDcbkfIGSrt2
-         gdlF0IQQDu+iHtutHyDFYkRAKPN6moljaKzPs/Lo=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56C4QpG010887
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 07:04:26 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 07:04:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 07:04:26 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56C4N15062131;
-        Thu, 6 Jun 2019 07:04:23 -0500
-Subject: Re: [PATCH 01/16] firmware: ti_sci: Add resource management APIs for
- ringacc, psi-l and udma
-To:     Lokesh Vutla <lokeshvutla@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-2-peter.ujfalusi@ti.com>
- <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <78a2d824-d730-4174-e80b-4153a2744427@ti.com>
-Date:   Thu, 6 Jun 2019 15:04:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 6 Jun 2019 08:04:30 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q26so1349582lfc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 05:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=XWWrktLRhmH5onjl7ijfGHY6CQGMEsILV3xHR3Mmnn8=;
+        b=bQT4WuDlx82yqPLzBi5aH828d7S/PWpupBCEa50SzGE4GRNiWoaeUegTs9DH/63Db+
+         3Aaceh4MKlRNKmnSBRcbq4N5pjyoQjI0cNRy1dlxpn0LT5QTI5rBrfNOYURNJY9SqBct
+         C5fdXevDbg8BmUSSzYcbWvuqKqxSCMXcAjmfm7gAoDLiOogur2nPbI0mhUaI8A/PyAJE
+         e8g1GhnyMYhcDPjxxzFXahQssbL/mtsQWUtHFzUr3xm01uFdPsjuxXi2PS81JPyeL1ez
+         5Ux8SmXB2+DrXu2KWm5NNzyiDOu2tMnVCZgIaZL6GHhIex3BFzixO59045Go+8FTuI0m
+         wB2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=XWWrktLRhmH5onjl7ijfGHY6CQGMEsILV3xHR3Mmnn8=;
+        b=I4l8to7KC62TkMxrUWhzKuW54f1rxM3rCmWisR0m1iHk6MmxiwefVjlZyhIs5F0b+W
+         wOBsQM6prG5K9OVeWi+95gFeAr6hnIt99aTkmXsHAvhdW+3ibXT/+hcHAJ1yLKmn/03z
+         E8dA0iaGflMvOKS0U+uwHHZPNsdYsacJ41LQjg2iwVKiP7xW8oilDxq7vZYRo/dpZxsn
+         siAJZHn5sXLbeOytrksnz92WDZTanDhOnaxbP1f3xKliAk6Owdi4jTeuALuMagLIQYl+
+         y49QDiHX309IP15/Rn5Kmljrls5PUsNxjx3oFnzII4z2mK02nzll80xTFvMneBSe6Yfa
+         ja9g==
+X-Gm-Message-State: APjAAAXVEzyW3QjXMbdxpio3zWebGA5yq21oeWOBa0Hqh0WS+55+yPDC
+        RqjBexLg6ToJmScM/fT5Hvh9KPJSbmM=
+X-Google-Smtp-Source: APXvYqwmXYlkVxNNMJGX5neeMTOxEpgrpeKu/vrN2TjjhK9CMP3mWnApcrZQjx9lDDGfsysi0/QCkg==
+X-Received: by 2002:a19:9156:: with SMTP id y22mr9854544lfj.43.1559822668509;
+        Thu, 06 Jun 2019 05:04:28 -0700 (PDT)
+Received: from pc636.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id l18sm309036lja.94.2019.06.06.05.04.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 05:04:27 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH v5 4/4] mm/vmalloc.c: switch to WARN_ON() and move it under unlink_va()
+Date:   Thu,  6 Jun 2019 14:04:11 +0200
+Message-Id: <20190606120411.8298-5-urezki@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190606120411.8298-1-urezki@gmail.com>
+References: <20190606120411.8298-1-urezki@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lokesh,
+Trigger a warning if an object that is about to be freed is detached.
+We used to have a BUG_ON(), but even though it is considered as faulty
+behaviour that is not a good reason to break a system.
 
-On 06/06/2019 9.00, Lokesh Vutla wrote:
-> Hi Peter,
-> 
-> On 06/05/19 6:04 PM, Peter Ujfalusi wrote:
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> 
-> Patch has the following checkpatch warnings and checks which can be fixed:
-> 
-> WARNING: Missing commit description - Add an appropriate one
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ mm/vmalloc.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-How did I missed it?
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index a4bdf5fc3512..899a250e4eb6 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -534,20 +534,17 @@ link_va(struct vmap_area *va, struct rb_root *root,
+ static __always_inline void
+ unlink_va(struct vmap_area *va, struct rb_root *root)
+ {
+-	/*
+-	 * During merging a VA node can be empty, therefore
+-	 * not linked with the tree nor list. Just check it.
+-	 */
+-	if (!RB_EMPTY_NODE(&va->rb_node)) {
+-		if (root == &free_vmap_area_root)
+-			rb_erase_augmented(&va->rb_node,
+-				root, &free_vmap_area_rb_augment_cb);
+-		else
+-			rb_erase(&va->rb_node, root);
++	if (WARN_ON(RB_EMPTY_NODE(&va->rb_node)))
++		return;
+ 
+-		list_del(&va->list);
+-		RB_CLEAR_NODE(&va->rb_node);
+-	}
++	if (root == &free_vmap_area_root)
++		rb_erase_augmented(&va->rb_node,
++			root, &free_vmap_area_rb_augment_cb);
++	else
++		rb_erase(&va->rb_node, root);
++
++	list_del(&va->list);
++	RB_CLEAR_NODE(&va->rb_node);
+ }
+ 
+ #if DEBUG_AUGMENT_PROPAGATE_CHECK
+@@ -1162,8 +1159,6 @@ EXPORT_SYMBOL_GPL(unregister_vmap_purge_notifier);
+ 
+ static void __free_vmap_area(struct vmap_area *va)
+ {
+-	BUG_ON(RB_EMPTY_NODE(&va->rb_node));
+-
+ 	/*
+ 	 * Remove from the busy tree/list.
+ 	 */
+-- 
+2.11.0
 
-> CHECK: Lines should not end with a '('
-> #262: FILE: drivers/firmware/ti_sci.c:2286:
-> +static int ti_sci_cmd_rm_udmap_tx_ch_cfg(
-> 
-> CHECK: Lines should not end with a '('
-> #323: FILE: drivers/firmware/ti_sci.c:2347:
-> +static int ti_sci_cmd_rm_udmap_rx_ch_cfg(
-> 
-> CHECK: Lines should not end with a '('
-> #383: FILE: drivers/firmware/ti_sci.c:2407:
-> +static int ti_sci_cmd_rm_udmap_rx_flow_cfg1(
-> 
-> CHECK: Lines should not end with a '('
-> #1414: FILE: include/linux/soc/ti/ti_sci_protocol.h:455:
-> +	int (*rx_flow_cfg)(
-> 
-> total: 0 errors, 2 warnings, 4 checks, 1399 lines checked
-
-There must be a reason why these left, but I will take another look.
-
->> ---
->>  drivers/firmware/ti_sci.c              | 439 +++++++++++++++
->>  drivers/firmware/ti_sci.h              | 704 +++++++++++++++++++++++++
->>  include/linux/soc/ti/ti_sci_protocol.h | 216 ++++++++
->>  3 files changed, 1359 insertions(+)
->>
->> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
->> index 64d895b80bc3..af3ebcdeab18 100644
->> --- a/drivers/firmware/ti_sci.c
->> +++ b/drivers/firmware/ti_sci.c
-> 
-> [..snip.]
-> 
->> +}
->> +
->> +static int ti_sci_cmd_rm_psil_pair(const struct ti_sci_handle *handle,
->> +				   u32 nav_id, u32 src_thread, u32 dst_thread)
->> +{
-> 
-> All the psil ops doesn't have the  kernel-doc function comments. Just be
-> consistent with other functions :)
-
-OK.
-
->> +	struct ti_sci_msg_hdr *resp;
->> +	struct ti_sci_msg_psil_pair *req;
->> +	struct ti_sci_xfer *xfer;
->> +	struct ti_sci_info *info;
->> +	struct device *dev;
->> +	int ret = 0;
->> +
->> +	if (IS_ERR(handle))
->> +		return PTR_ERR(handle);
->> +	if (!handle)
->> +		return -EINVAL;
->> +
->> +	info = handle_to_ti_sci_info(handle);
->> +	dev = info->dev;
->> +
->> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_RM_PSIL_PAIR,
->> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
->> +				   sizeof(*req), sizeof(*resp));
->> +	if (IS_ERR(xfer)) {
->> +		ret = PTR_ERR(xfer);
->> +		dev_err(dev, "RM_PSIL:Message reconfig failed(%d)\n", ret);
->> +		return ret;
->> +	}
->> +	req = (struct ti_sci_msg_psil_pair *)xfer->xfer_buf;
->> +	req->nav_id = nav_id;
->> +	req->src_thread = src_thread;
->> +	req->dst_thread = dst_thread;
->> +
->> +	ret = ti_sci_do_xfer(info, xfer);
->> +	if (ret) {
->> +		dev_err(dev, "RM_PSIL:Mbox send fail %d\n", ret);
->> +		goto fail;
->> +	}
->> +
->> +	resp = (struct ti_sci_msg_hdr *)xfer->xfer_buf;
->> +	ret = ti_sci_is_response_ack(resp) ? 0 : -EINVAL;
->> +
->> +fail:
->> +	ti_sci_put_one_xfer(&info->minfo, xfer);
->> +
->> +	return ret;
->> +}
->> +
-> 
-> [..snip..]
-> 
->> + */
->> +struct ti_sci_msg_rm_ring_cfg_req {
->> +	struct ti_sci_msg_hdr hdr;
->> +	u32 valid_params;
->> +	u16 nav_id;
->> +	u16 index;
->> +	u32 addr_lo;
->> +	u32 addr_hi;
->> +	u32 count;
->> +	u8 mode;
->> +	u8 size;
->> +	u8 order_id;
->> +} __packed;
->> +
->> +/**
->> + * struct ti_sci_msg_rm_ring_cfg_resp - Response to configuring a ring.
->> + *
->> + * @hdr:	Generic Header
->> + */
->> +struct ti_sci_msg_rm_ring_cfg_resp {
->> +	struct ti_sci_msg_hdr hdr;
->> +} __packed;
-> 
-> If it is a generic ACK, NACK response, just use the header directly.
-
-Sure, I'll fix it and other places if any.
-
-> 
-> [..snip..]
-> 
->> + */
->> +struct ti_sci_msg_rm_udmap_rx_ch_cfg_req {
->> +	struct ti_sci_msg_hdr hdr;
->> +	u32 valid_params;
->> +	u16 nav_id;
->> +	u16 index;
->> +	u16 rx_fetch_size;
->> +	u16 rxcq_qnum;
->> +	u8 rx_priority;
->> +	u8 rx_qos;
->> +	u8 rx_orderid;
->> +	u8 rx_sched_priority;
->> +	u16 flowid_start;
->> +	u16 flowid_cnt;
->> +	u8 rx_pause_on_err;
->> +	u8 rx_atype;
->> +	u8 rx_chan_type;
->> +	u8 rx_ignore_short;
->> +	u8 rx_ignore_long;
->> +	u8 rx_burst_size;
->> +
-> 
-> extra line?
-
-Will remove it.
-> 
->> +} __packed;
->> +
->> +/**
-> 
-> 
-> Thanks and regards,
-> Lokesh
-> 
-
-Thanks,
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
