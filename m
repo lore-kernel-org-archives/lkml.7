@@ -2,65 +2,120 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776E6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EBFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4129B20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49FA820673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0T5B+WL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfFFHbP (ORCPT
+        id S1726542AbfFFHcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:31:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48979 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfFFHbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:31:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 00:31:09 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Jun 2019 00:31:08 -0700
-Message-ID: <5CF8C272.7050808@intel.com>
-Date:   Thu, 06 Jun 2019 15:36:18 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+        Thu, 6 Jun 2019 03:32:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33479 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfFFHcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:32:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so1277092wru.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 00:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=e28AQOSNVuH9BCwVassenAYllziB9rQBHwACuXiGBI0=;
+        b=R0T5B+WL33Rb+7uIk9oZ2CfauW9TfoR9f4Ly4IEcBtR8WIsyabWCxdAqgbIqipJVGg
+         U7H9DxzBMMfxBr2kAGi4+ehn+1Y5+ZdpkB3wuD5XQ7LQjyIf99N8AXJBvuc1BjDcYe77
+         2SZioFYBlg6gdCHcBAU8FPkTjViAU9eJswBY5JNKxz3qJmvflMb5Q8rrnXbX+T0yx6an
+         n1r7ZfylkrbgHy6OIiRWlg5yjXdMSUbTS+42T20qpGAGJkfGioI2/rzs94AvAHEzsSwU
+         AhMlp8Tl1wbR8bk3WaNmteA2D8wlFqwZuBu7k051aXLgM61DxJSKxg91kKvxufGw6FfS
+         OWFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=e28AQOSNVuH9BCwVassenAYllziB9rQBHwACuXiGBI0=;
+        b=JGLu22RlJUF6Mw9j+hFNXn9J+F2W3MM7Ht3a5uyj3WxzShIQfQBh+Km3HCPG+Mk6vP
+         YZCdVfWgmw5thXfoZ3lXhysnDbvMS/vOqPc8WDstohUL6tHO9CCswJt02mplFfeJ+8ds
+         quHNkTLw6Lt275OQdjF/NIhJ+0t/BzE110tZMYG0Hh8NgXeXr+KdEfINHR/CePHG8JYd
+         8pQoaWAFUU9cBwMeyUX2/qKPuewYt0jJQ52uatJOjTW0NsDCiF8CZEyjKvfc9NpMM/nG
+         zt4oMLBwx0WOwR7qonpzxoCs776zelspIklqB8rUF5R0lIeEuSUqPwbplJVSLHkiTFar
+         M7hQ==
+X-Gm-Message-State: APjAAAWrnviZ9W50dW37IUfLoYuT/qf33vURvoqCeBDZFHriomzATytR
+        n6f0wNXN42G0JfWxli3e5WI=
+X-Google-Smtp-Source: APXvYqzbAH9hxFr+sRNq84PkdhhVpJM6uCPG0O2/RRBRmeLqyquMVnHBZT7i8gSziEou+SBHmd7J8g==
+X-Received: by 2002:adf:81c8:: with SMTP id 66mr27270317wra.261.1559806339282;
+        Thu, 06 Jun 2019 00:32:19 -0700 (PDT)
+Received: from ogabbay-VM ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id x83sm964216wmb.42.2019.06.06.00.32.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 00:32:18 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 10:32:16 +0300
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] habanalabs fixes for 5.2-rc4/5
+Message-ID: <20190606073216.GA31142@ogabbay-VM>
 MIME-Version: 1.0
-To:     Eric Hankland <ehankland@google.com>
-CC:     Cfir Cohen <cfir@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
-        rkrcmar@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
-References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com> <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com> <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com> <5CF07D37.9090805@intel.com> <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com> <5CF2599B.3030001@intel.com> <CAOyeoRWuHyhoy6NB=O+ekQMhBFngozKoanWzArxgBk4DH2hdtg@mail.gmail.com> <5CF5F6AE.90706@intel.com> <CAOyeoRW5wx0F=9B24h29KkhUrbaORXVSoJufb4d-XzKiAsz+NQ@mail.gmail.com> <CAEU=KTHsVmrAHXUKdHu_OwcrZoy-hgV7pk4UymtchGE5bGdUGA@mail.gmail.com> <CAOyeoRXFAQNNWRiHNtK3n17V0owBVNyKdv75xjt08Q_pC+XOXg@mail.gmail.com>
-In-Reply-To: <CAOyeoRXFAQNNWRiHNtK3n17V0owBVNyKdv75xjt08Q_pC+XOXg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/06/2019 05:35 AM, Eric Hankland wrote:
->>> Right - I'm aware there are other ways of detecting this - it's still
->>> a class of events that some people don't want to surface. I'll ask if
->>> there are any better examples.
-> I asked and it sounds like we are treating all events as potentially
-> insecure until they've been reviewed. If Intel were to publish
-> official (reasonably substantiated) guidance stating that the PMU is
-> secure, then I think we'd be happy without such a safeguard in place,
-> but short of that I think we want to err on the side of caution.
->
+Hi Greg,
 
-I'm not aware of any vendors who'd published statements like that.
+This is a pull request containing fixes to be merged to 5.2-rc4/5.
 
-Anyway, are you ready to share your QEMU patches or the events you want 
-to be on the whitelists?
+It contains 3 bug fixes. See the tag comment for more details.
 
+Thanks,
+Oded
 
-Best,
-Wei
+The following changes since commit 8aa75b72e3e6f0f566cd963606ec5da11b195c0b:
+
+  Merge tag 'misc-habanalabs-fixes-2019-05-24' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus (2019-05-31 09:19:42 -0700)
+
+are available in the Git repository at:
+
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-06-06
+
+for you to fetch changes up to 1f65105ffc472624b45aff8bedb819c10a85944d:
+
+  habanalabs: Read upper bits of trace buffer from RWPHI (2019-06-04 15:13:09 +0300)
+
+----------------------------------------------------------------
+This tag contains the following fixes:
+
+- Fix the code that checks whether we can use 2MB page size when mapping
+  memory in the ASIC's MMU. The current code had a "hole" which happened
+  in architectures other then x86-64.
+
+- Fix the debugfs interface to read/write from/to the device using device
+  virtual addresses. There was a bug in the translation regarding
+  addresses that were mapped using 2MB page size.
+
+- Fix a bug in the debug/profiling code, where the code didn't read the
+  full address but only the lower 32-bits of the address.
+
+----------------------------------------------------------------
+Oded Gabbay (1):
+      habanalabs: fix bug in checking huge page optimization
+
+Tomer Tayar (2):
+      habanalabs: Fix virtual address access via debugfs for 2MB pages
+      habanalabs: Read upper bits of trace buffer from RWPHI
+
+ drivers/misc/habanalabs/debugfs.c             |  5 ++++-
+ drivers/misc/habanalabs/goya/goya_coresight.c | 14 ++++++++++++--
+ drivers/misc/habanalabs/memory.c              |  6 ------
+ 3 files changed, 16 insertions(+), 9 deletions(-)
