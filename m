@@ -2,69 +2,124 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF749C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F13C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD8F2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559843757;
-	bh=AQujoUskv1cUCT/ttXfe2eKJQcGVonInZu44yu7SV50=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=tqVHfWYxsyuxQRqCa47gxPx8CDsazLb/bapq1Fzbc+0WlSjWN3Ti/kmhueQB0pv2o
-	 OJw28ESzRqJ4WDnv955ZS6CPSY1GoVMKGkt+AczThyPyubBZd162BygwzjpBvhWuvv
-	 er6tYRUHUgtGZFhZgBYlTvFaAQ1Wf4eU13iZzDjw=
+	by mail.kernel.org (Postfix) with ESMTP id 3C715208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfFFRz4 (ORCPT
+        id S1729216AbfFFR4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbfFFRz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:55:56 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1C132083E;
-        Thu,  6 Jun 2019 17:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559843755;
-        bh=AQujoUskv1cUCT/ttXfe2eKJQcGVonInZu44yu7SV50=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=2ve19ZUuliCz0eGq+XJlmjzhukF/h0t8PK7p8WRLuGY8oa/jMeGFg5ON4XdjBhUAr
-         04hMMqOKDmR0f9l7eyvv7QMcTUh4KKEAi31AR0WXADTPx7YIk1Fqfj0gaXPrOXtiDi
-         jGWe2vH5O6EtL8VAW/2hxrXeUFwJ80tJJQze5hG0=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 6 Jun 2019 13:56:25 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51846 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728812AbfFFR4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:56:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D07CC374;
+        Thu,  6 Jun 2019 10:56:24 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50F413F690;
+        Thu,  6 Jun 2019 10:56:22 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 18:56:19 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arch@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Elliott <paul.elliott@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/8] arm64: Basic Branch Target Identification support
+Message-ID: <20190606175619.GE28398@e103592.cambridge.arm.com>
+References: <1558693533-13465-1-git-send-email-Dave.Martin@arm.com>
+ <1558693533-13465-5-git-send-email-Dave.Martin@arm.com>
+ <20190524130217.GA15566@lakrids.cambridge.arm.com>
+ <20190524145306.GZ28398@e103592.cambridge.arm.com>
+ <20190606171155.GI56860@arrakis.emea.arm.com>
+ <20190606172345.GD28398@e103592.cambridge.arm.com>
+ <5f92e89a5823a3265fa0b389a19452ba995e9406.camel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190529093937.21748-1-yuehaibing@huawei.com>
-References: <20190512100328.27136-1-yuehaibing@huawei.com> <20190529093937.21748-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>, mturquette@baylibre.com,
-        t-kristo@ti.com, tony@atomide.com
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3] clk: ti: Remove unused functions
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-omap@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>
-User-Agent: alot/0.8.1
-Date:   Thu, 06 Jun 2019 10:55:54 -0700
-Message-Id: <20190606175555.B1C132083E@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f92e89a5823a3265fa0b389a19452ba995e9406.camel@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting YueHaibing (2019-05-29 02:39:37)
-> They are not used any more since
-> commit 7558562a70fb ("clk: ti: Drop legacy clk-3xxx-legacy code")
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Suggested-by: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
+On Thu, Jun 06, 2019 at 10:34:22AM -0700, Yu-cheng Yu wrote:
+> On Thu, 2019-06-06 at 18:23 +0100, Dave Martin wrote:
+> > On Thu, Jun 06, 2019 at 06:11:56PM +0100, Catalin Marinas wrote:
+> > > On Fri, May 24, 2019 at 03:53:06PM +0100, Dave P Martin wrote:
+> > > > On Fri, May 24, 2019 at 02:02:17PM +0100, Mark Rutland wrote:
+> > > > > On Fri, May 24, 2019 at 11:25:29AM +0100, Dave Martin wrote:
+> > > > > >  #endif /* _UAPI__ASM_HWCAP_H */
+> > > > > > diff --git a/arch/arm64/include/uapi/asm/mman.h
+> > > > > > b/arch/arm64/include/uapi/asm/mman.h
+> > > > > > new file mode 100644
+> > > > > > index 0000000..4776b43
+> > > > > > --- /dev/null
+> > > > > > +++ b/arch/arm64/include/uapi/asm/mman.h
+> > > > > > @@ -0,0 +1,9 @@
+> > > > > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > > > > > +#ifndef _UAPI__ASM_MMAN_H
+> > > > > > +#define _UAPI__ASM_MMAN_H
+> > > > > > +
+> > > > > > +#include <asm-generic/mman.h>
+> > > > > > +
+> > > > > > +#define PROT_BTI_GUARDED	0x10		/* BTI guarded
+> > > > > > page */
+> > > > > 
+> > > > > From prior discussions, I thought this would be PROT_BTI, without the
+> > > > > _GUARDED suffix. Do we really need that?
+> > > > > 
+> > > > > AFAICT, all other PROT_* definitions only have a single underscore, and
+> > > > > the existing arch-specific flags are PROT_ADI on sparc, and PROT_SAO on
+> > > > > powerpc.
+> > > > 
+> > > > No strong opinon.  I was trying to make the name less obscure, but I'm
+> > > > equally happy with PROT_BTI if people prefer that.
+> > > 
+> > > I prefer PROT_BTI as well. We are going to add a PROT_MTE at some point
+> > > (and a VM_ARM64_MTE in the high VMA flag bits).
+> > 
+> > Ack.
+> > 
+> > Some things need attention, so I need to respin this series anyway.
+> > 
+> > skip_faulting_instruction() and kprobes/uprobes may need looking at,
+> > plus I want to simply the ELF parsing (at least to skip some cost for
+> > arm64).
+> 
+> Can we add a case in the 'consistency checks for the interpreter' (right above
+> where you add arch_parse_property()) for PT_NOTE?  That way you can still use
+> part of the same parser.
 
-Applied to clk-next
+I think for arm64 that we can skip searching all the notes by checking
+for a PT_GNU_PROPERTY entry; once that's found, the actual
+NT_GNU_PROPERTY_TYPE_0 parsing should be common.  If there's no
+PT_GNU_PROPERTY entry, we can immediately give up.
 
+For x86, would it makes sense to use PT_GNU_PROPERTY if it's there,
+and fall back to scanning all the notes otherwise?  Ideally we
+wouldn't need the fallback, but if there are binaries in the wild with
+NT_GNU_PROPERTY_TYPE_0 that lack a PT_GNU_PROPERTY entry, we may be
+stuck with that.
+
+Thoughts?
+
+Cheers
+---Dave
