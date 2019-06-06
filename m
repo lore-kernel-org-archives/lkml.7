@@ -6,103 +6,136 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57C9C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B83C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877CE20717
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C9E2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFFBVB (ORCPT
+        id S1726655AbfFFBW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 21:21:01 -0400
-Received: from mga06.intel.com ([134.134.136.31]:62188 "EHLO mga06.intel.com"
+        Wed, 5 Jun 2019 21:22:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:54654 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfFFBVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 21:21:01 -0400
+        id S1726581AbfFFBW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 21:22:59 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 18:21:00 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 18:22:58 -0700
 X-ExtLoop1: 1
-Received: from likexu-e5-2699-v4.sh.intel.com ([10.239.48.178])
-  by orsmga008.jf.intel.com with ESMTP; 05 Jun 2019 18:20:58 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Eduardo Habkost <ehabkost@redhat.com>,
-        sean.j.christopherson@intel.com, xiaoyao.li@linux.intel.com,
-        linux-kernel@vger.kernel.org, like.xu@intel.com
-Subject: [PATCH v4] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Date:   Thu,  6 Jun 2019 09:18:45 +0800
-Message-Id: <20190606011845.40223-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from aubrey-skl.sh.intel.com ([10.239.53.6])
+  by orsmga008.jf.intel.com with ESMTP; 05 Jun 2019 18:22:55 -0700
+From:   Aubrey Li <aubrey.li@linux.intel.com>
+To:     akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
+        peterz@infradead.org, hpa@zytor.com
+Cc:     ak@linux.intel.com, tim.c.chen@linux.intel.com,
+        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
+        aubrey.li@intel.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v19 1/3] proc: add /proc/<pid>/arch_status
+Date:   Thu,  6 Jun 2019 09:22:34 +0800
+Message-Id: <20190606012236.9391-1-aubrey.li@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to expose Intel V2 Extended Topology Enumeration Leaf for
-some new systems with multiple software-visible die within each package.
+The architecture specific information of the running processes
+could be useful to the userland. Add /proc/<pid>/arch_status
+interface support to examine process architecture specific
+information externally.
 
-Because unimplemented and unexposed leaves should be explicitly reported
-as zero, there is no need to limit cpuid.0.eax to the maximum value of
-feature configuration but limit it to the highest leaf implemented in
-the current code. A single clamping seems sufficient and cheaper.
+v3:
+  Add a /proc/<pid>/arch_state interface to expose per-task
+  cpu specific state values.
+v5:
+  Change the interface to /proc/pid/status since no other
+  architectures need a separated CPU specific interface.
+v18:
+  Change the interface to /proc/pid/arch_status. The interface
+  /proc/<pid>/status should not be different on different
+  architectures. It would be better to separate the arch staff
+  into its own file /proc/<pid>/arch_status and make sure that
+  everything in it is namespaced.
 
-Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-
+Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+Acked-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linux API <linux-api@vger.kernel.org>
 ---
+ fs/proc/Kconfig         | 4 ++++
+ fs/proc/base.c          | 6 ++++++
+ include/linux/proc_fs.h | 9 +++++++++
+ 3 files changed, 19 insertions(+)
 
-==changelog==
-
-v4:
-- Limited cpuid.0.eax to the highest leaf implemented in KVM
-
-v3: https://lkml.org/lkml/2019/5/26/64
-- Refine commit message and comment
-
-v2: https://lkml.org/lkml/2019/4/25/1246
-
-- Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
-- Add comment to handle 0x1f anf 0xb in common code
-- Reduce check time in a descending-break style
-
-v1: https://lkml.org/lkml/2019/4/22/28
----
- arch/x86/kvm/cpuid.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index e18a9f9f65b5..f819011e6a13 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -426,7 +426,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+index 817c02b13b1d..d80ebf19d5f1 100644
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -97,3 +97,7 @@ config PROC_CHILDREN
  
- 	switch (function) {
- 	case 0:
--		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-+		/* Limited to the highest leaf implemented in KVM. */
-+		entry->eax = min(entry->eax, 0x1f);
- 		break;
- 	case 1:
- 		entry->edx &= kvm_cpuid_1_edx_x86_features;
-@@ -546,7 +547,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 		entry->edx = edx.full;
- 		break;
- 	}
--	/* function 0xb has additional index. */
-+	/*
-+	 * Per Intel's SDM, the 0x1f is a superset of 0xb,
-+	 * thus they can be handled by common code.
-+	 */
-+	case 0x1f:
- 	case 0xb: {
- 		int i, level_type;
+ 	  Say Y if you are running any user-space software which takes benefit from
+ 	  this interface. For example, rkt is such a piece of software.
++
++config PROC_PID_ARCH_STATUS
++	def_bool n
++	depends on PROC_FS
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 0c9bef89ac43..39ce939d8964 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -3066,6 +3066,9 @@ static const struct pid_entry tgid_base_stuff[] = {
+ #ifdef CONFIG_STACKLEAK_METRICS
+ 	ONE("stack_depth", S_IRUGO, proc_stack_depth),
+ #endif
++#ifdef CONFIG_PROC_PID_ARCH_STATUS
++	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
++#endif
+ };
  
+ static int proc_tgid_base_readdir(struct file *file, struct dir_context *ctx)
+@@ -3454,6 +3457,9 @@ static const struct pid_entry tid_base_stuff[] = {
+ #ifdef CONFIG_LIVEPATCH
+ 	ONE("patch_state",  S_IRUSR, proc_pid_patch_state),
+ #endif
++#ifdef CONFIG_PROC_PID_ARCH_STATUS
++	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
++#endif
+ };
+ 
+ static int proc_tid_base_readdir(struct file *file, struct dir_context *ctx)
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+index 52a283ba0465..a705aa2d03f9 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -75,6 +75,15 @@ struct proc_dir_entry *proc_create_net_single_write(const char *name, umode_t mo
+ 						    void *data);
+ extern struct pid *tgid_pidfd_to_pid(const struct file *file);
+ 
++#ifdef CONFIG_PROC_PID_ARCH_STATUS
++/*
++ * The architecture which selects CONFIG_PROC_PID_ARCH_STATUS must
++ * provide proc_pid_arch_status() definition.
++ */
++int proc_pid_arch_status(struct seq_file *m, struct pid_namespace *ns,
++			struct pid *pid, struct task_struct *task);
++#endif /* CONFIG_PROC_PID_ARCH_STATUS */
++
+ #else /* CONFIG_PROC_FS */
+ 
+ static inline void proc_root_init(void)
 -- 
-2.21.0
+2.17.1
 
