@@ -2,139 +2,109 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8A3C28D18
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B0FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3FAD20717
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6509E20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559787059;
+	bh=1wV4ExVvlN5EgzNFrCwIfBYS4g4614HuuxSdiSYaE/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kx8rGBQUmlW3Y+Pjud7grO+2at1Jk6QNewq58ufwKbx6Q4rEcq/PHvHrzjWKg2UB5
+	 mA/OADivvHHafRQKaVSuvvGsn+TaGmVBn+ZubpcBDvg2+gRMUB7A3GFRcaL+0LBYAM
+	 lfxkKBKjpcNLWyZq9udVFsZqVfLmfeEPC5xEjNts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfFFCI7 (ORCPT
+        id S1726668AbfFFCK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:08:59 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59224 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfFFCI6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 22:08:58 -0400
-Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5628UTB064831;
-        Thu, 6 Jun 2019 11:08:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp);
- Thu, 06 Jun 2019 11:08:30 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5628TDc064823;
-        Thu, 6 Jun 2019 11:08:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: (from i-love@localhost)
-        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id x5628T0g064822;
-        Thu, 6 Jun 2019 11:08:29 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Message-Id: <201906060208.x5628T0g064822@www262.sakura.ne.jp>
-X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
-Subject: Re: KASAN: use-after-free Read in =?ISO-2022-JP?B?dG9tb3lvX3JlYWxwYXRo?=
- =?ISO-2022-JP?B?X2Zyb21fcGF0aA==?=
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org
-Cc:     syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp
+        Wed, 5 Jun 2019 22:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726541AbfFFCK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 22:10:58 -0400
+Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 943F920717;
+        Thu,  6 Jun 2019 02:10:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559787057;
+        bh=1wV4ExVvlN5EgzNFrCwIfBYS4g4614HuuxSdiSYaE/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iaBgjkWHvEUB8xTxgpH7CYMJSqAEFJfcmI6o0nb7AXcneh+zDM86Ycr7Dgq2kb6yz
+         mmwwCHGq64fFLsorar9SPLF5AZaKCC1oM+7C3300P/f7k+roVd1FB3O9wi4YsBL8w9
+         X2EyQoBRKcUrQF+WyBrJQ4Y6VrM9A4SyL2ECfOYQ=
+Date:   Thu, 6 Jun 2019 10:10:32 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     arm@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v2] ARM: configs: Remove useless UEVENT_HELPER_PATH
+Message-ID: <20190606021027.GV29853@dragon>
+References: <1559636093-26005-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-Date:   Thu, 06 Jun 2019 11:08:29 +0900
-References: <0000000000004f43fa058a97f4d3@google.com>
-In-Reply-To: <0000000000004f43fa058a97f4d3@google.com>
-Content-Type: text/plain; charset="ISO-2022-JP"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559636093-26005-1-git-send-email-krzk@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here is a reproducer.
+On Tue, Jun 04, 2019 at 10:14:53AM +0200, Krzysztof Kozlowski wrote:
+> Remove the CONFIG_UEVENT_HELPER_PATH because:
+> 1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
+>    CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
+>    made default to 'n',
+> 2. It is not recommended (help message: "This should not be used today
+>    [...] creates a high system load") and was kept only for ancient
+>    userland,
+> 3. Certain userland specifically requests it to be disabled (systemd
+>    README: "Legacy hotplug slows down the system and confuses udev").
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> ---
+> 
+> Changes since v2:
+> 1. Remove unrelated files.
+> 2. Add Geert's ack.
+> ---
+...
+>  arch/arm/configs/imx_v4_v5_defconfig      | 1 -
 
-The problem is that TOMOYO is accessing already freed socket from security_file_open()
-which later fails with -ENXIO (because we can't get file descriptor of sockets via
-/proc/pid/fd/n interface), and the file descriptor is getting released before
-security_file_open() completes because we do not raise "struct file"->f_count of
-the file which is accessible via /proc/pid/fd/n interface. We can avoid this problem
-if we can avoid calling security_file_open() which after all fails with -ENXIO.
-How should we handle this race? Let LSM modules check if security_file_open() was
-called on a socket?
-
-----------------------------------------
-diff --git a/fs/open.c b/fs/open.c
-index b5b80469b93d..995ffcb37128 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -765,6 +765,12 @@ static int do_dentry_open(struct file *f,
- 	error = security_file_open(f);
- 	if (error)
- 		goto cleanup_all;
-+	if (!strcmp(current->comm, "a.out") &&
-+	    f->f_path.dentry->d_sb->s_magic == SOCKFS_MAGIC) {
-+		printk("Start open(socket) delay\n");
-+		schedule_timeout_killable(HZ * 5);
-+		printk("End open(socket) delay\n");
-+	}
- 
- 	error = break_lease(locks_inode(f), f->f_flags);
- 	if (error)
-----------------------------------------
-
-----------------------------------------
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/socket.h>
-
-int main(int argc, char *argv[])
-{
-	pid_t pid = getpid();
-	int fd = socket(AF_ISDN, SOCK_RAW, 0);
-	char buffer[128] = { };
-	if (fork() == 0) {
-		close(fd);
-		snprintf(buffer, sizeof(buffer) - 1, "/proc/%u/fd/%u", pid, fd);
-		open(buffer, 3);
-		_exit(0);
-	}
-	sleep(2);
-	close(fd);
-	return 0;
-}
-----------------------------------------
-
-----------------------------------------
-getpid()                                = 32504
-socket(AF_ISDN, SOCK_RAW, 0)            = 3
-clone(strace: Process 32505 attached
-child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7efea30dda10) = 32505
-[pid 32504] rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
-[pid 32505] close(3 <unfinished ...>
-[pid 32504] <... rt_sigprocmask resumed> [], 8) = 0
-[pid 32505] <... close resumed> )       = 0
-[pid 32504] rt_sigaction(SIGCHLD, NULL, {SIG_DFL, [], 0}, 8) = 0
-[pid 32505] open("/proc/32504/fd/3", O_ACCMODE <unfinished ...>
-[pid 32504] rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-[pid 32504] nanosleep({2, 0}, 0x7ffd3c608150) = 0
-[pid 32504] close(3)                    = 0
-[pid 32504] exit_group(0)               = ?
-[pid 32504] +++ exited with 0 +++
-<... open resumed> )                    = -1 ENXIO (No such device or address)
-exit_group(0)                           = ?
-----------------------------------------
-
-----------------------------------------
-[   95.109628] Start open(socket) delay
-[   97.113150] base_sock_release(00000000506a3239) sk=00000000016d0ceb
-[  100.142235] End open(socket) delay
-----------------------------------------
+Acked-by: Shawn Guo <shawnguo@kernel.org>
