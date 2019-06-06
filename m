@@ -2,133 +2,171 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49138C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1529FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F479206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD442206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JK8En4/C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbDvBSQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfFFTvT (ORCPT
+        id S1727623AbfFFTwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:51:19 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40960 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727149AbfFFTvR (ORCPT
+        Thu, 6 Jun 2019 15:52:09 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33547 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfFFTwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:51:17 -0400
-Received: by mail-qk1-f195.google.com with SMTP id c11so2256579qkk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:51:16 -0700 (PDT)
+        Thu, 6 Jun 2019 15:52:08 -0400
+Received: by mail-io1-f67.google.com with SMTP id u13so1208756iop.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:52:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fVbv7ZkCU0XRJ9jD+fxd4ieH6waXD3NIwch6tKZrfLk=;
-        b=JK8En4/CLh0QaNpMzjO2iMeOMpfrAAx/gr5SgNV/sb4SY2gHe/v8MOPkfC/9wPWIZ9
-         ZL8QsvlzUZu3/QV2sR8DriCxzBeBuTLKUUPKPgdfpcAKVXgCaQb7rGQ3TRW8g1PxMby9
-         +wxeHaZK6IN3egjgnP9IJZ+w011avGG0F3y8TTnoGrINoPzy0TddWA78C+1Q+KMGIdzz
-         92AxUAVNZWhAkEVYstL8INWhYQ829J/YpWO2ZbVyA8ZS8ksWZ7LFyB1R04yWWmr5UAZu
-         N8V2QVFH6XXSPdpk/99Edhk0JJ7bEpSx2FL6IQyeiD+YQVzMZEgvotOVmE8xHx4nh57Z
-         Aq3A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KHvZ08UQ6F9DrHSAJkdM4lRvAaL9fp+PzcKQDvAi3QA=;
+        b=jbDvBSQKpvmcMfisYPWINLkIs3i3NZs3RpdPSdnRUOHZnK1IOgnssVmxivPMMSoK4e
+         nv/niDA3x/sHbTqqGxpF7OBCH1o4MvD1RBWwK2KQoN7/h2miH0lAtmdrkm47ZBrYI13w
+         zt7vPo7wvgZLRvh1Gbnb6uHqUNOp1C1yUqwme7OSii8ttZ7QiWEESYK8uRtN5RF5QTrU
+         BN693xbH+tersd1T+gYqV8Tvly0puO4lUKcMojAn4ieh8PAhmYlk01sk9Pgx3tzF/Pg/
+         zmisvsJvs5pc9GzSL93Q4yWuXqYhyOkJmKKu74bQDnGI01kFwj9PQ7nwZ6XjK7Z6nb2Q
+         +0wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fVbv7ZkCU0XRJ9jD+fxd4ieH6waXD3NIwch6tKZrfLk=;
-        b=kK/LdxxmmfktwC3dmrexLpl8aVBKrNIXWkl/lm/DIn4eHkXASUFQ1jGWyIkkLrqpIa
-         3bo5AzVSEToU/fnbjPAOgfrxv5Yp3cZjjQGlRF8FDVejl79Tjf8z5DXp/aMxQ3IblVi6
-         KnR9XpAVEr07YVzgzkIPnCjyIgejaIxVEoL30T1LhQrced0GCGn/AqtaJpVLTWan7698
-         t0uJWB2IPgb4Vawd6TsaXFWFfvhFd5cn7I23kWmdzFjYwYryn57mdb7pdS2UgN1xCMEr
-         1ZZ7f+fJ6xDt+9lFH0Lav78IFEpX6NEGQ5PNyIwlP6iJ7jFqQt4YbbLqoWzpSHONmYwF
-         ApRg==
-X-Gm-Message-State: APjAAAXMilTBtLBDXW+/ThRqVM655uDBGYgx+YU4ZPTPFyMWOGPvcvdW
-        iOmvw6q2GEc4qz5cgTxhHwwv+Q==
-X-Google-Smtp-Source: APXvYqzyssiuyqvk956epvDv1OTyC6TvGNp+K2MqufTjNzhdzVN0pIMcZor/PXhzGoG5BWQnFWZbfw==
-X-Received: by 2002:a37:a9c3:: with SMTP id s186mr41012233qke.190.1559850676118;
-        Thu, 06 Jun 2019 12:51:16 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id t197sm1415555qke.2.2019.06.06.12.51.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 12:51:15 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hYyPr-00081O-0q; Thu, 06 Jun 2019 16:51:15 -0300
-Date:   Thu, 6 Jun 2019 16:51:15 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jan Kara <jack@suse.cz>
-Cc:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190606195114.GA30714@ziepe.ca>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KHvZ08UQ6F9DrHSAJkdM4lRvAaL9fp+PzcKQDvAi3QA=;
+        b=oW8LhAirENvnZdApuCEaawnBZYrxd6O7EPcNjjqBzg8Ep1HhSStBCLvt70CskShc0I
+         bmsEzH52/U7S7VUdCZGMkGQqFZ4Id0zjs9k/peIV8zbrsHAayK93uEC2W1Or0GUCQozI
+         tfwJqXUXTFPxZt7BvKJ6mJWIjPJeJLNcTsaahWdTk6dNwnAkwj0OUHXUSqgfUHW9+gze
+         bfoHjk6IIdJrHL6Gp1M+7AzS4sktN1VJcAueopi3y3YgYKEO1BJDjYbiR+4Xqs0l2dsE
+         9w/jqMMD+LGB72Lr/CmU3/AQjcO53x+d++Xle4+SoQpQyF65g1p8lXHeRE+LHsvrcemN
+         wqNw==
+X-Gm-Message-State: APjAAAV4yC5PjQymLlxy8NAcAIs1xG4C6p+6NxYXdpbTBC03VKO+bIE4
+        RhBZEQBAsfRtqr0FGK4wtKLDUlFSoVAB+mJu5Fk=
+X-Google-Smtp-Source: APXvYqymvS7JveFRHGX2qEIRdNfDHD4Cnki5S0RB9Xg/IBxcdtjj13BXWkPSvtVcEsD98/qeQ1BPGZK9lP9LOmRePc8=
+X-Received: by 2002:a6b:f607:: with SMTP id n7mr7342606ioh.263.1559850727465;
+ Thu, 06 Jun 2019 12:52:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606104203.GF7433@quack2.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
+ <CGME20190605070532epcas2p2154c96c417cca1c1fc3c149c66447560@epcas2p2.samsung.com>
+ <20190605070507.11417-6-andrew.smirnov@gmail.com> <9f847830-7bc6-c377-5cd7-b3cff783cbb3@samsung.com>
+In-Reply-To: <9f847830-7bc6-c377-5cd7-b3cff783cbb3@samsung.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Thu, 6 Jun 2019 12:51:56 -0700
+Message-ID: <CAHQ1cqGuDj2wVbKRMxBsFWk6cK4HO54ivajqSNfXate_NzF+Yg@mail.gmail.com>
+Subject: Re: [PATCH v3 05/15] drm/bridge: tc358767: Drop custom
+ tc_write()/tc_read() accessors
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
+On Thu, Jun 6, 2019 at 3:34 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>
+> On 05.06.2019 09:04, Andrey Smirnov wrote:
+> > A very unfortunate aspect of tc_write()/tc_read() macro helpers is
+> > that they capture quite a bit of context around them and thus require
+> > the caller to have magic variables 'ret' and 'tc' as well as label
+> > 'err'. That makes a number of code paths rather counterintuitive and
+> > somewhat clunky, for example tc_stream_clock_calc() ends up being like
+> > this:
+> >
+> >       int ret;
+> >
+> >       tc_write(DP0_VIDMNGEN1, 32768);
+> >
+> >       return 0;
+> > err:
+> >       return ret;
+> >
+> > which is rather surprising when you read the code for the first
+> > time. Since those helpers arguably aren't really saving that much code
+> > and there's no way of fixing them without making them too verbose to
+> > be worth it change the driver code to not use them at all.
+>
+>
+> On the other side, error checking after every registry access is very
+> annoying and significantly augments the code, makes it redundant and
+> less readable. To avoid it one can cache error state, and do not perform
+> real work until the error is clear. For example with following accessor:
+>
+> void tc_write(struct tc_data *tc, u32 reg, u32 val){
+>
+>     int ret;
+>
+>     if (tc->error) //This check is IMPORTANT
+>
+>         return;
+>
+>     ret =regmap_write(...);
+>
+>     if (ret >= 0)
+>
+>         return;
+>
+>     tc->error = ret;
+>
+>     dev_err(tc->dev, "Error writing register %#x\n", reg);
+>
+> }
+>
+> You can safely write code like:
+>
+>     tc_write(tc, DP_PHY_CTRL, BGREN | PWR_SW_EN | PHY_A0_EN);
+>
+>     tc_write(tc, DP0_PLLCTRL, PLLUPDATE | PLLEN);
+>
+>     tc_write(tc, DP1_PLLCTRL, PLLUPDATE | PLLEN);
+>
+>     if (tc->error) {
+>
+>         tc->error = 0;
+>
+>         goto err;
+>
+>     }
+>
+> This is of course loose suggestion.
+>
 
-> So I'd like to actually mandate that you *must* hold the file lease until
-> you unpin all pages in the given range (not just that you have an option to
-> hold a lease). And I believe the kernel should actually enforce this. That
-> way we maintain a sane state that if someone uses a physical location of
-> logical file offset on disk, he has a layout lease. Also once this is done,
-> sysadmin has a reasonably easy way to discover run-away RDMA application
-> and kill it if he wishes so.
-> 
-> The question is on how to exactly enforce that lease is taken until all
-> pages are unpinned. I belive it could be done by tracking number of
-> long-term pinned pages within a lease. Gup_longterm could easily increment
-> the count when verifying the lease exists, gup_longterm users will somehow
-> need to propagate corresponding 'filp' (struct file pointer) to
-> put_user_pages_longterm() callsites so that they can look up appropriate
-> lease to drop reference - probably I'd just transition all gup_longterm()
-> users to a saner API similar to the one we have in mm/frame_vector.c where
-> we don't hand out page pointers but an encapsulating structure that does
-> all the necessary tracking. Removing a lease would need to block until all
-> pins are released - this is probably the most hairy part since we need to
-> handle a case if application just closes the file descriptor which
-> would
+I am going to have to disagree with you on this one, unfortunately.
+Using regmap API explicitly definitely makes code more verbose, less
+readable or more annoying though? Not really from my perspective. With
+regmap code I know what the code is doing the moment I look at it,
+with the example above, not so much. I also find it annoying that I
+now have to remember the tricks that tc_write is pulling internally as
+well as be mindful of a global-ish error state object. My problem with
+original code was that a) it traded explicitness for conciseness in a
+an unfavorable way, which I still think is true for code above b) it
+didn't provide a comprehensive abstraction completely removing regmap
+API and still relied on things like regmap_update_bits() explicitly,
+making the code even more confusing (true for above example as well).
+I think this driver isn't big enough to have a dedicated person always
+working on it and it will mostly see occasional commits from somewhat
+random folks who are coming to the codebase fresh, so creating as
+little "institutional knowledge", so to speak, in a form of a custom
+exception-like mechanism and opting for explicit but verbose code
+seems like a preferable choice.
 
-I think if you are going to do this then the 'struct filp' that
-represents the lease should be held in the kernel (ie inside the RDMA
-umem) until the kernel is done with it.
+Anyway, I get it that's it is a loose suggestion :-), just wanted to
+provide a detailed explanation why I'd rather not go that way.
 
-Actually does someone have a pointer to this userspace lease API, I'm
-not at all familiar with it, thanks
-
-And yes, a better output format from GUP would be great..
-
-> Maybe we could block only on explicit lease unlock and just drop the layout
-> lease on file close and if there are still pinned pages, send SIGKILL to an
-> application as a reminder it did something stupid...
-
-Which process would you SIGKILL? At least for the rdma case a FD is
-holding the GUP, so to do the put_user_pages() the kernel needs to
-close the FD. I guess it would have to kill every process that has the
-FD open? Seems complicated...
-
-Regards,
-Jason
+Thanks,
+Andrey Smirnov
