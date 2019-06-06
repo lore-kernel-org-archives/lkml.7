@@ -2,94 +2,91 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6354C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F855C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCEE20883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431A020673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfFFGrn (ORCPT
+        id S1726664AbfFFGsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60306 "EHLO mail.kernel.org"
+        Thu, 6 Jun 2019 02:48:32 -0400
+Received: from gate.crashing.org ([63.228.1.57]:39155 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFGrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:47:42 -0400
-Received: from oasis.local.home (unknown [146.247.46.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E8A520673;
-        Thu,  6 Jun 2019 06:47:39 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 02:47:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "George G. Davis" <george_davis@mentor.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, Jann Horn <jannh@google.com>,
-        Nadav Amit <namit@vmware.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] treewide: trivial: fix s/poped/popped/ typo
-Message-ID: <20190606024734.5663fb80@oasis.local.home>
-In-Reply-To: <1559766612-12178-2-git-send-email-george_davis@mentor.com>
-References: <1559766612-12178-1-git-send-email-george_davis@mentor.com>
-        <1559766612-12178-2-git-send-email-george_davis@mentor.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725267AbfFFGsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:48:32 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x566lscw019648;
+        Thu, 6 Jun 2019 01:47:55 -0500
+Message-ID: <61fe2a4c80e654476a68929da9dcc18df8bc2639.camel@kernel.crashing.org>
+Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com,
+        jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com,
+        mchehab+samsung@kernel.org, robh+dt@kernel.org,
+        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com,
+        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+Date:   Thu, 06 Jun 2019 16:47:54 +1000
+In-Reply-To: <20190606063741.GA23305@kroah.com>
+References: <1559717653-11258-1-git-send-email-talel@amazon.com>
+         <1559717653-11258-3-git-send-email-talel@amazon.com>
+         <20190605075927.GA9693@kroah.com>
+         <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
+         <20190606063741.GA23305@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Jun 2019 16:30:10 -0400
-"George G. Davis" <george_davis@mentor.com> wrote:
-
-> Fix a couple of s/poped/popped/ typos.
+On Thu, 2019-06-06 at 08:37 +0200, Greg KH wrote:
+> On Thu, Jun 06, 2019 at 07:55:43AM +1000, Benjamin Herrenschmidt wrote:
+> > On Wed, 2019-06-05 at 09:59 +0200, Greg KH wrote:
+> > > 
+> > > > +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
+> > > > +
+> > > > +struct al_fic *al_fic_wire_init(struct device_node *node,
+> > > > +				void __iomem *base,
+> > > > +				const char *name,
+> > > > +				unsigned int parent_irq);
+> > > > +int al_fic_cleanup(struct al_fic *fic);
+> > > 
+> > > Who is using these new functions?  We don't add new apis that no one
+> > > uses :(
+> > 
+> > They will be used by subsequent driver submissions but those aren't
+> > quite ready yet, so we can hold onto patch 3 for now until they are.
 > 
-> Cc: Jiri Kosina <trivial@kernel.org>
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> Patch 2 also should have these removed :)
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+That's a mistake, that export should have been in patch3. Talel, pls
+fix that in your next spin.
 
--- Steve
+> You know we don't add new apis until we have a real, in-kernel user for
+> them...
 
-> ---
->  Documentation/arm/mem_alignment | 2 +-
->  arch/x86/kernel/kprobes/core.c  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+Yup, the user are going to be drivers in other subsystems, so
+coordination is a bit tricky, which is I think why Talel wanted to
+submit that now, but the patches for those other drivers aren't quite
+ready yet so we can hold onto that one for the time being.
+
+It's nothing nefarious :-) Just coordination issues.
+
+Cheers,
+Ben.
+
+> thanks,
 > 
-> diff --git a/Documentation/arm/mem_alignment b/Documentation/arm/mem_alignment
-> index 6335fcacbba9..e110e2781039 100644
-> --- a/Documentation/arm/mem_alignment
-> +++ b/Documentation/arm/mem_alignment
-> @@ -1,4 +1,4 @@
-> -Too many problems poped up because of unnoticed misaligned memory access in
-> +Too many problems popped up because of unnoticed misaligned memory access in
->  kernel code lately.  Therefore the alignment fixup is now unconditionally
->  configured in for SA11x0 based targets.  According to Alan Cox, this is a
->  bad idea to configure it out, but Russell King has some good reasons for
-> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-> index 6afd8061dbae..d3243d93daf4 100644
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -813,7 +813,7 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
->  			continue;
->  		/*
->  		 * Return probes must be pushed on this hash list correct
-> -		 * order (same as return order) so that it can be poped
-> +		 * order (same as return order) so that it can be popped
->  		 * correctly. However, if we find it is pushed it incorrect
->  		 * order, this means we find a function which should not be
->  		 * probed, because the wrong order entry is pushed on the
+> greg k-h
 
