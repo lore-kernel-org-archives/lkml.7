@@ -2,111 +2,108 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003FFC28EB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F80C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9907207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559815066;
-	bh=XH+qyuLG3h1Zuv0+YbIDecMVGDK3Yf4lc2GyNXDmgCk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SbNBAzz0b1CepFu9PlA2hHvFJhrd+uhBaBB1LPoMBp9+7SSABfdLDs3BAu4OVB5H+
-	 6O9fteF/qsTgn8KC7lWeHSNtZRRtRNRm9i5/wUQWePSbCW0486eWkweilc0JZhsUgm
-	 V+vDrKd77ofy6jm31IzQwcu8XxltnDHMDPPOYaxY=
+	by mail.kernel.org (Postfix) with ESMTP id CCF2D20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfFFJ5q (ORCPT
+        id S1728146AbfFFKBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:57:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41783 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbfFFJ5p (ORCPT
+        Thu, 6 Jun 2019 06:01:41 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45752 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726972AbfFFKBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:57:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 107so1370732otj.8;
-        Thu, 06 Jun 2019 02:57:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XH+qyuLG3h1Zuv0+YbIDecMVGDK3Yf4lc2GyNXDmgCk=;
-        b=G7VrrbtpCxh/rN1JAhQrEvmREQYuCw3NR5KRlDQ7GRse0x1joem1ncsm764VVo2r9h
-         IwVIWi9AOseuQ5tqTkH0G4nQGZsolIMHZhW07QsrZjWsKaUi7/2L71LXExdv5XrWFyv8
-         VboxH9tM9U3k85DA8puxNAm85EaOUGbGLEQ+KoTLjuIhznA7uvC2WLyfEVPXgTnvAyPV
-         1duwsDrhlMYcXpmOhPoTifhX/L5JpOXVEOCyW0/D0ouXj4Xhn4iFRz4t6M4Wubautshl
-         aK82DCBJu/juTLxMdKKzxcWX9CgnbAcu41Ak6Qlp5Uk5inI8ZBJrK7ehwBvzLpsPcxym
-         r7Cw==
-X-Gm-Message-State: APjAAAWBWgKpnAbfrJ3xvUFEt2fDCCI/dTA/MzDKLHhtKzBe3pVYSGXh
-        DwrB1OfLeZIWU2H3FMRNCK5HyXc6JmipdmBIbQI=
-X-Google-Smtp-Source: APXvYqy5nqB0n3eU73l8b059KjjRZ1IWKzGCTX8XEy5gMjkUWBhjcYRq934pC1uevpc9TibD4eCiQLkvJ8Ih4I4t1Ik=
-X-Received: by 2002:a9d:6b98:: with SMTP id b24mr13628927otq.189.1559815065036;
- Thu, 06 Jun 2019 02:57:45 -0700 (PDT)
+        Thu, 6 Jun 2019 06:01:39 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 4A078803EE; Thu,  6 Jun 2019 12:01:27 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 12:01:37 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, broonie@kernel.org,
+        lgirdwood@gmail.com, lee.jones@linaro.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 4/5] dt-bindings: leds: Add LED bindings for the
+ LM36274
+Message-ID: <20190606100136.GF975@amd>
+References: <20190605125634.7042-1-dmurphy@ti.com>
+ <20190605125634.7042-5-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <1559747630-28065-1-git-send-email-suzuki.poulose@arm.com>
- <1559747630-28065-8-git-send-email-suzuki.poulose@arm.com>
- <CAJZ5v0h+maPj-ijKV_vvQBpHD7N-VMiAqSeyztAkiUR9E2WdmQ@mail.gmail.com> <1f230eb7-f4e3-ed4e-960d-c3bbb60f0a18@arm.com>
-In-Reply-To: <1f230eb7-f4e3-ed4e-960d-c3bbb60f0a18@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 6 Jun 2019 11:57:33 +0200
-Message-ID: <CAJZ5v0i0WP88+vTEheSTfAoSi5nEdjaLs4KOGxXK3_AoPhPrhg@mail.gmail.com>
-Subject: Re: [PATCH 07/13] drivers: Add generic match helper by ACPI_COMPANION device
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="JcvBIhDvR6w3jUPA"
+Content-Disposition: inline
+In-Reply-To: <20190605125634.7042-5-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 11:28 AM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
->
->
-> On 06/06/2019 10:17, Rafael J. Wysocki wrote:
-> > On Wed, Jun 5, 2019 at 5:14 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> >>
-> >> Add a generic helper to match a device by the acpi device.
-> >
-> > "by its ACPI companion device object", please.
->
-> Sure.
->
-> >
-> > Also, it would be good to combine this patch with the patch(es) that
-> > cause device_match_acpi_dev() to be actually used.
-> >
-> > Helpers without any users are arguably not useful.
->
-> Sure, the helpers will be part of the part2 of the whole series,
-> which will actually have the individual subsystems consuming the
-> new helpers. For your reference, it is available here :
->
-> http://linux-arm.org/git?p=linux-skp.git;a=shortlog;h=refs/heads/driver-cleanup/v2
->
-> e.g:
-> http://linux-arm.org/git?p=linux-skp.git;a=commit;h=59534e843e2f214f1f29659993f6e423bef16b28
->
-> I could simply pull those patches into this part, if you prefer that.
 
-Not really.
+--JcvBIhDvR6w3jUPA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'd rather do it the other way around: push the introduction of the
-helpers to part 2.
+Hi!
 
-> However, that would be true for the other patches in the part2.
-> I am open to suggestions, on how to split the series.
+>  .../devicetree/bindings/leds/leds-lm36274.txt | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.t=
+xt
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Do=
+cumentation/devicetree/bindings/leds/leds-lm36274.txt
+> new file mode 100644
+> index 000000000000..329393700191
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
+> @@ -0,0 +1,82 @@
+> +* Texas Instruments LM36274 4-Channel LCD Backlight Driver w/Integrated =
+Bias
+> +
+> +The LM36274 is an integrated four-channel WLED driver and LCD bias suppl=
+y.
+> +The backlight boost provides the power to bias four parallel LED strings=
+ with
+> +up to 29V total output voltage. The 11-bit LED current is programmable v=
+ia
+> +the I2C bus and/or controlled via a logic level PWM input from 60 =CE=BC=
+A to 30 mA.
+> +
+> +Parent device properties are documented in ../mfd/ti_lmu.txt
+> +Regulator properties are documented in ../regulator/lm363x-regulator.txt
 
-You can introduce each helper along with its users in one patch.
+Should these paths follow the same format as below
+(Documentation/devicetree/bindings)
 
-This way the total number of patches will be reduced and they will be
-easier to review IMO.
+?
+
+Otherwise looks good.
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--JcvBIhDvR6w3jUPA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlz45IAACgkQMOfwapXb+vIJUwCeLojs/AGqWQF2DQiuVlw1Xz1P
+GqYAni4oAYbSvZ9Ki4SlbbOWLhRVDGHT
+=q2SH
+-----END PGP SIGNATURE-----
+
+--JcvBIhDvR6w3jUPA--
