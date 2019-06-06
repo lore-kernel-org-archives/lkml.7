@@ -2,110 +2,118 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FCBC28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAADBC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E281D206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8338C206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZH5VoJzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfFFIEh (ORCPT
+        id S1726997AbfFFIFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:04:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46207 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbfFFIEg (ORCPT
+        Thu, 6 Jun 2019 04:05:23 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41222 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfFFIFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:04:36 -0400
-Received: from mail-pf1-f200.google.com ([209.85.210.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hYnNy-0005Z5-Ds
-        for linux-kernel@vger.kernel.org; Thu, 06 Jun 2019 08:04:34 +0000
-Received: by mail-pf1-f200.google.com with SMTP id u7so1285067pfh.17
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 01:04:34 -0700 (PDT)
+        Thu, 6 Jun 2019 04:05:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 83so892603pgg.8;
+        Thu, 06 Jun 2019 01:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ouvvf9dJU+os5Ak7rjWYZrZK3ACKmLEodaHvlTlzcEc=;
+        b=ZH5VoJzSi6DSD799sd022i6+YXg7iXxAbZ7USRkscKg7Urms6QlI4mJ/URqAOeJ8qJ
+         Z5IJ/vM7+6NVRNYRTsHdN1pyOYqrOF7gsNHIMeBUXVHNoOFAoxKUGSMBcZv6K4M/kWWj
+         caNF7jyNypmFzh0L6U1YVHTjMmKki0Nwi5aSb9KI95MaeS2Xzl68lmgEocLGDGWj6i2X
+         REE/BNWqnzXaVyJXnXv8WYcne1gDNjtxYb/01QixAAwG/+ENh1rfVQHCYU3JQq2P8A9J
+         67VapW8e8fy1zLssEqI1Ded2ehuU0YiBkqNE9SzJtjG67C+gt9nHUlK3yKq07IMFLiKg
+         hQ7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=AiCZ+eWnELxsFCfkNHpZ8uErbdptfu0aYCu6DgRNOow=;
-        b=XGIfu2RMoAlTm+Tpb4yGnszlUl+Zr4nUG2K+Jb7h50Cf5fNJfVU2OvSg+OsrwagLok
-         5sV2tF7GeRLL8x9d0JmXeO+h+uFGCwt8QCztjI6d1Ihp4IJ9Xomvd0Z7iK97Awf6uYSM
-         Tk6c5qrzLs1NnArqnIQDdT0T9Gc77TW1GDYnQ/rznZh929LSdt/3IR0WGPFxHL8Tgbpb
-         ZFUUTkYe90xGWK+zX20HwFyrXmW8Thi/Z9nNWHoa349PVrZEPBjiXW4YZReiGBUTQAvU
-         wFhYfmxGZig7JVaC4rKlqtxn/BxVJXciabNl8wFKgilBV78qa9uQyHGIT7XZ6dX73qeX
-         X8Sw==
-X-Gm-Message-State: APjAAAWpqQ+IiiRfBqEc+d15YyzyQYFqug0hSR4TVe/szq8bKd+iNvUG
-        m77F0F4DTVV+J7vtU18Y10xWtzeny6B7g/PFC+L+HCGLgRO9NFhrTmD5FCnFcEHjHO1iqPJ2z9e
-        UqM2gHvpKKnwZXrMGPmbc0dSAZWo3RHR8PXQPCC+8Tw==
-X-Received: by 2002:a17:902:3fa5:: with SMTP id a34mr47447528pld.317.1559808273091;
-        Thu, 06 Jun 2019 01:04:33 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzSL9CxDGC2OiUM9isEnbmxV2GSn8dHls2aVW2WpOdz4AmFmP6Zv/jGob/jsAUodbFR9junzg==
-X-Received: by 2002:a17:902:3fa5:: with SMTP id a34mr47447510pld.317.1559808272766;
-        Thu, 06 Jun 2019 01:04:32 -0700 (PDT)
-Received: from 2001-b011-380f-115a-4031-dc0c-76c4-a6d1.dynamic-ip6.hinet.net (2001-b011-380f-115a-4031-dc0c-76c4-a6d1.dynamic-ip6.hinet.net. [2001:b011:380f:115a:4031:dc0c:76c4:a6d1])
-        by smtp.gmail.com with ESMTPSA id n70sm1047794pjb.4.2019.06.06.01.04.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 01:04:32 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190402033037.21877-1-kai.heng.feng@canonical.com>
-Date:   Thu, 6 Jun 2019 16:04:29 +0800
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <54557F79-6DE1-4AA4-895A-C0F014926590@canonical.com>
-References: <20190402033037.21877-1-kai.heng.feng@canonical.com>
-To:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ouvvf9dJU+os5Ak7rjWYZrZK3ACKmLEodaHvlTlzcEc=;
+        b=PuKqTzs5cBKu991WbFLK6WLQ/QBhvelUV7E41oaEaWL0tv+JL8pX4qQc6YQ66UPkrG
+         kkjN8Y5RbmkWotIOsZ9FKsIQ9OiHSsFabmetsve8IZDaVQnzzcmXZV4j6i3YqSd64mBK
+         Ox7ccETGwroLx2A3pTsLZTdOvHTKa82XS2npbs12cOtC5bHwiLF4kAO8+hpXmRc0Bab+
+         cGJYXXtq6NFh2tq6I5b1zCxFdW99AmPzq7pX4DVUKTVgeairuFp+vJGwZ7ly7pvp2XhO
+         eme+gIiox8vMscEf8942K9KaACAb8SNX0+vG4SfS/XDhIDksDjSgOlA/0licywYQ/8C9
+         AOoQ==
+X-Gm-Message-State: APjAAAUc++YrdoxigEZ4nJ+D/fIwOuGonBLGczr9j87y0rcgFqlQiDWu
+        +BhW5ge+zl6MYF604VEE9g5nVL9JQSI=
+X-Google-Smtp-Source: APXvYqxj1+DHpVWOnnaeWKG7SeN92b76OfgMqw504KhsCqTwFbSEryXEoLDgOFWQej9QqZwmxSnfmw==
+X-Received: by 2002:a65:5004:: with SMTP id f4mr2253196pgo.268.1559808321065;
+        Thu, 06 Jun 2019 01:05:21 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id m6sm1216015pjl.18.2019.06.06.01.05.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 01:05:20 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 08:05:20 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/5] x86: hv: hv_init.c: Add functions to
+ allocate/deallocate page for Hyper-V
+Message-ID: <5cf4ad6f3fae8dec33e364b367b99cbb5b0f2ba4.1559807514.git.m.maya.nakamura@gmail.com>
+References: <cover.1559807514.git.m.maya.nakamura@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1559807514.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Introduce two new functions, hv_alloc_hyperv_page() and
+hv_free_hyperv_page(), to allocate/deallocate memory with the size and
+alignment that Hyper-V expects as a page. Although currently they are
+not used, they are ready to be used to allocate/deallocate memory on x86
+when their ARM64 counterparts are implemented, keeping symmetry between
+architectures with potentially different guest page sizes.
 
-at 11:30, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+---
+ arch/x86/hyperv/hv_init.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> Another panel that needs 6BPC quirk.
-
-Please include this patch if possible.
-
-Kai-Heng
-
->
-> BugLink: https://bugs.launchpad.net/bugs/1819968
-> Cc: <stable@vger.kernel.org> # v4.8+
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/gpu/drm/drm_edid.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 990b1909f9d7..1cb4d0052efe 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -166,6 +166,9 @@ static const struct edid_quirk {
->  	/* Medion MD 30217 PG */
->  	{ "MED", 0x7b8, EDID_QUIRK_PREFER_LARGE_75 },
->
-> +	/* Lenovo G50 */
-> +	{ "SDC", 18514, EDID_QUIRK_FORCE_6BPC },
-> +
->  	/* Panel in Samsung NP700G7A-S01PL notebook reports 6bpc */
->  	{ "SEC", 0xd033, EDID_QUIRK_FORCE_8BPC },
->
-> -- 
-> 2.17.1
-
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index e4ba467a9fc6..84baf0e9a2d4 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -98,6 +98,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
+ u32 hv_max_vp_index;
+ EXPORT_SYMBOL_GPL(hv_max_vp_index);
+ 
++void *hv_alloc_hyperv_page(void)
++{
++	BUILD_BUG_ON(!(PAGE_SIZE == HV_HYP_PAGE_SIZE));
++
++	return (void *)__get_free_page(GFP_KERNEL);
++}
++EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
++
++void hv_free_hyperv_page(unsigned long addr)
++{
++	free_page(addr);
++}
++EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
++
+ static int hv_cpu_init(unsigned int cpu)
+ {
+ 	u64 msr_vp_index;
+-- 
+2.17.1
 
