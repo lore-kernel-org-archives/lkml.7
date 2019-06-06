@@ -2,140 +2,222 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B91C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC43C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6792220872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NfvtPKfr"
+	by mail.kernel.org (Postfix) with ESMTP id 0A6DD207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfFFHHC (ORCPT
+        id S1726789AbfFFHHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:07:02 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14164 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFHHC (ORCPT
+        Thu, 6 Jun 2019 03:07:06 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35813 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfFFHHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:07:02 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8bb930000>; Thu, 06 Jun 2019 00:06:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 00:07:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 00:07:01 -0700
-Received: from [10.26.11.84] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 07:06:59 +0000
-Subject: Re: [PATCH 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-To:     Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1557143908-5850-1-git-send-email-spujar@nvidia.com>
- <9f9962fc-a261-aecc-b4c5-408a75ebcb5f@nvidia.com>
- <490b81d9-2734-bb93-303b-94bb20a4f6a5@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <3b19a2bb-20a0-c650-49b7-d966585b5ba9@nvidia.com>
-Date:   Thu, 6 Jun 2019 08:06:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 03:07:04 -0400
+Received: by mail-qk1-f194.google.com with SMTP id l128so858119qke.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 00:07:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HpE5F2PryY/7ekaCFARM6Uj5LXLqn4ImiAP5wBAaGFc=;
+        b=M81sOntjiUiOAKlhMo/QLavJ0pI6rSSQmV6JPd5rjSQri2FEo0pbQtmAog4+ADoCyu
+         lXqWEPo/SIRjnmfH70PT8IPP04xxk5JIAem1HWt0nC8mYjgly+VztKlP5FSrR6uypRnw
+         wezKuRYSp1BcTfnpBeWGfas7ktlGv7F5FBMXpxf6uEkMtXZuXqSnEcJNMbFR2wGWAjBS
+         8fyQyQOsTN7JhkncehDJCyHPms0EoQ+H4C7SeyALbp3GsoZzPsp+rn6H8exLnyFL1oNb
+         P3q8gxHkKr6ZU6htuEKRyEfJOTc5XsoWUMGGuCjO/xiAjf0MgnG6C3F1hZ02CRw+4DF+
+         FMNA==
+X-Gm-Message-State: APjAAAUaqb0x8gKxm94E/Qbvw5182/+hTYRG36YJkg8lUzHUPLY5mUZz
+        7h8EPvdvnGI8a2420CQfc5Y2JANsXhtS9uaC++FZ4A==
+X-Google-Smtp-Source: APXvYqwFRTz20CD8M6Kwg2Np+AkH9v6bF7YwNEs8nIQpd/ztnd685i07+sFMbB/EzUwlkQYxhQWAuYDDIW0U/bPJIAA=
+X-Received: by 2002:a37:8847:: with SMTP id k68mr37265523qkd.278.1559804823661;
+ Thu, 06 Jun 2019 00:07:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <490b81d9-2734-bb93-303b-94bb20a4f6a5@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559804819; bh=Qogml3uZUkadmLM0Z3jsCr7L/168NFfO/EMbeCDrj+I=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=NfvtPKfrIyF4L1qHT1vMGT8m3zkSeuEAgZGRrBpEhYAlyfXdTajamdTupH7UWsAGS
-         EkK7pM5bYmycH5N4sLbfJ2DW4PPjXl795g4lCNznXmRH5AHb9TK0N13zmLtUQSBwxP
-         uA8wokpa+EvmKXXsT+7kWuqjGmeiffJ+4ZkT0nxk0iFWLEoOfrchB5fitolsw4J8t0
-         IJLwgiDvRjn+z+d3PeT6I1r21eatgJj1GMVvCYQRVjpF7/4JGXJiyv3+gqafloI2q5
-         GiCqN6P6GzbWTH/CAPmZIujCbSqKz7yiD4KxUVf5AzD6nE3sRywqtwtmp/g7iHR1z9
-         u2lu8VhygfM/w==
+References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+ <20190423160605.9970-1-jeffrey.l.hugo@gmail.com> <20190521164324.GA2085@tuxbook-pro>
+ <CAOCk7Nr-a=ek7xOhBwMgxG55jvKQK2tyy15oknrDn7OYvxtEwA@mail.gmail.com>
+In-Reply-To: <CAOCk7Nr-a=ek7xOhBwMgxG55jvKQK2tyy15oknrDn7OYvxtEwA@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 6 Jun 2019 09:06:51 +0200
+Message-ID: <CAO-hwJKeS06Tsz8BzbWZw2TW74ZowvRqJue=Od-cMmfNH9N7Tw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 6, 2019 at 1:25 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> On Tue, May 21, 2019 at 10:42 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > On Tue 23 Apr 09:06 PDT 2019, Jeffrey Hugo wrote:
+> >
+> > > There needs to be coordination between hid-quirks and the elan_i2c driver
+> > > about which devices are handled by what drivers.  Currently, both use
+> > > whitelists, which results in valid devices being unhandled by default,
+> > > when they should not be rejected by hid-quirks.  This is quickly becoming
+> > > an issue.
+> > >
+> > > Since elan_i2c has a maintained whitelist of what devices it will handle,
+> > > use that to implement a blacklist in hid-quirks so that only the devices
+> > > that need to be handled by elan_i2c get rejected by hid-quirks, and
+> > > everything else is handled by default.  The downside is the whitelist and
+> > > blacklist need to be kept in sync.
+> > >
+> >
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >
+> > Jiri, the two patches in this series doesn't have a build time
+> > dependency, so if you take this one through your tree I'll take 2/2
+> > through arm-soc.
+>
+> Ping?  Is this good from the HID perspective?  I would really like to
+> see this queued for 5.3.
+>
 
-On 06/06/2019 06:58, Sameer Pujar wrote:
->=20
-> On 6/4/2019 2:37 PM, Jon Hunter wrote:
->> On 06/05/2019 12:58, Sameer Pujar wrote:
->>> Add DT nodes for following devices on Tegra186 and Tegra194
->>> =C2=A0 * ACONNECT
->>> =C2=A0 * ADMA
->>> =C2=A0 * AGIC
->>>
->>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->>> ---
->>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67
->>> ++++++++++++++++++++++++++++++++
->>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67
->>> ++++++++++++++++++++++++++++++++
->>> =C2=A0 2 files changed, 134 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> index 6e2b6ce..2c432c9 100644
->>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> @@ -1153,4 +1153,71 @@
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_=
-LOW)>;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-parent=
- =3D <&gic>;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>> +
->>> +=C2=A0=C2=A0=C2=A0 aconnect@2a41000 {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "nvidia,tegr=
-a210-aconnect";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&bpmp TEGRA186_=
-CLK_APE>,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 <&bpmp TEGRA186_CLK_APB2APE>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "ape", "apb=
-2ape";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains =3D <&bpmp TE=
-GRA186_POWER_DOMAIN_AUD>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <2>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <2>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ranges;
->> My recollection is that non-empty range is preferred from what Rob told
->> me in the past. See the Tegra210 binding.
-> I see at various places empty ranges property is used. From DT spec, it
-> means
-> there is no translation in the address space between parent/child.
+Sorry, this felt through the cracks.
 
-Yes that is correct, but this is what Rob told me in the past ...
+I'm fine with the idea of the patch, but I just realized what bugged me:
+we should instead have a static array of the various ACPI matches,
+instead of duplicating the various strncmp.
 
-"Use of non-empty ranges is preferred though there is not much benefit
-if the parent and child sizes are the same. However, it does also
-limit what is a valid address for those child nodes."
+So IMO, we should:
+- merge patch 2/2 through Bjorn's tree (or with any changes he would request)
+- have a v5 for the HID/input part with:
+  * a static array of the names to match against in hid-quirks.c
+  * separate the elan_i2c trivial change in its separate patch as
+there are already a few changes committed in the input tree, which is
+different from the HID tree. I don't expect any conflicts though, so
+if Dmitry is fine, I can take the whole input/HID part through the HID
+tree, but a separate patch would be more obvious in case of a
+conflict.
 
-So I think it is best to be consistent.
+Cheers,
+Benjamin
 
-> Also I looked at Tegra210 binding,
-> ranges =3D <0x702c0000 0x0 0x702c0000 0x00040000>;
-> Should it be encoded as a triplet(child addr, parent addr, length)?
-Right but remember the parent address is 2 cells, hence the 4 values.
-
-Jon
-
---=20
-nvpublic
+> >
+> > Regards,
+> > Bjorn
+> >
+> > > Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > ---
+> > >  drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
+> > >  drivers/input/mouse/elan_i2c_core.c |  4 ++
+> > >  2 files changed, 58 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> > > index 77ffba48cc73..656485e08eb7 100644
+> > > --- a/drivers/hid/hid-quirks.c
+> > > +++ b/drivers/hid/hid-quirks.c
+> > > @@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
+> > >               break;
+> > >       case USB_VENDOR_ID_ELAN:
+> > >               /*
+> > > -              * Many Elan devices have a product id of 0x0401 and are handled
+> > > -              * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+> > > -              * is not (and cannot be) handled by that driver ->
+> > > -              * Ignore all 0x0401 devs except for the ELAN0800 dev.
+> > > +              * Blacklist of everything that gets handled by the elan_i2c
+> > > +              * input driver.  This should be kept in sync with the whitelist
+> > > +              * that exists in that driver.  This avoids disabling valid
+> > > +              * touchpads and other ELAN devices.
+> > >                */
+> > > -             if (hdev->product == 0x0401 &&
+> > > -                 strncmp(hdev->name, "ELAN0800", 8) != 0)
+> > > -                     return true;
+> > > -             /* Same with product id 0x0400 */
+> > > -             if (hdev->product == 0x0400 &&
+> > > -                 strncmp(hdev->name, "QTEC0001", 8) != 0)
+> > > +             if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
+> > > +                (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0100", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0600", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0601", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0602", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0603", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0604", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0605", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0606", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0607", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0608", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0609", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN060B", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN060C", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN060F", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0610", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0611", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0612", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0613", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0614", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0615", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0616", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0617", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0618", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0619", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN061A", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN061B", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN061C", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN061D", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN061E", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN061F", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0620", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0621", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0622", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0623", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0624", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0625", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0626", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0627", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0628", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0629", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN062A", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN062B", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN062C", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN062D", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0631", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN0632", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "ELAN1000", 8) == 0 ||
+> > > +                 strncmp(hdev->name, "elan,ekth3000", 13) == 0))
+> > >                       return true;
+> > >               break;
+> > >       }
+> > > diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> > > index f9525d6f0bfe..3ded19528cd4 100644
+> > > --- a/drivers/input/mouse/elan_i2c_core.c
+> > > +++ b/drivers/input/mouse/elan_i2c_core.c
+> > > @@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
+> > >  };
+> > >  MODULE_DEVICE_TABLE(i2c, elan_id);
+> > >
+> > > +/*
+> > > + * when these whtielists get updated, the corresponding blacklist in hid-quirks
+> > > + * needs to be updated to match.
+> > > + */
+> > >  #ifdef CONFIG_ACPI
+> > >  static const struct acpi_device_id elan_acpi_id[] = {
+> > >       { "ELAN0000", 0 },
+> > > --
+> > > 2.17.1
+> > >
