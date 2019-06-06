@@ -2,97 +2,141 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C291C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E51DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA662083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:30:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="wm/5HuCV"
+	by mail.kernel.org (Postfix) with ESMTP id 482F32083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbfFFRaO (ORCPT
+        id S1730153AbfFFRac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:30:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44111 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfFFRaO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:30:14 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so1910383pfe.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Er5DZ+jmgl4pACBM9mSuCYlxA1ZXYVy+Ri46ksNsKNU=;
-        b=wm/5HuCV6OCqFPMj5n7IL5mdjhSWRNBQjjf7DDWELSUHyHSEkxAJJUzCUh5K1Q/PrT
-         1rU9XPLawCPwYK34YEcRmd16u3HynW0SaTlCWw1xW/8f0xJXLaJFv5Amj8aU+x3jBRGZ
-         OirbFJ6smfoYmqM4vpdeGuUA2Diiozc28Ql/BUymxNlyCnF3U3NuNesy19sKjTxlBCZ9
-         xYkQgCVNc212j+aq83vwctLQsFzBYDYeCb21vGVD1yCTxbTMQZP9cLHvVL8JSwKlQeP+
-         HhhL48FMk2LjvcQQ5bdf6g41dqIbXtWQEnc9Q7xerefNu0gaXl87goSWT899hImcaaCN
-         b4UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Er5DZ+jmgl4pACBM9mSuCYlxA1ZXYVy+Ri46ksNsKNU=;
-        b=UgtMgYoCuJEpNLWTZ1BTMw87NNIkJnEqYq+TyTNGuJNwwSW/VJnvh9ItuiTilizF7u
-         XgAPsOddBzqKXBXTFWlZMhg4kXPX9OH+OerJsa23yqllc/sACy88YbcnglQboeVAiQqq
-         2uzmBLPS2z5zbOoJP+LXh3iZl+dEPmolhGhB4dTdzqjU0vzio8huuTXWHZjVxMl/a9bb
-         RAgQ0NSOO9atk57gW8zpsC9FcpodZ+bBLpOKJG1Yc1Tb7XMwiaz9Cj2zG88/VTYsuoLd
-         SvU2NCZjuS1LaZ5n3Rkn/N7LOOgjpAfX1NZSYHMKt8/oJ/eotpqJD4mOT/dZTojbwTCf
-         SmYQ==
-X-Gm-Message-State: APjAAAU/N9YNwxl8lP/1vOZrF9XByPzxIGza5hz57DEM7U7UIqC8reWb
-        i5LoYz1giymdVxDQyqlJqVwQEA==
-X-Google-Smtp-Source: APXvYqxcHDkEaPOHT2K2CyUbipGrVEDze7r7eLCeuaNBURmbKlAo/gGUVa+qM337klyNBaUWwbt8aQ==
-X-Received: by 2002:a17:90a:6505:: with SMTP id i5mr924412pjj.13.1559842213424;
-        Thu, 06 Jun 2019 10:30:13 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id o70sm2769938pfo.33.2019.06.06.10.30.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 10:30:12 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/2] drm/meson: fix G12A primary plane disabling
-In-Reply-To: <20190605141253.24165-3-narmstrong@baylibre.com>
-References: <20190605141253.24165-1-narmstrong@baylibre.com> <20190605141253.24165-3-narmstrong@baylibre.com>
-Date:   Thu, 06 Jun 2019 10:30:11 -0700
-Message-ID: <7h1s06ei58.fsf@baylibre.com>
+        Thu, 6 Jun 2019 13:30:32 -0400
+Received: from swift.blarg.de ([138.201.185.127]:37802 "EHLO swift.blarg.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726924AbfFFRab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:30:31 -0400
+X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Jun 2019 13:30:30 EDT
+Received: by swift.blarg.de (Postfix, from userid 1000)
+        id C92E14030F; Thu,  6 Jun 2019 19:24:40 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 19:24:40 +0200
+From:   Max Kellermann <max@blarg.de>
+To:     Justin Piszcz <jpiszcz@lucidpixels.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: 5.1 kernel: khugepaged stuck at 100%
+Message-ID: <20190606172440.GA24838@swift.blarg.de>
+Mail-Followup-To: Justin Piszcz <jpiszcz@lucidpixels.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <002901d5064d$42355ea0$c6a01be0$@lucidpixels.com>
+ <20190509111343.rvmy5noqlf4os3zk@box>
+ <CAO9zADww2v2ckHsNDwRgiyMr9b3JH1xOOSiRJ0Uh2XZT5c=MEQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO9zADww2v2ckHsNDwRgiyMr9b3JH1xOOSiRJ0Uh2XZT5c=MEQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On 2019/05/16 16:14, Justin Piszcz <jpiszcz@lucidpixels.com> wrote:
+> Kernel: 5.1.2
+> 
+> $ sudo cat /proc/$(pidof khugepaged)/stack
+> [<0>] 0xffffffffffffffff
+> 
+> $ perf top
+> 
+>    PerfTop:    3716 irqs/sec  kernel:92.9%  exact: 99.1% lost: 68/68
+> drop: 0/0 [4000Hz cycles],  (all, 12 CPUs)
+> -------------------------------------------------------------------------------
+> 
+>     47.53%  [kernel]                 [k] compaction_alloc
+>     38.88%  [kernel]                 [k] __pageblock_pfn_to_page
+>      6.68%  [kernel]                 [k] nmi
+>      0.58%  [kernel]                 [k] __list_del_entry_valid
+>      0.48%  [kernel]                 [k] format_decode
+>      0.39%  [kernel]                 [k] __rb_insert_augmented
+>      0.25%  libdbus-1.so.3.19.9      [.] _dbus_string_hex_decode
+>      0.24%  [kernel]                 [k] entry_SYSCALL_64_after_hwframe
+>      0.20%  perf                     [.] rb_next
+>      0.19%  perf                     [.] __symbols__insert
 
-> The G12A Primary plane was disabled by writing in the OSD1 configuration
-> registers, but this caused the plane blender to stall instead of continuing
-> blended only the overlay plane.
+I have the same problem (kernel 5.1.7), but over here, it's a PHP
+process, not khugepaged, which is looping inside compaction_alloc.
 
-grammar nit: "...instead of continuing to blend only the overlay plane."
+This is from "perf report":
 
-> Fix this by disabling the OSD1 plane in the blender registers, and also
-> enabling it back using the same register.
->
-> Fixes: 490f50c109d1 ("drm/meson: Add G12A support for OSD1 Plane")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+   100.00%     0.00%  php-cgi7.0  php-cgi7.0         [.] 0x000055d0e88bc5ee
+            |
+            ---0x55d0e88bc5ee
+               page_fault
+               __do_page_fault
+               handle_mm_fault
+               __handle_mm_fault
+               do_huge_pmd_anonymous_page
+               __alloc_pages_nodemask
+               __alloc_pages_slowpath
+               __alloc_pages_direct_compact
+               try_to_compact_pages
+               compact_zone_order
+               compact_zone
+               migrate_pages
+               compaction_alloc
+               |          
+               |--24.43%--__pageblock_pfn_to_page
+               |          
+                --2.22%--_cond_resched
+                          |          
+                           --0.89%--rcu_all_qs
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+ftrace:
 
-As noted elsewhere, this driver is also full of magic constants used in
-register writes which makes reviewing this kind of change for
-correctness that much more difficult, but since that's already been
-pointed out elsewhere, and it's already on your TODO list, it should not
-block this important fix.
+           <...>-263514 [012] .... 109004.793009: rcu_all_qs <-_cond_resched
+           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793009: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793010: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: __pageblock_pfn_to_page <-compaction_alloc
+           <...>-263514 [012] .... 109004.793011: _cond_resched <-compaction_alloc
 
-Kevin
+(Repeating this sequence over and over.)
+
+Nothing useful in /proc/263514/{stack,wchan,syscall}.
+
+What else can I do to collect more information to aid fix this?
+
+Max
