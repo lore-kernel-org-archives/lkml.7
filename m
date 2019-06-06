@@ -2,104 +2,208 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC2BC28D19
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A846C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D2B20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:40:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FBCQNeWA"
+	by mail.kernel.org (Postfix) with ESMTP id 086CA20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfFFFkr (ORCPT
+        id S1726369AbfFFFmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 01:40:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37757 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFFkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 01:40:47 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45KDyz70Swz9s3l;
-        Thu,  6 Jun 2019 15:40:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559799644;
-        bh=05otM2RfXszcLYY6GO4FdaQJRpZRyGnM74UilqAt4zU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FBCQNeWASieWkfXlMrESILKT08kikV2Ce/bLiuSlkkhbJPvVirBzJropZmleYm4/E
-         +qoTq3bSEqSFZj8IBnL0OpqydqnhsSMjnSkts1dSiCwlEHePybzlcTy8n0/Vs4c1CX
-         qghJNKqCifHzsPb4AzPBwJmx3NUOP46AvVZ4uP0WnH9A8R8VyA26HB+8Qu1i8RhQcM
-         VM92iiEt7lfkKwb+kwHWq5t+FNYzTN1HOHnsUNwoQJx2sbvtAhKXWduuJdhW+N17zu
-         UcBANdTFiRMvabXTMHheDUKJzXb63t6dJbbvLrpDwalFaCU3opzLcq5OPOBdI6VqeL
-         BjXYmvUaO8zXw==
-Date:   Thu, 6 Jun 2019 15:40:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: linux-next: manual merge of the pidfd tree with Linus' tree
-Message-ID: <20190606154034.7d8ba5d9@canb.auug.org.au>
+        Thu, 6 Jun 2019 01:42:51 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:29517 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725267AbfFFFmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 01:42:50 -0400
+X-UUID: 9c3da1f7682a4564842f2f6a9a9598ad-20190606
+X-UUID: 9c3da1f7682a4564842f2f6a9a9598ad-20190606
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 520499542; Thu, 06 Jun 2019 13:42:43 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 6 Jun 2019 13:42:39 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 6 Jun 2019 13:42:37 +0800
+Message-ID: <1559799757.20098.6.camel@mtksdaap41>
+Subject: Re: [PATCH v3, 06/27] drm/mediatek: add mutex mod into ddp private
+ data
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 6 Jun 2019 13:42:37 +0800
+In-Reply-To: <1559734986-7379-7-git-send-email-yongqiang.niu@mediatek.com>
+References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1559734986-7379-7-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/P82a9gtvGIURYM1Ekb4W_o0"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/P82a9gtvGIURYM1Ekb4W_o0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi, Yongqiang:
 
-Hi all,
+On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> except mutex mod, mutex mod reg,mutex sof reg,
+> and mutex sof id will be ddp private data
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 53 +++++++++++++++++++++++-----------
+>  1 file changed, 36 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 579ce28..ae94d44 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -41,12 +41,12 @@
+>  #define DISP_REG_CONFIG_DSI_SEL			0x050
+>  #define DISP_REG_CONFIG_DPI_SEL			0x064
+>  
+> -#define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
+> -#define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
+> -#define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
+> -#define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
+> -#define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+> -#define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
+> +#define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
+> +#define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
+> +#define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
+> +#define DISP_REG_MUTEX_MOD(n)			(0x2c + 0x20 * (n))
+> +#define DISP_REG_MUTEX_SOF(n)			(0x30 + 0x20 * (n))
+> +#define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
 
-Today's linux-next merge of the pidfd tree got a conflict in:
+You add 'tab' because of "add mutex mod register offset into ddp private
+data" not "add mutex mod into ddp private data", so move this to the
+related patch.
 
-  tools/testing/selftests/pidfd/pidfd_test.c
+Regards,
+CK
 
-between commit:
+>  
+>  #define INT_MUTEX				BIT(1)
+>  
+> @@ -147,12 +147,16 @@ struct mtk_disp_mutex {
+>  	bool claimed;
+>  };
+>  
+> +struct mtk_ddp_data {
+> +	const unsigned int *mutex_mod;
+> +};
+> +
+>  struct mtk_ddp {
+>  	struct device			*dev;
+>  	struct clk			*clk;
+>  	void __iomem			*regs;
+>  	struct mtk_disp_mutex		mutex[10];
+> -	const unsigned int		*mutex_mod;
+> +	const struct mtk_ddp_data	*data;
+>  };
+>  
+>  static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+> @@ -202,6 +206,18 @@ struct mtk_ddp {
+>  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+>  };
+>  
+> +static const struct mtk_ddp_data mt2701_ddp_driver_data = {
+> +	.mutex_mod = mt2701_mutex_mod,
+> +};
+> +
+> +static const struct mtk_ddp_data mt2712_ddp_driver_data = {
+> +	.mutex_mod = mt2712_mutex_mod,
+> +};
+> +
+> +static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+> +	.mutex_mod = mt8173_mutex_mod,
+> +};
+> +
+>  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>  				    enum mtk_ddp_comp_id next,
+>  				    unsigned int *addr)
+> @@ -464,15 +480,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+>  		reg = MUTEX_SOF_DPI1;
+>  		break;
+>  	default:
+> -		if (ddp->mutex_mod[id] < 32) {
+> +		if (ddp->data->mutex_mod[id] < 32) {
+>  			offset = DISP_REG_MUTEX_MOD(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg |= 1 << ddp->mutex_mod[id];
+> +			reg |= 1 << ddp->data->mutex_mod[id];
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		} else {
+>  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg |= 1 << (ddp->mutex_mod[id] - 32);
+> +			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		}
+>  		return;
+> @@ -502,15 +518,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+>  			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+>  		break;
+>  	default:
+> -		if (ddp->mutex_mod[id] < 32) {
+> +		if (ddp->data->mutex_mod[id] < 32) {
+>  			offset = DISP_REG_MUTEX_MOD(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg &= ~(1 << ddp->mutex_mod[id]);
+> +			reg &= ~(1 << ddp->data->mutex_mod[id]);
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		} else {
+>  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
+> +			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		}
+>  		break;
+> @@ -585,7 +601,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
+>  		return PTR_ERR(ddp->regs);
+>  	}
+>  
+> -	ddp->mutex_mod = of_device_get_match_data(dev);
+> +	ddp->data = of_device_get_match_data(dev);
+>  
+>  	platform_set_drvdata(pdev, ddp);
+>  
+> @@ -598,9 +614,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id ddp_driver_dt_match[] = {
+> -	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
+> -	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
+> -	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
+> +	{ .compatible = "mediatek,mt2701-disp-mutex",
+> +	  .data = &mt2701_ddp_driver_data},
+> +	{ .compatible = "mediatek,mt2712-disp-mutex",
+> +	  .data = &mt2712_ddp_driver_data},
+> +	{ .compatible = "mediatek,mt8173-disp-mutex",
+> +	  .data = &mt8173_ddp_driver_data},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
 
-  1fcd0eb356ad ("tests: fix pidfd-test compilation")
 
-from Linus' tree and commit:
-
-  233ad92edbea ("pidfd: add polling selftests")
-
-from the pidfd tree.
-
-I fixed it up (I just used the latter) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/P82a9gtvGIURYM1Ekb4W_o0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz4p1IACgkQAVBC80lX
-0GyrXggAiI/EPPvyqGl/jsf+PRndL5BZ2c9nKe5AlOG+tD8poTyrAvz7a8iPvd0v
-QGuYnPtPt/AJVIBf8PvfB+XbNI+pwzw+Agy7+J2qboB4PcqxOk5t4j1nZ0pGRz4P
-f4hetzqVgjIU+68r+5kR1Hm81u0sMfqVg8rrIMvchZB3THxDugaLy4byLSXJKkzH
-v9vtKYog/Wpxe4px1NhxUbO8RaLMUyBm/+H1smgkpNQ7FrpzV12Gjdn2KS8nTD3r
-0HYiheEFLSGaIOir2xxRu84+zZ8yPF1g2C27Q6f5vvYTbQkGmo7R27ME8e8sbZ5T
-ZJFR5E6MgWJ/737Vx8ws67YdnU1Mdg==
-=+018
------END PGP SIGNATURE-----
-
---Sig_/P82a9gtvGIURYM1Ekb4W_o0--
