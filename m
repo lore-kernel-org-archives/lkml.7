@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C5EC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5F5C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0487E207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DC320868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559806695;
-	bh=SaCo5XTxFSdoSTx0adxdVSEm12HbPMedDe8u08eNtC4=;
+	s=default; t=1559806698;
+	bh=c4RvbCOvzAZwo+JHxwzn6l9TERUZJXcjP8N8zi+spgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DWMX0qqC3g7Z21WOiiOpSss3kQc83LIld60yvT5xjZ+WVElKHJR/DK3hjbjV62Irh
-	 j0784gqp8LJA3awil5E32/ueTpQdUDICFOjIyM6EtNh6f3BGQHK36f8eN110L8CkVB
-	 RbAo9NptqwH0MC2Y5071T7uxNvHNPLzkUHBwZE5U=
+	b=Yp9J46qeqVqQOwNToOa6hJfa64a6ZmprmZJ2FwqftfHSk56kQ6afe4+NqBMUaxDLt
+	 Ed3AwU4i51s5gzxUX6rpZcToappbBHpFLrsbQmvS/tCY86+rXjUv9JuIGTNWCtxN2V
+	 rQYJZQQ0JgCLazv2cql8ocB9YGeMkUgTdGfOZtgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfFFHiO (ORCPT
+        id S1726103AbfFFHiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:38:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35916 "EHLO mail.kernel.org"
+        Thu, 6 Jun 2019 03:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFFHiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:38:13 -0400
+        id S1725769AbfFFHiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:38:16 -0400
 Received: from localhost.localdomain (unknown [223.93.147.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D511120872;
-        Thu,  6 Jun 2019 07:38:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 138492089E;
+        Thu,  6 Jun 2019 07:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559806692;
-        bh=SaCo5XTxFSdoSTx0adxdVSEm12HbPMedDe8u08eNtC4=;
+        s=default; t=1559806696;
+        bh=c4RvbCOvzAZwo+JHxwzn6l9TERUZJXcjP8N8zi+spgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIUKUn6shQ6GwRLxaWBHSnKYtvydlkduoU3TpKCNajvOUsFFqkQ7O2+rGEpGNcZOQ
-         vgpYq56PxceZAPGsLZ1OfHqwe9z62Uo9/gE/efaP7o7pzxdXBUmIa2qjVRVK1a0ce5
-         wmr+Cowh4Kokl7XQjm3+qHRM0oP76DfrH+iD8HH0=
+        b=WI3WcSBCqbnqEZawPZOnj8m2qZSaTZmcMlUZ93Ak87D4LT/w0hSxS68WrA7YGhF/d
+         KNO4DzeBiwQWWRCcyQEJb7l6dK3dB//eZ/iCalmYW4gjFUug1NL5dbazzX8WvG8BJy
+         22BQPRfJTGujsLm3sGy5oHY5bqNBblZhtwaqe7rE=
 From:   guoren@kernel.org
 To:     marc.zyngier@arm.com, mark.rutland@arm.com, tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, jason@lakedaemon.net,
         guoren@kernel.org, linux-csky@vger.kernel.org,
         Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V5 2/3] dt-bindings: interrupt-controller: Update csky mpintc
-Date:   Thu,  6 Jun 2019 15:37:32 +0800
-Message-Id: <1559806653-11249-3-git-send-email-guoren@kernel.org>
+Subject: [PATCH V5 3/3] irqchip/irq-csky-mpintc: Remove unnecessary loop in interrupt handler
+Date:   Thu,  6 Jun 2019 15:37:33 +0800
+Message-Id: <1559806653-11249-4-git-send-email-guoren@kernel.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559806653-11249-1-git-send-email-guoren@kernel.org>
 References: <1559806653-11249-1-git-send-email-guoren@kernel.org>
@@ -57,65 +57,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <ren_guo@c-sky.com>
 
-Add trigger type setting for csky,mpintc. The driver also could
-support #interrupt-cells <1> and it wouldn't invalidate existing
-DTs. Here we only show the complete format.
+csky_mpintc_handler()
+  ->handle_domain_irq()
+    ->irq_exit()
+      ->invoke_softirq()
+        ->__do_softirq()
+          ->local_irq_enable()
+
+If new interrupt coming, it'll get into interrupt trap before return to
+csky_mpintc_handler(). So there is no need loop in csky_mpintc_handler.
 
 Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Reviewed-by: Rob Herring <robh+dt@kernel.org>
 Cc: Marc Zyngier <marc.zyngier@arm.com>
 ---
- .../bindings/interrupt-controller/csky,mpintc.txt    | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-csky-mpintc.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-index ab921f1..e134053 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-@@ -6,11 +6,16 @@ C-SKY Multi-processors Interrupt Controller is designed for ck807/ck810/ck860
- SMP soc, and it also could be used in non-SMP system.
+diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
+index 4457722..806ba0e 100644
+--- a/drivers/irqchip/irq-csky-mpintc.c
++++ b/drivers/irqchip/irq-csky-mpintc.c
+@@ -34,7 +34,6 @@ static void __iomem *INTCL_base;
+ #define INTCL_PICTLR	0x0
+ #define INTCL_CFGR	0x14
+ #define INTCL_SIGR	0x60
+-#define INTCL_HPPIR	0x68
+ #define INTCL_RDYIR	0x6c
+ #define INTCL_SENR	0xa0
+ #define INTCL_CENR	0xa4
+@@ -75,11 +74,8 @@ static void csky_mpintc_handler(struct pt_regs *regs)
+ {
+ 	void __iomem *reg_base = this_cpu_read(intcl_reg);
  
- Interrupt number definition:
--
-   0-15  : software irq, and we use 15 as our IPI_IRQ.
-  16-31  : private  irq, and we use 16 as the co-processor timer.
-  31-1024: common irq for soc ip.
+-	do {
+-		handle_domain_irq(root_domain,
+-				  readl_relaxed(reg_base + INTCL_RDYIR),
+-				  regs);
+-	} while (readl_relaxed(reg_base + INTCL_HPPIR) & BIT(31));
++	handle_domain_irq(root_domain,
++		readl_relaxed(reg_base + INTCL_RDYIR), regs);
+ }
  
-+Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
-+ IRQ_TYPE_LEVEL_HIGH (default)
-+ IRQ_TYPE_LEVEL_LOW
-+ IRQ_TYPE_EDGE_RISING
-+ IRQ_TYPE_EDGE_FALLING
-+
- =============================
- intc node bindings definition
- =============================
-@@ -26,15 +31,22 @@ intc node bindings definition
- 	- #interrupt-cells
- 		Usage: required
- 		Value type: <u32>
--		Definition: must be <1>
-+		Definition: <2>
- 	- interrupt-controller:
- 		Usage: required
- 
--Examples:
-+Examples: ("interrupts = <irq_num IRQ_TYPE_XXX>")
- ---------
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- 	intc: interrupt-controller {
- 		compatible = "csky,mpintc";
--		#interrupt-cells = <1>;
-+		#interrupt-cells = <2>;
- 		interrupt-controller;
- 	};
-+
-+	device: device-example {
-+		...
-+		interrupts = <34 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-parent = <&intc>;
-+	};
+ static void csky_mpintc_enable(struct irq_data *d)
 -- 
 2.7.4
 
