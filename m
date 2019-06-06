@@ -2,450 +2,286 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74738C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE463C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48FE920693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37402070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfFFNUT (ORCPT
+        id S1727178AbfFFNU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:20:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43395 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFFNUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:20:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 06:20:18 -0700
-X-ExtLoop1: 1
-Received: from xxx.igk.intel.com (HELO xxx) ([10.237.93.170])
-  by orsmga005.jf.intel.com with ESMTP; 06 Jun 2019 06:20:16 -0700
-Date:   Thu, 6 Jun 2019 15:24:02 +0200
-From:   Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org, tiwai@suse.com
-Subject: Re: [alsa-devel] [PATCH v2] ASoC: msm8916-wcd-digital: Add sidetone
- support
-Message-ID: <20190606152402.2d310b7d@xxx>
-In-Reply-To: <20190606124242.12941-1-srinivas.kandagatla@linaro.org>
-References: <20190606124242.12941-1-srinivas.kandagatla@linaro.org>
+        Thu, 6 Jun 2019 09:20:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33554 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725782AbfFFNU0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 09:20:26 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56DJ5Kr004301
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 09:20:25 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sy13ng4fa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 09:20:03 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 6 Jun 2019 14:19:41 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Jun 2019 14:19:35 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x56DJY6F17760646
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Jun 2019 13:19:34 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ADF01B206A;
+        Thu,  6 Jun 2019 13:19:34 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64458B2067;
+        Thu,  6 Jun 2019 13:19:34 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.209.205])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Jun 2019 13:19:34 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id D487816C5DEA; Thu,  6 Jun 2019 06:19:33 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 06:19:33 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        herbert@gondor.apana.org.au, torvalds@linux-foundation.org
+Subject: [PATCH RFC tip/core/rcu] Restore barrier() to rcu_read_lock() and
+ rcu_read_unlock()
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060613-0060-0000-0000-0000034D0301
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011223; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01214064; UDB=6.00638153; IPR=6.00995143;
+ MB=3.00027206; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-06 13:19:40
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060613-0061-0000-0000-000049A8C8CC
+Message-Id: <20190606131933.GA12576@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906060095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  6 Jun 2019 13:42:42 +0100
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+Commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny and Tree
+RCU readers") removed the barrier() calls from rcu_read_lock() and
+rcu_write_lock() in CONFIG_PREEMPT=n&&CONFIG_PREEMPT_COUNT=n kernels.
+Within RCU, this commit was OK, but it failed to account for things like
+get_user() that can pagefault and that can be reordered by the compiler.
+Lack of the barrier() calls in rcu_read_lock() and rcu_read_unlock()
+can cause these page faults to migrate into RCU read-side critical
+sections, which in CONFIG_PREEMPT=n kernels could result in too-short
+grace periods and arbitrary misbehavior.  Please see commit 386afc91144b
+("spinlocks and preemption points need to be at least compiler barriers")
+for more details.
 
-> This patch adds sidetone support via one of the 3 RX Mix paths
-> using IIR1 and IIR2.
-> IIR1 can be feed by any Decimators or RX paths, and IIRx can also be
-> looped back to RX mixers to provide sidetone functionality.
-> Two IIR filters are used for Side tone equalization and each filter
-> is 5 stage.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> Changes since v1:
-> 	- added missing break in switch
-> 	- Moved IIR bands enable to switch controls
-> 
->  sound/soc/codecs/msm8916-wcd-digital.c | 282
-> +++++++++++++++++++++++++ 1 file changed, 282 insertions(+)
-> 
-> diff --git a/sound/soc/codecs/msm8916-wcd-digital.c
-> b/sound/soc/codecs/msm8916-wcd-digital.c index
-> a63961861e55..1db7e43ec203 100644 ---
-> a/sound/soc/codecs/msm8916-wcd-digital.c +++
-> b/sound/soc/codecs/msm8916-wcd-digital.c @@ -187,6 +187,43 @@
->  #define MSM8916_WCD_DIGITAL_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
->  				     SNDRV_PCM_FMTBIT_S32_LE)
->  
-> +/* Codec supports 2 IIR filters */
-> +enum {
-> +	IIR1 = 0,
-> +	IIR2,
-> +	IIR_MAX,
-> +};
-> +
-> +/* Codec supports 5 bands */
-> +enum {
-> +	BAND1 = 0,
-> +	BAND2,
-> +	BAND3,
-> +	BAND4,
-> +	BAND5,
-> +	BAND_MAX,
-> +};
-> +
-> +#define WCD_IIR_FILTER_SIZE	(sizeof(u32)*BAND_MAX)
-> +
-> +#define WCD_IIR_FILTER_CTL(xname, iidx, bidx) \
-> +{       .iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
-> +	.info = wcd_iir_filter_info, \
-> +	.get = msm8x16_wcd_get_iir_band_audio_mixer, \
-> +	.put = msm8x16_wcd_put_iir_band_audio_mixer, \
-> +	.private_value = (unsigned long)&(struct wcd_iir_filter_ctl)
-> { \
-> +		.iir_idx = iidx, \
-> +		.band_idx = bidx, \
-> +		.bytes_ext = {.max = WCD_IIR_FILTER_SIZE, }, \
-> +	} \
-> +}
-> +
-> +struct wcd_iir_filter_ctl {
-> +	unsigned int iir_idx;
-> +	unsigned int band_idx;
-> +	struct soc_bytes_ext bytes_ext;
-> +};
-> +
->  struct msm8916_wcd_digital_priv {
->  	struct clk *ahbclk, *mclk;
->  };
-> @@ -298,6 +335,161 @@ static
-> SOC_ENUM_SINGLE_DECL(rx2_dcb_cutoff_enum, LPASS_CDC_RX2_B4_CTL, 0,
-> static SOC_ENUM_SINGLE_DECL(rx3_dcb_cutoff_enum,
-> LPASS_CDC_RX3_B4_CTL, 0, dc_blocker_cutoff_text); 
-> +static int msm8x16_wcd_codec_set_iir_gain(struct snd_soc_dapm_widget
-> *w,
-> +		struct snd_kcontrol *kcontrol, int event)
-> +{
-> +	struct snd_soc_component *component =
-> +			snd_soc_dapm_to_component(w->dapm);
-> +	int value = 0, reg = 0;
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		if (w->shift == 0)
-> +			reg = LPASS_CDC_IIR1_GAIN_B1_CTL;
-> +		else if (w->shift == 1)
-> +			reg = LPASS_CDC_IIR2_GAIN_B1_CTL;
-> +		value = snd_soc_component_read32(component, reg);
-> +		snd_soc_component_write(component, reg, value);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static uint32_t get_iir_band_coeff(struct snd_soc_component
-> *component,
-> +				   int iir_idx, int band_idx,
-> +				   int coeff_idx)
-> +{
-> +	uint32_t value = 0;
-> +
-> +	/* Address does not automatically update if reading */
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
-> +		((band_idx * BAND_MAX + coeff_idx)
-> +		* sizeof(uint32_t)) & 0x7F);
-> +
-> +	value |= snd_soc_component_read32(component,
-> +		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx));
-> +
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
-> +		((band_idx * BAND_MAX + coeff_idx)
-> +		* sizeof(uint32_t) + 1) & 0x7F);
-> +
-> +	value |= (snd_soc_component_read32(component,
-> +		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx)) << 8);
-> +
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
-> +		((band_idx * BAND_MAX + coeff_idx)
-> +		* sizeof(uint32_t) + 2) & 0x7F);
-> +
-> +	value |= (snd_soc_component_read32(component,
-> +		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx)) << 16);
-> +
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
-> +		((band_idx * BAND_MAX + coeff_idx)
-> +		* sizeof(uint32_t) + 3) & 0x7F);
-> +
-> +	/* Mask bits top 2 bits since they are reserved */
-> +	value |= ((snd_soc_component_read32(component,
-> +		 (LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx)) &
-> 0x3f) << 24);
-> +	return value;
-> +
-> +}
-> +
-> +static int msm8x16_wcd_get_iir_band_audio_mixer(
-> +					struct snd_kcontrol
-> *kcontrol,
-> +					struct snd_ctl_elem_value
-> *ucontrol) +{
-> +
-> +	struct snd_soc_component *component =
-> +			snd_soc_kcontrol_component(kcontrol);
-> +	struct wcd_iir_filter_ctl *ctl =
-> +			(struct wcd_iir_filter_ctl
-> *)kcontrol->private_value;
-> +	struct soc_bytes_ext *params = &ctl->bytes_ext;
-> +	int iir_idx = ctl->iir_idx;
-> +	int band_idx = ctl->band_idx;
-> +	u32 coeff[BAND_MAX];
-> +
-> +	coeff[0] = get_iir_band_coeff(component, iir_idx, band_idx,
-> 0);
-> +	coeff[1] = get_iir_band_coeff(component, iir_idx, band_idx,
-> 1);
-> +	coeff[2] = get_iir_band_coeff(component, iir_idx, band_idx,
-> 2);
-> +	coeff[3] = get_iir_band_coeff(component, iir_idx, band_idx,
-> 3);
-> +	coeff[4] = get_iir_band_coeff(component, iir_idx, band_idx,
-> 4); +
-> +	memcpy(ucontrol->value.bytes.data, &coeff[0], params->max);
-> +
-> +	return 0;
-> +}
-> +
-> +static void set_iir_band_coeff(struct snd_soc_component *component,
-> +				int iir_idx, int band_idx,
-> +				uint32_t value)
-> +{
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx),
-> +		(value & 0xFF));
-> +
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx),
-> +		(value >> 8) & 0xFF);
-> +
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx),
-> +		(value >> 16) & 0xFF);
-> +
-> +	/* Mask top 2 bits, 7-8 are reserved */
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B2_CTL + 64 * iir_idx),
-> +		(value >> 24) & 0x3F);
-> +}
-> +
-> +static int msm8x16_wcd_put_iir_band_audio_mixer(
-> +					struct snd_kcontrol
-> *kcontrol,
-> +					struct snd_ctl_elem_value
-> *ucontrol) +{
-> +	struct snd_soc_component *component =
-> +			snd_soc_kcontrol_component(kcontrol);
-> +	struct wcd_iir_filter_ctl *ctl =
-> +			(struct wcd_iir_filter_ctl
-> *)kcontrol->private_value;
-> +	struct soc_bytes_ext *params = &ctl->bytes_ext;
-> +	int iir_idx = ctl->iir_idx;
-> +	int band_idx = ctl->band_idx;
-> +	u32 coeff[BAND_MAX];
-> +
-> +	memcpy(&coeff[0], ucontrol->value.bytes.data, params->max);
-> +
-> +	/* Mask top bit it is reserved */
-> +	/* Updates addr automatically for each B2 write */
-> +	snd_soc_component_write(component,
-> +		(LPASS_CDC_IIR1_COEF_B1_CTL + 64 * iir_idx),
-> +		(band_idx * BAND_MAX * sizeof(uint32_t)) & 0x7F);
-> +
-> +	set_iir_band_coeff(component, iir_idx, band_idx, coeff[0]);
-> +	set_iir_band_coeff(component, iir_idx, band_idx, coeff[1]);
-> +	set_iir_band_coeff(component, iir_idx, band_idx, coeff[2]);
-> +	set_iir_band_coeff(component, iir_idx, band_idx, coeff[3]);
-> +	set_iir_band_coeff(component, iir_idx, band_idx, coeff[4]);
-> +
-> +	return 0;
-> +}
-> +
-> +static int wcd_iir_filter_info(struct snd_kcontrol *kcontrol,
-> +				struct snd_ctl_elem_info *ucontrol)
-> +{
-> +	struct wcd_iir_filter_ctl *ctl =
-> +		(struct wcd_iir_filter_ctl *)kcontrol->private_value;
-> +	struct soc_bytes_ext *params = &ctl->bytes_ext;
-> +
-> +	ucontrol->type = SNDRV_CTL_ELEM_TYPE_BYTES;
-> +	ucontrol->count = params->max;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct snd_kcontrol_new
-> msm8916_wcd_digital_snd_controls[] = { SOC_SINGLE_S8_TLV("RX1 Digital
-> Volume", LPASS_CDC_RX1_VOL_CTL_B2_CTL, -128, 127, digital_gain),
-> @@ -322,6 +514,44 @@ static const struct snd_kcontrol_new
-> msm8916_wcd_digital_snd_controls[] = { SOC_SINGLE("RX1 Mute Switch",
-> LPASS_CDC_RX1_B6_CTL, 0, 1, 0), SOC_SINGLE("RX2 Mute Switch",
-> LPASS_CDC_RX2_B6_CTL, 0, 1, 0), SOC_SINGLE("RX3 Mute Switch",
-> LPASS_CDC_RX3_B6_CTL, 0, 1, 0), +
-> +	SOC_SINGLE("IIR1 Band1 Switch", LPASS_CDC_IIR1_CTL, 0, 1, 0),
-> +	SOC_SINGLE("IIR1 Band2 Switch", LPASS_CDC_IIR1_CTL, 1, 1, 0),
-> +	SOC_SINGLE("IIR1 Band3 Switch", LPASS_CDC_IIR1_CTL, 2, 1, 0),
-> +	SOC_SINGLE("IIR1 Band4 Switch", LPASS_CDC_IIR1_CTL, 3, 1, 0),
-> +	SOC_SINGLE("IIR1 Band5 Switch", LPASS_CDC_IIR1_CTL, 4, 1, 0),
-> +	SOC_SINGLE("IIR2 Band1 Switch", LPASS_CDC_IIR2_CTL, 0, 1, 0),
-> +	SOC_SINGLE("IIR2 Band2 Switch", LPASS_CDC_IIR2_CTL, 1, 1, 0),
-> +	SOC_SINGLE("IIR2 Band3 Switch", LPASS_CDC_IIR2_CTL, 2, 1, 0),
-> +	SOC_SINGLE("IIR2 Band4 Switch", LPASS_CDC_IIR2_CTL, 3, 1, 0),
-> +	SOC_SINGLE("IIR2 Band5 Switch", LPASS_CDC_IIR2_CTL, 4, 1, 0),
-> +	WCD_IIR_FILTER_CTL("IIR1 Band1", IIR1, BAND1),
-> +	WCD_IIR_FILTER_CTL("IIR1 Band2", IIR1, BAND2),
-> +	WCD_IIR_FILTER_CTL("IIR1 Band3", IIR1, BAND3),
-> +	WCD_IIR_FILTER_CTL("IIR1 Band4", IIR1, BAND4),
-> +	WCD_IIR_FILTER_CTL("IIR1 Band5", IIR1, BAND5),
-> +	WCD_IIR_FILTER_CTL("IIR2 Band1", IIR2, BAND1),
-> +	WCD_IIR_FILTER_CTL("IIR2 Band2", IIR2, BAND2),
-> +	WCD_IIR_FILTER_CTL("IIR2 Band3", IIR2, BAND3),
-> +	WCD_IIR_FILTER_CTL("IIR2 Band4", IIR2, BAND4),
-> +	WCD_IIR_FILTER_CTL("IIR2 Band5", IIR2, BAND5),
-> +	SOC_SINGLE_SX_TLV("IIR1 INP1 Volume",
-> LPASS_CDC_IIR1_GAIN_B1_CTL,
-> +			0,  -84, 40, digital_gain),
-> +	SOC_SINGLE_SX_TLV("IIR1 INP2 Volume",
-> LPASS_CDC_IIR1_GAIN_B2_CTL,
-> +			0,  -84, 40, digital_gain),
-> +	SOC_SINGLE_SX_TLV("IIR1 INP3 Volume",
-> LPASS_CDC_IIR1_GAIN_B3_CTL,
-> +			0,  -84, 40, digital_gain),
-> +	SOC_SINGLE_SX_TLV("IIR1 INP4 Volume",
-> LPASS_CDC_IIR1_GAIN_B4_CTL,
-> +			0,  -84,	40, digital_gain),
+This commit therefore restores the barrier() call to both rcu_read_lock()
+and rcu_read_unlock().  It also removes them from places in the RCU update
+machinery that used to need compensatory barrier() calls, effectively
+reverting commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny
+and Tree RCU readers").
 
-There seems to be some alignment issue in above line.
-And while I'm commenting this place, there is only 4 Volume controls,
-while there is 5 switches for IIR1 and IIR2, is this right?
+Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 
-> +	SOC_SINGLE_SX_TLV("IIR2 INP1 Volume",
-> LPASS_CDC_IIR2_GAIN_B1_CTL,
-> +			0,  -84, 40, digital_gain),
-> +	SOC_SINGLE_SX_TLV("IIR2 INP2 Volume",
-> LPASS_CDC_IIR2_GAIN_B2_CTL,
-> +			0,  -84, 40, digital_gain),
-> +	SOC_SINGLE_SX_TLV("IIR2 INP3 Volume",
-> LPASS_CDC_IIR2_GAIN_B3_CTL,
-> +			0,  -84, 40, digital_gain),
-> +	SOC_SINGLE_SX_TLV("IIR2 INP4 Volume",
-> LPASS_CDC_IIR2_GAIN_B4_CTL,
-> +			0,  -84, 40, digital_gain),
-> +
->  };
->  
->  static int msm8916_wcd_digital_enable_interpolator(
-> @@ -448,6 +678,24 @@ static int
-> msm8916_wcd_digital_enable_dmic(struct snd_soc_dapm_widget *w, return
-> 0; }
->  
-> +static const char * const iir_inp1_text[] = {
-> +	"ZERO", "DEC1", "DEC2", "RX1", "RX2", "RX3"
-> +};
-> +
-> +static const struct soc_enum iir1_inp1_mux_enum =
-> +	SOC_ENUM_SINGLE(LPASS_CDC_CONN_EQ1_B1_CTL,
-> +		0, 6, iir_inp1_text);
-> +
-> +static const struct soc_enum iir2_inp1_mux_enum =
-> +	SOC_ENUM_SINGLE(LPASS_CDC_CONN_EQ2_B1_CTL,
-> +		0, 6, iir_inp1_text);
-> +
-> +static const struct snd_kcontrol_new iir1_inp1_mux =
-> +	SOC_DAPM_ENUM("IIR1 INP1 Mux", iir1_inp1_mux_enum);
-> +
-> +static const struct snd_kcontrol_new iir2_inp1_mux =
-> +	SOC_DAPM_ENUM("IIR2 INP1 Mux", iir2_inp1_mux_enum);
-> +
->  static const struct snd_soc_dapm_widget
-> msm8916_wcd_digital_dapm_widgets[] = { /*RX stuff */
->  	SND_SOC_DAPM_AIF_IN("I2S RX1", NULL, 0, SND_SOC_NOPM, 0, 0),
-> @@ -534,6 +782,15 @@ static const struct snd_soc_dapm_widget
-> msm8916_wcd_digital_dapm_widgets[] = { SND_SOC_DAPM_MIC("Digital
-> Mic1", NULL), SND_SOC_DAPM_MIC("Digital Mic2", NULL),
->  
-> +	/* Sidetone */
-> +	SND_SOC_DAPM_MUX("IIR1 INP1 MUX", SND_SOC_NOPM, 0, 0,
-> &iir1_inp1_mux),
-> +	SND_SOC_DAPM_PGA_E("IIR1", LPASS_CDC_CLK_SD_CTL, 0, 0, NULL,
-> 0,
-> +		msm8x16_wcd_codec_set_iir_gain,
-> SND_SOC_DAPM_POST_PMU), +
-> +	SND_SOC_DAPM_MUX("IIR2 INP1 MUX", SND_SOC_NOPM, 0, 0,
-> &iir2_inp1_mux),
-> +	SND_SOC_DAPM_PGA_E("IIR2", LPASS_CDC_CLK_SD_CTL, 1, 0, NULL,
-> 0,
-> +		msm8x16_wcd_codec_set_iir_gain,
-> SND_SOC_DAPM_POST_PMU), +
->  };
->  
->  static int msm8916_wcd_digital_get_clks(struct platform_device *pdev,
-> @@ -708,10 +965,14 @@ static const struct snd_soc_dapm_route
-> msm8916_wcd_digital_audio_map[] = { {"RX1 MIX1 INP1", "RX1", "I2S
-> RX1"}, {"RX1 MIX1 INP1", "RX2", "I2S RX2"},
->  	{"RX1 MIX1 INP1", "RX3", "I2S RX3"},
-> +	{"RX1 MIX1 INP1", "IIR1", "IIR1"},
-> +	{"RX1 MIX1 INP1", "IIR2", "IIR2"},
->  
->  	{"RX1 MIX1 INP2", "RX1", "I2S RX1"},
->  	{"RX1 MIX1 INP2", "RX2", "I2S RX2"},
->  	{"RX1 MIX1 INP2", "RX3", "I2S RX3"},
-> +	{"RX1 MIX1 INP2", "IIR1", "IIR1"},
-> +	{"RX1 MIX1 INP2", "IIR2", "IIR2"},
->  
->  	{"RX1 MIX1 INP3", "RX1", "I2S RX1"},
->  	{"RX1 MIX1 INP3", "RX2", "I2S RX2"},
-> @@ -728,10 +989,14 @@ static const struct snd_soc_dapm_route
-> msm8916_wcd_digital_audio_map[] = { {"RX2 MIX1 INP1", "RX1", "I2S
-> RX1"}, {"RX2 MIX1 INP1", "RX2", "I2S RX2"},
->  	{"RX2 MIX1 INP1", "RX3", "I2S RX3"},
-> +	{"RX2 MIX1 INP1", "IIR1", "IIR1"},
-> +	{"RX2 MIX1 INP1", "IIR2", "IIR2"},
->  
->  	{"RX2 MIX1 INP2", "RX1", "I2S RX1"},
->  	{"RX2 MIX1 INP2", "RX2", "I2S RX2"},
->  	{"RX2 MIX1 INP2", "RX3", "I2S RX3"},
-> +	{"RX2 MIX1 INP1", "IIR1", "IIR1"},
-> +	{"RX2 MIX1 INP1", "IIR2", "IIR2"},
->  
->  	{"RX2 MIX1 INP3", "RX1", "I2S RX1"},
->  	{"RX2 MIX1 INP3", "RX2", "I2S RX2"},
-> @@ -748,10 +1013,27 @@ static const struct snd_soc_dapm_route
-> msm8916_wcd_digital_audio_map[] = { {"RX3 MIX1 INP1", "RX1", "I2S
-> RX1"}, {"RX3 MIX1 INP1", "RX2", "I2S RX2"},
->  	{"RX3 MIX1 INP1", "RX3", "I2S RX3"},
-> +	{"RX3 MIX1 INP1", "IIR1", "IIR1"},
-> +	{"RX3 MIX1 INP1", "IIR2", "IIR2"},
->  
->  	{"RX3 MIX1 INP2", "RX1", "I2S RX1"},
->  	{"RX3 MIX1 INP2", "RX2", "I2S RX2"},
->  	{"RX3 MIX1 INP2", "RX3", "I2S RX3"},
-> +	{"RX3 MIX1 INP2", "IIR1", "IIR1"},
-> +	{"RX3 MIX1 INP2", "IIR2", "IIR2"},
-> +
-> +	{"RX1 MIX2 INP1", "IIR1", "IIR1"},
-> +	{"RX2 MIX2 INP1", "IIR1", "IIR1"},
-> +	{"RX1 MIX2 INP1", "IIR2", "IIR2"},
-> +	{"RX2 MIX2 INP1", "IIR2", "IIR2"},
-> +
-> +	{"IIR1", NULL, "IIR1 INP1 MUX"},
-> +	{"IIR1 INP1 MUX", "DEC1", "DEC1 MUX"},
-> +	{"IIR1 INP1 MUX", "DEC2", "DEC2 MUX"},
-> +
-> +	{"IIR2", NULL, "IIR2 INP1 MUX"},
-> +	{"IIR2 INP1 MUX", "DEC1", "DEC1 MUX"},
-> +	{"IIR2 INP1 MUX", "DEC2", "DEC2 MUX"},
->  
->  	{"RX3 MIX1 INP3", "RX1", "I2S RX1"},
->  	{"RX3 MIX1 INP3", "RX2", "I2S RX2"},
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
+index 5a9238a2883c..080b39cc1dbb 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.html
++++ b/Documentation/RCU/Design/Requirements/Requirements.html
+@@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
+ <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
+ <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
+ <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
++<li>	<a href="#Accesses to User Mamory and RCU">
++Accesses to User Mamory and RCU</a>.
+ <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
+ <li>	<a href="#Scheduling-Clock Interrupts and RCU">
+ 	Scheduling-Clock Interrupts and RCU</a>.
+@@ -2521,6 +2523,75 @@ cannot be used.
+ The tracing folks both located the requirement and provided the
+ needed fix, so this surprise requirement was relatively painless.
+ 
++<h3><a name="Accesses to User Mamory and RCU">
++Accesses to User Mamory and RCU</a></h3>
++
++<p>
++The kernel needs to access user-space memory, for example, to access
++data referenced by system-call parameters.
++The <tt>get_user()</tt> macro does this job.
++
++<p>
++However, user-space memory might well be paged out, which means
++that <tt>get_user()</tt> might well page-fault and thus block while
++waiting for the resulting I/O to complete.
++It would be a very bad thing for the compiler to reorder
++a <tt>get_user()</tt> invocation into an RCU read-side critical
++section.
++For example, suppose that the source code looked like this:
++
++<blockquote>
++<pre>
++ 1 rcu_read_lock();
++ 2 p = rcu_dereference(gp);
++ 3 v = p-&gt;value;
++ 4 rcu_read_unlock();
++ 5 get_user(user_v, user_p);
++ 6 do_something_with(v, user_v);
++</pre>
++</blockquote>
++
++<p>
++The compiler must not be permitted to transform this source code into
++the following:
++
++<blockquote>
++<pre>
++ 1 rcu_read_lock();
++ 2 p = rcu_dereference(gp);
++ 3 get_user(user_v, user_p); // BUG: POSSIBLE PAGE FAULT!!!
++ 4 v = p-&gt;value;
++ 5 rcu_read_unlock();
++ 6 do_something_with(v, user_v);
++</pre>
++</blockquote>
++
++<p>
++If the compiler did make this transformation in a
++<tt>CONFIG_PREEMPT=n</tt> kernel build, and if <tt>get_user()</tt> did
++page fault, the result would be a quiescent state in the middle
++of an RCU read-side critical section.
++This misplaced quiescent state could result in line&nbsp;4 being
++a use-after-free access, which could be bad for your kernel's
++actuarial statistics.
++Similar examples can be constructed with the call to <tt>get_user()</tt>
++preceding the <tt>rcu_read_lock()</tt>.
++
++<p>
++Unfortunately, <tt>get_user()</tt> doesn't have any particular
++ordering properties, and in some architectures the underlying <tt>asm</tt>
++isn't even marked <tt>volatile</tt>.
++And even if it was marked <tt>volatile</tt>, the above access to
++<tt>p-&gt;value</tt> is not volatile, so the compiler would not have any
++reason to keep those two accesses in order.
++
++<p>
++Therefore, the Linux-kernel definitions of <tt>rcu_read_lock()</tt>
++and <tt>rcu_read_unlock()</tt> must act as compiler barriers,
++at least for outermost instances of <tt>rcu_read_lock()</tt> and
++<tt>rcu_read_unlock()</tt> within a nested set of RCU read-side critical
++sections.
++
+ <h3><a name="Energy Efficiency">Energy Efficiency</a></h3>
+ 
+ <p>
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 0c9b92799abc..8f7167478c1d 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -56,14 +56,12 @@ void __rcu_read_unlock(void);
+ 
+ static inline void __rcu_read_lock(void)
+ {
+-	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
+-		preempt_disable();
++	preempt_disable();
+ }
+ 
+ static inline void __rcu_read_unlock(void)
+ {
+-	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
+-		preempt_enable();
++	preempt_enable();
+ }
+ 
+ static inline int rcu_preempt_depth(void)
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index acb225023ed1..3f1b5041de9b 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -288,7 +288,6 @@ void rcu_note_context_switch(bool preempt)
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 	struct rcu_node *rnp;
+ 
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	trace_rcu_utilization(TPS("Start context switch"));
+ 	lockdep_assert_irqs_disabled();
+ 	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0);
+@@ -340,7 +339,6 @@ void rcu_note_context_switch(bool preempt)
+ 	if (rdp->exp_deferred_qs)
+ 		rcu_report_exp_rdp(rdp);
+ 	trace_rcu_utilization(TPS("End context switch"));
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
+ }
+ EXPORT_SYMBOL_GPL(rcu_note_context_switch);
+ 
+@@ -828,11 +826,6 @@ static void rcu_qs(void)
+  * dyntick-idle quiescent state visible to other CPUs, which will in
+  * some cases serve for expedited as well as normal grace periods.
+  * Either way, register a lightweight quiescent state.
+- *
+- * The barrier() calls are redundant in the common case when this is
+- * called externally, but just in case this is called from within this
+- * file.
+- *
+  */
+ void rcu_all_qs(void)
+ {
+@@ -847,14 +840,12 @@ void rcu_all_qs(void)
+ 		return;
+ 	}
+ 	this_cpu_write(rcu_data.rcu_urgent_qs, false);
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	if (unlikely(raw_cpu_read(rcu_data.rcu_need_heavy_qs))) {
+ 		local_irq_save(flags);
+ 		rcu_momentary_dyntick_idle();
+ 		local_irq_restore(flags);
+ 	}
+ 	rcu_qs();
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
+ 	preempt_enable();
+ }
+ EXPORT_SYMBOL_GPL(rcu_all_qs);
+@@ -864,7 +855,6 @@ EXPORT_SYMBOL_GPL(rcu_all_qs);
+  */
+ void rcu_note_context_switch(bool preempt)
+ {
+-	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	trace_rcu_utilization(TPS("Start context switch"));
+ 	rcu_qs();
+ 	/* Load rcu_urgent_qs before other flags. */
+@@ -877,7 +867,6 @@ void rcu_note_context_switch(bool preempt)
+ 		rcu_tasks_qs(current);
+ out:
+ 	trace_rcu_utilization(TPS("End context switch"));
+-	barrier(); /* Avoid RCU read-side critical sections leaking up. */
+ }
+ EXPORT_SYMBOL_GPL(rcu_note_context_switch);
+ 
 
