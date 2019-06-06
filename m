@@ -2,82 +2,84 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D6AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603DFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A642083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:18:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hh3vfV36"
+	by mail.kernel.org (Postfix) with ESMTP id 3FF5C2083D
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfFFGSZ (ORCPT
+        id S1726699AbfFFGS3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:18:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44600 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFGSZ (ORCPT
+        Thu, 6 Jun 2019 02:18:29 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:33515 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFGS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:18:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=U8rF1uP19dnET207DcY9H/fsoaYvyqbT8DVHn5K5oRM=; b=hh3vfV36YrLiF3AZvb2T4/Qsm
-        ZGpgeScpxKnNf0aS2baD3ki47trw/uHctB3wKBpv6V6SbCMpk2PfbKUk/5XgM8HNDjclepJ9Zdbz6
-        2GcqhtFfRtwgOlRsLz0gTHbH/QD8c0RD1Nwv73lkSzrx4ZW4CsWVtPnTSaYKb7q2DM4NJWtdmuwyk
-        Ib935aW8MHP3OauCGnonYIxkH5L3VSyJFRXG0U2YAfTuXHF11OiwL/C6RfAmS9J4JPPN67De362rW
-        nJke29YpqUQ+h0Q/HmV6zGVwwZQCpJPnOD1sInPHpqtie3EXgVS+P5THX1FahoL367+4HTT4+qz1H
-        qcJ4t2xpQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYljA-0005QG-0s; Thu, 06 Jun 2019 06:18:20 +0000
-Date:   Wed, 5 Jun 2019 23:18:19 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     ira.weiny@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 03/10] mm/gup: Pass flags down to __gup_device_huge*
- calls
-Message-ID: <20190606061819.GA20520@infradead.org>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606014544.8339-4-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606014544.8339-4-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 6 Jun 2019 02:18:27 -0400
+Received: from marcel-macpro.fritz.box (p5B3D2A37.dip0.t-ipconnect.de [91.61.42.55])
+        by mail.holtmann.org (Postfix) with ESMTPSA id F2632CF2B3;
+        Thu,  6 Jun 2019 08:26:48 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [5.2.0-rcx] Bluetooth: hci0: unexpected event for opcode
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CADDKRnDWhX25QPFNXA-uPcM_tD3Bep2ui=D5A2A8A5cZvrbJtA@mail.gmail.com>
+Date:   Thu, 6 Jun 2019 08:18:25 +0200
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <F99C3F13-D705-4214-ADE8-30676E29360D@holtmann.org>
+References: <CADDKRnDWhX25QPFNXA-uPcM_tD3Bep2ui=D5A2A8A5cZvrbJtA@mail.gmail.com>
+To:     =?utf-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 06:45:36PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> In order to support checking for a layout lease on a FS DAX inode these
-> calls need to know if FOLL_LONGTERM was specified.
-> 
-> Prepare for this with this patch.
+Hi Joerg,
 
-The GUP fast argument passing is a mess.  That is why I've come up
-with this as part of the (not ready) get_user_pages_fast_bvec
-implementation:
+> In 5.2.0-rcx I see a new error message on startup probably after
+> loading the Bluetooth firmware:
+> [    1.609460] Bluetooth: hci0: unexpected event for opcode 0xfc2f
+> 
+>> dmesg | grep Bluetooth
+> [    0.130969] Bluetooth: Core ver 2.22
+> [    0.130973] Bluetooth: HCI device and connection manager initialized
+> [    0.130974] Bluetooth: HCI socket layer initialized
+> [    0.130975] Bluetooth: L2CAP socket layer initialized
+> [    0.130976] Bluetooth: SCO socket layer initialized
+> [    0.374716] Bluetooth: RFCOMM TTY layer initialized
+> [    0.374718] Bluetooth: RFCOMM socket layer initialized
+> [    0.374718] Bluetooth: RFCOMM ver 1.11
+> [    0.374719] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+> [    0.374720] Bluetooth: BNEP socket layer initialized
+> [    0.374721] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+> [    0.374722] Bluetooth: HIDP socket layer initialized
+> [    1.422530] Bluetooth: hci0: read Intel version: 370710018002030d00
+> [    1.422533] Bluetooth: hci0: Intel Bluetooth firmware file:
+> intel/ibt-hw-37.7.10-fw-1.80.2.3.d.bseq
+> [    1.609460] Bluetooth: hci0: unexpected event for opcode 0xfc2f
+> [    1.625557] Bluetooth: hci0: Intel firmware patch completed and activated
+> [   21.986125] input: BluetoothMouse3600 Mouse as
+> /devices/virtual/misc/uhid/0005:045E:0916.0004/input/input15
+> [   21.986329] input: BluetoothMouse3600 Consumer Control as
+> /devices/virtual/misc/uhid/0005:045E:0916.0004/input/input16
+> [   21.986408] hid-generic 0005:045E:0916.0004: input,hidraw3:
+> BLUETOOTH HID v1.10 Mouse [BluetoothMouse3600] on 80:19:34:4D:31:44
+> 
+> 
+> The error message goes away if I revert following patch:
+> f80c5dad7b64 Bluetooth: Ignore CC events not matching the last HCI command
 
-http://git.infradead.org/users/hch/misc.git/commitdiff/c3d019802dbde5a4cc4160e7ec8ccba479b19f97
+if you can send btmon trace (or better btmon -w trace.log) for this event triggering it, then we can look if this is a hardware issue. We have only seen this with Atheros hardware so far, but it might happen for others as well. It indicates that this is an unexpected event. Normally you can ignore this warning since it just indicates an existing issue that we just papered over before. So if everything works as before, just ignore it, but send me the trace and I can look if the event is erroneous or if we can silence the warning for the Intel hardware.
+
+Regards
+
+Marcel
+
