@@ -2,74 +2,149 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B930CC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6E3C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9893920684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FDAE20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbfFFOtB (ORCPT
+        id S1728884AbfFFOuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:49:01 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18111 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728782AbfFFOtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:49:01 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 449519EDE45B1854AD72;
-        Thu,  6 Jun 2019 22:48:48 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Jun 2019
- 22:48:42 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: mscc: ocelot: remove unused variable 'vcap_data_t'
-Date:   Thu, 6 Jun 2019 22:46:49 +0800
-Message-ID: <20190606144649.21368-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Thu, 6 Jun 2019 10:50:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58130 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728667AbfFFOuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:50:17 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56EZgWn143386
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 10:50:16 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sy2spfa62-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:50:15 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 6 Jun 2019 15:50:13 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Jun 2019 15:50:09 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x56Eo82q45809782
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Jun 2019 14:50:08 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 765A94C058;
+        Thu,  6 Jun 2019 14:50:08 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AAF74C044;
+        Thu,  6 Jun 2019 14:50:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.80.30])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Jun 2019 14:50:07 +0000 (GMT)
+Subject: Re: [PATCH v3 0/2] ima/evm fixes for v5.2
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        dmitry.kasatkin@huawei.com, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        silviu.vlasceanu@huawei.com
+Date:   Thu, 06 Jun 2019 10:49:56 -0400
+In-Reply-To: <3711f387-3aef-9fbb-1bb4-dded6807b033@huawei.com>
+References: <20190606112620.26488-1-roberto.sassu@huawei.com>
+         <3711f387-3aef-9fbb-1bb4-dded6807b033@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19060614-0012-0000-0000-00000325A790
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060614-0013-0000-0000-0000215E8FBB
+Message-Id: <1559832596.4278.124.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906060102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+On Thu, 2019-06-06 at 13:43 +0200, Roberto Sassu wrote:
+> On 6/6/2019 1:26 PM, Roberto Sassu wrote:
+> > Previous versions included the patch 'ima: don't ignore INTEGRITY_UNKNOWN
+> > EVM status'. However, I realized that this patch cannot be accepted alone
+> > because IMA-Appraisal would deny access to new files created during the
+> > boot. With the current behavior, those files are accessible because they
+> > have a valid security.ima (not protected by EVM) created after the first
+> > write.
+> > 
+> > A solution for this problem is to initialize EVM very early with a random
+> > key. Access to created files will be granted, even with the strict
+> > appraisal, because after the first write those files will have both
+> > security.ima and security.evm (HMAC calculated with the random key).
+> > 
+> > Strict appraisal will work only if it is done with signatures until the
+> > persistent HMAC key is loaded.
+> 
+> Changelog
+> 
+> v2:
+> - remove patch 1/3 (evm: check hash algorithm passed to init_desc());
+>    already accepted
+> - remove patch 3/3 (ima: show rules with IMA_INMASK correctly);
+>    already accepted
+> - add new patch (evm: add option to set a random HMAC key at early boot)
+> - patch 2/3: modify patch description
 
-drivers/net/ethernet/mscc/ocelot_ace.c:96:3:
- warning: symbol 'vcap_data_t' was not declared. Should it be static?
+Roberto, as I tried explaining previously, this feature is not a
+simple bug fix.  These patches, if upstreamed, will be upstreamed the
+normal way, during an open window.  Whether they are classified as a
+bug fix has yet to be decided.
 
-'vcap_data_t' never used so can be removed
+Please stop Cc'ing stable.  If I don't Cc stable before sending the pull request, then Greg and Sasha have been really good about deciding which patches should be backported.  (Please refer to the comment on "Cc'ing stable" in section "5) Select the recipients for your patch" in Documentation/process/submitting-patches.rst.)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/mscc/ocelot_ace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'll review these patches, but in the future please use an appropriate patch set cover letter title in the subject line.
 
-diff --git a/drivers/net/ethernet/mscc/ocelot_ace.c b/drivers/net/ethernet/mscc/ocelot_ace.c
-index 34d8260..f74b98f 100644
---- a/drivers/net/ethernet/mscc/ocelot_ace.c
-+++ b/drivers/net/ethernet/mscc/ocelot_ace.c
-@@ -93,7 +93,7 @@ struct vcap_data {
- 	u32 counter_offset; /* Current counter offset */
- 	u32 tg_value; /* Current type-group value */
- 	u32 tg_mask; /* Current type-group mask */
--} vcap_data_t;
-+};
- 
- static u32 vcap_s2_read_update_ctrl(struct ocelot *oc)
- {
--- 
-2.7.4
+thanks,
 
+Mimi
+
+
+> 
+> v1:
+> - remove patch 2/4 (evm: reset status in evm_inode_post_setattr()); file
+>    attributes cannot be set if the signature is portable and immutable
+> - patch 3/4: add __ro_after_init to ima_appraise_req_evm variable
+>    declaration
+> - patch 3/4: remove ima_appraise_req_evm kernel option and introduce
+>    'enforce-evm' and 'log-evm' as possible values for ima_appraise=
+> - remove patch 4/4 (ima: only audit failed appraisal verifications)
+> - add new patch (ima: show rules with IMA_INMASK correctly)
+> 
+> 
+> > Roberto Sassu (2):
+> >    evm: add option to set a random HMAC key at early boot
+> >    ima: add enforce-evm and log-evm modes to strictly check EVM status
+> > 
+> >   .../admin-guide/kernel-parameters.txt         | 11 ++--
+> >   security/integrity/evm/evm.h                  | 10 +++-
+> >   security/integrity/evm/evm_crypto.c           | 57 ++++++++++++++++---
+> >   security/integrity/evm/evm_main.c             | 41 ++++++++++---
+> >   security/integrity/ima/ima_appraise.c         |  8 +++
+> >   security/integrity/integrity.h                |  1 +
+> >   6 files changed, 106 insertions(+), 22 deletions(-)
+> > 
+> 
 
