@@ -2,71 +2,73 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31224C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800EBC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A6F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E4520868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 04:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfFFEUy (ORCPT
+        id S1726535AbfFFEiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 00:20:54 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18106 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725769AbfFFEUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 00:20:54 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1FCAF3ACD174BB950496;
-        Thu,  6 Jun 2019 12:20:50 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 6 Jun 2019 12:20:40 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Al Cooper <alcooperx@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] phy: usb: phy-brcm-usb: Fix platform_no_drv_owner.cocci warnings
-Date:   Thu, 6 Jun 2019 04:28:40 +0000
-Message-ID: <20190606042840.12773-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 6 Jun 2019 00:38:11 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:55342 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbfFFEiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 00:38:11 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hYkA7-0005Ha-Ee; Thu, 06 Jun 2019 12:38:03 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hYk9z-0003Zv-Oe; Thu, 06 Jun 2019 12:37:55 +0800
+Date:   Thu, 6 Jun 2019 12:37:55 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Message-ID: <20190606043755.f6bkexrycojlj6pu@gondor.apana.org.au>
+References: <20190602055607.bk5vgmwjvvt4wejd@gondor.apana.org.au>
+ <20190603000617.GD28207@linux.ibm.com>
+ <20190603030324.kl3bckqmebzis2vw@gondor.apana.org.au>
+ <CAHk-=wj2t+GK+DGQ7Xy6U7zMf72e7Jkxn4_-kGyfH3WFEoH+YQ@mail.gmail.com>
+ <CAHk-=wgZcrb_vQi5rwpv+=wwG+68SRDY16HcqcMtgPFL_kdfyQ@mail.gmail.com>
+ <20190603195304.GK28207@linux.ibm.com>
+ <CAHk-=whXb-QGZqOZ7S9YdjvQf7FNymzceinzJegvRALqXm3=FQ@mail.gmail.com>
+ <20190604211449.GU28207@linux.ibm.com>
+ <20190605022117.kw6tldcwhdkyqd6u@gondor.apana.org.au>
+ <20190605033039.GY28207@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190605033039.GY28207@linux.ibm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove .owner field if calls are used which set it automatically
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+On Tue, Jun 04, 2019 at 08:30:39PM -0700, Paul E. McKenney wrote:
+>
+> Understood.  Does the patch I sent out a few hours ago cover it?  Or is
+> something else needed?
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/phy/broadcom/phy-brcm-usb.c | 1 -
- 1 file changed, 1 deletion(-)
+It looks good to me.
 
-diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
-index 292d5b3fc66c..f050de6fd109 100644
---- a/drivers/phy/broadcom/phy-brcm-usb.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb.c
-@@ -451,7 +451,6 @@ static struct platform_driver brcm_usb_driver = {
- 	.remove		= brcm_usb_phy_remove,
- 	.driver		= {
- 		.name	= "brcmstb-usb-phy",
--		.owner	= THIS_MODULE,
- 		.pm = &brcm_usb_phy_pm_ops,
- 		.of_match_table = brcm_usb_dt_ids,
- 	},
+> Other than updates to the RCU requirements documentation, which is
+> forthcoming.
 
-
-
-
-
+Thanks Paul.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
