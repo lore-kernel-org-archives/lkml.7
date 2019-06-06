@@ -2,91 +2,103 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9CEC46460
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EF8C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E55720673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:17:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559834251;
-	bh=KUu7Ble2WSlIDPUcjDZbizyKce1GDo2QexEABVOtcTM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=mfB4Rdo0O1lz5tLjjEcGBLOJTTKaZNSqGqaqs22GJkGUxmpBEA8JJssHd3FFQFCiI
-	 WJyRApFmuojYAeSQh5bJi5LEhpthsB27xB0wjfr2VMectPg0pohFt6wqmgDVsUoRsF
-	 9aw1UKj9eHEDCI0Gpe9lpFOkIqEeoCQkRa8wktfo=
+	by mail.kernel.org (Postfix) with ESMTP id F1A8A2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbfFFPRa (ORCPT
+        id S1729235AbfFFPSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbfFFPRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:17:30 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        Thu, 6 Jun 2019 11:18:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58866 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729029AbfFFPSA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:18:00 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3F8720652;
-        Thu,  6 Jun 2019 15:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559834249;
-        bh=KUu7Ble2WSlIDPUcjDZbizyKce1GDo2QexEABVOtcTM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZzcSXQPxsxHHxWvMc/cR/cl8gtpeDB+AiWbboLIC4cmgVBjhEpHD/H+tKU9OtHBlJ
-         6b8ZX5Wg9QrSNKeHF1BVKYhjj+3psmGm4lf98yNI2E5jBaIjV6WYaoxrRrWcaNlEh2
-         B3ePRkv7fkE5KAqXEeEX5uD8l2Bi0HXJvsHB6Up4=
-Date:   Thu, 6 Jun 2019 08:17:27 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: fixes for 5.2-rc4
-Message-ID: <20190606151727.GH1200785@magnolia>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 31276260D74;
+        Thu,  6 Jun 2019 16:17:58 +0100 (BST)
+Date:   Thu, 6 Jun 2019 17:17:55 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org,
+        bbrezillon@kernel.org, Joao.Pinto@synopsys.com,
+        lorenzo.bianconi83@gmail.com
+Subject: Re: [PATCH v2 2/3] i3c: add i3c_get_device_id helper
+Message-ID: <20190606171755.0feb8998@collabora.com>
+In-Reply-To: <eaa9eb66df6b4c9b577aec46fd440b99d763a5a2.1559831663.git.vitor.soares@synopsys.com>
+References: <cover.1559831663.git.vitor.soares@synopsys.com>
+        <eaa9eb66df6b4c9b577aec46fd440b99d763a5a2.1559831663.git.vitor.soares@synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu,  6 Jun 2019 17:12:03 +0200
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-Here are a couple more bug fixes for 5.2.  They've survived a few days
-of fstests and merge cleanly with upstream as of a few minutes ago.  Let
-me know if there are problems.
+> This helper return the i3c_device_id structure in order the client
+> have access to the driver data.
+> 
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> ---
+> Changes in v2:
+>   move this function to drivers/i3c/device.c
+> 
+>  drivers/i3c/device.c       | 8 ++++++++
+>  include/linux/i3c/device.h | 1 +
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+> index 69cc040..a6d0796 100644
+> --- a/drivers/i3c/device.c
+> +++ b/drivers/i3c/device.c
+> @@ -200,6 +200,14 @@ struct i3c_device *dev_to_i3cdev(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_to_i3cdev);
+>  
+> +const struct i3c_device_id *i3c_get_device_id(struct i3c_device *i3cdev)
+> +{
+> +	const struct i3c_driver *i3cdrv = drv_to_i3cdrv(i3cdev->dev.driver);
+> +
+> +	return i3cdrv->id_table;
+> +}
+> +EXPORT_SYMBOL_GPL(i3c_get_device_id);
 
---D
+That's not what I asked. I told you to expose i3c_device_match_id()
+which already exists and is in master.c. What you really want is to get
+the device_id entry that matches your device, not the first entry in
+the table...
 
-The following changes since commit 5cd213b0fec640a46adc5e6e4dfc7763aa54b3b2:
+> +
+>  /**
+>   * i3c_driver_register_with_owner() - register an I3C device driver
+>   *
+> diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
+> index 5ecb055..e0415e1 100644
+> --- a/include/linux/i3c/device.h
+> +++ b/include/linux/i3c/device.h
+> @@ -187,6 +187,7 @@ static inline struct i3c_driver *drv_to_i3cdrv(struct device_driver *drv)
+>  
+>  struct device *i3cdev_to_dev(struct i3c_device *i3cdev);
+>  struct i3c_device *dev_to_i3cdev(struct device *dev);
+> +const struct i3c_device_id *i3c_get_device_id(struct i3c_device *i3cdev);
+>  
+>  static inline void i3cdev_set_drvdata(struct i3c_device *i3cdev,
+>  				      void *data)
 
-  xfs: don't reserve per-AG space for an internal log (2019-05-20 11:25:39 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-fixes-2
-
-for you to fetch changes up to 025197ebb08a77eea702011c479ece1229a9525b:
-
-  xfs: inode btree scrubber should calculate im_boffset correctly (2019-06-03 09:18:40 -0700)
-
-----------------------------------------------------------------
-Changes since last update:
-- Fix some forgotten strings in a log debugging function
-- Fix incorrect unit conversion in online fsck code
-
-----------------------------------------------------------------
-Darrick J. Wong (2):
-      xfs: fix broken log reservation debugging
-      xfs: inode btree scrubber should calculate im_boffset correctly
-
- fs/xfs/scrub/ialloc.c |  3 ++-
- fs/xfs/xfs_log.c      | 11 +++++++++--
- 2 files changed, 11 insertions(+), 3 deletions(-)
