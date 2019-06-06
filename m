@@ -2,172 +2,156 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36626C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10BFC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082602083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:06:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AiBbVniy"
+	by mail.kernel.org (Postfix) with ESMTP id 8C0D92064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 22:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfFFWGs (ORCPT
+        id S1729010AbfFFWIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 18:06:48 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45719 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728066AbfFFWGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 18:06:47 -0400
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x56M6ZWp2158298
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 6 Jun 2019 15:06:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x56M6ZWp2158298
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559858797;
-        bh=Y/Jr6CNliji1kAb24oczEDrL2qxP44Q+9QVwOi6b+gg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AiBbVniyfQqP5N+4wCHxj0GHikCtN3vwHb9pOMlwAVJ8yysBWuQTBjWFCVfL3IR7G
-         f7/IyEa97AaqQzSEHb9EaV8CgpwIk4r5DL64J0/TzoFD/FZgzhz/hgQ/sdDaxGPuMq
-         F1CL4s5gggJRFAo4WtXcDu8vT3XpKZsVGQkzf+PmY7D9udfhUwdk7JMEYg530zZNlY
-         kpZfMBwXY1KN1t1OOrAae4jbJc+SWjAOLx0o2IySL7GD0LBlT0uu+2RhTPpRG4+q9l
-         X3b5gb8s+ipFL6ec0oX9cT1KPppz6zP7w559Sx8JCgoGQM89NcOd84p0n8qkyD7snH
-         mveB/T0Wgw47Q==
-Subject: Re: [PATCH RFC 1/2] x86/boot: Introduce the setup_header2
-To:     Daniel Kiper <daniel.kiper@oracle.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
-        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        ross.philipson@oracle.com
-References: <20190524095504.12894-1-daniel.kiper@oracle.com>
- <20190524095504.12894-2-daniel.kiper@oracle.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <95fd235b-b4e5-c547-3625-b23ef66c5d4f@zytor.com>
-Date:   Thu, 6 Jun 2019 15:06:30 -0700
+        Thu, 6 Jun 2019 18:08:25 -0400
+Received: from mga11.intel.com ([192.55.52.93]:46375 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728066AbfFFWIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 18:08:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 15:08:24 -0700
+X-ExtLoop1: 1
+Received: from ray.jf.intel.com (HELO [10.7.198.156]) ([10.7.198.156])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jun 2019 15:08:23 -0700
+Subject: Re: [PATCH v7 04/27] x86/fpu/xstate: Introduce XSAVES system states
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+ <20190606200646.3951-5-yu-cheng.yu@intel.com>
+ <0a2f8b9b-b96b-06c8-bae0-b78b2ca3b727@intel.com>
+ <5EE146A8-6C8C-4C5D-B7C0-AB8AD1012F1E@amacapital.net>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
+Date:   Thu, 6 Jun 2019 15:08:23 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190524095504.12894-2-daniel.kiper@oracle.com>
+In-Reply-To: <5EE146A8-6C8C-4C5D-B7C0-AB8AD1012F1E@amacapital.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/19 2:55 AM, Daniel Kiper wrote:
-> Due to limited space left in the setup header it was decided to
-> introduce the setup_header2. Its role is to communicate Linux kernel
-> supported features to the boot loader. Starting from now this is the
-> primary way to communicate things to the boot loader.
+
+
+On 6/6/19 3:04 PM, Andy Lutomirski wrote:
+>> But, that seems broken.  If we have supervisor state, we can't 
+>> always defer the load until return to userspace, so we'll never?? 
+>> have TIF_NEED_FPU_LOAD.  That would certainly be true for 
+>> cet_kernel_state.
 > 
-> Suggested-by: H. Peter Anvin <hpa@zytor.com>
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> Reviewed-by: Ross Philipson <ross.philipson@oracle.com>
-> Reviewed-by: Eric Snowberg <eric.snowberg@oracle.com>
-> ---
-> I know that setup_header2 is not the best name. There were some
-> alternatives proposed like setup_header_extra, setup_header_addendum,
-> setup_header_more, ext_setup_header, extended_setup_header, extended_header
-> and extended_setup. Sadly, I am not happy with any of them. So,
-> leaving setup_header2 as is but still looking for better name.
-> Probably shorter == better...
+> Ugh. I was sort of imagining that we would treat supervisor state
+ completely separately from user state.  But can you maybe give
+examples of exactly what you mean?
+> 
+>> It seems like we actually need three classes of XSAVE states: 1. 
+>> User state
+> 
+> This is FPU, XMM, etc, right?
 
-I would say kernel_info. The relationships between the headers are analogous
-to the various data sections:
+Yep.
 
-	setup_header		= .data
-	boot_params/setup_data	= .bss
+>> 2. Supervisor state that affects user mode
+> 
+> User CET?
 
-What is missing from the above list? That's right:
+Yep.
 
-	kernel_info		= .rodata
+>> 3. Supervisor state that affects kernel mode
+> 
+> Like supervisor CET?  If we start doing supervisor shadow stack, the 
+> context switches will be real fun.  We may need to handle this in 
+> asm.
 
-We have been (ab)using .data for things that could go into .rodata or .bss for
-a long time, for lack of alternatives and -- especially early on -- intertia.
-Also, the BIOS stub is responsible for creating boot_params, so it isn't
-available to a BIOS-based loader (setup_data is, though.)
+Yeah, that's what I was thinking.
 
-setup_header is permanently limited to 144 bytes due to the reach of the
-2-byte jump field, which doubles as a length field for the structure, combined
-with the size of the "hole" in struct boot_params that a protected-mode loader
-or the BIOS stub has to copy it into. It is currently 119 bytes long, which
-leaves us with 25 very precious bytes. This isn't something that can be fixed
-without revising the boot protocol entirely, breaking backwards compatibility.
+I have the feeling Yu-cheng's patches don't comprehend this since
+Sebastian's patches went in after he started working on shadow stacks.
 
-boot_params proper is limited to 4096 bytes, but can be arbitrarily extended
-by adding setup_data entries. It cannot be used to communicate properties of
-the kernel image, because it is .bss and has no image-provided content.
+> Where does PKRU fit in?  Maybe we can treat it as #3?
 
-kernel_info solves this by providing an extensible place for information about
-the kernel image. It is readonly, because the kernel cannot rely on a
-bootloader copying its contents anywhere, but that is OK; if it becomes
-necessary it can still contain data items that an enabled bootloader would be
-expected to copy into a setup_data chunk.
-
-^ The above or some variant thereof may be a good thing to put both in your
-patch comments as well as in the boot protocol documentation.
-
-While we are making a change that bumps the version number anyway, there is
-another change I would like to make to the boot protocol which we might as
-well do at the same time. setup_data is a bit awkward to use for extremely
-large data objects, both because the setup_data header has to be adjacent to
-the data object, and because it has a 32-bit length field. However, it is
-important that intermediate stages of the boot process have a way to identify
-which chunks of memory are occupied by kernel data.
-
-Thus I think we should introduce a uniform way to specify such indirect data.
-We define a new setup_data type we can maybe call SETUP_INDIRECT; a
-SETUP_INDIRECT data item would be an array of structures of the form:
-
-struct setup_indirect {
-	__u32 type;
-	__u32 reserved;	/* Reserved, must be set to zero */
-	__u64 len;
-	__u64 addr;
-};
-
-... where type is itself simply a SETUP_* type -- although we probably don't
-want to let it be SETUP_INDIRECT itself since making it a tree structure could
-require a lot of stack space in something that needs to parse it, and stack
-space can be limited in boot contexts.
-
-This would be particularly useful for having SETUP_INITRAMFS, if it becomes
-desirable to allow the kernel to parse a non-contiguous set of memory regions
-for the initramfs.
-
-It might be a good idea to immediately start out struct kernel_info with
-either a high mark or a bitmask of SETUP_* types that the kernel supports. A
-bitmask would be more flexible, but would need provisions to be grown in the
-future.
-
-Which leads me to yet another thought.
-
-We probably want to make the contents of kernel_info a bit more structured to
-allow for content that may need to be extended in the future, or is inherently
-variable length (like strings.)
-
-This would lend itself to a structure such as:
-
-	- Magic number
-	- Length of total structure
-
-... followed by a list of data chunks, each prefixed by a length field. The
-first data chunk would be the main (root) structure; other data structures are
-pointed to from the root structure using offsets from the beginning of the
-structure (the magic number field.)
-
-As an implementation detail, strings can of course be "pooled" into a single
-data chunk as long as they are zero-terminated.
-
-I have intentionally avoided specifying a type field for each data chunk;
-history shows that it is generally a bad idea to have multiple ways to derive
-the same information, as different implementations will do it differently,
-resulting in bugs when things change.
-
-	-hpa
+I thought Sebastian added specific PKRU handling to make it always
+eager.  It's actually user state that affect kernel mode. :)
