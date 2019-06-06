@@ -2,106 +2,78 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A31C28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9F8C46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E701C2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB30B20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbfFFL1p (ORCPT
+        id S1727473AbfFFL3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:27:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:45802 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFFL1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:27:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FDA7A78;
-        Thu,  6 Jun 2019 04:27:44 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3A13F246;
-        Thu,  6 Jun 2019 04:27:42 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 12:27:40 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH V2 4/4] arm64/mm: Drop local variable vm_fault_t from
- __do_page_fault()
-Message-ID: <20190606112739.GB56860@arrakis.emea.arm.com>
-References: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
- <1559544085-7502-5-git-send-email-anshuman.khandual@arm.com>
- <20190604145612.GM6610@arrakis.emea.arm.com>
- <1d89177a-e7af-ac4e-1a04-e8b750c2c768@arm.com>
+        Thu, 6 Jun 2019 07:29:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32987 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727034AbfFFL3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:29:35 -0400
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id BDD6AA80612E5B3DBD10;
+        Thu,  6 Jun 2019 12:29:32 +0100 (IST)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
+ by smtpsuk.huawei.com (10.201.108.46) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 6 Jun 2019 12:29:23 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
+        <mjg59@google.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <stable@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v3 0/2] ima/evm fixes for v5.2
+Date:   Thu, 6 Jun 2019 13:26:18 +0200
+Message-ID: <20190606112620.26488-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d89177a-e7af-ac4e-1a04-e8b750c2c768@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 10:24:01AM +0530, Anshuman Khandual wrote:
-> On 06/04/2019 08:26 PM, Catalin Marinas wrote:
-> > On Mon, Jun 03, 2019 at 12:11:25PM +0530, Anshuman Khandual wrote:
-> >> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> >> index 4bb65f3..41fa905 100644
-> >> --- a/arch/arm64/mm/fault.c
-> >> +++ b/arch/arm64/mm/fault.c
-> >> @@ -397,37 +397,29 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
-> >>  static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
-> >>  			   unsigned int mm_flags, unsigned long vm_flags)
-> >>  {
-> >> -	struct vm_area_struct *vma;
-> >> -	vm_fault_t fault;
-> >> +	struct vm_area_struct *vma = find_vma(mm, addr);
-> >>  
-> >> -	vma = find_vma(mm, addr);
-> >> -	fault = VM_FAULT_BADMAP;
-> >>  	if (unlikely(!vma))
-> >> -		goto out;
-> >> -	if (unlikely(vma->vm_start > addr))
-> >> -		goto check_stack;
-> >> +		return VM_FAULT_BADMAP;
-> >>  
-> >>  	/*
-> >>  	 * Ok, we have a good vm_area for this memory access, so we can handle
-> >>  	 * it.
-> >>  	 */
-> >> -good_area:
-> >> +	if (unlikely(vma->vm_start > addr)) {
-> >> +		if (!(vma->vm_flags & VM_GROWSDOWN))
-> >> +			return VM_FAULT_BADMAP;
-> >> +		if (expand_stack(vma, addr))
-> >> +			return VM_FAULT_BADMAP;
-> >> +	}
-> > 
-> > You could have a single return here:
-> > 
-> > 	if (unlikely(vma->vm_start > addr) &&
-> > 	    (!(vma->vm_flags & VM_GROWSDOWN) || expand_stack(vma, addr)))
-> > 		return VM_FAULT_BADMAP;
-> > 
-> > Not sure it's any clearer though.
-> 
-> TBH the proposed one seems clearer as it separates effect (vma->vm_start > addr)
-> from required permission check (vma->vm_flags & VM_GROWSDOWN) and required action
-> (expand_stack(vma, addr)). But I am happy to change as you have mentioned if that
-> is preferred.
+Previous versions included the patch 'ima: don't ignore INTEGRITY_UNKNOWN
+EVM status'. However, I realized that this patch cannot be accepted alone
+because IMA-Appraisal would deny access to new files created during the
+boot. With the current behavior, those files are accessible because they
+have a valid security.ima (not protected by EVM) created after the first
+write.
 
-Not bothered really. You can leave them as in your proposal (I was just
-seeing the VM_GROWSDOWN check tightly coupled with the expand_stack(),
-it's fine either way).
+A solution for this problem is to initialize EVM very early with a random
+key. Access to created files will be granted, even with the strict
+appraisal, because after the first write those files will have both
+security.ima and security.evm (HMAC calculated with the random key).
+
+Strict appraisal will work only if it is done with signatures until the
+persistent HMAC key is loaded.
+
+
+Roberto Sassu (2):
+  evm: add option to set a random HMAC key at early boot
+  ima: add enforce-evm and log-evm modes to strictly check EVM status
+
+ .../admin-guide/kernel-parameters.txt         | 11 ++--
+ security/integrity/evm/evm.h                  | 10 +++-
+ security/integrity/evm/evm_crypto.c           | 57 ++++++++++++++++---
+ security/integrity/evm/evm_main.c             | 41 ++++++++++---
+ security/integrity/ima/ima_appraise.c         |  8 +++
+ security/integrity/integrity.h                |  1 +
+ 6 files changed, 106 insertions(+), 22 deletions(-)
 
 -- 
-Catalin
+2.17.1
+
