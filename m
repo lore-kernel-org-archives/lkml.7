@@ -2,106 +2,97 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D18C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8022C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96C520868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3EB208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 18:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559844429;
+	bh=PtHQjqPhPn9GtUjORIN5/yJntoVHOyFYm99cfUt3QEQ=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=CA6shzPGDrtCCbCXP1+87boTUDfXwVWtFdCYNqrshneJQyP+p5FDAXuu3WKvqsP2h
+	 f6euYIz6jhW0LLMy1+ddDHEabkrncLpZ5Idj/BhUFEVoMj9YGuh7Te/m4YRgkFXO72
+	 j9EyVqWk90PFYVBNRd1tvw/Y4Sstgq5asm+NDwYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbfFFSGn (ORCPT
+        id S1730435AbfFFSHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 14:06:43 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40556 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfFFSGm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 14:06:42 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a9so837592lff.7;
-        Thu, 06 Jun 2019 11:06:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UEd66WheiI8yyTRsEa+z8oLhtOyljtbH2T2dZCHUna8=;
-        b=s5Wv1Fb7WHdpwRtST/K+oqN85JaYjOiLZAeQI5877b1aZeORAslVYsdZssg9Y4HYjN
-         lszdFGdIlpTUzV4NGuRrHUfUzog4ZdkwYI8S8CwV76roAly5envW3I4LMm+Lg5iWznEA
-         blYhmeQp1O7kZaGZBwyO2dZSnLN3tCpss8JsEbG95rWWNeeGz/JhCE0mUgscizXrZJG7
-         GArP1emPG2QI96blnaErB7qBkj8XSARSpy4pUTJr3YbpfCPRLyz8ciHXqHg8XZKiXi6Z
-         SpW/EqxpJ0mksibx0bZNSsKjsG+1YccnltFpDBOwtLmZf0RaTt3LFzz+7naU/OQdKuJD
-         OWmQ==
-X-Gm-Message-State: APjAAAWaAi+2IZcQYKktRk3ZflY/7imRVmdYQK+DEHEoofXhzDUoBOgV
-        u5Vpus1+7ijdJOjGkvkDqp2l1+NfQgKnG8Y2yuo=
-X-Google-Smtp-Source: APXvYqw2DQ1hkk9NGbrMoCpxPWvvSrGluX46vvZioEEIXVAu80TMiNPQs4dgaO2PEUOJN7DoCJlk4qvMl+vqvSMGZvQ=
-X-Received: by 2002:ac2:597c:: with SMTP id h28mr414494lfp.90.1559844400270;
- Thu, 06 Jun 2019 11:06:40 -0700 (PDT)
+        Thu, 6 Jun 2019 14:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727559AbfFFSHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 14:07:08 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD302089E;
+        Thu,  6 Jun 2019 18:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559844428;
+        bh=PtHQjqPhPn9GtUjORIN5/yJntoVHOyFYm99cfUt3QEQ=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=k6zLDmwuCmwUK53V9J+y+EBIGyWntq9mFBE4r5Elo1vwoTcrD85eMKzbtKG22/gEK
+         PBKhCzdjOJY05wYy/dWoJeAopcDZSm+pqcj6iCIPVQxnMR+w4T6tRSnz2zdC37BMv8
+         dEflQEjjAuWOT/pPmdB66tGtPxz7O5Z7OcK12gcg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org> <20190606142220.1392-2-jacopo+renesas@jmondi.org>
-In-Reply-To: <20190606142220.1392-2-jacopo+renesas@jmondi.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 6 Jun 2019 20:06:28 +0200
-Message-ID: <CAMuHMdXcsxnqxpQLundZq9rCTHBTN4bP4gSpUrYBCOP8NN7TXQ@mail.gmail.com>
-Subject: Re: [PATCH 01/20] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <VI1PR07MB4432F4F275BC445289FF3D9CFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
+References: <VI1PR07MB4432F4F275BC445289FF3D9CFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
+To:     Philippe Mazenauer <philippe.mazenauer@outlook.de>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: armada-xp: Remove unused variables
+Cc:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 06 Jun 2019 11:07:07 -0700
+Message-Id: <20190606180708.0BD302089E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+Quoting Philippe Mazenauer (2019-05-21 01:58:41)
+> Variables 'mv98dx3236_gating_desc' and 'mv98dx3236_coreclks' are
+> declared static and initialized, but are not used in the file.
+>=20
+> ../drivers/clk/mvebu/armada-xp.c:213:41: warning: =E2=80=98mv98dx3236_gat=
+ing_desc=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+>  static const struct clk_gating_soc_desc mv98dx3236_gating_desc[] __initc=
+onst =3D {
+>                                          ^~~~~~~~~~~~~~~~~~~~~~
+> ../drivers/clk/mvebu/armada-xp.c:171:38: warning: =E2=80=98mv98dx3236_cor=
+eclks=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+>  static const struct coreclk_soc_desc mv98dx3236_coreclks =3D {
+>                                       ^~~~~~~~~~~~~~~~~~~
+>=20
+> Signed-off-by: Philippe Mazenauer <philippe.mazenauer@outlook.de>
+> ---
+>  drivers/clk/mvebu/armada-xp.c | 14 --------------
+>  1 file changed, 14 deletions(-)
+>=20
+> diff --git a/drivers/clk/mvebu/armada-xp.c b/drivers/clk/mvebu/armada-xp.c
+> index fa1568279c23..2ae24a5debd0 100644
+> --- a/drivers/clk/mvebu/armada-xp.c
+> +++ b/drivers/clk/mvebu/armada-xp.c
+> @@ -168,11 +168,6 @@ static const struct coreclk_soc_desc axp_coreclks =
+=3D {
+>         .num_ratios =3D ARRAY_SIZE(axp_coreclk_ratios),
+>  };
+> =20
+> -static const struct coreclk_soc_desc mv98dx3236_coreclks =3D {
+> -       .get_tclk_freq =3D mv98dx3236_get_tclk_freq,
+> -       .get_cpu_freq =3D mv98dx3236_get_cpu_freq,
 
-On Thu, Jun 6, 2019 at 4:21 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Add device tree bindings documentation for the Renesas R-Car Display
-> Unit Color Management Module.
->
-> CMM is the image enhancement module available on each R-Car DU video
-> channel on Gen2 and Gen3 SoCs (V3H and V3M excluded).
+These functions are unused after applying this patch. Can you resend by
+test compiling the code?
 
-R-Car Gen2 ...
-
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks for your patch!
-
-> index 000000000000..d8d3cf9ce2ce
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> @@ -0,0 +1,25 @@
-> +* Renesas R-Car Color Management Module (CMM)
-> +
-> +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> +
-> +Required properties:
-> + - compatible: shall be one of:
-> +   - "renesas,cmm-gen3"
-> +   - "renesas,cmm-gen2"
-
-"gen3" and "gen2" don't carry much meaning on their own (SH2 is gen2 of
-SuperH?). Furthermore, revision info should immediately follow the comma.
-
-"renesas,rcar-gen3-cmm" and "renesas,rcar-gen2-cmm"?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
