@@ -2,98 +2,149 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8341C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D881C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 897C420874
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559835114;
-	bh=auxbwT7fReJRZ8phkETElOOGx98Nm3DMKGuBNzqK4tM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ySly9dq5/HpBxMDpTgEAqUef78lQYH3fX02QCbXWegcr4PCSP18/7PmgrMPJ9du71
-	 pSkMsP3+11jkoOkKtS0pcFU6THYfWw3B/koAfjPtYwLbxtDVaQUkviHMEtmcZkR+Vw
-	 eKxoeN1lmoUwqv8280r4YPiHPmyj309tScy85aNo=
+	by mail.kernel.org (Postfix) with ESMTP id 1316320684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiUYU8vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbfFFPbx (ORCPT
+        id S1729235AbfFFPcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:31:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbfFFPbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:31:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB9A520684;
-        Thu,  6 Jun 2019 15:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559835112;
-        bh=auxbwT7fReJRZ8phkETElOOGx98Nm3DMKGuBNzqK4tM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sls1Ac8ft0yHOcjrqT/Sogzn929Pqs6//tyMW7eH5G0zrT8QLdNQhIS85jv6VxDzz
-         MHZqpcHha72lL1p3LiRLsHd6UO8jnT++nCFM6pgYXW18Vppu62GMNhI2WeA7tVfexV
-         UEPrGRlzojOutRXk5dBStG/hmW9kjs1A9pfGreoY=
-Date:   Thu, 6 Jun 2019 17:31:50 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
-        linux-usb@vger.kernel.org, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/10] usb: Add USB subsystem notifications [ver #3]
-Message-ID: <20190606153150.GB28997@kroah.com>
-References: <20190606143306.GA11294@kroah.com>
- <Pine.LNX.4.44L0.1906061051310.1641-100000@iolanthe.rowland.org>
+        Thu, 6 Jun 2019 11:32:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45353 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729045AbfFFPcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:32:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so2872809wre.12;
+        Thu, 06 Jun 2019 08:32:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HX3M9WP/yryEwh7vX9+9JslPgp+IEmjuwN20Escc6kI=;
+        b=EiUYU8vhWxjAAxHOvDowkjzPhStcE3hELrYCWJ27QKnAI3cJFbwKgtz7SyV1Nlh3G7
+         aKbxXLDNqFCQSrvPmzI/x3zqIs0RocRokH+TItX8e6zy93V4TnYyK/nIP2w2Y6S7lRVo
+         oZJ4TEeNTAS/ojkuEzag0RiCf4oljXXX0x2UYQCurM8wg06qcdiQEy4if80rprzE6bxU
+         SF6cJPZYyqtGEpnSdRQA6IUtwIspXawWvs1aJfxPF+HOkXeQWSXbgX0pIGKa/VFQ8tlQ
+         pzv9iGs8JLuDdIXwcI5hSvQC4MriQbkxesUfvwPoK6G4JUCi/wGL16z5n3RcdBgnCrVT
+         fEVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HX3M9WP/yryEwh7vX9+9JslPgp+IEmjuwN20Escc6kI=;
+        b=UYjgwLOgIz+h36gk6C625AoevCIxXiuHNhYHAGaZGsdQ5o+UdUwBUnotpQYOWqg+6x
+         eNHDqahnTc1o2wcET2a7jWSL9NtSJ2ELO1rjavMzIMD9MfC2eOqG4zApAgM7q12oL8Hk
+         KH7N/oMYbs9DSDy3y+emap2sctTveeULzJVMMDiY1vAxXYTlLTb0XmQt9q//fehN6Oe2
+         9kAiycEXt58uRmmibC4vuLvWJXFZyWC8u5cMhRB6VuXLoegwGzdQApsG+ag5+9HAFbeZ
+         04YgKeDSxQeKC/NLyDsYzPcPPKrt69NMCEzkphqfpOCABav7f4mOjHWvf6MHg/Yfztuc
+         i6wQ==
+X-Gm-Message-State: APjAAAUiypPM1X5SjUtWiT5Iqc+N5dSs87JAFaf4L5pHLcCOK91YvUPx
+        7Rsy3usGdQ+SF1LZuvX+t2o=
+X-Google-Smtp-Source: APXvYqxRHVyiOMsBJdAL9QEQxw+Px16GqdTmA3UJBr61U49dfLm6pC0vNkSsniND2XvWP2wLGn5EWw==
+X-Received: by 2002:adf:9dcc:: with SMTP id q12mr3836539wre.93.1559835139048;
+        Thu, 06 Jun 2019 08:32:19 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id c129sm2082954wma.27.2019.06.06.08.32.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 08:32:18 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 17:32:16 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V8 05/15] PCI: dwc: Add ext config space capability
+ search API
+Message-ID: <20190606153216.GA3338@ulmo>
+References: <20190526043751.12729-1-vidyas@nvidia.com>
+ <20190526043751.12729-6-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1906061051310.1641-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190526043751.12729-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 10:55:24AM -0400, Alan Stern wrote:
-> On Thu, 6 Jun 2019, Greg Kroah-Hartman wrote:
-> 
-> > On Thu, Jun 06, 2019 at 10:24:18AM -0400, Alan Stern wrote:
-> > > On Thu, 6 Jun 2019, David Howells wrote:
-> > > 
-> > > > Add a USB subsystem notification mechanism whereby notifications about
-> > > > hardware events such as device connection, disconnection, reset and I/O
-> > > > errors, can be reported to a monitoring process asynchronously.
-> > > 
-> > > USB I/O errors covers an awfully large and vague field.  Do we really
-> > > want to include them?  I'm doubtful.
-> > 
-> > See the other patch on the linux-usb list that wanted to start adding
-> > KOBJ_CHANGE notifications about USB "i/o errors".
-> 
-> That patch wanted to add notifications only for enumeration failures
-> (assuming you're talking about the patch from Eugeniu Rosca), not I/O
-> errors in general.
 
-Yes, sorry, I was thinking that as a "I/O failed in enumeration" :)
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > So for "severe" issues, yes, we should do this, but perhaps not for all
-> > of the "normal" things we see when a device is yanked out of the system
-> > and the like.
-> 
-> Then what counts as a "severe" issue?  Anything besides enumeration 
-> failure?
+On Sun, May 26, 2019 at 10:07:41AM +0530, Vidya Sagar wrote:
+> Add extended configuration space capability search API using struct dw_pc=
+ie *
+> pointer
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+> Changes since [v7]:
+> * Changed data types of return and arguments to be inline with data being=
+ returned
+>   and passed.
+>=20
+> Changes since [v6]:
+> * None
+>=20
+> Changes since [v5]:
+> * None
+>=20
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * None
+>=20
+> Changes since [v1]:
+> * This is a new patch in v2 series
+>=20
+>  drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h |  1 +
+>  2 files changed, 42 insertions(+)
 
-Not that I can think of at the moment, other than the other recently
-added KOBJ_CHANGE issue.  I'm sure we have other "hard failure" issues
-in the USB stack that people will want exposed over time.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-thanks,
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
 
-greg k-h
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz5MfsACgkQ3SOs138+
+s6GApw//TPvpvgBzP5P9ZA+voryvcGrZFDGOvZN3Ue1+gcsGJLKWkkyfdki8Xn4K
+pkOboAWOYl3FVFstorO6OlL+sToBPM7KSW3d1y8Xf4lCJG6pl6Wguq01rQiL+lgC
+SiHzhKaumTJ6cIiZICbExS0cnWwgNvglaMRV1enwe3SfAdqpiSBJYsJy/OFgUHMX
+e8P0PX0CY6pK+lGGi610SRhzorXOne+ukTGgm+qrAU/9XsJWkF9uwyaJF7BprSfq
+fjPGMQlZ+ezB9sZn+RAJT8qZpNsovOTLDWV6P4b+bR6hBbHNM3uOFlnpOUsKfiLL
+YJIBU00ZlbIIOMMCK/78Xg2i9GsndiLKmAF8XYeNcGKfHOyivoABLViL4eL98yZl
+VMEUTSMw97RhAoZ9DgD5M5ESFEAbD0qvy5GoGW7OcJ3JyvJam6hr2nFDIqyAuq5G
+W5w/opznB6oYuiyvTWbH2BYTKdpZv1IMZTLRsq1o8yQHCRt/L7GemvXGWm+7UhNJ
+hPIFoLR7bvYE/wHvnplHw72iXh55j3/Ku2oBCgs9Ikx8Q64XWDSJQBwqNXwT5pW4
+2qcCVbs9kcdOmuhadUJNE+Aeyz32+7GC9JS5PIrtgvCrS9GlYWg6pjGDqMy4lzJ0
+fVfLAxMTiKwPO9jr2SOY8TIfObb7fXzKGB31sBPvCV2tRUpK0OE=
+=DlKq
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
