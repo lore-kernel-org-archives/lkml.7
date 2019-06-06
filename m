@@ -2,115 +2,91 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27125C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9CEC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0775B20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E55720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559834251;
+	bh=KUu7Ble2WSlIDPUcjDZbizyKce1GDo2QexEABVOtcTM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=mfB4Rdo0O1lz5tLjjEcGBLOJTTKaZNSqGqaqs22GJkGUxmpBEA8JJssHd3FFQFCiI
+	 WJyRApFmuojYAeSQh5bJi5LEhpthsB27xB0wjfr2VMectPg0pohFt6wqmgDVsUoRsF
+	 9aw1UKj9eHEDCI0Gpe9lpFOkIqEeoCQkRa8wktfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbfFFPP0 (ORCPT
+        id S1729196AbfFFPRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:15:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36828 "EHLO mx1.redhat.com"
+        Thu, 6 Jun 2019 11:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbfFFPP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:15:26 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729109AbfFFPRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:17:30 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9EE6430F1BC7;
-        Thu,  6 Jun 2019 15:15:25 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-18.gru2.redhat.com [10.97.112.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D4AC10ABD8D;
-        Thu,  6 Jun 2019 15:15:01 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 0679E10514E;
-        Thu,  6 Jun 2019 12:14:40 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x56FEaSG003248;
-        Thu, 6 Jun 2019 12:14:36 -0300
-Date:   Thu, 6 Jun 2019 12:14:35 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Haris Okanovic <haris.okanovic@ni.com>
-Subject: Re: [patch 2/3] timers: do not raise softirq unconditionally
- (spinlockless version)
-Message-ID: <20190606151433.GA3199@amt.cnet>
-References: <20190415201213.600254019@amt.cnet>
- <20190415201429.427759476@amt.cnet>
- <20190604062931.GC15459@xz-x1>
+        by mail.kernel.org (Postfix) with ESMTPSA id C3F8720652;
+        Thu,  6 Jun 2019 15:17:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559834249;
+        bh=KUu7Ble2WSlIDPUcjDZbizyKce1GDo2QexEABVOtcTM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZzcSXQPxsxHHxWvMc/cR/cl8gtpeDB+AiWbboLIC4cmgVBjhEpHD/H+tKU9OtHBlJ
+         6b8ZX5Wg9QrSNKeHF1BVKYhjj+3psmGm4lf98yNI2E5jBaIjV6WYaoxrRrWcaNlEh2
+         B3ePRkv7fkE5KAqXEeEX5uD8l2Bi0HXJvsHB6Up4=
+Date:   Thu, 6 Jun 2019 08:17:27 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: fixes for 5.2-rc4
+Message-ID: <20190606151727.GH1200785@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190604062931.GC15459@xz-x1>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 06 Jun 2019 15:15:25 +0000 (UTC)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 02:29:31PM +0800, Peter Xu wrote:
-> On Mon, Apr 15, 2019 at 05:12:15PM -0300, Marcelo Tosatti wrote:
-> > Check base->pending_map locklessly and skip raising timer softirq 
-> > if empty.
-> > 
-> > What allows the lockless (and potentially racy against mod_timer) 
-> > check is that mod_timer will raise another timer softirq after
-> > modifying base->pending_map.
-> > 
-> > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
-> > 
-> > ---
-> >  kernel/time/timer.c |   18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > Index: linux-rt-devel/kernel/time/timer.c
-> > ===================================================================
-> > --- linux-rt-devel.orig/kernel/time/timer.c	2019-04-15 14:21:02.788704354 -0300
-> > +++ linux-rt-devel/kernel/time/timer.c	2019-04-15 14:22:56.755047354 -0300
-> > @@ -1776,6 +1776,24 @@
-> >  		if (time_before(jiffies, base->clk))
-> >  			return;
-> >  	}
-> > +
-> > +#ifdef CONFIG_PREEMPT_RT_FULL
-> > +/* On RT, irq work runs from softirq */
-> > +	if (irq_work_needs_cpu())
-> > +		goto raise;
-> > +#endif
-> > +	base = this_cpu_ptr(&timer_bases[BASE_STD]);
-> > +	if (!housekeeping_cpu(base->cpu, HK_FLAG_TIMER)) {
-> > +		if (!bitmap_empty(base->pending_map, WHEEL_SIZE))
-> > +			goto raise;
-> > +		base++;
-> 
-> Shall we check against CONFIG_NO_HZ_COMMON?  Otherwise the base could
-> point to something else rather tha the deferred base (NR_BASES==1 if
-> without nohz-common).
-> 
-> I see that run_local_timers() has similar pattern, actually I'm
-> thinking whether we can put things like "base++" to be inside some
-> "if"s of CONFIG_NO_HZ_COMMON to be clear.
-> 
-> Thanks,
-> 
-> -- 
-> Peter Xu
+Hi Linus,
 
-Hi Peter,
+Here are a couple more bug fixes for 5.2.  They've survived a few days
+of fstests and merge cleanly with upstream as of a few minutes ago.  Let
+me know if there are problems.
 
-Yes, that is a good point and needs fixing. 
+--D
 
-I'll wait for Anna's comments before posting -v2.
+The following changes since commit 5cd213b0fec640a46adc5e6e4dfc7763aa54b3b2:
 
+  xfs: don't reserve per-AG space for an internal log (2019-05-20 11:25:39 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-fixes-2
+
+for you to fetch changes up to 025197ebb08a77eea702011c479ece1229a9525b:
+
+  xfs: inode btree scrubber should calculate im_boffset correctly (2019-06-03 09:18:40 -0700)
+
+----------------------------------------------------------------
+Changes since last update:
+- Fix some forgotten strings in a log debugging function
+- Fix incorrect unit conversion in online fsck code
+
+----------------------------------------------------------------
+Darrick J. Wong (2):
+      xfs: fix broken log reservation debugging
+      xfs: inode btree scrubber should calculate im_boffset correctly
+
+ fs/xfs/scrub/ialloc.c |  3 ++-
+ fs/xfs/xfs_log.c      | 11 +++++++++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
