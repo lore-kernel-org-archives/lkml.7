@@ -3,81 +3,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8E8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C00C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5CA207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D166207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfFFHFa (ORCPT
+        id S1726765AbfFFHFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:05:30 -0400
-Received: from gate.crashing.org ([63.228.1.57]:35610 "EHLO gate.crashing.org"
+        Thu, 6 Jun 2019 03:05:46 -0400
+Received: from foss.arm.com ([217.140.101.70]:41530 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbfFFHFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:05:30 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5674w8h020392;
-        Thu, 6 Jun 2019 02:04:59 -0500
-Message-ID: <06384baa09e0f24e0c33f560f461233ef4405799.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
- Fabric Interrupt Controller Driver
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com,
-        jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com,
-        mchehab+samsung@kernel.org, robh+dt@kernel.org,
-        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com,
-        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
-Date:   Thu, 06 Jun 2019 17:04:57 +1000
-In-Reply-To: <61fe2a4c80e654476a68929da9dcc18df8bc2639.camel@kernel.crashing.org>
-References: <1559717653-11258-1-git-send-email-talel@amazon.com>
-         <1559717653-11258-3-git-send-email-talel@amazon.com>
-         <20190605075927.GA9693@kroah.com>
-         <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
-         <20190606063741.GA23305@kroah.com>
-         <61fe2a4c80e654476a68929da9dcc18df8bc2639.camel@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1725267AbfFFHFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:05:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF821374;
+        Thu,  6 Jun 2019 00:05:44 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72C133F246;
+        Thu,  6 Jun 2019 00:05:39 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 08:05:37 +0100
+Message-ID: <86pnnrgpmm.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     "Shenhar, Talel" <talel@amazon.com>, <nicolas.ferre@microchip.com>,
+        <jason@lakedaemon.net>, <mark.rutland@arm.com>,
+        <mchehab+samsung@kernel.org>, <robh+dt@kernel.org>,
+        <davem@davemloft.net>, <shawn.lin@rock-chips.com>,
+        <tglx@linutronix.de>, <devicetree@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <jonnyc@amazon.com>, <hhhawa@amazon.com>,
+        <ronenk@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
+Subject: Re: [PATCH v2 2/2] irqchip: al-fic: Introduce Amazon's Annapurna Labs Fabric Interrupt Controller Driver
+In-Reply-To: <54df139cc6cfef9202be6b945c968c3040591607.camel@kernel.crashing.org>
+References: <1559731921-14023-1-git-send-email-talel@amazon.com>
+        <1559731921-14023-3-git-send-email-talel@amazon.com>
+        <fa6e5a95-d9dd-19f6-43e3-3046e0898bda@arm.com>
+        <553d06a4-a6b6-816f-b110-6ef7f300dde4@amazon.com>
+        <0915892c-0e53-8f53-e858-b1c3298a4d35@arm.com>
+        <54df139cc6cfef9202be6b945c968c3040591607.camel@kernel.crashing.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 16:47 +1000, Benjamin Herrenschmidt wrote:
-> On Thu, 2019-06-06 at 08:37 +0200, Greg KH wrote:
-> > On Thu, Jun 06, 2019 at 07:55:43AM +1000, Benjamin Herrenschmidt wrote:
-> > > On Wed, 2019-06-05 at 09:59 +0200, Greg KH wrote:
-> > > > 
-> > > > > +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
-> > > > > +
-> > > > > +struct al_fic *al_fic_wire_init(struct device_node *node,
-> > > > > +				void __iomem *base,
-> > > > > +				const char *name,
-> > > > > +				unsigned int parent_irq);
-> > > > > +int al_fic_cleanup(struct al_fic *fic);
-> > > > 
-> > > > Who is using these new functions?  We don't add new apis that no one
-> > > > uses :(
-> > > 
-> > > They will be used by subsequent driver submissions but those aren't
-> > > quite ready yet, so we can hold onto patch 3 for now until they are.
-> > 
-> > Patch 2 also should have these removed :)
+On Wed, 05 Jun 2019 23:06:05 +0100,
+Benjamin Herrenschmidt <benh@kernel.crashing.org> wrote:
 > 
-> That's a mistake, that export should have been in patch3. Talel, pls
-> fix that in your next spin.
+> On Wed, 2019-06-05 at 16:12 +0100, Marc Zyngier wrote:
+> > > Those error messages are control path messages. if we return the same 
+> > > error value from here and from the previous error, how can we 
+> > > differentiate between the two error cases by looking at the log?
+> > > 
+> > > Having informative printouts seems like a good idea for bad 
+> > > configuration cases as such, wouldn't you agree?
+> > 
+> > I completely disagree. The kernel log isn't a dumping ground for this
+> > kind of pretty useless information. Furthermore, the irq subsystem will
+> > also shout at you when it gets an error, so no need to add insult to injury.
+> > 
+> > If you really want to keep them around, turn them into pr_debug.
+> 
+> I disagree Marc. This is a rather bad error which indicates that the
+> device-tree is probably incorrect (or the HW was wired in a way that
+> cannot work).
 
-Actually that's already fixed in v2 of the series. The API have been
-removed for now.
+But surely that's something you'll spot pretty quickly. Also, you get
+a splat from the irq subsystem already, telling you that things went
+wrong (see __irq_set_trigger). At that stage, you can enable debugging
+and figure it out.
 
-Cheers,
-Ben.
+What I'm trying to avoid is the kernel becoming a (pretty bad)
+validation tool for DTS files.
 
+> Basically a given FIC can either be entirely level sensitive or
+> entirely edge sensitive. This catches cases where the DT has routed
+> a mixed of both to the same FIC. Definitely worth barfing loudly
+> about rather than trying to understand subtle odd misbehaviours of
+> the device in the field.
+
+Then, in the interest of not producing incorrect DTs, could the
+edge/level property be encoded in the FIC description itself, rather
+than in the interrupt specifiers of the individual devices? It would
+sidestep the problem altogether. You can still put the wrong one in
+the FIC node, but it then becomes even more obvious what is going
+on...
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
