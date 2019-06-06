@@ -2,140 +2,130 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90122C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E587C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62635208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50AC520717
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:15:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CQ2czUJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfFFXOH (ORCPT
+        id S1727661AbfFFXPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 19:14:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:41715 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfFFXOH (ORCPT
+        Thu, 6 Jun 2019 19:15:46 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:36369 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFFXPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 19:14:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id x17so16326iog.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 16:14:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=l9pinidd/tGKCpjMseqDc7ZTsfhvn4wdVbMaTBOdGOM=;
-        b=U0bn/lMlURv0dc/2LUTCA9exkK2izD1lGhNIm009mNUbexPrTf3DRb8qirmxhsfYmZ
-         iKsxj/fSfUJpnLtzFqoC7y5Z2u5mojPeiVLJjon8dfje4I62M1WHhGRZUYn6Yn02I9I4
-         pA9pF4/5VdTBRWWY/JdiVyAqVOoRcFUWVnMidZsLj/3e1FOOK/yrtcX/FGVPx3mJ7g8V
-         i5o2y3oRqK5oTKooiC1iyFCa9DJKKFjdt5PfJql4+8tShfVxC5I/xndEWFvr7beWTRfj
-         UcAB9PLoJDx8XdtCnNvSyHJKpJn5Yg4meDfDcTV+hI7oGD/MStnAzt/Hi4OjLK4SSUJa
-         DJ3A==
-X-Gm-Message-State: APjAAAWb55Q7QsqmYnItVJjWCTC6zckc8f2KLp3hp2CwQAmsSNjEFEbM
-        TXIt+aHlGV4/RdBaa7ri4AY7ehC3ykIRQkDJMuMkqW2UlHsd
-X-Google-Smtp-Source: APXvYqxXzf2VfP3HezFCUmwxAxPbzY6848/Uvr4YiHxacLFlLIXnL5YVIpNhLVk/FcFtL6Fq36VBeprvCc22BZWMQ22t5eaKQNia
+        Thu, 6 Jun 2019 19:15:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1559862945; x=1591398945;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=aM8dRNNhCuRSED8C8Oc74ThBFAMLPPJJcz08vPpy1+I=;
+  b=CQ2czUJOVLMn7qWm2TiKGrHpHNaO4Uu7cVL3wENYJxz4T7G4+af3dRWX
+   bQPTSUeUNIUuIPbWA6BM3vNXxOzv7YTALRpgks04i9vL0Kum6Nws/obYO
+   ZsNc48Hdm2MVeIPOUX/cff1s4WVc98SLLCcjRszaIKEgfdJaKwz2rC8me
+   yVXfQXzIEl8moSISyd0TDDRFK6Tvn0BzjSx09ZilWTs4/zF1YC6yn0Kd7
+   t+JOtmV55n/40e+pCY5rZ/W+epgHhrf6wvNpX9nhWN5VUqB/KBXFWf3Y6
+   aGRG4skAXPJcKr4D0Ng3B7Icq3rSAEhIxUf7QTHMEVrSGa4kqxCkHoUMz
+   A==;
+X-IronPort-AV: E=Sophos;i="5.63,561,1557158400"; 
+   d="scan'208";a="111270892"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2019 07:15:45 +0800
+IronPort-SDR: kEO1784+QzgnuqkNf70d1plcSSs6uGI73eVQs8qoaPvix+NH3DEec8alJxZbxZ5AWPumrWGGRu
+ bb9HlGfH6sNhGo6Vj8RjQxtsFRzZd44OQkKaf5poqlJv/qKpa8hucNGiBEUhSlIS3/LmZiSkiO
+ b9ykXE69subHL9btlPQT2/xCRsQc/x2S/y07CLWdZN+R/8na0WBkQWAvBQzZoFWwEOclw1mtYO
+ XNPiO/pIrWOw0YwlqPJYLe76VPRvqzy6kTSqDHx9SY6B8OEybn4D3ugFRg0FfjpKjf2amloMJs
+ s893fAs1hcWiW2Wuy8CCinyp
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP; 06 Jun 2019 15:50:38 -0700
+IronPort-SDR: 0uzpy0OABTK631+vt4PZaTzOPuv2jsT7PoBTW3gy3XUetZx0y2iO3qy3RNG4yzWbP+iflJwaiu
+ SqLPpZQtX8WBzIM8av0SjkTox/5maoWyh+useQzNBzpojpFn7NecUrxchJO4Tfc7aXFmzHKFAe
+ ++84UCZ34X5TH4mYA0hcISQgbwDDWOlTIvDliZH1XE9djkNlVysBDi8lIMmzu1B/ImnXEjVyM+
+ 4fQH8bF5LKrEx20xECan36vYzuoi/y5wFfAnXcTNGTfCs5VExDPXOm3Wx33efC57J9mhaUobdi
+ 6c8=
+Received: from r6220.sdcorp.global.sandisk.com (HELO [192.168.1.6]) ([10.196.157.143])
+  by uls-op-cesaip02.wdc.com with ESMTP; 06 Jun 2019 16:15:45 -0700
+Subject: Re: [PATCH v3 0/5] arch: riscv: add board and SoC DT file support
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+References: <20190602080500.31700-1-paul.walmsley@sifive.com>
+ <7h36kogchx.fsf@baylibre.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <05010310-baa2-c711-cb54-96a9138f582a@wdc.com>
+Date:   Thu, 6 Jun 2019 16:15:40 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c705:: with SMTP id f5mr33202129iop.113.1559862846161;
- Thu, 06 Jun 2019 16:14:06 -0700 (PDT)
-Date:   Thu, 06 Jun 2019 16:14:06 -0700
-In-Reply-To: <0000000000006b30f30587a5b569@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d810c9058aafdeb9@google.com>
-Subject: Re: general protection fault in ip6_dst_lookup_tail (2)
-From:   syzbot <syzbot+58d8f704b86e4e3fb4d3@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, dvyukov@google.com, edumazet@google.com,
-        kafai@fb.com, kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <7h36kogchx.fsf@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On 6/5/19 10:37 AM, Kevin Hilman wrote:
+> Hi Paul,
+> 
+> Paul Walmsley <paul.walmsley@sifive.com> writes:
+> 
+>> Add support for building flattened DT files from DT source files under
+>> arch/riscv/boot/dts.  Follow existing kernel precedent from other SoC
+>> architectures.  Start our board support by adding initial support for
+>> the SiFive FU540 SoC and the first development board that uses it, the
+>> SiFive HiFive Unleashed A00.
+>>
+>> This third version of the patch set adds I2C data for the chip,
+>> incorporates all remaining changes that riscv-pk was making
+>> automatically, and addresses a comment from Rob Herring
+>> <robh@kernel.org>.
+>>
+>> Boot-tested on v5.2-rc1 on a HiFive Unleashed A00 board, using the
+>> BBL and open-source FSBL, with modifications to pass in the DTB
+>> file generated by these patches.
+> 
+> Tested this series on top of v5.2-rc3 on HiFive Unleashed board using
+> OpenSBI + mainline u-boot (master branch as of today).
+> 
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> 
+>> This patch series can be found, along with the PRCI patch set
+>> and the DT macro prerequisite patch, at:
+>>
+>> https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1
+> 
+> nit: I only see this series in that branch, not any of the prerequisite
+> patches you mentioned, which made me assume I could this series alone on
+> top of v5.2-rc3, which worked just fine.
+> 
 
-HEAD commit:    07c3bbdb samples: bpf: print a warning about headers_install
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14424e2ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7b54c66298f8420
-dashboard link: https://syzkaller.appspot.com/bug?extid=58d8f704b86e4e3fb4d3
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f50e1a00000
+I tried only this series on top of v5.2-rc3. Kernel boots file with DT 
+updated via U-Boot. But networking didn't come up.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+58d8f704b86e4e3fb4d3@syzkaller.appspotmail.com
+Do you have networking up after the boot? If yes, can you please share 
+the config.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 14003 Comm: syz-executor.4 Not tainted 5.2.0-rc2+ #14
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:ip6_route_get_saddr include/net/ip6_route.h:120 [inline]
-RIP: 0010:ip6_dst_lookup_tail+0xf0e/0x1b30 net/ipv6/ip6_output.c:1032
-Code: e6 07 e8 75 66 55 fb 48 85 db 0f 84 83 08 00 00 e8 67 66 55 fb 48 8d  
-7b 7c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48  
-89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 07
-RSP: 0018:ffff888079027480 EFLAGS: 00010a07
-RAX: dffffc0000000000 RBX: ff8880990716c000 RCX: 0000000000000000
-RDX: 1ff1101320e2d80f RSI: ffffffff861b3f59 RDI: ff8880990716c07c
-RBP: ffff8880790275d8 R08: ffff8880855b43c0 R09: ffffed1015d26be8
-R10: ffffed1015d26be7 R11: ffff8880ae935f3b R12: ffff888079027740
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff888079027768
-FS:  00007f7158009700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd85cf4eb8 CR3: 00000000a96aa000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  ip6_dst_lookup_flow+0xa8/0x220 net/ipv6/ip6_output.c:1155
-  tcp_v6_connect+0xda3/0x20a0 net/ipv6/tcp_ipv6.c:282
-  __inet_stream_connect+0x834/0xe90 net/ipv4/af_inet.c:659
-  tcp_sendmsg_fastopen net/ipv4/tcp.c:1143 [inline]
-  tcp_sendmsg_locked+0x2318/0x3920 net/ipv4/tcp.c:1185
-  tcp_sendmsg+0x30/0x50 net/ipv4/tcp.c:1419
-  inet_sendmsg+0x141/0x5d0 net/ipv4/af_inet.c:802
-  sock_sendmsg_nosec net/socket.c:652 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:671
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2292
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2330
-  __do_sys_sendmsg net/socket.c:2339 [inline]
-  __se_sys_sendmsg net/socket.c:2337 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2337
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459279
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7158008c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459279
-RDX: 0000000020008844 RSI: 0000000020000240 RDI: 0000000000000005
-RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f71580096d4
-R13: 00000000004c6ccc R14: 00000000004dbb30 R15: 00000000ffffffff
-Modules linked in:
----[ end trace c968f232eacd4c70 ]---
-RIP: 0010:ip6_route_get_saddr include/net/ip6_route.h:120 [inline]
-RIP: 0010:ip6_dst_lookup_tail+0xf0e/0x1b30 net/ipv6/ip6_output.c:1032
-Code: e6 07 e8 75 66 55 fb 48 85 db 0f 84 83 08 00 00 e8 67 66 55 fb 48 8d  
-7b 7c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48  
-89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 07
-RSP: 0018:ffff888079027480 EFLAGS: 00010a07
-RAX: dffffc0000000000 RBX: ff8880990716c000 RCX: 0000000000000000
-RDX: 1ff1101320e2d80f RSI: ffffffff861b3f59 RDI: ff8880990716c07c
-RBP: ffff8880790275d8 R08: ffff8880855b43c0 R09: ffffed1015d26be8
-R10: ffffed1015d26be7 R11: ffff8880ae935f3b R12: ffff888079027740
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff888079027768
-FS:  00007f7158009700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000015523b8 CR3: 00000000a96aa000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Kevin
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
 
+
+-- 
+Regards,
+Atish
