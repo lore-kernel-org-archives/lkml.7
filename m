@@ -2,133 +2,79 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35202C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB5CC28D18
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0152220866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pD2wunXY"
+	by mail.kernel.org (Postfix) with ESMTP id 15FCA20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 00:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfFFAkE (ORCPT
+        id S1726664AbfFFAlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 20:40:04 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38954 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbfFFAkD (ORCPT
+        Wed, 5 Jun 2019 20:41:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:58263 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbfFFAlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 20:40:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j2so351612pfe.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 17:40:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2j6AeMQyqlvFrN/cZ76T3pXgzcnOXpcF30PXkUvG5XQ=;
-        b=pD2wunXYqvfYwPLkqvphd1Nzp5oBP1ZJMlmbllJSDRqtIDW6GMm+JLMRRA0rbZiS1C
-         +9pX2xQxEuN9NhtiVlPu2Jxh6vHv5pnFnYTwBGb5uvtA1DL8+Rf4kviOf5xc77dpWKSB
-         rf8bStUliSESYC80DHlCn8Zkpe6fr6yqjkblYLgaVy0mUYWGe2eSvbKU5FdYiCayUKmB
-         IS2+/HgohoC/dtOAoPVklaNzTd/4lnl4tVjaA8ytHMG8vSWNF8tHI4lhaEMgn3r1eDai
-         XQyeR/zl4UZGvJsyrPL5pR5yxascYYXBmP2ViQI/Xs2NIXa0Fz4whXJebVBrtj4cuJto
-         4/pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2j6AeMQyqlvFrN/cZ76T3pXgzcnOXpcF30PXkUvG5XQ=;
-        b=Mi91B/x7BMpmaXH4t8JhHsmP5TmoGuNARYRMkviVnp4NfRZbFXEBdugNczwexzX264
-         CFgVTvp5Dg1DF3vnwuoMLplXlPIScTo8PcnwttaGPBQjhCzA3+RoXhxqnwQbF8zlhEd5
-         plDVH+v5K+acDFarnQ9Gifiex9o2XRVM1pmlAlQkYwsky+pRdf4ch0+/+TgvgIEFCPsS
-         x06B6CcfHl5unwKg8wkLFpO2OlLwDLo8FA5oK1jQGWKrFyMkxPOdasZ57qRjpV21LLra
-         R+n/pPktInHCIwVUCEbGbyY0OnHrPsUlolbAP3NODP6hB8XvN/On6Xt7D04WdZr9ax6Z
-         qqww==
-X-Gm-Message-State: APjAAAUmjSDOg8pUTlyHQG/szzSLvz4WrABqVWAk/l88cSu3QjQK6rHM
-        4HZlRT80DwigtcoDn/jUeOjoMA==
-X-Google-Smtp-Source: APXvYqzvXQ5ewa5JC1Giq17eXL/bIpyul2XvnitexIdi7NKOYgS8rm1aWJkbpisCuaALbZ2LP5zfhA==
-X-Received: by 2002:a62:e511:: with SMTP id n17mr43614480pff.181.1559781602896;
-        Wed, 05 Jun 2019 17:40:02 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v28sm89656pga.65.2019.06.05.17.40.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 17:40:02 -0700 (PDT)
-Date:   Wed, 5 Jun 2019 17:39:59 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH 0/3] (Qualcomm) UFS device reset support
-Message-ID: <20190606003959.GM4814@minitux>
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org>
- <CANcMJZBmgWMZu7Y53Lnx_x3L2UpCmEbFRHVW0SFCXfW=Yw9uYg@mail.gmail.com>
- <SN6PR04MB4925530F216E86F6404FE14CFC160@SN6PR04MB4925.namprd04.prod.outlook.com>
- <20190605060154.GJ22737@tuxbook-pro>
- <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
+        Wed, 5 Jun 2019 20:41:51 -0400
+Received: from [192.168.1.110] ([77.2.1.21]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M7auL-1hTULY2kpR-0084pb; Thu, 06 Jun 2019 02:41:41 +0200
+Subject: Re: [PATCH] fs: cifs: drop unneeded likely() call around IS_ERR()
+To:     Steve French <smfrench@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+References: <1559769249-22011-1-git-send-email-info@metux.net>
+ <CAH2r5mvzEPj2NXMJW5fOfq0+bbh-pZFnJnL1jEnyFYDt1HJi1A@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <d76ceded-c2fc-beae-d60d-2b4a98623bf0@metux.net>
+Date:   Thu, 6 Jun 2019 00:41:39 +0000
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR04MB492521B7D2DB6F3462EDB7D9FC160@SN6PR04MB4925.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <CAH2r5mvzEPj2NXMJW5fOfq0+bbh-pZFnJnL1jEnyFYDt1HJi1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:9gPXvsujPwWsw652B9AYMdsfz8vfg0YZSoLHXf/ypYnkEMqbhAb
+ hzmgNOt3mulkvoYXmU/887n8jXZe5/9bHwXIS1rPcuI1MTVwdFzZWtHdvUoXu5lHt7yyWOn
+ n0ABv9uao1hD6HnigyderpzrjEJZOIx97Isx/4T+KbxIq/XBZvTp8JvxaVpnw289fLx1pZ8
+ aVc4uChgLugRybPClY0cg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Ndy1MvyuMos=:12CNblfygcej00zMQsPu7k
+ UgI5zW0YCLR0hCLyFpsSHq90/J/bHUHTJrYR+1KM6lKp/QMmVrfCXWIvw6GSTRgvOnI4TLcYQ
+ ARi4P7qx6ixlUqKos6AMCR32oIK+HWyfVkBIVt/1yg7qm7iesT2F0nh5qjXAUPHGdWrU3SZ++
+ ix8OOWCHyQ+lZDadBEGVDFmDF8H5ODatpAsAtSXUfVNE7jFDJXLxK5FOgE/duMULUnk+nCkQj
+ YIRlxgBHAfSfFpnuA5vJFK7s7PD5oyh3pyHnOibwkJgM0j/NBsOfPTDYRRhA/eq6K49PoL9fI
+ QT2dgnpi+Ipdh5YYY7gf0vKXpoDoqBBIF0LXUhoWs9hT2TVuCozXFJmOyIxv5bHNDzPEqEKKb
+ l4Eau7ZdCKljrcJ5630SQcRM3RSt5rs1ZLLmNnAcud2LTZogC8L5moBP6C0a+Q0vBgwTxVufA
+ 1oD08gJzCAvgW0yhF/j/HWn2IulnsYle77Kt3NEyvEu7YRi72B5rTjktqNTe9DimGPo21lJzr
+ aYSFuyxyTZzu5/HpgNaP+IyWKNjVeDS0z1qZqcmv/WP11Dtg2I45lzYQ5q0o1R/SpLmcLpm7E
+ N9EiByxq0bpGaBupGeOmdB+zfvWSLfXjtbOx3DMcm7i9LqK57K99811wdkriSsHl1edux+O1D
+ 21EMrwAU546USpOI6Ai9dHlTjQKwBNIh5PpONH03WAZlDMZFTdr1x77rXdacIz3+C7+1kszQn
+ 7OgAFo0/qkv9Gt52SUJ1E/1tDdwEfDZxOXBuYasxDSAuOPs98Lkve5FHibk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05 Jun 02:32 PDT 2019, Avri Altman wrote:
+On 05.06.19 21:52, Steve French wrote:
+> This duplicates a patch submitted earlier by Kefeng Wang
+> <wangkefeng.wang@huawei.com> which I plan to merge later today into
+> cifs-2.6.git for-next
 
-> > 
-> > On Tue 04 Jun 22:50 PDT 2019, Avri Altman wrote:
-> > 
-> > > Hi,
-> > >
-> > > >
-> > > > On Tue, Jun 4, 2019 at 12:22 AM Bjorn Andersson
-> > > > <bjorn.andersson@linaro.org> wrote:
-> > > > >
-> > > > > This series exposes the ufs_reset line as a gpio, adds support for ufshcd to
-> > > > > acquire and toggle this and then adds this to SDM845 MTP.
-> > > > >
-> > > > > Bjorn Andersson (3):
-> > > > >   pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-> > > > >   scsi: ufs: Allow resetting the UFS device
-> > > > >   arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
-> > > >
-> > > > Adding similar change as in sdm845-mtp to the not yet upstream
-> > > > blueline dts, I validated this allows my micron UFS pixel3 to boot.
-> > > >
-> > > > Tested-by: John Stultz <john.stultz@linaro.org>
-> > > Maybe ufs_hba_variant_ops would be the proper place to add this?
-> > >
-> > 
-> > Are you saying that these memories only need a reset when they are
-> > paired with the Qualcomm host controller?
-> ufs_hba_variant_ops is for vendors to implement their own vops,
-> and as you can see, many of them do.
-> Adding hw_reset to that template seems like the proper way
-> to do what you are doing.
-> 
+Great :)
+Just ignore my patch.
 
-Right, but the vops is operations related to the UFS controller, this
-property relates to the memory connected.
 
-E.g I have a Hynix memory and John have a Micron memory that needs this
-reset and my assumption is that these memories will need their RESET pin
-toggled regardless of which controller they are connected to.
+--mtx
 
-Regards,
-Bjorn
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
