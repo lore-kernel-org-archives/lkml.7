@@ -2,83 +2,92 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63A6C28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F910C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCA1206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CC2206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfFFK6K (ORCPT
+        id S1727730AbfFFK66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:58:10 -0400
-Received: from gate.crashing.org ([63.228.1.57]:37571 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfFFK6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:58:10 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x56Avni0032240;
-        Thu, 6 Jun 2019 05:57:50 -0500
-Message-ID: <f8df19ffe5b75537045119037459ae9ad4a1de39.camel@kernel.crashing.org>
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 06 Jun 2019 20:57:49 +1000
-In-Reply-To: <d87ac9a7faac0d5522cb496d74afc586410fed9c.camel@kernel.crashing.org>
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
-         <dfe6451c93574b61d4bdde4a05c5f8ccf86b31a0.camel@kernel.crashing.org>
-         <20190606093149.GA11598@darkstar.musicnaut.iki.fi>
-         <d87ac9a7faac0d5522cb496d74afc586410fed9c.camel@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Jun 2019 06:58:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32798 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727324AbfFFK66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:58:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F9F6AF21;
+        Thu,  6 Jun 2019 10:58:56 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id ED0EC1E3F51; Thu,  6 Jun 2019 12:58:55 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 12:58:55 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 07/10] fs/ext4: Fail truncate if pages are GUP pinned
+Message-ID: <20190606105855.GG7433@quack2.suse.cz>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606014544.8339-8-ira.weiny@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606014544.8339-8-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 20:56 +1000, Benjamin Herrenschmidt wrote:
-> On Thu, 2019-06-06 at 12:31 +0300, Aaro Koskinen wrote:
-> > Hi,
-> > 
-> > On Thu, Jun 06, 2019 at 10:54:51AM +1000, Benjamin Herrenschmidt
-> > wrote:
-> > > On Thu, 2019-06-06 at 01:50 +0300, Aaro Koskinen wrote:
-> > > > Hi,
-> > > > 
-> > > > When upgrading from v5.0 -> v5.1 on G4 PowerBook, I noticed WLAN
-> > > > does
-> > > > not work anymore:
-> > > > 
-> > > > [   42.004303] b43legacy-phy0: Loading firmware version 0x127,
-> > > > patch level 14 (2005-04-18 02:36:27)
-> > > > [   42.184837] b43legacy-phy0 debug: Chip initialized
-> > > > [   42.184873] b43legacy-phy0 ERROR: The machine/kernel does not
-> > > > support the required 30-bit DMA mask
-> > > > 
-> > > > The same happens with the current mainline.
-> > > 
-> > > How much RAM do you have ?
-> > 
-> > The system has 1129 MB RAM. Booting with mem=1G makes it work.
+On Wed 05-06-19 18:45:40, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Wow... that's an odd amount. One thing we could possibly do is add code
-> to limit the amount of RAM when we detect that device....
+> If pages are actively gup pinned fail the truncate operation.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  fs/ext4/inode.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 75f543f384e4..1ded83ec08c0 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -4250,6 +4250,9 @@ int ext4_break_layouts(struct inode *inode, loff_t offset, loff_t len)
+>  		if (!page)
+>  			return 0;
+>  
+> +		if (page_gup_pinned(page))
+> +			return -ETXTBSY;
+> +
+>  		error = ___wait_var_event(&page->_refcount,
+>  				atomic_read(&page->_refcount) == 1,
+>  				TASK_INTERRUPTIBLE, 0, 0,
 
-Sent too quickly... I mean that *or* force swiotlb at 30-bits on those systems based
-on detecting the presence of that device in the device-tree.
+This caught my eye. Does this mean that now truncate for a file which has
+temporary gup users (such buffers for DIO) can fail with ETXTBUSY? That
+doesn't look desirable. If we would mandate layout lease while pages are
+pinned as I suggested, this could be dealt with by checking for leases with
+pins (breaking such lease would return error and not break it) and if
+breaking leases succeeds (i.e., there are no long-term pinned pages), we'd
+just wait for the remaining references as we do now.
 
-Cheers,
-Ben.
-
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
