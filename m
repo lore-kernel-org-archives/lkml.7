@@ -2,109 +2,213 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F33DC46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841B0C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5461C20883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D09F20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:29:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+BqiICW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbfFFO2Z (ORCPT
+        id S1728958AbfFFO32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:28:25 -0400
-Received: from mga07.intel.com ([134.134.136.100]:20231 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbfFFO2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:28:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 07:28:24 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jun 2019 07:28:24 -0700
-Received: from kwong4-mobl.amr.corp.intel.com (unknown [10.252.203.122])
-        by linux.intel.com (Postfix) with ESMTP id 7B109580490;
-        Thu,  6 Jun 2019 07:28:23 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH v2] soundwire: stream: fix bad unlock balance
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190606112222.16502-1-srinivas.kandagatla@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <9427a73a-e09a-4a9c-7690-271d2e2e1024@linux.intel.com>
-Date:   Thu, 6 Jun 2019 09:28:25 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 6 Jun 2019 10:29:28 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35883 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727603AbfFFO32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:29:28 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u12so2886039qth.3;
+        Thu, 06 Jun 2019 07:29:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=63js31eXRcU8jBoDG4gjDfHpp/+nRhez2vrjmZ7DH8s=;
+        b=N+BqiICWI+Ly/preMLNFUsTWVrvmB7pZ2S2pX0fRuP3bwaST2oR/3ul2tXyRLcQDwO
+         WUxtl/eWvH5znFerESkUA4R/4figZ7Rh5ZFy9Tp0T1QE21BxiuKYZGczGmFsqckgn+HV
+         SUk+QvQ2QgeQjNaqVivjxV2ywTLrAobGyVSnMFSb7MBbWGwL26x8233I1Rz6EOMS8lwA
+         uWWZhZbixEJnQXBoNEvVSra5Df7EKysq5bAQWnB37IRylyktrj9mGQ9On0MTS0D0OPUj
+         isjDWM5l0KFIkZfqJCjx19ZdlHB+928AVDhZO6sgE76n3QwwElhe5CaBRbtcYSkNkrCA
+         IPXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=63js31eXRcU8jBoDG4gjDfHpp/+nRhez2vrjmZ7DH8s=;
+        b=pvpV4lWLjWiiicy5V6DHC2NeRhxMgj9PEBtcqf4hV/GrP0nDlxcHvwGlHm2rshQMkG
+         CUpxTDqe4ni/vZhXAVV1ZLlC9fU0W9+YI0pBxrEAMZk0ubEYoq08wFssp27i+FjAwVlv
+         3vnpNm7BRs9cVK3Q0xUzW6JUar/NzinbDQN1g0vddxU2bW5Avtba5GxcDIKQEdasthJA
+         G9oviG3t59sdvMzVrgcJYNcCLAQ0fcoEW61KuHPZQ/3RrNmKuToRFAfFI7Rdjvcu3V+J
+         iAUVBuW/VSps0hA/fi6TizOuQsReJlF8wu8QU/HLqB78TIOac0bwUX1fXcBjAncfK00z
+         kKQw==
+X-Gm-Message-State: APjAAAVp357SuQjFH22LDIvBdi85XkGEmSGXSFfgw0Nz9iBLBegzw4c5
+        kT82mprVQNXZBVfBzMTMC40=
+X-Google-Smtp-Source: APXvYqxfxlU94Olww40Y633iAm1vizMCBvBiV5Ut+neykUI6EKz7LtN5/SOLKWWvWDXokvL3OfZ7cg==
+X-Received: by 2002:aed:3f1a:: with SMTP id p26mr40639406qtf.113.1559831366406;
+        Thu, 06 Jun 2019 07:29:26 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.208.82])
+        by smtp.gmail.com with ESMTPSA id q37sm1192622qtj.94.2019.06.06.07.29.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 07:29:25 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 27C9541149; Thu,  6 Jun 2019 11:29:22 -0300 (-03)
+Date:   Thu, 6 Jun 2019 11:29:22 -0300
+To:     ufo19890607 <ufo19890607@gmail.com>
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com,
+        arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com,
+        adrian.hunter@intel.com, wangnan0@huawei.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@redhat.com
+Subject: Re: [PATCH] perf record: Add support to collect callchains from
+ kernel or user space only.
+Message-ID: <20190606142922.GB21245@kernel.org>
+References: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
+ <20190606142644.GA21245@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190606112222.16502-1-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606142644.GA21245@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 6:22 AM, Srinivas Kandagatla wrote:
-> multi bank switching code takes lock on condition but releases without
-> any check resulting in below warning.
-> This patch fixes this.
+Em Thu, Jun 06, 2019 at 11:26:44AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, May 30, 2019 at 02:29:22PM +0100, ufo19890607 escreveu:
+> > From: yuzhoujian <yuzhoujian@didichuxing.com>
+> > 
+> > One can just record callchains in the kernel or user space with
+> > this new options. We can use it together with "--all-kernel" options.
+> > This two options is used just like print_stack(sys) or print_ustack(usr)
+> > for systemtap.
+> > 
+> > Show below is the usage of this new option combined with "--all-kernel"
+> > options.
+> > 	1. Configure all used events to run in kernel space and just
+> > collect kernel callchains.
+> > 	$ perf record -a -g --all-kernel --kernel-callchains
+> > 	2. Configure all used events to run in kernel space and just
+> > collect user callchains.
+> > 	$ perf record -a -g --all-kernel --user-callchains
+> > 
+> > Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
+> > ---
+> >  tools/perf/Documentation/perf-record.txt | 6 ++++++
+> >  tools/perf/builtin-record.c              | 4 ++++
+> >  tools/perf/perf.h                        | 2 ++
+> >  tools/perf/util/evsel.c                  | 4 ++++
+> >  4 files changed, 16 insertions(+)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> > index de269430720a..b647eb3db0c6 100644
+> > --- a/tools/perf/Documentation/perf-record.txt
+> > +++ b/tools/perf/Documentation/perf-record.txt
+> > @@ -490,6 +490,12 @@ Configure all used events to run in kernel space.
+> >  --all-user::
+> >  Configure all used events to run in user space.
+> >  
+> > +--kernel-callchains::
+> > +Collect callchains from kernel space.
+> 
+> Ok, changing this to:
+> 
+> Collect callchains only from kernel space. I.e. this option sets
+> perf_event_attr.exclude_callchain_user to 1,
+> perf_event_attr.exclude_callchain_kernel to 0.
+> 
+> > +
+> > +--user-callchains::
+> > +Collect callchains from user space.
+> 
+> And this one to:
+> Collect callchains only from user space. I.e. this option sets
+> 
+> perf_event_attr.exclude_callchain_kernel to 1,
+> perf_event_attr.exclude_callchain_user to 0.
 
-
-Question to make sure we are talking about the same thing: multi-link 
-bank switching is a capability beyond the scope of the SoundWire spec 
-which requires hardware support to synchronize links and as Sanyog 
-hinted at in a previous email follow a different flow for bank switches.
-
-You would not use the multi-link mode if you have different links that 
-can operate independently and have no synchronization requirement. You 
-would conversely use the multi-link mode if you have two devices on the 
-same type on different links and want audio to be rendered at the same time.
-
-Can you clarify if indeed you were using the full-blown multi-link mode 
-with hardware synchronization or a regular single-link operation? I am 
-not asking for details of your test hardware, just trying to reconstruct 
-the program flow leading to this problem.
-
-It could also be that your commit message was meant to say:
-"the msg lock is taken for multi-link cases only but released 
-unconditionally, leading to an unlock balance warning for single-link 
-usages"?
-
-Thanks!
+Yeah, each of this options just sets the exclude bit for the undesired
+callchains, not setting 0 for the desired, so I'm fixing up the doc I
+suggested accordingly, my comment below remains valid tho:
 
 > 
->   =====================================
->   WARNING: bad unlock balance detected!
->   5.1.0-16506-gc1c383a6f0a2-dirty #1523 Tainted: G        W
->   -------------------------------------
->   aplay/2954 is trying to release lock (&bus->msg_lock) at:
->   do_bank_switch+0x21c/0x480
->   but there are no more locks to release!
+> So that the user don't try using:
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->   drivers/soundwire/stream.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>     pref record --user-callchains --kernel-callchains
 > 
-> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> index ce9cb7fa4724..73c52cd4fec8 100644
-> --- a/drivers/soundwire/stream.c
-> +++ b/drivers/soundwire/stream.c
-> @@ -814,7 +814,8 @@ static int do_bank_switch(struct sdw_stream_runtime *stream)
->   			goto error;
->   		}
->   
-> -		mutex_unlock(&bus->msg_lock);
-> +		if (bus->multi_link)
-> +			mutex_unlock(&bus->msg_lock);
->   	}
->   
->   	return ret;
+> expecting to get both user and kernel callchains and instead gets
+> nothing.
 > 
+> Ok?
+> 
+> - Arnaldo
+> 
+> > +
+> >  --timestamp-filename
+> >  Append timestamp to output file name.
+> >  
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index e2c3a585a61e..dca55997934e 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -2191,6 +2191,10 @@ static struct option __record_options[] = {
+> >  	OPT_BOOLEAN_FLAG(0, "all-user", &record.opts.all_user,
+> >  			 "Configure all used events to run in user space.",
+> >  			 PARSE_OPT_EXCLUSIVE),
+> > +	OPT_BOOLEAN(0, "kernel-callchains", &record.opts.kernel_callchains,
+> > +		    "collect kernel callchains"),
+> > +	OPT_BOOLEAN(0, "user-callchains", &record.opts.user_callchains,
+> > +		    "collect user callchains"),
+> >  	OPT_STRING(0, "clang-path", &llvm_param.clang_path, "clang path",
+> >  		   "clang binary to use for compiling BPF scriptlets"),
+> >  	OPT_STRING(0, "clang-opt", &llvm_param.clang_opt, "clang options",
+> > diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+> > index d59dee61b64d..711e009381ec 100644
+> > --- a/tools/perf/perf.h
+> > +++ b/tools/perf/perf.h
+> > @@ -61,6 +61,8 @@ struct record_opts {
+> >  	bool	     record_switch_events;
+> >  	bool	     all_kernel;
+> >  	bool	     all_user;
+> > +	bool	     kernel_callchains;
+> > +	bool	     user_callchains;
+> >  	bool	     tail_synthesize;
+> >  	bool	     overwrite;
+> >  	bool	     ignore_missing_thread;
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index a6f572a40deb..a606b2833e27 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -680,6 +680,10 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+> >  
+> >  	attr->sample_max_stack = param->max_stack;
+> >  
+> > +	if (opts->kernel_callchains)
+> > +		attr->exclude_callchain_user = 1;
+> > +	if (opts->user_callchains)
+> > +		attr->exclude_callchain_kernel = 1;
+> >  	if (param->record_mode == CALLCHAIN_LBR) {
+> >  		if (!opts->branch_stack) {
+> >  			if (attr->exclude_user) {
+> > -- 
+> > 2.14.1
+> 
+> -- 
+> 
+> - Arnaldo
 
+-- 
+
+- Arnaldo
