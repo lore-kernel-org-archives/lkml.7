@@ -2,101 +2,92 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9127C46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAE3C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAB320868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DD620868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559803065;
+	bh=PZclXto95zQCnAw7+RqvTMceiBAgvFgp7tWzFU0lQ7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oyOuuXaAgaKGDkhIsCcRoDWIrt1oG2/VfAT6bTApzZ7adeXrviAwPQpLqH5751m2I
+	 dfUF4GvcIQsXz/toH82DmlcQULovDhFnW5tnGTTLXZp6UJopaVZLZVzara5Sv1Luv8
+	 tEU5b8Owt5kWkQ1sRKEP96etV8I0K2+DcrTyCtbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfFFGhd (ORCPT
+        id S1726693AbfFFGho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:37:33 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37922 "EHLO deadmen.hmeau.com"
+        Thu, 6 Jun 2019 02:37:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFGhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:37:33 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hYm1g-0006bn-NT; Thu, 06 Jun 2019 14:37:28 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hYm1c-0003k2-At; Thu, 06 Jun 2019 14:37:24 +0800
-Date:   Thu, 6 Jun 2019 14:37:24 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] crypto: gcm - fix cacheline sharing
-Message-ID: <20190606063724.n77z7gaf32tmyxng@gondor.apana.org.au>
-References: <20190529202728.GA35103@gmail.com>
- <CAKv+Gu-4KqcY=WhwY98JigTzeXaL5ggYEcu7+kNzNtpO2FLQXg@mail.gmail.com>
- <VI1PR04MB44459EEF7BCD3458BB3D143D8C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <20190530133427.qrwjzctac2x6nsby@gondor.apana.org.au>
- <VI1PR04MB444562A2352FE4BAD7F681258C180@VI1PR04MB4445.eurprd04.prod.outlook.com>
- <CAKv+Gu-jTWQP0Zp=QpuzX41v8Eb5Bvd0O9ajwSnFkDO-ijBf_A@mail.gmail.com>
- <CAKv+Gu9JoC+GKJ6mMAE25mr_k2gbznh-83jApT4=FZsAW=jd8w@mail.gmail.com>
- <20190530142734.qlhgzeal22zxfhk5@gondor.apana.org.au>
- <CAKv+Gu8jJQCZwiHFORUJUzRaAizWzBQ95EAgYe36sFrcvzb6vg@mail.gmail.com>
- <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
+        id S1725267AbfFFGho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:37:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6493820673;
+        Thu,  6 Jun 2019 06:37:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559803063;
+        bh=PZclXto95zQCnAw7+RqvTMceiBAgvFgp7tWzFU0lQ7U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PaF9zKniU6nz+hpZYk8sIfBvycyGZXZUtrcuDhaITxaiz5LG2nCh0JS0S5FvvNyC9
+         S8cOJlblvb92R4pTjv0XRtItw/uMxdk6ya3j3pVfpahog89GnUzrxaOHFIH5v1uyK1
+         OOfd2N6+JPXmoN/BRUTgBLi3v/26cJgJpjKvOT0I=
+Date:   Thu, 6 Jun 2019 08:37:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Talel Shenhar <talel@amazon.com>, nicolas.ferre@microchip.com,
+        jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com,
+        mchehab+samsung@kernel.org, robh+dt@kernel.org,
+        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, jonnyc@amazon.com, hhhawa@amazon.com,
+        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+Subject: Re: [PATCH 2/3] irqchip: al-fic: Introduce Amazon's Annapurna Labs
+ Fabric Interrupt Controller Driver
+Message-ID: <20190606063741.GA23305@kroah.com>
+References: <1559717653-11258-1-git-send-email-talel@amazon.com>
+ <1559717653-11258-3-git-send-email-talel@amazon.com>
+ <20190605075927.GA9693@kroah.com>
+ <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-KBgiyNY2Dypx6vqtmpTXNfOxxWxJf50BTiF2rCOFqnw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <a81a46ef13273aa8c6ea87c8d3550e33650e27b6.camel@kernel.crashing.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 04:31:09PM +0200, Ard Biesheuvel wrote:
->
-> This might work:
->
-> diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-> index c0ece44f303b..3d313d2a279a 100644
-> --- a/drivers/crypto/caam/caamalg.c
-> +++ b/drivers/crypto/caam/caamalg.c
-> @@ -1661,7 +1661,8 @@ static int aead_decrypt(struct aead_request *req)
->   * allocate and map the skcipher extended descriptor for skcipher
->   */
->  static struct skcipher_edesc *skcipher_edesc_alloc(struct
-> skcipher_request *req,
-> -                                                  int desc_bytes)
-> +                                                  int desc_bytes,
-> +                                                  u8 const *input_iv)
->  {
->         struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
->         struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
-> @@ -1745,7 +1746,7 @@ static struct skcipher_edesc
-> *skcipher_edesc_alloc(struct skcipher_request *req,
->         /* Make sure IV is located in a DMAable area */
->         if (ivsize) {
->                 iv = (u8 *)edesc->hw_desc + desc_bytes + sec4_sg_bytes;
-> -               memcpy(iv, req->iv, ivsize);
-> +               memcpy(iv, input_iv, ivsize);
+On Thu, Jun 06, 2019 at 07:55:43AM +1000, Benjamin Herrenschmidt wrote:
+> On Wed, 2019-06-05 at 09:59 +0200, Greg KH wrote:
+> > 
+> > > +struct irq_domain *al_fic_wire_get_domain(struct al_fic *fic);
+> > > +
+> > > +struct al_fic *al_fic_wire_init(struct device_node *node,
+> > > +				void __iomem *base,
+> > > +				const char *name,
+> > > +				unsigned int parent_irq);
+> > > +int al_fic_cleanup(struct al_fic *fic);
+> > 
+> > Who is using these new functions?  We don't add new apis that no one
+> > uses :(
 > 
->                 iv_dma = dma_map_single(jrdev, iv, ivsize, DMA_TO_DEVICE);
->                 if (dma_mapping_error(jrdev, iv_dma)) {
+> They will be used by subsequent driver submissions but those aren't
+> quite ready yet, so we can hold onto patch 3 for now until they are.
 
-Hi Ard:
+Patch 2 also should have these removed :)
 
-I presume you will be submitting this patch at some point?  When
-you do please base it on top of your other one which I'm about to
-merge.
+You know we don't add new apis until we have a real, in-kernel user for
+them...
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+thanks,
+
+greg k-h
