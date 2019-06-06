@@ -2,120 +2,326 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E273C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE8AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145FC208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D237920665
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:25:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0Urs0vj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="EXmVmlMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfFFOY5 (ORCPT
+        id S1728956AbfFFOZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:24:57 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33020 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbfFFOY5 (ORCPT
+        Thu, 6 Jun 2019 10:25:07 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:49246 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbfFFOZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:24:57 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h17so1476633pgv.0;
-        Thu, 06 Jun 2019 07:24:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=LQYAX0Ik20hq3rHNgG5ZoN3VJukEDz/h1qNn+gur0Yc=;
-        b=F0Urs0vjcvUPDMVH3ss6E1lfrrwePnXPxS8VxAk0ZhxTaiOp2GopcOz+9v2JPv28Iw
-         +50FxoFHRhkOJr+V3RH5kiVJfd12zbyz6nfYplWizlqtM9WRo9SICFXhlYSa7JwJDdhV
-         yS/wDnHjjQIVg0EqcEwJJ/L04dpSBEj2S44oYVJCZjS41P2Ui2h/sq+LxHz8vYotig+7
-         T1u26tOcmZu2XrzhQA7HSZESCustX+qkH9JVBclpOby1ERexv1I3xqHoCUe0DM//sP4F
-         xcrupJrBV0oNaihnsK5ieWESk2BJaiFBmSfxzRhczFMz1mfmiOY5GyzmxUmnWPbqSM9X
-         re1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LQYAX0Ik20hq3rHNgG5ZoN3VJukEDz/h1qNn+gur0Yc=;
-        b=TpDnqc7LHB/+VFYWYsFsDv5U+PDRRgod26Kv2jkuaEDN6naxSG733VNBQjjUqgiQcq
-         uBA5pzuIQKDkqKV37BkRxw7PXmXu9zjD+pLyZF7WQ0wPROIK4y/BZJ2rFe5Q6EvHNMVy
-         dpt3OeLTr3N9C2gxjGPdidiRuo9bHAWJI52SKwGpdTwXpklFO8ouCWz084hVbwLKU76k
-         wVfTRw0CvRs/L652LI2joh5nZ/9ig9d4N/xe9wDkj1nq4yNbZVSxq81f2JZrPv/wP91c
-         w9IEArT5uGezjkZCTEq5qu8AzSTYT0Uadfi67a+DSCNP2wbLWEKz+eL6dbB0iNnqeIVC
-         nE4w==
-X-Gm-Message-State: APjAAAVTSrPJulkMzDaAyKzTCL+Apcf+2DRZBkrjj5443/zodLJ9rQN1
-        JpJ3yUbYRHMCW25ljY/Fm1U=
-X-Google-Smtp-Source: APXvYqxNWKZP/TTBjt3l/KT4pko8KyN1r7pV04OfzznlgsWnlokhYtmWgnbnadbK+gXJWYrmQ5quAQ==
-X-Received: by 2002:a17:90a:290b:: with SMTP id g11mr161148pjd.122.1559831096095;
-        Thu, 06 Jun 2019 07:24:56 -0700 (PDT)
-Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
-        by smtp.gmail.com with ESMTPSA id f11sm2884243pjg.1.2019.06.06.07.24.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 07:24:55 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 07:24:53 -0700
-From:   Eduardo Valentin <edubezval@gmail.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] drivers: thermal: tsens: remove redundant u32
- comparison with less than zero
-Message-ID: <20190606142450.GA7846@localhost.localdomain>
-References: <20190531105708.15312-1-colin.king@canonical.com>
+        Thu, 6 Jun 2019 10:25:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1559831106; x=1591367106;
+  h=subject:from:to:cc:references:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=rEjq0xdKk1JknlqpDZ/HFtUuPxL/PyV36Pg5yw6K8x8=;
+  b=EXmVmlMaegY/yjcFLRueV4Gp5JnSlor8BoOZugr2ZLfTNcztNjiRFPkP
+   68rCAVKnCb4mGEiDu5eFtpB4aLTEQoi7fL02UIbDNoWqvc2CvSW9zLU/b
+   o+akMIuPyyXPVN3W7NeqsDuq2hULGAnzlE46PhjL091seKWtn0/SDCX+E
+   gl+xu52TDh7bgGhyCXjJ4Gx+2czCsfc6nAq54HVKRni07vHCc5vepM/kz
+   WfPXePAe4R03G/fy6w9R3BRK37mO4pKhlRNzd8aqpNUdEdhMnXUztZqQ1
+   C4yGiB3SvgVNsa93/C7NdjfW8up4G6CFH5OuUQ35ePYDwO1KYZGAHDRmV
+   g==;
+X-IronPort-AV: E=Sophos;i="5.63,559,1557158400"; 
+   d="scan'208";a="216254235"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Jun 2019 22:25:05 +0800
+IronPort-SDR: VrOCLdjrLc6PjaHM5gkI3p5FUizjhuNIuhossoynL4RFLaRmAwi0nanpKAvhEWiZJBtbQM6C51
+ PbxJ2ci36I4V7DugXaLDF4/qnh7VsdJhBnpdN3DzbQ8ElTX1jF50IX9/HgCmZqQWESqWC1chZ8
+ PDapfGA8B1Ftup9mHF4q59Sc1a9p+R5jKpA50D/Vup4CiQxjfw7a5BKF0a4fOvI6WcT+e7Dsrn
+ +jLWCnFpo8PJFE6+6KVwmJ5JjACRbV4dnSLKcGtlsSWd/f7XV/E+ISETs5hfo5K5GubREq33B7
+ 6Z1GOnBJhFSdnUDwVitRh3SN
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 06 Jun 2019 07:00:00 -0700
+IronPort-SDR: JqEwNtP0feyi0QP+GRXCTEoS3x5m3WoXZziRmFdN3rKtyRAPs9vOm53tX5nskpiktumA46i+W9
+ mlxE6e/rQTVqV7TWiQXbfkoerYBZ6MvQzrej7ZXjqM7fzntLr5Z0eTDNYnFVudBcZnZhp3rq7z
+ lP4v9BOcGsSQi5wgxrO+KSFYEFnPsfwRUA5b3P2H7K8kBUp0Lg3jmXXdMOwcEl1S5+bdr+k3qz
+ 2bGBaWELQYdCXO7MPlSrMWJSWx+E8yDrFw9/SGH1ZUfWvdh9ZLM4/sLFtXhOeJSUoYuM1Appv6
+ N1c=
+Received: from unknown (HELO [10.225.105.220]) ([10.225.105.220])
+  by uls-op-cesaip01.wdc.com with ESMTP; 06 Jun 2019 07:25:04 -0700
+Subject: Re: [PATCH v6 4/7] arm: Use common cpu_topology structure and
+ functions.
+From:   Atish Patra <atish.patra@wdc.com>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190529211340.17087-1-atish.patra@wdc.com>
+ <20190529211340.17087-5-atish.patra@wdc.com>
+Message-ID: <de0dc9f6-8d20-86f3-7d7e-eb8a2a290901@wdc.com>
+Date:   Thu, 6 Jun 2019 07:25:01 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190531105708.15312-1-colin.king@canonical.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190529211340.17087-5-atish.patra@wdc.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hey Colin,
-
-On Fri, May 31, 2019 at 11:57:08AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> The u32 variable hw_id is unsigned and cannot be less than zero so
-> the comparison with less than zero is always false and hence is redundant
-> and can be removed.
->=20
-> Addresses-Coverity: ("Unsigned compared against 0")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-
-Thanks for the patch but the commit that introduced this has been
-reverted. I pushed an update on my -next branch to silence this in the
-linux-next tree too.
-
+On 5/29/19 2:15 PM, Atish Patra wrote:
+> Currently, ARM32 and ARM64 uses different data structures to represent
+> their cpu topologies. Since, we are moving the ARM64 topology to common
+> code to be used by other architectures, we can reuse that for ARM32 as
+> well.
+> 
+> Take this opprtunity to remove the redundant functions from ARM32 and
+> reuse the common code instead.
+> 
+> To: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
+> Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
+> 
 > ---
->  drivers/thermal/qcom/tsens-common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/t=
-sens-common.c
-> index 928e8e81ba69..f4419f45025d 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -69,7 +69,7 @@ bool is_sensor_enabled(struct tsens_priv *priv, u32 hw_=
-id)
->  	u32 val;
->  	int ret;
-> =20
-> -	if ((hw_id > (priv->num_sensors - 1)) || (hw_id < 0))
-> +	if (hw_id > (priv->num_sensors - 1))
->  		return -EINVAL;
->  	ret =3D regmap_field_read(priv->rf[SENSOR_EN], &val);
->  	if (ret)
+> Hi Russell,
+> Can we get a ACK for this patch ? We are hoping that the entire
+> series can be merged at one go.
+> ---
+>   arch/arm/include/asm/topology.h | 20 -----------
+>   arch/arm/kernel/topology.c      | 60 ++++-----------------------------
+>   drivers/base/arch_topology.c    |  4 ++-
+>   include/linux/arch_topology.h   |  6 ++--
+>   4 files changed, 11 insertions(+), 79 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
+> index 2a786f54d8b8..8a0fae94d45e 100644
+> --- a/arch/arm/include/asm/topology.h
+> +++ b/arch/arm/include/asm/topology.h
+> @@ -5,26 +5,6 @@
+>   #ifdef CONFIG_ARM_CPU_TOPOLOGY
+>   
+>   #include <linux/cpumask.h>
+> -
+> -struct cputopo_arm {
+> -	int thread_id;
+> -	int core_id;
+> -	int socket_id;
+> -	cpumask_t thread_sibling;
+> -	cpumask_t core_sibling;
+> -};
+> -
+> -extern struct cputopo_arm cpu_topology[NR_CPUS];
+> -
+> -#define topology_physical_package_id(cpu)	(cpu_topology[cpu].socket_id)
+> -#define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
+> -#define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
+> -#define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
+> -
+> -void init_cpu_topology(void);
+> -void store_cpu_topology(unsigned int cpuid);
+> -const struct cpumask *cpu_coregroup_mask(int cpu);
+> -
+>   #include <linux/arch_topology.h>
+>   
+>   /* Replace task scheduler's default frequency-invariant accounting */
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index 60e375ce1ab2..238f1da0219c 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -177,17 +177,6 @@ static inline void parse_dt_topology(void) {}
+>   static inline void update_cpu_capacity(unsigned int cpuid) {}
+>   #endif
+>   
+> - /*
+> - * cpu topology table
+> - */
+> -struct cputopo_arm cpu_topology[NR_CPUS];
+> -EXPORT_SYMBOL_GPL(cpu_topology);
+> -
+> -const struct cpumask *cpu_coregroup_mask(int cpu)
+> -{
+> -	return &cpu_topology[cpu].core_sibling;
+> -}
+> -
+>   /*
+>    * The current assumption is that we can power gate each core independently.
+>    * This will be superseded by DT binding once available.
+> @@ -197,32 +186,6 @@ const struct cpumask *cpu_corepower_mask(int cpu)
+>   	return &cpu_topology[cpu].thread_sibling;
+>   }
+>   
+> -static void update_siblings_masks(unsigned int cpuid)
+> -{
+> -	struct cputopo_arm *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
+> -	int cpu;
+> -
+> -	/* update core and thread sibling masks */
+> -	for_each_possible_cpu(cpu) {
+> -		cpu_topo = &cpu_topology[cpu];
+> -
+> -		if (cpuid_topo->socket_id != cpu_topo->socket_id)
+> -			continue;
+> -
+> -		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
+> -		if (cpu != cpuid)
+> -			cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
+> -
+> -		if (cpuid_topo->core_id != cpu_topo->core_id)
+> -			continue;
+> -
+> -		cpumask_set_cpu(cpuid, &cpu_topo->thread_sibling);
+> -		if (cpu != cpuid)
+> -			cpumask_set_cpu(cpu, &cpuid_topo->thread_sibling);
+> -	}
+> -	smp_wmb();
+> -}
+> -
+>   /*
+>    * store_cpu_topology is called at boot when only one cpu is running
+>    * and with the mutex cpu_hotplug.lock locked, when several cpus have booted,
+> @@ -230,7 +193,7 @@ static void update_siblings_masks(unsigned int cpuid)
+>    */
+>   void store_cpu_topology(unsigned int cpuid)
+>   {
+> -	struct cputopo_arm *cpuid_topo = &cpu_topology[cpuid];
+> +	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
+>   	unsigned int mpidr;
+>   
+>   	/* If the cpu topology has been already set, just return */
+> @@ -250,12 +213,12 @@ void store_cpu_topology(unsigned int cpuid)
+>   			/* core performance interdependency */
+>   			cpuid_topo->thread_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+>   			cpuid_topo->core_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+> -			cpuid_topo->socket_id = MPIDR_AFFINITY_LEVEL(mpidr, 2);
+> +			cpuid_topo->package_id = MPIDR_AFFINITY_LEVEL(mpidr, 2);
+>   		} else {
+>   			/* largely independent cores */
+>   			cpuid_topo->thread_id = -1;
+>   			cpuid_topo->core_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+> -			cpuid_topo->socket_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+> +			cpuid_topo->package_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+>   		}
+>   	} else {
+>   		/*
+> @@ -265,7 +228,7 @@ void store_cpu_topology(unsigned int cpuid)
+>   		 */
+>   		cpuid_topo->thread_id = -1;
+>   		cpuid_topo->core_id = 0;
+> -		cpuid_topo->socket_id = -1;
+> +		cpuid_topo->package_id = -1;
+>   	}
+>   
+>   	update_siblings_masks(cpuid);
+> @@ -275,7 +238,7 @@ void store_cpu_topology(unsigned int cpuid)
+>   	pr_info("CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
+>   		cpuid, cpu_topology[cpuid].thread_id,
+>   		cpu_topology[cpuid].core_id,
+> -		cpu_topology[cpuid].socket_id, mpidr);
+> +		cpu_topology[cpuid].package_id, mpidr);
+>   }
+>   
+>   static inline int cpu_corepower_flags(void)
+> @@ -298,18 +261,7 @@ static struct sched_domain_topology_level arm_topology[] = {
+>    */
+>   void __init init_cpu_topology(void)
+>   {
+> -	unsigned int cpu;
+> -
+> -	/* init core mask and capacity */
+> -	for_each_possible_cpu(cpu) {
+> -		struct cputopo_arm *cpu_topo = &(cpu_topology[cpu]);
+> -
+> -		cpu_topo->thread_id = -1;
+> -		cpu_topo->core_id =  -1;
+> -		cpu_topo->socket_id = -1;
+> -		cpumask_clear(&cpu_topo->core_sibling);
+> -		cpumask_clear(&cpu_topo->thread_sibling);
+> -	}
+> +	reset_cpu_topology();
+>   	smp_wmb();
+>   
+>   	parse_dt_topology();
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 5781bb4c457c..797e3cd71bea 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -426,6 +426,7 @@ static int __init parse_dt_topology(void)
+>   	of_node_put(cn);
+>   	return ret;
+>   }
+> +#endif
+>   
+>   /*
+>    * cpu topology table
+> @@ -491,7 +492,7 @@ static void clear_cpu_topology(int cpu)
+>   	cpumask_set_cpu(cpu, &cpu_topo->thread_sibling);
+>   }
+>   
+> -static void __init reset_cpu_topology(void)
+> +void __init reset_cpu_topology(void)
+>   {
+>   	unsigned int cpu;
+>   
+> @@ -526,6 +527,7 @@ __weak int __init parse_acpi_topology(void)
+>   	return 0;
+>   }
+>   
+> +#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
+>   void __init init_cpu_topology(void)
+>   {
+>   	reset_cpu_topology();
+> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+> index d4e76e0a283f..d4311127970d 100644
+> --- a/include/linux/arch_topology.h
+> +++ b/include/linux/arch_topology.h
+> @@ -54,11 +54,9 @@ extern struct cpu_topology cpu_topology[NR_CPUS];
+>   void init_cpu_topology(void);
+>   void store_cpu_topology(unsigned int cpuid);
+>   const struct cpumask *cpu_coregroup_mask(int cpu);
+> -#endif
+> -
+> -#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
+>   void update_siblings_masks(unsigned int cpu);
+> -#endif
+>   void remove_cpu_topology(unsigned int cpuid);
+> +void reset_cpu_topology(void);
+> +#endif
+>   
+>   #endif /* _LINUX_ARCH_TOPOLOGY_H_ */
+> 
+Hi Russell,
+Can we get an ACK for ARM if you don't have any objection to the series ?
+
+-- 
+Regards,
+Atish
