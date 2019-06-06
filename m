@@ -2,97 +2,148 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE727C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244D1C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C7520883
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559804306;
-	bh=/AotUYAn81Yvabr0QOuYw3tgELf9Sx7jAvd3vMMU3kY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nQcwSo14z3YKv2o7lzCJv7p31QhSEMU7U8Nd2i4qjhYbdPljQsLfhzy7OIJKVC5Tu
-	 b5ldr3UPLraj0AFDcXCXDn6fHhhsMOHTrERy0Aqn+57PJybNiLCS6LusYXwp+S0y5B
-	 +YGr6Lil2QmvtoO15Gfgs7k1ABknGCW197/TiPe0=
+	by mail.kernel.org (Postfix) with ESMTP id EBF5E20883
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:05:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XE2mWnWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfFFG60 (ORCPT
+        id S1726734AbfFFHFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFG6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:58:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8752207E0;
-        Thu,  6 Jun 2019 06:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559804305;
-        bh=/AotUYAn81Yvabr0QOuYw3tgELf9Sx7jAvd3vMMU3kY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=loi3rC5hpwqc/ItwOijTJjtZsZuRbo9pg0ZFutYYR/BfAfq7OxiyuXfyiod69OYcM
-         ykyNP7GpIsHdSWwKHqY4ppeG7Kya1j5n+9jllVJz6BFPiB17yIxD5L300a0TaTn8Sz
-         ijLeZZ+AGRzmaXxhGzDwgga8F1Q3++6lFMxc6ZqI=
-Date:   Thu, 6 Jun 2019 08:58:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v3] USB: move usb debugfs directory creation to the usb
- common core
-Message-ID: <20190606065822.GA29436@kroah.com>
-References: <20190605092816.GA23758@kroah.com>
- <20190605124440.GD17558@kroah.com>
- <1559788368.8487.109.camel@mhfsdcap03>
+        Thu, 6 Jun 2019 03:05:31 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34411 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFHFa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:05:30 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y198so748700lfa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 00:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LxUuoqEbUmgmnRX9vLQxQ/tQ09ZsJx159pAs1BZjQQw=;
+        b=XE2mWnWbAi156xacpzGakgxd0XdnPCTjLko9UBbfOxI68vIwEY1UqU3DdVepHT2unK
+         IXFQuljTyQaBE63iTT06aLL+Gabw06PozTCJJyXbmKvvVShYaCMrd+a5URAFB89lEIrU
+         oH3FnL+nYHmx42QzFDxG5r+oZSqRevKAxlp0V/DFV++C/3xPhMUC2Woo4QjnWcxAJlx8
+         I81qqKzeu0gdR3REUvOrz+2QwvtvK3yIaokulPtppIRatORNpAjdXcyB35p+xAEy9RmN
+         y4ND6KqQT11fRSwVqXg03KLBPqqJX4YYaH2X4ZLxkTZKD4Y39fNVQOdJy8bB0sRlmd6C
+         qLgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LxUuoqEbUmgmnRX9vLQxQ/tQ09ZsJx159pAs1BZjQQw=;
+        b=omyWHAenV/r5CRrmGeDM4ebZLG5Vs427NU7vIuKCu0ckeJQmzKh28QgikGA3b+UVFe
+         YTfCO3MQYHpNbENHPzD2ffR+hLV9kjeLBpHyoqXUkN4puYkKvkwdl+UsV7kLL0woAZfX
+         Bz4sUiSjfpAarqXJi3SGRr5tI62jRNIk3fJSF5luiAqCRoLIrSrhOroVEUQapCFzaGru
+         emFjlqtXY2yivkl8Xa4X9rMa43kvqM5wlPQ/hrUZmhwZ6lVoIPcDji+8YOGXh6S5e+4x
+         o0h05/cZiNF09tLmx5h3WhsO65gE98oau7EhyDlMfiTUekNa49rJXJJST61GObrLsn+8
+         4nQw==
+X-Gm-Message-State: APjAAAUUjJIdT86UgcMDPzGN2WMrKGl7J93ht0hoihDke/qzfju0bdLd
+        yVaisEZPyV+mBEdzx4QbVfhYa5QPoLdaWm48bLLw1Q==
+X-Google-Smtp-Source: APXvYqxZCAlDmT5oc8zqUrM9LX+7zRm365sy7bvsFw5heno4p5UQD7LD9oIpvPIgG/H6nUWIJ0qyXLkVoeON3W+U3V8=
+X-Received: by 2002:a19:2892:: with SMTP id o140mr9068556lfo.177.1559804728178;
+ Thu, 06 Jun 2019 00:05:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559788368.8487.109.camel@mhfsdcap03>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
+ <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
+ <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
+ <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
+ <5cdf2dc8.1c69fb81.521c8.9339@mx.google.com> <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
+In-Reply-To: <20190605172048.ahzusevvdxrpnebk@queper01-ThinkPad-T460s>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 6 Jun 2019 09:05:16 +0200
+Message-ID: <CAKfTPtCR360osDz3oW+XhHT1R12SacAuJ44W_NfFOPWxJFjOPg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 10:32:48AM +0800, Chunfeng Yun wrote:
-> On Wed, 2019-06-05 at 14:44 +0200, Greg Kroah-Hartman wrote:
-> > The USB gadget subsystem wants to use the USB debugfs root directory, so
-> > move it to the common "core" USB code so that it is properly initialized
-> > and removed as needed.
-> > 
-> > In order to properly do this, we need to load the common code before the
-> > usb core code, when everything is linked into the kernel, so reorder the
-> > link order of the code.
-> > 
-> > Also as the usb common code has the possibility of the led trigger logic
-> > to be merged into it, handle the build option properly by only having
-> > one module init/exit function and have the common code initialize the
-> > led trigger if needed.
-> > 
-> > Reported-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> > Chunfeng, can you try testing this again?
-> 
-> Tested-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> 
-> Thank you, Greg, Felipe
+Hi Quentin,
 
-Thanks for the review, and all of the different iterations for this.
-For something so "simple" it sure took us all a number of tries :)
+On Wed, 5 Jun 2019 at 19:21, Quentin Perret <quentin.perret@arm.com> wrote:
+>
+> On Friday 17 May 2019 at 14:55:19 (-0700), Stephen Boyd wrote:
+> > Quoting Amit Kucheria (2019-05-16 04:54:45)
+> > > (cc'ing Andy's correct email address)
+> > >
+> > > On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > >
+> > > > Quoting Amit Kucheria (2019-05-13 04:54:12)
+> > > > > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > > > > >
+> > > > > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > > > > > >
+> > > > > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+> > > > > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+> > > > > > > that describes this topology.
+> > > > > >
+> > > > > > This is partly true. There are two groups of gold and silver cores,
+> > > > > > but AFAICT they are in a single cluster, not two separate ones. SDM845
+> > > > > > is one of the early examples of ARM's Dynamiq architecture.
+> > > > > >
+> > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > > >
+> > > > > > I noticed that this patch sneaked through for this merge window but
+> > > > > > perhaps we can whip up a quick fix for -rc2?
+> > > > > >
+> > > > >
+> > > > > And please find attached a patch to fix this up. Andy, since this
+> > > > > hasn't landed yet (can we still squash this into the original patch?),
+> > > > > I couldn't add a Fixes tag.
+> > > > >
+> > > >
+> > > > I had the same concern. Thanks for catching this. I suspect this must
+> > > > cause some problem for IPA given that it can't discern between the big
+> > > > and little "power clusters"?
+> > >
+> > > Both EAS and IPA, I believe. It influences the scheduler's view of the
+> > > the topology.
+> >
+> > And EAS and IPA are OK with the real topology? I'm just curious if
+> > changing the topology to reflect reality will be a problem for those
+> > two.
+>
+> FWIW, neither EAS nor IPA depends on this. Not the upstream version of
+> EAS at least (which is used in recent Android kernels -- 4.19+).
+>
+> But doing this is still required for other things in the scheduler (the
+> so-called 'capacity-awareness' code). So until we have a better
+> solution, this patch is doing the right thing.
 
-I'll go queue it up now so that your future work can rely on it.
+I'm not sure to catch what you mean ?
+Which so-called 'capacity-awareness' code are you speaking about ? and
+what is the problem ?
 
-thanks,
+Regards,
+Vincent
 
-greg k-h
+>
+> I hope that helps.
+>
+> Thanks,
+> Quentin
