@@ -2,256 +2,197 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788F4C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9583AC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEFF20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64474207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:17:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="apeLxYtw";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M1M6GE79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfFFLPi (ORCPT
+        id S1728088AbfFFLRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:15:38 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57620 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfFFLPi (ORCPT
+        Thu, 6 Jun 2019 07:17:32 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58952 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726092AbfFFLRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:15:38 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 2C3F528546F
-Subject: Re: [PATCH v4] platform/chrome: mfd/cros_ec_debugfs: Add debugfs
- entry to retrieve EC uptime.
-To:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20190327182040.112651-1-twawrzynczak@chromium.org>
- <20190502160931.84177-1-twawrzynczak@chromium.org>
- <CAFqH_53OvUWN48Uwv7ofaZTB_6Upu6zjcNzfG-aNt1YaLJyyhg@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <b3b51df5-916a-3b28-81a8-ab77546a5719@collabora.com>
-Date:   Thu, 6 Jun 2019 13:15:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 07:17:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 20C0260A97; Thu,  6 Jun 2019 11:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559819851;
+        bh=44FYV19hER2OKPFePIbE2vYYVMSTWXADeWEp8M56/AI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=apeLxYtwa2KnIJ2NT4qZc5+2anZ9I8dhSoi2ERsbE0hZLkee4tASrDdeAA6GmXhaz
+         NW2eDbK+WWuNUp4CQNrja90ROpc5S9tk2vURgt8YGVL/xQ3vjJNu1qHGIx6Ameypfn
+         FsPGNbqmz4sU+niQVhaxozhQlwRge3PgjHDu5EKM=
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7F2D6063A;
+        Thu,  6 Jun 2019 11:17:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1559819850;
+        bh=44FYV19hER2OKPFePIbE2vYYVMSTWXADeWEp8M56/AI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M1M6GE79MO4dwRGVPw6dX44nWzVEYMupVmzwDTVnGZjF9IzERYLotzigSVZBdxVN+
+         5ikBRSjgLMX+LYqdiuRPh0TrCiXI66kS5aHGeHRd2DoPseMpzZ0aR5UlRQC7vB6TR1
+         C4fxI+K5H1cPbsEdEvdD/UfYTi135CxUhV6RKOt0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7F2D6063A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f53.google.com with SMTP id r18so2777395edo.7;
+        Thu, 06 Jun 2019 04:17:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAVrNhJ0N77bUZzO8wrq65ICXKJno5OEHFIdTTQdRs3Y9N/UVGa8
+        W1sRoDe1imCh7WYHONGyrNaZciRFL3V2h2g9PFg=
+X-Google-Smtp-Source: APXvYqwklxrrrs8SWvaSCMxC+Og7VzvNs6WCp3Va3dO+SqGYHV81qhQaGPqVo0WZDXo7IgykaSwgCatdbbsvwSmowQI=
+X-Received: by 2002:a17:906:3c1:: with SMTP id c1mr33330161eja.221.1559819848628;
+ Thu, 06 Jun 2019 04:17:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFqH_53OvUWN48Uwv7ofaZTB_6Upu6zjcNzfG-aNt1YaLJyyhg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190604222939.195471-1-swboyd@chromium.org> <20190604223700.GE4814@minitux>
+ <5cf6f4bb.1c69fb81.c39da.5496@mx.google.com> <CAFp+6iHZeawnz7Vfk3=Oox-GN_y6c-E9wMwc-qdp1bTOXgqjFQ@mail.gmail.com>
+ <5cf82c6f.1c69fb81.9e342.dbda@mx.google.com>
+In-Reply-To: <5cf82c6f.1c69fb81.9e342.dbda@mx.google.com>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Thu, 6 Jun 2019 16:47:16 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iE8FUXxexKbYy=ak+se-pj1XXUZxTu5o=hJvg66V6+Rzw@mail.gmail.com>
+Message-ID: <CAFp+6iE8FUXxexKbYy=ak+se-pj1XXUZxTu5o=hJvg66V6+Rzw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add iommus property to qup1
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
+Hi Stephen,
 
-Sorry for making you wait so much, now that the patches about cros_ec_commands
-include file has been accepted and the struct is up-to-date I can manage this.
-I've some few comments though, one of them is a change I requested but that now
-we should revert (sorry about that)
+On Thu, Jun 6, 2019 at 2:27 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Vivek Gautam (2019-06-04 21:55:26)
+> > On Wed, Jun 5, 2019 at 4:16 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Bjorn Andersson (2019-06-04 15:37:00)
+> > > > On Tue 04 Jun 15:29 PDT 2019, Stephen Boyd wrote:
+> > > >
+> > > > > The SMMU that sits in front of the QUP needs to be programmed properly
+> > > > > so that the i2c geni driver can allocate DMA descriptors. Failure to do
+> > > > > this leads to faults when using devices such as an i2c touchscreen where
+> > > > > the transaction is larger than 32 bytes and we use a DMA buffer.
+> > > > >
+> > > >
+> > > > I'm pretty sure I've run into this problem, but before we marked the
+> > > > smmu bypass_disable and as such didn't get the fault, thanks.
+> > > >
+> > > > >  arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+> > > > >  arm-smmu 15000000.iommu:         GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x000006c0, GFSYNR2 0x00000000
+> > > > >
+> > > > > Add the right SID and mask so this works.
+> > > > >
+> > > > > Cc: Sibi Sankar <sibis@codeaurora.org>
+> > > > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > index fcb93300ca62..2e57e861e17c 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > @@ -900,6 +900,7 @@
+> > > > >                       #address-cells = <2>;
+> > > > >                       #size-cells = <2>;
+> > > > >                       ranges;
+> > > > > +                     iommus = <&apps_smmu 0x6c0 0x3>;
+> > > >
+> > > > According to the docs this stream belongs to TZ, the HLOS stream should
+> > > > be 0x6c3.
+> > >
+> > > Aye, I saw this line in the downstream kernel but it doesn't work for
+> > > me. If I specify <&apps_smmu 0x6c3 0x0> it still blows up. I wonder if
+> > > my firmware perhaps is missing some initialization here to make the QUP
+> > > operate in HLOS mode? Otherwise, I thought that the 0x3 at the end was
+> > > the mask and so it should be split off to the second cell in the DT
+> > > specifier but that seemed a little weird.
+> >
+> > Two things here -
+> > 0x6c0 - TZ SID. Do you see above fault on MTP sdm845 devices?
+>
+> No. I see the above fault on Cheza.
 
-Please rebase the patch on top of chrome-platform-5.3, there are trivial conflicts.
+Right, expected.
 
-On 2/5/19 23:16, Enric Balletbo Serra wrote:
-> Hi Tim,
-> 
-> Missatge de Tim Wawrzynczak <twawrzynczak@chromium.org> del dia dj., 2
-> de maig 2019 a les 18:10:
->>
->> The new debugfs entry 'uptime' is being made available to userspace so that
->> a userspace daemon can synchronize EC logs with host time.
->>
->> Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
->> ---
->> Enric, is there something I can do to help speed this along?  This patch
->> is useful for ChromeOS board bringup, and we would like to see it upstreamed
->> if at all possible.
->>
-> 
-> The last version looks good to me. The patch is in my list but is too
-> late for the next merge window. Will be one of the first patches I'll
-> queue for 5.3
-> 
-> Thanks,
->  Enric
-> 
->> Also, AFAIK only the cros_ec supports the 'uptime' command for now.
->> And yes, the file does need to be seekable; the userspace daemon that
->> consumes the file keeps the file open and seeks back to the beginning
->> to get the latest uptime value.
->> Based on your second response to v3, I kept the separate 'create_uptime'
->> function b/c of the logic for checking support for the uptime command.
->> Let me know if you'd like me to move all of that logic into _probe.
->>
->> Changelist from v3:
->>  1) Don't check return values of debugfs_* functions.
->>  2) Only expose 'uptime' file if EC supports it.
->> ---
->>  Documentation/ABI/testing/debugfs-cros-ec | 10 +++
->>  drivers/platform/chrome/cros_ec_debugfs.c | 78 +++++++++++++++++++++++
->>  2 files changed, 88 insertions(+)
->>  create mode 100644 Documentation/ABI/testing/debugfs-cros-ec
->>
->> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
->> new file mode 100644
->> index 000000000000..24b781c67a4c
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/debugfs-cros-ec
->> @@ -0,0 +1,10 @@
->> +What:          /sys/kernel/debug/cros_ec/uptime
+>
+> > 0x6c3/0x6c6 - HLOS SIDs.
 
-Although for now only cros_ec supports it, let's use <cros-ec-device> for
-possible future uses.
+My bad, the other SID is 0x6D6.
 
-/sys/kernel/debug/<cros-ec-device>/uptime
+>
+> Why are there two? I see some mentions of GSI mode near these SIDs so
+> maybe GSI has to be used for DMA here to get the above two SIDs at the
+> IOMMU? Otherwise if we do the non-GSI mode of DMA we're going to use the
+> "TZ" SID?
 
->> +Date:          March 2019
->> +KernelVersion: 5.1
+Yea, one for GSI, and the other one for non-GSI DMA. I am unsure at this point
+about the use of TZ SID, but i would assume this is the SID that's used by the
+qup firmware, and therefore on MTP TZ programs this SID.
 
-Will be 5.3
+>
+> >
+> > Cheza will throw faults for anything that is programmed with TZ on mtp
+> > as all of that should be handled in HLOS. The firmwares of all these
+> > peripherals assume that the SID reservation is done (whether in TZ or HLOS).
+> >
+> > I am inclined to moving the iommus property for all 'TZ' to board dts files.
+> > MTP wouldn't need those SIDs. So, the SOC level dtsi will have just the
+> > HLOS SIDs.
+>
+> So you're saying you'd like to have the SID be <&apps_smmu 0x6c3 0x0> in
+> the sdm845.dtsi file and then override this on Cheza because our SID is
+> different (possibly because we don't use GSI)? Why can't we program the
+> SID in Cheza firmware to match the "HLOS" SID of 0x6c3?
 
->> +Description:
->> +               Read-only.
->> +               Reads the EC's current uptime information
->> +               (using EC_CMD_GET_UPTIME_INFO) and prints
->> +               time_since_ec_boot_ms into the file.
->> +               This is used for synchronizing AP host time
->> +               with the cros_ec log.
->> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
->> index 71308766e891..226545a2150b 100644
->> --- a/drivers/platform/chrome/cros_ec_debugfs.c
->> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
->> @@ -201,6 +201,50 @@ static int cros_ec_console_log_release(struct inode *inode, struct file *file)
->>         return 0;
->>  }
->>
->> +static int cros_ec_get_uptime(struct cros_ec_device *ec_dev, u32 *uptime)
->> +{
->> +       struct {
->> +               struct cros_ec_command msg;
->> +               struct ec_response_uptime_info resp;
->> +       } __packed ec_buf;
->> +       struct ec_response_uptime_info *resp;
->> +       struct cros_ec_command *msg;
->> +
->> +       msg = &ec_buf.msg;
->> +       resp = (struct ec_response_uptime_info *)msg->data;
->> +
->> +       msg->command = EC_CMD_GET_UPTIME_INFO;
->> +       msg->version = 0;
->> +       msg->insize = sizeof(*resp);
->> +       msg->outsize = 0;
->> +
->> +       ret = cros_ec_cmd_xfer_status(ec_dev, msg);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       *uptime = resp->time_since_ec_boot_ms;
->> +       return 0;
->> +}
->> +
->> +static ssize_t cros_ec_uptime_read(struct file *file,
->> +                                  char __user *user_buf,
->> +                                  size_t count,
->> +                                  loff_t *ppos)
->> +{
->> +       struct cros_ec_debugfs *debug_info = file->private_data;
->> +       struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
->> +       char read_buf[32];
->> +       int ret;
->> +       u32 uptime;
->> +
->> +       ret = cros_ec_get_uptime(ec_dev, &uptime);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       ret = scnprintf(read_buf, sizeof(read_buf), "%u\n", uptime);
->> +       return simple_read_from_buffer(user_buf, count, ppos, read_buf, ret);
->> +}
->> +
->>  static ssize_t cros_ec_pdinfo_read(struct file *file,
->>                                    char __user *user_buf,
->>                                    size_t count,
->> @@ -269,6 +313,13 @@ const struct file_operations cros_ec_pdinfo_fops = {
->>         .llseek = default_llseek,
->>  };
->>
->> +const struct file_operations cros_ec_uptime_fops = {
->> +       .owner = THIS_MODULE,
->> +       .open = simple_open,
->> +       .read = cros_ec_uptime_read,
->> +       .llseek = default_llseek,
->> +};
->> +
->>  static int ec_read_version_supported(struct cros_ec_dev *ec)
->>  {
->>         struct ec_params_get_cmd_versions_v1 *params;
->> @@ -413,6 +464,29 @@ static int cros_ec_create_pdinfo(struct cros_ec_debugfs *debug_info)
->>         return 0;
->>  }
->>
->> +static int cros_ec_create_uptime(struct cros_ec_debugfs *debug_info)
->> +{
->> +       struct cros_ec_debugfs *debug_info = file->private_data;
->> +       struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
->> +       u32 uptime;
->> +       int ret;
->> +
->> +       /*
->> +        * If the EC does not support the uptime command, which is
->> +        * indicated by xfer_status() returning -EINVAL, then no
->> +        * debugfs entry will be created.
->> +        */
->> +       ret = cros_ec_get_uptime(ec_dev, &uptime);
->> +
->> +       if (ret == -EINVAL)
->> +               return supported;
+Sorry my bad, I missed the overriding part.
+May be we add the lists of SIDs in board dts only. So, cheza dts will
+have all these SIDs -
+<&apps_smmu 0x6c0 0x3>   // for both 0x6c0 (TZ) and 0x6c3 (HLOS)
+<&apps_smmu 0x6d6 0x0>   // if we want to use the GSI dma.
+and
+MTP will have
+<&apps_smmu 0x6c3 0x0>
+<&apps_smmu 0x6d6 0x0>
+WDUT?
 
-That doesn't apply anymore, xfer_status will not return -EINVAL (sorry to make
-you change this before)
+>
+> >
+> > P.S.
+> > As you rightly said, the second cell in iommus property is the mask so that
+> > the iommu is able to reserve all that SIDs that are covered with the
+> > starting SID
+> > and the mask.
+> >
+>
+> Well if 0x6c6 is another possibility maybe it should be <&apps_smmu
+> 0x6c0 0x7> to cover the 0x6c3 and 0x6c6 SIDs?
 
->> +
->> +       debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
->> +                       &cros_ec_uptime_fops);
->> +
->> +       return 0;
->> +}
->> +
+The other SID was 0x6D6.
 
+Best regards
+Vivek
 
-Let's remove this function and just do
-
->>  static int cros_ec_debugfs_probe(struct platform_device *pd)
->>  {
->>         struct cros_ec_dev *ec = dev_get_drvdata(pd->dev.parent);
->> @@ -442,6 +516,10 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
->>         if (ret)
->>                 goto remove_log;
->>
-
-
-If the command fails just don't create the file silently. No need to remove the
-other files just because this fails.
-
-if (cros_ec_get_uptime() == 0)
-    debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
-                        &cros_ec_uptime_fops);
-
-Thanks,
- Enric
-
->> +       ret = cros_ec_create_uptime(debug_info);
->> +       if (ret)
->> +               goto remove_log;
->> +
->>         ec->debug_info = debug_info;
->>
->>         dev_set_drvdata(&pd->dev, ec);
->> --
->> 2.20.1
->>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
