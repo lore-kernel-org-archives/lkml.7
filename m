@@ -2,179 +2,176 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344DEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D78C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083C920684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9505F20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWscwD+f"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="QHJOC2ZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfFFPe7 (ORCPT
+        id S1729418AbfFFPf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:34:59 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37097 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729185AbfFFPe7 (ORCPT
+        Thu, 6 Jun 2019 11:35:56 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43469 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729319AbfFFPf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:34:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 131so2485052ljf.4;
-        Thu, 06 Jun 2019 08:34:57 -0700 (PDT)
+        Thu, 6 Jun 2019 11:35:56 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w79so1866551oif.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 08:35:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CNzuT4B+gj0fca3L+CBElR5BCGQz7D37R5CsfOS0R5U=;
-        b=VWscwD+f7KttjezbVWzpZtP1ZvHaxYlbphCgYRA7iz58igJeZyW24ly4jyIogAH0Uw
-         SHrCD9VcA1bnc0g4lDBUhiArGjnOKqINogD2cGRbqydhHmnbOt/9FOVwptsK9Ts/EDtM
-         vDeCBMXacEKgoIZrgg06bMgL6XwQiMlNa6OYNbARX2UOEv9qlrzo91Z0ocO6b9jNToYz
-         bk9kivBv6638oKvzKIlHqdQFNM0fpg9+4i4hwoRfSp3YM5699DWdG248k1ySlPOe+zy8
-         uVede+6ARmkEQwT4pDGyhUevnkhKW36zKI80lgtHM1ZzG3Repouf0aKJO1Ff4gS7RXBF
-         mv6w==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1uRCmoXjULyV6kNTp2XKoB1qQmxkPSNDXYL9A3FHXFA=;
+        b=QHJOC2ZZhCoDsF3kkt0jD8pflX+D1g9wOGO30jisMp6VkS20cZbHhajfwYZJVXdiNh
+         JvAq7go3CRc5C+qomPxstLKznxkYPvd1O8ef7VHSAdG1rMnaPbbiOm9MuPNkCt7QxXaR
+         tW2MckCN4CHKIL8N13EVae4FrQAMJth8VAaKv/3gRwubZltnT7kNI3PWIXvq1c0vgZdi
+         L4XQGyBb2kkKpfIMhfb2YWP8o3M95HB+am83dkZODoLq1I1UWGrX6Sp8tjJSrVa2UG3+
+         kN4AXQu3lycB826+fr4/pUl5FixrZTURACJPQlnP2NuCi+p38m+p145UkX/P89XlKLdK
+         QHrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CNzuT4B+gj0fca3L+CBElR5BCGQz7D37R5CsfOS0R5U=;
-        b=Gh74JyOWZ7yCfR8bCvvK+yG8e4qIhyBMqG2WYcE0NascSTzLcWy5BpPO0K/jROuPVH
-         GEOfWVbU17mVAiDCKQs/4sVNDkCczWAGIyuBjfrTDuJ1ngGELMBmd7w7xG+3cjKIGbgT
-         lnE7pJN24qH0wssvvCqun93wPmlF4yjWeg6Id/kVJmdiPcHB+l3dazF/stuXWzEDtxx8
-         241Hwid/grhqPPrUeSgTWXQgsMNvrwA0sVN5R1cFvOaJgNKqD0c9cGnvIMiUTpNwM0Ru
-         jL98ob5bW70YgT8jHtlwiilss+TWQaFp1GQ3M7XLxE6WEe2zEeuvHYQ3DFWuEB/LdVyD
-         6/Aw==
-X-Gm-Message-State: APjAAAXikuLb3n0lOH5R9D2Ap9GCWNGP1H6gER4K3cPSfroFivw3P0DH
-        2za24uaqeQUKhcr9CwAbS0s=
-X-Google-Smtp-Source: APXvYqycnx3S37BNA7DJjEmd/qBgfJr+RwE4m5dx1DAhWLvIzmnhmE5vqjakjfMRNCOKq5AfjVegUw==
-X-Received: by 2002:a2e:988b:: with SMTP id b11mr10513015ljj.85.1559835296660;
-        Thu, 06 Jun 2019 08:34:56 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id z12sm343409lfe.2.2019.06.06.08.34.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 08:34:55 -0700 (PDT)
-Subject: Re: [PATCH V2] i2c: busses: tegra: Add suspend-resume support
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559800475-5446-1-git-send-email-bbiswas@nvidia.com>
- <bf93e88f-cbed-3bb0-223a-74ad0b08aa9e@gmail.com>
- <5871f51b-11d4-8bc9-6f40-4a91f2aab8f8@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3d4ea007-e289-6b52-5321-68a7399e62d7@gmail.com>
-Date:   Thu, 6 Jun 2019 18:34:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1uRCmoXjULyV6kNTp2XKoB1qQmxkPSNDXYL9A3FHXFA=;
+        b=YlNcnFeICWC0g/hIfrXAV8R3tMOQpVdL6yykxncw8Pw5HvDu3P8bPvfx/SCSK5wXvc
+         Odwgq+EBm0wigxBTsCu2SL2laKhmE7FAsWq5zkIIjxY/PdE999SnfUh+XRMwKi8WOWgd
+         PvzUy8MPuweACjK+EXLLZldgSUcBoAT5DmG8poMrpSVqKdU4VgV6tfqmKntWbRHAFMMd
+         51rk8NF9JSJff9Kv9BliFQPdULqqNf/mpMz+SEdp8ev+9P8Gv6eoOyWbAQ9/AuBtEIHC
+         9dufa854FwCrqFqYdO6TAYwPY76e7nDXRbJqGFONMjM2BsXOJEc+/2U+Hd2Kjnx8pGJM
+         mpNg==
+X-Gm-Message-State: APjAAAXtb79cdjpYYtwPfB1nkaQ2Fjo6D+fzzlTa/8M08tbpCs0ffYZ0
+        W7kBt4lIYdw0Mu6uHreZKJVZKzAUshtKJYm+clIjYA==
+X-Google-Smtp-Source: APXvYqwQgzrGrWeJ2qr6zRt1Kh72wsL96qCKSVk7C2TBZflDvhLK6wlI/C4trmZ0QEDDo8Q9KA4CrwRdXYqf7oGmgHc=
+X-Received: by 2002:aca:bbc5:: with SMTP id l188mr410988oif.73.1559835355090;
+ Thu, 06 Jun 2019 08:35:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5871f51b-11d4-8bc9-6f40-4a91f2aab8f8@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190606014544.8339-1-ira.weiny@intel.com> <20190606104203.GF7433@quack2.suse.cz>
+In-Reply-To: <20190606104203.GF7433@quack2.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 6 Jun 2019 08:35:42 -0700
+Message-ID: <CAPcyv4h-k_5T39fDY+SVrLXG_XETmgz-6N3NjQUteYG7g9NdDQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+To:     Jan Kara <jack@suse.cz>
+Cc:     "Weiny, Ira" <ira.weiny@intel.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 16:58, Bitan Biswas пишет:
-> 
-> 
-> On 6/6/19 5:06 AM, Dmitry Osipenko wrote:
->> 06.06.2019 8:54, Bitan Biswas пишет:
->>> Post suspend I2C registers have power on reset values. Before any
->>> transfer initialize I2C registers to prevent I2C transfer timeout
->>> and implement suspend and resume callbacks needed. Fix below errors
->>> post suspend:
->>>
->>> 1) Tegra I2C transfer timeout during jetson tx2 resume:
->>>
->>> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @
->>> 2939, parent: i2c-1
->>> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
->>> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
->>> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
->>> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0
->>> returns -110
->>> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110
->>> after 127152 usecs
->>> [   27.666194] PM: Device 1-0074 failed to resume: error -110
->>>
->>> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
->>>
->>> Remove i2c bus lock-unlock calls in resume callback as
->>> i2c_mark_adapter_*
->>> (suspended-resumed) help ensure i2c core calls from client are not
->>> executed before i2c-tegra resume.
->>>
->>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->>> ---
->>>   drivers/i2c/busses/i2c-tegra.c | 23 +++++++++++++++++++++++
->>>   1 file changed, 23 insertions(+)
->>>
->>> diff --git a/drivers/i2c/busses/i2c-tegra.c
->>> b/drivers/i2c/busses/i2c-tegra.c
->>> index ebaa78d..76b7926 100644
->>> --- a/drivers/i2c/busses/i2c-tegra.c
->>> +++ b/drivers/i2c/busses/i2c-tegra.c
->>> @@ -1687,7 +1687,30 @@ static int tegra_i2c_remove(struct
->>> platform_device *pdev)
->>>   }
->>>     #ifdef CONFIG_PM_SLEEP
->>> +static int tegra_i2c_suspend(struct device *dev)
->>> +{
->>> +    struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->>> +
->>> +    i2c_mark_adapter_suspended(&i2c_dev->adapter);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int tegra_i2c_resume(struct device *dev)
->>> +{
->>> +    struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->>> +    int ret;
->>> +
->>> +    ret = tegra_i2c_init(i2c_dev, false);
->>> +    if (ret)
->>> +        return ret;
->>
->> We're expecting that tegra_i2c_init returns a error code on a failure
->> and nothing else, hence it will be a bit more expressive to name the
->> returned variable as "err". There is nothing wrong with yours variant,
->> this is just a very minor recommendation from me. Please note that a bit
->> more wise choice of the names makes easier to follow the code for other
->> people and hence results in a cleaner code.
-> Agreed.
-> 
->>
->>> +
->>> +    i2c_mark_adapter_resumed(&i2c_dev->adapter);
->>
->> Please add a blank line here for a better readability and to make the
->> patch consistent. You added the blank line in a similar case of
->> tegra_i2c_suspend() and this makes it inconsistent.
->>
-> OK.
-> 
->>> +    return 0;
->>> +}
->>> +
->>>   static const struct dev_pm_ops tegra_i2c_pm = {
->>> +    SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
->>>       SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend,
->>> tegra_i2c_runtime_resume,
->>>                  NULL)
->>>   };
->>>
-> I shall send updated patch with suggested changes.
+On Thu, Jun 6, 2019 at 3:42 AM Jan Kara <jack@suse.cz> wrote:
+>
+> On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> >
+> > ... V1,000,000   ;-)
+> >
+> > Pre-requisites:
+> >       John Hubbard's put_user_pages() patch series.[1]
+> >       Jan Kara's ext4_break_layouts() fixes[2]
+> >
+> > Based on the feedback from LSFmm and the LWN article which resulted.  I've
+> > decided to take a slightly different tack on this problem.
+> >
+> > The real issue is that there is no use case for a user to have RDMA pinn'ed
+> > memory which is then truncated.  So really any solution we present which:
+> >
+> > A) Prevents file system corruption or data leaks
+> > ...and...
+> > B) Informs the user that they did something wrong
+> >
+> > Should be an acceptable solution.
+> >
+> > Because this is slightly new behavior.  And because this is gonig to be
+> > specific to DAX (because of the lack of a page cache) we have made the user
+> > "opt in" to this behavior.
+> >
+> > The following patches implement the following solution.
+> >
+> > 1) The user has to opt in to allowing GUP pins on a file with a layout lease
+> >    (now made visible).
+> > 2) GUP will fail (EPERM) if a layout lease is not taken
+> > 3) Any truncate or hole punch operation on a GUP'ed DAX page will fail.
+> > 4) The user has the option of holding the layout lease to receive a SIGIO for
+> >    notification to the original thread that another thread has tried to delete
+> >    their data.  Furthermore this indicates that if the user needs to GUP the
+> >    file again they will need to retake the Layout lease before doing so.
+> >
+> >
+> > NOTE: If the user releases the layout lease or if it has been broken by
+> > another operation further GUP operations on the file will fail without
+> > re-taking the lease.  This means that if a user would like to register
+> > pieces of a file and continue to register other pieces later they would
+> > be advised to keep the layout lease, get a SIGIO notification, and retake
+> > the lease.
+> >
+> > NOTE2: Truncation of pages which are not actively pinned will succeed.
+> > Similar to accessing an mmap to this area GUP pins of that memory may
+> > fail.
+>
+> So after some through I'm willing accept the fact that pinned DAX pages
+> will just make truncate / hole punch fail and shove it into a same bucket
+> of situations like "user can open a file and unlink won't delete it" or
+> "ETXTBUSY when user is executing a file being truncated".  The problem I
+> have with this proposal is a lack of visibility from sysadmin POV. For
+> ETXTBUSY or "unlinked but open file" sysadmin can just do lsof, find the
+> problematic process and kill it. There's nothing like that with your
+> proposal since currently once you hold page reference, you can unmap the
+> file, drop layout lease, close the file, and there's no trace that you're
+> responsible for the pinned page anymore.
+>
+> So I'd like to actually mandate that you *must* hold the file lease until
+> you unpin all pages in the given range (not just that you have an option to
+> hold a lease). And I believe the kernel should actually enforce this. That
+> way we maintain a sane state that if someone uses a physical location of
+> logical file offset on disk, he has a layout lease. Also once this is done,
+> sysadmin has a reasonably easy way to discover run-away RDMA application
+> and kill it if he wishes so.
 
-Yes, please.
+Yes, this satisfies the primary concern that made me oppose failing
+truncate. If the administrator determines that reclaiming capacity is
+more important than maintaining active RDMA mappings "lsof + kill" is
+a reasonable way to recover. I'd go so far as to say that anything
+less is an abdication of the kernel's responsibility as an arbiter of
+platform resources.
+
+> The question is on how to exactly enforce that lease is taken until all
+> pages are unpinned. I belive it could be done by tracking number of
+> long-term pinned pages within a lease. Gup_longterm could easily increment
+> the count when verifying the lease exists, gup_longterm users will somehow
+> need to propagate corresponding 'filp' (struct file pointer) to
+> put_user_pages_longterm() callsites so that they can look up appropriate
+> lease to drop reference - probably I'd just transition all gup_longterm()
+> users to a saner API similar to the one we have in mm/frame_vector.c where
+> we don't hand out page pointers but an encapsulating structure that does
+> all the necessary tracking. Removing a lease would need to block until all
+> pins are released - this is probably the most hairy part since we need to
+> handle a case if application just closes the file descriptor which would
+> release the lease but OTOH we need to make sure task exit does not deadlock.
+> Maybe we could block only on explicit lease unlock and just drop the layout
+> lease on file close and if there are still pinned pages, send SIGKILL to an
+> application as a reminder it did something stupid...
+>
+> What do people think about this?
+
+SIGKILL on close() without explicit unlock and wait-on-last-pin with
+explicit unlock sounds reasonable to me.
