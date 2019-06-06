@@ -7,71 +7,70 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848E5C28EB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5D8C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0FD20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C682820883
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:47:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ct2B8euO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wdoh2MpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfFFJrf (ORCPT
+        id S1728246AbfFFJrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:47:35 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41324 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728106AbfFFJrd (ORCPT
+        Thu, 6 Jun 2019 05:47:47 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36987 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728195AbfFFJrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:47:33 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s21so1361661lji.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:47:32 -0700 (PDT)
+        Thu, 6 Jun 2019 05:47:42 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m15so1073638lfh.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 02:47:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=J2Cqvkykb6IzlqW52A480gg6SUQ50ONET6S3EycqghE=;
-        b=Ct2B8euOQrdzpG+cBAg47dgcUgrlI6vJX6UvUSSPeNwsKDpV+z4nSYOjKzI7W0wXTu
-         r4jjtQhfwhUWEQvY5WPDdCcoU0aNZzPqjiQACNymjSE/whrVITUQW+sfJJRh67N7gAPV
-         Y6aGOOnJIzpqaVpPjdK9zk+OILcF70TrXSnFDTE9d0Uy3ATZRk6SB8Wm0vsDLnuEgW9u
-         Msd37JC1CJnUF4yMZWBh8aTUaup5fRhVX6rYUFH8B7T1WP2DESSOhwHMhzvxVFXo3gDL
-         7pyLCCCDkdbKjJb4GMB88KOLLQZUiiIkR93f5TCKdSUkMPxl4b0iKh4nvjQxFwzkSw/n
-         PuYA==
+        bh=NsVvPiBY4yVAfgVoOW5rwqcEUi8304y5zEW51I3/QB0=;
+        b=Wdoh2MpFPPwEGDiEjo9yNWPvFiF5rNlEHiZaJf0n9Vg6FS4VUU2cc68GaQl4o2gqwy
+         4dbJ3g7WEmat/ufCpfazLVbgV6ySmza2gxaYFAenGQnggpEoKYT0NNP+fPKzDviOplly
+         V4mMdAPS/XxX37EVSGdaX+UcmhdKT4IrRkVpNMAbgC2gt8VMNs9PsvD/GD6B5RuHKt5c
+         t/UzHJLvzB8BJNgCgTBSJ9KsV9zFkV8hfU8Yx2nTgZ+yWZl6uY6MS8YPGXRBG1hDMj9x
+         L4RXjgeGsIVpXYaTYCaIyZyu1UZI8FSwWNUppmzZdyqw0fFmoG4R/pcy23fAlNtrw2K/
+         yzkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=J2Cqvkykb6IzlqW52A480gg6SUQ50ONET6S3EycqghE=;
-        b=UPfW67tCGxQ8hfgkl5VaoVWdkDotxgbBMhXcBZO2jOUsC6wQgaWDjnDiHdPFfx/CX5
-         Wp2/iD/N2S3V7+mNwYAinTelUSstlBEKieoCSlWulQDIKEN2pDrixx5mBJtKtSjrNi1X
-         7V/5C4OjuYNbvCrVyPaSl8mGAp3O5nJT7FLjBRgq3pBq40Hav16lw+OW1+N0sXk0yeQ4
-         CPmzSaDcs2ZEUaX11uU8UuCILh+lxiN6FeTkUQKHd2nWHfyNv8DHPv8Xyt4oC2qozLym
-         ean5UBtxpyoB2aqfZB5t63J0BqxGKCBZXlyVWjNo8AXIQe+S7FicR7Ql8T0gKs2trvAi
-         YkoQ==
-X-Gm-Message-State: APjAAAWX4miM5ptgrqRLb5m/iYCdlO+pqj+mkzmlu3nBToXpWImBekyB
-        vxoYDAavWT27KsYLhh/i1aDO0g==
-X-Google-Smtp-Source: APXvYqzYFWFgXwM4oVScr/7MwzKqnuStv9TQA+4YHbIIppvBW9LTDZNPdBEJzK7doqcYm4prjjpeQg==
-X-Received: by 2002:a2e:751c:: with SMTP id q28mr563236ljc.178.1559814451458;
-        Thu, 06 Jun 2019 02:47:31 -0700 (PDT)
+        bh=NsVvPiBY4yVAfgVoOW5rwqcEUi8304y5zEW51I3/QB0=;
+        b=S/089eThbgSarP5bLghbuPcjmyWoL/ytnfZQpJ6JALBiFEO2ZtT7GF9bJBncfKvMN6
+         krqwNhQOG5RhLz9ueGA4t9GltmpziKo4SmLrnZZuds7YiMzmXLhuKNuBDSm9QVIe9DSr
+         N81o7MhHH6ZY5xeBJsXGtZQmh4gbBTADlyIjEpQmDwslnjxu4xGSkD7eB/yIQHjZdkw3
+         e9nEIvZwgjhsshxJTfCvnr/STHUvgR4vFsd1n4oPMycxTLs/6A88aw5wZLdNBKTYToXb
+         x9dzQ/PmM9PoyY+bxdjE8h8uGeHnXXLO+4h9BgtWabalHO2bPUdSVNI4ZsTuS806A9G+
+         AfAw==
+X-Gm-Message-State: APjAAAVFd/4R8O4IQ/wluaW1KwPB7GlAPMfErKn1Ix18jD3GhpEULQIq
+        V2S7UDwGvp0JwpD1bqUuvExdYw==
+X-Google-Smtp-Source: APXvYqwC1lw0i+elxeAauVlnzExuJPoAeIohV6gRyR/H/KWYyVWxRDSoL1E/QIVDRnsweZyms/BPzA==
+X-Received: by 2002:ac2:4ac5:: with SMTP id m5mr22449224lfp.95.1559814460755;
+        Thu, 06 Jun 2019 02:47:40 -0700 (PDT)
 Received: from localhost (c-1c3670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.28])
-        by smtp.gmail.com with ESMTPSA id y6sm256967ljj.20.2019.06.06.02.47.30
+        by smtp.gmail.com with ESMTPSA id d23sm258143ljj.38.2019.06.06.02.47.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 02:47:30 -0700 (PDT)
+        Thu, 06 Jun 2019 02:47:40 -0700 (PDT)
 From:   Anders Roxell <anders.roxell@linaro.org>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        davem@davemloft.net
-Cc:     vivien.didelot@gmail.com, marex@denx.de, stefan@agner.ch,
-        airlied@linux.ie, daniel@ffwll.ch, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, b.zolnierkie@samsung.com,
-        a.hajda@samsung.com, mchehab@kernel.org, p.zabel@pengutronix.de,
-        lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
+To:     lgirdwood@gmail.com, broonie@kernel.org
+Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        marex@denx.de, stefan@agner.ch, airlied@linux.ie, daniel@ffwll.ch,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        b.zolnierkie@samsung.com, a.hajda@samsung.com, mchehab@kernel.org,
+        p.zabel@pengutronix.de, hkallweit1@gmail.com, lee.jones@linaro.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
         linux-media@vger.kernel.org,
         Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH 6/8] drivers: net: phy: fix warning same module names
-Date:   Thu,  6 Jun 2019 11:47:26 +0200
-Message-Id: <20190606094727.23868-1-anders.roxell@linaro.org>
+Subject: [PATCH 8/8] drivers: regulator: 88pm800: fix warning same module names
+Date:   Thu,  6 Jun 2019 11:47:36 +0200
+Message-Id: <20190606094736.23970-1-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,35 +79,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with CONFIG_ASIX_PHY and CONFIG_USB_NET_AX8817X enabled as
-loadable modules, we see the following warning:
+When building with CONFIG_MFD_88PM800 and CONFIG_REGULATOR_88PM800
+enabled as loadable modules, we see the following warning:
 
 warning: same module names found:
-  drivers/net/phy/asix.ko
-  drivers/net/usb/asix.ko
+  drivers/regulator/88pm800.ko
+  drivers/mfd/88pm800.ko
 
-Rework so media coda matches the config fragment. Leaving
-CONFIG_USB_NET_AX8817X as is since thats a well known module.
+Rework to rename the name.
 
 Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/net/phy/Makefile | 3 ++-
+ drivers/regulator/Makefile | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index 947c974bc69e..bab179b75a2a 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -52,7 +52,8 @@ ifdef CONFIG_HWMON
- aquantia-objs			+= aquantia_hwmon.o
- endif
- obj-$(CONFIG_AQUANTIA_PHY)	+= aquantia.o
--obj-$(CONFIG_ASIX_PHY)		+= asix.o
-+obj-$(CONFIG_ASIX_PHY)		+= asix-phy.o
-+asix-phy-objs			:= asix.o
- obj-$(CONFIG_AT803X_PHY)	+= at803x.o
- obj-$(CONFIG_BCM63XX_PHY)	+= bcm63xx.o
- obj-$(CONFIG_BCM7XXX_PHY)	+= bcm7xxx.o
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 76e78fa449a2..6906938071f5 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -11,7 +11,8 @@ obj-$(CONFIG_REGULATOR_VIRTUAL_CONSUMER) += virtual.o
+ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
+ 
+ obj-$(CONFIG_REGULATOR_88PG86X) += 88pg86x.o
+-obj-$(CONFIG_REGULATOR_88PM800) += 88pm800.o
++obj-$(CONFIG_REGULATOR_88PM800) += 88pm800-regulator.o
++88pm800-regulator-objs		:= 88pm800.o
+ obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
+ obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
+ obj-$(CONFIG_REGULATOR_AAT2870) += aat2870-regulator.o
 -- 
 2.20.1
 
