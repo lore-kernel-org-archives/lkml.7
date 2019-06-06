@@ -2,148 +2,180 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB2AC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA32C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E7D20872
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD3020872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:09:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bheIXqAp";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kJsw4bAO"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ptIZ7O3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbfFFTI1 (ORCPT
+        id S1728812AbfFFTJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:08:27 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34090 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727961AbfFFTI0 (ORCPT
+        Thu, 6 Jun 2019 15:09:20 -0400
+Received: from sonic309-27.consmr.mail.gq1.yahoo.com ([98.137.65.153]:38297
+        "EHLO sonic309-27.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728786AbfFFTJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:08:26 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56J7ZB0016262;
-        Thu, 6 Jun 2019 12:08:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=85C9p4zsuluVa4tF/7FTTB0+egDRB0eOy0gOcUdvjFo=;
- b=bheIXqApmlvDlL7H0t50rkAjI22WZCLo5nzF5i2DrnFmmGpGUXqV0nrNnvQwmzNoeudb
- 7E88p6hL7+oBvB4rmFD1iPR88igV74YH6iv6bBsyDcYFRRfL2fcSX5samdtbLTNnDT8Q
- QQadyW5zyZZcSCzJYjMMl8LcB12FT1G6kKM= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sy7yar61v-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 06 Jun 2019 12:08:04 -0700
-Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
- ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Jun 2019 12:08:02 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Jun 2019 12:08:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=85C9p4zsuluVa4tF/7FTTB0+egDRB0eOy0gOcUdvjFo=;
- b=kJsw4bAOFr3h6KTFSnBHfr7ggXB1OXtrbJvRFMLWH4ko6CS0ThY8NvssMycKwjMplHHFQPGuNfb7stTDc/OQ9myy1bBNjyZxNsYafaZvgCMB2DL2+in48Q0KYOOTVff+s1JulGbKaFybIZE+Ak8JCuPFLcLIvRuA3Vh29wWH+us=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB2657.namprd15.prod.outlook.com (20.179.138.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Thu, 6 Jun 2019 19:08:00 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::251b:ff54:1c67:4e5f]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::251b:ff54:1c67:4e5f%7]) with mapi id 15.20.1943.018; Thu, 6 Jun 2019
- 19:08:00 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-CC:     Kernel Team <Kernel-team@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
- bpf_get_current_cgroup_id() helper
-Thread-Topic: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
- bpf_get_current_cgroup_id() helper
-Thread-Index: AQHVHJn5xFnlIJGy00O8LdScbBruEqaO/RaA
-Date:   Thu, 6 Jun 2019 19:08:00 +0000
-Message-ID: <20190606190752.GA28743@tower.DHCP.thefacebook.com>
-References: <20190606185911.4089151-1-guro@fb.com>
-In-Reply-To: <20190606185911.4089151-1-guro@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0072.namprd19.prod.outlook.com
- (2603:10b6:300:94::34) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:aba7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: afd23bf9-0c5b-4cdb-47bb-08d6eab24b07
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB2657;
-x-ms-traffictypediagnostic: BN8PR15MB2657:
-x-microsoft-antispam-prvs: <BN8PR15MB26579313A097ECB739774AC6BE170@BN8PR15MB2657.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 00603B7EEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(136003)(366004)(346002)(396003)(199004)(54094003)(189003)(6486002)(6436002)(86362001)(186003)(9686003)(6512007)(8936002)(25786009)(5660300002)(478600001)(6246003)(6506007)(7736002)(66946007)(229853002)(46003)(386003)(68736007)(102836004)(11346002)(71190400001)(476003)(53936002)(446003)(71200400001)(1076003)(14454004)(256004)(4744005)(2906002)(64756008)(81166006)(73956011)(6116002)(81156014)(4326008)(316002)(110136005)(33656002)(8676002)(99286004)(305945005)(2501003)(76176011)(486006)(54906003)(66556008)(66446008)(52116002)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2657;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: C7y89wBLiqkfwJBVnQbNvBbaWCql3r4ndxLz9LSdcpen/xjUrSoNGTgVayFsuN+5y0nfwzf0o8IkAlItLpKMycGw49l/O5HZtfX60LYAFz/GhOAJE752m8cgUooiuOGpkkGVskCycARFF3P2r3RSFYiv9mDSy9T8NWPISJ8lSoauxI0Um5qH6f9Dp0P3MsU4uZzW8G8TyX/qB2bOxPDAUqweHHKVopCnhUYOScBsgr5QkoQSwLgY+wSOOrCHE3ojfK7Sz/d0ws2kv4RMjANfb3AeDtYR0dwGEn4sPCyeVGEJEG260R2QGmvrkki6TJ7Y44T+VWThjEOnARm0QlYewN+Pkcp3DDt2tT5fbtHFlgS/DyI8HdOWW9dErmVSGAcnHzhUeL37Zno2ABouLG2QQEhV9htvpcE7kEAybA2HlbM=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3ABAF4E2EE5B3242850320709B05A5AF@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Jun 2019 15:09:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1559848158; bh=KPinPwVYIStvQmTsZ8fVXryXE8chlEpKVcNaTLUqBkk=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=ptIZ7O3DcCuP6w96YCf4TBwwelJOiWXKMueXaWyXXS5Hq4SYnr+yqA27IH0WbMQoPfbRbUAYQs6alr5jVMqntnHFO0+yYMLbtHu07P99vBJBR/ZbfP/q9g/AKfkOdYByqCRzi+YL7ZJCWcaOAIEP7aXHhA+KDM4seVJqvsWL4U6YdwfiAFzsG7yKAAHLbLvLFtIXtgAOEmLhSo7X254jAXTBVLDORGqw7jcx9cMvHyg+LgwOfgJEhz6RBLYq9HcoWq5RwT9x3qkQ5xp1LGAcf5td6F5w5rSU1teFRtvLCtzee7HmPQeoel+4MeK+9HKpsCKhfyBWCLA8zx5soQhZ9w==
+X-YMail-OSG: hwHY0p4VM1kwRqNYlfVs6s8UA1io1Qfjq69S3APVqgYmJdqbzWmf7qM_wuOVZb0
+ 44B5oxy_HtlaNFHz1uTJf25C.0moouu50bDEYxg10avFv2azcLT5bO5NUW5OB.7OuBR3w7_Hvj1A
+ qRg3JQPakoyrYycrPfyDrpK2jBhxa2Mdf3vI1UQGdWpt6zyg1YDdBr_cw0QZ4Ycor4QVTJWG4INZ
+ KCPv4gPoKYY6XYoR3PusfzS66bJlVp3kcjYoAd_GOEcD8a4jxnw0dkJD3MZE_vu36MPjSMDBVbX.
+ 3NI8PTxJCV2tvu.v89yCWsiHuXhXDNl2A9TSOZlNEWsPz38IOJNXg4E2ZZLofdgqdcAAQhJg6Blm
+ Se8VrP0PeDPtyklbpBV.Rm0xbDt3YbU7duji7YUvhWcJJrNWmEeFk6.fMCjeuKlNRSZls6KmGc0n
+ eA.xZmw9ke9PqoPJ46MkZvUOQBBjhHiTbtvcIMOsWtXXQyfpu3yMCzCjNN9.nZazEHY3I6NCBW9Q
+ v9KjC5tcfmQzzFOR3dWxL.WUhU7h.c9VomQfQgDtola0.PJobrTTeuUs.F2WZN5ONR7Demk4b9Rd
+ K8XJUV0RjdcpPpcCVMrLwC.IzIlM4Pw_ko6TeA8mTH_gvceK_S4WUgnw1GlZACwnTPTP5dPLZ1V2
+ BUxvg704FI_grQNcp7zt5Astvviru298J3zooXyAQQ7kADqT0ygNTtkECAolkQk7dJDgb8byXr0a
+ kqGxMasgw8.De0uWywq6vWLnb0t91_rXwEZr17HHGAMhtBDk0R7Ri03asoPYZKATX2d4Y778N7H8
+ 6EaJ4m8z8TB9ulLUSLa_.ztDkP6Lszm3_ihfLVrD8kp.q8Od.xl99cvIM2MyLj2GDDPdWv_lXGCH
+ 1eBPljjZGzXWQHP4VxUcrDfDX2V6pfgGfXySasOB9ZYxN0M2KcpH.yy.CS31YvIcy1_4FPMcxy9J
+ LIOJRrDOLIMcSP_55W0mMNvXFTbrF7gWQQ01eYcm.l2.TSh9KZOT5l2OAo_VgT2N2btyTh1sX.Bd
+ _7gEkXyp6CFX9W_bT5PeCNVkjUOW2O54CFrvVfd0LW_Gu2wiVocWlWw._qFwB9Iv4.kTi_Fbu3Hn
+ .j9mF9JRzytmZ91owEN15vId6q6qPWt7sUkDLojxv16KscbX6Qr7R51Ii6bX1trZZJi2uiRlXjs0
+ G1i12exe9mz4FcI3AZza6l2YZfzpacHYfYwUmSjk04_fOIX.Z3QBy36o0qKVPGoKEC1sWVf5Uq8p
+ AVaeu2iyQUIXNvUVMcQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.gq1.yahoo.com with HTTP; Thu, 6 Jun 2019 19:09:18 +0000
+Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
+          by smtp416.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID b9532036bed4f2064fc104d314331dec;
+          Thu, 06 Jun 2019 19:09:13 +0000 (UTC)
+Subject: Re: [PATCH 01/10] security: Override creds in __fput() with last
+ fputter's creds [ver #3]
+To:     Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Jann Horn <jannh@google.com>
+References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
+ <155981413016.17513.10540579988392555403.stgit@warthog.procyon.org.uk>
+ <176F8189-3BE9-4B8C-A4D5-8915436338FB@amacapital.net>
+ <11031.1559833574@warthog.procyon.org.uk>
+ <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <e434a62a-d92a-c6e2-cda1-309ac99d4d5c@schaufler-ca.com>
+Date:   Thu, 6 Jun 2019 12:09:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: afd23bf9-0c5b-4cdb-47bb-08d6eab24b07
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 19:08:00.7288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2657
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=806 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060127
-X-FB-Internal: deliver
+In-Reply-To: <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 11:59:11AM -0700, Roman Gushchin wrote:
-> Currently bpf_get_current_cgroup_id() is not supported for
-> CGROUP_SKB programs. An attempt to load such a program generates an
-> error like this:
->     libbpf:
->     0: (b7) r6 =3D 0
->     ...
->     8: (63) *(u32 *)(r10 -28) =3D r6
->     9: (85) call bpf_get_current_cgroup_id#80
->     unknown func bpf_get_current_cgroup_id#80
->=20
-> There are no particular reasons for denying it,
-> and we have some use cases where it might be useful.
+On 6/6/2019 10:18 AM, Andy Lutomirski wrote:
+> On Thu, Jun 6, 2019 at 8:06 AM David Howells <dhowells@redhat.com> wrot=
+e:
+>> Andy Lutomirski <luto@amacapital.net> wrote:
+>>
+>>>> So that the LSM can see the credentials of the last process to do an=
+ fput()
+>>>> on a file object when the file object is being dismantled, do the fo=
+llowing
+>>>> steps:
+>>>>
+>>> I still maintain that this is a giant design error.
+>> Yes, I know.  This was primarily a post so that Greg could play with t=
+he USB
+>> notifications stuff I added.  The LSM support isn't resolved and is un=
+changed.
+>>
+>>> Can someone at least come up with a single valid use case that isn't
+>>> entirely full of bugs?
+>> "Entirely full of bugs"?
+> I can say "hey, I have this policy that the person who triggered an
+> event needs such-and-such permission, otherwise the event gets
+> suppressed".  But this isn't a full use case, and it's buggy.  It's
+> not a full use case because I haven't specified what my actual goal is
+> and why this particular policy achieves my goals.  And it's entirely
+> full of bugs because, as this patch so nicely illustrates, it's not
+> well defined who triggered the event.  For example, if I exec a setuid
+> process, who triggers the close?  What if I send the fd to systemd
+> over a socket and immediately close my copy before systemd gets (and
+> ignores) the message?  Or if I send it to Wayland, or to any other
+> process?
+>
+> A file is closed when everyone is done with it.  Trying to figure out
+> who the last intentional user of the file was seems little better than
+> random guessing.  Defining a security policy based on it seems like a
+> poor idea.
+>
+>> How would you propose I deal with Casey's requirement?  I'm getting th=
+e
+>> feeling you're going to nak it if I try to fulfil that and he's going =
+to nak
+>> it if I don't.
+>>
+> Casey, I think you need to state your requirement in a way that's well
+> defined, and I think you need to make a compelling case that your
+> requirement is indeed worth dictating the design of parts of the
+> kernel outside LSM.
 
-Ah, sorry, it's not so simple, as we probably need to take
-the cgroup pointer from the socket, not from current.
+Err, no, I don't believe so. There's a whole lot more
+going on in this discussion than just what's going on
+within the LSMs. Using examples from the LSMs makes it
+easier, because their policies are better defined than
+the "legacy" policies are. The most important part of the
+discussion is about ensuring that the event mechanism
+doesn't circumvent the legacy policies. Yes, I understand
+that you don't know what that means, or has to do with
+anything.
 
-So the implementation of the helper should be different
-for this type of programs.
 
-So I wonder if it's better to introduce a new helper
-bpf_get_sock_cgroup_id()?
-
-What do you think?
-
-Thanks!
