@@ -2,125 +2,109 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12E9C28EB7
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDBDC28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4AC20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559821530;
-	bh=vqDCsXe5IHyavNfXW5krmCev6CdBmExEhG6HMAbCLhc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RWTjP62bXoMTz0VG/GXzi/K4LHHtLe1ZPTBIa83ciOEXhE8wSrAZvT5yF6L9ZQU6f
-	 4AclFatd1dsHUtYHRI25m6p0HZE0momK/xLTCopsw3S0Jitcgo6tazjB7pEu6B8WMC
-	 iaMATGeaWaBN+lJok2FWgUOy6sUifpDVWOmWtnqY=
+	by mail.kernel.org (Postfix) with ESMTP id 8E61E206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfFFLpa (ORCPT
+        id S1727728AbfFFLr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:45:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFLp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:45:29 -0400
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3439208C0;
-        Thu,  6 Jun 2019 11:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559821529;
-        bh=vqDCsXe5IHyavNfXW5krmCev6CdBmExEhG6HMAbCLhc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=b6yQ9oA8ENOTDIff2KAsFD3F/2NkJA10BoHe6N5aygghiYufyZUDmWLKLSdgY/2s5
-         QQA61xYx11ZD/CnuimtlFIGJchk3K7856I/p/OqUxgKQkOimJQRTh34vyKAti116SA
-         mkz/P+8qVzFpnMqqL0jlMYlxU+pMuzxiC9qeMHPE=
-Received: by mail-lj1-f179.google.com with SMTP id o13so1698278lji.5;
-        Thu, 06 Jun 2019 04:45:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAWiOTPzDmE/LU8D7L/BDloXUFNUy0KceyVOuijhcpa1FQLxAL9+
-        TyccQOEht1ts/3ZDFib7qr3UdEmvgcrIcXkteT4=
-X-Google-Smtp-Source: APXvYqw9cRx3ydyjVTR7FBMwbZdJR6asW1APtajO6t1UPptVjz86e1QW4Q5Md03p3BchHDHfSNkcP3PD41BDIh6uTSg=
-X-Received: by 2002:a2e:568d:: with SMTP id k13mr23893341lje.194.1559821526851;
- Thu, 06 Jun 2019 04:45:26 -0700 (PDT)
+        Thu, 6 Jun 2019 07:47:59 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:42595 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727263AbfFFLr7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:47:59 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id Yqs5hzKus3qlsYqs9hmPS4; Thu, 06 Jun 2019 13:47:57 +0200
+Subject: Re: [PATCH 4.19 262/276] media: saa7146: avoid high stack usage with
+ clang
+To:     Pavel Machek <pavel@denx.de>, pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20190530030523.133519668@linuxfoundation.org>
+ <20190530030541.589347419@linuxfoundation.org> <20190606114439.GA27432@amd>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <bf6e478e-8993-8b99-7061-79616785b982@xs4all.nl>
+Date:   Thu, 6 Jun 2019 13:47:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CGME20190605165435eucas1p2fa32f4583f396fdce443b6943ac180d3@eucas1p2.samsung.com>
- <20190605165410.14606-1-l.luba@partner.samsung.com> <20190605165410.14606-9-l.luba@partner.samsung.com>
- <CAJKOXPfKbWpx9AapOudDyEZjDpgtMX-aHPQHRivuVNKaap8EQg@mail.gmail.com> <d5758d38-c0e5-1732-1407-91d602ae5500@partner.samsung.com>
-In-Reply-To: <d5758d38-c0e5-1732-1407-91d602ae5500@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 6 Jun 2019 13:45:15 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
-Message-ID: <CAJKOXPfiFCp52rYtOBk5mfHfLLA=VtBpakAdUB__UcVCqbma-g@mail.gmail.com>
-Subject: Re: [PATCH v8 08/13] drivers: memory: add DMC driver for Exynos5422
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190606114439.GA27432@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGNkpSF/LKKl1EbbPpwSZeOpmJU0JtjvAbuHp6TgtAdbfxHvD6hn+AThWsvmkBlX4TM+9M4209YgjqIwIUcsgws2qI97mXfJUR3xkzoo6WNNyxG+Ywx3
+ qaT3UZB6nROWXMS9A9FOPN1P2bxs8Qf0+yeo1MJrIs1CcAKOhs5go0w70kZWoFH8o28TzEBJF6BaXje3jwpg2eOTSUSNtVvPNMuli8SgM/PXS8q/Fvox7kA9
+ c0wXeSAMYeQMGX5u6OYws8xpSX811a4+vnRlX7faCzxvGOXe9b0DCYk8uwgEbOWQKtWOYGLU3Hf+E4cjz44qol0FCv7blPr0dltqW/KaQLx86iVuAriINQRZ
+ fTm0gstz
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Jun 2019 at 12:38, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> Hi Krzysztof,
-> >> +/**
-> >> + * exynos5_dmc_init_clks() - Initialize clocks needed for DMC operation.
-> >> + * @dmc:       DMC structure containing needed fields
-> >> + *
-> >> + * Get the needed clocks defined in DT device, enable and set the right parents.
-> >> + * Read current frequency and initialize the initial rate for governor.
-> >> + */
-> >> +static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
-> >> +{
-> >> +       int ret;
-> >> +       unsigned long target_volt = 0;
-> >> +       unsigned long target_rate = 0;
-> >> +
-> >> +       dmc->fout_spll = devm_clk_get(dmc->dev, "fout_spll");
-> >> +       if (IS_ERR(dmc->fout_spll))
-> >> +               return PTR_ERR(dmc->fout_spll);
-> >> +
-> >> +       dmc->fout_bpll = devm_clk_get(dmc->dev, "fout_bpll");
-> >> +       if (IS_ERR(dmc->fout_bpll))
-> >> +               return PTR_ERR(dmc->fout_bpll);
-> >> +
-> >> +       dmc->mout_mclk_cdrex = devm_clk_get(dmc->dev, "mout_mclk_cdrex");
-> >> +       if (IS_ERR(dmc->mout_mclk_cdrex))
-> >> +               return PTR_ERR(dmc->mout_mclk_cdrex);
-> >
-> > You are not enabling this clock. It is divider so it is fine for him
-> > but what about its parents? How can you guarantee that parents are
-> > enabled?
-> It uses two parents in this configuration:
-> 1. 'mout_bpll' which is set by the bootloader and is a default mode
-> 2. 'mout_mx_mspll_ccore' which is used temporary as a 'bypass clock
-> source' only for the time when BPLL is changing it's settings
->
-> Do you suggest to put a call:
->
-> to make sure the parent is up and running?
-> OR just move the lines from the end of this function:
->         clk_prepare_enable(dmc->fout_bpll);
->         clk_prepare_enable(dmc->mout_bpll);
-> and add:
->         ret = clk_set_parent(dmc->mout_mclk_cdrex, dmc->mout_bpll);
-> then call the clk_get_rate on 'mout_mclk_cdrex'
->
+On 6/6/19 1:44 PM, Pavel Machek wrote:
+> Hi!
+> 
+>> Two saa7146/hexium files contain a construct that causes a warning
+>> when built with clang:
+>>
+>> drivers/media/pci/saa7146/hexium_orion.c:210:12: error: stack frame size of 2272 bytes in function 'hexium_probe'
+>>       [-Werror,-Wframe-larger-than=]
+>> static int hexium_probe(struct saa7146_dev *dev)
+>>            ^
+>> drivers/media/pci/saa7146/hexium_gemini.c:257:12: error: stack frame size of 2304 bytes in function 'hexium_attach'
+>>       [-Werror,-Wframe-larger-than=]
+>> static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_data *info)
+>>            ^
+>>
+>> This one happens regardless of KASAN, and the problem is that a
+>> constructor to initialize a dynamically allocated structure leads
+>> to a copy of that structure on the stack, whereas gcc initializes
+>> it in place.
+>>
+>> Link: https://bugs.llvm.org/show_bug.cgi?id=40776
+> 
+>> --- a/drivers/media/pci/saa7146/hexium_gemini.c
+>> +++ b/drivers/media/pci/saa7146/hexium_gemini.c
+>> @@ -270,9 +270,8 @@ static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_extension_d
+>>  	/* enable i2c-port pins */
+>>  	saa7146_write(dev, MC1, (MASK_08 | MASK_24 | MASK_10 | MASK_26));
+>>  
+>> -	hexium->i2c_adapter = (struct i2c_adapter) {
+>> -		.name = "hexium gemini",
+>> -	};
+>> +	strscpy(hexium->i2c_adapter.name, "hexium gemini",
+>> +		sizeof(hexium->i2c_adapter.name));
+>>  	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_BIT_RATE_480);
+>>  	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
+>>  		DEB_S("cannot register i2c-device. skipping.\n");
+> 
+> As a sideeffect, this removes zero-initialization from
+> hexium->i2c_adapter.
+> 
+> Is that intended / correct?
 
-Ah, It's my mistake. I missed that later you enable its new parent. It's fine.
+It's correct, the hexium struct that contains the i2c_adapter is zeroed with
+kzalloc, so there is no need to zero it again.
 
-Best regards,
-Krzysztof
+Regards,
+
+	Hans
+
+> 
+> [I tried looked at saa7146_i2c_adapter_prepare(), and that does not
+> initialize all the fields, either.]
+> 
+> Best regards,
+> 									Pavel
+> 
+
