@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8951AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A51C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6927E20665
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC7820665
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbfFFOWS (ORCPT
+        id S1728941AbfFFOWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:22:18 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50225 "EHLO
+        Thu, 6 Jun 2019 10:22:06 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:41487 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728960AbfFFOWQ (ORCPT
+        with ESMTP id S1728774AbfFFOWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:22:16 -0400
+        Thu, 6 Jun 2019 10:22:02 -0400
 X-Originating-IP: 2.224.242.101
 Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C092D20007;
-        Thu,  6 Jun 2019 14:22:12 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7510520005;
+        Thu,  6 Jun 2019 14:21:58 +0000 (UTC)
 From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
 To:     laurent.pinchart@ideasonboard.com,
         kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
@@ -35,9 +35,9 @@ Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
         Harsha.ManjulaMallikarjun@in.bosch.com,
         linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 15/20] drm: rcar-du: Claim CMM support for Gen3 SoCs
-Date:   Thu,  6 Jun 2019 16:22:15 +0200
-Message-Id: <20190606142220.1392-16-jacopo+renesas@jmondi.org>
+Subject: [PATCH 10/20] arm64: dts: renesas: r8a7795: Add CMM units
+Date:   Thu,  6 Jun 2019 16:22:10 +0200
+Message-Id: <20190606142220.1392-11-jacopo+renesas@jmondi.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
 References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
@@ -48,77 +48,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CMM to the list of supported features for Gen3 SoCs that provide it:
-- R8A7795
-- R8A7796
-- R8A77965
-- R8A7799x
+Add CMM units to Renesas R-Car H3 device tree and reference them from
+the Display Unit they are connected to.
 
-Leave R8A77970 out as V3M and V3H are the only Gen3 SoCs that do not
-support CMM.
+While at it, re-sort the du device node properties to match the ordering
+found in other SoCs.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_du_drv.c | 12 ++++++++----
- drivers/gpu/drm/rcar-du/rcar_du_drv.h |  1 +
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 36 +++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-index 75ab17af13a9..1e69cfa11798 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-@@ -247,7 +247,8 @@ static const struct rcar_du_device_info rcar_du_r8a7795_info = {
- 	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
- 		  | RCAR_DU_FEATURE_VSP1_SOURCE
- 		  | RCAR_DU_FEATURE_INTERLACED
--		  | RCAR_DU_FEATURE_TVM_SYNC,
-+		  | RCAR_DU_FEATURE_TVM_SYNC
-+		  | RCAR_DU_FEATURE_CMM,
- 	.channels_mask = BIT(3) | BIT(2) | BIT(1) | BIT(0),
- 	.routes = {
- 		/*
-@@ -280,7 +281,8 @@ static const struct rcar_du_device_info rcar_du_r8a7796_info = {
- 	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
- 		  | RCAR_DU_FEATURE_VSP1_SOURCE
- 		  | RCAR_DU_FEATURE_INTERLACED
--		  | RCAR_DU_FEATURE_TVM_SYNC,
-+		  | RCAR_DU_FEATURE_TVM_SYNC
-+		  | RCAR_DU_FEATURE_CMM,
- 	.channels_mask = BIT(2) | BIT(1) | BIT(0),
- 	.routes = {
- 		/*
-@@ -309,7 +311,8 @@ static const struct rcar_du_device_info rcar_du_r8a77965_info = {
- 	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
- 		  | RCAR_DU_FEATURE_VSP1_SOURCE
- 		  | RCAR_DU_FEATURE_INTERLACED
--		  | RCAR_DU_FEATURE_TVM_SYNC,
-+		  | RCAR_DU_FEATURE_TVM_SYNC
-+		  | RCAR_DU_FEATURE_CMM,
- 	.channels_mask = BIT(3) | BIT(1) | BIT(0),
- 	.routes = {
- 		/*
-@@ -357,7 +360,8 @@ static const struct rcar_du_device_info rcar_du_r8a77970_info = {
- static const struct rcar_du_device_info rcar_du_r8a7799x_info = {
- 	.gen = 3,
- 	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
--		  | RCAR_DU_FEATURE_VSP1_SOURCE,
-+		  | RCAR_DU_FEATURE_VSP1_SOURCE
-+		  | RCAR_DU_FEATURE_CMM,
- 	.channels_mask = BIT(1) | BIT(0),
- 	.routes = {
- 		/*
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.h b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-index 1327cd0df90a..a00dccc447aa 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-@@ -28,6 +28,7 @@ struct rcar_du_encoder;
- #define RCAR_DU_FEATURE_VSP1_SOURCE	BIT(1)	/* Has inputs from VSP1 */
- #define RCAR_DU_FEATURE_INTERLACED	BIT(2)	/* HW supports interlaced */
- #define RCAR_DU_FEATURE_TVM_SYNC	BIT(3)	/* Has TV switch/sync modes */
-+#define RCAR_DU_FEATURE_CMM		BIT(4)	/* Has CMM */
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index abeac3059383..83edd9f12caa 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -2825,6 +2825,38 @@
+ 			renesas,fcp = <&fcpvi1>;
+ 		};
  
- #define RCAR_DU_QUIRK_ALIGN_128B	BIT(0)	/* Align pitches to 128 bytes */
++		cmm0: cmm@fea40000 {
++			compatible = "renesas,cmm-gen3";
++			reg = <0 0xfea40000 0 0x1000>;
++			clocks = <&cpg CPG_MOD 711>;
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++			resets = <&cpg 711>;
++		};
++
++		cmm1: cmm@fea50000 {
++			compatible = "renesas,cmm-gen3";
++			reg = <0 0xfea50000 0 0x1000>;
++			clocks = <&cpg CPG_MOD 710>;
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++			resets = <&cpg 710>;
++		};
++
++		cmm2: cmm@fea60000 {
++			compatible = "renesas,cmm-gen3";
++			reg = <0 0xfea60000 0 0x1000>;
++			clocks = <&cpg CPG_MOD 709>;
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++			resets = <&cpg 709>;
++		};
++
++		cmm3: cmm@fea70000 {
++			compatible = "renesas,cmm-gen3";
++			reg = <0 0xfea70000 0 0x1000>;
++			clocks = <&cpg CPG_MOD 708>;
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++			resets = <&cpg 708>;
++		};
++
+ 		csi20: csi2@fea80000 {
+ 			compatible = "renesas,r8a7795-csi2";
+ 			reg = <0 0xfea80000 0 0x10000>;
+@@ -3028,9 +3060,11 @@
+ 				 <&cpg CPG_MOD 722>,
+ 				 <&cpg CPG_MOD 721>;
+ 			clock-names = "du.0", "du.1", "du.2", "du.3";
+-			vsps = <&vspd0 0 &vspd1 0 &vspd2 0 &vspd0 1>;
+ 			status = "disabled";
  
++			vsps = <&vspd0 0 &vspd1 0 &vspd2 0 &vspd0 1>;
++			cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
++
+ 			ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
 -- 
 2.21.0
 
