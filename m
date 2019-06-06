@@ -2,142 +2,103 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1551C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B676C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A629520652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:30:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CqDzhS28"
+	by mail.kernel.org (Postfix) with ESMTP id 7A24720652
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 16:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfFFQaQ (ORCPT
+        id S1729656AbfFFQan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 12:30:16 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44765 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfFFQaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 12:30:15 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so664587iob.11;
-        Thu, 06 Jun 2019 09:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d7LytwrxXouA0Zs6R/AiX1+NNXroNALfB+EP9vrU3ak=;
-        b=CqDzhS28zOoXKqAmwZIGxqbShXAuwtqOzzqhggdfQVmXEfeJln82iHfrubi8vmVLfS
-         yjJMYT3JBT/pMQKyZwotP9cvg2CPLI8iawIC3LlhyybNGEuMJPBZA+O+H2877aBFuMbL
-         fowQ67ZuQZWNM0tESPs5I+ZMat9YSqOm1ldfdSI2UKOfdg6wUiV0O33De7/PxsH5+wSq
-         l81xAi7PWhySQ6y27rt+nSwNwEM6scBeWf8/0MdhaHXNE2CqjVBMUTROQtLn9CxfCemq
-         GhHxb/tduVEt73Elpc5FUhkGrzq0IKIOwLOF30IDZE9W7sPzQDwCvl53nvNTchjYHmPg
-         EScA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d7LytwrxXouA0Zs6R/AiX1+NNXroNALfB+EP9vrU3ak=;
-        b=oZjtX10MbGsBMCbVvrwui4jl2zt3dsNfGaOeozmkNqKShGuk+4ph3bwFZexI/vk2mc
-         gL+hp6ykj1UhkBjcdGbPnmvdJA4tRSA8Y7VAH97hQEtEmdy+glFJVM1UD6n30dxBE6M4
-         kZixBdK7F9dW3Dov8WTG5mt7lfyd3a6CgxbwD67/0hGRNuqpzGr9EOtUhPQzNBQ91ayD
-         8pfK1rNKfxFpEJjEOe84Rjep7IpxqR65bBWVPQBykl7CwJsTGX4b8HbTc8hPU5BgKFAZ
-         /pn12b3A5DRUKpd8vM5lq+vWl0/MT7uD9pNnw9fstf/2u25b4VZgOJV3p1bFIJYr+58m
-         fxag==
-X-Gm-Message-State: APjAAAX174f9/toB1jjcRHvewBTABUqGMBnLyLIp9vHsX3ulynf+2+eD
-        6fRAnTcwXx9ulXmVFmjrh/Q=
-X-Google-Smtp-Source: APXvYqx6Y2P7X9DmDW6zWXGbATaWZwdPGt54+mRbNR9V0Z0IbrAHa9vJLSmEXZTPLGvVlVq2Z9SkCg==
-X-Received: by 2002:a6b:8dcf:: with SMTP id p198mr33147282iod.46.1559838614878;
-        Thu, 06 Jun 2019 09:30:14 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id c100sm1217734itd.0.2019.06.06.09.30.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 09:30:14 -0700 (PDT)
-Subject: Re: [PATCH V8 13/15] phy: tegra: Add PCIe PIPE2UPHY support
-To:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com
-Cc:     mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20190526043751.12729-1-vidyas@nvidia.com>
- <20190526043751.12729-14-vidyas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c81c5d42-4292-ba6d-b5ab-afe1a604115f@gmail.com>
-Date:   Thu, 6 Jun 2019 19:30:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 12:30:43 -0400
+Received: from mail.us.es ([193.147.175.20]:43846 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728200AbfFFQan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 12:30:43 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id A8426C1DF9
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 18:30:39 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 987DCDA711
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 18:30:39 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 871C7DA713; Thu,  6 Jun 2019 18:30:39 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 3EA9CDA703;
+        Thu,  6 Jun 2019 18:30:37 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Thu, 06 Jun 2019 18:30:37 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (barqueta.lsi.us.es [150.214.188.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 1B3CE4265A2F;
+        Thu,  6 Jun 2019 18:30:37 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 18:30:35 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, tyhicks@canonical.com,
+        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, linux-kernel@vger.kernel.org,
+        richardrose@google.com, vapier@chromium.org, bhthompson@google.com,
+        smbarber@chromium.org, joelhockey@chromium.org,
+        ueberall@themenzentrisch.de
+Subject: Re: [PATCH RESEND net-next 1/2] br_netfilter: add struct netns_brnf
+Message-ID: <20190606163035.x7rvqdwubxiai5t6@salvia>
+References: <20190606114142.15972-1-christian@brauner.io>
+ <20190606114142.15972-2-christian@brauner.io>
+ <20190606081440.61ea1c62@hermes.lan>
+ <20190606151937.mdpalfk7urvv74ub@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <20190526043751.12729-14-vidyas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606151937.mdpalfk7urvv74ub@brauner.io>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.05.2019 7:37, Vidya Sagar пишет:
-> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
-> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
-> For each PCIe lane of a controller, there is a P2U unit instantiated at
-> hardware level. This driver provides support for the programming required
-> for each P2U that is going to be used for a PCIe controller.
+On Thu, Jun 06, 2019 at 05:19:39PM +0200, Christian Brauner wrote:
+> On Thu, Jun 06, 2019 at 08:14:40AM -0700, Stephen Hemminger wrote:
+> > On Thu,  6 Jun 2019 13:41:41 +0200
+> > Christian Brauner <christian@brauner.io> wrote:
+> > 
+> > > +struct netns_brnf {
+> > > +#ifdef CONFIG_SYSCTL
+> > > +	struct ctl_table_header *ctl_hdr;
+> > > +#endif
+> > > +
+> > > +	/* default value is 1 */
+> > > +	int call_iptables;
+> > > +	int call_ip6tables;
+> > > +	int call_arptables;
+> > > +
+> > > +	/* default value is 0 */
+> > > +	int filter_vlan_tagged;
+> > > +	int filter_pppoe_tagged;
+> > > +	int pass_vlan_indev;
+> > > +};
+> > 
+> > Do you really need to waste four bytes for each
+> > flag value. If you use a u8 that would work just as well.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v7]:
-> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
-> 
-> Changes since [v6]:
-> * None
-> 
-> Changes since [v5]:
-> * Addressed review comments from Thierry
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * Rebased on top of linux-next top of the tree
-> 
-> Changes since [v2]:
-> * Replaced spaces with tabs in Kconfig file
-> * Sorted header file inclusion alphabetically
-> 
-> Changes since [v1]:
-> * Added COMPILE_TEST in Kconfig
-> * Removed empty phy_ops implementations
-> * Modified code according to DT documentation file modifications
-> 
->  drivers/phy/tegra/Kconfig            |   7 ++
->  drivers/phy/tegra/Makefile           |   1 +
->  drivers/phy/tegra/phy-tegra194-p2u.c | 109 +++++++++++++++++++++++++++
->  3 files changed, 117 insertions(+)
->  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
-> 
-> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-> index a3b1de953fb7..c56fc8452e03 100644
-> --- a/drivers/phy/tegra/Kconfig
-> +++ b/drivers/phy/tegra/Kconfig
-> @@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
->  
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called phy-tegra-xusb.
-> +
-> +config PHY_TEGRA194_P2U
-> +	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
-> +	depends on ARCH_TEGRA || COMPILE_TEST
+> I think we had discussed something like this but the problem why we
+> can't do this stems from how the sysctl-table stuff is implemented.
+> I distinctly remember that it couldn't be done with a flag due to that.
 
-ARCH_TEGRA is a bit too much, ARCH_TEGRA_194_SOC should fit better here.
-
--- 
-Dmitry
+Could you define a pernet_operations object? I mean, define the id and size
+fields, then pass it to register_pernet_subsys() for registration.
+Similar to what we do in net/ipv4/netfilter/ipt_CLUSTER.c, see
+clusterip_net_ops and clusterip_pernet() for instance.
