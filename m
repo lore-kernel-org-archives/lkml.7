@@ -2,95 +2,81 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FF4C28D18
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB1BC28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027512070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:09:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559783341;
-	bh=rLe4wDM1i8CUFx415ydIm5XkrbpThXQyTUO1Dg0eLXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MGdIHOMBrkX8j41OD4n8k3rdqoo05JetRgK+e9eJFC0XS4ZAFCUdvygG35BCrd5TL
-	 vl6kgCv01i9GGxYHQB9Ng8J6u8UN2iGN0PoMKgSi+WLOj6ZDqC6l2xBpgIAf+Xb5jP
-	 BuoHbczNyddNfR/WUMhmWjoN2M7zQrT3LtjbsaSw=
+	by mail.kernel.org (Postfix) with ESMTP id BD4BD2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfFFBJA (ORCPT
+        id S1726648AbfFFBL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 21:09:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbfFFBI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 21:08:59 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74062070B;
-        Thu,  6 Jun 2019 01:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559783339;
-        bh=rLe4wDM1i8CUFx415ydIm5XkrbpThXQyTUO1Dg0eLXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2mEGngSqWpMxkHC7m+iR4PKQmzOLiH0JMRN2BOqO+Wp2Hu17PHY9+axqBQ/jWRmsm
-         ZZrML5vbocNStOeyg/rZLakuwSZlHaH6qv+nT3ohes3ARlc3pb5RZooNej7ZAQ79UQ
-         S85Up0xct/oDOWO4Uc7X6s+k6uzfxIK4ZHBV8+oo=
-Date:   Wed, 5 Jun 2019 21:08:57 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Chunyan Zhang <zhang.chunyan@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Grygorii Strashko <grygorii.Strashko@ti.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [BACKPORT 4.4.y] PM / sleep: prohibit devices probing during
- suspend/hibernation
-Message-ID: <20190606010857.GF29739@sasha-vm>
-References: <20190605111412.3461-1-zhang.chunyan@linaro.org>
+        Wed, 5 Jun 2019 21:11:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18087 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726543AbfFFBL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 21:11:58 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 87C5A28B02337AE3EB76;
+        Thu,  6 Jun 2019 09:11:55 +0800 (CST)
+Received: from [127.0.0.1] (10.177.19.180) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Jun 2019
+ 09:11:54 +0800
+Subject: Re: [PATCH] Input: alps: Drop unlikely before IS_ERR(_OR_NULL)
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        <linux-input@vger.kernel.org>
+References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
+ <20190605142428.84784-5-wangkefeng.wang@huawei.com>
+ <20190605144240.pfrvlgxsdpacpwxf@pali>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <36eac452-5477-3670-7980-765d0879ead4@huawei.com>
+Date:   Thu, 6 Jun 2019 09:08:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190605111412.3461-1-zhang.chunyan@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190605144240.pfrvlgxsdpacpwxf@pali>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.177.19.180]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 07:14:12PM +0800, Chunyan Zhang wrote:
->From: "Strashko, Grygorii" <grygorii.strashko@ti.com>
->
->[ Upstream commit 013c074f8642d8e815ad670601f8e27155a74b57 ]
->
->It is unsafe [1] if probing of devices will happen during suspend or
->hibernation and system behavior will be unpredictable in this case.
->So, let's prohibit device's probing in dpm_prepare() and defer their
->probing instead. The normal behavior will be restored in
->dpm_complete().
->
->This patch introduces new DD core APIs:
-> device_block_probing()
->   It will disable probing of devices and defer their probes instead.
-> device_unblock_probing()
->   It will restore normal behavior and trigger re-probing of deferred
->   devices.
->
->[1] https://lkml.org/lkml/2015/9/11/554
->
->Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->Acked-by: Pavel Machek <pavel@ucw.cz>
->Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
 
-This patch had to be fixed a few times (see 015bb5e134 and 9a2a5a638f8),
-we can't just take it as is.
+On 2019/6/5 22:42, Pali Rohár wrote:
+> On Wednesday 05 June 2019 22:24:28 Kefeng Wang wrote:
+>> IS_ERR(_OR_NULL) already contain an 'unlikely' compiler flag,
+>> so no need to do that again from its callers. Drop it.
+> Hi! I already reviewed this patch and rejected it, see:
+> https://patchwork.kernel.org/patch/10817475/
+OK, please ignore it.
+>> Cc: "Pali Rohár" <pali.rohar@gmail.com>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Cc: linux-input@vger.kernel.org
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>  drivers/input/mouse/alps.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
+>> index 0a6f7ca883e7..791ef0f826c5 100644
+>> --- a/drivers/input/mouse/alps.c
+>> +++ b/drivers/input/mouse/alps.c
+>> @@ -1478,7 +1478,7 @@ static void alps_report_bare_ps2_packet(struct psmouse *psmouse,
+>>  		/* On V2 devices the DualPoint Stick reports bare packets */
+>>  		dev = priv->dev2;
+>>  		dev2 = psmouse->dev;
+>> -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
+>> +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
+>>  		/* Register dev3 mouse if we received PS/2 packet first time */
+>>  		if (!IS_ERR(priv->dev3))
+>>  			psmouse_queue_work(psmouse, &priv->dev3_register_work,
 
-It might be just simpler to move to a newer kernel at this point.
-
---
-Thanks,
-Sasha
