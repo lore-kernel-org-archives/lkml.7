@@ -7,166 +7,111 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1529FC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE8FC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD442206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF3D206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbDvBSQK"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lfcvSghZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfFFTwJ (ORCPT
+        id S1727664AbfFFTwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:52:09 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33547 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfFFTwI (ORCPT
+        Thu, 6 Jun 2019 15:52:21 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35262 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfFFTwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:52:08 -0400
-Received: by mail-io1-f67.google.com with SMTP id u13so1208756iop.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:52:08 -0700 (PDT)
+        Thu, 6 Jun 2019 15:52:21 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y6so2494819oix.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 12:52:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KHvZ08UQ6F9DrHSAJkdM4lRvAaL9fp+PzcKQDvAi3QA=;
-        b=jbDvBSQKpvmcMfisYPWINLkIs3i3NZs3RpdPSdnRUOHZnK1IOgnssVmxivPMMSoK4e
-         nv/niDA3x/sHbTqqGxpF7OBCH1o4MvD1RBWwK2KQoN7/h2miH0lAtmdrkm47ZBrYI13w
-         zt7vPo7wvgZLRvh1Gbnb6uHqUNOp1C1yUqwme7OSii8ttZ7QiWEESYK8uRtN5RF5QTrU
-         BN693xbH+tersd1T+gYqV8Tvly0puO4lUKcMojAn4ieh8PAhmYlk01sk9Pgx3tzF/Pg/
-         zmisvsJvs5pc9GzSL93Q4yWuXqYhyOkJmKKu74bQDnGI01kFwj9PQ7nwZ6XjK7Z6nb2Q
-         +0wA==
+        bh=AlGSYF3m5pRxceZLV64eIzJ0xhu9mM8TneWE5MMLmMo=;
+        b=lfcvSghZm2oCpWdLgEjYrXEVmh8XE+PsjXfnX3AHi/5voOTkTXZLCTq+seq0WuXEel
+         gtGQ11Z1rgR+Mt1F+lcn7IABiI9vZHDD7nU3a/iM3t7PwlXEjvfNN8k3KEdGWjJ5BYj+
+         umcRd8UAGrHMIxhJCDMnC/d21mFu5JvnYzfihDu+ibXE6SB1fm6V8AFy2/etSwZeFX5s
+         d/M1M2xQrQYxWua9RLY+hs5y2z8gmaM7EMo1FUTViNaC3BmcGNIbRNSyHc1CRuNrZ8NZ
+         hugYIf7UcC+Tt6/EuroDU5yesWKZEiTJ+nbfBdiqkgs9ssxc4eaooHZgdb1B837ArR+w
+         CF4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KHvZ08UQ6F9DrHSAJkdM4lRvAaL9fp+PzcKQDvAi3QA=;
-        b=oW8LhAirENvnZdApuCEaawnBZYrxd6O7EPcNjjqBzg8Ep1HhSStBCLvt70CskShc0I
-         bmsEzH52/U7S7VUdCZGMkGQqFZ4Id0zjs9k/peIV8zbrsHAayK93uEC2W1Or0GUCQozI
-         tfwJqXUXTFPxZt7BvKJ6mJWIjPJeJLNcTsaahWdTk6dNwnAkwj0OUHXUSqgfUHW9+gze
-         bfoHjk6IIdJrHL6Gp1M+7AzS4sktN1VJcAueopi3y3YgYKEO1BJDjYbiR+4Xqs0l2dsE
-         9w/jqMMD+LGB72Lr/CmU3/AQjcO53x+d++Xle4+SoQpQyF65g1p8lXHeRE+LHsvrcemN
-         wqNw==
-X-Gm-Message-State: APjAAAV4yC5PjQymLlxy8NAcAIs1xG4C6p+6NxYXdpbTBC03VKO+bIE4
-        RhBZEQBAsfRtqr0FGK4wtKLDUlFSoVAB+mJu5Fk=
-X-Google-Smtp-Source: APXvYqymvS7JveFRHGX2qEIRdNfDHD4Cnki5S0RB9Xg/IBxcdtjj13BXWkPSvtVcEsD98/qeQ1BPGZK9lP9LOmRePc8=
-X-Received: by 2002:a6b:f607:: with SMTP id n7mr7342606ioh.263.1559850727465;
- Thu, 06 Jun 2019 12:52:07 -0700 (PDT)
+        bh=AlGSYF3m5pRxceZLV64eIzJ0xhu9mM8TneWE5MMLmMo=;
+        b=GSM0MQSiB4Z1Iwf86/trAFV+OjnaiPyawYwb4ewnnjN7Y1fRv3dJdqmllN1MGq3Ub6
+         kycs9SutbOpuKaFTEiWOB3muKEyK93HQC2sjhUHL7mDfZrjKU95sCvoQi9xEWpO2I1+Q
+         U18rW/8qeDDGcMj4avPknXYHT3V932Og7tj8cGofdvJ1Eh9/F8VBAmbIdjVS5mTLiYwQ
+         0c4Z5xvpyI7W0lsLGjmSeakzG69lhnBKYFwrSD237n0TkfBMCrPfj+eqn20XGHKXoRBJ
+         qYxLry9l6ZKIS960+0fu3RxBOHZRGXP7Yiwcv2N87e878wS1WkPE966Hc9dGST8IuPpy
+         fOKA==
+X-Gm-Message-State: APjAAAWVr1KQUyRX4wfSz91cK1V6JafPLCKBLlh7AQzXAURrBOkHaN9L
+        h8lbJ+qa/VAgKHo+2T34nlmPkW5ictKsWoFRSeQ=
+X-Google-Smtp-Source: APXvYqzL1PgG0HqdxQzrFaOHvyXNmJ5u5UlGgFrUhioJzm2uaHHH1bWzUlTIRoEmVXlAGFJ1/lpYoiz4ZwltUZn9/8w=
+X-Received: by 2002:aca:4403:: with SMTP id r3mr1313417oia.39.1559850740303;
+ Thu, 06 Jun 2019 12:52:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190605070507.11417-1-andrew.smirnov@gmail.com>
- <CGME20190605070532epcas2p2154c96c417cca1c1fc3c149c66447560@epcas2p2.samsung.com>
- <20190605070507.11417-6-andrew.smirnov@gmail.com> <9f847830-7bc6-c377-5cd7-b3cff783cbb3@samsung.com>
-In-Reply-To: <9f847830-7bc6-c377-5cd7-b3cff783cbb3@samsung.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 6 Jun 2019 12:51:56 -0700
-Message-ID: <CAHQ1cqGuDj2wVbKRMxBsFWk6cK4HO54ivajqSNfXate_NzF+Yg@mail.gmail.com>
-Subject: Re: [PATCH v3 05/15] drm/bridge: tc358767: Drop custom
- tc_write()/tc_read() accessors
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190527132200.17377-1-narmstrong@baylibre.com>
+ <20190527132200.17377-3-narmstrong@baylibre.com> <CAFBinCBTK=6OW4kG=i0KZe-+AzGVXyou9g0frnh9yqLsdmB5+w@mail.gmail.com>
+ <b54c7899-95b3-1202-d70b-9b8ee2955164@baylibre.com> <CAFBinCB9PZ-mjyjCafK24cH3sN5E1r4vt1z=m+uvkHsmRW2PFQ@mail.gmail.com>
+ <bbf3c69f-8695-d665-c7ca-587b7e77eb4f@baylibre.com>
+In-Reply-To: <bbf3c69f-8695-d665-c7ca-587b7e77eb4f@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 6 Jun 2019 21:52:09 +0200
+Message-ID: <CAFBinCA5tjZ9hxbbQkHE22BYMqQboE4UQ3Vk=w9-zCeQLn6OOA@mail.gmail.com>
+Subject: Re: [PATCH 02/10] arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth support
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 3:34 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+On Mon, Jun 3, 2019 at 10:57 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> On 05.06.2019 09:04, Andrey Smirnov wrote:
-> > A very unfortunate aspect of tc_write()/tc_read() macro helpers is
-> > that they capture quite a bit of context around them and thus require
-> > the caller to have magic variables 'ret' and 'tc' as well as label
-> > 'err'. That makes a number of code paths rather counterintuitive and
-> > somewhat clunky, for example tc_stream_clock_calc() ends up being like
-> > this:
+> Hi,
+>
+> On 29/05/2019 20:08, Martin Blumenstingl wrote:
+> > On Wed, May 29, 2019 at 12:25 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>
+> >> On 27/05/2019 20:36, Martin Blumenstingl wrote:
+> >>> On Mon, May 27, 2019 at 3:22 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>>>
+> >>>> From: Christian Hewitt <christianshewitt@gmail.com>
+> >>>>
+> >>>> - Remove serial1 alias
+> >>>> - Add support for uart_A rts/cts
+> >>>> - Add bluetooth uart_A subnode qith shutdown gpio
+> >>> I tried this on my own Khadas VIM2:
+> >>> Bluetooth: hci0: command 0x1001 tx timeout
+> >>> Bluetooth: hci0: BCM: Reading local version info failed (-110)
+> >>>
+> >>> I'm not sure whether this is specific to my board or what causes this.
+> >>
+> >> Which kernel version ?
+> > 5.2-rc2
 > >
-> >       int ret;
-> >
-> >       tc_write(DP0_VIDMNGEN1, 32768);
-> >
-> >       return 0;
-> > err:
-> >       return ret;
-> >
-> > which is rather surprising when you read the code for the first
-> > time. Since those helpers arguably aren't really saving that much code
-> > and there's no way of fixing them without making them too verbose to
-> > be worth it change the driver code to not use them at all.
+> > it's a Khadas VIM2 Basic (thus it has a AP6356S), board revision v1.2
 >
+> Can you try with :
 >
-> On the other side, error checking after every registry access is very
-> annoying and significantly augments the code, makes it redundant and
-> less readable. To avoid it one can cache error state, and do not perform
-> real work until the error is clear. For example with following accessor:
+> clocks = <&wifi32k>;
+> clock-names = "lpo";
 >
-> void tc_write(struct tc_data *tc, u32 reg, u32 val){
->
->     int ret;
->
->     if (tc->error) //This check is IMPORTANT
->
->         return;
->
->     ret =regmap_write(...);
->
->     if (ret >= 0)
->
->         return;
->
->     tc->error = ret;
->
->     dev_err(tc->dev, "Error writing register %#x\n", reg);
->
-> }
->
-> You can safely write code like:
->
->     tc_write(tc, DP_PHY_CTRL, BGREN | PWR_SW_EN | PHY_A0_EN);
->
->     tc_write(tc, DP0_PLLCTRL, PLLUPDATE | PLLEN);
->
->     tc_write(tc, DP1_PLLCTRL, PLLUPDATE | PLLEN);
->
->     if (tc->error) {
->
->         tc->error = 0;
->
->         goto err;
->
->     }
->
-> This is of course loose suggestion.
->
+> added in the bluetooth node ?
+that did it!
 
-I am going to have to disagree with you on this one, unfortunately.
-Using regmap API explicitly definitely makes code more verbose, less
-readable or more annoying though? Not really from my perspective. With
-regmap code I know what the code is doing the moment I look at it,
-with the example above, not so much. I also find it annoying that I
-now have to remember the tricks that tc_write is pulling internally as
-well as be mindful of a global-ish error state object. My problem with
-original code was that a) it traded explicitness for conciseness in a
-an unfavorable way, which I still think is true for code above b) it
-didn't provide a comprehensive abstraction completely removing regmap
-API and still relied on things like regmap_update_bits() explicitly,
-making the code even more confusing (true for above example as well).
-I think this driver isn't big enough to have a dedicated person always
-working on it and it will mostly see occasional commits from somewhat
-random folks who are coming to the codebase fresh, so creating as
-little "institutional knowledge", so to speak, in a form of a custom
-exception-like mechanism and opting for explicit but verbose code
-seems like a preferable choice.
+I think I also found the explanation why:
+on my Khadas VIM2 SD card I don't have linux-firmware installed.
+Thus the wifi driver will disable the 32kHz LPO clock again, breaking Bluetooth
 
-Anyway, I get it that's it is a loose suggestion :-), just wanted to
-provide a detailed explanation why I'd rather not go that way.
+are you going to send patches for the existing boards or do you want
+someone else to do it?
 
-Thanks,
-Andrey Smirnov
+
+Martin
