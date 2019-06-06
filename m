@@ -2,111 +2,133 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6379BC28EB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7F7C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A231208CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE9F208CA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZygxiJgz"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Od4/Zms7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfFFVOD (ORCPT
+        id S1728074AbfFFVOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:14:03 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45227 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbfFFVOD (ORCPT
+        Thu, 6 Jun 2019 17:14:53 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43086 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbfFFVOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:14:03 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w34so2024531pga.12;
-        Thu, 06 Jun 2019 14:14:02 -0700 (PDT)
+        Thu, 6 Jun 2019 17:14:53 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m14so2418377qka.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 14:14:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f52tpv1WD74Ax5kl9cRY3NuWmR2GDKh3GDLDw7CLojg=;
-        b=ZygxiJgzK6wW63rvs+Zm62oqJZT/v8GXAYyjAZ+Ml8LUg3NRmnQZZbMSY/S4onClJ2
-         MkPLtsZ+zyPMs/F8BwBl5LqIhCkDpLTx/NwGlNtV9RAjSnhlWzKzreM2fZCwslifQeiq
-         Mde06+0zI1bX+605ITvKPHRrmDO+jVXPP0fXa6pMzjN5i4R2AQO1+KCOpJYxNB81nA6s
-         KAaEdJlKbd7SMaWB2jsR6lNyvtWYvf1MRaac+HeBgq7+fXtZm1VxM30uTsaenC8fa150
-         0UoQDDsyDpL0aUchm8r7tjpDbPj3W9yrBuHuxyjPkni24iFLROtk/VTH2RWcG5oH+RMW
-         cplA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=4tzj6zPhT1KdbSrSSR8kBzCJNbXG0KIlt9cGXnaclK4=;
+        b=Od4/Zms7qPAZjXes4tQaOJuRZQ4nTLVj4JHC/VRP62XKlWIkgoId1L0gDrYI0upo3Q
+         MKL5z/D7EKHlp+2z5LFhIBY29JK5PfXXQX90rbgU4qF+u+9xquvqRVntbfH50/MGohoh
+         duZJZg5ha27LSaG0Lwz6HPEL3cS7qVVR+eNIp7LMoXwWpf/nWLE59wbi/J80b7/Y4mUp
+         OuwOgWWy6Dhi3DUV3xpLqlf9hfR7qV1r0pUN0HaU57otBERzexLaj+ofdMEq5TNCzr5h
+         msQq849jPxf36Tnw/WjR6lkFXwfVfHQLWqQL0WMFnCjajn6rC9xUJ15JHzNeoC9bmmds
+         5AJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f52tpv1WD74Ax5kl9cRY3NuWmR2GDKh3GDLDw7CLojg=;
-        b=aTLkhM6mNjvj3cC4lawvmHJtP9wtzzizO3EHWELUJsxUlid87q9//75GmYEkB2NYdi
-         WXHryAbzI9D1eEcq4Am7ImxxHY1fDJtDDO1//lJlbgCXrfIpJHH5z97nPPlVDvhapFlD
-         9APPdDUR+2uw/MpDeW8xpGe9UWb4+V6byvOtgKNaDxf72+YajYfYNCdHv298Df27pX7b
-         Ls5Bz23bnsySnkyQpqHixOfINAwQfOl5/Yon6nN9kUZFm0S//0yJ10x8m8AdlViRlSXS
-         5i06dk0RLi429AeE7TLYidjVFfGC/CVzVeSF72hVm9+geVbRPI1fCLFZQpIgsFlCW2zW
-         Tw1g==
-X-Gm-Message-State: APjAAAVEhvJcpkjY5PEraNmw/xOg6QChQ5wSmAkU4l4TLU5lXfisAZ5j
-        7RyOCxywWnXG/Pa4zRBrPoY=
-X-Google-Smtp-Source: APXvYqxPffMYASARwWQ8nHX5F4OQgoE9h3T/Ycgs5FveqCFJlhIfcnerwixue5QgxJqurc58KUmAGQ==
-X-Received: by 2002:a62:3287:: with SMTP id y129mr49409484pfy.101.1559855642500;
-        Thu, 06 Jun 2019 14:14:02 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s9sm17202pjp.7.2019.06.06.14.14.00
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
+         :content-transfer-encoding;
+        bh=4tzj6zPhT1KdbSrSSR8kBzCJNbXG0KIlt9cGXnaclK4=;
+        b=tNiU3/GFu5MZOH8W1fBd3Xf7plJISs6rlio8CaZsTYGozX2fmz64FVP8rdYt/fnccv
+         z5UJ9K4X3I5+qFcMy4nDYWOEnfn1yy1mXKP1TFhBd0uZWy0EP5PHop7Mh0tJm3L6BFJW
+         ZkUKINWNM/qTQz0PnTcPHhBVBMKEKI48k523TJFhC5ADnqyTazVahEX+24UI54wm3gUh
+         oa42HbF0HVz2e36X/8NK01KPBaZOlWKqzar2A3k/HFPtOJ7ud5fqm/G/vyMVG0LeQbt6
+         YKNDE1M2tt58UPxyKfQuedjgRNWjGR4Bkr5I7WVUnp0LaFebFYvsutXIRUzZbp3AUy0v
+         Qnhg==
+X-Gm-Message-State: APjAAAXn9eCHCnlpbninbUdTQWGuo0Yp2AWlPmnwbw2IgQfiV5o8h+qM
+        4FfIwEdkRUqj+MqiYfP0Eif5CA==
+X-Google-Smtp-Source: APXvYqydvG1nnTKvPNQw0gMJxfji0CL9Nl6m9nNeJFZ2COEu7Xq+dkCfa2DLi/cIbK4Tl/P8xi5Hmw==
+X-Received: by 2002:a37:a4d3:: with SMTP id n202mr39720518qke.84.1559855692552;
+        Thu, 06 Jun 2019 14:14:52 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id m21sm30540qtp.92.2019.06.06.14.14.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 14:14:01 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 14:14:00 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mironov.ivan@gmail.com,
-        rasmus.villemoes@prevas.dk
-Subject: Re: [PATCH 1/6] watchdog/hpwdt: Stop hpwdt on unregister.
-Message-ID: <20190606211400.GA856@roeck-us.net>
-References: <1558126783-4877-1-git-send-email-jerry.hoemann@hpe.com>
- <1558126783-4877-2-git-send-email-jerry.hoemann@hpe.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558126783-4877-2-git-send-email-jerry.hoemann@hpe.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 06 Jun 2019 14:14:51 -0700 (PDT)
+Message-ID: <1559855690.6132.50.camel@lca.pw>
+Subject: "locking/lockdep: Consolidate lock usage bit initialization" is
+ buggy
+From:   Qian Cai <cai@lca.pw>
+To:     Yuyang Du <duyuyang@gmail.com>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 06 Jun 2019 17:14:50 -0400
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 02:59:38PM -0600, Jerry Hoemann wrote:
-> Have the WD core stop the watchdog on unregister instead of explicitly
-> calling hpwdt_stop() in hpwdt_exit().
-> 
-> Signed-off-by: Jerry Hoemann <jerry.hoemann@hpe.com>
+The linux-next commit "locking/lockdep: Consolidate lock usage bit
+initialization" [1] will always generate a warning below. Looking through the
+commit that when mark_irqflags() returns 1 and check = 1, it will do one less
+mark_lock() call than it used to.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+[1] https://lore.kernel.org/lkml/tip-091806515124b20f8cff7927b4b7ff399483b109@gi
+t.kernel.org/
 
-> ---
->  drivers/watchdog/hpwdt.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/watchdog/hpwdt.c b/drivers/watchdog/hpwdt.c
-> index ef30c7e..8c49f13 100644
-> --- a/drivers/watchdog/hpwdt.c
-> +++ b/drivers/watchdog/hpwdt.c
-> @@ -310,6 +310,7 @@ static int hpwdt_init_one(struct pci_dev *dev,
->  	if (retval != 0)
->  		goto error_init_nmi_decoding;
->  
-> +	watchdog_stop_on_unregister(&hpwdt_dev);
->  	watchdog_set_nowayout(&hpwdt_dev, nowayout);
->  	if (watchdog_init_timeout(&hpwdt_dev, soft_margin, NULL))
->  		dev_warn(&dev->dev, "Invalid soft_margin: %d.\n", soft_margin);
-> @@ -350,9 +351,6 @@ static int hpwdt_init_one(struct pci_dev *dev,
->  
->  static void hpwdt_exit(struct pci_dev *dev)
->  {
-> -	if (!nowayout)
-> -		hpwdt_stop();
-> -
->  	watchdog_unregister_device(&hpwdt_dev);
->  	hpwdt_exit_nmi_decoding();
->  	pci_iounmap(dev, pci_mem_addr);
+# cat /proc/lockdep_stats,
+
+[ 7410.877772] DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) !=
+nr_unused)
+[ 7410.877798] WARNING: CPU: 58 PID: 126655 at kernel/locking/lockdep_proc.c:249
+lockdep_stats_show+0xe44/0x11e0
+[ 7410.877841] Modules linked in: brd ext4 crc16 mbcache jbd2 loop i2c_opal
+i2c_core ip_tables x_tables xfs sd_mod bnx2x ahci mdio libahci tg3 libphy libata
+firmware_class dm_mirror dm_region_hash dm_log dm_mod [last unloaded:
+dummy_del_mod]
+[ 7410.877954] CPU: 58 PID: 126655 Comm: proc01 Tainted:
+G        W  O      5.2.0-rc3-next-20190606+ #2
+[ 7410.877987] NIP:  c0000000001a4ae4 LR: c0000000001a4ae0 CTR: c0000000008afa30
+[ 7410.878027] REGS: c00000176c5af8e0 TRAP: 0700   Tainted:
+G        W  O       (5.2.0-rc3-next-20190606+)
+[ 7410.878059] MSR:  9000000000029033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:
+28888402  XER: 20040000
+[ 7410.878101] CFAR: c000000000118c44 IRQMASK: 0 
+               GPR00: c0000000001a4ae0 c00000176c5afb70 c0000000016e5400
+0000000000000044 
+               GPR04: c00000000171c250 c0000000001b44e8 4e5241575f534b43
+75626564284e4f5f 
+               GPR08: 0000001ffdf50000 0000000000000000 0000000000000000
+212029736b636f6c 
+               GPR12: 756e755f726e203d c000001ffffcfe00 0000000000000000
+c0000000015ad1d0 
+               GPR16: 0000000000000000 0000000000000000 0000000000000000
+0000000000000dd7 
+               GPR20: 0000000000000000 0000000000000000 0000000000000000
+0000000000000000 
+               GPR24: 0000000000000000 0000000000000000 0000000000000000
+c00000079dd0e158 
+               GPR28: 0000000000000000 c00000000171c270 c00000000171c4c4
+c00000000171ba18 
+[ 7410.878371] NIP [c0000000001a4ae4] lockdep_stats_show+0xe44/0x11e0
+[ 7410.878406] LR [c0000000001a4ae0] lockdep_stats_show+0xe40/0x11e0
+[ 7410.878443] Call Trace:
+[ 7410.878468] [c00000176c5afb70] [c0000000001a4ae0]
+lockdep_stats_show+0xe40/0x11e0 (unreliable)
+[ 7410.878529] [c00000176c5afca0] [c000000000489c34] seq_read+0x1d4/0x620
+[ 7410.878581] [c00000176c5afd30] [c00000000050cd40] proc_reg_read+0x90/0x130
+[ 7410.878622] [c00000176c5afd60] [c00000000044b1cc] __vfs_read+0x3c/0x70
+[ 7410.878653] [c00000176c5afd80] [c00000000044b2bc] vfs_read+0xbc/0x1a0
+[ 7410.878680] [c00000176c5afdd0] [c00000000044b74c] ksys_read+0x7c/0x140
+[ 7410.878722] [c00000176c5afe20] [c00000000000b108] system_call+0x5c/0x70
+[ 7410.878773] Instruction dump:
+[ 7410.878798] 419ef3b0 3d220004 3929abfc 81290000 2f890000 409ef39c 3c82ff33
+3c62ff33 
+[ 7410.878843] 38840a98 3863f8a8 4bf74101 60000000 <0fe00000> 4bfff37c 60000000
+39200000 
+[ 7410.878887] ---[ end trace 6a712a083aa01d23 ]---
