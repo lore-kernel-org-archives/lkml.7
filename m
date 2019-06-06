@@ -2,241 +2,195 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B452C28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0819CC28D1C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4437620874
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EED20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 07:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfFFHpR (ORCPT
+        id S1726785AbfFFHsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 03:45:17 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25016 "EHLO mga01.intel.com"
+        Thu, 6 Jun 2019 03:48:06 -0400
+Received: from relay.sw.ru ([185.231.240.75]:48818 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727014AbfFFHoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 03:44:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 00:44:43 -0700
-X-ExtLoop1: 1
-Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by orsmga005.jf.intel.com with ESMTP; 06 Jun 2019 00:44:41 -0700
-From:   Wei Wang <wei.w.wang@intel.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, ak@linux.intel.com, peterz@infradead.org
-Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
-        like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
-        arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v6 08/12] KVM/x86/vPMU: Add APIs to support host save/restore the guest lbr stack
-Date:   Thu,  6 Jun 2019 15:02:27 +0800
-Message-Id: <1559804551-42271-9-git-send-email-wei.w.wang@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559804551-42271-1-git-send-email-wei.w.wang@intel.com>
-References: <1559804551-42271-1-git-send-email-wei.w.wang@intel.com>
+        id S1725267AbfFFHsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 03:48:05 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hYn7g-0006Xz-Cu; Thu, 06 Jun 2019 10:47:44 +0300
+Subject: Re: KASAN: use-after-free Read in unregister_shrinker
+To:     syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, bfields@fieldses.org,
+        bfields@redhat.com, chris@chrisdown.name,
+        daniel.m.jordan@oracle.com, guro@fb.com, hannes@cmpxchg.org,
+        jlayton@kernel.org, laoar.shao@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, mgorman@techsingularity.net,
+        mhocko@suse.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com, yang.shi@linux.alibaba.com
+References: <0000000000005a4b99058a97f42e@google.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <b67a0f5d-c508-48a7-7643-b4251c749985@virtuozzo.com>
+Date:   Thu, 6 Jun 2019 10:47:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <0000000000005a4b99058a97f42e@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Like Xu <like.xu@intel.com>
+On 05.06.2019 21:42, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    b2924447 Add linux-next specific files for 20190605
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17e867eea00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4248d6bc70076f7d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=83a43746cebef3508b49
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1122965aa00000
+> 
+> The bug was bisected to:
+> 
+> commit db17b61765c2c63b9552d316551550557ff0fcfd
+> Author: J. Bruce Fields <bfields@redhat.com>
+> Date:   Fri May 17 13:03:38 2019 +0000
+> 
+>     nfsd4: drc containerization
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=110cd22ea00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=130cd22ea00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=150cd22ea00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com
+> Fixes: db17b61765c2 ("nfsd4: drc containerization")
+> 
+> ==================================================================
+> BUG: KASAN: use-after-free in __list_del_entry_valid+0xe6/0xf5 lib/list_debug.c:51
+> Read of size 8 at addr ffff88808a5bd128 by task syz-executor.2/12471
+> 
+> CPU: 0 PID: 12471 Comm: syz-executor.2 Not tainted 5.2.0-rc3-next-20190605 #9
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+>  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+>  kasan_report+0x12/0x20 mm/kasan/common.c:614
+>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+>  __list_del_entry_valid+0xe6/0xf5 lib/list_debug.c:51
+>  __list_del_entry include/linux/list.h:117 [inline]
+>  list_del include/linux/list.h:125 [inline]
+>  unregister_shrinker+0xb2/0x2e0 mm/vmscan.c:443
+>  nfsd_reply_cache_shutdown+0x26/0x360 fs/nfsd/nfscache.c:194
+>  nfsd_exit_net+0x170/0x4b0 fs/nfsd/nfsctl.c:1272
+>  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:154
+>  setup_net+0x400/0x740 net/core/net_namespace.c:333
+>  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+>  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+>  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+>  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+>  __do_sys_unshare kernel/fork.c:2786 [inline]
+>  __se_sys_unshare kernel/fork.c:2784 [inline]
+>  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+>  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459279
+> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f7ae73e1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
+> RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000459279
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000000
+> RBP: 000000000075bfc0 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7ae73e26d4
+> R13: 00000000004c84ef R14: 00000000004decb0 R15: 00000000ffffffff
+> 
+> Allocated by task 12460:
+>  save_stack+0x23/0x90 mm/kasan/common.c:71
+>  set_track mm/kasan/common.c:79 [inline]
+>  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+>  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+>  __do_kmalloc mm/slab.c:3654 [inline]
+>  __kmalloc+0x15c/0x740 mm/slab.c:3663
+>  kmalloc include/linux/slab.h:552 [inline]
+>  kzalloc include/linux/slab.h:742 [inline]
+>  ops_init+0xff/0x410 net/core/net_namespace.c:120
+>  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
+>  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+>  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+>  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+>  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+>  __do_sys_unshare kernel/fork.c:2786 [inline]
+>  __se_sys_unshare kernel/fork.c:2784 [inline]
+>  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+>  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Freed by task 12460:
+>  save_stack+0x23/0x90 mm/kasan/common.c:71
+>  set_track mm/kasan/common.c:79 [inline]
+>  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+>  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x106/0x2a0 mm/slab.c:3753
+>  ops_init+0xd1/0x410 net/core/net_namespace.c:135
+>  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
+>  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+>  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:107
+>  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:206
+>  ksys_unshare+0x444/0x980 kernel/fork.c:2718
+>  __do_sys_unshare kernel/fork.c:2786 [inline]
+>  __se_sys_unshare kernel/fork.c:2784 [inline]
+>  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2784
+>  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> The buggy address belongs to the object at ffff88808a5bcdc0
+>  which belongs to the cache kmalloc-1k of size 1024
+> The buggy address is located 872 bytes inside of
+>  1024-byte region [ffff88808a5bcdc0, ffff88808a5bd1c0)
+> The buggy address belongs to the page:
+> page:ffffea0002296f00 refcount:1 mapcount:0 mapping:ffff8880aa400ac0 index:0x0 compound_mapcount: 0
+> flags: 0x1fffc0000010200(slab|head)
+> raw: 01fffc0000010200 ffffea000249ea08 ffffea000235a588 ffff8880aa400ac0
+> raw: 0000000000000000 ffff88808a5bc040 0000000100000007 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>  ffff88808a5bd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff88808a5bd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>> ffff88808a5bd100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                                   ^
+>  ffff88808a5bd180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>  ffff88808a5bd200: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+> ==================================================================
 
-This patch adds support to enable/disable the host side save/restore
-for the guest lbr stack on vCPU switching. To enable that, the host
-creates a perf event for the vCPU, and the event attributes are set
-to the user callstack mode lbr so that all the conditions are meet in
-the host perf subsystem to save the lbr stack on task switching.
+This may be connected with that shrinker unregistering is forgotten on error path.
 
-The host side lbr perf event are created only for the purpose of saving
-and restoring the lbr stack. There is no need to enable the lbr
-functionality for this perf event, because the feature is essentially
-used in the vCPU. So perf_event_create is invoked with need_counter=false
-to get no counter assigned for the perf event.
-
-The vcpu_lbr field is added to cpuc, to indicate if the lbr perf event is
-used by the vCPU only for context switching. When the perf subsystem
-handles this event (e.g. lbr enable or read lbr stack on PMI) and finds
-it's non-zero, it simply returns.
-
-Signed-off-by: Like Xu <like.xu@intel.com>
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/x86/events/intel/lbr.c     | 13 +++++++--
- arch/x86/events/perf_event.h    |  1 +
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/pmu.h              |  3 ++
- arch/x86/kvm/vmx/pmu_intel.c    | 61 +++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 76 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 784642a..118764b 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -462,6 +462,9 @@ void intel_pmu_lbr_add(struct perf_event *event)
- 	if (!x86_pmu.lbr_nr)
- 		return;
+diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+index ea39497205f0..8705e7d09717 100644
+--- a/fs/nfsd/nfscache.c
++++ b/fs/nfsd/nfscache.c
+@@ -181,6 +181,7 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
  
-+	if (event->attr.exclude_guest && is_no_counter_event(event))
-+		cpuc->vcpu_lbr = 1;
-+
- 	cpuc->br_sel = event->hw.branch_reg.reg;
- 
- 	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data) {
-@@ -509,6 +512,9 @@ void intel_pmu_lbr_del(struct perf_event *event)
- 		task_ctx->lbr_callstack_users--;
- 	}
- 
-+	if (event->attr.exclude_guest && is_no_counter_event(event))
-+		cpuc->vcpu_lbr = 0;
-+
- 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
- 		cpuc->lbr_pebs_users--;
- 	cpuc->lbr_users--;
-@@ -521,7 +527,7 @@ void intel_pmu_lbr_enable_all(bool pmi)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	if (cpuc->lbr_users)
-+	if (cpuc->lbr_users && !cpuc->vcpu_lbr)
- 		__intel_pmu_lbr_enable(pmi);
+ 	return 0;
+ out_nomem:
++	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
+ 	printk(KERN_ERR "nfsd: failed to allocate reply cache\n");
+ 	return -ENOMEM;
  }
- 
-@@ -529,7 +535,7 @@ void intel_pmu_lbr_disable_all(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	if (cpuc->lbr_users)
-+	if (cpuc->lbr_users && !cpuc->vcpu_lbr)
- 		__intel_pmu_lbr_disable();
- }
- 
-@@ -669,7 +675,8 @@ void intel_pmu_lbr_read(void)
- 	 * This could be smarter and actually check the event,
- 	 * but this simple approach seems to work for now.
- 	 */
--	if (!cpuc->lbr_users || cpuc->lbr_users == cpuc->lbr_pebs_users)
-+	if (!cpuc->lbr_users || cpuc->vcpu_lbr ||
-+	    cpuc->lbr_users == cpuc->lbr_pebs_users)
- 		return;
- 
- 	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 186c1c7..86605d1 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -238,6 +238,7 @@ struct cpu_hw_events {
- 	/*
- 	 * Intel LBR bits
- 	 */
-+	u8				vcpu_lbr;
- 	int				lbr_users;
- 	int				lbr_pebs_users;
- 	struct perf_branch_stack	lbr_stack;
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index a6cc967..d0f59ea 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -477,6 +477,7 @@ struct kvm_pmu {
- 	struct kvm_pmc fixed_counters[INTEL_PMC_MAX_FIXED];
- 	struct irq_work irq_work;
- 	u64 reprogram_pmi;
-+	struct perf_event *vcpu_lbr_event;
- };
- 
- struct kvm_pmu_ops;
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 7926b65..384a0b7 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -123,6 +123,9 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
- 
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
- 
-+extern int intel_pmu_enable_save_guest_lbr(struct kvm_vcpu *vcpu);
-+extern void intel_pmu_disable_save_guest_lbr(struct kvm_vcpu *vcpu);
-+
- extern struct kvm_pmu_ops intel_pmu_ops;
- extern struct kvm_pmu_ops amd_pmu_ops;
- #endif /* __KVM_X86_PMU_H */
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 8df5e97..ca7a914 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -510,6 +510,67 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
- 		pmu->global_ovf_ctrl = 0;
- }
- 
-+int intel_pmu_enable_save_guest_lbr(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct perf_event *event;
-+
-+	/*
-+	 * The main purpose of this perf event is to have the host perf core
-+	 * help save/restore the guest lbr stack on vcpu switching. There is
-+	 * no perf counters allocated for the event.
-+	 *
-+	 * About the attr:
-+	 * exclude_guest: set to true to indicate that the event runs on the
-+	 *                host only.
-+	 * pinned:        set to false, so that the FLEXIBLE events will not
-+	 *                be rescheduled for this event which actually doesn't
-+	 *                need a perf counter.
-+	 * config:        Actually this field won't be used by the perf core
-+	 *                as this event doesn't have a perf counter.
-+	 * sample_period: Same as above.
-+	 * sample_type:   tells the perf core that it is an lbr event.
-+	 * branch_sample_type: tells the perf core that the lbr event works in
-+	 *                the user callstack mode so that the lbr stack will be
-+	 *                saved/restored on vCPU switching.
-+	 */
-+	struct perf_event_attr attr = {
-+		.type = PERF_TYPE_RAW,
-+		.size = sizeof(attr),
-+		.exclude_guest = true,
-+		.pinned = false,
-+		.config = 0,
-+		.sample_period = 0,
-+		.sample_type = PERF_SAMPLE_BRANCH_STACK,
-+		.branch_sample_type = PERF_SAMPLE_BRANCH_CALL_STACK |
-+				      PERF_SAMPLE_BRANCH_USER,
-+	};
-+
-+	if (pmu->vcpu_lbr_event)
-+		return 0;
-+
-+	event = perf_event_create(&attr, -1, current, NULL, NULL, false);
-+	if (IS_ERR(event)) {
-+		pr_err("%s: failed %ld\n", __func__, PTR_ERR(event));
-+		return -ENOENT;
-+	}
-+	pmu->vcpu_lbr_event = event;
-+
-+	return 0;
-+}
-+
-+void intel_pmu_disable_save_guest_lbr(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct perf_event *event = pmu->vcpu_lbr_event;
-+
-+	if (!event)
-+		return;
-+
-+	perf_event_release_kernel(event);
-+	pmu->vcpu_lbr_event = NULL;
-+}
-+
- struct kvm_pmu_ops intel_pmu_ops = {
- 	.find_arch_event = intel_find_arch_event,
- 	.find_fixed_event = intel_find_fixed_event,
--- 
-2.7.4
 
