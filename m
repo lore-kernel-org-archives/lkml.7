@@ -2,140 +2,135 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29983C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55770C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72F32070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:09:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r1DfGkAV"
+	by mail.kernel.org (Postfix) with ESMTP id 34C3B2070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfFFMJk (ORCPT
+        id S1728217AbfFFMMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 08:09:40 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52876 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbfFFMJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 08:09:40 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56C91JO022739;
-        Thu, 6 Jun 2019 07:09:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559822941;
-        bh=qcyIk2SJUn0ZdZwR3JN8S2jqhxldDWKzw9rcIaBM9CY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=r1DfGkAVMqtciddhXYiHl8QMDCTU/qQpAicziLVILpa8KpKMbqfJui+zeGvjT4GhI
-         SRIUt7L4kK40Egrm6VBGerre2yXhaPVNVfse9pVcPFFgH48VDmZQS81BByHg2rQ+AW
-         Ur+7hqcX1lzzJRn97RNTxSDJFv61OFNPHcT3PnlA=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56C910S073346
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 07:09:01 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 07:09:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 07:09:00 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56C8u4P076209;
-        Thu, 6 Jun 2019 07:08:56 -0500
-Subject: Re: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
-To:     Pawel Laszczak <pawell@cadence.com>, <devicetree@vger.kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <felipe.balbi@linux.intel.com>,
-        <linux-usb@vger.kernel.org>, <hdegoede@redhat.com>,
-        <heikki.krogerus@linux.intel.com>, <robh+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <jbergsagel@ti.com>,
-        <nsekhar@ti.com>, <nm@ti.com>, <sureshp@cadence.com>,
-        <peter.chen@nxp.com>, <jpawar@cadence.com>, <kurahul@cadence.com>
-References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
- <1559729030-16390-2-git-send-email-pawell@cadence.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
-Date:   Thu, 6 Jun 2019 15:08:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 6 Jun 2019 08:12:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:19764 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726757AbfFFMMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 08:12:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 05:12:45 -0700
+X-ExtLoop1: 1
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Jun 2019 05:12:39 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id E6E6C20D69; Thu,  6 Jun 2019 15:12:38 +0300 (EEST)
+Date:   Thu, 6 Jun 2019 15:12:38 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Vishal Sagar <vsagar@xilinx.com>
+Cc:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20190606121238.zxdvvogob3umzid4@paasikivi.fi.intel.com>
+References: <1559555971-193235-1-git-send-email-vishal.sagar@xilinx.com>
+ <1559555971-193235-2-git-send-email-vishal.sagar@xilinx.com>
+ <20190604192344.7tycwffjd3yeizxh@paasikivi.fi.intel.com>
+ <CH2PR02MB60889B850DCAA810A772160DA7170@CH2PR02MB6088.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <1559729030-16390-2-git-send-email-pawell@cadence.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR02MB60889B850DCAA810A772160DA7170@CH2PR02MB6088.namprd02.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pawel,
+Hi Vishal,
 
-On 05/06/2019 13:03, Pawel Laszczak wrote:
-> This patch aim at documenting USB related dt-bindings for the
-> Cadence USBSS-DRD controller.
+On Thu, Jun 06, 2019 at 11:54:19AM +0000, Vishal Sagar wrote:
+> Hi Sakari,
 > 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> > -----Original Message-----
+> > From: Sakari Ailus [mailto:sakari.ailus@linux.intel.com]
+> > Sent: Wednesday, June 05, 2019 12:54 AM
+> > To: Vishal Sagar <vishal.sagar@xilinx.com>
+> > Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
+> > mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
+> > Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
+> > devicetree@vger.kernel.org; hans.verkuil@cisco.com; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Dinesh Kumar
+> > <dineshk@xilinx.com>; Sandip Kothari <sandipk@xilinx.com>; Luca Ceresoli
+> > <luca@lucaceresoli.net>; Jacopo Mondi <jacopo@jmondi.org>
+> > Subject: Re: [PATCH v8 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+> > CSI-2 Rx Subsystem
+> > 
+> > EXTERNAL EMAIL
+> > 
+> > Hi Vishal,
+> > 
+> > On Mon, Jun 03, 2019 at 03:29:30PM +0530, Vishal Sagar wrote:
+> > 
+> > > +Optional properties:
+> > > +--------------------
+> > > +- .
+> > > +  Without this property the driver won't be loaded as IP won't be able to
+> > generate
+> > > +  media bus format compliant stream output.
+> > 
+> > I think we previously concluded that the format will be just different in
+> > this case. So the description appears incorrect.
+> > 
 > 
-> ---
->  .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
+> Referring to your email https://lkml.org/lkml/2019/3/22/1823 in response to v6 patches,
+> if the video format bridge is not enabled, then the way in which pixels are transported on
+> the bus don't correspond to the existing media bus formats in Linux.
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
-> new file mode 100644
-> index 000000000000..1d2b449e3cb4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
-> @@ -0,0 +1,30 @@
-> +Binding for the Cadence USBSS-DRD controller
-> +
-> +Required properties:
-> +  - reg: Physical base address and size of the controller's register areas.
-> +	 Controller has 3 different regions:
-> +	 region 1 - HOST registers area
-> +	 region 2 - DEVICE registers area
-> +	 region 3 - OTG/DRD registers area
-> +  - reg-names - register memory area names:
-> +	"xhci" - for HOST registers space
-> +	"dev" - for DEVICE registers space
-> +	"otg" - for OTG/DRD registers space
-> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
-> +  - interrupts: Interrupts used by cdns3 controller.
-
-Since we are requesting 3 separate named interrupts in code we need to
-mention them here.
-
-> +
-> +Optional properties:
-> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
-> +                   "full-speed"; refer to usb/generic.txt
-> + - dr_mode: Should be one of "host", "peripheral" or "otg".
-> + - phys: reference to the USB PHY
-> +
-> +Example:
-> +	usb@f3000000 {
-> +		compatible = "cdns,usb3-1.0.1";
-> +		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
-
-This example won't work as code requests for 3 separate interrupts.
-
-> +		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
-> +			0xf3010000 0x10000	/* memory area for DEVICE registers */
-> +			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
-> +		reg-names = "xhci", "dev", "otg";
-> +	};
+> If not loading the driver is incorrect way, is it ok for the driver to allow same media bus format
+> for packed and unpacked data type on the sink pad?
 > 
+> Or is it ok for the driver to not validate the media bus format set on the sink pad?
+
+Taking a fresh look at the issue --- usually such unpacking is done by the
+DMA engine, or the same device contains both the CSI-2 RX and DMA. But here
+it actually affects the input of that DMA engine. You're right in saying we
+don't have format definitions from which you could tell which case it is,
+and we also don't have other pre-existing means to tell them apart.
+
+Feel free to keep the check in the driver, but we can't refer to the driver
+loading in DT binding documentation: this is really not supposed to be
+related to that driver, or even Linux at all.
+
+How about changing this to:
+
+xlnx,vfb: Present when Video Format Bridge is enabled in IP configuration.
+
+That'd be aligned with the other properties and would more accurately
+convey what this means.
 
 -- 
-cheers,
--roger
+Kind regards,
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Sakari Ailus
+sakari.ailus@linux.intel.com
