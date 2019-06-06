@@ -2,131 +2,102 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C99C28EB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D68C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6578207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:18:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fFsx4LOV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LhdZc33S"
+	by mail.kernel.org (Postfix) with ESMTP id 0CF5B207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfFFLSr (ORCPT
+        id S1728134AbfFFLUK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:18:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59416 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfFFLSr (ORCPT
+        Thu, 6 Jun 2019 07:20:10 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:38929 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfFFLUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:18:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2A2C9605FE; Thu,  6 Jun 2019 11:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559819926;
-        bh=2bQeIUl0Sqcf4C18lybozSEspZJp3/TZIWNvfiD9Wsk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fFsx4LOVEiHkaYzS4WsBO6H47QY99htobSNLwTsYwkrYdPzcExCTQ6LapJK7t2Z6l
-         SbCwmcZ1sE1y/6AtpYjbIfkPRswfpWCIQYCkrB9x/sw/szmzgC1HTmdp/3Ed7sYPrR
-         hGj5Zy1XDMFYj9UfBzrtNksW5OCu7BCQrgc5rTlk=
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83500602C3;
-        Thu,  6 Jun 2019 11:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559819924;
-        bh=2bQeIUl0Sqcf4C18lybozSEspZJp3/TZIWNvfiD9Wsk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LhdZc33S/F4QvJdXEcT1pBCyAQ1AOzFE6v16OMWlXo1zb/orQQ2gvs97QSB8y7C0M
-         0Cxb9H9l20rwFCY9/h1+23mCo0OkcgLLsjyXZjtkAbQIv3wkuTChjVBuBQlcXhDnbs
-         8UTQFmqdmwogpXAx7YyI37AHOBlfdoTazISnwopw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 83500602C3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f43.google.com with SMTP id c26so2832067edt.1;
-        Thu, 06 Jun 2019 04:18:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAXqzVDv5WYdT77HdC8ywdIMsOawMcI8cyTr3Ma5hkqxDUBodWY6
-        OVPhs7P1JRJbLiwxu2PLKLbUveyN3iE7ihKbUC8=
-X-Google-Smtp-Source: APXvYqywciaOK50k3dYNiGNenR853IMjbXcIeW6KCMTsTQOrLx/1JWr+4cSt95XYaChU3AAORpJLqjht8ZoXsl40UKs=
-X-Received: by 2002:a17:906:8d8:: with SMTP id o24mr40716009eje.235.1559819923348;
- Thu, 06 Jun 2019 04:18:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190527102616.28315-1-vivek.gautam@codeaurora.org> <20190605082221.GB15169@ravnborg.org>
-In-Reply-To: <20190605082221.GB15169@ravnborg.org>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Thu, 6 Jun 2019 16:48:31 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iEXZyXaGvTeCqLmDgo3OvBZr172nrba2iX6sTYJCORESg@mail.gmail.com>
-Message-ID: <CAFp+6iEXZyXaGvTeCqLmDgo3OvBZr172nrba2iX6sTYJCORESg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] drm/panel: truly: Add additional delay after pulling
- down reset gpio
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     David Airlie <airlied@linux.ie>,
-        "thierry.reding" <thierry.reding@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 6 Jun 2019 07:20:09 -0400
+Received: from marcel-macpro.fritz.box (p5B3D2A37.dip0.t-ipconnect.de [91.61.42.55])
+        by mail.holtmann.org (Postfix) with ESMTPSA id B0E3ECF2B4;
+        Thu,  6 Jun 2019 13:28:31 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [5.2.0-rcx] Bluetooth: hci0: unexpected event for opcode
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CADDKRnDimtWTrW8BXHZjLCHYRnpZ1qs5pravPtdNpwE13cWvvg@mail.gmail.com>
+Date:   Thu, 6 Jun 2019 13:20:07 +0200
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <DE393F06-081D-4761-82BA-014CBD3E43A9@holtmann.org>
+References: <CADDKRnDWhX25QPFNXA-uPcM_tD3Bep2ui=D5A2A8A5cZvrbJtA@mail.gmail.com>
+ <F99C3F13-D705-4214-ADE8-30676E29360D@holtmann.org>
+ <CADDKRnDimtWTrW8BXHZjLCHYRnpZ1qs5pravPtdNpwE13cWvvg@mail.gmail.com>
+To:     =?utf-8?Q?J=C3=B6rg_Otte?= <jrg.otte@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 1:54 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Vivek,
->
-> On Mon, May 27, 2019 at 03:56:16PM +0530, Vivek Gautam wrote:
-> > MTP SDM845 panel seems to need additional delay to bring panel
-> > to a workable state. Running modetest without this change displays
-> > blurry artifacts.
-> >
-> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->
-> added to drm-misc-next
+Hi Joerg,
 
-Thanks a lot.
+>>> In 5.2.0-rcx I see a new error message on startup probably after
+>>> loading the Bluetooth firmware:
+>>> [    1.609460] Bluetooth: hci0: unexpected event for opcode 0xfc2f
+>>> 
+>>>> dmesg | grep Bluetooth
+>>> [    0.130969] Bluetooth: Core ver 2.22
+>>> [    0.130973] Bluetooth: HCI device and connection manager initialized
+>>> [    0.130974] Bluetooth: HCI socket layer initialized
+>>> [    0.130975] Bluetooth: L2CAP socket layer initialized
+>>> [    0.130976] Bluetooth: SCO socket layer initialized
+>>> [    0.374716] Bluetooth: RFCOMM TTY layer initialized
+>>> [    0.374718] Bluetooth: RFCOMM socket layer initialized
+>>> [    0.374718] Bluetooth: RFCOMM ver 1.11
+>>> [    0.374719] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+>>> [    0.374720] Bluetooth: BNEP socket layer initialized
+>>> [    0.374721] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+>>> [    0.374722] Bluetooth: HIDP socket layer initialized
+>>> [    1.422530] Bluetooth: hci0: read Intel version: 370710018002030d00
+>>> [    1.422533] Bluetooth: hci0: Intel Bluetooth firmware file:
+>>> intel/ibt-hw-37.7.10-fw-1.80.2.3.d.bseq
+>>> [    1.609460] Bluetooth: hci0: unexpected event for opcode 0xfc2f
+>>> [    1.625557] Bluetooth: hci0: Intel firmware patch completed and activated
+>>> [   21.986125] input: BluetoothMouse3600 Mouse as
+>>> /devices/virtual/misc/uhid/0005:045E:0916.0004/input/input15
+>>> [   21.986329] input: BluetoothMouse3600 Consumer Control as
+>>> /devices/virtual/misc/uhid/0005:045E:0916.0004/input/input16
+>>> [   21.986408] hid-generic 0005:045E:0916.0004: input,hidraw3:
+>>> BLUETOOTH HID v1.10 Mouse [BluetoothMouse3600] on 80:19:34:4D:31:44
+>>> 
+>>> 
+>>> The error message goes away if I revert following patch:
+>>> f80c5dad7b64 Bluetooth: Ignore CC events not matching the last HCI command
+>> 
+>> if you can send btmon trace (or better btmon -w trace.log) for this event triggering it, then we can look if this is a hardware issue.
+> 
+> The problem is that it happens only once during startup, especially at
+> the very first startup after power-on only. So I can't issue any
+> command.
 
-Best regards
-Vivek
+try to blacklist btusb.ko module. Create /etc/modprobe.d/blacklist-btusb.conf with the content of "blacklist vc4”. Then once booted, start “btmon -w trace.log” and then “modprobe btusb”. This should give you the initial firmware loading trace.
 
->
->         Sam
->
-> > ---
-> >  drivers/gpu/drm/panel/panel-truly-nt35597.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpu/drm/panel/panel-truly-nt35597.c b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-> > index fc2a66c53db4..aa7153fd3be4 100644
-> > --- a/drivers/gpu/drm/panel/panel-truly-nt35597.c
-> > +++ b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-> > @@ -280,6 +280,7 @@ static int truly_35597_power_on(struct truly_nt35597 *ctx)
-> >       gpiod_set_value(ctx->reset_gpio, 1);
-> >       usleep_range(10000, 20000);
-> >       gpiod_set_value(ctx->reset_gpio, 0);
-> > +     usleep_range(10000, 20000);
-> >
-> >       return 0;
-> >  }
-> > --
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > of Code Aurora Forum, hosted by The Linux Foundation
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I am just assuming that the module is connected via USB, if not then you need to let me know.
 
+>> We have only seen this with Atheros hardware so far, but it might happen for others as well. It indicates that this is an unexpected event. Normally you can ignore this warning since it just indicates an existing issue that we just papered over before. So if everything works as before, just ignore it,
+> 
+> Yes for me BT works as usual so ignoring it would be no problem (but
+> it looks ugly because the error message is painted right on the
+> boot-screen).
 
+The 0xfc2f command is never issued by btusb.c or btintel.c actually. It is a command to apply the BDDATA information used only by Intel AG6xx devices which are UART only. So I am almost certain that this is a bug in the hardware / firmware and the patch above just started to highlight it. The trace will show if that is the case.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Regards
+
+Marcel
+
