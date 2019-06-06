@@ -2,137 +2,117 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5909C46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F063EC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBF12083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB4520872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 17:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559841510;
+	bh=xfZRqQoeex0rjsT5lia2MuMyCOHqkbEMbiBprno0lnU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EwlQOwFGMrpZJICNJJftTEmhJ8aShbSQu9l+iqJWa7RB5Q5v8pp3Wvt5jUd2DYAeN
+	 xSrUOgRVWR8vGnGkysHDWYyd1oX0TY4joTY/6UPCfmXbR+9Wf8dQYae+droH9jNnkp
+	 askxMRHqv1JZp+L1mFw1yPAL/8YUqjtPXx+z4rAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbfFFRSL (ORCPT
+        id S1730072AbfFFRSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 13:18:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59842 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725267AbfFFRSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 13:18:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C95A0ABD0;
-        Thu,  6 Jun 2019 17:18:09 +0000 (UTC)
-Message-ID: <2dd0a516bbfe6150112ec7dc5f7d4d85cbe3cd03.camel@suse.de>
-Subject: Re: [PATCH v2 5/7] clk: raspberrypi: register platform device for
- raspberrypi-cpufreq
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        stefan.wahren@i2se.com
-Cc:     linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
-        ptesarik@suse.com, viresh.kumar@linaro.org,
-        mturquette@baylibre.com, linux-pm@vger.kernel.org,
-        rjw@rjwysocki.net, eric@anholt.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        mbrugger@suse.de, ssuloev@orpaltech.com
-Date:   Thu, 06 Jun 2019 19:16:56 +0200
-In-Reply-To: <20190606170505.39C5B20693@mail.kernel.org>
-References: <20190606142255.29454-1-nsaenzjulienne@suse.de>
-         <20190606142255.29454-6-nsaenzjulienne@suse.de>
-         <20190606170505.39C5B20693@mail.kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-kUnogK0EQ/Wuzf5iUu5P"
-User-Agent: Evolution 3.32.2 
+        Thu, 6 Jun 2019 13:18:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730057AbfFFRS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 13:18:29 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A769C208E3
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 17:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559841508;
+        bh=xfZRqQoeex0rjsT5lia2MuMyCOHqkbEMbiBprno0lnU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ttqi5RnBFnZ0CDlhhPjELblqvIx3Okp+N6+Ng2TOAKWVM7xvf7KU4+wxogP4eZ5SF
+         LBtR5MEQe59HXUip5bZ/XyyoMvV8z/EDII14Gan+gDkQYiK4dvT0v1PAb4E9MaHaqS
+         QJgBn/pRoUnH52BqjMBg6qThPcpvfUqAkGEwj0HU=
+Received: by mail-wr1-f48.google.com with SMTP id b17so2157063wrq.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 10:18:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAUShLXoME2f0PN69cyqswM5toXrWN3NPeRricBLfm128tiM9ssJ
+        bn2WlT+tTAWKZMoDiOT3nz1htpt/iI4AQHUWYHvqlQ==
+X-Google-Smtp-Source: APXvYqz+L9VkEoyCu7JqdY0NTE0bD0Q2wBWq/mFsrPsDQ5iRojaTQMSztaXWiT2/0eqKCThtuSRumT2MYYGwvQLWLIQ=
+X-Received: by 2002:a5d:4d06:: with SMTP id z6mr3348178wrt.343.1559841507169;
+ Thu, 06 Jun 2019 10:18:27 -0700 (PDT)
 MIME-Version: 1.0
+References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
+ <155981413016.17513.10540579988392555403.stgit@warthog.procyon.org.uk>
+ <176F8189-3BE9-4B8C-A4D5-8915436338FB@amacapital.net> <11031.1559833574@warthog.procyon.org.uk>
+In-Reply-To: <11031.1559833574@warthog.procyon.org.uk>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 6 Jun 2019 10:18:16 -0700
+X-Gmail-Original-Message-ID: <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com>
+Message-ID: <CALCETrUukxNNhbBAifxz1EADzLOvYKoh9oqqZFJteU+MMhh1ig@mail.gmail.com>
+Subject: Re: [PATCH 01/10] security: Override creds in __fput() with last
+ fputter's creds [ver #3]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>, raven@themaw.net,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 6, 2019 at 8:06 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Andy Lutomirski <luto@amacapital.net> wrote:
+>
+> > > So that the LSM can see the credentials of the last process to do an fput()
+> > > on a file object when the file object is being dismantled, do the following
+> > > steps:
+> > >
+> >
+> > I still maintain that this is a giant design error.
+>
+> Yes, I know.  This was primarily a post so that Greg could play with the USB
+> notifications stuff I added.  The LSM support isn't resolved and is unchanged.
+>
+> > Can someone at least come up with a single valid use case that isn't
+> > entirely full of bugs?
+>
+> "Entirely full of bugs"?
 
---=-kUnogK0EQ/Wuzf5iUu5P
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I can say "hey, I have this policy that the person who triggered an
+event needs such-and-such permission, otherwise the event gets
+suppressed".  But this isn't a full use case, and it's buggy.  It's
+not a full use case because I haven't specified what my actual goal is
+and why this particular policy achieves my goals.  And it's entirely
+full of bugs because, as this patch so nicely illustrates, it's not
+well defined who triggered the event.  For example, if I exec a setuid
+process, who triggers the close?  What if I send the fd to systemd
+over a socket and immediately close my copy before systemd gets (and
+ignores) the message?  Or if I send it to Wayland, or to any other
+process?
 
-On Thu, 2019-06-06 at 10:05 -0700, Stephen Boyd wrote:
-> Quoting Nicolas Saenz Julienne (2019-06-06 07:22:58)
-> > diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-
-> > raspberrypi.c
-> > index b1365cf19f3a..052296b5fbe4 100644
-> > --- a/drivers/clk/bcm/clk-raspberrypi.c
-> > +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> > @@ -63,6 +63,8 @@ struct raspberrypi_firmware_prop {
-> >         __le32 disable_turbo;
-> >  } __packed;
-> > =20
-> > +static struct platform_device *rpi_cpufreq;
->=20
-> Why can't this be stored in platform driver data?
+A file is closed when everyone is done with it.  Trying to figure out
+who the last intentional user of the file was seems little better than
+random guessing.  Defining a security policy based on it seems like a
+poor idea.
 
-It actually could, I just followed the same pattern as the code found in pa=
-tch
-#3. I'll update it in the next version if you prefer it.=20
+>
+> How would you propose I deal with Casey's requirement?  I'm getting the
+> feeling you're going to nak it if I try to fulfil that and he's going to nak
+> it if I don't.
+>
 
->=20
-> > +
-> >  static int raspberrypi_clock_property(struct rpi_firmware *firmware, u=
-32
-> > tag,
-> >                                       u32 clk, u32 *val)
-> >  {
-> > @@ -285,6 +287,17 @@ static int raspberrypi_clk_probe(struct platform_d=
-evice
-> > *pdev)
-> >                 return ret;
-> >         }
-> > =20
-> > +       rpi_cpufreq =3D platform_device_register_data(dev, "raspberrypi=
--
-> > cpufreq",
-> > +                                                   -1, NULL, 0);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int raspberrypi_clk_remove(struct platform_device *pdev)
-> > +{
-> > +       platform_device_unregister(rpi_cpufreq);
-> > +       rpi_cpufreq =3D NULL;
->=20
-> This assignment to NULL looks unnecessary.
->=20
-
-Same as above, but now that you pointed out, it's true it doesn't have any
-effect
-
-> > +
-> >         return 0;
-> >  }
-> > =20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
---=-kUnogK0EQ/Wuzf5iUu5P
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz5SogACgkQlfZmHno8
-x/4VhQgAs+iCf5QclLwdbxPvkFRyZXBtati3ZFFhBMaCi1DaZZUUSSs3K37BoxW8
-RbH8hNdRV0709SU3XWNHEetL5XTkJa0rBDcxxY4BNovcjJq5MXV02bZUkFVxSQDc
-zjPPWadRrNsZWs/ylCDjoTFjO4Rb9OKPtvtlr3/lB11zgZZT3WSt1HWSH+58bdrO
-44OehaU2kdivEHqT/M3g5cdSnkhMYYZsE874JnQsYmAOQ682FnhHrcA1n4Qjzvap
-916JhXnv4rv1FeeP9WvN0wKWorSlViOOSGu97jr4mAPoJQn1wfv0WulWnw0j896i
-vjBPNpJa84q+O2nkkwxpuG0bKbg4HA==
-=hGpW
------END PGP SIGNATURE-----
-
---=-kUnogK0EQ/Wuzf5iUu5P--
-
+Casey, I think you need to state your requirement in a way that's well
+defined, and I think you need to make a compelling case that your
+requirement is indeed worth dictating the design of parts of the
+kernel outside LSM.
