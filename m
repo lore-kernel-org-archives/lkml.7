@@ -2,213 +2,162 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3F6C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40BBC28EB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB366208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DE9208E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 21:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tpAub7gD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YMIH7Umh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfFFVAC (ORCPT
+        id S1727883AbfFFVIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 17:00:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37236 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbfFFVAB (ORCPT
+        Thu, 6 Jun 2019 17:08:17 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19743 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFVIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 17:00:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Kwvi7035512;
-        Thu, 6 Jun 2019 20:58:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=drRR+6CX4wX/6UUl5ax5nLLNcEZtf2FgpdLY3+Avjx8=;
- b=tpAub7gDsWCoILP8GDMYVgaffNAV+Nma+Mi0gxs5ELnN0QrSWpzV2LPksjAn7jfK1R/L
- IMZ89tm+p8PkFwMw4SL8VOpBAVmDcHrjCgejmBwlijMv20xs7OvR9MB0NjF4h//ck3o9
- rq1zG5F8Y16jNuDIUMRlsy3YI9tsfTF/zQ9z5bFO5x1SAn4LjTtMHD08EiYrMeU9Yxua
- pqacmfVkZEtKO1JW55K5d0e/d1hI8/IMhS2/Ja49hm2nVJqoKU6BUX9IcZa97Mp+3WlC
- t4sn/25kB3fqQZBENJ231K1M5v/kqWsD9ScTXBFRVth+1MWOhw90BDWMPUzlQgNM91Gm IQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2sugsttx57-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 20:58:56 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56KwZrG096313;
-        Thu, 6 Jun 2019 20:58:56 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2swnhaywtw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 06 Jun 2019 20:58:56 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x56KwuIf096743;
-        Thu, 6 Jun 2019 20:58:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2swnhaywtm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 20:58:56 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56KwsrG017895;
-        Thu, 6 Jun 2019 20:58:54 GMT
-Received: from localhost (/10.159.211.102)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 13:58:54 -0700
-Date:   Thu, 6 Jun 2019 16:58:51 -0400
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     Chris Mason <clm@fb.com>
-Cc:     Kris Van Hees <kris.van.hees@oracle.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "dtrace-devel@oss.oracle.com" <dtrace-devel@oss.oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "peterz@infradead.org" <peterz@infradead.org>
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190606205851.GI11035@oracle.com>
-References: <20190521184137.GH2422@oracle.com>
- <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521213648.GK2422@oracle.com>
- <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
- <20190522041253.GM2422@oracle.com>
- <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
- <20190523051608.GP2422@oracle.com>
- <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
- <20190530161543.GA1835@oracle.com>
- <5AD44AC7-F88F-4068-B122-962839F968B2@fb.com>
+        Thu, 6 Jun 2019 17:08:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf980b00000>; Thu, 06 Jun 2019 14:08:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 14:08:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 14:08:15 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 21:08:15 +0000
+Subject: Re: [PATCH 4/5] mm/hmm: hmm_vma_fault() doesn't always call
+ hmm_range_unregister()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Philip Yang <Philip.Yang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>
+References: <20190506232942.12623-1-rcampbell@nvidia.com>
+ <20190506232942.12623-5-rcampbell@nvidia.com>
+ <20190606145018.GA3658@ziepe.ca>
+ <45c7f8ae-36b2-60cc-7d1d-d13ddd402d4b@nvidia.com>
+ <20190606195404.GJ17373@ziepe.ca>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <716383df-9985-03b4-bd0c-93de87bffa90@nvidia.com>
+Date:   Thu, 6 Jun 2019 14:08:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5AD44AC7-F88F-4068-B122-962839F968B2@fb.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060142
+In-Reply-To: <20190606195404.GJ17373@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559855280; bh=Y4XntF7b7G4DQ81sR0y/Jn2xedJWjLJRstkFUo/OuT8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YMIH7Umhi4BIMhgVQhYRmUeQw1+kXYUpAhobvb7PiW1Vf+rDjc0Hn9H3i5vjlY58R
+         Ki+k06AVcac5VD5x4cnYgL6j4SSyhmQqpp7FmMoBYSBdHn1utQ8MWkrdRYI4L5qWf2
+         CsX6cpb+rH3mzDRwHkEPm8MqtFvTDP3V7TjDq54dSuVRPQ0YIRMIGmAioXkwEnMSKY
+         TYHX1WxoxUPWQx1T/Xog6YC/Y4acWP0UuaeT68p1n3EFgjEIl9gREBcBvj4dI6wj0L
+         5WNge292oaRHVcYfEP9Jl1UAbp69ACRJKuVUQfYbkY5SV99iyL9EXbwtFHPWupfdnO
+         KQ25V6EZu+cJg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 03:25:25PM +0000, Chris Mason wrote:
-> 
-> I'm being pretty liberal with chopping down quoted material to help 
-> emphasize a particular opinion about how to bootstrap existing 
-> out-of-tree projects into the kernel.  My goal here is to talk more 
-> about the process and less about the technical details, so please 
-> forgive me if I've ignored or changed the technical meaning of anything 
-> below.
-> 
-> On 30 May 2019, at 12:15, Kris Van Hees wrote:
-> 
-> > On Thu, May 23, 2019 at 01:28:44PM -0700, Alexei Starovoitov wrote:
-> >
-> > ... I believe that the discussion that has been going on in other
-> > emails has shown that while introducing a program type that provides a
-> > generic (abstracted) context is a different approach from what has 
-> > been done
-> > so far, it is a new use case that provides for additional ways in 
-> > which BPF
-> > can be used.
-> >
-> 
-> [ ... ]
-> 
-> >
-> > Yes and no.  It depends on what you are trying to do with the BPF 
-> > program that
-> > is attached to the different events.  From a tracing perspective, 
-> > providing a
-> > single BPF program with an abstract context would ...
-> 
-> [ ... ]
-> 
-> >
-> > In this model kprobe/ksys_write and 
-> > tracepoint/syscalls/sys_enter_write are
-> > equivalent for most tracing purposes ...
-> 
-> [ ... ]
-> 
-> >
-> > I agree with what you are saying but I am presenting an additional use 
-> > case
-> 
-> [ ... ]
-> 
-> >>
-> >> All that aside the kernel support for shared libraries is an awesome
-> >> feature to have and a bunch of folks want to see it happen, but
-> >> it's not a blocker for 'dtrace to bpf' user space work.
-> >> libbpf can be taught to do this 'pseudo shared library' feature
-> >> while 'dtrace to bpf' side doesn't need to do anything special.
-> 
-> [ ... ]
-> 
-> This thread intermixes some abstract conceptual changes with smaller 
-> technical improvements, and in general it follows a familiar pattern 
-> other out-of-tree projects have hit while trying to adapt the kernel to 
-> their existing code.  Just from this one email, I quoted the abstract 
-> models with use cases etc, and this is often where the discussions side 
-> track into less productive areas.
-> 
-> >
-> > So you are basically saying that I should redesign DTrace?
-> 
-> In your place, I would have removed features and adapted dtrace as much 
-> as possible to require the absolute minimum of kernel patches, or even 
-> better, no patches at all.  I'd document all of the features that worked 
-> as expected, and underline anything either missing or suboptimal that 
-> needed additional kernel changes.  Then I'd focus on expanding the 
-> community of people using dtrace against the mainline kernel, and work 
-> through the series features and improvements one by one upstream over 
-> time.
 
-Well, that is actually what I am doing in the sense that the proposed patches
-are quite minimal and lie at the core of the style of tracing that we need to
-support.  So I definitely agree with your statement.  The code I posted
-implements a minimal set of features (hardly any at all), although as Peter
-pointed out, some more can be stripped from it and I have done that already
-in a revision of the patchset I was preparing.
+On 6/6/19 12:54 PM, Jason Gunthorpe wrote:
+> On Thu, Jun 06, 2019 at 12:44:36PM -0700, Ralph Campbell wrote:
+>>
+>> On 6/6/19 7:50 AM, Jason Gunthorpe wrote:
+>>> On Mon, May 06, 2019 at 04:29:41PM -0700, rcampbell@nvidia.com wrote:
+>>>> From: Ralph Campbell <rcampbell@nvidia.com>
+>>>>
+>>>> The helper function hmm_vma_fault() calls hmm_range_register() but is
+>>>> missing a call to hmm_range_unregister() in one of the error paths.
+>>>> This leads to a reference count leak and ultimately a memory leak on
+>>>> struct hmm.
+>>>>
+>>>> Always call hmm_range_unregister() if hmm_range_register() succeeded.
+>>>>
+>>>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>>>> Signed-off-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>>>> Cc: John Hubbard <jhubbard@nvidia.com>
+>>>> Cc: Ira Weiny <ira.weiny@intel.com>
+>>>> Cc: Dan Williams <dan.j.williams@intel.com>
+>>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>>> Cc: Balbir Singh <bsingharora@gmail.com>
+>>>> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+>>>> Cc: Matthew Wilcox <willy@infradead.org>
+>>>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>    include/linux/hmm.h | 3 ++-
+>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>>> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+>>>> index 35a429621e1e..fa0671d67269 100644
+>>>> +++ b/include/linux/hmm.h
+>>>> @@ -559,6 +559,7 @@ static inline int hmm_vma_fault(struct hmm_range *=
+range, bool block)
+>>>>    		return (int)ret;
+>>>>    	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT))=
+ {
+>>>> +		hmm_range_unregister(range);
+>>>>    		/*
+>>>>    		 * The mmap_sem was taken by driver we release it here and
+>>>>    		 * returns -EAGAIN which correspond to mmap_sem have been
+>>>> @@ -570,13 +571,13 @@ static inline int hmm_vma_fault(struct hmm_range=
+ *range, bool block)
+>>>>    	ret =3D hmm_range_fault(range, block);
+>>>>    	if (ret <=3D 0) {
+>>>> +		hmm_range_unregister(range);
+>>>
+>>> While this seems to be a clear improvement, it seems there is still a
+>>> bug in nouveau_svm.c around here as I see it calls hmm_vma_fault() but
+>>> never calls hmm_range_unregister() for its on stack range - and
+>>> hmm_vma_fault() still returns with the range registered.
+>>>
+>>> As hmm_vma_fault() is only used by nouveau and is marked as
+>>> deprecated, I think we need to fix nouveau, either by dropping
+>>> hmm_range_fault(), or by adding the missing unregister to nouveau in
+>>> this patch.
+>>
+>> I will send a patch for nouveau to use hmm_range_register() and
+>> hmm_range_fault() and do some testing with OpenCL.
+>=20
+> wow, thanks, I'd like to also really like to send such a thing through
+> hmm.git - do you know who the nouveau maintainers are so we can
+> collaborate on patch planning this?
 
-> Your current approach relies on an all-or-nothing landing of patches 
-> upstream, and this consistently leads to conflict every time a project 
-> tries it.  A more incremental approach will require bigger changes on 
-> the dtrace application side, but over time it'll be much easier to 
-> justify your kernel changes.  You won't have to talk in abstract models, 
-> and you'll have many more concrete examples of people asking for dtrace 
-> features against mainline.  Most importantly, you'll make dtrace 
-> available on more kernels than just the absolute latest mainline, and 
-> removing dependencies makes the project much easier for new users to 
-> try.
+Ben Skeggs <bskeggs@redhat.com> is the maintainer and
+nouveau@lists.freedesktop.org is the mailing list for changes.
+I'll be sure to CC them for the patch.
 
-I am not sure where I gave the impression that my approach relies on an
-all-or-nothing landing of patches.  My intent (and the content of the patches
-reflects that I think) was to work from a minimal base and build on that,
-adding things as needed.  Granted, it depends on a rather crucial feature in
-the design that apparently should be avoided for now as well, and I can
-definitely work on avoiding that for now.  But I hope that it is clear from
-the patch set I posted that an incremental approach is indeed what I intend
-to do.
-
-Thank you for putting it in clear terms and explaining patfalls that have
-be observed in the past with projects.  I will proceed with an even more
-minimalist approach.
-
-To that end, could you advice on who patches should be Cc'd to to have the
-first minimal code submitted to a tools/dtrace directory in the kernel tree?
-
-	Kris
+>> I can also send a separate patch to then remove hmm_vma_fault()
+>> but I guess that should be after AMD's changes.
+>=20
+> Let us wait to hear back from AMD how they can consume hmm.git - I'd
+> very much like to get everything done in one kernel cycle!
+>=20
+> Regards,
+> Jason
+>=20
