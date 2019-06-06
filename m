@@ -2,34 +2,34 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A329C46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E26C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549AE20665
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C990B20665
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfFFOIb (ORCPT
+        id S1728644AbfFFOJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:08:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:61089 "EHLO mx1.redhat.com"
+        Thu, 6 Jun 2019 10:09:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50444 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726924AbfFFOIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:08:31 -0400
+        id S1727603AbfFFOJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:09:12 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 26D97550BB;
-        Thu,  6 Jun 2019 14:08:21 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 14D6E30C34C4;
+        Thu,  6 Jun 2019 14:08:57 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7720610843A5;
-        Thu,  6 Jun 2019 14:08:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with SMTP id D22F01084285;
+        Thu,  6 Jun 2019 14:08:52 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  6 Jun 2019 16:08:20 +0200 (CEST)
-Date:   Thu, 6 Jun 2019 16:08:14 +0200
+        oleg@redhat.com; Thu,  6 Jun 2019 16:08:56 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 16:08:52 +0200
 From:   Oleg Nesterov <oleg@redhat.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Deepa Dinamani <deepa.kernel@gmail.com>
@@ -41,35 +41,121 @@ Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, dbueso@suse.de,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         David Laight <David.Laight@ACULAB.COM>
-Subject: [PATCH 0/2] select: simplify the usage of
- restore_saved_sigmask_unless()
-Message-ID: <20190606140814.GA13440@redhat.com>
+Subject: [PATCH 1/2] select: change do_poll() to return -ERESTARTNOHAND
+ rather than -EINTR
+Message-ID: <20190606140852.GB13440@redhat.com>
 References: <20190522032144.10995-1-deepa.kernel@gmail.com>
  <20190529161157.GA27659@redhat.com>
  <20190604134117.GA29963@redhat.com>
+ <20190606140814.GA13440@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190604134117.GA29963@redhat.com>
+In-Reply-To: <20190606140814.GA13440@redhat.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 06 Jun 2019 14:08:31 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 06 Jun 2019 14:09:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lets start from fs/select.c
+do_poll() returns -EINTR if interrupted and after that all its callers
+have to translate it into -ERESTARTNOHAND. Change do_poll() to return
+-ERESTARTNOHAND and update (simplify) the callers.
 
-I have no idead how to test these changes, please review.
+Note that this also unifies all users of restore_saved_sigmask_unless(),
+see the next patch.
 
-On top of "[PATCH -mm V2 1/1] signal: simplify set_user_sigmask/restore_user_sigmask"
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ fs/select.c | 30 +++++++-----------------------
+ 1 file changed, 7 insertions(+), 23 deletions(-)
 
-it seems that we can do more unrelated cleanups in this code, say,
-poll_select_prepare(enum poll_time_type pt_type).
+diff --git a/fs/select.c b/fs/select.c
+index 1fc1b24..57712c3 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -925,7 +925,7 @@ static int do_poll(struct poll_list *list, struct poll_wqueues *wait,
+ 		if (!count) {
+ 			count = wait->error;
+ 			if (signal_pending(current))
+-				count = -EINTR;
++				count = -ERESTARTNOHAND;
+ 		}
+ 		if (count || timed_out)
+ 			break;
+@@ -1040,7 +1040,7 @@ static long do_restart_poll(struct restart_block *restart_block)
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	if (ret == -EINTR) {
++	if (ret == -ERESTARTNOHAND) {
+ 		restart_block->fn = do_restart_poll;
+ 		ret = -ERESTART_RESTARTBLOCK;
+ 	}
+@@ -1061,7 +1061,7 @@ SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds,
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+ 
+-	if (ret == -EINTR) {
++	if (ret == -ERESTARTNOHAND) {
+ 		struct restart_block *restart_block;
+ 
+ 		restart_block = &current->restart_block;
+@@ -1102,11 +1102,7 @@ SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
+ 		return ret;
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+-
+-	restore_saved_sigmask_unless(ret == -EINTR);
+-	/* We can restart this syscall, usually */
+-	if (ret == -EINTR)
+-		ret = -ERESTARTNOHAND;
++	restore_saved_sigmask_unless(ret == -ERESTARTNOHAND);
+ 	ret = poll_select_copy_remaining(&end_time, tsp, PT_TIMESPEC, ret);
+ 
+ 	return ret;
+@@ -1135,11 +1131,7 @@ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
+ 		return ret;
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+-
+-	restore_saved_sigmask_unless(ret == -EINTR);
+-	/* We can restart this syscall, usually */
+-	if (ret == -EINTR)
+-		ret = -ERESTARTNOHAND;
++	restore_saved_sigmask_unless(ret == -ERESTARTNOHAND);
+ 	ret = poll_select_copy_remaining(&end_time, tsp, PT_OLD_TIMESPEC, ret);
+ 
+ 	return ret;
+@@ -1413,11 +1405,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
+ 		return ret;
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+-
+-	restore_saved_sigmask_unless(ret == -EINTR);
+-	/* We can restart this syscall, usually */
+-	if (ret == -EINTR)
+-		ret = -ERESTARTNOHAND;
++	restore_saved_sigmask_unless(ret == -ERESTARTNOHAND);
+ 	ret = poll_select_copy_remaining(&end_time, tsp, PT_OLD_TIMESPEC, ret);
+ 
+ 	return ret;
+@@ -1446,11 +1434,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
+ 		return ret;
+ 
+ 	ret = do_sys_poll(ufds, nfds, to);
+-
+-	restore_saved_sigmask_unless(ret == -EINTR);
+-	/* We can restart this syscall, usually */
+-	if (ret == -EINTR)
+-		ret = -ERESTARTNOHAND;
++	restore_saved_sigmask_unless(ret == -ERESTARTNOHAND);
+ 	ret = poll_select_copy_remaining(&end_time, tsp, PT_TIMESPEC, ret);
+ 
+ 	return ret;
+-- 
+2.5.0
 
-Oleg.
-
- fs/select.c | 68 +++++++++++++++----------------------------------------------
- 1 file changed, 16 insertions(+), 52 deletions(-)
 
