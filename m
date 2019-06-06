@@ -2,464 +2,140 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBF0C28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5816DC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DFE20868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3718620872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 09:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfFFJnj (ORCPT
+        id S1728229AbfFFJnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 05:43:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58846 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbfFFJni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 05:43:38 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC8C18830E;
-        Thu,  6 Jun 2019 09:43:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 927322DE86;
-        Thu,  6 Jun 2019 09:43:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 10/10] Add sample notification program [ver #3]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 06 Jun 2019 10:43:33 +0100
-Message-ID: <155981421379.17513.13158528501056454772.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
-References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 6 Jun 2019 05:43:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42558 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727740AbfFFJnr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 05:43:47 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x569af6o083746
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 05:43:46 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sxyqe2cc2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 05:43:46 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 6 Jun 2019 10:43:44 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Jun 2019 10:43:41 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x569heXG27787628
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Jun 2019 09:43:41 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D7E76B2066;
+        Thu,  6 Jun 2019 09:43:40 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7394B205F;
+        Thu,  6 Jun 2019 09:43:40 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.136.182])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Jun 2019 09:43:40 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 25C7916C3A57; Thu,  6 Jun 2019 02:43:40 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 02:43:40 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: single copy atomicity for double load/stores on 32-bit systems
+Reply-To: paulmck@linux.ibm.com
+References: <2fd3a455-6267-5d21-c530-41964a4f6ce9@synopsys.com>
+ <20190531082112.GH2623@hirez.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2522B5B@us01wembx1.internal.synopsys.com>
+ <20190603201324.GN28207@linux.ibm.com>
+ <CAMuHMdW-8Jt80mSyHTYmj6354-3f1=Vp_8dY-Nite1ERpUCFew@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 06 Jun 2019 09:43:37 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW-8Jt80mSyHTYmj6354-3f1=Vp_8dY-Nite1ERpUCFew@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060609-0052-0000-0000-000003CC2620
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011223; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01213992; UDB=6.00638109; IPR=6.00995071;
+ MB=3.00027205; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-06 09:43:44
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060609-0053-0000-0000-00006134604B
+Message-Id: <20190606094340.GD28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906060070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This needs to be linked with -lkeyutils.
+On Tue, Jun 04, 2019 at 09:41:04AM +0200, Geert Uytterhoeven wrote:
+> Hi Paul,
+> 
+> On Mon, Jun 3, 2019 at 10:14 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> > On Mon, Jun 03, 2019 at 06:08:35PM +0000, Vineet Gupta wrote:
+> > > On 5/31/19 1:21 AM, Peter Zijlstra wrote:
+> > > >> I'm not sure how to interpret "natural alignment" for the case of double
+> > > >> load/stores on 32-bit systems where the hardware and ABI allow for 4 byte
+> > > >> alignment (ARCv2 LDD/STD, ARM LDRD/STRD ....)
+> > > > Natural alignment: !((uintptr_t)ptr % sizeof(*ptr))
+> > > >
+> > > > For any u64 type, that would give 8 byte alignment. the problem
+> > > > otherwise being that your data spans two lines/pages etc..
+> > >
+> > > Sure, but as Paul said, if the software doesn't expect them to be atomic by
+> > > default, they could span 2 hardware lines to keep the implementation simpler/sane.
+> >
+> > I could imagine 8-byte types being only four-byte aligned on 32-bit systems,
+> > but it would be quite a surprise on 64-bit systems.
+> 
+> Or two-byte aligned?
+> 
+> M68k started with a 16-bit data bus, and alignment rules were retained
+> when gaining a wider data bus.
+> 
+> BTW, do any platforms have issues with atomicity of 4-byte types on
+> 16-bit data buses? I believe some embedded ARM or PowerPC do have
+> such buses.
 
-It is run like:
+But m68k is !SMP-only, correct?  If so, the only issues would be
+interactions with interrupt handlers and the like, and doesn't current
+m68k hardware use exact interrupts?  Or is it still possible to interrupt
+an m68k in the middle of an instruction like it was in the bad old days?
 
-	./watch_test
+							Thanx, Paul
 
-and watches "/" for mount changes and the current session keyring for key
-changes:
-
-	# keyctl add user a a @s
-	1035096409
-	# keyctl unlink 1035096409 @s
-	# mount -t tmpfs none /mnt/nfsv3tcp/
-	# umount /mnt/nfsv3tcp
-
-producing:
-
-	# ./watch_test
-	ptrs h=4 t=2 m=20003
-	NOTIFY[00000004-00000002] ty=0003 sy=0002 i=01000010
-	KEY 2ffc2e5d change=2[linked] aux=1035096409
-	ptrs h=6 t=4 m=20003
-	NOTIFY[00000006-00000004] ty=0003 sy=0003 i=01000010
-	KEY 2ffc2e5d change=3[unlinked] aux=1035096409
-	ptrs h=8 t=6 m=20003
-	NOTIFY[00000008-00000006] ty=0001 sy=0000 i=02000010
-	MOUNT 00000013 change=0[new_mount] aux=168
-	ptrs h=a t=8 m=20003
-	NOTIFY[0000000a-00000008] ty=0001 sy=0001 i=02000010
-	MOUNT 00000013 change=1[unmount] aux=168
-
-Other events may be produced, such as with a failing disk:
-
-	ptrs h=5 t=2 m=6000004
-	NOTIFY[00000005-00000002] ty=0004 sy=0006 i=04000018
-	BLOCK 00800050 e=6[critical medium] s=5be8
-
-This corresponds to:
-
-	print_req_error: critical medium error, dev sdf, sector 23528 flags 0
-
-in dmesg.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- samples/Kconfig                  |    6 +
- samples/Makefile                 |    1 
- samples/watch_queue/Makefile     |    9 +
- samples/watch_queue/watch_test.c |  310 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 326 insertions(+)
- create mode 100644 samples/watch_queue/Makefile
- create mode 100644 samples/watch_queue/watch_test.c
-
-diff --git a/samples/Kconfig b/samples/Kconfig
-index 0561a94f6fdb..a2b7a7babee5 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -160,4 +160,10 @@ config SAMPLE_VFS
- 	  as mount API and statx().  Note that this is restricted to the x86
- 	  arch whilst it accesses system calls that aren't yet in all arches.
- 
-+config SAMPLE_WATCH_QUEUE
-+	bool "Build example /dev/watch_queue notification consumer"
-+	help
-+	  Build example userspace program to use the new mount_notify(),
-+	  sb_notify() syscalls and the KEYCTL_WATCH_KEY keyctl() function.
-+
- endif # SAMPLES
-diff --git a/samples/Makefile b/samples/Makefile
-index debf8925f06f..ed3b8bab6e9b 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -20,3 +20,4 @@ obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
- obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
- obj-y					+= vfio-mdev/
- subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
-+subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+= watch_queue
-diff --git a/samples/watch_queue/Makefile b/samples/watch_queue/Makefile
-new file mode 100644
-index 000000000000..42b694430d0f
---- /dev/null
-+++ b/samples/watch_queue/Makefile
-@@ -0,0 +1,9 @@
-+# List of programs to build
-+hostprogs-y := watch_test
-+
-+# Tell kbuild to always build the programs
-+always := $(hostprogs-y)
-+
-+HOSTCFLAGS_watch_test.o += -I$(objtree)/usr/include
-+
-+HOSTLOADLIBES_watch_test += -lkeyutils
-diff --git a/samples/watch_queue/watch_test.c b/samples/watch_queue/watch_test.c
-new file mode 100644
-index 000000000000..893a5380f792
---- /dev/null
-+++ b/samples/watch_queue/watch_test.c
-@@ -0,0 +1,310 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Use /dev/watch_queue to watch for notifications.
-+ *
-+ * Copyright (C) 2019 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <stdbool.h>
-+#include <stdarg.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <signal.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+#include <dirent.h>
-+#include <errno.h>
-+#include <sys/wait.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <poll.h>
-+#include <limits.h>
-+#include <linux/watch_queue.h>
-+#include <linux/unistd.h>
-+#include <linux/keyctl.h>
-+
-+#ifndef __NR_mount_notify
-+#define __NR_mount_notify -1
-+#endif
-+#ifndef __NR_sb_notify
-+#define __NR_sb_notify -1
-+#endif
-+#ifndef __NR_device_notify
-+#define __NR_device_notify -1
-+#endif
-+#ifndef KEYCTL_WATCH_KEY
-+#define KEYCTL_WATCH_KEY -1
-+#endif
-+
-+#define BUF_SIZE 4
-+
-+static const char *key_subtypes[256] = {
-+	[NOTIFY_KEY_INSTANTIATED]	= "instantiated",
-+	[NOTIFY_KEY_UPDATED]		= "updated",
-+	[NOTIFY_KEY_LINKED]		= "linked",
-+	[NOTIFY_KEY_UNLINKED]		= "unlinked",
-+	[NOTIFY_KEY_CLEARED]		= "cleared",
-+	[NOTIFY_KEY_REVOKED]		= "revoked",
-+	[NOTIFY_KEY_INVALIDATED]	= "invalidated",
-+	[NOTIFY_KEY_SETATTR]		= "setattr",
-+};
-+
-+static void saw_key_change(struct watch_notification *n)
-+{
-+	struct key_notification *k = (struct key_notification *)n;
-+	unsigned int len = n->info & WATCH_INFO_LENGTH;
-+
-+	if (len != sizeof(struct key_notification))
-+		return;
-+
-+	printf("KEY %08x change=%u[%s] aux=%u\n",
-+	       k->key_id, n->subtype, key_subtypes[n->subtype], k->aux);
-+}
-+
-+static const char *mount_subtypes[256] = {
-+	[NOTIFY_MOUNT_NEW_MOUNT]	= "new_mount",
-+	[NOTIFY_MOUNT_UNMOUNT]		= "unmount",
-+	[NOTIFY_MOUNT_EXPIRY]		= "expiry",
-+	[NOTIFY_MOUNT_READONLY]		= "readonly",
-+	[NOTIFY_MOUNT_SETATTR]		= "setattr",
-+	[NOTIFY_MOUNT_MOVE_FROM]	= "move_from",
-+	[NOTIFY_MOUNT_MOVE_TO]		= "move_to",
-+};
-+
-+static long keyctl_watch_key(int key, int watch_fd, int watch_id)
-+{
-+	return syscall(__NR_keyctl, KEYCTL_WATCH_KEY, key, watch_fd, watch_id);
-+}
-+
-+static void saw_mount_change(struct watch_notification *n)
-+{
-+	struct mount_notification *m = (struct mount_notification *)n;
-+	unsigned int len = n->info & WATCH_INFO_LENGTH;
-+
-+	if (len != sizeof(struct mount_notification))
-+		return;
-+
-+	printf("MOUNT %08x change=%u[%s] aux=%u\n",
-+	       m->triggered_on, n->subtype, mount_subtypes[n->subtype], m->changed_mount);
-+}
-+
-+static const char *super_subtypes[256] = {
-+	[NOTIFY_SUPERBLOCK_READONLY]	= "readonly",
-+	[NOTIFY_SUPERBLOCK_ERROR]	= "error",
-+	[NOTIFY_SUPERBLOCK_EDQUOT]	= "edquot",
-+	[NOTIFY_SUPERBLOCK_NETWORK]	= "network",
-+};
-+
-+static void saw_super_change(struct watch_notification *n)
-+{
-+	struct superblock_notification *s = (struct superblock_notification *)n;
-+	unsigned int len = n->info & WATCH_INFO_LENGTH;
-+
-+	if (len < sizeof(struct superblock_notification))
-+		return;
-+
-+	printf("SUPER %08llx change=%u[%s]\n",
-+	       s->sb_id, n->subtype, super_subtypes[n->subtype]);
-+}
-+
-+static const char *block_subtypes[256] = {
-+	[NOTIFY_BLOCK_ERROR_TIMEOUT]			= "timeout",
-+	[NOTIFY_BLOCK_ERROR_NO_SPACE]			= "critical space allocation",
-+	[NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT]	= "recoverable transport",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_TARGET]		= "critical target",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS]		= "critical nexus",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM]		= "critical medium",
-+	[NOTIFY_BLOCK_ERROR_PROTECTION]			= "protection",
-+	[NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE]		= "kernel resource",
-+	[NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE]		= "device resource",
-+	[NOTIFY_BLOCK_ERROR_IO]				= "I/O",
-+};
-+
-+static void saw_block_change(struct watch_notification *n)
-+{
-+	struct block_notification *b = (struct block_notification *)n;
-+	unsigned int len = n->info & WATCH_INFO_LENGTH;
-+
-+	if (len < sizeof(struct block_notification))
-+		return;
-+
-+	printf("BLOCK %08llx e=%u[%s] s=%llx\n",
-+	       (unsigned long long)b->dev,
-+	       n->subtype, block_subtypes[n->subtype],
-+	       (unsigned long long)b->sector);
-+}
-+
-+static const char *usb_subtypes[256] = {
-+	[NOTIFY_USB_DEVICE_ADD]		= "dev-add",
-+	[NOTIFY_USB_DEVICE_REMOVE]	= "dev-remove",
-+	[NOTIFY_USB_BUS_ADD]		= "bus-add",
-+	[NOTIFY_USB_BUS_REMOVE]		= "bus-remove",
-+	[NOTIFY_USB_DEVICE_RESET]	= "dev-reset",
-+	[NOTIFY_USB_DEVICE_ERROR]	= "dev-error",
-+};
-+
-+static void saw_usb_event(struct watch_notification *n)
-+{
-+	struct usb_notification *u = (struct usb_notification *)n;
-+	unsigned int len = n->info & WATCH_INFO_LENGTH;
-+
-+	if (len < sizeof(struct usb_notification))
-+		return;
-+
-+	printf("USB %*.*s %s e=%x r=%x\n",
-+	       u->name_len, u->name_len, u->name,
-+	       usb_subtypes[n->subtype],
-+	       u->error, u->reserved);
-+}
-+
-+/*
-+ * Consume and display events.
-+ */
-+static int consumer(int fd, struct watch_queue_buffer *buf)
-+{
-+	struct watch_notification *n;
-+	struct pollfd p[1];
-+	unsigned int head, tail, mask = buf->meta.mask;
-+
-+	for (;;) {
-+		p[0].fd = fd;
-+		p[0].events = POLLIN | POLLERR;
-+		p[0].revents = 0;
-+
-+		if (poll(p, 1, -1) == -1) {
-+			perror("poll");
-+			break;
-+		}
-+
-+		printf("ptrs h=%x t=%x m=%x\n",
-+		       buf->meta.head, buf->meta.tail, buf->meta.mask);
-+
-+		while (head = buf->meta.head,
-+		       tail = buf->meta.tail,
-+		       tail != head
-+		       ) {
-+			asm ("lfence" : : : "memory" );
-+			n = &buf->slots[tail & mask];
-+			printf("NOTIFY[%08x-%08x] ty=%04x sy=%04x i=%08x\n",
-+			       head, tail, n->type, n->subtype, n->info);
-+			if ((n->info & WATCH_INFO_LENGTH) == 0)
-+				goto out;
-+
-+			switch (n->type) {
-+			case WATCH_TYPE_META:
-+				if (n->subtype == WATCH_META_REMOVAL_NOTIFICATION)
-+					printf("REMOVAL of watchpoint %08x\n",
-+					       n->info & WATCH_INFO_ID);
-+				break;
-+			case WATCH_TYPE_MOUNT_NOTIFY:
-+				saw_mount_change(n);
-+				break;
-+			case WATCH_TYPE_SB_NOTIFY:
-+				saw_super_change(n);
-+				break;
-+			case WATCH_TYPE_KEY_NOTIFY:
-+				saw_key_change(n);
-+				break;
-+			case WATCH_TYPE_BLOCK_NOTIFY:
-+				saw_block_change(n);
-+				break;
-+			case WATCH_TYPE_USB_NOTIFY:
-+				saw_usb_event(n);
-+				break;
-+			}
-+
-+			tail += (n->info & WATCH_INFO_LENGTH) >> WATCH_LENGTH_SHIFT;
-+			asm("mfence" ::: "memory");
-+			buf->meta.tail = tail;
-+		}
-+	}
-+
-+out:
-+	return 0;
-+}
-+
-+static struct watch_notification_filter filter = {
-+	.nr_filters	= 5,
-+	.__reserved	= 0,
-+	.filters = {
-+		[0] = {
-+			.type			= WATCH_TYPE_MOUNT_NOTIFY,
-+			// Reject move-from notifications
-+			.subtype_filter[0]	= UINT_MAX & ~(1 << NOTIFY_MOUNT_MOVE_FROM),
-+		},
-+		[1]	= {
-+			.type			= WATCH_TYPE_SB_NOTIFY,
-+			// Only accept notification of changes to R/O state
-+			.subtype_filter[0]	= (1 << NOTIFY_SUPERBLOCK_READONLY),
-+			// Only accept notifications of change-to-R/O
-+			.info_mask		= WATCH_INFO_FLAG_0,
-+			.info_filter		= WATCH_INFO_FLAG_0,
-+		},
-+		[2]	= {
-+			.type			= WATCH_TYPE_KEY_NOTIFY,
-+			.subtype_filter[0]	= UINT_MAX,
-+		},
-+		[3]	= {
-+			.type			= WATCH_TYPE_BLOCK_NOTIFY,
-+			.subtype_filter[0]	= UINT_MAX,
-+		},
-+		[4]	= {
-+			.type			= WATCH_TYPE_USB_NOTIFY,
-+			.subtype_filter[0]	= UINT_MAX,
-+		},
-+	},
-+};
-+
-+int main(int argc, char **argv)
-+{
-+	struct watch_queue_buffer *buf;
-+	size_t page_size;
-+	int fd;
-+
-+	fd = open("/dev/watch_queue", O_RDWR);
-+	if (fd == -1) {
-+		perror("/dev/watch_queue");
-+		exit(1);
-+	}
-+
-+	if (ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, BUF_SIZE) == -1) {
-+		perror("/dev/watch_queue(size)");
-+		exit(1);
-+	}
-+
-+	if (ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter) == -1) {
-+		perror("/dev/watch_queue(filter)");
-+		exit(1);
-+	}
-+
-+	page_size = sysconf(_SC_PAGESIZE);
-+	buf = mmap(NULL, BUF_SIZE * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_SHARED, fd, 0);
-+	if (buf == MAP_FAILED) {
-+		perror("mmap");
-+		exit(1);
-+	}
-+
-+	if (keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fd, 0x01) == -1) {
-+		perror("keyctl");
-+		exit(1);
-+	}
-+
-+	if (syscall(__NR_mount_notify, AT_FDCWD, "/", 0, fd, 0x02) == -1) {
-+		perror("mount_notify");
-+		exit(1);
-+	}
-+
-+	if (syscall(__NR_sb_notify, AT_FDCWD, "/mnt", 0, fd, 0x03) == -1) {
-+		perror("sb_notify");
-+		exit(1);
-+	}
-+
-+	if (syscall(__NR_device_notify, fd, 0x04) == -1) {
-+		perror("device_notify");
-+		exit(1);
-+	}
-+
-+	return consumer(fd, buf);
-+}
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
