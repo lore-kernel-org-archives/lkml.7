@@ -2,104 +2,122 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1B0C28EB8
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14EDC28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC96A206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10F0206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfFFLoT (ORCPT
+        id S1728593AbfFFLom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:44:19 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32990 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727157AbfFFLoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:44:18 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id B9CDA6C53C31372D7D72;
-        Thu,  6 Jun 2019 12:44:15 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 6 Jun
- 2019 12:43:51 +0100
-Subject: Re: [PATCH v3 0/2] ima/evm fixes for v5.2
-To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
-        <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <stable@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>
-References: <20190606112620.26488-1-roberto.sassu@huawei.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <3711f387-3aef-9fbb-1bb4-dded6807b033@huawei.com>
-Date:   Thu, 6 Jun 2019 13:43:58 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Thu, 6 Jun 2019 07:44:42 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48354 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727157AbfFFLol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:44:41 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 24ABD80238; Thu,  6 Jun 2019 13:44:30 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 13:44:39 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 262/276] media: saa7146: avoid high stack usage with
+ clang
+Message-ID: <20190606114439.GA27432@amd>
+References: <20190530030523.133519668@linuxfoundation.org>
+ <20190530030541.589347419@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190606112620.26488-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Disposition: inline
+In-Reply-To: <20190530030541.589347419@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/2019 1:26 PM, Roberto Sassu wrote:
-> Previous versions included the patch 'ima: don't ignore INTEGRITY_UNKNOWN
-> EVM status'. However, I realized that this patch cannot be accepted alone
-> because IMA-Appraisal would deny access to new files created during the
-> boot. With the current behavior, those files are accessible because they
-> have a valid security.ima (not protected by EVM) created after the first
-> write.
-> 
-> A solution for this problem is to initialize EVM very early with a random
-> key. Access to created files will be granted, even with the strict
-> appraisal, because after the first write those files will have both
-> security.ima and security.evm (HMAC calculated with the random key).
-> 
-> Strict appraisal will work only if it is done with signatures until the
-> persistent HMAC key is loaded.
 
-Changelog
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v2:
-- remove patch 1/3 (evm: check hash algorithm passed to init_desc());
-   already accepted
-- remove patch 3/3 (ima: show rules with IMA_INMASK correctly);
-   already accepted
-- add new patch (evm: add option to set a random HMAC key at early boot)
-- patch 2/3: modify patch description
+Hi!
 
-v1:
-- remove patch 2/4 (evm: reset status in evm_inode_post_setattr()); file
-   attributes cannot be set if the signature is portable and immutable
-- patch 3/4: add __ro_after_init to ima_appraise_req_evm variable
-   declaration
-- patch 3/4: remove ima_appraise_req_evm kernel option and introduce
-   'enforce-evm' and 'log-evm' as possible values for ima_appraise=
-- remove patch 4/4 (ima: only audit failed appraisal verifications)
-- add new patch (ima: show rules with IMA_INMASK correctly)
+> Two saa7146/hexium files contain a construct that causes a warning
+> when built with clang:
+>=20
+> drivers/media/pci/saa7146/hexium_orion.c:210:12: error: stack frame size =
+of 2272 bytes in function 'hexium_probe'
+>       [-Werror,-Wframe-larger-than=3D]
+> static int hexium_probe(struct saa7146_dev *dev)
+>            ^
+> drivers/media/pci/saa7146/hexium_gemini.c:257:12: error: stack frame size=
+ of 2304 bytes in function 'hexium_attach'
+>       [-Werror,-Wframe-larger-than=3D]
+> static int hexium_attach(struct saa7146_dev *dev, struct saa7146_pci_exte=
+nsion_data *info)
+>            ^
+>=20
+> This one happens regardless of KASAN, and the problem is that a
+> constructor to initialize a dynamically allocated structure leads
+> to a copy of that structure on the stack, whereas gcc initializes
+> it in place.
+>=20
+> Link: https://bugs.llvm.org/show_bug.cgi?id=3D40776
 
+> --- a/drivers/media/pci/saa7146/hexium_gemini.c
+> +++ b/drivers/media/pci/saa7146/hexium_gemini.c
+> @@ -270,9 +270,8 @@ static int hexium_attach(struct saa7146_dev *dev, str=
+uct saa7146_pci_extension_d
+>  	/* enable i2c-port pins */
+>  	saa7146_write(dev, MC1, (MASK_08 | MASK_24 | MASK_10 | MASK_26));
+> =20
+> -	hexium->i2c_adapter =3D (struct i2c_adapter) {
+> -		.name =3D "hexium gemini",
+> -	};
+> +	strscpy(hexium->i2c_adapter.name, "hexium gemini",
+> +		sizeof(hexium->i2c_adapter.name));
+>  	saa7146_i2c_adapter_prepare(dev, &hexium->i2c_adapter, SAA7146_I2C_BUS_=
+BIT_RATE_480);
+>  	if (i2c_add_adapter(&hexium->i2c_adapter) < 0) {
+>  		DEB_S("cannot register i2c-device. skipping.\n");
 
-> Roberto Sassu (2):
->    evm: add option to set a random HMAC key at early boot
->    ima: add enforce-evm and log-evm modes to strictly check EVM status
-> 
->   .../admin-guide/kernel-parameters.txt         | 11 ++--
->   security/integrity/evm/evm.h                  | 10 +++-
->   security/integrity/evm/evm_crypto.c           | 57 ++++++++++++++++---
->   security/integrity/evm/evm_main.c             | 41 ++++++++++---
->   security/integrity/ima/ima_appraise.c         |  8 +++
->   security/integrity/integrity.h                |  1 +
->   6 files changed, 106 insertions(+), 22 deletions(-)
-> 
+As a sideeffect, this removes zero-initialization from
+hexium->i2c_adapter.
 
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+Is that intended / correct?
+
+[I tried looked at saa7146_i2c_adapter_prepare(), and that does not
+initialize all the fields, either.]
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlz4/KcACgkQMOfwapXb+vJG7wCdHGx8wDKp0FUCK2ZhbPtRF8in
+mRwAn3tACATCrLateDJTUNcqDmzymziv
+=SRoZ
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
