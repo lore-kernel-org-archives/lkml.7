@@ -2,122 +2,116 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC9C28D1B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83139C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75393206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:03:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="urtLIIiM"
+	by mail.kernel.org (Postfix) with ESMTP id 65560206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfFFIDK (ORCPT
+        id S1726942AbfFFIDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 6 Jun 2019 04:03:12 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54246 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbfFFIDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 04:03:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40144 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfFFIDK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:03:10 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u17so1009155pfn.7;
-        Thu, 06 Jun 2019 01:03:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X+5omg05moGUnjvkNUDj9Btx23ZMSVNZ5vRwilYMMMk=;
-        b=urtLIIiM4dS/SYQwVI9wQ9V4pSgfsvjnoe6/bX4wDa2norsn1R2D4hpDPqZrg5HxIJ
-         ErcVeSXJWr6LzbDzeshcwkHWkmR750fVFeTfk789u/uJ6k7C9anP0ZRAGJSo+4/k1Yen
-         UyckRxNAReyjVqVHbaV0nJw/NSVvE36305SKjCY06mFhMYqYtXIzTX81dR4sJSp2eS1/
-         x/WfIKg9H0MNcjXYlmgCoUZIlakfXhYNKMTqGYfIzlB6y0lSyKbhUMu7mRAulBmXhpw3
-         z9rhQu2KQdXj/AWzEgAYz3q/0X/At7fXhljFuuMR8DqncmmuNlTrwfHCQIKl6gCYS/5k
-         cnjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X+5omg05moGUnjvkNUDj9Btx23ZMSVNZ5vRwilYMMMk=;
-        b=DlK4y2eQgEjQ/MN4/xfKfotcS21R6GSHYEWYw0eSnkWKTmzSmZk5C3wnEg6i0PTYkB
-         Ld2iXmPzMH1mccxYRhhKn68VtQw9xkt7G1tMZWWBqf+RDRkpeUPUwchl8OXMipGcNgZL
-         CwD/kcoUQNyvhNH9FMt8W/H2DBItpcfTazFp0KmKD90F1aKWVwt4oDx53Ln3xz7eeI90
-         iJ+WiEPit9hi53sAcwbhrlhMEFgs8hxCg1qr6T9hFp+ubZRad+xq9w06XgCY+PgtlpIj
-         Z9rQ9K0rruXKvVONGCuSfKQazMbqnKGiQXcbfkpvLtXguoGwIlsh9LbOsHlXiQ/jxHsT
-         dmBw==
-X-Gm-Message-State: APjAAAWPcDJiTMfvh5WBVKwqUJxsDpQovNLhtzEN/eV+oKsDxbqB++dZ
-        /pjsA1cmdcYny2fAYlZfSXTlpk8rQgA=
-X-Google-Smtp-Source: APXvYqxziP1v2PbMyUtQ+mBSMis1QKL3RVW3cJVbZhDUi+1NO/xQ/XpXiv1dTvGTg9haWKI/sgUsVQ==
-X-Received: by 2002:a17:90a:cb12:: with SMTP id z18mr20415578pjt.82.1559808189181;
-        Thu, 06 Jun 2019 01:03:09 -0700 (PDT)
-Received: from maya190131 ([13.66.160.195])
-        by smtp.gmail.com with ESMTPSA id n66sm1349991pfn.52.2019.06.06.01.03.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 01:03:09 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 08:03:08 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0E911200A0C;
+        Thu,  6 Jun 2019 10:03:08 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 016FC200A13;
+        Thu,  6 Jun 2019 10:03:08 +0200 (CEST)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5069B205C7;
+        Thu,  6 Jun 2019 10:03:07 +0200 (CEST)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        linux-crypto@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] x86: hv: hyperv-tlfs.h: Create and use Hyper-V page
- definitions
-Message-ID: <67be3e283c0f28326f9c31a64f399fe659ad5690.1559807514.git.m.maya.nakamura@gmail.com>
-References: <cover.1559807514.git.m.maya.nakamura@gmail.com>
+Subject: [PATCH] ARM: dts: imx7ulp: add crypto support
+Date:   Thu,  6 Jun 2019 11:02:55 +0300
+Message-Id: <20190606080255.25504-1-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1559807514.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define HV_HYP_PAGE_SHIFT, HV_HYP_PAGE_SIZE, and HV_HYP_PAGE_MASK because
-the Linux guest page size and hypervisor page size concepts are
-different, even though they happen to be the same value on x86.
+From: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-Also, replace PAGE_SIZE with HV_HYP_PAGE_SIZE.
+Add crypto node in device tree for CAAM support.
 
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+Noteworthy is that on 7ulp the interrupt line is shared
+between the two job rings.
+
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 ---
- arch/x86/include/asm/hyperv-tlfs.h | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index cdf44aa9a501..44bd68aefd00 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -12,6 +12,16 @@
- #include <linux/types.h>
- #include <asm/page.h>
+I've just realized that this patch should be merged through the crypto tree,
+else bisectability could be affected due to cryptodev-2.6
+commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX7ULP")
+( https://patchwork.kernel.org/patch/10970017/ )
+which should come first.
+
+ arch/arm/boot/dts/imx7ulp.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+index d6b711011cba..e20483714be5 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -100,6 +100,29 @@
+ 		reg = <0x40000000 0x800000>;
+ 		ranges;
  
-+/*
-+ * While not explicitly listed in the TLFS, Hyper-V always runs with a page size
-+ * of 4096. These definitions are used when communicating with Hyper-V using
-+ * guest physical pages and guest physical page addresses, since the guest page
-+ * size may not be 4096 on all architectures.
-+ */
-+#define HV_HYP_PAGE_SHIFT	12
-+#define HV_HYP_PAGE_SIZE	BIT(HV_HYP_PAGE_SHIFT)
-+#define HV_HYP_PAGE_MASK	(~(HV_HYP_PAGE_SIZE - 1))
++		crypto: crypto@40240000 {
++			compatible = "fsl,sec-v4.0";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x40240000 0x10000>;
++			ranges = <0 0x40240000 0x10000>;
++			clocks = <&pcc2 IMX7ULP_CLK_CAAM>,
++				 <&scg1 IMX7ULP_CLK_NIC1_BUS_DIV>;
++			clock-names = "aclk", "ipg";
 +
- /*
-  * The below CPUID leaves are present if VersionAndFeatures.HypervisorPresent
-  * is set by CPUID(HvCpuIdFunctionVersionAndFeatures).
-@@ -841,7 +851,7 @@ union hv_gpa_page_range {
-  * count is equal with how many entries of union hv_gpa_page_range can
-  * be populated into the input parameter page.
-  */
--#define HV_MAX_FLUSH_REP_COUNT ((PAGE_SIZE - 2 * sizeof(u64)) /	\
-+#define HV_MAX_FLUSH_REP_COUNT ((HV_HYP_PAGE_SIZE - 2 * sizeof(u64)) /	\
- 				sizeof(union hv_gpa_page_range))
- 
- struct hv_guest_mapping_flush_list {
++			sec_jr0: jr0@1000 {
++				compatible = "fsl,sec-v4.0-job-ring";
++				reg = <0x1000 0x1000>;
++				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			sec_jr1: jr1@2000 {
++				compatible = "fsl,sec-v4.0-job-ring";
++				reg = <0x2000 0x1000>;
++				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
+ 		lpuart4: serial@402d0000 {
+ 			compatible = "fsl,imx7ulp-lpuart";
+ 			reg = <0x402d0000 0x1000>;
 -- 
 2.17.1
 
