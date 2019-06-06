@@ -2,175 +2,110 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6FDC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DC8C28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32073206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2938B206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:07:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1mUz4ya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfFFIGh (ORCPT
+        id S1727019AbfFFIG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:06:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46278 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbfFFIGg (ORCPT
+        Thu, 6 Jun 2019 04:06:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43802 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfFFIG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:06:36 -0400
-Received: from mail-pl1-f199.google.com ([209.85.214.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hYnPu-0005fw-BU
-        for linux-kernel@vger.kernel.org; Thu, 06 Jun 2019 08:06:34 +0000
-Received: by mail-pl1-f199.google.com with SMTP id b24so1025027plz.20
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 01:06:34 -0700 (PDT)
+        Thu, 6 Jun 2019 04:06:58 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cl9so598027plb.10;
+        Thu, 06 Jun 2019 01:06:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B7PI3lRvcRn5YsjKZaM8VAfEA9LM5Mb34wcf1QlCT9E=;
+        b=a1mUz4yagvLdR6fk3zHnxeQ82AYyd7LEyimBOtJBFKZhzwuQ4gGCI+hx1ThK/qvBcz
+         HiRhWQkwAGKFW0BuVJGuaBr78/DmvEmg2kwByCh+T5xDU5I0uq+P8dvbjVggUsLjgF7+
+         61p+kFIcG7Xr3s0Ty/+VdpIXyTaV8V5k+tURvtW4qqjtui3GnWWBgfFIKaJ9JCA7Scyi
+         00NhOdqkriK4Yf2G6O2nYiPagoGkxVvzUNlEGiD4XTW9ImYNL9rknP5cTjd3nhnI8ZDZ
+         3SN1ssBC/q7dNTxGD9vDmQlo0z84Vpqug/ABbD/hZ6XnAqaiAVGoxG48I06OL1rCj2oN
+         aRww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=vnPQv7wSaML5HbRULOaOYWAw6aFeo0e2SgXfuH28KXY=;
-        b=QzTHMj7YJQAvXvI+taUcTO6E3d2+T0gyHYpKOLxXRrvTPP/1EWQjBQVp72rfJhhh60
-         fXUCWqD1TL4ExUHswf/7+fUNSmj4nH6j6n9ZRQ971pMnwPvf4A3+wVL5NzWrrcpLG4Ci
-         7aveTRixXhifIbNv/AKFb7ZJA5MIe3neZ7ujT0kpXBTaJfmC/Oa5ZERMyxOshoHUlZuM
-         3E2kZqK0PF+YtNDusiU8rtJh9yDpxE0tiTlDnsX4qyr8eh0Xy5lDYPcZP60K2MGC1aj5
-         0JsNSgis6BWgaloZffUU+YKCIc/vuIzaIbTuwpElgDbsI1C2MwAOYF7tioAyZCOUIMLS
-         EFbA==
-X-Gm-Message-State: APjAAAVEceaa3uLmgmq7F2xOWtPejfxVLyyEKcgFgVWSBMGZuUvyvXeU
-        O//4/8K0yE1DdL2kThJHOmt+YBKqp7++mDdbx1LU/HGyzDoVXwsaEPT2KIZDa+1chheMZAK1ela
-        Kh6cCA/4tTQv6m9kmpJYLKWI+dmVqsqDlKAzqfQ49uQ==
-X-Received: by 2002:a63:374d:: with SMTP id g13mr2211352pgn.413.1559808392733;
-        Thu, 06 Jun 2019 01:06:32 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz47i1oZrAZILOOXCizCnA0BYBNyE2ZcG3QlIejqMqXeooR0KqKyDd7j7vS5ybdardZwzJKEw==
-X-Received: by 2002:a63:374d:: with SMTP id g13mr2211330pgn.413.1559808392506;
-        Thu, 06 Jun 2019 01:06:32 -0700 (PDT)
-Received: from 2001-b011-380f-115a-4031-dc0c-76c4-a6d1.dynamic-ip6.hinet.net (2001-b011-380f-115a-4031-dc0c-76c4-a6d1.dynamic-ip6.hinet.net. [2001:b011:380f:115a:4031:dc0c:76c4:a6d1])
-        by smtp.gmail.com with ESMTPSA id n2sm1198257pgp.27.2019.06.06.01.06.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 01:06:32 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2] USB: Disable USB2 LPM at shutdown
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <80534332-7E39-42B9-8B64-580B483B83A5@canonical.com>
-Date:   Thu, 6 Jun 2019 16:06:27 +0800
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <1C63D05A-1AEF-40F6-8127-4958A4112676@canonical.com>
-References: <20190124061643.11663-1-kai.heng.feng@canonical.com>
- <20190130082133.GA32660@kroah.com>
- <D84EEC8F-8B65-4B0C-9EA7-E01A0BB47398@canonical.com>
- <9EC6DA7E-2503-40F8-AB5A-25A2424B6346@canonical.com>
- <80534332-7E39-42B9-8B64-580B483B83A5@canonical.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B7PI3lRvcRn5YsjKZaM8VAfEA9LM5Mb34wcf1QlCT9E=;
+        b=JkDDahf0p7eOHoAwm9iDPHvwl+jUHXwXtAMbJUf51rJhN9IOLLyztf5utk2GIL9oLE
+         ROo0dhBKO0MaNUnh/DEj2wivTIMHK6c4pOXLYNKdKVsPBIcOf2bxkdIfxaRL66sMhVNy
+         2xeNi6BRe8sbs0ZbqdTRpCyQbsu4ZRQnVXtWxpbxdIb0urnHjod0Ed5aovy3N0RFqvYY
+         jSXX4VzXWiyJapqxh6wausOtZeuLFIvRtDjgnfwbWD90vKC/3uX6R4o6p3C0ZG76tqTw
+         6RYWJfkcLOeghDUCiBr2nEcfNedsnj4Y7WAsdLWUWYKENGYWJCVNqauwKUdFhCa2HMQM
+         kbsw==
+X-Gm-Message-State: APjAAAW9U19dMGeu6LaKJjiq24Y2/0gz6JVYJsQqnKJeiYo5r4X5opmY
+        5cTmtYNn7PdiHOrC0M8RaLEnmd+3jbo=
+X-Google-Smtp-Source: APXvYqwfsilz/VH+eooS8YRH2YGQydhBg/MSHihk39URW/f21Zb3zXkXFfFzqewMBfL0KcpP+Pltlg==
+X-Received: by 2002:a17:902:b093:: with SMTP id p19mr13696085plr.174.1559808417954;
+        Thu, 06 Jun 2019 01:06:57 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id 128sm1164580pff.16.2019.06.06.01.06.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 01:06:57 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 08:06:57 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/5] hv: vmbus: Replace page definition with Hyper-V
+ specific one
+Message-ID: <210c56ddb1dafc20ba289e6be9165efe8a5e818c.1559807514.git.m.maya.nakamura@gmail.com>
+References: <cover.1559807514.git.m.maya.nakamura@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1559807514.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 15:55, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
+not be 4096 on all architectures and Hyper-V always runs with a page
+size of 4096.
 
-> at 18:22, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->
->> at 00:01, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->>
->>>> On Jan 30, 2019, at 16:21, Greg KH <gregkh@linuxfoundation.org> wrote:
->>>>
->>>> On Thu, Jan 24, 2019 at 02:16:43PM +0800, Kai-Heng Feng wrote:
->>>>> The QCA Rome USB Bluetooth controller has several issues once LPM gets
->>>>> enabled:
->>>>> - Fails to get enumerated in coldboot. [1]
->>>>> - Drains more power (~ 0.2W) when the system is in S5. [2]
->>>>> - Disappears after a warmboot. [2]
->>>>>
->>>>> The issue happens because the device lingers at LPM L1 in S5, so device
->>>>> can't get enumerated even after a reboot.
->>>>>
->>>>> Disable LPM at shutdown to solve the issue.
->>>>>
->>>>> [1] https://bugs.launchpad.net/bugs/1757218
->>>>> [2] https://patchwork.kernel.org/patch/10607097/
->>>>>
->>>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>>> ---
->>>>> v2: Use new LPM helpers.
->>>>>
->>>>> drivers/usb/core/port.c | 9 +++++++++
->>>>> 1 file changed, 9 insertions(+)
->>>>>
->>>>> diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
->>>>> index 1a06a4b5fbb1..bbbb35fa639f 100644
->>>>> --- a/drivers/usb/core/port.c
->>>>> +++ b/drivers/usb/core/port.c
->>>>> @@ -285,6 +285,14 @@ static int usb_port_runtime_suspend(struct  
->>>>> device *dev)
->>>>> }
->>>>> #endif
->>>>>
->>>>> +static void usb_port_shutdown(struct device *dev)
->>>>> +{
->>>>> +	struct usb_port *port_dev = to_usb_port(dev);
->>>>> +
->>>>> +	if (port_dev->child)
->>>>> +		usb_disable_usb2_hardware_lpm(port_dev->child);
->>>>> +}
->>>>> +
->>>>> static const struct dev_pm_ops usb_port_pm_ops = {
->>>>> #ifdef CONFIG_PM
->>>>> 	.runtime_suspend =	usb_port_runtime_suspend,
->>>>> @@ -301,6 +309,7 @@ struct device_type usb_port_device_type = {
->>>>> static struct device_driver usb_port_driver = {
->>>>> 	.name = "usb",
->>>>> 	.owner = THIS_MODULE,
->>>>> +	.shutdown = usb_port_shutdown,
->>>>> };
->>>>
->>>> So you now do this for all ports in the system, no matter what is
->>>> plugged in or not.  Are you _SURE_ you want to do that?  It seems like a
->>>> big hammer to solve just one single device's problems.
->>>
->>> Yes I think this should be universally applied.
->>>
->>> I don’t think the bug only happens to one device. Users won’t find this
->>> unless they connect their laptop to a power meter.
->>>
->>> Platform may not completely cut off USB bus power during shutdown,
->>> so the device transits to L1 after system shutdown. Now xHC is disabled
->>> so nothing can bring it back to L0 or L2.
->>
->> It would be great if someone can come up with better ideas.
->>
->> We can also use other approaches, but currently this is the only way I  
->> can think of.
->
-> Alan and Mathias,
->
-> It would be great if you can review this patch, or give me some suggestion.
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+---
+ drivers/hv/hyperv_vmbus.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Can I get some advice here?
-I really think disabling LPM should be universally applied.
-
-Kai-Heng
-
->
-> Kai-Heng
->
->> Kai-Heng
->>
->>> Kai-Heng
->>>
->>>> thanks,
->>>>
->>>> greg k-h
-
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index e5467b821f41..5489b061d261 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -208,11 +208,11 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
+ 		       u64 *requestid, bool raw);
+ 
+ /*
+- * Maximum channels is determined by the size of the interrupt page
+- * which is PAGE_SIZE. 1/2 of PAGE_SIZE is for send endpoint interrupt
+- * and the other is receive endpoint interrupt
++ * Maximum channels, 16348, is determined by the size of the interrupt page,
++ * which is HV_HYP_PAGE_SIZE. 1/2 of HV_HYP_PAGE_SIZE is to send endpoint
++ * interrupt, and the other is to receive endpoint interrupt.
+  */
+-#define MAX_NUM_CHANNELS	((PAGE_SIZE >> 1) << 3)	/* 16348 channels */
++#define MAX_NUM_CHANNELS	((HV_HYP_PAGE_SIZE >> 1) << 3)
+ 
+ /* The value here must be in multiple of 32 */
+ /* TODO: Need to make this configurable */
+-- 
+2.17.1
 
