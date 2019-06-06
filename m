@@ -2,194 +2,255 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC95BC28D1E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B2FC28EB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A272320866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB54E20866
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:15:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=newmedia-net.de header.i=@newmedia-net.de header.b="JdlD+A7Z"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E+Fnh9I2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbfFFKOq (ORCPT
+        id S1728347AbfFFKPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:14:46 -0400
-Received: from webmail.newmedia-net.de ([185.84.6.166]:58250 "EHLO
-        webmail.newmedia-net.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbfFFKOq (ORCPT
+        Thu, 6 Jun 2019 06:15:40 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46655 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfFFKPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:14:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=newmedia-net.de; s=mikd;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=IVyG0+asKq/UCG7fsgR27xleEN4h1pxc9HyWAz1Nb+A=;
-        b=JdlD+A7ZvGDKeJH02nK2YNcVgPjSfugBFOPFlypfOjHjvJoxffzgnRKwsPh/cQ3EPGcGvn+/oAzIzX/I0pwoI6OGuefPKkFJI+Zhuwi3FI5z3PhmGZ+9uBZe9aka0TTDvcuTPWhb874ZXw82QKq3idv0DFZetf9qdp/pXn7vwKA=;
-Subject: Re: [PATCH v3 1/2] mt76: mt7615: enable support for mesh
-To:     Ryder Lee <ryder.lee@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Chih-Min Chen <chih-min.Chen@mediatek.com>,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
-From:   Sebastian Gottschall <s.gottschall@newmedia-net.de>
-Message-ID: <a0a6f631-2eb1-87cc-5653-338c6126690c@newmedia-net.de>
-Date:   Thu, 6 Jun 2019 12:14:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 06:15:39 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190606101537euoutp010f6530847edd3068398e15255f132902~llINEzmYU1138311383euoutp01a
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 10:15:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190606101537euoutp010f6530847edd3068398e15255f132902~llINEzmYU1138311383euoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559816137;
+        bh=Th+Wb3JBdg1A91JI1PUt45rRFl0hBweF8x0+BS/sqeU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=E+Fnh9I2uJ3oaIEcYI9wd3QYTHXq0Ce2DFLPfjyfBR/Ca34uXZaZZnTPEZSe3dxFP
+         JUweQ6sM767npZ5x10xLp5unPnFuFjnqyc1z65RX8LQ5k6MxXWRIcW1+gs2EsTOOLb
+         /PI/JiPR4fFZTlNzptpU/Q+5rUPUb1xcH2gt4bnc=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190606101536eucas1p2195d953b684e076f4ddbedd62833804e~llIMIkG8_1123511235eucas1p2n;
+        Thu,  6 Jun 2019 10:15:36 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 16.D7.04377.8C7E8FC5; Thu,  6
+        Jun 2019 11:15:36 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190606101535eucas1p1c40dc8dc803aa258abae3ef7d7fbd105~llILTHyXI2397023970eucas1p1s;
+        Thu,  6 Jun 2019 10:15:35 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190606101535eusmtrp28731c7bb25a15e0fdf988d5fdfdb824b~llILDMb581392513925eusmtrp2b;
+        Thu,  6 Jun 2019 10:15:35 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-ad-5cf8e7c82608
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 04.59.04146.6C7E8FC5; Thu,  6
+        Jun 2019 11:15:35 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190606101534eusmtip2df6566623252a4bcbe9231e2e9775aa7~llIJ5zpTa0368603686eusmtip2X;
+        Thu,  6 Jun 2019 10:15:34 +0000 (GMT)
+Subject: Re: [PATCH v8 07/13] dt-bindings: memory-controllers: add
+ Exynos5422 DMC device description
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <658d4f9a-633e-e64f-ea10-fbf9e758b80e@partner.samsung.com>
+Date:   Thu, 6 Jun 2019 12:15:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Received:  from [212.111.244.1] (helo=[172.29.0.186])
-        by webmail.newmedia-net.de with esmtpsa (TLSv1:AES128-SHA:128)
-        (Exim 4.72)
-        (envelope-from <s.gottschall@newmedia-net.de>)
-        id 1hYpQ1-0008Bc-SJ; Thu, 06 Jun 2019 12:14:49 +0200
+In-Reply-To: <CAJKOXPdg9Fr2Y16RJ4gbRnL6PiyWw2J3e46ybkRWTKOEd28GJA@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUzMcRz2vd/L/Tru+rmiz8rQzQybSqN9jaFFbv1h+ivRcK5fMd2V+3UR
+        NmGSUlleqlMqjXIcdZq6kO26SfRyJkJrTHmrDr1I5iXd/a7pv+f5fJ7P93me7csQ8n7Kl9mj
+        TeZ0WlWCgpaQdx7+bFv66ONYTFDtoARXF9yicOfIRwqX2NoofH2wB+Gzj4tFuCVLg3N7+gnc
+        3l4lxq3HBsT4WX0RjYezbQgXtDeIsMnWLcZdRytp3DhwksIPOiJw1y8ZHn30Dq2TK0e/55HK
+        i2lPSaXF0C1Wmo2naGX28S+0MqfGiJS3nxxSDpvnbma2SlbHcgl7Ujhd4Jqdkt0Wm5lKsgYe
+        eN+dLUpDr+ZnIg8G2OUw1H1enIkkjJytRPB1YNRNRhA020yEQIYR5N97Q06eGMoHkbCoQJD1
+        zUQJxIHAXn6Ccqq82DgwfL5MO7E3uxg6//xwiQi2moTauvoJE4ah2QCoM+5zaqRsOJiGGlx6
+        kl0AxT2fXG6z2C0wYjEjQTMTmgt7XXMPNhKeX7rqwgTrA697S0QCnge1jiJXbGALGeg750BC
+        7PXQYnW4K3hBX1ONWMBzYNwiHAPLQ1p2mVt/GHpyi92aVdDY9JRyZiYmytyqD3RCYEMh4xMt
+        QBm8dMwUEsgg704+IYylkJEuF95YBDWn7W6f2VBx44L4DFIYpvQyTOlimNLF8N+2FJFG5MPp
+        eU08xwdruf0BvErD67XxAepEjRlNfMEnf5tG6lD9711WxDJIMUMK1T9i5JQqhU/VWBEwhMJb
+        mmIfi5FLY1WpBzld4g6dPoHjrciPIRU+0kPT3m6Ts/GqZG4vxyVxusmtiPHwTUPTS8yOyOBf
+        ga3Wloq4c7G7PGVVUV+D1NfKh/z5cPmGh22mELW+Kq7L6Bt1N798ehi9Vnbf54onsvv1fYgc
+        Pf9lLP1oZf/ZhpthG2X+hdz4i4qOxwsjtKj37abo1Kj8Qc6u/r44IGSWYuV2S6j+SGpy9IrS
+        Z1U54WWONx0hOxn1PAXJ71YtW0LoeNU//968fH4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsVy+t/xe7rHn/+IMXg5k9Fi44z1rBbXvzxn
+        tZh/5ByrxeqPjxktJp+ay2RxpjvXov/xa2aL8+c3sFucbXrDbnF51xw2i8+9RxgtZpzfx2Sx
+        9shddovbjSvYLA6/aWe12H/Fy+L2bz6LbyceMToIeXz7OonFY3bDRRaPnbPusntsWtXJ5tHb
+        /I7No2/LKkaPzaerPT5vkgvgiNKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV
+        0rezSUnNySxLLdK3S9DL2HlkE2vBIf2Kp3d7mRoYbyp0MXJySAiYSMxa/JERxBYSWMoo8WKz
+        JERcTGLSvu3sELawxJ9rXWxdjFxANa8ZJfbNu83axcjBISyQJrH3Lli9iICmxPW/31lBapgF
+        NrJIXHzVywTRMIFJ4t7uM8wgDWwCehI7VhWCNPAKuEms/bSPDcRmEVCRmPv4BQuILSoQITF7
+        VwMLRI2gxMmZT8BsToFAiavzloHZzAJmEvM2P2SGsMUlbj2ZzwRhy0tsfzuHeQKj0Cwk7bOQ
+        tMxC0jILScsCRpZVjCKppcW56bnFhnrFibnFpXnpesn5uZsYgXG/7djPzTsYL20MPsQowMGo
+        xMMrsfF7jBBrYllxZe4hRgkOZiUR3rILP2KEeFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+Y
+        kvJK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTAGfHa6mJTvwyhd
+        lu0m/mLK5Gt+n/gecZ+Qv9AY5Bi1enqp95u9z9c5d3RbrpU8fyt8pWDjp01Ox9y+Nvk+2L0i
+        2+qZR8bmXv5I0293WRN58pMn2ix0ediar7qnJUDkctDaDKkeDp5bf0QCnRNPrZmW9zxNqJ5l
+        37aouWJPPVT85qWePf1+urkSS3FGoqEWc1FxIgCLsk2sEQMAAA==
+X-CMS-MailID: 20190606101535eucas1p1c40dc8dc803aa258abae3ef7d7fbd105
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190605165433eucas1p1214f65106df03ae74bbdc95e3eee71f1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190605165433eucas1p1214f65106df03ae74bbdc95e3eee71f1
+References: <CGME20190605165433eucas1p1214f65106df03ae74bbdc95e3eee71f1@eucas1p1.samsung.com>
+        <20190605165410.14606-1-l.luba@partner.samsung.com>
+        <20190605165410.14606-8-l.luba@partner.samsung.com>
+        <CAJKOXPdg9Fr2Y16RJ4gbRnL6PiyWw2J3e46ybkRWTKOEd28GJA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in addition you should take care about this problem which is raised up 
-if SAE is used. since AES-CMAC required tid to be non zero
+Hi Krzysztof,
 
-WARNING: CPU: 2 PID: 15324 at 
-/home/seg/DEV/mt7621/src/router/private/compat-wireless-2017-09-03/net/mac80211/key.c:1096 
-mt76_wcid_key_setup+0x58/0x9c [mt76]
-Modules linked in: shortcut_fe gcm ghash_generic ctr gf128mul mt7615e 
-mt76 mac80211 compat
-CPU: 2 PID: 15324 Comm: wpa_supplicant Tainted: G        W 4.14.123 #106
-Stack : 00000000 87c2d000 00000000 8007d8b4 80480000 80482b9c 80610000 
-805a4390
-         8057e2b4 854fb99c 87ed045c 805e4767 80578288 00000001 854fb940 
-805e9f78
-         00000000 00000000 80640000 00000000 81147bb8 00000584 00000007 
-00000000
-         00000000 80650000 80650000 20202020 80000000 00000000 80610000 
-872b9fe0
-         872a2b14 00000448 00000000 87c2d000 00000010 8022d660 00000008 
-80640008
-         ...
-Call Trace:
-[<800153e0>] show_stack+0x58/0x100
-[<8042e83c>] dump_stack+0x9c/0xe0
-[<800349f0>] __warn+0xe4/0x144
-[<8003468c>] warn_slowpath_null+0x1c/0x30
-[<872b9fe0>] mt76_wcid_key_setup+0x58/0x9c [mt76]
-[<87611690>] mt7615_eeprom_init+0x7b4/0xe9c [mt7615e]
----[ end trace e24aeb4b542e0dea ]---
+On 6/6/19 10:29 AM, Krzysztof Kozlowski wrote:
+> On Wed, 5 Jun 2019 at 18:54, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> The patch adds description for DT binding for a new Exynos5422 Dynamic
+>> Memory Controller device.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   .../memory-controllers/exynos5422-dmc.txt     | 84 +++++++++++++++++++
+>>   1 file changed, 84 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>> new file mode 100644
+>> index 000000000000..989ee0839fdf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>> @@ -0,0 +1,84 @@
+>> +* Exynos5422 frequency and voltage scaling for Dynamic Memory Controller device
+>> +
+>> +The Samsung Exynos5422 SoC has DMC (Dynamic Memory Controller) to which the DRAM
+>> +memory chips are connected. The driver is to monitor the controller in runtime
+>> +and switch frequency and voltage. To monitor the usage of the controller in
+>> +runtime, the driver uses the PPMU (Platform Performance Monitoring Unit), which
+>> +is able to measure the current load of the memory.
+>> +When 'userspace' governor is used for the driver, an application is able to
+>> +switch the DMC and memory frequency.
+>> +
+>> +Required properties for DMC device for Exynos5422:
+>> +- compatible: Should be "samsung,exynos5422-dmc".
+>> +- clocks : list of clock specifiers, must contain an entry for each
+>> +  required entry in clock-names for CLK_FOUT_SPLL, CLK_MOUT_SCLK_SPLL,
+>> +  CLK_FF_DOUT_SPLL2, CLK_FOUT_BPLL, CLK_MOUT_BPLL, CLK_SCLK_BPLL,
+>> +  CLK_MOUT_MX_MSPLL_CCORE, CLK_MOUT_MX_MSPLL_CCORE_PHY, CLK_MOUT_MCLK_CDREX,
+>> +  CLK_DOUT_CLK2X_PHY0, CLK_CLKM_PHY0, CLK_CLKM_PHY1
+>> +- clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
+>> +  "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
+>> +  "mout_mx_mspll_ccore_phy", "mout_mclk_cdrex", "dout_clk2x_phy0", "clkm_phy0",
+>> +  "clkm_phy1" entries
+>> +- devfreq-events : phandles for PPMU devices connected to this DMC.
+>> +- vdd-supply : phandle for voltage regulator which is connected.
+>> +- reg : registers of two CDREX controllers.
+>> +- operating-points-v2 : phandle for OPPs described in v2 definition.
+>> +- device-handle : phandle of the connected DRAM memory device. For more
+>> +       information please refer to documentation file:
+>> +       Documentation/devicetree/bindings/ddr/lpddr3.txt
+>> +- devfreq-events : phandles of the PPMU events used by the controller.
+>> +- samsung,syscon-clk : phandle of the clock register set used by the controller,
+>> +       these registers are used for enabling a 'pause' feature and are not
+>> +       exposed by clock framework but they must be used in a safe way.
+>> +       The register offsets are in the driver code and specyfic for this SoC
+>> +       type.
+>> +
+>> +Example:
+>> +
+>> +       ppmu_dmc0_0: ppmu@10d00000 {
+>> +               compatible = "samsung,exynos-ppmu";
+>> +               reg = <0x10d00000 0x2000>;
+>> +               clocks = <&clock CLK_PCLK_PPMU_DREX0_0>;
+>> +               clock-names = "ppmu";
+>> +               events {
+>> +                       ppmu_event_dmc0_0: ppmu-event3-dmc0_0 {
+>> +                               event-name = "ppmu-event3-dmc0_0";
+>> +                       };
+>> +               };
+>> +       };
+>> +
+>> +       dmc: memory-controller@10c20000 {
+>> +               compatible = "samsung,exynos5422-dmc";
+>> +               reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
+>> +               clocks =        <&clock CLK_FOUT_SPLL>,
+> 
+> I think you should not have tab after '='. Instead align consecutive
+> lines with the first one.
+I will change it, since there is a need of removing the duplicates below
+> 
+>> +                               <&clock CLK_MOUT_SCLK_SPLL>,
+>> +                               <&clock CLK_FF_DOUT_SPLL2>,
+>> +                               <&clock CLK_FOUT_BPLL>,
+>> +                               <&clock CLK_MOUT_BPLL>,
+>> +                               <&clock CLK_SCLK_BPLL>,
+>> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+>> +                               <&clock CLK_MOUT_MX_MSPLL_CCORE_PHY>,
+>> +                               <&clock CLK_MOUT_MCLK_CDREX>,
+>> +                               <&clock CLK_DOUT_CLK2X_PHY0>,
+>> +                               <&clock CLK_CLKM_PHY0>,
+>> +                               <&clock CLK_CLKM_PHY1>;
+>> +               clock-names =   "fout_spll",
+>> +                               "mout_sclk_spll",
+>> +                               "ff_dout_spll2",
+>> +                               "fout_bpll",
+>> +                               "mout_bpll",
+>> +                               "sclk_bpll",
+>> +                               "mout_mx_mspll_ccore",
+>> +                               "mout_mx_mspll_ccore_phy",
+>> +                               "mout_mclk_cdrex",
+>> +                               "dout_clk2x_phy0",
+>> +                               "clkm_phy0",
+>> +                               "clkm_phy1";
+>> +               operating-points-v2 = <&dmc_opp_table>;
+>> +               devfreq-events = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
+>> +                               <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+>> +               operating-points-v2 = <&dmc_opp_table>;
+> 
+> Duplicated property.
+Right, I will remove it and re-send it.
+> 
+> Beside that:
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Thank you
 
-Am 03.06.2019 um 08:08 schrieb Ryder Lee:
-> Enable NL80211_IFTYPE_MESH_POINT and update its path.
->
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
-> Changes since v3 - fix a wrong expression
-> Changes since v2 - remove unused definitions
-> ---
->   drivers/net/wireless/mediatek/mt76/mt7615/init.c | 6 ++++++
->   drivers/net/wireless/mediatek/mt76/mt7615/main.c | 1 +
->   drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 4 +++-
->   drivers/net/wireless/mediatek/mt76/mt7615/mcu.h  | 6 ------
->   4 files changed, 10 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-> index 59f604f3161f..f860af6a42da 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
-> @@ -133,6 +133,9 @@ static const struct ieee80211_iface_limit if_limits[] = {
->   	{
->   		.max = MT7615_MAX_INTERFACES,
->   		.types = BIT(NL80211_IFTYPE_AP) |
-> +#ifdef CONFIG_MAC80211_MESH
-> +			 BIT(NL80211_IFTYPE_MESH_POINT) |
-> +#endif
->   			 BIT(NL80211_IFTYPE_STATION)
->   	}
->   };
-> @@ -195,6 +198,9 @@ int mt7615_register_device(struct mt7615_dev *dev)
->   	dev->mt76.antenna_mask = 0xf;
->   
->   	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
-> +#ifdef CONFIG_MAC80211_MESH
-> +				 BIT(NL80211_IFTYPE_MESH_POINT) |
-> +#endif
->   				 BIT(NL80211_IFTYPE_AP);
->   
->   	ret = mt76_register_device(&dev->mt76, true, mt7615_rates,
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-> index b0bb7cc12385..585e67fa2728 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-> @@ -37,6 +37,7 @@ static int get_omac_idx(enum nl80211_iftype type, u32 mask)
->   
->   	switch (type) {
->   	case NL80211_IFTYPE_AP:
-> +	case NL80211_IFTYPE_MESH_POINT:
->   		/* ap use hw bssid 0 and ext bssid */
->   		if (~mask & BIT(HW_BSSID_0))
->   			return HW_BSSID_0;
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> index 43f70195244c..e82297048449 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-> @@ -754,6 +754,7 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
->   
->   	switch (vif->type) {
->   	case NL80211_IFTYPE_AP:
-> +	case NL80211_IFTYPE_MESH_POINT:
->   		tx_wlan_idx = mvif->sta.wcid.idx;
->   		conn_type = CONNECTION_INFRA_AP;
->   		break;
-> @@ -968,7 +969,7 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, struct ieee80211_vif *vif,
->   		.rx_wtbl = {
->   			.tag = cpu_to_le16(WTBL_RX),
->   			.len = cpu_to_le16(sizeof(struct wtbl_rx)),
-> -			.rca1 = vif->type != NL80211_IFTYPE_AP,
-> +			.rca1 = vif->type == NL80211_IFTYPE_STATION,
->   			.rca2 = 1,
->   			.rv = 1,
->   		},
-> @@ -1042,6 +1043,7 @@ static void sta_rec_convert_vif_type(enum nl80211_iftype type, u32 *conn_type)
->   {
->   	switch (type) {
->   	case NL80211_IFTYPE_AP:
-> +	case NL80211_IFTYPE_MESH_POINT:
->   		if (conn_type)
->   			*conn_type = CONNECTION_INFRA_STA;
->   		break;
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
-> index e96efb13fa4d..0915cb735699 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
-> @@ -105,25 +105,19 @@ enum {
->   #define STA_TYPE_STA		BIT(0)
->   #define STA_TYPE_AP		BIT(1)
->   #define STA_TYPE_ADHOC		BIT(2)
-> -#define STA_TYPE_TDLS		BIT(3)
->   #define STA_TYPE_WDS		BIT(4)
->   #define STA_TYPE_BC		BIT(5)
->   
->   #define NETWORK_INFRA		BIT(16)
->   #define NETWORK_P2P		BIT(17)
->   #define NETWORK_IBSS		BIT(18)
-> -#define NETWORK_MESH		BIT(19)
-> -#define NETWORK_BOW		BIT(20)
->   #define NETWORK_WDS		BIT(21)
->   
->   #define CONNECTION_INFRA_STA	(STA_TYPE_STA | NETWORK_INFRA)
->   #define CONNECTION_INFRA_AP	(STA_TYPE_AP | NETWORK_INFRA)
->   #define CONNECTION_P2P_GC	(STA_TYPE_STA | NETWORK_P2P)
->   #define CONNECTION_P2P_GO	(STA_TYPE_AP | NETWORK_P2P)
-> -#define CONNECTION_MESH_STA	(STA_TYPE_STA | NETWORK_MESH)
-> -#define CONNECTION_MESH_AP	(STA_TYPE_AP | NETWORK_MESH)
->   #define CONNECTION_IBSS_ADHOC	(STA_TYPE_ADHOC | NETWORK_IBSS)
-> -#define CONNECTION_TDLS		(STA_TYPE_STA | NETWORK_INFRA | STA_TYPE_TDLS)
->   #define CONNECTION_WDS		(STA_TYPE_WDS | NETWORK_WDS)
->   #define CONNECTION_INFRA_BC	(STA_TYPE_BC | NETWORK_INFRA)
->   
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+>> +               device-handle = <&samsung_K3QF2F20DB>;
+>> +               vdd-supply = <&buck1_reg>;
+>> +               samsung,syscon-clk = <&clock>;
+>> +       };
+>> --
+>> 2.17.1
+>>
+> 
+> 
