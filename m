@@ -2,408 +2,176 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA36C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C82DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43571208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559783091;
-	bh=y9Y0nBtkXWOsuZydgoYTvSFfbBFosYnVEbiVlseLM8g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gw3eq+tdOZc7bXr162GJQhtu2jpdurllzb9qiUingV9YD79r4k0cji3dMQYKt//Y+
-	 fxchp6yUULH7R2wiGq7Qrs9FRRcw/Ag2of0eMQ4QgPKD+8I8ie9fCByUUsz6uDmHiD
-	 SvpEAj0HHpmeGLn4Z+9azfWJ1bQ7Kby3cPDoacpk=
+	by mail.kernel.org (Postfix) with ESMTP id 41B5220874
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfFFBEu (ORCPT
+        id S1726729AbfFFBFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 21:04:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59368 "EHLO mail.kernel.org"
+        Wed, 5 Jun 2019 21:05:21 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56005 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfFFBEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 21:04:50 -0400
-Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6E4C20872;
-        Thu,  6 Jun 2019 01:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559783088;
-        bh=y9Y0nBtkXWOsuZydgoYTvSFfbBFosYnVEbiVlseLM8g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p31hObTrXcg6hWOauZjRUqsNHUY3x8RpYwXE80eyhKsmjbwDSMshcjY5iLZO52jZh
-         ijE5QnTtbZH0NcmOC3ih2M2UjVHhM1ZwYBXV6/Kitupdfg82xufJEGudb7gpvsx2pC
-         2bIt+2F0W6eqxa00vNo3ud44TnUY5Hx6tS/uce88=
-Date:   Thu, 6 Jun 2019 09:04:31 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: Introduce the NXP LS1021A-TSN board
-Message-ID: <20190606010429.GP29853@dragon>
-References: <20190529221222.19276-1-olteanv@gmail.com>
+        id S1726543AbfFFBFU (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 21:05:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 18:05:20 -0700
+X-ExtLoop1: 1
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.71]) ([10.239.196.71])
+  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2019 18:05:17 -0700
+Subject: Re: [PATCH v2 0/7] perf diff: diff cycles at basic block level
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
+ <20190605114424.GC5868@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <71cb247c-495f-b90c-1645-2957c351602a@linux.intel.com>
+Date:   Thu, 6 Jun 2019 09:05:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190529221222.19276-1-olteanv@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190605114424.GC5868@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 01:12:22AM +0300, Vladimir Oltean wrote:
-> The LS1021A-TSN is a development board built by VVDN/Argonboards in
-> partnership with NXP.
-> 
-> It features the LS1021A SoC and the first-generation SJA1105T Ethernet
-> switch for prototyping implementations of a subset of IEEE 802.1 TSN
-> standards.
-> 
-> It has two regular Ethernet ports and four switched, TSN-capable ports.
-> 
-> It also features:
-> - One Arduino header
-> - One expansion header
-> - Two USB 3.0 ports
-> - One mini PCIe slot
-> - One SATA interface
-> - Accelerometer, gyroscope, temperature sensors
-> 
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> ---
-> Changes from v1:
-> - Applied Shawn's feedback
-> - Introduced QSPI flash node
-> 
-> v1 patch available at:
-> https://patchwork.kernel.org/patch/10930451/
-> 
->  arch/arm/boot/dts/Makefile        |   1 +
->  arch/arm/boot/dts/ls1021a-tsn.dts | 288 ++++++++++++++++++++++++++++++
->  2 files changed, 289 insertions(+)
->  create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index dab2914fa293..a4eb4ca5e148 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -602,6 +602,7 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
->  dtb-$(CONFIG_SOC_LS1021A) += \
->  	ls1021a-moxa-uc-8410a.dtb \
->  	ls1021a-qds.dtb \
-> +	ls1021a-tsn.dtb \
->  	ls1021a-twr.dtb
->  dtb-$(CONFIG_SOC_VF610) += \
->  	vf500-colibri-eval-v3.dtb \
-> diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-> new file mode 100644
-> index 000000000000..b05774eac92e
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-> @@ -0,0 +1,288 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright 2016-2018 NXP Semiconductors
-> + * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +#include "ls1021a.dtsi"
-> +
-> +/ {
-> +	model = "NXP LS1021A-TSN Board";
-> +
-> +	sys_mclk: clock-mclk {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <24576000>;
-> +	};
-> +
-> +	reg_vdda_codec: regulator-3V3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3P3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_vddio_codec: regulator-2V5 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "2P5V";
-> +		regulator-min-microvolt = <2500000>;
-> +		regulator-max-microvolt = <2500000>;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&enet0 {
-> +	tbi-handle = <&tbi0>;
-> +	phy-handle = <&sgmii_phy2>;
-> +	phy-mode = "sgmii";
-> +	status = "okay";
-> +};
-> +
-> +&enet1 {
-> +	tbi-handle = <&tbi1>;
-> +	phy-handle = <&sgmii_phy1>;
-> +	phy-mode = "sgmii";
-> +	status = "okay";
-> +};
-> +
-> +/* RGMII delays added via PCB traces */
-> +&enet2 {
-> +	phy-mode = "rgmii";
-> +	status = "okay";
-> +
-> +	fixed-link {
-> +		speed = <1000>;
-> +		full-duplex;
-> +	};
-> +};
-> +
-> +&dspi0 {
-> +	bus-num = <0>;
-> +	status = "okay";
-> +
-> +	/* ADG704BRMZ 1:4 mux/demux */
-> +	sja1105: ethernet-switch@1 {
-> +		reg = <0x1>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "nxp,sja1105t";
-> +		/* 12 MHz */
-> +		spi-max-frequency = <12000000>;
-> +		/* Sample data on trailing clock edge */
-> +		spi-cpha;
-> +		fsl,spi-cs-sck-delay = <1000>;
-> +		fsl,spi-sck-cs-delay = <1000>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				/* ETH5 written on chassis */
-> +				label = "swp5";
-> +				phy-handle = <&rgmii_phy6>;
-> +				phy-mode = "rgmii-id";
-> +				reg = <0>;
-> +			};
-> +
-> +			port@1 {
-> +				/* ETH2 written on chassis */
-> +				label = "swp2";
-> +				phy-handle = <&rgmii_phy3>;
-> +				phy-mode = "rgmii-id";
-> +				reg = <1>;
-> +			};
-> +
-> +			port@2 {
-> +				/* ETH3 written on chassis */
-> +				label = "swp3";
-> +				phy-handle = <&rgmii_phy4>;
-> +				phy-mode = "rgmii-id";
-> +				reg = <2>;
-> +			};
-> +
-> +			port@3 {
-> +				/* ETH4 written on chassis */
-> +				label = "swp4";
-> +				phy-handle = <&rgmii_phy5>;
-> +				phy-mode = "rgmii-id";
-> +				reg = <3>;
-> +			};
-> +
-> +			port@4 {
-> +				/* Internal port connected to eth2 */
-> +				ethernet = <&enet2>;
-> +				phy-mode = "rgmii";
-> +				reg = <4>;
-> +
-> +				fixed-link {
-> +					speed = <1000>;
-> +					full-duplex;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&mdio0 {
-> +	/* AR8031 */
-> +	sgmii_phy1: ethernet-phy@1 {
-> +		reg = <0x1>;
-> +	};
-> +
-> +	/* AR8031 */
-> +	sgmii_phy2: ethernet-phy@2 {
-> +		reg = <0x2>;
-> +	};
-> +
-> +	/* BCM5464 quad PHY */
-> +	rgmii_phy3: ethernet-phy@3 {
-> +		reg = <0x3>;
-> +	};
-> +
-> +	rgmii_phy4: ethernet-phy@4 {
-> +		reg = <0x4>;
-> +	};
-> +
-> +	rgmii_phy5: ethernet-phy@5 {
-> +		reg = <0x5>;
-> +	};
-> +
-> +	rgmii_phy6: ethernet-phy@6 {
-> +		reg = <0x6>;
-> +	};
-> +
-> +	/* SGMII PCS for enet0 */
-> +	tbi0: tbi-phy@1f {
-> +		reg = <0x1f>;
-> +		device_type = "tbi-phy";
-> +	};
-> +};
-> +
-> +&mdio1 {
-> +	/* SGMII PCS for enet1 */
-> +	tbi1: tbi-phy@1f {
-> +		reg = <0x1f>;
-> +		device_type = "tbi-phy";
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +
-> +	/* 3 axis accelerometer */
-> +	accelerometer@1e {
-> +		compatible = "fsl,fxls8471";
-> +		position = <0>;
-> +		reg = <0x1e>;
-> +	};
-> +
-> +	/* Audio codec (SAI2) */
-> +	codec@2a {
 
-audio-codec for node name.
 
-> +		compatible = "fsl,sgtl5000";
-> +		VDDIO-supply = <&reg_vddio_codec>;
-> +		VDDA-supply = <&reg_vdda_codec>;
-> +		#sound-dai-cells = <0>;
-> +		clocks = <&sys_mclk>;
-> +		reg = <0x2a>;
-> +	};
-> +
-> +	/* Current sensing circuit for 1V VDDCORE PMIC rail */
-> +	current-sensor@44 {
-> +		compatible = "ti,ina220";
-> +		shunt-resistor = <1000>;
-> +		reg = <0x44>;
-> +	};
-> +
-> +	/* Current sensing circuit for 12V VCC rail */
-> +	current-sensor@45 {
-> +		compatible = "ti,ina220";
-> +		shunt-resistor = <1000>;
-> +		reg = <0x45>;
-> +	};
-> +
-> +	/* Thermal monitor - case */
-> +	temperature-sensor@48 {
-> +		compatible = "national,lm75";
-> +		reg = <0x48>;
-> +	};
-> +
-> +	/* Thermal monitor - chip */
-> +	temperature-sensor@4c {
-> +		compatible = "ti,tmp451";
-> +		reg = <0x4c>;
-> +	};
-> +
-> +	eeprom@51 {
-> +		compatible = "atmel,24c32";
-> +		reg = <0x51>;
-> +	};
-> +
-> +	/* Unsupported devices:
-> +	 * - FXAS21002C Gyroscope at 0x20
-> +	 * - TI ADS7924 4-channel ADC at 0x49
-> +	 */
-> +};
-> +
-> +&qspi {
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		/* Rev. A uses 64MB flash, Rev. B & C use 32MB flash */
-> +		compatible = "jedec,spi-nor", "s25fl256s1", "s25fl512s";
-> +		spi-max-frequency = <20000000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0>;
-> +
-> +		partitions {
-> +			compatible = "fixed-partitions";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			partition@0 {
-> +				label = "RCW";
-> +				reg = <0x0 0x40000>;
-> +			};
-> +
-> +			partition@40000 {
-> +				label = "U-Boot";
-> +				reg = <0x40000 0x300000>;
-> +			};
-> +
-> +			partition@340000 {
-> +				label = "U-Boot Env";
-> +				reg = <0x340000 0x100000>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&ifc {
-
-Please sort all these labelling nodes alphabetically.
-
-Shawn
-
-> +	status = "disabled";
-> +};
-> +
-> +&esdhc {
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&lpuart0 {
-> +	status = "okay";
-> +};
-> +
-> +&lpuart3 {
-> +	status = "okay";
-> +};
-> +
-> +&sai2 {
-> +	status = "okay";
-> +};
-> +
-> +&sata {
-> +	status = "okay";
-> +};
-> -- 
-> 2.17.1
+On 6/5/2019 7:44 PM, Jiri Olsa wrote:
+> On Mon, Jun 03, 2019 at 10:36:10PM +0800, Jin Yao wrote:
+>> In some cases small changes in hot loops can show big differences.
+>> But it's difficult to identify these differences.
+>>
+>> perf diff currently can only diff symbols (functions). We can also expand
+>> it to diff cycles of individual programs blocks as reported by timed LBR.
+>> This would allow to identify changes in specific code accurately.
 > 
+> can't compile on Fedora 30
+> 
+> builtin-diff.c: In function ‘block_cycles_diff_cmp’:
+> builtin-diff.c:544:6: error: absolute value function ‘abs’ given an argument of type ‘s64’ {aka ‘long int’} but has parameter of type ‘int’ which may cause truncation of value [-Werror=absolute-value]
+>    544 |  l = abs(left->diff.cycles);
+>        |      ^~~
+> builtin-diff.c:545:6: error: absolute value function ‘abs’ given an argument of type ‘s64’ {aka ‘long int’} but has parameter of type ‘int’ which may cause truncation of value [-Werror=absolute-value]
+>    545 |  r = abs(right->diff.cycles);
+>        |      ^~~
+> 
+> [jolsa@krava perf]$ gcc --version
+> gcc (GCC) 9.1.1 20190503 (Red Hat 9.1.1-1)
+> 
+> jirka
+> 
+
+Thanks for pointing out this issue.
+
+I should use labs()
+
+Thanks
+Jin Yao
+
+>>
+>> With this patch set, for example,
+>>
+>>   # perf record -b ./div
+>>   # perf record -b ./div
+>>   # perf diff -s cycles
+>>
+>>   # Event 'cycles'
+>>   #
+>>   # Baseline         Block cycles diff [start:end]  Shared Object     Symbol
+>>   # ........  ....................................  ................  ....................................
+>>   #
+>>       49.03%        -9 [         4ef:         520]  div               [.] main
+>>       49.03%         0 [         4e8:         4ea]  div               [.] main
+>>       49.03%         0 [         4ef:         500]  div               [.] main
+>>       49.03%         0 [         4ef:         51c]  div               [.] main
+>>       49.03%         0 [         4ef:         535]  div               [.] main
+>>       18.82%         0 [       3ac40:       3ac4d]  libc-2.23.so      [.] __random_r
+>>       18.82%         0 [       3ac40:       3ac5c]  libc-2.23.so      [.] __random_r
+>>       18.82%         0 [       3ac40:       3ac76]  libc-2.23.so      [.] __random_r
+>>       18.82%         0 [       3ac40:       3ac88]  libc-2.23.so      [.] __random_r
+>>       18.82%         0 [       3ac90:       3ac9c]  libc-2.23.so      [.] __random_r
+>>       16.29%        -8 [       3aac0:       3aac0]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3aac0:       3aad2]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3aae0:       3aae7]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3ab03:       3ab0f]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3ab14:       3ab1b]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3ab28:       3ab2e]  libc-2.23.so      [.] __random
+>>       16.29%         0 [       3ab4a:       3ab53]  libc-2.23.so      [.] __random
+>>        8.11%         0 [         640:         644]  div               [.] compute_flag
+>>        8.11%         0 [         649:         659]  div               [.] compute_flag
+>>        5.46%         0 [       3af60:       3af60]  libc-2.23.so      [.] rand
+>>        5.46%         0 [       3af60:       3af64]  libc-2.23.so      [.] rand
+>>        2.25%         0 [         490:         490]  div               [.] rand@plt
+>>        0.01%        26 [      c00a27:      c00a27]  [kernel.vmlinux]  [k] native_irq_return_iret
+>>        0.00%      -157 [      2bf9f2:      2bfa63]  [kernel.vmlinux]  [k] update_blocked_averages
+>>        0.00%       -56 [      2bf980:      2bf9d3]  [kernel.vmlinux]  [k] update_blocked_averages
+>>        0.00%        48 [      2bf934:      2bf942]  [kernel.vmlinux]  [k] update_blocked_averages
+>>        0.00%         3 [      2bfb38:      2bfb67]  [kernel.vmlinux]  [k] update_blocked_averages
+>>
+>> The 'cycles' is a new perf-diff computation selection, which enables
+>> the displaying of cycles difference of same program basic block amongst
+>> two perf.data. The program basic block is the code block between two
+>> branches in a function.
+>>
+>>   v2:
+>>   ---
+>>   Keep standard perf diff format.
+>>
+>>   Following is the v1 output.
+>>
+>>   # perf diff --basic-block
+>>
+>>   # Cycles diff  Basic block (start:end)
+>>   # ...........  .......................
+>>   #
+>>            -208  hrtimer_interrupt (30b9e0:30ba42)
+>>            -157  update_blocked_averages (2bf9f2:2bfa63)
+>>            -126  interrupt_entry (c00880:c0093a)
+>>             -86  hrtimer_interrupt (30bb29:30bb32)
+>>             -74  hrtimer_interrupt (30ba65:30bac4)
+>>             -56  update_blocked_averages (2bf980:2bf9d3)
+>>              48  update_blocked_averages (2bf934:2bf942)
+>>             -35  native_write_msr (267900:26790b)
+>>              26  native_irq_return_iret (c00a27:c00a27)
+>>              22  rcu_check_callbacks (2febb6:2febdc)
+>>             -21  __hrtimer_run_queues (30b220:30b2a3)
+>>              19  pvclock_gtod_notify (14ba0:14c1b)
+>>             -18  task_tick_fair (2c5d29:2c5d41)
+>>
+>> Jin Yao (7):
+>>    perf util: Create block_info structure
+>>    perf util: Add block_info in hist_entry
+>>    perf diff: Check if all data files with branch stacks
+>>    perf diff: Use hists to manage basic blocks per symbol
+>>    perf diff: Link same basic blocks among different data files
+>>    perf diff: Print the basic block cycles diff
+>>    perf diff: Documentation -c cycles option
+>>
+>>   tools/perf/Documentation/perf-diff.txt |  14 +-
+>>   tools/perf/builtin-diff.c              | 373 ++++++++++++++++++++++++++++++++-
+>>   tools/perf/ui/stdio/hist.c             |  26 +++
+>>   tools/perf/util/hist.c                 |  42 +++-
+>>   tools/perf/util/hist.h                 |   9 +
+>>   tools/perf/util/sort.h                 |   8 +
+>>   tools/perf/util/symbol.c               |  22 ++
+>>   tools/perf/util/symbol.h               |  23 ++
+>>   8 files changed, 509 insertions(+), 8 deletions(-)
+>>
+>> -- 
+>> 2.7.4
+>>
