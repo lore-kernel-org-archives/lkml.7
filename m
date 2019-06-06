@@ -2,197 +2,163 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5325C28EB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D43C28EB6
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A397A206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:21:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eG1gJbBZ"
+	by mail.kernel.org (Postfix) with ESMTP id E677A206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfFFKVr (ORCPT
+        id S1728348AbfFFKWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:21:47 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37692 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfFFKVq (ORCPT
+        Thu, 6 Jun 2019 06:22:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57184 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfFFKWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:21:46 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56ALcRA125801;
-        Thu, 6 Jun 2019 05:21:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559816498;
-        bh=1x+gSBPFfyrVYhSU5AsOgKF2OaPXUOvGBBRT9+Ix9To=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eG1gJbBZ1j92N0drtKBmLkis6wa5jdD3C3zeF2LudOk+795/t6lF7+RBaCBgOiaM+
-         Nnr83FDsFJRPT6zxRgwOr5jrIZmKb57y9wC/f9rV10NhoGVG7jdjOEDxPNlAibui0m
-         47CoH+P9WRUVPUvkBX8iG5qsXJoni5TP2BAWC7Do=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56ALc79085945
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 05:21:38 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 05:21:37 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 05:21:37 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56ALZqB072566;
-        Thu, 6 Jun 2019 05:21:35 -0500
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
-Date:   Thu, 6 Jun 2019 13:22:03 +0300
+        Thu, 6 Jun 2019 06:22:01 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id ED140263967
+Subject: Re: [PATCH v2 -next] platform/chrome: cros_ec: Make some symbols
+ static
+To:     Benson Leung <bleung@google.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     bleung@chromium.org, groeck@chromium.org,
+        linux-kernel@vger.kernel.org
+References: <20190529150749.8032-1-yuehaibing@huawei.com>
+ <20190530084932.2576-1-yuehaibing@huawei.com>
+ <20190530175349.GA24982@google.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <9ccd33ea-7745-c5e8-317e-0f8c28e7be2e@collabora.com>
+Date:   Thu, 6 Jun 2019 12:21:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190530175349.GA24982@google.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon, Sameer,
 
-On 06/06/2019 10.14, Jon Hunter wrote:
+
+On 30/5/19 19:53, Benson Leung wrote:
+> Hello YueHaibing,
 > 
-> On 06/06/2019 07:41, Sameer Pujar wrote:
+> On Thu, May 30, 2019 at 04:49:32PM +0800, YueHaibing wrote:
+>> Fix sparse warning:
 >>
->> On 6/6/2019 11:30 AM, Peter Ujfalusi wrote:
->>> Hi Sameer,
->>>
->>> On 06/06/2019 6.49, Sameer Pujar wrote:
->>>> Sorry for late reply.
->>>> [Resending the reply since delivery failed for few recipients]
->>>> I discussed this internally with HW folks and below is the reason why
->>>> DMA needs
->>>> to know FIFO size.
->>>>
->>>> - FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface
->>>> to the audio sub-system.
->>>> - ADMAIF has multiple channels and share FIFO buffer for individual
->>>> operations. There is a provision
->>>>    to allocate specific fifo size for each individual ADMAIF channel
->>>> from
->>>> the shared buffer.
->>>> - Tegra Audio DMA(ADMA) architecture is different from the usual DMA
->>>> engines, which you described earlier.
->>> It is not really different than what other DMAs are doing.
->>>
->>>> - The flow control logic is placed inside ADMA. Slave peripheral
->>>> device(ADMAIF) signals ADMA whenever a
->>>>    read or write happens on the FIFO(per WORD basis). Please note that
->>>> the signaling is per channel. There is
->>>>    no other signaling present from ADMAIF to ADMA.
->>>> - ADMA keeps a counter related to above signaling. Whenever a sufficient
->>>> space is available, it initiates a transfer.
->>>>    But the question is, how does it know when to transfer. This is the
->>>> reason, why ADMA has to be aware of FIFO
->>>>    depth of ADMAIF channel. Depending on the counters and FIFO depth, it
->>>> knows exactly when a free space is available
->>>>    in the context of a specific channel. On ADMA, FIFO_SIZE is just a
->>>> value which should match to actual FIFO_DEPTH/SIZE
->>>>    of ADMAIF channel.
->>>> - Now consider two cases based on above logic,
->>>>    * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
->>>>      In this case, ADMA thinks that there is enough space available for
->>>> transfer, when actually the FIFO data
->>>>      on slave is not consumed yet. It would result in OVERRUN.
->>>>    * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
->>>>      This is case where ADMA won’t transfer, even though sufficient
->>>> space
->>>> is available, resulting in UNDERRUN.
->>>> - The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =
->>>> SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
->>>>    way to communicate fifo size info to ADMA.
->>> The src_maxburst / dst_maxburst is exactly for this reason. To
->>> communicate how much data should be transferred per DMA request to/from
->>> peripheral.
->>>
->>> In TI land we have now 3 DMA engines servicing McASP. McASP has FIFO
->>> which is dynamically configured (you can see the AFIFO of McASP as a
->>> small DMA: on McASP side it services the peripheral, on the other side
->>> it interacts with the given system DMA used by the SoC - EDMA, sDMA or
->>> UDMAP). All DMAs needs a bit different configuration, but the AFIFO
->>> depth on the McASP side is coming in via the src/dst_maxburst and the
->>> drivers just need to interpret it correctly.
->>>
->>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>> well.
->> Not exactly equal.
->> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->> multiples of 16]
+>> drivers/platform/chrome/cros_ec_debugfs.c:256:30: warning: symbol 'cros_ec_console_log_fops' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_debugfs.c:265:30: warning: symbol 'cros_ec_pdinfo_fops' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_lightbar.c:550:24: warning: symbol 'cros_ec_lightbar_attr_group' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_sysfs.c:338:24: warning: symbol 'cros_ec_attr_group' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_vbc.c:104:24: warning: symbol 'cros_ec_vbc_attr_group' was not declared. Should it be static?
+>> drivers/platform/chrome/cros_ec_lpc.c:408:25: warning: symbol 'cros_ec_lpc_pm_ops' was not declared. Should it be static?
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > 
-> So I think that the key thing to highlight here, is that the as Sameer
-> highlighted above for the Tegra ADMA there are two values that need to
-> be programmed; the DMA client FIFO size and the max burst size. The ADMA
-> has register fields for both of these.
+> Reviewed-by: Benson Leung <bleung@chromium.org>
 
-How does the ADMA uses the 'client FIFO size' and 'max burst size'
-values and what is the relation of these values to the peripheral side
-(ADMAIF)?
+applied for 5.3
 
-> As you can see from the above the FIFO size can be much greater than the
-> burst size and so ideally both of these values would be passed to the DMA.
+Thanks,
+ Enric
+
 > 
-> We could get by with just passing the FIFO size (as the max burst size)
-> and then have the DMA driver set the max burst size depending on this,
-> but this does feel quite correct for this DMA. Hence, ideally, we would
-> like to pass both.
+>> ---
+>> v2: fix patch title
+>> ---
+>>  drivers/platform/chrome/cros_ec_debugfs.c  | 4 ++--
+>>  drivers/platform/chrome/cros_ec_lightbar.c | 2 +-
+>>  drivers/platform/chrome/cros_ec_lpc.c      | 2 +-
+>>  drivers/platform/chrome/cros_ec_sysfs.c    | 2 +-
+>>  drivers/platform/chrome/cros_ec_vbc.c      | 2 +-
+>>  5 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+>> index 4c2a27f6a6d0..4578eb3e0731 100644
+>> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+>> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+>> @@ -241,7 +241,7 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
+>>  				       read_buf, p - read_buf);
+>>  }
+>>  
+>> -const struct file_operations cros_ec_console_log_fops = {
+>> +static const struct file_operations cros_ec_console_log_fops = {
+>>  	.owner = THIS_MODULE,
+>>  	.open = cros_ec_console_log_open,
+>>  	.read = cros_ec_console_log_read,
+>> @@ -250,7 +250,7 @@ const struct file_operations cros_ec_console_log_fops = {
+>>  	.release = cros_ec_console_log_release,
+>>  };
+>>  
+>> -const struct file_operations cros_ec_pdinfo_fops = {
+>> +static const struct file_operations cros_ec_pdinfo_fops = {
+>>  	.owner = THIS_MODULE,
+>>  	.open = simple_open,
+>>  	.read = cros_ec_pdinfo_read,
+>> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+>> index d30a6650b0b5..23a82ee4c785 100644
+>> --- a/drivers/platform/chrome/cros_ec_lightbar.c
+>> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+>> @@ -547,7 +547,7 @@ static struct attribute *__lb_cmds_attrs[] = {
+>>  	NULL,
+>>  };
+>>  
+>> -struct attribute_group cros_ec_lightbar_attr_group = {
+>> +static struct attribute_group cros_ec_lightbar_attr_group = {
+>>  	.name = "lightbar",
+>>  	.attrs = __lb_cmds_attrs,
+>>  };
+>> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
+>> index c9c240fbe7c6..aaa21803633a 100644
+>> --- a/drivers/platform/chrome/cros_ec_lpc.c
+>> +++ b/drivers/platform/chrome/cros_ec_lpc.c
+>> @@ -405,7 +405,7 @@ static int cros_ec_lpc_resume(struct device *dev)
+>>  }
+>>  #endif
+>>  
+>> -const struct dev_pm_ops cros_ec_lpc_pm_ops = {
+>> +static const struct dev_pm_ops cros_ec_lpc_pm_ops = {
+>>  	SET_LATE_SYSTEM_SLEEP_PM_OPS(cros_ec_lpc_suspend, cros_ec_lpc_resume)
+>>  };
+>>  
+>> diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+>> index fe0b7614ae1b..3edb237bf8ed 100644
+>> --- a/drivers/platform/chrome/cros_ec_sysfs.c
+>> +++ b/drivers/platform/chrome/cros_ec_sysfs.c
+>> @@ -335,7 +335,7 @@ static umode_t cros_ec_ctrl_visible(struct kobject *kobj,
+>>  	return a->mode;
+>>  }
+>>  
+>> -struct attribute_group cros_ec_attr_group = {
+>> +static struct attribute_group cros_ec_attr_group = {
+>>  	.attrs = __ec_attrs,
+>>  	.is_visible = cros_ec_ctrl_visible,
+>>  };
+>> diff --git a/drivers/platform/chrome/cros_ec_vbc.c b/drivers/platform/chrome/cros_ec_vbc.c
+>> index 8392a1ec33a7..2aaefed87eb4 100644
+>> --- a/drivers/platform/chrome/cros_ec_vbc.c
+>> +++ b/drivers/platform/chrome/cros_ec_vbc.c
+>> @@ -101,7 +101,7 @@ static struct bin_attribute *cros_ec_vbc_bin_attrs[] = {
+>>  	NULL
+>>  };
+>>  
+>> -struct attribute_group cros_ec_vbc_attr_group = {
+>> +static struct attribute_group cros_ec_vbc_attr_group = {
+>>  	.name = "vbc",
+>>  	.bin_attrs = cros_ec_vbc_bin_attrs,
+>>  };
+>> -- 
+>> 2.17.1
+>>
+>>
 > 
-> We are also open to other ideas.
-
-I can not find public documentation (I think they are walled off by
-registration), but correct me if I'm wrong:
-ADMAIF - peripheral side
- - kind of a small DMA for audio preipheral(s)?
- - Variable FIFO size
- - sends DMA request to ADMA per words
-ADMA - system DMA
- - receives the DMA requests from ADMAIF
- - counts the requests
- - based on some threshold of the counter it will send/read from ADMAIF?
-  - maxburst number of words probably?
-
-ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
-managing that FIFO from the outside, making sure that it does not over
-or underrun?
-And it is the one who sets the pace (in effect the DMA burst size - how
-many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
