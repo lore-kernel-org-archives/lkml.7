@@ -2,92 +2,140 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545BDC28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621F1C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311EB2083E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35AAC2083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oWdP9WZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfFFKoj (ORCPT
+        id S1727230AbfFFKpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:44:39 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37604 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfFFKoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:44:39 -0400
-Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hYpsp-0003i8-AI; Thu, 06 Jun 2019 12:44:35 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: Split GPIO keys for veyron into multiple devices
-Date:   Thu, 06 Jun 2019 12:44:34 +0200
-Message-ID: <3394571.LkITImzWxP@phil>
-In-Reply-To: <20190605204320.22343-1-mka@chromium.org>
-References: <20190605204320.22343-1-mka@chromium.org>
+        Thu, 6 Jun 2019 06:45:16 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:44654 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFFKpQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:45:16 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56AdBIo121846;
+        Thu, 6 Jun 2019 10:44:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=rlTNItZ+vRzH1C5J9n3DIzZYXoQt0JFY3F5NEZCvtS8=;
+ b=oWdP9WZFGCHw1qxWUhunX2JomZIVQPQhXJ2qwjvgRnbfY6feGLqv4FAbh8QZTqO9x2Lv
+ GnyEYOdVNPpZYKVuC18tIW66GsQL6erL2HQrQj7ewltvSjVh93QhEEWh+D+N1Cxm/Qd5
+ okGibrOrohrLg+bAMOd7POOERxAJ818UIs8/sQ5GYRMgtcU98fkMWnDBfFKQQmYfP/dQ
+ AM+PnfG0Wzru10foVzr8RFpORFxWERTa8rIpEmYfwG+8Fad3tpZUYMme6iheDeaS3Gud
+ eJJOotZ8HZcAh8A7NNppd9IllLw/YGG2GNSN2eflBbPmoizY+KDlF7SfhC/NpoeFVOmk Tg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2suevdqw7u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 10:44:42 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Aifb8006245;
+        Thu, 6 Jun 2019 10:44:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2swnhcmdqm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 10:44:41 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56AidWx000959;
+        Thu, 6 Jun 2019 10:44:39 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Jun 2019 03:44:38 -0700
+Date:   Thu, 6 Jun 2019 13:44:28 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] bpf: remove redundant assignment to err
+Message-ID: <20190606104428.GK31203@kadam>
+References: <20190603170247.9951-1-colin.king@canonical.com>
+ <20190603102140.70fee157@cakuba.netronome.com>
+ <276525bd-dd79-052e-7663-9acc92621853@canonical.com>
+ <20190603104930.466a306b@cakuba.netronome.com>
+ <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906060078
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906060078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 5. Juni 2019, 22:43:19 CEST schrieb Matthias Kaehlcke:
-> With a single device DT overrides can become messy, especially when
-> keys are added or removed. Multiple devices also allow to
-> enable/disable wakeup per key/group.
+On Mon, Jun 03, 2019 at 07:07:20PM +0100, Colin Ian King wrote:
+> On 03/06/2019 18:49, Jakub Kicinski wrote:
+> > On Mon, 3 Jun 2019 18:39:16 +0100, Colin Ian King wrote:
+> >> On 03/06/2019 18:21, Jakub Kicinski wrote:
+> >>> On Mon,  3 Jun 2019 18:02:47 +0100, Colin King wrote:  
+> >>>> From: Colin Ian King <colin.king@canonical.com>
+> >>>>
+> >>>> The variable err is assigned with the value -EINVAL that is never
+> >>>> read and it is re-assigned a new value later on.  The assignment is
+> >>>> redundant and can be removed.
+> >>>>
+> >>>> Addresses-Coverity: ("Unused value")
+> >>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >>>> ---
+> >>>>  kernel/bpf/devmap.c | 2 +-
+> >>>>  kernel/bpf/xskmap.c | 2 +-
+> >>>>  2 files changed, 2 insertions(+), 2 deletions(-)
+> >>>>
+> >>>> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+> >>>> index 5ae7cce5ef16..a76cc6412fc4 100644
+> >>>> --- a/kernel/bpf/devmap.c
+> >>>> +++ b/kernel/bpf/devmap.c
+> >>>> @@ -88,7 +88,7 @@ static u64 dev_map_bitmap_size(const union bpf_attr *attr)
+> >>>>  static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
+> >>>>  {
+> >>>>  	struct bpf_dtab *dtab;
+> >>>> -	int err = -EINVAL;
+> >>>> +	int err;
+> >>>>  	u64 cost;  
+> >>>
+> >>> Perhaps keep the variables ordered longest to shortest?  
+> >>
+> >> Is that a required coding standard?
+> > 
+> > For networking code, yes.  Just look around the files you're changing
+> > and see for yourself.
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Ah, informal coding standards. Great. Won't this end up with more diff
+> churn?
 
-applied for 5.3 with 2 minor changes, detailed below.
+Everyone knows that netdev uses reverse Christmas tree declarations...
 
-> ---
->  .../boot/dts/rk3288-veyron-chromebook.dtsi    | 26 +++++++------
->  arch/arm/boot/dts/rk3288-veyron-minnie.dts    | 38 ++++++++++---------
->  arch/arm/boot/dts/rk3288-veyron-pinky.dts     |  2 +-
->  arch/arm/boot/dts/rk3288-veyron.dtsi          |  4 +-
->  4 files changed, 37 insertions(+), 33 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-> index fbef34578100..c5f71af84a40 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-> @@ -70,6 +70,20 @@
->  		pinctrl-0 = <&ac_present_ap>;
->  	};
->  
-> +	lid_switch: lid-switch {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&ap_lid_int_l>;
-
-added a blank line here
-
-> +		lid {
-> +			label = "Lid";
-> +			gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_LOW>;
-> +			wakeup-source;
-> +			linux,code = <0>; /* SW_LID */
-> +			linux,input-type = <5>; /* EV_SW */
-
-actually used the constants in the properties, we have the keycodes as
-dt-binding header nowadays.
-
-
-Heiko
-
+regards,
+dan carpenter
 
