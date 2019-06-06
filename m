@@ -2,299 +2,124 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE23C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111F3C46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBBB20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBB1208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 19:42:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Dn/N9iUb"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="ZRmSoUY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfFFTkm (ORCPT
+        id S1726823AbfFFTm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 15:40:42 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35591 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfFFTkm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 15:40:42 -0400
-Received: by mail-oi1-f194.google.com with SMTP id y6so2470888oix.2;
-        Thu, 06 Jun 2019 12:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VUkpswYzIybLr5sewhlaPDFxgSAlH6oiLrNe/6Vj/Y4=;
-        b=Dn/N9iUbulCQu6csNUyC/Sd/Q29OclRWcXGVVn3cvkGqxy1QpmzlykuZHEjEi8u/uF
-         +E4mfLmAHZ18SJIuP0l6fGggXy5CKBy5e4YzrQlQ6Ql10zvTaQB4GUAKyWtlXeGGC8al
-         TnOW7ehroBj5alYfyLG9gcN5o9OAcjhniAeVtgtgIH70N31ekJSzdH50GMD67+Erpnb7
-         kWJYF4iQ3TZxIeDwiGVB293rQjYRE9ehnt6GclZTuUfHEz7ucBLPAoUuICvmexCqhaTY
-         ohjuvIvSywWGwU7sybu6KvamaVWNU+WXKOEzkAzJr6XPx4UNf7VaKVF2kzWt6tGp3/EI
-         3b3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VUkpswYzIybLr5sewhlaPDFxgSAlH6oiLrNe/6Vj/Y4=;
-        b=JM7En98byk569cfeu2BSIVF+1hVi9GEvlS9ITwyEzVKwU+CyLdQUlpm6vDElTTe2qb
-         /VPipv+fHQdXmIgGv7JNHgMr+GvO3Upu8TY99Y4F/cnC3/E/+Y5zK7C4ji3L0dB6quyk
-         JE6+5VCJnVlMXLrHLqpbJkQ4dPmJR/wFsnHu0Rcr+gFbWTABnkGpEmRi0jgBf0M4KOp6
-         vlp7yFWhpuSnkAnVPbniDg1J+pg5dxXAAuHPnzZAF/77snYqs/fzpgHhz8q2Wta6RWxy
-         GouUShLsxBnL4MVC7nLZBLUS1esC8Qu1/qgFUTryIXT750YqXlK+o//uBcBWlooA3K5D
-         Exnw==
-X-Gm-Message-State: APjAAAXWl3b1yKazbBobgMVa1UUjdF4tJZwlcym650aBKxZNqPJvAmmz
-        sdSTQxFf+pkqMPuxWLwwxQ3DGHkt1NSjYwBqhUY=
-X-Google-Smtp-Source: APXvYqyBhaSoqBuYAPh0SFHkSREbhkUVa6SoyYMKtyObf/ml8cV/SVJ90QjUl5BNaiCLFwiz0/zojjZKJq8zC9p6aKY=
-X-Received: by 2002:aca:f144:: with SMTP id p65mr1253677oih.47.1559850041022;
- Thu, 06 Jun 2019 12:40:41 -0700 (PDT)
+        Thu, 6 Jun 2019 15:42:26 -0400
+Received: from mail-eopbgr710041.outbound.protection.outlook.com ([40.107.71.41]:58368
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726697AbfFFTmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 15:42:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ptGQkAb4bWbtSN8BP3oURGNkwJaEs2OAxlwtlFfplkQ=;
+ b=ZRmSoUY4mz8+F9AD8oQX0pYiQ75tRI5doVUDsD256Uy0wm/Z8au91iuie1vdZ07f5wXmBD4D7Y1hPtbqkWCdCPPYZ1xenLM/WkW4QFybzWOALBqnjhdmL0lhMIBhEAGvtnTpCWlUcWbD6HpGzB6FJbtyop9AJJj+y03Z+GRFAos=
+Received: from MN2PR05MB6208.namprd05.prod.outlook.com (20.178.241.91) by
+ MN2PR05MB6703.namprd05.prod.outlook.com (20.178.249.91) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Thu, 6 Jun 2019 19:42:21 +0000
+Received: from MN2PR05MB6208.namprd05.prod.outlook.com
+ ([fe80::fc2c:24b8:4047:a9a0]) by MN2PR05MB6208.namprd05.prod.outlook.com
+ ([fe80::fc2c:24b8:4047:a9a0%2]) with mapi id 15.20.1965.011; Thu, 6 Jun 2019
+ 19:42:21 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Stable tree <stable@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>
+Subject: Re: [RFC PATCH stable-4.4] coredump: fix race condition between
+ mmget_not_zero()/get_task_mm() and core dumping
+Thread-Topic: [RFC PATCH stable-4.4] coredump: fix race condition between
+ mmget_not_zero()/get_task_mm() and core dumping
+Thread-Index: AQHVHJ/0ITirHCq2DkaXsMkoZ1TuYw==
+Date:   Thu, 6 Jun 2019 19:42:20 +0000
+Message-ID: <5756B041-C0A8-4178-9F5B-7CBF7A554E31@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=akaher@vmware.com; 
+x-originating-ip: [2401:4900:3311:e32e:40b3:dd71:b60:71c9]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 11c9e4b0-efc3-4dea-e448-08d6eab7174f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR05MB6703;
+x-ms-traffictypediagnostic: MN2PR05MB6703:
+x-microsoft-antispam-prvs: <MN2PR05MB6703BA1F73E6460BFB7E2FCFBB170@MN2PR05MB6703.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 00603B7EEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(366004)(39860400002)(199004)(189003)(478600001)(486006)(4326008)(66946007)(46003)(316002)(476003)(186003)(14444005)(6116002)(6916009)(102836004)(53936002)(256004)(14454004)(25786009)(86362001)(83716004)(2906002)(6506007)(7416002)(54906003)(71200400001)(71190400001)(81156014)(33656002)(99286004)(2616005)(6512007)(68736007)(8676002)(73956011)(64756008)(76116006)(66446008)(305945005)(36756003)(66556008)(7736002)(5660300002)(66476007)(229853002)(107886003)(6486002)(82746002)(6246003)(81166006)(8936002)(6436002)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6703;H:MN2PR05MB6208.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SosFWyNtuQTqWPRcXv+U7rmCfdaX8rqjjuLPoH0J/CCHP5RZMh5ge8QQYtCbsAe2tgZtqFRDXE+Izpce0GxgWKuM/BWn7GP/3Yj04cL5LiUxbfcO65t3SG/b0/k8wv1q0j7yMiwawHTIYiBksgQWe2jap5JazchZMin3Txs1fYYU215Tn8k6i3d1ZiSXSGznD2GI9I46zmycIO3o9h1n+dJ/0jl+Eh0c7vsrpVDE+ZzXYjJKU6BHR5Cu39RNip/EqvjPCHmQIscdFHyZ7yh6hib2X27MfL6IDeQbdb2QDB/iLn35pvGBaRG6Lis2meTIfimNJQxtM7QSfHsMd9yDeBQJF+XLi9ZGa5hR4Ds/QGyDWXrfavFNykR0dUd6mtSsqr5s3hM5JHEWR+Ai1O/VzxQd1tH5MtZohIDK2GEIQ3A=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D37DEB9F3DAB484E8D5A6904E695BC12@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190604144714.2009-1-glaroque@baylibre.com> <20190604144714.2009-4-glaroque@baylibre.com>
-In-Reply-To: <20190604144714.2009-4-glaroque@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 6 Jun 2019 21:40:29 +0200
-Message-ID: <CAFBinCAecHbXURFMO5z+TuwFMk_h=QMGqWxTou73Vv0q3011fw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] iio: temperature: add a driver for the temperature
- sensor found in Amlogic Meson G12 SoCs
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     jic23@kernel.org, khilman@baylibre.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11c9e4b0-efc3-4dea-e448-08d6eab7174f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2019 19:42:20.9101
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: akaher@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6703
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guillaume,
-
-below are my initial impressions. I will have a closer look once
-there's a decision whether this belongs to the IIO or thermal
-framework.
-
-On Tue, Jun 4, 2019 at 4:48 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
->
-> The code is based on Amlogic source code. No public datasheet for this.
-the public S922X datasheet from Hardkernel [0] has some documentation
-(starting at page 1106).
-
-[...]
-> +config MESON_TSENSOR
-> +       tristate "Amlogic Meson temperature sensor Support"
-> +       default ARCH_MESON
-> +       depends on OF && ARCH_MESON
-depends on OF && (ARCH_MESON || COMPILE_TEST)
-so all the nice auto-builders / testing tools will speak up if someone
-tries to break your driver
-
-> +       help
-> +         If you say yess here you get support for Meson Temperature sensor
-s/yess/yes/
-
-> +         for G12 SoC Family.
-G12 (which I assume includes G12A and G12B) or G12A?
-
-[...]
-> diff --git a/drivers/iio/temperature/meson_tsensor.c b/drivers/iio/temperature/meson_tsensor.c
-> new file mode 100644
-> index 000000000000..be0a8d073ba3
-> --- /dev/null
-> +++ b/drivers/iio/temperature/meson_tsensor.c
-> @@ -0,0 +1,416 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Amlogic Meson Temperature Sensor
-> + *
-> + * Copyright (C) 2017 Huan Biao <huan.biao@amlogic.com>
-> + * Copyright (C) 2019 Guillaume La Roque <glaroque@baylibre.com>
-> + *
-> + * Register value to celsius temperature formulas:
-> + *     Read_Val            m * U
-> + * U = ---------, Uptat = ---------
-> + *     2^16              1 + n * U
-> + *
-> + * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
-> + *
-> + *  A B m n : calibration parameters
-> + *  u_efuse : fused calibration value, it's a signed 16 bits value
-it's great to have this explained in the docs (instead of having to
-look it up in some out of tree driver, as it's not part of the
-datasheet) - thank you for this!
-
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define TSENSOR_CFG_REG1                       0x4
-> +       #define TSENSOR_CFG_REG1_RSET_VBG       BIT(12)
-> +       #define TSENSOR_CFG_REG1_RSET_ADC       BIT(11)
-> +       #define TSENSOR_CFG_REG1_VCM_EN         BIT(10)
-> +       #define TSENSOR_CFG_REG1_VBG_EN         BIT(9)
-> +       #define TSENSOR_CFG_REG1_OUT_CTL        BIT(6)
-> +       #define TSENSOR_CFG_REG1_FILTER_EN      BIT(5)
-> +       #define TSENSOR_CFG_REG1_DEM_EN         BIT(3)
-> +       #define TSENSOR_CFG_REG1_CH_SEL         GENMASK(1, 0)
-> +       #define TSENSOR_CFG_REG1_ENABLE         \
-> +               (TSENSOR_CFG_REG1_FILTER_EN |   \
-> +                TSENSOR_CFG_REG1_VCM_EN |      \
-> +                TSENSOR_CFG_REG1_VBG_EN |      \
-> +                TSENSOR_CFG_REG1_DEM_EN |      \
-> +                TSENSOR_CFG_REG1_CH_SEL)
-are all of these needed to enabled *and* disable the temperature
-sensor? TSENSOR_CFG_REG1_CH_SEL doesn't seem related when disabling
-the sensor reading (but I don't know since there's no documentation)
-
-> +#define TSENSOR_CFG_REG2                               0x8
-> +       #define TSENSOR_CFG_REG2_HITEMP_EN              BIT(31)
-> +       #define TSENSOR_CFG_REG2_REBOOT_ALL_EN          BIT(30)
-> +       #define TSENSOR_CFG_REG2_REBOOT_TIME            GENMASK(25, 16)
-> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE   \
-> +               (TSENSOR_CFG_REG2_HITEMP_EN |           \
-> +                TSENSOR_CFG_REG2_REBOOT_ALL_EN |       \
-> +                TSENSOR_CFG_REG2_REBOOT_TIME)
-the name mix between TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE and
-TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE_MASK confused me.
-personally I would drop the macros which just bit-wise or multiple
-other macros together
-
-> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE_MASK              \
-> +               (GENMASK(31, 30) | GENMASK(25, 4))
-> +       #define TSENSOR_CFG_REG2_HITEMP_REBOOT_REG_MASK                 \
-> +               GENMASK(15, 4)
-> +       #define TSENSOR_CFG_REG2_HITEMP_REG_VAL(_reg_val)               \
-> +               (FIELD_PREP(TSENSOR_CFG_REG2_HITEMP_REBOOT_REG_MASK,    \
-> +                           _reg_val) |                                 \
-> +                TSENSOR_CFG_REG2_HITEMP_REBOOT_ENABLE)
-> +
-> +#define TSENSOR_CFG_REG3               0xC
-I like to use lower-case hex letters
-and I also pad them -> 0x0c in this case because we have for example 0x10 below)
-
-> +#define TSENSOR_CFG_REG4               0x10
-> +#define TSENSOR_CFG_REG5               0x14
-> +#define TSENSOR_CFG_REG6               0x18
-> +#define TSENSOR_CFG_REG7               0x1C
-> +#define TSENSOR_CFG_REG8               0x20
-> +
-> +#define TSENSOR_STAT0                  0x40
-> +
-> +#define TSENSOR_STAT9                  0x64
-> +
-> +#define TSENSOR_READ_TEMP_MASK         GENMASK(15, 0)
-TSENSOR_STAT0_FILTER_OUT would match the naming from the datasheet
-
-> +#define TSENSOR_TEMP_MASK              GENMASK(11, 0)
->
-> +#define TSENSOR_TRIM_SIGN_MASK         BIT(15)
-> +#define TSENSOR_TRIM_TEMP_MASK         GENMASK(14, 0)
-> +#define TSENSOR_TRIM_VERSION_MASK      GENMASK(31, 24)
-> +
-> +#define TSENSOR_TRIM_VERSION(_version)         \
-> +       FIELD_GET(TSENSOR_TRIM_VERSION_MASK, _version)
-I would drop this and use the FIELD_GET directly where needed (it's
-only one occurrence anyways)
-
-[...]
-> +static int meson_tsensor_enable(struct iio_dev *indio_dev)
-> +{
-> +       struct meson_tsensor *priv = iio_priv(indio_dev);
-> +
-> +       clk_prepare_enable(priv->clk);
-may return an error which you're discarding here
-
-> +       regmap_update_bits(priv->regmap, TSENSOR_CFG_REG1,
-> +                          TSENSOR_CFG_REG1_ENABLE, TSENSOR_CFG_REG1_ENABLE);
-> +
-> +       return 0;
-> +}
-> +
-> +static int meson_tsensor_disable(struct iio_dev *indio_dev)
-> +{
-> +       struct meson_tsensor *priv = iio_priv(indio_dev);
-> +
-> +       regmap_update_bits(priv->regmap, TSENSOR_CFG_REG1,
-> +                          TSENSOR_CFG_REG1_ENABLE, 0);
-> +       clk_disable(priv->clk);
-clk_disable_unprepare as you're calling clk_prepare_enable above?
-
-> +
-> +       return 0;
-make it a void function instead?
-
-> +static const struct regmap_config meson_tsensor_regmap_config_g12a = {
-> +       .reg_bits = 8,
-> +       .val_bits = 32,
-> +       .reg_stride = 4,
-> +       .max_register = TSENSOR_STAT9,
-.fast_io = true
-if you ever need to ACK interrupts from the IRQ handler
-(IIRC fast_io will use a spinlock instead of mutex)
-
-[...]
-> +static const struct of_device_id meson_tsensor_of_match[] = {
-> +       {
-> +               .compatible = "amlogic,meson-g12a-ddr-tsensor",
-> +               .data = &meson_tsensor_g12a_ddr_param,
-> +       },
-> +       {
-> +               .compatible = "amlogic,meson-g12a-cpu-tsensor",
-> +               .data = &meson_tsensor_g12a_cpu_param,
-> +       },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, meson_tsensor_of_match);
-I would move the of_device_id table above the platform_driver definition below
-of_device_get_match_data doesn't need the of_device_id as parameter
-(compared to it's predecessor)
-
-> +static int meson_tsensor_probe(struct platform_device *pdev)
-> +{
-> +       struct meson_tsensor *priv;
-> +       struct iio_dev *indio_dev;
-> +       struct resource *res;
-> +
-> +       int ret;
-> +
-> +       indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*priv));
-> +       if (!indio_dev) {
-> +               dev_err(&pdev->dev, "failed allocating iio device\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       priv = iio_priv(indio_dev);
-> +       priv->data = of_device_get_match_data(&pdev->dev);
-> +       if (!priv->data) {
-> +               dev_err(&pdev->dev, "failed to get match data\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       indio_dev->channels = temperature_channel;
-> +       indio_dev->num_channels = ARRAY_SIZE(temperature_channel);
-> +       indio_dev->name = dev_name(&pdev->dev);
-> +       indio_dev->dev.parent = &pdev->dev;
-> +       indio_dev->dev.of_node = pdev->dev.of_node;
-> +       indio_dev->modes = INDIO_DIRECT_MODE;
-> +       indio_dev->info = &meson_tsensor_iio_info;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       priv->base = devm_ioremap_resource(&pdev->dev, res);
-you're only using priv->base in this function. consider dropping it
-from struct meson_tsensor
-
-
-[0] https://dn.odroid.com/S922X/ODROID-N2/Datasheet/S922X_Public_Datasheet_V0.2.pdf
+DQo+IEZyb206IEFuZHJlYSBBcmNhbmdlbGkgPGFhcmNhbmdlQHJlZGhhdC5jb20+DQo+DQo+IFVw
+c3RyZWFtIDA0ZjU4NjZlNDFmYjcwNjkwZTI4Mzk3NDg3ZDhiZDhlZWE3ZDcxMmEgY29tbWl0Lg0K
+Pg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBNaWNoYWwgSG9ja28gPG1ob2Nrb0BzdXNlLmNvbT4NCj4g
+LS0tDQo+IEhpLA0KPiB0aGlzIGlzIGJhc2VkIG9uIHRoZSBiYWNrcG9ydCBJIGhhdmUgZG9uZSBm
+b3Igb3V0IDQuNCBiYXNlZCBkaXN0cmlidXRpb24NCj4ga2VybmVsLiBQbGVhc2UgZG91YmxlIGNo
+ZWNrIHRoYXQgSSBoYXZlbid0IG1pc3NlZCBhbnl0aGluZyBiZWZvcmUNCj4gYXBwbHlpbmcgdG8g
+dGhlIHN0YWJsZSB0cmVlLiBJIGhhdmUgYWxzbyBDQ2VkIEpvZWwgZm9yIHRoZSBiaW5kZXIgcGFy
+dA0KPiB3aGljaCBpcyBub3QgaW4gdGhlIGN1cnJlbnQgdXBzdHJlYW0gYW55bW9yZSBidXQgSSBi
+ZWxpZXZlIGl0IG5lZWRzIHRoZQ0KPiBjaGVjayBhcyB3ZWxsLg0KPg0KPiBSZXZpZXcgZmVlZGJh
+Y2sgd2VsY29tZS4NCj4NCj4gZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jIHwgIDYgKysrKysrDQo+
+IGZzL3Byb2MvdGFza19tbXUuYyAgICAgICB8IDE4ICsrKysrKysrKysrKysrKysrKw0KPiBmcy91
+c2VyZmF1bHRmZC5jICAgICAgICAgfCAxMCArKysrKysrKy0tDQo+IGluY2x1ZGUvbGludXgvbW0u
+aCAgICAgICB8IDIxICsrKysrKysrKysrKysrKysrKysrKw0KPiBtbS9odWdlX21lbW9yeS5jICAg
+ICAgICAgfCAgMiArLQ0KPiBtbS9tbWFwLmMgICAgICAgICAgICAgICAgfCAgNyArKysrKystDQo+
+IDYgZmlsZXMgY2hhbmdlZCwgNjAgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4NCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYyBiL2RyaXZlcnMvYW5kcm9pZC9i
+aW5kZXIuYw0KPiBpbmRleCAyNjBjZTBlNjAxODcuLjFmYjFjZGRiZDE5YSAxMDA2NDQNCj4gLS0t
+IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jDQo+ICsrKyBiL2RyaXZlcnMvYW5kcm9pZC9iaW5k
+ZXIuYw0KPiBAQCAtNTcwLDYgKzU3MCwxMiBAQCBzdGF0aWMgaW50IGJpbmRlcl91cGRhdGVfcGFn
+ZV9yYW5nZShzdHJ1Y3QgYmluZGVyX3Byb2MgKnByb2MsIGludCBhbGxvY2F0ZSwNCj4gDQo+IAlp
+ZiAobW0pIHsNCj4gCQlkb3duX3dyaXRlKCZtbS0+bW1hcF9zZW0pOw0KPiArCQlpZiAoIW1tZ2V0
+X3N0aWxsX3ZhbGlkKG1tKSkgew0KPiArCQkJaWYgKGFsbG9jYXRlID09IDApDQo+ICsJCQkJZ290
+byBmcmVlX3JhbmdlOw0KDQpQbGVhc2UgY3Jvc3MgY2hlY2ssIGZyZWVfcmFuZ2U6IHNob3VsZCBu
+b3QgZW5kLXVwIHdpdGggbW9kaWZpY2F0aW9ucyBpbiB2bWEuDQogDQo+ICsJCQlnb3RvIGVycl9u
+b192bWE7DQo+ICsJCX0NCj4gKw0KPiAJCXZtYSA9IHByb2MtPnZtYTsNCj4gCQlpZiAodm1hICYm
+IG1tICE9IHByb2MtPnZtYV92bV9tbSkgew0KPiAJCQlwcl9lcnIoIiVkOiB2bWEgbW0gYW5kIHRh
+c2sgbW0gbWlzbWF0Y2hcbiIsDQoNCg0K
