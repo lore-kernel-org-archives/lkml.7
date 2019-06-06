@@ -2,109 +2,91 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F7FC28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B61C46470
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90692207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA17207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 08:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559809567;
+	bh=wDXrpyOwL+LjZfaZjJPUv4duizrtCWxmnrJolZ71jR8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WOkfF+C7yipuYWGFeXEgFWrPFa0Lqw1GT7b95BVgkcZilL4T3ZMRb6vwhdlO9cFR/
+	 YW5xgM1eZk56ZJXC1JcGub7Zwo0kIjrjHg5t5q43Uu6gZ7r60lzSclX7ihEwjv2lv7
+	 dLQdICDtUfPbn8I/MsMhBjSm2LfS8hdDxnZL0AjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfFFIWq (ORCPT
+        id S1727150AbfFFI0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 04:22:46 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41834 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726926AbfFFIWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:22:45 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 902BAE2A83E486A484FC;
-        Thu,  6 Jun 2019 16:22:43 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 6 Jun 2019 16:22:34 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 00/12] net: hns3: some code optimizations & cleanups & bugfixes
-Date:   Thu, 6 Jun 2019 16:20:55 +0800
-Message-ID: <1559809267-53805-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 6 Jun 2019 04:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbfFFI0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:26:05 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD33F20874;
+        Thu,  6 Jun 2019 08:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559809565;
+        bh=wDXrpyOwL+LjZfaZjJPUv4duizrtCWxmnrJolZ71jR8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HumZh8TYb73Se/qjCptWIl11mEusUBQ+ReUkZQ8A4bXwAYmnomCFC7omQBEGVlaOo
+         5TYNbm5g3960qhaFXsiZ+9ln1HD61rrfcu7nWgC3EddPUXIFrA1Uv92x0bxTVn0JyD
+         e8jkFxxPLJS+yZncqYkAAjUaNJEI2C1dMte0jNkc=
+Received: by mail-lj1-f172.google.com with SMTP id t28so1127375lje.9;
+        Thu, 06 Jun 2019 01:26:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAWlb/mC/fZIK6Ufvf4n+9dtPh8xj7FI7BEJR9rdUyv6M5CXpFZu
+        KrOPj69guwBzzGONSmFj/kAzzJttvvfIyw/bUCI=
+X-Google-Smtp-Source: APXvYqwWjg3pXgyMEw427WjUsecZN9+F3YO63TbhH0qDVbkKIS2+97Iz/GaPq28+Hw7zF+Krz2MUFy7B03zMHzYrqlw=
+X-Received: by 2002:a2e:9a9a:: with SMTP id p26mr10201076lji.64.1559809563013;
+ Thu, 06 Jun 2019 01:26:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+References: <CGME20190605165429eucas1p224e803c851c9fd28e3d8737392a8a5c3@eucas1p2.samsung.com>
+ <20190605165410.14606-1-l.luba@partner.samsung.com> <20190605165410.14606-4-l.luba@partner.samsung.com>
+In-Reply-To: <20190605165410.14606-4-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 6 Jun 2019 10:25:51 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdpKRY7SGfXrOREQQP2mx84umthDp_SVuLomqG-whCQxw@mail.gmail.com>
+Message-ID: <CAJKOXPdpKRY7SGfXrOREQQP2mx84umthDp_SVuLomqG-whCQxw@mail.gmail.com>
+Subject: Re: [PATCH v8 03/13] clk: samsung: add BPLL rate table for Exynos
+ 5422 SoC
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set includes code optimizations, cleanups and bugfixes for
-the HNS3 ethernet controller driver.
+On Wed, 5 Jun 2019 at 18:54, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
+> Controller frequencies for driver's DRAM timings.
+>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5420.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
 
-[patch 1/12] logs more detail error info for ROCE RAS errors.
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-[patch 2/12] fixes a wrong size issue for mailbox responding.
-
-[patch 3/12] makes HW GRO handing compliant with SW one.
-
-[patch 4/12] refactors hns3_get_new_int_gl.
-
-[patch 5/12] adds handling for VF's over_8bd_nfe_err.
-
-[patch 6/12 - 12/12] adds some code optimizations and cleanups, to
-make the code more readable and compliant with some static code
-analysis tools, these modifications do not change the logic of
-the code.
-
-Jian Shen (1):
-  net: hns3: small changes for magic numbers
-
-Weihang Li (2):
-  net: hns3: trigger VF reset if a VF has an over_8bd_nfe_err
-  net: hns3: fix some coding style issues
-
-Xiaofei Tan (1):
-  net: hns3: log detail error info of ROCEE ECC and AXI errors
-
-Yonglong Liu (1):
-  net: hns3: Delete the redundant user nic codes
-
-Yufeng Mo (3):
-  net: hns3: use macros instead of magic numbers
-  net: hns3: refactor PF/VF RSS hash key configuration
-  net: hns3: some modifications to simplify and optimize code
-
-Yunsheng Lin (3):
-  net: hns3: make HW GRO handling compliant with SW GRO
-  net: hns3: replace numa_node_id with numa_mem_id for buffer reusing
-  net: hns3: refactor hns3_get_new_int_gl function
-
-Zhongzhu Liu (1):
-  net: hns3: fix wrong size of mailbox responding data
-
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |   2 +-
- drivers/net/ethernet/hisilicon/hns3/hnae3.c        |  21 +-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   7 -
- drivers/net/ethernet/hisilicon/hns3/hns3_dcbnl.c   |  12 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 199 ++++++-----
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  43 +--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  24 ++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c |  19 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 181 +++++++++-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   4 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 391 +++++++++++----------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  26 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |   4 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  | 140 ++++----
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  85 ++---
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   3 +
- 16 files changed, 682 insertions(+), 479 deletions(-)
-
--- 
-2.7.4
-
+Best regards,
+Krzysztof
