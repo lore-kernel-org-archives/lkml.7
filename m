@@ -2,96 +2,131 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83662C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B98C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F5720673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E2720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:18:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g9cYwVye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfFFPSf (ORCPT
+        id S1729241AbfFFPSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:18:35 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:51237 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729015AbfFFPSd (ORCPT
+        Thu, 6 Jun 2019 11:18:31 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37722 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728916AbfFFPSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:18:33 -0400
-X-UUID: 5fb22adf88d34f0fb2e5dba7a463049b-20190606
-X-UUID: 5fb22adf88d34f0fb2e5dba7a463049b-20190606
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 972181061; Thu, 06 Jun 2019 23:18:24 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 6 Jun 2019 23:18:22 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 6 Jun 2019 23:18:22 +0800
-Message-ID: <1559834302.3339.1.camel@mtkswgap22>
-Subject: Re: [PATCH v3 1/2] mt76: mt7615: enable support for mesh
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Sebastian Gottschall <s.gottschall@newmedia-net.de>
-CC:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Chih-Min Chen <chih-min.Chen@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Thu, 6 Jun 2019 23:18:22 +0800
-In-Reply-To: <a0a6f631-2eb1-87cc-5653-338c6126690c@newmedia-net.de>
-References: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
-         <a0a6f631-2eb1-87cc-5653-338c6126690c@newmedia-net.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Jun 2019 11:18:31 -0400
+Received: by mail-it1-f196.google.com with SMTP id x22so548534itl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 08:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+Czz2YJ7892NSsTQIUl/eIZo5zHlJk+9baf2OTNB6U0=;
+        b=g9cYwVyeaSTJ4J3DPXQfg7qNzmOZHt86bELF+Z9EwhydQbsHg68LqzYVRluTpmW4hn
+         lcSV0N7uV+jNQm0/Cbc12coiRdBCPFmmwPh9MUw7M5DX/C37GJ9bF7olW7lMtzvQ7MqD
+         4DnOx8YLETBZePvU2bW7nAHhb6VeAuQz7Som64e2OWsA/heLTuuxzjH0l3PweWblnAUo
+         1u4mts1yPfrl9NdEsx6qEa5iohK0qPO3/9k+s0VtMNXX0lhHer5/LtJwmJcs1OtBhyly
+         lCta6YwqJnjE/LxvVBHppNI3SnOAQhi5EyKs0SyY7tQPnKFhC+pXb5/YsGwzmEjDrcmM
+         qc1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Czz2YJ7892NSsTQIUl/eIZo5zHlJk+9baf2OTNB6U0=;
+        b=jMsLNoQ8af4hCeJtwtuFhJnz61+jZf2Mbsf+XYtWkl4B9AEROTWnxr+efO7A1kYs5v
+         /wYZ7RKIMPcJ1alF/2+UfodOXTyzpifdgdbbiUB01VvKBi3Rp2xeIqlgL9yLEVLwRn7X
+         C+1bcH0QcVFTahux1l6nFu1EibvMzZX8puRxbVZfcYQgKYx6VAg+A3LuNoBbIBGD/wOa
+         dwxpgLNrhWEpX8W7VCYUUq3IzDyE4i+vol1cwR8umha9a/CPxhgega3HTfmfrDzyBy9b
+         RK6iKbRVhuMWr7JlzpRdXWOJfASjFJYsM+E/QM6W2vjBxhz0W8t4jvmLf2u2lc9QIdgi
+         DDFA==
+X-Gm-Message-State: APjAAAWCtxWsRQ6ACgNneMAiG/7OIYQA9KSDgLBoQoCTH5ePvgMEHCVT
+        cnvsebjCeVqKxLhWYyhtfsMNz9E5qM8g9qh5kAlqPw==
+X-Google-Smtp-Source: APXvYqwD2/luGyw6rZrr4tRLwqYRE9SKSMYafHefhObPoppO7e8fH0bBzADF2n3XhHPwe3aohkyZGQ4yMO925zAA7W0=
+X-Received: by 2002:a02:1384:: with SMTP id 126mr29101248jaz.72.1559834310297;
+ Thu, 06 Jun 2019 08:18:30 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
+References: <0000000000005a4b99058a97f42e@google.com> <b67a0f5d-c508-48a7-7643-b4251c749985@virtuozzo.com>
+ <20190606131334.GA24822@fieldses.org> <275f77ad-1962-6a60-e60b-6b8845f12c34@virtuozzo.com>
+ <CACT4Y+aJQ6J5WdviD+cOmDoHt2Dj=Q4uZ4vHbCfHe+_TCEY6-Q@mail.gmail.com> <00ec828a-0dcb-ca70-e938-ca26a6a8b675@virtuozzo.com>
+In-Reply-To: <00ec828a-0dcb-ca70-e938-ca26a6a8b675@virtuozzo.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 6 Jun 2019 17:18:19 +0200
+Message-ID: <CACT4Y+aZNxZyhJEjZjxYqh34BKz+VnfZPpZO9rDn0B_9Z_gZcw@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in unregister_shrinker
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, bfields@redhat.com,
+        Chris Down <chris@chrisdown.name>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>, guro@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jeff Layton <jlayton@kernel.org>, laoar.shao@gmail.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-nfs@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yang.shi@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-06 at 12:14 +0200, Sebastian Gottschall wrote:
-> in addition you should take care about this problem which is raised up 
-> if SAE is used. since AES-CMAC required tid to be non zero
-> 
-> WARNING: CPU: 2 PID: 15324 at 
-> /home/seg/DEV/mt7621/src/router/private/compat-wireless-2017-09-03/net/mac80211/key.c:1096 
-> mt76_wcid_key_setup+0x58/0x9c [mt76]
-> Modules linked in: shortcut_fe gcm ghash_generic ctr gf128mul mt7615e 
-> mt76 mac80211 compat
-> CPU: 2 PID: 15324 Comm: wpa_supplicant Tainted: G        W 4.14.123 #106
-> Stack : 00000000 87c2d000 00000000 8007d8b4 80480000 80482b9c 80610000 
-> 805a4390
->          8057e2b4 854fb99c 87ed045c 805e4767 80578288 00000001 854fb940 
-> 805e9f78
->          00000000 00000000 80640000 00000000 81147bb8 00000584 00000007 
-> 00000000
->          00000000 80650000 80650000 20202020 80000000 00000000 80610000 
-> 872b9fe0
->          872a2b14 00000448 00000000 87c2d000 00000010 8022d660 00000008 
-> 80640008
->          ...
-> Call Trace:
-> [<800153e0>] show_stack+0x58/0x100
-> [<8042e83c>] dump_stack+0x9c/0xe0
-> [<800349f0>] __warn+0xe4/0x144
-> [<8003468c>] warn_slowpath_null+0x1c/0x30
-> [<872b9fe0>] mt76_wcid_key_setup+0x58/0x9c [mt76]
-> [<87611690>] mt7615_eeprom_init+0x7b4/0xe9c [mt7615e]
-> ---[ end trace e24aeb4b542e0dea ]---
+On Thu, Jun 6, 2019 at 4:54 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>
+> On 06.06.2019 17:40, Dmitry Vyukov wrote:
+> > On Thu, Jun 6, 2019 at 3:43 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> >>
+> >> On 06.06.2019 16:13, J. Bruce Fields wrote:
+> >>> On Thu, Jun 06, 2019 at 10:47:43AM +0300, Kirill Tkhai wrote:
+> >>>> This may be connected with that shrinker unregistering is forgotten on error path.
+> >>>
+> >>> I was wondering about that too.  Seems like it would be hard to hit
+> >>> reproduceably though: one of the later allocations would have to fail,
+> >>> then later you'd have to create another namespace and this time have a
+> >>> later module's init fail.
+> >>
+> >> Yes, it's had to bump into this in real life.
+> >>
+> >> AFAIU, syzbot triggers such the problem by using fault-injections
+> >> on allocation places should_failslab()->should_fail(). It's possible
+> >> to configure a specific slab, so the allocations will fail with
+> >> requested probability.
+> >
+> > No fault injection was involved in triggering of this bug.
+> > Fault injection is clearly visible in console log as "INJECTING
+> > FAILURE at this stack track" splats and also for bugs with repros it
+> > would be noted in the syzkaller repro as "fault_call": N. So somehow
+> > this bug was triggered as is.
+> >
+> > But overall syzkaller can do better then the old probabilistic
+> > injection. The probabilistic injection tend to both under-test what we
+> > want to test and also crash some system services. syzkaller uses the
+> > new "systematic fault injection" that allows to test specifically each
+> > failure site separately in each syscall separately.
+>
+> Oho! Interesting.
 
-This is fixed by Lorenzo's patch -
-https://patchwork.kernel.org/patch/10976191/
-
-Thanks.
-Ryder
-
+If you are interested. You write N into /proc/thread-self/fail-nth
+(say, 5) then it will cause failure of the N-th (5-th) failure site in
+the next syscall in this task only. And by reading it back after the
+syscall you can figure out if the failure was indeed injected or not
+(or the syscall had less than 5 failure sites).
+Then, for each syscall in a test (or only for one syscall of
+interest), we start by writing "1" into /proc/thread-self/fail-nth; if
+the failure was injected, write "2" and restart the test; if the
+failure was injected, write "3" and restart the test; and so on, until
+the failure wasn't injected (tested all failure sites).
+This guarantees systematic testing of each error path with minimal
+number of runs. This has obvious extensions to "each pair of failure
+sites" (to test failures on error paths), but it's not supported atm.
