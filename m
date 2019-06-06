@@ -2,79 +2,103 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACB5C46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526E6C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0D9208CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271DD2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559852414;
-	bh=Enbhr0t4DrJHwsF0RYBPkQa9lvUyfpzeuvhT2rjVbA8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QoJDRfMgiwVzQ/4/hBNAi6y55eHqmSqxt2Gr4TJ2ViRBv0yHRxwkfSFZCmAAyqyZn
-	 M4875iYAL91Nk9OJ9OzcmQM8BQCV1a6O1bE5CUwEudwsvJmHQpgmAwciBh/dTasLIi
-	 i6qxc7D3RDcrZue78bLXW0eOW0YDtMiibm++8cxQ=
+	s=default; t=1559852740;
+	bh=DKhd22QxqBDA4KYT2cEZlqhYj/PumKxUwK/zMkdDIFM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=APqp7FofIx4TAfVIMkcAzyV/fV9biwNviYDKKo58ZIJKmJbKjrQdWxl8qo7ek1L7g
+	 m9LBlmLueW35hNWKCu6TYjjPq+MVp+m/XKZGmjhUOswxJLsEoMFfd6fp5rbqE7TGrC
+	 RYbPHgYHTWGWCfdgT+ysVukNPh4ba8OC71P6r2/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfFFUUN (ORCPT
+        id S1726633AbfFFUZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:20:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56350 "EHLO mail.kernel.org"
+        Thu, 6 Jun 2019 16:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726238AbfFFUUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:20:12 -0400
-Subject: Re: [GIT] Crypto Fixes for 5.2
+        id S1726292AbfFFUZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:25:37 -0400
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 324CA21479
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 20:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559852412;
-        bh=Enbhr0t4DrJHwsF0RYBPkQa9lvUyfpzeuvhT2rjVbA8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=doUi+nMSSGxUu4ryIdBi1Vo+gNHhx6mKag8EslupaaO5n8gLoF0g+Tmw0/0m3V+Rv
-         n7NYeWzco3SCMEACLdTl/Sl3pgtPm+jQuSyBBVh1zWTSe7YCfo1A1crywCqF8bGLyK
-         1iEaaq9l+HNN+/ydUrXWJL4LGjV4ETmYWbAnhOTU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190606060324.du5zbk3ju5djkhfe@gondor.apana.org.au>
-References: <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
- <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
- <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
- <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
- <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
- <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
- <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
- <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
- <20190606060324.du5zbk3ju5djkhfe@gondor.apana.org.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190606060324.du5zbk3ju5djkhfe@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: 7829a0c1cb9c80debfb4fdb49b4d90019f2ea1ac
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ae8766042beee814c9e16e9ae1e84cd6eaa7ffaa
-Message-Id: <155985241232.29387.3663283585345390700.pr-tracker-bot@kernel.org>
-Date:   Thu, 06 Jun 2019 20:20:12 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        s=default; t=1559852736;
+        bh=DKhd22QxqBDA4KYT2cEZlqhYj/PumKxUwK/zMkdDIFM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=G0CVtpqeJtYYi6ZVaBFtvvXvsAJWteRf+Hozt3FdnG/AgCfB13Ad6uwZ0nLaLABj2
+         Ly/i51Lug8kHTeKHt0sOEyAEaFq4S0eb4MTCLoZsHoQIebL3w5+kFZd//YQMmGUiXU
+         4WkplG7Ari2A2w0tOQzaO/RkIK0JrHzIWXgmzQyU=
+Received: by mail-wr1-f47.google.com with SMTP id e16so3766652wrn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 13:25:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAWfA269NKfVTK08uuvegUeuCfJnnLcu/wLLs+QrOj/ThXzwn86v
+        J2hte0EW+UlL8dCCV9qcznrm4Fn6s1I1nGLfldaMhg==
+X-Google-Smtp-Source: APXvYqyiVg/qughgzdZroKp3BApJXIniApUU+56AdTnkB3j3XqqcAGvsvRwbxtgUhLtiuuaGb5s/W6OHjaS71guGj14=
+X-Received: by 2002:adf:f2c8:: with SMTP id d8mr4513620wrp.221.1559852734693;
+ Thu, 06 Jun 2019 13:25:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com> <20190606200926.4029-11-yu-cheng.yu@intel.com>
+In-Reply-To: <20190606200926.4029-11-yu-cheng.yu@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 6 Jun 2019 13:25:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrUZ9vu8+9WrMcMdV6DvmB3nRQmLjd5_uDk8x1NMQUtPpg@mail.gmail.com>
+Message-ID: <CALCETrUZ9vu8+9WrMcMdV6DvmB3nRQmLjd5_uDk8x1NMQUtPpg@mail.gmail.com>
+Subject: Re: [PATCH v7 10/14] x86/vdso/32: Add ENDBR32 to __kernel_vsyscall
+ entry point
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 6 Jun 2019 14:03:24 +0800:
+On Thu, Jun 6, 2019 at 1:17 PM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+>
+> From: "H.J. Lu" <hjl.tools@gmail.com>
+>
+> Add ENDBR32 to __kernel_vsyscall entry point.
+>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+Acked-by: Andy Lutomirski <luto@kernel.org>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ae8766042beee814c9e16e9ae1e84cd6eaa7ffaa
+However, you forgot your own Signed-off-by.
 
-Thank you!
+> Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+
+--Andy
