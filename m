@@ -2,88 +2,130 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2684C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7897BC28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE6B20645
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2A72067C
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:44:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfFFNmn (ORCPT
+        id S1728428AbfFFNoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:42:43 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:41208 "EHLO deadmen.hmeau.com"
+        Thu, 6 Jun 2019 09:44:03 -0400
+Received: from relay.sw.ru ([185.231.240.75]:33160 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727009AbfFFNmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:42:43 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hYsfB-000705-Ue; Thu, 06 Jun 2019 21:42:41 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hYsf3-0007Q1-NW; Thu, 06 Jun 2019 21:42:33 +0800
-Date:   Thu, 6 Jun 2019 21:42:33 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH RFC tip/core/rcu] Restore barrier() to rcu_read_lock()
- and rcu_read_unlock()
-Message-ID: <20190606134233.saqa3insjv75xu6o@gondor.apana.org.au>
-References: <20190606131933.GA12576@linux.ibm.com>
+        id S1726092AbfFFNoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 09:44:03 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hYsgC-0008Uh-Hh; Thu, 06 Jun 2019 16:43:44 +0300
+Subject: Re: KASAN: use-after-free Read in unregister_shrinker
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     syzbot <syzbot+83a43746cebef3508b49@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, bfields@redhat.com,
+        chris@chrisdown.name, daniel.m.jordan@oracle.com, guro@fb.com,
+        hannes@cmpxchg.org, jlayton@kernel.org, laoar.shao@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, mgorman@techsingularity.net,
+        mhocko@suse.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com, yang.shi@linux.alibaba.com
+References: <0000000000005a4b99058a97f42e@google.com>
+ <b67a0f5d-c508-48a7-7643-b4251c749985@virtuozzo.com>
+ <20190606131334.GA24822@fieldses.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <275f77ad-1962-6a60-e60b-6b8845f12c34@virtuozzo.com>
+Date:   Thu, 6 Jun 2019 16:43:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606131933.GA12576@linux.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190606131334.GA24822@fieldses.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 06:19:33AM -0700, Paul E. McKenney wrote:
-> Commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny and Tree
-> RCU readers") removed the barrier() calls from rcu_read_lock() and
-> rcu_write_lock() in CONFIG_PREEMPT=n&&CONFIG_PREEMPT_COUNT=n kernels.
-> Within RCU, this commit was OK, but it failed to account for things like
-> get_user() that can pagefault and that can be reordered by the compiler.
-> Lack of the barrier() calls in rcu_read_lock() and rcu_read_unlock()
-> can cause these page faults to migrate into RCU read-side critical
-> sections, which in CONFIG_PREEMPT=n kernels could result in too-short
-> grace periods and arbitrary misbehavior.  Please see commit 386afc91144b
-> ("spinlocks and preemption points need to be at least compiler barriers")
-> for more details.
+On 06.06.2019 16:13, J. Bruce Fields wrote:
+> On Thu, Jun 06, 2019 at 10:47:43AM +0300, Kirill Tkhai wrote:
+>> This may be connected with that shrinker unregistering is forgotten on error path.
 > 
-> This commit therefore restores the barrier() call to both rcu_read_lock()
-> and rcu_read_unlock().  It also removes them from places in the RCU update
-> machinery that used to need compensatory barrier() calls, effectively
-> reverting commit bb73c52bad36 ("rcu: Don't disable preemption for Tiny
-> and Tree RCU readers").
+> I was wondering about that too.  Seems like it would be hard to hit
+> reproduceably though: one of the later allocations would have to fail,
+> then later you'd have to create another namespace and this time have a
+> later module's init fail.
+
+Yes, it's had to bump into this in real life.
+
+AFAIU, syzbot triggers such the problem by using fault-injections
+on allocation places should_failslab()->should_fail(). It's possible
+to configure a specific slab, so the allocations will fail with
+requested probability.
+ 
+> This is the patch I have, which also fixes a (probably less important)
+> failure to free the slab cache.
 > 
-> Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> --b.
+> 
+> commit 17c869b35dc9
+> Author: J. Bruce Fields <bfields@redhat.com>
+> Date:   Wed Jun 5 18:03:52 2019 -0400
+> 
+>     nfsd: fix cleanup of nfsd_reply_cache_init on failure
+>     
+>     Make sure everything is cleaned up on failure.
+>     
+>     Especially important for the shrinker, which will otherwise eventually
+>     be freed while still referred to by global data structures.
+>     
+>     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> 
+> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> index ea39497205f0..3dcac164e010 100644
+> --- a/fs/nfsd/nfscache.c
+> +++ b/fs/nfsd/nfscache.c
+> @@ -157,12 +157,12 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
+>  	nn->nfsd_reply_cache_shrinker.seeks = 1;
+>  	status = register_shrinker(&nn->nfsd_reply_cache_shrinker);
+>  	if (status)
+> -		return status;
+> +		goto out_nomem;
+>  
+>  	nn->drc_slab = kmem_cache_create("nfsd_drc",
+>  				sizeof(struct svc_cacherep), 0, 0, NULL);
+>  	if (!nn->drc_slab)
+> -		goto out_nomem;
+> +		goto out_shrinker;
+>  
+>  	nn->drc_hashtbl = kcalloc(hashsize,
+>  				sizeof(*nn->drc_hashtbl), GFP_KERNEL);
+> @@ -170,7 +170,7 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
+>  		nn->drc_hashtbl = vzalloc(array_size(hashsize,
+>  						 sizeof(*nn->drc_hashtbl)));
+>  		if (!nn->drc_hashtbl)
+> -			goto out_nomem;
+> +			goto out_slab;
+>  	}
+>  
+>  	for (i = 0; i < hashsize; i++) {
+> @@ -180,6 +180,10 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
+>  	nn->drc_hashsize = hashsize;
+>  
+>  	return 0;
+> +out_slab:
+> +	kmem_cache_destroy(nn->drc_slab);
+> +out_shrinker:
+> +	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
+>  out_nomem:
+>  	printk(KERN_ERR "nfsd: failed to allocate reply cache\n");
+>  	return -ENOMEM;
 
-Paul, Linus has already commited his patch:
+Looks OK for me. Feel free to add my reviewed-by if you want.
 
-commit 66be4e66a7f422128748e3c3ef6ee72b20a6197b
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon Jun 3 13:26:20 2019 -0700
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 
-    rcu: locking and unlocking need to always be at least barriers
-
-So you'll need to rebase this.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
