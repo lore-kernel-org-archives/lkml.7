@@ -2,94 +2,74 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F6DC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9BAC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34602089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559827593;
-	bh=+YFE5KfxRqfYtx6rWWzBRcfeTGDL0h4C05kyoVGm8/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hvg7hKyC28dPfo0r6nZLohid50LR9yr3qcRRoEm5zVyDiiv6WulEdkHWg7YSLX0bT
-	 LKszKIgtE0egksqffVIZcaG4fEwL4UW/qp5kb4WqTMgA0tkb9KNZCaBL8r6KvytB4x
-	 5uir3Nl6L2zRVAswYjwJpd5jmU6ewnPV/9tuDJb0=
+	by mail.kernel.org (Postfix) with ESMTP id CB1FC20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfFFN0d (ORCPT
+        id S1728032AbfFFN1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:26:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbfFFN0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:26:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEAA520866;
-        Thu,  6 Jun 2019 13:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559827592;
-        bh=+YFE5KfxRqfYtx6rWWzBRcfeTGDL0h4C05kyoVGm8/E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2TQ96GlbngiJ3UHV2MJizMMOMHTKuu8n0r9WABtfcnIaw3SsHmWEKeHcYck6Z0RpA
-         ttXxBM44zNh+0vE0zX5s5CO3KrAj4B0NbxOBeU4p19sfHBxKUXPwFKHbn/tM2Vt/Qf
-         rMegbanfCqBR641qvx9IOaLkNRj9FYuVpKos0x1o=
-Date:   Thu, 6 Jun 2019 15:26:29 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dragan Cvetic <dragan.cvetic@xilinx.com>
-Cc:     arnd@arndb.de, michal.simek@xilinx.com,
-        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>
-Subject: Re: [PATCH V4 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Message-ID: <20190606132629.GB7943@kroah.com>
-References: <1558784245-108751-1-git-send-email-dragan.cvetic@xilinx.com>
- <1558784245-108751-5-git-send-email-dragan.cvetic@xilinx.com>
+        Thu, 6 Jun 2019 09:27:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35968 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfFFN1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 09:27:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 61DACAEB8;
+        Thu,  6 Jun 2019 13:27:44 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 15:27:43 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] livepatch: Use static buffer for debugging messages
+ under rq lock
+Message-ID: <20190606132743.sy6viyd6mt7te6ar@pathway.suse.cz>
+References: <20190531074147.27616-1-pmladek@suse.com>
+ <20190531074147.27616-4-pmladek@suse.com>
+ <20190531193908.nltikmafed36iozh@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558784245-108751-5-git-send-email-dragan.cvetic@xilinx.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190531193908.nltikmafed36iozh@treble>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 12:37:17PM +0100, Dragan Cvetic wrote:
-> Add char device interface per DT node present and support
-> file operations:
-> - open(),
-> - close(),
-> - unlocked_ioctl(),
-> - compat_ioctl().
+On Fri 2019-05-31 14:39:08, Josh Poimboeuf wrote:
+> On Fri, May 31, 2019 at 09:41:47AM +0200, Petr Mladek wrote:
+> > The err_buf array uses 128 bytes of stack space.  Move it off the stack
+> > by making it static.  It's safe to use a shared buffer because
+> > klp_try_switch_task() is called under klp_mutex.
+> > 
+> > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> > Acked-by: Miroslav Benes <mbenes@suse.cz>
+> > Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 > 
-> Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
-> Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> ---
->  drivers/misc/xilinx_sdfec.c      | 57 +++++++++++++++++++++++++++++++++++++---
->  include/uapi/misc/xilinx_sdfec.h |  4 +++
->  2 files changed, 58 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-> index ff32d29..740b487 100644
-> --- a/drivers/misc/xilinx_sdfec.c
-> +++ b/drivers/misc/xilinx_sdfec.c
-> @@ -51,7 +51,6 @@ struct xsdfec_clks {
->   * @regs: device physical base address
->   * @dev: pointer to device struct
->   * @config: Configuration of the SDFEC device
-> - * @open_count: Count of char device being opened
+> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Why is this removed here?  You don't add something in one patch and then
-remove it in a later one if it's never needed :)
+The patch is committed into for-5.3/core branch.
 
-thanks,
+Note that the branch is based on the last merge from livepatch.git.
+As a result, the sefttest fails because of the regression in
+the reliable stacktrace code.
 
-greg k-h
+You might want to base your development on the for-next branch.
+Or you chould cherry pick the commit 7eaf51a2e094229b75cc0c31
+("[PATCH] stacktrace: Unbreak stack_trace_save_tsk_reliable()").
+
+Best Regards,
+Petr
+
+PS: I am leaving the fate of the other two patches into Miroslav's
+hands ;-)
