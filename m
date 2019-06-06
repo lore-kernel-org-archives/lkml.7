@@ -2,98 +2,91 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CD2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514C6C28CC5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DEA0206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:00:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9qObc4i"
+	by mail.kernel.org (Postfix) with ESMTP id 27ACC206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 02:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559786433;
+	bh=iLIh1cF5PrdXT/fdIuzZB/k+k3Z+d0zIq2E9MelXmLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kcy3tr91sn49npyw5c9MP5Mq0XQcwdZkjyDyhEHRLX0Ss7oy6zfI5O/g8g3VIGyga
+	 2J4dEkU73E4tMRcDlemwMifDh0zzZH+mTEsgOIexQipamObUAFU8ZKh97PRL1PpMPt
+	 12PfEabWK61GQx1SxBrC1IoU/bmwUYNissBB7ulQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfFFCAR (ORCPT
+        id S1726742AbfFFCAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 22:00:17 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33379 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfFFCAR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 22:00:17 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x15so483715pfq.0;
-        Wed, 05 Jun 2019 19:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=x7qwOsCUljcPtS0zwGfT/F7OR260b2vj2I2Z3hV+0Vw=;
-        b=A9qObc4i5vO0woGJ3cg3uISuB5bxnGAL/+ozW+EhdwWNA31g3TMfQIeiD5NULF0cA2
-         XYZKt9Jel0pAbExfDGszMRiWtFxOpGfUZdzBnjShNA3K+lfXeNSH6udRdX4+puQDg2Y3
-         4HSQpALDaGVvKEKK2Q4DCpxqaNlx8q8f/AlKyRGLaqveYSPvXZC8oE3oNSHS2Hk2CGnh
-         p9SnF9IXb0e4J7wrfzdmPNULuKTVJg32mDvQFvYY7krDNRSOIu4cONvhSRc4KkUsAOxj
-         F0C9aaJ/XPNJmEbCyy10tF+mMPxNlNPvj2B/tzf8ZVFX2a67suPLpO5ksNbmU4VFxdPX
-         x9rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=x7qwOsCUljcPtS0zwGfT/F7OR260b2vj2I2Z3hV+0Vw=;
-        b=W7eqkk5JUNtAW2wUmL+wb/i/zXcKdTR1FvIM22+tKU4vk9mxqSxGPJTftEI19pW+Hf
-         fV4nTd0EPvDS1SnLEaytcSvw4sZRRtfd2J6nTYF/I1fgI4M5dbsc56s9B3NL0h+YZnAE
-         XNo3Gq79coTax+xjbW+kMUtVBNhq/wPcPk1V6kSeOcaPohamw6+Fw0mvivz30LJpEL4U
-         jZmMyqeRfImN5oQxoDnbsW49jAJDPTiiK8Q9vI48O3HppTJyWHSyu2xWkROeDcTTBwiS
-         VS5Zf6iplcqmp5T3yCYf+7jwm5BnCNKh2nDjjJTNIh70b1rE08otSKy3/TUUytYPCvhO
-         E0Uw==
-X-Gm-Message-State: APjAAAWZt4lD+14jNZhlami1UGTmssTyPM6NP9MukW4PXbQZ4946H+ar
-        J1FRGVrdrsqQct6YP2KNvcg=
-X-Google-Smtp-Source: APXvYqyPmqa7lqmty0IqA8/OiwgJIYtWHbs/vn7I7gtRg48rBH4l7U9lXE5gPHXIQWvvzkHtLfXb+w==
-X-Received: by 2002:a63:de53:: with SMTP id y19mr884162pgi.166.1559786416299;
-        Wed, 05 Jun 2019 19:00:16 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id k14sm185234pga.5.2019.06.05.19.00.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Jun 2019 19:00:15 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        marc.w.gonzalez@free.fr, jcrouse@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2 0/3] MSM8998 GPUCC Support
-Date:   Wed,  5 Jun 2019 18:58:44 -0700
-Message-Id: <20190606015844.2285-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 5 Jun 2019 22:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbfFFCAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 22:00:31 -0400
+Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12B4420866;
+        Thu,  6 Jun 2019 02:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559786431;
+        bh=iLIh1cF5PrdXT/fdIuzZB/k+k3Z+d0zIq2E9MelXmLg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dv5TTeCz1d2AZNEaYK00A5nsKms4beVe0/HMpGnLt7s6oxOYmK2ryuXseFxDkgcoG
+         KMffspjP3zcZ58h0JhogAVnnqLlErgIspfCvlalaTD+KafiKyvMPhYsWg94oU8mZmw
+         iN+ojzDvSH7u11XjJvT8HPYB5hzRXhx0B99kMI7A=
+Date:   Thu, 6 Jun 2019 10:00:09 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, arm@kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexander Shiyan <shc_work@mail.ru>
+Subject: Re: [PATCH v2] ARM: config: Remove left-over BACKLIGHT_LCD_SUPPORT
+Message-ID: <20190606020008.GT29853@dragon>
+References: <1559633061-28003-1-git-send-email-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559633061-28003-1-git-send-email-krzk@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Adreno GPU on MSM8998 has its own clock controller, which is a
-dependency for bringing up the GPU.  This series gets the gpucc all in
-place as another step on the road to getting the GPU enabled.
+On Tue, Jun 04, 2019 at 09:24:21AM +0200, Krzysztof Kozlowski wrote:
+> The CONFIG_BACKLIGHT_LCD_SUPPORT was removed in commit 8c5dc8d9f19c
+> ("video: backlight: Remove useless BACKLIGHT_LCD_SUPPORT kernel
+> symbol"). Options protected by CONFIG_BACKLIGHT_LCD_SUPPORT are now
+> available directly.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 1. Change also mini2440_defconfig.
+> ---
+...
+>  arch/arm/configs/mxs_defconfig            | 1 -
 
-v2:
--drop desd code
-
-Jeffrey Hugo (3):
-  dt-bindings: clock: Document gpucc for msm8998
-  clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver
-  arm64: dts: qcom: msm8998: Add gpucc node
-
- .../devicetree/bindings/clock/qcom,gpucc.txt  |   4 +-
- arch/arm64/boot/dts/qcom/msm8998.dtsi         |  15 +
- drivers/clk/qcom/Kconfig                      |   8 +
- drivers/clk/qcom/Makefile                     |   1 +
- drivers/clk/qcom/gpucc-msm8998.c              | 364 ++++++++++++++++++
- .../dt-bindings/clock/qcom,gpucc-msm8998.h    |  29 ++
- 6 files changed, 420 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/qcom/gpucc-msm8998.c
- create mode 100644 include/dt-bindings/clock/qcom,gpucc-msm8998.h
-
--- 
-2.17.1
-
+Acked-by: Shawn Guo <shawnguo@kernel.org>
