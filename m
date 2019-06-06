@@ -2,90 +2,135 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CF6C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485C5C28EB4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3BF208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205BD2053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stIiNeN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfFFUMA (ORCPT
+        id S1728604AbfFFUMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:12:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58646 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727082AbfFFUMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:12:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7B49AAF8A;
-        Thu,  6 Jun 2019 20:11:58 +0000 (UTC)
+        Thu, 6 Jun 2019 16:12:03 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41667 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfFFUMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:12:02 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 107so3173852otj.8;
+        Thu, 06 Jun 2019 13:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZplH1ueYIFTxbhcNaq6d9TNtLXhmYa3vn9NLw27k9Lg=;
+        b=stIiNeN9hdh/mk6PIsJUOcTV5NamnY+Y+K3zQGA/YUbAsxjwv51CGIsZSrrY1ygC5u
+         Ndjv8UvipwdJcvPnTGbXklxessOCWoR2PVsRgn7tauT5lgtngZvoq0M5wzWL7bpi+g9N
+         XdwMm8VvjAqoO3mCTAqphKPLlYiLz7IABHFHrfYUGnBPM8P1Wd0eWhQJWHzUz4Z2bgQq
+         2DwHS6Z2slz5m7Tq6KXezIEwPtYEhG/fj5ic/eCici/bSdauJ1rFG44EgZ55tfYqAAfr
+         Bspd6Y2TT//5MgX+Hb8pqXXVcU7WnLCRyajfW6952doLGSTff8CYoBhTEP+0DjqoAG8E
+         bXtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZplH1ueYIFTxbhcNaq6d9TNtLXhmYa3vn9NLw27k9Lg=;
+        b=Cl3oEWk1xcCSVjdvqwMw/NaC3j9M6bZQUhJuYaPFMdGfs0LR0pQVHXkHgJoDwNT8zK
+         KYxVQtptksJCd8bq2WgrHNWUPrvH7iQquPxwmG5sNafz5FvQzx8tddYC+uPM11HjCYyH
+         xVINBhSwaHdJxSHG7VFFkVxDOgsSomZPLe8Sj1Um7Bp65rKfVgBtOyMC/G+rUq/PmAgE
+         WFnJPj044z+/qzd7EUf1u9B/ILdSNF8TQUO3eP+ugnlSRbsW4IawRXK8RojQjSBQG7/4
+         eYSuNN3fITJKBQrMYJWxTsQW8g+8fjU0c+4y2CyRDcV1gcB8O5ZYLgrEH5Xq1W+yPTe9
+         jzcQ==
+X-Gm-Message-State: APjAAAUXT2CxGlwuMuZuyuwGZFBMjLlW+xmoz2e5u7MjPwQK0ZE/nYJY
+        1pF2DR6ptTqkz5yqJfgN9ocypUUm
+X-Google-Smtp-Source: APXvYqz5aiOuHakWTOD3QUBMVJRMbspstMuG5nak7/mBIuhot/sBvNQAywuKuD4N3fv4rPTfgxvGyA==
+X-Received: by 2002:a9d:2f69:: with SMTP id h96mr15834204otb.366.1559851921100;
+        Thu, 06 Jun 2019 13:12:01 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id a15sm2187otl.20.2019.06.06.13.11.56
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 13:11:56 -0700 (PDT)
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+To:     Christoph Hellwig <hch@lst.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+ <dfe6451c93574b61d4bdde4a05c5f8ccf86b31a0.camel@kernel.crashing.org>
+ <20190606093149.GA11598@darkstar.musicnaut.iki.fi>
+ <d87ac9a7faac0d5522cb496d74afc586410fed9c.camel@kernel.crashing.org>
+ <f8df19ffe5b75537045119037459ae9ad4a1de39.camel@kernel.crashing.org>
+ <20190606114325.GA7497@lst.de>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <1a9e2b2f-b388-bc13-3b90-9d6b4038073b@lwfinger.net>
+Date:   Thu, 6 Jun 2019 15:11:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190606114325.GA7497@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 06 Jun 2019 22:11:57 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Renzo Davoli <renzo@cs.unibo.it>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
-In-Reply-To: <20190603150010.GE4312@cs.unibo.it>
-References: <20190526142521.GA21842@cs.unibo.it>
- <20190527073332.GA13782@kroah.com> <20190527133621.GC26073@cs.unibo.it>
- <480f1bda66b67f740f5da89189bbfca3@suse.de>
- <20190531104502.GE3661@cs.unibo.it>
- <cd20672aaf13f939b4f798d0839d2438@suse.de>
- <20190603150010.GE4312@cs.unibo.it>
-Message-ID: <5d44edf655e193789823094d1b4301fd@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Renzo,
-
-On 2019-06-03 17:00, Renzo Davoli wrote:
-> Hi Roman,
+On 6/6/19 6:43 AM, Christoph Hellwig wrote:
+> On Thu, Jun 06, 2019 at 08:57:49PM +1000, Benjamin Herrenschmidt wrote:
+>>> Wow... that's an odd amount. One thing we could possibly do is add code
+>>> to limit the amount of RAM when we detect that device....
+>>
+>> Sent too quickly... I mean that *or* force swiotlb at 30-bits on those systems based
+>> on detecting the presence of that device in the device-tree.
 > 
-> 	 I sorry for the delay in my answer, but I needed to set up a minimal
-> tutorial to show what I am working on and why I need a feature like the
-> one I am proposing.
+> swiotlb doesn't really help you, as these days swiotlb on matters for
+> the dma_map* case.  What would help is a ZONE_DMA that covers these
+> devices.  No need to do the 24-bit x86 does, but 30-bit would do it.
 > 
-> Please, have a look of the README.md page here:
-> https://github.com/virtualsquare/vuos
-> (everything can be downloaded and tested)
+> WIP patch for testing below:
+> 
+> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+> index b8286a2013b4..7a367ce87c41 100644
+> --- a/arch/powerpc/include/asm/page.h
+> +++ b/arch/powerpc/include/asm/page.h
+> @@ -319,6 +319,10 @@ struct vm_area_struct;
+>   #endif /* __ASSEMBLY__ */
+>   #include <asm/slice.h>
+>   
+> +#if 1 /* XXX: pmac?  dynamic discovery? */
+> +#define ARCH_ZONE_DMA_BITS 30
+> +#else
+>   #define ARCH_ZONE_DMA_BITS 31
+> +#endif
+>   
+>   #endif /* _ASM_POWERPC_PAGE_H */
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index cba29131bccc..2540d3b2588c 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -248,7 +248,8 @@ void __init paging_init(void)
+>   	       (long int)((top_of_ram - total_ram) >> 20));
+>   
+>   #ifdef CONFIG_ZONE_DMA
+> -	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, 0x7fffffffUL >> PAGE_SHIFT);
+> +	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
+> +			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
+>   #endif
+>   	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
+>   #ifdef CONFIG_HIGHMEM
+> 
 
-Is that similar to what user-mode linux does?  I mean the principle.
+This trial patch failed.
 
-> I am not trying to port some tools to use user-space implemented
-> stacks or device
-> drivers/emulators, I am seeking to a general purpose approach.
-
-You still intersect *each* syscall, why not to do the same for 
-epoll_wait()
-and replace events with correct value?  Seems you do something similar 
-already
-in a vu_wrap_poll.c: wo_epoll_wait(), right?
-
-Don't get me wrong, I really want to understand whether everything 
-really
-looks so bad without proposed change. It seems not, because the whole 
-principle
-is based on intersection of each syscall, thus one more one less - it 
-does not
-become more clean and especially does not look like a generic purpose 
-solution,
-which you seek.  I may be wrong.
-
---
-Roman
+Larry
 
