@@ -4,29 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9093AC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5848C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5D5208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98256208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 20:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfFFUSD (ORCPT
+        id S1729576AbfFFURi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 16:18:03 -0400
-Received: from mga07.intel.com ([134.134.136.100]:42899 "EHLO mga07.intel.com"
+        Thu, 6 Jun 2019 16:17:38 -0400
+Received: from mga14.intel.com ([192.55.52.115]:51133 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbfFFURk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 16:17:40 -0400
+        id S1727716AbfFFURe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 16:17:34 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:17:31 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 13:17:32 -0700
 X-ExtLoop1: 1
 Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Jun 2019 13:17:30 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 06 Jun 2019 13:17:31 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -52,10 +51,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
         Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
         Dave Martin <Dave.Martin@arm.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
-Date:   Thu,  6 Jun 2019 13:09:15 -0700
-Message-Id: <20190606200926.4029-4-yu-cheng.yu@intel.com>
+Subject: [PATCH v7 09/14] x86/vdso: Insert endbr32/endbr64 to vDSO
+Date:   Thu,  6 Jun 2019 13:09:21 -0700
+Message-Id: <20190606200926.4029-10-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190606200926.4029-1-yu-cheng.yu@intel.com>
 References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
@@ -64,72 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indirect Branch Tracking (IBT) provides an optional legacy code bitmap
-that allows execution of legacy, non-IBT compatible library by an
-IBT-enabled application.  When set, each bit in the bitmap indicates
-one page of legacy code.
+From: "H.J. Lu" <hjl.tools@gmail.com>
 
-The bitmap is allocated and setup from the application.
+When Intel indirect branch tracking is enabled, functions in vDSO which
+may be called indirectly must have endbr32 or endbr64 as the first
+instruction.  Compiler must support -fcf-protection=branch so that it
+can be used to compile vDSO.
 
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
 ---
- arch/x86/include/asm/cet.h |  1 +
- arch/x86/kernel/cet.c      | 26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ arch/x86/entry/vdso/Makefile          | 12 +++++++++++-
+ arch/x86/entry/vdso/vdso-layout.lds.S |  1 +
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/cet.h b/arch/x86/include/asm/cet.h
-index 89330e4159a9..9e613a6598c9 100644
---- a/arch/x86/include/asm/cet.h
-+++ b/arch/x86/include/asm/cet.h
-@@ -31,6 +31,7 @@ void cet_disable_free_shstk(struct task_struct *p);
- int cet_restore_signal(bool ia32, struct sc_ext *sc);
- int cet_setup_signal(bool ia32, unsigned long rstor, struct sc_ext *sc);
- int cet_setup_ibt(void);
-+int cet_setup_ibt_bitmap(unsigned long bitmap, unsigned long size);
- void cet_disable_ibt(void);
- #else
- static inline int prctl_cet(int option, unsigned long arg2) { return -EINVAL; }
-diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
-index 14ad25b8ff21..e0ef996d3148 100644
---- a/arch/x86/kernel/cet.c
-+++ b/arch/x86/kernel/cet.c
-@@ -22,6 +22,7 @@
- #include <asm/fpu/types.h>
- #include <asm/cet.h>
- #include <asm/special_insns.h>
-+#include <asm/elf.h>
- #include <uapi/asm/sigcontext.h>
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 42fe42e82baf..718fc17b0d67 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -108,13 +108,17 @@ vobjx32s := $(foreach F,$(vobjx32s-y),$(obj)/$F)
  
- static int set_shstk_ptr(unsigned long addr)
-@@ -361,3 +362,28 @@ void cet_disable_ibt(void)
+ # Convert 64bit object file to x32 for x32 vDSO.
+ quiet_cmd_x32 = X32     $@
+-      cmd_x32 = $(OBJCOPY) -O elf32-x86-64 $< $@
++      cmd_x32 = $(OBJCOPY) -R .note.gnu.property -O elf32-x86-64 $< $@
  
- 	current->thread.cet.ibt_enabled = 0;
- }
+ $(obj)/%-x32.o: $(obj)/%.o FORCE
+ 	$(call if_changed,x32)
+ 
+ targets += vdsox32.lds $(vobjx32s-y)
+ 
++ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
++    $(obj)/vclock_gettime.o $(obj)/vgetcpu.o $(obj)/vdso32/vclock_gettime.o: KBUILD_CFLAGS += -fcf-protection=branch
++endif
 +
-+int cet_setup_ibt_bitmap(unsigned long bitmap, unsigned long size)
-+{
-+	u64 r;
-+
-+	if (!current->thread.cet.ibt_enabled)
-+		return -EINVAL;
-+
-+	if (!PAGE_ALIGNED(bitmap) || (size > TASK_SIZE_MAX))
-+		return -EINVAL;
-+
-+	current->thread.cet.ibt_bitmap_addr = bitmap;
-+	current->thread.cet.ibt_bitmap_size = size;
-+
-+	/*
-+	 * Turn on IBT legacy bitmap.
-+	 */
-+	modify_fpu_regs_begin();
-+	rdmsrl(MSR_IA32_U_CET, r);
-+	r |= (MSR_IA32_CET_LEG_IW_EN | bitmap);
-+	wrmsrl(MSR_IA32_U_CET, r);
-+	modify_fpu_regs_end();
-+
-+	return 0;
-+}
+ $(obj)/%.so: OBJCOPYFLAGS := -S
+ $(obj)/%.so: $(obj)/%.so.dbg FORCE
+ 	$(call if_changed,objcopy)
+@@ -173,6 +177,12 @@ quiet_cmd_vdso = VDSO    $@
+ VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
+ 	$(call ld-option, --build-id) $(call ld-option, --eh-frame-hdr) \
+ 	-Bsymbolic
++ifdef CONFIG_X86_INTEL_BRANCH_TRACKING_USER
++  VDSO_LDFLAGS += $(call ldoption, -z$(comma)ibt)
++endif
++ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
++  VDSO_LDFLAGS += $(call ldoption, -z$(comma)shstk)
++endif
+ GCOV_PROFILE := n
+ 
+ #
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index 93c6dc7812d0..3fea2ce318bc 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -52,6 +52,7 @@ SECTIONS
+ 		*(.gnu.linkonce.b.*)
+ 	}						:text
+ 
++	.note.gnu.property : { *(.note.gnu.property) }	:text	:note
+ 	.note		: { *(.note.*) }		:text	:note
+ 
+ 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
 -- 
 2.17.1
 
