@@ -2,134 +2,149 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CC7C28EBA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB642C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A38420684
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:11:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYVyDjB2"
+	by mail.kernel.org (Postfix) with ESMTP id 8647D20684
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 23:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfFFXLf (ORCPT
+        id S1727480AbfFFXLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 19:11:35 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40949 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfFFXLf (ORCPT
+        Thu, 6 Jun 2019 19:11:48 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.96]:46829 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727302AbfFFXLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 19:11:35 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r18so91420edo.7;
-        Thu, 06 Jun 2019 16:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QEUnkE6Im8einmZj2C6MIq4PTwm8bjOQ1E1LQ2F5/1Q=;
-        b=iYVyDjB27ZoY2J+fA/C4YM+TJgoVpnrkcjDB56OyGXRumXAtq/rIt8zYaszUOEfjp1
-         iPAboJAJVTnITpR9DNOFQtSeD0c6dqkLPEGmQmdkMBlU09vEmrZqFwAPm6uv1Hl5xgkq
-         RFeZRXsei4Cc6qaXjjzR19dokNaTAcwuk3E3husnIII9AlycYH/HFNwBjqenSlgFOAwb
-         n1jnQkUAaQHPJfLnrY43VBExrRNH+UN9OyfAMk4fAuur0zlxdmCQ4oXh03j3h6TPRNMn
-         GdsN3RA49FTjxKEnDS0j5IG79Yyz+2GasCYISZe801tgVCjmOOuDCFoYMCqdiSL61bpN
-         jLdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QEUnkE6Im8einmZj2C6MIq4PTwm8bjOQ1E1LQ2F5/1Q=;
-        b=TOO33hjXeIoKO1zs2DF9NxFt05gjpCj+WuuCzjXV0svHKcjHn8cT1mhQQDHnhZhnXr
-         VkCxR4+cB6CXenEuCw1U4UaLPBZkLBLn8ZNfBffHmnMj8QDlDWtFQ+z1LAmM9tOoIrwT
-         qgkzEAl9Drsv8cknuPMf8pAAv/iricoB3WOtracCO2W0LsRJLTHVSS8CDo8x7OAwJuGT
-         eKm+Fi7mFkR03G5wpweEasxsz26arl5qcDddIhTWHQXEBYc8Ww3qrCWVsLvBGrxD8/XA
-         e57mtZRVJkAXzj4HcMmisLa4vmcHnksMPrKvpFpV8fZONpX+msnrQkKbQUp2LLPgteNb
-         pBxw==
-X-Gm-Message-State: APjAAAVnHz/Xdj3Dc3CKGwdpxvF/PVKfFKlIQuHb5fufDa2MiN7HpJaX
-        F9HfHtILvpLy/cJuI5N9zdc=
-X-Google-Smtp-Source: APXvYqzN7vH2/T1J4iZHUGpAwwlzUurd20U6+aeJE3pXfxKOhkrG4L0EgT0PfhZ6Ggh/Kh0AdX1QSA==
-X-Received: by 2002:a50:f5c2:: with SMTP id x2mr6609917edm.13.1559862693382;
-        Thu, 06 Jun 2019 16:11:33 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id a17sm72898edt.63.2019.06.06.16.11.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 16:11:32 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 16:11:30 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Joe Korty <Joe.Korty@concurrent-rt.com>
-Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alistair Strachan <astrachan@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [BUG 4.4.178] x86_64 compat mode futexes broken
-Message-ID: <20190606231130.GA69331@archlinux-epyc>
-References: <20190606211140.GA52454@zipoli.concurrent-rt.com>
+        Thu, 6 Jun 2019 19:11:47 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 896DC49B2
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2019 18:11:46 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Z1XuhccusYTGMZ1XuhaW8R; Thu, 06 Jun 2019 18:11:46 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.120] (port=54232 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hZ1Xt-000gqI-Gn; Thu, 06 Jun 2019 18:11:45 -0500
+Date:   Thu, 6 Jun 2019 18:11:44 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2] pinctrl: tb10x: Use flexible-array member and
+ struct_size() helper
+Message-ID: <20190606231144.GA1402@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606211140.GA52454@zipoli.concurrent-rt.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.120
+X-Source-L: No
+X-Exim-ID: 1hZ1Xt-000gqI-Gn
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.120]:54232
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 09:11:43PM +0000, Joe Korty wrote:
-> Starting with 4.4.178, the LTP test
-> 
->   pthread_cond_wait/2-3
-> 
-> when compiled on x86_64 with 'gcc -m32', started failing.  It generates this log output:
-> 
->   [16:18:38]Implementation supports the MONOTONIC CLOCK but option is disabled in test.           
->   [16:18:38]Test starting
->   [16:18:38] Process-shared primitive will be tested
->   [16:18:38] Alternative clock for cond will be tested
->   [16:18:38]Test 2-3.c FAILED: The child did not own the mutex inside the cleanup handler
-> 
+Update the code to use a flexible array member instead of a pointer in
+structure tb10x_pinctrl and use the struct_size() helper:
 
-What is the exact build command + test case command? I'd like to
-reproduce this myself.
+struct tb10x_pinctrl {
+        ...
+	struct tb10x_of_pinfunc pinfuncs[];
+};
 
-> A git bisection between 4.4.177..178 shows that this commit is the culprit:
-> 
->   Git-Commit: 79739ad2d0ac5787a15a1acf7caaf34cd95bbf3c
->   Author: Alistair Strachan <astrachan@google.com>
->   Subject: [PATCH] x86: vdso: Use $LD instead of $CC to link
-> 
+Also, make use of the struct_size() helper instead of an open-coded
+version in order to avoid any potential type mistakes.
 
-Have you tested 4.4.180? There were two subsequent fixes to this patch
-in 4.4:
+So, replace the following form:
 
-485d15db01ca ("kbuild: simplify ld-option implementation")
-07d35512e494 ("x86/vdso: Pass --eh-frame-hdr to the linker")
+sizeof(struct tb10x_pinctrl) + of_get_child_count(of_node) * sizeof(struct tb10x_of_pinfunc)
 
-> And, indeed, when I back this patch out of 4.4.178 proper, the above test
-> passes again.
-> 
-> Please consider backing this patch out of linux-4.4.y, and from master, and from
-> any other linux branch it has been backported to.
-> 
+with:
 
-So this is broken in mainline too?
+struct_size(state, pinfuncs, of_get_child_count(of_node))
 
-> PS: In backing it out of 4.4.178, I first backed out
-> 
->    7c45b45fd6e928c9ce275c32f6fa98d317e6f5ee
->    
-> This is a follow-on vdso patch which collides with the
-> patch we are interested in removing.  As it claims to be
-> only removing redundant code, it probably should never
-> have been backported in the first place.
+This code was detected with the help of Coccinelle.
 
-While it is redundant for ld.bfd, it causes a build failure with the
-release version of ld.lld:
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+Changes in v2:
+ - Update changelog text.
+ - Add Kees' Reviewed-by tag.
 
-https://github.com/ClangBuiltLinux/linux/issues/31
+ drivers/pinctrl/pinctrl-tb10x.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-Cheers,
-Nathan
+diff --git a/drivers/pinctrl/pinctrl-tb10x.c b/drivers/pinctrl/pinctrl-tb10x.c
+index 2e90a6d8fb3b..a32badf3f118 100644
+--- a/drivers/pinctrl/pinctrl-tb10x.c
++++ b/drivers/pinctrl/pinctrl-tb10x.c
+@@ -483,22 +483,22 @@ struct tb10x_port {
+  * @base: register set base address.
+  * @pingroups: pointer to an array of the pin groups this driver manages.
+  * @pinfuncgrpcnt: number of pingroups in @pingroups.
+- * @pinfuncs: pointer to an array of pin functions this driver manages.
+  * @pinfuncnt: number of pin functions in @pinfuncs.
+  * @mutex: mutex for exclusive access to a pin controller's state.
+  * @ports: current state of each port.
+  * @gpios: Indicates if a given pin is currently used as GPIO (1) or not (0).
++ * @pinfuncs: flexible array of pin functions this driver manages.
+  */
+ struct tb10x_pinctrl {
+ 	struct pinctrl_dev *pctl;
+ 	void *base;
+ 	const struct tb10x_pinfuncgrp *pingroups;
+ 	unsigned int pinfuncgrpcnt;
+-	struct tb10x_of_pinfunc *pinfuncs;
+ 	unsigned int pinfuncnt;
+ 	struct mutex mutex;
+ 	struct tb10x_port ports[TB10X_PORTS];
+ 	DECLARE_BITMAP(gpios, MAX_PIN + 1);
++	struct tb10x_of_pinfunc pinfuncs[];
+ };
+ 
+ static inline void tb10x_pinctrl_set_config(struct tb10x_pinctrl *state,
+@@ -771,15 +771,13 @@ static int tb10x_pinctrl_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	state = devm_kzalloc(dev, sizeof(struct tb10x_pinctrl) +
+-					of_get_child_count(of_node)
+-					* sizeof(struct tb10x_of_pinfunc),
+-				GFP_KERNEL);
++	state = devm_kzalloc(dev, struct_size(state, pinfuncs,
++					      of_get_child_count(of_node)),
++			     GFP_KERNEL);
+ 	if (!state)
+ 		return -ENOMEM;
+ 
+ 	platform_set_drvdata(pdev, state);
+-	state->pinfuncs = (struct tb10x_of_pinfunc *)(state + 1);
+ 	mutex_init(&state->mutex);
+ 
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-- 
+2.21.0
+
