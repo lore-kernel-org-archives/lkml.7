@@ -2,892 +2,183 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A8BC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D129C28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B142070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:01:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bOizV4Hx"
+	by mail.kernel.org (Postfix) with ESMTP id 2584D20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 06:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfFFGBX (ORCPT
+        id S1726645AbfFFGCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 02:01:23 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:13321 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFGBW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 02:01:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8ac200000>; Wed, 05 Jun 2019 23:01:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 05 Jun 2019 23:01:18 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 05 Jun 2019 23:01:18 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 06:01:18 +0000
-Subject: Re: [PATCH 12/16] mm: consolidate the get_user_pages* implementations
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        <linux-mips@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-mm@kvack.org>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190601074959.14036-1-hch@lst.de>
- <20190601074959.14036-13-hch@lst.de>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b0b73eae-6d79-b621-ce4e-997ccfbf4446@nvidia.com>
-Date:   Wed, 5 Jun 2019 23:01:17 -0700
+        Thu, 6 Jun 2019 02:02:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37370 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725267AbfFFGCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 02:02:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4EB62AF80;
+        Thu,  6 Jun 2019 06:02:08 +0000 (UTC)
+Subject: Re: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi
+ host
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+References: <20190605190836.32354-1-hch@lst.de>
+ <20190605190836.32354-11-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <345c3931-0940-7d59-ebc6-fa1ea56c60ac@suse.de>
+Date:   Thu, 6 Jun 2019 08:02:07 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190601074959.14036-13-hch@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190605190836.32354-11-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559800864; bh=FNPMk9u8IGHPUqYa2AxwVubIJkuRblDkcc29ly253/c=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bOizV4HxLVZiFOgoSLahtlRk6AhPR3Vx+egZ05eM9gjqxUN6nd5C3OcdBrHEIp8/6
-         dD5d3NRvbri5Ew5dSmjaFpsAF7MP5pC/O1TFUs4ayDIHtE/rAbWE8uga6jTuR+fxZq
-         xiXPhPvx7t2P261LxOnvjjwhVyewzLi58J4Si1AANc7sMduHYrdwq9/D7DGgqWi2EI
-         bMv5/LbaBVclnPeu2+W1S8MfqX2wFQGe2GtixeD9PNl3fCVXYqt1JZCgYu1bRy+VPE
-         mFNFw3rXLNjfKccvRIZAfXkTkYXP1jpkWapYCWRQyjuzpRtV2+eKUfZPLAkv7YCpkN
-         Ce1CdoAJ5E8ww==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/1/19 12:49 AM, Christoph Hellwig wrote:
-> Always build mm/gup.c, and move the nommu versions and replace the
-> separate stubs for various functions by the default ones, with the _fast
-> version always falling back to the slow path because gup_fast_permitted
-> always returns false now if HAVE_FAST_GUP is not set, and we use the
-> nommu version of __get_user_pages while keeping all the wrappers common.
+On 6/5/19 9:08 PM, Christoph Hellwig wrote:
+> This ensures all proper DMA layer handling is taken care of by the
+> SCSI midlayer.  Note that the effect is global, as the IOMMU merging
+> is based off a paramters in struct device.  We could still turn if off
+> if no PCIe devices are present, but I don't know how to find that out.
 > 
-> This also ensures the new put_user_pages* helpers are available for
-> nommu, as those are currently missing, which would create a problem as
-> soon as we actually grew users for it.
+> Also remove the bogus nomerges flag, merges do take the virt_boundary
+> into account.
 > 
-
-Hi Christoph,
-
-Thanks for fixing up the nommu case. And the patchset overall is a huge
-relief to see, because I'd filed those arches under the "despair" category
-for the gup conversions. :)
-
-I started reviewing this one patch, and it's kind of messy figuring out 
-if the code motion preserves everything because of
-all the consolidation from other places, plus having to move things in
-and out of the ifdef blocks.  So I figured I'd check and see if this is
-going to make it past RFC status soon, and if it's going before or after
-Ira's recent RFC ("RDMA/FS DAX truncate proposal").
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  mm/Kconfig  |   1 +
->  mm/Makefile |   4 +-
->  mm/gup.c    | 476 +++++++++++++++++++++++++++++-----------------------
->  mm/nommu.c  |  88 ----------
->  mm/util.c   |  47 ------
->  5 files changed, 269 insertions(+), 347 deletions(-)
+>  drivers/scsi/megaraid/megaraid_sas_base.c   | 46 +++++----------------
+>  drivers/scsi/megaraid/megaraid_sas_fusion.c |  7 ++++
+>  2 files changed, 18 insertions(+), 35 deletions(-)
 > 
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 98dffb0f2447..5c41409557da 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -133,6 +133,7 @@ config HAVE_MEMBLOCK_PHYS_MAP
->  	bool
->  
->  config HAVE_FAST_GUP
-> +	depends on MMU
->  	bool
->  
->  config ARCH_KEEP_MEMBLOCK
-> diff --git a/mm/Makefile b/mm/Makefile
-> index ac5e5ba78874..dc0746ca1109 100644
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -22,7 +22,7 @@ KCOV_INSTRUMENT_mmzone.o := n
->  KCOV_INSTRUMENT_vmstat.o := n
->  
->  mmu-y			:= nommu.o
-> -mmu-$(CONFIG_MMU)	:= gup.o highmem.o memory.o mincore.o \
-> +mmu-$(CONFIG_MMU)	:= highmem.o memory.o mincore.o \
->  			   mlock.o mmap.o mmu_gather.o mprotect.o mremap.o \
->  			   msync.o page_vma_mapped.o pagewalk.o \
->  			   pgtable-generic.o rmap.o vmalloc.o
-> @@ -39,7 +39,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
->  			   mm_init.o mmu_context.o percpu.o slab_common.o \
->  			   compaction.o vmacache.o \
->  			   interval_tree.o list_lru.o workingset.o \
-> -			   debug.o $(mmu-y)
-> +			   debug.o gup.o $(mmu-y)
->  
->  # Give 'page_alloc' its own module-parameter namespace
->  page-alloc-y := page_alloc.o
-> diff --git a/mm/gup.c b/mm/gup.c
-> index a24f52292c7f..c8da7764de9c 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -134,6 +134,7 @@ void put_user_pages(struct page **pages, unsigned long npages)
->  }
->  EXPORT_SYMBOL(put_user_pages);
->  
-> +#ifdef CONFIG_MMU
->  static struct page *no_page_table(struct vm_area_struct *vma,
->  		unsigned int flags)
->  {
-> @@ -1099,86 +1100,6 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
->  	return pages_done;
+> diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+> index 3dd1df472dc6..20b3b3f8bc16 100644
+> --- a/drivers/scsi/megaraid/megaraid_sas_base.c
+> +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+> @@ -1870,39 +1870,6 @@ void megasas_set_dynamic_target_properties(struct scsi_device *sdev,
+>  	}
 >  }
 >  
 > -/*
-> - * We can leverage the VM_FAULT_RETRY functionality in the page fault
-> - * paths better by using either get_user_pages_locked() or
-> - * get_user_pages_unlocked().
+> - * megasas_set_nvme_device_properties -
+> - * set nomerges=2
+> - * set virtual page boundary = 4K (current mr_nvme_pg_size is 4K).
+> - * set maximum io transfer = MDTS of NVME device provided by MR firmware.
 > - *
-> - * get_user_pages_locked() is suitable to replace the form:
+> - * MR firmware provides value in KB. Caller of this function converts
+> - * kb into bytes.
 > - *
-> - *      down_read(&mm->mmap_sem);
-> - *      do_something()
-> - *      get_user_pages(tsk, mm, ..., pages, NULL);
-> - *      up_read(&mm->mmap_sem);
+> - * e.a MDTS=5 means 2^5 * nvme page size. (In case of 4K page size,
+> - * MR firmware provides value 128 as (32 * 4K) = 128K.
 > - *
-> - *  to:
+> - * @sdev:				scsi device
+> - * @max_io_size:				maximum io transfer size
 > - *
-> - *      int locked = 1;
-> - *      down_read(&mm->mmap_sem);
-> - *      do_something()
-> - *      get_user_pages_locked(tsk, mm, ..., pages, &locked);
-> - *      if (locked)
-> - *          up_read(&mm->mmap_sem);
 > - */
-> -long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
-> -			   unsigned int gup_flags, struct page **pages,
-> -			   int *locked)
+> -static inline void
+> -megasas_set_nvme_device_properties(struct scsi_device *sdev, u32 max_io_size)
 > -{
-> -	/*
-> -	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
-> -	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
-> -	 * vmas.  As there are no users of this flag in this call we simply
-> -	 * disallow this option for now.
-> -	 */
-> -	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-> -		return -EINVAL;
+> -	struct megasas_instance *instance;
+> -	u32 mr_nvme_pg_size;
 > -
-> -	return __get_user_pages_locked(current, current->mm, start, nr_pages,
-> -				       pages, NULL, locked,
-> -				       gup_flags | FOLL_TOUCH);
+> -	instance = (struct megasas_instance *)sdev->host->hostdata;
+> -	mr_nvme_pg_size = max_t(u32, instance->nvme_page_size,
+> -				MR_DEFAULT_NVME_PAGE_SIZE);
+> -
+> -	blk_queue_max_hw_sectors(sdev->request_queue, (max_io_size / 512));
+> -
+> -	blk_queue_flag_set(QUEUE_FLAG_NOMERGES, sdev->request_queue);
+> -	blk_queue_virt_boundary(sdev->request_queue, mr_nvme_pg_size - 1);
 > -}
-> -EXPORT_SYMBOL(get_user_pages_locked);
 > -
-> -/*
-> - * get_user_pages_unlocked() is suitable to replace the form:
-> - *
-> - *      down_read(&mm->mmap_sem);
-> - *      get_user_pages(tsk, mm, ..., pages, NULL);
-> - *      up_read(&mm->mmap_sem);
-> - *
-> - *  with:
-> - *
-> - *      get_user_pages_unlocked(tsk, mm, ..., pages);
-> - *
-> - * It is functionally equivalent to get_user_pages_fast so
-> - * get_user_pages_fast should be used instead if specific gup_flags
-> - * (e.g. FOLL_FORCE) are not required.
-> - */
-> -long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-> -			     struct page **pages, unsigned int gup_flags)
-> -{
-> -	struct mm_struct *mm = current->mm;
-> -	int locked = 1;
-> -	long ret;
-> -
-> -	/*
-> -	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
-> -	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
-> -	 * vmas.  As there are no users of this flag in this call we simply
-> -	 * disallow this option for now.
-> -	 */
-> -	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-> -		return -EINVAL;
-> -
-> -	down_read(&mm->mmap_sem);
-> -	ret = __get_user_pages_locked(current, mm, start, nr_pages, pages, NULL,
-> -				      &locked, gup_flags | FOLL_TOUCH);
-> -	if (locked)
-> -		up_read(&mm->mmap_sem);
-> -	return ret;
-> -}
-> -EXPORT_SYMBOL(get_user_pages_unlocked);
 > -
 >  /*
->   * get_user_pages_remote() - pin user pages in memory
->   * @tsk:	the task_struct to use for page fault accounting, or
-> @@ -1255,6 +1176,199 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
->  }
->  EXPORT_SYMBOL(get_user_pages_remote);
+>   * megasas_set_static_target_properties -
+>   * Device property set by driver are static and it is not required to be
+> @@ -1961,8 +1928,10 @@ static void megasas_set_static_target_properties(struct scsi_device *sdev,
+>  		max_io_size_kb = le32_to_cpu(instance->tgt_prop->max_io_size_kb);
+>  	}
 >  
-> +/**
-> + * populate_vma_page_range() -  populate a range of pages in the vma.
-> + * @vma:   target vma
-> + * @start: start address
-> + * @end:   end address
-> + * @nonblocking:
-> + *
-> + * This takes care of mlocking the pages too if VM_LOCKED is set.
-> + *
-> + * return 0 on success, negative error code on error.
-> + *
-> + * vma->vm_mm->mmap_sem must be held.
-> + *
-> + * If @nonblocking is NULL, it may be held for read or write and will
-> + * be unperturbed.
-> + *
-> + * If @nonblocking is non-NULL, it must held for read only and may be
-> + * released.  If it's released, *@nonblocking will be set to 0.
-> + */
-> +long populate_vma_page_range(struct vm_area_struct *vma,
-> +		unsigned long start, unsigned long end, int *nonblocking)
-> +{
-> +	struct mm_struct *mm = vma->vm_mm;
-> +	unsigned long nr_pages = (end - start) / PAGE_SIZE;
-> +	int gup_flags;
-> +
-> +	VM_BUG_ON(start & ~PAGE_MASK);
-> +	VM_BUG_ON(end   & ~PAGE_MASK);
-> +	VM_BUG_ON_VMA(start < vma->vm_start, vma);
-> +	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
-> +	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-> +
-> +	gup_flags = FOLL_TOUCH | FOLL_POPULATE | FOLL_MLOCK;
-> +	if (vma->vm_flags & VM_LOCKONFAULT)
-> +		gup_flags &= ~FOLL_POPULATE;
-> +	/*
-> +	 * We want to touch writable mappings with a write fault in order
-> +	 * to break COW, except for shared mappings because these don't COW
-> +	 * and we would not want to dirty them for nothing.
-> +	 */
-> +	if ((vma->vm_flags & (VM_WRITE | VM_SHARED)) == VM_WRITE)
-> +		gup_flags |= FOLL_WRITE;
-> +
-> +	/*
-> +	 * We want mlock to succeed for regions that have any permissions
-> +	 * other than PROT_NONE.
-> +	 */
-> +	if (vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC))
-> +		gup_flags |= FOLL_FORCE;
-> +
-> +	/*
-> +	 * We made sure addr is within a VMA, so the following will
-> +	 * not result in a stack expansion that recurses back here.
-> +	 */
-> +	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
-> +				NULL, NULL, nonblocking);
-> +}
-> +
-> +/*
-> + * __mm_populate - populate and/or mlock pages within a range of address space.
-> + *
-> + * This is used to implement mlock() and the MAP_POPULATE / MAP_LOCKED mmap
-> + * flags. VMAs must be already marked with the desired vm_flags, and
-> + * mmap_sem must not be held.
-> + */
-> +int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
-> +{
-> +	struct mm_struct *mm = current->mm;
-> +	unsigned long end, nstart, nend;
-> +	struct vm_area_struct *vma = NULL;
-> +	int locked = 0;
-> +	long ret = 0;
-> +
-> +	end = start + len;
-> +
-> +	for (nstart = start; nstart < end; nstart = nend) {
-> +		/*
-> +		 * We want to fault in pages for [nstart; end) address range.
-> +		 * Find first corresponding VMA.
-> +		 */
-> +		if (!locked) {
-> +			locked = 1;
-> +			down_read(&mm->mmap_sem);
-> +			vma = find_vma(mm, nstart);
-> +		} else if (nstart >= vma->vm_end)
-> +			vma = vma->vm_next;
-> +		if (!vma || vma->vm_start >= end)
-> +			break;
-> +		/*
-> +		 * Set [nstart; nend) to intersection of desired address
-> +		 * range with the first VMA. Also, skip undesirable VMA types.
-> +		 */
-> +		nend = min(end, vma->vm_end);
-> +		if (vma->vm_flags & (VM_IO | VM_PFNMAP))
-> +			continue;
-> +		if (nstart < vma->vm_start)
-> +			nstart = vma->vm_start;
-> +		/*
-> +		 * Now fault in a range of pages. populate_vma_page_range()
-> +		 * double checks the vma flags, so that it won't mlock pages
-> +		 * if the vma was already munlocked.
-> +		 */
-> +		ret = populate_vma_page_range(vma, nstart, nend, &locked);
-> +		if (ret < 0) {
-> +			if (ignore_errors) {
-> +				ret = 0;
-> +				continue;	/* continue at next VMA */
-> +			}
-> +			break;
-> +		}
-> +		nend = nstart + ret * PAGE_SIZE;
-> +		ret = 0;
+> -	if (instance->nvme_page_size && max_io_size_kb)
+> -		megasas_set_nvme_device_properties(sdev, (max_io_size_kb << 10));
+> +	if (instance->nvme_page_size && max_io_size_kb) {
+> +		blk_queue_max_hw_sectors(sdev->request_queue,
+> +				(max_io_size_kb << 10) / 512);
 > +	}
-> +	if (locked)
-> +		up_read(&mm->mmap_sem);
-> +	return ret;	/* 0 or negative error code */
-> +}
-> +
-> +/**
-> + * get_dump_page() - pin user page in memory while writing it to core dump
-> + * @addr: user address
-> + *
-> + * Returns struct page pointer of user page pinned for dump,
-> + * to be freed afterwards by put_page().
-> + *
-> + * Returns NULL on any kind of failure - a hole must then be inserted into
-> + * the corefile, to preserve alignment with its headers; and also returns
-> + * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
-> + * allowing a hole to be left in the corefile to save diskspace.
-> + *
-> + * Called without mmap_sem, but after all other threads have been killed.
-> + */
-> +#ifdef CONFIG_ELF_CORE
-> +struct page *get_dump_page(unsigned long addr)
-> +{
-> +	struct vm_area_struct *vma;
-> +	struct page *page;
-> +
-> +	if (__get_user_pages(current, current->mm, addr, 1,
-> +			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
-> +			     NULL) < 1)
-> +		return NULL;
-> +	flush_cache_page(vma, addr, page_to_pfn(page));
-> +	return page;
-> +}
-> +#endif /* CONFIG_ELF_CORE */
-> +
-> +#else /* CONFIG_MMU */
-> +static long __get_user_pages_locked(struct task_struct *tsk,
-> +		struct mm_struct *mm, unsigned long start,
-> +		unsigned long nr_pages, struct page **pages,
-> +		struct vm_area_struct **vmas, int *locked,
-> +		unsigned int foll_flags)
-> +{
-> +	struct vm_area_struct *vma;
-> +	unsigned long vm_flags;
-> +	int i;
-> +
-> +	/* calculate required read or write permissions.
-> +	 * If FOLL_FORCE is set, we only require the "MAY" flags.
-> +	 */
-> +	vm_flags  = (foll_flags & FOLL_WRITE) ?
-> +			(VM_WRITE | VM_MAYWRITE) : (VM_READ | VM_MAYREAD);
-> +	vm_flags &= (foll_flags & FOLL_FORCE) ?
-> +			(VM_MAYREAD | VM_MAYWRITE) : (VM_READ | VM_WRITE);
-> +
-> +	for (i = 0; i < nr_pages; i++) {
-> +		vma = find_vma(mm, start);
-> +		if (!vma)
-> +			goto finish_or_fault;
-> +
-> +		/* protect what we can, including chardevs */
-> +		if ((vma->vm_flags & (VM_IO | VM_PFNMAP)) ||
-> +		    !(vm_flags & vma->vm_flags))
-> +			goto finish_or_fault;
-> +
-> +		if (pages) {
-> +			pages[i] = virt_to_page(start);
-> +			if (pages[i])
-> +				get_page(pages[i]);
-> +		}
-> +		if (vmas)
-> +			vmas[i] = vma;
-> +		start = (start + PAGE_SIZE) & PAGE_MASK;
-> +	}
-> +
-> +	return i;
-> +
-> +finish_or_fault:
-> +	return i ? : -EFAULT;
-> +}
-> +#endif /* !CONFIG_MMU */
-> +
->  #if defined(CONFIG_FS_DAX) || defined (CONFIG_CMA)
->  static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
->  {
-> @@ -1416,7 +1530,7 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
->  {
->  	return nr_pages;
->  }
-> -#endif
-> +#endif /* CONFIG_CMA */
 >  
->  /*
->   * __gup_longterm_locked() is a wrapper for __get_user_pages_locked which
-> @@ -1502,152 +1616,85 @@ long get_user_pages(unsigned long start, unsigned long nr_pages,
->  }
->  EXPORT_SYMBOL(get_user_pages);
+>  	scsi_change_queue_depth(sdev, device_qd);
 >  
-> -/**
-> - * populate_vma_page_range() -  populate a range of pages in the vma.
-> - * @vma:   target vma
-> - * @start: start address
-> - * @end:   end address
-> - * @nonblocking:
-> - *
-> - * This takes care of mlocking the pages too if VM_LOCKED is set.
-> +/*
-> + * We can leverage the VM_FAULT_RETRY functionality in the page fault
-> + * paths better by using either get_user_pages_locked() or
-> + * get_user_pages_unlocked().
->   *
-> - * return 0 on success, negative error code on error.
-> + * get_user_pages_locked() is suitable to replace the form:
->   *
-> - * vma->vm_mm->mmap_sem must be held.
-> + *      down_read(&mm->mmap_sem);
-> + *      do_something()
-> + *      get_user_pages(tsk, mm, ..., pages, NULL);
-> + *      up_read(&mm->mmap_sem);
->   *
-> - * If @nonblocking is NULL, it may be held for read or write and will
-> - * be unperturbed.
-> + *  to:
->   *
-> - * If @nonblocking is non-NULL, it must held for read only and may be
-> - * released.  If it's released, *@nonblocking will be set to 0.
-> + *      int locked = 1;
-> + *      down_read(&mm->mmap_sem);
-> + *      do_something()
-> + *      get_user_pages_locked(tsk, mm, ..., pages, &locked);
-> + *      if (locked)
-> + *          up_read(&mm->mmap_sem);
->   */
-> -long populate_vma_page_range(struct vm_area_struct *vma,
-> -		unsigned long start, unsigned long end, int *nonblocking)
-> +long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
-> +			   unsigned int gup_flags, struct page **pages,
-> +			   int *locked)
->  {
-> -	struct mm_struct *mm = vma->vm_mm;
-> -	unsigned long nr_pages = (end - start) / PAGE_SIZE;
-> -	int gup_flags;
-> -
-> -	VM_BUG_ON(start & ~PAGE_MASK);
-> -	VM_BUG_ON(end   & ~PAGE_MASK);
-> -	VM_BUG_ON_VMA(start < vma->vm_start, vma);
-> -	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
-> -	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
-> -
-> -	gup_flags = FOLL_TOUCH | FOLL_POPULATE | FOLL_MLOCK;
-> -	if (vma->vm_flags & VM_LOCKONFAULT)
-> -		gup_flags &= ~FOLL_POPULATE;
-> -	/*
-> -	 * We want to touch writable mappings with a write fault in order
-> -	 * to break COW, except for shared mappings because these don't COW
-> -	 * and we would not want to dirty them for nothing.
-> -	 */
-> -	if ((vma->vm_flags & (VM_WRITE | VM_SHARED)) == VM_WRITE)
-> -		gup_flags |= FOLL_WRITE;
-> -
->  	/*
-> -	 * We want mlock to succeed for regions that have any permissions
-> -	 * other than PROT_NONE.
-> +	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
-> +	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
-> +	 * vmas.  As there are no users of this flag in this call we simply
-> +	 * disallow this option for now.
->  	 */
-> -	if (vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC))
-> -		gup_flags |= FOLL_FORCE;
-> +	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-> +		return -EINVAL;
->  
-> -	/*
-> -	 * We made sure addr is within a VMA, so the following will
-> -	 * not result in a stack expansion that recurses back here.
-> -	 */
-> -	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
-> -				NULL, NULL, nonblocking);
-> +	return __get_user_pages_locked(current, current->mm, start, nr_pages,
-> +				       pages, NULL, locked,
-> +				       gup_flags | FOLL_TOUCH);
->  }
-> +EXPORT_SYMBOL(get_user_pages_locked);
->  
->  /*
-> - * __mm_populate - populate and/or mlock pages within a range of address space.
-> + * get_user_pages_unlocked() is suitable to replace the form:
->   *
-> - * This is used to implement mlock() and the MAP_POPULATE / MAP_LOCKED mmap
-> - * flags. VMAs must be already marked with the desired vm_flags, and
-> - * mmap_sem must not be held.
-> + *      down_read(&mm->mmap_sem);
-> + *      get_user_pages(tsk, mm, ..., pages, NULL);
-> + *      up_read(&mm->mmap_sem);
-> + *
-> + *  with:
-> + *
-> + *      get_user_pages_unlocked(tsk, mm, ..., pages);
-> + *
-> + * It is functionally equivalent to get_user_pages_fast so
-> + * get_user_pages_fast should be used instead if specific gup_flags
-> + * (e.g. FOLL_FORCE) are not required.
->   */
-> -int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
-> +long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-> +			     struct page **pages, unsigned int gup_flags)
->  {
->  	struct mm_struct *mm = current->mm;
-> -	unsigned long end, nstart, nend;
-> -	struct vm_area_struct *vma = NULL;
-> -	int locked = 0;
-> -	long ret = 0;
-> +	int locked = 1;
-> +	long ret;
->  
-> -	end = start + len;
-> +	/*
-> +	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
-> +	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
-> +	 * vmas.  As there are no users of this flag in this call we simply
-> +	 * disallow this option for now.
-> +	 */
-> +	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-> +		return -EINVAL;
->  
-> -	for (nstart = start; nstart < end; nstart = nend) {
-> -		/*
-> -		 * We want to fault in pages for [nstart; end) address range.
-> -		 * Find first corresponding VMA.
-> -		 */
-> -		if (!locked) {
-> -			locked = 1;
-> -			down_read(&mm->mmap_sem);
-> -			vma = find_vma(mm, nstart);
-> -		} else if (nstart >= vma->vm_end)
-> -			vma = vma->vm_next;
-> -		if (!vma || vma->vm_start >= end)
-> -			break;
-> -		/*
-> -		 * Set [nstart; nend) to intersection of desired address
-> -		 * range with the first VMA. Also, skip undesirable VMA types.
-> -		 */
-> -		nend = min(end, vma->vm_end);
-> -		if (vma->vm_flags & (VM_IO | VM_PFNMAP))
-> -			continue;
-> -		if (nstart < vma->vm_start)
-> -			nstart = vma->vm_start;
-> -		/*
-> -		 * Now fault in a range of pages. populate_vma_page_range()
-> -		 * double checks the vma flags, so that it won't mlock pages
-> -		 * if the vma was already munlocked.
-> -		 */
-> -		ret = populate_vma_page_range(vma, nstart, nend, &locked);
-> -		if (ret < 0) {
-> -			if (ignore_errors) {
-> -				ret = 0;
-> -				continue;	/* continue at next VMA */
-> -			}
-> -			break;
-> -		}
-> -		nend = nstart + ret * PAGE_SIZE;
-> -		ret = 0;
-> -	}
-> +	down_read(&mm->mmap_sem);
-> +	ret = __get_user_pages_locked(current, mm, start, nr_pages, pages, NULL,
-> +				      &locked, gup_flags | FOLL_TOUCH);
->  	if (locked)
->  		up_read(&mm->mmap_sem);
-> -	return ret;	/* 0 or negative error code */
-> -}
-> -
-> -/**
-> - * get_dump_page() - pin user page in memory while writing it to core dump
-> - * @addr: user address
-> - *
-> - * Returns struct page pointer of user page pinned for dump,
-> - * to be freed afterwards by put_page().
-> - *
-> - * Returns NULL on any kind of failure - a hole must then be inserted into
-> - * the corefile, to preserve alignment with its headers; and also returns
-> - * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
-> - * allowing a hole to be left in the corefile to save diskspace.
-> - *
-> - * Called without mmap_sem, but after all other threads have been killed.
-> - */
-> -#ifdef CONFIG_ELF_CORE
-> -struct page *get_dump_page(unsigned long addr)
-> -{
-> -	struct vm_area_struct *vma;
-> -	struct page *page;
-> -
-> -	if (__get_user_pages(current, current->mm, addr, 1,
-> -			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
-> -			     NULL) < 1)
-> -		return NULL;
-> -	flush_cache_page(vma, addr, page_to_pfn(page));
-> -	return page;
-> +	return ret;
->  }
-> -#endif /* CONFIG_ELF_CORE */
-> +EXPORT_SYMBOL(get_user_pages_unlocked);
->  
->  /*
->   * Fast GUP
-> @@ -1682,7 +1729,7 @@ struct page *get_dump_page(unsigned long addr)
->   *
->   * This code is based heavily on the PowerPC implementation by Nick Piggin.
->   */
-> -#ifdef CONFIG_HAVE_FAST_GUP
-> +#if defined(CONFIG_MMU) && defined(CONFIG_HAVE_FAST_GUP)
->  #ifdef CONFIG_GUP_GET_PTE_LOW_HIGH
->  /*
->   * WARNING: only to be used in the get_user_pages_fast() implementation.
-> @@ -2159,6 +2206,12 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
->  			return;
->  	} while (pgdp++, addr = next, addr != end);
->  }
-> +#else
-> +static inline void gup_pgd_range(unsigned long addr, unsigned long end,
-> +		unsigned int flags, struct page **pages, int *nr)
-> +{
-> +}
-> +#endif /* CONFIG_HAVE_FAST_GUP */
->  
->  #ifndef gup_fast_permitted
->  /*
-> @@ -2167,7 +2220,7 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
->   */
->  static bool gup_fast_permitted(unsigned long start, unsigned long end)
->  {
-> -	return true;
-> +	return IS_ENABLED(CONFIG_HAVE_FAST_GUP) ? true : false;
->  }
->  #endif
->  
-> @@ -2176,6 +2229,9 @@ static bool gup_fast_permitted(unsigned long start, unsigned long end)
->   * the regular GUP.
->   * Note a difference with get_user_pages_fast: this always returns the
->   * number of pages pinned, 0 if no pages were pinned.
-> + *
-> + * If the architecture does not support this function, simply return with no
-> + * pages pinned.
->   */
->  int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
->  			  struct page **pages)
-> @@ -2213,6 +2269,7 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
->  
->  	return nr;
->  }
-> +EXPORT_SYMBOL_GPL(__get_user_pages_fast);
->  
->  static int __gup_longterm_unlocked(unsigned long start, int nr_pages,
->  				   unsigned int gup_flags, struct page **pages)
-> @@ -2295,5 +2352,4 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
->  
->  	return ret;
->  }
-> -
-> -#endif /* CONFIG_HAVE_GENERIC_GUP */
-> +EXPORT_SYMBOL_GPL(get_user_pages_fast);
-> diff --git a/mm/nommu.c b/mm/nommu.c
-> index d8c02fbe03b5..07165ad2e548 100644
-> --- a/mm/nommu.c
-> +++ b/mm/nommu.c
-> @@ -111,94 +111,6 @@ unsigned int kobjsize(const void *objp)
->  	return PAGE_SIZE << compound_order(page);
->  }
->  
-> -static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
-> -		      unsigned long start, unsigned long nr_pages,
-> -		      unsigned int foll_flags, struct page **pages,
-> -		      struct vm_area_struct **vmas, int *nonblocking)
-> -{
-> -	struct vm_area_struct *vma;
-> -	unsigned long vm_flags;
-> -	int i;
-> -
-> -	/* calculate required read or write permissions.
-> -	 * If FOLL_FORCE is set, we only require the "MAY" flags.
-> -	 */
-> -	vm_flags  = (foll_flags & FOLL_WRITE) ?
-> -			(VM_WRITE | VM_MAYWRITE) : (VM_READ | VM_MAYREAD);
-> -	vm_flags &= (foll_flags & FOLL_FORCE) ?
-> -			(VM_MAYREAD | VM_MAYWRITE) : (VM_READ | VM_WRITE);
-> -
-> -	for (i = 0; i < nr_pages; i++) {
-> -		vma = find_vma(mm, start);
-> -		if (!vma)
-> -			goto finish_or_fault;
-> -
-> -		/* protect what we can, including chardevs */
-> -		if ((vma->vm_flags & (VM_IO | VM_PFNMAP)) ||
-> -		    !(vm_flags & vma->vm_flags))
-> -			goto finish_or_fault;
-> -
-> -		if (pages) {
-> -			pages[i] = virt_to_page(start);
-> -			if (pages[i])
-> -				get_page(pages[i]);
-> -		}
-> -		if (vmas)
-> -			vmas[i] = vma;
-> -		start = (start + PAGE_SIZE) & PAGE_MASK;
-> -	}
-> -
-> -	return i;
-> -
-> -finish_or_fault:
-> -	return i ? : -EFAULT;
-> -}
-> -
-> -/*
-> - * get a list of pages in an address range belonging to the specified process
-> - * and indicate the VMA that covers each page
-> - * - this is potentially dodgy as we may end incrementing the page count of a
-> - *   slab page or a secondary page from a compound page
-> - * - don't permit access to VMAs that don't support it, such as I/O mappings
-> - */
-> -long get_user_pages(unsigned long start, unsigned long nr_pages,
-> -		    unsigned int gup_flags, struct page **pages,
-> -		    struct vm_area_struct **vmas)
-> -{
-> -	return __get_user_pages(current, current->mm, start, nr_pages,
-> -				gup_flags, pages, vmas, NULL);
-> -}
-> -EXPORT_SYMBOL(get_user_pages);
-> -
-> -long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
-> -			    unsigned int gup_flags, struct page **pages,
-> -			    int *locked)
-> -{
-> -	return get_user_pages(start, nr_pages, gup_flags, pages, NULL);
-> -}
-> -EXPORT_SYMBOL(get_user_pages_locked);
-> -
-> -static long __get_user_pages_unlocked(struct task_struct *tsk,
-> -			struct mm_struct *mm, unsigned long start,
-> -			unsigned long nr_pages, struct page **pages,
-> -			unsigned int gup_flags)
-> -{
-> -	long ret;
-> -	down_read(&mm->mmap_sem);
-> -	ret = __get_user_pages(tsk, mm, start, nr_pages, gup_flags, pages,
-> -				NULL, NULL);
-> -	up_read(&mm->mmap_sem);
-> -	return ret;
-> -}
-> -
-> -long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-> -			     struct page **pages, unsigned int gup_flags)
-> -{
-> -	return __get_user_pages_unlocked(current, current->mm, start, nr_pages,
-> -					 pages, gup_flags);
-> -}
-> -EXPORT_SYMBOL(get_user_pages_unlocked);
-> -
->  /**
->   * follow_pfn - look up PFN at a user virtual address
->   * @vma: memory mapping
-> diff --git a/mm/util.c b/mm/util.c
-> index 91682a2090ee..d58f5b0eb669 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -300,53 +300,6 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
->  }
->  #endif
->  
-> -/*
-> - * Like get_user_pages_fast() except its IRQ-safe in that it won't fall
-> - * back to the regular GUP.
-> - * Note a difference with get_user_pages_fast: this always returns the
-> - * number of pages pinned, 0 if no pages were pinned.
-> - * If the architecture does not support this function, simply return with no
-> - * pages pinned.
-> - */
-> -int __weak __get_user_pages_fast(unsigned long start,
-> -				 int nr_pages, int write, struct page **pages)
-> -{
-> -	return 0;
-> -}
-> -EXPORT_SYMBOL_GPL(__get_user_pages_fast);
-> -
-> -/**
-> - * get_user_pages_fast() - pin user pages in memory
-> - * @start:	starting user address
-> - * @nr_pages:	number of pages from start to pin
-> - * @gup_flags:	flags modifying pin behaviour
-> - * @pages:	array that receives pointers to the pages pinned.
-> - *		Should be at least nr_pages long.
-> - *
-> - * get_user_pages_fast provides equivalent functionality to get_user_pages,
-> - * operating on current and current->mm, with force=0 and vma=NULL. However
-> - * unlike get_user_pages, it must be called without mmap_sem held.
-> - *
-> - * get_user_pages_fast may take mmap_sem and page table locks, so no
-> - * assumptions can be made about lack of locking. get_user_pages_fast is to be
-> - * implemented in a way that is advantageous (vs get_user_pages()) when the
-> - * user memory area is already faulted in and present in ptes. However if the
-> - * pages have to be faulted in, it may turn out to be slightly slower so
-> - * callers need to carefully consider what to use. On many architectures,
-> - * get_user_pages_fast simply falls back to get_user_pages.
-> - *
-> - * Return: number of pages pinned. This may be fewer than the number
-> - * requested. If nr_pages is 0 or negative, returns 0. If no pages
-> - * were pinned, returns -errno.
-> - */
-> -int __weak get_user_pages_fast(unsigned long start,
-> -				int nr_pages, unsigned int gup_flags,
-> -				struct page **pages)
-> -{
-> -	return get_user_pages_unlocked(start, nr_pages, pages, gup_flags);
-> -}
-> -EXPORT_SYMBOL_GPL(get_user_pages_fast);
-> -
->  unsigned long vm_mmap_pgoff(struct file *file, unsigned long addr,
->  	unsigned long len, unsigned long prot,
->  	unsigned long flag, unsigned long pgoff)
-> 
+What happened to the NOMERGES queue flag?
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke		   Teamlead Storage & Networking
+hare@suse.de			               +49 911 74053 688
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
