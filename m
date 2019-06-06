@@ -2,87 +2,121 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8D9C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B82AC04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35F220868
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9E22083E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 15:34:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qkTuWFTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbfFFPdY (ORCPT
+        id S1729379AbfFFPeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 11:33:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53640 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728916AbfFFPdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 11:33:22 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6C971B97A2064D149B70;
-        Thu,  6 Jun 2019 23:23:04 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Jun 2019
- 23:23:00 +0800
-Date:   Thu, 6 Jun 2019 16:22:49 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Joe Perches" <joe@perches.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] crypto: hisilicon - Use the correct style for SPDX
- License Identifier
-Message-ID: <20190606162249.00002da5@huawei.com>
-In-Reply-To: <20190606150612.GA4002@nishad>
-References: <20190606150612.GA4002@nishad>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Thu, 6 Jun 2019 11:34:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51807 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729156AbfFFPeO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 11:34:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f10so409737wmb.1;
+        Thu, 06 Jun 2019 08:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YNCZH4cwmzPfukjIuLRGuMkntmVdByW0qbXhUjyBVJI=;
+        b=qkTuWFTlw3+q8iegPcKQi5pHRkjycGloiIIztCCnol8eUIPokPCXP4YRVghDXDiwSK
+         G9p8cvDaWEVxt0dCZ2CKExTIKqIRnqOCq4ZK8EXYWbTi5aSHF2+AoESLcZWuHMykQ/dq
+         gXx+aq/LsdL2uFtqWoT98mHJ6HtH+LbosxYY6Fr4QFD3rim+dI2jxLb0+oQpCav0+/kQ
+         z368AmjqFNen6gnMfrduuUo3a6Xf5Tln7SofOb8EEom1KHuTY5vwQiFKOHqAxgELqdtB
+         w9/xd0qp+1/wr2nya+0+ra7AX4cW9pMKhrDgGlu+xegVxxWiw/yQL+6CxNgCvBBg9exk
+         Ws6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YNCZH4cwmzPfukjIuLRGuMkntmVdByW0qbXhUjyBVJI=;
+        b=b30l//SlwmLh30Xk+29HTEFGOvwyBskPVfWmaXPHv4jYFLkxGNE+YEj/MxsYl+R//Z
+         ijuCOnvJC6FpxvunSW4v1b3DqmbmtscLrGIxZZbf87BbMMr9bbcwMJb7IMwz+am6fkGx
+         FGrn7urZX8alC+hk3FJoSKlVyvgs4TglwLBC73tuxciZ1wbLn700NVd86fYVj9Co4PwG
+         0R6lIZzn2RlXHKTbwbX1FY6eR4p+jh/scFpszB6htFMb/0jPFsV7u3gP8dPrB/jOsuQb
+         e29ArEx6YvyflL9qox6f9S6+1czHJAyCGhF/OTGQo9aWYcTNGW6eR8SXdu/bwA0WQMDT
+         YWaA==
+X-Gm-Message-State: APjAAAWnWrU0lr3qN4uL5N5M+88WcVzK7X2ChyvSqnH0oylTRCw9iHcn
+        Wy/RYlB3VXVQ0my+xhSkpzs=
+X-Google-Smtp-Source: APXvYqwlmKS/iYNpwXsxb3o95trjpJEbEMQt25ZZsFm3shcsDu2hQJZ+WVxjYH8Lt0OMyySB6KY5wQ==
+X-Received: by 2002:a1c:5546:: with SMTP id j67mr503162wmb.80.1559835251398;
+        Thu, 06 Jun 2019 08:34:11 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id u13sm2173183wrq.62.2019.06.06.08.34.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 08:34:10 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 17:34:09 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V8 09/15] dt-bindings: PCI: tegra: Add device tree
+ support for Tegra194
+Message-ID: <20190606153409.GB3338@ulmo>
+References: <20190526043751.12729-1-vidyas@nvidia.com>
+ <20190526043751.12729-10-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jho1yZJdad60DJr+"
+Content-Disposition: inline
+In-Reply-To: <20190526043751.12729-10-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Jun 2019 20:36:17 +0530
-Nishad Kamdar <nishadkamdar@gmail.com> wrote:
 
-> This patch corrects the SPDX License Identifier style
-> in header file related to Crypto Drivers for Hisilicon
-> SEC Engine in Hip06 and Hip07.
-> For C header files Documentation/process/license-rules.rst
-> mandates C-like comments (opposed to C source files where
-> C++ style should be used)
-> 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+--jho1yZJdad60DJr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Sun, May 26, 2019 at 10:07:45AM +0530, Vidya Sagar wrote:
+> Add support for Tegra194 PCIe controllers. These controllers are based
+> on Synopsys DesignWare core IP.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-> ---
->  drivers/crypto/hisilicon/sec/sec_drv.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/crypto/hisilicon/sec/sec_drv.h b/drivers/crypto/hisilicon/sec/sec_drv.h
-> index 2d2f186674ba..4d9063a8b10b 100644
-> --- a/drivers/crypto/hisilicon/sec/sec_drv.h
-> +++ b/drivers/crypto/hisilicon/sec/sec_drv.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /* Copyright (c) 2016-2017 Hisilicon Limited. */
->  
->  #ifndef _SEC_DRV_H_
+Acked-by: Thierry Reding <treding@nvidia.com>
 
+--jho1yZJdad60DJr+
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlz5MnEACgkQ3SOs138+
+s6EZuRAArnRIwdHFGGw7PRPo7CkDJeVM+eTKg/JkJJmI9FfY5NbdVm7wwEXJJg4b
+jkzRaxcDKtL/8WkfptcnjrtRiz+GY5oz4+FvkIqaAXVy2pYQChgfecQ5fTgf8R5b
+U/cyR75uLNk7VTyOjHsn8s16NsvTEe4eVgxQzt9OF/AiR0OPeT2Fnu/wvUO5MJmA
+zeyr/MaJ8vkm6qOmkntugy0cTjx+o0/7kOd7Oi7FEOOvrKUsgbuW3k31pvykYIbE
+qzDwL+R7Ay9h3dM+OAbRgrK7K/sHZFJQxGtIRn8jq5iTIJcPs8jIK+B5v8d8ahlC
+aSlUS1gouB7Fp0zSJEdD25wGtZh8MV80kM9wSC/R/4CnY1VqX+/o5sDbL0X8ir1v
+cd9h+XKLY5ZgSRsz1EHdbilB+uu5LNtDYBdkBWcEY7oLM/ACom2JSI4vtJs0w7nJ
+yBWq1Qxw/9Gy8pOc3YfUuNx2yjdlK1c9QwLJd585/aKExzYJfrlOCvljY4nl75DD
+1bw4mDI7uWdBWUhgsdMugW2sVz5RgkVPjen2sx+tIgBPCmR8JInAEROvIpALG5hC
+9VHz2Yc2GGSM6tHiVUD5lBmNmhdh1PS38nEw4KUEuDFlc26S7S9Vf/tqHlwZ0G4f
+JaFf4UTs1U7Z+PtXw13of7OpxYVFfdMlswoI6y1ottPBuBFhLU0=
+=M5MQ
+-----END PGP SIGNATURE-----
+
+--jho1yZJdad60DJr+--
