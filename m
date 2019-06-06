@@ -2,261 +2,162 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F40C04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05364C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7B72070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOJ2SOWe"
+	by mail.kernel.org (Postfix) with ESMTP id D053B208C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559831800;
+	bh=QN3c86AsOhqUNNGms5nxThdRVIMwAWzxlEniJHv0Z7I=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=IovOAbvq+XMdv8GUxtjkWU8gQ4Ymv01pZxojHoUd20BIPipxLrX1vCdLosMZC9Idq
+	 hlg2AfSO/WikJDIFQ7EpmBtjXDLxFasbdKr5eE3MR5OCXeSTEMZySphfV88Q64nwLr
+	 lcabZ1QInBKvA2PJ/1KInJjwHs9qNmGPi0v2IdGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbfFFOgb (ORCPT
+        id S1729169AbfFFOgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:36:31 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46213 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728998AbfFFOgS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:36:18 -0400
-Received: by mail-lf1-f68.google.com with SMTP id l26so303207lfh.13;
-        Thu, 06 Jun 2019 07:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2hfOxo8l0gFhuVWRcVdyoIpZK87a/GmDPhKeRcDc4w8=;
-        b=nOJ2SOWedcJJKQfYKQAGCrvRN1XuMLGMKQ4GsIHaW54Vm//5qJ9gMHHIT0QIwX0LVd
-         y5zdRzeCosV65bQJDEjUJ9Z8dEcosaRpfyvndAkj0fe5ccIwycVn1cEDkkUJtd6VAakQ
-         dINas5GqydMOXerK0fMrFZ4CnOWp047db8HgRPZtKwD2lRr3qkqQn+N/CJgCQt6+bOhx
-         av3QHUldbGAEPzM4DUa61JZFKmwKeCNJCPdd6MPlHEvfzyHOZp0p642swo0p9JTW4Bfn
-         yEjllN7hESeYJC3grg1cbh24YTVUrAIvynWDNV8hkAnuJNoSu+tXXsihWgySIoSgQTsG
-         sQmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2hfOxo8l0gFhuVWRcVdyoIpZK87a/GmDPhKeRcDc4w8=;
-        b=h8dUclOd5q1kyhvx5RnfH0qYKy5Q27LVRdRpMyquG9X2WE8UPrWB8U4X7lfFfIOHhA
-         FLNotMqzVW0IhgnkQnJOZuxRfz7mLCB8aBKDUmbVhUjXEA9DPLA39NMdTxMFrDdDv40I
-         SiajVlgr/Ro2Bl0O4d1qUjGNDQGHprSLR0HG/eFGWooy/SuaN6lLWsdQ1PU+VgRdtu4f
-         AGYtW0COkpGrZCiGSuxtjGibjGtDY3vj971euqBTD2JLNv/hOmEkP1sRYyu/xZXB3MpC
-         6l1UkcUbvXKZ7iwwUGy9aAUW8TfWQt4BsEBv+5YFUsBwmtvQV4xq8PKlco6BGXiSLSyM
-         1oJg==
-X-Gm-Message-State: APjAAAVfwgvTgU1QXTPZOWVPPOLw/ZTMNTnW8OR4BE7ctiRMJ/QHXXdd
-        MLsFsgGFXkDB4SIzVh4Hb6iGmxYY
-X-Google-Smtp-Source: APXvYqzl4fAETW3eFv8nNulleZJDKsTUZwdD5FL17bvo37P6pkxNigHAMzvqov6Fhs1bSjoBRr+EcQ==
-X-Received: by 2002:a19:f00a:: with SMTP id p10mr15241712lfc.68.1559831775065;
-        Thu, 06 Jun 2019 07:36:15 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id p15sm140908lji.80.2019.06.06.07.36.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 07:36:14 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-X-Google-Original-From: Dmitry Osipenko <digetx+tegraml@gmail.com>
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
- <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
- <71795bb0-2b8f-2b58-281c-e7e15bca3164@gmail.com>
- <2eab4777-79b8-0aea-c22f-ac9d11284889@nvidia.com>
-Message-ID: <26a8e261-4872-78df-3620-ee4a1e843fa4@gmail.com>
-Date:   Thu, 6 Jun 2019 17:36:13 +0300
+        Thu, 6 Jun 2019 10:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728998AbfFFOgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 10:36:38 -0400
+Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96FD020684;
+        Thu,  6 Jun 2019 14:36:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559831797;
+        bh=QN3c86AsOhqUNNGms5nxThdRVIMwAWzxlEniJHv0Z7I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QjXfcCXHB9oVQGRYbvr+CazQVQoj8bLOAnyZMtuiwuOO9JgiuPAPj6QLD4fXDG25e
+         /Jig0a6WIqaplQVRqVNx6Pb9fY/dLu0oMQaUqfPf8vemM7sn343qiZcoQJT3tWguZz
+         tac332Hb3ozwqxvbrJspQEMJ7SE5FlZaAoVemx6g=
+Subject: Re: [PATCH v2] ARM: configs: Remove useless UEVENT_HELPER_PATH
+To:     Krzysztof Kozlowski <krzk@kernel.org>, arm@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>
+References: <1559636093-26005-1-git-send-email-krzk@kernel.org>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3ca9b096-e53e-6434-47ee-2c3d59676fd4@kernel.org>
+Date:   Thu, 6 Jun 2019 09:36:33 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <2eab4777-79b8-0aea-c22f-ac9d11284889@nvidia.com>
+In-Reply-To: <1559636093-26005-1-git-send-email-krzk@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 17:26, Jon Hunter пишет:
-> 
-> On 06/06/2019 14:55, Dmitry Osipenko wrote:
->> 06.06.2019 16:45, Dmitry Osipenko пишет:
->>> 06.06.2019 15:37, Jon Hunter пишет:
->>>>
->>>> On 06/06/2019 12:54, Peter Ujfalusi wrote:
->>>>>
->>>>>
->>>>> On 06/06/2019 13.49, Jon Hunter wrote:
->>>>>>
->>>>>> On 06/06/2019 11:22, Peter Ujfalusi wrote:
->>>>>>
->>>>>> ...
->>>>>>
->>>>>>>>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>>>>>>>>> well.
->>>>>>>>> Not exactly equal.
->>>>>>>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->>>>>>>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->>>>>>>>> multiples of 16]
->>>>>>>>
->>>>>>>> So I think that the key thing to highlight here, is that the as Sameer
->>>>>>>> highlighted above for the Tegra ADMA there are two values that need to
->>>>>>>> be programmed; the DMA client FIFO size and the max burst size. The ADMA
->>>>>>>> has register fields for both of these.
->>>>>>>
->>>>>>> How does the ADMA uses the 'client FIFO size' and 'max burst size'
->>>>>>> values and what is the relation of these values to the peripheral side
->>>>>>> (ADMAIF)?
->>>>>>
->>>>>> Per Sameer's previous comment, the FIFO size is used by the ADMA to
->>>>>> determine how much space is available in the FIFO. I assume the burst
->>>>>> size just limits how much data is transferred per transaction.
->>>>>>
->>>>>>>> As you can see from the above the FIFO size can be much greater than the
->>>>>>>> burst size and so ideally both of these values would be passed to the DMA.
->>>>>>>>
->>>>>>>> We could get by with just passing the FIFO size (as the max burst size)
->>>>>>>> and then have the DMA driver set the max burst size depending on this,
->>>>>>>> but this does feel quite correct for this DMA. Hence, ideally, we would
->>>>>>>> like to pass both.
->>>>>>>>
->>>>>>>> We are also open to other ideas.
->>>>>>>
->>>>>>> I can not find public documentation (I think they are walled off by
->>>>>>> registration), but correct me if I'm wrong:
->>>>>>
->>>>>> No unfortunately, you are not wrong here :-(
->>>>>>
->>>>>>> ADMAIF - peripheral side
->>>>>>>  - kind of a small DMA for audio preipheral(s)?
->>>>>>
->>>>>> Yes this is the interface to the APE (audio processing engine) and data
->>>>>> sent to the ADMAIF is then sent across a crossbar to one of many
->>>>>> devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
->>>>>> configurable depending on the use-case.
->>>>>>
->>>>>>>  - Variable FIFO size
->>>>>>
->>>>>> Yes.
->>>>>>
->>>>>>>  - sends DMA request to ADMA per words
->>>>>>
->>>>>> From Sameer's notes it says the ADMAIF send a signal to the ADMA per
->>>>>> word, yes.
->>>>>>
->>>>>>> ADMA - system DMA
->>>>>>>  - receives the DMA requests from ADMAIF
->>>>>>>  - counts the requests
->>>>>>>  - based on some threshold of the counter it will send/read from ADMAIF?
->>>>>>>   - maxburst number of words probably?
->>>>>>
->>>>>> Sounds about right to me.
->>>>>>
->>>>>>> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
->>>>>>> managing that FIFO from the outside, making sure that it does not over
->>>>>>> or underrun?
->>>>>>
->>>>>> Yes.
->>>>>>
->>>>>>> And it is the one who sets the pace (in effect the DMA burst size - how
->>>>>>> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
->>>>>>
->>>>>> Yes.
->>>>>>
->>>>>> So currently, if you look at the ADMA driver
->>>>>> (drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
->>>>>> for the burst, but the FIFO size is hard-coded (see the
->>>>>> TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
->>>>>> Ideally, we should not hard-code this but pass it.
->>>>>
->>>>> Sure, hardcoding is never good ;)
->>>>>
->>>>>> Given that there are no current users of the ADMA upstream, we could
->>>>>> change the usage of the src/dst_maxburst, but being able to set the FIFO
->>>>>> size as well would be ideal.
->>>>>
->>>>> Looking at the drivers/dma/tegra210-adma.c for the
->>>>> TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
->>>>> remote FIFO size would fit.
->>>>> There are fields for overflow and starvation(?) thresholds and TX/RX
->>>>> size (assuming word length, 3 == 32bits?).
->>>>
->>>> The TX/RX size are the FIFO size. So 3 equates to a FIFO size of 3 * 64
->>>> bytes.
->>>>
->>>>> Both threshold is set to one, so I assume currently ADMA is
->>>>> pushing/pulling data word by word.
->>>>
->>>> That's different. That indicates thresholds when transfers start.
->>>>
->>>>> Not sure what the burst size is used for, my guess would be that it is
->>>>> used on the memory (DDR) side for optimized, more efficient accesses?
->>>>
->>>> That is the actual burst size.
->>>>
->>>>> My guess is that the threshold values are the counter limits, if the DMA
->>>>> request counter reaches it then ADMA would do a threshold limit worth of
->>>>> push/pull to ADMAIF.
->>>>> Or there is another register where the remote FIFO size can be written
->>>>> and ADMA is counting back from there until it reaches the threshold (and
->>>>> pushes/pulling again threshold amount of data) so it keeps the FIFO
->>>>> filled with at least threshold amount of data?
->>>>>
->>>>> I think in both cases the threshold would be the maxburst.
->>>>>
->>>>> I suppose you have the patch for adma on how to use the fifo_size
->>>>> parameter? That would help understand what you are trying to achieve better.
->>>>
->>>> Its quite simple, we would just use the FIFO size to set the fields
->>>> TEGRAXXX_ADMA_CH_FIFO_CTRL_TXSIZE/RXSIZE in the
->>>> TEGRAXXX_ADMA_CH_FIFO_CTRL register. That's all.
->>>>
->>>> Jon
->>>>
->>>
->>> Hi,
->>>
->>> If I understood everything correctly, the FIFO buffer is shared among
->>> all of the ADMA clients and hence it should be up to the ADMA driver to
->>> manage the quotas of the clients. So if there is only one client that
->>> uses ADMA at a time, then this client will get a whole FIFO buffer, but
->>> once another client starts to use ADMA, then the ADMA driver will have
->>> to reconfigure hardware to split the quotas.
->>>
->>
->> You could also simply hardcode the quotas per client in the ADMA driver
->> if the quotas are going to be static anyway.
-> 
-> Essentially this is what we have done so far, but Sameer is looking for
-> a way to make this more programmable/flexible. We can always do that if
-> there is no other option indeed. However, seems like a good time to see
-> if there is a better way.
 
-If the default values are good enough, then why bother? Otherwise it
-looks like you'll need some kind of "quotas manager", please try to
-figure out if it's really needed. It's always better to avoid
-over-engineering.
+
+On 6/4/19 3:14 AM, Krzysztof Kozlowski wrote:
+> Remove the CONFIG_UEVENT_HELPER_PATH because:
+> 1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
+>    CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
+>    made default to 'n',
+> 2. It is not recommended (help message: "This should not be used today
+>    [...] creates a high system load") and was kept only for ancient
+>    userland,
+> 3. Certain userland specifically requests it to be disabled (systemd
+>    README: "Legacy hotplug slows down the system and confuses udev").
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+
+> diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
+> index 6701a975e785..fe2e1e82e233 100644
+> --- a/arch/arm/configs/socfpga_defconfig
+> +++ b/arch/arm/configs/socfpga_defconfig
+> @@ -44,7 +44,6 @@ CONFIG_PCI=y
+>  CONFIG_PCI_MSI=y
+>  CONFIG_PCIE_ALTERA=y
+>  CONFIG_PCIE_ALTERA_MSI=y
+> -CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+>  CONFIG_DEVTMPFS=y
+>  CONFIG_DEVTMPFS_MOUNT=y
+>  CONFIG_MTD=y
+
+For (socfpga_defconfig):
+
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
