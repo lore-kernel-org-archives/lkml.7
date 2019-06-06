@@ -2,130 +2,111 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82873C28EB7
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA0FC28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635792070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7772070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 11:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfFFLak (ORCPT
+        id S1728483AbfFFLbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 07:30:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32989 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727296AbfFFLak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 07:30:40 -0400
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id A3EEDA022841E334D138;
-        Thu,  6 Jun 2019 12:30:38 +0100 (IST)
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
- by smtpsuk.huawei.com (10.201.108.46) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 6 Jun 2019 12:30:30 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
-        <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <stable@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v3 2/2] ima: add enforce-evm and log-evm modes to strictly check EVM status
-Date:   Thu, 6 Jun 2019 13:26:20 +0200
-Message-ID: <20190606112620.26488-3-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606112620.26488-1-roberto.sassu@huawei.com>
-References: <20190606112620.26488-1-roberto.sassu@huawei.com>
+        Thu, 6 Jun 2019 07:31:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:45846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727296AbfFFLbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 07:31:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61922A78;
+        Thu,  6 Jun 2019 04:31:21 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA95C3F246;
+        Thu,  6 Jun 2019 04:31:19 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 12:31:17 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH V2 4/4] arm64/mm: Drop local variable vm_fault_t from
+ __do_page_fault()
+Message-ID: <20190606113117.GC37821@lakrids.cambridge.arm.com>
+References: <1559544085-7502-1-git-send-email-anshuman.khandual@arm.com>
+ <1559544085-7502-5-git-send-email-anshuman.khandual@arm.com>
+ <20190604145612.GM6610@arrakis.emea.arm.com>
+ <1d89177a-e7af-ac4e-1a04-e8b750c2c768@arm.com>
+ <20190606112739.GB56860@arrakis.emea.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.154]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606112739.GB56860@arrakis.emea.arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IMA and EVM have been designed as two independent subsystems: the first for
-checking the integrity of file data; the second for checking file metadata.
-Making them independent allows users to adopt them incrementally.
+On Thu, Jun 06, 2019 at 12:27:40PM +0100, Catalin Marinas wrote:
+> On Thu, Jun 06, 2019 at 10:24:01AM +0530, Anshuman Khandual wrote:
+> > On 06/04/2019 08:26 PM, Catalin Marinas wrote:
+> > > On Mon, Jun 03, 2019 at 12:11:25PM +0530, Anshuman Khandual wrote:
+> > >> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> > >> index 4bb65f3..41fa905 100644
+> > >> --- a/arch/arm64/mm/fault.c
+> > >> +++ b/arch/arm64/mm/fault.c
+> > >> @@ -397,37 +397,29 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
+> > >>  static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
+> > >>  			   unsigned int mm_flags, unsigned long vm_flags)
+> > >>  {
+> > >> -	struct vm_area_struct *vma;
+> > >> -	vm_fault_t fault;
+> > >> +	struct vm_area_struct *vma = find_vma(mm, addr);
+> > >>  
+> > >> -	vma = find_vma(mm, addr);
+> > >> -	fault = VM_FAULT_BADMAP;
+> > >>  	if (unlikely(!vma))
+> > >> -		goto out;
+> > >> -	if (unlikely(vma->vm_start > addr))
+> > >> -		goto check_stack;
+> > >> +		return VM_FAULT_BADMAP;
+> > >>  
+> > >>  	/*
+> > >>  	 * Ok, we have a good vm_area for this memory access, so we can handle
+> > >>  	 * it.
+> > >>  	 */
+> > >> -good_area:
+> > >> +	if (unlikely(vma->vm_start > addr)) {
+> > >> +		if (!(vma->vm_flags & VM_GROWSDOWN))
+> > >> +			return VM_FAULT_BADMAP;
+> > >> +		if (expand_stack(vma, addr))
+> > >> +			return VM_FAULT_BADMAP;
+> > >> +	}
+> > > 
+> > > You could have a single return here:
+> > > 
+> > > 	if (unlikely(vma->vm_start > addr) &&
+> > > 	    (!(vma->vm_flags & VM_GROWSDOWN) || expand_stack(vma, addr)))
+> > > 		return VM_FAULT_BADMAP;
+> > > 
+> > > Not sure it's any clearer though.
+> > 
+> > TBH the proposed one seems clearer as it separates effect (vma->vm_start > addr)
+> > from required permission check (vma->vm_flags & VM_GROWSDOWN) and required action
+> > (expand_stack(vma, addr)). But I am happy to change as you have mentioned if that
+> > is preferred.
+> 
+> Not bothered really. You can leave them as in your proposal (I was just
+> seeing the VM_GROWSDOWN check tightly coupled with the expand_stack(),
+> it's fine either way).
 
-The point of intersection is in IMA-Appraisal, which calls
-evm_verifyxattr() to ensure that security.ima wasn't modified during an
-offline attack. The design choice, to ensure incremental adoption, was to
-continue appraisal verification if evm_verifyxattr() returns
-INTEGRITY_UNKNOWN. This value is returned when EVM is not enabled in the
-kernel configuration, or if the HMAC key has not been loaded yet.
+Personally, I find it clearer as separate statements, so I'd suggest
+keeping it as per Anshuman's proposal.
 
-Although this choice appears legitimate, it might not be suitable for
-hardened systems, where the administrator expects that access is denied if
-there is any error. An attacker could intentionally delete the EVM keys
-from the system and set the file digest in security.ima to the actual file
-digest so that the final appraisal status is INTEGRITY_PASS.
-
-This patch allows such hardened systems to strictly enforce an access
-control policy based on the validity of signatures/HMACs, by introducing
-two new values for the ima_appraise= kernel option: enforce-evm and
-log-evm.
-
-Fixes: 2fe5d6def1672 ("ima: integrity appraisal extension")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Cc: stable@vger.kernel.org
----
- Documentation/admin-guide/kernel-parameters.txt | 3 ++-
- security/integrity/ima/ima_appraise.c           | 8 ++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fe5cde58c11b..0585194ca736 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1587,7 +1587,8 @@
- 			Set number of hash buckets for inode cache.
- 
- 	ima_appraise=	[IMA] appraise integrity measurements
--			Format: { "off" | "enforce" | "fix" | "log" }
-+			Format: { "off" | "enforce" | "fix" | "log" |
-+				  "enforce-evm" | "log-evm" }
- 			default: "enforce"
- 
- 	ima_appraise_tcb [IMA] Deprecated.  Use ima_policy= instead.
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 5fb7127bbe68..afef06e10fb9 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -18,6 +18,7 @@
- 
- #include "ima.h"
- 
-+static bool ima_appraise_req_evm __ro_after_init;
- static int __init default_appraise_setup(char *str)
- {
- #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
-@@ -28,6 +29,9 @@ static int __init default_appraise_setup(char *str)
- 	else if (strncmp(str, "fix", 3) == 0)
- 		ima_appraise = IMA_APPRAISE_FIX;
- #endif
-+	if (strcmp(str, "enforce-evm") == 0 ||
-+	    strcmp(str, "log-evm") == 0)
-+		ima_appraise_req_evm = true;
- 	return 1;
- }
- 
-@@ -245,7 +249,11 @@ int ima_appraise_measurement(enum ima_hooks func,
- 	switch (status) {
- 	case INTEGRITY_PASS:
- 	case INTEGRITY_PASS_IMMUTABLE:
-+		break;
- 	case INTEGRITY_UNKNOWN:
-+		if (ima_appraise_req_evm &&
-+		    xattr_value->type != EVM_IMA_XATTR_DIGSIG)
-+			goto out;
- 		break;
- 	case INTEGRITY_NOXATTRS:	/* No EVM protected xattrs. */
- 	case INTEGRITY_NOLABEL:		/* No security.evm xattr. */
--- 
-2.17.1
-
+Thanks,
+Mark.
