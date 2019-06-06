@@ -2,247 +2,180 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC72C28EB4
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A81C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C79120652
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8024420868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:55:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mozm+4tF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JRbyl06C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfFFNzW (ORCPT
+        id S1728204AbfFFNzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:55:22 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40574 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfFFNzW (ORCPT
+        Thu, 6 Jun 2019 09:55:52 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3797 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbfFFNzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:55:22 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a21so2112131ljh.7;
-        Thu, 06 Jun 2019 06:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CGoxdLwbU1DKw0cBZ5dECytgAjdbKzc3O395e3fylMw=;
-        b=Mozm+4tFeMf2cYNJ2tsUo4LC8N+dYvztYPOpjFczQLqy3SltxYYebMcTxEqsuOvG57
-         VsILQIaP1O3kdb/ilUMeqQXEjwmbItIyIDFYWOhgk3hgFfAFW1JhvtXwHPUlW51aWZuh
-         e8ETzq9bvbzsi6yxjD9IWJtacwHUDs4gmnuprvkTA0v47kgrq4Bz2R4YjA9RaxX5uYZm
-         GRb6EWMjJ5xbmIOTcQAlAlEgm7c/6u0rLulSBgODyg/NI3MJ08zvDE8Zp+Ba4qJhQnNe
-         w09s/y37UgWNz6C9GJDLriqRtm1q5GqkQYzsO7gvaflUfsri6py0NXSyrqYmm/0BngHM
-         +TFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CGoxdLwbU1DKw0cBZ5dECytgAjdbKzc3O395e3fylMw=;
-        b=FyT3WGngZlXVIyfc/3/Eb0CUrlFxusjpGILM4z+/Zlh70jiC4PRoWH08NVDGM0yxGt
-         JpYzAkT3mPLY1slr5PhNyzBT8PG8mEsLsHnk+h1KIjuZPB10Jj7HYRJT/nSrUAugoWoy
-         pEgLIhPtLWZ4g9KXQP/p0FudUyU69ebPpuHSRSa0GyfdGFGZbcFZjCHfjhYgqE4pUJjN
-         Qoq0vsrHV/WtoqDG+ewDNZ82npDM0g2zpO/itEhyXdW94zwfuLFhsukFWzrCdckMjkX/
-         NsQ0z1JM4vT1+3JMdomTmhi94e6wGjzZbMY1lerG80tKFrdJSkUJCMBg61cbiQk8VfRJ
-         qGqg==
-X-Gm-Message-State: APjAAAVDEKBXg0ycSlnt6VhnKyILR24dclYEgTt4KVFwCOkGt/v9Mmw9
-        egQfx85pLI8rWetJxd3ZarS8l4bp
-X-Google-Smtp-Source: APXvYqwWlkawKi3y4f0NWBoHKY3H6H0v7Re/WBLN9bKHxxpzbp6ExiSiFvFaMUucpptNuG/8308QkA==
-X-Received: by 2002:a2e:8793:: with SMTP id n19mr757668lji.174.1559829318714;
-        Thu, 06 Jun 2019 06:55:18 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id p10sm367406ljh.50.2019.06.06.06.55.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 06:55:17 -0700 (PDT)
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
- <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
-Message-ID: <71795bb0-2b8f-2b58-281c-e7e15bca3164@gmail.com>
-Date:   Thu, 6 Jun 2019 16:55:16 +0300
+        Thu, 6 Jun 2019 09:55:51 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf91b640000>; Thu, 06 Jun 2019 06:55:48 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 06:55:50 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 06:55:50 -0700
+Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 13:55:47 +0000
+Subject: Re: [PATCH V1] i2c: busses: tegra: Add suspend-resume support
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559195718-6693-1-git-send-email-bbiswas@nvidia.com>
+ <c8bad04b-67ef-bcdf-04df-4aa61271e81c@gmail.com>
+ <9142282b-ab76-53a0-13ce-c43b8adc575f@nvidia.com>
+ <4f14a218-332c-0263-c6c5-73a13b2446f0@gmail.com>
+ <caa17a53-6f29-411b-9a84-58ff019752ff@nvidia.com>
+ <d5803f1d-0895-08b8-4851-cd8afad830c6@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <c88b736e-47e0-43ca-b859-900936f94715@nvidia.com>
+Date:   Thu, 6 Jun 2019 06:55:44 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d5803f1d-0895-08b8-4851-cd8afad830c6@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559829348; bh=6e3s0THa4zvwhgtfqAaZTr8O5dOGC++3FEJrroJDDAM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JRbyl06CrpDeo4FzGqcdZpCzNspp06hfus947iu9KFcuwYOQb3f0J1gO2h/AsyISV
+         1HeUcOzb9gQF8QP5tE0ElsWfqN4nq+ipSyuJw8b+hvmHdCsfyThebGDWeCzIRk2kpq
+         HUpvN+czSs4p0uj7yFvhL+JFYqieAW73aodH7C/RdFQK/N+tt1zCk9ebNyqj7PebXS
+         V8N5glHmXbOenkrt5ZkwlIO+YCsDEMeqz48lXvZh3M0wzcigme8XIB+Hz/iYA0iiif
+         FKBLFojrFDRs8plNGLBUJuyVzMcWis6knxxIkP3Omc+p1J0/Wls1gLaa6HeQBV0XtW
+         jdBgZTDVUi0sw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.06.2019 16:45, Dmitry Osipenko пишет:
-> 06.06.2019 15:37, Jon Hunter пишет:
->>
->> On 06/06/2019 12:54, Peter Ujfalusi wrote:
->>>
->>>
->>> On 06/06/2019 13.49, Jon Hunter wrote:
->>>>
->>>> On 06/06/2019 11:22, Peter Ujfalusi wrote:
->>>>
->>>> ...
->>>>
->>>>>>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>>>>>>> well.
->>>>>>> Not exactly equal.
->>>>>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->>>>>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->>>>>>> multiples of 16]
->>>>>>
->>>>>> So I think that the key thing to highlight here, is that the as Sameer
->>>>>> highlighted above for the Tegra ADMA there are two values that need to
->>>>>> be programmed; the DMA client FIFO size and the max burst size. The ADMA
->>>>>> has register fields for both of these.
->>>>>
->>>>> How does the ADMA uses the 'client FIFO size' and 'max burst size'
->>>>> values and what is the relation of these values to the peripheral side
->>>>> (ADMAIF)?
->>>>
->>>> Per Sameer's previous comment, the FIFO size is used by the ADMA to
->>>> determine how much space is available in the FIFO. I assume the burst
->>>> size just limits how much data is transferred per transaction.
->>>>
->>>>>> As you can see from the above the FIFO size can be much greater than the
->>>>>> burst size and so ideally both of these values would be passed to the DMA.
->>>>>>
->>>>>> We could get by with just passing the FIFO size (as the max burst size)
->>>>>> and then have the DMA driver set the max burst size depending on this,
->>>>>> but this does feel quite correct for this DMA. Hence, ideally, we would
->>>>>> like to pass both.
->>>>>>
->>>>>> We are also open to other ideas.
->>>>>
->>>>> I can not find public documentation (I think they are walled off by
->>>>> registration), but correct me if I'm wrong:
->>>>
->>>> No unfortunately, you are not wrong here :-(
->>>>
->>>>> ADMAIF - peripheral side
->>>>>  - kind of a small DMA for audio preipheral(s)?
->>>>
->>>> Yes this is the interface to the APE (audio processing engine) and data
->>>> sent to the ADMAIF is then sent across a crossbar to one of many
->>>> devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
->>>> configurable depending on the use-case.
->>>>
->>>>>  - Variable FIFO size
->>>>
->>>> Yes.
->>>>
->>>>>  - sends DMA request to ADMA per words
->>>>
->>>> From Sameer's notes it says the ADMAIF send a signal to the ADMA per
->>>> word, yes.
->>>>
->>>>> ADMA - system DMA
->>>>>  - receives the DMA requests from ADMAIF
->>>>>  - counts the requests
->>>>>  - based on some threshold of the counter it will send/read from ADMAIF?
->>>>>   - maxburst number of words probably?
->>>>
->>>> Sounds about right to me.
->>>>
->>>>> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
->>>>> managing that FIFO from the outside, making sure that it does not over
->>>>> or underrun?
->>>>
->>>> Yes.
->>>>
->>>>> And it is the one who sets the pace (in effect the DMA burst size - how
->>>>> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
->>>>
->>>> Yes.
->>>>
->>>> So currently, if you look at the ADMA driver
->>>> (drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
->>>> for the burst, but the FIFO size is hard-coded (see the
->>>> TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
->>>> Ideally, we should not hard-code this but pass it.
->>>
->>> Sure, hardcoding is never good ;)
->>>
->>>> Given that there are no current users of the ADMA upstream, we could
->>>> change the usage of the src/dst_maxburst, but being able to set the FIFO
->>>> size as well would be ideal.
->>>
->>> Looking at the drivers/dma/tegra210-adma.c for the
->>> TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
->>> remote FIFO size would fit.
->>> There are fields for overflow and starvation(?) thresholds and TX/RX
->>> size (assuming word length, 3 == 32bits?).
->>
->> The TX/RX size are the FIFO size. So 3 equates to a FIFO size of 3 * 64
->> bytes.
->>
->>> Both threshold is set to one, so I assume currently ADMA is
->>> pushing/pulling data word by word.
->>
->> That's different. That indicates thresholds when transfers start.
->>
->>> Not sure what the burst size is used for, my guess would be that it is
->>> used on the memory (DDR) side for optimized, more efficient accesses?
->>
->> That is the actual burst size.
->>
->>> My guess is that the threshold values are the counter limits, if the DMA
->>> request counter reaches it then ADMA would do a threshold limit worth of
->>> push/pull to ADMAIF.
->>> Or there is another register where the remote FIFO size can be written
->>> and ADMA is counting back from there until it reaches the threshold (and
->>> pushes/pulling again threshold amount of data) so it keeps the FIFO
->>> filled with at least threshold amount of data?
->>>
->>> I think in both cases the threshold would be the maxburst.
->>>
->>> I suppose you have the patch for adma on how to use the fifo_size
->>> parameter? That would help understand what you are trying to achieve better.
->>
->> Its quite simple, we would just use the FIFO size to set the fields
->> TEGRAXXX_ADMA_CH_FIFO_CTRL_TXSIZE/RXSIZE in the
->> TEGRAXXX_ADMA_CH_FIFO_CTRL register. That's all.
->>
->> Jon
->>
-> 
-> Hi,
-> 
-> If I understood everything correctly, the FIFO buffer is shared among
-> all of the ADMA clients and hence it should be up to the ADMA driver to
-> manage the quotas of the clients. So if there is only one client that
-> uses ADMA at a time, then this client will get a whole FIFO buffer, but
-> once another client starts to use ADMA, then the ADMA driver will have
-> to reconfigure hardware to split the quotas.
-> 
 
-You could also simply hardcode the quotas per client in the ADMA driver
-if the quotas are going to be static anyway.
 
--- 
-Dmitry
+On 6/6/19 4:52 AM, Dmitry Osipenko wrote:
+> 06.06.2019 8:43, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>>
+>> On 5/31/19 5:43 AM, Dmitry Osipenko wrote:
+>>> 31.05.2019 11:50, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>
+>>>>
+>>>> On 5/30/19 4:27 AM, Dmitry Osipenko wrote:
+>>>>> 30.05.2019 8:55, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> Post suspend I2C registers have power on reset values. Before any
+>>>>>> transfer initialize I2C registers to prevent I2C transfer timeout
+>>>>>> and implement suspend and resume callbacks needed. Fix below errors
+>>>>>> post suspend:
+>>>>>>
+>>>>>> 1) Tegra I2C transfer timeout during jetson tx2 resume:
+>>>>>>
+>>>>>> [=C2=A0=C2=A0 27.520613] pca953x 1-0074: calling pca953x_resume+0x0/=
+0x1b0 @
+>>>>>> 2939, parent: i2c-1
+>>>>>> [=C2=A0=C2=A0 27.633623] tegra-i2c 3160000.i2c: i2c transfer timed o=
+ut
+>>>>>> [=C2=A0=C2=A0 27.639162] pca953x 1-0074: Unable to sync registers 0x=
+3-0x5. -110
+>>>>>> [=C2=A0=C2=A0 27.645336] pca953x 1-0074: Failed to sync GPIO dir reg=
+isters: -110
+>>>>>> [=C2=A0=C2=A0 27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/=
+0x1b0
+>>>>>> returns -110
+>>>>>> [=C2=A0=C2=A0 27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 re=
+turned -110
+>>>>>> after 127152 usecs
+>>>>>> [=C2=A0=C2=A0 27.666194] PM: Device 1-0074 failed to resume: error -=
+110
+>>>>>>
+>>>>>> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+>>>>>>
+>>>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>>>> ---
+>>>>>>  =C2=A0=C2=A0 drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++=
+++++++
+>>>>>>  =C2=A0=C2=A0 1 file changed, 24 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c
+>>>>>> b/drivers/i2c/busses/i2c-tegra.c
+>>>>>> index ebaa78d..f6a377f 100644
+>>>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>>>> @@ -1687,9 +1687,33 @@ static int tegra_i2c_remove(struct
+>>>>>> platform_device *pdev)
+>>>>>>  =C2=A0=C2=A0 }
+>>>>>>  =C2=A0=C2=A0 =C2=A0 #ifdef CONFIG_PM_SLEEP
+>>>>>> +static int tegra_i2c_suspend(struct device *dev)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdat=
+a(dev);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 i2c_mark_adapter_suspended(&i2c_dev->adapter);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int tegra_i2c_resume(struct device *dev)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdat=
+a(dev);
+>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 i2c_lock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_AD=
+APTER);
+>>>>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra_i2c_init(i2c_dev, false);
+>>>>>> +=C2=A0=C2=A0=C2=A0 i2c_unlock_bus(&i2c_dev->adapter, I2C_LOCK_ROOT_=
+ADAPTER);
+>>>>>
+>>>>> Why the locking is needed here?
+>>>>
+>>>> async resume could result in stress test issues if some client accesse=
+s
+>>>> the i2c instance. This ensures the i2c instance is locked till the
+>>>> initialization is complete.
+>>>
+>>> 1) This doesn't make much sense.. if client could access I2C during of
+>>> tegra_i2c_init execution, then what stops it to perform the access
+>>> before the lock is taken?
+>> Client resumes will start after I2C instance resume because of driver
+>> dependency. Since lock is the first call in i2c-tegra I believe I2C
+>> calls of client will not start.
+>=20
+> You're incorrectly assuming that client can start resuming in the middle
+> of the controller's resume process. I2C client's resume won't start
+> until tegra_i2c_resume() is finished completely. That is because child
+> drivers are resumed only after theirs parent is ready and this is
+> guaranteed by the drivers core.
+>=20
+Agreed.
+
+-regards,
+  Bitan
