@@ -2,117 +2,131 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529DEC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47920C28EB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4C820673
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6C920673
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 14:35:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MBprUpp1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ej65huN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfFFOed (ORCPT
+        id S1728965AbfFFOfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 10:34:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33338 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728796AbfFFOec (ORCPT
+        Thu, 6 Jun 2019 10:35:45 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:37483 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728768AbfFFOfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 10:34:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so1644762pfq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:34:32 -0700 (PDT)
+        Thu, 6 Jun 2019 10:35:45 -0400
+Received: by mail-yb1-f196.google.com with SMTP id l66so1012559ybf.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 07:35:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=uliRl25tF2O1ExnxNI5OeemcUVuWp/hZHc1pbbwUvtw=;
-        b=MBprUpp1e5VKUe+T74LmM6i0Ek4WwUD8SNxviqye9qRCXjeQD1AN2cQwMjMeLOJAFU
-         gJe75uGQWbYYHmyw2x5BvtU5ncrcFbkHTESEAOA1dzwscKIbkZKdQNpmnqFhKnBmc3zQ
-         EGOBnm10P7Akkmw3M7Phxq/g7hqCRhz0eQ+B4qicHZCKeanltJAA1IX5vvqIsNB6EU1V
-         ffagFv4poPie3Oi6fc6m4FO/7bfLmtOyca95WSoReHg1f/VgYW1TP1sk+8d73DWcuplv
-         eVzc1ya3v/2UecxqoJ+Sq8Lb0zxNK7qHeBb63mjflhEmiQno3Q0gxTPT2+o1bJzLxiLZ
-         ZnSw==
+        bh=HgJ0GZY//Len7veYiP6CvMdfuN08GbgxjLHnvQVRuds=;
+        b=Ej65huN6br/BvsJL6NdryRgqMaigzdNrEh0yptxU6ktxfkOVfnGB8JhlcnDFegwM39
+         1+xf+2IbGCkZB2jitqE7MsxKe30xIxv6oUIFZb6dZojIaggD1y9e4wkzFf6KEnZXQAqs
+         Dka83U7UotuhVF2sxPWPJXwFEBL/RGPvmp+iW3hO/pbvvqr2hWVkwHI4hCcz1H+v8zVs
+         OwjZQY6FfB4+yJ4wASjdtBBchHyOGI2lsAZ1758+/CfmAKb7zdYttFR66+IXUdJkua8n
+         8l5PehvXi2ROk4xfrf1yIV+PuPc2tzcfIIjxZyYe149/ZfI5TuYzV25HnKl5aAl6A0yT
+         kF2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uliRl25tF2O1ExnxNI5OeemcUVuWp/hZHc1pbbwUvtw=;
-        b=STLcVmsdhyl9Q7O7syqNvpdu+qR38No8e7e/cWwYtlhlBETTmshH4AyyK47rzmLCQ4
-         7x2TcxlVKJnm5ALfZHBr0WRJdSU2augeeFHBIJBOzxDGlcC2ALtWSKCb6xhZc82/aWIr
-         rlt2J9gp77pyT9t63SWCmjcCBFbxk09w0/MOZQ+kK9jPY7N+Ob9XgT2RbW/KDgQ+tgy+
-         J8JoJZiwe3gYtOa8zsSNQKk53xqJT9TP2S0IWWLkD0IpKcKn7VFSEZtvidYh636Iob76
-         gGDN2Mwpe2Gv484Akl0co7FoBWNwrDeDxFWtxP1PeYJliuWhfPmrgnY2Yc3LOrLQdk0x
-         Jcfg==
-X-Gm-Message-State: APjAAAXG84FcyMXXbvvA9xaWK8QV3UJ/tTygoj5mOnhWc6ioj+jwTVDe
-        OdTiDAgPyEU37O7MqDJkSMEENw==
-X-Google-Smtp-Source: APXvYqzIL8wsldD4bies6ebY7rZKopPTvKboOK8nOCrGaFcXy8cI3glqwYs+CwKGEY8yNiE0aUv+Rw==
-X-Received: by 2002:a63:dd05:: with SMTP id t5mr3525537pgg.229.1559831671810;
-        Thu, 06 Jun 2019 07:34:31 -0700 (PDT)
-Received: from brauner.io ([172.56.30.175])
-        by smtp.gmail.com with ESMTPSA id l7sm2552259pfl.9.2019.06.06.07.34.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 07:34:31 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 16:34:21 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-usb@vger.kernel.org, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 00/10] Mount, FS, Block and Keyrings notifications
- [ver #3]
-Message-ID: <20190606143420.hxjximmhigpa2nti@brauner.io>
-References: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
+        bh=HgJ0GZY//Len7veYiP6CvMdfuN08GbgxjLHnvQVRuds=;
+        b=aZHDpCJN3bPssPZRZdsiTyKU/tpwIRrz8fWrrt47t3x31zVnsuw/GI7AtbPkeNsCRA
+         nDtqKEtLumlwHO+Cpb6wUTgXVpg0nyi8z1PS6Mht+mHpmh2CVOXDJ09VDKXDfw/jL0fI
+         sCFhzfmighORdfOAY0TSARYRvsSEvfgU21qycU4jOJLAP3M3vS8nYV9ToUkj/YWYLevb
+         zP2x09WZppRWDIDDGG9l6/zdj8UL5qh4/ZPeesKQ+HuGL34BvL7NpxAfUe3lcCILQBjs
+         UBY3MEBHlzzeghhywUU15g/iUwg6t34+I+x54IxUqVvN/2pisxbZ021v/xUUE38UsnLC
+         eQqQ==
+X-Gm-Message-State: APjAAAWcf51Rtu1fTpQbxm/w8dXS9SPJsz6Y3uz8C7hkYrvHvLPmC78B
+        PK1S4r9CQujRY9o6iNsqqNCrEg==
+X-Google-Smtp-Source: APXvYqx4wLLqF1nY5nqIufaWI5Hdcp2smawrQmPU3ZCZZRABh9cWLQ/l6pM/bekVLBiX79E90XgiSg==
+X-Received: by 2002:a5b:a90:: with SMTP id h16mr21558068ybq.341.1559831744170;
+        Thu, 06 Jun 2019 07:35:44 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li1322-146.members.linode.com. [45.79.223.146])
+        by smtp.gmail.com with ESMTPSA id v70sm515376ywc.78.2019.06.06.07.35.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Jun 2019 07:35:43 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 22:35:32 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] perf augmented_raw_syscalls: Document clang
+ configuration
+Message-ID: <20190606143532.GD5970@leoy-ThinkPad-X240s>
+References: <20190606094845.4800-1-leo.yan@linaro.org>
+ <20190606094845.4800-5-leo.yan@linaro.org>
+ <20190606140800.GF30166@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155981411940.17513.7137844619951358374.stgit@warthog.procyon.org.uk>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190606140800.GF30166@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 10:41:59AM +0100, David Howells wrote:
+On Thu, Jun 06, 2019 at 11:08:00AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Jun 06, 2019 at 05:48:45PM +0800, Leo Yan escreveu:
+> > To build this program successfully with clang, there have three
+> > compiler options need to be specified:
+> > 
+> >   - Header file path: tools/perf/include/bpf;
+> >   - Specify architecture;
+> >   - Define macro __NR_CPUS__.
 > 
-> Hi Al,
-> 
-> Here's a set of patches to add a general variable-length notification queue
-> concept and to add sources of events for:
-> 
->  (1) Mount topology events, such as mounting, unmounting, mount expiry,
->      mount reconfiguration.
-> 
->  (2) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
->      errors (not complete yet).
-> 
->  (3) Key/keyring events, such as creating, linking and removal of keys.
-> 
->  (4) General device events (single common queue) including:
-> 
->      - Block layer events, such as device errors
-> 
->      - USB subsystem events, such as device/bus attach/remove, device
->        reset, device errors.
-> 
-> One of the reasons for this is so that we can remove the issue of processes
-> having to repeatedly and regularly scan /proc/mounts, which has proven to
-> be a system performance problem.  To further aid this, the fsinfo() syscall
-> on which this patch series depends, provides a way to access superblock and
-> mount information in binary form without the need to parse /proc/mounts.
-> 
-> 
-> LSM support is included, but controversial:
+> So, this shouldn't be needed, all of this is supposed to be done
+> automagically, have you done a 'make -C tools/perf install'?
 
-Apart from the LSM/security controversy here the general direction of
-this patchset is pretty well received it seems.
-Imho, having a notification mechanism like this is a very good thing for
-userspace. So would be great if there'd be a consensus on the LSM bits.
+I missed the up operation.  But after git pulled the lastest code base
+from perf/core branch and used the command 'make -C tools/perf
+install', I still saw the eBPF build failure.
 
-Christian
+Just now this issue is fixed after I removed the config
+'clang-bpf-cmd-template' from ~/.perfconfig;  the reason is I followed
+up the Documentation/perf-config.txt to set the config as below:
+
+  clang-bpf-cmd-template = "$CLANG_EXEC -D__KERNEL__ $CLANG_OPTIONS \
+                          $KERNEL_INC_OPTIONS -Wno-unused-value \
+                          -Wno-pointer-sign -working-directory \
+                          $WORKING_DIR -c $CLANG_SOURCE -target bpf \
+                          -O2 -o -"
+
+In fact, util/llvm-utils.c has updated the default configuration as
+below:
+
+  #define CLANG_BPF_CMD_DEFAULT_TEMPLATE                          \
+                "$CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS "\
+                "-DLINUX_VERSION_CODE=$LINUX_VERSION_CODE "     \
+                "$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
+                "-Wno-unused-value -Wno-pointer-sign "          \
+                "-working-directory $WORKING_DIR "              \
+                "-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
+
+Maybe should update Documentation/perf-config.txt to tell users the
+real default value of clang-bpf-cmd-template?
+
+Thanks,
+Leo Yan
