@@ -2,102 +2,69 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5DAC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3D4C04AB5
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D14620693
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E34F20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 13:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfFFNwU (ORCPT
+        id S1727340AbfFFNwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 09:52:20 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:50734 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727522AbfFFNwM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 09:52:12 -0400
-Received: by mail-io1-f70.google.com with SMTP id m26so178423ioh.17
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 06:52:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=yRMkhc7yuKfa2dw31vxobwmwLPW+9z7XoM/maofKdPk=;
-        b=D4J7eQvW4wAvbK3TL3pw2uiKmm2DMqEXbFtw49zLPcAQKVPay40GsQ6O+N+b5xX8ZG
-         jpddqET3navqZEu9gxFyffEWnXtAnFGuYP3kV2JfjervKRGhFpfuXt1TCf2GILLXpFJk
-         CctWVe1/kAbTI1qS8J6LBH8xKyE6gP2iRj5tdFSu9p4+05RxB28xJ1oGErdw282PlSj0
-         v17BFp45HUe7QaL+h7ts+sN3VfhvKlnHYCK/JrVUG/V8n3NJf3zVrjnD1Ri9GuNIHgFI
-         Rpb8GEPT0ZuiV2N+gDsXrf9tUI2W4scaLvhCABeuHf/t1zFocexCv+FKRhqVZ1roiPH0
-         Hmgw==
-X-Gm-Message-State: APjAAAUqzLngsqSc7Nzdhj0xJNyhWhiTrX2FSMVkECsSh8dPyKlqu4OW
-        SI0RXTjx26EVKhfKqvObQomnAU9MrUZnxs+Txkdbcde0QAbI
-X-Google-Smtp-Source: APXvYqxsOSemHsUbujSph9lEzIDYC7+nk5LCzhefqqwo192xfbCeFrUgqyeODNjVlpcURg4PEu+WR9j7lfp6hBZjNe0whweIPjv3
-MIME-Version: 1.0
-X-Received: by 2002:a6b:4f14:: with SMTP id d20mr14000242iob.219.1559829131378;
- Thu, 06 Jun 2019 06:52:11 -0700 (PDT)
-Date:   Thu, 06 Jun 2019 06:52:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004945f1058aa80556@google.com>
-Subject: KASAN: slab-out-of-bounds Read in corrupted (2)
-From:   syzbot <syzbot+9a901acbc447313bfe3e@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, cai@lca.pw, crecklin@redhat.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Thu, 6 Jun 2019 09:52:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40314 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727522AbfFFNwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 09:52:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 44DFEAF42;
+        Thu,  6 Jun 2019 13:52:22 +0000 (UTC)
+From:   Nikolay Borisov <nborisov@suse.com>
+To:     linux-btrfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andrea.parri@amarulasolutions.com,
+        peterz@infradead.org, paulmck@linux.ibm.com,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: [PATCH 0/2] Refactor snapshot vs nocow writers locking
+Date:   Thu,  6 Jun 2019 16:52:17 +0300
+Message-Id: <20190606135219.1086-1-nborisov@suse.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This patchset first factors out the open code which essentially implements a 
+lock that allows to have either multiple reader or multiple writers but not 
+both. Then patch 2 just converts the code to using the newly introduced lock. 
 
-syzbot found the following crash on:
+The individual patch descriptions contain more information about the technical 
+details and invariants that the lock provide. 
 
-HEAD commit:    156c0591 Merge tag 'linux-kselftest-5.2-rc4' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13512d51a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
-dashboard link: https://syzkaller.appspot.com/bug?extid=9a901acbc447313bfe3e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a4b01ea00000
+I have also CC'ed a copule of the maintainer of linux memory model since my 
+patches just factor out the code and I would really like someone proficient 
+enough in the usage/semantics of memory barries to review it as well. 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9a901acbc447313bfe3e@syzkaller.appspotmail.com
+Nikolay Borisov (2):
+  btrfs: Implement DRW lock
+  btrfs: convert snapshot/nocow exlcusion to drw lock
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in vsnprintf+0x1727/0x19a0  
-lib/vsprintf.c:2503
-Read of size 8 at addr ffff8880a91c7d00 by task syz-executor.0/9821
+ fs/btrfs/Makefile      |  2 +-
+ fs/btrfs/ctree.h       | 10 ++----
+ fs/btrfs/disk-io.c     | 39 ++---------------------
+ fs/btrfs/drw_lock.c    | 71 ++++++++++++++++++++++++++++++++++++++++++
+ fs/btrfs/drw_lock.h    | 23 ++++++++++++++
+ fs/btrfs/extent-tree.c | 35 ---------------------
+ fs/btrfs/file.c        | 12 +++----
+ fs/btrfs/inode.c       |  8 ++---
+ fs/btrfs/ioctl.c       | 10 ++----
+ 9 files changed, 114 insertions(+), 96 deletions(-)
+ create mode 100644 fs/btrfs/drw_lock.c
+ create mode 100644 fs/btrfs/drw_lock.h
 
-CPU: 0 PID: 9821 Comm: syz-executor.0 Not tainted 5.2.0-rc3+ #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
+-- 
+2.17.1
 
-Allocated by task 1024:
-(stack is not available)
-
-Freed by task 2310999008:
-------------[ cut here ]------------
-Bad or missing usercopy whitelist? Kernel memory overwrite attempt detected  
-to SLAB object 'skbuff_head_cache' (offset 24, size 1)!
-WARNING: CPU: 0 PID: 9821 at mm/usercopy.c:78 usercopy_warn+0xeb/0x110  
-mm/usercopy.c:78
-Kernel panic - not syncing: panic_on_warn set ...
-Shutting down cpus with NMI
-Kernel Offset: disabled
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
