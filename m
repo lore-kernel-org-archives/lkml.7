@@ -2,91 +2,201 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3AAC28CC5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1A1C28CC6
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C0E2070B
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C072070B
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 01:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfFFBnJ (ORCPT
+        id S1726711AbfFFBpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Jun 2019 21:43:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18089 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726561AbfFFBnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Jun 2019 21:43:09 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 620AAF014900085AD60D;
-        Thu,  6 Jun 2019 09:43:07 +0800 (CST)
-Received: from [127.0.0.1] (10.177.19.180) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 6 Jun 2019
- 09:43:05 +0800
-Subject: Re: [PATCH net-next] net: Drop unlikely before IS_ERR(_OR_NULL)
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
- <20190605142428.84784-3-wangkefeng.wang@huawei.com>
- <20190605091319.000054e9@intel.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <721a48ce-c09a-a35e-86ae-eac5eec26668@huawei.com>
-Date:   Thu, 6 Jun 2019 09:39:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        Wed, 5 Jun 2019 21:45:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:36140 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbfFFBpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Jun 2019 21:45:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2019 18:45:08 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2019 18:45:06 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
+        "Theodore Ts'o" <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Date:   Wed,  5 Jun 2019 18:45:33 -0700
+Message-Id: <20190606014544.8339-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190605091319.000054e9@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.177.19.180]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ira Weiny <ira.weiny@intel.com>
 
-On 2019/6/6 0:13, Jesse Brandeburg wrote:
-> On Wed, 5 Jun 2019 22:24:26 +0800 Kefeng wrote:
->> IS_ERR(_OR_NULL) already contain an 'unlikely' compiler flag,
->> so no need to do that again from its callers. Drop it.
->>
-> <snip>
->
->>  	segs = __skb_gso_segment(skb, features, false);
->> -	if (unlikely(IS_ERR_OR_NULL(segs))) {
->> +	if (IS_ERR_OR_NULL(segs)) {
->>  		int segs_nr = skb_shinfo(skb)->gso_segs;
->>  
-> The change itself seems reasonable, but did you check to see if the
-> paths changed are faster/slower with your fix?  Did you look at any
-> assembly output to see if the compiler actually generated different
-> code?  Is there a set of similar changes somewhere else in the kernel
-> we can refer to?
+... V1,000,000   ;-)
 
-+Enrico Weigelt
+Pre-requisites:
+	John Hubbard's put_user_pages() patch series.[1]
+	Jan Kara's ext4_break_layouts() fixes[2]
 
-There is no different in assembly output (only check the x86/arm64), and
+Based on the feedback from LSFmm and the LWN article which resulted.  I've
+decided to take a slightly different tack on this problem.
 
-the Enrico Weigelt have finished a cocci script to do this cleanup.
+The real issue is that there is no use case for a user to have RDMA pinn'ed
+memory which is then truncated.  So really any solution we present which:
+
+A) Prevents file system corruption or data leaks
+...and...
+B) Informs the user that they did something wrong
+
+Should be an acceptable solution.
+
+Because this is slightly new behavior.  And because this is gonig to be
+specific to DAX (because of the lack of a page cache) we have made the user
+"opt in" to this behavior.
+
+The following patches implement the following solution.
+
+1) The user has to opt in to allowing GUP pins on a file with a layout lease
+   (now made visible).
+2) GUP will fail (EPERM) if a layout lease is not taken
+3) Any truncate or hole punch operation on a GUP'ed DAX page will fail.
+4) The user has the option of holding the layout lease to receive a SIGIO for
+   notification to the original thread that another thread has tried to delete
+   their data.  Furthermore this indicates that if the user needs to GUP the
+   file again they will need to retake the Layout lease before doing so.
 
 
->
-> I'm not sure in the end that the change is worth it, so would like you
-> to prove it is, unless davem overrides me. :-)
->
->
-> .
->
+NOTE: If the user releases the layout lease or if it has been broken by another
+operation further GUP operations on the file will fail without re-taking the
+lease.  This means that if a user would like to register pieces of a file and
+continue to register other pieces later they would be advised to keep the
+layout lease, get a SIGIO notification, and retake the lease.
+
+NOTE2: Truncation of pages which are not actively pinned will succeed.  Similar
+to accessing an mmap to this area GUP pins of that memory may fail.
+
+
+A general overview follows for background.
+
+It should be noted that one solution for this problem is to use RDMA's On
+Demand Paging (ODP).  There are 2 big reasons this may not work.
+
+	1) The hardware being used for RDMA may not support ODP
+	2) ODP may be detrimental to the over all network (cluster or cloud)
+	   performance
+
+Therefore, in order to support RDMA to File system pages without On Demand
+Paging (ODP) a number of things need to be done.
+
+1) GUP "longterm" users need to inform the other subsystems that they have
+   taken a pin on a page which may remain pinned for a very "long time".[3]
+
+2) Any page which is "controlled" by a file system needs to have special
+   handling.  The details of the handling depends on if the page is page cache
+   fronted or not.
+
+   2a) A page cache fronted page which has been pinned by GUP long term can use a
+   bounce buffer to allow the file system to write back snap shots of the page.
+   This is handled by the FS recognizing the GUP long term pin and making a copy
+   of the page to be written back.
+	NOTE: this patch set does not address this path.
+
+   2b) A FS "controlled" page which is not page cache fronted is either easier
+   to deal with or harder depending on the operation the filesystem is trying
+   to do.
+
+	2ba) [Hard case] If the FS operation _is_ a truncate or hole punch the
+	FS can no longer use the pages in question until the pin has been
+	removed.  This patch set presents a solution to this by introducing
+	some reasonable restrictions on user space applications.
+
+	2bb) [Easy case] If the FS operation is _not_ a truncate or hole punch
+	then there is nothing which need be done.  Data is Read or Written
+	directly to the page.  This is an easy case which would currently work
+	if not for GUP long term pins being disabled.  Therefore this patch set
+	need not change access to the file data but does allow for GUP pins
+	after 2ba above is dealt with.
+
+
+This patch series and presents a solution for problem 2ba)
+
+[1] https://github.com/johnhubbard/linux/tree/gup_dma_core
+
+[2] ext4/dev branch:
+
+- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/log/?h=dev
+
+	Specific patches:
+
+	[2a] ext4: wait for outstanding dio during truncate in nojournal mode
+
+	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=82a25b027ca48d7ef197295846b352345853dfa8
+
+	[2b] ext4: do not delete unlinked inode from orphan list on failed truncate
+
+	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=ee0ed02ca93ef1ecf8963ad96638795d55af2c14
+
+	[2c] ext4: gracefully handle ext4_break_layouts() failure during truncate
+
+	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=b9c1c26739ec2d4b4fb70207a0a9ad6747e43f4c
+
+[3] The definition of long time is debatable but it has been established
+that RDMAs use of pages, minutes or hours after the pin is the extreme case
+which makes this problem most severe.
+
+
+Ira Weiny (10):
+  fs/locks: Add trace_leases_conflict
+  fs/locks: Export F_LAYOUT lease to user space
+  mm/gup: Pass flags down to __gup_device_huge* calls
+  mm/gup: Ensure F_LAYOUT lease is held prior to GUP'ing pages
+  fs/ext4: Teach ext4 to break layout leases
+  fs/ext4: Teach dax_layout_busy_page() to operate on a sub-range
+  fs/ext4: Fail truncate if pages are GUP pinned
+  fs/xfs: Teach xfs to use new dax_layout_busy_page()
+  fs/xfs: Fail truncate if pages are GUP pinned
+  mm/gup: Remove FOLL_LONGTERM DAX exclusion
+
+ fs/Kconfig                       |   1 +
+ fs/dax.c                         |  38 ++++++---
+ fs/ext4/ext4.h                   |   2 +-
+ fs/ext4/extents.c                |   6 +-
+ fs/ext4/inode.c                  |  26 +++++--
+ fs/locks.c                       |  97 ++++++++++++++++++++---
+ fs/xfs/xfs_file.c                |  24 ++++--
+ fs/xfs/xfs_inode.h               |   5 +-
+ fs/xfs/xfs_ioctl.c               |  15 +++-
+ fs/xfs/xfs_iops.c                |  14 +++-
+ fs/xfs/xfs_pnfs.c                |  14 ++--
+ include/linux/dax.h              |   9 ++-
+ include/linux/fs.h               |   2 +-
+ include/linux/mm.h               |   2 +
+ include/trace/events/filelock.h  |  35 +++++++++
+ include/uapi/asm-generic/fcntl.h |   3 +
+ mm/gup.c                         | 129 ++++++++++++-------------------
+ mm/huge_memory.c                 |  12 +++
+ 18 files changed, 299 insertions(+), 135 deletions(-)
+
+-- 
+2.20.1
 
