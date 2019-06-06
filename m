@@ -2,129 +2,109 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B32EC04AB5
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F31C28D1E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A71B20866
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028CD20868
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 12:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbfFFMvq (ORCPT
+        id S1728106AbfFFMx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 08:51:46 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46832 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727310AbfFFMvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 08:51:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C15C374;
-        Thu,  6 Jun 2019 05:51:45 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 834683F5AF;
-        Thu,  6 Jun 2019 05:51:43 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 13:51:41 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
+        Thu, 6 Jun 2019 08:53:26 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50137 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbfFFMx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 08:53:26 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id E1AF980262; Thu,  6 Jun 2019 14:53:13 +0200 (CEST)
+Date:   Thu, 6 Jun 2019 14:53:23 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>
-Subject: Re: [PATCH 0/6] mailbox: arm_mhu: add support to use in doorbell mode
-Message-ID: <20190606125140.GB26273@e107155-lin>
-References: <20190531143320.8895-1-sudeep.holla@arm.com>
- <CABb+yY1u5zdocgV=HhQcHWQa_R7ArtFqndU5_T=NsPHJ=jwseA@mail.gmail.com>
- <20190531165326.GA18115@e107155-lin>
- <20190603193946.GC2456@sirena.org.uk>
- <20190604093827.GA31069@e107533-lin.cambridge.arm.com>
- <20190605194636.GW2456@sirena.org.uk>
- <CABb+yY27Xe7d5=drKUGg82rJXcRU3EfZkG9FygZoOiioY-BMyw@mail.gmail.com>
+        James Smart <james.smart@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 237/276] scsi: lpfc: avoid uninitialized variable
+ warning
+Message-ID: <20190606125323.GC27432@amd>
+References: <20190530030523.133519668@linuxfoundation.org>
+ <20190530030539.944220603@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="adJ1OR3c6QgCpb/j"
 Content-Disposition: inline
-In-Reply-To: <CABb+yY27Xe7d5=drKUGg82rJXcRU3EfZkG9FygZoOiioY-BMyw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190530030539.944220603@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 07:51:12PM -0500, Jassi Brar wrote:
-> On Wed, Jun 5, 2019 at 2:46 PM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Tue, Jun 04, 2019 at 10:44:24AM +0100, Sudeep Holla wrote:
-> > > On Mon, Jun 03, 2019 at 08:39:46PM +0100, Mark Brown wrote:
-> >
-> > >
-> > > > It feels like the issues with sharing access to the hardware and with the
-> > > > API for talking to doorbell hardware are getting tied together and
-> > > > confusing things.  But like I say I might be missing something here.
-> >
-> > ...
-> >
-> > > So what I am trying to convey here is MHU controller hardware can be
-> > > used choosing one of the  different transport protocols available and
-> > > that's platform choice based on the use-case.
-> >
-> > > The driver in the kernel should identify the same from the firmware/DT
-> > > and configure it appropriately.
-> >
-> > > It may get inefficient and sometime impossible to address all use-case
-> > > if we stick to one transport protocol in the driver and try to build
-> > > an abstraction on top to use in different transport mode.
-> >
-> > Right, what I was trying to get at was that it feels like the discussion
-> > is getting wrapped up in the specifics of the MHU rather than
-> > representing this sort of controller with multiple modes in the
-> > framework.
-> >
-> Usually when a controller could be used in more than one way, we
-> implement the more generic usecase. And that's what was done for MHU.
 
-That's debatable and we have done that so extensively so far.
-So what I am saying is to implement different modes not just one so that
-as many use-case are addressed.
+--adJ1OR3c6QgCpb/j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Implementing doorbell scheme would have disallowed mhu platforms that
-> don't have any shmem between the endpoints. Now such platforms could
-> use 32bits registers to pass/get data. Meanwhile doorbells could be
-> emulated in client code.
->  Also, next version of MHU has many (100?) such 32bit registers per
-> interrupt. Clearly those are not meant to be seen as 3200 doorbells,
-> but as message passing windows. (or maybe that is an almost different
-> controller because of the differences)
->
+Hi!
 
-I disagree. It's configurable and vendors can just choose 2 instead of
-100s as you mentioned based on the use-case and needs. So we will still
-need the same there.
+> [ Upstream commit faf5a744f4f8d76e7c03912b5cd381ac8045f6ec ]
+>=20
+> clang -Wuninitialized incorrectly sees a variable being used without
+> initialization:
+>=20
+> drivers/scsi/lpfc/lpfc_nvme.c:2102:37: error: variable 'localport' is uni=
+nitialized when used here
+>       [-Werror,-Wuninitialized]
+>                 lport =3D (struct lpfc_nvme_lport *)localport->private;
+>                                                   ^~~~~~~~~
+> drivers/scsi/lpfc/lpfc_nvme.c:2059:38: note: initialize the variable 'loc=
+alport' to silence this warning
+>         struct nvme_fc_local_port *localport;
+>                                             ^
+>                                              =3D NULL
+> 1 error generated.
+>=20
+> This is clearly in dead code, as the condition leading up to it is always
+> false when CONFIG_NVME_FC is disabled, and the variable is always
+> initialized when nvme_fc_register_localport() got called successfully.
+>=20
+> Change the preprocessor conditional to the equivalent C construct, which
+> makes the code more readable and gets rid of the warning.
 
-> BTW, this is not going to be the end of SCMI troubles (I believe
-> that's what his client is). SCMI will eventually have to be broken up
-> in layers (protocol and transport) for many legit platforms to use it.
-> That is mbox_send_message() will have to be replaced by, say,
-> platform_mbox_send()  in drivers/firmware/arm_scmi/driver.c  OR  the
-> platforms have to have shmem and each mailbox controller driver (that
-> could ever be used under scmi) will have to implement "doorbell
-> emulation" mode. That is the reason I am not letting the way paved for
-> such emulations.
->
+Unfortunately, this missed "else" branch where the code was freeing
+the memory with kfree(cstat)... so this introduces a memory leak.
 
-While I don't dislike or disagree with separate transport in SCMI which
-I have invested time and realised that I will duplicate mailbox framework
-at the end. So I am against it only because of duplication and extra
-layer of indirection which has performance impact(we have this seen in
-sched governor for DVFS). So idea wise, it's good and I don't disagree
-with practically seen performance impact. Hence I thought it's sane to
-do something I am proposing. It also avoids coming up with virtual DT
-nodes for this layer of abstract which I am completely against.
+Best regards,
+									Pavel
 
---
-Regards,
-Sudeep
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: James Smart <james.smart@broadcom.com>
+> Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--adJ1OR3c6QgCpb/j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlz5DMMACgkQMOfwapXb+vL9mgCfWykgy5M4WHThY/CXqMxs9B8y
+7BcAnikxGH2w2GgBe5Ox/uWDPPO4yA9q
+=n/8A
+-----END PGP SIGNATURE-----
+
+--adJ1OR3c6QgCpb/j--
