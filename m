@@ -2,72 +2,165 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A300C28EB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C35C28EB6
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D68A206E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864BB206E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 10:55:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTpIPwBk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbfFFKxg (ORCPT
+        id S1727519AbfFFKzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 06:53:36 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37742 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbfFFKxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:53:36 -0400
-Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hYq1V-0003l3-NS; Thu, 06 Jun 2019 12:53:33 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, mka@chromium.org,
-        seanpaul@chromium.org, Urja Rannikko <urjaman@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] clk: rockchip: Remove 48 MHz PLL rate from rk3288
-Date:   Thu, 06 Jun 2019 12:53:33 +0200
-Message-ID: <4759206.qoGe4VK7Kb@phil>
-In-Reply-To: <20190604223200.345-1-dianders@chromium.org>
-References: <20190604223200.345-1-dianders@chromium.org>
+        Thu, 6 Jun 2019 06:55:40 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39801 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfFFKzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:55:40 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 196so1148585pgc.6;
+        Thu, 06 Jun 2019 03:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=u11NQoOcVc3KEqCmRt6p0L2NADGM3isejFoGnzfSN6E=;
+        b=CTpIPwBkWIu2kbKtsD3xwmvvC02dqEo8yUPXjFCyPCiFjWT6ZsYSdkZ+PG/g/sHnzG
+         K0FStLpYv8QELGLHzuLfljfsgIOfG2+tXg2xXxXGCT5Ef0Ddr3HTXjBABHo+olQBUr6i
+         yrAkl7JZ1oDPOYV0awiDLxXbJRZ/opHNKYDGXzRlEKvxEFDU3t82lbRx8kkk9DsdYifg
+         gcNFM/9e8MLK7KWachFnFSyZftwWG+TTOJRIwCMHGm0NhsjA6vvuvZ4i8nfuX8lLTWdC
+         hxnPC2qH7xNqp1BJoN55t/CADJPg5EnCdSKUEBx1dJAoPGtc2cduOY/TaycxMNz7L+00
+         Q83w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=u11NQoOcVc3KEqCmRt6p0L2NADGM3isejFoGnzfSN6E=;
+        b=eJeHODtCnAj71NEsKkucccCmtZNUxUnFsCyNxpCGcY3Tc2G9MDKKxNw2J+1ucf9inW
+         Wk4JVYLTTl1HlwUX95GCSBCmVZ6g0Ely6Z92/2m3xs0OlNdL69R4YyYRNXxqlz+uBLhV
+         k2ZBb5AnwpP5d0ZXdmVsGs6LZYacDKar+lFP7hDPSc3oQ7vCfmt1a4XkqDSLNjSZLjyO
+         aQ0UmRGg3xnYbFHktUyC9V9673S4hyk+hMsexWvXRGjctKzzL4kSVfVdxNrINs1DwkSj
+         NlQgiJQlNICv2TrAkq751akSjzJguO0yPkhYf2LyjNwZXgy2yWx/sHy/AHfhhroFLxtC
+         Zx6w==
+X-Gm-Message-State: APjAAAXafwRqKNoPMSyEH9h/pBdF6HTZYo8PR9Bf1DIlvoPiPCu/1Sgq
+        aeAp/pccH0MeYnFhnybuJJf+7QPn
+X-Google-Smtp-Source: APXvYqxaHotpQRxzvgbbRzCQ3B2/0ascc5stHMR6qrAPogQfvs7zpzAUQYHshwy0iPahV5QnhUp2MA==
+X-Received: by 2002:a62:b609:: with SMTP id j9mr38392045pff.145.1559818539414;
+        Thu, 06 Jun 2019 03:55:39 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id d10sm4340213pgh.43.2019.06.06.03.55.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 06 Jun 2019 03:55:38 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v2 4/3] KVM: LAPIC: add advance timer support to pi_inject_timer
+Date:   Thu,  6 Jun 2019 18:55:33 +0800
+Message-Id: <1559818533-20529-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1559799086-13912-4-git-send-email-wanpengli@tencent.com>
+References: <1559799086-13912-4-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 5. Juni 2019, 00:31:59 CEST schrieb Douglas Anderson:
-> The 48 MHz PLL rate is not present in the downstream chromeos-3.14
-> tree.  Looking at history, it was originally removed in
-> <https://crrev.com/c/265810> ("CHROMIUM: clk: rockchip: expand more
-> clocks support") with no explanation.  Much of that patch was later
-> reverted in <https://crrev.com/c/284595> ("CHROMIUM: clk: rockchip:
-> Revert more questionable PLL rates"), but that patch left in the
-> removal of 48 MHz.  What I wrote in that patch:
-> 
-> > Note that the original change also removed the rate (48000000, 1,
-> > 64, 32) from the table.  I have no idea why that was squashed in
-> > there, but that rate was invalid anyway (it appears to have an out
-> > of bounds NO).  I'm not putting that rate in.
-> 
-> Reading the TRM I see that NO is defined as
-> - NO: 1, 2-16 (even only)
-> ...and furthermore only 4 bits are assigned for NO-1, which means that
-> the highest NO we could even represent is 16.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-applied for 5.3
+Wait before calling posted-interrupt deliver function directly to add 
+advance timer support to pi_inject_timer.
 
-Thanks
-Heiko
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c   | 6 ++++--
+ arch/x86/kvm/lapic.h   | 2 +-
+ arch/x86/kvm/svm.c     | 2 +-
+ arch/x86/kvm/vmx/vmx.c | 2 +-
+ 4 files changed, 7 insertions(+), 5 deletions(-)
 
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index a3e4ca8..9581817 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1470,6 +1470,8 @@ static void apic_timer_expired(struct kvm_lapic *apic)
+ 		return;
+ 
+ 	if (unlikely(can_posted_interrupt_inject_timer(apic->vcpu))) {
++		if (apic->lapic_timer.timer_advance_ns)
++			kvm_wait_lapic_expire(vcpu, true);
+ 		kvm_apic_inject_pending_timer_irqs(apic);
+ 		return;
+ 	}
+@@ -1561,7 +1563,7 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ }
+ 
+-void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
++void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu, bool pi_inject)
+ {
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 	u64 guest_tsc, tsc_deadline;
+@@ -1569,7 +1571,7 @@ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+ 	if (apic->lapic_timer.expired_tscdeadline == 0)
+ 		return;
+ 
+-	if (!lapic_timer_int_injected(vcpu))
++	if (!lapic_timer_int_injected(vcpu) && !pi_inject)
+ 		return;
+ 
+ 	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index f974a3d..16f0500 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -220,7 +220,7 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
+ 
+ bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
+ 
+-void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
++void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu, bool pi_inject);
+ 
+ bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
+ 			struct kvm_vcpu **dest_vcpu);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 302cb40..049ba64 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5648,7 +5648,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	if (lapic_in_kernel(vcpu) &&
+ 		vcpu->arch.apic->lapic_timer.timer_advance_ns)
+-		kvm_wait_lapic_expire(vcpu);
++		kvm_wait_lapic_expire(vcpu, false);
+ 
+ 	/*
+ 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index da24f18..302bac4 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6447,7 +6447,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	if (lapic_in_kernel(vcpu) &&
+ 		vcpu->arch.apic->lapic_timer.timer_advance_ns)
+-		kvm_wait_lapic_expire(vcpu);
++		kvm_wait_lapic_expire(vcpu, false);
+ 
+ 	/*
+ 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+-- 
+2.7.4
 
