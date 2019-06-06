@@ -2,443 +2,254 @@ Return-Path: <SRS0=eZ3S=UF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 612F9C28D1A
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F373C28D1A
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4FD2083D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D37A20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Jun 2019 05:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pMnRmFeF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TW406TlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbfFFFuk (ORCPT
+        id S1726642AbfFFFwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 01:50:40 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35919 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfFFFuk (ORCPT
+        Thu, 6 Jun 2019 01:52:16 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:10322 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfFFFwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 01:50:40 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so1005535wrs.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2019 22:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=SFwgRrUX5NbIwGMJJbQos1+XcNe9OUMpKOxNNI4/5J0=;
-        b=pMnRmFeFFIopuOEfrE10MPiMZ8aHUEtrCOHgU8lTHnS7yDq3AZxpQg5fitXwHvP3zn
-         AsNRb5RLDd6oUjQ3hh8UDlQTyDgPC4zXGAKFUAbcHpO+x44v25TMA8aAqOlb41kCGPDk
-         C08br0sjksuGmqIdkG4AL/ZYJyjaVbpRgw+wbnZ8FwLK4eoOp3GyE5sKJDDsYbn8pBqq
-         UbEO4uF78bQzGA8kwjmpH5yWahLZPJhoxHq6uSu1GBRZ1yCud86HKLrNsTOGZplUB2t7
-         NU+aQBo1aQun7moVR1MVoyt9cdRpH2Y4cX2OF1NQe72jLUlBGTYIW24ICRTUHUiBwySP
-         wI5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=SFwgRrUX5NbIwGMJJbQos1+XcNe9OUMpKOxNNI4/5J0=;
-        b=QMt9DWPwxWHRu0zbl7splKrzDwE+RZTbHmmC9froFDzJBY5TcZny3XjwLA3/qWAL8q
-         rrqCl6PnW+keSI939zyn8s7E28dKYAv97pb7OvQSPuUl5VxRe1v3MbMtE6IokVftMvV6
-         NIHGbsk47pA86vBmIX/tLzXHo/Di5pOQmL98smU8y4qBc6CtwqV4JeHVZnmWpiGaWg4n
-         aWnznbsYJwesx4HHK2kPtzBe5HEWJlxbm38c8tvXMBzkK/m1NZIq3E776yL7tKkReu8E
-         pOYJx06KOxBwRtk68n25K0srrZ84Xy3CgRxrJVPI2kxB+bECTONgOPqiSwuAvYCHuqc/
-         Qpvg==
-X-Gm-Message-State: APjAAAUutGNCcTvlwikQOeTxoyRVlVc1+Ziku6KWtkbaeRmgrC306qsD
-        8XxlQVl+FC0SoJFZQ5uPfM5TjQ==
-X-Google-Smtp-Source: APXvYqwNF17eo3yv5ofakq7tLcRsxVwPVUUdGQAlGsl2W3AaoRBN74ym9DI/0/GcntCv3KU74osEWQ==
-X-Received: by 2002:adf:e30d:: with SMTP id b13mr10144964wrj.246.1559800237721;
-        Wed, 05 Jun 2019 22:50:37 -0700 (PDT)
-Received: from dell ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id l7sm637729wmh.20.2019.06.05.22.50.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Jun 2019 22:50:36 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 06:50:34 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, hdegoede@redhat.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
-Message-ID: <20190606055034.GA4797@dell>
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
- <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
+        Thu, 6 Jun 2019 01:52:15 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf8aa0b0001>; Wed, 05 Jun 2019 22:52:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 05 Jun 2019 22:52:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 05 Jun 2019 22:52:13 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 05:52:12 +0000
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+To:     <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>
+CC:     Matthew Wilcox <willy@infradead.org>, <linux-xfs@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <c559c2ce-50dc-d143-5741-fe3d21d0305c@nvidia.com>
+Date:   Wed, 5 Jun 2019 22:52:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190606014544.8339-1-ira.weiny@intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559800331; bh=Gp2g3b03DgFtDGUPs5KjcyAYE0tK8DWBS3G4Sguhlos=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=TW406TlWPfq1+txQJKeJk28J1JWSrmzZBUVeqHD3lW0hwmrqL+i5fmSoZOx4n4lWy
+         Hmav7hC+Dg2NnnU5/CKwGJdLiRg333XopPd8PNY/+OwsQjn4q9eA0uKBcQ18GF9GA7
+         bYorekfcWSMtASfx9atYR+4f1F8QwG+zlW9PqvxXVvqn3XJTcUDuvIUXPM8aJLM+s1
+         n0mI8czwPnoQSbO7wH92BWoJ5ljhc5QN8KOrfC7Etg4R98qDMovGb1D5yAPWIzIDso
+         ICscXJ9Im6L2nwKphSDu/r7hHPF3XN6orU2ooI7jJgoOKQuUSz25kWcKOJRt+HaqXq
+         PVtJjo3M2HZOA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019, Jeffrey Hugo wrote:
-
-> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> functionality includes USB (host), microSD-card, keyboard, and trackpad.
+On 6/5/19 6:45 PM, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
->  .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
-
-What's happening with this patch?
-
-It's been on the list a while now.  I'm waiting for it to be accepted,
-since there are patches I wish to submit which are based on it.
-
-Who is responsible for merging these?
-
->  3 files changed, 309 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> ... V1,000,000   ;-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 21d548f02d39..c3e4307bcbd4 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-> new file mode 100644
-> index 000000000000..1a341d4b1597
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-> @@ -0,0 +1,278 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-> +
-> +/*
-> + * Common include for MSM8998 clamshell devices, ie the Lenovo Miix 630,
-> + * Asus NovaGo TP370QL, and HP Envy x2.  All three devices are basically the
-> + * same, with differences in peripherals.
-> + */
-> +
-> +#include "msm8998.dtsi"
-> +#include "pm8998.dtsi"
-> +#include "pm8005.dtsi"
-> +
-> +/ {
-> +	chosen {
-> +	};
-> +
-> +	thermal-zones {
-> +		battery-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 0>;
-> +
-> +			trips {
-> +				battery_crit: trip0 {
-> +					temperature = <60000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		skin-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens1 5>;
-> +
-> +			trips {
-> +				skin_alert: trip0 {
-> +					temperature = <44000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				skip_crit: trip1 {
-> +					temperature = <70000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	vph_pwr: vph-pwr-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vph_pwr";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +&qusb2phy {
-> +	status = "okay";
-> +
-> +	vdda-pll-supply = <&vreg_l12a_1p8>;
-> +	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-> +};
-> +
-> +&rpm_requests {
-> +	pm8998-regulators {
-> +		compatible = "qcom,rpm-pm8998-regulators";
-> +
-> +		vdd_s1-supply = <&vph_pwr>;
-> +		vdd_s2-supply = <&vph_pwr>;
-> +		vdd_s3-supply = <&vph_pwr>;
-> +		vdd_s4-supply = <&vph_pwr>;
-> +		vdd_s5-supply = <&vph_pwr>;
-> +		vdd_s6-supply = <&vph_pwr>;
-> +		vdd_s7-supply = <&vph_pwr>;
-> +		vdd_s8-supply = <&vph_pwr>;
-> +		vdd_s9-supply = <&vph_pwr>;
-> +		vdd_s10-supply = <&vph_pwr>;
-> +		vdd_s11-supply = <&vph_pwr>;
-> +		vdd_s12-supply = <&vph_pwr>;
-> +		vdd_s13-supply = <&vph_pwr>;
-> +		vdd_l1_l27-supply = <&vreg_s7a_1p025>;
-> +		vdd_l2_l8_l17-supply = <&vreg_s3a_1p35>;
-> +		vdd_l3_l11-supply = <&vreg_s7a_1p025>;
-> +		vdd_l4_l5-supply = <&vreg_s7a_1p025>;
-> +		vdd_l6-supply = <&vreg_s5a_2p04>;
-> +		vdd_l7_l12_l14_l15-supply = <&vreg_s5a_2p04>;
-> +		vdd_l9-supply = <&vph_pwr>;
-> +		vdd_l10_l23_l25-supply = <&vph_pwr>;
-> +		vdd_l13_l19_l21-supply = <&vph_pwr>;
-> +		vdd_l16_l28-supply = <&vph_pwr>;
-> +		vdd_l18_l22-supply = <&vph_pwr>;
-> +		vdd_l20_l24-supply = <&vph_pwr>;
-> +		vdd_l26-supply = <&vreg_s3a_1p35>;
-> +		vdd_lvs1_lvs2-supply = <&vreg_s4a_1p8>;
-> +
-> +		vreg_s3a_1p35: s3 {
-> +			regulator-min-microvolt = <1352000>;
-> +			regulator-max-microvolt = <1352000>;
-> +		};
-> +		vreg_s4a_1p8: s4 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-allow-set-load;
-> +		};
-> +		vreg_s5a_2p04: s5 {
-> +			regulator-min-microvolt = <1904000>;
-> +			regulator-max-microvolt = <2040000>;
-> +		};
-> +		vreg_s7a_1p025: s7 {
-> +			regulator-min-microvolt = <900000>;
-> +			regulator-max-microvolt = <1028000>;
-> +		};
-> +		vreg_l1a_0p875: l1 {
-> +			regulator-min-microvolt = <880000>;
-> +			regulator-max-microvolt = <880000>;
-> +			regulator-allow-set-load;
-> +		};
-> +		vreg_l2a_1p2: l2 {
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1200000>;
-> +			regulator-allow-set-load;
-> +		};
-> +		vreg_l3a_1p0: l3 {
-> +			regulator-min-microvolt = <1000000>;
-> +			regulator-max-microvolt = <1000000>;
-> +		};
-> +		vreg_l5a_0p8: l5 {
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <800000>;
-> +		};
-> +		vreg_l6a_1p8: l6 {
-> +			regulator-min-microvolt = <1808000>;
-> +			regulator-max-microvolt = <1808000>;
-> +		};
-> +		vreg_l7a_1p8: l7 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +		vreg_l8a_1p2: l8 {
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1200000>;
-> +		};
-> +		vreg_l9a_1p8: l9 {
-> +			regulator-min-microvolt = <1808000>;
-> +			regulator-max-microvolt = <2960000>;
-> +		};
-> +		vreg_l10a_1p8: l10 {
-> +			regulator-min-microvolt = <1808000>;
-> +			regulator-max-microvolt = <2960000>;
-> +		};
-> +		vreg_l11a_1p0: l11 {
-> +			regulator-min-microvolt = <1000000>;
-> +			regulator-max-microvolt = <1000000>;
-> +		};
-> +		vreg_l12a_1p8: l12 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +		vreg_l13a_2p95: l13 {
-> +			regulator-min-microvolt = <1808000>;
-> +			regulator-max-microvolt = <2960000>;
-> +		};
-> +		vreg_l14a_1p88: l14 {
-> +			regulator-min-microvolt = <1880000>;
-> +			regulator-max-microvolt = <1880000>;
-> +		};
-> +		vreg_15a_1p8: l15 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +		vreg_l16a_2p7: l16 {
-> +			regulator-min-microvolt = <2704000>;
-> +			regulator-max-microvolt = <2704000>;
-> +		};
-> +		vreg_l17a_1p3: l17 {
-> +			regulator-min-microvolt = <1304000>;
-> +			regulator-max-microvolt = <1304000>;
-> +		};
-> +		vreg_l18a_2p7: l18 {
-> +			regulator-min-microvolt = <2704000>;
-> +			regulator-max-microvolt = <2704000>;
-> +		};
-> +		vreg_l19a_3p0: l19 {
-> +			regulator-min-microvolt = <3008000>;
-> +			regulator-max-microvolt = <3008000>;
-> +		};
-> +		vreg_l20a_2p95: l20 {
-> +			regulator-min-microvolt = <2960000>;
-> +			regulator-max-microvolt = <2960000>;
-> +			regulator-allow-set-load;
-> +		};
-> +		vreg_l21a_2p95: l21 {
-> +			regulator-min-microvolt = <2960000>;
-> +			regulator-max-microvolt = <2960000>;
-> +			regulator-allow-set-load;
-> +			regulator-system-load = <800000>;
-> +		};
-> +		vreg_l22a_2p85: l22 {
-> +			regulator-min-microvolt = <2864000>;
-> +			regulator-max-microvolt = <2864000>;
-> +		};
-> +		vreg_l23a_3p3: l23 {
-> +			regulator-min-microvolt = <3312000>;
-> +			regulator-max-microvolt = <3312000>;
-> +		};
-> +		vreg_l24a_3p075: l24 {
-> +			regulator-min-microvolt = <3088000>;
-> +			regulator-max-microvolt = <3088000>;
-> +		};
-> +		vreg_l25a_3p3: l25 {
-> +			regulator-min-microvolt = <3104000>;
-> +			regulator-max-microvolt = <3312000>;
-> +		};
-> +		vreg_l26a_1p2: l26 {
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1200000>;
-> +		};
-> +		vreg_l28_3p0: l28 {
-> +			regulator-min-microvolt = <3008000>;
-> +			regulator-max-microvolt = <3008000>;
-> +		};
-> +
-> +		vreg_lvs1a_1p8: lvs1 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +
-> +		vreg_lvs2a_1p8: lvs2 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +
-> +	};
-> +};
-> +
-> +&tlmm {
-> +	gpio-reserved-ranges = <0 4>, <81 4>;
-> +
-> +	touchpad: touchpad {
-> +		config {
-> +			pins = "gpio123";
-> +			bias-pull-up;           /* pull up */
-> +		};
-> +	};
-> +};
-> +
-> +&sdhc2 {
-> +	status = "okay";
-> +
-> +	vmmc-supply = <&vreg_l21a_2p95>;
-> +	vqmmc-supply = <&vreg_l13a_2p95>;
-> +
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
-> +	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-> +};
-> +
-> +&usb3 {
-> +	status = "okay";
-> +};
-> +
-> +&usb3_dwc3 {
-> +	dr_mode = "host"; /* Force to host until we have Type-C hooked up */
-> +};
-> +
-> +&usb3phy {
-> +	status = "okay";
-> +
-> +	vdda-phy-supply = <&vreg_l1a_0p875>;
-> +	vdda-pll-supply = <&vreg_l2a_1p2>;
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> new file mode 100644
-> index 000000000000..407c6a32911c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-> +
-> +/dts-v1/;
-> +
-> +#include "msm8998-clamshell.dtsi"
-> +
-> +/ {
-> +	model = "Lenovo Miix 630";
-> +	compatible = "lenovo,miix-630", "qcom,msm8998";
-> +};
-> +
-> +&blsp1_i2c6 {
-> +	status = "okay";
-> +
-> +	keyboard@3a {
-> +		compatible = "hid-over-i2c";
-> +		interrupt-parent = <&tlmm>;
-> +		interrupts = <0x79 IRQ_TYPE_LEVEL_LOW>;
-> +		reg = <0x3a>;
-> +		hid-descr-addr = <0x0001>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&touchpad>;
-> +	};
-> +};
-> +
-> +&sdhc2 {
-> +	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
-> +};
+> Pre-requisites:
+> 	John Hubbard's put_user_pages() patch series.[1]
+> 	Jan Kara's ext4_break_layouts() fixes[2]
+> 
+> Based on the feedback from LSFmm and the LWN article which resulted.  I've
+> decided to take a slightly different tack on this problem.
+> 
+> The real issue is that there is no use case for a user to have RDMA pinn'ed
+> memory which is then truncated.  So really any solution we present which:
+> 
+> A) Prevents file system corruption or data leaks
+> ...and...
+> B) Informs the user that they did something wrong
+> 
+> Should be an acceptable solution.
+> 
+> Because this is slightly new behavior.  And because this is gonig to be
+> specific to DAX (because of the lack of a page cache) we have made the user
+> "opt in" to this behavior.
+> 
+> The following patches implement the following solution.
+> 
+> 1) The user has to opt in to allowing GUP pins on a file with a layout lease
+>    (now made visible).
+> 2) GUP will fail (EPERM) if a layout lease is not taken
+> 3) Any truncate or hole punch operation on a GUP'ed DAX page will fail.
+> 4) The user has the option of holding the layout lease to receive a SIGIO for
+>    notification to the original thread that another thread has tried to delete
+>    their data.  Furthermore this indicates that if the user needs to GUP the
+>    file again they will need to retake the Layout lease before doing so.
+> 
+> 
+> NOTE: If the user releases the layout lease or if it has been broken by another
+> operation further GUP operations on the file will fail without re-taking the
+> lease.  This means that if a user would like to register pieces of a file and
+> continue to register other pieces later they would be advised to keep the
+> layout lease, get a SIGIO notification, and retake the lease.
+> 
+> NOTE2: Truncation of pages which are not actively pinned will succeed.  Similar
+> to accessing an mmap to this area GUP pins of that memory may fail.
+> 
 
+Hi Ira,
+
+Wow, great to see this. This looks like basically the right behavior, IMHO.
+
+1. We'll need man page additions, to explain it. In fact, even after a quick first
+pass through, I'm vague on two points:
+
+a) I'm not sure how this actually provides "opt-in to new behavior", because I 
+don't see any CONFIG_* or boot time choices, and it looks like the new behavior 
+just is there. That is, if user space doesn't set F_LAYOUT on a range, 
+GUP FOLL_LONGTERM will now fail, which is new behavior. (Did I get that right?)
+
+b) Truncate and hole punch behavior, with and without user space having a SIGIO
+handler. (I'm sure this is obvious after another look through, but it might go
+nicely in a man page.)
+
+2. It *seems* like ext4, xfs are taken care of here, not just for the DAX case,
+but for general RDMA on them? Or is there more that must be done?
+
+3. Christophe Hellwig's unified gup patchset wreaks havoc in gup.c, and will
+conflict violently, as I'm sure you noticed. :)
+
+
+thanks,
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+John Hubbard
+NVIDIA
+
+> 
+> A general overview follows for background.
+> 
+> It should be noted that one solution for this problem is to use RDMA's On
+> Demand Paging (ODP).  There are 2 big reasons this may not work.
+> 
+> 	1) The hardware being used for RDMA may not support ODP
+> 	2) ODP may be detrimental to the over all network (cluster or cloud)
+> 	   performance
+> 
+> Therefore, in order to support RDMA to File system pages without On Demand
+> Paging (ODP) a number of things need to be done.
+> 
+> 1) GUP "longterm" users need to inform the other subsystems that they have
+>    taken a pin on a page which may remain pinned for a very "long time".[3]
+> 
+> 2) Any page which is "controlled" by a file system needs to have special
+>    handling.  The details of the handling depends on if the page is page cache
+>    fronted or not.
+> 
+>    2a) A page cache fronted page which has been pinned by GUP long term can use a
+>    bounce buffer to allow the file system to write back snap shots of the page.
+>    This is handled by the FS recognizing the GUP long term pin and making a copy
+>    of the page to be written back.
+> 	NOTE: this patch set does not address this path.
+> 
+>    2b) A FS "controlled" page which is not page cache fronted is either easier
+>    to deal with or harder depending on the operation the filesystem is trying
+>    to do.
+> 
+> 	2ba) [Hard case] If the FS operation _is_ a truncate or hole punch the
+> 	FS can no longer use the pages in question until the pin has been
+> 	removed.  This patch set presents a solution to this by introducing
+> 	some reasonable restrictions on user space applications.
+> 
+> 	2bb) [Easy case] If the FS operation is _not_ a truncate or hole punch
+> 	then there is nothing which need be done.  Data is Read or Written
+> 	directly to the page.  This is an easy case which would currently work
+> 	if not for GUP long term pins being disabled.  Therefore this patch set
+> 	need not change access to the file data but does allow for GUP pins
+> 	after 2ba above is dealt with.
+> 
+> 
+> This patch series and presents a solution for problem 2ba)
+> 
+> [1] https://github.com/johnhubbard/linux/tree/gup_dma_core
+> 
+> [2] ext4/dev branch:
+> 
+> - https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/log/?h=dev
+> 
+> 	Specific patches:
+> 
+> 	[2a] ext4: wait for outstanding dio during truncate in nojournal mode
+> 
+> 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=82a25b027ca48d7ef197295846b352345853dfa8
+> 
+> 	[2b] ext4: do not delete unlinked inode from orphan list on failed truncate
+> 
+> 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=ee0ed02ca93ef1ecf8963ad96638795d55af2c14
+> 
+> 	[2c] ext4: gracefully handle ext4_break_layouts() failure during truncate
+> 
+> 	- https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=dev&id=b9c1c26739ec2d4b4fb70207a0a9ad6747e43f4c
+> 
+> [3] The definition of long time is debatable but it has been established
+> that RDMAs use of pages, minutes or hours after the pin is the extreme case
+> which makes this problem most severe.
+> 
+> 
+> Ira Weiny (10):
+>   fs/locks: Add trace_leases_conflict
+>   fs/locks: Export F_LAYOUT lease to user space
+>   mm/gup: Pass flags down to __gup_device_huge* calls
+>   mm/gup: Ensure F_LAYOUT lease is held prior to GUP'ing pages
+>   fs/ext4: Teach ext4 to break layout leases
+>   fs/ext4: Teach dax_layout_busy_page() to operate on a sub-range
+>   fs/ext4: Fail truncate if pages are GUP pinned
+>   fs/xfs: Teach xfs to use new dax_layout_busy_page()
+>   fs/xfs: Fail truncate if pages are GUP pinned
+>   mm/gup: Remove FOLL_LONGTERM DAX exclusion
+> 
+>  fs/Kconfig                       |   1 +
+>  fs/dax.c                         |  38 ++++++---
+>  fs/ext4/ext4.h                   |   2 +-
+>  fs/ext4/extents.c                |   6 +-
+>  fs/ext4/inode.c                  |  26 +++++--
+>  fs/locks.c                       |  97 ++++++++++++++++++++---
+>  fs/xfs/xfs_file.c                |  24 ++++--
+>  fs/xfs/xfs_inode.h               |   5 +-
+>  fs/xfs/xfs_ioctl.c               |  15 +++-
+>  fs/xfs/xfs_iops.c                |  14 +++-
+>  fs/xfs/xfs_pnfs.c                |  14 ++--
+>  include/linux/dax.h              |   9 ++-
+>  include/linux/fs.h               |   2 +-
+>  include/linux/mm.h               |   2 +
+>  include/trace/events/filelock.h  |  35 +++++++++
+>  include/uapi/asm-generic/fcntl.h |   3 +
+>  mm/gup.c                         | 129 ++++++++++++-------------------
+>  mm/huge_memory.c                 |  12 +++
+>  18 files changed, 299 insertions(+), 135 deletions(-)
+> 
