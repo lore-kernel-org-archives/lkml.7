@@ -2,137 +2,139 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ADAC46460
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB20C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6C6208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F8E208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k/GR7joJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pWM8R+X3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfFGFdv (ORCPT
+        id S1726711AbfFGFhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 01:33:51 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:39467 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfFGFdu (ORCPT
+        Fri, 7 Jun 2019 01:37:55 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:5698 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfFGFhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 01:33:50 -0400
-Received: by mail-it1-f195.google.com with SMTP id j204so941179ite.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 22:33:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I1Ohgac363EioDxzXpyXf7UN1ZgVyShBjggu94kceQ8=;
-        b=k/GR7joJNJJ6Ve9R/aFsDJRsptZAid18wqkAKiXzRB6NlE5r0KsuMRDWBQiDjQE71p
-         daD8j4DSrVfI6HVAkD5vCpZj39PQaq9fApbZACjRC0RDDKZIBpn7/PLmAhGU1uSNjV36
-         ZPpnk1tioX9M+1EYWJoeTvWylBd+vbf5sKkC6jEafyQKFEFkOanMnEF7whEz4Nqwt4hG
-         bE4l9bBTG0ogocOQzuioUmmPSF5w+Ho92/o1cceuVe444tHP69yQxu8DSewMXHLCqg4l
-         Ja6TZAP9vQDDI+y+jUJx9i8y337VPVjbLYX5aoIkmB6O4W9ByhkvQ0wvmaFU4t1VIu/d
-         h8DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I1Ohgac363EioDxzXpyXf7UN1ZgVyShBjggu94kceQ8=;
-        b=uGW+QkziJ8PWgzwvVeHoLRPpjML0QxjEkz4uc3bca11nWhNxUGKOGUXIk41821uF5H
-         X3zjqI1yOhk0YrZsftxNMqj8NfdiUBzwwkjqeLIYMuzWIiko5pe2YlCkFu3HW7AdKbJe
-         3S416vuTWt+PkPd+KP5sKQPiYGzS609sWhlozb3rci6sYIlqj+0z3nxYUPCq0YjG7jW6
-         A/QD/3UQhjSyvQ8+NJzVR5BPnGh93iWWMpmFGisZHToIelEFA/JwBD/gox/VC7Kucl3Z
-         01lxUT8NKIPxeQBrkgc0w90ObOrIZ/Zr6yKLChCIndIPkml8ZufjEC8hC3oCXHMVoQfo
-         R/Fg==
-X-Gm-Message-State: APjAAAVkX6MwHTPHJZ7vx3LbfyRB4/3HxuB0kTj40kPEdMeX4LHhMano
-        q74dbgW6e3T/dN1/g7MvujNY7bWA91xQBNfnPOi69Q==
-X-Google-Smtp-Source: APXvYqzO76FNbL4lc2mT5nAI8664+vPAEC2qxggUSScGxp/b2eT89TkEwyH+hzeEqr8qRCV6LZQ9VkHcX6jY2/9nElY=
-X-Received: by 2002:a05:660c:752:: with SMTP id a18mr2789419itl.63.1559885629583;
- Thu, 06 Jun 2019 22:33:49 -0700 (PDT)
+        Fri, 7 Jun 2019 01:37:55 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf9f8300000>; Thu, 06 Jun 2019 22:37:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 22:37:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 22:37:54 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 05:37:54 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 05:37:54 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Jun 2019 05:37:53 +0000
+Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cf9f82e0000>; Thu, 06 Jun 2019 22:37:53 -0700
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>,
+        "Bitan Biswas" <bbiswas@nvidia.com>
+Subject: [PATCH V3] i2c: busses: tegra: Add suspend-resume support
+Date:   Thu, 6 Jun 2019 22:37:47 -0700
+Message-ID: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com> <dc3f3092abbc0d48e51b2e2a2ca8f4c4f69fa0f4.1559580831.git.andreyknvl@google.com>
-In-Reply-To: <dc3f3092abbc0d48e51b2e2a2ca8f4c4f69fa0f4.1559580831.git.andreyknvl@google.com>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Fri, 7 Jun 2019 07:33:38 +0200
-Message-ID: <CAHUa44E+g3YTcja+7qgx+iABVd48DbrMMOm0sbyMwf0U6F5NPw@mail.gmail.com>
-Subject: Re: [PATCH v16 14/16] tee, arm64: untag user pointers in tee_shm_register
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559885872; bh=lradURPIF8NVqpsjNzVcQeBNJXNwJ8oAGPuiXA8KFuA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=pWM8R+X3XP03BDpAARq4mr4lqMCBp5A1EJMy+8dM8R2difViMjqMo1jwNUfCy2yxw
+         zsguWB588FIcl0EdbIyCZUtvKXzFaDZvqEW2gertxCeIuY8w0RWPkCjZ9wjZcZ6sjt
+         763t09KTvrpbT1a+zjd7GTXzQAkwuaG2CC1RtYOOXHSjYNJFYv0HcNqu4iqtnPsYw8
+         bhXiUUVUe4qBCB2QMdQRo3bxWry6SzHAzkkid7olVKw6r+lAl/cf/DZKZnx8wmfw6/
+         pLW4zcwPjF/5vV1bco72zmznTG+XYV5Ri28u2dpaq/msEIJUb/Odxxcq8OBSV4OQe5
+         FR4DmW+2j9f7w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 6:56 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
->
-> tee_shm_register()->optee_shm_unregister()->check_mem_type() uses provided
-> user pointers for vma lookups (via __check_mem_type()), which can only by
-> done with untagged pointers.
->
-> Untag user pointers in this function.
->
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Post suspend I2C registers have power on reset values. Before any
+transfer initialize I2C registers to prevent I2C transfer timeout
+and implement suspend and resume callbacks needed. Fix below errors
+post suspend:
 
-Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
+1) Tegra I2C transfer timeout during jetson tx2 resume:
 
-> ---
->  drivers/tee/tee_shm.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> index 49fd7312e2aa..96945f4cefb8 100644
-> --- a/drivers/tee/tee_shm.c
-> +++ b/drivers/tee/tee_shm.c
-> @@ -263,6 +263,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
->         shm->teedev = teedev;
->         shm->ctx = ctx;
->         shm->id = -1;
-> +       addr = untagged_addr(addr);
->         start = rounddown(addr, PAGE_SIZE);
->         shm->offset = addr - start;
->         shm->size = length;
-> --
-> 2.22.0.rc1.311.g5d7573a151-goog
->
+[   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, parent: i2c-1
+[   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
+[   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
+[   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
+[   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns -110
+[   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 after 127152 usecs
+[   27.666194] PM: Device 1-0074 failed to resume: error -110
+
+2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+
+Remove i2c bus lock-unlock calls in resume callback as i2c_mark_adapter_*
+(suspended-resumed) help ensure i2c core calls from client are not
+executed before i2c-tegra resume.
+
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index ebaa78d..1dbba39 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1687,7 +1687,31 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
++static int tegra_i2c_suspend(struct device *dev)
++{
++	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
++
++	i2c_mark_adapter_suspended(&i2c_dev->adapter);
++
++	return 0;
++}
++
++static int tegra_i2c_resume(struct device *dev)
++{
++	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
++	int err;
++
++	err = tegra_i2c_init(i2c_dev, false);
++	if (err)
++		return err;
++
++	i2c_mark_adapter_resumed(&i2c_dev->adapter);
++
++	return 0;
++}
++
+ static const struct dev_pm_ops tegra_i2c_pm = {
++	SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
+ 	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
+ 			   NULL)
+ };
+-- 
+2.7.4
+
