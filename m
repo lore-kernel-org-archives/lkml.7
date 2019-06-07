@@ -2,124 +2,104 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFB0C46476
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BCAC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDD92089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79152089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:02:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="nqigpFQh"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="LGNaJv5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfFGJAb (ORCPT
+        id S1727728AbfFGJCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:00:31 -0400
-Received: from mail-eopbgr1410134.outbound.protection.outlook.com ([40.107.141.134]:22372
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726531AbfFGJAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:00:31 -0400
+        Fri, 7 Jun 2019 05:02:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42110 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfFGJCL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 05:02:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x17so1321682wrl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 02:02:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ug4D4bWQLFod8L4mR0B6ztjM+TriGDmUg1GSORIW8KU=;
- b=nqigpFQheTOG8f1y384EapSPxIHch9Wze/EnmNOy/uk+JnGUJCGZ7wf3X5Z+/KynmX52HlJt3a6qvf7jsGg4UoTMkqrIhq/e6Xg+W5Z7lzbH5UOblsUeKsXCuqy/MjNkhwl/cg9jyK9no5xaQ4h78Gyjvj/282Xgqjh1jNOoZGA=
-Received: from TYAPR01MB3102.jpnprd01.prod.outlook.com (20.177.103.73) by
- TYAPR01MB3198.jpnprd01.prod.outlook.com (20.177.103.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Fri, 7 Jun 2019 09:00:26 +0000
-Received: from TYAPR01MB3102.jpnprd01.prod.outlook.com
- ([fe80::4c13:4e4f:c7ac:9f6e]) by TYAPR01MB3102.jpnprd01.prod.outlook.com
- ([fe80::4c13:4e4f:c7ac:9f6e%3]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
- 09:00:26 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
-Thread-Topic: [PATCH] phy: renesas: rcar-gen3-usb2: fix imbalance powered flag
-Thread-Index: AQHVG1qxx9ucB2mLPUSYOHggZ3+zpqaMymmAgAAt5MCAABBwAIAC2Ysg
-Date:   Fri, 7 Jun 2019 09:00:26 +0000
-Message-ID: <TYAPR01MB3102B60943E7A677B5C17570D8100@TYAPR01MB3102.jpnprd01.prod.outlook.com>
-References: <1559710142-29161-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdUqajM2yR72AYE5ppp-RJumfoG2+YArEzLiJvt55_1k4g@mail.gmail.com>
- <OSAPR01MB30897161EF40942B1E561232D8160@OSAPR01MB3089.jpnprd01.prod.outlook.com>
- <CAMuHMdVHpOULpusZeOJvRs8OMoC2JopOqrK9Q8KeCxtyEbz0qA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVHpOULpusZeOJvRs8OMoC2JopOqrK9Q8KeCxtyEbz0qA@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [118.238.235.108]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4bd4f110-aaa3-41d7-c552-08d6eb269519
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB3198;
-x-ms-traffictypediagnostic: TYAPR01MB3198:
-x-microsoft-antispam-prvs: <TYAPR01MB319808883645C635B2EF5FABD8100@TYAPR01MB3198.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0061C35778
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(136003)(366004)(376002)(346002)(199004)(189003)(74316002)(2906002)(9686003)(6506007)(102836004)(55016002)(3846002)(76176011)(6116002)(316002)(6436002)(486006)(25786009)(5660300002)(68736007)(7696005)(53936002)(305945005)(99286004)(66476007)(14454004)(6916009)(229853002)(6246003)(66066001)(71200400001)(54906003)(7736002)(11346002)(186003)(446003)(71190400001)(26005)(8936002)(81166006)(64756008)(66556008)(86362001)(8676002)(73956011)(5024004)(14444005)(66946007)(76116006)(476003)(66446008)(256004)(52536014)(81156014)(478600001)(4326008)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3198;H:TYAPR01MB3102.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5ZihYdyfTpxebksGpT2/FgVUv0SqzqX5DJ2r1EYRcVuAeXdcL2FqyeOleWXgwUdnlBG56iuw38DBN2mhjRz/YJb10eW+wAYIs/9n2i3/89bq3mjwplt1aWVJlOY5lJDwKyRvC3q0Y4dXU/fguuxMwF9ecNHq53tigmRpjJzkJpf7qSfNRWFxhimdDrLRi10RJVf1I5FzxO7y2+ypx5ZahCQ8zxGiwmkgi1k8un5vXMrYx6Dx5BnJ+8G3iqDMuh/ycYO9y77QQMbLhbC87kzFOf/IcmycBOLevppFZj0iLKlNcJUMMeghtjmy/zUC9UxCSenJeK42NpZImEVFg/EGne2SEr+MpPs1r0w832SM0mS/PoaXNDJWojTlZ28GJJNu44TEfxkWv7BJXrQ5T0NFpZW/OBXw/vl3TzWZJG03MWs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D/xgR5j9++o/IJFaras/pmlOomePQdSslom82YUYeMA=;
+        b=LGNaJv5PZkTpfOgsh2GlidgQ+SwvbmP2ki//SLuYiaD8SMqxB+yTnXeFR0P+/Z+err
+         Aj3Ie4TJCW/CDIc/G9b6lEMG4S1yEO9M7y9OxEPT+n+DAAeC3PoZm6nMJk/WSbphkUGE
+         pe88nwmO5d+ZD80k1sbbEJy9ULn/qUQOz6CEo6lpciXWWiN2yzczXUzAon3btnYxhtsm
+         YIJPeGDylXB7SQyg+TZwvLaZvCTLkf/KNFy35TUISW5oIP6TnCrOoU3pNvmOQC09/zRX
+         I2dc8ovK1QBCSbbClg3+bgt4iDAprAXF54kC8uYvJs49pabKoVszun2PCBxFx+/iyLaW
+         H/4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D/xgR5j9++o/IJFaras/pmlOomePQdSslom82YUYeMA=;
+        b=fuxYs6Oc+uk3Tzjb19UXNg8Y+BysyAcFGha/lVuKi1brV/o8PXDMxkWbGho/5VvxOX
+         mo9/6M1d/MExtW378gocbDcPCaSB9hDJQYN3t3BEHT6ypKDozcC5yz7X+Y5IwUpmYfmG
+         qmyitOrwsWCJbgLxpO4rPDkNwjwoIjIiC+7cTzdBcBAocsAP5tSWcLfnRi7GMTfkzH91
+         G9QKPfKnoPZIOYzPC4rSS0yWtF+IO1WMnOtMmTo657aiR0cddd62IVJehvy41UBsi51C
+         vDqwPcwy/JdTV0i9zyd3S57+QbtCqp+8R4ewnyqcjSeSKrNDKa9T471gOEY8fq0p+aJF
+         CC2g==
+X-Gm-Message-State: APjAAAV+WIzy14rErcKP6tglG5ZF2fiQ7gzW4B9zThF7x+OaoMmMrWYs
+        r2Du2kCh5PREWd0qjJAn/kqobA==
+X-Google-Smtp-Source: APXvYqxWxNSKoYoMGfHNmDh2K2l4SWVxASc8qfOvlvmrxrXJSe6LTdHa1sZFO8sV6S7XdvJQD713NQ==
+X-Received: by 2002:adf:83c5:: with SMTP id 63mr20099906wre.33.1559898129860;
+        Fri, 07 Jun 2019 02:02:09 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id a125sm1487444wmf.42.2019.06.07.02.02.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 02:02:09 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        David Lechner <david@lechnology.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] ARM: davinci: da850-evm: call regulator_has_full_constraints()
+Date:   Fri,  7 Jun 2019 11:02:01 +0200
+Message-Id: <20190607090201.5995-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bd4f110-aaa3-41d7-c552-08d6eb269519
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 09:00:26.1183
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yoshihiro.shimoda.uh@renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3198
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVz
-ZGF5LCBKdW5lIDUsIDIwMTkgMTA6MDggUE0NCjxzbmlwPg0KPiA+ID4gRnJvbTogR2VlcnQgVXl0
-dGVyaG9ldmVuLCBTZW50OiBXZWRuZXNkYXksIEp1bmUgNSwgMjAxOSA2OjI1IFBNDQo+ID4gPHNu
-aXA+DQo+ID4gPiBUaGFuayB5b3UsIHRoaXMgc2VlbXMgdG8gZml4IHRoZSB3YXJuaW5nLCBzbw0K
-PiA+ID4gVGVzdGVkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVy
-LmJlPg0KPiA+DQo+ID4gVGhhbmsgeW91IGZvciB0aGUgdGVzdGluZyENCj4gPg0KPiA+ID4gSG93
-ZXZlciwgdGhlIG90aGVyIGltYmFsYW5jZSAocGh5LWVlMDgwMjAwLnVzYi1waHkuNiBlbmFibGlu
-ZyBpdHMNCj4gPiA+IHJlZ3VsYXRvciBkdXJpbmcgZWFjaCBzeXN0ZW0gcmVzdW1lIHBoYXNlLCBi
-dXQgbmV2ZXIgdG91Y2hpbmcgaXQNCj4gPiA+IG90aGVyd2lzZSkgaXMgc3RpbGwgcHJlc2VudC4N
-Cj4gPg0KPiA+IFVtbSwgc2luY2UgSSdkIGxpa2UgdG8gaW52ZXN0aWdhdGUgdGhpcywNCj4gPiB3
-b3VsZCB5b3Ugc2hhcmUgeW91ciBkZWJ1ZyBwcmludCBwYXRjaD8NCj4gDQo+IEF0dGFjaGVkLg0K
-DQpUaGFuayB5b3UgZm9yIHlvdXIgcGF0Y2guIEZpbmFsbHksIEkgZm91bmQgdGhlIG90aGVyIGlt
-YmFsYW5jZSBpcyBjYXVzZWQgYnkNCnJjYXJfZ2VuM19waHlfdXNiMl9wb3dlcl9vbigpLiByY2Fy
-X2dlbjNfcGh5X3VzYjJfcG93ZXJfb24oKSBzaG91bGQgaGF2ZQ0Kb3duIG11dGV4IGxvY2sgdG8g
-YXZvaWQgYSByYWNlIGNvbmRpdGlvbiBiZXR3ZWVuIGNhbGxzIHJjYXJfZ2VuM19hcmVfYWxsX3Jw
-aHlzX3Bvd2VyX29mZigpDQphbmQgYXNzaWduIHRoZSAtPnBvd2VyZWQuIFNvLCBJJ2xsIHN1Ym1p
-dCB2MiBwYXRjaCBsYXRlci4NCg0KTm90ZXM6DQogLSBFdmVuIGlmIHRoZSBkcml2ZXIgaGFzIHN1
-Y2ggYW4gb3duIG11dGV4LCBzb21ldGltZXMgdGhlIGRpZmZlcmVudCBwaHkgbnVtYmVyDQogICBl
-bmFibGVzIHRoZSByZWd1bGF0b3IuIEJ1dCB0aGUgaW1iYWxhbmNlIGVuYWJsaW5nIHRoZSByZWd1
-bGF0b3IgaXNzdWUgZGlzYXBwZWFycy4NCg0KIC0gT25lIG9mIHRoZSBwaHkgY2hhbm5lbCBoYXMg
-NCBwaHkgZGV2aWNlcy4gQW5kIHRoZSBwaHkgY2hhbm5lbCBoYXMgYSByZWd1bGF0b3INCiAgIHNv
-IHRoYXQgZW5hYmxpbmcgdGhlIHJlZ3VsYXRvciBieSBvbmUgb2YgdGhlIHBoeSBkZXZpY2VzIGlz
-IGVub3VnaC4NCg0KLS0tIEV4YW1wbGUgKHY1LjItcmMzIG9uIFItQ2FyIEgzKSAtLS0NCiMgbHMg
-L3N5cy9jbGFzcy9waHkvDQpwaHktZTY1ZWUwMDAudXNiLXBoeS4xMiAgcGh5LWVlMGEwMjAwLnVz
-Yi1waHkuMCAgcGh5LWVlMGMwMjAwLnVzYi1waHkuNQ0KcGh5LWVlMDgwMjAwLnVzYi1waHkuMTAg
-IHBoeS1lZTBhMDIwMC51c2ItcGh5LjEgIHBoeS1lZTBjMDIwMC51c2ItcGh5LjYNCnBoeS1lZTA4
-MDIwMC51c2ItcGh5LjExICBwaHktZWUwYTAyMDAudXNiLXBoeS4yICBwaHktZWUwYzAyMDAudXNi
-LXBoeS43DQpwaHktZWUwODAyMDAudXNiLXBoeS44ICAgcGh5LWVlMGEwMjAwLnVzYi1waHkuMw0K
-cGh5LWVlMDgwMjAwLnVzYi1waHkuOSAgIHBoeS1lZTBjMDIwMC51c2ItcGh5LjQNCg0KLSBwaHkt
-ZWUwODAyMDAudXNiLXBoeSBpcyBvbmUgb2YgdGhlIHBoeSBjaGFubmVsLg0KLS0gQW5kIHRoZSAi
-cGh5LWVlMDgwMjAwLnVzYi1waHkiIHBoeSBjaGFubmVsIGhhcyBhIHJlZ3VsYXRvci4NCi0tIE90
-aGVyIHBoeSBjaGFubmVscyAocGh5LWVlMFthY10wMjAwLnVzYi1waHkpIGRvbid0IGhhdmUgdGhl
-aXIgcmVndWxhdG9ycy4NCg0KLSBwaHktZWUwODAyMDAudXNiLXBoeS57OCw5LDEwLDExfSBhcmUg
-cGh5IGRldmljZXMuDQotLS0tDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoN
-Cg==
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+The BB expander at 0x21 i2c bus 1 fails to probe on da850-evm because
+the board doesn't set has_full_constraints to true in the regulator
+API.
+
+Call regulator_has_full_constraints() at the end of board registration
+just like we do in da850-lcdk and da830-evm.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/mach-davinci/board-da850-evm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index 4ee65a8a3b80..31ae3be5741d 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -1480,6 +1480,8 @@ static __init void da850_evm_init(void)
+ 	if (ret)
+ 		pr_warn("%s: dsp/rproc registration failed: %d\n",
+ 			__func__, ret);
++
++	regulator_has_full_constraints();
+ }
+ 
+ #ifdef CONFIG_SERIAL_8250_CONSOLE
+-- 
+2.21.0
+
