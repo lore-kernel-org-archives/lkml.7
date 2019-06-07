@@ -2,87 +2,176 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F23C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5221C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6824208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559939919;
-	bh=Bv/Z57sNRBiCj/37OETmg8X34CsAqnKoIw0yu/2tidg=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=0xGe97TJ0NE7HmBzpt57ZTkYuyDydc5tC3Br9UKC6hJVg4iefDu/3pYa4G2p2eFLW
-	 0o/uPB9Fsd+h3LjoUSLW2o+Rq4C5anf1Pfo1PtMuJKlsMU0/tDpvtyhN9pYLN9KoZ8
-	 HkQh/QLvcmUNfGEZ+/4hMpQixvJtGtw/kKpb8hEM=
+	by mail.kernel.org (Postfix) with ESMTP id 778AD212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:40:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="xrvdgiwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbfFGUij (ORCPT
+        id S1730307AbfFGUkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:38:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729587AbfFGUii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:38:38 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1361E208C3;
-        Fri,  7 Jun 2019 20:38:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559939918;
-        bh=Bv/Z57sNRBiCj/37OETmg8X34CsAqnKoIw0yu/2tidg=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=dvs7AxnoTTxM6KuVZNpZ6dVBRQFQLk4ZgRxUQ8yfTkBD1JIqhKvUe1AB0yXKJyeH7
-         g3/eTCudXDV/1ezouiOt7x7TQFFiUsRNyJZ4WF8gPbUT0vIokFw8yDHkMefjPsoUq5
-         ZBNPYrRkQ5eCw6nxpwQ6MYnZ9t3ZXXD5oIqAJB8o=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Fri, 7 Jun 2019 16:40:10 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34688 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729677AbfFGUkJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 16:40:09 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h2so1753289pgg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=/zXZ0PAO7hrTuftMmJADCccAFJNVvLuJoT5zW483dm4=;
+        b=xrvdgiwgMy+n6sUxDDjF6GbcFmqZ9IbL4LqbaOlUjeE8uqFUu4xLwLCn5TySJGkcHl
+         fXPiABlcfNSCw9bl0NwfmBnfApC4fAM1xXXJDZ27D9KyYVvW3Pd4X+nasECUMC2LBZEJ
+         fKA5BQIw1BcsTounoXppfOwxaeXfpEVX0HyHm3x1KFjINzS4PCb6c6IaljqNaSCBm7Od
+         drrmRGWCxY710x1mQlxy/KRBEo0C1hie/MUbVm5jM/+AlavFNb6N+fUr8V+MNbUOPbuC
+         xC4rbQBCWUzb43kM79GQ/pk24o4zNJi31I1dPZeQMzNZkLkM+wXFQ8x1bMx3nK65vvQb
+         mnNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=/zXZ0PAO7hrTuftMmJADCccAFJNVvLuJoT5zW483dm4=;
+        b=ZVqfFEdlWyJdLHg/zgBcbnBWrWdM4taZhCddPhDT5GiwaphYbTvi/0gP+NZe0nGo7i
+         YKD+JZLimlZqqELZJ3NmuLwdYbMjdYYfo3JyTEWfzUVFgk7nQzj2kGTlelCpsz+uZg1N
+         nVw+I6fjPnl8+rlaYWt4UhOsauWxawqCosSlU6xM+2dZjty0Mj6u6oBiQeqgYybsEFnw
+         7FgR4egV5X1W9AzOErG94E1wZA6Sng6QKtk24LCAwxvWU6htKmk7MWGjoaJ0C8XoFCui
+         //MOP/qQM1okpHD7mqxFXbmd7GPxzHT9e5kCKBfnHp8c/iZ/ax8Uw1gBwursDAZzBw+9
+         ueow==
+X-Gm-Message-State: APjAAAX7mq7SPwNHHjy+/cq/0VzotjFcEAIA7bqvB39F0VXMM5PgJ2KM
+        rzQ23bvwx0LUmcLrSY+be0aVyw==
+X-Google-Smtp-Source: APXvYqw9CMgTx+uPCBp2eShznieLWxzWHpVNj71rqNoWul6wN77odT5+ocrO71ob0NcUvASo3obsmg==
+X-Received: by 2002:a63:490a:: with SMTP id w10mr4721938pga.6.1559940008694;
+        Fri, 07 Jun 2019 13:40:08 -0700 (PDT)
+Received: from ?IPv6:2600:1012:b044:6f30:60ea:7662:8055:2cca? ([2600:1012:b044:6f30:60ea:7662:8055:2cca])
+        by smtp.gmail.com with ESMTPSA id 128sm3433146pff.16.2019.06.07.13.40.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 13:40:07 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <352e6172-938d-f8e4-c195-9fd1b881bdee@intel.com>
+Date:   Fri, 7 Jun 2019 13:40:06 -0700
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org>
-References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org> <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
-Cc:     david.brown@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
-        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Fri, 07 Jun 2019 13:38:37 -0700
-Message-Id: <20190607203838.1361E208C3@mail.kernel.org>
+Message-Id: <D10B5B59-1BE7-44DC-8E91-C8E4292DC6FB@amacapital.net>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com> <20190606200926.4029-4-yu-cheng.yu@intel.com> <20190607080832.GT3419@hirez.programming.kicks-ass.net> <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com> <20190607174336.GM3436@hirez.programming.kicks-ass.net> <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com> <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net> <352e6172-938d-f8e4-c195-9fd1b881bdee@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-05-21 07:52:28)
-> On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
-> > The multimedia clock controller (mmcc) is the main clock controller for
-> > the multimedia subsystem and is required to enable things like display =
-and
-> > camera.
+
+
+> On Jun 7, 2019, at 11:58 AM, Dave Hansen <dave.hansen@intel.com> wrote:
 >=20
-> Stephen, I think this series is good to go, and I have display/gpu stuff =
-
-> I'm polishing that will depend on this.  Would you kindly pickup patches =
-
-> 1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 and 6.
+> On 6/7/19 11:29 AM, Andy Lutomirski wrote:
+> ...
+>>> I think this new MSR probably needs to get included in oops output when
+>>> CET is enabled.
+>>=20
+>> This shouldn=E2=80=99t be able to OOPS because it only happens at CPL 3,
+>> right?  We should put it into core dumps, though.
 >=20
+> Good point.
+>=20
+> Yu-cheng, can you just confirm that the bitmap can't be referenced in
+> ring-0, no matter what?  We should also make sure that no funny business
+> happens if we put an address in the bitmap that faults, or is
+> non-canonical.  Do we have any self-tests for that?
+>=20
+> Let's say userspace gets a fault on this.  Do they have the
+> introspection capability to figure out why they faulted, say in their
+> signal handler?
 
-If I apply patch 3 won't it break boot until patch 2 is also in the
-tree? That seems to imply that I'll break bisection, and we have
-kernelci boot testing clk-next so this will probably set off alarms
-somewhere.
+We need to stick the tracker state in the sigcontext somewhere.
 
-I thought we had some code that got removed that was going to make the
-transition "seamless" in the sense that it would search the tree for an
-RPM clk controller and then not add the XO fixed factor clk somehow.
-See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
-clocks") for the code that we removed. So ideally we do something like
-this too, but now we search for a property on the calling node to see if
-the XO clk is there?
+Did we end up defining a signal frame shadow stack token?
+
+>=20
+>>> Why don't we require that a VMA be in place for the entire bitmap?
+>>> Don't we need a "get" prctl function too in case something like a JIT is=
+
+>>> running and needs to find the location of this bitmap to set bits itself=
+?
+>>>=20
+>>> Or, do we just go whole-hog and have the kernel manage the bitmap
+>>> itself. Our interface here could be:
+>>>=20
+>>>   prctl(PR_MARK_CODE_AS_LEGACY, start, size);
+>>>=20
+>>> and then have the kernel allocate and set the bitmap for those code
+>>> locations.
+>>=20
+>> Given that the format depends on the VA size, this might be a good
+>> idea.
+>=20
+> Yeah, making userspace know how large the address space is or could be
+> is rather nasty, especially if we ever get any fancy CPU features that
+> eat up address bits (a la ARM top-byte-ignore or SPARC ADI).
+
+That gets extra bad if we ever grow user code that uses it but is unaware. I=
+t could poke the wrong part of the bitmap.
+
+>=20
+>> Hmm.  Can we be creative and skip populating it with zeros?  The CPU
+> should only ever touch a page if we miss an ENDBR on it, so, in normal
+> operation, we don=E2=80=99t need anything to be there.  We could try to pr=
+event
+> anyone from *reading* it outside of ENDBR tracking if we want to avoid
+> people accidentally wasting lots of memory by forcing it to be fully
+> populated when the read it.
+>=20
+> Won't reads on a big, contiguous private mapping get the huge zero page
+> anyway?
+
+The zero pages may be free, but the page tables could be decently large.  Do=
+es the core mm code use huge, immense, etc huge zero pages?  Or can it synth=
+esize them by reusing page table pages that map zeros?
+
+>=20
+>> The one downside is this forces it to be per-mm, but that seems like
+>> a generally reasonable model anyway.
+>=20
+> Yeah, practically, you could only make it shared if you shared the
+> layout of all code in the address space.  I'm sure the big database(s)
+> do that cross-process, but I bet nobody else does.  User ASLR
+> practically guarantees that nobody can do this.
+
+I meant per-mm instead of per-task.
 
