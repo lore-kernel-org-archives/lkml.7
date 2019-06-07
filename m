@@ -2,81 +2,94 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1617C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A02C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0E020868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712E9212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559931245;
+	bh=UdznyVpRLBkTyuEoupaePTT33UjXWCnnxsQdTJKxo4Q=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=Aw5OoNxOlXJ7LMjfrlAnLRkrdLyLtNnNxPhrxxzTVWl7ftZJ+DIGKvqu03qNkxe6c
+	 iV5MM7OMXwl+t0ldCEoHxx5mIK97uoKOFU0bwzCYLh7kwKWFRq3+IO6gnPjkoWsSHO
+	 yZWLaNIzqKIA7VhtgOG996rNjmX6x3xOgOihuCl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbfFGSNZ (ORCPT
+        id S1731320AbfFGSOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:13:25 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34668 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730310AbfFGSNY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:13:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e16so3080310wrn.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:13:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EosIO25kscDdg4/deIdAXrXIX/FDoWhyB9PaERsqjT8=;
-        b=iLENssuFeym6tV8GWZW8fPY8LqNLBNmmSEGCna/wVR2Qdj/mhFRwT7rtIg47bG/EZ+
-         28km3jAEZCaVMApDCUlAivoJ9k4RfToXcCjSEtI5nt+dWxQ9yRTOtQrELRb8tlgV465R
-         I7cCNgq1nITph4HpWUsqKnDJprMCEkw/8r82BARLyftmPSe+jlO7vbZNN2dBEwFtS3zZ
-         IkXMH2RtRp1Tmko4+gd4qdQzKZGkxC/9bizEcsTjytCvrdsdq6nqZkT+b1wa2Anr0KA6
-         cKzHmH8rW0p6e3orEQXPF9IuGDKp/9tHCV1q1SRH71qYU5aocU+cTp4pVy5A1bHpk8Mr
-         hvug==
-X-Gm-Message-State: APjAAAUhviITsHBpMNSXDrUIAOz/3tPgkha9rHfqf3vvbL/GFmXVAqDB
-        QqhUeweGkLdTW4ltRDE3U4uJMg==
-X-Google-Smtp-Source: APXvYqxP6cfcdMrFlzUn4io5BVLKCM01R591Zj4sqsIG/1P3jh9zZMqspSJglpTb+em4cSqroAXVTw==
-X-Received: by 2002:a5d:4603:: with SMTP id t3mr11524174wrq.315.1559931203159;
-        Fri, 07 Jun 2019 11:13:23 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:d43d:6da3:9364:a775? ([2001:b07:6468:f312:d43d:6da3:9364:a775])
-        by smtp.gmail.com with ESMTPSA id b2sm3323821wrp.72.2019.06.07.11.13.22
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 11:13:22 -0700 (PDT)
-Subject: Re: [PATCH] KVM: VMX: simplify vmx_prepare_switch_to_{guest,host}
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1559927301-8124-1-git-send-email-pbonzini@redhat.com>
- <20190607173710.GG9083@linux.intel.com>
- <20190607174753.GH9083@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <11522be0-4d38-a8e5-e4cd-274c8e309b2f@redhat.com>
-Date:   Fri, 7 Jun 2019 20:13:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 7 Jun 2019 14:14:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730889AbfFGSOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 14:14:03 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3F9820868;
+        Fri,  7 Jun 2019 18:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559931242;
+        bh=UdznyVpRLBkTyuEoupaePTT33UjXWCnnxsQdTJKxo4Q=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=T1E46J9x/Y3mc1Ns6Or3nqaANxl2yDrd3n+pp3KNPD/W7cmLkijwMwceya5LP2rBS
+         u1Tn3hQQ9pgY9IxmdiTchSQCjo6raPxsaDGE1txJUZGwvOS3pn/oCCl9cTjnNy7tcV
+         I889Nknlvh4dsJejPqUpv9s8bTtXfGUN1qbUQAfY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190607174753.GH9083@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190520080421.12575-2-wens@kernel.org>
+References: <20190520080421.12575-1-wens@kernel.org> <20190520080421.12575-2-wens@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Michael Turquette <mturquette@baylibre.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 01/25] clk: Fix debugfs clk_possible_parents for clks without parent string names
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Fri, 07 Jun 2019 11:14:01 -0700
+Message-Id: <20190607181402.B3F9820868@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/19 19:47, Sean Christopherson wrote:
->> This is the hiccup with naming it sregs_loaded.  The split bools is also
->> kinda wonky since the 32->64 case is a one-off scenario.  I think a
->> cleaner solution would be to remove guest_msrs_dirty and refresh the MSRs
->> directly from setup_msrs().  Then loaded_cpu_state -> loaded_guest_state
->> can be a straight conversion from loaded_vmcs -> bool.  I'll send patches.
-> Actually, would it be easier on your end if I do a v2 of the series that
-> would introduce vmx_sync_vmcs_host_state(), and splice these patch into it?
+Quoting Chen-Yu Tsai (2019-05-20 01:03:57)
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index aa51756fd4d6..bdb077ba59b9 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3000,12 +3000,16 @@ DEFINE_SHOW_ATTRIBUTE(clk_flags);
+>  static int possible_parents_show(struct seq_file *s, void *data)
+>  {
+>         struct clk_core *core =3D s->private;
+> +       struct clk_core *parent;
+>         int i;
+> =20
+> -       for (i =3D 0; i < core->num_parents - 1; i++)
+> -               seq_printf(s, "%s ", core->parents[i].name);
+> +       for (i =3D 0; i < core->num_parents - 1; i++) {
+> +               parent =3D clk_core_get_parent_by_index(core, i);
+> +               seq_printf(s, "%s ", parent ? parent->name : NULL);
+> +       }
+> =20
+> -       seq_printf(s, "%s\n", core->parents[i].name);
+> +       parent =3D clk_core_get_parent_by_index(core, i);
+> +       seq_printf(s, "%s", parent ? parent->name : NULL);
 
-For now I'll just rename it to guest_state_loaded, let's do further
-cleanups on top.  My plan is to post my version of everything after
-testing so that you can do a "git range-diff" between my patches and
-yours.  (For exposure I'll probably push that to kvm/queue, but I don't
-intend to merge them to kvm/next without your review).
+What do we do if the parent won't appear on this system, but we've
+listed it as a possible parent with the '.fw_name' string? Is that not a
+"possible" parent because it won't ever appear?
 
-Paolo
+I'm mostly saying that we should try to detect these corner cases and
+print something besides NULL. Maybe we could even print the fallback
+'.name' if clk_core_get_parent_by_index() fails (and '.name' isn't
+NULL).  Then we're left with the case where even the fallback '.name' is
+NULL, and we can print something like "<fw_name> (fw)" to indicate that
+we're waiting for the kernel to probe a provider for that parent, but
+the firmware name is <fw_name> and that's all we know.
+
