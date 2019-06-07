@@ -2,160 +2,123 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672B2C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18C7C468BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6CF20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB70920B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="K15lDwrH"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="bg+UwTLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbfFGRFT (ORCPT
+        id S1731128AbfFGRII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:05:19 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40285 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729944AbfFGRFS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:05:18 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d30so1470398pgm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:05:18 -0700 (PDT)
+        Fri, 7 Jun 2019 13:08:08 -0400
+Received: from mail-eopbgr710053.outbound.protection.outlook.com ([40.107.71.53]:12907
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728989AbfFGRIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 13:08:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=DgtSX/H6NfPgrhihV60ypaHNzH2XLKDDtBMwkkXJEQM=;
-        b=K15lDwrHU+QByMLUcGsPxdOnNlJhavwl5vzG6kxYPkx7YmYvZeW1ck5JO0OoObB5Xa
-         bYOzIyKVQ7hz1tKrFJw+d10DsxIcYUogKFKziY6bC49Z4sqMZGz+GKrut1kqgjD9iqnD
-         Iy7yuXdRlEQo1JJypK02SCFJ3fiU6aXucnVYHIUhOl0FC0rrAuLNGfNaBUSjjY0SJP0O
-         g+9/YMoWXJmfYyZUowSn5eE6XZng5m+uDKaxwLeh1WtwbitTB4KCIgvTiJtDprK4A3Nl
-         yGxKspKE+tdnIrdwE1lKLqeXOSavRevLlFIkM3wUJcLjFBoUe06Q+MLv/g4yKH03/nvj
-         qypA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=DgtSX/H6NfPgrhihV60ypaHNzH2XLKDDtBMwkkXJEQM=;
-        b=YTgzAzMeHMrO4rWIwi5GiQ7SHzuDUrUbN7eWepY3219rU+UVUc1/hgfx0wDYcG8ChG
-         QivU5qz8fcfN9x/VTNIQP8Z8xqYdSIveH0mlhsv2NOTet6o8GTFz3/tVxZ82jVw4+C7E
-         ewv/u1do6njRzrX1sykJ5ciqfQE1f9JVIvf4uQA1ykp/kgURpaJDQGtNoXhfCCL1aoJW
-         sjYn7l3gZgofqk5b/0sGL/LXa0mVuOIT2ifEVtZvjN58Q3z185uj/+aueBcUV3uDRBON
-         H0EpRLbHP/eZyVIdXhiyrX75Utg6UCtc+tYrczQbLiMZhl0IS/nL+XI3sVEG8xGRqzUQ
-         XKeQ==
-X-Gm-Message-State: APjAAAVYXQoHqyHoKzEOAo6+jZJXJCg8AaHOlkOefGX/32HZ0kaAHzC3
-        4agiSt3xf0SBF8nak/LlGPmTgw==
-X-Google-Smtp-Source: APXvYqxpIAgK6uMLd/KqHPohBW13L8/VruBdBF59jsPIJ7TQYnlh4WNEPsdSIs+GfxOtnM3FSmF/iQ==
-X-Received: by 2002:a17:90a:24e4:: with SMTP id i91mr7053557pje.9.1559927117889;
-        Fri, 07 Jun 2019 10:05:17 -0700 (PDT)
-Received: from ?IPv6:2600:1012:b044:6f30:60ea:7662:8055:2cca? ([2600:1012:b044:6f30:60ea:7662:8055:2cca])
-        by smtp.gmail.com with ESMTPSA id b2sm2609638pgk.50.2019.06.07.10.05.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 10:05:15 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <ac8827d7b516f4b58e1df20f45b94998d36c418c.camel@intel.com>
-Date:   Fri, 7 Jun 2019 10:05:13 -0700
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A495EEB4-F05F-4AB3-831A-0F15B912A7EC@amacapital.net>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com> <20190606200926.4029-4-yu-cheng.yu@intel.com> <20190607080832.GT3419@hirez.programming.kicks-ass.net> <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com> <76B7B1AE-3AEA-4162-B539-990EF3CCE2C2@amacapital.net> <ac8827d7b516f4b58e1df20f45b94998d36c418c.camel@intel.com>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SMudd+xc/xqETJeGxFP4rxMXb9jluzX2RF5EeMf9Ua0=;
+ b=bg+UwTLhAlLzOmECSBjlZwup6i3mYtfwoiaUkX9kzq5M3DvpHnqMJuyYGbv0vqp3FhLbE+l9+turT7GDeJJ1zQYhDaSQuYIjeaX/Kfcee15C8a4ZXJFqU49CEIL8aA/LctuxL4DLkkAUEs/eoDFJMR6Amp6OnUO6Uv4Wl5rHPsQ=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2605.namprd12.prod.outlook.com (52.135.102.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Fri, 7 Jun 2019 17:08:05 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
+ 17:08:05 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "Luck, Tony" <tony.luck@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Topic: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Index: AQHU/5PPbonhoiIaT0+tpMBUt0fOpKZt/3MAgAAEtbCAAA1jAIAAAELggAAGlYCAADB8kIAABZ8AgAAG7YCAANzUAIAAUaUwgAAal4CAAA3JgIAABf+AgAAE/ICAABizgIAAAygAgAAEo4CACWuboIAGhWIAgBC3iXCAAB8mgIAAANXggAAFOACAAABXsA==
+Date:   Fri, 7 Jun 2019 17:08:04 +0000
+Message-ID: <SN6PR12MB263905712C2375078012E833F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190517174817.GG13482@zn.tnic>
+ <20190517180607.GA21710@agluck-desk> <20190517193431.GI13482@zn.tnic>
+ <SN6PR12MB2639C5427366AC3004C35CC0F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190517200225.GK13482@zn.tnic>
+ <SN6PR12MB26390759DB43763D3A482918F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190527232849.GC8209@cz.tnic>
+ <SN6PR12MB263998ECCDF1E345FEB0869AF8100@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190607163723.GG20269@zn.tnic>
+ <SN6PR12MB263968DE0DD98EBE14450698F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190607165902.GJ20269@zn.tnic>
+In-Reply-To: <20190607165902.GJ20269@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [165.204.84.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c269f6f1-0d3f-4b60-c55e-08d6eb6ab4c6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2605;
+x-ms-traffictypediagnostic: SN6PR12MB2605:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SN6PR12MB2605E7D18CFBDBFDEF942A08F8100@SN6PR12MB2605.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0061C35778
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(376002)(366004)(39860400002)(13464003)(199004)(189003)(11346002)(6246003)(33656002)(52536014)(66446008)(186003)(66066001)(74316002)(8936002)(81166006)(8676002)(81156014)(229853002)(55016002)(446003)(6306002)(53936002)(9686003)(66476007)(76116006)(316002)(2906002)(86362001)(14454004)(6916009)(76176011)(486006)(73956011)(5660300002)(66556008)(66946007)(64756008)(54906003)(71190400001)(25786009)(3846002)(102836004)(6116002)(6436002)(256004)(72206003)(478600001)(476003)(305945005)(4326008)(7736002)(6506007)(53546011)(99286004)(26005)(7696005)(71200400001)(966005)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2605;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gCpw+678l3bkbYFyaUNAiPejMe7fr0J+ET/BBHbZLI9YyKYFrYJpfd3SVGvZwZHbt4nP3AJhTvNlTT6JqbHXFTgUPcqm7yDnvr9qNRA9v0GXrWi7xeExQBfAstUDF7VTcyijorWoI/kbxtlWFmqTHJB3wpaCFdbwZEf8ECvZbWDBnUlijYPiVpgtRMhnsLZEmgFbRXaaIYTdRthZTk5G/JNMKbZx+IcbctGCeAiwaBC2dKGkJ34KxklmjxJKG/nmMZQaDzH1rM2+b4m8ToY76eo3M5RWWcEOeBDb1Jo+NNzTfN1VIJWm80XNceHf2iVqEuv8VHFPnyeUuoiqQbgVffQ/XV8sKnl252HHFsJZyjdGR0sqLEyQII5RZljJ9QqyHrIWABiF5ByOXV5s1g7FWWW48yaDBv7tv6wAOVaELyg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c269f6f1-0d3f-4b60-c55e-08d6eb6ab4c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 17:08:04.9691
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yghannam@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2605
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-
-> On Jun 7, 2019, at 9:45 AM, Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
->=20
-> On Fri, 2019-06-07 at 09:35 -0700, Andy Lutomirski wrote:
->>> On Jun 7, 2019, at 9:23 AM, Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
->>>=20
->>>>> On Fri, 2019-06-07 at 10:08 +0200, Peter Zijlstra wrote:
->>>>> On Thu, Jun 06, 2019 at 01:09:15PM -0700, Yu-cheng Yu wrote:
->>>>> Indirect Branch Tracking (IBT) provides an optional legacy code bitmap=
-
->>>>> that allows execution of legacy, non-IBT compatible library by an
->>>>> IBT-enabled application.  When set, each bit in the bitmap indicates
->>>>> one page of legacy code.
->>>>>=20
->>>>> The bitmap is allocated and setup from the application.
->>>>> +int cet_setup_ibt_bitmap(unsigned long bitmap, unsigned long size)
->>>>> +{
->>>>> +    u64 r;
->>>>> +
->>>>> +    if (!current->thread.cet.ibt_enabled)
->>>>> +        return -EINVAL;
->>>>> +
->>>>> +    if (!PAGE_ALIGNED(bitmap) || (size > TASK_SIZE_MAX))
->>>>> +        return -EINVAL;
->>>>> +
->>>>> +    current->thread.cet.ibt_bitmap_addr =3D bitmap;
->>>>> +    current->thread.cet.ibt_bitmap_size =3D size;
->>>>> +
->>>>> +    /*
->>>>> +     * Turn on IBT legacy bitmap.
->>>>> +     */
->>>>> +    modify_fpu_regs_begin();
->>>>> +    rdmsrl(MSR_IA32_U_CET, r);
->>>>> +    r |=3D (MSR_IA32_CET_LEG_IW_EN | bitmap);
->>>>> +    wrmsrl(MSR_IA32_U_CET, r);
->>>>> +    modify_fpu_regs_end();
->>>>> +
->>>>> +    return 0;
->>>>> +}
->>>>=20
->>>> So you just program a random user supplied address into the hardware.
->>>> What happens if there's not actually anything at that address or the
->>>> user munmap()s the data after doing this?
->>>=20
->>> This function checks the bitmap's alignment and size, and anything else i=
-s
->>> the
->>> app's responsibility.  What else do you think the kernel should check?
->>>=20
->>=20
->> One might reasonably wonder why this state is privileged in the first pla=
-ce
->> and, given that, why we=E2=80=99re allowing it to be written like this.
->>=20
->> Arguably we should have another prctl to lock these values (until exec) a=
-s a
->> gardening measure.
->=20
-> We can prevent the bitmap from being set more than once.  I will test it.
->=20
-
-I think it would be better to make locking an explicit opt-in.=
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogRnJpZGF5LCBKdW5lIDcsIDIwMTkgMTE6NTkg
+QU0NCj4gVG86IEdoYW5uYW0sIFlhemVuIDxZYXplbi5HaGFubmFtQGFtZC5jb20+DQo+IENjOiBM
+dWNrLCBUb255IDx0b255Lmx1Y2tAaW50ZWwuY29tPjsgbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHg4NkBrZXJuZWwub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjMgNS82XSB4ODYvTUNFOiBTYXZlIE1DQSBjb250cm9sIGJpdHMgdGhh
+dCBnZXQgc2V0IGluIGhhcmR3YXJlDQo+IA0KPiBPbiBGcmksIEp1biAwNywgMjAxOSBhdCAwNDo0
+NDoyNFBNICswMDAwLCBHaGFubmFtLCBZYXplbiB3cm90ZToNCj4gPiBJIGhhdmUgYW5vdGhlciB2
+ZXJzaW9uIG9mIHRoaXMgc2V0IHRoYXQgSSBjYW4gc2VuZCB0b2RheS4gSXQgaW5jbHVkZXMNCj4g
+PiB0aGUgY2hhbmdlcyBmb3IgdGhpcyBwYXRjaCBhbmQgYWxzbyBpbmNsdWRlcyB0aGUgZml4IGZv
+ciB0aGUgbG9ja2luZw0KPiA+IGJ1ZyBtZXNzYWdlLg0KPiA+DQo+ID4gU2hvdWxkIEkgc2VuZCBv
+dXQgdGhlIG5ldyB2ZXJzaW9uPyBPciBkbyB5b3Ugd2FudCBtZSB0byB3YWl0IGZvciBhbnkNCj4g
+PiBmaXhlcyBvbiB0b3Agb2YgdGhlIGN1cnJlbnQgdmVyc2lvbj8NCj4gDQo+IEkgZG9uJ3QgdW5k
+ZXJzdGFuZCAtIEkgdGhpbmsgd2Ugc2FpZCB0byBmZWVsIGZyZWUgdG8gcmV3b3JrIGl0IGFsbCBi
+eSB1c2luZw0KPiANCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5l
+bC9naXQvYnAvYnAuZ2l0L2xvZy8/aD1yYzAlMmIzLXJhcw0KPiANCj4gYW5kIHJld29ya2luZyB0
+aGUgd2hvbGUgYnJhbmNoIHRvIGFjY29tb2RhdGUgdGhlIGNoYW5nZXMgYW5kIHRoZW4NCj4gc2Vu
+ZGluZyBhIHdob2xlIG5ldyBzZXJpZXMuLi4NCj4gDQoNClJpZ2h0LCBJIHRvb2sgdGhhdCBicmFu
+Y2gsIHNxdWFzaGVkIHRoZSBsb2NraW5nIGZpeCBpbnRvIHBhdGNoIDIsIGZpeGVkIHVwIHRoZSBy
+ZW1haW5pbmcgcGF0Y2hlcywgYW5kIHRoZW4gcmVkaWQgdGhlIGxhc3QgcGF0Y2guDQoNCkkgcGxh
+biB0byBzZW5kIHRoZSByZXN1bHQgYXMgYSB2NCBvZiB0aGlzIHBhdGNoc2V0IHdpdGggYWxsIHRo
+ZSBsaW5rcywgdmVyc2lvbiBoaXN0b3J5LCBldGMuIElzIHRoYXQgd2hhdCB5b3UgbWVhbj8gU29y
+cnksIGlmIEkgbWlzdW5kZXJzdG9vZC4NCg0KVGhhbmtzLA0KWWF6ZW4NCg==
