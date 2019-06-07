@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5A0C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D54C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5CA2146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A661F212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922283;
-	bh=9J0yNPBijp9CKjVl5XU7MV5vKc+bAeRutjTRMItWFdE=;
+	s=default; t=1559922286;
+	bh=7+mU74GXrbpCUDKfGhZsLZkVwFWMioX8PzYR9FHW0TE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S5REBqFBKHeOUEMX6F3++ukZ/LoBtEseFz7MOf0LOajhOT1Rk+MjJNS5lUKq57tGh
-	 Ah6LE2jo1Xt58rUNJsVoqHxNEkGdg0ZWMzqNAHGvnB+jUrm64oPl1mf+Y0zRwq11s8
-	 UksPRdMnYOBB06c8zNdIy0P9B6gpWCBoyOG9n3W4=
+	b=GcPkJIt59loeDGQQehvtVmP6mbK6ySJkrSXRSa/vnA57E1l1LOk64j4yzLPq9O1uC
+	 DRV+CaYQ0CwB7InFp1PTlnOIkGyf3aSG//Tu6UKYkMkfCNgoKwQvOOZyebV9VAux55
+	 lEVQAFl/SfZDjVATI5fkW/G+gNNXuo35pZb7Gzu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbfFGPom (ORCPT
+        id S1731139AbfFGPop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:44:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730379AbfFGPok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:40 -0400
+        id S1731126AbfFGPom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 816CF2146E;
-        Fri,  7 Jun 2019 15:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE612133D;
+        Fri,  7 Jun 2019 15:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922279;
-        bh=9J0yNPBijp9CKjVl5XU7MV5vKc+bAeRutjTRMItWFdE=;
+        s=default; t=1559922282;
+        bh=7+mU74GXrbpCUDKfGhZsLZkVwFWMioX8PzYR9FHW0TE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rZsxUpnvH7ZuuugJe3/T2Vo4njusM3tj77theqU/yTUR0w3TvxhGD0SDi/JFkqPoi
-         o4RSxhJcv87pO3cCKFLy/gNPDEIxFR3zqa+OIs6X4CdOUp1ijEYv/Eqmvx7I9SNLWQ
-         eWzYKPOzZYtHOjhMH48d3KAtP0MDxmOQPN3HMxG8=
+        b=wTSXpzeGtIgJv2vXRCuyqa2TxaZPp/xDQcEupac/z11tlcBnST+xdAbRHAoIugAJy
+         vHooiQV1TsrntuLS/nqhWqzKWgjr1+WRi1hCG6Rp3dVNGaNQYvPXMwTHPvWN94FfF8
+         NuWWoM+wGg5cIsCIZNKnxZ/4DFlBsWv0wI5LeivU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 03/73] xhci: update bounce buffer with correct sg num
-Date:   Fri,  7 Jun 2019 17:38:50 +0200
-Message-Id: <20190607153849.070712216@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 30/73] powerpc/perf: Fix MMCRA corruption by bhrb_filter
+Date:   Fri,  7 Jun 2019 17:39:17 +0200
+Message-Id: <20190607153852.422822358@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -59,82 +61,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Lin <henryl@nvidia.com>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-commit 597c56e372dab2c7f79b8d700aad3a5deebf9d1b upstream.
+commit 3202e35ec1c8fc19cea24253ff83edf702a60a02 upstream.
 
-This change fixes a data corruption issue occurred on USB hard disk for
-the case that bounce buffer is used during transferring data.
+Consider a scenario where user creates two events:
 
-While updating data between sg list and bounce buffer, current
-implementation passes mapped sg number (urb->num_mapped_sgs) to
-sg_pcopy_from_buffer() and sg_pcopy_to_buffer(). This causes data
-not get copied if target buffer is located in the elements after
-mapped sg elements. This change passes sg number for full list to
-fix issue.
+  1st event:
+    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+    attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
+    fd = perf_event_open(attr, 0, 1, -1, 0);
 
-Besides, for copying data from bounce buffer, calling dma_unmap_single()
-on the bounce buffer before copying data to sg list can avoid cache issue.
+  This sets cpuhw->bhrb_filter to 0 and returns valid fd.
 
-Fixes: f9c589e142d0 ("xhci: TD-fragment, align the unsplittable case with a bounce buffer")
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: Henry Lin <henryl@nvidia.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+  2nd event:
+    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+    attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
+    fd = perf_event_open(attr, 0, 1, -1, 0);
+
+  It overrides cpuhw->bhrb_filter to -1 and returns with error.
+
+Now if power_pmu_enable() gets called by any path other than
+power_pmu_add(), ppmu->config_bhrb(-1) will set MMCRA to -1.
+
+Fixes: 3925f46bb590 ("powerpc/perf: Enable branch stack sampling framework")
+Cc: stable@vger.kernel.org # v3.10+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/powerpc/perf/core-book3s.c |    6 ++++--
+ arch/powerpc/perf/power8-pmu.c  |    3 +++
+ arch/powerpc/perf/power9-pmu.c  |    3 +++
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -656,6 +656,7 @@ static void xhci_unmap_td_bounce_buffer(
- 	struct device *dev = xhci_to_hcd(xhci)->self.controller;
- 	struct xhci_segment *seg = td->bounce_seg;
- 	struct urb *urb = td->urb;
-+	size_t len;
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -1827,6 +1827,7 @@ static int power_pmu_event_init(struct p
+ 	int n;
+ 	int err;
+ 	struct cpu_hw_events *cpuhw;
++	u64 bhrb_filter;
  
- 	if (!ring || !seg || !urb)
- 		return;
-@@ -666,11 +667,14 @@ static void xhci_unmap_td_bounce_buffer(
- 		return;
+ 	if (!ppmu)
+ 		return -ENOENT;
+@@ -1932,13 +1933,14 @@ static int power_pmu_event_init(struct p
+ 	err = power_check_constraints(cpuhw, events, cflags, n + 1);
+ 
+ 	if (has_branch_stack(event)) {
+-		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
++		bhrb_filter = ppmu->bhrb_filter_map(
+ 					event->attr.branch_sample_type);
+ 
+-		if (cpuhw->bhrb_filter == -1) {
++		if (bhrb_filter == -1) {
+ 			put_cpu_var(cpu_hw_events);
+ 			return -EOPNOTSUPP;
+ 		}
++		cpuhw->bhrb_filter = bhrb_filter;
  	}
  
--	/* for in tranfers we need to copy the data from bounce to sg */
--	sg_pcopy_from_buffer(urb->sg, urb->num_mapped_sgs, seg->bounce_buf,
--			     seg->bounce_len, seg->bounce_offs);
- 	dma_unmap_single(dev, seg->bounce_dma, ring->bounce_buf_len,
- 			 DMA_FROM_DEVICE);
-+	/* for in tranfers we need to copy the data from bounce to sg */
-+	len = sg_pcopy_from_buffer(urb->sg, urb->num_sgs, seg->bounce_buf,
-+			     seg->bounce_len, seg->bounce_offs);
-+	if (len != seg->bounce_len)
-+		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %ld != %d\n",
-+				len, seg->bounce_len);
- 	seg->bounce_len = 0;
- 	seg->bounce_offs = 0;
+ 	put_cpu_var(cpu_hw_events);
+--- a/arch/powerpc/perf/power8-pmu.c
++++ b/arch/powerpc/perf/power8-pmu.c
+@@ -29,6 +29,7 @@ enum {
+ #define	POWER8_MMCRA_IFM1		0x0000000040000000UL
+ #define	POWER8_MMCRA_IFM2		0x0000000080000000UL
+ #define	POWER8_MMCRA_IFM3		0x00000000C0000000UL
++#define	POWER8_MMCRA_BHRB_MASK		0x00000000C0000000UL
+ 
+ /*
+  * Raw event encoding for PowerISA v2.07 (Power8):
+@@ -243,6 +244,8 @@ static u64 power8_bhrb_filter_map(u64 br
+ 
+ static void power8_config_bhrb(u64 pmu_bhrb_filter)
+ {
++	pmu_bhrb_filter &= POWER8_MMCRA_BHRB_MASK;
++
+ 	/* Enable BHRB filter in PMU */
+ 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
  }
-@@ -3104,6 +3108,7 @@ static int xhci_align_td(struct xhci_hcd
- 	unsigned int unalign;
- 	unsigned int max_pkt;
- 	u32 new_buff_len;
-+	size_t len;
+--- a/arch/powerpc/perf/power9-pmu.c
++++ b/arch/powerpc/perf/power9-pmu.c
+@@ -100,6 +100,7 @@ enum {
+ #define POWER9_MMCRA_IFM1		0x0000000040000000UL
+ #define POWER9_MMCRA_IFM2		0x0000000080000000UL
+ #define POWER9_MMCRA_IFM3		0x00000000C0000000UL
++#define POWER9_MMCRA_BHRB_MASK		0x00000000C0000000UL
  
- 	max_pkt = usb_endpoint_maxp(&urb->ep->desc);
- 	unalign = (enqd_len + *trb_buff_len) % max_pkt;
-@@ -3134,8 +3139,12 @@ static int xhci_align_td(struct xhci_hcd
+ /* Nasty Power9 specific hack */
+ #define PVR_POWER9_CUMULUS		0x00002000
+@@ -308,6 +309,8 @@ static u64 power9_bhrb_filter_map(u64 br
  
- 	/* create a max max_pkt sized bounce buffer pointed to by last trb */
- 	if (usb_urb_dir_out(urb)) {
--		sg_pcopy_to_buffer(urb->sg, urb->num_mapped_sgs,
-+		len = sg_pcopy_to_buffer(urb->sg, urb->num_sgs,
- 				   seg->bounce_buf, new_buff_len, enqd_len);
-+		if (len != seg->bounce_len)
-+			xhci_warn(xhci,
-+				"WARN Wrong bounce buffer write length: %ld != %d\n",
-+				len, seg->bounce_len);
- 		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
- 						 max_pkt, DMA_TO_DEVICE);
- 	} else {
+ static void power9_config_bhrb(u64 pmu_bhrb_filter)
+ {
++	pmu_bhrb_filter &= POWER9_MMCRA_BHRB_MASK;
++
+ 	/* Enable BHRB filter in PMU */
+ 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
+ }
 
 
