@@ -2,105 +2,129 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D984C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF8EC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57CE2208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301FF2133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:07:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="cX5B/ybN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbfFGUEn (ORCPT
+        id S1729972AbfFGUHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:04:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16835 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729342AbfFGUEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:04:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 13:04:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,564,1557212400"; 
-   d="scan'208";a="182781141"
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2019 13:04:42 -0700
-Message-ID: <9d3cedc83c236ee7a109325113fd1c1f9d849f25.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Fri, 7 Jun 2019 16:07:41 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35115 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729342AbfFGUHl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 16:07:41 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j19so3005524otq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:07:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eCiKEWFDcZP7j811fk8M8DkkVpOdsBHHGSCQGbcAqsM=;
+        b=cX5B/ybN+9E76C8vJtaIyiZ12P5fTDIXvvmXG0mOyMhb/Md40OxzeycYBwXFnWA0IJ
+         eHlbUUA10FvcMoJyZ8CTLDV9XHwhiUCX3OgHH81/Z7uy38VkIfuK665/O+t5F/pa0u8f
+         QgcsAPD0wM+v2RvkhElbUU6b+LR29R1dqNkyno4eRZhIDtlQF/cFlGPX6xi1pTmSenIR
+         RWyEjxRs88GDKPlo3xDEyPXchy6YBS7fEh0gh5qhe5t/i15+k6BZqVFzebLLrAceNQdc
+         KYQQxtBe2uLzxpejgnrt3bWzxDBrq8tYDPjhi92QfxXzxDjAwak55hrZX6LaF12G9aHE
+         srjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eCiKEWFDcZP7j811fk8M8DkkVpOdsBHHGSCQGbcAqsM=;
+        b=jkAyH+oreoAT12JoWxv+zyNH6msxzXtSfiBgegs+fPh8/KLaiezGED5uGwLHpSzNg5
+         10erSRnYsfVDsYcRG9S+JGgLiq7/hukTR24WfIpI8A/vea3qiLjwjW5fdfJ2Xfj+iLjC
+         5BFKRQHwUdpfR6XZGr3vGS+onvq8soC3fBafXbxcPa/Og5fyZOKbCkoNCn5WD1qdiDla
+         iLlo8+6ya7uVDhC1TvI6BnMQX7smc8oCb92gb+jMHXGK4jWKctAYB/M7ZBPgsoWvKVQB
+         Cm4r4Jq4DRmtTXyuSdP+6UzSk9UQGrAtl5qpc6p8eWAoVLAkra2LBsaXpFo7/hUblikF
+         Ejww==
+X-Gm-Message-State: APjAAAUYpBO0LILYwdRt6HwTsNJo9B53IxCA4CW0UMpocu/aYu3gIKZN
+        DNqlIf4CymPPsA1RUi9HLDnuwKBUOFFOzIya5qrK6w==
+X-Google-Smtp-Source: APXvYqz2rbY6yUyrAbyzCD+KOoV/chSruHULmHuQow0UVyDGQb5c3BZJ2KdwaL++9IlM9uuK2zqoXUgttHphpe1xf4A=
+X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr15801599otn.71.1559938060915;
+ Fri, 07 Jun 2019 13:07:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <155993563277.3036719.17400338098057706494.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155993567538.3036719.16306480832003017141.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <e2fd563a-1be4-b4dc-09fa-886f0319be5b@intel.com>
+In-Reply-To: <e2fd563a-1be4-b4dc-09fa-886f0319be5b@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 7 Jun 2019 13:07:30 -0700
+Message-ID: <CAPcyv4jhoxDXUwv4vgDYo=aLAAOxZ-Yq0qcgi5kHF_ybGUd-gg@mail.gmail.com>
+Subject: Re: [PATCH v3 08/10] device-dax: Add a driver for "hmem" devices
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Fri, 07 Jun 2019 12:56:40 -0700
-In-Reply-To: <352e6172-938d-f8e4-c195-9fd1b881bdee@intel.com>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
-         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
-         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
-         <352e6172-938d-f8e4-c195-9fd1b881bdee@intel.com>
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        X86 ML <x86@kernel.org>, linux-efi <linux-efi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 11:58 -0700, Dave Hansen wrote:
-> On 6/7/19 11:29 AM, Andy Lutomirski wrote:
-> ...
-> > > I think this new MSR probably needs to get included in oops output when
-> > > CET is enabled.
-> > 
-> > This shouldn’t be able to OOPS because it only happens at CPL 3,
-> > right?  We should put it into core dumps, though.
-> 
-> Good point.
-> 
-> Yu-cheng, can you just confirm that the bitmap can't be referenced in
-> ring-0, no matter what?  We should also make sure that no funny business
-> happens if we put an address in the bitmap that faults, or is
-> non-canonical.  Do we have any self-tests for that?
+On Fri, Jun 7, 2019 at 12:54 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 6/7/19 12:27 PM, Dan Williams wrote:
+> > This consumes "hmem" devices the producer of "hmem" devices is saved for
+> > a follow-on patch so that it can reference the new CONFIG_DEV_DAX_HMEM
+> > symbol to gate performing the enumeration work.
+>
+> Do these literally show up as /dev/hmemX?
 
-Yes, the bitmap is user memory, but the kernel can still get to it (e.g.
-copy_from_user()).  We can do more check on the address.
+No, everything shows as daxX.Y character devices across hmem and pmem
+producers. For example:
 
-> 
-> Let's say userspace gets a fault on this.  Do they have the
-> introspection capability to figure out why they faulted, say in their
-> signal handler?
-
-The bitmap address is kept by the application; the kernel won't provide it again
-to user-space.  In the signal handler, the app can find out from its own record.
-
-[...]
+# daxctl list -RDu
+[
+  {
+    "path":"/platform/hmem.1",
+    "id":1,
+    "size":"4.00 GiB (4.29 GB)",
+    "align":2097152,
+    "devices":[
+      {
+        "chardev":"dax1.0",
+        "size":"4.00 GiB (4.29 GB)"
+      }
+    ]
+  },
+  {
+    "path":"/LNXSYSTM:00/LNXSYBUS:00/ACPI0012:00/ndbus0/region2/dax2.1",
+    "id":2,
+    "size":"125.01 GiB (134.23 GB)",
+    "align":2097152,
+    "devices":[
+      {
+        "chardev":"dax2.0",
+        "size":"125.01 GiB (134.23 GB)"
+      }
+    ]
+  },
+  {
+    "path":"/platform/hmem.0",
+    "id":0,
+    "size":"4.00 GiB (4.29 GB)",
+    "align":2097152,
+    "devices":[
+      {
+        "chardev":"dax0.0",
+        "size":"4.00 GiB (4.29 GB)"
+      }
+    ]
+  }
+]
