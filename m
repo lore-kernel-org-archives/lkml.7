@@ -2,95 +2,123 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FE1C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAE5C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3162089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF07212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559920877;
+	bh=wSA9+DEHwIHYbrjI6rB2FJbnN9VPE/h6ycu0SC0xEOw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=J/b+5LafsiTbHs62pW/pmND+HfByFMES4lea2hbqC/tbgLJqiufDkbbehpSVbQF9y
+	 JxfZG/V6cMJEEeMKWxUR0D0WgmxWuGzbdnKOWe5Qwn5T9I21IHmiqq94xhUuztWnW+
+	 uXdhlR9BgOZUOPczVTCrA44t8UcOjuQWYCWm/O1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfFGPRW (ORCPT
+        id S1729379AbfFGPVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:17:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:42484 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 11:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbfFGPRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:17:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B5A6367;
-        Fri,  7 Jun 2019 08:17:21 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F0F83F718;
-        Fri,  7 Jun 2019 08:17:18 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 16:17:16 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH 07/18] drivers: firmware: psci: Prepare to use OS
- initiated suspend mode
-Message-ID: <20190607151716.GF15577@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-8-ulf.hansson@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513192300.653-8-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1728665AbfFGPVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:21:16 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ED4D2089E;
+        Fri,  7 Jun 2019 15:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559920875;
+        bh=wSA9+DEHwIHYbrjI6rB2FJbnN9VPE/h6ycu0SC0xEOw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p343FTxfeSAM/E5VDYkxZLhAnjNQDez+iK0gcSp+nJAL7C70RhIrBquis3RHUyuPn
+         W3R5Fez3zQzDKBl4QiitU5/d1SA0qkebSYAdi+tU/VFeYf/BlZR4OoPqpgcaLmWVib
+         pWByQv15U6DMJvlz3iXDOBC73t0ou2cKDFAaUF+8=
+Date:   Sat, 8 Jun 2019 00:21:09 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 03/15] x86/kprobes: Fix frame pointer annotations
+Message-Id: <20190608002109.aee01e9a0e0787dc9e419e0c@kernel.org>
+In-Reply-To: <20190607133602.os7st57epo3otbc4@treble>
+References: <20190605130753.327195108@infradead.org>
+        <20190605131944.711054227@infradead.org>
+        <20190607220210.328ed88f2f7598e757c3564f@kernel.org>
+        <20190607133602.os7st57epo3otbc4@treble>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:22:49PM +0200, Ulf Hansson wrote:
-> The per CPU variable psci_power_state, contains an array of fixed values,
-> which reflects the corresponding arm,psci-suspend-param parsed from DT, for
-> each of the available CPU idle states.
->
-> This isn't sufficient when using the hierarchical CPU topology in DT in
-> combination with having PSCI OS initiated (OSI) mode enabled. More
-> precisely, in OSI mode, Linux is responsible of telling the PSCI FW what
-> idle state the cluster (a group of CPUs) should enter, while in PSCI
-> Platform Coordinated (PC) mode, each CPU independently votes for an idle
-> state of the cluster.
->
-> For this reason, let's introduce an additional per CPU variable called
-> domain_state and implement two helper functions to read/write its values.
-> Following patches, which implements PM domain support for PSCI, will use
-> the domain_state variable and set it to corresponding bits that represents
-> the selected idle state for the cluster.
->
-> Finally, in psci_cpu_suspend_enter() and psci_suspend_finisher(), let's
-> take into account the values in the domain_state, as to get the complete
-> suspend parameter.
->
+On Fri, 7 Jun 2019 09:36:02 -0400
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-I understand it was split to ease review, but this patch also does
-nothing as domain_state = 0 always. I was trying hard to find where it's
-set, but I assume it will be done in later patches. Again may be this
-can be squashed into the first caller of psci_set_domain_state
+> On Fri, Jun 07, 2019 at 10:02:10PM +0900, Masami Hiramatsu wrote:
+> > On Wed, 05 Jun 2019 15:07:56 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > The kprobe trampolines have a FRAME_POINTER annotation that makes no
+> > > sense. It marks the frame in the middle of pt_regs, at the place of
+> > > saving BP.
+> > 
+> > commit ee213fc72fd67 introduced this code, and this is for unwinder which
+> > uses frame pointer. I think current code stores the address of previous
+> > (original context's) frame pointer into %rbp. So with that, if unwinder
+> > tries to decode frame pointer, it can get the original %rbp value,
+> > instead of &pt_regs from current %rbp.
+> > 
+> > > 
+> > > Change it to mark the pt_regs frame as per the ENCODE_FRAME_POINTER
+> > > from the respective entry_*.S.
+> > > 
+> > 
+> > With this change, I think stack unwinder can not get the original %rbp
+> > value. Peter, could you check the above commit?
+> 
+> The unwinder knows how to decode the encoded frame pointer.  So it can
+> find regs by decoding the new rbp value, and it also knows that regs->bp
+> is the original rbp value.
+> 
+> Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> 
 
---
-Regards,
-Sudeep
+Ah, OK. My misunderstood. So this encode framepointer as same as other
+interrupt entry stack.
+Then, it looks good to me too.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you Josh!
+
+
+
+
+> -- 
+> Josh
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
