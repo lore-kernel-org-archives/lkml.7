@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775C9C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C81AC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6D4208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BE2208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923031;
-	bh=K297D0p4T/W6MxFo5zeCKRUJ8tjjJc5kbFmbLBKZkhE=;
+	s=default; t=1559923034;
+	bh=8ykz2MlrKkxdzIV+VRyTQrM0mmEzo471AC/ARqC5kqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zKRjeBLg6GiBBU7Sb7n2n3N86CARE0cg514m+bygta845Fbwt+2LrHQZRyYVXw5dO
-	 6u0RXzFx/iO4BDmwt76NQKfHX7urKzEOO+m5xu53/YnxUuAyzyozK8sNwPlSCbLnrP
-	 3wlfchtl+bisd+9EULMA+VXI7DBa+OlpQ3Lj/JrY=
+	b=PBmbKQady9ZzE24QjxRznj0Snb+obSI/9UhYn+wgMn8hpYLhIQpaf3xQ3PTvzn0nj
+	 Mc70p5aaPV6VAiJFW2MO+6sXPn3KI80Sm0cbbCLsBHuW7jO3REBdU2aGoW0j4Qj3mM
+	 G458nEABDIGP8poPp2R57GEiq1OO+dIgspjwvpYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbfFGPoL (ORCPT
+        id S1730990AbfFGPoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730986AbfFGPoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 11:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729787AbfFGPoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D762D2133D;
-        Fri,  7 Jun 2019 15:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02FB221473;
+        Fri,  7 Jun 2019 15:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922248;
-        bh=K297D0p4T/W6MxFo5zeCKRUJ8tjjJc5kbFmbLBKZkhE=;
+        s=default; t=1559922245;
+        bh=8ykz2MlrKkxdzIV+VRyTQrM0mmEzo471AC/ARqC5kqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwOUiNhWrOvXRduaYo4Wm/NDAxQn8jrbBfyGfBIqKDZJY9hmqQ2hp/jcy7dUOSwWb
-         x0RIbok9faMq6iC4Pcm7xjzEBiS3MVDgjXl5U/AyaLsVy8/52ujbmOdfWaMDQEqbvj
-         ypp24VcoA5UmQdji2oXy8euUANIlZ0Uwd8okzBYk=
+        b=LwDkUOiCQL1/7pavf8B7jlrcztQlix4vU2kv+5azJdPDwqRt91eI8UBkqByacKoWT
+         Vib9kjzAtGFOwINYWi3yKjSBpLVNTPDBYGJdTfCguD+vIPSKPRnmbPHv2m3vNQo/f4
+         hrZYmNLSX+9sdF26q+0hUxDD+np7x2zy2XEmVvAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 4.19 02/73] include/linux/bitops.h: sanitize rotate primitives
-Date:   Fri,  7 Jun 2019 17:38:49 +0200
-Message-Id: <20190607153848.955759584@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 19/73] scsi: zfcp: fix to prevent port_remove with pure auto scan LUNs (only sdevs)
+Date:   Fri,  7 Jun 2019 17:39:06 +0200
+Message-Id: <20190607153851.066543765@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -68,133 +60,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit ef4d6f6b275c498f8e5626c99dbeefdc5027f843 upstream.
+commit ef4021fe5fd77ced0323cede27979d80a56211ca upstream.
 
-The ror32 implementation (word >> shift) | (word << (32 - shift) has
-undefined behaviour if shift is outside the [1, 31] range.  Similarly
-for the 64 bit variants.  Most callers pass a compile-time constant
-(naturally in that range), but there's an UBSAN report that these may
-actually be called with a shift count of 0.
+When the user tries to remove a zfcp port via sysfs, we only rejected it if
+there are zfcp unit children under the port. With purely automatically
+scanned LUNs there are no zfcp units but only SCSI devices. In such cases,
+the port_remove erroneously continued. We close the port and this
+implicitly closes all LUNs under the port. The SCSI devices survive with
+their private zfcp_scsi_dev still holding a reference to the "removed"
+zfcp_port (still allocated but invisible in sysfs) [zfcp_get_port_by_wwpn
+in zfcp_scsi_slave_alloc]. This is not a problem as long as the fc_rport
+stays blocked. Once (auto) port scan brings back the removed port, we
+unblock its fc_rport again by design.  However, there is no mechanism that
+would recover (open) the LUNs under the port (no "ersfs_3" without
+zfcp_unit [zfcp_erp_strategy_followup_success]).  Any pending or new I/O to
+such LUN leads to repeated:
 
-Instead of special-casing that, we can make them DTRT for all values of
-shift while also avoiding UB.  For some reason, this was already partly
-done for rol32 (which was well-defined for [0, 31]).  gcc 8 recognizes
-these patterns as rotates, so for example
+  Done: NEEDS_RETRY Result: hostbyte=DID_IMM_RETRY driverbyte=DRIVER_OK
 
-  __u32 rol32(__u32 word, unsigned int shift)
-  {
-	return (word << (shift & 31)) | (word >> ((-shift) & 31));
-  }
+See also v4.10 commit 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race
+with LUN recovery"). Even a manual LUN recovery
+(echo 0 > /sys/bus/scsi/devices/H:C:T:L/zfcp_failed)
+does not help, as the LUN links to the old "removed" port which remains
+to lack ZFCP_STATUS_COMMON_RUNNING [zfcp_erp_required_act].
+The only workaround is to first ensure that the fc_rport is blocked
+(e.g. port_remove again in case it was re-discovered by (auto) port scan),
+then delete the SCSI devices, and finally re-discover by (auto) port scan.
+The port scan includes an fc_rport unblock, which in turn triggers
+a new scan on the scsi target to freshly get new pure auto scan LUNs.
 
-compiles to
+Fix this by rejecting port_remove also if there are SCSI devices
+(even without any zfcp_unit) under this port. Re-use mechanics from v3.7
+commit d99b601b6338 ("[SCSI] zfcp: restore refcount check on port_remove").
+However, we have to give up zfcp_sysfs_port_units_mutex earlier in unit_add
+to prevent a deadlock with scsi_host scan taking shost->scan_mutex first
+and then zfcp_sysfs_port_units_mutex now in our zfcp_scsi_slave_alloc().
 
-0000000000000020 <rol32>:
-  20:   89 f8                   mov    %edi,%eax
-  22:   89 f1                   mov    %esi,%ecx
-  24:   d3 c0                   rol    %cl,%eax
-  26:   c3                      retq
-
-Older compilers unfortunately do not do as well, but this only affects
-the small minority of users that don't pass constants.
-
-Due to integer promotions, ro[lr]8 were already well-defined for shifts
-in [0, 8], and ro[lr]16 were mostly well-defined for shifts in [0, 16]
-(only mostly - u16 gets promoted to _signed_ int, so if bit 15 is set,
-word << 16 is undefined).  For consistency, update those as well.
-
-Link: http://lkml.kernel.org/r/20190410211906.2190-1-linux@rasmusvillemoes.dk
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reported-by: Ido Schimmel <idosch@mellanox.com>
-Tested-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Will Deacon <will.deacon@arm.com>
-Cc: Vadim Pasternak <vadimp@mellanox.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: b62a8d9b45b9 ("[SCSI] zfcp: Use SCSI device data zfcp scsi dev instead of zfcp unit")
+Fixes: f8210e34887e ("[SCSI] zfcp: Allow midlayer to scan for LUNs when running in NPIV mode")
+Cc: <stable@vger.kernel.org> #2.6.37+
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/bitops.h |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/s390/scsi/zfcp_ext.h   |    1 
+ drivers/s390/scsi/zfcp_scsi.c  |    9 ++++++
+ drivers/s390/scsi/zfcp_sysfs.c |   54 ++++++++++++++++++++++++++++++++++++-----
+ drivers/s390/scsi/zfcp_unit.c  |    8 +++++-
+ 4 files changed, 65 insertions(+), 7 deletions(-)
 
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -60,7 +60,7 @@ static __always_inline unsigned long hwe
-  */
- static inline __u64 rol64(__u64 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (64 - shift));
-+	return (word << (shift & 63)) | (word >> ((-shift) & 63));
- }
+--- a/drivers/s390/scsi/zfcp_ext.h
++++ b/drivers/s390/scsi/zfcp_ext.h
+@@ -164,6 +164,7 @@ extern const struct attribute_group *zfc
+ extern struct mutex zfcp_sysfs_port_units_mutex;
+ extern struct device_attribute *zfcp_sysfs_sdev_attrs[];
+ extern struct device_attribute *zfcp_sysfs_shost_attrs[];
++bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port);
  
- /**
-@@ -70,7 +70,7 @@ static inline __u64 rol64(__u64 word, un
-  */
- static inline __u64 ror64(__u64 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (64 - shift));
-+	return (word >> (shift & 63)) | (word << ((-shift) & 63));
- }
+ /* zfcp_unit.c */
+ extern int zfcp_unit_add(struct zfcp_port *, u64);
+--- a/drivers/s390/scsi/zfcp_scsi.c
++++ b/drivers/s390/scsi/zfcp_scsi.c
+@@ -125,6 +125,15 @@ static int zfcp_scsi_slave_alloc(struct
  
- /**
-@@ -80,7 +80,7 @@ static inline __u64 ror64(__u64 word, un
-  */
- static inline __u32 rol32(__u32 word, unsigned int shift)
- {
--	return (word << shift) | (word >> ((-shift) & 31));
-+	return (word << (shift & 31)) | (word >> ((-shift) & 31));
- }
+ 	zfcp_sdev->erp_action.port = port;
  
- /**
-@@ -90,7 +90,7 @@ static inline __u32 rol32(__u32 word, un
-  */
- static inline __u32 ror32(__u32 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (32 - shift));
-+	return (word >> (shift & 31)) | (word << ((-shift) & 31));
- }
++	mutex_lock(&zfcp_sysfs_port_units_mutex);
++	if (zfcp_sysfs_port_is_removing(port)) {
++		/* port is already gone */
++		mutex_unlock(&zfcp_sysfs_port_units_mutex);
++		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
++		return -ENXIO;
++	}
++	mutex_unlock(&zfcp_sysfs_port_units_mutex);
++
+ 	unit = zfcp_unit_find(port, zfcp_scsi_dev_lun(sdev));
+ 	if (unit)
+ 		put_device(&unit->dev);
+--- a/drivers/s390/scsi/zfcp_sysfs.c
++++ b/drivers/s390/scsi/zfcp_sysfs.c
+@@ -235,6 +235,53 @@ static ZFCP_DEV_ATTR(adapter, port_resca
  
- /**
-@@ -100,7 +100,7 @@ static inline __u32 ror32(__u32 word, un
-  */
- static inline __u16 rol16(__u16 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (16 - shift));
-+	return (word << (shift & 15)) | (word >> ((-shift) & 15));
- }
+ DEFINE_MUTEX(zfcp_sysfs_port_units_mutex);
  
- /**
-@@ -110,7 +110,7 @@ static inline __u16 rol16(__u16 word, un
-  */
- static inline __u16 ror16(__u16 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (16 - shift));
-+	return (word >> (shift & 15)) | (word << ((-shift) & 15));
- }
++static void zfcp_sysfs_port_set_removing(struct zfcp_port *const port)
++{
++	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
++	atomic_set(&port->units, -1);
++}
++
++bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port)
++{
++	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
++	return atomic_read(&port->units) == -1;
++}
++
++static bool zfcp_sysfs_port_in_use(struct zfcp_port *const port)
++{
++	struct zfcp_adapter *const adapter = port->adapter;
++	unsigned long flags;
++	struct scsi_device *sdev;
++	bool in_use = true;
++
++	mutex_lock(&zfcp_sysfs_port_units_mutex);
++	if (atomic_read(&port->units) > 0)
++		goto unlock_port_units_mutex; /* zfcp_unit(s) under port */
++
++	spin_lock_irqsave(adapter->scsi_host->host_lock, flags);
++	__shost_for_each_device(sdev, adapter->scsi_host) {
++		const struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
++
++		if (sdev->sdev_state == SDEV_DEL ||
++		    sdev->sdev_state == SDEV_CANCEL)
++			continue;
++		if (zsdev->port != port)
++			continue;
++		/* alive scsi_device under port of interest */
++		goto unlock_host_lock;
++	}
++
++	/* port is about to be removed, so no more unit_add or slave_alloc */
++	zfcp_sysfs_port_set_removing(port);
++	in_use = false;
++
++unlock_host_lock:
++	spin_unlock_irqrestore(adapter->scsi_host->host_lock, flags);
++unlock_port_units_mutex:
++	mutex_unlock(&zfcp_sysfs_port_units_mutex);
++	return in_use;
++}
++
+ static ssize_t zfcp_sysfs_port_remove_store(struct device *dev,
+ 					    struct device_attribute *attr,
+ 					    const char *buf, size_t count)
+@@ -257,16 +304,11 @@ static ssize_t zfcp_sysfs_port_remove_st
+ 	else
+ 		retval = 0;
  
- /**
-@@ -120,7 +120,7 @@ static inline __u16 ror16(__u16 word, un
-  */
- static inline __u8 rol8(__u8 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (8 - shift));
-+	return (word << (shift & 7)) | (word >> ((-shift) & 7));
- }
+-	mutex_lock(&zfcp_sysfs_port_units_mutex);
+-	if (atomic_read(&port->units) > 0) {
++	if (zfcp_sysfs_port_in_use(port)) {
+ 		retval = -EBUSY;
+-		mutex_unlock(&zfcp_sysfs_port_units_mutex);
+ 		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
+ 		goto out;
+ 	}
+-	/* port is about to be removed, so no more unit_add */
+-	atomic_set(&port->units, -1);
+-	mutex_unlock(&zfcp_sysfs_port_units_mutex);
  
- /**
-@@ -130,7 +130,7 @@ static inline __u8 rol8(__u8 word, unsig
-  */
- static inline __u8 ror8(__u8 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (8 - shift));
-+	return (word >> (shift & 7)) | (word << ((-shift) & 7));
- }
+ 	write_lock_irq(&adapter->port_list_lock);
+ 	list_del(&port->list);
+--- a/drivers/s390/scsi/zfcp_unit.c
++++ b/drivers/s390/scsi/zfcp_unit.c
+@@ -124,7 +124,7 @@ int zfcp_unit_add(struct zfcp_port *port
+ 	int retval = 0;
  
- /**
+ 	mutex_lock(&zfcp_sysfs_port_units_mutex);
+-	if (atomic_read(&port->units) == -1) {
++	if (zfcp_sysfs_port_is_removing(port)) {
+ 		/* port is already gone */
+ 		retval = -ENODEV;
+ 		goto out;
+@@ -168,8 +168,14 @@ int zfcp_unit_add(struct zfcp_port *port
+ 	write_lock_irq(&port->unit_list_lock);
+ 	list_add_tail(&unit->list, &port->unit_list);
+ 	write_unlock_irq(&port->unit_list_lock);
++	/*
++	 * lock order: shost->scan_mutex before zfcp_sysfs_port_units_mutex
++	 * due to      zfcp_unit_scsi_scan() => zfcp_scsi_slave_alloc()
++	 */
++	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+ 
+ 	zfcp_unit_scsi_scan(unit);
++	return retval;
+ 
+ out:
+ 	mutex_unlock(&zfcp_sysfs_port_units_mutex);
 
 
