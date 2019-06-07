@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062E8C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E5CC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E4120868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25BB20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559933792;
-	bh=dgQ7Sdw3+Qs/ODnlw6jkJOny1VOVt1lbwTQ60dXG9oo=;
+	s=default; t=1559933795;
+	bh=eDWCb2tO/DSqciHvZy9mIHdkLB2lt9h4ll/M+526S+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wSUpo6TxstJ5HoLe8FjGGtzttpKVsHooP3EOIK0TABnWr/hzGu+LxYY+YUnaOIakP
-	 UOUkkSCt2LJoKOjshQMoSL0sBTxxuLXqV4r3vVaGlC/TxwbpidMWNi3iBnGBq0DZqH
-	 I5fmNOJXpZ3qvCMDGNUvZ71muIWaEEXr1s5pRvj8=
+	b=cgeRQX2ABaDOv5LO467Ywb4RTlawcyObaqc9M+NT9hpiDC8g3ZywPM0lWfrTO+Urf
+	 uLQkQaukfanBsY2ii5NJ9eAa5f7t/Eb9rAYSoFKI0NtRt7wqjyJWGqSxIwDMifnr1r
+	 IjWT0b8PjOoI0rxbL/9W7+CULapOMKkpmf6nyviQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbfFGS4b (ORCPT
+        id S1732337AbfFGS4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:56:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42266 "EHLO
+        Fri, 7 Jun 2019 14:56:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42284 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729904AbfFGSyk (ORCPT
+        with ESMTP id S1732051AbfFGSyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 14:54:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,29 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nmmmmE8IK45VX9V9j4/cO2pBiB9thUFj9++29NB31JM=; b=Y06nEFtTO7Y9tpHUkNKkdvuFUl
-        tDxCKPIMotVcDSONsp1f5JxxBGArpwZn1Xine9jlhQUqN2yZs2Llfa4QJtVk3EBgLVKGN+3ZF3phh
-        1xBFNqWhgzVvixgDvY6ZIXPNeJdP82HqL6WP3yJ3+fs4pgNaVD9GEsPqdRcbDlGcR8uo2NletgwWO
-        83iGFHuQEHepH3mHKMer6lleQYtniZSKBY2Wmjvn1vfpqFIu1L2JVA8og/Ayq4vag1LKaakTvSaf0
-        Y3LoObrR51VBYTmlSy6lALLrBVn8zwTV7ad0BvL+IYWOQg4O/AZFgasHzVOOdZhRKsjNHW5L3yPs6
-        nkM2t0qg==;
+        bh=jgwcv0yUHJkpC0RNxq8/GXr5590Xomrjfw0h2lyU8s8=; b=raMDeqoTfqqEQGzpZlFQZ3SRGn
+        9g6TQhLsjS/gjBh+2U5mHsW5a48/kKYqXf8f2krjuTj0AMcBWApyIltl2IMJPKmEtp5ubrrO2w443
+        yxDqf2610IrosbWMzgfADTAXtP2s3i+qU6jLJK+ej0p7628oQjWMpKzvrmpv8gxNav+3RjLfHIEQE
+        m2Y/x0GTTSuyzqwimmuKxPNWRx5218qE3o9SAPYK369vWKVrV540ru4u82QF/pQ2YRmBkZhYwlPLm
+        zIo7eVcxkBSXteMYeGd6I/9YBnd1DVEgQk3yRd4AmS/CP8XiU4c4RbYLlU/nBYcNARduXXf+L7DjY
+        nDo8tt/A==;
 Received: from [179.181.119.115] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZK0d-0005si-M7; Fri, 07 Jun 2019 18:54:39 +0000
+        id 1hZK0d-0005sg-KS; Fri, 07 Jun 2019 18:54:39 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZK0b-0007Ff-Lu; Fri, 07 Jun 2019 15:54:37 -0300
+        id 1hZK0b-0007F2-F2; Fri, 07 Jun 2019 15:54:37 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v3 18/20] docs: isdn: remove hisax references from kernel-parameters.txt
-Date:   Fri,  7 Jun 2019 15:54:34 -0300
-Message-Id: <7681f328a4205bf1609521c2bf05a346d85e9566.1559933665.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3 10/20] docs: gpio: driver.rst: fix a bad tag
+Date:   Fri,  7 Jun 2019 15:54:26 -0300
+Message-Id: <123b42e77f9c1beadfcf7d93cfe1d5e3319049c4.1559933665.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
 References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
@@ -64,30 +67,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hisax driver got removed on 85993b8c9786 ("isdn: remove hisax driver"),
-but a left-over was kept at kernel-parameters.txt.
+With ReST, [foo]_ means a reference to foo, causing this warning:
 
-Fixes: 85993b8c9786 ("isdn: remove hisax driver")
+    Documentation/driver-api/gpio/driver.rst:419: WARNING: Unknown target name: "devm".
+
+Fix it by using a literal for the name.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 3 ---
- 1 file changed, 3 deletions(-)
+ Documentation/driver-api/gpio/driver.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 1abd7e145357..9b16b640ce48 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1388,9 +1388,6 @@
- 			Valid parameters: "on", "off"
- 			Default: "on"
+diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
+index 1ce7fcd0f989..25e2ddeb4f31 100644
+--- a/Documentation/driver-api/gpio/driver.rst
++++ b/Documentation/driver-api/gpio/driver.rst
+@@ -418,7 +418,7 @@ symbol:
  
--	hisax=		[HW,ISDN]
--			See Documentation/isdn/README.HiSax.
--
- 	hlt		[BUGS=ARM,SH]
- 
- 	hpet=		[X86-32,HPET] option to control HPET usage
+ If there is a need to exclude certain GPIO lines from the IRQ domain handled by
+ these helpers, we can set .irq.need_valid_mask of the gpiochip before
+-[devm_]gpiochip_add_data() is called. This allocates an .irq.valid_mask with as
++``[devm_]gpiochip_add_data()`` is called. This allocates an .irq.valid_mask with as
+ many bits set as there are GPIO lines in the chip, each bit representing line
+ 0..n-1. Drivers can exclude GPIO lines by clearing bits from this mask. The mask
+ must be filled in before gpiochip_irqchip_add() or gpiochip_irqchip_add_nested()
 -- 
 2.21.0
 
