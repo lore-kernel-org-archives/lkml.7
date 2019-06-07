@@ -2,71 +2,122 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E2BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8B9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9AC212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2961420840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="PUsM67q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfFGPCh (ORCPT
+        id S1729482AbfFGPDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:02:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41500 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfFGPCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:02:36 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C9DDE30058D9;
-        Fri,  7 Jun 2019 15:02:36 +0000 (UTC)
-Received: from Hades.local (dhcp-17-185.bos.redhat.com [10.18.17.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1026D104B50D;
-        Fri,  7 Jun 2019 15:02:34 +0000 (UTC)
-Subject: Re: [PATCH net] bonding: make debugging output more succinct
-To:     linux-kernel@vger.kernel.org
-Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <20190607145933.37058-1-jarod@redhat.com>
- <20190607145933.37058-9-jarod@redhat.com>
-From:   Jarod Wilson <jarod@redhat.com>
-Message-ID: <0e12b390-9b47-ae24-3a1b-4f602c57a779@redhat.com>
-Date:   Fri, 7 Jun 2019 11:02:34 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190607145933.37058-9-jarod@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 7 Jun 2019 11:03:44 -0400
+Received: from mail-eopbgr140052.outbound.protection.outlook.com ([40.107.14.52]:54622
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728521AbfFGPDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:03:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNkaq0/5Lf//tT41Zpi6esnwv21pP8q6+SwlpU6KhpU=;
+ b=PUsM67q+3c24HWptTylJxHV+a2/aKHOWYQU2bjl3Pefwal+UXra3PEnm09PcDtlbgOmaU7rHCTiOnrGdWfcosJms8UCi1tztv0PKAYJdiYruUZCax2CGiS6lqhzPdKlWN5wR0DEJIavUIjm1RwuzhVnEWGU/U46Y1iPeEKohlJw=
+Received: from AM0PR08MB4226.eurprd08.prod.outlook.com (20.179.36.17) by
+ AM0PR08MB3219.eurprd08.prod.outlook.com (52.134.95.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Fri, 7 Jun 2019 15:03:39 +0000
+Received: from AM0PR08MB4226.eurprd08.prod.outlook.com
+ ([fe80::bc0c:5148:629e:1a31]) by AM0PR08MB4226.eurprd08.prod.outlook.com
+ ([fe80::bc0c:5148:629e:1a31%6]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
+ 15:03:39 +0000
+From:   Ayan Halder <Ayan.Halder@arm.com>
+To:     Ayan Halder <Ayan.Halder@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     nd <nd@arm.com>
+Subject: [PATCH] drm/komeda: Enable/Disable vblank interrupts
+Thread-Topic: [PATCH] drm/komeda: Enable/Disable vblank interrupts
+Thread-Index: AQHVHUIw9rNeEORvRUuKBGT248hnNw==
+Date:   Fri, 7 Jun 2019 15:03:39 +0000
+Message-ID: <20190607150323.20395-1-ayan.halder@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 07 Jun 2019 15:02:36 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0196.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::16) To AM0PR08MB4226.eurprd08.prod.outlook.com
+ (2603:10a6:208:147::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Ayan.Halder@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.21.0
+x-originating-ip: [217.140.106.52]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ef5dfeb2-ccbc-4f99-446b-08d6eb5952ef
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR08MB3219;
+x-ms-traffictypediagnostic: AM0PR08MB3219:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <AM0PR08MB3219F8B82CCE1CBE83EB184DE4100@AM0PR08MB3219.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 0061C35778
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39850400004)(346002)(396003)(366004)(376002)(199004)(189003)(2501003)(1076003)(81166006)(476003)(2616005)(66066001)(81156014)(99286004)(486006)(7736002)(2906002)(72206003)(305945005)(71190400001)(5660300002)(6506007)(66946007)(73956011)(386003)(66476007)(66446008)(64756008)(102836004)(66556008)(52116002)(26005)(6486002)(50226002)(256004)(6512007)(5024004)(316002)(2201001)(4326008)(25786009)(86362001)(110136005)(44832011)(6436002)(6116002)(8936002)(3846002)(478600001)(71200400001)(186003)(8676002)(68736007)(36756003)(53936002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3219;H:AM0PR08MB4226.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jLVyfg2eUL2Y0L9YFIlrTlPZttAzf2mybJzb6mDUMBNtsTMT0qjbC2YW3Ec9m42Cfys9691+Ne4Qyja/dfxnasGqCvqqjFDnvcDtYfqYTiXbz5VO6HTIcP4BKkfxkcXNp++S1Ir6g/Hv1jXac+7qK5euPjHrPT7AApUa+0j8A9Up6zXtOQL9nJRjvCftXBynad3zT8lkS6EP5HrpypvTy6EIfYFmP1o9Yota0CFMGJljB6WO9Iy3AMVBAMX4c0Tf2YxjtvqrE68xmm9Wy4m3Y3hCWCV/HbOauuILQ6NkqZVRIMqk+0abZ0/3HZQ6xawkLSHZkHtbTKpzf6PJQrkBIoM6KfTX+OthDoZIhOPhBg24xNamZr00FSbhQvjRdNMJjpWiktkQMa/8EVLFYxVO4TG7uB7LV/pDnaWIFtvsXxU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef5dfeb2-ccbc-4f99-446b-08d6eb5952ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 15:03:39.8131
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ayan.Halder@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3219
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 10:59 AM, Jarod Wilson wrote:
-> Seeing bonding debug log data along the lines of "event: 5" is a bit spartan,
-> and often requires a lookup table if you don't remember what every event is.
-> Make use of netdev_cmd_to_name for an improved debugging experience, so for
-> the prior example, you'll see: "bond_netdev_event received NETDEV_REGISTER"
-> instead (both are prefixed with the device for which the event pertains).
-> 
-> There are also quite a few places that the netdev_dbg output could stand to
-> mention exactly which slave the message pertains to (gets messy if you have
-> multiple slaves all spewing at once to know which one they pertain to).
-
-Argh. Please drop this one, detritus in my git tree when I hit git 
-send-email caused this earlier iteration of patch 1 of the set this is 
-threaded with to go out.
-
--- 
-Jarod Wilson
-jarod@redhat.com
+T25lIG5lZWRzIHRvIHNldCAiKHN0cnVjdCBkcm1fZGV2aWNlICopLT5pcnFfZW5hYmxlZCA9IHRy
+dWUiIHRvIHNpZ25hbCBkcm0gY29yZQ0KdG8gZW5hYmxlIHZibGFuayBpbnRlcnJ1cHRzIGFmdGVy
+IHRoZSBoYXJkd2FyZSBoYXMgYmVlbiBpbml0aWFsaXplZC4NCkNvcnJlc3BvbmRpbmdseSwgb25l
+IG5lZWRzIHRvIGRpc2FibGUgdmJsYW5rIGludGVycnVwdHMgYnkgc2V0dGluZw0KIihzdHJ1Y3Qg
+ZHJtX2RldmljZSAqKS0+aXJxX2VuYWJsZWQgPSBmYWxzZSIgYXQgdGhlIGJlZ2lubmluZyBvZiB0
+aGUNCmRlLWluaXRpYWxpemluZyByb3V0aW5lLg0KDQpTaWduZWQtb2ZmLWJ5OiBBeWFuIEt1bWFy
+IGhhbGRlciA8YXlhbi5oYWxkZXJAYXJtLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9hcm0v
+ZGlzcGxheS9rb21lZGEva29tZWRhX2ttcy5jIHwgNCArKysrDQogMSBmaWxlIGNoYW5nZWQsIDQg
+aW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5
+L2tvbWVkYS9rb21lZGFfa21zLmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRh
+L2tvbWVkYV9rbXMuYw0KaW5kZXggN2I1Y2RlMTRlM2JhLi5iNGZkOGVlMGQwNWYgMTAwNjQ0DQot
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMuYw0KKysr
+IGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmMNCkBAIC0y
+MDQsNiArMjA0LDggQEAgc3RydWN0IGtvbWVkYV9rbXNfZGV2ICprb21lZGFfa21zX2F0dGFjaChz
+dHJ1Y3Qga29tZWRhX2RldiAqbWRldikNCiAJaWYgKGVycikNCiAJCWdvdG8gdW5pbnN0YWxsX2ly
+cTsNCiANCisJZHJtLT5pcnFfZW5hYmxlZCA9IHRydWU7DQorDQogCWVyciA9IGRybV9kZXZfcmVn
+aXN0ZXIoZHJtLCAwKTsNCiAJaWYgKGVycikNCiAJCWdvdG8gdW5pbnN0YWxsX2lycTsNCkBAIC0y
+MTEsNiArMjEzLDcgQEAgc3RydWN0IGtvbWVkYV9rbXNfZGV2ICprb21lZGFfa21zX2F0dGFjaChz
+dHJ1Y3Qga29tZWRhX2RldiAqbWRldikNCiAJcmV0dXJuIGttczsNCiANCiB1bmluc3RhbGxfaXJx
+Og0KKwlkcm0tPmlycV9lbmFibGVkID0gZmFsc2U7DQogCWRybV9pcnFfdW5pbnN0YWxsKGRybSk7
+DQogY2xlYW51cF9tb2RlX2NvbmZpZzoNCiAJZHJtX21vZGVfY29uZmlnX2NsZWFudXAoZHJtKTsN
+CkBAIC0yMjUsNiArMjI4LDcgQEAgdm9pZCBrb21lZGFfa21zX2RldGFjaChzdHJ1Y3Qga29tZWRh
+X2ttc19kZXYgKmttcykNCiAJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9ICZrbXMtPmJhc2U7DQog
+CXN0cnVjdCBrb21lZGFfZGV2ICptZGV2ID0gZHJtLT5kZXZfcHJpdmF0ZTsNCiANCisJZHJtLT5p
+cnFfZW5hYmxlZCA9IGZhbHNlOw0KIAltZGV2LT5mdW5jcy0+ZGlzYWJsZV9pcnEobWRldik7DQog
+CWRybV9kZXZfdW5yZWdpc3Rlcihkcm0pOw0KIAlkcm1faXJxX3VuaW5zdGFsbChkcm0pOw0KLS0g
+DQoyLjIxLjANCg0K
