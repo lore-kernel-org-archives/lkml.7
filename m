@@ -2,116 +2,53 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B75C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CE3C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC4620868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D75720868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbfFGTkb (ORCPT
+        id S1730828AbfFGTlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:40:31 -0400
-Received: from gateway36.websitewelcome.com ([50.116.125.2]:34265 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729353AbfFGTkb (ORCPT
+        Fri, 7 Jun 2019 15:41:19 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:44742 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729809AbfFGTlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:40:31 -0400
-X-Greylist: delayed 1361 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Jun 2019 15:40:30 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 87DDD400CA603
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 13:38:49 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ZKN3huKlLdnCeZKN3hXPwv; Fri, 07 Jun 2019 14:17:49 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.134.24] (port=48016 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hZKN1-002mT3-Kl; Fri, 07 Jun 2019 14:17:48 -0500
-Date:   Fri, 7 Jun 2019 14:17:45 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Igor Mitsyanko <imitsyanko@quantenna.com>,
-        Avinash Patil <avinashp@quantenna.com>,
-        Sergey Matyukevich <smatyukevich@quantenna.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
+        Fri, 7 Jun 2019 15:41:19 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9F2C315050C7B;
+        Fri,  7 Jun 2019 12:41:18 -0700 (PDT)
+Date:   Fri, 07 Jun 2019 12:41:18 -0700 (PDT)
+Message-Id: <20190607.124118.2177169200453520939.davem@davemloft.net>
+To:     kvalo@codeaurora.org
 Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] qtnfmac: Use struct_size() in kzalloc()
-Message-ID: <20190607191745.GA19120@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.134.24
-X-Source-L: No
-X-Exim-ID: 1hZKN1-002mT3-Kl
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.134.24]:48016
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        linux-kernel@vger.kernel.org
+Subject: Re: pull-request: wireless-drivers 2019-06-07
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <87a7etsqg8.fsf@kamboji.qca.qualcomm.com>
+References: <87a7etsqg8.fsf@kamboji.qca.qualcomm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 07 Jun 2019 12:41:18 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+From: Kalle Valo <kvalo@codeaurora.org>
+Date: Fri, 07 Jun 2019 12:19:19 +0300
 
-struct ieee80211_regdomain {
-	...
-        struct ieee80211_reg_rule reg_rules[];
-};
+> here's a pull request to net tree for 5.2, more info below. Please let
+> me know if there are any problems.
 
-instance = kzalloc(sizeof(*mac->rd) +
-                          sizeof(struct ieee80211_reg_rule) *
-                          count, GFP_KERNEL);
-
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = kzalloc(struct_size(instance, reg_rules, count), GFP_KERNEL);
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/quantenna/qtnfmac/commands.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/commands.c b/drivers/net/wireless/quantenna/qtnfmac/commands.c
-index 459f6b81d2eb..dc0c7244b60e 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/commands.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/commands.c
-@@ -1011,9 +1011,8 @@ qtnf_parse_variable_mac_info(struct qtnf_wmac *mac,
- 	if (WARN_ON(resp->n_reg_rules > NL80211_MAX_SUPP_REG_RULES))
- 		return -E2BIG;
- 
--	mac->rd = kzalloc(sizeof(*mac->rd) +
--			  sizeof(struct ieee80211_reg_rule) *
--			  resp->n_reg_rules, GFP_KERNEL);
-+	mac->rd = kzalloc(struct_size(mac->rd, reg_rules, resp->n_reg_rules),
-+			  GFP_KERNEL);
- 	if (!mac->rd)
- 		return -ENOMEM;
- 
--- 
-2.21.0
-
+Pulled, thanks Kalle.
