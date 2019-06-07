@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF1BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210AEC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0C12133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF172146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922202;
-	bh=/OXER1Ejj6On/IPyGWXD/d4+RU7b36OA0PhjKQsOZ3A=;
+	s=default; t=1559922205;
+	bh=zZ1Yq9iUX9tAqCiV5f6O1/J3MMF/LJ3pYsq4wPsGn88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rQ7c0XXDGNw6i8y37rCjWnA+9xzKsT0+W5L8BTU4Mybmx8sKjt2My1kWT2m6+1goo
-	 vjJpoKB2paiq82ti/j3p6Wyf+tqqq182rYu6O0cRlGjjRsZ2bjf8tyZp/Ba6/HN1yW
-	 losiJcFCcIxF7OSs9TJGY2imqYN/+5vvMSheiH9k=
+	b=Ew97pjxXTomxgu8KRyY6NKAMnVB5pUSshQkKD/WW2jB8X/O8vtDmvT06w/L1iFbgE
+	 pd0FQzCRrjTijT0Yof+MkZP78uK+R6zzbGbqrcwpj50KX+oPu4YySp2QuRieQXRanY
+	 WJW8C/7Z90sHRpajBS8ceKbyEnoYo6K0UurCc4dM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfFGPnW (ORCPT
+        id S1730854AbfFGPnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54414 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730828AbfFGPnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:43:18 -0400
+        id S1730837AbfFGPnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:43:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C5502133D;
-        Fri,  7 Jun 2019 15:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE9F21479;
+        Fri,  7 Jun 2019 15:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922198;
-        bh=/OXER1Ejj6On/IPyGWXD/d4+RU7b36OA0PhjKQsOZ3A=;
+        s=default; t=1559922200;
+        bh=zZ1Yq9iUX9tAqCiV5f6O1/J3MMF/LJ3pYsq4wPsGn88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFj44j642rKHBCy1aqWbvJG7FcIglOMJ01B1ANSVXTBlPxfIxf/wREZBkFc3zZ2uc
-         gxhLmKbgEp/QfK1hk7DjlzwtWV1uasjRXQU08R/4FrWpg1j0eQm2dz7cSmVbTOkT74
-         eBoDM4XFbq3PGl0G2H53d/UWkZUvA19jf/dYTwAo=
+        b=lKf4I96t4+bO1jxXDrOlXqtrtolzyHopbA14B7eTylYZ0yEko3haXu4PMslPGp7KX
+         uUWi3RLTchlHfipY/pDMmmL6TjEMrob6+kzPpkGfSC7lrLD8rD3VeLwSNq7H58/819
+         /FOLvDsolcgTIznnfKy7OnIGPWLvOnpEwexOlvdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 45/69] ALSA: hda/realtek - Set default power save node to 0
-Date:   Fri,  7 Jun 2019 17:39:26 +0200
-Message-Id: <20190607153853.952274138@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 4.14 46/69] KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
+Date:   Fri,  7 Jun 2019 17:39:27 +0200
+Message-Id: <20190607153854.077761066@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -59,36 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Thomas Huth <thuth@redhat.com>
 
-commit 317d9313925cd8388304286c0d3c8dda7f060a2d upstream.
+commit a86cb413f4bf273a9d341a3ab2c2ca44e12eb317 upstream.
 
-I measured power consumption between power_save_node=1 and power_save_node=0.
-It's almost the same.
-Codec will enter to runtime suspend and suspend.
-That pin also will enter to D3. Don't need to enter to D3 by single pin.
-So, Disable power_save_node as default. It will avoid more issues.
-Windows Driver also has not this option at runtime PM.
+KVM_CAP_MAX_VCPU_ID is currently always reporting KVM_MAX_VCPU_ID on all
+architectures. However, on s390x, the amount of usable CPUs is determined
+during runtime - it is depending on the features of the machine the code
+is running on. Since we are using the vcpu_id as an index into the SCA
+structures that are defined by the hardware (see e.g. the sca_add_vcpu()
+function), it is not only the amount of CPUs that is limited by the hard-
+ware, but also the range of IDs that we can use.
+Thus KVM_CAP_MAX_VCPU_ID must be determined during runtime on s390x, too.
+So the handling of KVM_CAP_MAX_VCPU_ID has to be moved from the common
+code into the architecture specific code, and on s390x we have to return
+the same value here as for KVM_CAP_MAX_VCPUS.
+This problem has been discovered with the kvm_create_max_vcpus selftest.
+With this change applied, the selftest now passes on s390x, too.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reviewed-by: Andrew Jones <drjones@redhat.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+Message-Id: <20190523164309.13345-9-thuth@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- sound/pci/hda/patch_realtek.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7078,7 +7078,7 @@ static int patch_alc269(struct hda_codec
- 
- 	spec = codec->spec;
- 	spec->gen.shared_mic_vref_pin = 0x18;
--	codec->power_save_node = 1;
-+	codec->power_save_node = 0;
- 
- #ifdef CONFIG_PM
- 	codec->patch_ops.suspend = alc269_suspend;
+---
+ arch/mips/kvm/mips.c       |    3 +++
+ arch/powerpc/kvm/powerpc.c |    3 +++
+ arch/s390/kvm/kvm-s390.c   |    1 +
+ arch/x86/kvm/x86.c         |    3 +++
+ virt/kvm/arm/arm.c         |    3 +++
+ virt/kvm/kvm_main.c        |    2 --
+ 6 files changed, 13 insertions(+), 2 deletions(-)
+
+--- a/arch/mips/kvm/mips.c
++++ b/arch/mips/kvm/mips.c
+@@ -1078,6 +1078,9 @@ int kvm_vm_ioctl_check_extension(struct
+ 	case KVM_CAP_MAX_VCPUS:
+ 		r = KVM_MAX_VCPUS;
+ 		break;
++	case KVM_CAP_MAX_VCPU_ID:
++		r = KVM_MAX_VCPU_ID;
++		break;
+ 	case KVM_CAP_MIPS_FPU:
+ 		/* We don't handle systems with inconsistent cpu_has_fpu */
+ 		r = !!raw_cpu_has_fpu;
+--- a/arch/powerpc/kvm/powerpc.c
++++ b/arch/powerpc/kvm/powerpc.c
+@@ -629,6 +629,9 @@ int kvm_vm_ioctl_check_extension(struct
+ 	case KVM_CAP_MAX_VCPUS:
+ 		r = KVM_MAX_VCPUS;
+ 		break;
++	case KVM_CAP_MAX_VCPU_ID:
++		r = KVM_MAX_VCPU_ID;
++		break;
+ #ifdef CONFIG_PPC_BOOK3S_64
+ 	case KVM_CAP_PPC_GET_SMMU_INFO:
+ 		r = 1;
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -428,6 +428,7 @@ int kvm_vm_ioctl_check_extension(struct
+ 		break;
+ 	case KVM_CAP_NR_VCPUS:
+ 	case KVM_CAP_MAX_VCPUS:
++	case KVM_CAP_MAX_VCPU_ID:
+ 		r = KVM_S390_BSCA_CPU_SLOTS;
+ 		if (!kvm_s390_use_sca_entries())
+ 			r = KVM_MAX_VCPUS;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2825,6 +2825,9 @@ int kvm_vm_ioctl_check_extension(struct
+ 	case KVM_CAP_MAX_VCPUS:
+ 		r = KVM_MAX_VCPUS;
+ 		break;
++	case KVM_CAP_MAX_VCPU_ID:
++		r = KVM_MAX_VCPU_ID;
++		break;
+ 	case KVM_CAP_NR_MEMSLOTS:
+ 		r = KVM_USER_MEM_SLOTS;
+ 		break;
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -217,6 +217,9 @@ int kvm_vm_ioctl_check_extension(struct
+ 	case KVM_CAP_MAX_VCPUS:
+ 		r = KVM_MAX_VCPUS;
+ 		break;
++	case KVM_CAP_MAX_VCPU_ID:
++		r = KVM_MAX_VCPU_ID;
++		break;
+ 	case KVM_CAP_NR_MEMSLOTS:
+ 		r = KVM_USER_MEM_SLOTS;
+ 		break;
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2964,8 +2964,6 @@ static long kvm_vm_ioctl_check_extension
+ 	case KVM_CAP_MULTI_ADDRESS_SPACE:
+ 		return KVM_ADDRESS_SPACE_NUM;
+ #endif
+-	case KVM_CAP_MAX_VCPU_ID:
+-		return KVM_MAX_VCPU_ID;
+ 	default:
+ 		break;
+ 	}
 
 
