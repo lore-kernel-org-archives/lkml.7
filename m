@@ -2,84 +2,316 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C309C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C0BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DBA20840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C6920840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730513AbfFGQY0 (ORCPT
+        id S1730540AbfFGQY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:24:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40952 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730066AbfFGQY0 (ORCPT
+        Fri, 7 Jun 2019 12:24:28 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:50581 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730446AbfFGQY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 12:24:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p11so2759466wre.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 09:24:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5oup8aDf0v+i4nY2iXLwyIEfJBWa+tQFAZ2fj1dhWlA=;
-        b=BLA6htiezCqBVwvZjIMuSJiQMZnOcWxp6kajXcWwJmfz1ybUijAP0rFARQ/KTBittG
-         AF7ijh+sWKKkmKvUKCNXkuqGmuJALV2Rv6k6XocboTy6a7zzCxkMGfde0LSOQB+UzkqO
-         w0Xl2eRBxiqU229X1OJM1Bte82IWYDqyTjCNsdwFG4JdCFTl7HbuUWIe67Qd7txsXhOJ
-         OHrXh0BzU3EBWSMkcimsQPCv6I9NNar5ETp8Nw4r1VcA9PoAX51Qbnfym+lTbpQGAw+n
-         rhQlVkYD6N22wWTIt+varL++QFV8hnQR51utOqcxDNikFHOQPngwgJoPPZ4Ja589aWaf
-         /Q9Q==
-X-Gm-Message-State: APjAAAUNzcFgyhLANt9yVxjddzSLjEjqgP5bzigpx9EHGpk6WnjVo5lo
-        OPzr5t3RxdXT/PF1TAPaNdUFAQ02AXc=
-X-Google-Smtp-Source: APXvYqzLgpRRvfyTFa6/TEI5l10HeRd8tc36q34IPW/9wW2GzAxU5AlO2ZetyEIBACf1Y9qZK8wjWA==
-X-Received: by 2002:adf:aa0a:: with SMTP id p10mr33931090wrd.125.1559924664702;
-        Fri, 07 Jun 2019 09:24:24 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id w6sm2524953wro.71.2019.06.07.09.24.23
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 09:24:24 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nVMX: Rename prepare_vmcs02_*_full to
- prepare_vmcs02_*_extra
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1559834652-105872-1-git-send-email-pbonzini@redhat.com>
- <20190606184117.GJ23169@linux.intel.com>
- <8382fd94-aed1-51b4-007e-7579a0f35ece@redhat.com>
- <20190607141847.GA9083@linux.intel.com>
- <5762005d-1504-bb41-9583-ec549e107ce5@redhat.com>
- <20190607160422.GE9083@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <525f4ee1-c111-aaa0-2dcd-6c5ce26e3088@redhat.com>
-Date:   Fri, 7 Jun 2019 18:24:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190607160422.GE9083@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: from [5.158.153.52] (helo=noscherz.tec.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hZHes-0000ei-BJ; Fri, 07 Jun 2019 18:24:02 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [RFC PATCH v2 2/2] printk-rb: add test module
+Date:   Fri,  7 Jun 2019 18:29:49 +0206
+Message-Id: <20190607162349.18199-3-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190607162349.18199-1-john.ogness@linutronix.de>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/19 18:04, Sean Christopherson wrote:
->> That's what came to mind first, but then "extended" had the same issue
->> as "full" (i.e. encompassing the "basic" set as well) so I decided you
->> knew better!
-> Ah, I was thinking of "basic" and "extended" as separate states, but your
-> interpretation is correct.
-> 
-> I probably have a slight preference for 'uncommon' over 'extra'?  I feel
-> like they have equal odds of being misinterpreted, so pick your poison :-)
+This module does some heavy write stress testing on the ringbuffer
+with a reader that is checking for integrity.
 
-Among your proposals, in fact, I also thought of "uncommon" and "rare".
- Uncommon is a bit long so I'll go with "rare", knowing that the meat
-reference will give me a chuckle every now and then.
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+---
+ lib/Makefile   |   2 +
+ lib/test_prb.c | 237 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 239 insertions(+)
+ create mode 100644 lib/test_prb.c
 
-Paolo
+diff --git a/lib/Makefile b/lib/Makefile
+index fb7697031a79..9a485274b6ba 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -292,3 +292,5 @@ obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
+ obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
+ obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
+ obj-$(CONFIG_OBJAGG) += objagg.o
++
++obj-m += test_prb.o
+diff --git a/lib/test_prb.c b/lib/test_prb.c
+new file mode 100644
+index 000000000000..2c365028f4e4
+--- /dev/null
++++ b/lib/test_prb.c
+@@ -0,0 +1,237 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/kthread.h>
++#include <linux/delay.h>
++#include <linux/random.h>
++#include <linux/slab.h>
++#include <linux/printk_ringbuffer.h>
++
++/*
++ * This is a test module that starts "num_online_cpus() - 1" writer threads
++ * and 1 reader thread. The writer threads each write strings of varying
++ * length. They do this as fast as they can.
++ *
++ * The reader thread reads as fast as it can and performs sanity checks on
++ * the data.
++ *
++ * Because the threads are running in such tight loops, they will call
++ * schedule() from time to time so the system stays alive.
++ *
++ * If either the writers or the reader encounter an error, the test is
++ * aborted. Test results are recorded to the ftrace buffers. The test can
++ * be aborted manually by removing the module. (Ideally the test should
++ * never abort on its own.)
++ */
++
++struct rbdata {
++	int len;
++	char text[0];
++};
++
++static char *test_running;
++static int halt_test;
++
++static void dump_rb(struct printk_ringbuffer *rb)
++{
++	DECLARE_PRINTKRB_ENTRY(entry, 140);
++	DECLARE_PRINTKRB_ITER(iter, rb, &entry);
++	struct rbdata *dat;
++	u64 last_seq = 0;
++	int len;
++
++	trace_printk("BEGIN full dump\n");
++
++	prb_for_each_entry(&iter, len) {
++		if (entry.seq - last_seq != 1) {
++			trace_printk("LOST %llu\n",
++				     entry.seq - (last_seq + 1));
++		}
++		last_seq = entry.seq;
++
++		dat = (struct rbdata *)&entry.buffer[0];
++
++		trace_printk("seq=%llu len=%d textlen=%d dataval=%s\n",
++			     entry.seq, len, dat->len, dat->text);
++	}
++
++	trace_printk("END full dump\n");
++}
++
++DECLARE_PRINTKRB(test_rb, 7, 5);
++
++static int prbtest_writer(void *data)
++{
++	unsigned long num = (unsigned long)data;
++	struct prb_reserved_entry e;
++	char id = 'A' + num;
++	struct rbdata *dat;
++	int count = 0;
++	int len;
++
++	pr_err("prbtest: start thread %lu (writer)\n", num);
++
++	for (;;) {
++		len = sizeof(struct rbdata) + (prandom_u32() & 0x7f) + 1;
++
++		dat = (struct rbdata *)prb_reserve(&e, &test_rb, len);
++		if (dat) {
++			len -= sizeof(struct rbdata) + 1;
++			memset(&dat->text[0], id, len);
++			dat->text[len] = 0;
++			dat->len = len;
++			prb_commit(&e);
++		} else {
++			WRITE_ONCE(halt_test, 1);
++			trace_printk("writer%lu (%c) failed to reserve\n",
++				     num, id);
++		}
++
++		if ((count++ & 0x3fff) == 0)
++			schedule();
++
++		if (READ_ONCE(halt_test) == 1)
++			break;
++	}
++
++	pr_err("prbtest: end thread %lu (writer)\n", num);
++
++	test_running[num] = 0;
++
++	return 0;
++}
++
++static int prbtest_reader(void *data)
++{
++	unsigned long num = (unsigned long)data;
++	DECLARE_PRINTKRB_ENTRY(entry, 140);
++	DECLARE_PRINTKRB_ITER(iter, &test_rb, &entry);
++	unsigned long total_lost = 0;
++	unsigned long max_lost = 0;
++	struct rbdata *dat;
++	int did_sched = 1;
++	u64 last_seq = 0;
++	int count = 0;
++	int len;
++
++	pr_err("prbtest: start thread %lu (reader)\n", num);
++
++	for (;;) {
++		prb_for_each_entry(&iter, len) {
++			if (entry.seq - last_seq != 1 && !did_sched) {
++				total_lost += entry.seq - (last_seq + 1);
++				if (max_lost < entry.seq - (last_seq + 1))
++					max_lost = entry.seq - (last_seq + 1);
++			}
++			last_seq = entry.seq;
++			did_sched = 0;
++
++			dat = (struct rbdata *)&entry.buffer[0];
++
++			len = strlen(dat->text);
++			if (len != dat->len) {
++				WRITE_ONCE(halt_test, 1);
++				trace_printk("reader%lu invalid length\n",
++					     num);
++			}
++			while (len) {
++				len--;
++				if (dat->text[len] != dat->text[0]) {
++					WRITE_ONCE(halt_test, 1);
++					trace_printk("reader%lu invalid data\n",
++						     num);
++				}
++			}
++
++			if ((count++ & 0x3fff) == 0) {
++				did_sched = 1;
++				schedule();
++			}
++
++			if (READ_ONCE(halt_test) == 1)
++				goto out;
++		}
++	}
++out:
++	pr_err("reader%lu: total_lost=%lu max_lost=%lu seq=%llu\n",
++	       num, total_lost, max_lost, entry.seq);
++	pr_err("prbtest: end thread %lu (reader)\n", num);
++
++	test_running[num] = 0;
++
++	return 0;
++}
++
++static int module_test_running;
++
++static int start_test(void *arg)
++{
++	struct task_struct *thread;
++	unsigned long i;
++	int num_cpus;
++
++	num_cpus = num_online_cpus();
++	test_running = kzalloc(num_cpus, GFP_KERNEL);
++	if (!test_running)
++		return -ENOMEM;
++
++	module_test_running = 1;
++
++	pr_err("prbtest: starting test\n");
++
++	for (i = 0; i < num_cpus; i++) {
++		test_running[i] = 1;
++		if (i < num_cpus - 1) {
++			thread = kthread_run(prbtest_writer, (void *)i,
++					     "prbtest writer");
++		} else {
++			thread = kthread_run(prbtest_reader, (void *)i,
++					     "prbtest reader");
++		}
++		if (IS_ERR(thread)) {
++			pr_err("prbtest: unable to create thread %lu\n", i);
++			test_running[i] = 0;
++		}
++	}
++
++	for (;;) {
++		for (i = 0; i < num_cpus; i++) {
++			if (test_running[i] == 1)
++				break;
++		}
++		if (i == num_cpus)
++			break;
++		msleep(1000);
++	}
++
++	pr_err("prbtest: completed test\n");
++
++	dump_rb(&test_rb);
++
++	module_test_running = 0;
++
++	kfree(test_running);
++
++	return 0;
++}
++
++static int prbtest_init(void)
++{
++	kthread_run(start_test, NULL, "prbtest");
++	return 0;
++}
++
++static void prbtest_exit(void)
++{
++	WRITE_ONCE(halt_test, 1);
++
++	while (module_test_running)
++		msleep(1000);
++}
++
++module_init(prbtest_init);
++module_exit(prbtest_exit);
++
++MODULE_AUTHOR("John Ogness <john.ogness@linutronix.de>");
++MODULE_DESCRIPTION("printk ringbuffer test");
++MODULE_LICENSE("GPL v2");
+-- 
+2.11.0
+
