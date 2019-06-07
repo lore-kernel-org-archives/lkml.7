@@ -2,316 +2,122 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C0BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819C0C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C6920840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D9420840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbfFGQY2 (ORCPT
+        id S1730586AbfFGQYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:24:28 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:50581 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730446AbfFGQY0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:24:26 -0400
-Received: from [5.158.153.52] (helo=noscherz.tec.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hZHes-0000ei-BJ; Fri, 07 Jun 2019 18:24:02 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Fri, 7 Jun 2019 12:24:31 -0400
+Received: from mga03.intel.com ([134.134.136.65]:24376 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730446AbfFGQY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:24:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:24:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,563,1557212400"; 
+   d="scan'208";a="182719826"
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2019 09:24:27 -0700
+Message-ID: <ea07ae367f9d130cfe7a3e508d478956c2bf47a7.camel@intel.com>
+Subject: Re: [PATCH v7 18/27] mm: Introduce do_mmap_locked()
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [RFC PATCH v2 2/2] printk-rb: add test module
-Date:   Fri,  7 Jun 2019 18:29:49 +0206
-Message-Id: <20190607162349.18199-3-john.ogness@linutronix.de>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190607162349.18199-1-john.ogness@linutronix.de>
-References: <20190607162349.18199-1-john.ogness@linutronix.de>
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Fri, 07 Jun 2019 09:16:26 -0700
+In-Reply-To: <20190607074707.GD3463@hirez.programming.kicks-ass.net>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+         <20190606200646.3951-19-yu-cheng.yu@intel.com>
+         <20190607074322.GP3419@hirez.programming.kicks-ass.net>
+         <20190607074707.GD3463@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This module does some heavy write stress testing on the ringbuffer
-with a reader that is checking for integrity.
+On Fri, 2019-06-07 at 09:47 +0200, Peter Zijlstra wrote:
+> On Fri, Jun 07, 2019 at 09:43:22AM +0200, Peter Zijlstra wrote:
+> > On Thu, Jun 06, 2019 at 01:06:37PM -0700, Yu-cheng Yu wrote:
+> > > There are a few places that need do_mmap() with mm->mmap_sem held.
+> > > Create an in-line function for that.
+> > > 
+> > > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> > > ---
+> > >  include/linux/mm.h | 18 ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > > 
+> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > > index 398f1e1c35e5..7cf014604848 100644
+> > > --- a/include/linux/mm.h
+> > > +++ b/include/linux/mm.h
+> > > @@ -2411,6 +2411,24 @@ static inline void mm_populate(unsigned long addr,
+> > > unsigned long len)
+> > >  static inline void mm_populate(unsigned long addr, unsigned long len) {}
+> > >  #endif
+> > >  
+> > > +static inline unsigned long do_mmap_locked(unsigned long addr,
+> > > +	unsigned long len, unsigned long prot, unsigned long flags,
+> > > +	vm_flags_t vm_flags)
+> > > +{
+> > > +	struct mm_struct *mm = current->mm;
+> > > +	unsigned long populate;
+> > > +
+> > > +	down_write(&mm->mmap_sem);
+> > > +	addr = do_mmap(NULL, addr, len, prot, flags, vm_flags, 0,
+> > > +		       &populate, NULL);
+> > 
+> > Funny thing how do_mmap() takes a file pointer as first argument and
+> > this thing explicitly NULLs that. That more or less invalidates the name
+> > do_mmap_locked().
+> > 
+> > > +	up_write(&mm->mmap_sem);
+> > > +
+> > > +	if (populate)
+> > > +		mm_populate(addr, populate);
+> > > +
+> > > +	return addr;
+> > > +}
+> 
+> You also don't retain that last @uf argument.
+> 
+> I'm thikning you're better off adding a helper to the cet.c file; call
+> it cet_mmap() or whatever.
 
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
----
- lib/Makefile   |   2 +
- lib/test_prb.c | 237 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 239 insertions(+)
- create mode 100644 lib/test_prb.c
+Ok, I will fix that.
 
-diff --git a/lib/Makefile b/lib/Makefile
-index fb7697031a79..9a485274b6ba 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -292,3 +292,5 @@ obj-$(CONFIG_GENERIC_LIB_MULDI3) += muldi3.o
- obj-$(CONFIG_GENERIC_LIB_CMPDI2) += cmpdi2.o
- obj-$(CONFIG_GENERIC_LIB_UCMPDI2) += ucmpdi2.o
- obj-$(CONFIG_OBJAGG) += objagg.o
-+
-+obj-m += test_prb.o
-diff --git a/lib/test_prb.c b/lib/test_prb.c
-new file mode 100644
-index 000000000000..2c365028f4e4
---- /dev/null
-+++ b/lib/test_prb.c
-@@ -0,0 +1,237 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/kthread.h>
-+#include <linux/delay.h>
-+#include <linux/random.h>
-+#include <linux/slab.h>
-+#include <linux/printk_ringbuffer.h>
-+
-+/*
-+ * This is a test module that starts "num_online_cpus() - 1" writer threads
-+ * and 1 reader thread. The writer threads each write strings of varying
-+ * length. They do this as fast as they can.
-+ *
-+ * The reader thread reads as fast as it can and performs sanity checks on
-+ * the data.
-+ *
-+ * Because the threads are running in such tight loops, they will call
-+ * schedule() from time to time so the system stays alive.
-+ *
-+ * If either the writers or the reader encounter an error, the test is
-+ * aborted. Test results are recorded to the ftrace buffers. The test can
-+ * be aborted manually by removing the module. (Ideally the test should
-+ * never abort on its own.)
-+ */
-+
-+struct rbdata {
-+	int len;
-+	char text[0];
-+};
-+
-+static char *test_running;
-+static int halt_test;
-+
-+static void dump_rb(struct printk_ringbuffer *rb)
-+{
-+	DECLARE_PRINTKRB_ENTRY(entry, 140);
-+	DECLARE_PRINTKRB_ITER(iter, rb, &entry);
-+	struct rbdata *dat;
-+	u64 last_seq = 0;
-+	int len;
-+
-+	trace_printk("BEGIN full dump\n");
-+
-+	prb_for_each_entry(&iter, len) {
-+		if (entry.seq - last_seq != 1) {
-+			trace_printk("LOST %llu\n",
-+				     entry.seq - (last_seq + 1));
-+		}
-+		last_seq = entry.seq;
-+
-+		dat = (struct rbdata *)&entry.buffer[0];
-+
-+		trace_printk("seq=%llu len=%d textlen=%d dataval=%s\n",
-+			     entry.seq, len, dat->len, dat->text);
-+	}
-+
-+	trace_printk("END full dump\n");
-+}
-+
-+DECLARE_PRINTKRB(test_rb, 7, 5);
-+
-+static int prbtest_writer(void *data)
-+{
-+	unsigned long num = (unsigned long)data;
-+	struct prb_reserved_entry e;
-+	char id = 'A' + num;
-+	struct rbdata *dat;
-+	int count = 0;
-+	int len;
-+
-+	pr_err("prbtest: start thread %lu (writer)\n", num);
-+
-+	for (;;) {
-+		len = sizeof(struct rbdata) + (prandom_u32() & 0x7f) + 1;
-+
-+		dat = (struct rbdata *)prb_reserve(&e, &test_rb, len);
-+		if (dat) {
-+			len -= sizeof(struct rbdata) + 1;
-+			memset(&dat->text[0], id, len);
-+			dat->text[len] = 0;
-+			dat->len = len;
-+			prb_commit(&e);
-+		} else {
-+			WRITE_ONCE(halt_test, 1);
-+			trace_printk("writer%lu (%c) failed to reserve\n",
-+				     num, id);
-+		}
-+
-+		if ((count++ & 0x3fff) == 0)
-+			schedule();
-+
-+		if (READ_ONCE(halt_test) == 1)
-+			break;
-+	}
-+
-+	pr_err("prbtest: end thread %lu (writer)\n", num);
-+
-+	test_running[num] = 0;
-+
-+	return 0;
-+}
-+
-+static int prbtest_reader(void *data)
-+{
-+	unsigned long num = (unsigned long)data;
-+	DECLARE_PRINTKRB_ENTRY(entry, 140);
-+	DECLARE_PRINTKRB_ITER(iter, &test_rb, &entry);
-+	unsigned long total_lost = 0;
-+	unsigned long max_lost = 0;
-+	struct rbdata *dat;
-+	int did_sched = 1;
-+	u64 last_seq = 0;
-+	int count = 0;
-+	int len;
-+
-+	pr_err("prbtest: start thread %lu (reader)\n", num);
-+
-+	for (;;) {
-+		prb_for_each_entry(&iter, len) {
-+			if (entry.seq - last_seq != 1 && !did_sched) {
-+				total_lost += entry.seq - (last_seq + 1);
-+				if (max_lost < entry.seq - (last_seq + 1))
-+					max_lost = entry.seq - (last_seq + 1);
-+			}
-+			last_seq = entry.seq;
-+			did_sched = 0;
-+
-+			dat = (struct rbdata *)&entry.buffer[0];
-+
-+			len = strlen(dat->text);
-+			if (len != dat->len) {
-+				WRITE_ONCE(halt_test, 1);
-+				trace_printk("reader%lu invalid length\n",
-+					     num);
-+			}
-+			while (len) {
-+				len--;
-+				if (dat->text[len] != dat->text[0]) {
-+					WRITE_ONCE(halt_test, 1);
-+					trace_printk("reader%lu invalid data\n",
-+						     num);
-+				}
-+			}
-+
-+			if ((count++ & 0x3fff) == 0) {
-+				did_sched = 1;
-+				schedule();
-+			}
-+
-+			if (READ_ONCE(halt_test) == 1)
-+				goto out;
-+		}
-+	}
-+out:
-+	pr_err("reader%lu: total_lost=%lu max_lost=%lu seq=%llu\n",
-+	       num, total_lost, max_lost, entry.seq);
-+	pr_err("prbtest: end thread %lu (reader)\n", num);
-+
-+	test_running[num] = 0;
-+
-+	return 0;
-+}
-+
-+static int module_test_running;
-+
-+static int start_test(void *arg)
-+{
-+	struct task_struct *thread;
-+	unsigned long i;
-+	int num_cpus;
-+
-+	num_cpus = num_online_cpus();
-+	test_running = kzalloc(num_cpus, GFP_KERNEL);
-+	if (!test_running)
-+		return -ENOMEM;
-+
-+	module_test_running = 1;
-+
-+	pr_err("prbtest: starting test\n");
-+
-+	for (i = 0; i < num_cpus; i++) {
-+		test_running[i] = 1;
-+		if (i < num_cpus - 1) {
-+			thread = kthread_run(prbtest_writer, (void *)i,
-+					     "prbtest writer");
-+		} else {
-+			thread = kthread_run(prbtest_reader, (void *)i,
-+					     "prbtest reader");
-+		}
-+		if (IS_ERR(thread)) {
-+			pr_err("prbtest: unable to create thread %lu\n", i);
-+			test_running[i] = 0;
-+		}
-+	}
-+
-+	for (;;) {
-+		for (i = 0; i < num_cpus; i++) {
-+			if (test_running[i] == 1)
-+				break;
-+		}
-+		if (i == num_cpus)
-+			break;
-+		msleep(1000);
-+	}
-+
-+	pr_err("prbtest: completed test\n");
-+
-+	dump_rb(&test_rb);
-+
-+	module_test_running = 0;
-+
-+	kfree(test_running);
-+
-+	return 0;
-+}
-+
-+static int prbtest_init(void)
-+{
-+	kthread_run(start_test, NULL, "prbtest");
-+	return 0;
-+}
-+
-+static void prbtest_exit(void)
-+{
-+	WRITE_ONCE(halt_test, 1);
-+
-+	while (module_test_running)
-+		msleep(1000);
-+}
-+
-+module_init(prbtest_init);
-+module_exit(prbtest_exit);
-+
-+MODULE_AUTHOR("John Ogness <john.ogness@linutronix.de>");
-+MODULE_DESCRIPTION("printk ringbuffer test");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
-
+Yu-cheng
