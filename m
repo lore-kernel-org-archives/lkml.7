@@ -2,142 +2,106 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66726C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D599EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5C8208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559949524;
-	bh=l2jzpqRVXHZxq5pLdpMGhXCEZg3vOypPYJk8LvJUja8=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=kb+d47lKwLv7yhv43Q+nfma7tQwSckp8KIQJF2l7A0Red8grTguntY5wqGOK8Flsq
-	 c4WkKENhgOVtAiTL79b11zz9baiXpSVld+WpKQrch0FhuI5Xo3LQESI1F+RTyVVHfF
-	 OHbWM5hYHcXrvKX58OMuBnE9uNJ/iaOUqAvVV+gs=
+	by mail.kernel.org (Postfix) with ESMTP id 9899120868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m7cbzg/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfFGXSn (ORCPT
+        id S1730029AbfFGXY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 19:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbfFGXSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 19:18:43 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D101120825;
-        Fri,  7 Jun 2019 23:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559949521;
-        bh=l2jzpqRVXHZxq5pLdpMGhXCEZg3vOypPYJk8LvJUja8=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=GCLGxU6azs6ie7ehXuwV0HZBgHSl5RVwKBY/sOot40PJFHo56qbAciZfPutbiiAEE
-         eivl+cvfIOPcr+av1XvzyMB9dswXq0KFVm/Fqc7M41ZxNBT7urjJ7MTTcHc9lH4Yv2
-         MFovqZaMbj0d9bpx/VN336ZjiVucLkR0eOpGHF5c=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 7 Jun 2019 19:24:57 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36339 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729738AbfFGXY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 19:24:57 -0400
+Received: by mail-lj1-f196.google.com with SMTP id i21so3120523ljj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 16:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yxnf76CubLzSCgXqXpm3Tzi+epD/T4P0TuWJfUgCO5c=;
+        b=m7cbzg/qI+c44FkJJMtfka3ULkiYlcpI79X7AytRLLbncMH7UguQ+pmdFoSIdUQ4xb
+         395kdBEA+7vIzXou6mzkhFaOnbg2G6WVZhTjgjZPNPiTnn7mThymVTCdv9vmRwNjli6d
+         qr2CcHPVG2YAWGQ5HzNc8MSGj8lw8kgCTu22wQvaB22PTIPDMpRPp7FCzXhccEh9sOHR
+         YseeXQCtF4KngoJUx/oUlBuVKGXanwNSs4NDsZ1vXs6ca6MlZ+667a2xeAYC94qsAXmB
+         0DJdQlJq+UnSK/PlBL+kR3FZBg6+Lj0ESBAyT2iqyuQXZXAG6xtEzMt1Gjsxnhg7w6m0
+         y2Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yxnf76CubLzSCgXqXpm3Tzi+epD/T4P0TuWJfUgCO5c=;
+        b=SwF9k6BDFTdUWqYXdSCkV7KI9X50oKsj36OEKnZXBBPyI2FyWx4nSGLHEN/pckXO66
+         fUFTLeM7jFW2/n/ffdvpyWeCIpVmWXhVzBBIsVMDHephPtESVEb2GzX9Rz18mPJyjFOl
+         n/2kfVKbyLw+B2lrDlx9hxLh0rfiC7kRxmPSD5JHUM355bbewLjaMa/EwVp4knASMM4Y
+         e/sKneYecbZLo0FGYSfZkXMQYRQAWhyRiPIWmeNb0drtT/g1QdJ2b/mgqn+7ZjwRd74m
+         W+MQQ1w03/y3p2aXcN2h0E4RvuW5qZE8jC0ojqEE+haeY2SPrV+mefP8jdxB6J18oBqT
+         Qgrw==
+X-Gm-Message-State: APjAAAV/OX/5fQlju5j6bWoZQ70ySTe8chfIQbpROY1kL7UILBN6XCrK
+        W5jN4PZzl4SH9ias3ZSZdgJCaTS+6M4vg9V3lTECgQ==
+X-Google-Smtp-Source: APXvYqz+5A0YHaUqFPfF5fc/C7ZquljZneISf6m3UY24XIeHmwjuL30ItSQeeaMXOgZ8MXGYNR70QQM+S+zI5+UI0c0=
+X-Received: by 2002:a2e:5dc4:: with SMTP id v65mr20460259lje.138.1559949895389;
+ Fri, 07 Jun 2019 16:24:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAOCk7NrnnUzaXtnRvH0pHyHha4sTQDQCRoVPPatHfgVuEPZr0Q@mail.gmail.com>
-References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org> <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org> <20190607203838.1361E208C3@mail.kernel.org> <CAOCk7NrnnUzaXtnRvH0pHyHha4sTQDQCRoVPPatHfgVuEPZr0Q@mail.gmail.com>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        David Brown <david.brown@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
-User-Agent: alot/0.8.1
-Date:   Fri, 07 Jun 2019 16:18:41 -0700
-Message-Id: <20190607231841.D101120825@mail.kernel.org>
+References: <20190606231144.GA1402@embeddedor>
+In-Reply-To: <20190606231144.GA1402@embeddedor>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 8 Jun 2019 01:24:47 +0200
+Message-ID: <CACRpkdYXxHZ2KmU5Fz1eDXN=Z9i=uqwAtOWmpHam6F0U-eYySA@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: tb10x: Use flexible-array member and
+ struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jeffrey Hugo (2019-06-07 14:31:13)
-> On Fri, Jun 7, 2019 at 2:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Jeffrey Hugo (2019-05-21 07:52:28)
-> > > On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
-> > > > The multimedia clock controller (mmcc) is the main clock controller=
- for
-> > > > the multimedia subsystem and is required to enable things like disp=
-lay and
-> > > > camera.
-> > >
-> > > Stephen, I think this series is good to go, and I have display/gpu st=
-uff
-> > > I'm polishing that will depend on this.  Would you kindly pickup patc=
-hes
-> > > 1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 a=
-nd 6.
-> > >
-> >
-> > If I apply patch 3 won't it break boot until patch 2 is also in the
-> > tree? That seems to imply that I'll break bisection, and we have
-> > kernelci boot testing clk-next so this will probably set off alarms
-> > somewhere.
->=20
-> Yes, it'll break boot.  Maybe you and Bjorn can make a deal?  (more below)
->=20
-> Doesn't look like kernelci is running tests on 8998 anymore, so maybe
-> no one will complain?  As far as I am aware, Marc, Lee, Bjorn, and I
-> are the only ones whom care about 8998 presently, and I think we are
-> all good with a temporary breakage in order to get this basic
-> functionality in since the platform isn't really well supported yet.
+On Fri, Jun 7, 2019 at 1:11 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 
-Ok.
+> Update the code to use a flexible array member instead of a pointer in
+> structure tb10x_pinctrl and use the struct_size() helper:
+>
+> struct tb10x_pinctrl {
+>         ...
+>         struct tb10x_of_pinfunc pinfuncs[];
+> };
+>
+> Also, make use of the struct_size() helper instead of an open-coded
+> version in order to avoid any potential type mistakes.
+>
+> So, replace the following form:
+>
+> sizeof(struct tb10x_pinctrl) + of_get_child_count(of_node) * sizeof(struct tb10x_of_pinfunc)
+>
+> with:
+>
+> struct_size(state, pinfuncs, of_get_child_count(of_node))
+>
+> This code was detected with the help of Coccinelle.
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+> Changes in v2:
+>  - Update changelog text.
+>  - Add Kees' Reviewed-by tag.
 
->=20
-> >
-> > I thought we had some code that got removed that was going to make the
-> > transition "seamless" in the sense that it would search the tree for an
-> > RPM clk controller and then not add the XO fixed factor clk somehow.
-> > See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
-> > clocks") for the code that we removed. So ideally we do something like
-> > this too, but now we search for a property on the calling node to see if
-> > the XO clk is there?
-> >
->=20
-> Trying to remember back a bit.
->=20
-> I don't think its possible.  Maybe I'm wrong.  I didn't see a solution
-> to the below:
->=20
-> How does GCC know the following?
-> -RPMCC is compiled in the build (I guess this can be assumed)
+Patch applied.
 
-This is the IS_ENABLED part.
-
-> -RPMCC has probed
-> -RPMCC is not and will not be providing XO
-
-Presumably if it's enabled then it will be providing XO at some point in
-the future. I'm not suggesting the probe defer logic is removed, just
-that we don't get into a state where clk tree has merged all the patches
-for clk driver side and that then relies on DT to provide the clk but it
-doesn't do that.
-
-So the idea is to check if RPM is compiled in and also check the GCC DT
-node for the clocks property having the xo clk there. Then we assume
-that we have the clk patches in place for the RPM clk driver to provide
-that clk and we skip inserting the fake clk that RPM is going to
-provide.
-
-This is also a "general" solution to GCC not depending on or selecting
-the RPM clk driver. It may be better to just have a select statement in
-GCC Kconfig so that we can't enable the GCC driver without also enabling
-the RPM driver if it's an essential dependency to the clk tree working.
-But if we do this design then we can make the clk tree keep working
-regardless of RPM being there or not, which may be a good thing.
-
+Yours,
+Linus Walleij
