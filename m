@@ -2,385 +2,109 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20659C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF92C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC44208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA0B2146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="anqdPlIV"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="u6rXT3Xk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731392AbfFGUDV (ORCPT
+        id S1728727AbfFGUDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:03:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38334 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728727AbfFGUDN (ORCPT
+        Fri, 7 Jun 2019 16:03:38 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45803 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729342AbfFGUDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:03:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v11so1701687pgl.5;
-        Fri, 07 Jun 2019 13:03:12 -0700 (PDT)
+        Fri, 7 Jun 2019 16:03:38 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m206so2260128oib.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4D4oR3+EcDIMRWnoOapv8MWepU/3mqlHePYzqppkUYY=;
-        b=anqdPlIVbKRJhtPk9zvCEpaEgYFntSLQaS17pQk7sX5JNP+Z80wCXk4P07piBPhrEU
-         l9eVZJgG+lGHWoa/N7/WdSn4OMDikbOpbls19vXkhDGXEB7fNgvntA8T/JTUhoJya2DD
-         dn6SxCg33qLUPl4FpT4dEIgzDqmgfUrnlOqX2KZpPU1nOZElVNAue7w0RC137CK4m3UC
-         ihH57DJWnc9wP8eNJbEXueZha7CiezAvjtA2eb9kUFri7/XXF2Wsum/bflAk7vQn5cE6
-         GHMrp8iQDlLnPf+x3vbLFkRFESjNE66mxlZPSTp7Oxbyqpj+cJ5WxvR8MLAyG24qIf0p
-         dNsA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tNWHofgNaqy6pErzI2UDdlfPXYGdisLICCNigvI4kL0=;
+        b=u6rXT3Xk89E7qKZJuqet/kerwsW/8pbifYfbULG0Hl/9cqx/I2ZRAEyvBG62o4extZ
+         wAaIEjw3XjBv16xyVl1le/CrVWXfxtjbO+/oJacrZ7oKh3hvurUvbwDA/9HTSM20GBjn
+         w5BBygSxhP2JKc63CxyI3teYBc84w8qnOmwxMKIgAOtMMiuAcSIq4AtgY5fyAra+CJHI
+         oF4c/P4dsqTzwVfwmGRtz2IoT9hpxJhBJtN/CXH5nQ6lK38J+bgrm3NiRudTmRV4xr8B
+         w9zoN74jsv49+DgrTPWzcfpX7kTtx8FhE+9Qxspy8dgylv58d2b5qynGCr7A6rUP8kjG
+         xw1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4D4oR3+EcDIMRWnoOapv8MWepU/3mqlHePYzqppkUYY=;
-        b=RvjU7ui3pBgfj9MVY7K3Lhrrbb/hYJawmbJuPdf4pr/sYChjy86F4MVIDeVTxv4oDb
-         aYQLR9Qqtb0UYPKCa4GHQECdEMnazT+BQQ1phPRZxaTuK+oT6V56er+AfyMnOECqK8fv
-         k4pMhCeK7WxYqArY1RLnqI92cKcP9gT42dnMbvDBU7MHv7EWFef2ZmfzETOgOP/LOP02
-         NaD/QAEtZmIvxjCD+VGirt+0oyxg4lun/THfauMuC063C9pX03RHgj/XVcfI01SpuRkm
-         xpQBqtrDMueHHyhg4tOk0PwD/5IuYyZvb/KZRG6OGAZGI7bL2BOd7BXlfzHUqQ+MeI7j
-         N5vQ==
-X-Gm-Message-State: APjAAAW6VKo4wEj/8nZrbAEwCO6vEr6j21GInLxuK98sSxMvgAhWnb2i
-        FVT5Ktks1RM48ODOBIem/aVPdiAC1Wo=
-X-Google-Smtp-Source: APXvYqzAqVkFf0AtJS8rLIx3pCswZwL7G+26PTk6WTXMmWYHmeF5ATgD7k3U1KW2nDeeDq0G1XxEZA==
-X-Received: by 2002:a63:1d02:: with SMTP id d2mr4570230pgd.26.1559937791155;
-        Fri, 07 Jun 2019 13:03:11 -0700 (PDT)
-Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id s5sm3289405pgj.60.2019.06.07.13.03.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 13:03:10 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Chris Spencer <christopher.spencer@sea.co.uk>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] crypto: caam - correct DMA address size for the i.MX8
-Date:   Fri,  7 Jun 2019 13:02:24 -0700
-Message-Id: <20190607200225.21419-4-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190607200225.21419-1-andrew.smirnov@gmail.com>
-References: <20190607200225.21419-1-andrew.smirnov@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tNWHofgNaqy6pErzI2UDdlfPXYGdisLICCNigvI4kL0=;
+        b=f9h8q5v0h0hUsGaNFpZKzsTLmS578PnxE8otJ1vmi880D5+EUTNI627/DOqhMkFNtD
+         wvmxtQc7C6XIvCrpZsUl0F7ZrZz9We55pmqyQvlB/cghHm17bs60wdM/q2PIoM7seR9T
+         upKT1C8MuZUZzvhnYsfHIkzjBPJkkwAq6qNFhTqKgmwG43ttU3F1XRemZqybOSJxzNWq
+         9QITdXDeKb83FuYZdwmm4t5Wbo/1nggSrtW43QsXl4/j+ZweGjYcYQmDVSvRzhMpz3Rm
+         pRzMaBSzScBVDVr3IAvo0NEbfmt1SkG4l1fcq0W1U3KmPN4hzL4Od7gv13Nydy6LMXWF
+         TgyA==
+X-Gm-Message-State: APjAAAUl9PnEILvcZFbn+/sJKR/V9KsFwusN2yNmBGbGlu+lBlRcjlDA
+        Q3rjZdwrZUsGHN7gDClbU9iLxZq/RmSmW0ZG9sO3dw==
+X-Google-Smtp-Source: APXvYqzjRw0XmHbFfB6N+LCDL02dSt9gHYEVSEZPCDUNI5M9/YAyKIO6lrQhDDoN+9fLMKTRkM2lsSceY96vks8ggTQ=
+X-Received: by 2002:aca:aa88:: with SMTP id t130mr2819351oie.70.1559937817614;
+ Fri, 07 Jun 2019 13:03:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <155993563277.3036719.17400338098057706494.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155993564854.3036719.3692507629721494555.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <f6c2d673-a202-4ad5-7055-5aaece9356e1@intel.com>
+In-Reply-To: <f6c2d673-a202-4ad5-7055-5aaece9356e1@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 7 Jun 2019 13:03:26 -0700
+Message-ID: <CAPcyv4iFG3Z9xL9TSmqLVHxLZ6oiz-uWD6iKgJ8LF4f0n=m9=w@mail.gmail.com>
+Subject: Re: [PATCH v3 03/10] efi: Enumerate EFI_MEMORY_SP
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        X86 ML <x86@kernel.org>, linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Spencer <christopher.spencer@sea.co.uk>
+On Fri, Jun 7, 2019 at 12:54 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 6/7/19 12:27 PM, Dan Williams wrote:
+> > @@ -848,15 +848,16 @@ char * __init efi_md_typeattr_format(char *buf, size_t size,
+> >       if (attr & ~(EFI_MEMORY_UC | EFI_MEMORY_WC | EFI_MEMORY_WT |
+> >                    EFI_MEMORY_WB | EFI_MEMORY_UCE | EFI_MEMORY_RO |
+> >                    EFI_MEMORY_WP | EFI_MEMORY_RP | EFI_MEMORY_XP |
+> > -                  EFI_MEMORY_NV |
+> > +                  EFI_MEMORY_NV | EFI_MEMORY_SP |
+> >                    EFI_MEMORY_RUNTIME | EFI_MEMORY_MORE_RELIABLE))
+> >               snprintf(pos, size, "|attr=0x%016llx]",
+> >                        (unsigned long long)attr);
+> >       else
+> >               snprintf(pos, size,
+> > -                      "|%3s|%2s|%2s|%2s|%2s|%2s|%2s|%3s|%2s|%2s|%2s|%2s]",
+> > +                      "|%3s|%2s|%2s|%2s|%2s|%2s|%2s|%2s|%3s|%2s|%2s|%2s|%2s]",
+> >                        attr & EFI_MEMORY_RUNTIME ? "RUN" : "",
+> >                        attr & EFI_MEMORY_MORE_RELIABLE ? "MR" : "",
+> > +                      attr & EFI_MEMORY_SP      ? "SP"  : "",
+> >                        attr & EFI_MEMORY_NV      ? "NV"  : "",
+> >                        attr & EFI_MEMORY_XP      ? "XP"  : "",
+> >                        attr & EFI_MEMORY_RP      ? "RP"  : "",
+>
+> Haha, I went digging in sysfs to find out where this gets dumped out.
+> The joke was on me because it seems to only go to dmesg.
+>
+> Separate from these patches, should we have a runtime file that dumps
+> out the same info?  dmesg isn't always available, and hotplug could
+> change this too, I'd imagine.
 
-The i.MX8 is arm64, but its CAAM DMA address size is 32-bits.
-
-Signed-off-by: Aymen Sghaier <aymen.sghaier@nxp.com>
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Signed-off-by: Chris Spencer <christopher.spencer@sea.co.uk>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Spencer <christopher.spencer@sea.co.uk>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Horia Geantă <horia.geanta@nxp.com>
-Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/crypto/caam/desc_constr.h | 24 +++++++--------
- drivers/crypto/caam/intern.h      |  6 ++--
- drivers/crypto/caam/pdb.h         | 49 ++++++++++++++++---------------
- drivers/crypto/caam/regs.h        | 21 +++++++++++--
- 4 files changed, 58 insertions(+), 42 deletions(-)
-
-diff --git a/drivers/crypto/caam/desc_constr.h b/drivers/crypto/caam/desc_constr.h
-index 2980b8ef1fb1..ab1a1c786c18 100644
---- a/drivers/crypto/caam/desc_constr.h
-+++ b/drivers/crypto/caam/desc_constr.h
-@@ -13,7 +13,7 @@
- 
- #define IMMEDIATE (1 << 23)
- #define CAAM_CMD_SZ sizeof(u32)
--#define CAAM_PTR_SZ sizeof(dma_addr_t)
-+#define CAAM_PTR_SZ sizeof(caam_dma_addr_t)
- #define CAAM_DESC_BYTES_MAX (CAAM_CMD_SZ * MAX_CAAM_DESCSIZE)
- #define DESC_JOB_IO_LEN (CAAM_CMD_SZ * 5 + CAAM_PTR_SZ * 3)
- 
-@@ -90,9 +90,9 @@ static inline void init_job_desc_pdb(u32 * const desc, u32 options,
- 	init_job_desc(desc, (((pdb_len + 1) << HDR_START_IDX_SHIFT)) | options);
- }
- 
--static inline void append_ptr(u32 * const desc, dma_addr_t ptr)
-+static inline void append_ptr(u32 * const desc, caam_dma_addr_t ptr)
- {
--	dma_addr_t *offset = (dma_addr_t *)desc_end(desc);
-+	caam_dma_addr_t *offset = (caam_dma_addr_t *)desc_end(desc);
- 
- 	*offset = cpu_to_caam_dma(ptr);
- 
-@@ -100,7 +100,7 @@ static inline void append_ptr(u32 * const desc, dma_addr_t ptr)
- 				CAAM_PTR_SZ / CAAM_CMD_SZ);
- }
- 
--static inline void init_job_desc_shared(u32 * const desc, dma_addr_t ptr,
-+static inline void init_job_desc_shared(u32 * const desc, caam_dma_addr_t ptr,
- 					int len, u32 options)
- {
- 	PRINT_POS;
-@@ -155,7 +155,7 @@ static inline u32 *write_cmd(u32 * const desc, u32 command)
- 	return desc + 1;
- }
- 
--static inline void append_cmd_ptr(u32 * const desc, dma_addr_t ptr, int len,
-+static inline void append_cmd_ptr(u32 * const desc, caam_dma_addr_t ptr, int len,
- 				  u32 command)
- {
- 	append_cmd(desc, command | len);
-@@ -163,7 +163,7 @@ static inline void append_cmd_ptr(u32 * const desc, dma_addr_t ptr, int len,
- }
- 
- /* Write length after pointer, rather than inside command */
--static inline void append_cmd_ptr_extlen(u32 * const desc, dma_addr_t ptr,
-+static inline void append_cmd_ptr_extlen(u32 * const desc, caam_dma_addr_t ptr,
- 					 unsigned int len, u32 command)
- {
- 	append_cmd(desc, command);
-@@ -228,7 +228,7 @@ APPEND_CMD_LEN(seq_fifo_load, SEQ_FIFO_LOAD)
- APPEND_CMD_LEN(seq_fifo_store, SEQ_FIFO_STORE)
- 
- #define APPEND_CMD_PTR(cmd, op) \
--static inline void append_##cmd(u32 * const desc, dma_addr_t ptr, \
-+static inline void append_##cmd(u32 * const desc, caam_dma_addr_t ptr, \
- 				unsigned int len, u32 options) \
- { \
- 	PRINT_POS; \
-@@ -239,7 +239,7 @@ APPEND_CMD_PTR(load, LOAD)
- APPEND_CMD_PTR(fifo_load, FIFO_LOAD)
- APPEND_CMD_PTR(fifo_store, FIFO_STORE)
- 
--static inline void append_store(u32 * const desc, dma_addr_t ptr,
-+static inline void append_store(u32 * const desc, caam_dma_addr_t ptr,
- 				unsigned int len, u32 options)
- {
- 	u32 cmd_src;
-@@ -258,7 +258,7 @@ static inline void append_store(u32 * const desc, dma_addr_t ptr,
- 
- #define APPEND_SEQ_PTR_INTLEN(cmd, op) \
- static inline void append_seq_##cmd##_ptr_intlen(u32 * const desc, \
--						 dma_addr_t ptr, \
-+						 caam_dma_addr_t ptr, \
- 						 unsigned int len, \
- 						 u32 options) \
- { \
-@@ -282,7 +282,7 @@ APPEND_CMD_PTR_TO_IMM(load, LOAD);
- APPEND_CMD_PTR_TO_IMM(fifo_load, FIFO_LOAD);
- 
- #define APPEND_CMD_PTR_EXTLEN(cmd, op) \
--static inline void append_##cmd##_extlen(u32 * const desc, dma_addr_t ptr, \
-+static inline void append_##cmd##_extlen(u32 * const desc, caam_dma_addr_t ptr, \
- 					 unsigned int len, u32 options) \
- { \
- 	PRINT_POS; \
-@@ -296,7 +296,7 @@ APPEND_CMD_PTR_EXTLEN(seq_out_ptr, SEQ_OUT_PTR)
-  * the size of its type
-  */
- #define APPEND_CMD_PTR_LEN(cmd, op, type) \
--static inline void append_##cmd(u32 * const desc, dma_addr_t ptr, \
-+static inline void append_##cmd(u32 * const desc, caam_dma_addr_t ptr, \
- 				type len, u32 options) \
- { \
- 	PRINT_POS; \
-@@ -456,7 +456,7 @@ struct alginfo {
- 	unsigned int keylen;
- 	unsigned int keylen_pad;
- 	union {
--		dma_addr_t key_dma;
-+		caam_dma_addr_t key_dma;
- 		const void *key_virt;
- 	};
- 	bool key_inline;
-diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
-index b0e32a91cdea..12d261e0d531 100644
---- a/drivers/crypto/caam/intern.h
-+++ b/drivers/crypto/caam/intern.h
-@@ -34,7 +34,7 @@ struct caam_jrentry_info {
- 	void (*callbk)(struct device *dev, u32 *desc, u32 status, void *arg);
- 	void *cbkarg;	/* Argument per ring entry */
- 	u32 *desc_addr_virt;	/* Stored virt addr for postprocessing */
--	dma_addr_t desc_addr_dma;	/* Stored bus addr for done matching */
-+	caam_dma_addr_t desc_addr_dma;	/* Stored bus addr for done matching */
- 	u32 desc_size;	/* Stored size for postprocessing, header derived */
- };
- 
-@@ -55,7 +55,7 @@ struct caam_drv_private_jr {
- 	spinlock_t inplock ____cacheline_aligned; /* Input ring index lock */
- 	u32 inpring_avail;	/* Number of free entries in input ring */
- 	int head;			/* entinfo (s/w ring) head index */
--	dma_addr_t *inpring;	/* Base of input ring, alloc DMA-safe */
-+	caam_dma_addr_t *inpring;	/* Base of input ring, alloc DMA-safe */
- 	int out_ring_read_index;	/* Output index "tail" */
- 	int tail;			/* entinfo (s/w ring) tail index */
- 	struct jr_outentry *outring;	/* Base of output ring, DMA-safe */
-@@ -133,7 +133,7 @@ static inline u64 caam_get_dma_mask(struct device *dev)
- {
- 	struct device_node *nprop = dev->of_node;
- 
--	if (sizeof(dma_addr_t) != sizeof(u64))
-+	if (sizeof(caam_dma_addr_t) != sizeof(u64))
- 		return DMA_BIT_MASK(32);
- 
- 	if (caam_dpaa2)
-diff --git a/drivers/crypto/caam/pdb.h b/drivers/crypto/caam/pdb.h
-index 810f0bef0652..128d16682feb 100644
---- a/drivers/crypto/caam/pdb.h
-+++ b/drivers/crypto/caam/pdb.h
-@@ -9,6 +9,7 @@
- #ifndef CAAM_PDB_H
- #define CAAM_PDB_H
- #include "compat.h"
-+#include "regs.h"
- 
- /*
-  * PDB- IPSec ESP Header Modification Options
-@@ -507,10 +508,10 @@ struct dsa_verify_pdb {
-  */
- struct rsa_pub_pdb {
- 	u32		sgf;
--	dma_addr_t	f_dma;
--	dma_addr_t	g_dma;
--	dma_addr_t	n_dma;
--	dma_addr_t	e_dma;
-+	caam_dma_addr_t	f_dma;
-+	caam_dma_addr_t	g_dma;
-+	caam_dma_addr_t	n_dma;
-+	caam_dma_addr_t	e_dma;
- 	u32		f_len;
- } __packed;
- 
-@@ -524,10 +525,10 @@ struct rsa_pub_pdb {
-  */
- struct rsa_priv_f1_pdb {
- 	u32		sgf;
--	dma_addr_t	g_dma;
--	dma_addr_t	f_dma;
--	dma_addr_t	n_dma;
--	dma_addr_t	d_dma;
-+	caam_dma_addr_t	g_dma;
-+	caam_dma_addr_t	f_dma;
-+	caam_dma_addr_t	n_dma;
-+	caam_dma_addr_t	d_dma;
- } __packed;
- 
- /**
-@@ -546,13 +547,13 @@ struct rsa_priv_f1_pdb {
-  */
- struct rsa_priv_f2_pdb {
- 	u32		sgf;
--	dma_addr_t	g_dma;
--	dma_addr_t	f_dma;
--	dma_addr_t	d_dma;
--	dma_addr_t	p_dma;
--	dma_addr_t	q_dma;
--	dma_addr_t	tmp1_dma;
--	dma_addr_t	tmp2_dma;
-+	caam_dma_addr_t	g_dma;
-+	caam_dma_addr_t	f_dma;
-+	caam_dma_addr_t	d_dma;
-+	caam_dma_addr_t	p_dma;
-+	caam_dma_addr_t	q_dma;
-+	caam_dma_addr_t	tmp1_dma;
-+	caam_dma_addr_t	tmp2_dma;
- 	u32		p_q_len;
- } __packed;
- 
-@@ -576,15 +577,15 @@ struct rsa_priv_f2_pdb {
-  */
- struct rsa_priv_f3_pdb {
- 	u32		sgf;
--	dma_addr_t	g_dma;
--	dma_addr_t	f_dma;
--	dma_addr_t	c_dma;
--	dma_addr_t	p_dma;
--	dma_addr_t	q_dma;
--	dma_addr_t	dp_dma;
--	dma_addr_t	dq_dma;
--	dma_addr_t	tmp1_dma;
--	dma_addr_t	tmp2_dma;
-+	caam_dma_addr_t	g_dma;
-+	caam_dma_addr_t	f_dma;
-+	caam_dma_addr_t	c_dma;
-+	caam_dma_addr_t	p_dma;
-+	caam_dma_addr_t	q_dma;
-+	caam_dma_addr_t	dp_dma;
-+	caam_dma_addr_t	dq_dma;
-+	caam_dma_addr_t	tmp1_dma;
-+	caam_dma_addr_t	tmp2_dma;
- 	u32		p_q_len;
- } __packed;
- 
-diff --git a/drivers/crypto/caam/regs.h b/drivers/crypto/caam/regs.h
-index 8591914d5c51..6e7f8d4f3f2b 100644
---- a/drivers/crypto/caam/regs.h
-+++ b/drivers/crypto/caam/regs.h
-@@ -137,7 +137,7 @@ static inline void clrsetbits_32(void __iomem *reg, u32 clear, u32 set)
-  *    base + 0x0000 : least-significant 32 bits
-  *    base + 0x0004 : most-significant 32 bits
-  */
--#ifdef CONFIG_64BIT
-+#if defined(CONFIG_64BIT) && !defined(CONFIG_ARCH_MXC)
- static inline void wr_reg64(void __iomem *reg, u64 data)
- {
- 	if (caam_little_end)
-@@ -195,7 +195,7 @@ static inline u64 caam_dma64_to_cpu(u64 value)
- 	return caam64_to_cpu(value);
- }
- 
--#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-+#if defined(CONFIG_ARCH_DMA_ADDR_T_64BIT) && !defined(CONFIG_ARCH_MXC)
- #define cpu_to_caam_dma(value) cpu_to_caam_dma64(value)
- #define caam_dma_to_cpu(value) caam_dma64_to_cpu(value)
- #else
-@@ -203,12 +203,27 @@ static inline u64 caam_dma64_to_cpu(u64 value)
- #define caam_dma_to_cpu(value) caam32_to_cpu(value)
- #endif /* CONFIG_ARCH_DMA_ADDR_T_64BIT */
- 
-+/*
-+ * On i.MX8 boards the arch is arm64 but the CAAM dma address size is
-+ * 32 bits on 8MQ and 36 bits on 8QM and 8QXP.
-+ * For 8QM and 8QXP there is a configurable field PS called pointer size
-+ * in the MCFGR register to switch between 32 and 64 (default 32)
-+ * But this register is only accessible by the SECO and is left to its
-+ * default value.
-+ * Here we set the CAAM dma address size to 32 bits for all i.MX8
-+ */
-+#if defined(CONFIG_ARM64) && defined(CONFIG_ARCH_MXC)
-+#define caam_dma_addr_t u32
-+#else
-+#define caam_dma_addr_t dma_addr_t
-+#endif
-+
- /*
-  * jr_outentry
-  * Represents each entry in a JobR output ring
-  */
- struct jr_outentry {
--	dma_addr_t desc;/* Pointer to completed descriptor */
-+	caam_dma_addr_t desc;/* Pointer to completed descriptor */
- 	u32 jrstatus;	/* Status for completed descriptor */
- } __packed;
- 
--- 
-2.21.0
-
+Perhaps, but I thought /proc/iomem was that runtime file. Given that
+x86/Linux only seems to care about the the EFI to E820 translation of
+the map and the E820 map is directly reflected in /proc/iomem, do we
+need another file?
