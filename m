@@ -2,182 +2,121 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D729C46476
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36E4C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0192D208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99727208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZIENBkuV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfFGGef (ORCPT
+        id S1727380AbfFGGgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:34:35 -0400
-Received: from mga02.intel.com ([134.134.136.20]:49508 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfFGGed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:34:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 23:34:32 -0700
-X-ExtLoop1: 1
-Received: from pg-eswbuild-angstrom-alpha.altera.com ([10.142.34.148])
-  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2019 23:34:29 -0700
-From:   "Hean-Loong, Ong" <hean.loong.ong@intel.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com,
-        chin.liang.see@intel.com, Ong@vger.kernel.org
-Subject: [PATCHv15 1/3] ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
-Date:   Fri,  7 Jun 2019 22:28:25 +0800
-Message-Id: <20190607142827.329-2-hean.loong.ong@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190607142827.329-1-hean.loong.ong@intel.com>
-References: <20190607142827.329-1-hean.loong.ong@intel.com>
+        Fri, 7 Jun 2019 02:36:14 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:38401 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfFGGgN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 02:36:13 -0400
+Received: by mail-vs1-f65.google.com with SMTP id b10so530468vsp.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 23:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wUw9ISMPGHSgRh2KdM2HGIT34kJ3x6jiWvQJ3Y7JEOw=;
+        b=ZIENBkuV+65B17001zA6jR4EfLu0gUD5mQO9Uehe+MYtDvP7sg6FaHCpOTZn0V7moO
+         aeQeggPButGXdlh3l+1CJ0LRez4REvNOPCkvZfM0rdwngG6OTerORMZoab7XIizXIDdf
+         VCk2Ekwn0j6PHyUBOsWjmlyOjzKJU2vVWjdPY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wUw9ISMPGHSgRh2KdM2HGIT34kJ3x6jiWvQJ3Y7JEOw=;
+        b=YE17Uc8NJU4ftwo9HR3fQg6KykfA6LNNOkdGFhK6BILFZRGnNcK6Pu4FyO0PqshdtT
+         EMm9Oh43N6z568ex7YU9HLAGjS+oKDvqnGs4TfPAq8mPSXDD5Tup0W77RhURe+rD0EJq
+         yZ6QmeN4fK3+FjtloUWOcdemaG8ogsIFRtxCvIupmkceAgboEJCUsczg8nJJoQJxEuSk
+         n3o/R86WQZeaiUULDu+NgnYInExEX+aHNm+tl58MZHDIUFGFjDRpIZH3sSqhwhAfYkTv
+         SN1uBXlOhQXDPsUnalOECwHT4OgfAZeJRqM1IFtwhawqgys1PDaTZiWigI8QZ26Z4NVg
+         OkFw==
+X-Gm-Message-State: APjAAAUCI1vMQAq8uWo2zuzvEGiP2AKA9L6Le+RwEQxEZHp2jO1iC+KQ
+        k/xd2YwoN35saxusu+nAr/K/nUMkFCHe6XqOvLL/xQ==
+X-Google-Smtp-Source: APXvYqw9TJz+d26iMe8IX5YhwPQItF/uBMG5lcq6EkUJxtv8WLmxNcmMsoJw1P0kitqbTkvFQVVSXTEFjJuWpguXvAk=
+X-Received: by 2002:a67:ebcb:: with SMTP id y11mr476318vso.138.1559889372706;
+ Thu, 06 Jun 2019 23:36:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190525123705.8588-1-yuehaibing@huawei.com>
+In-Reply-To: <20190525123705.8588-1-yuehaibing@huawei.com>
+From:   Sumit Saxena <sumit.saxena@broadcom.com>
+Date:   Fri, 7 Jun 2019 12:06:01 +0530
+Message-ID: <CAL2rwxroDkKSRCN9inYZTGD79h+8AWn6LO3+=ND316=BVm40ug@mail.gmail.com>
+Subject: Re: [PATCH -next] scsi: megaraid_sas: remove set but not used
+ variable 'sge_sz'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ong, Hean Loong" <hean.loong.ong@intel.com>
+On Sat, May 25, 2019 at 6:07 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/scsi/megaraid/megaraid_sas_base.c: In function megasas_create_frame_pool:
+> drivers/scsi/megaraid/megaraid_sas_base.c:4124:6: warning: variable sge_sz set but not used [-Wunused-but-set-variable]
+>
+> It's not used any more since
+> commit 200aed582d61 ("megaraid_sas: endianness related bug fixes and code optimization")
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
 
-Device tree binding for Intel FPGA Video and Image Processing Suite.
-The bindings would set the max width, max height,
-bits per pixel and memory port width.
-The device tree binding only supports the Intel
-Arria10 devkit and its variants. Vendor name retained as altr.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-V15:
-Reviewed
-
-V14:
-No Change
-
-V13:
-No change
-
-V12:
-Wrap comments and fix commit message
-
-V11:
-No change
-
-V10:
-No change
-
-V9:
-Remove Display port node
-
-V8:
-*Add port to Display port decoder
-
-V7:
-*Fix OF graph for better description
-*Add description for encoder
-
-V6:
-*Description have not describe DT device in general
-
-V5:
-*remove bindings for bits per symbol as it has only one value which is 8
-
-V4:
-*fix properties that does not describe the values
-
-V3:
-*OF graph not in accordance to graph.txt
-
-V2:
-*Remove Linux driver description
-
-V1:
-*Missing vendor prefix
-
-Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
----
- .../bindings/display/altr,vip-fb2.txt         | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
-
-diff --git a/Documentation/devicetree/bindings/display/altr,vip-fb2.txt b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
-new file mode 100644
-index 000000000000..89a3b9e166a8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
-@@ -0,0 +1,63 @@
-+Intel Video and Image Processing(VIP) Frame Buffer II bindings
-+
-+Supported hardware: Intel FPGA SoC Arria10 and above with display port IP
-+
-+The Video Frame Buffer II in Video Image Processing (VIP) suite is an IP core
-+that interfaces between system memory and Avalon-ST video ports. The IP core
-+can be configured to support the memory reader (from memory to Avalon-ST)
-+and/or memory writer (from Avalon-ST to memory) interfaces.
-+
-+More information the FPGA video IP component can be acquired from
-+https://www.altera.com/content/dam/altera-www/global/en_US/pdfs\
-+/literature/ug/ug_vip.pdf
-+
-+DT-Bindings:
-+=============
-+Required properties:
-+----------------------------
-+- compatible: "altr,vip-frame-buffer-2.0"
-+- reg: Physical base address and length of the framebuffer controller's
-+	registers.
-+- altr,max-width: The maximum width of the framebuffer in pixels.
-+- altr,max-height: The maximum height of the framebuffer in pixels.
-+- altr,mem-port-width = the bus width of the avalon master port
-+	on the frame reader
-+
-+Optional sub-nodes:
-+- ports: The connection to the encoder
-+
-+Connections between the Frame Buffer II and other video IP cores in the system
-+are modelled using the OF graph DT bindings. The Frame Buffer II node has up
-+to two OF graph ports. When the memory writer interface is enabled, port 0
-+maps to the Avalon-ST Input (din) port. When the memory reader interface is
-+enabled, port 1 maps to the Avalon-ST Output (dout) port.
-+
-+The encoder is built into the FPGA HW design and therefore would not
-+be accessible from the DDR.
-+
-+		Port 0				Port1
-+---------------------------------------------------------
-+ARRIA10 AVALON_ST (DIN)		AVALON_ST (DOUT)
-+
-+Required Properties Example:
-+----------------------------
-+
-+framebuffer@100000280 {
-+		compatible = "altr,vip-frame-buffer-2.0";
-+		reg = <0x00000001 0x00000280 0x00000040>;
-+		altr,max-width = <1280>;
-+		altr,max-height = <720>;
-+		altr,mem-port-width = <128>;
-+
-+		ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <1>;
-+					fb_output: endpoint {
-+						remote-endpoint = <&dp_encoder_input>;
-+					};
-+			};
-+		};
-+};
--- 
-2.17.1
-
+> ---
+>  drivers/scsi/megaraid/megaraid_sas_base.c | 11 -----------
+>  1 file changed, 11 deletions(-)
+>
+> diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+> index b26991dcf137..25281a2eb424 100644
+> --- a/drivers/scsi/megaraid/megaraid_sas_base.c
+> +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+> @@ -4121,22 +4121,11 @@ static int megasas_create_frame_pool(struct megasas_instance *instance)
+>  {
+>         int i;
+>         u16 max_cmd;
+> -       u32 sge_sz;
+>         u32 frame_count;
+>         struct megasas_cmd *cmd;
+>
+>         max_cmd = instance->max_mfi_cmds;
+>
+> -       /*
+> -        * Size of our frame is 64 bytes for MFI frame, followed by max SG
+> -        * elements and finally SCSI_SENSE_BUFFERSIZE bytes for sense buffer
+> -        */
+> -       sge_sz = (IS_DMA64) ? sizeof(struct megasas_sge64) :
+> -           sizeof(struct megasas_sge32);
+> -
+> -       if (instance->flag_ieee)
+> -               sge_sz = sizeof(struct megasas_sge_skinny);
+> -
+>         /*
+>          * For MFI controllers.
+>          * max_num_sge = 60
+> --
+> 2.17.1
+>
+>
