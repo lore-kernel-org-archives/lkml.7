@@ -2,160 +2,162 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343B6C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4433DC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F5F212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BEC20840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nfa4aa26"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CFxvdk65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbfFGWTQ (ORCPT
+        id S1731100AbfFGWTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:19:16 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46565 "EHLO
+        Fri, 7 Jun 2019 18:19:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35110 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbfFGWTQ (ORCPT
+        with ESMTP id S1730039AbfFGWTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:19:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 81so1909885pfy.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:19:15 -0700 (PDT)
+        Fri, 7 Jun 2019 18:19:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d126so1938036pfd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:19:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G5DghZ8PPTikiU9X/j+4tCPHJAWwROuGMzt1uGNfZxg=;
-        b=nfa4aa26dP+W2SLl0AGTju8iFHimCwmA22RUcaVoSUtkRbCjSuFsIStiXwSI3+mgxd
-         04TRxqG9n7UVWtsKdsn+xVIbNNL8P2QGe5fvxcctipFUs56vZ49Oc72VXPEO3FGXls8/
-         nIj2/NJ0Gxy8o5NLusKojvxEixTDC2W9CQuag=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8iuPUmxzg7rQ1mcChA8EFOd7sUTB/HD7Cy4zNZiOnqU=;
+        b=CFxvdk65xd7tcdZzJVz4UpmWkpj2H0DyBEP+rSqqcdcBPMPUXaHAK2yMfBeGuEzfcK
+         stk+FYrZRrEUIFuksmoi9O52OT8AevaATD57kkw1chD3TO3mDhDjM1uOuEasaWq/K+ci
+         sfAVNw3mZCK0NZ8i3/luNQ/qVucJTF0GbUfTk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G5DghZ8PPTikiU9X/j+4tCPHJAWwROuGMzt1uGNfZxg=;
-        b=A0Pr9zN32bdXI9J2Gf5FAyGiSFJkabFR5lb/lsUX+NquuAk0ypd4i2ufj5Xf6wvjkP
-         Gt++CCi2myTtn+jBjLj6lFxvm+HZhheiob5oB87rucwHiCj99RmdqBpKchDD2EdyBplV
-         16JQeFjGWwwA3qmhHJ0Ggoe8nUkcWcuIqj4CN+/PqbQP5CKIhGyRidKK927aup14O6gP
-         sDB18zIvwi38uYCl1+BD3gapJZTfWD0wFpjfAtpwIVug5C8hjzZnMxYA0LCEAUl8Cxtn
-         v5CekKYlVmqHV+BZW1IdUO8k5WeUUswlKeaHg3x4fllDc09W/eqXnVfZE6tEeph5KUMo
-         iYjQ==
-X-Gm-Message-State: APjAAAW1eMfEz2cMhpQZG8OFSAmw4PHs9N/gEfSPiufj7e8pxE9Op2kX
-        gWmYQ81nrIFwOEh+f/HriQM8rA==
-X-Google-Smtp-Source: APXvYqzMhd/uupPOTxDJkDmURMyXVUhnZKymqId/tK/dqDZ5RWQedokZNvY86vrjWt7WoP/VMZ4Mtw==
-X-Received: by 2002:a62:83cb:: with SMTP id h194mr25838451pfe.201.1559945955449;
-        Fri, 07 Jun 2019 15:19:15 -0700 (PDT)
-Received: from localhost ([2620:15c:202:201:82b8:d8c4:6cb6:57f5])
-        by smtp.gmail.com with ESMTPSA id n13sm3201633pff.59.2019.06.07.15.19.14
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8iuPUmxzg7rQ1mcChA8EFOd7sUTB/HD7Cy4zNZiOnqU=;
+        b=BGcl73cZHKH/2zkjKbsA77nWjqUZpXfgRad/fvGIACqGdZ9So9C/cMlpXTHpfS3Cwx
+         HLmkSgsx6mKaLAenuRwDQsfrEcmTosXJjjSdJP8qTaVmpmVM/aFeMU+lT6eydyUWAfmd
+         skNQFGGZxCqZ0z/c5pr+16b1RqqhHocW0v+vGw+rNH8SEd4WEj8LEssILDU3KdHQMmOF
+         6E+qIwz2bjj1u7bDOuQ26oRuSsZ0CkXNWzFrSaahfhkKoLfVrRCu+url4FqqC8VD9ylO
+         14/Vmp1yxm2IHAdgG6AVz7mvaeJEfBr0IT6TYy+xH9k/Q59Fl8ntiGW4HYJqsxinnFOD
+         LfJA==
+X-Gm-Message-State: APjAAAX4cGD2PDqxW+25ICZZVstoHAcnQqJwgs8AUXOr+KifD280d5e3
+        t0r2/LB01K1zZqgUAzQZaf7LHg==
+X-Google-Smtp-Source: APXvYqz2x5Lf3XLwNWkRmjImZUEqpXEjYipatdtaIyzpqULgmQhr7hnhIYl70ZYH3co6M3PTWxBmjw==
+X-Received: by 2002:a17:90a:5d15:: with SMTP id s21mr7940880pji.126.1559945989250;
+        Fri, 07 Jun 2019 15:19:49 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id g17sm3474771pfb.56.2019.06.07.15.19.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 15:19:15 -0700 (PDT)
-From:   Alex Levin <levinale@chromium.org>
-To:     alsa-devel@alsa-project.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alex Levin <levinale@chromium.org>,
-        linux-kernel@vger.kernel.org, benzh@chromium.org,
-        cujomalainey@chromium.org
-Subject: [PATCH] ASoC: Intel: sst: fix kmalloc call with wrong flags
-Date:   Fri,  7 Jun 2019 15:19:11 -0700
-Message-Id: <20190607221911.118136-1-levinale@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+        Fri, 07 Jun 2019 15:19:48 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 15:19:44 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Doug Anderson <dianders@google.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Brian Norris <briannorris@google.com>,
+        Guenter Roeck <groeck@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Message-ID: <20190607220947.GR40515@google.com>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20180208113032.27810-4-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling kmalloc with GFP_KERNEL in case CONFIG_SLOB is unset,
-kmem_cache_alloc_trace is called.
+Hi Enric,
 
-In case CONFIG_TRACING is set, kmem_cache_alloc_trace will ball
-slab_alloc, which will call slab_pre_alloc_hook which might_sleep_if.
+some comments inline, a bit late, but I just tested this on veyron
+minnie.
 
-The context in which it is called in this case, the
-intel_sst_interrupt_mrfld, calling a sleeping kmalloc generates a BUG():
+On Thu, Feb 08, 2018 at 12:30:31PM +0100, Enric Balletbo i Serra wrote:
+> When you want to change the brightness using a PWM signal, one thing you
+> need to consider is how human perceive the brightness. Human perceive
+> the brightness change non-linearly, we have better sensitivity at low
+> luminance than high luminance, so to achieve perceived linear dimming,
+> the brightness must be matches to the way our eyes behave. The CIE 1931
+> lightness formula is what actually describes how we perceive light.
+> 
+> This patch computes a default table with the brightness levels filled
+> with the numbers provided by the CIE 1931 algorithm, the number of the
+> brightness levels is calculated based on the PWM resolution.
+> 
+> The calculation of the table using the CIE 1931 algorithm is enabled by
+> default when you do not define the 'brightness-levels' propriety in your
+> device tree.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>
+> ...
+>
+> +static
+> +int pwm_backlight_brightness_default(struct device *dev,
+> +				     struct platform_pwm_backlight_data *data,
+> +				     unsigned int period)
+> +{
+> +	unsigned int counter = 0;
+> +	unsigned int i, n;
+> +	u64 retval;
+> +
+> +	/*
+> +	 * Count the number of bits needed to represent the period number. The
+> +	 * number of bits is used to calculate the number of levels used for the
+> +	 * brightness-levels table, the purpose of this calculation is have a
+> +	 * pre-computed table with enough levels to get linear brightness
+> +	 * perception. The period is divided by the number of bits so for a
+> +	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
+> +	 * we have 65535 / 16 = 4096 brightness levels.
+> +	 *
+> +	 * Note that this method is based on empirical testing on different
+> +	 * devices with PWM of 8 and 16 bits of resolution.
+> +	 */
+> +	n = period;
+> +	while (n) {
+> +		counter += n % 2;
+> +		n >>= 1;
+> +	}
 
-Fixes: 972b0d456e64 ("ASoC: Intel: remove GFP_ATOMIC, use GFP_KERNEL")
+I don't quite follow the heuristics above. Are you sure the number of
+PWM bits can be infered from the period? What if the period value (in
+ns) doesn't directly correspond to a register value? And even if it
+did, counting the number of set bits (the above loops is a
+re-implementation of ffs()) doesn't really result in the dividers
+mentioned in the comment. E.g. a period of 32768 ns (0x8000) results
+in a divider of 1, i.e. 32768 brighness levels.
 
-[   20.250671] BUG: sleeping function called from invalid context at mm/slab.h:422
-[   20.250683] in_atomic(): 1, irqs_disabled(): 1, pid: 1791, name: Chrome_IOThread
-[   20.250690] CPU: 0 PID: 1791 Comm: Chrome_IOThread Tainted: G        W         4.19.43 #61
-[   20.250693] Hardware name: GOOGLE Kefka, BIOS Google_Kefka.7287.337.0 03/02/2017
-[   20.250697] Call Trace:
-[   20.250704]  <IRQ>
-[   20.250716]  dump_stack+0x7e/0xc3
-[   20.250725]  ___might_sleep+0x12a/0x140
-[   20.250731]  kmem_cache_alloc_trace+0x53/0x1c5
-[   20.250736]  ? update_cfs_rq_load_avg+0x17e/0x1aa
-[   20.250740]  ? cpu_load_update+0x6c/0xc2
-[   20.250746]  sst_create_ipc_msg+0x2d/0x88
-[   20.250752]  intel_sst_interrupt_mrfld+0x12a/0x22c
-[   20.250758]  __handle_irq_event_percpu+0x133/0x228
-[   20.250764]  handle_irq_event_percpu+0x35/0x7a
-[   20.250768]  handle_irq_event+0x36/0x55
-[   20.250773]  handle_fasteoi_irq+0xab/0x16c
-[   20.250779]  handle_irq+0xd9/0x11e
-[   20.250785]  do_IRQ+0x54/0xe0
-[   20.250791]  common_interrupt+0xf/0xf
-[   20.250795]  </IRQ>
-[   20.250800] RIP: 0010:__lru_cache_add+0x4e/0xad
-[   20.250806] Code: 00 01 48 c7 c7 b8 df 01 00 65 48 03 3c 25 28 f1 00 00 48 8b 48 08 48 89 ca 48 ff ca f6 c1 01 48 0f 44 d0 f0 ff 42 34 0f b6 0f <89> ca fe c2 88 17 48 89 44 cf 08 80 fa 0f 74 0e 48 8b 08 66 85 c9
-[   20.250809] RSP: 0000:ffffa568810bfd98 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffd6
-[   20.250814] RAX: ffffd3b904eb1940 RBX: ffffd3b904eb1940 RCX: 0000000000000004
-[   20.250817] RDX: ffffd3b904eb1940 RSI: ffffa10ee5c47450 RDI: ffffa10efba1dfb8
-[   20.250821] RBP: ffffa568810bfda8 R08: ffffa10ef9c741c1 R09: dead000000000100
-[   20.250824] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa10ee8d52a40
-[   20.250827] R13: ffffa10ee8d52000 R14: ffffa10ee5c47450 R15: 800000013ac65067
-[   20.250835]  lru_cache_add_active_or_unevictable+0x4e/0xb8
-[   20.250841]  handle_mm_fault+0xd98/0x10c4
-[   20.250848]  __do_page_fault+0x235/0x42d
-[   20.250853]  ? page_fault+0x8/0x30
-[   20.250858]  do_page_fault+0x3d/0x17a
-[   20.250862]  ? page_fault+0x8/0x30
-[   20.250866]  page_fault+0x1e/0x30
-[   20.250872] RIP: 0033:0x7962fdea9304
-[   20.250875] Code: 0f 11 4c 17 f0 c3 48 3b 15 f1 26 31 00 0f 83 e2 00 00 00 48 39 f7 72 0f 74 12 4c 8d 0c 16 4c 39 cf 0f 82 63 01 00 00 48 89 d1 <f3> a4 c3 80 fa 08 73 12 80 fa 04 73 1e 80 fa 01 77 26 72 05 0f b6
-[   20.250879] RSP: 002b:00007962f4db5468 EFLAGS: 00010206
-[   20.250883] RAX: 00003c8cc9d47008 RBX: 0000000000000000 RCX: 0000000000001b48
-[   20.250886] RDX: 0000000000002b40 RSI: 00003c8cc9551000 RDI: 00003c8cc9d48000
-[   20.250890] RBP: 00007962f4db5820 R08: 0000000000000000 R09: 00003c8cc9552b48
-[   20.250893] R10: 0000562dd1064d30 R11: 00003c8cc825b908 R12: 00003c8cc966d3c0
-[   20.250896] R13: 00003c8cc9e280c0 R14: 0000000000000000 R15: 0000000000000000
+On veyron minnie the period is 1000000 ns, which results in 142858
+levels (1000000 / 7)!
 
-Signed-off-by: Alex Levin <levinale@chromium.org>
----
+Not sure if there is a clean solution using heuristics, a DT property
+specifying the number of levels could be an alternative. This could
+also be useful to limit the number of (mostly) redundant levels, even
+the intended max of 4096 seems pretty high.
 
- sound/soc/intel/atom/sst/sst_pvt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Another (not directly related) observation is that on minnie the
+actual brightness at a nominal 50% is close to 0 (duty cycle ~3%). I
+haven't tested with other devices, but I wonder if it would make
+sense to have an option to drop the bottom N% of levels, since the
+near 0 brightness in the lower 50% probably isn't very useful in most
+use cases, but maybe it looks different on other devices.
 
-diff --git a/sound/soc/intel/atom/sst/sst_pvt.c b/sound/soc/intel/atom/sst/sst_pvt.c
-index 00a37a09dc9b..dba0ca07ebf9 100644
---- a/sound/soc/intel/atom/sst/sst_pvt.c
-+++ b/sound/soc/intel/atom/sst/sst_pvt.c
-@@ -166,11 +166,11 @@ int sst_create_ipc_msg(struct ipc_post **arg, bool large)
- {
- 	struct ipc_post *msg;
- 
--	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_ATOMIC);
- 	if (!msg)
- 		return -ENOMEM;
- 	if (large) {
--		msg->mailbox_data = kzalloc(SST_MAILBOX_SIZE, GFP_KERNEL);
-+		msg->mailbox_data = kzalloc(SST_MAILBOX_SIZE, GFP_ATOMIC);
- 		if (!msg->mailbox_data) {
- 			kfree(msg);
- 			return -ENOMEM;
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
+Cheers
 
+Matthias
