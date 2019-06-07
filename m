@@ -2,243 +2,115 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F3CC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56E2C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBCB20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BACC20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559922869;
+	bh=bJKv8I6sI63y31Yb5PHStzUDtMTSJ2No5Qgf2jrHFoA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oSpEViYo9JrQ3/UOMb8TtQgDRhD647LBq2TCvRbYR6NoH6kGEJ/Vwzmes6mMOBjrh
+	 tH6RZpoS0LM1vmiSsSu2Bs5FWgarMoP7DyRy767XYjSVCw06wlbooRpvWlEjEuJRZc
+	 ruODf1qwj1zSJNa3URvLTiyI3nkpjoPsZe/yTnUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732072AbfFGPyP (ORCPT
+        id S1732062AbfFGPy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:54:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:43498 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 11:54:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729748AbfFGPyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:54:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41E62337;
-        Fri,  7 Jun 2019 08:54:11 -0700 (PDT)
-Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7739B3F718;
-        Fri,  7 Jun 2019 08:54:09 -0700 (PDT)
-Subject: Re: [PATCH v3 4/8] arm64: Fix interrupt tracing in the presence of
- NMIs
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     mark.rutland@arm.com, Jason Cooper <jason@lakedaemon.net>,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        james.morse@arm.com, yuzenghui@huawei.com,
-        wanghaibin.wang@huawei.com, Thomas Gleixner <tglx@linutronix.de>,
-        liwei391@huawei.com
-References: <1559813517-41540-1-git-send-email-julien.thierry@arm.com>
- <1559813517-41540-5-git-send-email-julien.thierry@arm.com>
- <72cc234e-1c70-9356-bf53-0e3aa4ba43c5@arm.com>
-From:   Julien Thierry <julien.thierry@arm.com>
-Message-ID: <2e8805e1-7b47-e578-0fae-58d2fdcab885@arm.com>
-Date:   Fri, 7 Jun 2019 16:54:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1730778AbfFGPqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45F58212F5;
+        Fri,  7 Jun 2019 15:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559922410;
+        bh=bJKv8I6sI63y31Yb5PHStzUDtMTSJ2No5Qgf2jrHFoA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mbJioWKWrXG0EHFcW0keNjj0Ym8SEm2Q4bPOjHqUI264TCjbmV1t+Y/5I1YH4XYtB
+         djo4Z9srHqFcFK9sH6G9yUK2g8k7PqxkB0MtF3hX8BiF0UGiwZtF9QW4RkRSAdh9rM
+         NdjoRlL/01BAipS4TW2s3Ry1Mztb+heXPnMItf3g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zhenliang Wei <weizhenliang@huawei.com>,
+        Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ivan Delalande <colona@arista.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 41/73] kernel/signal.c: trace_signal_deliver when signal_group_exit
+Date:   Fri,  7 Jun 2019 17:39:28 +0200
+Message-Id: <20190607153853.731262451@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
+References: <20190607153848.669070800@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <72cc234e-1c70-9356-bf53-0e3aa4ba43c5@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Zhenliang Wei <weizhenliang@huawei.com>
+
+commit 98af37d624ed8c83f1953b1b6b2f6866011fc064 upstream.
+
+In the fixes commit, removing SIGKILL from each thread signal mask and
+executing "goto fatal" directly will skip the call to
+"trace_signal_deliver".  At this point, the delivery tracking of the
+SIGKILL signal will be inaccurate.
+
+Therefore, we need to add trace_signal_deliver before "goto fatal" after
+executing sigdelset.
+
+Note: SEND_SIG_NOINFO matches the fact that SIGKILL doesn't have any info.
+
+Link: http://lkml.kernel.org/r/20190425025812.91424-1-weizhenliang@huawei.com
+Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
+Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
+Reviewed-by: Christian Brauner <christian@brauner.io>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Ivan Delalande <colona@arista.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/signal.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2436,6 +2436,8 @@ relock:
+ 	if (signal_group_exit(signal)) {
+ 		ksig->info.si_signo = signr = SIGKILL;
+ 		sigdelset(&current->pending.signal, SIGKILL);
++		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
++				&sighand->action[SIGKILL - 1]);
+ 		recalc_sigpending();
+ 		goto fatal;
+ 	}
 
 
-On 07/06/2019 16:42, Marc Zyngier wrote:
-> On 06/06/2019 10:31, Julien Thierry wrote:
->> In the presence of any form of instrumentation, nmi_enter() should be
->> done before calling any traceable code and any instrumentation code.
->>
->> Currently, nmi_enter() is done in handle_domain_nmi(), which is much
->> too late as instrumentation code might get called before. Move the
->> nmi_enter/exit() calls to the arch IRQ vector handler.
->>
->> On arm64, it is not possible to know if the IRQ vector handler was
->> called because of an NMI before acknowledging the interrupt. However, It
->> is possible to know whether normal interrupts could be taken in the
->> interrupted context (i.e. if taking an NMI in that context could
->> introduce a potential race condition).
->>
->> When interrupting a context with IRQs disabled, call nmi_enter() as soon
->> as possible. In contexts with IRQs enabled, defer this to the interrupt
->> controller, which is in a better position to know if an interrupt taken
->> is an NMI.
->>
->> Fixes: bc3c03ccb ("arm64: Enable the support of pseudo-NMIs")
->> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Jason Cooper <jason@lakedaemon.net>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> ---
->>  arch/arm64/kernel/entry.S    | 44 +++++++++++++++++++++++++++++++++-----------
->>  arch/arm64/kernel/irq.c      | 17 +++++++++++++++++
->>  drivers/irqchip/irq-gic-v3.c |  6 ++++++
->>  kernel/irq/irqdesc.c         |  8 ++++++--
->>  4 files changed, 62 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
->> index 89ab6bd..46358a3 100644
->> --- a/arch/arm64/kernel/entry.S
->> +++ b/arch/arm64/kernel/entry.S
->> @@ -435,6 +435,20 @@ tsk	.req	x28		// current thread_info
->>  	irq_stack_exit
->>  	.endm
->>
->> +#ifdef CONFIG_ARM64_PSEUDO_NMI
->> +	/*
->> +	 * Set res to 0 if irqs were masked in interrupted context.
-> 
-> Is that comment right? This macro seems to return 0 if PMR is equal to
-> GIC_PRIO_IRQON, meaning that irqs are unmasked...
-
-You're right, the comment is wrong. At least the references to the macro
-seem to be doing the right thing and interpreting 0 as "irqs were
-unmasked" :) .
-
-> 
->> +	 * Otherwise set res to non-0 value.
->> +	 */
->> +	.macro	test_irqs_unmasked res:req, pmr:req
->> +alternative_if ARM64_HAS_IRQ_PRIO_MASKING
->> +	sub	\res, \pmr, #GIC_PRIO_IRQON
->> +alternative_else
->> +	mov	\res, xzr
->> +alternative_endif
->> +	.endm
->> +#endif
->> +
->>  	.text
->>
->>  /*
->> @@ -631,19 +645,19 @@ ENDPROC(el1_sync)
->>  el1_irq:
->>  	kernel_entry 1
->>  	enable_da_f
->> -#ifdef CONFIG_TRACE_IRQFLAGS
->> +
->>  #ifdef CONFIG_ARM64_PSEUDO_NMI
->>  alternative_if ARM64_HAS_IRQ_PRIO_MASKING
->>  	ldr	x20, [sp, #S_PMR_SAVE]
->> -alternative_else
->> -	mov	x20, #GIC_PRIO_IRQON
->> -alternative_endif
->> -	cmp	x20, #GIC_PRIO_IRQOFF
->> -	/* Irqs were disabled, don't trace */
->> -	b.ls	1f
->> +alternative_else_nop_endif
->> +	test_irqs_unmasked	res=x0, pmr=x20
->> +	cbz	x0, 1f
->> +	bl	asm_nmi_enter
->> +1:
->>  #endif
->> +
->> +#ifdef CONFIG_TRACE_IRQFLAGS
->>  	bl	trace_hardirqs_off
->> -1:
->>  #endif
->>
->>  	irq_handler
->> @@ -662,14 +676,22 @@ alternative_else_nop_endif
->>  	bl	preempt_schedule_irq		// irq en/disable is done inside
->>  1:
->>  #endif
->> -#ifdef CONFIG_TRACE_IRQFLAGS
->> +
->>  #ifdef CONFIG_ARM64_PSEUDO_NMI
->>  	/*
->>  	 * if IRQs were disabled when we received the interrupt, we have an NMI
->>  	 * and we are not re-enabling interrupt upon eret. Skip tracing.
->>  	 */
->> -	cmp	x20, #GIC_PRIO_IRQOFF
->> -	b.ls	1f
->> +	test_irqs_unmasked	res=x0, pmr=x20
->> +	cbz	x0, 1f
->> +	bl	asm_nmi_exit
->> +1:
->> +#endif
->> +
->> +#ifdef CONFIG_TRACE_IRQFLAGS
->> +#ifdef CONFIG_ARM64_PSEUDO_NMI
->> +	test_irqs_unmasked	res=x0, pmr=x20
->> +	cbnz	x0, 1f
->>  #endif
->>  	bl	trace_hardirqs_on
->>  1:
->> diff --git a/arch/arm64/kernel/irq.c b/arch/arm64/kernel/irq.c
->> index 92fa817..fdd9cb2 100644
->> --- a/arch/arm64/kernel/irq.c
->> +++ b/arch/arm64/kernel/irq.c
->> @@ -27,8 +27,10 @@
->>  #include <linux/smp.h>
->>  #include <linux/init.h>
->>  #include <linux/irqchip.h>
->> +#include <linux/kprobes.h>
->>  #include <linux/seq_file.h>
->>  #include <linux/vmalloc.h>
->> +#include <asm/daifflags.h>
->>  #include <asm/vmap_stack.h>
->>
->>  unsigned long irq_err_count;
->> @@ -76,3 +78,18 @@ void __init init_IRQ(void)
->>  	if (!handle_arch_irq)
->>  		panic("No interrupt controller found.");
->>  }
->> +
->> +/*
->> + * Stubs to make nmi_enter/exit() code callable from ASM
->> + */
->> +asmlinkage void notrace asm_nmi_enter(void)
->> +{
->> +	nmi_enter();
->> +}
->> +NOKPROBE_SYMBOL(asm_nmi_enter);
->> +
->> +asmlinkage void notrace asm_nmi_exit(void)
->> +{
->> +	nmi_exit();
->> +}
->> +NOKPROBE_SYMBOL(asm_nmi_exit);
->> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
->> index f44cd89..0bf0fc4 100644
->> --- a/drivers/irqchip/irq-gic-v3.c
->> +++ b/drivers/irqchip/irq-gic-v3.c
->> @@ -495,7 +495,13 @@ static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs
->>
->>  	if (gic_supports_nmi() &&
->>  	    unlikely(gic_read_rpr() == GICD_INT_NMI_PRI)) {
->> +		if (interrupts_enabled(regs))
->> +			nmi_enter();
->> +
->>  		gic_handle_nmi(irqnr, regs);
->> +
->> +		if (interrupts_enabled(regs))
->> +			nmi_exit();
-> 
-> Just to be on the safe side, I'd rather sample interrupts_enabled(regs)
-> and use the same value to decide whether to do nmi_exit or not.
-> 
-
-Fair enough.
-
-In case there are no other issues, can this (and the comment) be amended
-or shall respin the series? (If there are other isues raised I'll just
-respin).
-
-Thanks,
-
--- 
-Julien Thierry
