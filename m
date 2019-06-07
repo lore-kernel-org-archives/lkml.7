@@ -2,291 +2,300 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DCDC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2BAC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90422083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:17:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="gNR7vqbv"
+	by mail.kernel.org (Postfix) with ESMTP id DA71E21479
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfFGOR0 (ORCPT
+        id S1729213AbfFGORg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:17:26 -0400
-Received: from mail-eopbgr20074.outbound.protection.outlook.com ([40.107.2.74]:34670
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728442AbfFGOR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:17:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YFGA95qFYxtMHxgk6toGn0vo5C+hJt7URww77XFWL9c=;
- b=gNR7vqbv2iyFfJuyKPBRwx9UuQw9xeJXaQiLvBIW5OKxPfSzAj8h2nA+Yfd67c9dLBdXXTc1UEcnR20hlYaOiQQPK0k+54NDz2l15ULRotGzAgiL8pXnHqAWR47JUxXJo1YnjgdgMEnVXXIzgeH3LveV8mXMERCMkhneu2fQWEQ=
-Received: from AM6PR08MB4104.eurprd08.prod.outlook.com (20.179.2.31) by
- AM6PR08MB4358.eurprd08.prod.outlook.com (20.179.6.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Fri, 7 Jun 2019 14:17:20 +0000
-Received: from AM6PR08MB4104.eurprd08.prod.outlook.com
- ([fe80::2dd7:c53e:ed14:2be4]) by AM6PR08MB4104.eurprd08.prod.outlook.com
- ([fe80::2dd7:c53e:ed14:2be4%7]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
- 14:17:20 +0000
-From:   Brian Starkey <Brian.Starkey@arm.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-CC:     Liviu Dudau <Liviu.Dudau@arm.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH 2/2] drm/vkms: Add support for writeback
-Thread-Topic: [PATCH 2/2] drm/vkms: Add support for writeback
-Thread-Index: AQHVHLjw9b7acSIAk0ig6PJNyFSEZqaQPfyA
-Date:   Fri, 7 Jun 2019 14:17:20 +0000
-Message-ID: <20190607141719.3ruo3vudqyc32wey@DESKTOP-E1NTVVP.localdomain>
-References: <cover.1559860606.git.rodrigosiqueiramelo@gmail.com>
- <0acd74232d988970668298be0111c485bc68ec87.1559860606.git.rodrigosiqueiramelo@gmail.com>
-In-Reply-To: <0acd74232d988970668298be0111c485bc68ec87.1559860606.git.rodrigosiqueiramelo@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: NeoMutt/20180716-849-147d51-dirty
-x-originating-ip: [217.140.106.53]
-x-clientproxiedby: LNXP123CA0006.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::18) To AM6PR08MB4104.eurprd08.prod.outlook.com
- (2603:10a6:20b:a9::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Brian.Starkey@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 42788f0f-5d44-459f-d0c5-08d6eb52da07
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR08MB4358;
-x-ms-traffictypediagnostic: AM6PR08MB4358:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <AM6PR08MB4358EC46CD4FAE14039AC0CEF0100@AM6PR08MB4358.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0061C35778
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(366004)(39860400002)(346002)(376002)(189003)(199004)(52116002)(30864003)(1411001)(14454004)(229853002)(305945005)(76176011)(99286004)(58126008)(6246003)(7736002)(4326008)(102836004)(53936002)(54906003)(86362001)(6486002)(6436002)(81156014)(316002)(81166006)(8936002)(72206003)(1076003)(478600001)(73956011)(6916009)(66446008)(64756008)(66556008)(66476007)(66946007)(68736007)(386003)(6116002)(8676002)(3846002)(6506007)(44832011)(66066001)(26005)(476003)(11346002)(446003)(486006)(25786009)(186003)(14444005)(71190400001)(2906002)(256004)(5660300002)(5024004)(9686003)(6512007)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR08MB4358;H:AM6PR08MB4104.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: eV/jibS0MmVCtQavbEk4LNuurY0QQ2bCq3896kKnVKvOPiuDUbnT9nYwifqdyahFCS1UHQUTnTXCSnuk81OXvCKUbPLajTXQQ/loMUb5lvmiFZ9ipgraOOk8JhDNjlBve+kO9x3jD828iOQmj7Z3L7nspDzkylH+Ju2BRKnfG0HDzz1KZiqJ9kyeIGNrQjMfNpOLZkiN8QJwWId39h/qhgSrAUUv0YhQVxaooXvaLZcsA9WVEqQpfdo64ccn9TbMxGsKeb0t88ZpvzXqMWzDqzML1ebvU/YsPKVwCi2t1JSGftLFQ/RMmSmKN1ROKN2rCZATCf7CkvkWBLn15mgRCqObhVxHXJlLe9vhMEF0Ob3MMw3JrmkaaWdczjNI3H1gs2G1zLECKzknGlyMFybq2jB1rAsAKhB2EwwCtM7IDlM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BA66A9C4DBA3FD41934B26035485F673@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 7 Jun 2019 10:17:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58852 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728257AbfFGORf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:17:35 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E9C7E22389B;
+        Fri,  7 Jun 2019 14:17:24 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC12578566;
+        Fri,  7 Jun 2019 14:17:15 +0000 (UTC)
+Subject: [RFC][PATCH 00/13] Mount, FS,
+ Block and Keyrings notifications [ver #4]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-usb@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dhowells@redhat.com, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 07 Jun 2019 15:17:10 +0100
+Message-ID: <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 42788f0f-5d44-459f-d0c5-08d6eb52da07
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 14:17:20.0772
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Brian.Starkey@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4358
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 07 Jun 2019 14:17:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9kcmlnbywNCg0KT24gVGh1LCBKdW4gMDYsIDIwMTkgYXQgMDc6NDE6MDFQTSAtMDMwMCwg
-Um9kcmlnbyBTaXF1ZWlyYSB3cm90ZToNCj4gVGhpcyBwYXRjaCBpbXBsZW1lbnRzIHRoZSBuZWNl
-c3NhcnkgZnVuY3Rpb25zIHRvIGFkZCB3cml0ZWJhY2sgc3VwcG9ydA0KPiBmb3Igdmttcy4gVGhp
-cyBmZWF0dXJlIGlzIHVzZWZ1bCBmb3IgdGVzdGluZyBjb21wb3NpdG9ycyBpZiB5b3UgZG9u4oCZ
-dA0KPiBoYXZlIGhhcmR3YXJlIHdpdGggd3JpdGViYWNrIHN1cHBvcnQuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBSb2RyaWdvIFNpcXVlaXJhIDxyb2RyaWdvc2lxdWVpcmFtZWxvQGdtYWlsLmNvbT4N
-Cj4gLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vdmttcy9NYWtlZmlsZSAgICAgICAgIHwgICA5ICst
-DQo+ICBkcml2ZXJzL2dwdS9kcm0vdmttcy92a21zX2NydGMuYyAgICAgIHwgICA1ICsNCj4gIGRy
-aXZlcnMvZ3B1L2RybS92a21zL3ZrbXNfZHJ2LmMgICAgICAgfCAgMTAgKysNCj4gIGRyaXZlcnMv
-Z3B1L2RybS92a21zL3ZrbXNfZHJ2LmggICAgICAgfCAgMTIgKysNCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS92a21zL3ZrbXNfb3V0cHV0LmMgICAgfCAgIDYgKw0KPiAgZHJpdmVycy9ncHUvZHJtL3ZrbXMv
-dmttc193cml0ZWJhY2suYyB8IDE2NSArKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgNiBm
-aWxlcyBjaGFuZ2VkLCAyMDYgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS92a21zL3ZrbXNfd3JpdGViYWNrLmMNCj4gDQo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmttcy9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1
-L2RybS92a21zL01ha2VmaWxlDQo+IGluZGV4IDg5ZjA5YmVjN2IyMy4uOTBlYjdhY2Q2MThkIDEw
-MDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdmttcy9NYWtlZmlsZQ0KPiArKysgYi9kcml2
-ZXJzL2dwdS9kcm0vdmttcy9NYWtlZmlsZQ0KPiBAQCAtMSw0ICsxLDExIEBADQo+ICAjIFNQRFgt
-TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkNCj4gLXZrbXMteSA6PSB2a21zX2Rydi5v
-IHZrbXNfcGxhbmUubyB2a21zX291dHB1dC5vIHZrbXNfY3J0Yy5vIHZrbXNfZ2VtLm8gdmttc19j
-cmMubw0KPiArdmttcy15IDo9IFwNCj4gKwl2a21zX2Rydi5vIFwNCj4gKwl2a21zX3BsYW5lLm8g
-XA0KPiArCXZrbXNfb3V0cHV0Lm8gXA0KPiArCXZrbXNfY3J0Yy5vIFwNCj4gKwl2a21zX2dlbS5v
-IFwNCj4gKwl2a21zX2NyYy5vIFwNCj4gKwl2a21zX3dyaXRlYmFjay5vDQo+ICANCj4gIG9iai0k
-KENPTkZJR19EUk1fVktNUykgKz0gdmttcy5vDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vdmttcy92a21zX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS92a21zL3ZrbXNfY3J0Yy5jDQo+
-IGluZGV4IDFiYmUwOTliN2RiOC4uY2U3OTdlMjY1YjFiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vdmttcy92a21zX2NydGMuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdmttcy92
-a21zX2NydGMuYw0KPiBAQCAtMjMsNiArMjMsMTEgQEAgc3RhdGljIGVudW0gaHJ0aW1lcl9yZXN0
-YXJ0IHZrbXNfdmJsYW5rX3NpbXVsYXRlKHN0cnVjdCBocnRpbWVyICp0aW1lcikNCj4gIAlpZiAo
-IXJldCkNCj4gIAkJRFJNX0VSUk9SKCJ2a21zIGZhaWx1cmUgb24gaGFuZGxpbmcgdmJsYW5rIik7
-DQo+ICANCj4gKwlpZiAob3V0cHV0LT53cml0ZWJhY2tfc3RhdHVzID09IFdCX1NUQVJUKSB7DQo+
-ICsJCWRybV93cml0ZWJhY2tfc2lnbmFsX2NvbXBsZXRpb24oJm91dHB1dC0+d2JfY29ubmVjdG9y
-LCAwKTsNCj4gKwkJb3V0cHV0LT53cml0ZWJhY2tfc3RhdHVzID0gV0JfU1RPUDsNCj4gKwl9DQo+
-ICsNCj4gIAlpZiAoc3RhdGUgJiYgb3V0cHV0LT5jcmNfZW5hYmxlZCkgew0KPiAgCQl1NjQgZnJh
-bWUgPSBkcm1fY3J0Y19hY2N1cmF0ZV92YmxhbmtfY291bnQoY3J0Yyk7DQo+ICANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS92a21zL3ZrbXNfZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0v
-dmttcy92a21zX2Rydi5jDQo+IGluZGV4IDkyMjk2YmQ4ZjYyMy4uZDU5MTdkNWE0NWUzIDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdmttcy92a21zX2Rydi5jDQo+ICsrKyBiL2RyaXZl
-cnMvZ3B1L2RybS92a21zL3ZrbXNfZHJ2LmMNCj4gQEAgLTI5LDYgKzI5LDEwIEBAIGJvb2wgZW5h
-YmxlX2N1cnNvcjsNCj4gIG1vZHVsZV9wYXJhbV9uYW1lZChlbmFibGVfY3Vyc29yLCBlbmFibGVf
-Y3Vyc29yLCBib29sLCAwNDQ0KTsNCj4gIE1PRFVMRV9QQVJNX0RFU0MoZW5hYmxlX2N1cnNvciwg
-IkVuYWJsZS9EaXNhYmxlIGN1cnNvciBzdXBwb3J0Iik7DQo+ICANCj4gK2ludCBlbmFibGVfd3Jp
-dGViYWNrOw0KPiArbW9kdWxlX3BhcmFtX25hbWVkKGVuYWJsZV93cml0ZWJhY2ssIGVuYWJsZV93
-cml0ZWJhY2ssIGludCwgMDQ0NCk7DQo+ICtNT0RVTEVfUEFSTV9ERVNDKGVuYWJsZV93cml0ZWJh
-Y2ssICJFbmFibGUvRGlzYWJsZSB3cml0ZWJhY2sgY29ubmVjdG9yIik7DQo+ICsNCj4gIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgZmlsZV9vcGVyYXRpb25zIHZrbXNfZHJpdmVyX2ZvcHMgPSB7DQo+ICAJ
-Lm93bmVyCQk9IFRISVNfTU9EVUxFLA0KPiAgCS5vcGVuCQk9IGRybV9vcGVuLA0KPiBAQCAtMTIz
-LDYgKzEyNywxMiBAQCBzdGF0aWMgaW50IF9faW5pdCB2a21zX2luaXQodm9pZCkNCj4gIAkJZ290
-byBvdXRfZmluaTsNCj4gIAl9DQo+ICANCj4gKwl2a21zX2RldmljZS0+b3V0cHV0LndyaXRlYmFj
-a19zdGF0dXMgPSBXQl9ESVNBQkxFRDsNCj4gKwlpZiAoZW5hYmxlX3dyaXRlYmFjaykgew0KPiAr
-CQl2a21zX2RldmljZS0+b3V0cHV0LndyaXRlYmFja19zdGF0dXMgPSBXQl9TVE9QOw0KPiArCQlE
-Uk1fSU5GTygiV3JpdGViYWNrIGNvbm5lY3RvciBlbmFibGVkIik7DQo+ICsJfQ0KPiArDQo+ICAJ
-cmV0ID0gdmttc19tb2Rlc2V0X2luaXQodmttc19kZXZpY2UpOw0KPiAgCWlmIChyZXQpDQo+ICAJ
-CWdvdG8gb3V0X2Zpbmk7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmttcy92a21z
-X2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL3ZrbXMvdmttc19kcnYuaA0KPiBpbmRleCBlODEwNzNk
-ZWExNTQuLmNhMWY5ZWU2M2VjOCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3ZrbXMv
-dmttc19kcnYuaA0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdmttcy92a21zX2Rydi5oDQo+IEBA
-IC03LDYgKzcsNyBAQA0KPiAgI2luY2x1ZGUgPGRybS9kcm0uaD4NCj4gICNpbmNsdWRlIDxkcm0v
-ZHJtX2dlbS5oPg0KPiAgI2luY2x1ZGUgPGRybS9kcm1fZW5jb2Rlci5oPg0KPiArI2luY2x1ZGUg
-PGRybS9kcm1fd3JpdGViYWNrLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvaHJ0aW1lci5oPg0KPiAg
-DQo+ICAjZGVmaW5lIFhSRVNfTUlOICAgIDIwDQo+IEBAIC02MCwxNCArNjEsMjIgQEAgc3RydWN0
-IHZrbXNfY3J0Y19zdGF0ZSB7DQo+ICAJdTY0IGZyYW1lX2VuZDsNCj4gIH07DQo+ICANCj4gK2Vu
-dW0gd2Jfc3RhdHVzIHsNCj4gKwlXQl9ESVNBQkxFRCwNCj4gKwlXQl9TVEFSVCwNCj4gKwlXQl9T
-VE9QLA0KPiArfTsNCj4gKw0KPiAgc3RydWN0IHZrbXNfb3V0cHV0IHsNCj4gIAlzdHJ1Y3QgZHJt
-X2NydGMgY3J0YzsNCj4gIAlzdHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2RlcjsNCj4gIAlzdHJ1Y3Qg
-ZHJtX2Nvbm5lY3RvciBjb25uZWN0b3I7DQo+ICsJc3RydWN0IGRybV93cml0ZWJhY2tfY29ubmVj
-dG9yIHdiX2Nvbm5lY3RvcjsNCj4gIAlzdHJ1Y3QgaHJ0aW1lciB2YmxhbmtfaHJ0aW1lcjsNCj4g
-IAlrdGltZV90IHBlcmlvZF9uczsNCj4gIAlzdHJ1Y3QgZHJtX3BlbmRpbmdfdmJsYW5rX2V2ZW50
-ICpldmVudDsNCj4gIAlib29sIGNyY19lbmFibGVkOw0KPiArCWVudW0gd2Jfc3RhdHVzIHdyaXRl
-YmFja19zdGF0dXM7DQo+ICAJLyogb3JkZXJlZCB3cSBmb3IgY3JjX3dvcmsgKi8NCj4gIAlzdHJ1
-Y3Qgd29ya3F1ZXVlX3N0cnVjdCAqY3JjX3dvcmtxOw0KPiAgCS8qIHByb3RlY3RzIGNvbmN1cnJl
-bnQgYWNjZXNzIHRvIGNyY19kYXRhICovDQo+IEBAIC0xNDEsNCArMTUwLDcgQEAgaW50IHZrbXNf
-dmVyaWZ5X2NyY19zb3VyY2Uoc3RydWN0IGRybV9jcnRjICpjcnRjLCBjb25zdCBjaGFyICpzb3Vy
-Y2VfbmFtZSwNCj4gIAkJCSAgIHNpemVfdCAqdmFsdWVzX2NudCk7DQo+ICB2b2lkIHZrbXNfY3Jj
-X3dvcmtfaGFuZGxlKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yayk7DQo+ICANCj4gKy8qIFdyaXRl
-YmFjayAqLw0KPiAraW50IGVuYWJsZV93cml0ZWJhY2tfY29ubmVjdG9yKHN0cnVjdCB2a21zX2Rl
-dmljZSAqdmttc2Rldik7DQo+ICsNCj4gICNlbmRpZiAvKiBfVktNU19EUlZfSF8gKi8NCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS92a21zL3ZrbXNfb3V0cHV0LmMgYi9kcml2ZXJzL2dw
-dS9kcm0vdmttcy92a21zX291dHB1dC5jDQo+IGluZGV4IDE0NDJiNDQ3YzcwNy4uMWZjMWQ0ZTk1
-ODVjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdmttcy92a21zX291dHB1dC5jDQo+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS92a21zL3ZrbXNfb3V0cHV0LmMNCj4gQEAgLTkxLDYgKzkx
-LDEyIEBAIGludCB2a21zX291dHB1dF9pbml0KHN0cnVjdCB2a21zX2RldmljZSAqdmttc2Rldiwg
-aW50IGluZGV4KQ0KPiAgCQlnb3RvIGVycl9hdHRhY2g7DQo+ICAJfQ0KPiAgDQo+ICsJaWYgKHZr
-bXNkZXYtPm91dHB1dC53cml0ZWJhY2tfc3RhdHVzICE9IFdCX0RJU0FCTEVEKSB7DQo+ICsJCXJl
-dCA9IGVuYWJsZV93cml0ZWJhY2tfY29ubmVjdG9yKHZrbXNkZXYpOw0KPiArCQlpZiAocmV0KQ0K
-PiArCQkJRFJNX0VSUk9SKCJGYWlsZWQgdG8gaW5pdCB3cml0ZWJhY2sgY29ubmVjdG9yXG4iKTsN
-Cj4gKwl9DQo+ICsNCj4gIAlkcm1fbW9kZV9jb25maWdfcmVzZXQoZGV2KTsNCj4gIA0KPiAgCXJl
-dHVybiAwOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3ZrbXMvdmttc193cml0ZWJh
-Y2suYyBiL2RyaXZlcnMvZ3B1L2RybS92a21zL3ZrbXNfd3JpdGViYWNrLmMNCj4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi5mN2I5NjJhZTU2NDYNCj4gLS0tIC9k
-ZXYvbnVsbA0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdmttcy92a21zX3dyaXRlYmFjay5jDQo+
-IEBAIC0wLDAgKzEsMTY1IEBADQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
-MCsNCj4gKw0KPiArI2luY2x1ZGUgInZrbXNfZHJ2LmgiDQo+ICsjaW5jbHVkZSA8ZHJtL2RybV93
-cml0ZWJhY2suaD4NCj4gKyNpbmNsdWRlIDxkcm0vZHJtX3Byb2JlX2hlbHBlci5oPg0KPiArI2lu
-Y2x1ZGUgPGRybS9kcm1fYXRvbWljX2hlbHBlci5oPg0KPiArI2luY2x1ZGUgPGRybS9kcm1fZ2Vt
-X2ZyYW1lYnVmZmVyX2hlbHBlci5oPg0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9j
-b25uZWN0b3JfZnVuY3Mgdmttc193Yl9jb25uZWN0b3JfZnVuY3MgPSB7DQo+ICsJLmZpbGxfbW9k
-ZXMgPSBkcm1faGVscGVyX3Byb2JlX3NpbmdsZV9jb25uZWN0b3JfbW9kZXMsDQo+ICsJLmRlc3Ry
-b3kgPSBkcm1fY29ubmVjdG9yX2NsZWFudXAsDQo+ICsJLnJlc2V0ID0gZHJtX2F0b21pY19oZWxw
-ZXJfY29ubmVjdG9yX3Jlc2V0LA0KPiArCS5hdG9taWNfZHVwbGljYXRlX3N0YXRlID0gZHJtX2F0
-b21pY19oZWxwZXJfY29ubmVjdG9yX2R1cGxpY2F0ZV9zdGF0ZSwNCj4gKwkuYXRvbWljX2Rlc3Ry
-b3lfc3RhdGUgPSBkcm1fYXRvbWljX2hlbHBlcl9jb25uZWN0b3JfZGVzdHJveV9zdGF0ZSwNCj4g
-K307DQo+ICsNCj4gK3N0YXRpYyBpbnQgdmttc193Yl9lbmNvZGVyX2F0b21pY19jaGVjayhzdHJ1
-Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIsDQo+ICsJCQkJCXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAq
-Y3J0Y19zdGF0ZSwNCj4gKwkJCQkJc3RydWN0IGRybV9jb25uZWN0b3Jfc3RhdGUgKmNvbm5fc3Rh
-dGUpDQo+ICt7DQo+ICsJc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmI7DQo+ICsJY29uc3Qgc3Ry
-dWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUgPSAmY3J0Y19zdGF0ZS0+bW9kZTsNCj4gKw0KPiAr
-CWlmICghY29ubl9zdGF0ZS0+d3JpdGViYWNrX2pvYiB8fCAhY29ubl9zdGF0ZS0+d3JpdGViYWNr
-X2pvYi0+ZmIpDQo+ICsJCXJldHVybiAwOw0KPiArDQo+ICsJZmIgPSBjb25uX3N0YXRlLT53cml0
-ZWJhY2tfam9iLT5mYjsNCj4gKwlpZiAoZmItPndpZHRoICE9IG1vZGUtPmhkaXNwbGF5IHx8IGZi
-LT5oZWlnaHQgIT0gbW9kZS0+dmRpc3BsYXkpIHsNCj4gKwkJRFJNX0RFQlVHX0tNUygiSW52YWxp
-ZCBmcmFtZWJ1ZmZlciBzaXplICV1eCV1XG4iLA0KPiArCQkJICAgICAgZmItPndpZHRoLCBmYi0+
-aGVpZ2h0KTsNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsJfQ0KPiArDQo+ICsJaWYgKGZiLT5m
-b3JtYXQtPmZvcm1hdCAhPSBEUk1fRk9STUFUX1hSR0I4ODg4KSB7DQo+ICsJCXN0cnVjdCBkcm1f
-Zm9ybWF0X25hbWVfYnVmIGZvcm1hdF9uYW1lOw0KPiArDQo+ICsJCURSTV9ERUJVR19LTVMoIklu
-dmFsaWQgcGl4ZWwgZm9ybWF0ICVzXG4iLA0KPiArCQkJICAgICAgZHJtX2dldF9mb3JtYXRfbmFt
-ZShmYi0+Zm9ybWF0LT5mb3JtYXQsDQo+ICsJCQkJCQkgICZmb3JtYXRfbmFtZSkpOw0KPiArCQly
-ZXR1cm4gLUVJTlZBTDsNCj4gKwl9DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiAr
-c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZW5jb2Rlcl9oZWxwZXJfZnVuY3Mgdmttc193Yl9lbmNv
-ZGVyX2hlbHBlcl9mdW5jcyA9IHsNCj4gKwkuYXRvbWljX2NoZWNrID0gdmttc193Yl9lbmNvZGVy
-X2F0b21pY19jaGVjaywNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBpbnQgdmttc193Yl9jb25uZWN0
-b3JfZ2V0X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IpDQo+ICt7DQo+ICsJ
-c3RydWN0IGRybV9kZXZpY2UgKmRldiA9IGNvbm5lY3Rvci0+ZGV2Ow0KPiArDQo+ICsJcmV0dXJu
-IGRybV9hZGRfbW9kZXNfbm9lZGlkKGNvbm5lY3RvciwgZGV2LT5tb2RlX2NvbmZpZy5tYXhfd2lk
-dGgsDQo+ICsJCQkJICAgIGRldi0+bW9kZV9jb25maWcubWF4X2hlaWdodCk7DQo+ICt9DQo+ICsN
-Cj4gK3N0YXRpYyBpbnQgdmttc193Yl9wcmVwYXJlX2pvYihzdHJ1Y3QgZHJtX3dyaXRlYmFja19j
-b25uZWN0b3IgKndiX2Nvbm5lY3RvciwNCj4gKwkJCSAgICAgICBzdHJ1Y3QgZHJtX3dyaXRlYmFj
-a19qb2IgKmpvYikNCj4gK3sNCj4gKwlzdHJ1Y3Qgdmttc19nZW1fb2JqZWN0ICp2a21zX29iajsN
-Cj4gKwlzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKmdlbV9vYmo7DQo+ICsJaW50IHJldDsNCj4gKw0K
-PiArCWlmICgham9iLT5mYikNCj4gKwkJcmV0dXJuIDA7DQo+ICsNCj4gKwlnZW1fb2JqID0gZHJt
-X2dlbV9mYl9nZXRfb2JqKGpvYi0+ZmIsIDApOw0KPiArCXJldCA9IHZrbXNfZ2VtX3ZtYXAoZ2Vt
-X29iaik7DQo+ICsJaWYgKHJldCkgew0KPiArCQlEUk1fRVJST1IoInZtYXAgZmFpbGVkOiAlZFxu
-IiwgcmV0KTsNCj4gKwkJcmV0dXJuIHJldDsNCj4gKwl9DQo+ICsNCj4gKwl2a21zX29iaiA9IGRy
-bV9nZW1fdG9fdmttc19nZW0oZ2VtX29iaik7DQo+ICsJam9iLT5wcml2ID0gdmttc19vYmotPnZh
-ZGRyOw0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lkIHZrbXNf
-d2JfY2xlYW51cF9qb2Ioc3RydWN0IGRybV93cml0ZWJhY2tfY29ubmVjdG9yICpjb25uZWN0b3Is
-DQo+ICsJCQkJc3RydWN0IGRybV93cml0ZWJhY2tfam9iICpqb2IpDQo+ICt7DQo+ICsJc3RydWN0
-IGRybV9nZW1fb2JqZWN0ICpnZW1fb2JqOw0KPiArDQo+ICsJaWYgKCFqb2ItPmZiKQ0KPiArCQly
-ZXR1cm47DQo+ICsNCj4gKwlnZW1fb2JqID0gZHJtX2dlbV9mYl9nZXRfb2JqKGpvYi0+ZmIsIDAp
-Ow0KPiArCXZrbXNfZ2VtX3Z1bm1hcChnZW1fb2JqKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIHZv
-aWQgdmttc193Yl9hdG9taWNfY29tbWl0KHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uLA0KPiAr
-CQkJCSAgc3RydWN0IGRybV9jb25uZWN0b3Jfc3RhdGUgKnN0YXRlKQ0KPiArew0KPiArCXN0cnVj
-dCB2a21zX2RldmljZSAqdmttc2RldiA9IGRybV9kZXZpY2VfdG9fdmttc19kZXZpY2UoY29ubi0+
-ZGV2KTsNCj4gKwlzdHJ1Y3Qgdmttc19vdXRwdXQgKm91dHB1dCA9ICZ2a21zZGV2LT5vdXRwdXQ7
-DQo+ICsJc3RydWN0IGRybV93cml0ZWJhY2tfY29ubmVjdG9yICp3Yl9jb25uID0gJm91dHB1dC0+
-d2JfY29ubmVjdG9yOw0KPiArCXN0cnVjdCBkcm1fY29ubmVjdG9yX3N0YXRlICpjb25uX3N0YXRl
-ID0gd2JfY29ubi0+YmFzZS5zdGF0ZTsNCj4gKwl2b2lkICpwcml2X2RhdGEgPSBjb25uX3N0YXRl
-LT53cml0ZWJhY2tfam9iLT5wcml2Ow0KPiArCXN0cnVjdCB2a21zX2NyY19kYXRhICpwcmltYXJ5
-X2RhdGEgPSBOVUxMOw0KPiArCXN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiID0gTlVMTDsNCj4g
-KwlzdHJ1Y3Qgdmttc19nZW1fb2JqZWN0ICp2a21zX29iajsNCj4gKwlzdHJ1Y3QgZHJtX2dlbV9v
-YmplY3QgKmdlbV9vYmo7DQo+ICsJc3RydWN0IGRybV9wbGFuZSAqcGxhbmU7DQo+ICsNCj4gKwlp
-ZiAoIWNvbm5fc3RhdGUpDQo+ICsJCXJldHVybjsNCj4gKw0KPiArCWlmICghY29ubl9zdGF0ZS0+
-d3JpdGViYWNrX2pvYiB8fCAhY29ubl9zdGF0ZS0+d3JpdGViYWNrX2pvYi0+ZmIpIHsNCj4gKwkJ
-b3V0cHV0LT53cml0ZWJhY2tfc3RhdHVzID0gV0JfU1RPUDsNCj4gKwkJRFJNX0RFQlVHX0RSSVZF
-UigiRGlzYWJsZSB3cml0ZWJhY2tcbiIpOw0KPiArCQlyZXR1cm47DQo+ICsJfQ0KPiArDQo+ICsJ
-ZHJtX2Zvcl9lYWNoX3BsYW5lKHBsYW5lLCAmdmttc2Rldi0+ZHJtKSB7DQo+ICsJCXN0cnVjdCB2
-a21zX3BsYW5lX3N0YXRlICp2cGxhbmVfc3RhdGU7DQo+ICsJCXN0cnVjdCB2a21zX2NyY19kYXRh
-ICpwbGFuZV9kYXRhOw0KPiArDQo+ICsJCXZwbGFuZV9zdGF0ZSA9IHRvX3ZrbXNfcGxhbmVfc3Rh
-dGUocGxhbmUtPnN0YXRlKTsNCj4gKwkJcGxhbmVfZGF0YSA9IHZwbGFuZV9zdGF0ZS0+Y3JjX2Rh
-dGE7DQo+ICsNCj4gKwkJaWYgKGRybV9mcmFtZWJ1ZmZlcl9yZWFkX3JlZmNvdW50KCZwbGFuZV9k
-YXRhLT5mYikgPT0gMCkNCj4gKwkJCWNvbnRpbnVlOw0KDQpJdCdzIG5vdCByZWFsbHkgc3BlY2lm
-aWMgdG8gdGhpcyBwYXRjaCwgYnV0IHRoaXMgbG9va3Mga2luZGENCndlaXJkIHRvIG1lLiBZb3Un
-dmUgZ290IGEgY29weSBvZiB0aGUgZmIgc3RydWN0IGluIHBsYW5lX2RhdGE/DQoNCkl0IHNlZW1z
-IGxpa2UgdGhhdCB3b3VsZCBicmVhayBhIGJ1bmNoIG9mIHJlZmNvdW50aW5nIGlmIG5vdGhpbmcg
-ZWxzZS4NCg0KQ2FuJ3QgeW91IHVzZSBwbGFuZS0+c3RhdGUtPmZiIGRpcmVjdGx5LCBhbmQganVz
-dCBjaGVjayBpZiBpdCdzIE5VTEw/DQoNCj4gKw0KPiArCQlpZiAocGxhbmUtPnR5cGUgPT0gRFJN
-X1BMQU5FX1RZUEVfUFJJTUFSWSkNCj4gKwkJCXByaW1hcnlfZGF0YSA9IHBsYW5lX2RhdGE7DQo+
-ICsJfQ0KPiArDQo+ICsJaWYgKCFwcmltYXJ5X2RhdGEpDQo+ICsJCXJldHVybjsNCj4gKw0KPiAr
-CWZiID0gJnByaW1hcnlfZGF0YS0+ZmI7DQo+ICsJZ2VtX29iaiA9IGRybV9nZW1fZmJfZ2V0X29i
-aihmYiwgMCk7DQo+ICsJdmttc19vYmogPSBkcm1fZ2VtX3RvX3ZrbXNfZ2VtKGdlbV9vYmopOw0K
-PiArDQo+ICsJaWYgKCF2a21zX29iai0+dmFkZHIgfHwgIXByaXZfZGF0YSkNCj4gKwkJcmV0dXJu
-Ow0KPiArDQo+ICsJbWVtY3B5KHByaXZfZGF0YSwgdmttc19vYmotPnZhZGRyLCB2a21zX29iai0+
-Z2VtLnNpemUpOw0KPiArCWRybV93cml0ZWJhY2tfcXVldWVfam9iKHdiX2Nvbm4sIHN0YXRlKTsN
-Cj4gKwlvdXRwdXQtPndyaXRlYmFja19zdGF0dXMgPSBXQl9TVEFSVDsNCg0KWW91IHByb2JhYmx5
-IGRvbid0IG5lZWQgdGhlIGRlZmVycmVkIGNvbXBsZXRpb24gc2lnbmFsaW5nLiBJJ2QgZXhwZWN0
-DQp0aGlzIHRvIHdvcmsgT0sgKGFuZCBpdCBtYXRjaGVzIHRoZSBBUEkgc2VtYW50aWNzKToNCg0K
-ICBkcm1fd3JpdGViYWNrX3F1ZXVlX2pvYih3Yl9jb25uLCBzdGF0ZSk7DQogIG1lbWNweShwcml2
-X2RhdGEsIHZrbXNfb2JqLT52YWRkciwgdmttc19vYmotPmdlbS5zaXplKTsNCiAgZHJtX3dyaXRl
-YmFja19zaWduYWxfY29tcGxldGlvbih3Yl9jb25uLCAwKTsNCg0KDQpDaGVlcnMsDQotQnJpYW4N
-Cg0KPiArfQ0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9jb25uZWN0b3JfaGVscGVy
-X2Z1bmNzIHZrbXNfd2JfY29ubl9oZWxwZXJfZnVuY3MgPSB7DQo+ICsJLmdldF9tb2RlcyA9IHZr
-bXNfd2JfY29ubmVjdG9yX2dldF9tb2RlcywNCj4gKwkucHJlcGFyZV93cml0ZWJhY2tfam9iID0g
-dmttc193Yl9wcmVwYXJlX2pvYiwNCj4gKwkuY2xlYW51cF93cml0ZWJhY2tfam9iID0gdmttc193
-Yl9jbGVhbnVwX2pvYiwNCj4gKwkuYXRvbWljX2NvbW1pdCA9IHZrbXNfd2JfYXRvbWljX2NvbW1p
-dCwNCj4gK307DQo+ICsNCj4gK2ludCBlbmFibGVfd3JpdGViYWNrX2Nvbm5lY3RvcihzdHJ1Y3Qg
-dmttc19kZXZpY2UgKnZrbXNkZXYpDQo+ICt7DQo+ICsJc3RydWN0IGRybV93cml0ZWJhY2tfY29u
-bmVjdG9yICp3YiA9ICZ2a21zZGV2LT5vdXRwdXQud2JfY29ubmVjdG9yOw0KPiArDQo+ICsJdmtt
-c2Rldi0+b3V0cHV0LndiX2Nvbm5lY3Rvci5lbmNvZGVyLnBvc3NpYmxlX2NydGNzID0gMTsNCj4g
-Kwlkcm1fY29ubmVjdG9yX2hlbHBlcl9hZGQoJndiLT5iYXNlLCAmdmttc193Yl9jb25uX2hlbHBl
-cl9mdW5jcyk7DQo+ICsNCj4gKwlyZXR1cm4gZHJtX3dyaXRlYmFja19jb25uZWN0b3JfaW5pdCgm
-dmttc2Rldi0+ZHJtLCB3YiwNCj4gKwkJCQkJICAgICZ2a21zX3diX2Nvbm5lY3Rvcl9mdW5jcywN
-Cj4gKwkJCQkJICAgICZ2a21zX3diX2VuY29kZXJfaGVscGVyX2Z1bmNzLA0KPiArCQkJCQkgICAg
-dmttc19mb3JtYXRzLA0KPiArCQkJCQkgICAgQVJSQVlfU0laRSh2a21zX2Zvcm1hdHMpKTsNCj4g
-K30NCj4gKw0KPiAtLSANCj4gMi4yMS4wDQoNCg0K
+
+Hi Al,
+
+Here's a set of patches to add a general variable-length notification queue
+concept and to add sources of events for:
+
+ (1) Mount topology events, such as mounting, unmounting, mount expiry,
+     mount reconfiguration.
+
+ (2) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
+     errors (not complete yet).
+
+ (3) Key/keyring events, such as creating, linking and removal of keys.
+
+ (4) General device events (single common queue) including:
+
+     - Block layer events, such as device errors
+
+     - USB subsystem events, such as device/bus attach/remove, device
+       reset, device errors.
+
+One of the reasons for this is so that we can remove the issue of processes
+having to repeatedly and regularly scan /proc/mounts, which has proven to
+be a system performance problem.  To further aid this, the fsinfo() syscall
+on which this patch series depends, provides a way to access superblock and
+mount information in binary form without the need to parse /proc/mounts.
+
+
+LSM support is included, but controversial:
+
+ (1) The creds of the process that did the fput() that reduced the refcount
+     to zero are cached in the file struct.
+
+ (2) __fput() overrides the current creds with the creds from (1) whilst
+     doing the cleanup, thereby making sure that the creds seen by the
+     destruction notification generated by mntput() appears to come from
+     the last fputter.
+
+ (3) security_post_notification() is called for each queue that we might
+     want to post a notification into, thereby allowing the LSM to prevent
+     covert communications.
+
+ (?) Do I need to add security_set_watch(), say, to rule on whether a watch
+     may be set in the first place?  I might need to add a variant per
+     watch-type.
+
+ (?) Do I really need to keep track of the process creds in which an
+     implicit object destruction happened?  For example, imagine you create
+     an fd with fsopen()/fsmount().  It is marked to dissolve the mount it
+     refers to on close unless move_mount() clears that flag.  Now, imagine
+     someone looking at that fd through procfs at the same time as you exit
+     due to an error.  The LSM sees the destruction notification come from
+     the looker if they happen to do their fput() after yours.
+
+
+Design decisions:
+
+ (1) A misc chardev is used to create and open a ring buffer:
+
+	fd = open("/dev/watch_queue", O_RDWR);
+
+     which is then configured and mmap'd into userspace:
+
+	ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, BUF_SIZE);
+	ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter);
+	buf = mmap(NULL, BUF_SIZE * page_size, PROT_READ | PROT_WRITE,
+		   MAP_SHARED, fd, 0);
+
+     The fd cannot be read or written (though there is a facility to use
+     write to inject records for debugging) and userspace just pulls data
+     directly out of the buffer.
+
+ (2) The ring index pointers are stored inside the ring and are thus
+     accessible to userspace.  Userspace should only update the tail
+     pointer and never the head pointer or risk breaking the buffer.  The
+     kernel checks that the pointers appear valid before trying to use
+     them.  A 'skip' record is maintained around the pointers.
+
+ (3) poll() can be used to wait for data to appear in the buffer.
+
+ (4) Records in the buffer are binary, typed and have a length so that they
+     can be of varying size.
+
+     This means that multiple heterogeneous sources can share a common
+     buffer.  Tags may be specified when a watchpoint is created to help
+     distinguish the sources.
+
+ (5) The queue is reusable as there are 16 million types available, of
+     which I've used 4, so there is scope for others to be used.
+
+ (6) Records are filterable as types have up to 256 subtypes that can be
+     individually filtered.  Other filtration is also available.
+
+ (7) Each time the buffer is opened, a new buffer is created - this means
+     that there's no interference between watchers.
+
+ (8) When recording a notification, the kernel will not sleep, but will
+     rather mark a queue as overrun if there's insufficient space, thereby
+     avoiding userspace causing the kernel to hang.
+
+ (9) The 'watchpoint' should be specific where possible, meaning that you
+     specify the object that you want to watch.
+
+(10) The buffer is created and then watchpoints are attached to it, using
+     one of:
+
+	keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fd, 0x01);
+	mount_notify(AT_FDCWD, "/", 0, fd, 0x02);
+	sb_notify(AT_FDCWD, "/mnt", 0, fd, 0x03);
+
+     where in all three cases, fd indicates the queue and the number after
+     is a tag between 0 and 255.
+
+(11) The watch must be removed if either the watch buffer is destroyed or
+     the watched object is destroyed.
+
+
+Things I want to avoid:
+
+ (1) Introducing features that make the core VFS dependent on the network
+     stack or networking namespaces (ie. usage of netlink).
+
+ (2) Dumping all this stuff into dmesg and having a daemon that sits there
+     parsing the output and distributing it as this then puts the
+     responsibility for security into userspace and makes handling
+     namespaces tricky.  Further, dmesg might not exist or might be
+     inaccessible inside a container.
+
+ (3) Letting users see events they shouldn't be able to see.
+
+
+Further things that could be considered:
+
+ (1) Adding a keyctl call to allow a watch on a keyring to be extended to
+     "children" of that keyring, such that the watch is removed from the
+     child if it is unlinked from the keyring.
+
+ (2) Adding global superblock event queue.
+
+ (3) Propagating watches to child superblock over automounts.
+
+
+The patches can be found here also:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications
+
+Changes:
+
+ v4: Split the basic UAPI bits out into their own patch and then split the
+     LSM hooks out into an intermediate patch.  Add LSM hooks for setting
+     watches.
+
+     Rename the *_notify() system calls to watch_*() for consistency.
+
+ v3: I've added a USB notification source and reformulated the block
+     notification source so that there's now a common watch list, for which
+     the system call is now device_notify().
+
+     I've assigned a pair of unused ioctl numbers in the 'W' series to the
+     ioctls added by this series.
+
+     I've also added a description of the kernel API to the documentation.
+
+ v2: I've fixed various issues raised by Jann Horn and GregKH and moved to
+     krefs for refcounting.  I've added some security features to try and
+     give Casey Schaufler the LSM control he wants.
+
+David
+---
+David Howells (13):
+      security: Override creds in __fput() with last fputter's creds
+      uapi: General notification ring definitions
+      security: Add hooks to rule on setting a watch
+      security: Add a hook for the point of notification insertion
+      General notification queue with user mmap()'able ring buffer
+      keys: Add a notification facility
+      vfs: Add a mount-notification facility
+      vfs: Add superblock notifications
+      fsinfo: Export superblock notification counter
+      Add a general, global device notification watch list
+      block: Add block layer notifications
+      usb: Add USB subsystem notifications
+      Add sample notification program
+
+
+ Documentation/ioctl/ioctl-number.txt   |    1 
+ Documentation/security/keys/core.rst   |   58 ++
+ Documentation/watch_queue.rst          |  492 ++++++++++++++++++
+ arch/x86/entry/syscalls/syscall_32.tbl |    3 
+ arch/x86/entry/syscalls/syscall_64.tbl |    3 
+ block/Kconfig                          |    9 
+ block/blk-core.c                       |   29 +
+ drivers/base/Kconfig                   |    9 
+ drivers/base/Makefile                  |    1 
+ drivers/base/watch.c                   |   89 +++
+ drivers/misc/Kconfig                   |   13 
+ drivers/misc/Makefile                  |    1 
+ drivers/misc/watch_queue.c             |  889 ++++++++++++++++++++++++++++++++
+ drivers/usb/core/Kconfig               |   10 
+ drivers/usb/core/devio.c               |   55 ++
+ drivers/usb/core/hub.c                 |    3 
+ fs/Kconfig                             |   21 +
+ fs/Makefile                            |    1 
+ fs/file_table.c                        |   12 
+ fs/fsinfo.c                            |   12 
+ fs/mount.h                             |   33 +
+ fs/mount_notify.c                      |  187 +++++++
+ fs/namespace.c                         |    9 
+ fs/super.c                             |  122 ++++
+ include/linux/blkdev.h                 |   15 +
+ include/linux/dcache.h                 |    1 
+ include/linux/device.h                 |    7 
+ include/linux/fs.h                     |   79 +++
+ include/linux/key.h                    |    4 
+ include/linux/lsm_hooks.h              |   48 ++
+ include/linux/security.h               |   35 +
+ include/linux/syscalls.h               |    5 
+ include/linux/usb.h                    |   19 +
+ include/linux/watch_queue.h            |   87 +++
+ include/uapi/linux/fsinfo.h            |   10 
+ include/uapi/linux/keyctl.h            |    1 
+ include/uapi/linux/watch_queue.h       |  213 ++++++++
+ kernel/sys_ni.c                        |    7 
+ samples/Kconfig                        |    6 
+ samples/Makefile                       |    1 
+ samples/vfs/test-fsinfo.c              |   13 
+ samples/watch_queue/Makefile           |    9 
+ samples/watch_queue/watch_test.c       |  308 +++++++++++
+ security/keys/Kconfig                  |   10 
+ security/keys/compat.c                 |    2 
+ security/keys/gc.c                     |    5 
+ security/keys/internal.h               |   30 +
+ security/keys/key.c                    |   37 +
+ security/keys/keyctl.c                 |   95 +++
+ security/keys/keyring.c                |   17 -
+ security/keys/request_key.c            |    4 
+ security/security.c                    |   29 +
+ 52 files changed, 3121 insertions(+), 38 deletions(-)
+ create mode 100644 Documentation/watch_queue.rst
+ create mode 100644 drivers/base/watch.c
+ create mode 100644 drivers/misc/watch_queue.c
+ create mode 100644 fs/mount_notify.c
+ create mode 100644 include/linux/watch_queue.h
+ create mode 100644 include/uapi/linux/watch_queue.h
+ create mode 100644 samples/watch_queue/Makefile
+ create mode 100644 samples/watch_queue/watch_test.c
+
