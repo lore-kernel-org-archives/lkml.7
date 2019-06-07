@@ -2,80 +2,99 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28CDC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56018C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEEFE20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WiVfnV1X"
+	by mail.kernel.org (Postfix) with ESMTP id 26F5320657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559923087;
+	bh=BDB3ig0QlMOY4R06RNujJ6k6tWZKmQbZv1OOduIroVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z9B5/+2yg7XL9ETWVrE43g9VgCOzxa45Kl1OJD5YKK+0ygiZgxRegHqqivExEIF3f
+	 mbUfxIHDZ6b3oaER/lAGCNeIJcOD5ogGaUKxKIAjepYXb1qNl+UpVweLYTEjzt37CI
+	 h35UkinHa90QJNFoYvS5UwA1XvKnrllIMUjEpRrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfFGP57 (ORCPT
+        id S1730819AbfFGPnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:57:59 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:33424 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729367AbfFGP55 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:57:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559923075; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=LEAcNQEFSV4vEi4RU29MUMcA9Jz9XuPJ9DAENOw2h5s=;
-        b=WiVfnV1X9xbWRAHKa8gRqq1hhkt2xZvf4pKWyy8C7np+GyxuaQZYV+0f1xBoHVyVQnueNJ
-        Yu/+OPO7ZX9yIgoUOsgDOsvfL4l/uQML13BjKur+aUIN5qJCryZUyr2q7ZzOJFq/Hy/GZa
-        7X+lxYJivVTeFOohhUHKvT+CFlQpHyQ=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Bin Liu <b-liu@ti.com>
-Cc:     od@zcrc.me, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] usb: musb: jz4740: Make probe function __init_or_module
-Date:   Fri,  7 Jun 2019 17:57:51 +0200
-Message-Id: <20190607155751.15778-1-paul@crapouillou.net>
+        Fri, 7 Jun 2019 11:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730798AbfFGPnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:43:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA4312147A;
+        Fri,  7 Jun 2019 15:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559922192;
+        bh=BDB3ig0QlMOY4R06RNujJ6k6tWZKmQbZv1OOduIroVM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rCUOXf20M4ge31aZBR+TtQ6rTfGxFsmbZ3nEGqct03UuQIPCfLUtVQKozsOaqHKEI
+         tQ39o7RIzAT8N0CYcEc1tLcrT+jyEOoB69IDjT+cjtgszHpsTu1d6iYcPGIJz/b81e
+         0BRJW5eNDW8NiDqLUNeQ3BglVXgomPAHyCQBcP6M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.14 69/69] media: uvcvideo: Fix uvc_alloc_entity() allocation alignment
+Date:   Fri,  7 Jun 2019 17:39:50 +0200
+Message-Id: <20190607153856.262197244@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
+References: <20190607153848.271562617@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the probe function to be dropped after the kernel finished
-its initialization, in the case where the driver was not compiled as a
-module.
+From: Nadav Amit <namit@vmware.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+commit 89dd34caf73e28018c58cd193751e41b1f8bdc56 upstream.
+
+The use of ALIGN() in uvc_alloc_entity() is incorrect, since the size of
+(entity->pads) is not a power of two. As a stop-gap, until a better
+solution is adapted, use roundup() instead.
+
+Found by a static assertion. Compile-tested only.
+
+Fixes: 4ffc2d89f38a ("uvcvideo: Register subdevices for each entity")
+
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/musb/jz4740.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/usb/uvc/uvc_driver.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index 5261f8dfedec..c881f6d14752 100644
---- a/drivers/usb/musb/jz4740.c
-+++ b/drivers/usb/musb/jz4740.c
-@@ -105,7 +105,7 @@ static const struct musb_platform_ops jz4740_musb_ops = {
- 	.init		= jz4740_musb_init,
- };
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -903,7 +903,7 @@ static struct uvc_entity *uvc_alloc_enti
+ 	unsigned int size;
+ 	unsigned int i;
  
--static int jz4740_probe(struct platform_device *pdev)
-+static int __init_or_module jz4740_probe(struct platform_device *pdev)
- {
- 	struct musb_hdrc_platform_data	*pdata = &jz4740_musb_platform_data;
- 	struct platform_device		*musb;
-@@ -174,7 +174,7 @@ static int jz4740_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int jz4740_remove(struct platform_device *pdev)
-+static int __exit jz4740_remove(struct platform_device *pdev)
- {
- 	struct jz4740_glue	*glue = platform_get_drvdata(pdev);
- 
--- 
-2.21.0.593.g511ec345e18
+-	extra_size = ALIGN(extra_size, sizeof(*entity->pads));
++	extra_size = roundup(extra_size, sizeof(*entity->pads));
+ 	num_inputs = (type & UVC_TERM_OUTPUT) ? num_pads : num_pads - 1;
+ 	size = sizeof(*entity) + extra_size + sizeof(*entity->pads) * num_pads
+ 	     + num_inputs;
+
 
