@@ -2,118 +2,101 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FDAC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1401C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4993D20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD60208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbfFGUMf (ORCPT
+        id S1730348AbfFGUOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:12:35 -0400
-Received: from mga18.intel.com ([134.134.136.126]:46026 "EHLO mga18.intel.com"
+        Fri, 7 Jun 2019 16:14:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:41728 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728724AbfFGUMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:12:35 -0400
+        id S1729353AbfFGUOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 16:14:14 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 13:12:34 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 13:14:14 -0700
 X-ExtLoop1: 1
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Jun 2019 13:12:33 -0700
-Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 7 Jun 2019 13:12:33 -0700
-Received: from orsmsx121.amr.corp.intel.com ([169.254.10.133]) by
- ORSMSX161.amr.corp.intel.com ([169.254.4.126]) with mapi id 14.03.0415.000;
- Fri, 7 Jun 2019 13:12:33 -0700
-From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
-To:     Colin King <colin.king@canonical.com>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][next][V2] ixgbe: fix potential u32 overflow on shift
-Thread-Topic: [PATCH][next][V2] ixgbe: fix potential u32 overflow on shift
-Thread-Index: AQHVHV2OjqHrl9oJCUOLbN4+Vk3DLaaQn9mg
-Date:   Fri, 7 Jun 2019 20:12:33 +0000
-Message-ID: <02874ECE860811409154E81DA85FBB589674F4D9@ORSMSX121.amr.corp.intel.com>
-References: <20190607181920.23339-1-colin.king@canonical.com>
-In-Reply-To: <20190607181920.23339-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDgzYTI2MjctYWRmOC00MzIyLTg3ZjktYmQ4ZWJhZjYxNjQ2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiXC9BM3NKY01ieTVneE1rRWRGbldvZWlRYjVJT01DZHByNTJodE15bEkrc3RJM1hYTks1TVE0dDFlMmV3TEw0M2wifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by orsmga002.jf.intel.com with ESMTP; 07 Jun 2019 13:14:12 -0700
+Message-ID: <0e505563f7dae3849b57fb327f578f41b760b6f7.camel@intel.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Fri, 07 Jun 2019 13:06:10 -0700
+In-Reply-To: <4b448cde-ee4e-1c95-0f7f-4fe694be7db6@intel.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+         <20190606200926.4029-4-yu-cheng.yu@intel.com>
+         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
+         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
+         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+         <4b448cde-ee4e-1c95-0f7f-4fe694be7db6@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDb2xpbiBLaW5nIFttYWlsdG86
-Y29saW4ua2luZ0BjYW5vbmljYWwuY29tXQ0KPiBTZW50OiBGcmlkYXksIEp1bmUgMDcsIDIwMTkg
-MTE6MTkgQU0NCj4gVG86IEtlbGxlciwgSmFjb2IgRSA8amFjb2IuZS5rZWxsZXJAaW50ZWwuY29t
-PjsgS2lyc2hlciwgSmVmZnJleSBUDQo+IDxqZWZmcmV5LnQua2lyc2hlckBpbnRlbC5jb20+OyBE
-YXZpZCBTIC4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0PjsgaW50ZWwtd2lyZWQtDQo+IGxh
-bkBsaXN0cy5vc3Vvc2wub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnDQo+IENjOiBrZXJuZWwt
-amFuaXRvcnNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+
-IFN1YmplY3Q6IFtQQVRDSF1bbmV4dF1bVjJdIGl4Z2JlOiBmaXggcG90ZW50aWFsIHUzMiBvdmVy
-ZmxvdyBvbiBzaGlmdA0KPiANCj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fu
-b25pY2FsLmNvbT4NCj4gDQo+IFRoZSB1MzIgdmFyaWFibGUgcmVtIGlzIGJlaW5nIHNoaWZ0ZWQg
-dXNpbmcgdTMyIGFyaXRobWV0aWMgaG93ZXZlcg0KPiBpdCBpcyBiZWluZyBwYXNzZWQgdG8gZGl2
-X3U2NCB0aGF0IGV4cGVjdHMgdGhlIGV4cHJlc3Npb24gdG8gYmUgYSB1NjQuDQo+IFRoZSAzMiBi
-aXQgc2hpZnQgbWF5IHBvdGVudGlhbGx5IG92ZXJmbG93LCBzbyBjYXN0IHJlbSB0byBhIHU2NCBi
-ZWZvcmUNCj4gc2hpZnRpbmcgdG8gYXZvaWQgdGhpcy4gIEFsc28gcmVtb3ZlIGNvbW1lbnQgYWJv
-dXQgb3ZlcmZsb3cuDQo+IA0KPiBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiVW5pbnRlbnRpb25hbCBp
-bnRlZ2VyIG92ZXJmbG93IikNCj4gRml4ZXM6IGNkNDU4MzIwNjk5MCAoIml4Z2JlOiBpbXBsZW1l
-bnQgc3VwcG9ydCBmb3IgU0RQL1BQUyBvdXRwdXQgb24gWDU1MA0KPiBoYXJkd2FyZSIpDQo+IEZp
-eGVzOiA2OGQ5Njc2ZmMwNGUgKCJpeGdiZTogZml4IFBUUCBTRFAgcGluIHNldHVwIG9uIFg1NDAg
-aGFyZHdhcmUiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0Bj
-YW5vbmljYWwuY29tPg0KPiAtLS0NCj4gDQo+IFYyOiB1cGRhdGUgY29tbWVudA0KDQpUaGFua3Mg
-Q29saW4hDQoNCkFja2VkLWJ5OiBKYWNvYiBLZWxsZXIgPGphY29iLmUua2VsbGVyQGludGVsLmNv
-bT4NCg0KUmVnYXJkcywNCkpha2UNCg0KPiANCj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5l
-dC9pbnRlbC9peGdiZS9peGdiZV9wdHAuYyB8IDE0ICsrKystLS0tLS0tLS0tDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9peGdiZS9peGdiZV9wdHAuYw0KPiBiL2Ry
-aXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2l4Z2JlL2l4Z2JlX3B0cC5jDQo+IGluZGV4IDJjNGQz
-MjdmY2MyZS4uMGJlMTNhOTBmZjc5IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5l
-dC9pbnRlbC9peGdiZS9peGdiZV9wdHAuYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9p
-bnRlbC9peGdiZS9peGdiZV9wdHAuYw0KPiBAQCAtMjA1LDExICsyMDUsOCBAQCBzdGF0aWMgdm9p
-ZCBpeGdiZV9wdHBfc2V0dXBfc2RwX1g1NDAoc3RydWN0DQo+IGl4Z2JlX2FkYXB0ZXIgKmFkYXB0
-ZXIpDQo+ICAJICovDQo+ICAJcmVtID0gKE5TX1BFUl9TRUMgLSByZW0pOw0KPiANCj4gLQkvKiBB
-ZGp1c3QgdGhlIGNsb2NrIGVkZ2UgdG8gYWxpZ24gd2l0aCB0aGUgbmV4dCBmdWxsIHNlY29uZC4g
-VGhpcw0KPiAtCSAqIGFzc3VtZXMgdGhhdCB0aGUgY3ljbGUgY291bnRlciBzaGlmdCBpcyBzbWFs
-bCBlbm91Z2ggdG8gYXZvaWQNCj4gLQkgKiBvdmVyZmxvd2luZyB3aGVuIHNoaWZ0aW5nIHRoZSBy
-ZW1haW5kZXIuDQo+IC0JICovDQo+IC0JY2xvY2tfZWRnZSArPSBkaXZfdTY0KChyZW0gPDwgY2Mt
-PnNoaWZ0KSwgY2MtPm11bHQpOw0KPiArCS8qIEFkanVzdCB0aGUgY2xvY2sgZWRnZSB0byBhbGln
-biB3aXRoIHRoZSBuZXh0IGZ1bGwgc2Vjb25kLiAqLw0KPiArCWNsb2NrX2VkZ2UgKz0gZGl2X3U2
-NCgoKHU2NClyZW0gPDwgY2MtPnNoaWZ0KSwgY2MtPm11bHQpOw0KPiAgCXRyZ3R0aW1sID0gKHUz
-MiljbG9ja19lZGdlOw0KPiAgCXRyZ3R0aW1oID0gKHUzMikoY2xvY2tfZWRnZSA+PiAzMik7DQo+
-IA0KPiBAQCAtMjkxLDExICsyODgsOCBAQCBzdGF0aWMgdm9pZCBpeGdiZV9wdHBfc2V0dXBfc2Rw
-X1g1NTAoc3RydWN0DQo+IGl4Z2JlX2FkYXB0ZXIgKmFkYXB0ZXIpDQo+ICAJICovDQo+ICAJcmVt
-ID0gKE5TX1BFUl9TRUMgLSByZW0pOw0KPiANCj4gLQkvKiBBZGp1c3QgdGhlIGNsb2NrIGVkZ2Ug
-dG8gYWxpZ24gd2l0aCB0aGUgbmV4dCBmdWxsIHNlY29uZC4gVGhpcw0KPiAtCSAqIGFzc3VtZXMg
-dGhhdCB0aGUgY3ljbGUgY291bnRlciBzaGlmdCBpcyBzbWFsbCBlbm91Z2ggdG8gYXZvaWQNCj4g
-LQkgKiBvdmVyZmxvd2luZyB3aGVuIHNoaWZ0aW5nIHRoZSByZW1haW5kZXIuDQo+IC0JICovDQo+
-IC0JY2xvY2tfZWRnZSArPSBkaXZfdTY0KChyZW0gPDwgY2MtPnNoaWZ0KSwgY2MtPm11bHQpOw0K
-PiArCS8qIEFkanVzdCB0aGUgY2xvY2sgZWRnZSB0byBhbGlnbiB3aXRoIHRoZSBuZXh0IGZ1bGwg
-c2Vjb25kLiAqLw0KPiArCWNsb2NrX2VkZ2UgKz0gZGl2X3U2NCgoKHU2NClyZW0gPDwgY2MtPnNo
-aWZ0KSwgY2MtPm11bHQpOw0KPiANCj4gIAkvKiBYNTUwIGhhcmR3YXJlIHN0b3JlcyB0aGUgdGlt
-ZSBpbiAzMmJpdHMgb2YgJ2JpbGxpb25zIG9mIGN5Y2xlcycgYW5kDQo+ICAJICogMzJiaXRzIG9m
-ICdjeWNsZXMnLiBUaGVyZSdzIG5vIGd1YXJhbnRlZSB0aGF0IGN5Y2xlcyByZXByZXNlbnRzDQo+
-IC0tDQo+IDIuMjAuMQ0KDQo=
+On Fri, 2019-06-07 at 13:00 -0700, Dave Hansen wrote:
+> On 6/7/19 12:49 PM, Yu-cheng Yu wrote:
+> > > 
+> > > This also gives us an excellent opportunity to make it read-only as seen
+> > > from
+> > > userspace to prevent exploits from just poking it full of ones before
+> > > redirecting execution.
+> > 
+> > GLIBC sets bits only for legacy code, and then makes the bitmap read-
+> > only.  That
+> > avoids most issues:
+> > 
+> >   To populate bitmap pages, mprotect() is required.
+> >   Reading zero bitmap pages would not waste more physical memory, right?
+> 
+> Huh, how does glibc know about all possible past and future legacy code
+> in the application?
+
+When dlopen() gets a legacy binary and the policy allows that, it will manage
+the bitmap:
+
+  If a bitmap has not been created, create one.
+  Set bits for the legacy code being loaded.
+
+Yu-cheng
