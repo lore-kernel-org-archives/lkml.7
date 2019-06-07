@@ -2,95 +2,177 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3694C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DBAC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926A72083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E461820868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731465AbfFGVvO (ORCPT
+        id S1731499AbfFGVxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 17:51:14 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:49505 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729810AbfFGVvO (ORCPT
+        Fri, 7 Jun 2019 17:53:07 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:38156 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729810AbfFGVxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 17:51:14 -0400
-Received: from [192.168.1.110] ([77.4.3.118]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MXoxG-1h3P5h2siC-00Y9qf; Fri, 07 Jun 2019 23:50:57 +0200
-Subject: Re: [PATCH v2] drivers: scsi: remove unnecessary #ifdef MODULE
-To:     James Bottomley <jejb@linux.ibm.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     khalid@gonehiking.org, martin.petersen@oracle.com,
-        aacraid@microsemi.com, linux-scsi@vger.kernel.org
-References: <1559833471-30534-1-git-send-email-info@metux.net>
- <1559868089.3233.1.camel@linux.ibm.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <da4cea67-7651-7284-51e6-5313b1241a8a@metux.net>
-Date:   Fri, 7 Jun 2019 23:50:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 7 Jun 2019 17:53:06 -0400
+Received: by mail-it1-f199.google.com with SMTP id j83so2966016ita.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 14:53:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nXaF6BflGlbYB1uaA9t1b5FLsqtpwLwJtk7m3M3w/9Q=;
+        b=jF2zuq+RDwgM/pMhl6PcrfROyClI/Wv9kMVZerG2nP22AVz7ptf8RHGNARc6spENDB
+         sxfI/QG+sZt3x4oA05RlLkIHwUxc/FIWCIKyJzyQgE+f1snV99CEMopPe0vJzOhfuoWD
+         Yh+YayzASExrZ3ZsgL1i6bgXP+msHanf/84qTVq7EOc/cL+1qMOtzQfxpKZaQq8P5DO+
+         bO18mmsvjxPtv3KH+LQMZsiJ50M29c7QYKz1wV3iLe4jcQlIPzD/Te8QHqSQJTKZg0UA
+         hca/2tBqLC+eilA0Vos+xNXf8eDOaDzzQjR6yJeJUP/YGUsMWdLJQTP+g/GT/KUe926q
+         NPEw==
+X-Gm-Message-State: APjAAAX5J2tPhEcPOKtQdkEj4iaSaM+rdtJVoIVR4voFjH+WpUMMEcyw
+        tYNjOOtPApbUlRfs/aNQ6AzaVpq17McKpvZoo5WM5ivC64rU
+X-Google-Smtp-Source: APXvYqw/CJqxEN3K/rLwxaL65HHSXdHQlP7JF9ccQwtvURNaoKjyljO2HjBAi8q/VK1pBjIGxEBEnxILICTanBjnuImytLHfD7a3
 MIME-Version: 1.0
-In-Reply-To: <1559868089.3233.1.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/bCMse1WqZ7oNEY4vFZvKN9LFM1f/TRTC3pQ7DcAleqpq7Xo8ai
- zwnPKyQyBXrJLyQV61/TX4O1dsgwz1U2SIMIzt+Y6AfKcZJNqczaN/zdpovIZlJa81u8sg3
- kUObtDK4rfzkv6kqXrDbagbt3q+Pmr+XfNZtAS2t3JnuXHoCJtQw6V5xCTE5pznqT6OsL/o
- AsfppQd8TmDEj26Hk45Gw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8zu0GrELbRA=:HVFy5tvIU4G51zzd+cWHIp
- 7hcYMkW9nWPaYJNMctjHusm5bOAFnMxSzpCRH++x5VfzjyNw7yHQgMIDLQtKWFnd3fg6CAMKk
- //Vjzb9oU4E/2ECPs6jsQtUQCrIH+kQvQHnjfCW6Wu/TT6CZ3xjA005ykTGsu+zKaW3Kjxf/x
- CHBpWvoAGMruvpIBNtfObaPQu2A6KbbRN6gR6PBo7NwncStrGP0pGMNKYyw1TObkaQFUfSIAP
- 9D9g0ctggb5dnlCapoLUjif3gVJzfO4RM7xpimAWA/aP1txmXyjGMJ7jLRqXRVMaOZmb95FTb
- 3Uipcl4dDEyGCibOVqsjhnu/nv+PTvqtmaDUyz5konmFvWux3B/Q8nPMtriWxhtHZp0ZREB1R
- CQED9B6cmcW4mEuseBKUHJCMUZvCj3zrxHT83qyWmiOaVLg67OQ+EowQJ0q0sZfivYXBardYb
- kBLO7rqVv1av9kgX3SbwtWFRAn76ceWt9Vsopy3aPNHbDeQGUHOiL0GkgTUENd50etvYVdO77
- ZYYw0iaSQhahup86ZGgKk6B7HUqPV6Qlw/LOmBrCDkokD4q+XgovCxZvL4u4kzx8cKysDZqwi
- U4yU0N5J8vshhfN+jJnSt2r/RaUhaGMH0NYV+prKt0a7cPSp/z+L+jKnbauAUFA92SxconfO3
- aKnJRzys9q9N3jjraqMkBoLKLLZr8ywzzw+4lDu5IcsUHtGTskXhGLjkdF8+jnyolvDj+kGcc
- aKSnxdiEBO/6GfObCF6dtSy632O3zJqhKtg4Bn9XRTHKNkMJ7JxA4rhLtng=
+X-Received: by 2002:a05:6638:3d3:: with SMTP id r19mr38028074jaq.53.1559944385576;
+ Fri, 07 Jun 2019 14:53:05 -0700 (PDT)
+Date:   Fri, 07 Jun 2019 14:53:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f8c953058ac2dae4@google.com>
+Subject: KMSAN: uninit-value in read_sensor_register
+From:   syzbot <syzbot+06ddf1788cfd048c5e82@syzkaller.appspotmail.com>
+To:     glider@google.com, hverkuil@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.06.19 02:41, James Bottomley wrote:
-> On Thu, 2019-06-06 at 17:04 +0200, Enrico Weigelt, metux IT consult
-> wrote:
->> From: Enrico Weigelt <info@metux.net>
->>
->> The MODULE_DEVICE_TABLE() macro already checks for MODULE defined,
->> so the extra check here is not necessary.
->>
->> Changes v2:
->>     * make dptids const to fix warning on unused variable
-> 
-> I don't think this works; in my version of gcc, const does not defeat
-> the unused variable warning if I try with a test programme:
-> 
-> jejb@jarvis:~> gcc -Wunused-variable -c test1.c
-> test1.c:3:18: warning: ‘i’ defined but not used [-Wunused-cons
-> t-variable=]
->  static const int i[] = { 1, 2, 3};
+Hello,
 
-Which gcc version are you using ?
-Could you please have a try w/ the kernel (plus my patch) ?
+syzbot found the following crash on:
 
-Tested w/ 6.3.0-18+deb9u1 (stretch-amd64), got no warnings.
+HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=1454b01ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link: https://syzkaller.appspot.com/bug?extid=06ddf1788cfd048c5e82
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cbead2a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1683b761a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+06ddf1788cfd048c5e82@syzkaller.appspotmail.com
+
+usb 1-1: config 0 has an invalid interface number: 110 but max is 0
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=0ac8, idProduct=c301, bcdDevice=  
+1.4a
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+gspca_main: vc032x-2.14.0 probing 0ac8:c301
+gspca_vc032x: reg_w err -71
+==================================================================
+BUG: KMSAN: uninit-value in read_sensor_register+0x732/0x26a0  
+drivers/media/usb/gspca/vc032x.c:2975
+CPU: 1 PID: 33 Comm: kworker/1:1 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  read_sensor_register+0x732/0x26a0 drivers/media/usb/gspca/vc032x.c:2975
+  vc032x_probe_sensor drivers/media/usb/gspca/vc032x.c:3036 [inline]
+  sd_init+0x2f94/0x5330 drivers/media/usb/gspca/vc032x.c:3167
+  gspca_dev_probe2+0xee0/0x2240 drivers/media/usb/gspca/gspca.c:1546
+  gspca_dev_probe+0x346/0x3b0 drivers/media/usb/gspca/gspca.c:1619
+  sd_probe+0x8d/0xa0 drivers/media/usb/gspca/gl860/gl860.c:523
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:208 [inline]
+  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:162
+  kmsan_kmalloc+0xa4/0x130 mm/kmsan/kmsan_hooks.c:175
+  kmem_cache_alloc_trace+0x503/0xae0 mm/slub.c:2801
+  kmalloc include/linux/slab.h:547 [inline]
+  gspca_dev_probe2+0x30c/0x2240 drivers/media/usb/gspca/gspca.c:1480
+  gspca_dev_probe+0x346/0x3b0 drivers/media/usb/gspca/gspca.c:1619
+  sd_probe+0x8d/0xa0 drivers/media/usb/gspca/gl860/gl860.c:523
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+==================================================================
 
 
---mtx
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
