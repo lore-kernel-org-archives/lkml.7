@@ -2,186 +2,104 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C62DC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB80CC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0763B2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD372089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbfFGPLu (ORCPT
+        id S1729818AbfFGPNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:11:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:42296 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 11:13:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:42346 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729173AbfFGPLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:11:47 -0400
+        id S1728486AbfFGPNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:13:20 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84117C0A;
-        Fri,  7 Jun 2019 08:11:46 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F8053F718;
-        Fri,  7 Jun 2019 08:11:44 -0700 (PDT)
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-To:     "Shenhar, Talel" <talel@amazon.com>
-Cc:     "Hawa, Hanna" <hhhawa@amazon.com>, Borislav Petkov <bp@alien8.de>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <25efb27c-b725-137d-5735-b3ab88323846@arm.com>
-Date:   Fri, 7 Jun 2019 16:11:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE6E0C15;
+        Fri,  7 Jun 2019 08:13:19 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 081593F718;
+        Fri,  7 Jun 2019 08:13:18 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 16:13:16 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        catalin.marinas@arm.com
+Subject: [GIT PULL] arm64: fixes for -rc4
+Message-ID: <20190607151316.GB19862@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+Hi Linus,
 
-On 06/06/2019 12:37, Shenhar, Talel wrote:
->>> Disagree. The various drivers don't depend on each other.
->>> I think we should keep the drivers separated as they are distinct and independent IP
->>> blocks.
->> But they don't exist in isolation, they both depend on the integration-choices/firmware
->> that makes up your platform.
->>
->> Other platforms may have exactly the same IP blocks, configured differently, or with
->> different features enabled in firmware. This means we can't just probe the driver based on
->> the presence of the IP block, we need to know the integration choices and firmware
->> settings match what the driver requires.
->>
->> (Case in point, that A57 ECC support is optional, another A57 may not have it)
->>
->> Descriptions of what firmware did don't really belong in the DT. Its not a hardware
->> property.
->>
->> This is why its better to probe this stuff based on the machine-compatible/platform-name,
->> not the presence of the IP block in the DT.
->>
->>
->> Will either of your separate drivers ever run alone? If they're probed from the same
->> machine-compatible this won't happen.
->>
->>
->> How does your memory controller report errors? Does it send back some data with an invalid
->> checksum, or a specific poison/invalid flag? Will the cache report this as a cache error
->> too, if its an extra signal, does the cache know what it is?
->>
->> All these are integration choices between the two IP blocks, done as separate drivers we
->> don't have anywhere to store that information. Even if you don't care about this, making
->> them separate drivers should only be done to make them usable on other platforms, where
->> these choices may have been different.
+Another round of mostly-benign fixes, the exception being a boot crash on
+SVE2-capable CPUs (although I don't know where you'd find such a thing, so
+maybe it's benign too). We're in the process of resolving some big-endian
+ptrace breakage, so I'll probably have some more for you next week.
 
-> From our perspective, l1/l2 has nothing to do with the ddr memory controller.
+Please pull.
 
-I understand you're coming from the position that these things have counters, you want
-something to read and export them.
+Cheers,
 
-I'm coming at this from somewhere else. This stuff has to be considered all the way
-through the system. Just because each component supports error detection, doesn't mean you
-aren't going to get silent corruption. Likewise if another platform picks up two piecemeal
-edac drivers for hardware it happens to have in common with yours, it doesn't mean we're
-counting all the errors. This stuff has to be viewed for the whole platform.
+Will
 
+--->8
 
-> Its right that they both use same edac subsystem but they are using totally different APIs
-> of it.
-> 
-> We also even want to have separate control for enabling/disabling l1/l2 edac vs memory
-> controller edac.
+The following changes since commit 1e29ab3186e33c77dbb2d7566172a205b59fa390:
 
-Curious, what for? Surely you either care about counting errors, or you don't.
+  arm64: use the correct function type for __arm64_sys_ni_syscall (2019-05-29 13:46:00 +0100)
 
+are available in the git repository at:
 
-> Even from technical point-of-view L1/L2 UE collection method is totally different from
-> collecting memory-controller UE. (CPU exception vs actual interrupts).
-> 
-> So there is less reason why to combine them vs giving each one its own file, e.g.
-> al_mc_edac, al_l1_l2_edac (I even don't see why Hanna combined l1 and l2...)
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
 
-> As we don't have any technical relation between the two we would rather avoid this
-> combination.
-> 
-> Also, Lets assume we have different setups with different memory controllers, having a dt
-> binding to control the difference is super easy and flexible.
+for you to fetch changes up to ebcc5928c5d925b1c8d968d9c89cdb0d0186db17:
 
-If the hardware is different you should describe this in the DT. I'm not suggesting you
-don't describe it.
+  arm64: Silence gcc warnings about arch ABI drift (2019-06-06 13:28:45 +0100)
 
-The discussion here is whether we should probe the driver based on a dummy-node
-compatible, (which this 'edac_l1_l2' is) or based on the machine compatible.
+----------------------------------------------------------------
+arm64 fixes for -rc4
 
-At the extreme end: you should paint the CPU and cache nodes with a compatible describing
-your integration. (I've mangled Juno's DT here:)
-| A57_0: cpu@0 {
-| 	compatible = "amazon-al,cortex-a57", "arm,cortex-a57";
-| 	reg = <0x0 0x0>;
-| 	device_type = "cpu";
-| 	next-level-cache = <&A57_L2>;
-| };
-|
-[...]
-|
-| A57_L2: l2-cache0 {
-| 	compatible = "amazon-al,cache", "cache";
-|	cpu_map = <A57_0, A57_1>
-| };
+- Fix boot crash on platforms with SVE2 due to missing register encoding
 
+- Fix architected timer accessors when CONFIG_OPTIMIZE_INLINING=y
 
-This is the most accurate way to describe what you have here. The driver can use this to
-know that this integration of CPU and Cache support the edac registers. (This doesn't tell
-us anything about whether firmware enabled this stuff, or made/left it all secure-only)
+- Move cpu_logical_map into smp.h for use by upcoming irqchip drivers
 
-But this doesn't give you a device you can bind a driver to, to kick this stuff off.
-This (I assume) is why you added a dummy 'edac_l1_l2' node, that just probes the driver.
-The hardware is to do with the CPU and caches, 'edac_l1'_l2' doesn't correspond to any
-distinct part of the soc.
+- Trivial typo fix in comment
 
-The request is to use the machine compatible, not a dummy node. This wraps up the firmware
-properties too, and any other platform property we don't know about today.
+- Disable some useless, noisy warnings from GCC 9
 
-Once you have this, you don't really need the cpu/cache integration annotations, and your
-future memory-controller support can be picked up as part of the platform driver.
-If you have otherwise identical platforms with different memory controllers, OF gives you
-the API to match the node in the DT.
+----------------------------------------------------------------
+Anders Roxell (1):
+      arm64: arch_timer: mark functions as __always_inline
 
+Dave Martin (2):
+      arm64: cpufeature: Fix missing ZFR0 in __read_sysreg_by_encoding()
+      arm64: Silence gcc warnings about arch ABI drift
 
-> Would having a dedicated folder for amazon ease the move to separate files?
+Florian Fainelli (1):
+      arm64: smp: Moved cpu_logical_map[] to smp.h
 
-I don't think anyone cares about the number of files. Code duplication and extra
-boiler-plate, maybe.
+George G. Davis (1):
+      ARM64: trivial: s/TIF_SECOMP/TIF_SECCOMP/ comment typo fix
 
-
-Thanks,
-
-James
+ arch/arm64/Makefile                  | 1 +
+ arch/arm64/include/asm/arch_timer.h  | 8 ++++----
+ arch/arm64/include/asm/smp.h         | 6 ++++++
+ arch/arm64/include/asm/smp_plat.h    | 5 -----
+ arch/arm64/include/asm/thread_info.h | 2 +-
+ arch/arm64/kernel/cpufeature.c       | 1 +
+ 6 files changed, 13 insertions(+), 10 deletions(-)
