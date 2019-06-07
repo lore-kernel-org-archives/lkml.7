@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAF3C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C92C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50EFD21479
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3AD2133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922167;
-	bh=e2KFDJLz9Lsataaan3BzvauG6mpgnuRbx5NYfA9C6yU=;
+	s=default; t=1559922176;
+	bh=PRLpC5nwM9nO3KrtQa6s3Sz5d8KnuDm79+AssLvw99g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IP28mZIvRm9uAMy7obTJLmOeiNVbaWWVEJHfty6iXNlVtICV+CVl7s4g2euDSwRSp
-	 yfIkvsz84wrtdmkLOM8JH0C+0NN2tUZpXqG5chXsnQza6q6g4XbFOmrN7v39YoEoqK
-	 rr1L34cxEuIh86aDl9Gj6OgPvP2TE8ymWwxP2V8A=
+	b=lcPSpKjcrT1+gENAGumksnfEklNdMV4TS0P0scLQKejejScqaVeNXicRzOTxoPhRZ
+	 yPAk22M7WnQy45tw4BMOUDxlZBYW1jqiGAMMOtTDfSTBvo14b7dZ1r5kFUksUdK+FQ
+	 okVH9lfiQgCCooehALR6hU5wFcH5w+9+NGQZDptI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbfFGPmq (ORCPT
+        id S1730699AbfFGPmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53560 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:42:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730648AbfFGPmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:45 -0400
+        id S1730663AbfFGPmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA83C214AF;
-        Fri,  7 Jun 2019 15:42:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588D421479;
+        Fri,  7 Jun 2019 15:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922164;
-        bh=e2KFDJLz9Lsataaan3BzvauG6mpgnuRbx5NYfA9C6yU=;
+        s=default; t=1559922169;
+        bh=PRLpC5nwM9nO3KrtQa6s3Sz5d8KnuDm79+AssLvw99g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9Bf0kvCZnJe9P+77jhg1+y6O6VcUhjH5Dg9gILyHxj+uuiyVrMaxddTPUn5Lw06v
-         KTsr/DmxLfwAfStkHH0Iape8+rSDdDjJ81Zr007TadHDQVGH6MMnBZ+uBXR6ZIrbqH
-         V0ssVhH/EK2YmkCx70rxeyXlgdxFTCVqXc8uaB+w=
+        b=FxWBuEyfXh7/laGS5A7dG/BvraPK81MMIOOMgh3/fb3Bmn4jZ3rA7yzEl5nuxlYzB
+         zGfeRgwvoDqXguOQqICu67YecVbf1oEVc4iyyZ+HDSQUi3k0hKpzoNidf0M+xY1OFV
+         q2Y/acLQGgNKDcAlskDGp7YKPQBZvHYKQbvFbEZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Coddington <bcodding@redhat.com>,
-        XueWei Zhang <xueweiz@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.14 60/69] Revert "lockd: Show pid of lockd for remote locks"
-Date:   Fri,  7 Jun 2019 17:39:41 +0200
-Message-Id: <20190607153855.452656175@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 4.14 61/69] gcc-plugins: Fix build failures under Darwin host
+Date:   Fri,  7 Jun 2019 17:39:42 +0200
+Message-Id: <20190607153855.545998344@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -60,68 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Coddington <bcodding@redhat.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 141731d15d6eb2fd9aaefbf9b935ce86ae243074 upstream.
+commit 7210e060155b9cf557fb13128353c3e494fa5ed3 upstream.
 
-This reverts most of commit b8eee0e90f97 ("lockd: Show pid of lockd for
-remote locks"), which caused remote locks to not be differentiated between
-remote processes for NLM.
+The gcc-common.h file did not take into account certain macros that
+might have already been defined in the build environment. This updates
+the header to avoid redefining the macros, as seen on a Darwin host
+using gcc 4.9.2:
 
-We retain the fixup for setting the client's fl_pid to a negative value.
+ HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o - due to: scripts/gcc-plugins/gcc-common.h
+In file included from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:0:
+scripts/gcc-plugins/gcc-common.h:153:0: warning: "__unused" redefined
+^
+In file included from /usr/include/stdio.h:64:0,
+                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/system.h:40,
+                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/gcc-plugin.h:28,
+                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/plugin.h:23,
+                from scripts/gcc-plugins/gcc-common.h:9,
+                from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:
+/usr/include/sys/cdefs.h:161:0: note: this is the location of the previous definition
+^
 
-Fixes: b8eee0e90f97 ("lockd: Show pid of lockd for remote locks")
+Reported-and-tested-by: "H. Nikolaus Schaller" <hns@goldelico.com>
+Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
 Cc: stable@vger.kernel.org
-
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Reviewed-by: XueWei Zhang <xueweiz@google.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/lockd/xdr.c  |    4 ++--
- fs/lockd/xdr4.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ scripts/gcc-plugins/gcc-common.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/lockd/xdr.c
-+++ b/fs/lockd/xdr.c
-@@ -127,7 +127,7 @@ nlm_decode_lock(__be32 *p, struct nlm_lo
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -150,8 +150,12 @@ void print_gimple_expr(FILE *, gimple, i
+ void dump_gimple_stmt(pretty_printer *, gimple, int, int);
+ #endif
  
- 	locks_init_lock(fl);
- 	fl->fl_owner = current->files;
--	fl->fl_pid   = current->tgid;
-+	fl->fl_pid   = (pid_t)lock->svid;
- 	fl->fl_flags = FL_POSIX;
- 	fl->fl_type  = F_RDLCK;		/* as good as anything else */
- 	start = ntohl(*p++);
-@@ -269,7 +269,7 @@ nlmsvc_decode_shareargs(struct svc_rqst
- 	memset(lock, 0, sizeof(*lock));
- 	locks_init_lock(&lock->fl);
- 	lock->svid = ~(u32) 0;
--	lock->fl.fl_pid = current->tgid;
-+	lock->fl.fl_pid = (pid_t)lock->svid;
++#ifndef __unused
+ #define __unused __attribute__((__unused__))
++#endif
++#ifndef __visible
+ #define __visible __attribute__((visibility("default")))
++#endif
  
- 	if (!(p = nlm_decode_cookie(p, &argp->cookie))
- 	 || !(p = xdr_decode_string_inplace(p, &lock->caller,
---- a/fs/lockd/xdr4.c
-+++ b/fs/lockd/xdr4.c
-@@ -119,7 +119,7 @@ nlm4_decode_lock(__be32 *p, struct nlm_l
- 
- 	locks_init_lock(fl);
- 	fl->fl_owner = current->files;
--	fl->fl_pid   = current->tgid;
-+	fl->fl_pid   = (pid_t)lock->svid;
- 	fl->fl_flags = FL_POSIX;
- 	fl->fl_type  = F_RDLCK;		/* as good as anything else */
- 	p = xdr_decode_hyper(p, &start);
-@@ -266,7 +266,7 @@ nlm4svc_decode_shareargs(struct svc_rqst
- 	memset(lock, 0, sizeof(*lock));
- 	locks_init_lock(&lock->fl);
- 	lock->svid = ~(u32) 0;
--	lock->fl.fl_pid = current->tgid;
-+	lock->fl.fl_pid = (pid_t)lock->svid;
- 
- 	if (!(p = nlm4_decode_cookie(p, &argp->cookie))
- 	 || !(p = xdr_decode_string_inplace(p, &lock->caller,
+ #define DECL_NAME_POINTER(node) IDENTIFIER_POINTER(DECL_NAME(node))
+ #define DECL_NAME_LENGTH(node) IDENTIFIER_LENGTH(DECL_NAME(node))
 
 
