@@ -2,239 +2,146 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C168FC468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBB4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976E02083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B013A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Qkp4Nz7c"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="m/K9VzHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbfFGOrk (ORCPT
+        id S1729541AbfFGOrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:47:40 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19348 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfFGOrk (ORCPT
+        Fri, 7 Jun 2019 10:47:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40786 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729479AbfFGOrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:47:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfa78fb0000>; Fri, 07 Jun 2019 07:47:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 07 Jun 2019 07:47:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 07 Jun 2019 07:47:38 -0700
-Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 14:47:38 +0000
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL112.nvidia.com
- (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 14:47:38 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 7 Jun 2019 14:47:38 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cfa79040000>; Fri, 07 Jun 2019 07:47:37 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V9 04/15] PCI: dwc: Move config space capability search API
-Date:   Fri, 7 Jun 2019 20:16:29 +0530
-Message-ID: <20190607144640.13427-5-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190607144640.13427-1-vidyas@nvidia.com>
-References: <20190607144640.13427-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 7 Jun 2019 10:47:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p11so2448692wre.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/q31YJBntN7aERDn31WI4iT/fxCa5CdKI5jVgevLIGg=;
+        b=m/K9VzHsqgtdqCgZnn8FiXFVa2tmOrV/uYTohpN41eUsEfmLuX4FjOkht0Es8GNV8M
+         1rjOE/orKbGwIzp34kaqjOM/wWt7ZozDMQAdgZVG3UNqGaWECo/TbXHqW+u8zISJeXM2
+         0H8/udl2i10r6WquXUwgiOsODs8vMYvOHya23dQ2JFbxx3YF+jffpCKHX36cHvlmy1Vo
+         EPlhXiTqUHA/iEptOv6wCIlS1kJC1JirNrXHkaZqlL5aMmxFZMCEa9Ns3M8siQ7Exfl4
+         /b5sdGGxvPBHz0YxcRzrGR5HsIkZEeDznqlljPXo607dbxGJdX8sYySfaPRrORFZljcn
+         IU6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/q31YJBntN7aERDn31WI4iT/fxCa5CdKI5jVgevLIGg=;
+        b=FldjbHXCfq2xCfaGV4l9AbEUFebd7TtM+d3bjvzZGopkWXg2TxIl7AMF6ZObch8cQp
+         cRHRAP8zYExzDtUgkKzkU5LJoClA0N7U1mzrNAZeF/QpDMRZNR4pmkbK3SbICcp5DT2I
+         tmed4k4la7uvBRWlxrZ64mpU+uoqobUo8qDECD7GZ/WrRwWQy7zAucNkN5vA5GV7+GpI
+         iaYJFxR3wC822XumstkODMJXEUm2dmd4lB8LyKJgOg8wz0tabxLkBGfTRGUqKsOHf1Vu
+         F+NS0pOoFRH3Oi3LYfF5XgiHkpIn7aDj4Uif/vCdlE4GhWorImv4Fy1oP/tL0WfO2yI9
+         l9qA==
+X-Gm-Message-State: APjAAAUHsN42Gbz/gj/6v8Zp/oeWbRM7fOiPq6LbkeQjwfHp14YyBbqW
+        6/GjnUf5fgl8ipc+wi0Bp5jR2whB/2XVYg==
+X-Google-Smtp-Source: APXvYqx7nN0vbFi+WM1m4IK4O4uZDD/Xl1Qx+n1xucGQ8GFrcb+e0WJvGAdiLqpAfIS5NRuz4n7VyA==
+X-Received: by 2002:a5d:6243:: with SMTP id m3mr3374922wrv.41.1559918860294;
+        Fri, 07 Jun 2019 07:47:40 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q20sm5184516wra.36.2019.06.07.07.47.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 07 Jun 2019 07:47:39 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/3] arm64: dts: meson-g12a-x96-max: add support for sdcard and emmc
+Date:   Fri,  7 Jun 2019 16:47:33 +0200
+Message-Id: <20190607144735.3829-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607144735.3829-1-narmstrong@baylibre.com>
+References: <20190607144735.3829-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559918843; bh=pPvlsWYos72hB9G3en+IVOBmZIF5gallR4qO1Of29Io=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Qkp4Nz7cGHE8F/JQG3UXzEErl8s0oAEHtQlfYEaeaI8VarD5Fr7XCM4OCRv/4apq0
-         1J50DsiblW4W3sIt4j9qFaKviwBHVWpOPhh0kS6ywE8UptdFMBnEioTQNfqI06gEcs
-         9FTkEVi8OSzTYFzUYBADSPLQwRj6a0QBpSbzsPHM4Neh9f9iLS9FkfH6XNsQCBcoSc
-         Tcy1We3EqGLtwngCQrqMHrdWX88fv5Ks0nbCVhFDWT1yxPw2bbCTl8MzSSQKk6l6nR
-         nZUYsK03dJV6p38zAEFcbyXxS4rg4Af7UDXZUO2bUpHhlb5D7I0ELZ8KRRcqjsMtkA
-         nfgUBvNXEXx9Q==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move PCIe config space capability search API to common DesignWare file
-as this can be used by both host and ep mode codes.
+From: Guillaume La Roque <glaroque@baylibre.com>
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
+Add nodes to support SDCard and onboard eMMC on the X96 Max.
+
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
-Changes since [v8]:
-* None
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-Changes since [v7]:
-* Changed comment to explicitly state their mere resemblance to standard APIs
-  but not their operation and place of use.
-
-Changes since [v6]:
-* Exported dw_pcie_find_capability() API
-
-Changes since [v5]:
-* None
-
-Changes since [v4]:
-* Removed redundant APIs in pcie-designware-ep.c file after moving them
-  to pcie-designware.c file based on Bjorn's comments.
-
-Changes since [v3]:
-* Rebased to linux-next top of the tree
-
-Changes since [v2]:
-* None
-
-Changes since [v1]:
-* Removed dw_pcie_find_next_ext_capability() API from here and made a
-  separate patch for that
-
- .../pci/controller/dwc/pcie-designware-ep.c   | 37 +-----------------
- drivers/pci/controller/dwc/pcie-designware.c  | 39 +++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h  |  2 +
- 3 files changed, 43 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 2bf5a35c0570..65f479250087 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
- 	__dw_pcie_ep_reset_bar(pci, bar, 0);
- }
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+index 5cdc263b03e6..69aae6c03dc5 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+@@ -45,6 +45,11 @@
+ 		};
+ 	};
  
--static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
--			      u8 cap)
--{
--	u8 cap_id, next_cap_ptr;
--	u16 reg;
--
--	if (!cap_ptr)
--		return 0;
--
--	reg = dw_pcie_readw_dbi(pci, cap_ptr);
--	cap_id = (reg & 0x00ff);
--
--	if (cap_id > PCI_CAP_ID_MAX)
--		return 0;
--
--	if (cap_id == cap)
--		return cap_ptr;
--
--	next_cap_ptr = (reg & 0xff00) >> 8;
--	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
--}
--
--static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
--{
--	u8 next_cap_ptr;
--	u16 reg;
--
--	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
--	next_cap_ptr = (reg & 0x00ff);
--
--	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
--}
--
- static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
- 				   struct pci_epf_header *hdr)
- {
-@@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
- 		return -ENOMEM;
- 	}
--	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
-+	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
- 
--	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
-+	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
- 
- 	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
- 	if (offset) {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 83cdd2ce2486..38d76bd63b8f 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -14,6 +14,45 @@
- 
- #include "pcie-designware.h"
- 
-+/*
-+ * These interfaces resemble the pci_find_*capability() interfaces, but these
-+ * are for configuring host controllers, which are bridges *to* PCI devices but
-+ * are not PCI devices themselves.
-+ */
-+static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
-+				  u8 cap)
-+{
-+	u8 cap_id, next_cap_ptr;
-+	u16 reg;
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
++	};
 +
-+	if (!cap_ptr)
-+		return 0;
+ 	flash_1v8: regulator-flash_1v8 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "FLASH_1V8";
+@@ -172,3 +177,38 @@
+ 	status = "okay";
+ 	dr_mode = "host";
+ };
 +
-+	reg = dw_pcie_readw_dbi(pci, cap_ptr);
-+	cap_id = (reg & 0x00ff);
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_c_pins>;
++	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
++	pinctrl-names = "default", "clk-gate";
 +
-+	if (cap_id > PCI_CAP_ID_MAX)
-+		return 0;
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++	disable-wp;
 +
-+	if (cap_id == cap)
-+		return cap_ptr;
++	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddao_3v3>;
++};
 +
-+	next_cap_ptr = (reg & 0xff00) >> 8;
-+	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-+}
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
++	pinctrl-1 = <&emmc_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
 +
-+u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
-+{
-+	u8 next_cap_ptr;
-+	u16 reg;
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	max-frequency = <100000000>;
++	non-removable;
++	disable-wp;
 +
-+	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
-+	next_cap_ptr = (reg & 0x00ff);
-+
-+	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-+}
-+EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
-+
- int dw_pcie_read(void __iomem *addr, int size, u32 *val)
- {
- 	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 14762e262758..6cb978132469 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -251,6 +251,8 @@ struct dw_pcie {
- #define to_dw_pcie_from_ep(endpoint)   \
- 		container_of((endpoint), struct dw_pcie, ep)
- 
-+u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
-+
- int dw_pcie_read(void __iomem *addr, int size, u32 *val);
- int dw_pcie_write(void __iomem *addr, int size, u32 val);
- 
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&flash_1v8>;
++};
 -- 
-2.17.1
+2.21.0
 
