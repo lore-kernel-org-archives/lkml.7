@@ -2,809 +2,145 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B267FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 04:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CB0C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 04:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D76A208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 04:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAA4208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 04:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDs7+rgH"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="FhFitQfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfFGEr2 (ORCPT
+        id S1725978AbfFGEyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 00:47:28 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34338 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfFGEqf (ORCPT
+        Fri, 7 Jun 2019 00:54:23 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:64448 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFGEyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 00:46:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h2so491680pgg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 21:46:34 -0700 (PDT)
+        Fri, 7 Jun 2019 00:54:23 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,562,1557212400"; 
+   d="scan'208";a="34772477"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Jun 2019 21:54:22 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
+ chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 6 Jun 2019 21:54:21 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 6 Jun 2019 21:54:21 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oDsvBuIMQj7KHWjN89mW4cHRKu1BukpnFISgVSO0KEo=;
-        b=nDs7+rgH65evGz17RxnCUdcTAQ0DeXorEmOxJx4ccrlOQnvk8VxsQzR7GBI5SqS9ok
-         7ji1UXbm8s0WoTeCqvf4yEgzhv+sMUgW4yjzNhzvTKtRi2MF9sCrGSDn0UlCOiNjYXim
-         2vgfbm0a04Ekrep1A/UdbYLUDJug+TGkOgzzerw7mDSqtNE+VNwh/bAuZzO7mWzokzS5
-         YQCoHo6Q0CFrjd9NSJchvYAyeC6CD86xzsS9by9VNpo3Jja9hNpojJlGsAgaQlsXjvh5
-         j+oz6nYYWoILTlzPHl1MEpjjTDKx7bczCCUBvEXOJ9DfWg+Nnn124EpxXwyyrKZxpfck
-         OxUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oDsvBuIMQj7KHWjN89mW4cHRKu1BukpnFISgVSO0KEo=;
-        b=dnr2sUXQhh4iDREc875KfUPEYTQR7c8II7g6twGnqbojBkGn/jOgSMmdEEIRi+i6Sj
-         U67mrBNPauFffVZa6K3eYVGucbPg3sUcTflTqgWN8Dx7KxR8ThHXcRezVDbYtx47wByH
-         RtBBLjXodqTNIpB6OBCPbU+fhwXw4iHae5hzrKuOTjeACON1onEKT4+h+hD9J3EXbCVr
-         bCH9lKkan/6CK1bsedxJbxXYt3XO6nwjBxnufZ2TciYXplCHOtzGTmWGPmRYV0jytLYn
-         0dCz4ezQ8aSrXoWpfFFVBloRDOLkINnlcNKqb3TDuPzTH9AePI/daUdPGNRwL0olQNqP
-         POiQ==
-X-Gm-Message-State: APjAAAU/3pU8BjhebR71gV/ZuEKnJFjm6piRGAlJykMVE736RCQo+Ubo
-        GjFUUUel/haAZo3toaSqqX4=
-X-Google-Smtp-Source: APXvYqx2QyYl2x0bXNGjOguiSBizGxaqdgY+KR/JD3ScMz5mr+g7wzKkvR4DISCjv+O0xjmZG6g0qQ==
-X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr3403651pjz.140.1559882794027;
-        Thu, 06 Jun 2019 21:46:34 -0700 (PDT)
-Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id o13sm919516pfh.23.2019.06.06.21.46.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 21:46:33 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 05/15] drm/bridge: tc358767: Drop custom tc_write()/tc_read() accessors
-Date:   Thu,  6 Jun 2019 21:45:40 -0700
-Message-Id: <20190607044550.13361-6-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190607044550.13361-1-andrew.smirnov@gmail.com>
-References: <20190607044550.13361-1-andrew.smirnov@gmail.com>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1MOfrxpcLloTDFR+GlMIfx0ID92W6ANeQcMXQWwoxHY=;
+ b=FhFitQfEZPAS/tVmoXbF/KHz478+zK3X65pX/gdNYSTOWN8ea4671SM/VAb9qpVKeBgotefXGdc7fC7hD/tqID6rLApXqndCuviQZjEp9T3IH6HChRsDeBrIM9gtvIg8xJULa5s30wXcr0Ls8PTBzGOjdOxM31RdGm2UW6JSppA=
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
+ BN6PR11MB1905.namprd11.prod.outlook.com (10.175.97.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1943.22; Fri, 7 Jun 2019 04:54:19 +0000
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::e581:f807:acdc:cb36]) by BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::e581:f807:acdc:cb36%9]) with mapi id 15.20.1943.018; Fri, 7 Jun 2019
+ 04:54:19 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <ludovic.Barre@st.com>, <marek.vasut@gmail.com>
+CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <bbrezillon@kernel.org>, <richard@nod.at>,
+        <alexandre.torgue@st.com>, <robh+dt@kernel.org>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH] mtd: spi-nor: stm32: remove the driver as it was replaced
+ by spi-stm32-qspi.c
+Thread-Topic: [PATCH] mtd: spi-nor: stm32: remove the driver as it was
+ replaced by spi-stm32-qspi.c
+Thread-Index: AQHVBLY5V09e/skhoEu+jgD24Fu8MKaP0KoA
+Date:   Fri, 7 Jun 2019 04:54:19 +0000
+Message-ID: <2940804e-2df7-066c-c9da-2e842ec74a04@microchip.com>
+References: <1557220598-18531-1-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <1557220598-18531-1-git-send-email-ludovic.Barre@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR07CA0230.eurprd07.prod.outlook.com
+ (2603:10a6:802:58::33) To BN6PR11MB1842.namprd11.prod.outlook.com
+ (2603:10b6:404:101::18)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [86.120.241.49]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 086421dd-569a-4559-d8c9-08d6eb0432f7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1905;
+x-ms-traffictypediagnostic: BN6PR11MB1905:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BN6PR11MB1905AD034E89C817EBDD7B51F0100@BN6PR11MB1905.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0061C35778
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(366004)(376002)(396003)(136003)(199004)(189003)(66946007)(71190400001)(66556008)(8676002)(6116002)(486006)(316002)(53546011)(446003)(6246003)(102836004)(99286004)(6436002)(52116002)(36756003)(6512007)(2906002)(54906003)(110136005)(3846002)(6306002)(6486002)(476003)(5660300002)(2616005)(11346002)(186003)(4326008)(81166006)(386003)(71200400001)(305945005)(73956011)(6506007)(4744005)(86362001)(66476007)(76176011)(229853002)(7736002)(31696002)(68736007)(53936002)(31686004)(8936002)(81156014)(7416002)(66066001)(478600001)(256004)(64756008)(25786009)(14444005)(966005)(66446008)(72206003)(14454004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1905;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yrAZQ2rbvTCn3NTYRro74GSl+hcVuUpQiQAEYcJ2EmZgx7SEypl/Axs5f7dNbeoEkGuZFykcE+Z+YtMBF/WZdqQ2teZ3TRiJin0GRMQWwPMIphoXulBQhGxO3kOyDmnAv9R+8OS/8qKxF4A0xRkR7PnWE1FqQjpTByXz2Om30DYtyQlDyI/kM7BfhAxmsShXrLdjz39Z32X9pcARfppzhltdhXXGXuxdNCVi6N2uoeYhEkVyz6OG4c5WW6/+qrLwFcRAF65qBnwuGvf9XYm2y8cY8v1Uk3Oq7a7exPE1nBuQMUIoBGrfy37zuCeRUUWFInm71Qfzxb+VVzeqSJu940xhgN+VJUmOstrB7Ao7OacFlV+7aolf6yDU6xXUnN8q9Vq5edge9SBi7ktanlwZsEEC5uvF/a3z4jHTr+wQjBE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F1FDC19070F3C5438494749CC8BEED4D@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 086421dd-569a-4559-d8c9-08d6eb0432f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 04:54:19.4570
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1905
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A very unfortunate aspect of tc_write()/tc_read() macro helpers is
-that they capture quite a bit of context around them and thus require
-the caller to have magic variables 'ret' and 'tc' as well as label
-'err'. That makes a number of code paths rather counter-intuitive and
-somewhat clunky, for example tc_stream_clock_calc() ends up being like
-this:
-
-	int ret;
-
-	tc_write(DP0_VIDMNGEN1, 32768);
-
-	return 0;
-err:
-	return ret;
-
-which is rather surprising when you read the code for the first
-time. Since those helpers arguably aren't really saving that much code
-and there's no way of fixing them without making them too verbose to
-be worth it change the driver code to not use them at all.
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/gpu/drm/bridge/tc358767.c | 382 ++++++++++++++++++------------
- 1 file changed, 230 insertions(+), 152 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 5b78021d6c5b..7b15caec2ce5 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -280,20 +280,6 @@ static inline struct tc_data *connector_to_tc(struct drm_connector *c)
- 	return container_of(c, struct tc_data, connector);
- }
- 
--/* Simple macros to avoid repeated error checks */
--#define tc_write(reg, var)					\
--	do {							\
--		ret = regmap_write(tc->regmap, reg, var);	\
--		if (ret)					\
--			goto err;				\
--	} while (0)
--#define tc_read(reg, var)					\
--	do {							\
--		ret = regmap_read(tc->regmap, reg, var);	\
--		if (ret)					\
--			goto err;				\
--	} while (0)
--
- static inline int tc_poll_timeout(struct tc_data *tc, unsigned int addr,
- 				  unsigned int cond_mask,
- 				  unsigned int cond_value,
-@@ -351,7 +337,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 
- 	ret = tc_aux_wait_busy(tc, 100);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	if (request == DP_AUX_I2C_WRITE || request == DP_AUX_NATIVE_WRITE) {
- 		/* Store data */
-@@ -362,7 +348,11 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 				tmp = (tmp << 8) | buf[i];
- 			i++;
- 			if (((i % 4) == 0) || (i == size)) {
--				tc_write(DP0_AUXWDATA((i - 1) >> 2), tmp);
-+				ret = regmap_write(tc->regmap,
-+						   DP0_AUXWDATA((i - 1) >> 2),
-+						   tmp);
-+				if (ret)
-+					return ret;
- 				tmp = 0;
- 			}
- 		}
-@@ -372,23 +362,32 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 	}
- 
- 	/* Store address */
--	tc_write(DP0_AUXADDR, msg->address);
-+	ret = regmap_write(tc->regmap, DP0_AUXADDR, msg->address);
-+	if (ret)
-+		return ret;
- 	/* Start transfer */
--	tc_write(DP0_AUXCFG0, ((size - 1) << 8) | request);
-+	ret = regmap_write(tc->regmap, DP0_AUXCFG0,
-+			   ((size - 1) << 8) | request);
-+	if (ret)
-+		return ret;
- 
- 	ret = tc_aux_wait_busy(tc, 100);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	ret = tc_aux_get_status(tc, &msg->reply);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	if (request == DP_AUX_I2C_READ || request == DP_AUX_NATIVE_READ) {
- 		/* Read data */
- 		while (i < size) {
--			if ((i % 4) == 0)
--				tc_read(DP0_AUXRDATA(i >> 2), &tmp);
-+			if ((i % 4) == 0) {
-+				ret = regmap_read(tc->regmap,
-+						  DP0_AUXRDATA(i >> 2), &tmp);
-+				if (ret)
-+					return ret;
-+			}
- 			buf[i] = tmp & 0xff;
- 			tmp = tmp >> 8;
- 			i++;
-@@ -396,8 +395,6 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 	}
- 
- 	return size;
--err:
--	return ret;
- }
- 
- static const char * const training_pattern1_errors[] = {
-@@ -454,6 +451,7 @@ static int tc_pxl_pll_en(struct tc_data *tc, u32 refclk, u32 pixelclock)
- 	int ext_div[] = {1, 2, 3, 5, 7};
- 	int best_pixelclock = 0;
- 	int vco_hi = 0;
-+	u32 pxl_pllparam;
- 
- 	dev_dbg(tc->dev, "PLL: requested %d pixelclock, ref %d\n", pixelclock,
- 		refclk);
-@@ -523,24 +521,29 @@ static int tc_pxl_pll_en(struct tc_data *tc, u32 refclk, u32 pixelclock)
- 		best_mul = 0;
- 
- 	/* Power up PLL and switch to bypass */
--	tc_write(PXL_PLLCTRL, PLLBYP | PLLEN);
-+	ret = regmap_write(tc->regmap, PXL_PLLCTRL, PLLBYP | PLLEN);
-+	if (ret)
-+		return ret;
-+
-+	pxl_pllparam  = vco_hi << 24; /* For PLL VCO >= 300 MHz = 1 */
-+	pxl_pllparam |= ext_div[best_pre] << 20; /* External Pre-divider */
-+	pxl_pllparam |= ext_div[best_post] << 16; /* External Post-divider */
-+	pxl_pllparam |= IN_SEL_REFCLK; /* Use RefClk as PLL input */
-+	pxl_pllparam |= best_div << 8; /* Divider for PLL RefClk */
-+	pxl_pllparam |= best_mul; /* Multiplier for PLL */
- 
--	tc_write(PXL_PLLPARAM,
--		 (vco_hi << 24) |		/* For PLL VCO >= 300 MHz = 1 */
--		 (ext_div[best_pre] << 20) |	/* External Pre-divider */
--		 (ext_div[best_post] << 16) |	/* External Post-divider */
--		 IN_SEL_REFCLK |		/* Use RefClk as PLL input */
--		 (best_div << 8) |		/* Divider for PLL RefClk */
--		 (best_mul << 0));		/* Multiplier for PLL */
-+	ret = regmap_write(tc->regmap, PXL_PLLPARAM, pxl_pllparam);
-+	if (ret)
-+		return ret;
- 
- 	/* Force PLL parameter update and disable bypass */
--	tc_write(PXL_PLLCTRL, PLLUPDATE | PLLEN);
-+	ret = regmap_write(tc->regmap, PXL_PLLCTRL, PLLUPDATE | PLLEN);
-+	if (ret)
-+		return ret;
- 
- 	tc_wait_pll_lock(tc);
- 
- 	return 0;
--err:
--	return ret;
- }
- 
- static int tc_pxl_pll_dis(struct tc_data *tc)
-@@ -551,7 +554,6 @@ static int tc_pxl_pll_dis(struct tc_data *tc)
- 
- static int tc_stream_clock_calc(struct tc_data *tc)
- {
--	int ret;
- 	/*
- 	 * If the Stream clock and Link Symbol clock are
- 	 * asynchronous with each other, the value of M changes over
-@@ -567,16 +569,13 @@ static int tc_stream_clock_calc(struct tc_data *tc)
- 	 * M/N = f_STRMCLK / f_LSCLK
- 	 *
- 	 */
--	tc_write(DP0_VIDMNGEN1, 32768);
--
--	return 0;
--err:
--	return ret;
-+	return regmap_write(tc->regmap, DP0_VIDMNGEN1, 32768);
- }
- 
- static int tc_aux_link_setup(struct tc_data *tc)
- {
- 	unsigned long rate;
-+	u32 dp0_auxcfg1;
- 	u32 value;
- 	int ret;
- 
-@@ -601,18 +600,26 @@ static int tc_aux_link_setup(struct tc_data *tc)
- 
- 	/* Setup DP-PHY / PLL */
- 	value |= SYSCLK_SEL_LSCLK | LSCLK_DIV_2;
--	tc_write(SYS_PLLPARAM, value);
--
--	tc_write(DP_PHY_CTRL, BGREN | PWR_SW_EN | PHY_A0_EN);
-+	ret = regmap_write(tc->regmap, SYS_PLLPARAM, value);
-+	if (ret)
-+		goto err;
- 
-+	ret = regmap_write(tc->regmap, DP_PHY_CTRL,
-+			   BGREN | PWR_SW_EN | PHY_A0_EN);
-+	if (ret)
-+		goto err;
- 	/*
- 	 * Initially PLLs are in bypass. Force PLL parameter update,
- 	 * disable PLL bypass, enable PLL
- 	 */
--	tc_write(DP0_PLLCTRL, PLLUPDATE | PLLEN);
-+	ret = regmap_write(tc->regmap, DP0_PLLCTRL, PLLUPDATE | PLLEN);
-+	if (ret)
-+		goto err;
- 	tc_wait_pll_lock(tc);
- 
--	tc_write(DP1_PLLCTRL, PLLUPDATE | PLLEN);
-+	ret = regmap_write(tc->regmap, DP1_PLLCTRL, PLLUPDATE | PLLEN);
-+	if (ret)
-+		goto err;
- 	tc_wait_pll_lock(tc);
- 
- 	ret = tc_poll_timeout(tc, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 1, 1000);
-@@ -624,9 +631,13 @@ static int tc_aux_link_setup(struct tc_data *tc)
- 	}
- 
- 	/* Setup AUX link */
--	tc_write(DP0_AUXCFG1, AUX_RX_FILTER_EN |
--		 (0x06 << 8) |	/* Aux Bit Period Calculator Threshold */
--		 (0x3f << 0));	/* Aux Response Timeout Timer */
-+	dp0_auxcfg1  = AUX_RX_FILTER_EN;
-+	dp0_auxcfg1 |= 0x06 << 8; /* Aux Bit Period Calculator Threshold */
-+	dp0_auxcfg1 |= 0x3f << 0; /* Aux Response Timeout Timer */
-+
-+	ret = regmap_write(tc->regmap, DP0_AUXCFG1, dp0_auxcfg1);
-+	if (ret)
-+		goto err;
- 
- 	return 0;
- err:
-@@ -727,48 +738,73 @@ static int tc_set_video_mode(struct tc_data *tc,
- 	 * assume we do not need any delay when DPI is a source of
- 	 * sync signals
- 	 */
--	tc_write(VPCTRL0,
--		 FIELD_PREP(VSDELAY, 0) |
--		 OPXLFMT_RGB888 | FRMSYNC_DISABLED | MSF_DISABLED);
--	tc_write(HTIM01,
--		 FIELD_PREP(HBPR, ALIGN(left_margin, 2)) |
--		 FIELD_PREP(HPW, ALIGN(hsync_len, 2)));
--	tc_write(HTIM02,
--		 FIELD_PREP(HDISPR, ALIGN(mode->hdisplay, 2)) |
--		 FIELD_PREP(HFPR, ALIGN(right_margin, 2)));
--	tc_write(VTIM01,
--		 FIELD_PREP(VBPR, upper_margin) |
--		 FIELD_PREP(VSPR, vsync_len));
--	tc_write(VTIM02,
--		 FIELD_PREP(VFPR, lower_margin) |
--		 FIELD_PREP(VDISPR, mode->vdisplay));
--	tc_write(VFUEN0, VFUEN);		/* update settings */
-+	ret = regmap_write(tc->regmap, VPCTRL0,
-+			   FIELD_PREP(VSDELAY, 0) |
-+			   OPXLFMT_RGB888 | FRMSYNC_DISABLED | MSF_DISABLED);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(tc->regmap, HTIM01,
-+			   FIELD_PREP(HBPR, ALIGN(left_margin, 2)) |
-+			   FIELD_PREP(HPW, ALIGN(hsync_len, 2)));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(tc->regmap, HTIM02,
-+			   FIELD_PREP(HDISPR, ALIGN(mode->hdisplay, 2)) |
-+			   FIELD_PREP(HFPR, ALIGN(right_margin, 2)));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(tc->regmap, VTIM01,
-+			   FIELD_PREP(VBPR, upper_margin) |
-+			   FIELD_PREP(VSPR, vsync_len));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(tc->regmap, VTIM02,
-+			   FIELD_PREP(VFPR, lower_margin) |
-+			   FIELD_PREP(VDISPR, mode->vdisplay));
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(tc->regmap, VFUEN0, VFUEN); /* update settings */
-+	if (ret)
-+		return ret;
- 
- 	/* Test pattern settings */
--	tc_write(TSTCTL,
--		 FIELD_PREP(COLOR_R, 120) |
--		 FIELD_PREP(COLOR_G, 20) |
--		 FIELD_PREP(COLOR_B, 99) |
--		 ENI2CFILTER |
--		 FIELD_PREP(COLOR_BAR_MODE, COLOR_BAR_MODE_BARS));
-+	ret = regmap_write(tc->regmap, TSTCTL,
-+			   FIELD_PREP(COLOR_R, 120) |
-+			   FIELD_PREP(COLOR_G, 20) |
-+			   FIELD_PREP(COLOR_B, 99) |
-+			   ENI2CFILTER |
-+			   FIELD_PREP(COLOR_BAR_MODE, COLOR_BAR_MODE_BARS));
-+	if (ret)
-+		return ret;
- 
- 	/* DP Main Stream Attributes */
- 	vid_sync_dly = hsync_len + left_margin + mode->hdisplay;
--	tc_write(DP0_VIDSYNCDELAY,
-+	ret = regmap_write(tc->regmap, DP0_VIDSYNCDELAY,
- 		 FIELD_PREP(THRESH_DLY, max_tu_symbol) |
- 		 FIELD_PREP(VID_SYNC_DLY, vid_sync_dly));
- 
--	tc_write(DP0_TOTALVAL,
--		 FIELD_PREP(H_TOTAL, mode->htotal) |
--		 FIELD_PREP(V_TOTAL, mode->vtotal));
-+	ret = regmap_write(tc->regmap, DP0_TOTALVAL,
-+			   FIELD_PREP(H_TOTAL, mode->htotal) |
-+			   FIELD_PREP(V_TOTAL, mode->vtotal));
-+	if (ret)
-+		return ret;
- 
--	tc_write(DP0_STARTVAL,
--		 FIELD_PREP(H_START, left_margin + hsync_len) |
--		 FIELD_PREP(V_START, upper_margin + vsync_len));
-+	ret = regmap_write(tc->regmap, DP0_STARTVAL,
-+			   FIELD_PREP(H_START, left_margin + hsync_len) |
-+			   FIELD_PREP(V_START, upper_margin + vsync_len));
-+	if (ret)
-+		return ret;
- 
--	tc_write(DP0_ACTIVEVAL,
--		 FIELD_PREP(V_ACT, mode->vdisplay) |
--		 FIELD_PREP(H_ACT, mode->hdisplay));
-+	ret = regmap_write(tc->regmap, DP0_ACTIVEVAL,
-+			   FIELD_PREP(V_ACT, mode->vdisplay) |
-+			   FIELD_PREP(H_ACT, mode->hdisplay));
-+	if (ret)
-+		return ret;
- 
- 	dp0_syncval = FIELD_PREP(VS_WIDTH, vsync_len) |
- 		      FIELD_PREP(HS_WIDTH, hsync_len);
-@@ -779,21 +815,25 @@ static int tc_set_video_mode(struct tc_data *tc,
- 	if (mode->flags & DRM_MODE_FLAG_NHSYNC)
- 		dp0_syncval |= SYNCVAL_HS_POL_ACTIVE_LOW;
- 
--	tc_write(DP0_SYNCVAL, dp0_syncval);
-+	ret = regmap_write(tc->regmap, DP0_SYNCVAL, dp0_syncval);
-+	if (ret)
-+		return ret;
- 
--	tc_write(DPIPXLFMT,
--		 VS_POL_ACTIVE_LOW | HS_POL_ACTIVE_LOW |
--		 DE_POL_ACTIVE_HIGH | SUB_CFG_TYPE_CONFIG1 |
--		 DPI_BPP_RGB888);
-+	ret = regmap_write(tc->regmap, DPIPXLFMT,
-+			   VS_POL_ACTIVE_LOW | HS_POL_ACTIVE_LOW |
-+			   DE_POL_ACTIVE_HIGH | SUB_CFG_TYPE_CONFIG1 |
-+			   DPI_BPP_RGB888);
-+	if (ret)
-+		return ret;
- 
--	tc_write(DP0_MISC,
--		 FIELD_PREP(MAX_TU_SYMBOL, max_tu_symbol) |
--		 FIELD_PREP(TU_SIZE, TU_SIZE_RECOMMENDED) |
--		 BPC_8);
-+	ret = regmap_write(tc->regmap, DP0_MISC,
-+			   FIELD_PREP(MAX_TU_SYMBOL, max_tu_symbol) |
-+			   FIELD_PREP(TU_SIZE, TU_SIZE_RECOMMENDED) |
-+			   BPC_8);
-+	if (ret)
-+		return ret;
- 
- 	return 0;
--err:
--	return ret;
- }
- 
- static int tc_wait_link_training(struct tc_data *tc)
-@@ -808,11 +848,11 @@ static int tc_wait_link_training(struct tc_data *tc)
- 		return ret;
- 	}
- 
--	tc_read(DP0_LTSTAT, &value);
-+	ret = regmap_read(tc->regmap, DP0_LTSTAT, &value);
-+	if (ret)
-+		return ret;
- 
- 	return (value >> 8) & 0x7;
--err:
--	return ret;
- }
- 
- static int tc_main_link_enable(struct tc_data *tc)
-@@ -827,15 +867,25 @@ static int tc_main_link_enable(struct tc_data *tc)
- 
- 	dev_dbg(tc->dev, "link enable\n");
- 
--	tc_read(DP0CTL, &value);
--	if (WARN_ON(value & DP_EN))
--		tc_write(DP0CTL, 0);
-+	ret = regmap_read(tc->regmap, DP0CTL, &value);
-+	if (ret)
-+		return ret;
-+
-+	if (WARN_ON(value & DP_EN)) {
-+		ret = regmap_write(tc->regmap, DP0CTL, 0);
-+		if (ret)
-+			return ret;
-+	}
- 
--	tc_write(DP0_SRCCTRL, tc_srcctrl(tc));
-+	ret = regmap_write(tc->regmap, DP0_SRCCTRL, tc_srcctrl(tc));
-+	if (ret)
-+		return ret;
- 	/* SSCG and BW27 on DP1 must be set to the same as on DP0 */
--	tc_write(DP1_SRCCTRL,
-+	ret = regmap_write(tc->regmap, DP1_SRCCTRL,
- 		 (tc->link.spread ? DP0_SRCCTRL_SSCG : 0) |
- 		 ((tc->link.base.rate != 162000) ? DP0_SRCCTRL_BW27 : 0));
-+	if (ret)
-+		return ret;
- 
- 	rate = clk_get_rate(tc->refclk);
- 	switch (rate) {
-@@ -855,27 +905,36 @@ static int tc_main_link_enable(struct tc_data *tc)
- 		return -EINVAL;
- 	}
- 	value |= SYSCLK_SEL_LSCLK | LSCLK_DIV_2;
--	tc_write(SYS_PLLPARAM, value);
-+	ret = regmap_write(tc->regmap, SYS_PLLPARAM, value);
-+	if (ret)
-+		return ret;
- 
- 	/* Setup Main Link */
- 	dp_phy_ctrl = BGREN | PWR_SW_EN | PHY_A0_EN | PHY_M0_EN;
- 	if (tc->link.base.num_lanes == 2)
- 		dp_phy_ctrl |= PHY_2LANE;
--	tc_write(DP_PHY_CTRL, dp_phy_ctrl);
-+
-+	ret = regmap_write(tc->regmap, DP_PHY_CTRL, dp_phy_ctrl);
-+	if (ret)
-+		return ret;
- 
- 	/* PLL setup */
--	tc_write(DP0_PLLCTRL, PLLUPDATE | PLLEN);
-+	ret = regmap_write(tc->regmap, DP0_PLLCTRL, PLLUPDATE | PLLEN);
-+	if (ret)
-+		return ret;
- 	tc_wait_pll_lock(tc);
- 
--	tc_write(DP1_PLLCTRL, PLLUPDATE | PLLEN);
-+	ret = regmap_write(tc->regmap, DP1_PLLCTRL, PLLUPDATE | PLLEN);
-+	if (ret)
-+		return ret;
- 	tc_wait_pll_lock(tc);
- 
- 	/* Reset/Enable Main Links */
- 	dp_phy_ctrl |= DP_PHY_RST | PHY_M1_RST | PHY_M0_RST;
--	tc_write(DP_PHY_CTRL, dp_phy_ctrl);
-+	ret = regmap_write(tc->regmap, DP_PHY_CTRL, dp_phy_ctrl);
- 	usleep_range(100, 200);
- 	dp_phy_ctrl &= ~(DP_PHY_RST | PHY_M1_RST | PHY_M0_RST);
--	tc_write(DP_PHY_CTRL, dp_phy_ctrl);
-+	ret = regmap_write(tc->regmap, DP_PHY_CTRL, dp_phy_ctrl);
- 
- 	ret = tc_poll_timeout(tc, DP_PHY_CTRL, PHY_RDY, PHY_RDY, 1, 1000);
- 	if (ret) {
-@@ -886,7 +945,7 @@ static int tc_main_link_enable(struct tc_data *tc)
- 	/* Set misc: 8 bits per color */
- 	ret = regmap_update_bits(tc->regmap, DP0_MISC, BPC_8, BPC_8);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	/*
- 	 * ASSR mode
-@@ -939,53 +998,71 @@ static int tc_main_link_enable(struct tc_data *tc)
- 	/* Clock-Recovery */
- 
- 	/* Set DPCD 0x102 for Training Pattern 1 */
--	tc_write(DP0_SNKLTCTRL, DP_LINK_SCRAMBLING_DISABLE |
--		 DP_TRAINING_PATTERN_1);
-+	ret = regmap_write(tc->regmap, DP0_SNKLTCTRL,
-+			   DP_LINK_SCRAMBLING_DISABLE |
-+			   DP_TRAINING_PATTERN_1);
-+	if (ret)
-+		return ret;
- 
--	tc_write(DP0_LTLOOPCTRL,
--		 (15 << 28) |	/* Defer Iteration Count */
--		 (15 << 24) |	/* Loop Iteration Count */
--		 (0xd << 0));	/* Loop Timer Delay */
-+	ret = regmap_write(tc->regmap, DP0_LTLOOPCTRL,
-+			   (15 << 28) |	/* Defer Iteration Count */
-+			   (15 << 24) |	/* Loop Iteration Count */
-+			   (0xd << 0));	/* Loop Timer Delay */
-+	if (ret)
-+		return ret;
- 
--	tc_write(DP0_SRCCTRL, tc_srcctrl(tc) | DP0_SRCCTRL_SCRMBLDIS |
--		 DP0_SRCCTRL_AUTOCORRECT | DP0_SRCCTRL_TP1);
-+	ret = regmap_write(tc->regmap, DP0_SRCCTRL,
-+			   tc_srcctrl(tc) | DP0_SRCCTRL_SCRMBLDIS |
-+			   DP0_SRCCTRL_AUTOCORRECT |
-+			   DP0_SRCCTRL_TP1);
-+	if (ret)
-+		return ret;
- 
- 	/* Enable DP0 to start Link Training */
--	tc_write(DP0CTL,
--		 ((tc->link.base.capabilities & DP_LINK_CAP_ENHANCED_FRAMING) ? EF_EN : 0) |
--		 DP_EN);
-+	ret = regmap_write(tc->regmap, DP0CTL,
-+			   ((tc->link.base.capabilities &
-+			     DP_LINK_CAP_ENHANCED_FRAMING) ? EF_EN : 0) |
-+			   DP_EN);
-+	if (ret)
-+		return ret;
- 
- 	/* wait */
-+
- 	ret = tc_wait_link_training(tc);
- 	if (ret < 0)
--		goto err;
-+		return ret;
- 
- 	if (ret) {
- 		dev_err(tc->dev, "Link training phase 1 failed: %s\n",
- 			training_pattern1_errors[ret]);
--		ret = -ENODEV;
--		goto err;
-+		return -ENODEV;
- 	}
- 
- 	/* Channel Equalization */
- 
- 	/* Set DPCD 0x102 for Training Pattern 2 */
--	tc_write(DP0_SNKLTCTRL, DP_LINK_SCRAMBLING_DISABLE |
--		 DP_TRAINING_PATTERN_2);
-+	ret = regmap_write(tc->regmap, DP0_SNKLTCTRL,
-+			   DP_LINK_SCRAMBLING_DISABLE |
-+			   DP_TRAINING_PATTERN_2);
-+	if (ret)
-+		return ret;
- 
--	tc_write(DP0_SRCCTRL, tc_srcctrl(tc) | DP0_SRCCTRL_SCRMBLDIS |
--		 DP0_SRCCTRL_AUTOCORRECT | DP0_SRCCTRL_TP2);
-+	ret = regmap_write(tc->regmap, DP0_SRCCTRL,
-+			   tc_srcctrl(tc) | DP0_SRCCTRL_SCRMBLDIS |
-+			   DP0_SRCCTRL_AUTOCORRECT |
-+			   DP0_SRCCTRL_TP2);
-+	if (ret)
-+		return ret;
- 
- 	/* wait */
- 	ret = tc_wait_link_training(tc);
- 	if (ret < 0)
--		goto err;
-+		return ret;
- 
- 	if (ret) {
- 		dev_err(tc->dev, "Link training phase 2 failed: %s\n",
- 			training_pattern2_errors[ret]);
--		ret = -ENODEV;
--		goto err;
-+		return -ENODEV;
- 	}
- 
- 	/*
-@@ -998,7 +1075,10 @@ static int tc_main_link_enable(struct tc_data *tc)
- 	 */
- 
- 	/* Clear Training Pattern, set AutoCorrect Mode = 1 */
--	tc_write(DP0_SRCCTRL, tc_srcctrl(tc) | DP0_SRCCTRL_AUTOCORRECT);
-+	ret = regmap_write(tc->regmap, DP0_SRCCTRL, tc_srcctrl(tc) |
-+			   DP0_SRCCTRL_AUTOCORRECT);
-+	if (ret)
-+		return ret;
- 
- 	/* Clear DPCD 0x102 */
- 	/* Note: Can Not use DP0_SNKLTCTRL (0x06E4) short cut */
-@@ -1042,7 +1122,7 @@ static int tc_main_link_enable(struct tc_data *tc)
- 		dev_err(dev, "0x0205 SINK_STATUS:               0x%02x\n", tmp[3]);
- 		dev_err(dev, "0x0206 ADJUST_REQUEST_LANE0_1:    0x%02x\n", tmp[4]);
- 		dev_err(dev, "0x0207 ADJUST_REQUEST_LANE2_3:    0x%02x\n", tmp[5]);
--		goto err;
-+		return ret;
- 	}
- 
- 	return 0;
-@@ -1051,7 +1131,6 @@ static int tc_main_link_enable(struct tc_data *tc)
- 	return ret;
- err_dpcd_write:
- 	dev_err(tc->dev, "Failed to write DPCD: %d\n", ret);
--err:
- 	return ret;
- }
- 
-@@ -1061,12 +1140,11 @@ static int tc_main_link_disable(struct tc_data *tc)
- 
- 	dev_dbg(tc->dev, "link disable\n");
- 
--	tc_write(DP0_SRCCTRL, 0);
--	tc_write(DP0CTL, 0);
-+	ret = regmap_write(tc->regmap, DP0_SRCCTRL, 0);
-+	if (ret)
-+		return ret;
- 
--	return 0;
--err:
--	return ret;
-+	return regmap_write(tc->regmap, DP0CTL, 0);
- }
- 
- static int tc_stream_enable(struct tc_data *tc)
-@@ -1081,7 +1159,7 @@ static int tc_stream_enable(struct tc_data *tc)
- 		ret = tc_pxl_pll_en(tc, clk_get_rate(tc->refclk),
- 				    1000 * tc->mode.clock);
- 		if (ret)
--			goto err;
-+			return ret;
- 	}
- 
- 	ret = tc_set_video_mode(tc, &tc->mode);
-@@ -1096,7 +1174,9 @@ static int tc_stream_enable(struct tc_data *tc)
- 	value = VID_MN_GEN | DP_EN;
- 	if (tc->link.base.capabilities & DP_LINK_CAP_ENHANCED_FRAMING)
- 		value |= EF_EN;
--	tc_write(DP0CTL, value);
-+	ret = regmap_write(tc->regmap, DP0CTL, value);
-+	if (ret)
-+		return ret;
- 	/*
- 	 * VID_EN assertion should be delayed by at least N * LSCLK
- 	 * cycles from the time VID_MN_GEN is enabled in order to
-@@ -1106,36 +1186,35 @@ static int tc_stream_enable(struct tc_data *tc)
- 	 */
- 	usleep_range(500, 1000);
- 	value |= VID_EN;
--	tc_write(DP0CTL, value);
-+	ret = regmap_write(tc->regmap, DP0CTL, value);
-+	if (ret)
-+		return ret;
- 	/* Set input interface */
- 	value = DP0_AUDSRC_NO_INPUT;
- 	if (tc_test_pattern)
- 		value |= DP0_VIDSRC_COLOR_BAR;
- 	else
- 		value |= DP0_VIDSRC_DPI_RX;
--	tc_write(SYSCTRL, value);
-+	ret = regmap_write(tc->regmap, SYSCTRL, value);
-+	if (ret)
-+		return ret;
- 
- 	return 0;
--err:
--	return ret;
- }
- 
- static int tc_stream_disable(struct tc_data *tc)
- {
- 	int ret;
--	u32 val;
- 
- 	dev_dbg(tc->dev, "disable video stream\n");
- 
--	tc_read(DP0CTL, &val);
--	val &= ~VID_EN;
--	tc_write(DP0CTL, val);
-+	ret = regmap_update_bits(tc->regmap, DP0CTL, VID_EN, 0);
-+	if (ret)
-+		return ret;
- 
- 	tc_pxl_pll_dis(tc);
- 
- 	return 0;
--err:
--	return ret;
- }
- 
- static void tc_bridge_pre_enable(struct drm_bridge *bridge)
-@@ -1327,7 +1406,9 @@ static enum drm_connector_status tc_connector_detect(struct drm_connector *conne
- 			return connector_status_unknown;
- 	}
- 
--	tc_read(GPIOI, &val);
-+	ret = regmap_read(tc->regmap, GPIOI, &val);
-+	if (ret)
-+		return connector_status_unknown;
- 
- 	conn = val & BIT(tc->hpd_pin);
- 
-@@ -1335,9 +1416,6 @@ static enum drm_connector_status tc_connector_detect(struct drm_connector *conne
- 		return connector_status_connected;
- 	else
- 		return connector_status_disconnected;
--
--err:
--	return connector_status_unknown;
- }
- 
- static const struct drm_connector_funcs tc_connector_funcs = {
--- 
-2.21.0
-
+DQoNCk9uIDA1LzA3LzIwMTkgMTI6MTYgUE0sIEx1ZG92aWMgQmFycmUgd3JvdGU6DQo+IEZyb206
+IEx1ZG92aWMgQmFycmUgPGx1ZG92aWMuYmFycmVAc3QuY29tPg0KPiANCj4gVGhlcmUncyBhIG5l
+dyBkcml2ZXIgdXNpbmcgdGhlIFNQSSBtZW1vcnkgaW50ZXJmYWNlIG9mIHRoZQ0KPiBTUEkgZnJh
+bWV3b3JrIGF0IHNwaS9zcGktc3RtMzItcXNwaS5jLCB3aGljaCBjYW4gYmUgdXNlZA0KPiB0b2dl
+dGhlciB3aXRoIG0yNXA4MC5jIHRvIHJlcGxhY2UgdGhlIGZ1bmN0aW9uYWxpdHkgb2YNCj4gdGhp
+cyBTUEkgTk9SIGRyaXZlci4NCj4gDQo+IFRoZSAibmV3IiBkcml2ZXIgdXNlcyB0aGUgc2FtZSBk
+dCBwcm9wZXJ0aWVzIGFuZCBub3QgYWZmZWN0cw0KPiB0aGUgbGVnYWN5IGNvbXBhdGliaWxpdHku
+DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMdWRvdmljIEJhcnJlIDxsdWRvdmljLmJhcnJlQHN0LmNv
+bT4NCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvc3RtMzItcXVhZHNwaS50
+eHQgICAgICB8ICA0MyAtLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9LY29uZmlnICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgIDcgLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9NYWtlZmlsZSAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDEgLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9zdG0z
+Mi1xdWFkc3BpLmMgICAgICAgICAgICAgICAgfCA3MjAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+
+ICA0IGZpbGVzIGNoYW5nZWQsIDc3MSBkZWxldGlvbnMoLSkNCj4gIGRlbGV0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3N0bTMyLXF1YWRzcGkudHh0
+DQo+ICBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tdGQvc3BpLW5vci9zdG0zMi1xdWFkc3Bp
+LmMNCg0KQXBwbGllZCB0byBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC9tdGQvbGludXguZ2l0LA0Kc3BpLW5vci9uZXh0IGJyYW5jaC4NCg0KVGhhbmtzLA0K
+dGENCg==
