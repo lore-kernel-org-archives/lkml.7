@@ -2,98 +2,143 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0C2C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09623C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C122089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01D62089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLr2K5Di"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqR33tXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbfFGQLF (ORCPT
+        id S1730233AbfFGQMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:11:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44592 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfFGQLE (ORCPT
+        Fri, 7 Jun 2019 12:12:07 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42011 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729440AbfFGQMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:11:04 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so1442592pfe.11;
-        Fri, 07 Jun 2019 09:11:04 -0700 (PDT)
+        Fri, 7 Jun 2019 12:12:06 -0400
+Received: by mail-ed1-f66.google.com with SMTP id z25so3739363edq.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 09:12:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gOcAoOgUJ8ToP+KuOkuSoSykBN8JQpaW2IEBwzocWiA=;
-        b=rLr2K5DiMojbzEaa5Ywy9k6urJhtkEtxIf/Qb6eFY1P3LqQ9Qh8Yv4gF7IopVlNtx4
-         EKs9LbyvNh/YH6Ip8Nz2tcEUYljmsuEuNNZAML33Kl3Bdh3cRpZjHPWpmSKR2N84SGZO
-         8XNyN0/ofl9BoedI+3OymYbvpAUVY71j3BZ42t4ybwcdXphUOci+QY5CXcADqFykqW2Y
-         6JsD8A2QRbAlRxQWJO67AHbHSRllv2q2nbaLB1VIS677IbeMj9s4YJae4M6yMAawiHbo
-         C1VPnvbogyAR0mObFI8PpPVUujfDejOsTUGgTEQB2PD4W8/BEKyy8SjdGdvQ/Lgr4wLa
-         5EYA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0JpUdTsOa7EIqirFoRpEdJ3i1kEV+MZYFQgC803VPU4=;
+        b=JqR33tXvj7r3SHSdAHfYwNexD3XwyD1ZvtvYnpUh+WuFIqsP+hRuv63fN0FauVOcjj
+         RtW7VNOkguzUN+evgxN0vU5f6Utscp5VDT9uCSvFv9ErP39f1DoZVwUcEudOh1cCg4xf
+         tXEHhviwSiYhRa8OVpLjGGzNq1UZOdWKHbbxVqkr7wucaWqoqdi9VfXzJ2u3vOnrJ6T5
+         FFQajWDRxOgOQOxXqEJyUwGhAWYf8n9qUP7QiVrxOXxdsH/MO7OnaTDxomnk5pjOseKK
+         yTYkGnLAsm7mvkh4RoLf/xq8TfoJt46ZDhv8N6jrBWO+qUc1gTrp1g6Lf4hKfaVUQ+pg
+         pg6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gOcAoOgUJ8ToP+KuOkuSoSykBN8JQpaW2IEBwzocWiA=;
-        b=ak2j0KkanEHRbINCG/bDAbS8p4Ey53Ng1lSQ/7cceFmxKJQGpzYV9f+fzBOHvekMpb
-         i6+3rAULV7DQIlfjWZFJHF7eaJ/wRo2TCZs41J7k3LrfF6/UDrgmIPJX9xXs4IGVPvoB
-         SP/XV2WdxuWO854f+Wu5/N22KdB2T0EG/kvUH8UbDjMHzK6zW37bDfkTiGFaA/MkHU1o
-         lWrs/PFDCOLxMlEX1pqa/dZRswB5mBDAKZrbhYXQdCtzGT1Z8GAHdsEEWF7OwlUhE8va
-         6SZDGvpQ7j9nIYJfl24WwyZuhfNdx9FgPRxvloNjg6C9W9H5z+lc9GZZLrjydGDmqEiq
-         2UUw==
-X-Gm-Message-State: APjAAAUT0fWYDE/XTwSdo0Z8mge3pkdVaKJYdw8cTXN8low9uQgGQ3gT
-        pUNUeSNv+JkoSEOYd/W/VOU=
-X-Google-Smtp-Source: APXvYqxOm0VlI3dITuIPgYNDymmbq9I5So9h/kTANxxFE3KmXn4DO43Jzc03+CMy8gxb+ixZaWIn2Q==
-X-Received: by 2002:a17:90a:b115:: with SMTP id z21mr6339628pjq.64.1559923864406;
-        Fri, 07 Jun 2019 09:11:04 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o6sm2831948pfo.164.2019.06.07.09.11.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 09:11:03 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 09:11:02 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/69] 4.14.124-stable review
-Message-ID: <20190607161102.GA19615@roeck-us.net>
-References: <20190607153848.271562617@linuxfoundation.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0JpUdTsOa7EIqirFoRpEdJ3i1kEV+MZYFQgC803VPU4=;
+        b=W8RmEOfCOgnwTzVzIxSNC367E2WeowWBDcDjR/y8kFVkKYtJAbWMqyx3AjUSWaeuHv
+         kIr8uFyW5EVnQYHW4GVzGb4zUIrysj6+vUHDpkwPTr2PnTTdcr5CXjRFiWoHMuEzqwwE
+         ueNwDk7yraR8VJYTEhrK1GMpMA4uTQx9+F38KVjv7kjhK7Ny8M4OobPWvRxESRR+T5jB
+         EqcGMr9wpAfHkLhd75KQ5RLUvowlfmfRWW4IF3dQATAj+wroeSRVXSXDjCrnZswTRrwE
+         GwpJg73DnbnOQGo+5hetNuNiSHA+naN6LLeeJ+sPC+u+gub/fvFgYpfqFG2hYpanej2e
+         VBPg==
+X-Gm-Message-State: APjAAAUoka6k2Jpho0wz12P0HLcyd6LpT0Q3w7Ebk7Qo++fLKexG9TLp
+        ObVtlGgq1cmk4k78UK0avUQ=
+X-Google-Smtp-Source: APXvYqxaqFHNuIkJrpIMXSYPMvOKZbnkIur25HxoxqrDANRMZ9mZX+ezXOZ6faSEaGlGt95Y6uIsEQ==
+X-Received: by 2002:a17:906:53c8:: with SMTP id p8mr48103973ejo.18.1559923925065;
+        Fri, 07 Jun 2019 09:12:05 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id q24sm440117ejr.35.2019.06.07.09.12.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 07 Jun 2019 09:12:04 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] arm64: Don't unconditionally add -Wno-psabi to KBUILD_CFLAGS
+Date:   Fri,  7 Jun 2019 09:12:01 -0700
+Message-Id: <20190607161201.73430-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 05:38:41PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.124 release.
-> There are 69 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun 09 Jun 2019 03:37:08 PM UTC.
-> Anything received after that time might be too late.
->
+This is a GCC only option, which warns about ABI changes within GCC, so
+unconditionally adding breaks Clang with tons of:
 
-fs/btrfs/inode.c: In function 'btrfs_add_link':
-fs/btrfs/inode.c:6590:27: error: invalid initializer
-   struct timespec64 now = current_time(&parent_inode->vfs_inode);
-                           ^~~~~~~~~~~~
-fs/btrfs/inode.c:6592:35: error: incompatible types when assigning to type 'struct timespec' from type 'struct timespec64'
-   parent_inode->vfs_inode.i_mtime = now;
-                                   ^
-fs/btrfs/inode.c:6593:35: error: incompatible types when assigning to type 'struct timespec' from type 'struct timespec64'
-   parent_inode->vfs_inode.i_ctime = now;
-                                   ^
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
 
-Guenter
+and link time failures:
+
+ld.lld: error: undefined symbol: __efistub___stack_chk_guard
+>>> referenced by arm-stub.c:73
+(/home/nathan/cbl/linux/drivers/firmware/efi/libstub/arm-stub.c:73)
+>>>               arm-stub.stub.o:(__efistub_install_memreserve_table)
+in archive ./drivers/firmware/efi/libstub/lib.a
+
+I suspect the link time failure comes from some flags not being added
+via cc-option, which will always fail when an unknown flag is
+unconditionally added to KBUILD_CFLAGS because -Werror is added after
+commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
+support clang").
+
+$ echo "int main() { return 0; }" | clang -Wno-psabi -o /dev/null -x c -
+warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+1 warning generated.
+
+$ echo $?
+0
+
+$ echo "int main() { return 0; }" | clang -Werror -Wno-psabi -o /dev/null -x c -
+error: unknown warning option '-Wno-psabi' [-Werror,-Wunknown-warning-option]
+
+$ echo $?
+1
+
+This side effect is user visible (aside from the inordinate amount of
+-Wunknown-warning-option and build failure), as some warnings that are
+normally disabled like -Waddress-of-packed-member or
+-Wunused-const-variable show up.
+
+Use cc-disable-warning so that it gets disabled for GCC and does nothing
+for Clang.
+
+Fixes: ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI drift")
+Link: https://github.com/ClangBuiltLinux/linux/issues/511
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ arch/arm64/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 8fbd583b18e1..e9d2e578cbe6 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -51,7 +51,7 @@ endif
+ 
+ KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
+ KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+-KBUILD_CFLAGS	+= -Wno-psabi
++KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
+ KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
+ 
+ KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
+-- 
+2.22.0.rc3
+
