@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B979C468BF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DBEC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A492147A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F97A21530
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922154;
-	bh=cYTjEnrGVJZwA7HlPblYMwwrw9L/XU5fNTXJgOmLX+g=;
+	s=default; t=1559922157;
+	bh=Jf33kmLLFmEOiNWvM0nQgXO0kil+1qKY4cJex/Oqgak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cM2lsr45zzX2DEJtGZvBTJDoGhgMZO8o1ka6jR/7nEUVYK7p1HNN7igV/Cf2E7aUL
-	 zjWcNEJfCX5qtdn25FbXkNgkaPYhfGpMMgRdBsQXzx9TTEr2xBbaGE1J/2r6de55qv
-	 W12eZ3uoU8819B2EWP3hvNl/klqIVClwRyv9vMd0=
+	b=gQmnl8V8U76Bcz8blfY2wucfIMWLjpo+HowgojCNWTMVTZXGZYrQAt0V6p0VJODGR
+	 4BiGu6rLNyCjUvJqFCMwToNJhg5i0XfTxuMrud7Mzj0K4bMr0dqvL4khkuM2aj4fT1
+	 uRvgpDa5iEOSaaA/k3nPc70FOo0vaDlSR4Xm8sWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbfFGPmd (ORCPT
+        id S1728873AbfFGPmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:42:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbfFGPma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:30 -0400
+        id S1730604AbfFGPmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A82482147A;
-        Fri,  7 Jun 2019 15:42:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89132214C6;
+        Fri,  7 Jun 2019 15:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922150;
-        bh=cYTjEnrGVJZwA7HlPblYMwwrw9L/XU5fNTXJgOmLX+g=;
+        s=default; t=1559922153;
+        bh=Jf33kmLLFmEOiNWvM0nQgXO0kil+1qKY4cJex/Oqgak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIh385MMhXyxBSJAZ+egsryg1nyeXlNWIZZ9AvB3eF4bZT5l6z1njSNFJkkmBKCpp
-         WC5nPLr8lKZbV3VFtcc579UJRjKVxAdsOeUdgPUIu8scVNRfJXcZN9syO4keYFXse3
-         677Fd/B8HRlf1iD3O9i+VhgmSq6Xbcv6RunVWhy8=
+        b=pr1dL4kri3GG4GAjxJHXoADY+SYs7TOMT0salUBXqtThkWAXPChF+CE5YzkbvkPQ2
+         clxFc1fHu7Fo+itRE2H0r8Tggity5k7Wh4CBI6XV4fesQxHdQ07P0kY7C2ClGa9cEw
+         bvZ5Z4E7ptrgIFI2bqULRr/Kgc+OQnrWGAjt59+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 4.14 55/69] ima: show rules with IMA_INMASK correctly
-Date:   Fri,  7 Jun 2019 17:39:36 +0200
-Message-Id: <20190607153854.952094064@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Rodin <mrodin@de.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "George G. Davis" <george_davis@mentor.com>
+Subject: [PATCH 4.14 56/69] serial: sh-sci: disable DMA for uart_console
+Date:   Fri,  7 Jun 2019 17:39:37 +0200
+Message-Id: <20190607153855.055695580@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -59,69 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: George G. Davis <george_davis@mentor.com>
 
-commit 8cdc23a3d9ec0944000ad43bad588e36afdc38cd upstream.
+commit 099506cbbc79c0bd52b19cb6b930f256dabc3950 upstream.
 
-Show the '^' character when a policy rule has flag IMA_INMASK.
+As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
+console UART"), UART console lines use low-level PIO only access functions
+which will conflict with use of the line when DMA is enabled, e.g. when
+the console line is also used for systemd messages. So disable DMA
+support for UART console lines.
 
-Fixes: 80eae209d63ac ("IMA: allow reading back the current IMA policy")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
+Link: https://patchwork.kernel.org/patch/10929511/
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: stable@vger.kernel.org
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/ima/ima_policy.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/tty/serial/sh-sci.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -964,10 +964,10 @@ enum {
- };
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1479,6 +1479,13 @@ static void sci_request_dma(struct uart_
  
- static const char *const mask_tokens[] = {
--	"MAY_EXEC",
--	"MAY_WRITE",
--	"MAY_READ",
--	"MAY_APPEND"
-+	"^MAY_EXEC",
-+	"^MAY_WRITE",
-+	"^MAY_READ",
-+	"^MAY_APPEND"
- };
+ 	dev_dbg(port->dev, "%s: port %d\n", __func__, port->line);
  
- #define __ima_hook_stringify(str)	(#str),
-@@ -1027,6 +1027,7 @@ int ima_policy_show(struct seq_file *m,
- 	struct ima_rule_entry *entry = v;
- 	int i;
- 	char tbuf[64] = {0,};
-+	int offset = 0;
- 
- 	rcu_read_lock();
- 
-@@ -1046,15 +1047,17 @@ int ima_policy_show(struct seq_file *m,
- 	if (entry->flags & IMA_FUNC)
- 		policy_func_show(m, entry->func);
- 
--	if (entry->flags & IMA_MASK) {
-+	if ((entry->flags & IMA_MASK) || (entry->flags & IMA_INMASK)) {
-+		if (entry->flags & IMA_MASK)
-+			offset = 1;
- 		if (entry->mask & MAY_EXEC)
--			seq_printf(m, pt(Opt_mask), mt(mask_exec));
-+			seq_printf(m, pt(Opt_mask), mt(mask_exec) + offset);
- 		if (entry->mask & MAY_WRITE)
--			seq_printf(m, pt(Opt_mask), mt(mask_write));
-+			seq_printf(m, pt(Opt_mask), mt(mask_write) + offset);
- 		if (entry->mask & MAY_READ)
--			seq_printf(m, pt(Opt_mask), mt(mask_read));
-+			seq_printf(m, pt(Opt_mask), mt(mask_read) + offset);
- 		if (entry->mask & MAY_APPEND)
--			seq_printf(m, pt(Opt_mask), mt(mask_append));
-+			seq_printf(m, pt(Opt_mask), mt(mask_append) + offset);
- 		seq_puts(m, " ");
- 	}
++	/*
++	 * DMA on console may interfere with Kernel log messages which use
++	 * plain putchar(). So, simply don't use it with a console.
++	 */
++	if (uart_console(port))
++		return;
++
+ 	if (!port->dev->of_node)
+ 		return;
  
 
 
