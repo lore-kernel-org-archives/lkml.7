@@ -2,111 +2,198 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E9DC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D24C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E361A20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2F5208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XSGfcj1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbfFGRoh (ORCPT
+        id S1730743AbfFGRqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:44:37 -0400
-Received: from mga09.intel.com ([134.134.136.24]:20991 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728684AbfFGRog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:44:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 10:44:35 -0700
-X-ExtLoop1: 1
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Jun 2019 10:44:35 -0700
-Received: from orsmsx152.amr.corp.intel.com (10.22.226.39) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 7 Jun 2019 10:44:35 -0700
-Received: from orsmsx121.amr.corp.intel.com ([169.254.10.133]) by
- ORSMSX152.amr.corp.intel.com ([169.254.8.218]) with mapi id 14.03.0415.000;
- Fri, 7 Jun 2019 10:44:34 -0700
-From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
-To:     Colin King <colin.king@canonical.com>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][next] ixgbe: fix potential u32 overflow on shift
-Thread-Topic: [PATCH][next] ixgbe: fix potential u32 overflow on shift
-Thread-Index: AQHVHGlIFzjSo2T24EekWjY0GDeFv6aQeFNA
-Date:   Fri, 7 Jun 2019 17:44:34 +0000
-Message-ID: <02874ECE860811409154E81DA85FBB589674E8A9@ORSMSX121.amr.corp.intel.com>
-References: <20190606131053.25103-1-colin.king@canonical.com>
-In-Reply-To: <20190606131053.25103-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzQ0NTdiMjYtMzdlZi00YjZkLWE1ZjgtNWZiMzNhYWZiMWNjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoic05lQVM1c3BPcGRjQk1xaXFsUVNnUEY1U1Z3cFcwdUxxV3ZEdGpcLzh3T1QyZFUwQ2hkS3VMeTJHUTFVXC9cL0FWUiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 7 Jun 2019 13:46:45 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35060 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfFGRqp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 13:46:45 -0400
+Received: by mail-io1-f67.google.com with SMTP id m24so2068032ioo.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:46:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OGmBbbRWFo234O0ByoHzH5djRqtJUP/+gKNDjfi0ktg=;
+        b=XSGfcj1IOPYQbpqtlN+cMfxYHMJGXzTsP7R2SENjFD5r+ZZSMN2L7x2ee0FXcNEldO
+         Rt88V2mbBhXKwecz/KlFLfUKszcmNPPAL09D2sYuxcNhgCdSjn7jZAucRGy9vlFAwNjq
+         oxWyov48Y4hATJrDHadH0u9gUvH5/XFySKG56cOI5Z11wp+mCKyVO02j1BPrREdYthAL
+         iy6oBZs/H1ppEFG6pM1vY0ZronAHPbDe95sorgybDhwmG+et7L1OysCqtwlp4Ng21MgG
+         VrNT+mM7esgI3iK4tyURZwYeE/MQV7y5XHK7PyBDa+U++Ye/+7YW96FY/ypVO37vSbV5
+         vo8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OGmBbbRWFo234O0ByoHzH5djRqtJUP/+gKNDjfi0ktg=;
+        b=ViUStW9hK5IhJeHHhI+6GOsc0Mq5gcIMo02X4KyV7WkMshwvFM3C7f1qMvmZRhLFvF
+         it4jIqtueuyIS93F1etvpbGvW2afyuOt00tnR7ZVhv3urEFvocxhGx5IKorELXQhmJZE
+         U3jKmjmSCmChjuzG/Gh9kEAx2NFnxgza5T52Mg2ChoGP3cIAy5cmuuSJ9WlF+JSUqi+0
+         ObqPanuemLL1pe0ntTgnjptSIDakW64JYVxOyZBTDA3tJDXwtOQVvA/uVM51Yc8bcdHm
+         2c/zyOVxqo6QqXvN2elhYMxRU44fXbf+jpxJzwfFCnDTePOHS+I85ZUmPElKHzMlt1AV
+         g8aQ==
+X-Gm-Message-State: APjAAAUdOlBUROdZYimF21CN8+kwMaNtN7h7tAaySSnZhimoNEkCLHzz
+        M4wzrpWDvJ7VkdaMYXWHxsqt8nvrBkT7TRaV10CsAw==
+X-Google-Smtp-Source: APXvYqzcojG7IhnLk8f2hB3YsMsOg6cYvCD99jIIpOf/uzmSkn3NO8EuVgnxxOq/xMVendXgc7HudOQRbCab/mMtcP4=
+X-Received: by 2002:a6b:2c96:: with SMTP id s144mr19471049ios.57.1559929603835;
+ Fri, 07 Jun 2019 10:46:43 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
+ <20190524173508.29044-3-mathieu.poirier@linaro.org> <c1507e8b-9ec8-a5c4-a398-20dcc47acaa8@arm.com>
+In-Reply-To: <c1507e8b-9ec8-a5c4-a398-20dcc47acaa8@arm.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 7 Jun 2019 11:46:32 -0600
+Message-ID: <CANLsYkx6o9xgxTh4s-o7tVxKKLu_SQc5CLtoHzHK=8WtNK4dbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/17] perf tools: Configure timestsamp generation in
+ CPU-wide mode
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDb2xpbiBLaW5nIFttYWlsdG86
-Y29saW4ua2luZ0BjYW5vbmljYWwuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgSnVuZSAwNiwgMjAx
-OSA2OjExIEFNDQo+IFRvOiBLZWxsZXIsIEphY29iIEUgPGphY29iLmUua2VsbGVyQGludGVsLmNv
-bT47IEtpcnNoZXIsIEplZmZyZXkgVA0KPiA8amVmZnJleS50LmtpcnNoZXJAaW50ZWwuY29tPjsg
-RGF2aWQgUyAuIE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47IGludGVsLXdpcmVkLQ0KPiBs
-YW5AbGlzdHMub3N1b3NsLm9yZzsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZw0KPiBDYzoga2VybmVs
-LWphbml0b3JzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0K
-PiBTdWJqZWN0OiBbUEFUQ0hdW25leHRdIGl4Z2JlOiBmaXggcG90ZW50aWFsIHUzMiBvdmVyZmxv
-dyBvbiBzaGlmdA0KPiANCj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25p
-Y2FsLmNvbT4NCj4gDQo+IFRoZSB1MzIgdmFyaWFibGUgcmVtIGlzIGJlaW5nIHNoaWZ0ZWQgdXNp
-bmcgdTMyIGFyaXRobWV0aWMgaG93ZXZlcg0KPiBpdCBpcyBiZWluZyBwYXNzZWQgdG8gZGl2X3U2
-NCB0aGF0IGV4cGVjdHMgdGhlIGV4cHJlc3Npb24gdG8gYmUgYSB1NjQuDQo+IFRoZSAzMiBiaXQg
-c2hpZnQgbWF5IHBvdGVudGlhbGx5IG92ZXJmbG93LCBzbyBjYXN0IHJlbSB0byBhIHU2NCBiZWZv
-cmUNCj4gc2hpZnRpbmcgdG8gYXZvaWQgdGhpcy4NCj4gDQo+IEFkZHJlc3Nlcy1Db3Zlcml0eTog
-KCJVbmludGVudGlvbmFsIGludGVnZXIgb3ZlcmZsb3ciKQ0KPiBGaXhlczogY2Q0NTgzMjA2OTkw
-ICgiaXhnYmU6IGltcGxlbWVudCBzdXBwb3J0IGZvciBTRFAvUFBTIG91dHB1dCBvbiBYNTUwDQo+
-IGhhcmR3YXJlIikNCj4gRml4ZXM6IDY4ZDk2NzZmYzA0ZSAoIml4Z2JlOiBmaXggUFRQIFNEUCBw
-aW4gc2V0dXAgb24gWDU0MCBoYXJkd2FyZSIpDQo+IFNpZ25lZC1vZmYtYnk6IENvbGluIElhbiBL
-aW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9uZXQvZXRo
-ZXJuZXQvaW50ZWwvaXhnYmUvaXhnYmVfcHRwLmMgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaXhnYmUvaXhnYmVfcHRwLmMNCj4gYi9kcml2ZXJzL25l
-dC9ldGhlcm5ldC9pbnRlbC9peGdiZS9peGdiZV9wdHAuYw0KPiBpbmRleCAyYzRkMzI3ZmNjMmUu
-LmZmMjI5ZDBlOTE0NiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwv
-aXhnYmUvaXhnYmVfcHRwLmMNCj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaXhn
-YmUvaXhnYmVfcHRwLmMNCj4gQEAgLTIwOSw3ICsyMDksNyBAQCBzdGF0aWMgdm9pZCBpeGdiZV9w
-dHBfc2V0dXBfc2RwX1g1NDAoc3RydWN0IGl4Z2JlX2FkYXB0ZXINCj4gKmFkYXB0ZXIpDQo+ICAJ
-ICogYXNzdW1lcyB0aGF0IHRoZSBjeWNsZSBjb3VudGVyIHNoaWZ0IGlzIHNtYWxsIGVub3VnaCB0
-byBhdm9pZA0KPiAgCSAqIG92ZXJmbG93aW5nIHdoZW4gc2hpZnRpbmcgdGhlIHJlbWFpbmRlci4N
-Cj4gIAkgKi8NCg0KV2l0aCB0aGlzIGNoYW5nZSwgdGhlIGNvbW1lbnQgYWJvdmUgdGhlIGRpdl91
-NjQgZG9lc24ndCBtYWtlIG11Y2ggc2Vuc2UuIEkgd291bGQgYWxzbyBkcm9wIHRoZSBwYXJ0IGFi
-b3V0IHRoZSBhc3N1bWluZyBpdCB3b24ndCBvdmVyZmxvdyB0aGUgcmVtYWluZGVyLg0KDQo+IC0J
-Y2xvY2tfZWRnZSArPSBkaXZfdTY0KChyZW0gPDwgY2MtPnNoaWZ0KSwgY2MtPm11bHQpOw0KPiAr
-CWNsb2NrX2VkZ2UgKz0gZGl2X3U2NCgoKHU2NClyZW0gPDwgY2MtPnNoaWZ0KSwgY2MtPm11bHQp
-Ow0KPiAgCXRyZ3R0aW1sID0gKHUzMiljbG9ja19lZGdlOw0KPiAgCXRyZ3R0aW1oID0gKHUzMiko
-Y2xvY2tfZWRnZSA+PiAzMik7DQo+IA0KPiBAQCAtMjk1LDcgKzI5NSw3IEBAIHN0YXRpYyB2b2lk
-IGl4Z2JlX3B0cF9zZXR1cF9zZHBfWDU1MChzdHJ1Y3QgaXhnYmVfYWRhcHRlcg0KPiAqYWRhcHRl
-cikNCj4gIAkgKiBhc3N1bWVzIHRoYXQgdGhlIGN5Y2xlIGNvdW50ZXIgc2hpZnQgaXMgc21hbGwg
-ZW5vdWdoIHRvIGF2b2lkDQo+ICAJICogb3ZlcmZsb3dpbmcgd2hlbiBzaGlmdGluZyB0aGUgcmVt
-YWluZGVyLg0KPiAgCSAqLw0KDQpTYW1lIGhlcmUuDQoNClRoYW5rcywNCkpha2UNCg0KPiAtCWNs
-b2NrX2VkZ2UgKz0gZGl2X3U2NCgocmVtIDw8IGNjLT5zaGlmdCksIGNjLT5tdWx0KTsNCj4gKwlj
-bG9ja19lZGdlICs9IGRpdl91NjQoKCh1NjQpcmVtIDw8IGNjLT5zaGlmdCksIGNjLT5tdWx0KTsN
-Cj4gDQo+ICAJLyogWDU1MCBoYXJkd2FyZSBzdG9yZXMgdGhlIHRpbWUgaW4gMzJiaXRzIG9mICdi
-aWxsaW9ucyBvZiBjeWNsZXMnIGFuZA0KPiAgCSAqIDMyYml0cyBvZiAnY3ljbGVzJy4gVGhlcmUn
-cyBubyBndWFyYW50ZWUgdGhhdCBjeWNsZXMgcmVwcmVzZW50cw0KPiAtLQ0KPiAyLjIwLjENCg0K
+On Fri, 7 Jun 2019 at 03:41, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+>
+>
+> On 24/05/2019 18:34, Mathieu Poirier wrote:
+> > When operating in CPU-wide mode tracers need to generate timestamps in
+> > order to correlate the code being traced on one CPU with what is executed
+> > on other CPUs.
+> >
+> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > ---
+> >   tools/perf/arch/arm/util/cs-etm.c | 57 +++++++++++++++++++++++++++++++
+> >   1 file changed, 57 insertions(+)
+> >
+> > diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> > index 3912f0bf04ed..be1e4f20affa 100644
+> > --- a/tools/perf/arch/arm/util/cs-etm.c
+> > +++ b/tools/perf/arch/arm/util/cs-etm.c
+> > @@ -99,6 +99,54 @@ static int cs_etm_set_context_id(struct auxtrace_record *itr,
+> >       return err;
+> >   }
+> >
+> > +static int cs_etm_set_timestamp(struct auxtrace_record *itr,
+> > +                             struct perf_evsel *evsel, int cpu)
+> > +{
+> > +     struct cs_etm_recording *ptr;
+> > +     struct perf_pmu *cs_etm_pmu;
+> > +     char path[PATH_MAX];
+> > +     int err = -EINVAL;
+> > +     u32 val;
+> > +
+> > +     ptr = container_of(itr, struct cs_etm_recording, itr);
+> > +     cs_etm_pmu = ptr->cs_etm_pmu;
+> > +
+> > +     if (!cs_etm_is_etmv4(itr, cpu))
+> > +             goto out;
+> > +
+> > +     /* Get a handle on TRCIRD0 */
+> > +     snprintf(path, PATH_MAX, "cpu%d/%s",
+> > +              cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
+> > +     err = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
+> > +
+> > +     /* There was a problem reading the file, bailing out */
+> > +     if (err != 1) {
+> > +             pr_err("%s: can't read file %s\n",
+> > +                    CORESIGHT_ETM_PMU_NAME, path);
+> > +             goto out;
+> > +     }
+> > +
+> > +     /*
+> > +      * TRCIDR0.TSSIZE, bit [28-24], indicates whether global timestamping
+> > +      * is supported:
+> > +      *  0b00000 Global timestamping is not implemented
+> > +      *  0b00110 Implementation supports a maximum timestamp of 48bits.
+> > +      *  0b01000 Implementation supports a maximum timestamp of 64bits.
+> > +      */
+> > +     val &= GENMASK(28, 24);
+> > +     if (!val) {
+> > +             err = -EINVAL;
+> > +             goto out;
+> > +     }
+> > +
+> > +     /* All good, let the kernel know */
+> > +     evsel->attr.config |= (1 << ETM_OPT_TS);
+> > +     err = 0;
+> > +
+> > +out:
+> > +     return err;
+> > +}
+> > +
+> >   static int cs_etm_set_option(struct auxtrace_record *itr,
+> >                            struct perf_evsel *evsel, u32 option)
+> >   {
+> > @@ -118,6 +166,11 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
+> >                       if (err)
+> >                               goto out;
+> >                       break;
+> > +             case ETM_OPT_TS:
+> > +                     err = cs_etm_set_timestamp(itr, evsel, i);
+> > +                     if (err)
+> > +                             goto out;
+> > +                     break;
+> >               default:
+> >                       goto out;
+> >               }
+> > @@ -343,6 +396,10 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+> >               err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_CTXTID);
+> >               if (err)
+> >                       goto out;
+> > +
+> > +             err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_TS);
+> > +             if (err)
+> > +                     goto out;
+>
+> nit: Could we not do this in one shot, say :
+>
+>         cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_TS | ETM_OPT_CTXTID) ?
+>
+> rather than iterating over the per-CPU events twice ? The cs_etm_set_option()
+> could simply replace the switch() to :
+>
+>         if (option & ETM_OPT_1)
+>                 do_something_for_1()
+>         if (option & ETM_OPT_2)
+>                 do_something_for_2();
+>         if (option & ~(ETM_OPT_1 | ETM_OPT_2 |...))
+>                 /* do unsupported option */
+>
+
+Yes, that is a good optimization.
+
+Arnaldo, do you prefer a new set or another patch on top of this one?
+
+Thanks,
+Mathieu
+
+>
+> Cheers
+> Suzuki
