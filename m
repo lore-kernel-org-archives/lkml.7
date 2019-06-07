@@ -2,103 +2,128 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46023C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F40AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123A820868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0055C206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWf1N2/7"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eIZjWpfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfFGDcr (ORCPT
+        id S1726707AbfFGDkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 23:32:47 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42066 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfFGDcq (ORCPT
+        Thu, 6 Jun 2019 23:40:19 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15308 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfFGDkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 23:32:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so385140pgd.9;
-        Thu, 06 Jun 2019 20:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Uid5j8Xhkx1Up2P/L/dzyxeFX18f8LJ+y3dsMZAvABE=;
-        b=VWf1N2/7qRnL6GliVgGLRsKMZY9lK9c3sG2D8m+7hzOSdzhoDoPUasj/LxVOTU09kQ
-         DLF0evu6aStur0COx3yoDrA2WSD4xRsoXdQRo9ae5HX101EPQ1+Upw+O1To53tWWhqNG
-         k9fIN+nu+0pLNT0vG9wQESwVyyz+NowLqzieud6gInVawhCG4/iW61zB5aeiEHaMT+RW
-         pzp4Z4c4nxjDgBPM398kj9l9REJzBZeYjOxFeht5R80RrJ35BXJ501LXN4FQ2EDx6m70
-         vMAhI05FHpaF+eu9m3oZwKl1Yyic9xCYy/nC+OcvgWF1yGHjxUVCvxhvZIq3+RJD7+d3
-         RakQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uid5j8Xhkx1Up2P/L/dzyxeFX18f8LJ+y3dsMZAvABE=;
-        b=CkKXaI73mY1YTPoUVEj2yG62JgzoOVDOSYflRpII39vLKWS4g93t8I6c6mrksg9m99
-         GZfhXAUUYmLOqjiWJvLvvhzqTtffWdNICJyIWIzTSSaUaMt8XoRE4kN1TVU8OZS7uqtd
-         3SH0cLtqOZR0bMS8TsRn+epwprsVG2o+3glmkSTMiR8t4FYY1LlMSTulCj2es6G0sbp6
-         2VJZlEa8A5hl7YExk8j9LiLyC59ttImwAwGfOSpsgA6KZVjWYu4BULYUmWhzgrs7/sbH
-         Q5Sv9zVqCeXXWvbQoWgeuoepbmfpjP0EivJc5Pl9EDhmqpOKrQQ/p5NG5OpHbnPiYcb1
-         4QiA==
-X-Gm-Message-State: APjAAAX80y130jlbPnMNOncV8kjxziEVvPJR+HpzKcMOzOUzXor/gOSW
-        9XOzseD8vfY7+5UEP/iTbUg=
-X-Google-Smtp-Source: APXvYqxj5lrNGYMpJ4UD+bpaXMalgKDNsmj3X7TucZ0MPOjcr90U/gLYZ8CU3k9AjNirwQH9GAasSQ==
-X-Received: by 2002:a17:90a:ac0e:: with SMTP id o14mr3244614pjq.142.1559878366329;
-        Thu, 06 Jun 2019 20:32:46 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id p6sm472522pjp.7.2019.06.06.20.32.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 20:32:45 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 20:32:43 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
-Message-ID: <20190607033242.expuqccmzhxdkwzq@localhost>
-References: <20190604170756.14338-1-olteanv@gmail.com>
- <20190604.202258.1443410652869724565.davem@davemloft.net>
- <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
- <CA+h21hrJYm4GLn+LpJ623_dpgxE2z-k3xTMD=z1QQ9WqXg7zrQ@mail.gmail.com>
- <20190605174547.b4rwbfrzjqzujxno@localhost>
- <CA+h21hqdmu3+YQVMXyvckrUjXW7mstjG1MDafWGy4qFHB9zdtg@mail.gmail.com>
- <20190606031135.6lyydjb6hqfeuzt3@localhost>
- <CA+h21hosUmUu98QdzKTJPUd2PEwa+sUg1SNY1ti95kD6kOqE6A@mail.gmail.com>
+        Thu, 6 Jun 2019 23:40:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf9dc920000>; Thu, 06 Jun 2019 20:40:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 20:40:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 20:40:17 -0700
+Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 03:40:14 +0000
+Subject: Re: [PATCH V4] drivers: i2c: tegra: fix checkpatch defects
+To:     Peter Rosin <peda@axentia.se>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559806523-1352-1-git-send-email-bbiswas@nvidia.com>
+ <8df7648d-c5bd-7179-6368-66dab9b7fa39@axentia.se>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <7f24640f-5031-1413-e96d-6a28e6a50869@nvidia.com>
+Date:   Thu, 6 Jun 2019 20:40:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21hosUmUu98QdzKTJPUd2PEwa+sUg1SNY1ti95kD6kOqE6A@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <8df7648d-c5bd-7179-6368-66dab9b7fa39@axentia.se>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559878802; bh=nfSUhBUF0xlX62infTIeqrfDT/WeXXcT5pJ8IWqzS7E=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=eIZjWpfvKzFCwQBJeizXnXqq20T+jo+8OdUlQ/U8pnV5ormVQsb0am3YqW0y7wIwc
+         kxWPHMyJvk1z/h3Men8AqQ0X9V0BeJgeV1XqYg93Ud2y/AfbJqi43yhQh8Cf0b7XMh
+         1CZDD6wfk/8I5EctFaDLnz2c1qUmBPN38GcjR84OLNbz/xmGuzdTMkltoKHaP4PXI8
+         5OSw19q4NXiPZ3zqQqg3u9WZ464Y2Im3mAUFKqGgXVtPmHu+RFYps6sw8yIR2A1y05
+         dU7CfPAMO7aOCUpHWvi1sjAV4VaoECe3k+vr7FcCkkiznBpnFSejJ0TtFZCpEvuZVA
+         KhmWBvf1ETI0w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 04:40:19PM +0300, Vladimir Oltean wrote:
-> Plain and simply because it doesn't work very well.
-> Even phc2sys from the system clock to the hardware (no timestamps
-> involved) has trouble staying put (under 1000 ns offset).
-> And using the hardware-corrected timestamps triggers a lot of clockchecks.
-
-It sounds like a bug in reading or adjusting the HW clock.  Is the HW
-clock stable when you don't adjust its frequency?
-
-Thanks,
-Richard
 
 
+On 6/6/19 1:45 PM, Peter Rosin wrote:
+> On 2019-06-06 09:35, Bitan Biswas wrote:
+>> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
+>>
+>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+>> as needed. Replace BUG() with error handling code.
+>> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
+>>
+>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>> ---
+>>   drivers/i2c/busses/i2c-tegra.c | 67 +++++++++++++++++++++++-------------------
+>>   1 file changed, 37 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+>> index 76b7926..55a5d87 100644
+>> --- a/drivers/i2c/busses/i2c-tegra.c
+>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>> @@ -78,6 +78,7 @@
+>>   #define I2C_ERR_NO_ACK				0x01
+>>   #define I2C_ERR_ARBITRATION_LOST		0x02
+>>   #define I2C_ERR_UNKNOWN_INTERRUPT		0x04
+>> +#define I2C_ERR_UNEXPECTED_STATUS               0x08
+> 
+> Use tabs like the the surrounding code. And perhaps convert all
+> these flags to use the BIT() macro?
+I shall correct the line and use tabs. I shall convert macros to BIT() 
+if possible.
 
+> 
+>>   
+>>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+>>   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+>> @@ -112,7 +113,7 @@
+>>   #define I2C_CLKEN_OVERRIDE			0x090
+>>   #define I2C_MST_CORE_CLKEN_OVR			BIT(0)
+>>   
+>> -#define I2C_CONFIG_LOAD_TIMEOUT			1000000
+>> +#define I2C_CONFIG_LOAD_TMOUT			1000000
+> 
+> Similar to xfer_tm already mentioned by Dmitry; just keep it as
+> ..._TIMEOUT and ignore checkpatch on this issue. Or juggle the
+> code in some other way to pacify checkpatch. E.g. abbreviate
+> CONFIG instead? Or something. CONF is way easier to read than
+> TMOUT IMHO...
+OK. Just for consistency planning to ignore checkpatch warning and shall 
+keep current macro I2C_CONFIG_LOAD_TIMEOUT.
+
+-Thanks,
+  Bitan
