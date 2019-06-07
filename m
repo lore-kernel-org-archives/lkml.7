@@ -2,73 +2,75 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16891C468BD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2867C2BCA1
 	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF5272133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCCCA208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O4Q4lH3b"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="w3CaDR2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731211AbfFGTws (ORCPT
+        id S1731226AbfFGTwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:52:48 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49818 "EHLO
+        Fri, 7 Jun 2019 15:52:49 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49824 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729548AbfFGTwr (ORCPT
+        with ESMTP id S1729857AbfFGTwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 15:52:47 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57JiKEL098463;
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57Ji74w098344;
         Fri, 7 Jun 2019 19:52:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=2Hqgg1/dO7uDJAgCGo7yaezXbdAI6xjToJ1CY+fruaU=;
- b=O4Q4lH3bRZ7MwIrivSjLjEanSp/1BldkeSoNEhDGZB9H8i68MirSK5kT1G9vfxNC3u4G
- tobWGASbTP9Drb1g9Mp6AfG8qM1rx37y+y4jziC7fhhXc85/r1nyZdjc0AvVPgR6CHSx
- mIG1Ihxno+1jVFyxrLhM0kOMgrsCEXUfm8XfDOuuOU7vnXmbp6UA1fNJI3jhDUe7a+Kj
- 2hmnQAljFlUykUzJfFxc07Lcm1cms6sQ9cH5eVDN5A51sxAKeJHRt4ypV3oFix9CV0pf
- SvSI14XmrW8h5CL/zA1fBwxGuMoBQ9DLdBog4cttYZAO5Rx24YoPOe0lSjwY171+j0cH Eg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2suj0r05yx-1
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=azHW+cQaxRO87i10SYgPO4FUpLCfSWASegXloVuy3VQ=;
+ b=w3CaDR2O4INbPMzrHAC8aguIcoYcO5oSuWcxoIEYHztSXXbVVYZJg5+WE+14EIzCE0C1
+ TVMTE2n4O7EDEytsuoc1n2hm/zTNBIcaUeDeFuoprpMxzxgNn7gn76RyTjO8IWmUlRVZ
+ ZUjUWxxde/bBSNq/xwUhJJb1vpb3w3mfVrRWLbt0ybhL4KtoTPpBWfeXukHVNQ+G4VlT
+ WS3KA2XBp3fi0dLpDJL4iARVbhFdld/fvWVI6fDmF4ad38jxcL3MdsC8VbsknLBn6PKe
+ wt23+RHL4aBmnFtEZLSzTmWknxdbTaYmUeWlteDmG2JZxIBskT7SF31VlhAwBrxSemdF 5Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2suj0r05yw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 07 Jun 2019 19:52:33 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57JpA1j022963;
-        Fri, 7 Jun 2019 19:52:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2swngn8kcn-1
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57Jq2W2024665;
+        Fri, 7 Jun 2019 19:52:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2swngk6psb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 07 Jun 2019 19:52:32 +0000
 Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x57JqRQt020424;
-        Fri, 7 Jun 2019 19:52:28 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x57JqThx012151;
+        Fri, 7 Jun 2019 19:52:29 GMT
 Received: from oracle.com (/75.80.107.76)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 12:52:27 -0700
+        with ESMTP ; Fri, 07 Jun 2019 12:52:29 -0700
 From:   Larry Bassel <larry.bassel@oracle.com>
 To:     mike.kravetz@oracle.com, willy@infradead.org,
         dan.j.williams@intel.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     Larry Bassel <larry.bassel@oracle.com>
-Subject: [RFC PATCH v2 0/2] Share PMDs for FS/DAX on x86
-Date:   Fri,  7 Jun 2019 12:51:01 -0700
-Message-Id: <1559937063-8323-1-git-send-email-larry.bassel@oracle.com>
+Subject: [RFC PATCH v2 2/2] Implement sharing/unsharing of PMDs for FS/DAX
+Date:   Fri,  7 Jun 2019 12:51:03 -0700
+Message-Id: <1559937063-8323-3-git-send-email-larry.bassel@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1559937063-8323-1-git-send-email-larry.bassel@oracle.com>
+References: <1559937063-8323-1-git-send-email-larry.bassel@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=641
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906070132
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=682 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906070132
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,68 +78,246 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes from v1 to v2:
+This is based on (but somewhat different from) what hugetlbfs
+does to share/unshare page tables.
 
-* Rebased on v5.2-rc3
-
-* An incorrect reference to "page table entries" was fixed (pointed
-out by Kirill Shutemov)
-
-* Renamed CONFIG_ARCH_WANT_HUGE_PMD_SHARE
-to CONFIG_ARCH_HAS_HUGE_PMD_SHARE instead of introducing
-a new config option (suggested by Dan Williams)
-
-* Removed some unnecessary #ifdef stubs (suggested by Matt Wilcox)
-
-* A previously overlooked case involving mprotect() is now handled
-properly (pointed out by Mike Kravetz)
-
+Signed-off-by: Larry Bassel <larry.bassel@oracle.com>
 ---
+ include/linux/hugetlb.h |   4 ++
+ mm/huge_memory.c        |  37 +++++++++++++++++
+ mm/hugetlb.c            |   8 ++--
+ mm/memory.c             | 108 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 152 insertions(+), 5 deletions(-)
 
-This patchset implements sharing of page tables pointing
-to 2MiB pages (PMDs) for FS/DAX on x86.
-
-Only shared mmapings of files (i.e. neither private mmapings nor
-anonymous pages) are eligible for PMD sharing.
-
-Due to the characteristics of DAX, this code is simpler and
-less intrusive than the general case would be.
-
-In our use case (high end Oracle database using DAX/XFS/PMEM/2MiB
-pages) there would be significant memory savings.
-
-A future system might have 6 TiB of PMEM on it and
-there might be 10000 processes each mapping all of this 6 TiB.
-Here the savings would be approximately
-(6 TiB / 2 MiB) * 8 bytes (page table size) * 10000 = 240 GiB
-(and these page tables themselves would probably be in
-non-PMEM (ordinary RAM)).
-
-There would also be a reduction in page faults because in
-some cases the page fault has already been satisfied and
-the page table entry has been filled in (and so the processes
-after the first would not take a fault).
-
-The code for detecting whether PMDs can be shared and
-the implementation of sharing and unsharing is based
-on, but somewhat different than that in mm/hugetlb.c,
-though some of the code from this file could be reused and
-thus was made non-static.
-
-Larry Bassel (2):
-  Rename CONFIG_ARCH_WANT_HUGE_PMD_SHARE to
-    CONFIG_ARCH_HAS_HUGE_PMD_SHARE
-  Implement sharing/unsharing of PMDs for FS/DAX
-
- arch/arm64/Kconfig          |   2 +-
- arch/arm64/mm/hugetlbpage.c |   2 +-
- arch/x86/Kconfig            |   2 +-
- include/linux/hugetlb.h     |   4 ++
- mm/huge_memory.c            |  37 +++++++++++++++
- mm/hugetlb.c                |  14 +++---
- mm/memory.c                 | 108 +++++++++++++++++++++++++++++++++++++++++++-
- 7 files changed, 158 insertions(+), 11 deletions(-)
-
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index edf476c..debff55 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -140,6 +140,10 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+ int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr, pte_t *ptep);
+ void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
+ 				unsigned long *start, unsigned long *end);
++unsigned long page_table_shareable(struct vm_area_struct *svma,
++				   struct vm_area_struct *vma,
++				   unsigned long addr, pgoff_t idx);
++bool vma_shareable(struct vm_area_struct *vma, unsigned long addr);
+ struct page *follow_huge_addr(struct mm_struct *mm, unsigned long address,
+ 			      int write);
+ struct page *follow_huge_pd(struct vm_area_struct *vma,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 9f8bce9..935874c 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1751,6 +1751,33 @@ static inline void zap_deposited_table(struct mm_struct *mm, pmd_t *pmd)
+ 	mm_dec_nr_ptes(mm);
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_HUGE_PMD_SHARE
++static int unshare_huge_pmd(struct mm_struct *mm, unsigned long addr,
++			    pmd_t *pmdp)
++{
++	pgd_t *pgd = pgd_offset(mm, addr);
++	p4d_t *p4d = p4d_offset(pgd, addr);
++	pud_t *pud = pud_offset(p4d, addr);
++
++	WARN_ON(page_count(virt_to_page(pmdp)) == 0);
++	if (page_count(virt_to_page(pmdp)) == 1)
++		return 0;
++
++	pud_clear(pud);
++	put_page(virt_to_page(pmdp));
++	mm_dec_nr_pmds(mm);
++	return 1;
++}
++
++#else
++static int unshare_huge_pmd(struct mm_struct *mm, unsigned long addr,
++			    pmd_t *pmdp)
++{
++	return 0;
++}
++
++#endif
++
+ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 		 pmd_t *pmd, unsigned long addr)
+ {
+@@ -1768,6 +1795,11 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 	 * pgtable_trans_huge_withdraw after finishing pmdp related
+ 	 * operations.
+ 	 */
++	if (unshare_huge_pmd(vma->vm_mm, addr, pmd)) {
++		spin_unlock(ptl);
++		return 1;
++	}
++
+ 	orig_pmd = pmdp_huge_get_and_clear_full(tlb->mm, addr, pmd,
+ 			tlb->fullmm);
+ 	tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
+@@ -1915,6 +1947,11 @@ int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 	if (!ptl)
+ 		return 0;
+ 
++	if (unshare_huge_pmd(mm, addr, pmd)) {
++		spin_unlock(ptl);
++		return HPAGE_PMD_NR;
++	}
++
+ 	preserve_write = prot_numa && pmd_write(*pmd);
+ 	ret = 1;
+ 
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 3a54c9d..1c1ed4e 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4653,9 +4653,9 @@ long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
+ }
+ 
+ #ifdef CONFIG_ARCH_HAS_HUGE_PMD_SHARE
+-static unsigned long page_table_shareable(struct vm_area_struct *svma,
+-				struct vm_area_struct *vma,
+-				unsigned long addr, pgoff_t idx)
++unsigned long page_table_shareable(struct vm_area_struct *svma,
++				   struct vm_area_struct *vma,
++				   unsigned long addr, pgoff_t idx)
+ {
+ 	unsigned long saddr = ((idx - svma->vm_pgoff) << PAGE_SHIFT) +
+ 				svma->vm_start;
+@@ -4678,7 +4678,7 @@ static unsigned long page_table_shareable(struct vm_area_struct *svma,
+ 	return saddr;
+ }
+ 
+-static bool vma_shareable(struct vm_area_struct *vma, unsigned long addr)
++bool vma_shareable(struct vm_area_struct *vma, unsigned long addr)
+ {
+ 	unsigned long base = addr & PUD_MASK;
+ 	unsigned long end = base + PUD_SIZE;
+diff --git a/mm/memory.c b/mm/memory.c
+index ddf20bd..1ca8f75 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3932,6 +3932,109 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_HUGE_PMD_SHARE
++static pmd_t *huge_pmd_offset(struct mm_struct *mm,
++			      unsigned long addr, unsigned long sz)
++{
++	pgd_t *pgd;
++	p4d_t *p4d;
++	pud_t *pud;
++	pmd_t *pmd;
++
++	pgd = pgd_offset(mm, addr);
++	if (!pgd_present(*pgd))
++		return NULL;
++	p4d = p4d_offset(pgd, addr);
++	if (!p4d_present(*p4d))
++		return NULL;
++
++	pud = pud_offset(p4d, addr);
++	if (sz != PUD_SIZE && pud_none(*pud))
++		return NULL;
++	/* hugepage or swap? */
++	if (pud_huge(*pud) || !pud_present(*pud))
++		return (pmd_t *)pud;
++
++	pmd = pmd_offset(pud, addr);
++	if (sz != PMD_SIZE && pmd_none(*pmd))
++		return NULL;
++	/* hugepage or swap? */
++	if (pmd_huge(*pmd) || !pmd_present(*pmd))
++		return pmd;
++
++	return NULL;
++}
++
++static pmd_t *pmd_share(struct mm_struct *mm, pud_t *pud, unsigned long addr)
++{
++	struct vm_area_struct *vma = find_vma(mm, addr);
++	struct address_space *mapping = vma->vm_file->f_mapping;
++	pgoff_t idx = ((addr - vma->vm_start) >> PAGE_SHIFT) +
++			vma->vm_pgoff;
++	struct vm_area_struct *svma;
++	unsigned long saddr;
++	pmd_t *spmd = NULL;
++	pmd_t *pmd;
++	spinlock_t *ptl;
++
++	if (!vma_shareable(vma, addr))
++		return pmd_alloc(mm, pud, addr);
++
++	i_mmap_lock_write(mapping);
++
++	vma_interval_tree_foreach(svma, &mapping->i_mmap, idx, idx) {
++		if (svma == vma)
++			continue;
++
++		saddr = page_table_shareable(svma, vma, addr, idx);
++		if (saddr) {
++			spmd = huge_pmd_offset(svma->vm_mm, saddr,
++					       vma_mmu_pagesize(svma));
++			if (spmd) {
++				get_page(virt_to_page(spmd));
++				break;
++			}
++		}
++	}
++
++	if (!spmd)
++		goto out;
++
++	ptl = pmd_lockptr(mm, spmd);
++	spin_lock(ptl);
++
++	if (pud_none(*pud)) {
++		pud_populate(mm, pud,
++			     (pmd_t *)((unsigned long)spmd & PAGE_MASK));
++		mm_inc_nr_pmds(mm);
++	} else {
++		put_page(virt_to_page(spmd));
++	}
++	spin_unlock(ptl);
++out:
++	pmd = pmd_alloc(mm, pud, addr);
++	i_mmap_unlock_write(mapping);
++	return pmd;
++}
++
++static bool may_share_pmd(struct vm_area_struct *vma)
++{
++	if (vma_is_fsdax(vma))
++		return true;
++	return false;
++}
++#else
++static pmd_t *pmd_share(struct mm_struct *mm, pud_t *pud, unsigned long addr)
++{
++	return pmd_alloc(mm, pud, addr);
++}
++
++static bool may_share_pmd(struct vm_area_struct *vma)
++{
++	return false;
++}
++#endif
++
+ /*
+  * By the time we get here, we already hold the mm semaphore
+  *
+@@ -3985,7 +4088,10 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
+ 		}
+ 	}
+ 
+-	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
++	if (unlikely(may_share_pmd(vma)))
++		vmf.pmd = pmd_share(mm, vmf.pud, address);
++	else
++		vmf.pmd = pmd_alloc(mm, vmf.pud, address);
+ 	if (!vmf.pmd)
+ 		return VM_FAULT_OOM;
+ 	if (pmd_none(*vmf.pmd) && __transparent_hugepage_enabled(vma)) {
 -- 
 1.8.3.1
 
