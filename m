@@ -2,51 +2,51 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,URI_NOVOWEL,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB5CC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699D1C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912B720840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435A820657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922529;
-	bh=gbnX3ywF0e3V1x5CbjGk84uFpatjER0sEXlbfyLEBoI=;
+	s=default; t=1559922532;
+	bh=i9a0ZUahDI1c5+MI02r8x0XYn9rRDSysmbWvD6LbOn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rv6MElFHeh28qp0py7gBfgzHHV0TXlVouZtp44QFhfBjs3Sev/UgfbxMqXiYnmE9n
-	 QX6ejsJWnVlAw8ErtGJbzTzMvlo/ldzjpBmftEf04aSJlDdi9DtmuBn9tFpcIG8uQV
-	 JfWd9OQ4/m5nUqsZzR4G6CLwTto9Ep14BmErP0fQ=
+	b=KBjatL8W+kerU5SrHUpj9jCzDt/nHawjEZeaEEe2pc4IxD7S+3OXQWPgSkM3c2S1m
+	 26WbA+Y/2Gk63z/5TaJYx5jJHFzZHrKZBeh7sHLtIVIC/02XrkUOIxh+KPwReaz79s
+	 972MWHt0biotKL9gjN3QVm8GuIDZDODuDJ3hIoJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731163AbfFGPss (ORCPT
+        id S1731855AbfFGPsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:48:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34244 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730098AbfFGPsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:48:46 -0400
+        id S1730010AbfFGPsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:48:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D677B20657;
-        Fri,  7 Jun 2019 15:48:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51BDB20840;
+        Fri,  7 Jun 2019 15:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922525;
-        bh=gbnX3ywF0e3V1x5CbjGk84uFpatjER0sEXlbfyLEBoI=;
+        s=default; t=1559922522;
+        bh=i9a0ZUahDI1c5+MI02r8x0XYn9rRDSysmbWvD6LbOn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GYEPmtsljG7Qji/oUTmNtBK/QqcC7nUkWUUDAx68ohCRfMwgR0yL2UpJbz04Ui4FG
-         NXRFTLoFGR466ijmwVIdJX073H0zjZs6wh5TzU6Wr+efHdECqUoG2tCZVZ+LTj1ZV/
-         vrten1v9qNdJX4QjK8+69dxv/l6Zs4N/E+YJ1XxA=
+        b=tot3mFAgDPZtC5M54q2uS8J7OmINCAT69mZEFKtthmom7QkTB9Jn19n2vdTRHz43W
+         F5GI4sojtDhq4t9noq1IFiwzKo8D+BsYUgZ6j6b+2SV3tJe6MwpKQUwDz6JC/8vpND
+         /yz+XRixfw3k6Ff7DDZwyJeW6ahhHxLQIVsYBsPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 5.1 44/85] i2c: mlxcpld: Fix wrong initialization order in probe
-Date:   Fri,  7 Jun 2019 17:39:29 +0200
-Message-Id: <20190607153854.537361926@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.1 26/85] Btrfs: incremental send, fix file corruption when no-holes feature is enabled
+Date:   Fri,  7 Jun 2019 17:39:11 +0200
+Message-Id: <20190607153852.505395646@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -59,44 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 13067ef73f337336e3149f5bb9f3fd05fe7f87a0 upstream.
+commit 6b1f72e5b82a5c2a4da4d1ebb8cc01913ddbea21 upstream.
 
-Fix wrong order in probing routine initialization - field `base_addr'
-is used before it's initialized. Move assignment of 'priv->base_addr`
-to the beginning, prior the call to mlxcpld_i2c_read_comm().
-Wrong order caused the first read of capability register to be executed
-at wrong offset 0x0 instead of 0x2000. By chance it was a "good
-garbage" at 0x0 offset.
+When using the no-holes feature, if we have a file with prealloc extents
+with a start offset beyond the file's eof, doing an incremental send can
+cause corruption of the file due to incorrect hole detection. Such case
+requires that the prealloc extent(s) exist in both the parent and send
+snapshots, and that a hole is punched into the file that covers all its
+extents that do not cross the eof boundary.
 
-Fixes: 313ce648b5a4 ("i2c: mlxcpld: Add support for extended transaction length for i2c-mlxcpld")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
+Example reproducer:
+
+  $ mkfs.btrfs -f -O no-holes /dev/sdb
+  $ mount /dev/sdb /mnt/sdb
+
+  $ xfs_io -f -c "pwrite -S 0xab 0 500K" /mnt/sdb/foobar
+  $ xfs_io -c "falloc -k 1200K 800K" /mnt/sdb/foobar
+
+  $ btrfs subvolume snapshot -r /mnt/sdb /mnt/sdb/base
+
+  $ btrfs send -f /tmp/base.snap /mnt/sdb/base
+
+  $ xfs_io -c "fpunch 0 500K" /mnt/sdb/foobar
+
+  $ btrfs subvolume snapshot -r /mnt/sdb /mnt/sdb/incr
+
+  $ btrfs send -p /mnt/sdb/base -f /tmp/incr.snap /mnt/sdb/incr
+
+  $ md5sum /mnt/sdb/incr/foobar
+  816df6f64deba63b029ca19d880ee10a   /mnt/sdb/incr/foobar
+
+  $ mkfs.btrfs -f /dev/sdc
+  $ mount /dev/sdc /mnt/sdc
+
+  $ btrfs receive -f /tmp/base.snap /mnt/sdc
+  $ btrfs receive -f /tmp/incr.snap /mnt/sdc
+
+  $ md5sum /mnt/sdc/incr/foobar
+  cf2ef71f4a9e90c2f6013ba3b2257ed2   /mnt/sdc/incr/foobar
+
+    --> Different checksum, because the prealloc extent beyond the
+        file's eof confused the hole detection code and it assumed
+        a hole starting at offset 0 and ending at the offset of the
+        prealloc extent (1200Kb) instead of ending at the offset
+        500Kb (the file's size).
+
+Fix this by ensuring we never cross the file's size when issuing the
+write operations for a hole.
+
+Fixes: 16e7549f045d33 ("Btrfs: incompatible format change to remove hole extents")
+CC: stable@vger.kernel.org # 3.14+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-mlxcpld.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/send.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/i2c/busses/i2c-mlxcpld.c
-+++ b/drivers/i2c/busses/i2c-mlxcpld.c
-@@ -503,6 +503,7 @@ static int mlxcpld_i2c_probe(struct plat
- 	platform_set_drvdata(pdev, priv);
+--- a/fs/btrfs/send.c
++++ b/fs/btrfs/send.c
+@@ -5017,6 +5017,12 @@ static int send_hole(struct send_ctx *sc
+ 	if (offset >= sctx->cur_inode_size)
+ 		return 0;
  
- 	priv->dev = &pdev->dev;
-+	priv->base_addr = MLXPLAT_CPLD_LPC_I2C_BASE_ADDR;
++	/*
++	 * Don't go beyond the inode's i_size due to prealloc extents that start
++	 * after the i_size.
++	 */
++	end = min_t(u64, end, sctx->cur_inode_size);
++
+ 	if (sctx->flags & BTRFS_SEND_FLAG_NO_FILE_DATA)
+ 		return send_update_extent(sctx, offset, end - offset);
  
- 	/* Register with i2c layer */
- 	mlxcpld_i2c_adapter.timeout = usecs_to_jiffies(MLXCPLD_I2C_XFER_TO);
-@@ -518,7 +519,6 @@ static int mlxcpld_i2c_probe(struct plat
- 		mlxcpld_i2c_adapter.nr = pdev->id;
- 	priv->adap = mlxcpld_i2c_adapter;
- 	priv->adap.dev.parent = &pdev->dev;
--	priv->base_addr = MLXPLAT_CPLD_LPC_I2C_BASE_ADDR;
- 	i2c_set_adapdata(&priv->adap, priv);
- 
- 	err = i2c_add_numbered_adapter(&priv->adap);
 
 
