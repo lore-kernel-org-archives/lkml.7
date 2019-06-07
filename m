@@ -2,244 +2,95 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209A1C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3148C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EA721479
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922114;
-	bh=M97kvfNqU291Z0rC27Xf7jcfcJgYt2yGRAZwR1iEu2s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLJxXJiWuLPfm7jEBot7apPpw7mN42zxyjmAX2nlYFKHOz3Ts+lYmYKo01oyU0XuJ
-	 UetABshji7gA2WFjm8n+qHYWM2REtO1clgv827SWhmAzuDym2WgI8gKIjem3mHQtTZ
-	 1CUn3BsyjCNaifTIUhf6rEgkK8FbB9V0socEl+oE=
+	by mail.kernel.org (Postfix) with ESMTP id BA72621473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730418AbfFGPlx (ORCPT
+        id S1730432AbfFGPl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:41:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51954 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:41:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:42968 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730382AbfFGPlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:41:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C686212F5;
-        Fri,  7 Jun 2019 15:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922108;
-        bh=M97kvfNqU291Z0rC27Xf7jcfcJgYt2yGRAZwR1iEu2s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNIlEItUP+EubeEeSPSl9QXeCIzf82C+3DJa47XJnYq8kXsoTc2wVyKFTYSrmgvxo
-         xNa7Tnwj0vKlnFZbQK5k+caQrnitf5aTE2FraKAB3WAMFCJcgAa2fTbbeNQWG7NoEP
-         ux6qf+nkpBAUrLb83H2RnMtznIebADkqzvfs/MfU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 38/69] scsi: zfcp: fix to prevent port_remove with pure auto scan LUNs (only sdevs)
-Date:   Fri,  7 Jun 2019 17:39:19 +0200
-Message-Id: <20190607153853.059058671@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
-References: <20190607153848.271562617@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730403AbfFGPlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:41:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D456C337;
+        Fri,  7 Jun 2019 08:41:50 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98B363F718;
+        Fri,  7 Jun 2019 08:41:49 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 16:41:47 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Qian Cai <cai@lca.pw>, Dave Martin <Dave.Martin@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: "arm64: Silence gcc warnings about arch ABI drift" breaks clang
+Message-ID: <20190607154147.GD19862@fuggles.cambridge.arm.com>
+References: <1559920965.6132.56.camel@lca.pw>
+ <20190607152517.GC19862@fuggles.cambridge.arm.com>
+ <1559921171.6132.57.camel@lca.pw>
+ <20190607154010.GA41392@archlinux-epyc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607154010.GA41392@archlinux-epyc>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Maier <maier@linux.ibm.com>
+On Fri, Jun 07, 2019 at 08:40:10AM -0700, Nathan Chancellor wrote:
+> On Fri, Jun 07, 2019 at 11:26:11AM -0400, Qian Cai wrote:
+> > On Fri, 2019-06-07 at 16:25 +0100, Will Deacon wrote:
+> > > On Fri, Jun 07, 2019 at 11:22:45AM -0400, Qian Cai wrote:
+> > > > The linux-next commit "arm64: Silence gcc warnings about arch ABI drift" [1]
+> > > > breaks clang build where it screams that unknown option "-Wno-psabi" and
+> > > > generates errors below,
+> > > 
+> > > So that can be easily fixed with cc-option...
+> > > 
+> > > > [1] https://lore.kernel.org/linux-arm-kernel/1559817223-32585-1-git-send-ema
+> > > > il-D
+> > > > ave.Martin@arm.com/
+> > > > 
+> > > > ./drivers/firmware/efi/libstub/arm-stub.stub.o: In function
+> > > > `install_memreserve_table':
+> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:73: undefined reference to
+> > > > `__efistub___stack_chk_guard'
+> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:73: undefined reference to
+> > > > `__efistub___stack_chk_guard'
+> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:93: undefined reference to
+> > > > `__efistub___stack_chk_guard'
+> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:93: undefined reference to
+> > > > `__efistub___stack_chk_guard'
+> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:94: undefined reference to
+> > > > `__efistub___stack_chk_fail
+> > > 
+> > > ... but this looks unrelated. Are you saying you don't see these errors if
+> > > you revert Dave's patch?
+> > 
+> > Yes.
+> 
+> I suspect the reason for this is -Wunknown-warning-option causes
+> cc-option to fail. I see some disabled warnings like
+> -Waddress-of-packed-member and -Wunused-const-variable when -Wno-psabi
+> is unconditionally added.
+> 
+> I'll do some further triage but I think the obvious fix as Will
+> suggested is to use cc-disable-warning. I'll send a patch.
 
-commit ef4021fe5fd77ced0323cede27979d80a56211ca upstream.
+Cheers, Nathan. I've already sent the pull for -rc4, but I can send your
+fix for -rc5 next week.
 
-When the user tries to remove a zfcp port via sysfs, we only rejected it if
-there are zfcp unit children under the port. With purely automatically
-scanned LUNs there are no zfcp units but only SCSI devices. In such cases,
-the port_remove erroneously continued. We close the port and this
-implicitly closes all LUNs under the port. The SCSI devices survive with
-their private zfcp_scsi_dev still holding a reference to the "removed"
-zfcp_port (still allocated but invisible in sysfs) [zfcp_get_port_by_wwpn
-in zfcp_scsi_slave_alloc]. This is not a problem as long as the fc_rport
-stays blocked. Once (auto) port scan brings back the removed port, we
-unblock its fc_rport again by design.  However, there is no mechanism that
-would recover (open) the LUNs under the port (no "ersfs_3" without
-zfcp_unit [zfcp_erp_strategy_followup_success]).  Any pending or new I/O to
-such LUN leads to repeated:
-
-  Done: NEEDS_RETRY Result: hostbyte=DID_IMM_RETRY driverbyte=DRIVER_OK
-
-See also v4.10 commit 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race
-with LUN recovery"). Even a manual LUN recovery
-(echo 0 > /sys/bus/scsi/devices/H:C:T:L/zfcp_failed)
-does not help, as the LUN links to the old "removed" port which remains
-to lack ZFCP_STATUS_COMMON_RUNNING [zfcp_erp_required_act].
-The only workaround is to first ensure that the fc_rport is blocked
-(e.g. port_remove again in case it was re-discovered by (auto) port scan),
-then delete the SCSI devices, and finally re-discover by (auto) port scan.
-The port scan includes an fc_rport unblock, which in turn triggers
-a new scan on the scsi target to freshly get new pure auto scan LUNs.
-
-Fix this by rejecting port_remove also if there are SCSI devices
-(even without any zfcp_unit) under this port. Re-use mechanics from v3.7
-commit d99b601b6338 ("[SCSI] zfcp: restore refcount check on port_remove").
-However, we have to give up zfcp_sysfs_port_units_mutex earlier in unit_add
-to prevent a deadlock with scsi_host scan taking shost->scan_mutex first
-and then zfcp_sysfs_port_units_mutex now in our zfcp_scsi_slave_alloc().
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: b62a8d9b45b9 ("[SCSI] zfcp: Use SCSI device data zfcp scsi dev instead of zfcp unit")
-Fixes: f8210e34887e ("[SCSI] zfcp: Allow midlayer to scan for LUNs when running in NPIV mode")
-Cc: <stable@vger.kernel.org> #2.6.37+
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/s390/scsi/zfcp_ext.h   |    1 
- drivers/s390/scsi/zfcp_scsi.c  |    9 ++++++
- drivers/s390/scsi/zfcp_sysfs.c |   54 ++++++++++++++++++++++++++++++++++++-----
- drivers/s390/scsi/zfcp_unit.c  |    8 +++++-
- 4 files changed, 65 insertions(+), 7 deletions(-)
-
---- a/drivers/s390/scsi/zfcp_ext.h
-+++ b/drivers/s390/scsi/zfcp_ext.h
-@@ -161,6 +161,7 @@ extern const struct attribute_group *zfc
- extern struct mutex zfcp_sysfs_port_units_mutex;
- extern struct device_attribute *zfcp_sysfs_sdev_attrs[];
- extern struct device_attribute *zfcp_sysfs_shost_attrs[];
-+bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port);
- 
- /* zfcp_unit.c */
- extern int zfcp_unit_add(struct zfcp_port *, u64);
---- a/drivers/s390/scsi/zfcp_scsi.c
-+++ b/drivers/s390/scsi/zfcp_scsi.c
-@@ -125,6 +125,15 @@ static int zfcp_scsi_slave_alloc(struct
- 
- 	zfcp_sdev->erp_action.port = port;
- 
-+	mutex_lock(&zfcp_sysfs_port_units_mutex);
-+	if (zfcp_sysfs_port_is_removing(port)) {
-+		/* port is already gone */
-+		mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
-+		return -ENXIO;
-+	}
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+
- 	unit = zfcp_unit_find(port, zfcp_scsi_dev_lun(sdev));
- 	if (unit)
- 		put_device(&unit->dev);
---- a/drivers/s390/scsi/zfcp_sysfs.c
-+++ b/drivers/s390/scsi/zfcp_sysfs.c
-@@ -238,6 +238,53 @@ static ZFCP_DEV_ATTR(adapter, port_resca
- 
- DEFINE_MUTEX(zfcp_sysfs_port_units_mutex);
- 
-+static void zfcp_sysfs_port_set_removing(struct zfcp_port *const port)
-+{
-+	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
-+	atomic_set(&port->units, -1);
-+}
-+
-+bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port)
-+{
-+	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
-+	return atomic_read(&port->units) == -1;
-+}
-+
-+static bool zfcp_sysfs_port_in_use(struct zfcp_port *const port)
-+{
-+	struct zfcp_adapter *const adapter = port->adapter;
-+	unsigned long flags;
-+	struct scsi_device *sdev;
-+	bool in_use = true;
-+
-+	mutex_lock(&zfcp_sysfs_port_units_mutex);
-+	if (atomic_read(&port->units) > 0)
-+		goto unlock_port_units_mutex; /* zfcp_unit(s) under port */
-+
-+	spin_lock_irqsave(adapter->scsi_host->host_lock, flags);
-+	__shost_for_each_device(sdev, adapter->scsi_host) {
-+		const struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
-+
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
-+		if (zsdev->port != port)
-+			continue;
-+		/* alive scsi_device under port of interest */
-+		goto unlock_host_lock;
-+	}
-+
-+	/* port is about to be removed, so no more unit_add or slave_alloc */
-+	zfcp_sysfs_port_set_removing(port);
-+	in_use = false;
-+
-+unlock_host_lock:
-+	spin_unlock_irqrestore(adapter->scsi_host->host_lock, flags);
-+unlock_port_units_mutex:
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+	return in_use;
-+}
-+
- static ssize_t zfcp_sysfs_port_remove_store(struct device *dev,
- 					    struct device_attribute *attr,
- 					    const char *buf, size_t count)
-@@ -260,16 +307,11 @@ static ssize_t zfcp_sysfs_port_remove_st
- 	else
- 		retval = 0;
- 
--	mutex_lock(&zfcp_sysfs_port_units_mutex);
--	if (atomic_read(&port->units) > 0) {
-+	if (zfcp_sysfs_port_in_use(port)) {
- 		retval = -EBUSY;
--		mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
- 		goto out;
- 	}
--	/* port is about to be removed, so no more unit_add */
--	atomic_set(&port->units, -1);
--	mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 
- 	write_lock_irq(&adapter->port_list_lock);
- 	list_del(&port->list);
---- a/drivers/s390/scsi/zfcp_unit.c
-+++ b/drivers/s390/scsi/zfcp_unit.c
-@@ -124,7 +124,7 @@ int zfcp_unit_add(struct zfcp_port *port
- 	int retval = 0;
- 
- 	mutex_lock(&zfcp_sysfs_port_units_mutex);
--	if (atomic_read(&port->units) == -1) {
-+	if (zfcp_sysfs_port_is_removing(port)) {
- 		/* port is already gone */
- 		retval = -ENODEV;
- 		goto out;
-@@ -168,8 +168,14 @@ int zfcp_unit_add(struct zfcp_port *port
- 	write_lock_irq(&port->unit_list_lock);
- 	list_add_tail(&unit->list, &port->unit_list);
- 	write_unlock_irq(&port->unit_list_lock);
-+	/*
-+	 * lock order: shost->scan_mutex before zfcp_sysfs_port_units_mutex
-+	 * due to      zfcp_unit_scsi_scan() => zfcp_scsi_slave_alloc()
-+	 */
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 
- 	zfcp_unit_scsi_scan(unit);
-+	return retval;
- 
- out:
- 	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-
-
+Will
