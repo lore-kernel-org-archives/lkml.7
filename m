@@ -2,99 +2,72 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A35C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6737C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8534620657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922875;
-	bh=d8wDCBFt6gfNsWx7kXoC8Wpg1qHS8rC3QMWztaPCtSY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2iQimwWRea992GgjMXOJznikihHrMjW7QZhURLGdZd3d768VDn3bMPr21MdVxFcU
-	 UXgE3qCbBZNW7pKtv7XyK5L1cdPc3TksYaiPPaSpixoUQiycA6QMOUnUthlsir4xl+
-	 v8wHcoT6WCIEh+s1fZyiRvRetq3jiFvJ8p3juMY8=
+	by mail.kernel.org (Postfix) with ESMTP id B022020657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="eHbx2qJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732092AbfFGPye (ORCPT
+        id S1731880AbfFGPyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729293AbfFGPqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C539B212F5;
-        Fri,  7 Jun 2019 15:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922405;
-        bh=d8wDCBFt6gfNsWx7kXoC8Wpg1qHS8rC3QMWztaPCtSY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=irP2uwg2EWE5AExPbM2UXZis3SKKCm0iAvZqZqYcB/1TzMowqgOQOr48d5ay5WdiJ
-         8udLHd5XjPrZsgDsPnfGYwl/UixqqPYFTLOUFeYQhZ8Xh3gS+mXu0W/SGbzxvd4gOL
-         OHTuQ7m2SfwzX/RW5zq77P6WtKAhl0+YgZQMqNo8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Joe Burmeister <joe.burmeister@devtank.co.uk>
-Subject: [PATCH 4.19 39/73] tty: max310x: Fix external crystal register setup
-Date:   Fri,  7 Jun 2019 17:39:26 +0200
-Message-Id: <20190607153853.508656537@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
-References: <20190607153848.669070800@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 7 Jun 2019 11:54:49 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:58506 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729293AbfFGPyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:54:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1559922885; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=vxBqAc96EhZ4PSZvc1D8uQDGXjEbUQwnCFYwSOLsi0g=;
+        b=eHbx2qJx4yi3WXwd2S/9fgnqwkhFpgGCIQx8ZE7jjc+xD088BN55f7hx3cE4zREhIPqw81
+        lJj+Gh7LxLHkC4c4WfC9Cr1p3aDEtdQnTpXFDoxDz26xQWjrGzFot9MAerdTcW60kd+ols
+        BULH75jKY5N9WPgFrFWbFnTZeBnBSWA=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     od@zcrc.me, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] rtc: jz4740: Make probe function __init_or_module
+Date:   Fri,  7 Jun 2019 17:54:38 +0200
+Message-Id: <20190607155438.14342-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Burmeister <joe.burmeister@devtank.co.uk>
+This allows the probe function to be dropped after the kernel finished
+its initialization, in the case where the driver was not compiled as a
+module.
 
-commit 5d24f455c182d5116dd5db8e1dc501115ecc9c2c upstream.
-
-The datasheet states:
-
-  Bit 4: ClockEnSet the ClockEn bit high to enable an external clocking
-(crystal or clock generator at XIN). Set the ClockEn bit to 0 to disable
-clocking
-  Bit 1: CrystalEnSet the CrystalEn bit high to enable the crystal
-oscillator. When using an external clock source at XIN, CrystalEn must
-be set low.
-
-The bit 4, MAX310X_CLKSRC_EXTCLK_BIT, should be set and was not.
-
-This was required to make the MAX3107 with an external crystal on our
-board able to send or receive data.
-
-Signed-off-by: Joe Burmeister <joe.burmeister@devtank.co.uk>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/tty/serial/max310x.c |    2 +-
+ drivers/rtc/rtc-jz4740.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -576,7 +576,7 @@ static int max310x_set_ref_clk(struct de
- 	}
+diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
+index 9e7b3a04debc..a20e7dc794dd 100644
+--- a/drivers/rtc/rtc-jz4740.c
++++ b/drivers/rtc/rtc-jz4740.c
+@@ -303,7 +303,7 @@ static const struct of_device_id jz4740_rtc_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, jz4740_rtc_of_match);
  
- 	/* Configure clock source */
--	clksrc = xtal ? MAX310X_CLKSRC_CRYST_BIT : MAX310X_CLKSRC_EXTCLK_BIT;
-+	clksrc = MAX310X_CLKSRC_EXTCLK_BIT | (xtal ? MAX310X_CLKSRC_CRYST_BIT : 0);
- 
- 	/* Configure PLL */
- 	if (pllcfg) {
-
+-static int jz4740_rtc_probe(struct platform_device *pdev)
++static int __init_or_module jz4740_rtc_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+ 	struct jz4740_rtc *rtc;
+-- 
+2.21.0.593.g511ec345e18
 
