@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEF4C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752BFC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E13220840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424E320840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wu5ODvnE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ucg5J6CS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731708AbfFGWht (ORCPT
+        id S1731692AbfFGWhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:37:49 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38457 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731585AbfFGWhr (ORCPT
+        Fri, 7 Jun 2019 18:37:48 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36927 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731581AbfFGWhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:37:47 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v11so1867908pgl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:37:47 -0700 (PDT)
+        Fri, 7 Jun 2019 18:37:46 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bh12so1342484plb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=z4uQcLhxDEep9Dd0+N4T4ar1lYZLNVNOCQMZpRaAcgQ=;
-        b=Wu5ODvnEgN+Dz3rZXFZGppPRarqh2wkcmSq/jdU0lxIYcSNaG6l9SM/cQ7rqNOQ+cx
-         zxBOamHsP0cMwIo+6syFyWFHtQZ64LbEArNImhJSma0pDWnZQVdsP77XNYh/mmK0Dm2q
-         qWYduKxF+F5spTIpgm3Rypp+nRk8xG2J2D5aM=
+        bh=8sTKn+NeNGftSNd5KJGe8Yb4ykjEmhycPSYA44kfjJY=;
+        b=Ucg5J6CS84kZYZtbBhATrQIknzmFCKsyZ7LYk+YHEeYL4wOxQCtCRSkS3wIsUeuHkJ
+         /LQxRvlY2IWw8HHiKuSX9ALH8ZzfyZEB4BNOJKcdMs2xn7gjThq+DFjBPyJ8y52VaHrx
+         2MH6k6VP9dROiEtG//1pGg4RL1jTW6bsCQPgg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=z4uQcLhxDEep9Dd0+N4T4ar1lYZLNVNOCQMZpRaAcgQ=;
-        b=pVr9MNjTnDxh/sKZTf/psMJKGS0xY2eT4lsq+0G6/niDHqNjCiwWp++HM9JdRB7C0x
-         VLYbiHpETkhRHm5JwRfF3v1hfbneehQb6XAE7mV/DXe50m9VIjgB4zzML0BhfIPPJqfh
-         rTZ6OVyS9SQfpCYezMXtQgvwdkrOLD2KrlTuTXLLrHH5flLToXPSirkZIt5ds1/RGycA
-         DDlLGUkGMZIs6GyevLx+XkCyf2mjPy7HWVi8bpKfCPab7Gcv8nvHJwDdLC9rZKCzLz33
-         3RrB2lg3n8OudX5m2vVcXidLs8iuZnA1rMZWRc2cxWa/lNg/IyCGslkdZ2N/GWjFgwQJ
-         tl7w==
-X-Gm-Message-State: APjAAAX+x7+BeXHNoZwCsYUXpyjwYXTEdqgrVQYWl+eKS+fABjAIo5Kn
-        5JdnGZ0LJja5FkVRtMiTMTX5EA==
-X-Google-Smtp-Source: APXvYqxs31BYhnz3CuDYoW0F6K1ef/NQQc4dhUPxacP60w15cFP3tld8eeafi1pEevxCtCS+7gK93A==
-X-Received: by 2002:a17:90a:9504:: with SMTP id t4mr8420374pjo.100.1559947066689;
-        Fri, 07 Jun 2019 15:37:46 -0700 (PDT)
+        bh=8sTKn+NeNGftSNd5KJGe8Yb4ykjEmhycPSYA44kfjJY=;
+        b=Id66F3ll6xQFrAPFQoHI5ccnFA7zEvsc5ZvgaWwnnrDnc8aS9d0uT1m4qUJnc/rvZS
+         zhThaz+evvs7+8XK2F3UwUQT03JTzGiAv6tBsKMUy4u5LCGYl2owGJCa3HLhEpcKhIXr
+         /pzGA6HM2Rq2K7YepqJyYBToXkF38E+bEe/i4/R/dYEL5JOKJT9pfRrQEPN8fOicwJyf
+         pQcXAnWmA7aqs4ZiKAfIRIKLxqrr8Gp1yNKx9JobXm2XerxVlXFIcuSG7TEtPrsH6pTN
+         BL6K8JISMs7p+rIZC9ldR3VQybs/yXDJFKENOVoYQM4zpP7+rkqdwA/lv3eliwRoBzr8
+         77Pg==
+X-Gm-Message-State: APjAAAUtM+8XEQwfQPlDHp3ODpXlbH7hiC7Kk7Ud9hsfqvNIWXsfCiHO
+        ZYII391xOc7ufBGIioXzZzFq+g==
+X-Google-Smtp-Source: APXvYqw1I/ZttnUQ8QkMd/Js4RpLH7dJjGMdXXIuPwxR4ePJkKWsj+UjjyQqqvZzmUs8Y7lbo3jcBw==
+X-Received: by 2002:a17:902:d88e:: with SMTP id b14mr7328462plz.153.1559947065437;
+        Fri, 07 Jun 2019 15:37:45 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id j23sm4185193pgb.63.2019.06.07.15.37.45
+        by smtp.gmail.com with ESMTPSA id j23sm4185193pgb.63.2019.06.07.15.37.44
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 15:37:46 -0700 (PDT)
+        Fri, 07 Jun 2019 15:37:44 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Kalle Valo <kvalo@codeaurora.org>,
@@ -68,15 +68,16 @@ Cc:     brcm80211-dev-list.pdl@broadcom.com,
         Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
         netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
         Douglas Anderson <dianders@chromium.org>,
-        Franky Lin <franky.lin@broadcom.com>,
-        linux-kernel@vger.kernel.org,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Ondrej Jirman <megous@megous.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH v3 5/5] brcmfmac: sdio: Don't tune while the card is off
-Date:   Fri,  7 Jun 2019 15:37:16 -0700
-Message-Id: <20190607223716.119277-6-dianders@chromium.org>
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tony Lindgren <tony@atomide.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH v3 4/5] mmc: core: Export mmc_retune_hold_now() mmc_retune_release()
+Date:   Fri,  7 Jun 2019 15:37:15 -0700
+Message-Id: <20190607223716.119277-5-dianders@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 In-Reply-To: <20190607223716.119277-1-dianders@chromium.org>
 References: <20190607223716.119277-1-dianders@chromium.org>
@@ -87,78 +88,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When Broadcom SDIO cards are idled they go to sleep and a whole
-separate subsystem takes over their SDIO communication.  This is the
-Always-On-Subsystem (AOS) and it can't handle tuning requests.
+We want SDIO drivers to be able to temporarily stop retuning when the
+driver knows that the SDIO card is not in a state where retuning will
+work (maybe because the card is asleep).  We'll move the relevant
+functions to a place where drivers can call them.
 
-Specifically, as tested on rk3288-veyron-minnie (which reports having
-BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
-when "on = 1" (aka we're transition from sleep to wake) by whacking:
-  bus->sdiodev->func1->card->host->need_retune = 1
-...then I can often see tuning fail.  In this case dw_mmc reports "All
-phases bad!").  Note that I don't get 100% failure, presumably because
-sometimes the card itself has already transitioned away from the AOS
-itself by the time we try to wake it up.  If I force retuning when "on
-= 0" (AKA force retuning right before sending the command to go to
-sleep) then retuning is always OK.
-
-NOTE: we need _both_ this patch and the patch to avoid triggering
-tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
-sdio: Disable auto-tuning around commands expected to fail").  Though
-both patches handle issues with Broadcom's AOS, the problems are
-distinct:
-1. We want to defer (but not ignore) asynchronous (like
-   timer-requested) tuning requests till the card is awake.  However,
-   we want to ignore CRC errors during the transition, we don't want
-   to queue deferred tuning request.
-2. You could imagine that the AOS could implement retuning but we
-   could still get errors while transitioning in and out of the AOS.
-   Similarly you could imagine a seamless transition into and out of
-   the AOS (with no CRC errors) even if the AOS couldn't handle
-   tuning.
-
-ALSO NOTE: presumably there is never a desperate need to retune in
-order to wake up the card, since doing so is impossible.  Luckily the
-only way the card can get into sleep state is if we had a good enough
-tuning to send it a sleep command, so presumably that "good enough"
-tuning is enough to wake us up, at least with a few retries.
+NOTE: We'll leave the calls with a mmc_ prefix following the lead of
+the API call mmc_hw_reset(), which is also expected to be called
+directly by SDIO cards.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v3:
-- ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
+- ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
 
 Changes in v2: None
 
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/mmc/core/host.c  | 7 +++++++
+ drivers/mmc/core/host.h  | 7 -------
+ include/linux/mmc/core.h | 2 ++
+ 3 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 4040aae1f9ed..98ffb4e90e15 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -670,6 +670,10 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 6a51f7a06ce7..361f4d151d20 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -111,6 +111,13 @@ void mmc_retune_hold(struct mmc_host *host)
+ 	host->hold_retune += 1;
+ }
  
- 	mmc_expect_errors_begin(bus->sdiodev->func1->card->host);
- 
-+	/* Cannot re-tune if device is asleep; defer till we're awake */
-+	if (on)
-+		mmc_retune_hold_now(bus->sdiodev->func1->card->host);
++void mmc_retune_hold_now(struct mmc_host *host)
++{
++	host->retune_now = 0;
++	host->hold_retune += 1;
++}
++EXPORT_SYMBOL(mmc_retune_hold_now);
 +
- 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
- 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
- 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
-@@ -730,6 +734,9 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
- 	if (try_cnt > MAX_KSO_ATTEMPTS)
- 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+ void mmc_retune_release(struct mmc_host *host)
+ {
+ 	if (host->hold_retune)
+diff --git a/drivers/mmc/core/host.h b/drivers/mmc/core/host.h
+index 4805438c02ff..3212afc6c9fe 100644
+--- a/drivers/mmc/core/host.h
++++ b/drivers/mmc/core/host.h
+@@ -19,17 +19,10 @@ void mmc_unregister_host_class(void);
+ void mmc_retune_enable(struct mmc_host *host);
+ void mmc_retune_disable(struct mmc_host *host);
+ void mmc_retune_hold(struct mmc_host *host);
+-void mmc_retune_release(struct mmc_host *host);
+ int mmc_retune(struct mmc_host *host);
+ void mmc_retune_pause(struct mmc_host *host);
+ void mmc_retune_unpause(struct mmc_host *host);
  
-+	if (on)
-+		mmc_retune_release(bus->sdiodev->func1->card->host);
-+
- 	mmc_expect_errors_end(bus->sdiodev->func1->card->host);
+-static inline void mmc_retune_hold_now(struct mmc_host *host)
+-{
+-	host->retune_now = 0;
+-	host->hold_retune += 1;
+-}
+-
+ static inline void mmc_retune_recheck(struct mmc_host *host)
+ {
+ 	if (host->hold_retune <= 1)
+diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
+index 02a13abf0cda..53085245383c 100644
+--- a/include/linux/mmc/core.h
++++ b/include/linux/mmc/core.h
+@@ -181,5 +181,7 @@ int mmc_sw_reset(struct mmc_host *host);
+ void mmc_expect_errors_begin(struct mmc_host *host);
+ void mmc_expect_errors_end(struct mmc_host *host);
+ void mmc_set_data_timeout(struct mmc_data *data, const struct mmc_card *card);
++void mmc_retune_release(struct mmc_host *host);
++void mmc_retune_hold_now(struct mmc_host *host);
  
- 	return err;
+ #endif /* LINUX_MMC_CORE_H */
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
