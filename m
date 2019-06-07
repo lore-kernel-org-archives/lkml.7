@@ -2,167 +2,142 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2008C2BA1D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67332C2BA1D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB071208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D2B20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=concurrentrt.onmicrosoft.com header.i=@concurrentrt.onmicrosoft.com header.b="MGjxTtNz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhxM/LCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfFGBBk (ORCPT
+        id S1727523AbfFGBxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 21:01:40 -0400
-Received: from mail-eopbgr690131.outbound.protection.outlook.com ([40.107.69.131]:7174
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725784AbfFGBBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 21:01:40 -0400
+        Thu, 6 Jun 2019 21:53:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41832 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFGBxH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 21:53:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c2so480396wrm.8;
+        Thu, 06 Jun 2019 18:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=concurrentrt.onmicrosoft.com; s=selector1-concurrentrt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HM2e9Rp9K0t4VVNSTmbyT0wUlp1pIV8AOfGL0EekRTc=;
- b=MGjxTtNzznCkIKj+hKngKOlDVnZX7gi6pxj/xrjjuk0BtG3zrFfvrrtu0l+EkVD+kdWacRzR5u53Q/IO9CQ7mFMRFIE/u7APeH5VGPuaExVek9XWwZKzO14fMo6Vv6SoY7mout45ixIwXKF50vqBgQ4va+y8Dh+b//ndxX1mo2w=
-Received: from DM6PR11MB2570.namprd11.prod.outlook.com (20.176.99.12) by
- DM6PR11MB2602.namprd11.prod.outlook.com (20.176.99.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Fri, 7 Jun 2019 01:01:36 +0000
-Received: from DM6PR11MB2570.namprd11.prod.outlook.com
- ([fe80::91ec:580:13d5:fe72]) by DM6PR11MB2570.namprd11.prod.outlook.com
- ([fe80::91ec:580:13d5:fe72%7]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
- 01:01:36 +0000
-From:   Joe Korty <Joe.Korty@concurrent-rt.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alistair Strachan <astrachan@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: Re: [BUG 4.4.178] x86_64 compat mode futexes broken
-Thread-Topic: [BUG 4.4.178] x86_64 compat mode futexes broken
-Thread-Index: AQHVHKxw/Uv5M9zAE0qNS0uTrHGe4g==
-Date:   Fri, 7 Jun 2019 01:01:36 +0000
-Message-ID: <20190607010128.GB24007@zipoli.concurrent-rt.com>
-References: <20190606211140.GA52454@zipoli.concurrent-rt.com>
- <20190606231130.GA69331@archlinux-epyc>
-In-Reply-To: <20190606231130.GA69331@archlinux-epyc>
-Reply-To: Joe Korty <Joe.Korty@concurrent-rt.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN3PR03CA0061.namprd03.prod.outlook.com
- (2a01:111:e400:7a4d::21) To DM6PR11MB2570.namprd11.prod.outlook.com
- (2603:10b6:5:c6::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Joe.Korty@concurrent-rt.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.220.59.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0a7615d2-d35a-4336-8953-08d6eae3b071
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR11MB2602;
-x-ms-traffictypediagnostic: DM6PR11MB2602:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DM6PR11MB26020290F09B00EDEDC5496BA0100@DM6PR11MB2602.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0061C35778
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(366004)(396003)(136003)(376002)(346002)(199004)(189003)(6916009)(1076003)(99286004)(186003)(26005)(508600001)(966005)(486006)(53936002)(44832011)(43066004)(6506007)(76176011)(3450700001)(386003)(72206003)(14444005)(52116002)(256004)(6306002)(6512007)(102836004)(5660300002)(446003)(71190400001)(2906002)(11346002)(476003)(71200400001)(3846002)(6116002)(316002)(54906003)(6436002)(86362001)(1411001)(6486002)(4326008)(6246003)(25786009)(33656002)(68736007)(14454004)(8676002)(66066001)(7736002)(305945005)(8936002)(81156014)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(81166006)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR11MB2602;H:DM6PR11MB2570.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: concurrent-rt.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QKceZSc8ei7fKQfsKmybSkzwH6cYpzVYHv9cd6pLInIpkFn/4aTz54rTOR5ev7t+3lctIAtLGgjDF2t3iJzsT//gjuQ7c1UxHD3w68huvU9ZnO5id3v6oyLQVDBy8ywqvAQIvUZbwUVq44najUYkpQAGvTbDeY9hvVDjkSsLUeq+CKNRhrszViW4cwNNs6hMMExqjimGwwvHzmUfe5EqQl+UnZR6teegsAoaGDnaSotZDjsF4OH7orYxNXcjtr5r4/TxpNpbdimrv20FLm+hA43KNe3aFXKbC4Dymlg3w4CkYZPy87UHxkwCcQBABlpe+j05kG/qtpYLHnYzEGF82mC8WO8xmP4JeFL4M+amQ12ryqXTHmBzCqbYp9KfPSHJTwT0q0slF5M78ypT1fGF6cyNk9pl0029aSbbAQbpHGw=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E26024FD0DC36741851E2BC138571CA0@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HXbPnXaGhtf2NYvX8iWSqIWrGp6VGw0M5oS+kh5tYlw=;
+        b=YhxM/LClRdhOXLrXGoyig8gM2kzYsJK3ClPUrSk8fcH08+R/FeaQGN1FzsJ1hEAI8V
+         T1vIWi3coyHCm0EGClXmSsRPKJ6+G3iolZ8N0fHCOEMv9cWcTHMc1BrzkKI/ralknloR
+         k/5zPimvlBj2OBt220R2UcWK0Mm+zjpX2SJ+U/xQczafReLc2mxhm5dNg016YBqEg79K
+         nvgIrZ1hLvrUvDw79HGU/P5PqOecyyLi76Kq7qsux4ttza1LsVLMXbB96s6+OtSS4Rb+
+         EOkhBBbnbsntBs24oiEX1Xxv9rlsaipyvWRM0r+qLh3b84RETMzMuxYYwK7qk//72BVV
+         ruSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HXbPnXaGhtf2NYvX8iWSqIWrGp6VGw0M5oS+kh5tYlw=;
+        b=ZORfoHD30cO27nLyvOMCKzhhRKQvJBRMTNGgG3R3+ggSE6BYRvt2VMZBjRcWvL0Y7k
+         2aqxfc7yqh1omdplmMgeioans1+IZiF7eN4dAOjFo7AG4rTIDRsEBAueCzq1W7pwVJxh
+         hiIzJtMSaZLgU+OvFHUetQPftb1mVCgGmb3CdENIA3nw/V3uKNjjIHtEb6hh6Web2qgb
+         q5vVZ+1XWZJmQ5pm7fiUPTjw3Xem4H8xuDXw4I4xLzLlIt28QrUUkM2eW2g7Uit0Rsjf
+         FMNMihqBdkrYqkDMYm0vT+XNrpKtDHy2CAHB7sbwrf2qnLuJaZDlG1mS2t5+IwQORwVb
+         y1xg==
+X-Gm-Message-State: APjAAAVUB7vV/IS2TFjr+RML/9HnwPTrzEcRdzoovx4S8z5zXB6fmuMZ
+        4tixiZQLBH8f/6JL9FMuXH0=
+X-Google-Smtp-Source: APXvYqxrKI3cYKI8sa6Aq8nV6jOp2DQ6mq7nGAQXpG2pc6sNmTJDT0osxxNapHChjOID6yvlf9XaCw==
+X-Received: by 2002:a5d:4904:: with SMTP id x4mr4866906wrq.337.1559872385508;
+        Thu, 06 Jun 2019 18:53:05 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([108.61.173.19])
+        by smtp.gmail.com with ESMTPSA id s63sm544369wme.17.2019.06.06.18.53.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 18:53:04 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 09:52:58 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: fix a missing-free bug in clk_cpy_name()
+Message-ID: <20190607015258.GA2660@zhanggen-UX430UQ>
+References: <20190531011424.GA4374@zhanggen-UX430UQ>
+ <eb8e2d33-e8f7-93a5-c8bc-98731c0d63b6@suse.cz>
+ <20190605160043.GA4351@zhanggen-UX430UQ>
+ <20190606201646.B4CC4206BB@mail.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: concurrent-rt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a7615d2-d35a-4336-8953-08d6eae3b071
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 01:01:36.0858
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 38747689-e6b0-4933-86c0-1116ee3ef93e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Joe.Korty@concurrent-rt.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2602
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606201646.B4CC4206BB@mail.kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 04:11:30PM -0700, Nathan Chancellor wrote:
-> On Thu, Jun 06, 2019 at 09:11:43PM +0000, Joe Korty wrote:
-> > Starting with 4.4.178, the LTP test
-> >=20
-> >   pthread_cond_wait/2-3
-> >=20
-> > when compiled on x86_64 with 'gcc -m32', started failing.  It generates=
- this log output:
-> >=20
-> >   [16:18:38]Implementation supports the MONOTONIC CLOCK but option is d=
-isabled in test.          =20
-> >   [16:18:38]Test starting
-> >   [16:18:38] Process-shared primitive will be tested
-> >   [16:18:38] Alternative clock for cond will be tested
-> >   [16:18:38]Test 2-3.c FAILED: The child did not own the mutex inside t=
-he cleanup handler
-> >=20
->=20
-> What is the exact build command + test case command? I'd like to
-> reproduce this myself.
->=20
-> > A git bisection between 4.4.177..178 shows that this commit is the culp=
-rit:
-> >=20
-> >   Git-Commit: 79739ad2d0ac5787a15a1acf7caaf34cd95bbf3c
-> >   Author: Alistair Strachan <astrachan@google.com>
-> >   Subject: [PATCH] x86: vdso: Use $LD instead of $CC to link
-> >=20
->=20
-> Have you tested 4.4.180? There were two subsequent fixes to this patch
-> in 4.4:
+On Thu, Jun 06, 2019 at 01:16:45PM -0700, Stephen Boyd wrote:
+> Quoting Gen Zhang (2019-06-05 09:00:43)
+> > On Wed, Jun 05, 2019 at 08:38:00AM +0200, Jiri Slaby wrote:
+> > > On 31. 05. 19, 3:14, Gen Zhang wrote:
+> > > > In clk_cpy_name(), '*dst_p'('parent->name'and 'parent->fw_name') and 
+> > > > 'dst' are allcoted by kstrdup_const(). According to doc: "Strings 
+> > > > allocated by kstrdup_const should be freed by kfree_const". So 
+> > > > 'parent->name', 'parent->fw_name' and 'dst' should be freed.
+> > > > 
+> > > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > > ---
+> > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > > index aa51756..85c4d3f 100644
+> > > > --- a/drivers/clk/clk.c
+> > > > +++ b/drivers/clk/clk.c
+> > > > @@ -3435,6 +3435,7 @@ static int clk_cpy_name(const char **dst_p, const char *src, bool must_exist)
+> > > >     if (!dst)
+> > > >             return -ENOMEM;
+> > > >  
+> > > > +   kfree_const(dst);
+> > > 
+> > > So you are now returning a freed pointer in dst_p?
+> > Thanks for your reply. I re-examined the code, and this kfree is 
+> > incorrect and it should be deleted.
+> > > 
+> > > >     return 0;
+> > > >  }
+> > > >  
+> > > > @@ -3491,6 +3492,8 @@ static int clk_core_populate_parent_map(struct clk_core *core)
+> > > >                             kfree_const(parents[i].name);
+> > > >                             kfree_const(parents[i].fw_name);
+> > > >                     } while (--i >= 0);
+> > > > +                   kfree_const(parent->name);
+> > > > +                   kfree_const(parent->fw_name);
+> > > 
+> > > Both of them were just freed in the loop above, no?
+> > for (i = 0, parent = parents; i < num_parents; i++, parent++)
+> > Is 'parent' the same as the one from the loop above?
+> 
+> Yes. Did it change somehow?
+parent++?
+> 
+> > 
+> > Moreover, should 'parents[i].name' and 'parents[i].fw_name' be freed by
+> > kfree_const()?
+> > 
+> 
+> Yes? They're allocated with kstrdup_const() in clk_cpy_name(), or
+> they're NULL by virtue of the kcalloc and then kfree_const() does
+> nothing.
+I re-examined clk_cpy_name(). They are the second parameter of 
+clk_cpy_name(). The first parameter is allocated, not the second one.
+So 'parent->name' and 'parent->fw_name' should be freed, not 
+'parents[i].name' or 'parents[i].fw_name'. Am I totally misunderstanding
+this clk_cpy_name()? :-(
 
-Hi Nathan,
-I started with 4.4.179-rt181 and worked backwards from there.  Per your
-suggestion, I tried 4.4.180 and it does work properly.
-
-Thanks,
-Joe
-
-
-
-
-> 485d15db01ca ("kbuild: simplify ld-option implementation")
-> 07d35512e494 ("x86/vdso: Pass --eh-frame-hdr to the linker")
->=20
-> > And, indeed, when I back this patch out of 4.4.178 proper, the above te=
-st
-> > passes again.
-> >=20
-> > Please consider backing this patch out of linux-4.4.y, and from master,=
- and from
-> > any other linux branch it has been backported to.
-> >=20
->=20
-> So this is broken in mainline too?
->=20
-> > PS: In backing it out of 4.4.178, I first backed out
-> >=20
-> >    7c45b45fd6e928c9ce275c32f6fa98d317e6f5ee
-> >   =20
-> > This is a follow-on vdso patch which collides with the
-> > patch we are interested in removing.  As it claims to be
-> > only removing redundant code, it probably should never
-> > have been backported in the first place.
->=20
-> While it is redundant for ld.bfd, it causes a build failure with the
-> release version of ld.lld:
->=20
-> https://github.com/ClangBuiltLinux/linux/issues/31
->=20
-> Cheers,
-> Nathan
+Thanks
+Gen
+> 
+> I'm having a hard time following what this patch is trying to fix. It
+> looks unnecessary though so I'm going to drop it from the clk review
+> queue.
+> 
