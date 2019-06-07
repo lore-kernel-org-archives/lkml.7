@@ -2,153 +2,168 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2639EC468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C370C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABFA2146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1AF208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fukRxLFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbfFGVFr (ORCPT
+        id S1731213AbfFGVF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 17:05:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12484 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730342AbfFGVFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 17:05:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 14:05:45 -0700
-X-ExtLoop1: 1
-Received: from ray.jf.intel.com (HELO [10.7.198.156]) ([10.7.198.156])
-  by orsmga006.jf.intel.com with ESMTP; 07 Jun 2019 14:05:44 -0700
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
- <20190606200926.4029-4-yu-cheng.yu@intel.com>
- <20190607080832.GT3419@hirez.programming.kicks-ass.net>
- <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
- <20190607174336.GM3436@hirez.programming.kicks-ass.net>
- <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
- <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
- <352e6172-938d-f8e4-c195-9fd1b881bdee@intel.com>
- <D10B5B59-1BE7-44DC-8E91-C8E4292DC6FB@amacapital.net>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <74620397-a839-cb8c-8c8b-fe72b921803c@intel.com>
-Date:   Fri, 7 Jun 2019 14:05:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 17:05:59 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43480 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730342AbfFGVF7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 17:05:59 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so1760566pgv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 14:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N/JCuNUNHpvYXS5HzA6CyKCsgw+Y9FIdtQCe1irA9XM=;
+        b=fukRxLFxtd7ntyRussvwUhf3/zME/vEBn6WGUhgH1C6xOnnk0xy7yOcRq4qemQ/RTZ
+         PrX8Ex6DvqdTxy457AK7HsZtrQQqB9xNE6LljfHQ9P0unErJGi2JsAgc42A54+WTAWfv
+         4RYexHsqYcIebiGu00X5NriGKSpzU3V8os//8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N/JCuNUNHpvYXS5HzA6CyKCsgw+Y9FIdtQCe1irA9XM=;
+        b=cdW5aYYMU8Y0E5CObaCL7XR33UyXxhMBsWKc0e3OFNB3/q+n4XvvyC2JNykWLpbcP4
+         HUYi+CP76sgUdTmgHcbj/jjnEi3M/uYYjEEKdIjwZZ/93etJxASEyYYCvJl34vwpdy0v
+         oEIfnGGZFpwnIjNKuI5vMP/Xin6DH5O3w14Y47Sw+Gj0eGk4KSgOVwR6bchWgMeWdGDt
+         XWA/5fIa6rDM952Mho/p8po756+F1Q117chN2wbzhNMwWDl8zdqpmDlbzzD4T2Ak5vpU
+         Lnu+4N1ymH4sIGzAze9fTUkcF6qok8Mh+zP1Z0R8sjg1asIpcy+onue0jl8lqTXZRe2A
+         L45Q==
+X-Gm-Message-State: APjAAAWsT1a9u4JLQ8782f+M5tpoG+fOayUKhZqAvxIJ9ZN7ET/SZgkf
+        5rSckD60iShDOQI+DgNxS+NrxA==
+X-Google-Smtp-Source: APXvYqxjHp5dkMvJDKi1lSt+UmE9FfTR90t9yYb9tPqSBVjLl7gU0dBNruK1PMygm1fD6LLqIOfdrg==
+X-Received: by 2002:a65:490f:: with SMTP id p15mr4761307pgs.275.1559941558355;
+        Fri, 07 Jun 2019 14:05:58 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id n2sm5583391pgp.27.2019.06.07.14.05.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 07 Jun 2019 14:05:57 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        linux-kernel@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>
+Subject: [PATCH] platform/chrome: Expose resume result via sysfs
+Date:   Fri,  7 Jun 2019 14:05:28 -0700
+Message-Id: <20190607210528.248042-1-evgreen@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <D10B5B59-1BE7-44DC-8E91-C8E4292DC6FB@amacapital.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 1:40 PM, Andy Lutomirski wrote:
->>> Hmm.  Can we be creative and skip populating it with zeros?  The
->>> CPU
->> should only ever touch a page if we miss an ENDBR on it, so, in
->> normal operation, we don’t need anything to be there.  We could try
->> to prevent anyone from *reading* it outside of ENDBR tracking if we
->> want to avoid people accidentally wasting lots of memory by forcing
->> it to be fully populated when the read it.
->> 
->> Won't reads on a big, contiguous private mapping get the huge zero
->> page anyway?
-> 
-> The zero pages may be free, but the page tables could be decently
-large.  Does the core mm code use huge, immense, etc huge zero pages?
-Or can it synthesize them by reusing page table pages that map zeros?
+For ECs that support it, the EC returns the number of slp_s0
+transitions and whether or not there was a timeout in the resume
+response. Expose the last resume result to usermode via sysfs so
+that usermode can detect and report S0ix timeouts.
 
-IIRC, we only ever fill single PMDs, even though we could gang a pmd
-page up and do it for 1GB areas too.
+Signed-off-by: Evan Green <evgreen@chromium.org>
+---
 
-I guess the page table consumption could really suck if we had code all
-over the 57-bit address space and that code moved around and the process
-ran for a long long time.  Pathologically, we need a ulong/pmd_t for
-each 2MB of address space which is 8*2^56-30=512GB per process.  Yikes.
- Right now, we'd at least detect the memory consumption and OOM-kill the
-process(es) eventually.  But, that's not really _this_ patch's problem.
- It's a general problem, and doesn't even require the zero page to be
-mapped all over.
+Enric, I'm not sure if this conflicts with your giant refactoring.
+I can rebase this on your series, but patchwork doesn't have patch
+2 of your series, so you'd have to point me to a tree.
 
-Longer-term, I'd much rather see us add some page table reclaim
-mechanism that new how to go after things like excessive page tables  in
-MAP_NORESERVE areas.
+---
+ drivers/mfd/cros_ec.c                   |  6 +++++-
+ drivers/platform/chrome/cros_ec_sysfs.c | 17 +++++++++++++++++
+ include/linux/mfd/cros_ec.h             |  1 +
+ 3 files changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+index bd2bcdd4718b..64a2d3adc729 100644
+--- a/drivers/mfd/cros_ec.c
++++ b/drivers/mfd/cros_ec.c
+@@ -110,12 +110,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+ 
+ 	/* For now, report failure to transition to S0ix with a warning. */
+ 	if (ret >= 0 && ec_dev->host_sleep_v1 &&
+-	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
++	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
++		ec_dev->last_resume_result =
++			buf.u.resp1.resume_response.sleep_transitions;
++
+ 		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
+ 			  EC_HOST_RESUME_SLEEP_TIMEOUT,
+ 			  "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
+ 			  buf.u.resp1.resume_response.sleep_transitions &
+ 			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
++	}
+ 
+ 	return ret;
+ }
+diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+index 3edb237bf8ed..2deca98c7a7a 100644
+--- a/drivers/platform/chrome/cros_ec_sysfs.c
++++ b/drivers/platform/chrome/cros_ec_sysfs.c
+@@ -308,18 +308,35 @@ static ssize_t kb_wake_angle_store(struct device *dev,
+ 	return count;
+ }
+ 
++/* Last resume result */
++static ssize_t last_resume_result_show(struct device *dev,
++				       struct device_attribute *attr, char *buf)
++{
++	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
++	int ret;
++
++	ret = scnprintf(buf,
++			PAGE_SIZE,
++			"0x%x\n",
++			ec->ec_dev->last_resume_result);
++
++	return ret;
++}
++
+ /* Module initialization */
+ 
+ static DEVICE_ATTR_RW(reboot);
+ static DEVICE_ATTR_RO(version);
+ static DEVICE_ATTR_RO(flashinfo);
+ static DEVICE_ATTR_RW(kb_wake_angle);
++static DEVICE_ATTR_RO(last_resume_result);
+ 
+ static struct attribute *__ec_attrs[] = {
+ 	&dev_attr_kb_wake_angle.attr,
+ 	&dev_attr_reboot.attr,
+ 	&dev_attr_version.attr,
+ 	&dev_attr_flashinfo.attr,
++	&dev_attr_last_resume_result.attr,
+ 	NULL,
+ };
+ 
+diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+index cfa78bb4990f..d50ade418a83 100644
+--- a/include/linux/mfd/cros_ec.h
++++ b/include/linux/mfd/cros_ec.h
+@@ -163,6 +163,7 @@ struct cros_ec_device {
+ 	struct ec_response_get_next_event_v1 event_data;
+ 	int event_size;
+ 	u32 host_event_wake_mask;
++	u32 last_resume_result;
+ };
+ 
+ /**
+-- 
+2.20.1
+
