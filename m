@@ -2,58 +2,53 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8376C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B47C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECAA21479
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FDB214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922552;
-	bh=JwvSQ0W0IQqcM+2rYs9kJsFp6mVziXjD2/UTK4iOejY=;
+	s=default; t=1559922556;
+	bh=i0rXYPA+kVCel0/TEtRCT7TCNOUBC00D8dg5+vPFZVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OBf09RiaXF/GD+01pMKVioOPgRCRFjcmMqwbYdTQSdJFGRExTmrNvNn84AYZtYdTq
-	 O68YmxDExmIxVrFuqhOcMCvopLOHbOwkJxof5ssWW1WIbC0nN+0MElwaopFzpzdkoN
-	 ubmfIkSciLgg2sMNr1p6NEGd+qWn/TyREOpCdZ1A=
+	b=o70mMBRUBPPaWJ4GC010sB9ZasGp82aVAHHiyDSJq6D80lpZGGG+98LRFrHWpF8Id
+	 PHLEbuuwT/E7Gm/6j2kWDOyODj6sN3WOV6Q74+dF4QcOEkOx/UHgmAapIUCpkWV6db
+	 FHpGnLabmNdw0+A3GQYK/BHB4lj88k8X7DbDPKUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731908AbfFGPtL (ORCPT
+        id S1731918AbfFGPtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731880AbfFGPtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:49:03 -0400
+        id S1730322AbfFGPtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:49:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E09DA20840;
-        Fri,  7 Jun 2019 15:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D93D20840;
+        Fri,  7 Jun 2019 15:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922542;
-        bh=JwvSQ0W0IQqcM+2rYs9kJsFp6mVziXjD2/UTK4iOejY=;
+        s=default; t=1559922547;
+        bh=i0rXYPA+kVCel0/TEtRCT7TCNOUBC00D8dg5+vPFZVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mo5NH0hqCz+gFxl8WFzl+qGSpgMxDGTn/BO437djcc6UF8iEYAlOzAswlpNAICIwi
-         NNFCRnDiOf7S1E0ioXs0MiD9Kc4NcSRS/XICSKr285eIpqGFJUGUADIVIjCX1NNRvM
-         2q87mghnvqTM9uURqSNEO3ixSWU6TgR53ErkNKDY=
+        b=Yg/GydUXPV57Zl30K3rhHzJBSimE4qeCQOieDE8R8hKXeBND0vrYvl9li8d8sCWsR
+         WpJ3DiscoYmetB3mJKOIaI0N/HIH/Wg0OifJmwGebROiayfGjUl9K/4F81/QxmLFLH
+         OssJJMi16vF8TggUR3nd2/ihEvH82KOjMroOoVQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 50/85] kasan: initialize tag to 0xff in __kasan_kmalloc
-Date:   Fri,  7 Jun 2019 17:39:35 +0200
-Message-Id: <20190607153855.112480800@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.1 52/85] signal/arm64: Use force_sig not force_sig_fault for SIGKILL
+Date:   Fri,  7 Jun 2019 17:39:37 +0200
+Message-Id: <20190607153855.329078761@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -66,52 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-commit 0600597c854e53d2f9b7a6a718c1da2b8b4cb4db upstream.
+commit d76cac67db40c172791ce07948367b96a758e45b upstream.
 
-When building with -Wuninitialized and CONFIG_KASAN_SW_TAGS unset, Clang
-warns:
+I don't think this is userspace visible but SIGKILL does not have
+any si_codes that use the fault member of the siginfo union.  Correct
+this the simple way and call force_sig instead of force_sig_fault when
+the signal is SIGKILL.
 
-mm/kasan/common.c:484:40: warning: variable 'tag' is uninitialized when
-used here [-Wuninitialized]
-        kasan_unpoison_shadow(set_tag(object, tag), size);
-                                              ^~~
+The two know places where synchronous SIGKILL are generated are
+do_bad_area and fpsimd_save.  The call paths to force_sig_fault are:
+do_bad_area
+  arm64_force_sig_fault
+    force_sig_fault
+force_signal_inject
+  arm64_notify_die
+    arm64_force_sig_fault
+       force_sig_fault
 
-set_tag ignores tag in this configuration but clang doesn't realize it at
-this point in its pipeline, as it points to arch_kasan_set_tag as being
-the point where it is used, which will later be expanded to (void
-*)(object) without a use of tag.  Initialize tag to 0xff, as it removes
-this warning and doesn't change the meaning of the code.
+Which means correcting this in arm64_force_sig_fault is enough
+to ensure the arm64 code is not misusing the generic code, which
+could lead to maintenance problems later.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/465
-Link: http://lkml.kernel.org/r/20190502163057.6603-1-natechancellor@gmail.com
-Fixes: 7f94ffbc4c6a ("kasan: add hooks implementation for tag-based mode")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Cc: Dave Martin <Dave.Martin@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Fixes: af40ff687bc9 ("arm64: signal: Ensure si_code is valid for all fault signals")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/kasan/common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/traps.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -472,7 +472,7 @@ static void *__kasan_kmalloc(struct kmem
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -256,7 +256,10 @@ void arm64_force_sig_fault(int signo, in
+ 			   const char *str)
  {
- 	unsigned long redzone_start;
- 	unsigned long redzone_end;
--	u8 tag;
-+	u8 tag = 0xff;
+ 	arm64_show_signal(signo, str);
+-	force_sig_fault(signo, code, addr, current);
++	if (signo == SIGKILL)
++		force_sig(SIGKILL, current);
++	else
++		force_sig_fault(signo, code, addr, current);
+ }
  
- 	if (gfpflags_allow_blocking(flags))
- 		quarantine_reduce();
+ void arm64_force_sig_mceerr(int code, void __user *addr, short lsb,
 
 
