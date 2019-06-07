@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E8FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE17C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B1A214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74F4214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922344;
-	bh=JyX84JqCTKs45PfWeKpnmGa2HeJsO7bMDBIhYz7qQaw=;
+	s=default; t=1559922346;
+	bh=36eC9LzTEo0QMP/ymP9uy/gU8UGDQFvYsE4YirRunko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E0PuBTCU72Rn1xgc8r93cunKKL7tVrps/xCx2csF6i2BKq9yBB9J2Si/AkoRxLCBk
-	 WMkJgoeQtoAX5wpYvK9izeoyMignESnVHDn1gEbM6DseN0p+cXpd4gtaudixz2Y90h
-	 SKR96rk0SGjRs3JMzvS0+bzqEk4lW6oSWreH0LYY=
+	b=lri7nvBvYkWf1N60q6L3qhuvITTA1AZTW5I1AXVn6iuq8RLKd+qxCRC+a0+UPVIie
+	 HkitoEYirMpunzR3D5JJ8qpjchHJM45rFkD1Inve9Q8m+DuH+BThiAf+GpIGmD5jh2
+	 +Zb91Fjn+7w1XqIN3epYStXntJd6MUujj/cGhQ2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731277AbfFGPpn (ORCPT
+        id S1731290AbfFGPpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57642 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:45:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731238AbfFGPpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:45:38 -0400
+        id S1731260AbfFGPpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:45:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A9D2146E;
-        Fri,  7 Jun 2019 15:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F7B321479;
+        Fri,  7 Jun 2019 15:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922338;
-        bh=JyX84JqCTKs45PfWeKpnmGa2HeJsO7bMDBIhYz7qQaw=;
+        s=default; t=1559922340;
+        bh=36eC9LzTEo0QMP/ymP9uy/gU8UGDQFvYsE4YirRunko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMxjctYjJtoD0qQBoygY7v1vbRhUt9VeMhe488+xQgYGTJCtiVd5XboDaU8WKBE0M
-         CKzSvZyjajnVqCECAjymyRuG5Sb1X95NMBIqsQxJuLEbIjhDWRA/kD3LqzXYJniBO1
-         o5FP3h8z5cCn1ooZ4mIrd7evfVCRHR8st3QSkbTM=
+        b=ayQQS9kUOgDFnkstba+DxBsdU9tE6G694MmaYduIShIzMxGdWSArp8uudxCSJ269u
+         S0ykwXgDSHL/RvJXOXjJ/m0pqIXo5P5kpoH7JeVS1O+o1eK75mUy254D0gBjKJ/DQh
+         Df6O2pBzbmDciexnyW18M1a+mmlF3BKPU1t960Xs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 52/73] cifs: fix memory leak of pneg_inbuf on -EOPNOTSUPP ioctl case
-Date:   Fri,  7 Jun 2019 17:39:39 +0200
-Message-Id: <20190607153854.878421027@linuxfoundation.org>
+Subject: [PATCH 4.19 53/73] CIFS: cifs_read_allocate_pages: dont iterate through whole page array on ENOMEM
+Date:   Fri,  7 Jun 2019 17:39:40 +0200
+Message-Id: <20190607153854.978314671@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -59,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-commit 210782038b54ec8e9059a3c12d6f6ae173efa3a9 upstream.
+commit 31fad7d41e73731f05b8053d17078638cf850fa6 upstream.
 
-Currently in the case where SMB2_ioctl returns the -EOPNOTSUPP error
-there is a memory leak of pneg_inbuf. Fix this by returning via
-the out_free_inbuf exit path that will perform the relevant kfree.
+ In cifs_read_allocate_pages, in case of ENOMEM, we go through
+whole rdata->pages array but we have failed the allocation before
+nr_pages, therefore we may end up calling put_page with NULL
+pointer, causing oops
 
-Addresses-Coverity: ("Resource leak")
-Fixes: 969ae8e8d4ee ("cifs: Accept validate negotiate if server return NT_STATUS_NOT_SUPPORTED")
-CC: Stable <stable@vger.kernel.org> # v5.1+
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2pdu.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/cifs/file.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -887,7 +887,8 @@ int smb3_validate_negotiate(const unsign
- 		 * not supported error. Client should accept it.
- 		 */
- 		cifs_dbg(VFS, "Server does not support validate negotiate\n");
--		return 0;
-+		rc = 0;
-+		goto out_free_inbuf;
- 	} else if (rc != 0) {
- 		cifs_dbg(VFS, "validate protocol negotiate failed: %d\n", rc);
- 		rc = -EIO;
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -2988,7 +2988,9 @@ cifs_read_allocate_pages(struct cifs_rea
+ 	}
+ 
+ 	if (rc) {
+-		for (i = 0; i < nr_pages; i++) {
++		unsigned int nr_page_failed = i;
++
++		for (i = 0; i < nr_page_failed; i++) {
+ 			put_page(rdata->pages[i]);
+ 			rdata->pages[i] = NULL;
+ 		}
 
 
