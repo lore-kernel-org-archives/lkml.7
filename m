@@ -2,119 +2,103 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E6AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E6BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAA2208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GY+aUKOD"
+	by mail.kernel.org (Postfix) with ESMTP id E53332133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbfFGQY7 (ORCPT
+        id S1730795AbfFGQZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:24:59 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:59166 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730634AbfFGQYp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:24:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559924683; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=reftoaIV6JypAZSty0APUo6zLR/HlKCFOvQxUsfhCCA=;
-        b=GY+aUKOD3ICy/vKpZNT3vm41AnEZt9N3yoxJ5DEqH8yLDOFHqfpUktjP0fRRlhIluDxSGg
-        dlOcMgYR0T6Cz2U0enfvnfrFmdkIDp9KdaOpXLCoCi1GK2Q2UTZSqF4dnjF4ohGZaPR8Lo
-        mWipA/FChZ7o98kwlR6WGfjqu/+mbao=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     od@zcrc.me, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 2/4] watchdog: jz4740: Avoid starting watchdog in set_timeout
-Date:   Fri,  7 Jun 2019 18:24:27 +0200
-Message-Id: <20190607162429.17915-3-paul@crapouillou.net>
-In-Reply-To: <20190607162429.17915-1-paul@crapouillou.net>
-References: <20190607162429.17915-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Jun 2019 12:25:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:13437 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730634AbfFGQZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:25:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:25:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,563,1557212400"; 
+   d="scan'208";a="182720042"
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2019 09:25:08 -0700
+Message-ID: <1b5778f8f1336ad7a63f4621f189b7f04a56a9ed.camel@intel.com>
+Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
+ ELF file
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Fri, 07 Jun 2019 09:17:06 -0700
+In-Reply-To: <20190607075822.GR3419@hirez.programming.kicks-ass.net>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+         <20190606200646.3951-23-yu-cheng.yu@intel.com>
+         <20190607075822.GR3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously the jz4740_wdt_set_timeout() function was starting the timer
-unconditionally, even if it was stopped when that function was entered.
+On Fri, 2019-06-07 at 09:58 +0200, Peter Zijlstra wrote:
+> On Thu, Jun 06, 2019 at 01:06:41PM -0700, Yu-cheng Yu wrote:
+> > An ELF file's .note.gnu.property indicates features the executable file
+> > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+> > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+> > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
+> > 
+> > With this patch, if an arch needs to setup features from ELF properties,
+> > it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
+> > arch_setup_property().
+> > 
+> > For example, for X86_64:
+> > 
+> > int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
+> > {
+> > 	int r;
+> > 	uint32_t property;
+> > 
+> > 	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
+> > 			     &property);
+> > 	...
+> > }
+> > 
+> > Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> 
+> Did HJ write this patch as suggested by that SoB chain? If so, you lost
+> a From: line on top, if not, the SoB thing is invalid.
 
-Now, the timer will be restarted only if it was already running before
-this function is called.
+I will fix that.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
----
-
-Notes:
-    v2: - Don't disable TCU timer if it was already disabled
-    	- Don't enable TCU timer if it was already enabled
-
- drivers/watchdog/jz4740_wdt.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index a2592c4fff02..7519d80c5d05 100644
---- a/drivers/watchdog/jz4740_wdt.c
-+++ b/drivers/watchdog/jz4740_wdt.c
-@@ -68,6 +68,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
- 	unsigned int rtc_clk_rate;
- 	unsigned int timeout_value;
- 	unsigned short clock_div = JZ_WDT_CLOCK_DIV_1;
-+	u8 tcer;
- 
- 	rtc_clk_rate = clk_get_rate(drvdata->rtc_clk);
- 
-@@ -83,6 +84,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
- 		clock_div += (1 << TCU_TCSR_PRESCALE_LSB);
- 	}
- 
-+	tcer = readb(drvdata->base + TCU_REG_WDT_TCER);
- 	writeb(0x0, drvdata->base + TCU_REG_WDT_TCER);
- 	writew(clock_div, drvdata->base + TCU_REG_WDT_TCSR);
- 
-@@ -90,7 +92,8 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
- 	writew(0x0, drvdata->base + TCU_REG_WDT_TCNT);
- 	writew(clock_div | JZ_WDT_CLOCK_RTC, drvdata->base + TCU_REG_WDT_TCSR);
- 
--	writeb(0x1, drvdata->base + TCU_REG_WDT_TCER);
-+	if (tcer & TCU_WDT_TCER_TCEN)
-+		writeb(TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
- 
- 	wdt_dev->timeout = new_timeout;
- 	return 0;
-@@ -98,9 +101,18 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
- 
- static int jz4740_wdt_start(struct watchdog_device *wdt_dev)
- {
-+	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
-+	u8 tcer;
-+
-+	tcer = readb(drvdata->base + TCU_REG_WDT_TCER);
-+
- 	jz4740_timer_enable_watchdog();
- 	jz4740_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
- 
-+	/* Start watchdog if it wasn't started already */
-+	if (!(tcer & TCU_WDT_TCER_TCEN))
-+		writeb(TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
-+
- 	return 0;
- }
- 
--- 
-2.21.0.593.g511ec345e18
-
+Yu-cheng
