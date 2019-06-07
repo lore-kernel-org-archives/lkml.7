@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542F7C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E93C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2944320825
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE34A2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nS21om+s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rloz6Cds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731674AbfFGXLR (ORCPT
+        id S1731836AbfFGXL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 19:11:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42172 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731454AbfFGXLP (ORCPT
+        Fri, 7 Jun 2019 19:11:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55703 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731725AbfFGXLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 19:11:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so3614647wrl.9;
-        Fri, 07 Jun 2019 16:11:15 -0700 (PDT)
+        Fri, 7 Jun 2019 19:11:22 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a15so3495633wmj.5;
+        Fri, 07 Jun 2019 16:11:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=E4E30xpqxw1cyUThhqcs8LcBlilNIoX4BY+l8x9uJrk=;
-        b=nS21om+sxmgQhlX01Uzu3VcogD22hZ1kHhzDLmgBxs0AswjQws9aI3nyYVsa+trWaj
-         LTimR/IkxY73JBSpn1aE21GzZneJv0mp0uCeLh/Zy+51tc6xkWmUXNtqxlxKp1lbhS+a
-         1Zt0xuip8BIrCtufL1kMLDesoB/OM1g0yj8JpJqRpzuezZOr0/TJNIIlTMUMc2+NRW6W
-         C1yhY3acXuSv1RhNg87OREdA6FILarBltHh+S0FbvQUYxiDEgHPuKMQHrRSfUwzx7fI/
-         ZGkXhoLcGX/7zqrSCxKpJsagbXNVYQQgfArtSuvdPGRYtlW02QzG8MD8oaY8GgF8NJzm
-         fItQ==
+        bh=njnjG6a7jdrYLSKYX++HVTkLLSLz4gvoHp7YU4YYSHc=;
+        b=rloz6Cds/NcMZNyX5rYQjfALN+w2sD5cwdqhllPoUbXBmo8udxJ0GPHIGW9k93s5Zy
+         IaGyx6fa4lOL0OtqX1KdDOP0m4A/Stjp7v3fKISOW9c9HR7JFDMdVV9gyavmg5XydFjy
+         1Q5C/XfWld69ItuWgeM7X8Csi5s42hghY7NRTi81LMy7+cIVJNkguVaQwSTU7tPEFOnt
+         m80h0avgOSIZHmo8IDE5n5ENCEzrhfQHQzF+bmXv1popmBa17bFYDVJat//VcrWLkJPt
+         haGZHYjeygHbonGEmu/0f5VyCQ0mXQeYpR2wYujWxyoryzhertqqaKpFMonDIyBDzVOK
+         3KBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E4E30xpqxw1cyUThhqcs8LcBlilNIoX4BY+l8x9uJrk=;
-        b=sTvpqGlhHPLy/EyUNxHhOt/3+XQVNOu0yWQNTm6lQFkdTfeCO7P9YniqQuNtc8IfXZ
-         7W4zsJr7kDAhjvddcMx0kaJCFceEquCdD28Mi/ZJZ8OHazGBElb1k4nF6CjhuH8TA0JS
-         xAveFQJKbtaCuJSC+0Xf0n/X/IWLqlT1VjeE70XKjBQTo8Xr23DuDZJHTX8Bd+b8Xkxz
-         rZSpx/npk1UI7VEMAUGe92k1HKQXnisT2dABLXud6CuyruBemkVL+x49JcTXveMVGBPp
-         P+Srz/Me6ByJL8h3qrdTvBC/da2+bon97HSuwBXysXfvZVy8UNxReebh2HeI50sTWdUz
-         FOjw==
-X-Gm-Message-State: APjAAAULqQeKRtVU/LY1kIjsvw0w8fyzPKQ937MzmpJiVifgx+wXLGE1
-        ERlEEPo6neSFDLnHj1YNPhs=
-X-Google-Smtp-Source: APXvYqzVT3Th7VqkSyB0yRD4rbflOI8dOw1Wivvjx5R6t+uE5NXQaKKRFZa88frNgIUrvmk5iiRhfg==
-X-Received: by 2002:a5d:4087:: with SMTP id o7mr21805064wrp.277.1559949074312;
-        Fri, 07 Jun 2019 16:11:14 -0700 (PDT)
+        bh=njnjG6a7jdrYLSKYX++HVTkLLSLz4gvoHp7YU4YYSHc=;
+        b=fv6j7aNwa+g0khKc9XG1hSGCb7ZEgPZqnWkUVXL/PTDnB/WDGxr0EAW5MfcVDmmOLk
+         IXHsnU3+Ks73Ij338i1j/Vmv4N+iaSLNw0M5IAiCIIR0SWo1jVHS1wI2OP8BSHa9fVZf
+         RCYNxpd+vtbbFJN71ReFMkn4cZKWjzJ63Z6hYekCUK6BpoRtF0JNv4eiC0LnmrGcRuQe
+         sO9ZAVAaR2gHtlxqluEDy+ZQjQT5iQJA7RGP+yWmB/MkxhWHSM3mWlRLx5sHoSh7+j5T
+         28jYSOeQNVmQMOq6NIWeF/XAB1xHhW2jN60m0zCdhzGifJwC6Y3YgM2kkewAnfa6c8+s
+         INJg==
+X-Gm-Message-State: APjAAAWFZGysunZdBfC4nTvIQRdswjquuXVqMg7LHuZGx0eXLH0/DB5x
+        d1lXTQVPlvt48UgP3ljVUyc=
+X-Google-Smtp-Source: APXvYqzEr1O0RpYAA6xX7b1pY4WlGx9jKDwzLXPofzg39mkwMlQpXn6zyw+shISAW27y3Y6h+x5pVA==
+X-Received: by 2002:a7b:cb55:: with SMTP id v21mr5134238wmj.157.1559949080086;
+        Fri, 07 Jun 2019 16:11:20 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.13
+        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.18
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 16:11:13 -0700 (PDT)
+        Fri, 07 Jun 2019 16:11:19 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
         Sean Young <sean@mess.org>
-Subject: [PATCH v5 05/13] ARM: dts: sunxi: Prefer A31 bindings for IR
-Date:   Sat,  8 Jun 2019 01:10:52 +0200
-Message-Id: <20190607231100.5894-6-peron.clem@gmail.com>
+Subject: [PATCH v5 11/13] arm64: dts: allwinner: h6: Add IR receiver node
+Date:   Sat,  8 Jun 2019 01:10:58 +0200
+Message-Id: <20190607231100.5894-12-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190607231100.5894-1-peron.clem@gmail.com>
 References: <20190607231100.5894-1-peron.clem@gmail.com>
@@ -82,57 +82,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since A31, memory mapping of the IR driver has changed.
+Allwinner H6 IR is similar to A31 and can use same driver.
 
-Prefer the A31 bindings instead of A13.
+Add support for it.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 Acked-by: Sean Young <sean@mess.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi  | 2 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi | 2 +-
- arch/arm/boot/dts/sun9i-a80.dtsi  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index c04efad81bbc..110622b30796 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -1351,7 +1351,7 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 16c5c3d0fd81..649cbdfe452e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -647,6 +647,25 @@
+ 				pins = "PL0", "PL1";
+ 				function = "s_i2c";
+ 			};
++
++			r_ir_rx_pin: r-ir-rx-pin {
++				pins = "PL9";
++				function = "s_cir_rx";
++			};
++		};
++
++		r_ir: ir@7040000 {
++				compatible = "allwinner,sun50i-h6-ir",
++					     "allwinner,sun6i-a31-ir";
++				reg = <0x07040000 0x400>;
++				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&r_ccu CLK_R_APB1_IR>,
++					 <&r_ccu CLK_IR>;
++				clock-names = "apb", "ir";
++				resets = <&r_ccu RST_R_APB1_IR>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&r_ir_rx_pin>;
++				status = "disabled";
  		};
  
- 		ir: ir@1f02000 {
--			compatible = "allwinner,sun5i-a13-ir";
-+			compatible = "allwinner,sun6i-a31-ir";
- 			clocks = <&apb0_gates 1>, <&ir_clk>;
- 			clock-names = "apb", "ir";
- 			resets = <&apb0_rst 1>;
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 392b0cabbf0d..8d603f3309f2 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -1067,7 +1067,7 @@
- 
- 		r_cir: ir@1f02000 {
- 			compatible = "allwinner,sun8i-a83t-ir",
--				"allwinner,sun5i-a13-ir";
-+				"allwinner,sun6i-a31-ir";
- 			clocks = <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
- 			clock-names = "apb", "ir";
- 			resets = <&r_ccu RST_APB0_IR>;
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 0c1eec9000e3..310cd972ee5b 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -1167,7 +1167,7 @@
- 		};
- 
- 		r_ir: ir@8002000 {
--			compatible = "allwinner,sun5i-a13-ir";
-+			compatible = "allwinner,sun6i-a31-ir";
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&r_ir_pins>;
+ 		r_i2c: i2c@7081400 {
 -- 
 2.20.1
 
