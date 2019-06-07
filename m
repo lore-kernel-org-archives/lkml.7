@@ -2,75 +2,169 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C443C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECF3C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E122146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1419F2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:26:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ng9VAdE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729866AbfFGPZY (ORCPT
+        id S1729915AbfFGP0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:25:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:42662 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729462AbfFGPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:25:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8A39346;
-        Fri,  7 Jun 2019 08:25:20 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D270C3F718;
-        Fri,  7 Jun 2019 08:25:19 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 16:25:17 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org
-Subject: Re: "arm64: Silence gcc warnings about arch ABI drift" breaks clang
-Message-ID: <20190607152517.GC19862@fuggles.cambridge.arm.com>
-References: <1559920965.6132.56.camel@lca.pw>
+        Fri, 7 Jun 2019 11:26:15 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40726 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729878AbfFGP0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:26:15 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so962164pla.7;
+        Fri, 07 Jun 2019 08:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XVGisPA/tmje+GMmiDK8OnPmVMVeg+5zpouDsmuezH0=;
+        b=Ng9VAdE1hknVxgMRmGjp2lDv/vnEMUT819mfzZMuI8Vo6TE0MQGzCyXQIXbFSQSR9d
+         mKrNlvkbRFOoWrF67ukGOUJy4jylKGdkI6hIa+PapCfYavrA91o8rolb+/2gcZ89PHi4
+         TCKXDiJaTwa1LK8hu36NqCpMeFdtpAHiDM4lDcBoesgsWJUQKalZSIuLylNn8fC6ZpPa
+         jrw8KWHCbIrHI4lj+eQDHSVFYpOVYAS1GI7rAz/OImckqC1LWeXKUjZlS5GZhLJXoIQy
+         Q7PudF+uPC57APLwcHvHZjgTe0n5U3Fn6YNewGQKV/dgVXu9sEBuf67YsfvDIaQIy+MF
+         eFNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XVGisPA/tmje+GMmiDK8OnPmVMVeg+5zpouDsmuezH0=;
+        b=e3CBz1lCutw2gZP9krwcp9x8ZSoI7pD4t8A+sFMv1QK8iRNJH9kDcXmYV0z1IGK+ER
+         1w7BalgPNMKxhl/R/4S9yQDA1LPW/KvsNRuNCoJBwTrmV+1g8rT1a7d/gpQq2Hxx5CfW
+         9N2hep08BUmdJ4nLLZ90l249s9YOBW2APIe4r67x72KkrOfKaSJkrm8aPq+9+e2EebU9
+         eZLg2v/k+8MM5Zp7JlB6DGwckvfIhVnOTQQ+vOHmHr7Yw1BzEambZ2tO0z2uAcrEzvtl
+         F1ciCatdsfK8+CJyoiSyBAPKYKj+qpmyNCTG8uRZq3Jk4C/J/DKc+3dEHI3GGuk9KUWZ
+         jV1w==
+X-Gm-Message-State: APjAAAWi1FHCt3IfbltsoEJ7c0eehGtAG0dJGabnOx8jK9wGHa37Zzz8
+        wg5swwcovmIgE7ttHj5apqyX1Brt
+X-Google-Smtp-Source: APXvYqyb+ly9dDrO0mjWbQvwYi45rypLj3ZwkYwj101gOR+IwU70sx8VUSNY5cgcVG4+h34ABuZAJw==
+X-Received: by 2002:a17:902:294a:: with SMTP id g68mr57385663plb.169.1559921174428;
+        Fri, 07 Jun 2019 08:26:14 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id j7sm2461679pfa.184.2019.06.07.08.26.13
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 08:26:13 -0700 (PDT)
+Subject: Re: inet: frags: Turn fqdir->dead into an int for old Alphas
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+References: <20190603200301.GM28207@linux.ibm.com>
+ <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
+ <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
+ <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <da5eedfe-92f9-6c50-b9e7-68886047dd25@gmail.com>
+Date:   Fri, 7 Jun 2019 08:26:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559920965.6132.56.camel@lca.pw>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:22:45AM -0400, Qian Cai wrote:
-> The linux-next commit "arm64: Silence gcc warnings about arch ABI drift" [1]
-> breaks clang build where it screams that unknown option "-Wno-psabi" and
-> generates errors below,
 
-So that can be easily fixed with cc-option...
 
-> [1] https://lore.kernel.org/linux-arm-kernel/1559817223-32585-1-git-send-email-D
-> ave.Martin@arm.com/
+On 6/7/19 7:09 AM, Herbert Xu wrote:
+> On Tue, Jun 04, 2019 at 09:04:55AM -0700, Linus Torvalds wrote:
+>>
+>> In fact, the alpha port was always subtly buggy exactly because of the
+>> "byte write turns into a read-and-masked-write", even if I don't think
+>> anybody ever noticed (we did fix cases where people _did_ notice,
+>> though, and we might still have some cases where we use 'int' for
+>> booleans because of alpha issues.).
 > 
-> ./drivers/firmware/efi/libstub/arm-stub.stub.o: In function
-> `install_memreserve_table':
-> ./linux/drivers/firmware/efi/libstub/arm-stub.c:73: undefined reference to
-> `__efistub___stack_chk_guard'
-> ./linux/drivers/firmware/efi/libstub/arm-stub.c:73: undefined reference to
-> `__efistub___stack_chk_guard'
-> ./linux/drivers/firmware/efi/libstub/arm-stub.c:93: undefined reference to
-> `__efistub___stack_chk_guard'
-> ./linux/drivers/firmware/efi/libstub/arm-stub.c:93: undefined reference to
-> `__efistub___stack_chk_guard'
-> ./linux/drivers/firmware/efi/libstub/arm-stub.c:94: undefined reference to
-> `__efistub___stack_chk_fail
+> This is in fact a real bug in the code in question that no amount
+> of READ_ONCE/WRITE_ONCE would have caught.  The field fqdir->dead is
+> declared as boolean so writing to it is not atomic (on old Alphas).
+> 
+> I don't think it currently matters because padding would ensure
+> that it is in fact 64 bits long.  However, should someone add another
+> char/bool/bitfield in this struct in future it could become an issue.
+> 
+> So let's fix it.
 
-... but this looks unrelated. Are you saying you don't see these errors if
-you revert Dave's patch?
 
-Will
+There is common knowledge among us programmers that bit fields
+(or bool) sharing a common 'word' need to be protected
+with a common lock.
+
+Converting all bit fields to plain int/long would be quite a waste of memory.
+
+In this case, fqdir_exit() is called right before the whole
+struct fqdir is dismantled, and the only cpu that could possibly
+change the thing is ourself, and we are going to start an RCU grace period.
+
+Note that first cache line in 'struct fqdir' is read-only.
+Only ->dead field is flipped to one at exit time.
+
+Your patch would send a strong signal to programmers to not even try using
+bit fields.
+
+Do we really want that ?
+
+> 
+> ---8<--
+> The field fqdir->dead is meant to be written (and read) atomically.
+> As old Alpha CPUs can't write a single byte atomically, we need at
+> least an int for it to work.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
+> diff --git a/include/net/inet_frag.h b/include/net/inet_frag.h
+> index e91b79ad4e4a..8c458fba74ad 100644
+> --- a/include/net/inet_frag.h
+> +++ b/include/net/inet_frag.h
+> @@ -14,7 +14,9 @@ struct fqdir {
+>  	int			max_dist;
+>  	struct inet_frags	*f;
+>  	struct net		*net;
+> -	bool			dead;
+> +
+> +	/* We can't use boolean because this needs atomic writes. */
+> +	int			dead;
+>  
+>  	struct rhashtable       rhashtable ____cacheline_aligned_in_smp;
+>  
+> diff --git a/net/ipv4/inet_fragment.c b/net/ipv4/inet_fragment.c
+> index 35e9784fab4e..05aa7c145817 100644
+> --- a/net/ipv4/inet_fragment.c
+> +++ b/net/ipv4/inet_fragment.c
+> @@ -193,7 +193,7 @@ void fqdir_exit(struct fqdir *fqdir)
+>  {
+>  	fqdir->high_thresh = 0; /* prevent creation of new frags */
+>  
+> -	fqdir->dead = true;
+> +	fqdir->dead = 1;
+>  
+>  	/* call_rcu is supposed to provide memory barrier semantics,
+>  	 * separating the setting of fqdir->dead with the destruction
+> 
