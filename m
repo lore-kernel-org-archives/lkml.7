@@ -2,182 +2,80 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A82C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC68C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2528D212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922260;
-	bh=9IMUKYg37DtSQU0lEGNAr7Q/o9dEQwhYrt1h/7V6ipk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LIcxDW4lwtzemX/sPzg73X0Jiq+6WrzPfnUaACm5jHHsV4fkdx9p/N4Jq1UYrRotr
-	 67XCc1siCDQ2S8Bv7v8Yx1tOp9mZfD01d48cfS9yIlbYXvEyuqVRNFPL7r+my7GcBx
-	 +JYfq7adalRVDLMHCnqeMcWKjYwH679R7fIuSbXM=
+	by mail.kernel.org (Postfix) with ESMTP id B4E882146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="iqgslyEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731039AbfFGPoT (ORCPT
+        id S1731072AbfFGPoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:44:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729761AbfFGPoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CFA22133D;
-        Fri,  7 Jun 2019 15:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922256;
-        bh=9IMUKYg37DtSQU0lEGNAr7Q/o9dEQwhYrt1h/7V6ipk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEMchG+F9jYJZ3djc09oPQZlZyEP3R91GdhMeZycAPredHZPYEt0Yp9bi2mWKbOck
-         x6jxAHDk3+KeyZjtuhzNJKChMl9eMf6kQpHftWYc9WIFrCSyWo6TJkZVJ30OlI+vYu
-         YhyJUNawkKdVwCYCaWNJkkDS64vViGJ1zE876ND0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 22/73] Btrfs: fix race updating log root item during fsync
-Date:   Fri,  7 Jun 2019 17:39:09 +0200
-Message-Id: <20190607153851.457035495@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
-References: <20190607153848.669070800@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 7 Jun 2019 11:44:25 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:48070 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731040AbfFGPoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1559922258; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eaMMjjO6GjkOecl+5NcUj1ujYtdY632QmibYiRdHYSE=;
+        b=iqgslyEsosWoxhOHDygV/fhPw2b30/16mkUA+T4z8W+tH/SUme/vRLVVrJcm0sA6lRX4lU
+        rfVvF6S3b+Sx6BGHCtLQtaqx/uuE3nokgAT8CX45MxHOYQYvWs6rD7dThQNgvgIOHdN/iI
+        Ud0nGT8Sw6ZWNjaj8lohNG/z/6okTyg=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 2/6] pwm: jz4740: Remove unused devicetree compatible strings
+Date:   Fri,  7 Jun 2019 17:44:06 +0200
+Message-Id: <20190607154410.10633-3-paul@crapouillou.net>
+In-Reply-To: <20190607154410.10633-1-paul@crapouillou.net>
+References: <20190607154410.10633-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+Right now none of the Ingenic-based boards probe this driver from
+devicetree. This driver defined three compatible strings for the exact
+same behaviour. Before these strings are used, we can remove two of
+them.
 
-commit 06989c799f04810f6876900d4760c0edda369cf7 upstream.
-
-When syncing the log, the final phase of a fsync operation, we need to
-either create a log root's item or update the existing item in the log
-tree of log roots, and that depends on the current value of the log
-root's log_transid - if it's 1 we need to create the log root item,
-otherwise it must exist already and we update it. Since there is no
-synchronization between updating the log_transid and checking it for
-deciding whether the log root's item needs to be created or updated, we
-end up with a tiny race window that results in attempts to update the
-item to fail because the item was not yet created:
-
-              CPU 1                                    CPU 2
-
-  btrfs_sync_log()
-
-    lock root->log_mutex
-
-    set log root's log_transid to 1
-
-    unlock root->log_mutex
-
-                                               btrfs_sync_log()
-
-                                                 lock root->log_mutex
-
-                                                 sets log root's
-                                                 log_transid to 2
-
-                                                 unlock root->log_mutex
-
-    update_log_root()
-
-      sees log root's log_transid
-      with a value of 2
-
-        calls btrfs_update_root(),
-        which fails with -EUCLEAN
-        and causes transaction abort
-
-Until recently the race lead to a BUG_ON at btrfs_update_root(), but after
-the recent commit 7ac1e464c4d47 ("btrfs: Don't panic when we can't find a
-root key") we just abort the current transaction.
-
-A sample trace of the BUG_ON() on a SLE12 kernel:
-
-  ------------[ cut here ]------------
-  kernel BUG at ../fs/btrfs/root-tree.c:157!
-  Oops: Exception in kernel mode, sig: 5 [#1]
-  SMP NR_CPUS=2048 NUMA pSeries
-  (...)
-  Supported: Yes, External
-  CPU: 78 PID: 76303 Comm: rtas_errd Tainted: G                 X 4.4.156-94.57-default #1
-  task: c00000ffa906d010 ti: c00000ff42b08000 task.ti: c00000ff42b08000
-  NIP: d000000036ae5cdc LR: d000000036ae5cd8 CTR: 0000000000000000
-  REGS: c00000ff42b0b860 TRAP: 0700   Tainted: G                 X  (4.4.156-94.57-default)
-  MSR: 8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 22444484  XER: 20000000
-  CFAR: d000000036aba66c SOFTE: 1
-  GPR00: d000000036ae5cd8 c00000ff42b0bae0 d000000036bda220 0000000000000054
-  GPR04: 0000000000000001 0000000000000000 c00007ffff8d37c8 0000000000000000
-  GPR08: c000000000e19c00 0000000000000000 0000000000000000 3736343438312079
-  GPR12: 3930373337303434 c000000007a3a800 00000000007fffff 0000000000000023
-  GPR16: c00000ffa9d26028 c00000ffa9d261f8 0000000000000010 c00000ffa9d2ab28
-  GPR20: c00000ff42b0bc48 0000000000000001 c00000ff9f0d9888 0000000000000001
-  GPR24: c00000ffa9d26000 c00000ffa9d261e8 c00000ffa9d2a800 c00000ff9f0d9888
-  GPR28: c00000ffa9d26028 c00000ffa9d2aa98 0000000000000001 c00000ffa98f5b20
-  NIP [d000000036ae5cdc] btrfs_update_root+0x25c/0x4e0 [btrfs]
-  LR [d000000036ae5cd8] btrfs_update_root+0x258/0x4e0 [btrfs]
-  Call Trace:
-  [c00000ff42b0bae0] [d000000036ae5cd8] btrfs_update_root+0x258/0x4e0 [btrfs] (unreliable)
-  [c00000ff42b0bba0] [d000000036b53610] btrfs_sync_log+0x2d0/0xc60 [btrfs]
-  [c00000ff42b0bce0] [d000000036b1785c] btrfs_sync_file+0x44c/0x4e0 [btrfs]
-  [c00000ff42b0bd80] [c00000000032e300] vfs_fsync_range+0x70/0x120
-  [c00000ff42b0bdd0] [c00000000032e44c] do_fsync+0x5c/0xb0
-  [c00000ff42b0be10] [c00000000032e8dc] SyS_fdatasync+0x2c/0x40
-  [c00000ff42b0be30] [c000000000009488] system_call+0x3c/0x100
-  Instruction dump:
-  7f43d378 4bffebb9 60000000 88d90008 3d220000 e8b90000 3b390009 e87a01f0
-  e8898e08 e8f90000 4bfd48e5 60000000 <0fe00000> e95b0060 39200004 394a0ea0
-  ---[ end trace 8f2dc8f919cabab8 ]---
-
-So fix this by doing the check of log_transid and updating or creating the
-log root's item while holding the root's log_mutex.
-
-Fixes: 7237f1833601d ("Btrfs: fix tree logs parallel sync")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- fs/btrfs/tree-log.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3038,6 +3038,12 @@ int btrfs_sync_log(struct btrfs_trans_ha
- 	log->log_transid = root->log_transid;
- 	root->log_start_pid = 0;
- 	/*
-+	 * Update or create log root item under the root's log_mutex to prevent
-+	 * races with concurrent log syncs that can lead to failure to update
-+	 * log root item because it was not created yet.
-+	 */
-+	ret = update_log_root(trans, log);
-+	/*
- 	 * IO has been started, blocks of the log tree have WRITTEN flag set
- 	 * in their headers. new modifications of the log will be written to
- 	 * new positions. so it's safe to allow log writers to go in.
-@@ -3056,8 +3062,6 @@ int btrfs_sync_log(struct btrfs_trans_ha
- 
- 	mutex_unlock(&log_root_tree->log_mutex);
- 
--	ret = update_log_root(trans, log);
--
- 	mutex_lock(&log_root_tree->log_mutex);
- 	if (atomic_dec_and_test(&log_root_tree->log_writers)) {
- 		/* atomic_dec_and_test implies a barrier */
+Notes:
+    v2: Rebase on v5.2-rc3
 
+ drivers/pwm/pwm-jz4740.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+index 88a51a40e695..5c8bb6192201 100644
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -184,8 +184,6 @@ static int jz4740_pwm_remove(struct platform_device *pdev)
+ #ifdef CONFIG_OF
+ static const struct of_device_id jz4740_pwm_dt_ids[] = {
+ 	{ .compatible = "ingenic,jz4740-pwm", },
+-	{ .compatible = "ingenic,jz4770-pwm", },
+-	{ .compatible = "ingenic,jz4780-pwm", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, jz4740_pwm_dt_ids);
+-- 
+2.21.0.593.g511ec345e18
 
