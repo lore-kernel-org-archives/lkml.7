@@ -2,267 +2,148 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081C9C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B97C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E0B208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A77E208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfFGKQJ (ORCPT
+        id S1727848AbfFGKUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 06:16:09 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35508 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727373AbfFGKQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 06:16:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 03:16:08 -0700
-X-ExtLoop1: 1
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 07 Jun 2019 03:16:03 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 07 Jun 2019 13:16:02 +0300
-Date:   Fri, 7 Jun 2019 13:16:02 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        felipe.balbi@linux.intel.com, linux-usb@vger.kernel.org,
-        hdegoede@redhat.com, robh+dt@kernel.org, rogerq@ti.com,
-        linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com,
-        nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com,
-        jpawar@cadence.com, kurahul@cadence.com
-Subject: Re: [PATCH v7 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Message-ID: <20190607101602.GD10298@kuha.fi.intel.com>
-References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
- <1559729030-16390-6-git-send-email-pawell@cadence.com>
+        Fri, 7 Jun 2019 06:20:03 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:38017 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbfFGKUC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 06:20:02 -0400
+Received: from [192.168.1.162] ([37.4.249.160]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MBmDy-1hPFnq3Uia-00CC77; Fri, 07 Jun 2019 12:19:38 +0200
+Subject: Re: [PATCH v2 7/7] arm64: defconfig: enable cpufreq support for RPi3
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
+        Catalin Marinas <catalin.marinas@arm.com>, ptesarik@suse.com,
+        sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
+        Will Deacon <will.deacon@arm.com>, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        mbrugger@suse.de, ssuloev@orpaltech.com
+References: <20190606142255.29454-1-nsaenzjulienne@suse.de>
+ <20190606142255.29454-8-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <431a1f0c-8bc8-5c9b-7fa2-f293a2846ce3@i2se.com>
+Date:   Fri, 7 Jun 2019 12:19:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1559729030-16390-6-git-send-email-pawell@cadence.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190606142255.29454-8-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:09PmIyPrq3oDWWfzzNFVNklZb0/fNgRWdtV+WDNiSybbPuWbl1S
+ gn5ZCLMtkTRonHU3RKBBT91U6MUg1U0BURu+WmhW0euSLUKls8EKDNHqAfve9nI7NMaUBp5
+ YkFjMYTc2og/a12gf4QjQb7WNK4H8SvQbE4SZZoXuHkHXkbZ59T9zJshhuMayxpsUsN3H44
+ 55bykqcVvTf8/wffQiP+Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lLfGaMPR4yI=:iCm6gyvGTcdNde4g/GNPsF
+ DOMOvdjf3rfYPFalaOgxIoNXRO6io92hou+dyFAn/AGtWong8yie/9AJ/xZnATTR4PTCBvZoh
+ oHKoRhhOUqVTwdxC8zKLcfUeoGN74Ir6ISFgmEkAJhT54Iq7wUHVlDP/owGjdv9PFgeUvvXKU
+ 4QJ/SmjPIJz0qlrIgkImdie0Jze3ymcpGIRcrm5TcOqu9LdhCvRM+mdHIz+Cv6EglQbvPuCc3
+ R1QvoWTF/gmfPfBJ6uSZ4k4wCDoJt2lsaggmZaW56vIJ0O2PPxR3gy9n/OVm36DZ1Muk5XoW1
+ Psld0DjyMCbvPqBBUxfyN6hbr3jGYAYxcnb2cTLUYsUk1UWy5pqvXTJLUdrucA7IXR0vGlOCE
+ lbQvwJ4WolnTl0i1/0fSS0xquo75n/KwdUCc/3CPq80B6lHRRU3Fx3dxVrY3UN7JRBbV7+FDY
+ O7WprUd64hoVA4m49xsj2QqENDHRtdeDkd5x7D8KBI57BBIKlUOG/CExPsg6YuJidXe0RAkPp
+ vKhOPNBo2oTGMlKVesAnIC9TVqD/0IqORQbclHtSL8rt51P8sw7Uct5E0H4RhNpeB1SCEfTRU
+ h/FFHxtY9GMMWMc40E96Susb4SxSF4M3Ry8g+YPHmiMY/hUNG5XxnoYrDTb3WECfv5xjS4Nk+
+ SJyPH+oPD3q9Ubotum4i5E6TJSFpKodugNSxH5SQijFlluIMk38aHKmcU7iKwfjf3cKNTrnWO
+ VMI3AjeIeJsPlr+hOfYzBnQJBo/XX5weW3CzRfXolB4AAmhe1ciDOxQBBqk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 11:03:49AM +0100, Pawel Laszczak wrote:
-> diff --git a/drivers/usb/cdns3/debugfs.c b/drivers/usb/cdns3/debugfs.c
-> new file mode 100644
-> index 000000000000..dfcbeb5e14f8
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/debugfs.c
-> @@ -0,0 +1,173 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Cadence USBSS DRD Controller DebugFS filer.
-> + *
-> + * Copyright (C) 2018-2019 Cadence.
-> + *
-> + * Author: Pawel Laszczak <pawell@cadence.com>
-> + */
-> +
-> +#include <linux/types.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "core.h"
-> +#include "gadget.h"
-> +#include "drd.h"
+Hi Nicolas,
 
-static const char *const cdns3_mode[] = {
-        [USB_DR_MODE_UNKNOWN]           = "unknown",
-        [USB_DR_MODE_OTG]               = "otg",
-        [USB_DR_MODE_HOST]              = "host",
-        [USB_DR_MODE_PERIPHERAL]        = "device",
-};
+Am 06.06.19 um 16:23 schrieb Nicolas Saenz Julienne:
+> This enables both the new firmware clock driver and cpufreq driver
+> available for the RPi3 family of boards.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  arch/arm64/configs/defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 4d583514258c..3b7baffb3087 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -82,6 +82,7 @@ CONFIG_CPUFREQ_DT=y
+>  CONFIG_ACPI_CPPC_CPUFREQ=m
+>  CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
+>  CONFIG_ARM_SCPI_CPUFREQ=y
+> +CONFIG_ARM_RASPBERRYPI_CPUFREQ=y
 
-> +static int cdns3_mode_show(struct seq_file *s, void *unused)
-> +{
-> +	struct cdns3 *cdns = s->private;
-> +
-> +	switch (cdns->current_dr_mode) {
-> +	case USB_DR_MODE_HOST:
-> +		seq_puts(s, "host\n");
-> +		break;
-> +	case USB_DR_MODE_PERIPHERAL:
-> +		seq_puts(s, "device\n");
-> +		break;
-> +	case USB_DR_MODE_OTG:
-> +		seq_puts(s, "otg\n");
-> +		break;
-> +	default:
-> +		seq_puts(s, "UNKNOWN mode\n");
-> +	}
+the arm64 kernel tends to get very big, so i suggested to build it as a
+kernel module.
 
-All you should need here is:
+Any reason why you choose to make it builtin?
 
-        seq_puts(s, cdns3_mode[cdns->current_dr_mode]);
-
-> +	return 0;
-> +}
-> +
-> +static int cdns3_mode_open(struct inode *inode, struct file *file)
-> +{
-> +	return single_open(file, cdns3_mode_show, inode->i_private);
-> +}
-> +
-> +static ssize_t cdns3_mode_write(struct file *file,
-> +				const char __user *ubuf,
-> +				size_t count, loff_t *ppos)
-> +{
-> +	struct seq_file	 *s = file->private_data;
-> +	struct cdns3 *cdns = s->private;
-> +	u32 mode = USB_DR_MODE_UNKNOWN;
-> +	char buf[32];
-> +	int ret = 0;
-
-        int ret;
-
-> +	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-> +		return -EFAULT;
-
-                return -EINVAL;
-
-> +
-> +	if (cdns->debug_disable) {
-> +		dev_err(cdns->dev,
-> +			"Mode can't be changed when disable is set\n");
-> +		return -EFAULT;
-
-                return -EPERM;
-
-> +	}
-> +
-> +	if (!strncmp(buf, "host", 4)) {
-> +		if (cdns->dr_mode == USB_DR_MODE_HOST ||
-> +		    cdns->dr_mode == USB_DR_MODE_OTG) {
-> +			mode = USB_DR_MODE_HOST;
-> +		}
-> +	}
-> +
-> +	if (!strncmp(buf, "device", 6))
-> +		if (cdns->dr_mode == USB_DR_MODE_PERIPHERAL ||
-> +		    cdns->dr_mode == USB_DR_MODE_OTG)
-> +			mode = USB_DR_MODE_PERIPHERAL;
-> +
-> +	if (!strncmp(buf, "otg", 3) && cdns->dr_mode == USB_DR_MODE_OTG)
-> +		mode = USB_DR_MODE_OTG;
-> +
-> +	if (mode == USB_DR_MODE_UNKNOWN) {
-> +		dev_err(cdns->dev, "Failed: incorrect mode setting\n");
-> +		return -EFAULT;
-> +	}
-
-To cover all those, you just need to:
-
-        ret = match_string(cdns3_mode, ARRAY_SIZE(cdns3_mode), buf));
-        if (ret < 0 || ret == USB_DR_MODE_UNKNOWN)
-                return -EINVAL;
-
-> +	if (cdns->current_dr_mode != mode) {
-> +		cdns->desired_dr_mode = mode;
-
-        if (cdns->current_dr_mode != ret)
-		cdns->desired_dr_mode = ret;
-
-> +		cdns3_role_stop(cdns);
-> +		ret = cdns3_drd_update_mode(cdns);
-> +		if (ret)
-> +			return ret;
-> +
-> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static const struct file_operations cdns3_mode_fops = {
-> +	.open			= cdns3_mode_open,
-> +	.write			= cdns3_mode_write,
-> +	.read			= seq_read,
-> +	.llseek			= seq_lseek,
-> +	.release		= single_release,
-> +};
-> +
-> +static int cdns3_disable_show(struct seq_file *s, void *unused)
-> +{
-> +	struct cdns3 *cdns = s->private;
-> +
-> +	if (!cdns->debug_disable)
-> +		seq_puts(s, "0\n");
-> +	else
-> +		seq_puts(s, "1\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t cdns3_disable_write(struct file *file,
-> +				   const char __user *ubuf,
-> +				   size_t count, loff_t *ppos)
-> +{
-> +	struct seq_file	 *s = file->private_data;
-> +	struct cdns3 *cdns = s->private;
-> +	bool disable;
-> +	char buf[16];
-> +
-> +	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-> +		return -EFAULT;
-> +
-> +	if (kstrtobool(buf, &disable)) {
-> +		dev_err(cdns->dev, "wrong setting\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (disable != cdns->debug_disable) {
-> +		cdns->debug_disable = disable;
-> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static int cdns3_disable_open(struct inode *inode, struct file *file)
-> +{
-> +	return single_open(file, cdns3_disable_show, inode->i_private);
-> +}
-> +
-> +static const struct file_operations cdns3_disable_fops = {
-> +	.open			= cdns3_disable_open,
-> +	.write			= cdns3_disable_write,
-> +	.read			= seq_read,
-> +	.llseek			= seq_lseek,
-> +	.release		= single_release,
-> +};
-> +
-> +void cdns3_debugfs_init(struct cdns3 *cdns)
-> +{
-> +	struct dentry *root;
-> +
-> +	root = debugfs_create_dir(dev_name(cdns->dev), NULL);
-> +	cdns->root = root;
-> +	if (IS_ENABLED(CONFIG_USB_CDNS3_GADGET) &&
-> +	    IS_ENABLED(CONFIG_USB_CDNS3_HOST))
-> +		debugfs_create_file("mode", 0644, root, cdns,
-> +				    &cdns3_mode_fops);
-> +
-> +	debugfs_create_file("disable", 0644, root, cdns,
-> +			    &cdns3_disable_fops);
-> +}
-> +
-> +void cdns3_debugfs_exit(struct cdns3 *cdns)
-> +{
-> +	debugfs_remove_recursive(cdns->root);
-> +}
-
-thanks,
-
--- 
-heikki
+>  CONFIG_ARM_TEGRA186_CPUFREQ=y
+>  CONFIG_ARM_SCPI_PROTOCOL=y
+>  CONFIG_RASPBERRYPI_FIRMWARE=y
+> @@ -639,6 +640,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
+>  CONFIG_COMMON_CLK_S2MPS11=y
+>  CONFIG_CLK_QORIQ=y
+>  CONFIG_COMMON_CLK_PWM=y
+> +CONFIG_CLK_RASPBERRYPI=y
+>  CONFIG_CLK_IMX8MQ=y
+>  CONFIG_CLK_IMX8QXP=y
+>  CONFIG_TI_SCI_CLK=y
