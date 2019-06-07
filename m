@@ -4,49 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F74EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775C9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A25208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6D4208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923024;
-	bh=8zij8wJ8dgz1Uqyz6tJvFbzOLkke21OjWkjSFkRIi+I=;
+	s=default; t=1559923031;
+	bh=K297D0p4T/W6MxFo5zeCKRUJ8tjjJc5kbFmbLBKZkhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CKx27Z7zDMHjxFkau4Ec8oD9MozGlxUO06ViGxFg4aOcxK0/dENfNeJTH5Z4aZs4g
-	 xDWpu4IZaSlJCbFARaS1OTirkdbrxRrsrZa8kR3XGYrMKqO8etuZmXNbOoKZE3tJ0w
-	 oZIMeES4BNZWP9/Z6lxxHEkLCSNV8MKw6bQ+M0z8=
+	b=zKRjeBLg6GiBBU7Sb7n2n3N86CARE0cg514m+bygta845Fbwt+2LrHQZRyYVXw5dO
+	 6u0RXzFx/iO4BDmwt76NQKfHX7urKzEOO+m5xu53/YnxUuAyzyozK8sNwPlSCbLnrP
+	 3wlfchtl+bisd+9EULMA+VXI7DBa+OlpQ3Lj/JrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbfFGP5D (ORCPT
+        id S1729787AbfFGPoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55758 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729761AbfFGPoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:20 -0400
+        id S1730986AbfFGPoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E29121479;
-        Fri,  7 Jun 2019 15:44:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D762D2133D;
+        Fri,  7 Jun 2019 15:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922259;
-        bh=8zij8wJ8dgz1Uqyz6tJvFbzOLkke21OjWkjSFkRIi+I=;
+        s=default; t=1559922248;
+        bh=K297D0p4T/W6MxFo5zeCKRUJ8tjjJc5kbFmbLBKZkhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kq1WyI7z8dxahiPSvGk4sdk+PyxIoTfPlHooSXjvbtJOzGMWf3uEU4L0teGDubTt
-         pzKRNWmGlUUa50woQnVtNW7p97M6VpH7xnCs2QoMo26Uqvs9f0vJBMuqlYuMbiYdLZ
-         u3zPQgcpROCCuriYYA1ZqwBBLCBIMloBunLEhf40=
+        b=mwOUiNhWrOvXRduaYo4Wm/NDAxQn8jrbBfyGfBIqKDZJY9hmqQ2hp/jcy7dUOSwWb
+         x0RIbok9faMq6iC4Pcm7xjzEBiS3MVDgjXl5U/AyaLsVy8/52ujbmOdfWaMDQEqbvj
+         ypp24VcoA5UmQdji2oXy8euUANIlZ0Uwd8okzBYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 23/73] Btrfs: fix fsync not persisting changed attributes of a directory
-Date:   Fri,  7 Jun 2019 17:39:10 +0200
-Message-Id: <20190607153851.591790140@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH 4.19 02/73] include/linux/bitops.h: sanitize rotate primitives
+Date:   Fri,  7 Jun 2019 17:38:49 +0200
+Message-Id: <20190607153848.955759584@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -59,97 +68,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-commit 60d9f50308e5df19bc18c2fefab0eba4a843900a upstream.
+commit ef4d6f6b275c498f8e5626c99dbeefdc5027f843 upstream.
 
-While logging an inode we follow its ancestors and for each one we mark
-it as logged in the current transaction, even if we have not logged it.
-As a consequence if we change an attribute of an ancestor, such as the
-UID or GID for example, and then explicitly fsync it, we end up not
-logging the inode at all despite returning success to user space, which
-results in the attribute being lost if a power failure happens after
-the fsync.
+The ror32 implementation (word >> shift) | (word << (32 - shift) has
+undefined behaviour if shift is outside the [1, 31] range.  Similarly
+for the 64 bit variants.  Most callers pass a compile-time constant
+(naturally in that range), but there's an UBSAN report that these may
+actually be called with a shift count of 0.
 
-Sample reproducer:
+Instead of special-casing that, we can make them DTRT for all values of
+shift while also avoiding UB.  For some reason, this was already partly
+done for rol32 (which was well-defined for [0, 31]).  gcc 8 recognizes
+these patterns as rotates, so for example
 
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
+  __u32 rol32(__u32 word, unsigned int shift)
+  {
+	return (word << (shift & 31)) | (word >> ((-shift) & 31));
+  }
 
-  $ mkdir /mnt/dir
-  $ chown 6007:6007 /mnt/dir
+compiles to
 
-  $ sync
+0000000000000020 <rol32>:
+  20:   89 f8                   mov    %edi,%eax
+  22:   89 f1                   mov    %esi,%ecx
+  24:   d3 c0                   rol    %cl,%eax
+  26:   c3                      retq
 
-  $ chown 9003:9003 /mnt/dir
-  $ touch /mnt/dir/file
-  $ xfs_io -c fsync /mnt/dir/file
+Older compilers unfortunately do not do as well, but this only affects
+the small minority of users that don't pass constants.
 
-  # fsync our directory after fsync'ing the new file, should persist the
-  # new values for the uid and gid.
-  $ xfs_io -c fsync /mnt/dir
+Due to integer promotions, ro[lr]8 were already well-defined for shifts
+in [0, 8], and ro[lr]16 were mostly well-defined for shifts in [0, 16]
+(only mostly - u16 gets promoted to _signed_ int, so if bit 15 is set,
+word << 16 is undefined).  For consistency, update those as well.
 
-  <power failure>
-
-  $ mount /dev/sdb /mnt
-  $ stat -c %u:%g /mnt/dir
-  6007:6007
-
-    --> should be 9003:9003, the uid and gid were not persisted, despite
-        the explicit fsync on the directory prior to the power failure
-
-Fix this by not updating the logged_trans field of ancestor inodes when
-logging an inode, since we have not logged them. Let only future calls to
-btrfs_log_inode() to mark inodes as logged.
-
-This could be triggered by my recent fsync fuzz tester for fstests, for
-which an fstests patch exists titled "fstests: generic, fsync fuzz tester
-with fsstress".
-
-Fixes: 12fcfd22fe5b ("Btrfs: tree logging unlink/rename fixes")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Link: http://lkml.kernel.org/r/20190410211906.2190-1-linux@rasmusvillemoes.dk
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reported-by: Ido Schimmel <idosch@mellanox.com>
+Tested-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Will Deacon <will.deacon@arm.com>
+Cc: Vadim Pasternak <vadimp@mellanox.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   12 ------------
- 1 file changed, 12 deletions(-)
+ include/linux/bitops.h |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -5312,7 +5312,6 @@ static noinline int check_parent_dirs_fo
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -60,7 +60,7 @@ static __always_inline unsigned long hwe
+  */
+ static inline __u64 rol64(__u64 word, unsigned int shift)
  {
- 	int ret = 0;
- 	struct dentry *old_parent = NULL;
--	struct btrfs_inode *orig_inode = inode;
+-	return (word << shift) | (word >> (64 - shift));
++	return (word << (shift & 63)) | (word >> ((-shift) & 63));
+ }
  
- 	/*
- 	 * for regular files, if its inode is already on disk, we don't
-@@ -5332,16 +5331,6 @@ static noinline int check_parent_dirs_fo
- 	}
+ /**
+@@ -70,7 +70,7 @@ static inline __u64 rol64(__u64 word, un
+  */
+ static inline __u64 ror64(__u64 word, unsigned int shift)
+ {
+-	return (word >> shift) | (word << (64 - shift));
++	return (word >> (shift & 63)) | (word << ((-shift) & 63));
+ }
  
- 	while (1) {
--		/*
--		 * If we are logging a directory then we start with our inode,
--		 * not our parent's inode, so we need to skip setting the
--		 * logged_trans so that further down in the log code we don't
--		 * think this inode has already been logged.
--		 */
--		if (inode != orig_inode)
--			inode->logged_trans = trans->transid;
--		smp_mb();
--
- 		if (btrfs_must_commit_transaction(trans, inode)) {
- 			ret = 1;
- 			break;
-@@ -6070,7 +6059,6 @@ void btrfs_record_unlink_dir(struct btrf
- 	 * if this directory was already logged any new
- 	 * names for this file/dir will get recorded
- 	 */
--	smp_mb();
- 	if (dir->logged_trans == trans->transid)
- 		return;
+ /**
+@@ -80,7 +80,7 @@ static inline __u64 ror64(__u64 word, un
+  */
+ static inline __u32 rol32(__u32 word, unsigned int shift)
+ {
+-	return (word << shift) | (word >> ((-shift) & 31));
++	return (word << (shift & 31)) | (word >> ((-shift) & 31));
+ }
  
+ /**
+@@ -90,7 +90,7 @@ static inline __u32 rol32(__u32 word, un
+  */
+ static inline __u32 ror32(__u32 word, unsigned int shift)
+ {
+-	return (word >> shift) | (word << (32 - shift));
++	return (word >> (shift & 31)) | (word << ((-shift) & 31));
+ }
+ 
+ /**
+@@ -100,7 +100,7 @@ static inline __u32 ror32(__u32 word, un
+  */
+ static inline __u16 rol16(__u16 word, unsigned int shift)
+ {
+-	return (word << shift) | (word >> (16 - shift));
++	return (word << (shift & 15)) | (word >> ((-shift) & 15));
+ }
+ 
+ /**
+@@ -110,7 +110,7 @@ static inline __u16 rol16(__u16 word, un
+  */
+ static inline __u16 ror16(__u16 word, unsigned int shift)
+ {
+-	return (word >> shift) | (word << (16 - shift));
++	return (word >> (shift & 15)) | (word << ((-shift) & 15));
+ }
+ 
+ /**
+@@ -120,7 +120,7 @@ static inline __u16 ror16(__u16 word, un
+  */
+ static inline __u8 rol8(__u8 word, unsigned int shift)
+ {
+-	return (word << shift) | (word >> (8 - shift));
++	return (word << (shift & 7)) | (word >> ((-shift) & 7));
+ }
+ 
+ /**
+@@ -130,7 +130,7 @@ static inline __u8 rol8(__u8 word, unsig
+  */
+ static inline __u8 ror8(__u8 word, unsigned int shift)
+ {
+-	return (word >> shift) | (word << (8 - shift));
++	return (word >> (shift & 7)) | (word << ((-shift) & 7));
+ }
+ 
+ /**
 
 
