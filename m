@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D8C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6F9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33B420657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F3120657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922701;
-	bh=hGiZwCLJZ5kXx2cEqrIQ0M0cdug7o1WlyxRzqNq1Bog=;
+	s=default; t=1559922706;
+	bh=fzEzy8z1nNA01mTDYGij1Szd2Ct45Wg92K9Ox1KP368=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GSTjIYHVZwxGCGMrRngZIoLQJxkyN6d7U0Hn0jOB/nM0UOhAMt9zu/RbLm2Ld6KpE
-	 qbHQLIxJOlpsF3TzO1M8G5yKTCVzv9qGzrM3+sHDdzf6CxczwETJ1BuIkEUaSv58t9
-	 8CMiMR+XM3530ACsAsYTEJ0teQA5r2vlqaxeGW94=
+	b=mkGPoaZtus/ZsJhNorY6FjiTGORWjPt4gJXeAlm1IOVyyprB5Ny63R5iCBv8VF+dI
+	 v5yxE5fS34AWsmrqF/r7CAp+hT2j3lsxzJJMYGgwuJuK9uPc2jtwXQGqHvcSiXlEPj
+	 jCTAeoCBTq9E6c+uVPJ+BjVODsFaU5lbwqvA672A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732156AbfFGPuY (ORCPT
+        id S1732297AbfFGPvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:50:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730951AbfFGPuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:50:22 -0400
+        id S1731294AbfFGPuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:50:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57CC620840;
-        Fri,  7 Jun 2019 15:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A81FA2147A;
+        Fri,  7 Jun 2019 15:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922620;
-        bh=hGiZwCLJZ5kXx2cEqrIQ0M0cdug7o1WlyxRzqNq1Bog=;
+        s=default; t=1559922615;
+        bh=fzEzy8z1nNA01mTDYGij1Szd2Ct45Wg92K9Ox1KP368=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CfBN9L6pqbAGv1V8e2NZy+qbG/WAxjq609HgXbaGTFUB8xlAY+7nRAk1G13bc66UB
-         r2dUCz/Lj5RxF/LQ/JjEL/uns9N/QMn/m7c55cstOVbuMucwSdnitHWn8PD24DJwg8
-         PFQOEKcPNDs8ItRLxL+jp+QLczSJSUnXlf1zdTro=
+        b=vJ7RJHGolvLitOnXxVqFFLS5N3KcLY5/SYYseKiiBJrqmj4zYai+SIiG3Gcjp8K+z
+         pXJPGg/SH5j9zHgWn3j1uIXKMbs6Ks1e4oeNMDGaeNyG0eYMRsK97wpYMBm06zltzC
+         zGfDQMBeiTN2+mGX2AHPSfxiwbLQbXLjlXGUWd0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Packard <keithp@keithp.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 5.1 79/85] drm/atomic: Wire file_priv through for property changes
-Date:   Fri,  7 Jun 2019 17:40:04 +0200
-Message-Id: <20190607153857.733115350@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 5.1 77/85] drm/imx: ipuv3-plane: fix atomic update status query for non-plus i.MX6Q
+Date:   Fri,  7 Jun 2019 17:40:02 +0200
+Message-Id: <20190607153857.545955797@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -60,167 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-commit 36e4523aaf4a35de963e190064b53839fa131653 upstream.
+commit 137caa702f2308f7ef03876e164b0d0f3300712a upstream.
 
-We need this to make sure lessees can only connect their
-plane/connectors to crtc objects they own. And note that this is
-irrespective of whether the lessor is atomic or not, lessor cannot
-prevent lessees from enabling atomic.
+The current buffer check halves the frame rate on non-plus i.MX6Q,
+as the IDMAC current buffer pointer is not yet updated when
+ipu_plane_atomic_update_pending is called from the EOF irq handler.
 
+Fixes: 70e8a0c71e9 ("drm/imx: ipuv3-plane: add function to query atomic update status")
+Tested-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: stable@vger.kernel.org
-Cc: Keith Packard <keithp@keithp.com>
-Reviewed-by: Dave Airlie <airlied@redhat.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190228144910.26488-7-daniel.vetter@ffwll.ch
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_atomic_uapi.c   |   32 +++++++++++++++++++-------------
- drivers/gpu/drm/drm_crtc_internal.h |    1 +
- drivers/gpu/drm/drm_mode_object.c   |    5 +++--
- 3 files changed, 23 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/imx/ipuv3-plane.c |   13 ++++++++-----
+ drivers/gpu/drm/imx/ipuv3-plane.h |    1 -
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/drm_atomic_uapi.c
-+++ b/drivers/gpu/drm/drm_atomic_uapi.c
-@@ -512,8 +512,8 @@ drm_atomic_crtc_get_property(struct drm_
+--- a/drivers/gpu/drm/imx/ipuv3-plane.c
++++ b/drivers/gpu/drm/imx/ipuv3-plane.c
+@@ -605,7 +605,6 @@ static void ipu_plane_atomic_update(stru
+ 		active = ipu_idmac_get_current_buffer(ipu_plane->ipu_ch);
+ 		ipu_cpmem_set_buffer(ipu_plane->ipu_ch, !active, eba);
+ 		ipu_idmac_select_buffer(ipu_plane->ipu_ch, !active);
+-		ipu_plane->next_buf = !active;
+ 		if (ipu_plane_separate_alpha(ipu_plane)) {
+ 			active = ipu_idmac_get_current_buffer(ipu_plane->alpha_ch);
+ 			ipu_cpmem_set_buffer(ipu_plane->alpha_ch, !active,
+@@ -710,7 +709,6 @@ static void ipu_plane_atomic_update(stru
+ 	ipu_cpmem_set_buffer(ipu_plane->ipu_ch, 1, eba);
+ 	ipu_idmac_lock_enable(ipu_plane->ipu_ch, num_bursts);
+ 	ipu_plane_enable(ipu_plane);
+-	ipu_plane->next_buf = -1;
  }
  
- static int drm_atomic_plane_set_property(struct drm_plane *plane,
--		struct drm_plane_state *state, struct drm_property *property,
--		uint64_t val)
-+		struct drm_plane_state *state, struct drm_file *file_priv,
-+		struct drm_property *property, uint64_t val)
- {
- 	struct drm_device *dev = plane->dev;
- 	struct drm_mode_config *config = &dev->mode_config;
-@@ -521,7 +521,8 @@ static int drm_atomic_plane_set_property
- 	int ret;
+ static const struct drm_plane_helper_funcs ipu_plane_helper_funcs = {
+@@ -732,10 +730,15 @@ bool ipu_plane_atomic_update_pending(str
  
- 	if (property == config->prop_fb_id) {
--		struct drm_framebuffer *fb = drm_framebuffer_lookup(dev, NULL, val);
-+		struct drm_framebuffer *fb;
-+		fb = drm_framebuffer_lookup(dev, file_priv, val);
- 		drm_atomic_set_fb_for_plane(state, fb);
- 		if (fb)
- 			drm_framebuffer_put(fb);
-@@ -537,7 +538,7 @@ static int drm_atomic_plane_set_property
- 			return -EINVAL;
+ 	if (ipu_state->use_pre)
+ 		return ipu_prg_channel_configure_pending(ipu_plane->ipu_ch);
+-	else if (ipu_plane->next_buf >= 0)
+-		return ipu_idmac_get_current_buffer(ipu_plane->ipu_ch) !=
+-		       ipu_plane->next_buf;
  
- 	} else if (property == config->prop_crtc_id) {
--		struct drm_crtc *crtc = drm_crtc_find(dev, NULL, val);
-+		struct drm_crtc *crtc = drm_crtc_find(dev, file_priv, val);
- 		return drm_atomic_set_crtc_for_plane(state, crtc);
- 	} else if (property == config->prop_crtc_x) {
- 		state->crtc_x = U642I64(val);
-@@ -681,14 +682,14 @@ static int drm_atomic_set_writeback_fb_f
++	/*
++	 * Pretend no update is pending in the non-PRE/PRG case. For this to
++	 * happen, an atomic update would have to be deferred until after the
++	 * start of the next frame and simultaneously interrupt latency would
++	 * have to be high enough to let the atomic update finish and issue an
++	 * event before the previous end of frame interrupt handler can be
++	 * executed.
++	 */
+ 	return false;
  }
+ int ipu_planes_assign_pre(struct drm_device *dev,
+--- a/drivers/gpu/drm/imx/ipuv3-plane.h
++++ b/drivers/gpu/drm/imx/ipuv3-plane.h
+@@ -27,7 +27,6 @@ struct ipu_plane {
+ 	int			dp_flow;
  
- static int drm_atomic_connector_set_property(struct drm_connector *connector,
--		struct drm_connector_state *state, struct drm_property *property,
--		uint64_t val)
-+		struct drm_connector_state *state, struct drm_file *file_priv,
-+		struct drm_property *property, uint64_t val)
- {
- 	struct drm_device *dev = connector->dev;
- 	struct drm_mode_config *config = &dev->mode_config;
+ 	bool			disabling;
+-	int			next_buf;
+ };
  
- 	if (property == config->prop_crtc_id) {
--		struct drm_crtc *crtc = drm_crtc_find(dev, NULL, val);
-+		struct drm_crtc *crtc = drm_crtc_find(dev, file_priv, val);
- 		return drm_atomic_set_crtc_for_connector(state, crtc);
- 	} else if (property == config->dpms_property) {
- 		/* setting DPMS property requires special handling, which
-@@ -747,8 +748,10 @@ static int drm_atomic_connector_set_prop
- 		}
- 		state->content_protection = val;
- 	} else if (property == config->writeback_fb_id_property) {
--		struct drm_framebuffer *fb = drm_framebuffer_lookup(dev, NULL, val);
--		int ret = drm_atomic_set_writeback_fb_for_connector(state, fb);
-+		struct drm_framebuffer *fb;
-+		int ret;
-+		fb = drm_framebuffer_lookup(dev, file_priv, val);
-+		ret = drm_atomic_set_writeback_fb_for_connector(state, fb);
- 		if (fb)
- 			drm_framebuffer_put(fb);
- 		return ret;
-@@ -943,6 +946,7 @@ out:
- }
- 
- int drm_atomic_set_property(struct drm_atomic_state *state,
-+			    struct drm_file *file_priv,
- 			    struct drm_mode_object *obj,
- 			    struct drm_property *prop,
- 			    uint64_t prop_value)
-@@ -965,7 +969,8 @@ int drm_atomic_set_property(struct drm_a
- 		}
- 
- 		ret = drm_atomic_connector_set_property(connector,
--				connector_state, prop, prop_value);
-+				connector_state, file_priv,
-+				prop, prop_value);
- 		break;
- 	}
- 	case DRM_MODE_OBJECT_CRTC: {
-@@ -993,7 +998,8 @@ int drm_atomic_set_property(struct drm_a
- 		}
- 
- 		ret = drm_atomic_plane_set_property(plane,
--				plane_state, prop, prop_value);
-+				plane_state, file_priv,
-+				prop, prop_value);
- 		break;
- 	}
- 	default:
-@@ -1365,8 +1371,8 @@ retry:
- 				goto out;
- 			}
- 
--			ret = drm_atomic_set_property(state, obj, prop,
--						      prop_value);
-+			ret = drm_atomic_set_property(state, file_priv,
-+						      obj, prop, prop_value);
- 			if (ret) {
- 				drm_mode_object_put(obj);
- 				goto out;
---- a/drivers/gpu/drm/drm_crtc_internal.h
-+++ b/drivers/gpu/drm/drm_crtc_internal.h
-@@ -214,6 +214,7 @@ int drm_atomic_connector_commit_dpms(str
- 				     struct drm_connector *connector,
- 				     int mode);
- int drm_atomic_set_property(struct drm_atomic_state *state,
-+			    struct drm_file *file_priv,
- 			    struct drm_mode_object *obj,
- 			    struct drm_property *prop,
- 			    uint64_t prop_value);
---- a/drivers/gpu/drm/drm_mode_object.c
-+++ b/drivers/gpu/drm/drm_mode_object.c
-@@ -451,6 +451,7 @@ static int set_property_legacy(struct dr
- }
- 
- static int set_property_atomic(struct drm_mode_object *obj,
-+			       struct drm_file *file_priv,
- 			       struct drm_property *prop,
- 			       uint64_t prop_value)
- {
-@@ -477,7 +478,7 @@ retry:
- 						       obj_to_connector(obj),
- 						       prop_value);
- 	} else {
--		ret = drm_atomic_set_property(state, obj, prop, prop_value);
-+		ret = drm_atomic_set_property(state, file_priv, obj, prop, prop_value);
- 		if (ret)
- 			goto out;
- 		ret = drm_atomic_commit(state);
-@@ -520,7 +521,7 @@ int drm_mode_obj_set_property_ioctl(stru
- 		goto out_unref;
- 
- 	if (drm_drv_uses_atomic_modeset(property->dev))
--		ret = set_property_atomic(arg_obj, property, arg->value);
-+		ret = set_property_atomic(arg_obj, file_priv, property, arg->value);
- 	else
- 		ret = set_property_legacy(arg_obj, property, arg->value);
- 
+ struct ipu_plane *ipu_plane_init(struct drm_device *dev, struct ipu_soc *ipu,
 
 
