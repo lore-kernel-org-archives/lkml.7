@@ -2,176 +2,141 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4B4C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96186C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6E320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEB920B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:14:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nW5jAgWB"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kRCIKBb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfFGMMo (ORCPT
+        id S1728604AbfFGMOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:12:44 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54318 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfFGMMo (ORCPT
+        Fri, 7 Jun 2019 08:14:43 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:35264 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbfFGMOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:12:44 -0400
-Received: by mail-it1-f196.google.com with SMTP id m138so684624ita.4;
-        Fri, 07 Jun 2019 05:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=t/Yzpyhe0lIY0ZvNZIHH9Qq5sh9pCp4H8G9Hd8cxDhI=;
-        b=nW5jAgWB1sx1YZmfU0tsCeWJgIEQJMqOjIlZhqV2rQnjWjahJrQqKqBSmScAtogxUi
-         XComFFssBR2dJ2kVOLPLxT/EycLlMos1PFNqs9/cJrUJwpXbpIHEsPjLEVcRvztKFsQi
-         G0JjI+CAvPCa6PYDv9y9sCqFp5K+tmor5BynFEz5TFGNd72hS8WVGxzrohe0MWrLwKTM
-         FIe968RzW+iWDgRKb6Vpoitrw3GWqq44bU4VHArurJOyWEQKJz2xzxRlJNVjrQFigSmR
-         8Iss5qbJ+L83LIkjkRLESHg4zCjtfiAsqlZbEizP4/RDiI7E8W6oPBQdGXAYBqQ5dAoy
-         5E4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=t/Yzpyhe0lIY0ZvNZIHH9Qq5sh9pCp4H8G9Hd8cxDhI=;
-        b=K4xYPpbX67sAprwAZUiSALQ4Dd9cm06gm4pJmPzrcSDhK64Vt6WKPkaJ7d5gKBzIgT
-         p5ow3lbGvwCauCJNuOScEW3lZGErnxUh51/Iypa3wbA5mZ7A1t7FQwnKPAHiQ6m4X/YY
-         gxys4L18RmSP1NhfcE8DLJx2MZNNPbTtO31z2dPu8XJIO+4nCgrPLgYHA/qurRhXsHxk
-         /iNKNprciaP4UJoFCndivWinNzTKu7jqLBrYCPOF/bZIKs3NvR8KrJbvuKitO++cTpS4
-         ffhG+KuHTpkGJ4azeHcLlnX0BXNVzyWt9x8nZn3OylD7AAzO4ACJSHGofcykVk0sHA1C
-         nY6w==
-X-Gm-Message-State: APjAAAVFfPI1IlscGbrRO1jdy7n8PDmIbBMD+QTQjjImD58jkWYeO4NK
-        layxiZMefxLe8pomHY5iJt4=
-X-Google-Smtp-Source: APXvYqwAmpdLsCkfzboHMDsKjDkEK4IJDG6lZIzOURapJzI2Im7Digf4erao2kzL/TneFsFscDI6lQ==
-X-Received: by 2002:a02:9a0f:: with SMTP id b15mr1686288jal.32.1559909563311;
-        Fri, 07 Jun 2019 05:12:43 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-170-54.pppoe.mtu-net.ru. [91.76.170.54])
-        by smtp.googlemail.com with ESMTPSA id j185sm4707394itj.3.2019.06.07.05.12.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 05:12:42 -0700 (PDT)
-Subject: Re: [PATCH V1 6/6] i2c: tegra: remove BUG, BUG_ON
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
- <1559908507-31192-6-git-send-email-bbiswas@nvidia.com>
- <4aec6d7a-0dea-18c9-efde-96cc1a54b945@gmail.com>
-Message-ID: <2281ef29-6e69-78e7-4d07-77f33c2f2d5a@gmail.com>
-Date:   Fri, 7 Jun 2019 15:12:39 +0300
+        Fri, 7 Jun 2019 08:14:43 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190607121441euoutp01cf8f247504751d9bd52ad70f66f5d82b~l6ZdEY9Lk2518925189euoutp01Q
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 12:14:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190607121441euoutp01cf8f247504751d9bd52ad70f66f5d82b~l6ZdEY9Lk2518925189euoutp01Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559909681;
+        bh=Y0PHswQo3moF+imArv8WDzx/3UV2pAXhOR9DW6vz0jg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=kRCIKBb307zWFw/na98wFuhwvVYLSPJ/rXrY7XiaCoMOGw/yjS7jMRsANydCk3FJU
+         7XnUhFMGNTNxb7TMceaz0fKH8t3XN1Wgt3rekcftxZVpMBSuNbYqjrVwi37myINP5m
+         UyjonA45PuUxT71Xy0wl1zKRBkFsnnjQUpcf3YpA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190607121441eucas1p16ac404b9de39463b748ae21a0b70208b~l6ZcmL9UL1604016040eucas1p1B;
+        Fri,  7 Jun 2019 12:14:41 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 60.73.04298.1355AFC5; Fri,  7
+        Jun 2019 13:14:41 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190607121440eucas1p2b3417ac3909535c3f7e24bb37d6b842b~l6ZbvWPHP1479714797eucas1p2z;
+        Fri,  7 Jun 2019 12:14:40 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190607121440eusmtrp161e9c4df5d352e1846dd1269b74b758b~l6ZbdAle12590725907eusmtrp1d;
+        Fri,  7 Jun 2019 12:14:40 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-6f-5cfa55317db4
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B9.C0.04140.0355AFC5; Fri,  7
+        Jun 2019 13:14:40 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607121439eusmtip14bff059c802953abfab4ff858ea82d7f~l6ZbLUfwE1348713487eusmtip16;
+        Fri,  7 Jun 2019 12:14:39 +0000 (GMT)
+Subject: Re: [PATCH 2/3] au1200fb: fix DMA API abuse
+To:     Manuel Lauss <manuel.lauss@gmail.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Linux-MIPS <linux-mips@vger.kernel.org>,
+        linux-fbdev <linux-fbdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <76042970-34b0-87a9-6aac-5fa27a113e21@samsung.com>
+Date:   Fri, 7 Jun 2019 14:14:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <4aec6d7a-0dea-18c9-efde-96cc1a54b945@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAOLZvyG14NvbgX4PA5aafk=reLcHbqDswqS-8j4+7QJMx02d7A@mail.gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCKsWRmVeSWpSXmKPExsWy7djPc7qGob9iDCbdYLZYufook8WJvg+s
+        Fpd3zWGz6Ny0ldHi2pdH7A6sHjtn3WX32H2zgc3j8ya5AOYoLpuU1JzMstQifbsErowFHY0s
+        BQfYKlqe3GVqYFzI2sXIwSEhYCLRvD+yi5GLQ0hgBaPEzCOPWCGcL4wSrXuOMEI4nxklvq1c
+        B+RwgnUcvtPLBJFYziix9sV6dgjnLaPEwvfvmUCqhIGqDp1eywxiiwh4Srz/e5sVxGYWqJWY
+        +f0/mM0mYCUxsX0VI8gdvAJ2Eg/e+IKEWQRUJB6tn8EOYosKREjcP7YBrJxXQFDi5MwnLCDl
+        nAKBEl83M0NMFJe49WQ+E4QtL7H97RxmkHMkBCazS5zedZMZ4k0XiaVL+CDuF5Z4dXwLO4Qt
+        I3F6cg8LRP06Rom/HS+gmrczSiyf/I8Nospa4vDxi+DwYhbQlFi/Sx8i7Chx/dxPqPl8Ejfe
+        CkLcwCcxadt0qDCvREebEES1msSGZRvYYNZ27VzJPIFRaRaSx2Yh+WYWkm9mIexdwMiyilE8
+        tbQ4Nz212DAvtVyvODG3uDQvXS85P3cTIzCtnP53/NMOxq+Xkg4xCnAwKvHwerD/jBFiTSwr
+        rsw9xCjBwawkwlt24UeMEG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2ampBalF
+        MFkmDk6pBsY1ihGzf5QUlv3tXbQsx8d/YtgzmZkvZS7WOio7vjXL1/O6nxl4Te1i2Iu3U+/N
+        uaJr5fLg5of7xwLzz8W12/pM23T7OKd4RZmZ8ME9acJyc+I8Dht7H+i8EqBfdv7ko84z20pk
+        532K62TY3PnklYXRvKWcXGI71qncfzJ/2oXyI6xWn6p6N2UpsRRnJBpqMRcVJwIA11NxWicD
+        AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsVy+t/xu7oGob9iDDrOsFisXH2UyeJE3wdW
+        i8u75rBZdG7aymhx7csjdgdWj52z7rJ77L7ZwObxeZNcAHOUnk1RfmlJqkJGfnGJrVK0oYWR
+        nqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsaCjkaWggNsFS1P7jI1MC5k7WLk5JAQ
+        MJE4fKeXqYuRi0NIYCmjxMnWhyxdjBxACRmJ4+vLIGqEJf5c62KDqHnNKPG99ykzSEIYqPnQ
+        6bVgtoiAp8T7v7fBhjIL1Ess6bkA1fCBUeLv3sWMIAk2ASuJie2rGEEW8ArYSTx44wsSZhFQ
+        kXi0fgY7iC0qECFx5v0KFhCbV0BQ4uTMJ2D3cAoESnzdzAwxXl3iz7xLULa4xK0n85kgbHmJ
+        7W/nME9gFJqFpHsWkpZZSFpmIWlZwMiyilEktbQ4Nz232EivODG3uDQvXS85P3cTIzCSth37
+        uWUHY9e74EOMAhyMSjy8M5h+xgixJpYVV+YeYpTgYFYS4S278CNGiDclsbIqtSg/vqg0J7X4
+        EKMp0G8TmaVEk/OBUZ5XEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNT
+        qoHRy8Kz7sXhV0vLLsWoTrp+6VeWldjtQNH6SNXkJQHHiuo/SK8uStipEWp2QM09TfBJpGHG
+        BQabPRvrPeW3xx25lPexn9lb7JsR06/pO7YYftx0uW/VHDUF9voJeaKqMco7rXZMv3ggcAXf
+        olPNp1acVBE23atwd+t07bP187PSrf8UrbTdWLJJiaU4I9FQi7moOBEAwUW/nboCAAA=
+X-CMS-MailID: 20190607121440eucas1p2b3417ac3909535c3f7e24bb37d6b842b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190515111114epcas1p10322ccf505be725a188b664baed2e183
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190515111114epcas1p10322ccf505be725a188b664baed2e183
+References: <20190509173849.11825-1-hch@lst.de>
+        <20190509173849.11825-3-hch@lst.de>
+        <CGME20190515111114epcas1p10322ccf505be725a188b664baed2e183@epcas1p1.samsung.com>
+        <CAOLZvyG14NvbgX4PA5aafk=reLcHbqDswqS-8j4+7QJMx02d7A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.06.2019 15:08, Dmitry Osipenko пишет:
-> 07.06.2019 14:55, Bitan Biswas пишет:
->> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
->> as needed. Replace BUG() with error handling code.
->> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
+
+On 5/15/19 1:10 PM, Manuel Lauss wrote:
+> Servus Christoph,
+> 
+> On Thu, May 9, 2019 at 7:39 PM Christoph Hellwig <hch@lst.de> wrote:
+>> Virtual addresses return from dma(m)_alloc_attrs are opaque in what
+>> backs then, and drivers must not poke into them.  Similarly caching
+>> modes are not supposed to be directly set by the driver.  Switch the
+>> driver to use the generic DMA API mmap helper to avoid these problems.
 >>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
 >> ---
->>  drivers/i2c/busses/i2c-tegra.c | 15 ++++++++-------
->>  1 file changed, 8 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
->> index 4dfb4c1..c407bd7 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -73,6 +73,7 @@
->>  #define I2C_ERR_NO_ACK				BIT(0)
->>  #define I2C_ERR_ARBITRATION_LOST		BIT(1)
->>  #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
->> +#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
->>  
->>  #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->>  #define PACKET_HEADER0_PACKET_ID_SHIFT		16
->> @@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->>  	 * prevent overwriting past the end of buf
->>  	 */
->>  	if (rx_fifo_avail > 0 && buf_remaining > 0) {
->> -		BUG_ON(buf_remaining > 3);
->>  		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
->>  		val = cpu_to_le32(val);
->>  		memcpy(buf, &val, buf_remaining);
->> @@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->>  		rx_fifo_avail--;
->>  	}
->>  
->> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
->>  	i2c_dev->msg_buf_remaining = buf_remaining;
->>  	i2c_dev->msg_buf = buf;
->>  
->> @@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
->>  	 * boundary and fault.
->>  	 */
->>  	if (tx_fifo_avail > 0 && buf_remaining > 0) {
->> -		BUG_ON(buf_remaining > 3);
->>  		memcpy(&val, buf, buf_remaining);
->>  		val = le32_to_cpu(val);
->>  
->> @@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->>  
->>  	if (!i2c_dev->is_curr_dma_xfer) {
->>  		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
->> -			if (i2c_dev->msg_buf_remaining)
->> +			if (i2c_dev->msg_buf_remaining) {
->>  				tegra_i2c_empty_rx_fifo(i2c_dev);
->> -			else
->> -				BUG();
->> +			} else {
->> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
->> +				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
->> +				goto err;
->> +			}
->>  		}
->>  
->>  		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
->> @@ -876,7 +877,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->>  	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->>  		if (i2c_dev->is_curr_dma_xfer)
->>  			i2c_dev->msg_buf_remaining = 0;
->> -		BUG_ON(i2c_dev->msg_buf_remaining);
->> +		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
->>  		complete(&i2c_dev->msg_complete);
->>  	}
->>  	goto done;
->>
+>>  drivers/video/fbdev/au1200fb.c | 19 ++++---------------
+>>  1 file changed, 4 insertions(+), 15 deletions(-)
 > 
-> Very nice, thank you very much! BTW, I think it may worth to add another
-> patch that will reset hardware state in a case of the warning since we
-> know that something gone wrong.
+> Runs fine on my test system.
 > 
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> 
+> Tested-by: Manuel Lauss <manuel.lauss@gmail.com>
 
-Something like that:
+Patch queued for v5.3, thanks.
 
- 	complete(&i2c_dev->msg_complete);
-
-	if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining))
-		goto err;
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
