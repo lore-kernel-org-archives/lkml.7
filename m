@@ -2,51 +2,51 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,URI_NOVOWEL,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00AFC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63002C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BA9208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABAD208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922947;
-	bh=gbnX3ywF0e3V1x5CbjGk84uFpatjER0sEXlbfyLEBoI=;
+	s=default; t=1559922953;
+	bh=TwpQH5IEGVm1BfQanqjx4j2oQNl5Cm9iB/CvJp+FJHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7kSD+dJiNG9zr383Y2UG1CSCm3smoDFXFRCJs1NzKoADjL9sDiP2xpcLlD5EF0bp
-	 t9geg6V6SNRkALjEU34zDbDc6yKgmh16DXVBSPnvUwXAWiFCA6FcGo6YMT6+MB41Tg
-	 QsIdOdwab9zNmdU+jAxn/M2PHGDZrofUH2c3Z8Rs=
+	b=kS8iC06qQUeSzHKYzQquLHsF346+J/GXjmRvsBYKrv0D9Jlwv2PirIBHxiP8IiM+0
+	 RjbZtcY5DeD1O4jmRv+Mi5YYojDp2NXAUQ+gDpzuqTejwK4/RH2XVJao8n5Bfpacl8
+	 FbWU87b2O4da1xz/cIFy+Xh/Rf0wNNfk6B/yUnlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfFGPzr (ORCPT
+        id S1731966AbfFGPzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:55:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:55:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730611AbfFGPpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:45:16 -0400
+        id S1729992AbfFGPpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:45:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 299582146E;
-        Fri,  7 Jun 2019 15:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0D32146E;
+        Fri,  7 Jun 2019 15:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922315;
-        bh=gbnX3ywF0e3V1x5CbjGk84uFpatjER0sEXlbfyLEBoI=;
+        s=default; t=1559922310;
+        bh=TwpQH5IEGVm1BfQanqjx4j2oQNl5Cm9iB/CvJp+FJHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SzPuMVGB9yk+OvPv3lwS6dVnWJ6AMVXY38F2mBdPKL8vhf2/OGGS5dKoRuv79Q6Ip
-         m325kbRGbRSZ3GMfH2aYvnTPhz8AJE8/29Q5xXc40JO5apqjKhgo5dvZPiXtpKma84
-         9nPPb1ghbp8bF4nfSX2k58Xq6Qq3yGBTpf5EJfvc=
+        b=LkNAabbpIJzoAEzxyzsKsOfkq7icBzBLElGAYfmZz4ChDxDbw/AJwpj8/hZ226i78
+         TgK+mMz6L/of1K4dYO1goLbVkkHEh9RT3dwecieZkfcbJYzkqua28fd7HSWQ9RXKlE
+         llsHG+lr8FFVrcxYg0UJ8rVTZBji59/k25646rvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 4.19 36/73] i2c: mlxcpld: Fix wrong initialization order in probe
-Date:   Fri,  7 Jun 2019 17:39:23 +0200
-Message-Id: <20190607153853.136918240@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+71f1e64501a309fcc012@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 09/73] USB: Fix slab-out-of-bounds write in usb_get_bos_descriptor
+Date:   Fri,  7 Jun 2019 17:38:56 +0200
+Message-Id: <20190607153849.804860791@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -59,44 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 13067ef73f337336e3149f5bb9f3fd05fe7f87a0 upstream.
+commit a03ff54460817c76105f81f3aa8ef655759ccc9a upstream.
 
-Fix wrong order in probing routine initialization - field `base_addr'
-is used before it's initialized. Move assignment of 'priv->base_addr`
-to the beginning, prior the call to mlxcpld_i2c_read_comm().
-Wrong order caused the first read of capability register to be executed
-at wrong offset 0x0 instead of 0x2000. By chance it was a "good
-garbage" at 0x0 offset.
+The syzkaller USB fuzzer found a slab-out-of-bounds write bug in the
+USB core, caused by a failure to check the actual size of a BOS
+descriptor.  This patch adds a check to make sure the descriptor is at
+least as large as it is supposed to be, so that the code doesn't
+inadvertently access memory beyond the end of the allocated region
+when assigning to dev->bos->desc->bNumDeviceCaps later on.
 
-Fixes: 313ce648b5a4 ("i2c: mlxcpld: Add support for extended transaction length for i2c-mlxcpld")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+71f1e64501a309fcc012@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-mlxcpld.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/config.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/i2c/busses/i2c-mlxcpld.c
-+++ b/drivers/i2c/busses/i2c-mlxcpld.c
-@@ -503,6 +503,7 @@ static int mlxcpld_i2c_probe(struct plat
- 	platform_set_drvdata(pdev, priv);
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -936,8 +936,8 @@ int usb_get_bos_descriptor(struct usb_de
  
- 	priv->dev = &pdev->dev;
-+	priv->base_addr = MLXPLAT_CPLD_LPC_I2C_BASE_ADDR;
- 
- 	/* Register with i2c layer */
- 	mlxcpld_i2c_adapter.timeout = usecs_to_jiffies(MLXCPLD_I2C_XFER_TO);
-@@ -518,7 +519,6 @@ static int mlxcpld_i2c_probe(struct plat
- 		mlxcpld_i2c_adapter.nr = pdev->id;
- 	priv->adap = mlxcpld_i2c_adapter;
- 	priv->adap.dev.parent = &pdev->dev;
--	priv->base_addr = MLXPLAT_CPLD_LPC_I2C_BASE_ADDR;
- 	i2c_set_adapdata(&priv->adap, priv);
- 
- 	err = i2c_add_numbered_adapter(&priv->adap);
+ 	/* Get BOS descriptor */
+ 	ret = usb_get_descriptor(dev, USB_DT_BOS, 0, bos, USB_DT_BOS_SIZE);
+-	if (ret < USB_DT_BOS_SIZE) {
+-		dev_err(ddev, "unable to get BOS descriptor\n");
++	if (ret < USB_DT_BOS_SIZE || bos->bLength < USB_DT_BOS_SIZE) {
++		dev_err(ddev, "unable to get BOS descriptor or descriptor too short\n");
+ 		if (ret >= 0)
+ 			ret = -ENOMSG;
+ 		kfree(bos);
 
 
