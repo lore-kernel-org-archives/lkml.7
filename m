@@ -2,176 +2,77 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0867C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD55DC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963D52133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:08:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kKmWVm7K"
+	by mail.kernel.org (Postfix) with ESMTP id 854012080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfFGLIh (ORCPT
+        id S1728433AbfFGLIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:08:37 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36376 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbfFGLIh (ORCPT
+        Fri, 7 Jun 2019 07:08:45 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:42188 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728226AbfFGLIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:08:37 -0400
-Received: by mail-io1-f68.google.com with SMTP id h6so1092685ioh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 04:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GXA3Jr+Mhw7TJ/Zj0rrWncqBfBkrIy8iCvF3ptMXOGE=;
-        b=kKmWVm7KNq1gSBghKEw8JHjybhOI4fZHTnGfp2JTChD6SU08oV8twygIt6if0dSujm
-         YFYcFhgdSb4cTtmxOX8hlja4HscZv35gluhEq+WILhmLtf2CXLYanIgjfETslUG3AIee
-         77sfg8QmheYJ1Y9FMyJqEHmU78MGah8K9YstGDvrZfeib4m1GrGI77FH36AgGhfNvtmE
-         5XRu8K1G/HTl0HNGtTgagJfajtF11z8NCLRF/bWYbXO0Oyb+PhDvuHUiw0aPyucijghq
-         K7QZDmenykjrYN02pdjgCGLSvTWxLAYh1G8X164OxAHcifc+HYiAB0/+HlO43PpdrFIq
-         Rx3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GXA3Jr+Mhw7TJ/Zj0rrWncqBfBkrIy8iCvF3ptMXOGE=;
-        b=qBqbF1/b5vcnfa0rzaEWAjfK7aRwX+vRU/ah7F3Oxmr4tak3NjiVSkswRwjB0pgYAC
-         JoEydUFMrj+HsZTkk0t1WjaLOXXvC4vN0tS14RpbHekTbCGl+jgPqXmRIcX74WS1KuQs
-         Bw9DPy447SvNE61CWUjkrwz3BNy7dKiIxLmkXTjPWfLV3K4wougOxD4x2piKKppvKWW+
-         +hsjc2u4UtXtBgvuPpMvUlBGUF7FMkUHdfHb0/rBP443Rm4tsHN6EUXTQOibvROpFzBN
-         FJ/2vDiKPD0pRnRlXz84SgyH1c23qsbynHzaEhTSU6uuzGqkssA89XxDM4CgrN2aQ25K
-         5oWw==
-X-Gm-Message-State: APjAAAVfO1FSZjgHPI7l2/FSe6w/3pjg5lN790itxfsyQ8fthuH48oR8
-        G/BexBmfYkyzXh0IPlPZLF8JSxskUhIJ/XLiEA8R8FMhG+u9jw==
-X-Google-Smtp-Source: APXvYqx+hd94b4UUsZSCPJJ96EY6XV+oXjukJZTTRGg/pxcsi1nOH4E1wPdCHkE5/rIixOEkqC0BmTndCcDQVsRhVM8=
-X-Received: by 2002:a05:6602:98:: with SMTP id h24mr300107iob.49.1559905716603;
- Fri, 07 Jun 2019 04:08:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190607082901.6491-1-lee.jones@linaro.org>
-In-Reply-To: <20190607082901.6491-1-lee.jones@linaro.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 7 Jun 2019 13:08:25 +0200
-Message-ID: <CAKv+Gu_SP7qBggCrVkF41BimV3PnCQXb5OUKyCsE0bBxa68RZA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        wsa+renesas@sang-engineering.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 7 Jun 2019 07:08:45 -0400
+Received: from ramsan ([84.194.111.163])
+        by laurent.telenet-ops.be with bizsmtp
+        id Mn8j2000m3XaVaC01n8jYw; Fri, 07 Jun 2019 13:08:44 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hZCjj-000497-Qk; Fri, 07 Jun 2019 13:08:43 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hZCjj-0003MQ-PI; Fri, 07 Jun 2019 13:08:43 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial] Documentation: net: dsa: Grammar s/the its/its/
+Date:   Fri,  7 Jun 2019 13:08:42 +0200
+Message-Id: <20190607110842.12876-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 10:29, Lee Jones <lee.jones@linaro.org> wrote:
->
-> Add a match table to allow automatic probing of ACPI device
-> QCOM0220.  Ignore clock attainment errors.  Set default clock
-> frequency value.
->
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index db075bc0d952..0fa93b448e8d 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
->
-> +#include <linux/acpi.h>
->  #include <linux/clk.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/err.h>
-> @@ -483,6 +484,12 @@ static const struct i2c_algorithm geni_i2c_algo = {
->         .functionality  = geni_i2c_func,
->  };
->
-> +static const struct acpi_device_id geni_i2c_acpi_match[] = {
-> +       { "QCOM0220"},
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(acpi, geni_i2c_acpi_match);
-> +
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/networking/dsa/dsa.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-We usually put #ifdef CONFIG_ACPI/#endif around these, otherwise you
-end up with acpi:XXXX modaliases even though ACPI is not compiled in.
+diff --git a/Documentation/networking/dsa/dsa.rst b/Documentation/networking/dsa/dsa.rst
+index ca87068b9ab904a9..563d56c6a25c924e 100644
+--- a/Documentation/networking/dsa/dsa.rst
++++ b/Documentation/networking/dsa/dsa.rst
+@@ -531,7 +531,7 @@ Bridge VLAN filtering
+   a software implementation.
+ 
+ .. note:: VLAN ID 0 corresponds to the port private database, which, in the context
+-        of DSA, would be the its port-based VLAN, used by the associated bridge device.
++        of DSA, would be its port-based VLAN, used by the associated bridge device.
+ 
+ - ``port_fdb_del``: bridge layer function invoked when the bridge wants to remove a
+   Forwarding Database entry, the switch hardware should be programmed to delete
+@@ -554,7 +554,7 @@ Bridge VLAN filtering
+   associated with this VLAN ID.
+ 
+ .. note:: VLAN ID 0 corresponds to the port private database, which, in the context
+-        of DSA, would be the its port-based VLAN, used by the associated bridge device.
++        of DSA, would be its port-based VLAN, used by the associated bridge device.
+ 
+ - ``port_mdb_del``: bridge layer function invoked when the bridge wants to remove a
+   multicast database entry, the switch hardware should be programmed to delete
+-- 
+2.17.1
 
->  static int geni_i2c_probe(struct platform_device *pdev)
->  {
->         struct geni_i2c_dev *gi2c;
-> @@ -502,7 +509,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
->                 return PTR_ERR(gi2c->se.base);
->
->         gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
-
-Can we avoid this call altogether in ACPI mode? Also, please use
-'has_acpi_companion()' to test whether we are probing via ACPI.
-
-> -       if (IS_ERR(gi2c->se.clk)) {
-> +       if (IS_ERR(gi2c->se.clk) && !ACPI_HANDLE(&pdev->dev)) {
-
-
->                 ret = PTR_ERR(gi2c->se.clk);
->                 dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
->                 return ret;
-> @@ -510,12 +517,19 @@ static int geni_i2c_probe(struct platform_device *pdev)
->
->         ret = device_property_read_u32(&pdev->dev, "clock-frequency",
->                                                         &gi2c->clk_freq_out);
-> -       if (ret) {
-> +       if (ret && !ACPI_HANDLE(&pdev->dev)) {
->                 dev_info(&pdev->dev,
->                         "Bus frequency not specified, default to 100kHz.\n");
->                 gi2c->clk_freq_out = KHZ(100);
->         }
->
-> +       if (ACPI_HANDLE(&pdev->dev)) {
-> +               ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
-> +
-> +               /* Using default, same as the !ACPI case above */
-> +               gi2c->clk_freq_out = KHZ(100);
-> +       }
-> +
-
-You are overriding the speed to 100 kHz even if the ACPI device has a
-"clock-frequency" property.
-
->         gi2c->irq = platform_get_irq(pdev, 0);
->         if (gi2c->irq < 0) {
->                 dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
-> @@ -660,6 +674,7 @@ static struct platform_driver geni_i2c_driver = {
->                 .name = "geni_i2c",
->                 .pm = &geni_i2c_pm_ops,
->                 .of_match_table = geni_i2c_dt_match,
-> +               .acpi_match_table = ACPI_PTR(geni_i2c_acpi_match),
->         },
->  };
->
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
