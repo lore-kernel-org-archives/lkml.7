@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F0FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6E7C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92DEF20825
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF2721473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sybVLoJi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiLeaHHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731806AbfFGXLY (ORCPT
+        id S1730419AbfFGXLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 19:11:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50868 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731700AbfFGXLV (ORCPT
+        Fri, 7 Jun 2019 19:11:36 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37548 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731692AbfFGXLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 19:11:21 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c66so3500587wmf.0;
-        Fri, 07 Jun 2019 16:11:19 -0700 (PDT)
+        Fri, 7 Jun 2019 19:11:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 22so3290050wmg.2;
+        Fri, 07 Jun 2019 16:11:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PqR/4nQ0kMEXVQlzSnSXdJ4vrq0kGPr980mhH5i0djg=;
-        b=sybVLoJiDJnW343uwPnsM5S0HNjMSLDL48ncmZRtj7mgfrBAr3I0s4Hs0qLIJPzFww
-         /4xhK8BD+hIPhr4i0Fv5ybyRCGXQesuCl6NKAiI1BCD4B2hq+fc6tud+WvAoLwitIrdP
-         tabsUlT1/0VQQu1XwWxGPdeaxzH4nXCBg48RUWfCBFpCcYNvEY2aSq2oIN0kU2YX/3Q/
-         gEr/xVMF/Tmqju9DJAXw3QdP9o85u7cIdhsG/yAdU8F8CJ8ehvhg0VYhZEL8ZbwmX1kE
-         O3HxxS93luXNkfMiRqX3X8Iwx+wC9ZFck1P9WiEjMLjkok7zXoo+xG5vRhev6XxbTnF4
-         Ez+Q==
+        bh=ZFHFRMwqhia+MVch9pKGgEBNeKukD3ZLzLQ+6+PB9fg=;
+        b=eiLeaHHak8jYQRZKjm/x1H8ej+KxQ2LjmoNyoxAAGEjakKrI7elSGX0wrr60ZoO5qj
+         9HU+8ZIVn3pNJvvh82yUhGxMElRvn7NJ7FPjqlXS7tS+rmnFy7UyH2NsO8qQY2GvvwTA
+         +Ks0iEPXlNlJy77jrZZ/TfqHLkhTrrBApCZj5lQzYAP9CfjT9ks1SOToNaHh+UrAgrne
+         B9+/uz12mb0rkzFBGXjZ23XnsQ/cnjjPyPzSMzCwKImGOrW4pZz69r0+QX1orVmhFcu8
+         dLfDhGHEnCL7q1FgbuP6sJYZnK9iZghCczKyDY70qnQ73o4xwyKnIwdcEF1luofmnTZK
+         kKyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PqR/4nQ0kMEXVQlzSnSXdJ4vrq0kGPr980mhH5i0djg=;
-        b=GDjYvs0fI8LPMhyiptnLmhqzCaeKjnhNz7CsUXDr2Ol32j56lMQcZ2NzY5Igctx7Qi
-         WgzMa28/5Sj6QThSHvPe5kgPd33vwebrmlykV3CLCMHC0fqWzEPSs3CwwAkr9W66/H7O
-         z4wmHpVVDWCeFm3LE/H/aUz84XnjTeYUJc0O5gQsw+7GBrS+M9ZRvzMT8wXRbRxTHlOf
-         NSitXxhAWUbGnwBCGKwEHHsaAe6VEi0XvYrluaDz9UtTyzKTT2Ss/UtffLEfYIa5/NdT
-         YlYVBGU2U2wYvjYDM75RrBVHl+HEsbM/5FG0pUKE4yTiiEU1xtyM4iXhnaDnVkQxSlG/
-         LbPQ==
-X-Gm-Message-State: APjAAAWjVVb5k4gtL2KwkcCXjsBqs9ytRkB9Yv1KMfO4ZaEDA5j5aIl8
-        kCBU7wXzmtQASNFL5cb09To=
-X-Google-Smtp-Source: APXvYqzCKM/QhWEqfR073eumDXe5BXIfBA3ismSGYlRmD88R5qIgkreKWQ2hlT9fpfbTa8GVbAMSWw==
-X-Received: by 2002:a1c:6c08:: with SMTP id h8mr5514087wmc.62.1559949078962;
-        Fri, 07 Jun 2019 16:11:18 -0700 (PDT)
+        bh=ZFHFRMwqhia+MVch9pKGgEBNeKukD3ZLzLQ+6+PB9fg=;
+        b=avr4bebehorIOb2O+9rvwI/dzLReEPXtQmIj7wigqjQxWyq8HPGdH1FPaaMZ1HAk6H
+         h8wWoMjXUktyKI0S+lcUZAHqa+yUrqQGCa8aqG+ImXTxL3Dm24wBgwn8w+ycnbbEqLxp
+         MTGYHwxDaEaEMauxdTVFtzVrUHylePis9ipRO881LIXukLrmN4LClc6nR+311Jz9998X
+         C5/+psCYoPG1+m6NnnDPOPKCKCvYryinh8ub4QpwdpqA+Rzg0XeNebkyBL//td61H9MB
+         bedRsWGuDYD2+5/o4ZeAkc/VD+YPeL/35fAKZbAo0yMslz9yrwDind+lpLWqGCA2G7Cm
+         oZvQ==
+X-Gm-Message-State: APjAAAXa5+wDQoJ4tqUBJJC6sRmRaIm3Ujg/yE2v7vuxpAjL4ToTPuG4
+        nC7lqNrJLhzqB0d5OZamkEU=
+X-Google-Smtp-Source: APXvYqwddSzhdksmvNkBbueAxfPvGpAbf9YR3GwvhZyX9J61/5+7yOtpn8VduLAqIR6fHtcd7KNeQQ==
+X-Received: by 2002:a7b:c018:: with SMTP id c24mr3051220wmb.37.1559949082496;
+        Fri, 07 Jun 2019 16:11:22 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.18
+        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.21
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 16:11:18 -0700 (PDT)
+        Fri, 07 Jun 2019 16:11:21 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
         Sean Young <sean@mess.org>
-Subject: [PATCH v5 10/13] dt-bindings: media: sunxi-ir: Add H6 compatible
-Date:   Sat,  8 Jun 2019 01:10:57 +0200
-Message-Id: <20190607231100.5894-11-peron.clem@gmail.com>
+Subject: [PATCH v5 13/13] arm64: defconfig: Enable IR SUNXI option
+Date:   Sat,  8 Jun 2019 01:11:00 +0200
+Message-Id: <20190607231100.5894-14-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190607231100.5894-1-peron.clem@gmail.com>
 References: <20190607231100.5894-1-peron.clem@gmail.com>
@@ -82,28 +82,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some minor differences between A31 or A64 with H6 IR peripheral.
-
-But A31 IR driver is compatible with H6.
+Enable CONFIG_IR_SUNXI option for ARM64, so that Allwinner A64/H6 SoCs
+can use their IR receiver controller.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 Acked-by: Sean Young <sean@mess.org>
 ---
- Documentation/devicetree/bindings/media/sunxi-ir.txt | 1 +
+ arch/arm64/configs/defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-index 1dd287a4ab3a..81eaf95fb764 100644
---- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-+++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	"allwinner,sun5i-a13-ir"
- 	"allwinner,sun6i-a31-ir"
- 	"allwinner,sun50i-a64-ir", "allwinner,sun6i-a31-ir"
-+	"allwinner,sun50i-h6-ir", "allwinner,sun6i-a31-ir"
- - clocks	    : list of clock specifiers, corresponding to
- 		      entries in clock-names property;
- - clock-names	    : should contain "apb" and "ir" entries;
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4d583514258c..5128029100d2 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -460,6 +460,7 @@ CONFIG_RC_CORE=m
+ CONFIG_RC_DECODERS=y
+ CONFIG_RC_DEVICES=y
+ CONFIG_IR_MESON=m
++CONFIG_IR_SUNXI=m
+ CONFIG_MEDIA_SUPPORT=m
+ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_ANALOG_TV_SUPPORT=y
 -- 
 2.20.1
 
