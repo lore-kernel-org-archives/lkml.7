@@ -2,123 +2,84 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19255C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F96C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0A7208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZyjmYNb"
+	by mail.kernel.org (Postfix) with ESMTP id 1F344208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbfFGVb0 (ORCPT
+        id S1730950AbfFGVdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 17:31:26 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:55550 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730931AbfFGVbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 17:31:25 -0400
-Received: by mail-it1-f196.google.com with SMTP id i21so4875155ita.5;
-        Fri, 07 Jun 2019 14:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0DdUyzrMgwnb7OSBUknmdzq6QeSxNyekOjNxnEzj1SA=;
-        b=QZyjmYNbrUmtT5xBRTmMfROG2NU0uvuqLYMBV801O/lYtk/0J+spnINtWEdTmKBUIq
-         OeZqq7nWBjWl7iUjqaczNrOfEr75+dqmh5SSIrTyF3I3TXYrzWuh9R02Nwp3E6zWh9i6
-         2Gl9gSZn8sehbjpCSZjMJ7dbZKgcDroUR2tgdBavY67FlujPHol59nba0X331HPhwC7E
-         u6Q1YYVQWbrVVmmkHeU2/H4D30DCn5Q8oNTFG/4uk+34pD1mnXQ1GOmoKra6QTXUaLVn
-         lUXUuXyar8+LWT8QALyC1L/pKqV9g5Sb2YE0T0xyuHdhkLmvkyYquEiy7kJtGarCDYJD
-         36cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0DdUyzrMgwnb7OSBUknmdzq6QeSxNyekOjNxnEzj1SA=;
-        b=fsgIQe/kENBQbpP9jYfrBf1naek3QdxIGZlI/pNFe9FaYG5PZueTcxAO7r0a3nkLwV
-         tEqHIkG8DrnZp+4VyUmDozIgHPWuxsrmMqn66mNjitMYgjjIlLi+umTqiwWs1xdYJFn5
-         wTrSEHEX+wlpYKxHXlW4bQmHjWb202DgQzaQuqPqWsNzZYGH7ppqiNcYa1exA8xacTWM
-         KwTlQhwrC/HPBnUvu/m3rlippVzhMcW0HgS3Cv0dhb9HWzyL1LRIu8OlckOZ3htv6EK4
-         rsB81JZUIrAMojTcUDEiAnwBSo/OW/3e2HC5snvQ6CjdjkoSX6zJWIOyu2YOcGB+2br9
-         ojqA==
-X-Gm-Message-State: APjAAAUeZLi7YWbOuRE6/cTx6N7WZsrQdzQnlIulMZNNEJZmycGGlR6y
-        5TQ3ceDYCtfujWS3WtvcDQ0f1sPULMh29GKHzv4=
-X-Google-Smtp-Source: APXvYqwDLsWApqI7m7WAtDtXoPKvcnVVSosNF8TJ7e9pxEqMiqXjds9y/y+9gC3V5HDDaqKAaHY1Uws8QJdwlv63YL8=
-X-Received: by 2002:a05:660c:343:: with SMTP id b3mr1747694itl.52.1559943084285;
- Fri, 07 Jun 2019 14:31:24 -0700 (PDT)
+        Fri, 7 Jun 2019 17:33:37 -0400
+Received: from mga18.intel.com ([134.134.136.126]:50823 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730145AbfFGVdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 17:33:36 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 14:33:35 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 07 Jun 2019 14:33:35 -0700
+Date:   Fri, 7 Jun 2019 14:24:20 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     James Morse <james.morse@arm.com>
+Cc:     linux-doc@vger.kernel.org, x86@kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Babu Moger <Babu.Moger@amd.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] Documentation: x86: Contiguous cbm isn't all X86
+Message-ID: <20190607212419.GA143433@romley-ivt3.sc.intel.com>
+References: <20190607151409.15476-1-james.morse@arm.com>
+ <20190607151409.15476-2-james.morse@arm.com>
 MIME-Version: 1.0
-References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
- <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org> <20190607203838.1361E208C3@mail.kernel.org>
-In-Reply-To: <20190607203838.1361E208C3@mail.kernel.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Fri, 7 Jun 2019 15:31:13 -0600
-Message-ID: <CAOCk7NrnnUzaXtnRvH0pHyHha4sTQDQCRoVPPatHfgVuEPZr0Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
-        David Brown <david.brown@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607151409.15476-2-james.morse@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 2:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Fri, Jun 07, 2019 at 04:14:06PM +0100, James Morse wrote:
+> Since commit 4d05bf71f157 ("x86/resctrl: Introduce AMD QOS feature")
+> resctrl has supported non-contiguous cache bit masks. The interface
+> for this is currently try-it-and-see.
+> 
+> Update the documentation to say Intel CPUs have this requirement,
+> instead of X86.
+> 
+> Cc: Babu Moger <Babu.Moger@amd.com>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
+>  Documentation/x86/resctrl_ui.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/x86/resctrl_ui.rst b/Documentation/x86/resctrl_ui.rst
+> index 225cfd4daaee..066f94e53418 100644
+> --- a/Documentation/x86/resctrl_ui.rst
+> +++ b/Documentation/x86/resctrl_ui.rst
+> @@ -342,7 +342,7 @@ For cache resources we describe the portion of the cache that is available
+>  for allocation using a bitmask. The maximum value of the mask is defined
+>  by each cpu model (and may be different for different cache levels). It
+>  is found using CPUID, but is also provided in the "info" directory of
+> -the resctrl file system in "info/{resource}/cbm_mask". X86 hardware
+> +the resctrl file system in "info/{resource}/cbm_mask". Intel hardware
+>  requires that these masks have all the '1' bits in a contiguous block. So
+>  0x3, 0x6 and 0xC are legal 4-bit masks with two bits set, but 0x5, 0x9
+>  and 0xA are not.  On a system with a 20-bit mask each bit represents 5%
+> -- 
+> 2.20.1
 >
-> Quoting Jeffrey Hugo (2019-05-21 07:52:28)
-> > On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
-> > > The multimedia clock controller (mmcc) is the main clock controller for
-> > > the multimedia subsystem and is required to enable things like display and
-> > > camera.
-> >
-> > Stephen, I think this series is good to go, and I have display/gpu stuff
-> > I'm polishing that will depend on this.  Would you kindly pickup patches
-> > 1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 and 6.
-> >
->
-> If I apply patch 3 won't it break boot until patch 2 is also in the
-> tree? That seems to imply that I'll break bisection, and we have
-> kernelci boot testing clk-next so this will probably set off alarms
-> somewhere.
+ 
+Acked-by: Fenghua Yu <fenghua.yu@intel.com>
 
-Yes, it'll break boot.  Maybe you and Bjorn can make a deal?  (more below)
+Thanks.
 
-Doesn't look like kernelci is running tests on 8998 anymore, so maybe
-no one will complain?  As far as I am aware, Marc, Lee, Bjorn, and I
-are the only ones whom care about 8998 presently, and I think we are
-all good with a temporary breakage in order to get this basic
-functionality in since the platform isn't really well supported yet.
-
->
-> I thought we had some code that got removed that was going to make the
-> transition "seamless" in the sense that it would search the tree for an
-> RPM clk controller and then not add the XO fixed factor clk somehow.
-> See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
-> clocks") for the code that we removed. So ideally we do something like
-> this too, but now we search for a property on the calling node to see if
-> the XO clk is there?
->
-
-Trying to remember back a bit.
-
-I don't think its possible.  Maybe I'm wrong.  I didn't see a solution
-to the below:
-
-How does GCC know the following?
--RPMCC is compiled in the build (I guess this can be assumed)
--RPMCC has probed
--RPMCC is not and will not be providing XO
+-Fenghua Yu
