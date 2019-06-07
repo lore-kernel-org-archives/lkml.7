@@ -2,146 +2,109 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D379C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD87C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E36207E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7F4208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:58:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KW+Ubysj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c34v2gJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfFGH5d (ORCPT
+        id S1727511AbfFGH6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 03:57:33 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34467 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfFGH5d (ORCPT
+        Fri, 7 Jun 2019 03:58:53 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47516 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfFGH6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 03:57:33 -0400
-Received: by mail-ed1-f66.google.com with SMTP id c26so1736183edt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 00:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1Y0dqNgN5GRlPumwnSwim+P7xV+jz6U0uadHjVytHrk=;
-        b=KW+UbysjArNVACv4q6+549r7+cTv3EkG+0hIgp5Gzs8ersC7PVJ/arg0EbqcKW/BDT
-         7m/td0oX1nSkgEGBxV+/rFF94cYaaujJuBaZbnkb6j43aX9EoDSuUh2jbUn90a72Q1m6
-         wWSpptOZ5QJhMjkYz1VNG/I1tEoevoc3dgNZE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=1Y0dqNgN5GRlPumwnSwim+P7xV+jz6U0uadHjVytHrk=;
-        b=Sjuq/qKDv3w/BLfbYZErMmVfz6N5RvpvYORdxUaz2uzWYU4YGfqG1C/PvbXf8W8HCY
-         PmEuABL07lCts4gk0Jo09YoriPFSMai5XDvuit0IQkEGEphOp1GmIoiSDXVelOzr0DSw
-         d3oW077elhHakwqrp6rJuITVFUnhrZd3ZezqvM3w+Mwaiehe1oUjZ25e3YSAlzjeQw/l
-         nwAaonR8jCecRAkxpYBb0XeUKIozL7/NipmYC1DhIbyrqtSikpyR7kBs0kaoXjc9HaBK
-         yjz7KMSkeIvlzvqS0E+MYqI9/DQqVcVYfesNPULDEPELAJc9lnIPigoG+e8mNGS9jWE9
-         vWyg==
-X-Gm-Message-State: APjAAAVbubGVo/ekinDcCwlHEFos7jQSOW0TOjfVsYeFGfoUHaPxFVVY
-        3vIqPpH9dIQBlY+550wuf/fICg==
-X-Google-Smtp-Source: APXvYqxb9k77uDmPH+x6SZW7m5DzVGO6PSl0oSp7JXNVVPERM605KEjklDJiu0Eyo4Ib14+dHcCJGA==
-X-Received: by 2002:a17:906:4f8f:: with SMTP id o15mr45250693eju.129.1559894251343;
-        Fri, 07 Jun 2019 00:57:31 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id f3sm241948ejc.15.2019.06.07.00.57.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 00:57:30 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 09:57:28 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     marex@denx.de, stefan@agner.ch, airlied@linux.ie, daniel@ffwll.ch,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        b.zolnierkie@samsung.com, andrew@lunn.ch, vivien.didelot@gmail.com,
-        f.fainelli@gmail.com, a.hajda@samsung.com, mchehab@kernel.org,
-        p.zabel@pengutronix.de, hkallweit1@gmail.com, lee.jones@linaro.org,
-        lgirdwood@gmail.com, broonie@kernel.org, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 3/8] drivers: (video|gpu): fix warning same module names
-Message-ID: <20190607075728.GE21222@phenom.ffwll.local>
-Mail-Followup-To: Anders Roxell <anders.roxell@linaro.org>, marex@denx.de,
-        stefan@agner.ch, airlied@linux.ie, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, b.zolnierkie@samsung.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com, a.hajda@samsung.com,
-        mchehab@kernel.org, p.zabel@pengutronix.de, hkallweit1@gmail.com,
-        lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
-        linux-media@vger.kernel.org
-References: <20190606094712.23715-1-anders.roxell@linaro.org>
+        Fri, 7 Jun 2019 03:58:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z6UrZZzp3n14Ze8Py53PCQO3uqTMikRd3FqfmNFJBQ4=; b=c34v2gJu6/rQ2aR6lzQzkJp4R
+        z4dwER8rHQHa20F2xwJqlwIMnaDfbzgY0t9dtmC00if5JmBXgbJwuagYcVraKs/LOpN57iEZWAQ4Z
+        7t7YudJFD6qIS39i+NzbtHeGLIClaVI94mba6elh0sLE+c8QjeqhvQneZ+6vITyvsC/YlzzZf7KLg
+        os1cVnpLF3vYqwamMx9h2vPERuVOJzJBX3XIOH+7iw7eyNZ7+DeblVjqaHE45hP7O5GsCdgg/mZ2T
+        wAwFffH77sM5O+pS21lWtrBJwviK0lHJlsAHzQKUXtTSOrZRbG9TXAL3qKQUt76wjH7Dfc5J7d7Vc
+        8UlJaR+SQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZ9lX-0006Ov-Fa; Fri, 07 Jun 2019 07:58:23 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3C301202CD6B2; Fri,  7 Jun 2019 09:58:22 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 09:58:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
+ ELF file
+Message-ID: <20190607075822.GR3419@hirez.programming.kicks-ass.net>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+ <20190606200646.3951-23-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606094712.23715-1-anders.roxell@linaro.org>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
+In-Reply-To: <20190606200646.3951-23-yu-cheng.yu@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 11:47:12AM +0200, Anders Roxell wrote:
-> When building with CONFIG_DRM_MXSFB and CONFIG_FB_MXS enabled as
-> loadable modules, we see the following warning:
+On Thu, Jun 06, 2019 at 01:06:41PM -0700, Yu-cheng Yu wrote:
+> An ELF file's .note.gnu.property indicates features the executable file
+> can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+> indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+> GNU_PROPERTY_X86_FEATURE_1_SHSTK.
 > 
-> warning: same module names found:
->   drivers/video/fbdev/mxsfb.ko
->   drivers/gpu/drm/mxsfb/mxsfb.ko
+> With this patch, if an arch needs to setup features from ELF properties,
+> it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
+> arch_setup_property().
 > 
-> Rework so the names matches the config fragment.
+> For example, for X86_64:
 > 
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
+> {
+> 	int r;
+> 	uint32_t property;
+> 
+> 	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
+> 			     &property);
+> 	...
+> }
+> 
+> Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-I'm assuming Bart will pick this one up for fbdev.
--Daniel
-
-> ---
->  drivers/gpu/drm/mxsfb/Makefile | 4 ++--
->  drivers/video/fbdev/Makefile   | 3 ++-
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mxsfb/Makefile b/drivers/gpu/drm/mxsfb/Makefile
-> index ff6e358088fa..5d49d7548e66 100644
-> --- a/drivers/gpu/drm/mxsfb/Makefile
-> +++ b/drivers/gpu/drm/mxsfb/Makefile
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -mxsfb-y := mxsfb_drv.o mxsfb_crtc.o mxsfb_out.o
-> -obj-$(CONFIG_DRM_MXSFB)	+= mxsfb.o
-> +drm-mxsfb-y := mxsfb_drv.o mxsfb_crtc.o mxsfb_out.o
-> +obj-$(CONFIG_DRM_MXSFB)	+= drm-mxsfb.o
-> diff --git a/drivers/video/fbdev/Makefile b/drivers/video/fbdev/Makefile
-> index 655f2537cac1..7ee967525af2 100644
-> --- a/drivers/video/fbdev/Makefile
-> +++ b/drivers/video/fbdev/Makefile
-> @@ -131,7 +131,8 @@ obj-$(CONFIG_FB_VGA16)            += vga16fb.o
->  obj-$(CONFIG_FB_OF)               += offb.o
->  obj-$(CONFIG_FB_MX3)		  += mx3fb.o
->  obj-$(CONFIG_FB_DA8XX)		  += da8xx-fb.o
-> -obj-$(CONFIG_FB_MXS)		  += mxsfb.o
-> +obj-$(CONFIG_FB_MXS)		  += fb-mxs.o
-> +fb-mxs-objs			  := mxsfb.o
->  obj-$(CONFIG_FB_SSD1307)	  += ssd1307fb.o
->  obj-$(CONFIG_FB_SIMPLE)           += simplefb.o
->  
-> -- 
-> 2.20.1
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Did HJ write this patch as suggested by that SoB chain? If so, you lost
+a From: line on top, if not, the SoB thing is invalid.
