@@ -2,191 +2,168 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64520C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275D6C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F39721019
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCAA2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:20:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZfHB7PA9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kme53K79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfFGIJh (ORCPT
+        id S1727388AbfFGIUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 04:09:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39417 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfFGIJg (ORCPT
+        Fri, 7 Jun 2019 04:20:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39662 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfFGIUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 04:09:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so1172370wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 01:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ap0XAetM+pT0J8lzDb15ksHa3sKJqhSdyqZL0XBCEG4=;
-        b=ZfHB7PA9Hz6ves72j99VkQp94oROxR3wx2SUlb3gGT3XFITeqkXSLhQ5tkbK3Vxr7X
-         vQHIGyuVgENQcIqma1vXhRpu8pSfMWPbSYnNJiJfFzxci9Dvkups+OE6dW8oRbc8UJLB
-         Fg4kHSC2AcerCfBDhoEg3tEJ/YcxsbSJwFO21JcKC9dyHxlF73CJtez6rvZ0W5W2yncp
-         Msb9YgCmuwmbTGgRbsqYj/rlkslBn2ASoplqc9a3QBSHrMkb/CzQZ8zoeJNJD74v6/jp
-         4WsVRVE1AkZh/1KBSAV7DW1tYMu9155X/5MuNmQnJVqW+e26vssRF+Tjar8J1wEGIbk5
-         jMfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ap0XAetM+pT0J8lzDb15ksHa3sKJqhSdyqZL0XBCEG4=;
-        b=a4BvJ1rn9ZEWRv06INp98pk4RwiVje9BKeSsUS4yNf0u8dYj4LmsvLwf3L+R1NexK6
-         +9LVhtmQbgJWba/GheVmjwTJqKQufd6uLzBNSVH8E7+MjZoWHmZ7kNMg6dhZlBjPcQVo
-         dnLtYlR7Ctl3OwYlX58yUNzLXBQPScNHn6vQQJfAMb1ZprgIXEntUO4uaCVIiaDRl+bx
-         mwLar1fsu4ABmnz0XyTNQcRT8+cwIEHhcoaEMSb85Hz8KdTp5yHyCdOnRUsea639PCvZ
-         LSqDFJfCnSdyU2+QJNvjq0XGNrsg2Jt7H9Nzn6OD1ddflWpf3xGAd4MkUmkeKw3Ax5sW
-         KuiA==
-X-Gm-Message-State: APjAAAXAUkhA6Tdh/SGp0JfmPnjMJc//Qo9EJ9iGFIU/BIlJdJCGA/zV
-        gHI6Z85v3QIkkcuuEaGD2TAASnbDemvL+A==
-X-Google-Smtp-Source: APXvYqxP6A+8A3KS84/Et4P9G/ZJC2IBacGunUaWZeHsk1vVP/T5CFd8ysxnZm05uOsKCYWFFibizg==
-X-Received: by 2002:adf:aa09:: with SMTP id p9mr11794798wrd.59.1559894973940;
-        Fri, 07 Jun 2019 01:09:33 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id r9sm1114935wrq.0.2019.06.07.01.09.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 01:09:33 -0700 (PDT)
-Subject: Re: [PATCH] drm/meson: fix G12A HDMI PLL settings for 4K60 1000/1001
- variations
-To:     Kevin Hilman <khilman@baylibre.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190605125320.8708-1-narmstrong@baylibre.com>
- <7hh892fzgj.fsf@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <abf63289-dd97-75d7-d3ae-e41e171d59cc@baylibre.com>
-Date:   Fri, 7 Jun 2019 10:09:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 04:20:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JazDGPTciCVZpSGhyhHqtjBiLtA80UeGIT+jhVKWr9o=; b=Kme53K79YiAo8gwQa7fNoeLwvt
+        lmUBsep1uyKFrtc32Scf/rZ4G5ZcIIBXbkjqlRYMGGDpeUdOoGHsQewbtazrvas1G4F0xalu4ytKh
+        TPgKn9eJoxMD3lsvqwMs0YGSrnGgUt6c5coJw0AwuDzic3q9zsRJWd9bJ2HhJgKad6Tm8iqt/y347
+        E2xKm1R2/lC3BgaTlHJuB+DxU2GsiJdedpVRsHdYYnbGzf0wtYVj+BIKHIFoVBSwmgm+CKIJQ1JnG
+        zpYQ0XlNm4jOuCxIEU2WLpe9syVirNmX/vFTfgaLkk4tr6Hqcfl3LlTskhUgG6r3PHUspNSXTCAbI
+        4zVLXuoQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZA6h-0006P7-8H; Fri, 07 Jun 2019 08:20:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 682C520227133; Fri,  7 Jun 2019 10:20:13 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 10:20:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20190607082013.GU3419@hirez.programming.kicks-ass.net>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131945.005681046@infradead.org>
+ <7C13A4B6-6D5B-44C4-B238-58DC5926D7E1@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <7hh892fzgj.fsf@baylibre.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7C13A4B6-6D5B-44C4-B238-58DC5926D7E1@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/06/2019 18:30, Kevin Hilman wrote:
-> Neil Armstrong <narmstrong@baylibre.com> writes:
+On Fri, Jun 07, 2019 at 05:41:42AM +0000, Nadav Amit wrote:
+
+> > int poke_int3_handler(struct pt_regs *regs)
+> > {
+> > +	long ip = regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE;
+> > +	struct opcode {
+> > +		u8 insn;
+> > +		s32 rel;
+> > +	} __packed opcode;
+> > +
+> > 	/*
+> > 	 * Having observed our INT3 instruction, we now must observe
+> > 	 * bp_patching_in_progress.
+> > 	 *
+> > -	 * 	in_progress = TRUE		INT3
+> > -	 * 	WMB				RMB
+> > -	 * 	write INT3			if (in_progress)
+> > +	 *	in_progress = TRUE		INT3
+> > +	 *	WMB				RMB
+> > +	 *	write INT3			if (in_progress)
 > 
->> The Amlogic G12A HDMI PLL needs some specific settings to lock with
->> different fractional values for the 5,4GHz mode.
->>
->> Handle the 1000/1001 variation fractional case here to avoid having
->> the PLL in an non lockable state.
->>
->> Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  drivers/gpu/drm/meson/meson_vclk.c | 13 +++++++++++--
->>  1 file changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
->> index 44250eff8a3f..83fc2fc82001 100644
->> --- a/drivers/gpu/drm/meson/meson_vclk.c
->> +++ b/drivers/gpu/drm/meson/meson_vclk.c
->> @@ -553,8 +553,17 @@ void meson_hdmi_pll_set_params(struct meson_drm *priv, unsigned int m,
->>  
->>  		/* G12A HDMI PLL Needs specific parameters for 5.4GHz */
->>  		if (m >= 0xf7) {
->> -			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4, 0xea68dc00);
->> -			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5, 0x65771290);
->> +			if (frac < 0x10000) {
->> +				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4,
->> +							0x6a685c00);
->> +				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5,
->> +							0x11551293);
->> +			} else {
->> +				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL4,
->> +							0xea68dc00);
->> +				regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL5,
->> +							0x65771290);
->> +			}
->>  			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL6, 0x39272000);
->>  			regmap_write(priv->hhi, HHI_HDMI_PLL_CNTL7, 0x55540000);
->>  		} else {
+> I don’t see what has changed in this chunk… Whitespaces?
+
+Yep, my editor kept marking that stuff red (space before tab), which
+annoyed me enough to fix it.
+
+> > 	 *
+> > -	 * Idem for bp_int3_handler.
+> > +	 * Idem for bp_int3_opcode.
+> > 	 */
+> > 	smp_rmb();
+> > 
+> > @@ -943,8 +949,21 @@ int poke_int3_handler(struct pt_regs *re
+> > 	if (user_mode(regs) || regs->ip != (unsigned long)bp_int3_addr)
+> > 		return 0;
+> > 
+> > -	/* set up the specified breakpoint handler */
+> > -	regs->ip = (unsigned long) bp_int3_handler;
+> > +	opcode = *(struct opcode *)bp_int3_opcode;
+> > +
+> > +	switch (opcode.insn) {
+> > +	case 0xE8: /* CALL */
+> > +		int3_emulate_call(regs, ip + opcode.rel);
+> > +		break;
+> > +
+> > +	case 0xE9: /* JMP */
+> > +		int3_emulate_jmp(regs, ip + opcode.rel);
+> > +		break;
 > 
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+> Consider using RELATIVECALL_OPCODE and RELATIVEJUMP_OPCODE instead of the
+> constants (0xE8, 0xE9), just as you do later in the patch.
 
-Applied to drm-misc-fixes
+Those are private to kprobes..
 
-> 
-> nit: this is continuing with more magic constants, and it would be nice
-> to have them converted to #define'd bitfields.  But since that isn't a
-> new problem in this patch, it's fine to cleanup later.
+but I can do something like so:
 
-Yep, it's on our to priority.
-
-Neil
-
-
-> 
-> Kevin
-> 
-
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -48,8 +48,14 @@ static inline void int3_emulate_jmp(stru
+ 	regs->ip = ip;
+ }
+ 
+-#define INT3_INSN_SIZE 1
+-#define CALL_INSN_SIZE 5
++#define INT3_INSN_SIZE		1
++#define INT3_INSN_OPCODE	0xCC
++
++#define CALL_INSN_SIZE		5
++#define CALL_INSN_OPCODE	0xE8
++
++#define JMP_INSN_SIZE		5
++#define JMP_INSN_OPCODE		0xE9
+ 
+ static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
+ {
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -952,11 +952,11 @@ int poke_int3_handler(struct pt_regs *re
+ 	opcode = *(struct opcode *)bp_int3_opcode;
+ 
+ 	switch (opcode.insn) {
+-	case 0xE8: /* CALL */
++	case CALL_INSN_OPCODE:
+ 		int3_emulate_call(regs, ip + opcode.rel);
+ 		break;
+ 
+-	case 0xE9: /* JMP */
++	case JMP_INSN_OPCODE:
+ 		int3_emulate_jmp(regs, ip + opcode.rel);
+ 		break;
+ 
