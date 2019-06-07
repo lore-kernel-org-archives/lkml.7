@@ -2,157 +2,140 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C08C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347F4C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D7E208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125A4208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWHWpsvE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EL5NpsBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731850AbfFGSde (ORCPT
+        id S1731867AbfFGSeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:33:34 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34528 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730870AbfFGSde (ORCPT
+        Fri, 7 Jun 2019 14:34:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46316 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730978AbfFGSeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:33:34 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m29so3450768qtu.1;
-        Fri, 07 Jun 2019 11:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QNRX9KnxWkZ2r9K8YGQq6ZdDeDJ/GrTZUflSmXosl7M=;
-        b=bWHWpsvEXP6UCqxstvYTLpY98dCZdRFEJaXRlEBBKPuFW7gjzbELeALwqVKt5gMcoO
-         OitNPdnpbl3Agn1TV1Zj+XaK9RHHEsCzeC4CUgDIzpSliYHVHJjRRQh9g4Nv+gX9hd1G
-         E8VQ5EMXS0VSS8hp+66tlYAFV5QwYz8GHWnFaKAGw7E8Xd5tjulhLKvA5qO49wCjyuzW
-         ah2MSK5omCXAGvmMFmOAE8wDRlX1cGnx8sBOKokrHZ+hF1RacuN+ac4vnSJeRPYfEt2d
-         e8rCKl2BwFSMa/UQYi1w2iBQua3fbimTOmK4HYZgvP7y2inEaALM4IyBVwsWYOVIkN0E
-         P6pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QNRX9KnxWkZ2r9K8YGQq6ZdDeDJ/GrTZUflSmXosl7M=;
-        b=r41Gh2le1OZOrwIV/kcX4E1TZGWRqtXjZQrhixT9YU23DPDn5vIHt9wHhyZEW0IbZJ
-         SD9zV+epWzJf/t8Ja0Uw3puNZfBxs4TUlmXv6+FX0wROiRvvVO0XivLVeSNQ7UUp9Qee
-         Tf1cewGnAO1tUe2pFQzIR1UTbrEgnSP2flxAngrO0pdJ7e7ghmHfhEkYSjJL7SmNgNO8
-         OAWmJ3Zuz8nCw4X5iV7247ijBLHultWHXJLj3aV4+rQKZ+fO63NbBrmA3c1BKgQbhUNU
-         EW1HKPcMhb+jTLl6feN1fmQBVnnXyzp2hn7sIiC9/VgMyhoEVxLOycGsfiqO1rF6k4bt
-         aEXQ==
-X-Gm-Message-State: APjAAAUCBwzDOVFtr81LOcd9WaaQ680WLnDSMI1q+dsiHCaAViR3Jnyv
-        PHF34westCdbYhFFM7S5Ye4=
-X-Google-Smtp-Source: APXvYqywQCAflJJIG/WDcICjNR9y51jZgagcRPT2LEDOooYhRTB2XYGnyCKSbsqBjPF7IaWwtzFTOg==
-X-Received: by 2002:ac8:18b2:: with SMTP id s47mr46754820qtj.75.1559932412813;
-        Fri, 07 Jun 2019 11:33:32 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (187-26-97-17.3g.claro.net.br. [187.26.97.17])
-        by smtp.gmail.com with ESMTPSA id o6sm1604801qtc.47.2019.06.07.11.33.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 11:33:31 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4093741149; Fri,  7 Jun 2019 15:33:28 -0300 (-03)
-Date:   Fri, 7 Jun 2019 15:33:28 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] perf augmented_raw_syscalls: Document clang
- configuration
-Message-ID: <20190607183328.GN21245@kernel.org>
-References: <20190606094845.4800-1-leo.yan@linaro.org>
- <20190606094845.4800-5-leo.yan@linaro.org>
- <20190606140800.GF30166@kernel.org>
- <20190606143532.GD5970@leoy-ThinkPad-X240s>
- <20190606182941.GE21245@kernel.org>
- <20190607143849.GI5970@leoy-ThinkPad-X240s>
+        Fri, 7 Jun 2019 14:34:22 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57ITMNN031647;
+        Fri, 7 Jun 2019 18:34:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=QolDy22uOLtBFa3YAasmOe69CPUw0iodu68OQSiZ4/I=;
+ b=EL5NpsBTmOzBK4E1TTYSBNZF7Fboir2lPBs3P9MB4V6Y3256Qpzxxnr4BOFbyOiMzcUZ
+ CwqkHii0C92he+/EbdutialG4GKTZmUW4oRRIJ/lPjlzcJgPcKL+Cifhtqf6IVvUgmpk
+ hvp7wIHAFB6YKYW0ZatlB++vzVLP+VOkjJ4HJ1/9Q0QkhKtA5yju32rU52FCj3UuO/1R
+ j6h4KtcEFibA1RFLcaHJaDES9I03Dzc8ZpiEfor1GRQnUX87RLCTs7MJBGn7d2+1h8sd
+ OzIwQcwBAu17liXQGF03DhAhVrH825UM4tiPJlDrcLdccLNRLN06eTaFAI59rlPQRk7a Tg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2sugstyxkr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Jun 2019 18:34:12 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57IXxrm045999;
+        Fri, 7 Jun 2019 18:34:12 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2swngk5pdp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Jun 2019 18:34:11 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x57IYB8s001900;
+        Fri, 7 Jun 2019 18:34:11 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Jun 2019 11:34:11 -0700
+Date:   Fri, 7 Jun 2019 11:34:10 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] Documentation: xfs: Fix typo
+Message-ID: <20190607183410.GF1871505@magnolia>
+References: <20190509030549.2253-1-ruansy.fnst@cn.fujitsu.com>
+ <20190607114415.32cb32dd@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190607143849.GI5970@leoy-ThinkPad-X240s>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190607114415.32cb32dd@lwn.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906070123
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906070123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jun 07, 2019 at 10:38:49PM +0800, Leo Yan escreveu:
-> Hi Arnaldo,
+On Fri, Jun 07, 2019 at 11:44:15AM -0600, Jonathan Corbet wrote:
+> On Thu, 9 May 2019 11:05:49 +0800
+> Shiyang Ruan <ruansy.fnst@cn.fujitsu.com> wrote:
 > 
-> On Thu, Jun 06, 2019 at 03:29:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Jun 06, 2019 at 10:35:32PM +0800, Leo Yan escreveu:
-> > > On Thu, Jun 06, 2019 at 11:08:00AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > Em Thu, Jun 06, 2019 at 05:48:45PM +0800, Leo Yan escreveu:
-> > > > > To build this program successfully with clang, there have three
-> > > > > compiler options need to be specified:
-> > > > > 
-> > > > >   - Header file path: tools/perf/include/bpf;
-> > > > >   - Specify architecture;
-> > > > >   - Define macro __NR_CPUS__.
-> > > > 
-> > > > So, this shouldn't be needed, all of this is supposed to be done
-> > > > automagically, have you done a 'make -C tools/perf install'?
-> > > 
-> > > I missed the up operation.  But after git pulled the lastest code base
-> > > from perf/core branch and used the command 'make -C tools/perf
-> > > install', I still saw the eBPF build failure.
-> > > 
-> > > Just now this issue is fixed after I removed the config
-> > > 'clang-bpf-cmd-template' from ~/.perfconfig;  the reason is I followed
-> > > up the Documentation/perf-config.txt to set the config as below:
-> > > 
-> > >   clang-bpf-cmd-template = "$CLANG_EXEC -D__KERNEL__ $CLANG_OPTIONS \
-> > >                           $KERNEL_INC_OPTIONS -Wno-unused-value \
-> > >                           -Wno-pointer-sign -working-directory \
-> > >                           $WORKING_DIR -c $CLANG_SOURCE -target bpf \
-> > >                           -O2 -o -"
-> > > 
-> > > In fact, util/llvm-utils.c has updated the default configuration as
-> > > below:
-> > > 
-> > >   #define CLANG_BPF_CMD_DEFAULT_TEMPLATE                          \
-> > >                 "$CLANG_EXEC -D__KERNEL__ -D__NR_CPUS__=$NR_CPUS "\
-> > >                 "-DLINUX_VERSION_CODE=$LINUX_VERSION_CODE "     \
-> > >                 "$CLANG_OPTIONS $PERF_BPF_INC_OPTIONS $KERNEL_INC_OPTIONS " \
-> > >                 "-Wno-unused-value -Wno-pointer-sign "          \
-> > >                 "-working-directory $WORKING_DIR "              \
-> > >                 "-c \"$CLANG_SOURCE\" -target bpf $CLANG_EMIT_LLVM -O2 -o - $LLVM_OPTIONS_PIPE"
-> > > 
-> > > Maybe should update Documentation/perf-config.txt to tell users the
-> > > real default value of clang-bpf-cmd-template?
+> > In "Y+P" of this line, there are two non-ASCII characters(0xd9 0x8d)
+> > following behind the 'Y'.  Shown as a small '=' under the '+' in VIM
+> > and a '賺' in webpage[1].
 > > 
-> > Sure, if you fell like doing this, please update and also please figure
-> > out when the this changed and add a Fixes: that cset,
+> > I think it's a mistake and remove these strange characters.
+> > 
+> > [1]: https://www.kernel.org/doc/Documentation/filesystems/xfs-delayed-logging-design.txt
+> > 
+> > Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+> > ---
+> >  Documentation/filesystems/xfs-delayed-logging-design.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/filesystems/xfs-delayed-logging-design.txt b/Documentation/filesystems/xfs-delayed-logging-design.txt
+> > index 2ce36439c09f..9a6dd289b17b 100644
+> > --- a/Documentation/filesystems/xfs-delayed-logging-design.txt
+> > +++ b/Documentation/filesystems/xfs-delayed-logging-design.txt
+> > @@ -34,7 +34,7 @@ transaction:
+> >  	   D			A+B+C+D		X+n+m+o
+> >  	    <object written to disk>
+> >  	   E			   E		   Y (> X+n+m+o)
+> > -	   F			  E+F		  Yٍ+p
+> > +	   F			  E+F		  Y+p
 > 
-> Thanks for guidance.  Have sent patch for this [1].
-
-yeah, applied already.
-
-- Arnaldo
- 
-> > Its great that you're going thru the docs and making sure the
-> > differences are noted so that we update the docs, thanks a lot!
+> OK, that does look funky, applied.
 > 
-> You are welcome!
+> This patch probably should have been copied to the XFS list (added), even
+> though get_maintainer.pl doesn't know that.
 
+Yeah, it's "Y+p" not "Y<weird plusequals thing>p" in the xfs
+documentation repo:
 
+https://git.kernel.org/pub/scm/fs/xfs/xfs-documentation.git/tree/design/XFS_Filesystem_Structure/delayed_logging.asciidoc
+
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+I doubt the value of maintaining duplicate copies of this document in
+the kernel and the xfs documentation repo, and since the xfs docs and
+kernel licences aren't compatible maybe we should withdraw one...
+
+...but since Dave is the author I'm gonna punt to him.  IMHO either we
+should claim responsibility for those files in MAINTAINERS or drop them.
+:)
+
+Thanks for the heads-up,
+--D
+
+> Thanks,
+> 
+> jon
