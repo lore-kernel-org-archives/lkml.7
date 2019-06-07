@@ -2,219 +2,129 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33489C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C584C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AD62089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A2B214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FM93wd7J"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="shBn+/bZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbfFGMEG (ORCPT
+        id S1728572AbfFGMEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:04:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44243 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfFGMEF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:04:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so1179660iob.11;
-        Fri, 07 Jun 2019 05:04:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P04I2xCwuF5E99E7jtuBah/fpprx9JlOXUiB4dx+kwU=;
-        b=FM93wd7Jfz9NzXHjCCDySeU9YOiGvNofd9XmBuyjPycuC0Q/d0kL60phEKdb8RFu80
-         0j8T/cYE9OwAzwjX4fzeZVxHQXy6TaLsoyYiHOelj5vAztUe1rKLUTaB1stKnvQsyAw6
-         AS4gI6KO5v9HzsqoqB1ddwbADr4dUh4/qw0lyAJAvdYM6YUxhE7L6t6txdsQmo3qhW2j
-         600mMCvy8DYjs+LCe8twNTUiWRcftwh2ti7anoIFFiNDAv9dBg3GYFkQOr/rLSLIRsJC
-         3YGmo7Lj87K9aGlq8Dh15EsjlEF3R9E1tygTjYE9/fBZvPGmfA3pXOuTIeMHOTdIhCes
-         USvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P04I2xCwuF5E99E7jtuBah/fpprx9JlOXUiB4dx+kwU=;
-        b=A+YX/Z9Z8szd4rJX64b/4V8d+k1zUHhK3Z0gz2meyLYR1lDFvlZk32wjNwkROXCTOW
-         MyaiSjVThqgcQ41QEN/3UAQQMnObWgDA16Jpao4SlsvoZezev4NCcFZPc8XWlk1H3j8+
-         7pNBGNASuw7IQxOt4xMp83oHT/wrCRiJp2jleOQj6oxFAUpKvQJow7m6JLPflzV0ErEg
-         7x/ZdXp8uO2pi6QMrJ+P4sO0St/n2XXeBGgoL6VdTPyvlz7i1SFvJFjoXjVTYKHiBdFi
-         y9ThOj3OUD95aH8oK8UpUdMvZu96WEjTTAeruhtE8wIc8xX66Cf/+xfPRQtT+FE/wqkv
-         95nQ==
-X-Gm-Message-State: APjAAAVY1J0j41ez3h9eXS/uuaIPGorbZNl6VzzZ/REXoDvRfJqxHa4j
-        5G0lZElyZQ+RL8K3Gsim8HeSbz1m
-X-Google-Smtp-Source: APXvYqxGHoc8mTNqWACl5n4g+McLRsiO7mq3KLQ5nLr/z/bNWY+xW7l3vu90fgjvI6yktf1P/msiww==
-X-Received: by 2002:a6b:cd86:: with SMTP id d128mr12895346iog.234.1559909044633;
-        Fri, 07 Jun 2019 05:04:04 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-170-54.pppoe.mtu-net.ru. [91.76.170.54])
-        by smtp.googlemail.com with ESMTPSA id f206sm760276itd.17.2019.06.07.05.04.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 05:04:04 -0700 (PDT)
-Subject: Re: [PATCH V1 3/6] i2c: tegra: fix alignment and spacing violations
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
- <1559908507-31192-3-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fbaf13e3-604a-7df1-6b96-2b7d9dabfa4f@gmail.com>
-Date:   Fri, 7 Jun 2019 15:04:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 7 Jun 2019 08:04:22 -0400
+Received: from ozlabs.org ([203.11.71.1]:46453 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727452AbfFGMEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 08:04:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45L1Qt4FFfz9sNd;
+        Fri,  7 Jun 2019 22:04:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1559909057;
+        bh=SVse233ZP/gfWiwAkphdAiPtrWGA02EH5CK05uTxdco=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=shBn+/bZp4+i7ILKYT0rkicAc6qcmmQP1VlZ3saK03LKB9zc/NDFJ5cjhXqlEHyPz
+         2nllWsT+DJ6D5zDFTOmqEnjXbNpqikUY4YWSMMSeJwu5ucFQSEtL4eZUc6HVdKK4TE
+         qeoWLj3UUE4M9QEUmDXWh2ARrdai0SPhHQww77UvDoWOKjYJt4Bb67lNhTHgNKLPBy
+         6p7Lz1Bv/DqsVATPnHpr/EbevipmxUHrPDNyWaHhD6m4citn/ZVKw/Yu0UerC8T4Bm
+         d5uAfepi6bZG8PmazXKqBSrkpabcAFZqyXErnjGLWQxR8X21ypmE9ZV6+vmRkEQUdV
+         qL0IogG/ZPB0Q==
+Date:   Fri, 7 Jun 2019 22:03:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
+ kprobe_page_fault()
+Message-ID: <20190607220326.1e21fc9c@canb.auug.org.au>
+In-Reply-To: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1559908507-31192-3-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/f4dkIceQ5ZrfVlbLmfAkblH"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.06.2019 14:55, Bitan Biswas пишет:
-> Fix checkpatch.pl alignment and blank line check(s) in i2c-tegra.c
-> 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 35 +++++++++++++++++++----------------
->  1 file changed, 19 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index f7116b7..2d381de 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -295,7 +295,7 @@ static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
->   * to the I2C block inside the DVC block
->   */
->  static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
-> -	unsigned long reg)
-> +					unsigned long reg)
->  {
->  	if (i2c_dev->is_dvc)
->  		reg += (reg >= I2C_TX_FIFO) ? 0x10 : 0x40;
-> @@ -303,7 +303,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
->  }
->  
->  static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
-> -	unsigned long reg)
-> +		       unsigned long reg)
->  {
->  	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
->  
-> @@ -318,13 +318,13 @@ static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
->  }
->  
->  static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
-> -	unsigned long reg, int len)
-> +			unsigned long reg, int len)
->  {
->  	writesl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
->  }
->  
->  static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
-> -	unsigned long reg, int len)
-> +		       unsigned long reg, int len)
->  {
->  	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
->  }
-> @@ -669,10 +669,11 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
->  		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
->  		if (in_interrupt())
->  			err = readl_poll_timeout_atomic(addr, val, val == 0,
-> -					1000, I2C_CONFIG_LOAD_TIMEOUT);
-> +							1000,
-> +							I2C_CONFIG_LOAD_TIMEOUT);
->  		else
-> -			err = readl_poll_timeout(addr, val, val == 0,
-> -					1000, I2C_CONFIG_LOAD_TIMEOUT);
-> +			err = readl_poll_timeout(addr, val, val == 0, 1000,
-> +						 I2C_CONFIG_LOAD_TIMEOUT);
->  
->  		if (err) {
->  			dev_warn(i2c_dev->dev,
-> @@ -1013,7 +1014,8 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
->  }
->  
->  static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
-> -	struct i2c_msg *msg, enum msg_end_type end_state)
-> +			      struct i2c_msg *msg,
-> +			      enum msg_end_type end_state)
->  {
->  	u32 packet_header;
->  	u32 int_mask;
-> @@ -1150,9 +1152,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
->  		if (err)
->  			return err;
->  
-> -		time_left = wait_for_completion_timeout(
-> -						&i2c_dev->dma_complete,
-> -						msecs_to_jiffies(xfer_time));
-> +		time_left = wait_for_completion_timeout(&i2c_dev->dma_complete,
-> +							msecs_to_jiffies(xfer_time));
->  		if (time_left == 0) {
->  			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
->  			dmaengine_terminate_sync(i2c_dev->msg_read ?
-> @@ -1214,7 +1215,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
->  }
->  
->  static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
-> -	int num)
-> +			  int num)
->  {
->  	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
->  	int i;
-> @@ -1260,14 +1261,15 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
->  {
->  	struct device_node *np = i2c_dev->dev->of_node;
->  	int ret;
-> +	bool multi_mode;
->  
->  	ret = of_property_read_u32(np, "clock-frequency",
-> -			&i2c_dev->bus_clk_rate);
-> +				   &i2c_dev->bus_clk_rate);
->  	if (ret)
->  		i2c_dev->bus_clk_rate = 100000; /* default clock rate */
->  
-> -	i2c_dev->is_multimaster_mode = of_property_read_bool(np,
-> -			"multi-master");
-> +	multi_mode = of_property_read_bool(np, "multi-master");
-> +	i2c_dev->is_multimaster_mode = multi_mode;
->  }
->  
->  static const struct i2c_algorithm tegra_i2c_algo = {
-> @@ -1611,7 +1613,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
->  	}
->  
->  	ret = devm_request_irq(&pdev->dev, i2c_dev->irq,
-> -			tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
-> +			       tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to request irq %i\n", i2c_dev->irq);
->  		goto release_dma;
-> @@ -1704,6 +1706,7 @@ static const struct dev_pm_ops tegra_i2c_pm = {
->  	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
->  			   NULL)
->  };
-> +
->  #define TEGRA_I2C_PM	(&tegra_i2c_pm)
->  #else
->  #define TEGRA_I2C_PM	NULL
-> 
-Very nice!
+--Sig_/f4dkIceQ5ZrfVlbLmfAkblH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Hi Anshuman,
+
+On Fri,  7 Jun 2019 16:04:15 +0530 Anshuman Khandual <anshuman.khandual@arm=
+.com> wrote:
+>
+> +static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+> +					      unsigned int trap)
+> +{
+> +	int ret =3D 0;
+> +
+> +	/*
+> +	 * To be potentially processing a kprobe fault and to be allowed
+> +	 * to call kprobe_running(), we have to be non-preemptible.
+> +	 */
+> +	if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
+> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
+> +			ret =3D 1;
+> +	}
+> +	return ret;
+> +}
+
+Since this is now declared as "bool" (thanks for that), you should make
+"ret" be bool and use true and false;
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/f4dkIceQ5ZrfVlbLmfAkblH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz6Uo4ACgkQAVBC80lX
+0GwAlwgAndGNjcRg/+OZtSy1kiUIeIc3sDi7Ok5AjcBz7eTGTC6rACK7/CqF74Ff
+Hw76yMUeoSjtJWLlhqmY0XI4ib30yQJSvSSWJyDvZpmgkDbNO69BK4rT4CO/d2YX
+sCodILuUU462hNmmfr9N6uWJGSeDWdEvbfitkR2PEzQAUSsQacEA8UB+bqf+zQ13
+xwBTJEE0YFg5UCqOcsE3bSTh/e+p7djYHrQIiZX0ntJOra+nJZuz/GfJQUmx4WYn
+AHgcP+Marnv0/MW4JDWYDtetq+Fmr96wk01Ex4gMytm7TcpL0asnQ0IEVwljvVr/
+HFKp+ZJLlwZP8lyt90zY76EEDgViPQ==
+=7Lk0
+-----END PGP SIGNATURE-----
+
+--Sig_/f4dkIceQ5ZrfVlbLmfAkblH--
