@@ -2,123 +2,87 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F0DC468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F23C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2568F208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="iXoOHs0q"
+	by mail.kernel.org (Postfix) with ESMTP id C6824208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559939919;
+	bh=Bv/Z57sNRBiCj/37OETmg8X34CsAqnKoIw0yu/2tidg=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=0xGe97TJ0NE7HmBzpt57ZTkYuyDydc5tC3Br9UKC6hJVg4iefDu/3pYa4G2p2eFLW
+	 0o/uPB9Fsd+h3LjoUSLW2o+Rq4C5anf1Pfo1PtMuJKlsMU0/tDpvtyhN9pYLN9KoZ8
+	 HkQh/QLvcmUNfGEZ+/4hMpQixvJtGtw/kKpb8hEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfFGUhU (ORCPT
+        id S1730233AbfFGUij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:37:20 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35894 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729487AbfFGUhT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:37:19 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c3so3075884otr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:37:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kwl/nkc+IszDeHT62sv1m6fGxfEAM5F5rJvu4oDhrCE=;
-        b=iXoOHs0qLQeKL146DhnpQRL8fyunWXkNhiyrEGM4mBSemtorkbJ+Lf69iPFQOJa/Gu
-         97Z7Zj9tM2EZGj/tnqFMuHcRbrtcN2P9edSdTzjrI3sY9MOfgAKH9+e5MjoUxeF5F0Zc
-         IX/4HIajFNa1uMMtHjO4jNtyaM9hw1AoHCA1upzHQMKDiK/kTjkfpyIOKdWYInDlC0xw
-         DtqXeQoz30yH3g9Wn1/6c59zn+kx7FaVaBGhD/G9is+lvNesOwwpvLWj6HO8+Iu7xKKt
-         UN3q3PaOMFG+sqdZ72Vns2NPyLuL+tkxywHgGlXD5VYzKAww7B5ovRTePAWDkz/oRYPV
-         OXiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kwl/nkc+IszDeHT62sv1m6fGxfEAM5F5rJvu4oDhrCE=;
-        b=SMcseXM/HmiwP/5vmB7plQmRMv51+X9BSEEdTaF8v9P4rjk/HefIQwRt/V0OJgFBtz
-         f4PcKKRbY8exLzH6H9KDKwqvfvSL6p0bNPnh3YKVW6qOGPqf2rYc1Niir0qDygMLliU3
-         4D3fkQtma7jtdlLecpgPZAaUfMTWRRvgfRLO0AMBtounoMLOXdatW2NkRBsufrL+LfQp
-         kwAOHiJGGG54773EyCPBXezyKluvLbvSintOvG3cYDikIaKMmmveLb/8hy7Jy8Lh4O+Y
-         LKPOujuCsTzaTZp/+kJAWjUxdIo5QIYqFsW1Cy5kpytk9bkM+nDZb+z9lqBTwD2GrJPP
-         wB3w==
-X-Gm-Message-State: APjAAAXju7zKPFwFYbnBeV6v0f600HcA/yscMLC/oxbDOQ69kFMeTC5d
-        gItnCGios2V1DPJENq66Wiz4R78GbIWecgUXsyOB2A==
-X-Google-Smtp-Source: APXvYqxyknLc/KKZrXUegoVoEchoENiE3uDTtvta1M+m/gEOhSX8p64QD9se390P/E5smOxnDXWM2sESCdMzk/VkmBs=
-X-Received: by 2002:a9d:470d:: with SMTP id a13mr5538455otf.126.1559939839164;
- Fri, 07 Jun 2019 13:37:19 -0700 (PDT)
+        Fri, 7 Jun 2019 16:38:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729587AbfFGUii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 16:38:38 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1361E208C3;
+        Fri,  7 Jun 2019 20:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559939918;
+        bh=Bv/Z57sNRBiCj/37OETmg8X34CsAqnKoIw0yu/2tidg=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=dvs7AxnoTTxM6KuVZNpZ6dVBRQFQLk4ZgRxUQ8yfTkBD1JIqhKvUe1AB0yXKJyeH7
+         g3/eTCudXDV/1ezouiOt7x7TQFFiUsRNyJZ4WF8gPbUT0vIokFw8yDHkMefjPsoUq5
+         ZBNPYrRkQ5eCw6nxpwQ6MYnZ9t3ZXXD5oIqAJB8o=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <155993563277.3036719.17400338098057706494.stgit@dwillia2-desk3.amr.corp.intel.com>
- <86a49d1a-678e-5e86-180b-e48326d1bdb5@intel.com>
-In-Reply-To: <86a49d1a-678e-5e86-180b-e48326d1bdb5@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 7 Jun 2019 13:37:08 -0700
-Message-ID: <CAPcyv4gvToqPXSy5MKXOX=HvFP2R0F_6DY3qUiagQEKk84BKpg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] EFI Specific Purpose Memory Support
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Keith Busch <keith.busch@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org>
+References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org> <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
+Cc:     david.brown@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Fri, 07 Jun 2019 13:38:37 -0700
+Message-Id: <20190607203838.1361E208C3@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 12:57 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 6/7/19 12:27 PM, Dan Williams wrote:
-> > In support of optionally allowing either application-exclusive and
-> > core-kernel-mm managed access to differentiated memory, claim
-> > EFI_MEMORY_SP ranges for exposure as device-dax instances by default.
-> > Such instances can be directly owned / mapped by a
-> > platform-topology-aware application. Alternatively, with the new kmem
-> > facility [4], the administrator has the option to instead designate that
-> > those memory ranges be hot-added to the core-kernel-mm as a unique
-> > memory numa-node. In short, allow for the decision about what software
-> > agent manages specific-purpose memory to be made at runtime.
->
-> It's probably worth noting that the reason the memory lands into the
-> state of being controlled by device-dax by default is that device-dax is
-> nice.  It's actually willing and able to give up ownership of the memory
-> when we ask.  If we added to the core-mm, we'd almost certainly not be
-> able to get it back reliably.
->
-> Anyway, thanks for doing these, and I really hope that the world's
-> BIOSes actually use this flag.
+Quoting Jeffrey Hugo (2019-05-21 07:52:28)
+> On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
+> > The multimedia clock controller (mmcc) is the main clock controller for
+> > the multimedia subsystem and is required to enable things like display =
+and
+> > camera.
+>=20
+> Stephen, I think this series is good to go, and I have display/gpu stuff =
 
-It should be noted that the flag is necessary, but not sufficient to
-route this memory range to device-dax. The BIOS must also publish ACPI
-HMAT performance data for the range so the OS has a chance of knowing
-*why* the memory is "reserved for a specific purpose", and delineate
-the boundaries of multiple performance differentiated memory ranges
-that might be combined into one shared / contiguous EFI memory
-descriptor.
+> I'm polishing that will depend on this.  Would you kindly pickup patches =
 
-With no HMAT the memory will be reserved, but no dax-device will be
-surfaced. Perhaps this implementation also needs a WARN_TAINT(...,
-TAINT_FIRMWARE_WORKAROUND...) to scream about a BIOS that fails to
-publish the required HMAT entries, or perhaps even better a command
-line option to ignore the flag so that the core-mm can pick up the
-memory by default?
+> 1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 and 6.
+>=20
+
+If I apply patch 3 won't it break boot until patch 2 is also in the
+tree? That seems to imply that I'll break bisection, and we have
+kernelci boot testing clk-next so this will probably set off alarms
+somewhere.
+
+I thought we had some code that got removed that was going to make the
+transition "seamless" in the sense that it would search the tree for an
+RPM clk controller and then not add the XO fixed factor clk somehow.
+See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
+clocks") for the code that we removed. So ideally we do something like
+this too, but now we search for a property on the calling node to see if
+the XO clk is there?
+
