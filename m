@@ -2,72 +2,184 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3E3C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD91C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3763F208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3FE2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:46:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GMH5Pk0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfFGOqd (ORCPT
+        id S1729212AbfFGOqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:46:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38360 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728198AbfFGOqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:46:33 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1CD983082126;
-        Fri,  7 Jun 2019 14:46:12 +0000 (UTC)
-Received: from treble (ovpn-124-241.rdu2.redhat.com [10.10.124.241])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 53D267DE49;
-        Fri,  7 Jun 2019 14:45:56 +0000 (UTC)
-Date:   Fri, 7 Jun 2019 10:45:54 -0400
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 04/15] x86/ftrace: Add pt_regs frame annotations
-Message-ID: <20190607144554.jcjgwab7lgsqtti4@treble>
-References: <20190605130753.327195108@infradead.org>
- <20190605131944.770117090@infradead.org>
+        Fri, 7 Jun 2019 10:46:54 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:5116 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbfFGOqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:46:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cfa78db0000>; Fri, 07 Jun 2019 07:46:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 07 Jun 2019 07:46:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 07 Jun 2019 07:46:52 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 14:46:50 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Jun 2019 14:46:51 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cfa78d50000>; Fri, 07 Jun 2019 07:46:50 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
+CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V9 00/15] Add Tegra194 PCIe support
+Date:   Fri, 7 Jun 2019 20:16:25 +0530
+Message-ID: <20190607144640.13427-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190605131944.770117090@infradead.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 07 Jun 2019 14:46:32 +0000 (UTC)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559918812; bh=w+RZiLEBEOZjbsMK8N679FNYBkSuyDWniXmfWfFxw/0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=GMH5Pk0QwJr5i8HHaqC5YRO7QfDwXcLN8FKgJm+wSbl04iv+w04bncroUIRtY22f6
+         uFVS+x7MNTDLWE0kenPUyrPYb1JLsmAsaP86CGSIpoHGOC3NkTokWFdAkc5AW5a3XO
+         P6JMBCL1iyC3CSkzG+K5N/LoXd7+mfiX4w5JfzBiOY3sUrQ/Q9VP+xGk+NK3a8DUT/
+         MI54yuKfbf8hRM1jrLDWx37GaQmBgasoXuh1lnCxTXoYC3PVw1f+puCADCGG/ta8t2
+         GYxd4vFhwqQ6aMQICedPb37mCQUZ7JsSES4UNUfRV0hB856STZBCIbbkHIcybV/80A
+         K/q0DgVRf5fEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 03:07:57PM +0200, Peter Zijlstra wrote:
-> When CONFIG_FRAME_POINTER, we should mark pt_regs frames.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+to PCIe controller
+This patch series
+- Adds support for P2U PHY driver
+- Adds support for PCIe host controller
+- Adds device tree nodes each PCIe controllers
+- Enables nodes applicable to p2972-0000 platform
+- Adds helper APIs in Designware core driver to get capability regs offset
+- Adds defines for new feature registers of PCIe spec revision 4
+- Makes changes in DesignWare core driver to get Tegra194 PCIe working
 
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Testing done on P2972-0000 platform
+- Able to get PCIe link up with on-board Marvel eSATA controller
+- Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+- Able to do data transfers with both SATA drives and NVMe cards
+
+Note
+- Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+  It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+  disabled in this patch series. A future patch series would enable this.
+- This series is based on top of the following series
+  Jisheng's patches to add support to .remove() in Designware sub-system
+  https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+  (Jisheng's patches are now accepted and applied for v5.2)
+  My patches made on top of Jisheng's patches to export various symbols
+  https://patchwork.kernel.org/project/linux-pci/list/?series=101259
+
+Changes since [v8]:
+* Made the drivers dependent on ARCH_TEGRA_194_SOC directly
+* Addressed review comments from Dmitry
+
+Changes since [v7]:
+* Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
+* Addressed review comments from Thierry and Rob
+
+Changes since [v6]:
+* Took care of review comments from Rob
+* Added a quirk to disable MSI for root ports
+* Removed using pcie_pme_disable_msi() API in host controller driver
+
+Changes since [v5]:
+* Removed patch that exports pcie_bus_config symbol
+* Took care of review comments from Thierry and Rob
+
+Changes since [v4]:
+* Removed redundant APIs in pcie-designware-ep.c file after moving them
+  to pcie-designware.c file based on Bjorn's review comments
+
+Changes since [v3]:
+* Rebased on top of linux-next top of the tree
+* Addressed Gustavo's comments and added his Ack for some of the changes.
+
+Changes since [v2]:
+* Addressed review comments from Thierry
+
+Changes since [v1]:
+* Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+* Added more patches in v2 series
+
+Vidya Sagar (15):
+  PCI: Add #defines for some of PCIe spec r4.0 features
+  PCI: Disable MSI for Tegra194 root port
+  PCI: dwc: Perform dbi regs write lock towards the end
+  PCI: dwc: Move config space capability search API
+  PCI: dwc: Add ext config space capability search API
+  dt-bindings: PCI: designware: Add binding for CDM register check
+  PCI: dwc: Add support to enable CDM register check
+  dt-bindings: Add PCIe supports-clkreq property
+  dt-bindings: PCI: tegra: Add device tree support for Tegra194
+  dt-bindings: PHY: P2U: Add Tegra194 P2U block
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT
+  arm64: tegra: Enable PCIe slots in P2972-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support
+  PCI: tegra: Add Tegra194 PCIe support
+  arm64: Add Tegra194 PCIe driver to defconfig
+
+ .../bindings/pci/designware-pcie.txt          |    5 +
+ .../bindings/pci/nvidia,tegra194-pcie.txt     |  155 ++
+ Documentation/devicetree/bindings/pci/pci.txt |    5 +
+ .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |    2 +-
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |   41 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  437 +++++
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/pci/controller/dwc/Kconfig            |   10 +
+ drivers/pci/controller/dwc/Makefile           |    1 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+ .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |   87 +
+ drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 1621 +++++++++++++++++
+ drivers/pci/quirks.c                          |   23 +
+ drivers/phy/tegra/Kconfig                     |    7 +
+ drivers/phy/tegra/Makefile                    |    1 +
+ drivers/phy/tegra/phy-tegra194-p2u.c          |  109 ++
+ include/uapi/linux/pci_regs.h                 |   22 +-
+ 20 files changed, 2575 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+ create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
 
 -- 
-Josh
+2.17.1
+
