@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AECC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859FBC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262CA21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9FA214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922290;
-	bh=Bw0g5FLiG92QgvG8Pgr5tS+MqI1u4cPdgbtJLo51+TM=;
+	s=default; t=1559922295;
+	bh=eeOWfvVi0TzpXJgbUJuj17sjR8JZbbalEfDNIa8GdQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UEq9h/WbFl4+fNSEuWwCbkmmzPi+EVFT0uZwPUrxL0qi8F69IFJTKFwjnBTwS2q40
-	 exrVNBUvpiUdCwm1UW2x68/aR4tgKi6HmloEDxfXy6p41HWdPC+UQiC/x2ftJoOkXI
-	 sXBA9gBX2QjTrZqEV0OPcOTJPgKgU059z4XT9P4Q=
+	b=BEje6XMCub0wHppJblb11Z6XtNr+GCm6bddb1WZzBxg+YBjQqKZDrRV0vlkSPIIUR
+	 g2BQMgC7rn7XYTKOyl66/PhORhZ3lv3l/jrzqva/qsIXmXyiBHGFeqZi8Bko4T1mt0
+	 B6VvCGaiOp4UAimjjP3SgZgKB2RzpOPKhgLscJts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfFGPot (ORCPT
+        id S1730487AbfFGPoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:44:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56338 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731135AbfFGPoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:46 -0400
+        id S1730489AbfFGPou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 509032146E;
-        Fri,  7 Jun 2019 15:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A75EC2146E;
+        Fri,  7 Jun 2019 15:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922284;
-        bh=Bw0g5FLiG92QgvG8Pgr5tS+MqI1u4cPdgbtJLo51+TM=;
+        s=default; t=1559922290;
+        bh=eeOWfvVi0TzpXJgbUJuj17sjR8JZbbalEfDNIa8GdQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gqPnd312GgEh8oZdqy8lTbYQk5BuHI+Ul9p5J9TXvnNIrGdtz9C0Kv0muMtLJVFuK
-         +5VeDJw1A2Q6xOGATNpQ7++TRRlrcFKgaNc7CE8vH9QrTd8uXYnGRTvvrwB2/adx/H
-         fIw/aHjTMI3prSe4xeYMY9vqxT8JryIAXgyHTFjE=
+        b=dvZQZdDBl9b0bYmaLN3PrcrdGJdzsBw3d+GIiOjroXVi9jrzNAjJ5YDMWlKDsUY+r
+         tt+AP6DkaIubn5ODw3LQ9a8Lw9LDM/xiUMsyz/Rn4bfy6ByqXkel5yTciGRnGxfwBC
+         I3aGgDR1XL+prtbbgQUNqUOEbKx5d+xkBMPQ9zxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+5255458d5e0a2b10bbb9@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 31/73] ALSA: line6: Assure canceling delayed work at disconnection
-Date:   Fri,  7 Jun 2019 17:39:18 +0200
-Message-Id: <20190607153852.547645726@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Kailang Yang <kailang@realtek.com>,
+        Hui Wang <hui.wang@canonical.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 33/73] ALSA: hda/realtek - Improve the headset mic for Acer Aspire laptops
+Date:   Fri,  7 Jun 2019 17:39:20 +0200
+Message-Id: <20190607153852.787979693@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -60,142 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 0b074ab7fc0d575247b9cc9f93bb7e007ca38840 upstream.
+commit 9cb40eb184c4220d244a532bd940c6345ad9dbd9 upstream.
 
-The current code performs the cancel of a delayed work at the late
-stage of disconnection procedure, which may lead to the access to the
-already cleared state.
+We met another Acer Aspire laptop which has the problem on the
+headset-mic, the Pin 0x19 is not set the corret configuration for a
+mic and the pin presence can't be detected too after plugging a
+headset. Kailang suggested that we should set the coeff to enable the
+mic and apply the ALC269_FIXUP_LIFEBOOK_EXTMIC. After doing that,
+both headset-mic presence and headset-mic work well.
 
-This patch assures to call cancel_delayed_work_sync() at the beginning
-of the disconnection procedure for avoiding that race.  The delayed
-work object is now assigned in the common line6 object instead of its
-derivative, so that we can call cancel_delayed_work_sync().
+The existing ALC255_FIXUP_ACER_MIC_NO_PRESENCE set the headset-mic
+jack to be a phantom jack. Now since the jack can support presence
+unsol event, let us imporve it to set the jack to be a normal jack.
 
-Along with the change, the startup function is called via the new
-callback instead.  This will make it easier to port other LINE6
-drivers to use the delayed work for startup in later patches.
-
-Reported-by: syzbot+5255458d5e0a2b10bbb9@syzkaller.appspotmail.com
-Fixes: 7f84ff68be05 ("ALSA: line6: toneport: Fix broken usage of timer for delayed execution")
+https://bugs.launchpad.net/bugs/1821269
+Fixes: 5824ce8de7b1c ("ALSA: hda/realtek - Add support for Acer Aspire E5-475 headset mic")
+Cc: Chris Chiu <chiu@endlessm.com>
+CC: Daniel Drake <drake@endlessm.com>
 Cc: <stable@vger.kernel.org>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/driver.c   |   12 ++++++++++++
- sound/usb/line6/driver.h   |    4 ++++
- sound/usb/line6/toneport.c |   15 +++------------
- 3 files changed, 19 insertions(+), 12 deletions(-)
+ sound/pci/hda/patch_realtek.c |   16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -720,6 +720,15 @@ static int line6_init_cap_control(struct
- 	return 0;
- }
- 
-+static void line6_startup_work(struct work_struct *work)
-+{
-+	struct usb_line6 *line6 =
-+		container_of(work, struct usb_line6, startup_work.work);
-+
-+	if (line6->startup)
-+		line6->startup(line6);
-+}
-+
- /*
- 	Probe USB device.
- */
-@@ -755,6 +764,7 @@ int line6_probe(struct usb_interface *in
- 	line6->properties = properties;
- 	line6->usbdev = usbdev;
- 	line6->ifcdev = &interface->dev;
-+	INIT_DELAYED_WORK(&line6->startup_work, line6_startup_work);
- 
- 	strcpy(card->id, properties->id);
- 	strcpy(card->driver, driver_name);
-@@ -825,6 +835,8 @@ void line6_disconnect(struct usb_interfa
- 	if (WARN_ON(usbdev != line6->usbdev))
- 		return;
- 
-+	cancel_delayed_work(&line6->startup_work);
-+
- 	if (line6->urb_listen != NULL)
- 		line6_stop_listen(line6);
- 
---- a/sound/usb/line6/driver.h
-+++ b/sound/usb/line6/driver.h
-@@ -178,11 +178,15 @@ struct usb_line6 {
- 			fifo;
- 	} messages;
- 
-+	/* Work for delayed PCM startup */
-+	struct delayed_work startup_work;
-+
- 	/* If MIDI is supported, buffer_message contains the pre-processed data;
- 	 * otherwise the data is only in urb_listen (buffer_incoming).
- 	 */
- 	void (*process_message)(struct usb_line6 *);
- 	void (*disconnect)(struct usb_line6 *line6);
-+	void (*startup)(struct usb_line6 *line6);
- };
- 
- extern char *line6_alloc_sysex_buffer(struct usb_line6 *line6, int code1,
---- a/sound/usb/line6/toneport.c
-+++ b/sound/usb/line6/toneport.c
-@@ -54,9 +54,6 @@ struct usb_line6_toneport {
- 	/* Firmware version (x 100) */
- 	u8 firmware_version;
- 
--	/* Work for delayed PCM startup */
--	struct delayed_work pcm_work;
--
- 	/* Device type */
- 	enum line6_device_type type;
- 
-@@ -241,12 +238,8 @@ static int snd_toneport_source_put(struc
- 	return 1;
- }
- 
--static void toneport_start_pcm(struct work_struct *work)
-+static void toneport_startup(struct usb_line6 *line6)
- {
--	struct usb_line6_toneport *toneport =
--		container_of(work, struct usb_line6_toneport, pcm_work.work);
--	struct usb_line6 *line6 = &toneport->line6;
--
- 	line6_pcm_acquire(line6->line6pcm, LINE6_STREAM_MONITOR, true);
- }
- 
-@@ -394,7 +387,7 @@ static int toneport_setup(struct usb_lin
- 	if (toneport_has_led(toneport))
- 		toneport_update_led(toneport);
- 
--	schedule_delayed_work(&toneport->pcm_work,
-+	schedule_delayed_work(&toneport->line6.startup_work,
- 			      msecs_to_jiffies(TONEPORT_PCM_DELAY * 1000));
- 	return 0;
- }
-@@ -407,8 +400,6 @@ static void line6_toneport_disconnect(st
- 	struct usb_line6_toneport *toneport =
- 		(struct usb_line6_toneport *)line6;
- 
--	cancel_delayed_work_sync(&toneport->pcm_work);
--
- 	if (toneport_has_led(toneport))
- 		toneport_remove_leds(toneport);
- }
-@@ -424,9 +415,9 @@ static int toneport_init(struct usb_line
- 	struct usb_line6_toneport *toneport =  (struct usb_line6_toneport *) line6;
- 
- 	toneport->type = id->driver_info;
--	INIT_DELAYED_WORK(&toneport->pcm_work, toneport_start_pcm);
- 
- 	line6->disconnect = line6_toneport_disconnect;
-+	line6->startup = toneport_startup;
- 
- 	/* initialize PCM subsystem: */
- 	err = line6_init_pcm(line6, &toneport_pcm_properties);
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6084,13 +6084,15 @@ static const struct hda_fixup alc269_fix
+ 		.chain_id = ALC269_FIXUP_THINKPAD_ACPI,
+ 	},
+ 	[ALC255_FIXUP_ACER_MIC_NO_PRESENCE] = {
+-		.type = HDA_FIXUP_PINS,
+-		.v.pins = (const struct hda_pintbl[]) {
+-			{ 0x19, 0x01a1913c }, /* use as headset mic, without its own jack detect */
+-			{ }
++		.type = HDA_FIXUP_VERBS,
++		.v.verbs = (const struct hda_verb[]) {
++			/* Enable the Mic */
++			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x45 },
++			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5089 },
++			{}
+ 		},
+ 		.chained = true,
+-		.chain_id = ALC255_FIXUP_HEADSET_MODE
++		.chain_id = ALC269_FIXUP_LIFEBOOK_EXTMIC
+ 	},
+ 	[ALC255_FIXUP_ASUS_MIC_NO_PRESENCE] = {
+ 		.type = HDA_FIXUP_PINS,
+@@ -7122,6 +7124,10 @@ static const struct snd_hda_pin_quirk al
+ 		{0x19, 0x0181303F},
+ 		{0x21, 0x0221102f}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1025, "Acer", ALC255_FIXUP_ACER_MIC_NO_PRESENCE,
++		{0x12, 0x90a60140},
++		{0x14, 0x90170120},
++		{0x21, 0x02211030}),
++	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1025, "Acer", ALC255_FIXUP_ACER_MIC_NO_PRESENCE,
+ 		{0x12, 0x90a601c0},
+ 		{0x14, 0x90171120},
+ 		{0x21, 0x02211030}),
 
 
