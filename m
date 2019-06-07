@@ -2,94 +2,221 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D891C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37644C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156DA212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074EE208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:18:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0h625BH/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UkkXvQUz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfFGNP7 (ORCPT
+        id S1728726AbfFGNSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 09:15:59 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59208 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728487AbfFGNP6 (ORCPT
+        Fri, 7 Jun 2019 09:18:07 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:56451 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727467AbfFGNSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 09:15:58 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57D90CD170363;
-        Fri, 7 Jun 2019 13:15:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=AnxeMW2yKku5zXHYhBhTJHK6a2GW6KArjD0e2vKaQ/Q=;
- b=0h625BH/hWSodjzp2HsgRJZ4BXpggoiSMD+eizHjFYSa7DYFPWCwy+5LxYHVneq8E/nA
- NYPgz/YqvzYeO88AnDDiH9NB3qz7GSP7GwxxeIu6l3e4P4aB6F6lkQdFuM4ueW0AnPGp
- dzbxa2JVVooAKSchwTE2yRMkDPvTxSNBZoqSSJH1kDZN7ENPpE+3KjHy4a/4hiCLFtmH
- lp6bqxMb3R9us3XPIFWSmyVj9QUnPsh+8RJ1NBXF+68H3wh9FTLrQkag2h7LykYcxa+b
- tlRvdzdSRys1SIBFE12w0wNFl46A5R38sX8S8dX+0lVIlQLYmuZWxYouK9yTH4/XnFNm yw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2suevdxfef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 13:15:49 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57DEkjN181041;
-        Fri, 7 Jun 2019 13:15:49 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2swnhd8kjx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 13:15:49 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x57DFmjb031376;
-        Fri, 7 Jun 2019 13:15:48 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 06:15:47 -0700
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Intel SCU Linux support <intel-linux-scu@intel.com>,
-        Artur Paszkiewicz <artur.paszkiewicz@intel.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jiri Kosina <trivial@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH trivial] scsi: isci: Grammar s/the its/its/
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190607113426.14937-1-geert+renesas@glider.be>
-Date:   Fri, 07 Jun 2019 09:15:45 -0400
-In-Reply-To: <20190607113426.14937-1-geert+renesas@glider.be> (Geert
-        Uytterhoeven's message of "Fri, 7 Jun 2019 13:34:26 +0200")
-Message-ID: <yq14l51leny.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Fri, 7 Jun 2019 09:18:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1559913513; x=1591449513;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Yc969BoWhmiS9qHR4q79BQ4HSMy5w/pXrnIo0UWQJmY=;
+  b=UkkXvQUzN7tsWlwtELDMqlg+UgWuY986h2iNKpdCv8ySchRj3fpDb//V
+   RMN+Ml6hqP4/x6uGol8aTHUApEwm33xkAohSIxWLfC9LAgEnOU4nlOTor
+   HYLsLr6UhCaYadQFV5U6seZ8PsLycn5h1Z3SG2edeL3T4DDhz7DDXxRYT
+   GOiA33eFN0k/w+L3rC+YCA2oRgejABXCS54uLTzDjBikb0MLtFRPEel5g
+   wkFJzffoohUhZDDCnMFbgQyldWBC9A3gF51KQRWxJ2rqbUQvJzSv0fOxl
+   gxpOcuUSf161ZzYBj2k/VKM1IgcgrfV+kfVK7+geXvkvLjVOkSr5UcLRv
+   w==;
+X-IronPort-AV: E=Sophos;i="5.63,563,1557158400"; 
+   d="scan'208";a="209674981"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2019 21:18:32 +0800
+IronPort-SDR: rmtvv5nKXeyRyZxuWjbCVuAKeQ1mrf7MA2JIu3qYWO6NfbWid60j3nK929FRtGwwsYR6v/piXJ
+ qch08UWSWH53cN5LEHX/1Kp6Mo1YEi8MiLcPsk3s3tRhPhtYPXJEIrbceZD2QjiRxYFytzezA0
+ 5es02aPxo0Fw+D++kZhqp6MNKd9MJuG9JqpiD+y0Q8oQtNsBG/ZjJOAgfN3p3DeGQZdUfQ7J4+
+ egUCSKM5QR4ohvB5xlf3ZfEaoWRo776Bn2wcJJ5XR4jX3aCwQH17S5oaL81+TeYk8vTSeq7kdp
+ 3YQEwJKCBQesSTy4+KTig/LS
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP; 07 Jun 2019 05:55:22 -0700
+IronPort-SDR: nIMyNf0cdHsV8clYR97sR6yXmzQaSw1ZOwFyLEPpECQq4biZuhMO0Yv/Q61ZpBW8ELsOnf0S8y
+ OEwLWN0J73Ef1CzjUM3ajO9XtRg/y+r017FHj+JrQ1GEkkVZsdoR2MsA4Di571aBB6zej8qt9u
+ F1GQNr/rBL738AotV5qHDshK0NKHNlDHU3Qa4BgCpEXuu1DZs5yOIdP4cz5BR9TdizAMaupWYC
+ pVNtp9ckZYBLrAsBWtNneR9Ss37NfgtRlu5KTkz1wwEsJGaQk+yZdBFKQkWaZpS2aUWGzvXXry
+ Z5I=
+Received: from naota.dhcp.fujisawa.hgst.com (HELO naota.fujisawa.hgst.com) ([10.149.53.115])
+  by uls-op-cesaip02.wdc.com with ESMTP; 07 Jun 2019 06:18:03 -0700
+From:   Naohiro Aota <naohiro.aota@wdc.com>
+To:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>
+Subject: [PATCH 02/12] btrfs-progs: utils: Introduce queue_param
+Date:   Fri,  7 Jun 2019 22:17:41 +0900
+Message-Id: <20190607131751.5359-2-naohiro.aota@wdc.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607131751.5359-1-naohiro.aota@wdc.com>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131751.5359-1-naohiro.aota@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=785
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070093
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=846 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070093
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Introduce the queue_param function to get a device request queue
+parameter and this function to test if the device is an SSD in
+is_ssd().
 
-Geert,
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+[Naohiro] fixed error return value
+Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+---
+ mkfs/main.c | 40 ++--------------------------------------
+ utils.c     | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ utils.h     |  1 +
+ 3 files changed, 49 insertions(+), 38 deletions(-)
 
-Applied to 5.3/scsi-queue. Thanks.
-
+diff --git a/mkfs/main.c b/mkfs/main.c
+index b442e6e40c37..93c0b71c864e 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -404,49 +404,13 @@ static int zero_output_file(int out_fd, u64 size)
+ 
+ static int is_ssd(const char *file)
+ {
+-	blkid_probe probe;
+-	char wholedisk[PATH_MAX];
+-	char sysfs_path[PATH_MAX];
+-	dev_t devno;
+-	int fd;
+ 	char rotational;
+ 	int ret;
+ 
+-	probe = blkid_new_probe_from_filename(file);
+-	if (!probe)
++	ret = queue_param(file, "rotational", &rotational, 1);
++	if (ret < 1)
+ 		return 0;
+ 
+-	/* Device number of this disk (possibly a partition) */
+-	devno = blkid_probe_get_devno(probe);
+-	if (!devno) {
+-		blkid_free_probe(probe);
+-		return 0;
+-	}
+-
+-	/* Get whole disk name (not full path) for this devno */
+-	ret = blkid_devno_to_wholedisk(devno,
+-			wholedisk, sizeof(wholedisk), NULL);
+-	if (ret) {
+-		blkid_free_probe(probe);
+-		return 0;
+-	}
+-
+-	snprintf(sysfs_path, PATH_MAX, "/sys/block/%s/queue/rotational",
+-		 wholedisk);
+-
+-	blkid_free_probe(probe);
+-
+-	fd = open(sysfs_path, O_RDONLY);
+-	if (fd < 0) {
+-		return 0;
+-	}
+-
+-	if (read(fd, &rotational, 1) < 1) {
+-		close(fd);
+-		return 0;
+-	}
+-	close(fd);
+-
+ 	return rotational == '0';
+ }
+ 
+diff --git a/utils.c b/utils.c
+index c6cdc8f01dc1..7d5a1f3b7f8d 100644
+--- a/utils.c
++++ b/utils.c
+@@ -65,6 +65,52 @@ static unsigned short rand_seed[3];
+ 
+ struct btrfs_config bconf;
+ 
++/*
++ * Get a device request queue parameter.
++ */
++int queue_param(const char *file, const char *param, char *buf, size_t len)
++{
++	blkid_probe probe;
++	char wholedisk[PATH_MAX];
++	char sysfs_path[PATH_MAX];
++	dev_t devno;
++	int fd;
++	int ret;
++
++	probe = blkid_new_probe_from_filename(file);
++	if (!probe)
++		return 0;
++
++	/* Device number of this disk (possibly a partition) */
++	devno = blkid_probe_get_devno(probe);
++	if (!devno) {
++		blkid_free_probe(probe);
++		return 0;
++	}
++
++	/* Get whole disk name (not full path) for this devno */
++	ret = blkid_devno_to_wholedisk(devno,
++			wholedisk, sizeof(wholedisk), NULL);
++	if (ret) {
++		blkid_free_probe(probe);
++		return 0;
++	}
++
++	snprintf(sysfs_path, PATH_MAX, "/sys/block/%s/queue/%s",
++		 wholedisk, param);
++
++	blkid_free_probe(probe);
++
++	fd = open(sysfs_path, O_RDONLY);
++	if (fd < 0)
++		return 0;
++
++	len = read(fd, buf, len);
++	close(fd);
++
++	return len;
++}
++
+ /*
+  * Discard the given range in one go
+  */
+diff --git a/utils.h b/utils.h
+index 7c5eb798557d..47321f62c8e0 100644
+--- a/utils.h
++++ b/utils.h
+@@ -121,6 +121,7 @@ int get_label(const char *btrfs_dev, char *label);
+ int set_label(const char *btrfs_dev, const char *label);
+ 
+ char *__strncpy_null(char *dest, const char *src, size_t n);
++int queue_param(const char *file, const char *param, char *buf, size_t len);
+ int is_block_device(const char *file);
+ int is_mount_point(const char *file);
+ int is_path_exist(const char *file);
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.21.0
+
