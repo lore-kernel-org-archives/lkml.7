@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C3FC468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FBCC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9D820657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F09E20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922785;
-	bh=ET5qG1XoF3OZACkbA9mNkVFZr/Isn+mUK3xZc6ixKhU=;
+	s=default; t=1559922796;
+	bh=rSQyGOMQ6OMJje46NqgsQ88DSyiCPqA1B4v+M1aEzs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uz7lx8sCyRl5dSNt+uZpglDzsvIpRPGB378lvYhMIuKVXpfHhoYyVJzpwxLg6h+M8
-	 P/BB+7lGRKXcHsLLz/cZ2+FyWv4IftqOEj3vfq8yiYy5LydI3f6/HtbIi4QRheIIKn
-	 JxTH9o5k+SGo2DDFNYMgHLhQBgq8egLzFry99qhg=
+	b=s37cL4Cb0bEvlXzroEiTNY5VoJClWjNsgWRxff8+WgAPYQNPC0MYNMKFXqPAA+RlI
+	 3Ak8kkvn9pDNOrJg0vMfUwXdkf7lm2QNvP6pRrm0mnzChMZLp+j7VdM4hRjgNXTrg5
+	 LeWqAzetHtX+PgUTZJLXhpDUBUCavX2Vhd/1C4F4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731768AbfFGPsY (ORCPT
+        id S1732021AbfFGPxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33572 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:53:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbfFGPsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:48:20 -0400
+        id S1731718AbfFGPsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0DAA2147A;
-        Fri,  7 Jun 2019 15:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 738EB2146E;
+        Fri,  7 Jun 2019 15:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922500;
-        bh=ET5qG1XoF3OZACkbA9mNkVFZr/Isn+mUK3xZc6ixKhU=;
+        s=default; t=1559922492;
+        bh=rSQyGOMQ6OMJje46NqgsQ88DSyiCPqA1B4v+M1aEzs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxJn9ERw4OvfBJ8jnhl7X2o+Fud0ymsQe2nRhN31XX1miwD3xCDOgVQcvJlGWMat5
-         WaUZdS1eBqaj3/YnoZjK5/BUCXRWrDOs3hY10cRSuaYn9MvJ/E5TldVGfj9TNoGyDF
-         u2FrF0tgUqwqxA2rLu+tayVHBDnTXrnjoSq9f/aw=
+        b=jYmY0hNBi07TXMo6vZ4vknjitJaEbsNVEnKMnENXhgx9++Gi2Qhdily+U6JKtkxp1
+         GQzsaIo8x4u0REnzZiTcLMuqLgs5uZdyzQkfcgDsi1Sy11VZaqtPeE7z1bqSXswM5l
+         oQ889Mml28WewkwS7J8YeG3RO9MC6jGWvaQtI9ws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Paul Mackerras <paulus@ozlabs.org>
-Subject: [PATCH 5.1 36/85] KVM: PPC: Book3S HV: Restore SPRG3 in kvmhv_p9_guest_entry()
-Date:   Fri,  7 Jun 2019 17:39:21 +0200
-Message-Id: <20190607153853.721213391@linuxfoundation.org>
+        stable@vger.kernel.org, Juan Erbes <jerbes@gmail.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.1 25/85] btrfs: qgroup: Check bg while resuming relocation to avoid NULL pointer dereference
+Date:   Fri,  7 Jun 2019 17:39:10 +0200
+Message-Id: <20190607153852.354385547@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -60,39 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit d724c9e54939a597592de3659541da11fc7aa112 upstream.
+commit 57949d033a09c57d77be218b5bec07af6878ab32 upstream.
 
-The sprgs are a set of 4 general purpose sprs provided for software use.
-SPRG3 is special in that it can also be read from userspace. Thus it is
-used on linux to store the cpu and numa id of the process to speed up
-syscall access to this information.
+[BUG]
+When mounting a fs with reloc tree and has qgroup enabled, it can cause
+NULL pointer dereference at mount time:
 
-This register is overwritten with the guest value on kvm guest entry,
-and so needs to be restored on exit again. Thus restore the value on
-the guest exit path in kvmhv_p9_guest_entry().
+  BUG: kernel NULL pointer dereference, address: 00000000000000a8
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 0 P4D 0
+  Oops: 0000 [#1] PREEMPT SMP NOPTI
+  RIP: 0010:btrfs_qgroup_add_swapped_blocks+0x186/0x300 [btrfs]
+  Call Trace:
+   replace_path.isra.23+0x685/0x900 [btrfs]
+   merge_reloc_root+0x26e/0x5f0 [btrfs]
+   merge_reloc_roots+0x10a/0x1a0 [btrfs]
+   btrfs_recover_relocation+0x3cd/0x420 [btrfs]
+   open_ctree+0x1bc8/0x1ed0 [btrfs]
+   btrfs_mount_root+0x544/0x680 [btrfs]
+   legacy_get_tree+0x34/0x60
+   vfs_get_tree+0x2d/0xf0
+   fc_mount+0x12/0x40
+   vfs_kern_mount.part.12+0x61/0xa0
+   vfs_kern_mount+0x13/0x20
+   btrfs_mount+0x16f/0x860 [btrfs]
+   legacy_get_tree+0x34/0x60
+   vfs_get_tree+0x2d/0xf0
+   do_mount+0x81f/0xac0
+   ksys_mount+0xbf/0xe0
+   __x64_sys_mount+0x25/0x30
+   do_syscall_64+0x65/0x240
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Cc: stable@vger.kernel.org # v4.20+
-Fixes: 95a6432ce9038 ("KVM: PPC: Book3S HV: Streamlined guest entry/exit path on P9 for radix guests")
+[CAUSE]
+In btrfs_recover_relocation(), we don't have enough info to determine
+which block group we're relocating, but only to merge existing reloc
+trees.
 
-Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Thus in btrfs_recover_relocation(), rc->block_group is NULL.
+btrfs_qgroup_add_swapped_blocks() hasn't taken this into consideration,
+and causes a NULL pointer dereference.
+
+The bug is introduced by commit 3d0174f78e72 ("btrfs: qgroup: Only trace
+data extents in leaves if we're relocating data block group"), and
+later qgroup refactoring still keeps this optimization.
+
+[FIX]
+Thankfully in the context of btrfs_recover_relocation(), there is no
+other progress can modify tree blocks, thus those swapped tree blocks
+pair will never affect qgroup numbers, no matter whatever we set for
+block->trace_leaf.
+
+So we only need to check if @bg is NULL before accessing @bg->flags.
+
+Reported-by: Juan Erbes <jerbes@gmail.com>
+Link: https://bugzilla.opensuse.org/show_bug.cgi?id=1134806
+Fixes: 3d0174f78e72 ("btrfs: qgroup: Only trace data extents in leaves if we're relocating data block group")
+CC: stable@vger.kernel.org # 4.20+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/qgroup.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -3624,6 +3624,7 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu
- 	vc->in_guest = 0;
- 
- 	mtspr(SPRN_DEC, local_paca->kvm_hstate.dec_expires - mftb());
-+	mtspr(SPRN_SPRG_VDSO_WRITE, local_paca->sprg_vdso);
- 
- 	kvmhv_load_host_pmu();
- 
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -3831,7 +3831,13 @@ int btrfs_qgroup_add_swapped_blocks(stru
+ 							    subvol_slot);
+ 	block->last_snapshot = last_snapshot;
+ 	block->level = level;
+-	if (bg->flags & BTRFS_BLOCK_GROUP_DATA)
++
++	/*
++	 * If we have bg == NULL, we're called from btrfs_recover_relocation(),
++	 * no one else can modify tree blocks thus we qgroup will not change
++	 * no matter the value of trace_leaf.
++	 */
++	if (bg && bg->flags & BTRFS_BLOCK_GROUP_DATA)
+ 		block->trace_leaf = true;
+ 	else
+ 		block->trace_leaf = false;
 
 
