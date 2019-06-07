@@ -2,124 +2,83 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE777C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA44C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4320208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559947839;
-	bh=ApxVfHs8JnkHiww93//1LZR4TXbvN/4IO2MtYEzl9mo=;
-	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
-	b=2VgYy6VzUe8p5MmruBtur7lIs5WQ2XoulgKfLUq6nETe+TLXh2Zo8QRDJkyTRC1mh
-	 1AJv7eTKZ+lMMXNL15O3FiOr8k7AwJy48tbMw2P/RG4uOUVROseex8b5MbUwZFEO8R
-	 2g9eFGWHa90o05YZTih1NXsjUmllGpepW4e2y5js=
+	by mail.kernel.org (Postfix) with ESMTP id BACB2206E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NqnGfAJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfFGWuj (ORCPT
+        id S1730834AbfFGW4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbfFGWui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:50:38 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02A5D20868;
-        Fri,  7 Jun 2019 22:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559947838;
-        bh=ApxVfHs8JnkHiww93//1LZR4TXbvN/4IO2MtYEzl9mo=;
-        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
-        b=xfujo2GLbkIM+KKtYFuiV81Iew3/QJfwEMbo2anGI8s4SiwI07Ah1j2/ciUOhTDOO
-         q3goGaFH8UPTc3Ej7pzCV+vxygsPZnRYStoVowZC3Jxm6bRTeQ9ni5Ny2lOQ1txxv7
-         PtMvH0dcM+c/REo3Y1kZ5cZB/lRKUS2wrJhduqGA=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 7 Jun 2019 18:56:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40418 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730547AbfFGW4x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 18:56:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so1880992pgm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=M8kh7Dgz12YKrTZB/CDTuS2cguipR8YlgXyL4uu88Rk=;
+        b=NqnGfAJwCu03tLbifhT0GvFm2QW9R9io9AMcdefvJFzJ7g5Vr8PmXoK2S/sS0EBCtH
+         Fusk7Ssd1izPi4ZVcnBnUIZrYJgm2cJJofYjf12PPHOu7ZZQRvC6lU0/MhgweIGPyLeg
+         E6/EwGWuLTjiqp09TGPSY2SCFTQsrN6Q1gyBuOEW5aINnxk+dmy7z5bJcCLEazyA8lbi
+         VWQySNTO5RzIXQriYe54HK29THy5Z3raT0y6A4hFRm5CoOlH/IVwVyITcvGmjab4XIjl
+         OGj96J+wDHrvBD5Bl803937Zwo9o/GU9QYKxuCxNaeVzWqwjMi90YBdkhNvlFjQpuFFm
+         tqPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=M8kh7Dgz12YKrTZB/CDTuS2cguipR8YlgXyL4uu88Rk=;
+        b=pSnCpyidtLx/PXvFPiN0P8hoYVrrpcEjr+GRuHjy5ObF0zMrc/VmQ/nRgvKtRWWToP
+         QWPNF8P65b6iSzNNPVE/DARTZXVOFHwJFSqTpl1z486VUaO8vpqZp+esrF6W7LA6TwIK
+         84GH4ocK09fm1FK5Rxtd4azHsl+RQZVlcV3DiWd245QAXAHU2PskbXmKo7Y1eqqK20+6
+         x95jJismYiMrs8bl7PnXJZliH/50dJ9x8/IIs5DsXqfWWEPuggP2LJZGhFf05RQEibWR
+         s4Lt7eVUNP+SIAevdk8d3Ii/B0LczmCl5QwA35s17VPKRC+bxQji0nA2YNd8Md+ts/o8
+         cmMw==
+X-Gm-Message-State: APjAAAVe5aKikUlNRHw0oqEKSYDS7zq3zUrL8wOAFsmEglGwVyZ9z8rp
+        Z5KVWQjNRPIRB8MLZqWmV1XRs1ZVaCo=
+X-Google-Smtp-Source: APXvYqx8Ow2gN0FBBUIuNPbj3rAAjRbrUfUEtyHrw8/8rVx9mCf6X0IFniQr4nPekXIHjCWdFu3P7g==
+X-Received: by 2002:a17:90a:5d15:: with SMTP id s21mr8054502pji.126.1559948212523;
+        Fri, 07 Jun 2019 15:56:52 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id f13sm3439916pfa.182.2019.06.07.15.56.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 15:56:51 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-media@vger.kernel.org, linux-media@lists.freedesktop.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: platform: ao-cec-g12a: remove spin_lock_irqsave() locking in meson_ao_cec_g12a_read/write
+In-Reply-To: <20190605122015.11439-1-narmstrong@baylibre.com>
+References: <20190605122015.11439-1-narmstrong@baylibre.com>
+Date:   Fri, 07 Jun 2019 15:56:51 -0700
+Message-ID: <7hk1dxatsc.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1559944794.11351.0@crapouillou.net>
-References: <20190521145141.9813-1-paul@crapouillou.net> <20190521145141.9813-6-paul@crapouillou.net> <20190607212819.A5FAE208C3@mail.kernel.org> <1559944794.11351.0@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mathieu Malaterre <malat@debian.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH v12 05/13] clk: ingenic: Add driver for the TCU clocks
-User-Agent: alot/0.8.1
-Date:   Fri, 07 Jun 2019 15:50:37 -0700
-Message-Id: <20190607225038.02A5D20868@mail.kernel.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul Cercueil (2019-06-07 14:59:54)
-> Hi Stephen, thanks for the review.
-> > Quoting Paul Cercueil (2019-05-21 07:51:33)
-> >>  diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
-> >>  new file mode 100644
-> >>  index 000000000000..7249225a6994
-> >>  --- /dev/null
-> >>  +++ b/drivers/clk/ingenic/tcu.c
-> >>  @@ -0,0 +1,458 @@
-> >>  +// SPDX-License-Identifier: GPL-2.0
-> >>  +/*
-> >>  + * JZ47xx SoCs TCU clocks driver
-> >>  + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
-> >>  + */
-> >>  +
-> >>  +#include <linux/clk.h>
-> >>  +#include <linux/clk-provider.h>
-> >>  +#include <linux/clkdev.h>
-> >>  +#include <linux/clockchips.h>
-> >>  +#include <linux/mfd/ingenic-tcu.h>
-> >>  +#include <linux/regmap.h>
-> >>  +
-> >>  +#include <dt-bindings/clock/ingenic,tcu.h>
-> >>  +
-> >>  +/* 8 channels max + watchdog + OST */
-> >>  +#define TCU_CLK_COUNT  10
-> >>  +
-> >>  +#define TCU_ERR(...) pr_crit("ingenic-tcu-clk: " __VA_ARGS__)
-> >=20
-> > Why is it pr_crit instead of pr_err()?
->=20
-> If the TCU timer clocks are not provided for any reason, the system
-> will have no timer, and the kernel will hang very early in the init
-> process. That's why I chose pr_crit().
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-HMm. So maybe it should be TCU_CRIT() then? Or just drop the wrapper
-macro and define a pr_fmt for this file that has ingenic-tcu-clk: for
-it?
+> Since locking is handled by regmap, the spin_lock_irqsave() in the
+> meson_ao_cec_g12a_read/write() regmap callbacks is not needed.
+>
+> Fixes: b7778c46683c ("media: platform: meson: Add Amlogic Meson G12A AO CEC Controller driver")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
->=20
-> Most of the code here works without a struct device, it wouldn't be=20
-> easy to
-> get it to work with runtime PM.
->=20
-> I can enable the "tcu" clock in the probe and just gate/ungate it in the
-> suspend/resume callbacks, that would work just fine. We don't need=20
-> anything
-> fancy here.
-
-OK. That sounds like a better approach to gate and ungate in
-suspend/resume.
-
+Tested-by: Kevin Hilman <khilman@baylibre.com>
