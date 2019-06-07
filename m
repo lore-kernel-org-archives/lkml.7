@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B2CC46476
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA00BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41AD120B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD94420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfFGJNQ (ORCPT
+        id S1727736AbfFGJNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:13:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:36116 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 05:13:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:36132 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfFGJNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:13:13 -0400
+        id S1726531AbfFGJNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 05:13:18 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE8AB344;
-        Fri,  7 Jun 2019 02:13:12 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCB46346;
+        Fri,  7 Jun 2019 02:13:16 -0700 (PDT)
 Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C00033F96A;
-        Fri,  7 Jun 2019 02:13:09 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7CDA23F96A;
+        Fri,  7 Jun 2019 02:13:13 -0700 (PDT)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
@@ -32,10 +32,11 @@ Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         James Morse <james.morse@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH V3 1/2] arm64/mm: Consolidate page fault information capture
-Date:   Fri,  7 Jun 2019 14:43:05 +0530
-Message-Id: <1559898786-28530-2-git-send-email-anshuman.khandual@arm.com>
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH V3 2/2] arm64/mm: Refactor __do_page_fault()
+Date:   Fri,  7 Jun 2019 14:43:06 +0530
+Message-Id: <1559898786-28530-3-git-send-email-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559898786-28530-1-git-send-email-anshuman.khandual@arm.com>
 References: <1559898786-28530-1-git-send-email-anshuman.khandual@arm.com>
@@ -44,10 +45,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This consolidates page fault information capture and move them bit earlier.
-While here it also adds an wrapper is_write_abort(). It also saves some
-cycles by replacing multiple user_mode() calls into a single one earlier
-during the fault.
+__do_page_fault() is over complicated with multiple goto statements. This
+cleans up the code flow and while there drops local variable vm_fault_t.
 
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
@@ -55,93 +54,64 @@ Cc: Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: James Morse <james.morse@arm.com>
 Cc: Andrey Konovalov <andreyknvl@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>
 ---
- arch/arm64/mm/fault.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ arch/arm64/mm/fault.c | 30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
 diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 7c1c8f4..95cac4a 100644
+index 95cac4a..235b7c0 100644
 --- a/arch/arm64/mm/fault.c
 +++ b/arch/arm64/mm/fault.c
-@@ -435,6 +435,15 @@ static bool is_el0_instruction_abort(unsigned int esr)
- 	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_LOW;
+@@ -397,37 +397,29 @@ static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *re
+ static vm_fault_t __do_page_fault(struct mm_struct *mm, unsigned long addr,
+ 			   unsigned int mm_flags, unsigned long vm_flags)
+ {
+-	struct vm_area_struct *vma;
+-	vm_fault_t fault;
++	struct vm_area_struct *vma = find_vma(mm, addr);
+ 
+-	vma = find_vma(mm, addr);
+-	fault = VM_FAULT_BADMAP;
+ 	if (unlikely(!vma))
+-		goto out;
+-	if (unlikely(vma->vm_start > addr))
+-		goto check_stack;
++		return VM_FAULT_BADMAP;
+ 
+ 	/*
+ 	 * Ok, we have a good vm_area for this memory access, so we can handle
+ 	 * it.
+ 	 */
+-good_area:
++	if (unlikely(vma->vm_start > addr)) {
++		if (!(vma->vm_flags & VM_GROWSDOWN))
++			return VM_FAULT_BADMAP;
++		if (expand_stack(vma, addr))
++			return VM_FAULT_BADMAP;
++	}
++
+ 	/*
+ 	 * Check that the permissions on the VMA allow for the fault which
+ 	 * occurred.
+ 	 */
+-	if (!(vma->vm_flags & vm_flags)) {
+-		fault = VM_FAULT_BADACCESS;
+-		goto out;
+-	}
+-
++	if (!(vma->vm_flags & vm_flags))
++		return VM_FAULT_BADACCESS;
+ 	return handle_mm_fault(vma, addr & PAGE_MASK, mm_flags);
+-
+-check_stack:
+-	if (vma->vm_flags & VM_GROWSDOWN && !expand_stack(vma, addr))
+-		goto good_area;
+-out:
+-	return fault;
  }
  
-+/*
-+ * Note: not valid for EL1 DC IVAC, but we never use that such that it
-+ * should fault. EL0 cannot issue DC IVAC (undef).
-+ */
-+static bool is_write_abort(unsigned int esr)
-+{
-+	return (esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM);
-+}
-+
- static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 				   struct pt_regs *regs)
- {
-@@ -443,6 +452,9 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 	vm_fault_t fault, major = 0;
- 	unsigned long vm_flags = VM_READ | VM_WRITE;
- 	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
-+	bool is_user = user_mode(regs);
-+	bool is_el0_exec = is_el0_instruction_abort(esr);
-+	bool is_write = is_write_abort(esr);
- 
- 	if (notify_page_fault(regs, esr))
- 		return 0;
-@@ -454,13 +466,13 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 	if (faulthandler_disabled() || !mm)
- 		goto no_context;
- 
--	if (user_mode(regs))
-+	if (is_user)
- 		mm_flags |= FAULT_FLAG_USER;
- 
--	if (is_el0_instruction_abort(esr)) {
-+	if (is_el0_exec) {
- 		vm_flags = VM_EXEC;
- 		mm_flags |= FAULT_FLAG_INSTRUCTION;
--	} else if ((esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM)) {
-+	} else if (is_write) {
- 		vm_flags = VM_WRITE;
- 		mm_flags |= FAULT_FLAG_WRITE;
- 	}
-@@ -488,7 +500,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 	 * we can bug out early if this is from code which shouldn't.
- 	 */
- 	if (!down_read_trylock(&mm->mmap_sem)) {
--		if (!user_mode(regs) && !search_exception_tables(regs->pc))
-+		if (!is_user && !search_exception_tables(regs->pc))
- 			goto no_context;
- retry:
- 		down_read(&mm->mmap_sem);
-@@ -499,7 +511,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 		 */
- 		might_sleep();
- #ifdef CONFIG_DEBUG_VM
--		if (!user_mode(regs) && !search_exception_tables(regs->pc)) {
-+		if (!is_user && !search_exception_tables(regs->pc)) {
- 			up_read(&mm->mmap_sem);
- 			goto no_context;
- 		}
-@@ -517,7 +529,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 		 * in __lock_page_or_retry in mm/filemap.c.
- 		 */
- 		if (fatal_signal_pending(current)) {
--			if (!user_mode(regs))
-+			if (!is_user)
- 				goto no_context;
- 			return 0;
- 		}
-@@ -562,7 +574,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 	 * If we are in kernel mode at this point, we have no context to
- 	 * handle this fault with.
- 	 */
--	if (!user_mode(regs))
-+	if (!is_user)
- 		goto no_context;
- 
- 	if (fault & VM_FAULT_OOM) {
+ static bool is_el0_instruction_abort(unsigned int esr)
 -- 
 2.7.4
 
