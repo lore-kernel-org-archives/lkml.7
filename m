@@ -2,92 +2,146 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EDFC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C59C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1545F2083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8ACF2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfFGOmg (ORCPT
+        id S1729005AbfFGOns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:42:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:41370 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 10:43:48 -0400
+Received: from mail.us.es ([193.147.175.20]:51498 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728252AbfFGOmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:42:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CE78337;
-        Fri,  7 Jun 2019 07:42:35 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 05C733F71A;
-        Fri,  7 Jun 2019 07:42:33 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 15:42:31 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] KVM: arm64: Drop 'const' from argument of vq_present()
-Message-ID: <20190607144229.GF28398@e103592.cambridge.arm.com>
-References: <699121e5c938c6f4b7b14a7e2648fa15af590a4a.1559623368.git.viresh.kumar@linaro.org>
- <20190604095915.GW28398@e103592.cambridge.arm.com>
- <20190607060037.eaof3hllyombxlhc@vireshk-i7>
+        id S1728699AbfFGOns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:43:48 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 59C5EBAE97
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 16:43:46 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 4AB26DA710
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 16:43:46 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 3D963DA709; Fri,  7 Jun 2019 16:43:46 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id EEC13DA706;
+        Fri,  7 Jun 2019 16:43:43 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 07 Jun 2019 16:43:43 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id B92C34265A2F;
+        Fri,  7 Jun 2019 16:43:43 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 16:43:43 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, tyhicks@canonical.com,
+        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
+        nikolay@cumulusnetworks.com, linux-kernel@vger.kernel.org,
+        richardrose@google.com, vapier@chromium.org, bhthompson@google.com,
+        smbarber@chromium.org, joelhockey@chromium.org,
+        ueberall@themenzentrisch.de
+Subject: Re: [PATCH RESEND net-next 1/2] br_netfilter: add struct netns_brnf
+Message-ID: <20190607144343.nzdlnuo4csllcy7q@salvia>
+References: <20190606114142.15972-1-christian@brauner.io>
+ <20190606114142.15972-2-christian@brauner.io>
+ <20190606081440.61ea1c62@hermes.lan>
+ <20190606151937.mdpalfk7urvv74ub@brauner.io>
+ <20190606163035.x7rvqdwubxiai5t6@salvia>
+ <20190607132516.q3zwmzrynvqo7mzn@brauner.io>
+ <20190607142858.vgkljqohn34rxhe2@salvia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190607060037.eaof3hllyombxlhc@vireshk-i7>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190607142858.vgkljqohn34rxhe2@salvia>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:30:37AM +0530, Viresh Kumar wrote:
-> On 04-06-19, 10:59, Dave Martin wrote:
-> > On Tue, Jun 04, 2019 at 10:13:19AM +0530, Viresh Kumar wrote:
-> > > We currently get following compilation warning:
+On Fri, Jun 07, 2019 at 04:28:58PM +0200, Pablo Neira Ayuso wrote:
+> On Fri, Jun 07, 2019 at 03:25:16PM +0200, Christian Brauner wrote:
+> > On Thu, Jun 06, 2019 at 06:30:35PM +0200, Pablo Neira Ayuso wrote:
+> > > On Thu, Jun 06, 2019 at 05:19:39PM +0200, Christian Brauner wrote:
+> > > > On Thu, Jun 06, 2019 at 08:14:40AM -0700, Stephen Hemminger wrote:
+> > > > > On Thu,  6 Jun 2019 13:41:41 +0200
+> > > > > Christian Brauner <christian@brauner.io> wrote:
+> > > > > 
+> > > > > > +struct netns_brnf {
+> > > > > > +#ifdef CONFIG_SYSCTL
+> > > > > > +	struct ctl_table_header *ctl_hdr;
+> > > > > > +#endif
+> > > > > > +
+> > > > > > +	/* default value is 1 */
+> > > > > > +	int call_iptables;
+> > > > > > +	int call_ip6tables;
+> > > > > > +	int call_arptables;
+> > > > > > +
+> > > > > > +	/* default value is 0 */
+> > > > > > +	int filter_vlan_tagged;
+> > > > > > +	int filter_pppoe_tagged;
+> > > > > > +	int pass_vlan_indev;
+> > > > > > +};
+> > > > > 
+> > > > > Do you really need to waste four bytes for each
+> > > > > flag value. If you use a u8 that would work just as well.
+> > > > 
+> > > > I think we had discussed something like this but the problem why we
+> > > > can't do this stems from how the sysctl-table stuff is implemented.
+> > > > I distinctly remember that it couldn't be done with a flag due to that.
 > > > 
-> > > arch/arm64/kvm/guest.c: In function 'set_sve_vls':
-> > > arch/arm64/kvm/guest.c:262:18: warning: passing argument 1 of 'vq_present' from incompatible pointer type
-> > > arch/arm64/kvm/guest.c:212:13: note: expected 'const u64 (* const)[8]' but argument is of type 'u64 (*)[8]'
-> > > 
-> > > The argument can't be const, as it is copied at runtime using
-> > > copy_from_user(). Drop const from the prototype of vq_present().
-> > > 
-> > > Fixes: 9033bba4b535 ("KVM: arm64/sve: Add pseudo-register for the guest's vector lengths")
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > ---
-> > >  arch/arm64/kvm/guest.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> > > index 3ae2f82fca46..78f5a4f45e0a 100644
-> > > --- a/arch/arm64/kvm/guest.c
-> > > +++ b/arch/arm64/kvm/guest.c
-> > > @@ -209,7 +209,7 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-> > >  #define vq_mask(vq) ((u64)1 << ((vq) - SVE_VQ_MIN) % 64)
-> > >  
-> > >  static bool vq_present(
-> > > -	const u64 (*const vqs)[KVM_ARM64_SVE_VLS_WORDS],
-> > > +	u64 (*const vqs)[KVM_ARM64_SVE_VLS_WORDS],
-> > >  	unsigned int vq)
-> > >  {
-> > >  	return (*vqs)[vq_word(vq)] & vq_mask(vq);
+> > > Could you define a pernet_operations object? I mean, define the id and size
+> > > fields, then pass it to register_pernet_subsys() for registration.
+> > > Similar to what we do in net/ipv4/netfilter/ipt_CLUSTER.c, see
+> > > clusterip_net_ops and clusterip_pernet() for instance.
 > > 
-> > Ack, but maybe this should just be converted to a macro?
+> > Hm, I don't think that would work. The sysctls for br_netfilter are
+> > located in /proc/sys/net/bridge under /proc/sys/net which is tightly
+> > integrated with the sysctls infrastructure for all of net/ and all the
+> > folder underneath it including "core", "ipv4" and "ipv6".
+> > I don't think creating and managing files manually in /proc/sys/net is
+> > going to fly. It also doesn't seem very wise from a consistency and
+> > complexity pov. I'm also not sure if this would work at all wrt to file
+> > creation and reference counting if there are two different ways of
+> > managing them in the same subfolder...
+> > (clusterip creates files manually underneath /proc/net which probably is
+> > the reason why it gets away with it.)
 > 
-> I will send a patch with that if that's what you want.
+> br_netfilter is now a module, and br_netfilter_hooks.c is part of it
+> IIRC, this file registers these sysctl entries from the module __init
+> path.
+> 
+> It would be a matter of adding a new .init callback to the existing
+> brnf_net_ops object in br_netfilter_hooks.c. Then, call
+> register_net_sysctl() from this .init callback to register the sysctl
+> entries per netns.
 
-I think this would solve the problem and simplify the code a bit at the
-same time.
+Actually, this is what you patch is doing...
 
-So go for it.
+> There is already a brnf_net area that you can reuse for this purpose,
+> to place these pernetns flags...
+> 
+> struct brnf_net {
+>         bool enabled;
+> };
+> 
+> which is going to be glad to have more fields (under the #ifdef
+> CONFIG_SYSCTL) there.
 
-Cheers
----Dave
+... except that struct brnf_net is not used to store the ctl_table.
+
+So what I'm propose should be result in a small update to your patch 2/2.
