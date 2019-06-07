@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A485C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B43C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5EC20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0FD21473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922666;
-	bh=e2KFDJLz9Lsataaan3BzvauG6mpgnuRbx5NYfA9C6yU=;
+	s=default; t=1559922669;
+	bh=xOFzgDzIJd+HZd+bR7YkJZ9x9WUvI8zhPy1SBcGADjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZgcD2Wef21qouV9NOQQc4KVAk56ZGuOuz5gYNMRS0m/iBuXgusbwO25Q4/xAEraNk
-	 /KYymqS8h2gBeha9HC5f++Vd3EV8aPeQxqixgdJy3reYwYSQSiucUFSr5yJRmLzW3g
-	 TIDV5+46uzJ7VZYzzwtGQO08smQX4qsV8aFWGMMM=
+	b=X7bWNJOHRT678p+XtlLWj2S3hpLyKXc/xEb2uJ3Oi3dJOSvfEwb6X7gxhGnRgBWLB
+	 Rfz08NR6KRZwSccrBNS6LbjjrkSTc3F3ZfwAPoVFL2oVoTlTO/VDvK1zxgJ5piV86X
+	 HhxF8Nd5YGrl/Wtz37Mu39h8pUIYf24hH51mFHg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732265AbfFGPvB (ORCPT
+        id S1732282AbfFGPvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:51:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38032 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:51:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732236AbfFGPuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:50:52 -0400
+        id S1732274AbfFGPvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 455F320657;
-        Fri,  7 Jun 2019 15:50:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B65A2146E;
+        Fri,  7 Jun 2019 15:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922651;
-        bh=e2KFDJLz9Lsataaan3BzvauG6mpgnuRbx5NYfA9C6yU=;
+        s=default; t=1559922663;
+        bh=xOFzgDzIJd+HZd+bR7YkJZ9x9WUvI8zhPy1SBcGADjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NLFv+rvhQe/htccakmn4Z/kXnv1YW6NroOD0tjem2r7ReAkZdVD0BuL6gSbwRVDVT
-         C2offBboZ4zh7nfBT39ZFMd1zsB7UAw5Kg5YgYn08pH4g4pwbuebs0rG3+wXAc/6JH
-         fzTaLjk0HKp20MkAT+JD1J2T5pmRrqL5zJyHIj5Q=
+        b=vogjOTqmgVa/8nhVBuUATRdQNtGxhMTDvNkM7qzrgJY0tKyuH+dcAK/lPVTwBmEQ1
+         /JCqjyoXmtNjm3rsQLV8VCVypUOEqjwQtrDYN83ko72alj295yLF5vuhzyho5vi0pG
+         pOV3/wBn0nMyk8FqvjsWeHN0YXLKnTQwnH9Ea6UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Coddington <bcodding@redhat.com>,
-        XueWei Zhang <xueweiz@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.1 69/85] Revert "lockd: Show pid of lockd for remote locks"
-Date:   Fri,  7 Jun 2019 17:39:54 +0200
-Message-Id: <20190607153856.848666652@linuxfoundation.org>
+        stable@vger.kernel.org, Grzegorz Halat <ghalat@redhat.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.1 63/85] vt/fbcon: deinitialize resources in visual_init() after failed memory allocation
+Date:   Fri,  7 Jun 2019 17:39:48 +0200
+Message-Id: <20190607153856.346128456@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -60,68 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Coddington <bcodding@redhat.com>
+From: Grzegorz Halat <ghalat@redhat.com>
 
-commit 141731d15d6eb2fd9aaefbf9b935ce86ae243074 upstream.
+commit a1ad1cc9704f64c169261a76e1aee1cf1ae51832 upstream.
 
-This reverts most of commit b8eee0e90f97 ("lockd: Show pid of lockd for
-remote locks"), which caused remote locks to not be differentiated between
-remote processes for NLM.
+After memory allocation failure vc_allocate() doesn't clean up data
+which has been initialized in visual_init(). In case of fbcon this
+leads to divide-by-0 in fbcon_init() on next open of the same tty.
 
-We retain the fixup for setting the client's fl_pid to a negative value.
+memory allocation in vc_allocate() may fail here:
+1097:     vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
 
-Fixes: b8eee0e90f97 ("lockd: Show pid of lockd for remote locks")
-Cc: stable@vger.kernel.org
+on next open() fbcon_init() skips vc_font.data initialization:
+1088:     if (!p->fontdata) {
 
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Reviewed-by: XueWei Zhang <xueweiz@google.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+division by zero in fbcon_init() happens here:
+1149:     new_cols /= vc->vc_font.width;
+
+Additional check is needed in fbcon_deinit() to prevent
+usage of uninitialized vc_screenbuf:
+
+1251:        if (vc->vc_hi_font_mask && vc->vc_screenbuf)
+1252:                set_vc_hi_font(vc, false);
+
+Crash:
+
+ #6 [ffffc90001eafa60] divide_error at ffffffff81a00be4
+    [exception RIP: fbcon_init+463]
+    RIP: ffffffff814b860f  RSP: ffffc90001eafb18  RFLAGS: 00010246
+...
+ #7 [ffffc90001eafb60] visual_init at ffffffff8154c36e
+ #8 [ffffc90001eafb80] vc_allocate at ffffffff8154f53c
+ #9 [ffffc90001eafbc8] con_install at ffffffff8154f624
+...
+
+Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+Reviewed-by: Oleksandr Natalenko <oleksandr@redhat.com>
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/lockd/xdr.c  |    4 ++--
- fs/lockd/xdr4.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/tty/vt/vt.c              |   11 +++++++++--
+ drivers/video/fbdev/core/fbcon.c |    2 +-
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
---- a/fs/lockd/xdr.c
-+++ b/fs/lockd/xdr.c
-@@ -127,7 +127,7 @@ nlm_decode_lock(__be32 *p, struct nlm_lo
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1056,6 +1056,13 @@ static void visual_init(struct vc_data *
+ 	vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+ }
  
- 	locks_init_lock(fl);
- 	fl->fl_owner = current->files;
--	fl->fl_pid   = current->tgid;
-+	fl->fl_pid   = (pid_t)lock->svid;
- 	fl->fl_flags = FL_POSIX;
- 	fl->fl_type  = F_RDLCK;		/* as good as anything else */
- 	start = ntohl(*p++);
-@@ -269,7 +269,7 @@ nlmsvc_decode_shareargs(struct svc_rqst
- 	memset(lock, 0, sizeof(*lock));
- 	locks_init_lock(&lock->fl);
- 	lock->svid = ~(u32) 0;
--	lock->fl.fl_pid = current->tgid;
-+	lock->fl.fl_pid = (pid_t)lock->svid;
++
++static void visual_deinit(struct vc_data *vc)
++{
++	vc->vc_sw->con_deinit(vc);
++	module_put(vc->vc_sw->owner);
++}
++
+ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ {
+ 	struct vt_notifier_param param;
+@@ -1103,6 +1110,7 @@ int vc_allocate(unsigned int currcons)	/
  
- 	if (!(p = nlm_decode_cookie(p, &argp->cookie))
- 	 || !(p = xdr_decode_string_inplace(p, &lock->caller,
---- a/fs/lockd/xdr4.c
-+++ b/fs/lockd/xdr4.c
-@@ -119,7 +119,7 @@ nlm4_decode_lock(__be32 *p, struct nlm_l
+ 	return 0;
+ err_free:
++	visual_deinit(vc);
+ 	kfree(vc);
+ 	vc_cons[currcons].d = NULL;
+ 	return -ENOMEM;
+@@ -1331,9 +1339,8 @@ struct vc_data *vc_deallocate(unsigned i
+ 		param.vc = vc = vc_cons[currcons].d;
+ 		atomic_notifier_call_chain(&vt_notifier_list, VT_DEALLOCATE, &param);
+ 		vcs_remove_sysfs(currcons);
+-		vc->vc_sw->con_deinit(vc);
++		visual_deinit(vc);
+ 		put_pid(vc->vt_pid);
+-		module_put(vc->vc_sw->owner);
+ 		vc_uniscr_set(vc, NULL);
+ 		kfree(vc->vc_screenbuf);
+ 		vc_cons[currcons].d = NULL;
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -1248,7 +1248,7 @@ finished:
+ 	if (free_font)
+ 		vc->vc_font.data = NULL;
  
- 	locks_init_lock(fl);
- 	fl->fl_owner = current->files;
--	fl->fl_pid   = current->tgid;
-+	fl->fl_pid   = (pid_t)lock->svid;
- 	fl->fl_flags = FL_POSIX;
- 	fl->fl_type  = F_RDLCK;		/* as good as anything else */
- 	p = xdr_decode_hyper(p, &start);
-@@ -266,7 +266,7 @@ nlm4svc_decode_shareargs(struct svc_rqst
- 	memset(lock, 0, sizeof(*lock));
- 	locks_init_lock(&lock->fl);
- 	lock->svid = ~(u32) 0;
--	lock->fl.fl_pid = current->tgid;
-+	lock->fl.fl_pid = (pid_t)lock->svid;
+-	if (vc->vc_hi_font_mask)
++	if (vc->vc_hi_font_mask && vc->vc_screenbuf)
+ 		set_vc_hi_font(vc, false);
  
- 	if (!(p = nlm4_decode_cookie(p, &argp->cookie))
- 	 || !(p = xdr_decode_string_inplace(p, &lock->caller,
+ 	if (!con_is_bound(&fb_con))
 
 
