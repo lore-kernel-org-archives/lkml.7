@@ -2,149 +2,125 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6487BC28EBB
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EC8C04AB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCDC208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:10:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XR1gdxQz";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NMkr6aIH"
+	by mail.kernel.org (Postfix) with ESMTP id E70AF206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfFGAKB (ORCPT
+        id S1728162AbfFGAXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 20:10:01 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:41376 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726343AbfFGAKB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 20:10:01 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5708n8T003840;
-        Thu, 6 Jun 2019 17:09:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=D8z6kDvituKzMrSIoAkpd1Isn/lr7fvLl5ffOvBqD1A=;
- b=XR1gdxQzMJ0BJRhbZLKr5R1n6qPbKo1qXmK9ixa72vO1EgUv0+85E92NjCBVnulBbK0X
- wOGzn1ey38/Zxm8gyweWgsuhua145ddj2UU/GsPKMzBBVEhl0QsaXcP7H1YdHXQKKIDD
- jBK9wfUUf3HBOMbrLzA2x0v435u6Ask8N1c= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sy072u0bj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 06 Jun 2019 17:09:46 -0700
-Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
- prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 6 Jun 2019 17:09:45 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Jun 2019 17:09:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D8z6kDvituKzMrSIoAkpd1Isn/lr7fvLl5ffOvBqD1A=;
- b=NMkr6aIHbQu8oOJcQtSYXgc2xwbmjG8qLUfwJYYZWetPJ6v9hEgj6i0GL+B8wbd3t1eM+XnuNgTM+b4YoifHnRaSbDVbjOGae6RRG67WDqC8Zhx39x9FqPTCsRyyELez8uWvxS0QlLdHyyi6zbQkOZU4AL8BLgITWtvSsBdDBZE=
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com (20.179.161.152) by
- DM6PR15MB3339.namprd15.prod.outlook.com (20.179.50.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Fri, 7 Jun 2019 00:09:43 +0000
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::5022:93e0:dd8b:b1a1]) by DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::5022:93e0:dd8b:b1a1%7]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
- 00:09:43 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-CC:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
+        Thu, 6 Jun 2019 20:23:11 -0400
+Received: from mga09.intel.com ([134.134.136.24]:11184 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727659AbfFGAXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 20:23:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 17:23:10 -0700
+X-ExtLoop1: 1
+Received: from pgsmsx105.gar.corp.intel.com ([10.221.44.96])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Jun 2019 17:23:08 -0700
+Received: from pgsmsx114.gar.corp.intel.com ([169.254.4.99]) by
+ PGSMSX105.gar.corp.intel.com ([169.254.4.53]) with mapi id 14.03.0415.000;
+ Fri, 7 Jun 2019 08:23:07 +0800
+From:   "Ong, Boon Leong" <boon.leong.ong@intel.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Voon, Weifeng" <weifeng.voon@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
- bpf_skb_cgroup_id() helper
-Thread-Topic: [PATCH bpf-next] bpf: allow CGROUP_SKB programs to use
- bpf_skb_cgroup_id() helper
-Thread-Index: AQHVHKa6xHw8ltBwiEqcWIquD5GBU6aPTrAAgAACnAA=
-Date:   Fri, 7 Jun 2019 00:09:43 +0000
-Message-ID: <20190607000937.GA13090@tower.DHCP.thefacebook.com>
-References: <20190606203012.130071-1-guro@fb.com>
- <a9a8d1ec-f0ce-6cde-31f1-9003c6b2c64a@iogearbox.net>
-In-Reply-To: <a9a8d1ec-f0ce-6cde-31f1-9003c6b2c64a@iogearbox.net>
-Accept-Language: en-US
+        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        biao huang <biao.huang@mediatek.com>,
+        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
+Subject: RE: [PATCH net-next v6 2/5] net: stmmac: introducing support for
+ DWC xPCS logics
+Thread-Topic: [PATCH net-next v6 2/5] net: stmmac: introducing support for
+ DWC xPCS logics
+Thread-Index: AQHVGsR8mZhQFRvu0EOiETyHTmqFxaaLcWMAgAET3gCAATg0IA==
+Date:   Fri, 7 Jun 2019 00:23:06 +0000
+Message-ID: <AF233D1473C1364ABD51D28909A1B1B75C12D381@pgsmsx114.gar.corp.intel.com>
+References: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
+ <1559674736-2190-3-git-send-email-weifeng.voon@intel.com>
+ <05cf54dc-7c40-471e-f08a-7fdf5fe4ef54@gmail.com>
+ <78EB27739596EE489E55E81C33FEC33A0B93EF69@DE02WEMBXB.internal.synopsys.com>
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B93EF69@DE02WEMBXB.internal.synopsys.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR02CA0002.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::15) To DM6PR15MB2635.namprd15.prod.outlook.com
- (2603:10b6:5:1a6::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:6fb0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0010b288-d406-45de-694f-08d6eadc715b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR15MB3339;
-x-ms-traffictypediagnostic: DM6PR15MB3339:
-x-microsoft-antispam-prvs: <DM6PR15MB3339E2ECB8F93143E08BE88CBE100@DM6PR15MB3339.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0061C35778
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(39860400002)(376002)(346002)(199004)(189003)(476003)(305945005)(486006)(86362001)(68736007)(6916009)(33656002)(7736002)(4744005)(53936002)(478600001)(102836004)(4326008)(6506007)(53546011)(386003)(2906002)(5660300002)(71190400001)(71200400001)(14454004)(6116002)(76176011)(52116002)(446003)(11346002)(6246003)(81156014)(81166006)(186003)(8936002)(25786009)(1076003)(9686003)(6512007)(8676002)(256004)(54906003)(66476007)(66946007)(66446008)(64756008)(66556008)(73956011)(6486002)(99286004)(6436002)(229853002)(316002)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3339;H:DM6PR15MB2635.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ghxUHXBocrI8MWSACNnYTSVIOxzydbtfPnH5vvcS1TsllqfebV/7uuYaQKe87eJAQwqFSNDP0DeB2gCYhIayVhD6/Z+QT8/H+ajIJgcBAuoRs7nIilD48ue9SG6a2eawjfdRlRuKxDtfsjMark9/7mKlSYRvx54EbsNTXpImqOxhL/c7TGtbFnXZWqHlltO8w7mvu+u+SZzY3LwRfzGc1Kf/p0nDQf7feyC9dsZvpwL9atQjTHSOzAQXai83QWKqz8dh0tVSJcxY/+JM3rX0QSXHE5aFsproocSGVStRkvE2sdl9aSXLtOShWVBROlRVQiCge+drwMEKMmUHcf9zzCACXJHF59HtNPLKPG7iaL5lCuG8o+PCynZ0Tl2bTvsvNkVtt8bsWOQzoEaRW5vYU6Sxv4SPUgrmZr/Avf05wU8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0025DAEFE979994581EA351CEBA3494E@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMmQ4ZWFhNWMtOTIxZS00YmRmLWJhNDUtZTkxZDZkMTQ2ZDBmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNzY2c2YxY0p5Z2RUcVwvM3RWOTFabHVBaHBvR3ZKZm1aUUV3dGNoWWsrdWtYSG1hRW5YcEpGc0lVWVVKUWxsclwvIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.206]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0010b288-d406-45de-694f-08d6eadc715b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 00:09:43.7683
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3339
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=935 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906070000
-X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 02:00:20AM +0200, Daniel Borkmann wrote:
-> On 06/06/2019 10:30 PM, Roman Gushchin wrote:
-> > Currently bpf_skb_cgroup_id() is not supported for CGROUP_SKB
-> > programs. An attempt to load such a program generates an error
-> > like this:
-> >=20
-> >     libbpf:
-> >     0: (b7) r6 =3D 0
-> >     ...
-> >     9: (85) call bpf_skb_cgroup_id#79
-> >     unknown func bpf_skb_cgroup_id#79
-> >=20
-> > There are no particular reasons for denying it, and we have some
-> > use cases where it might be useful.
-> >=20
-> > So let's add it to the list of allowed helpers.
-> >=20
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Cc: Yonghong Song <yhs@fb.com>
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Daniel Borkmann <daniel@iogearbox.net>
->=20
-> Applied, thanks!
-
-Thank you, Daniel!
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogSm9zZSBBYnJldSBbbWFpbHRvOkpv
+c2UuQWJyZXVAc3lub3BzeXMuY29tXQ0KPlNlbnQ6IFdlZG5lc2RheSwgSnVuZSA1LCAyMDE5IDk6
+MTMgUE0NCj5UbzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+OyBWb29u
+LCBXZWlmZW5nDQo+PHdlaWZlbmcudm9vbkBpbnRlbC5jb20+OyBEYXZpZCBTLiBNaWxsZXIgPGRh
+dmVtQGRhdmVtbG9mdC5uZXQ+Ow0KPk1heGltZSBDb3F1ZWxpbiA8bWNvcXVlbGluLnN0bTMyQGdt
+YWlsLmNvbT47IFJ1c3NlbGwgS2luZw0KPjxsaW51eEBhcm1saW51eC5vcmcudWs+DQo+Q2M6IG5l
+dGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEdpdXNl
+cHBlDQo+Q2F2YWxsYXJvIDxwZXBwZS5jYXZhbGxhcm9Ac3QuY29tPjsgQW5kcmV3IEx1bm4gPGFu
+ZHJld0BsdW5uLmNoPjsNCj5BbGV4YW5kcmUgVG9yZ3VlIDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNv
+bT47IGJpYW8gaHVhbmcNCj48Ymlhby5odWFuZ0BtZWRpYXRlay5jb20+OyBPbmcsIEJvb24gTGVv
+bmcNCj48Ym9vbi5sZW9uZy5vbmdAaW50ZWwuY29tPjsgS3dlaCwgSG9jayBMZW9uZw0KPjxob2Nr
+Lmxlb25nLmt3ZWhAaW50ZWwuY29tPg0KPlN1YmplY3Q6IFJFOiBbUEFUQ0ggbmV0LW5leHQgdjYg
+Mi81XSBuZXQ6IHN0bW1hYzogaW50cm9kdWNpbmcgc3VwcG9ydCBmb3INCj5EV0MgeFBDUyBsb2dp
+Y3MNCj4NCj5Gcm9tOiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4NCj4N
+Cj4+ICtSdXNzZWxsLA0KPj4NCj4+IE9uIDYvNC8yMDE5IDExOjU4IEFNLCBWb29uIFdlaWZlbmcg
+d3JvdGU6DQo+PiA+IEZyb206IE9uZyBCb29uIExlb25nIDxib29uLmxlb25nLm9uZ0BpbnRlbC5j
+b20+DQo+PiA+DQo+PiA+IHhQQ1MgaXMgRFdDIEV0aGVybmV0IFBoeXNpY2FsIENvZGluZyBTdWJs
+YXllciB0aGF0IG1heSBiZSBpbnRlZ3JhdGVkDQo+PiA+IGludG8gYSBHYkUgY29udHJvbGxlciB0
+aGF0IHVzZXMgRFdDIEVRb1MgTUFDIGNvbnRyb2xsZXIuIEFuIGV4YW1wbGUgb2YNCj4+ID4gSFcg
+Y29uZmlndXJhdGlvbiBpcyBzaG93biBiZWxvdzotDQo+PiA+DQo+PiA+ICAgPC0tLS0tLS0tLS0t
+LS0tLS0tR0JFIENvbnRyb2xsZXItLS0tLS0tLS0tPnw8LS1FeHRlcm5hbCBQSFkgY2hpcC0tPg0K
+Pj4gPg0KPj4gPiAgICstLS0tLS0tLS0tKyAgICAgICAgICstLS0tKyAgICArLS0tKyAgICAgICAg
+ICAgICAgICstLS0tLS0tLS0tLS0tLSsNCj4+ID4gICB8ICAgRVFvUyAgIHwgPC1HTUlJLT58IERX
+IHw8LS0+fFBIWXwgPC0tIFNHTUlJIC0tPiB8IEV4dGVybmFsIEdiRSB8DQo+PiA+ICAgfCAgIE1B
+QyAgICB8ICAgICAgICAgfHhQQ1N8ICAgIHxJRiB8ICAgICAgICAgICAgICAgfCBQSFkgQ2hpcCAg
+ICAgfA0KPj4gPiAgICstLS0tLS0tLS0tKyAgICAgICAgICstLS0tKyAgICArLS0tKyAgICAgICAg
+ICAgICAgICstLS0tLS0tLS0tLS0tLSsNCj4+ID4gICAgICAgICAgXiAgICAgICAgICAgICAgIF4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXg0KPj4gPiAgICAgICAgICB8ICAgICAg
+ICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+PiA+ICAgICAg
+ICAgICstLS0tLS0tLS0tLS0tLS0tLS0tLS1NRElPLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsN
+Cj4+ID4NCj4+ID4geFBDUyBpcyBhIENsYXVzZS00NSBNRElPIE1hbmFnZWFibGUgRGV2aWNlIChN
+TUQpIGFuZCB3ZSBuZWVkIGEgd2F5DQo+dG8NCj4+ID4gZGlmZmVyZW50aWF0ZSBpdCBmcm9tIGV4
+dGVybmFsIFBIWSBjaGlwIHRoYXQgaXMgZGlzY292ZXJlZCBvdmVyIE1ESU8uDQo+PiA+IFRoZXJl
+Zm9yZSwgeHBjc19waHlfYWRkciBpcyBpbnRyb2R1Y2VkIGluIHN0bW1hYyBwbGF0Zm9ybSBkYXRh
+DQo+PiA+IChwbGF0X3N0bW1hY2VuZXRfZGF0YSkgZm9yIGRpZmZlcmVudGlhdGluZyB4UENTIGZy
+b20gJ3BoeV9hZGRyJyB0aGF0DQo+PiA+IGJlbG9uZ3MgdG8gZXh0ZXJuYWwgUEhZLg0KPj4NCj4+
+IEFzc3VtaW5nIHRoaXMgRFcgeFBDUyBjYW4gYmUgZm91bmQgd2l0aCBkZXNpZ25zIG90aGVyIHRo
+YW4gU1RNTUFDDQo+d291bGQNCj4+IG5vdCBpdCBtYWtlIHNlbnNlIHRvIG1vZGVsIHRoaXMgYXMg
+c29tZSBraW5kIG9mIFBIWS9NRElPIGJyaWRnZT8gQQ0KPj4gbGl0dGxlIGJpdCBsaWtlIHdoYXQg
+ZHJpdmVycy9uZXQvcGh5L3hpbGlueF9nbWlpMnJnbWlpLmMgdHJpZXMgdG8gZG8/DQo+DQo+WWVz
+LCBEVyBYUENTIGlzIGEgc2VwYXJhdGUgSVAgdGhhdCBjYW4gYmUgc29sZCB3aXRob3V0IHRoZSBN
+QUMuDQoNCkhpIEZsb3JpYW4sIHRoYW5rcyBmb3IgcG9pbnRpbmcgb3V0IHRoZSBQSFkgZHJpdmVy
+IGZvciBHTUlJIHRvIFJHTUlJIGNvbnZlcnRlcg0KaW1wbGVtZW50YXRpb24uIEl0IHNlZW1zIGxp
+a2UgY29tbXVuaXR5IHdvdWxkIGxpa2UgZHd4cGNzIHRvIHRha2UgdGhlDQpjb252ZXJ0ZXIgcGh5
+IGRyaXZlciBkaXJlY3Rpb24uIA0KDQpXZSB3b3VsZCBsaWtlIHRvIGNoZWNrIHdpdGggY29tbXVu
+aXR5IHdoYXQgaXMgdGhlIE1BQyBjb250cm9sbGVyIHRoYXQgaXMNCnVzaW5nIGFib3ZlIFBIWSBk
+cml2ZXIgc28gdGhhdCB3ZSBjYW4gZGlnIGRlZXBlciBpbnRvIHRoZSBQSFkgJiBNQUMgZHJpdmVy
+DQphcmNoaXRlY3R1cmUuIFdlIHdvdWxkIGxpa2UgdG8gbWFwIHRoZSBleGlzdGluZyB1c2FnZSBv
+ZiBkd3hwY3MuYyBpbiAzLzUgb2YNCnRoaXMgc2VyaWVzIGlzIGFyY2hpdGVjdHVyYWxseSByZWFk
+eSBmb3IgUEhZIGRyaXZlciBmcmFtZXdvcmsgb3IgbmV3IEFQSXMNCndvdWxkIG5lZWQgdG8gYmUg
+ZGVmaW5lZC4gDQoNClRoYW5rcw0KQm9vbiBMZW9uZw0K
