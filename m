@@ -2,102 +2,160 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4421FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672B2C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C297208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6CF20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="kHGnpw7z"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="K15lDwrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbfFGRCG (ORCPT
+        id S1730622AbfFGRFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:02:06 -0400
-Received: from nbd.name ([46.4.11.11]:59402 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfFGRCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:02:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=w1NkHhj3P/sBvSMvxpUd9PLtJQN0qShfm+pLtoheRUo=; b=kHGnpw7zxPutB/Ss7SbHat/1rJ
-        tLj2TGAlVTPJg84j5twrteZIN57pTyVLZDbRQRqb6XO/IPr6XdXfnnDBMzdy18glsMUk7X5Jn2xHD
-        l06jkGzivkfnK/5k6v7CLH0LsuiFcw+nb/SR+7bnr/ey9wWj6zay2Y/U4lKzoxBfjJP8=;
-Received: from p4ff13bc7.dip0.t-ipconnect.de ([79.241.59.199] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1hZIFf-00013n-CA; Fri, 07 Jun 2019 19:02:03 +0200
-Subject: Re: [PATCH v3 2/2] mt76: mt7615: fix slow performance when enable
- encryption
-To:     Ryder Lee <ryder.lee@mediatek.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Chih-Min Chen <chih-min.Chen@mediatek.com>,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
- <429cf8c1421017b4030b8b6e4fa9e5cbea953d3c.1559541944.git.ryder.lee@mediatek.com>
-From:   Felix Fietkau <nbd@nbd.name>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <034e7eaa-5e39-57c4-1e5b-f58d41ad451a@nbd.name>
-Date:   Fri, 7 Jun 2019 19:02:02 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <429cf8c1421017b4030b8b6e4fa9e5cbea953d3c.1559541944.git.ryder.lee@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Jun 2019 13:05:19 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40285 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729944AbfFGRFS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 13:05:18 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so1470398pgm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DgtSX/H6NfPgrhihV60ypaHNzH2XLKDDtBMwkkXJEQM=;
+        b=K15lDwrHU+QByMLUcGsPxdOnNlJhavwl5vzG6kxYPkx7YmYvZeW1ck5JO0OoObB5Xa
+         bYOzIyKVQ7hz1tKrFJw+d10DsxIcYUogKFKziY6bC49Z4sqMZGz+GKrut1kqgjD9iqnD
+         Iy7yuXdRlEQo1JJypK02SCFJ3fiU6aXucnVYHIUhOl0FC0rrAuLNGfNaBUSjjY0SJP0O
+         g+9/YMoWXJmfYyZUowSn5eE6XZng5m+uDKaxwLeh1WtwbitTB4KCIgvTiJtDprK4A3Nl
+         yGxKspKE+tdnIrdwE1lKLqeXOSavRevLlFIkM3wUJcLjFBoUe06Q+MLv/g4yKH03/nvj
+         qypA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DgtSX/H6NfPgrhihV60ypaHNzH2XLKDDtBMwkkXJEQM=;
+        b=YTgzAzMeHMrO4rWIwi5GiQ7SHzuDUrUbN7eWepY3219rU+UVUc1/hgfx0wDYcG8ChG
+         QivU5qz8fcfN9x/VTNIQP8Z8xqYdSIveH0mlhsv2NOTet6o8GTFz3/tVxZ82jVw4+C7E
+         ewv/u1do6njRzrX1sykJ5ciqfQE1f9JVIvf4uQA1ykp/kgURpaJDQGtNoXhfCCL1aoJW
+         sjYn7l3gZgofqk5b/0sGL/LXa0mVuOIT2ifEVtZvjN58Q3z185uj/+aueBcUV3uDRBON
+         H0EpRLbHP/eZyVIdXhiyrX75Utg6UCtc+tYrczQbLiMZhl0IS/nL+XI3sVEG8xGRqzUQ
+         XKeQ==
+X-Gm-Message-State: APjAAAVYXQoHqyHoKzEOAo6+jZJXJCg8AaHOlkOefGX/32HZ0kaAHzC3
+        4agiSt3xf0SBF8nak/LlGPmTgw==
+X-Google-Smtp-Source: APXvYqxpIAgK6uMLd/KqHPohBW13L8/VruBdBF59jsPIJ7TQYnlh4WNEPsdSIs+GfxOtnM3FSmF/iQ==
+X-Received: by 2002:a17:90a:24e4:: with SMTP id i91mr7053557pje.9.1559927117889;
+        Fri, 07 Jun 2019 10:05:17 -0700 (PDT)
+Received: from ?IPv6:2600:1012:b044:6f30:60ea:7662:8055:2cca? ([2600:1012:b044:6f30:60ea:7662:8055:2cca])
+        by smtp.gmail.com with ESMTPSA id b2sm2609638pgk.50.2019.06.07.10.05.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 10:05:15 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup function
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <ac8827d7b516f4b58e1df20f45b94998d36c418c.camel@intel.com>
+Date:   Fri, 7 Jun 2019 10:05:13 -0700
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A495EEB4-F05F-4AB3-831A-0F15B912A7EC@amacapital.net>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com> <20190606200926.4029-4-yu-cheng.yu@intel.com> <20190607080832.GT3419@hirez.programming.kicks-ass.net> <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com> <76B7B1AE-3AEA-4162-B539-990EF3CCE2C2@amacapital.net> <ac8827d7b516f4b58e1df20f45b94998d36c418c.camel@intel.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-03 08:08, Ryder Lee wrote:
-> Fix wrong WCID assignment and add RKV (RX Key of this entry is valid)
-> flag to check if peer uses the same configuration with previous
-> handshaking.
-> 
-> If the configuration is mismatch, WTBL indicates a “cipher mismatch”
-> to stop SEC decryption to prevent the packet from damage.
-> 
-> Suggested-by: YF Luo <yf.luo@mediatek.com>
-> Suggested-by: Yiwei Chung <yiwei.chung@mediatek.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 
-Applied, thanks.
 
-- Felix
+
+> On Jun 7, 2019, at 9:45 AM, Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+>=20
+> On Fri, 2019-06-07 at 09:35 -0700, Andy Lutomirski wrote:
+>>> On Jun 7, 2019, at 9:23 AM, Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+>>>=20
+>>>>> On Fri, 2019-06-07 at 10:08 +0200, Peter Zijlstra wrote:
+>>>>> On Thu, Jun 06, 2019 at 01:09:15PM -0700, Yu-cheng Yu wrote:
+>>>>> Indirect Branch Tracking (IBT) provides an optional legacy code bitmap=
+
+>>>>> that allows execution of legacy, non-IBT compatible library by an
+>>>>> IBT-enabled application.  When set, each bit in the bitmap indicates
+>>>>> one page of legacy code.
+>>>>>=20
+>>>>> The bitmap is allocated and setup from the application.
+>>>>> +int cet_setup_ibt_bitmap(unsigned long bitmap, unsigned long size)
+>>>>> +{
+>>>>> +    u64 r;
+>>>>> +
+>>>>> +    if (!current->thread.cet.ibt_enabled)
+>>>>> +        return -EINVAL;
+>>>>> +
+>>>>> +    if (!PAGE_ALIGNED(bitmap) || (size > TASK_SIZE_MAX))
+>>>>> +        return -EINVAL;
+>>>>> +
+>>>>> +    current->thread.cet.ibt_bitmap_addr =3D bitmap;
+>>>>> +    current->thread.cet.ibt_bitmap_size =3D size;
+>>>>> +
+>>>>> +    /*
+>>>>> +     * Turn on IBT legacy bitmap.
+>>>>> +     */
+>>>>> +    modify_fpu_regs_begin();
+>>>>> +    rdmsrl(MSR_IA32_U_CET, r);
+>>>>> +    r |=3D (MSR_IA32_CET_LEG_IW_EN | bitmap);
+>>>>> +    wrmsrl(MSR_IA32_U_CET, r);
+>>>>> +    modify_fpu_regs_end();
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>=20
+>>>> So you just program a random user supplied address into the hardware.
+>>>> What happens if there's not actually anything at that address or the
+>>>> user munmap()s the data after doing this?
+>>>=20
+>>> This function checks the bitmap's alignment and size, and anything else i=
+s
+>>> the
+>>> app's responsibility.  What else do you think the kernel should check?
+>>>=20
+>>=20
+>> One might reasonably wonder why this state is privileged in the first pla=
+ce
+>> and, given that, why we=E2=80=99re allowing it to be written like this.
+>>=20
+>> Arguably we should have another prctl to lock these values (until exec) a=
+s a
+>> gardening measure.
+>=20
+> We can prevent the bitmap from being set more than once.  I will test it.
+>=20
+
+I think it would be better to make locking an explicit opt-in.=
