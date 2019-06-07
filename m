@@ -2,95 +2,188 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23D3C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B9EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9846208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQXTin5D"
+	by mail.kernel.org (Postfix) with ESMTP id A2296208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732040AbfFGSup (ORCPT
+        id S1732051AbfFGSva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:50:45 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:46332 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbfFGSuo (ORCPT
+        Fri, 7 Jun 2019 14:51:30 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:51346 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729809AbfFGSva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:50:44 -0400
-Received: by mail-ot1-f44.google.com with SMTP id z23so2769712ote.13;
-        Fri, 07 Jun 2019 11:50:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mtzNzCUSsxdVxTwVxd+bIYbQvGHAfnBIn5rvBFTyjR8=;
-        b=OQXTin5D9dTshUeb7Y4bM60DsbmSUlShMmHN60dZZLL9XCDDB+ORnAUfy+Hr/bRkU4
-         Cv0yqr74BU8WBzsrZKhPHtnDdaY0de6HTTVhECsYW3ZFDhfnMueDBif/LMeSAfUlEn3h
-         UDnpCbe1YcCpVwHTuEqfOdBNQpHWtDtmXLvZG2FrS/El4fO7hc1A2zcnTOFbu7C5mW/Q
-         R8WpqASpMYH4b2zJL1KNqjkz+a3zX08H5kIsv0x12+gOBo0YS8HeS10XU5lcpnd1N66R
-         2jI8Uqy8aRSN0derlvny6iWoNLEhVmBJPssrItiTU/pRpjxCLC1oJG2fF5MGcFU9ZEFo
-         EXaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mtzNzCUSsxdVxTwVxd+bIYbQvGHAfnBIn5rvBFTyjR8=;
-        b=H0fcyPqpRI8W7Pll6j4/IMhvldc32YezU/Sf8yGbceUjERIWnOGgbV6OrxxtFS17YJ
-         qVUOHZJCkZCwXUsfi5B0HtVTW7CGlc7KIkMM1Zzw2MmE0mwgdgogbxACAHMOkBh+XZfg
-         itrHGeEKfY0ARVaJeUReSjD+s0rhl7cFzJENE1DHdzxx9OOnfwpVuCSM1Nn1OQWtNFhM
-         Y118iNyOBFXk5Q3IBNJ/x1peKpZhhRn8FFmYaLP1lemZtYxNfZK99cw+/BSW3qypSB4u
-         aHvNsi5trtOeSIyXOxHS8C3yVEuSo6sUxteVPNc+uuUpe75p5HpbTkFswXL2or0rPhYZ
-         iSOg==
-X-Gm-Message-State: APjAAAXrKynw+eRPD+GSkCp2Lc6B+zGiI8i7uEfLfKqVDmiK/gfgoj6z
-        mO3cRAX/j9EYKjc9RRJNICHvYLh3
-X-Google-Smtp-Source: APXvYqz4kHg4ws3IMu+HwC+T75hwpF0oGqhuGhXdapOMtWtwVH7DgtPV5tHN5bGG1FLCCtTfGvS7mw==
-X-Received: by 2002:a9d:7683:: with SMTP id j3mr20795572otl.290.1559933443940;
-        Fri, 07 Jun 2019 11:50:43 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id w22sm1034238otp.73.2019.06.07.11.50.42
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 11:50:43 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
- <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
- <20190607172902.GA8183@lst.de>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <034e6860-8fa8-0510-96c2-0cf6e6a04868@lwfinger.net>
-Date:   Fri, 7 Jun 2019 13:50:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 14:51:30 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TTeuMkB_1559933482;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TTeuMkB_1559933482)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 08 Jun 2019 02:51:25 +0800
+Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190423175252.GP25106@dhcp22.suse.cz>
+ <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
+ <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
+ <20190507104709.GP31017@dhcp22.suse.cz>
+ <ec8a65c7-9b0b-9342-4854-46c732c99390@linux.alibaba.com>
+ <217fc290-5800-31de-7d46-aa5c0f7b1c75@linux.alibaba.com>
+ <alpine.LSU.2.11.1906070314001.1938@eggly.anvils>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <f5b9e7f5-20e7-76a7-e014-891d34780dc5@linux.alibaba.com>
+Date:   Fri, 7 Jun 2019 11:51:22 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190607172902.GA8183@lst.de>
+In-Reply-To: <alpine.LSU.2.11.1906070314001.1938@eggly.anvils>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 12:29 PM, Christoph Hellwig wrote:
-> I don't think we should work around this in the driver, we need to fix
-> it in the core.  I'm curious why my previous patch didn't work.  Can
-> you throw in a few printks what failed?  I.e. did dma_direct_supported
-> return false?  Did the actual allocation fail?
 
-I agree that that patch should not be sent upstream. I posted it only so that 
-anyone running into the problem would have a work around.
 
-I will try to see why your patch failed.
+On 6/7/19 3:57 AM, Hugh Dickins wrote:
+> On Thu, 6 Jun 2019, Yang Shi wrote:
+>> On 5/7/19 10:10 AM, Yang Shi wrote:
+>>> On 5/7/19 3:47 AM, Michal Hocko wrote:
+>>>> [Hmm, I thought, Hugh was CCed]
+>>>>
+>>>> On Mon 06-05-19 16:37:42, Yang Shi wrote:
+>>>>> On 4/28/19 12:13 PM, Yang Shi wrote:
+>>>>>> On 4/23/19 10:52 AM, Michal Hocko wrote:
+>>>>>>> On Wed 24-04-19 00:43:01, Yang Shi wrote:
+>>>>>>>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility
+>>>>>>>> for each
+>>>>>>>> vma") introduced THPeligible bit for processes' smaps. But, when
+>>>>>>>> checking
+>>>>>>>> the eligibility for shmem vma, __transparent_hugepage_enabled()
+>>>>>>>> is
+>>>>>>>> called to override the result from shmem_huge_enabled().  It may
+>>>>>>>> result
+>>>>>>>> in the anonymous vma's THP flag override shmem's.  For example,
+>>>>>>>> running a
+>>>>>>>> simple test which create THP for shmem, but with anonymous THP
+>>>>>>>> disabled,
+>>>>>>>> when reading the process's smaps, it may show:
+>>>>>>>>
+>>>>>>>> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+>>>>>>>> Size:               4096 kB
+>>>>>>>> ...
+>>>>>>>> [snip]
+>>>>>>>> ...
+>>>>>>>> ShmemPmdMapped:     4096 kB
+>>>>>>>> ...
+>>>>>>>> [snip]
+>>>>>>>> ...
+>>>>>>>> THPeligible:    0
+>>>>>>>>
+>>>>>>>> And, /proc/meminfo does show THP allocated and PMD mapped too:
+>>>>>>>>
+>>>>>>>> ShmemHugePages:     4096 kB
+>>>>>>>> ShmemPmdMapped:     4096 kB
+>>>>>>>>
+>>>>>>>> This doesn't make too much sense.  The anonymous THP flag should
+>>>>>>>> not
+>>>>>>>> intervene shmem THP.  Calling shmem_huge_enabled() with checking
+>>>>>>>> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+>>>>>>>> dax vma check since we already checked if the vma is shmem
+>>>>>>>> already.
+>>>>>>> Kirill, can we get a confirmation that this is really intended
+>>>>>>> behavior
+>>>>>>> rather than an omission please? Is this documented? What is a
+>>>>>>> global
+>>>>>>> knob to simply disable THP system wise?
+>>>>>> Hi Kirill,
+>>>>>>
+>>>>>> Ping. Any comment?
+>>>>> Talked with Kirill at LSFMM, it sounds this is kind of intended
+>>>>> behavior
+>>>>> according to him. But, we all agree it looks inconsistent.
+>>>>>
+>>>>> So, we may have two options:
+>>>>>       - Just fix the false negative issue as what the patch does
+>>>>>       - Change the behavior to make it more consistent
+>>>>>
+>>>>> I'm not sure whether anyone relies on the behavior explicitly or
+>>>>> implicitly
+>>>>> or not.
+>>>> Well, I would be certainly more happy with a more consistent behavior.
+>>>> Talked to Hugh at LSFMM about this and he finds treating shmem objects
+>>>> separately from the anonymous memory. And that is already the case
+>>>> partially when each mount point might have its own setup. So the primary
+>>>> question is whether we need a one global knob to controll all THP
+>>>> allocations. One argument to have that is that it might be helpful to
+>>>> for an admin to simply disable source of THP at a single place rather
+>>>> than crawling over all shmem mount points and remount them. Especially
+>>>> in environments where shmem points are mounted in a container by a
+>>>> non-root. Why would somebody wanted something like that? One example
+>>>> would be to temporarily workaround high order allocations issues which
+>>>> we have seen non trivial amount of in the past and we are likely not at
+>>>> the end of the tunel.
+>>> Shmem has a global control for such use. Setting shmem_enabled to "force"
+>>> or "deny" would enable or disable THP for shmem globally, including non-fs
+>>> objects, i.e. memfd, SYS V shmem, etc.
+>>>
+>>>> That being said I would be in favor of treating the global sysfs knob to
+>>>> be global for all THP allocations. I will not push back on that if there
+>>>> is a general consensus that shmem and fs in general are a different
+>>>> class of objects and a single global control is not desirable for
+>>>> whatever reasons.
+>>> OK, we need more inputs from Kirill, Hugh and other folks.
+>> [Forgot cc to mailing lists]
+>>
+>> Hi guys,
+>>
+>> How should we move forward for this one? Make the sysfs knob
+>> (/sys/kernel/mm/transparent_hugepage/enabled) to be global for both anonymous
+>> and tmpfs? Or just treat shmem objects separately from anon memory then fix
+>> the false-negative of THP eligibility by this patch?
+> Sorry for not getting back to you sooner on this.
+>
+> I don't like to drive design by smaps. I agree with the word "mess" used
+> several times of THP tunings in this thread, but it's too easy to make
+> that mess worse by unnecessary changes, so I'm very cautious here.
+>
+> The addition of "THPeligible" without an "Anon" in its name was
+> unfortunate. I suppose we're two releases too late to change that.
 
-Larry
+The smaps shows it is anon vma or shmem vma for the most cases.
+
+>
+> Applying process (PR_SET_THP_DISABLE) and mm (MADV_*HUGEPAGE)
+> limitations to shared filesystem objects doesn't work all that well.
+
+The THP eligibility indicator is per vma, it just reports whether THP is 
+eligible for a specific vma. So, I'm supposed it should keep consistent 
+with MMF_DISABLE_THP and MADV_*HUGEPAGE setting.
+
+The current implementation in shmem and kuhugepaged also checks these.
+
+>
+> I recommend that you continue to treat shmem objects separately from
+> anon memory, and just make the smaps "THPeligible" more often accurate.
+>
+> Is your v2 patch earlier in this thread the best for that?
+
+The v2 patch treats shmem objects separately from anon memory and it 
+makes the "THPeligible" more often accurate.
+
+> No answer tonight, I'll re-examine later in the day.
+>
+> Hugh
 
