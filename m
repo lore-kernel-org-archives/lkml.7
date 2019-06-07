@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CACBC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D55C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8CA2133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C1821479
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922213;
-	bh=uyIkaYx4Do60DeM1Fok7P3O2zNsV3shDL6HrAbissfE=;
+	s=default; t=1559922216;
+	bh=op1gChslQGxNPa936LUqZEqpWuej5GsHZdQxDraDVkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v0umZ2IGWhQLM06yPTGnbd9RB/OFPdxPRMj89IGSSSpj6LZII0A0cfw3Ivk0ztd2x
-	 ww3d4PxLG9ncpe+oySQpSZD+YrViQ1mrAYXiGLyX8EIcbRWuXGUNd0kW6cOxR8ZG4P
-	 V+ofEJmPUxYoxDpnMMfjDTAJOTIAz0dbFDR81sFk=
+	b=fDv9AlCX1z3zPGML0K/Qw0aA/Vacu/yET8jp0EKZyx/S2Aj+ZRMEwZlCcyKR8zS/Z
+	 wms6iKKyaRbzjUQrH5r6BSmXp1jHB+MME0BHYJOw2B0+sxSSB/GbH1dJExJMf8Ca9k
+	 9cRbtdo8i0cAbgAR6I1EFh3V9wbziGllG1ST6N6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbfFGPnc (ORCPT
+        id S1730880AbfFGPna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730872AbfFGPna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 11:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729770AbfFGPn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:43:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58B292146E;
-        Fri,  7 Jun 2019 15:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3DC12146E;
+        Fri,  7 Jun 2019 15:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922209;
-        bh=uyIkaYx4Do60DeM1Fok7P3O2zNsV3shDL6HrAbissfE=;
+        s=default; t=1559922206;
+        bh=op1gChslQGxNPa936LUqZEqpWuej5GsHZdQxDraDVkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LX611G/0aJG08mLDMDrM7WJCmglLPzMXtK4w1iS9kr/lZzBp4U5UoLirfNdZjkGVT
-         xxHVyQujeLMiTkE1OampGdS3KC5QmDspfu/pPwU1ULWzm9vY8h576E5a5yICjH/ue5
-         6J2j3hlxonpxq9GwegTqDKCHLmtwNKPi6CEev/Fk=
+        b=TRoFRKu6TYSDfOQUQCdW4yLfvlFufaKA4B8If+o8u8mrX1VOlGDM+XCyAFv0AEuSt
+         FimCE7BR78l/vJDdIUmFwywaEIOobWC/0hQInQLoHMGoVKuvgrk08T7l69DGwAsQf9
+         eBXIsfMBaHI6Q5rbn1HXfcy7Yno7huh54nvgbSQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Joe Burmeister <joe.burmeister@devtank.co.uk>
-Subject: [PATCH 4.14 49/69] tty: max310x: Fix external crystal register setup
-Date:   Fri,  7 Jun 2019 17:39:30 +0200
-Message-Id: <20190607153854.391152729@linuxfoundation.org>
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH 4.14 48/69] tty: serial: msm_serial: Fix XON/XOFF
+Date:   Fri,  7 Jun 2019 17:39:29 +0200
+Message-Id: <20190607153854.275715769@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -59,42 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Burmeister <joe.burmeister@devtank.co.uk>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-commit 5d24f455c182d5116dd5db8e1dc501115ecc9c2c upstream.
+commit 61c0e37950b88bad590056286c1d766b1f167f4e upstream.
 
-The datasheet states:
+When the tty layer requests the uart to throttle, the current code
+executing in msm_serial will trigger "Bad mode in Error Handler" and
+generate an invalid stack frame in pstore before rebooting (that is if
+pstore is indeed configured: otherwise the user shall just notice a
+reboot with no further information dumped to the console).
 
-  Bit 4: ClockEnSet the ClockEn bit high to enable an external clocking
-(crystal or clock generator at XIN). Set the ClockEn bit to 0 to disable
-clocking
-  Bit 1: CrystalEnSet the CrystalEn bit high to enable the crystal
-oscillator. When using an external clock source at XIN, CrystalEn must
-be set low.
+This patch replaces the PIO byte accessor with the word accessor
+already used in PIO mode.
 
-The bit 4, MAX310X_CLKSRC_EXTCLK_BIT, should be set and was not.
-
-This was required to make the MAX3107 with an external crystal on our
-board able to send or receive data.
-
-Signed-off-by: Joe Burmeister <joe.burmeister@devtank.co.uk>
-Cc: stable <stable@vger.kernel.org>
+Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/max310x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/msm_serial.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -579,7 +579,7 @@ static int max310x_set_ref_clk(struct ma
- 	}
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -868,6 +868,7 @@ static void msm_handle_tx(struct uart_po
+ 	struct circ_buf *xmit = &msm_port->uart.state->xmit;
+ 	struct msm_dma *dma = &msm_port->tx_dma;
+ 	unsigned int pio_count, dma_count, dma_min;
++	char buf[4] = { 0 };
+ 	void __iomem *tf;
+ 	int err = 0;
  
- 	/* Configure clock source */
--	clksrc = xtal ? MAX310X_CLKSRC_CRYST_BIT : MAX310X_CLKSRC_EXTCLK_BIT;
-+	clksrc = MAX310X_CLKSRC_EXTCLK_BIT | (xtal ? MAX310X_CLKSRC_CRYST_BIT : 0);
+@@ -877,10 +878,12 @@ static void msm_handle_tx(struct uart_po
+ 		else
+ 			tf = port->membase + UART_TF;
  
- 	/* Configure PLL */
- 	if (pllcfg) {
++		buf[0] = port->x_char;
++
+ 		if (msm_port->is_uartdm)
+ 			msm_reset_dm_count(port, 1);
+ 
+-		iowrite8_rep(tf, &port->x_char, 1);
++		iowrite32_rep(tf, buf, 1);
+ 		port->icount.tx++;
+ 		port->x_char = 0;
+ 		return;
 
 
