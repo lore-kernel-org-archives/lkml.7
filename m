@@ -2,152 +2,141 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874ECC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5E4C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5681720B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C852D20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:08:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MeyCzVWA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZzuXtFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbfFGOHT (ORCPT
+        id S1729363AbfFGOI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:07:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33595 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728199AbfFGOHS (ORCPT
+        Fri, 7 Jun 2019 10:08:58 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35578 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727840AbfFGOI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:07:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g21so895631plq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:07:18 -0700 (PDT)
+        Fri, 7 Jun 2019 10:08:57 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so1514512ioo.2;
+        Fri, 07 Jun 2019 07:08:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dN/Vg8VmpZ2MdQzZ8FBtvf2tGAMIAAsE9edwuUKNnNU=;
-        b=MeyCzVWAzQPRCgD7BC4afNMiWnt++zxzpcmIpt6Ip91tKpHwQNdoSWQxlSGrkICLBg
-         rzJYZ14EmLn7AqgaxECwqZkfuOiQt5J7Q2dGBbfcqdSQhlC4KoBc7frlMwSDclWpcHRb
-         DDzCRDPL2IKuOf8P7NTSCDwgUnJLYIM21+0/jNElfAEunPgb5JJzSNYEMNCT6hlmC4es
-         BxCfaYVHIfCRQ4+nwcjJUc30Ue2VaufhxDP6WrxyY5ctIZLXkZ/OYinQ/XBnCRK2LByK
-         zuu3nTN6QToQLqOhrNSEIEbduivFc/+WHu/bhoREMwX9/93AxxKiZm/SP5gIjJLSmVBP
-         SVfw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pCTc9jsipUoi63VdTLHDq+J3b8osAzXSjDn0slmiFY4=;
+        b=oZzuXtFmut9n4jR87BPzOqCINKRM9d9nSOlA6LqyRGYVMnHoDIUSN9iFKe90wej7tj
+         ER264ZUFfBAIEY7euu1cZrEfDEYSPp1k0fUGak9xE4t3kiVlffd9gM6ifqgbIsLm0wQT
+         EXMSkFJAQxgYbX4a/bNoZiaxCcIzhpCcFC8l4ydxf7k4krU3sb05f4qZAtfeb5dsW+Zk
+         UkTV30CxUjgiJghfILJ3nDVUnr8+55ZF3+0gu1qLivvcLNjC6yfjL8nf5lmjjlwcneqQ
+         2xWGjRySqeiw2Gd4OVJpRzLJQ9KmFmZV4xJTMWPDTp4DspPpPCbJWx3pjTe8ZxPlb6QB
+         Rjlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dN/Vg8VmpZ2MdQzZ8FBtvf2tGAMIAAsE9edwuUKNnNU=;
-        b=X/A8nffQCCUF7DYHLg3X3KYl/ZtQNR2T4wRJKkSylRueP8jZgcF0EN6yU81tZaSdsi
-         WIR9WOsQyXzJVATfoFZPpP4SYvvRnQ8PS+aDVSYjAD0Ec4l5eLBAXDnI3kZ7E0R64qX0
-         VblJd7SomPzpAxTiCrpujIfPZ3mwQWbVHLwDsxWOLS9brWBSkLvGzIg/MMtiQs0Xlho9
-         Nax7P4Mc5rnEFlBdZH9bBetjaQntTmN21dYLL8Xds8hNnFpJX0Y5JVKfZ+pAJuMlbEF4
-         nu7+HrAXdx2n7VhrHUTu0ArWeVv645oUR0w86r3+AErVgTw01YJHZRJI5HZ4/0chSM0A
-         Kd4A==
-X-Gm-Message-State: APjAAAVg0Av5oJBdpSaTTmHNc4bLx9utZym5CG9Wbc5YoIT7RynyaQSy
-        t3t1W3OivMOmKNntJddLZQE=
-X-Google-Smtp-Source: APXvYqz18+sGwBta6VjMgL4HrcHyt8lJDGDyybdXd+t/BjpPHb2jsU5i0Tu9X4Bc9dCRZGcfvJY85Q==
-X-Received: by 2002:a17:902:e490:: with SMTP id cj16mr54799243plb.136.1559916437964;
-        Fri, 07 Jun 2019 07:07:17 -0700 (PDT)
-Received: from localhost.localdomain ([110.227.95.145])
-        by smtp.gmail.com with ESMTPSA id j7sm7071983pjb.26.2019.06.07.07.07.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 07:07:17 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, straube.linux@gmail.com,
-        larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        colin.king@canonical.com, valdis.kletnieks@vt.edu,
-        tiny.windzz@gmail.com
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH 2/2] staging: rtl8712: r8712_createbss_cmd(): Change
-Date:   Fri,  7 Jun 2019 19:36:58 +0530
-Message-Id: <20190607140658.11932-2-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190607140658.11932-1-nishkadg.linux@gmail.com>
-References: <20190607140658.11932-1-nishkadg.linux@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pCTc9jsipUoi63VdTLHDq+J3b8osAzXSjDn0slmiFY4=;
+        b=pOoJ/nFaKP1jDW2JnG66Uta608iDW3JQ+2mrdW8dyqrF+zyaiqeLZs+cSUfCgAQUbC
+         B2CfQEB1J+gYr7iMlwpzSNXERJyBo/uaqwMsjft114YVmMla97tszl79VP/QTzqP7Suw
+         uytPWnubjPpW577vWGBwjQgawFmRNBQdSm+c8+ExyYEUP8Nsth7fX47dba7SXguQwpLi
+         uO4axy8FIS4UmXjEZN+2Qcz1s/boCqEXkj26jwvGTGPJEG9keG8RoGl6/NaRk0T48jim
+         1PCK+yFZCVLnpx4r0DMJ1kDEUCENenvuDtS0tHhtymovlAiS1qKAnlL7+5FcrhB1RMca
+         soFw==
+X-Gm-Message-State: APjAAAUwLzxOpMYkCCYGBhoWYDiltf2Yf2AHvdvTRRayF0xWuYfVgrDb
+        0nVoQcEHFumWsd1g7+itEW95EaE36PLZcoyFLYc=
+X-Google-Smtp-Source: APXvYqwbSPhjuuMf9/v2tEx2rOUvzTVYr08r5T2FJscY80vogA7xlSoSgNUAMJ8dWw2gCLnxFBofO3r6QgiBpUMMqxE=
+X-Received: by 2002:a05:6602:2001:: with SMTP id y1mr15641346iod.166.1559916536908;
+ Fri, 07 Jun 2019 07:08:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
+ <20190528164803.38642-1-jeffrey.l.hugo@gmail.com> <20190606230050.2F33720645@mail.kernel.org>
+In-Reply-To: <20190606230050.2F33720645@mail.kernel.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 7 Jun 2019 08:08:46 -0600
+Message-ID: <CAOCk7NqYptsLkYyfUCSvh0J0FZd_9gPDZJoyjB5Ng4v8aLFUNw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change return values of r8712_createbss_cmd from _SUCCESS and _FAIL to 0
-and -ENOMEM respectively.
-Change return type of the function from unsigned to int to reflect this.
-Change call site to check for 0 instead of _SUCCESS.
-(Instead of !=0, simply passing the function output to the conditional
-will do.)
+On Thu, Jun 6, 2019 at 5:00 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Jeffrey Hugo (2019-05-28 09:48:03)
+> > diff --git a/drivers/clk/qcom/gpucc-msm8998.c b/drivers/clk/qcom/gpucc-msm8998.c
+> > new file mode 100644
+> > index 000000000000..e45062e40718
+> > --- /dev/null
+> > +++ b/drivers/clk/qcom/gpucc-msm8998.c
+> > +
+> > +static int gpucc_msm8998_probe(struct platform_device *pdev)
+> > +{
+> > +       struct regmap *regmap;
+> > +       struct clk *xo;
+> > +
+> > +       /*
+> > +        * We must have a valid XO to continue until orphan probe defer is
+> > +        * implemented.
+> > +        */
+> > +       xo = clk_get(&pdev->dev, "xo");
+>
+> Why is this necessary?
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/rtl8712/rtl871x_cmd.c       | 6 +++---
- drivers/staging/rtl8712/rtl871x_cmd.h       | 2 +-
- drivers/staging/rtl8712/rtl871x_ioctl_set.c | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+As you well know, XO is the root clock for pretty much everything on
+Qualcomm platforms.  We are trying to do things "properly" on 8998.
+We are planning on having rpmcc manage it (see my other series), and
+all the other components consume xo from there.  Unfortunately we
+cannot control the probe order, particularly when things are built as
+modules, so its possible gpucc might be the first thing to probe.
+Currently, the clock framework will allow that since everything in
+gpucc will just be an orphan.  However that doesn't prevent gpucc
+consumers from grabbing their clocks, and we've seen that cause
+issues.
 
-diff --git a/drivers/staging/rtl8712/rtl871x_cmd.c b/drivers/staging/rtl8712/rtl871x_cmd.c
-index e478c031f95f..94ff875d9025 100644
---- a/drivers/staging/rtl8712/rtl871x_cmd.c
-+++ b/drivers/staging/rtl8712/rtl871x_cmd.c
-@@ -409,7 +409,7 @@ void r8712_readtssi_cmdrsp_callback(struct _adapter *padapter,
- 	padapter->mppriv.workparam.bcompleted = true;
- }
- 
--u8 r8712_createbss_cmd(struct _adapter *padapter)
-+int r8712_createbss_cmd(struct _adapter *padapter)
- {
- 	struct cmd_obj *pcmd;
- 	struct cmd_priv *pcmdpriv = &padapter->cmdpriv;
-@@ -419,7 +419,7 @@ u8 r8712_createbss_cmd(struct _adapter *padapter)
- 	padapter->ledpriv.LedControlHandler(padapter, LED_CTL_START_TO_LINK);
- 	pcmd = kmalloc(sizeof(*pcmd), GFP_ATOMIC);
- 	if (!pcmd)
--		return _FAIL;
-+		return -ENOMEM;
- 	INIT_LIST_HEAD(&pcmd->list);
- 	pcmd->cmdcode = _CreateBss_CMD_;
- 	pcmd->parmbuf = (unsigned char *)pdev_network;
-@@ -431,7 +431,7 @@ u8 r8712_createbss_cmd(struct _adapter *padapter)
- 	pdev_network->IELength = pdev_network->IELength;
- 	pdev_network->Ssid.SsidLength =	pdev_network->Ssid.SsidLength;
- 	r8712_enqueue_cmd(pcmdpriv, pcmd);
--	return _SUCCESS;
-+	return 0;
- }
- 
- u8 r8712_joinbss_cmd(struct _adapter  *padapter, struct wlan_network *pnetwork)
-diff --git a/drivers/staging/rtl8712/rtl871x_cmd.h b/drivers/staging/rtl8712/rtl871x_cmd.h
-index 800216cca2f6..6ea1bafd8acc 100644
---- a/drivers/staging/rtl8712/rtl871x_cmd.h
-+++ b/drivers/staging/rtl8712/rtl871x_cmd.h
-@@ -712,7 +712,7 @@ u8 r8712_setMacAddr_cmd(struct _adapter *padapter, u8 *mac_addr);
- u8 r8712_setassocsta_cmd(struct _adapter *padapter, u8 *mac_addr);
- u8 r8712_sitesurvey_cmd(struct _adapter *padapter,
- 			struct ndis_802_11_ssid *pssid);
--u8 r8712_createbss_cmd(struct _adapter *padapter);
-+int r8712_createbss_cmd(struct _adapter *padapter);
- u8 r8712_setstakey_cmd(struct _adapter *padapter, u8 *psta, u8 unicast_key);
- u8 r8712_joinbss_cmd(struct _adapter *padapter,
- 		     struct wlan_network *pnetwork);
-diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_set.c b/drivers/staging/rtl8712/rtl871x_ioctl_set.c
-index 2622d5e3bff9..d0274c65d17e 100644
---- a/drivers/staging/rtl8712/rtl871x_ioctl_set.c
-+++ b/drivers/staging/rtl8712/rtl871x_ioctl_set.c
-@@ -84,7 +84,7 @@ static u8 do_join(struct _adapter *padapter)
- 			       sizeof(struct ndis_802_11_ssid));
- 			r8712_update_registrypriv_dev_network(padapter);
- 			r8712_generate_random_ibss(pibss);
--			if (r8712_createbss_cmd(padapter) != _SUCCESS)
-+			if (r8712_createbss_cmd(padapter))
- 				return false;
- 			pmlmepriv->to_join = false;
- 		} else {
--- 
-2.19.1
+As you've previously explained, you have a ton of work to do to
+refactor things so that a clock will probe defer if its dependencies
+are not present.  We'd prefer that functionality, but are not really
+willing to wait for it.  Thus, we are implementing the same
+functionality in the driver until the framework handles it for us, at
+which point we'll gladly rip this out.
 
+>
+> > +       if (IS_ERR(xo))
+> > +               return PTR_ERR(xo);
+> > +       clk_put(xo);
+> > +
+> > +       regmap = qcom_cc_map(pdev, &gpucc_msm8998_desc);
+> > +       if (IS_ERR(regmap))
+> > +               return PTR_ERR(regmap);
+> > +
+> > +       /* force periph logic on to acoid perf counter corruption */
+>
+> avoid?
+
+Yes.  Do you want a v3 with this fixed?
+
+>
+> > +       regmap_write_bits(regmap, gfx3d_clk.clkr.enable_reg, BIT(13), BIT(13));
+> > +       /* tweak droop detector (GPUCC_GPU_DD_WRAP_CTRL) to reduce leakage */
+> > +       regmap_write_bits(regmap, gfx3d_clk.clkr.enable_reg, BIT(0), BIT(0));
+> > +
+> > +       return qcom_cc_really_probe(pdev, &gpucc_msm8998_desc, regmap);
+> > +}
+> > +
