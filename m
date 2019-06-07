@@ -2,189 +2,156 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04374C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E77C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0E520840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C428420840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:42:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZO4rdF0c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n1lnQGKk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbfFGNil (ORCPT
+        id S1729002AbfFGNmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 09:38:41 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41766 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfFGNik (ORCPT
+        Fri, 7 Jun 2019 09:42:50 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43933 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728740AbfFGNmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 09:38:40 -0400
-Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2F88E334;
-        Fri,  7 Jun 2019 15:38:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1559914718;
-        bh=cZWJM1dGWVBJvNXv07QLU66jY8fTal7gs4kQKfSyIAw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZO4rdF0cZmRzSCRE2r/yzqMnESSU+RYfuDkWC5d0d9ZFpoTzj5PIr9xSnI0SsdqXl
-         Qf7nRCBMJPzAk5ykLUE9R8QeUFQdvrXnyxb6Z46Nr4nBzNk2IX1NxzjZQDuCw8Mp3e
-         mf5k1OAOoyidAQCAKMXgWF/m2rKG5dBXjLcyOnkU=
-Date:   Fri, 7 Jun 2019 16:38:18 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     a.hajda@samsung.com, jernej.skrabec@siol.net,
-        maxime.ripard@bootlin.com, jonas@kwiboo.se,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 2/5] drm/bridge: add encoder support to specify bridge
- input format
-Message-ID: <20190607133818.GM7593@pendragon.ideasonboard.com>
-References: <20190520133753.23871-1-narmstrong@baylibre.com>
- <20190520133753.23871-3-narmstrong@baylibre.com>
+        Fri, 7 Jun 2019 09:42:49 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z24so2246929qtj.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 06:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3WofkuIu9igDLPAQnWn5qFH+FdgRGt2W5dGohyfL5bo=;
+        b=n1lnQGKkeKsiGRx9x7uI6LTN+EX3yAuiclsjYtuaV9QgzH5H2R3zrNbiuZAkVmtF5W
+         WHntmEZBrSJEVOz7HgVLx+C2H9Ovsr/y7PbdFquDC+wOkaSQQaYPbBY2L49iwXc//rlW
+         M2Rfi1KuameCfRdBGip+OvrCA9SXZA4gfspYu5F7ye4Dpg7wSJTd/6dvJ8rKyljga7Al
+         7bE7zLDqoe7kMwCol673Fq9oKJW1/iPKomslzazl9QfJIzpD2gag0wSK9OShHlAcXBv2
+         sfL81E7/N+KKk5xEDZkPjiB3yaXMKXC5yMRtvM/RxMTMlaWIFTw9VfRhiY/tTQftsXgH
+         ECtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3WofkuIu9igDLPAQnWn5qFH+FdgRGt2W5dGohyfL5bo=;
+        b=h+TiJjxor6rB4ippYwgdg9T15N1zimNpxe283x3VFf7sM3kDQZaMJmul2wLHKzPOIg
+         7C4KfMf/FCTIZgxYd8OevRapElKT2Syj+IHt5JfHH1Vvu1fihT5D3BUlhIsyLyp5ZYtX
+         HaN0XG/VrWWOH2sM7lkf7Kw1JJ8HdXeGroMyRyqKAq6ov81asjaPTe2yhAWxnxP0uYqk
+         0GJL1Gs9FBe6VJHHAjuFi9RMLu/CUkgb2swm3R3jhxIA+MIW/Tg/ts7fDtHrezuROO3k
+         iV8Lr/ki4l+IBNTbymZekfx5tXbcTao5Balq7Z0aAmGDEkkBLcskFwJH88R5vEjr9bkk
+         +76w==
+X-Gm-Message-State: APjAAAU3J9D4RKTAbtnMIXSvHnREY2LcqOoW62yM5ENWbT0vZQ6Je2hC
+        B1El+pBHeLr5LRUPe7o5JbNSSg==
+X-Google-Smtp-Source: APXvYqzHgv638dIvZYD6LkRLDpzgnhtAJFigmQgwYChIND2SwnM+zmbtS1QVchVJkw/zzaI8x8einA==
+X-Received: by 2002:ac8:2cbc:: with SMTP id 57mr44959069qtw.222.1559914968187;
+        Fri, 07 Jun 2019 06:42:48 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li1322-146.members.linode.com. [45.79.223.146])
+        by smtp.gmail.com with ESMTPSA id x2sm997287qke.92.2019.06.07.06.42.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 06:42:47 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 21:42:39 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        corbet@lwn.net
+Subject: Re: [PATCH] Documentation: coresight: Update the generic device names
+Message-ID: <20190607134239.GH5970@leoy-ThinkPad-X240s>
+References: <1559229077-26436-1-git-send-email-suzuki.poulose@arm.com>
+ <20190603190133.GA20462@xps15>
+ <99055755-6525-694e-a15d-5de7318a80da@arm.com>
+ <20190607022136.GE5970@leoy-ThinkPad-X240s>
+ <78c98c28-4f3f-825b-18e1-c71fb63a80eb@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520133753.23871-3-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <78c98c28-4f3f-825b-18e1-c71fb63a80eb@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Hi Suzuki,
 
-Thank you for the patch.
-
-On Mon, May 20, 2019 at 03:37:50PM +0200, Neil Armstrong wrote:
-> This patch adds a new format_set() callback to the bridge ops permitting
-> the encoder to specify the new input format and encoding.
+On Fri, Jun 07, 2019 at 09:40:48AM +0100, Suzuki K Poulose wrote:
+> Hi Leo,
 > 
-> This allows supporting the very specific HDMI2.0 YUV420 output mode
-> when the bridge cannot convert from RGB or YUV444 to YUV420.
+> > > > >    A Coresight PMU works the same way as any other PMU, i.e the name of the PMU is
+> > > > >    listed along with configuration options within forward slashes '/'.  Since a
+> > > > >    Coresight system will typically have more than one sink, the name of the sink to
+> > > > > -work with needs to be specified as an event option.  Names for sink to choose
+> > > > > -from are listed in sysFS under ($SYSFS)/bus/coresight/devices:
+> > > > > +work with needs to be specified as an event option.
+> > > > > +On newer kernels the available sinks are listed in sysFS under:
+> > > > > +($SYSFS)/bus/event_source/devices/cs_etm/sinks/
+> > > > > -	root@linaro-nano:~# ls /sys/bus/coresight/devices/
+> > > > > -		20010000.etf   20040000.funnel  20100000.stm  22040000.etm
+> > > > > -		22140000.etm  230c0000.funnel  23240000.etm 20030000.tpiu
+> > > > > -		20070000.etr     20120000.replicator  220c0000.funnel
+> > > > > -		23040000.etm  23140000.etm     23340000.etm
+> > > > > +	root@localhost:/sys/bus/event_source/devices/cs_etm/sinks# ls
+> > > > > +	tmc_etf0  tmc_etr0  tpiu0
+> > > > > -	root@linaro-nano:~# perf record -e cs_etm/@20070000.etr/u --per-thread program
+> > > > > +On older kernels, this may need to be found from the list of coresight devices,
+> > > > > +available under ($SYSFS)/bus/coresight/devices/:
+> > > > > +
+> > > > > +	root@localhost:/sys/bus/coresight/devices# ls
+> > > > > +	etm0  etm1  etm2  etm3  etm4  etm5  funnel0  funnel1  funnel2  replicator0  stm0 tmc_etf0  tmc_etr0  tpiu0
+> > > > > +
+> > > > > +	root@linaro-nano:~# perf record -e cs_etm/@tmc_etr0/u --per-thread program
+> > > > 
+> > > > On the "older" kernels you are referring to one would find the original naming
+> > > > convention.  Everything else looks good to me.
+> > > 
+> > > True, but do we care what we see there ? All we care about is the location,
+> > > where to find them. I could fix it, if you think thats needed.
+> > 
+> > IIUC, either the old kernel or newer kernel, both we can find the event
+> > from ($SYSFS)/bus/event_source/devices/cs_etm/sinks/; the only
+> > difference between them is the naming convention.
 > 
-> In this case, the encode must downsample before the bridge and must
-> specify the bridge the new input bus format differs.
+> The cs_etm/sinks was only added with the CPU-wide trace support. So, if someone
+> refers to this document alone and then tries to do something on on older kernel,
+> which is quite possible for a production device running a stable kernel, {s,}he
+> might be surprised.
+
+Okay, understand now.  Thanks for clarification.
+
+> > So the doc can use the same location to find event for both new and
+> > old kernel, and explain the naming convention difference?
 > 
-> This will also help supporting the YUV420 mode where the bridge cannot
-> downsample, and also support 10bit, 12bit and 16bit output modes
-> when the bridge cannot convert between different bit depths.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/gpu/drm/drm_bridge.c | 35 +++++++++++++++++++++++++++++++++++
->  include/drm/drm_bridge.h     | 19 +++++++++++++++++++
->  2 files changed, 54 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index 138b2711d389..33be74a977f7 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -307,6 +307,41 @@ void drm_bridge_mode_set(struct drm_bridge *bridge,
->  }
->  EXPORT_SYMBOL(drm_bridge_mode_set);
->  
-> +/**
-> + * drm_bridge_format_set - setup with proposed input format and encoding for
-> + *			   all bridges in the encoder chain
-> + * @bridge: bridge control structure
-> + * @input_bus_format: proposed input bus format for the bridge
-> + * @input_encoding: proposed input encoding for this bridge
-> + *
-> + * Calls &drm_bridge_funcs.format_set op for all the bridges in the
-> + * encoder chain, starting from the first bridge to the last.
-> + *
-> + * Note: the bridge passed should be the one closest to the encoder
-> + *
-> + * RETURNS:
-> + * true on success, false if one of the bridge cannot handle the format
+> My question is really, does the naming convention matter ? What you see
+> under the directory is the name. But yes, I am open to add a section to
+> explain the fact that we changed the naming scheme, if everyone agrees
+> to it.
 
-I would return an int to propagate the failure reason upstream. It will
-reach the commit tail handler in any case, so will be dropped there, but
-could help debugging issues if we print it in the right place.
+The naming convention is not important for the developers who are
+familiar with CoreSight development; later who is the first time to
+access kernel CoreSight modules and don't know the history for naming
+scheme, the related documentation will be friendly and reduce the
+barrier for using it.
 
-> + */
-> +bool drm_bridge_format_set(struct drm_bridge *bridge,
-> +			   const u32 input_bus_format,
-> +			   const u32 input_encoding)
+I have no strong opinion for this, seems to me another choice is to
+describe the older kernel with old naming scheme, something like below:
 
-You don't need a const here.
+On older kernels, this may need to be found from the list of coresight devices,
+available under ($SYSFS)/bus/coresight/devices/ with old naming scheme:
 
-> +{
-> +	bool ret = true;
-> +
-> +	if (!bridge)
-> +		return true;
-> +
-> +	if (bridge->funcs->format_set)
-> +		ret = bridge->funcs->format_set(bridge, input_bus_format,
-> +						input_encoding);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	return drm_bridge_format_set(bridge->next, input_bus_format,
-> +				     input_encoding);
+    root@linaro-nano:~# ls /sys/bus/coresight/devices/
+    	20010000.etf   20040000.funnel  20100000.stm  22040000.etm> Cheers
+    	22140000.etm  230c0000.funnel  23240000.etm 20030000.tpiu > Suzuki
+    	20070000.etr     20120000.replicator  220c0000.funnel
+    	23040000.etm  23140000.etm     23340000.etm
 
-I don't think this will scale. It's not that uncommon for bridges to
-change the format (most likely converting from YUV to RGB or the other
-way around, or reducing the number of bits per sample) and the encoding.
-We thus can't propagate it from bridge to bridge and expect that to
-work.
+    root@linaro-nano:~# perf record -e cs_etm/@20070000.etr/u --per-thread program
 
-At the very least, the bridge should report its output bus format and
-encoding, to be applied to the next bridge, but this won't allow
-checking if the configuration can be applied ahead of time, resulting in
-possible failures of a commit tail handler. I wonder if this wouldn't be
-a good time to introduce bridge states...
 
-> +}
-> +EXPORT_SYMBOL(drm_bridge_format_set);
-> +
->  /**
->   * drm_bridge_pre_enable - prepares for enabling all
->   *			   bridges in the encoder chain
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index d4428913a4e1..7a79e61b7825 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -198,6 +198,22 @@ struct drm_bridge_funcs {
->  	void (*mode_set)(struct drm_bridge *bridge,
->  			 const struct drm_display_mode *mode,
->  			 const struct drm_display_mode *adjusted_mode);
-> +
-> +	/**
-> +	 * @format_set:
-> +	 *
-> +	 * This callback should configure the bridge for the given input bus
-> +	 * format and encoding. It is called after the @format_set callback
-> +	 * for the preceding element in the display pipeline has been called
-> +	 * already. If the bridge is the first element then this would be
-> +	 * &drm_encoder_helper_funcs.format_set. The display pipe (i.e.
-> +	 * clocks and timing signals) is off when this function is called.
-> +	 *
-> +	 * @returns: true in success, false is a bridge refuses the format
-> +	 */
-> +	bool (*format_set)(struct drm_bridge *bridge,
-> +			   const u32 input_bus_format,
-> +			   const u32 input_encoding);
->  	/**
->  	 * @pre_enable:
->  	 *
-> @@ -311,6 +327,9 @@ void drm_bridge_post_disable(struct drm_bridge *bridge);
->  void drm_bridge_mode_set(struct drm_bridge *bridge,
->  			 const struct drm_display_mode *mode,
->  			 const struct drm_display_mode *adjusted_mode);
-> +bool drm_bridge_format_set(struct drm_bridge *bridge,
-> +			   const u32 input_bus_format,
-> +			   const u32 input_encoding);
->  void drm_bridge_pre_enable(struct drm_bridge *bridge);
->  void drm_bridge_enable(struct drm_bridge *bridge);
->  
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Leo Yan
