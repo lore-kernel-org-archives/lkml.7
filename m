@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB95C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6838AC468BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FB020657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E1C208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923197;
-	bh=oYudx6GRFL5to2nlzf9auCcRhrsv3IIMd6j94J16tRc=;
+	s=default; t=1559923206;
+	bh=o0F+UEmMzpFIUL4hfhU/dW7tl6mKsAmLq9rLyqohHfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zElec6TtI+7ufBIKb5IO0PR+zOI/egqbJRuESb6weOGqXkFOFgILudqmWTVViQT56
-	 hzNlJOr6hBDm0aEqVrW2ui5CuidzGuWbfSv93WXOzQkzyIAF6JPM31iy6ru3rVwplm
-	 lHwUSKw8Y9i+Ojn1ZuL30rk3O3vN5hgb6DGeB/zU=
+	b=UbTEHm0vOShWInVTgktmhSRAp1mREsnyEDjw6xjvyHvON9MVjUk+ZGJWS+mZ+ntPR
+	 6XfAAGRLY8eT0Fok9obFg8n1DR/PwboCL45v0zX2YqSRlSuWm01+vL44hhIL6SPSkp
+	 l8/MV6s5e/cSjfSYUQbJ4+LsScSWLVailEPwYeKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbfFGPlF (ORCPT
+        id S1730703AbfFGQAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 12:00:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbfFGPlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:41:01 -0400
+        id S1730127AbfFGPku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:40:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1AD42146F;
-        Fri,  7 Jun 2019 15:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8388D21473;
+        Fri,  7 Jun 2019 15:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922060;
-        bh=oYudx6GRFL5to2nlzf9auCcRhrsv3IIMd6j94J16tRc=;
+        s=default; t=1559922050;
+        bh=o0F+UEmMzpFIUL4hfhU/dW7tl6mKsAmLq9rLyqohHfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BHcR9id+CLoVYDP38tzixSGZTQ7R9RM5+43j1KdgmA9yTGMnYPtezlhB37t8qbDkA
-         tK8gvOyzOcdjEQstWzHy3WNBVvsMpPw3lVC5Fc7YRB4IfjZU7j9pqzp0LaKD1kiWvu
-         7o4P8ZJLtYap59y7RVXS3xt7mHQ4SpAhd0dlEcKY=
+        b=ykHTIRKgI25vyZyVNNEcL/N4Q1bnSm5bM/M0VAvyByuUrvaIv6k9gnIx7+QauU21+
+         rhRoC3JNvQQXwtNOl4HJmihfDQsvtszK38SHwTERTV/3SpglR07VuRL/qIU5O2q+fg
+         rf/TfCgwLA9oV2wcPFnczDqspBvWEwa+0UICdszQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 05/69] net-gro: fix use-after-free read in napi_gro_frags()
-Date:   Fri,  7 Jun 2019 17:38:46 +0200
-Message-Id: <20190607153848.925279853@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 19/69] Revert "tipc: fix modprobe tipc failed after switch order of device registration"
+Date:   Fri,  7 Jun 2019 17:39:00 +0200
+Message-Id: <20190607153850.709176380@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -60,69 +58,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: David S. Miller <davem@davemloft.net>
 
-[ Upstream commit a4270d6795b0580287453ea55974d948393e66ef ]
+commit 5593530e56943182ebb6d81eca8a3be6db6dbba4 upstream.
 
-If a network driver provides to napi_gro_frags() an
-skb with a page fragment of exactly 14 bytes, the call
-to gro_pull_from_frag0() will 'consume' the fragment
-by calling skb_frag_unref(skb, 0), and the page might
-be freed and reused.
+This reverts commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e.
 
-Reading eth->h_proto at the end of napi_frags_skb() might
-read mangled data, or crash under specific debugging features.
+More revisions coming up.
 
-BUG: KASAN: use-after-free in napi_frags_skb net/core/dev.c:5833 [inline]
-BUG: KASAN: use-after-free in napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
-Read of size 2 at addr ffff88809366840c by task syz-executor599/8957
-
-CPU: 1 PID: 8957 Comm: syz-executor599 Not tainted 5.2.0-rc1+ #32
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
- __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- kasan_report+0x12/0x20 mm/kasan/common.c:614
- __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
- napi_frags_skb net/core/dev.c:5833 [inline]
- napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
- tun_get_user+0x2f3c/0x3ff0 drivers/net/tun.c:1991
- tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
- call_write_iter include/linux/fs.h:1872 [inline]
- do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
- do_iter_write fs/read_write.c:970 [inline]
- do_iter_write+0x184/0x610 fs/read_write.c:951
- vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
- do_writev+0x15b/0x330 fs/read_write.c:1058
-
-Fixes: a50e233c50db ("net-gro: restore frag0 optimization")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -5067,7 +5067,6 @@ static struct sk_buff *napi_frags_skb(st
- 	skb_reset_mac_header(skb);
- 	skb_gro_reset_offset(skb);
+---
+ net/tipc/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -62,10 +62,6 @@ static int __net_init tipc_init_net(stru
+ 	INIT_LIST_HEAD(&tn->node_list);
+ 	spin_lock_init(&tn->node_list_lock);
  
--	eth = skb_gro_header_fast(skb, 0);
- 	if (unlikely(skb_gro_header_hard(skb, hlen))) {
- 		eth = skb_gro_header_slow(skb, hlen, 0);
- 		if (unlikely(!eth)) {
-@@ -5077,6 +5076,7 @@ static struct sk_buff *napi_frags_skb(st
- 			return NULL;
- 		}
- 	} else {
-+		eth = (const struct ethhdr *)skb->data;
- 		gro_pull_from_frag0(skb, hlen);
- 		NAPI_GRO_CB(skb)->frag0 += hlen;
- 		NAPI_GRO_CB(skb)->frag0_len -= hlen;
+-	err = tipc_socket_init();
+-	if (err)
+-		goto out_socket;
+-
+ 	err = tipc_sk_rht_init(net);
+ 	if (err)
+ 		goto out_sk_rht;
+@@ -92,8 +88,6 @@ out_subscr:
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+ out_sk_rht:
+-	tipc_socket_stop();
+-out_socket:
+ 	return err;
+ }
+ 
+@@ -104,7 +98,6 @@ static void __net_exit tipc_exit_net(str
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+ 	tipc_sk_rht_destroy(net);
+-	tipc_socket_stop();
+ }
+ 
+ static struct pernet_operations tipc_net_ops = {
+@@ -140,6 +133,10 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_pernet;
+ 
++	err = tipc_socket_init();
++	if (err)
++		goto out_socket;
++
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -147,6 +144,8 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
++	tipc_socket_stop();
++out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+@@ -162,6 +161,7 @@ out_netlink:
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
++	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
 
 
