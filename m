@@ -2,274 +2,194 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1DDC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FDBC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23EFB208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365D32146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfFGQ3v (ORCPT
+        id S1730333AbfFGQbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:29:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36024 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730521AbfFGQ3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:29:50 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 7 Jun 2019 12:31:18 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38768 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728978AbfFGQbS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:31:18 -0400
+Received: from [IPv6:2a00:5f00:102:0:6dae:eb08:2e0f:5281] (unknown [IPv6:2a00:5f00:102:0:6dae:eb08:2e0f:5281])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 702B630872DE;
-        Fri,  7 Jun 2019 16:29:42 +0000 (UTC)
-Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C93318CFA6;
-        Fri,  7 Jun 2019 16:29:33 +0000 (UTC)
-Date:   Fri, 7 Jun 2019 10:29:31 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
-        jean-philippe.brucker@arm.com, will.deacon@arm.com,
-        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
-        marc.zyngier@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-Subject: Re: [PATCH v8 25/29] vfio-pci: Add a new VFIO_REGION_TYPE_NESTED
- region type
-Message-ID: <20190607102931.0bf2dfe0@x1.home>
-In-Reply-To: <9c1ea2db-5ba0-3cf5-3b38-2c4a125460e6@redhat.com>
-References: <20190526161004.25232-1-eric.auger@redhat.com>
-        <20190526161004.25232-26-eric.auger@redhat.com>
-        <20190603163159.31e7ae23@x1.home>
-        <9c1ea2db-5ba0-3cf5-3b38-2c4a125460e6@redhat.com>
-Organization: Red Hat
+        (Authenticated sender: gtucker)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0AA1D28530C;
+        Fri,  7 Jun 2019 17:31:16 +0100 (BST)
+Subject: Re: [alsa-devel] next/master boot bisection: next-20190528 on
+ sun8i-h3-libretech-all-h3-cc
+To:     Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Cc:     tomeu.vizoso@collabora.com, mgalka@collabora.com,
+        matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, "kernelci.org bot" <bot@kernelci.org>,
+        linux-kernel@vger.kernel.org
+References: <5cef9f66.1c69fb81.39f30.21e8@mx.google.com>
+ <s5hr28gszvj.wl-tiwai@suse.de>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <8ca25787-fc03-7942-0705-3ec7d88862a6@collabora.com>
+Date:   Fri, 7 Jun 2019 17:31:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <s5hr28gszvj.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 07 Jun 2019 16:29:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 10:28:06 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
-
-> Hi Alex,
+On 30/05/2019 16:53, Takashi Iwai wrote:
+> On Thu, 30 May 2019 11:16:22 +0200,
+> kernelci.org bot wrote:
+>>
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>> * This automated bisection report was sent to you on the basis  *
+>> * that you may be involved with the breaking commit it has      *
+>> * found.  No manual investigation has been done to verify it,   *
+>> * and the root cause of the problem may be somewhere else.      *
+>> * Hope this helps!                                              *
+>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>
+>> next/master boot bisection: next-20190528 on sun8i-h3-libretech-all-h3-cc
+>>
+>> Summary:
+>>   Start:      531b0a360899 Add linux-next specific files for 20190528
+>>   Details:    https://kernelci.org/boot/id/5cece0fd59b5144bc47a362b
+>>   Plain log:  https://storage.kernelci.org//next/master/next-20190528/arm/sunxi_defconfig/gcc-8/lab-baylibre/boot-sun8i-h3-libretech-all-h3-cc.txt
+>>   HTML log:   https://storage.kernelci.org//next/master/next-20190528/arm/sunxi_defconfig/gcc-8/lab-baylibre/boot-sun8i-h3-libretech-all-h3-cc.html
+>>   Result:     34ac3c3eb8f0 ASoC: core: lock client_mutex while removing link components
+>>
+>> Checks:
+>>   revert:     PASS
+>>   verify:     PASS
+>>
+>> Parameters:
+>>   Tree:       next
+>>   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>>   Branch:     master
+>>   Target:     sun8i-h3-libretech-all-h3-cc
+>>   CPU arch:   arm
+>>   Lab:        lab-baylibre
+>>   Compiler:   gcc-8
+>>   Config:     sunxi_defconfig
+>>   Test suite: boot
+>>
+>> Breaking commit found:
+>>
+>> -------------------------------------------------------------------------------
+>> commit 34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb
+>> Author: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+>> Date:   Thu May 23 10:12:01 2019 -0700
+>>
+>>     ASoC: core: lock client_mutex while removing link components
+>>     
+>>     Removing link components results in topology unloading. So,
+>>     acquire the client_mutex before removing components in
+>>     soc_remove_link_components. This will prevent the lockdep warning
+>>     seen when dai links are removed during topology removal.
+>>     
+>>     Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+>>     Signed-off-by: Mark Brown <broonie@kernel.org>
+>>
+>> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+>> index 2403bec2fccf..7c9415987ac7 100644
+>> --- a/sound/soc/soc-core.c
+>> +++ b/sound/soc/soc-core.c
+>> @@ -1005,12 +1005,14 @@ static void soc_remove_link_components(struct snd_soc_card *card,
+>>  	struct snd_soc_component *component;
+>>  	struct snd_soc_rtdcom_list *rtdcom;
+>>  
+>> +	mutex_lock(&client_mutex);
+>>  	for_each_rtdcom(rtd, rtdcom) {
+>>  		component = rtdcom->component;
+>>  
+>>  		if (component->driver->remove_order == order)
+>>  			soc_remove_component(component);
+>>  	}
+>> +	mutex_unlock(&client_mutex);
+>>  }
 > 
-> On 6/4/19 12:31 AM, Alex Williamson wrote:
-> > On Sun, 26 May 2019 18:10:00 +0200
-> > Eric Auger <eric.auger@redhat.com> wrote:
-> >   
-> >> This patch adds two new regions aiming to handle nested mode
-> >> translation faults.
-> >>
-> >> The first region (two host kernel pages) is read-only from the
-> >> user-space perspective. The first page contains an header
-> >> that provides information about the circular buffer located in the
-> >> second page. The circular buffer is put in a different page in
-> >> the prospect to be mmappable.
-> >>
-> >> The max user API version supported by the kernel is returned
-> >> through a dedicated fault region capability.
-> >>
-> >> The prod header contains
-> >> - the user API version in use (potentially inferior to the one
-> >>   returned in the capability),
-> >> - the offset of the queue within the region,
-> >> - the producer index relative to the start of the queue
-> >> - the max number of fault records,
-> >> - the size of each record.
-> >>
-> >> The second region is write-only from the user perspective. It
-> >> contains the version of the requested fault ABI and the consumer
-> >> index that is updated by the userspace each time this latter has
-> >> consumed fault records.
-> >>
-> >> The natural order of operation for the userspace is:
-> >> - retrieve the highest supported fault ABI version
-> >> - set the requested fault ABI version in the consumer region
-> >>
-> >> Until the ABI version is not set by the userspace, the kernel
-> >> cannot return a comprehensive set of information inside the
-> >> prod header (entry size and number of entries in the fault queue).  
-> > 
-> > It's not clear to me why two regions are required for this.  If the
-> > first page is not mmap capable, why does it need to be read-only?  If
-> > it were not read-only couldn't the fields of the second region also fit
-> > within this first page?  If you wanted to deal with an mmap capable
-> > writeable region, it could just be yet a 3rd page in the first region.  
-> I thought it would be clearer for the userspace to have 2 separate
-> regions, one for the producer and one for the consumer. Otherwise I will
-> need to specify which fields are read-only or write-only. But this may
-> be more self-contained in a single region.
-
-We need to figure out read vs write anyway, but separating them to
-separate regions just for that seems unnecessary.  How many regions do
-we expect to require for a single feature?
-
-> >   
-> >>
-> >> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> >>
-> >> ---
-> >>
-> >> v4 -> v5
-> >> - check cons is not null in vfio_pci_check_cons_fault
-> >>
-> >> v3 -> v4:
-> >> - use 2 separate regions, respectively in read and write modes
-> >> - add the version capability
-> >> ---
-> >>  drivers/vfio/pci/vfio_pci.c         | 105 ++++++++++++++++++++++++++++
-> >>  drivers/vfio/pci/vfio_pci_private.h |  17 +++++
-> >>  drivers/vfio/pci/vfio_pci_rdwr.c    |  73 +++++++++++++++++++
-> >>  include/uapi/linux/vfio.h           |  42 +++++++++++
-> >>  4 files changed, 237 insertions(+)
-> >>
-> >> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> >> index cab71da46f4a..f75f61127277 100644
-> >> --- a/drivers/vfio/pci/vfio_pci.c
-> >> +++ b/drivers/vfio/pci/vfio_pci.c
-> >> @@ -261,6 +261,106 @@ int vfio_pci_set_power_state(struct vfio_pci_device *vdev, pci_power_t state)
-> >>  	return ret;
-> >>  }
-> >>  
-> >> +void vfio_pci_fault_release(struct vfio_pci_device *vdev,
-> >> +			    struct vfio_pci_region *region)
-> >> +{
-> >> +}
-> >> +
-> >> +static const struct vfio_pci_fault_abi fault_abi_versions[] = {
-> >> +	[0] = {
-> >> +		.entry_size = sizeof(struct iommu_fault),
-> >> +	},
-> >> +};
-> >> +
-> >> +#define NR_FAULT_ABIS ARRAY_SIZE(fault_abi_versions)  
-> > 
-> > This looks like it's leading to some dangerous complicated code to
-> > support multiple user selected ABIs.  How many ABIs do we plan to
-> > support?  The region capability also exposes a type, sub-type, and
-> > version.  How much of this could be exposed that way?  ie. if we need
-> > to support multiple versions, expose multiple regions.  
+> Indeed this dead-locks in the error path of
+> snd_soc_instantiate_card():
 > 
-> This is something that was discussed earlier and suggested by
-> Jean-Philippe that we may need to support several versions of the ABI
-> (typicallu when adding PRI support).
-> Exposing multiple region is an interesting idea and I will explore that
-> direction.
-> >   
-> >> +
-> >> +static int vfio_pci_fault_prod_add_capability(struct vfio_pci_device *vdev,
-> >> +		struct vfio_pci_region *region, struct vfio_info_cap *caps)
-> >> +{
-> >> +	struct vfio_region_info_cap_fault cap = {
-> >> +		.header.id = VFIO_REGION_INFO_CAP_PRODUCER_FAULT,
-> >> +		.header.version = 1,
-> >> +		.version = NR_FAULT_ABIS,
-> >> +	};
-> >> +	return vfio_info_add_capability(caps, &cap.header, sizeof(cap));
-> >> +}
-> >> +
-> >> +static const struct vfio_pci_regops vfio_pci_fault_cons_regops = {
-> >> +	.rw		= vfio_pci_fault_cons_rw,
-> >> +	.release	= vfio_pci_fault_release,
-> >> +};
-> >> +
-> >> +static const struct vfio_pci_regops vfio_pci_fault_prod_regops = {
-> >> +	.rw		= vfio_pci_fault_prod_rw,
-> >> +	.release	= vfio_pci_fault_release,
-> >> +	.add_capability = vfio_pci_fault_prod_add_capability,
-> >> +};
-> >> +
-> >> +static int vfio_pci_init_fault_region(struct vfio_pci_device *vdev)
-> >> +{
-> >> +	struct vfio_region_fault_prod *header;
-> >> +	int ret;
-> >> +
-> >> +	mutex_init(&vdev->fault_queue_lock);
-> >> +
-> >> +	vdev->fault_pages = kzalloc(3 * PAGE_SIZE, GFP_KERNEL);
-> >> +	if (!vdev->fault_pages)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	ret = vfio_pci_register_dev_region(vdev,
-> >> +		VFIO_REGION_TYPE_NESTED,
-> >> +		VFIO_REGION_SUBTYPE_NESTED_FAULT_PROD,
-> >> +		&vfio_pci_fault_prod_regops, 2 * PAGE_SIZE,
-> >> +		VFIO_REGION_INFO_FLAG_READ, vdev->fault_pages);  
-> > 
-> > If mmap isn't supported yet, why are we pushing the queue out to the
-> > 2nd page?  We're just wasting space.  vfio_region_fault_prod.offset
-> > allows us to relocate it when/if it is mmap capable.  
-> OK. mmap capability is introduced in 27/29 though.
-> >   
-> >> +	if (ret)
-> >> +		goto out;
-> >> +
-> >> +	ret = vfio_pci_register_dev_region(vdev,
-> >> +		VFIO_REGION_TYPE_NESTED,
-> >> +		VFIO_REGION_SUBTYPE_NESTED_FAULT_CONS,
-> >> +		&vfio_pci_fault_cons_regops,
-> >> +		sizeof(struct vfio_region_fault_cons),
-> >> +		VFIO_REGION_INFO_FLAG_WRITE,
-> >> +		vdev->fault_pages + 2 * PAGE_SIZE);  
-> > 
-> > What's the remaining (PAGE_SIZE - sizeof(struct vfio_region_fault_cons))
-> > bytes used for?  
-> They are not used.
-
-So we probably don't want to allocate a full page for it.  Seems little
-reason to separate by pages when mmap is not supported anyway.
- 
-> >> +	if (ret)
-> >> +		goto out;
-> >> +
-> >> +	header = (struct vfio_region_fault_prod *)vdev->fault_pages;
-> >> +	header->version = -1;
-> >> +	header->offset = PAGE_SIZE;
-> >> +	return 0;
-> >> +out:
-> >> +	kfree(vdev->fault_pages);
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +int vfio_pci_check_cons_fault(struct vfio_pci_device *vdev,
-> >> +			     struct vfio_region_fault_cons *cons_header)
-> >> +{
-> >> +	struct vfio_region_fault_prod *prod_header =
-> >> +		(struct vfio_region_fault_prod *)vdev->fault_pages;
-> >> +
-> >> +	if (cons_header->version > NR_FAULT_ABIS)
-> >> +		return -EINVAL;
-> >> +
-> >> +	if (!vdev->fault_abi) {
-> >> +		vdev->fault_abi = cons_header->version;
-> >> +		prod_header->entry_size =
-> >> +			fault_abi_versions[vdev->fault_abi - 1].entry_size;
-> >> +		prod_header->nb_entries = PAGE_SIZE / prod_header->entry_size;  
-> > 
-> > Is this sufficient for 4K hosts?  Clearly a 64K host has 16x the number
-> > of entries, so if this is a heuristic the results are vastly different.  
-> This series only deals with unrecoverable errors. We don't expect many
-> of them so I did not consider the need to have a more complicated
-> heuristic. Now if we consider the PRI use case we need to reconsider the
-> size of the fault queue. If this feature is introduced later with a new
-> region type, then we can handle this later?
+> snd_soc_instantiate_card() ->
+>   mutex_lock(&client_mutex);
+>   ....
+>   -> soc_cleanup_card_resources();
+>     -> soc_remove_dai_links();
+>       -> soc_remove_link_components();
+>          mutex_lock(&client_mutex);
 > 
-> Practically the event queue size is set by the guest SMMUv3 driver and
-> trapped at the SMMUV3 QEMU device level. So we could communicate this
-> info through IOMMU MR notifiers but that's a rather complicated chain
-> and I would rather avoid that complexity if not necessary.
+> 
+> Ranjani, which code path your patch tries to address?  Maybe better to
+> wrap client_mutex() in the caller side like snd_soc_unbind_card()?
 
-I'd hope that this interface accounts for both errors and page mapping
-requests and that things like queue size are specified in the user
-interface to account for these sorts of differences.  Thanks,
+Is anyone looking into this issue?
 
-Alex
+It is still occurring in next-20190606, there was a bisection
+today which landed on the same commit.  There just hasn't been
+any new bisection reports because they have been temporarily
+disabled while we fix some issues on kernelci.org.
+
+Thanks,
+Guillaume
+
+>>  static void soc_remove_dai_links(struct snd_soc_card *card)
+>> -------------------------------------------------------------------------------
+>>
+>>
+>> Git bisection log:
+>>
+>> -------------------------------------------------------------------------------
+>> git bisect start
+>> # good: [cd6c84d8f0cdc911df435bb075ba22ce3c605b07] Linux 5.2-rc2
+>> git bisect good cd6c84d8f0cdc911df435bb075ba22ce3c605b07
+>> # bad: [531b0a360899269bd99a38ba9852a8ba46852bcd] Add linux-next specific files for 20190528
+>> git bisect bad 531b0a360899269bd99a38ba9852a8ba46852bcd
+>> # bad: [0b61d4c3b7d7938ef0014778c328e3f65c0d6d57] Merge remote-tracking branch 'crypto/master'
+>> git bisect bad 0b61d4c3b7d7938ef0014778c328e3f65c0d6d57
+>> # bad: [6179e21b065dc0f592cd3d9d3676bd64d4278025] Merge remote-tracking branch 'xtensa/xtensa-for-next'
+>> git bisect bad 6179e21b065dc0f592cd3d9d3676bd64d4278025
+>> # bad: [3e085f66fe7e93575f2a583a3d434415cef2d860] Merge remote-tracking branch 'amlogic/for-next'
+>> git bisect bad 3e085f66fe7e93575f2a583a3d434415cef2d860
+>> # bad: [b9afa223a3420432bc483d2b43429c88c6a5d0e0] Merge remote-tracking branch 'staging.current/staging-linus'
+>> git bisect bad b9afa223a3420432bc483d2b43429c88c6a5d0e0
+>> # good: [fc6557648e19dbd207dc815c6e09fc6452f01e63] Merge remote-tracking branch 'bpf/master'
+>> git bisect good fc6557648e19dbd207dc815c6e09fc6452f01e63
+>> # bad: [6c3f2a0e0f236f31b47d63ab7d3f4ec889821d0d] Merge remote-tracking branch 'spi-fixes/for-linus'
+>> git bisect bad 6c3f2a0e0f236f31b47d63ab7d3f4ec889821d0d
+>> # bad: [20a5f9c8649d74407aa657ce5b76cf8b0bbb17e3] Merge branch 'asoc-5.2' into asoc-linus
+>> git bisect bad 20a5f9c8649d74407aa657ce5b76cf8b0bbb17e3
+>> # good: [ad6eecbfc01c987e0253371f274c3872042e4350] ASoC: cs42xx8: Add regcache mask dirty
+>> git bisect good ad6eecbfc01c987e0253371f274c3872042e4350
+>> # good: [069d037aea98ffa64c26d4b1dc958fb8f39f5c2b] ASoC: simple-card: Fix configuration of DAI format
+>> git bisect good 069d037aea98ffa64c26d4b1dc958fb8f39f5c2b
+>> # good: [df9366131a452296d040a7a496d93108f1fc240c] ASoC: Intel: sof-rt5682: fix AMP quirk support
+>> git bisect good df9366131a452296d040a7a496d93108f1fc240c
+>> # bad: [34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb] ASoC: core: lock client_mutex while removing link components
+>> git bisect bad 34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb
+>> # good: [4819d06292c9b57eabdd6d1603e49a27baf183be] ASoC: simple-card: Restore original configuration of DAI format
+>> git bisect good 4819d06292c9b57eabdd6d1603e49a27baf183be
+>> # first bad commit: [34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb] ASoC: core: lock client_mutex while removing link components
+>> -------------------------------------------------------------------------------
+>> _______________________________________________
+>> Alsa-devel mailing list
+>> Alsa-devel@alsa-project.org
+>> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>>
+
