@@ -2,95 +2,92 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B15C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EDFC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A18B208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1545F2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfFGOkk (ORCPT
+        id S1728729AbfFGOmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:40:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33001 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728198AbfFGOkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:40:39 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 5288EE6A9E88F4C4862A;
-        Fri,  7 Jun 2019 15:40:37 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 7 Jun
- 2019 15:40:29 +0100
-Subject: Re: [PATCH v3 2/2] ima: add enforce-evm and log-evm modes to strictly
- check EVM status
-To:     Mimi Zohar <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
-        <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <stable@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>
-References: <20190606112620.26488-1-roberto.sassu@huawei.com>
- <20190606112620.26488-3-roberto.sassu@huawei.com>
- <1559917462.4278.253.camel@linux.ibm.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <93459fe8-f9b6-fe45-1ca7-2efb8854dc8b@huawei.com>
-Date:   Fri, 7 Jun 2019 16:40:37 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Fri, 7 Jun 2019 10:42:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:41370 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728252AbfFGOmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:42:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CE78337;
+        Fri,  7 Jun 2019 07:42:35 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 05C733F71A;
+        Fri,  7 Jun 2019 07:42:33 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 15:42:31 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] KVM: arm64: Drop 'const' from argument of vq_present()
+Message-ID: <20190607144229.GF28398@e103592.cambridge.arm.com>
+References: <699121e5c938c6f4b7b14a7e2648fa15af590a4a.1559623368.git.viresh.kumar@linaro.org>
+ <20190604095915.GW28398@e103592.cambridge.arm.com>
+ <20190607060037.eaof3hllyombxlhc@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <1559917462.4278.253.camel@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607060037.eaof3hllyombxlhc@vireshk-i7>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/2019 4:24 PM, Mimi Zohar wrote:
-> Hi Roberto,
+On Fri, Jun 07, 2019 at 11:30:37AM +0530, Viresh Kumar wrote:
+> On 04-06-19, 10:59, Dave Martin wrote:
+> > On Tue, Jun 04, 2019 at 10:13:19AM +0530, Viresh Kumar wrote:
+> > > We currently get following compilation warning:
+> > > 
+> > > arch/arm64/kvm/guest.c: In function 'set_sve_vls':
+> > > arch/arm64/kvm/guest.c:262:18: warning: passing argument 1 of 'vq_present' from incompatible pointer type
+> > > arch/arm64/kvm/guest.c:212:13: note: expected 'const u64 (* const)[8]' but argument is of type 'u64 (*)[8]'
+> > > 
+> > > The argument can't be const, as it is copied at runtime using
+> > > copy_from_user(). Drop const from the prototype of vq_present().
+> > > 
+> > > Fixes: 9033bba4b535 ("KVM: arm64/sve: Add pseudo-register for the guest's vector lengths")
+> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > ---
+> > >  arch/arm64/kvm/guest.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> > > index 3ae2f82fca46..78f5a4f45e0a 100644
+> > > --- a/arch/arm64/kvm/guest.c
+> > > +++ b/arch/arm64/kvm/guest.c
+> > > @@ -209,7 +209,7 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+> > >  #define vq_mask(vq) ((u64)1 << ((vq) - SVE_VQ_MIN) % 64)
+> > >  
+> > >  static bool vq_present(
+> > > -	const u64 (*const vqs)[KVM_ARM64_SVE_VLS_WORDS],
+> > > +	u64 (*const vqs)[KVM_ARM64_SVE_VLS_WORDS],
+> > >  	unsigned int vq)
+> > >  {
+> > >  	return (*vqs)[vq_word(vq)] & vq_mask(vq);
+> > 
+> > Ack, but maybe this should just be converted to a macro?
 > 
-> Thank you for updating the patch description.
+> I will send a patch with that if that's what you want.
 
-Hi Mimi
+I think this would solve the problem and simplify the code a bit at the
+same time.
 
-no problem.
+So go for it.
 
-
-> On Thu, 2019-06-06 at 13:26 +0200, Roberto Sassu wrote:
->> IMA and EVM have been designed as two independent subsystems: the first for
->> checking the integrity of file data; the second for checking file metadata.
->> Making them independent allows users to adopt them incrementally.
->>
->> The point of intersection is in IMA-Appraisal, which calls
->> evm_verifyxattr() to ensure that security.ima wasn't modified during an
->> offline attack. The design choice, to ensure incremental adoption, was to
->> continue appraisal verification if evm_verifyxattr() returns
->> INTEGRITY_UNKNOWN. This value is returned when EVM is not enabled in the
->> kernel configuration, or if the HMAC key has not been loaded yet.
->>
->> Although this choice appears legitimate, it might not be suitable for
->> hardened systems, where the administrator expects that access is denied if
->> there is any error. An attacker could intentionally delete the EVM keys
->> from the system and set the file digest in security.ima to the actual file
->> digest so that the final appraisal status is INTEGRITY_PASS.
-> 
-> Assuming that the EVM HMAC key is stored in the initramfs, not on some
-> other file system, and the initramfs is signed, INTEGRITY_UNKNOWN
-> would be limited to the rootfs filesystem.
-
-There is another issue. The HMAC key, like the public keys, should be
-loaded when appraisal is disabled. This means that we have to create a
-trusted key at early boot and defer the unsealing.
-
-Roberto
-
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+Cheers
+---Dave
