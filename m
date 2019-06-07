@@ -2,50 +2,51 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,URI_NOVOWEL,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA60C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00AFC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B3720657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BA9208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922932;
-	bh=CEg1spDROT8I4kU1zXMKX9TQSs6MvE3Zy6f+1mgUizM=;
+	s=default; t=1559922947;
+	bh=gbnX3ywF0e3V1x5CbjGk84uFpatjER0sEXlbfyLEBoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUpLqpCZe8zkECzUABu/hBNQF7o2ULrBjw5mQy7zVARsAgIxqQD2zi6n5R2PSBu1U
-	 E9PGSAtnmmp/NLpVako4cLLKdxkErY8mFUk98qZ378U3sOBb8QQK5AHFRdHedDMtjp
-	 bFJwT5caJ4dGKYc3pQ1bboJy6bVSWFqzeCcGW18E=
+	b=U7kSD+dJiNG9zr383Y2UG1CSCm3smoDFXFRCJs1NzKoADjL9sDiP2xpcLlD5EF0bp
+	 t9geg6V6SNRkALjEU34zDbDc6yKgmh16DXVBSPnvUwXAWiFCA6FcGo6YMT6+MB41Tg
+	 QsIdOdwab9zNmdU+jAxn/M2PHGDZrofUH2c3Z8Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbfFGPpl (ORCPT
+        id S1731705AbfFGPzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:45:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731245AbfFGPpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:45:35 -0400
+        id S1730611AbfFGPpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:45:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 887432146E;
-        Fri,  7 Jun 2019 15:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 299582146E;
+        Fri,  7 Jun 2019 15:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922335;
-        bh=CEg1spDROT8I4kU1zXMKX9TQSs6MvE3Zy6f+1mgUizM=;
+        s=default; t=1559922315;
+        bh=gbnX3ywF0e3V1x5CbjGk84uFpatjER0sEXlbfyLEBoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdIGQVtQTOJSYB5Fixb5Gn65kQcLJI2q+7Pw2jX2DYaeBvD61UwvvGb+N4YdI5C9d
-         GAdzY7Ye//4HYHwUbL8ZiGTsdJaMlriJNYnI+uYJkwcQj2JWFiPws6C8mlEYSH5T2Q
-         oJEohJ9WwsPi3Q5Bxlsnr84VHT2dZv10hJ2FEnQ8=
+        b=SzPuMVGB9yk+OvPv3lwS6dVnWJ6AMVXY38F2mBdPKL8vhf2/OGGS5dKoRuv79Q6Ip
+         m325kbRGbRSZ3GMfH2aYvnTPhz8AJE8/29Q5xXc40JO5apqjKhgo5dvZPiXtpKma84
+         9nPPb1ghbp8bF4nfSX2k58Xq6Qq3yGBTpf5EJfvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Collier <osdevtc@gmail.com>
-Subject: [PATCH 4.19 51/73] staging: wlan-ng: fix adapter initialization failure
-Date:   Fri,  7 Jun 2019 17:39:38 +0200
-Message-Id: <20190607153854.772384672@linuxfoundation.org>
+        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
+        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
+Subject: [PATCH 4.19 36/73] i2c: mlxcpld: Fix wrong initialization order in probe
+Date:   Fri,  7 Jun 2019 17:39:23 +0200
+Message-Id: <20190607153853.136918240@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -58,52 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Collier <osdevtc@gmail.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-commit a67fedd788182764dc8ed59037c604b7e60349f1 upstream.
+commit 13067ef73f337336e3149f5bb9f3fd05fe7f87a0 upstream.
 
-Commit e895f00a8496 ("Staging: wlan-ng: hfa384x_usb.c Fixed too long
-code line warnings.") moved the retrieval of the transfer buffer from
-the URB from the top of function hfa384x_usbin_callback to a point
-after reposting of the URB via a call to submit_rx_urb. The reposting
-of the URB allocates a new transfer buffer so the new buffer is
-retrieved instead of the buffer containing the response passed into
-the callback. This results in failure to initialize the adapter with
-an error reported in the system log (something like "CTLX[1] error:
-state(Request failed)").
+Fix wrong order in probing routine initialization - field `base_addr'
+is used before it's initialized. Move assignment of 'priv->base_addr`
+to the beginning, prior the call to mlxcpld_i2c_read_comm().
+Wrong order caused the first read of capability register to be executed
+at wrong offset 0x0 instead of 0x2000. By chance it was a "good
+garbage" at 0x0 offset.
 
-This change moves the retrieval to just before the point where the URB
-is reposted so that the correct transfer buffer is retrieved and
-initialization of the device succeeds.
-
-Signed-off-by: Tim Collier <osdevtc@gmail.com>
-Fixes: e895f00a8496 ("Staging: wlan-ng: hfa384x_usb.c Fixed too long code line warnings.")
-Cc: stable <stable@vger.kernel.org>
+Fixes: 313ce648b5a4 ("i2c: mlxcpld: Add support for extended transaction length for i2c-mlxcpld")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wlan-ng/hfa384x_usb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-mlxcpld.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/wlan-ng/hfa384x_usb.c
-+++ b/drivers/staging/wlan-ng/hfa384x_usb.c
-@@ -3119,7 +3119,9 @@ static void hfa384x_usbin_callback(struc
- 		break;
- 	}
+--- a/drivers/i2c/busses/i2c-mlxcpld.c
++++ b/drivers/i2c/busses/i2c-mlxcpld.c
+@@ -503,6 +503,7 @@ static int mlxcpld_i2c_probe(struct plat
+ 	platform_set_drvdata(pdev, priv);
  
-+	/* Save values from the RX URB before reposting overwrites it. */
- 	urb_status = urb->status;
-+	usbin = (union hfa384x_usbin *)urb->transfer_buffer;
+ 	priv->dev = &pdev->dev;
++	priv->base_addr = MLXPLAT_CPLD_LPC_I2C_BASE_ADDR;
  
- 	if (action != ABORT) {
- 		/* Repost the RX URB */
-@@ -3136,7 +3138,6 @@ static void hfa384x_usbin_callback(struc
- 	/* Note: the check of the sw_support field, the type field doesn't
- 	 *       have bit 12 set like the docs suggest.
- 	 */
--	usbin = (union hfa384x_usbin *)urb->transfer_buffer;
- 	type = le16_to_cpu(usbin->type);
- 	if (HFA384x_USB_ISRXFRM(type)) {
- 		if (action == HANDLE) {
+ 	/* Register with i2c layer */
+ 	mlxcpld_i2c_adapter.timeout = usecs_to_jiffies(MLXCPLD_I2C_XFER_TO);
+@@ -518,7 +519,6 @@ static int mlxcpld_i2c_probe(struct plat
+ 		mlxcpld_i2c_adapter.nr = pdev->id;
+ 	priv->adap = mlxcpld_i2c_adapter;
+ 	priv->adap.dev.parent = &pdev->dev;
+-	priv->base_addr = MLXPLAT_CPLD_LPC_I2C_BASE_ADDR;
+ 	i2c_set_adapdata(&priv->adap, priv);
+ 
+ 	err = i2c_add_numbered_adapter(&priv->adap);
 
 
