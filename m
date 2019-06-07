@@ -2,174 +2,259 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448A9C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0092FC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8D8208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC94214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559920913;
+	bh=C4wSxFGlR6b9yxuGgWtjERfZiktf9Nic7InAMLS2vlc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=SDmF/TABOCl3y2o7QiBahZ1i7fZRLcidNl2GGTRQMartv43/Ajp9336M41GIfmdOO
+	 N4E8PNpK3YWWE25L3P2HFIcWJwHZaW7wSe4CzH3Gyl+osO7FPIMZdCb4OeSc7FYQ3e
+	 ROvPNkpxY2yKFBW6KD4n2TCQgzy7sh56ocTVz0Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfFGPVV (ORCPT
+        id S1729768AbfFGPVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:21:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:42562 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 11:21:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbfFGPVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:21:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99207337;
-        Fri,  7 Jun 2019 08:21:19 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9EEB3F718;
-        Fri,  7 Jun 2019 08:21:16 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 16:21:14 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S1728665AbfFGPVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:21:52 -0400
+Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ACCB208C3;
+        Fri,  7 Jun 2019 15:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559920911;
+        bh=C4wSxFGlR6b9yxuGgWtjERfZiktf9Nic7InAMLS2vlc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=f0Y+3vyWwKNie94rK4lNNs5Gjz8Njf4YDzV52+JvXjDibV6vA1j7g+A8+RGBRvj5T
+         aaSxRqJeEcqn1xYFeeR6+oHhuwoUYd3Ykl5qUZS+uRVrtj+BgoL4Wi95MUwVr4wQ7s
+         jMGhgXO4r5jl56S4D74j47sX5KRVgaB83H5rtT5g=
+Subject: Re: [PATCHv16 1/3] ARM:dt-bindings:display Intel FPGA Video and Image
+ Processing Suite
+To:     "Hean-Loong, Ong" <hean.loong.ong@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/18] drivers: firmware: psci: Prepare to support PM
- domains
-Message-ID: <20190607152114.GG15577@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-9-ulf.hansson@linaro.org>
+        dri-devel@lists.freedesktop.org, chin.liang.see@intel.com
+References: <20190607143022.427-1-hean.loong.ong@intel.com>
+ <20190607143022.427-2-hean.loong.ong@intel.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9695f3e1-92ab-23ce-5922-71fbb7d8149f@kernel.org>
+Date:   Fri, 7 Jun 2019 10:21:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513192300.653-9-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190607143022.427-2-hean.loong.ong@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:22:50PM +0200, Ulf Hansson wrote:
-> Subsequent changes implements support for PM domains to PSCI. Those changes
-> are mainly implemented in a new separate c-file, hence a couple of the
-> internal PSCI functions needs to be shared to be accessible. Let's do that
-> via adding a new PSCI header file.
->
-> Moreover, to implement support for PM domains, switching the PSCI FW into
-> the OS initiated mode is sometimes needed. Therefore, let's share a new
-> function that implement this.
->
+Hi Hean-Loong:
 
-This looks fine.
+Please format your commit message like this:
 
---
-Regards,
-Sudeep
+<Commit message>
 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
+---
+V15:
+v14:
+
+
+The version history needs go after the ---
+
+Dinh
+
+On 6/7/19 9:30 AM, Hean-Loong, Ong wrote:
+> From: "Ong, Hean Loong" <hean.loong.ong@intel.com>
+> 
+> Device tree binding for Intel FPGA Video and Image Processing Suite.
+> The bindings would set the max width, max height,
+> bits per pixel and memory port width.
+> The device tree binding only supports the Intel
+> Arria10 devkit and its variants. Vendor name retained as altr.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> V15:
+> Reviewed
+> 
+> V14:
+> No Change
+> 
+> V13:
+> No change
+> 
+> V12:
+> Wrap comments and fix commit message
+> 
+> V11:
+> No change
+> 
+> V10:
+> No change
+> 
+> V9:
+> Remove Display port node
+> 
+> V8:
+> *Add port to Display port decoder
+> 
+> V7:
+> *Fix OF graph for better description
+> *Add description for encoder
+> 
+> V6:
+> *Description have not describe DT device in general
+> 
+> V5:
+> *remove bindings for bits per symbol as it has only one value which is 8
+> 
+> V4:
+> *fix properties that does not describe the values
+> 
+> V3:
+> *OF graph not in accordance to graph.txt
+> 
+> V2:
+> *Remove Linux driver description
+> 
+> V1:
+> *Missing vendor prefix
+> 
+> Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
 > ---
->
-> Changes:
-> 	- Convert psci_set_osi_mode() to return an int.
-> 	- Don't share psci_get_domain_state() as that's no longer needed.
-> 	- Update changelog.
->
-> ---
->  drivers/firmware/psci/psci.c | 17 ++++++++++++++---
->  drivers/firmware/psci/psci.h | 16 ++++++++++++++++
->  2 files changed, 30 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/firmware/psci/psci.h
->
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index 4aec513136e4..0e91d864e346 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -34,6 +34,8 @@
->  #include <asm/smp_plat.h>
->  #include <asm/suspend.h>
->
-> +#include "psci.h"
-> +
->  /*
->   * While a 64-bit OS can make calls with SMC32 calling conventions, for some
->   * calls it is necessary to use SMC64 to pass or return 64-bit values.
-> @@ -96,7 +98,7 @@ static inline bool psci_has_ext_power_state(void)
->  				PSCI_1_0_FEATURES_CPU_SUSPEND_PF_MASK;
->  }
->
-> -static inline bool psci_has_osi_support(void)
-> +bool psci_has_osi_support(void)
->  {
->  	return psci_cpu_suspend_feature & PSCI_1_0_OS_INITIATED;
->  }
-> @@ -161,6 +163,15 @@ static u32 psci_get_version(void)
->  	return invoke_psci_fn(PSCI_0_2_FN_PSCI_VERSION, 0, 0, 0);
->  }
->
-> +int psci_set_osi_mode(void)
-> +{
-> +	int err;
-> +
-> +	err = invoke_psci_fn(PSCI_1_0_FN_SET_SUSPEND_MODE,
-> +			     PSCI_1_0_SUSPEND_MODE_OSI, 0, 0);
-> +	return psci_to_linux_errno(err);
-> +}
-> +
->  static int psci_cpu_suspend(u32 state, unsigned long entry_point)
->  {
->  	int err;
-> @@ -292,12 +303,12 @@ static inline u32 psci_get_domain_state(void)
->  	return __this_cpu_read(domain_state);
->  }
->
-> -static inline void psci_set_domain_state(u32 state)
-> +void psci_set_domain_state(u32 state)
->  {
->  	__this_cpu_write(domain_state, state);
->  }
->
-> -static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
-> +int psci_dt_parse_state_node(struct device_node *np, u32 *state)
->  {
->  	int err = of_property_read_u32(np, "arm,psci-suspend-param", state);
->
-> diff --git a/drivers/firmware/psci/psci.h b/drivers/firmware/psci/psci.h
+>  .../bindings/display/altr,vip-fb2.txt         | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/altr,vip-fb2.txt b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
 > new file mode 100644
-> index 000000000000..f2277c3ad405
+> index 000000000000..89a3b9e166a8
 > --- /dev/null
-> +++ b/drivers/firmware/psci/psci.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+> +++ b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> @@ -0,0 +1,63 @@
+> +Intel Video and Image Processing(VIP) Frame Buffer II bindings
 > +
-> +#ifndef __PSCI_H
-> +#define __PSCI_H
+> +Supported hardware: Intel FPGA SoC Arria10 and above with display port IP
 > +
-> +struct device_node;
+> +The Video Frame Buffer II in Video Image Processing (VIP) suite is an IP core
+> +that interfaces between system memory and Avalon-ST video ports. The IP core
+> +can be configured to support the memory reader (from memory to Avalon-ST)
+> +and/or memory writer (from Avalon-ST to memory) interfaces.
 > +
-> +int psci_set_osi_mode(void);
-> +bool psci_has_osi_support(void);
+> +More information the FPGA video IP component can be acquired from
+> +https://www.altera.com/content/dam/altera-www/global/en_US/pdfs\
+> +/literature/ug/ug_vip.pdf
 > +
-> +#ifdef CONFIG_CPU_IDLE
-> +void psci_set_domain_state(u32 state);
-> +int psci_dt_parse_state_node(struct device_node *np, u32 *state);
-> +#endif
+> +DT-Bindings:
+> +=============
+> +Required properties:
+> +----------------------------
+> +- compatible: "altr,vip-frame-buffer-2.0"
+> +- reg: Physical base address and length of the framebuffer controller's
+> +	registers.
+> +- altr,max-width: The maximum width of the framebuffer in pixels.
+> +- altr,max-height: The maximum height of the framebuffer in pixels.
+> +- altr,mem-port-width = the bus width of the avalon master port
+> +	on the frame reader
 > +
-> +#endif /* __PSCI_H */
-> --
-> 2.17.1
->
-
+> +Optional sub-nodes:
+> +- ports: The connection to the encoder
+> +
+> +Connections between the Frame Buffer II and other video IP cores in the system
+> +are modelled using the OF graph DT bindings. The Frame Buffer II node has up
+> +to two OF graph ports. When the memory writer interface is enabled, port 0
+> +maps to the Avalon-ST Input (din) port. When the memory reader interface is
+> +enabled, port 1 maps to the Avalon-ST Output (dout) port.
+> +
+> +The encoder is built into the FPGA HW design and therefore would not
+> +be accessible from the DDR.
+> +
+> +		Port 0				Port1
+> +---------------------------------------------------------
+> +ARRIA10 AVALON_ST (DIN)		AVALON_ST (DOUT)
+> +
+> +Required Properties Example:
+> +----------------------------
+> +
+> +framebuffer@100000280 {
+> +		compatible = "altr,vip-frame-buffer-2.0";
+> +		reg = <0x00000001 0x00000280 0x00000040>;
+> +		altr,max-width = <1280>;
+> +		altr,max-height = <720>;
+> +		altr,mem-port-width = <128>;
+> +
+> +		ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +					fb_output: endpoint {
+> +						remote-endpoint = <&dp_encoder_input>;
+> +					};
+> +			};
+> +		};
+> +};
+> 
