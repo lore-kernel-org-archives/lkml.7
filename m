@@ -2,149 +2,266 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE65C46476
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89364C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C6E208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f4Y/Z1dO"
+	by mail.kernel.org (Postfix) with ESMTP id 5694F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfFGHB4 (ORCPT
+        id S1726891AbfFGHDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 03:01:56 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45988 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfFGHBz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 03:01:55 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x575ngl4006282;
-        Fri, 7 Jun 2019 00:49:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559886582;
-        bh=MEagnH+kxa/s49pg8767gTrJDW79F25A6Ljg2yywMAM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=f4Y/Z1dOPufN9GWrG/ITdjZw+4v5bZsUm/7AJAaIo619OzOzhBVvcN2odiJZm8sY/
-         QhrE2jn/CsinbMhp47a42n+xS1VDzkj/LadgxyoESHMLtVVWawgGCc9g1lp1btvZMu
-         AvSg8JmBOvuHak6DBMnRTm/uQHH/BuYO8hnw4dbE=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x575ngto024423
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 7 Jun 2019 00:49:42 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
- 2019 00:49:42 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 7 Jun 2019 00:49:42 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x575ndR3104523;
-        Fri, 7 Jun 2019 00:49:40 -0500
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <d0db90e3-3d05-dfba-8768-28511d9ee3ac@ti.com>
-Date:   Fri, 7 Jun 2019 08:50:08 +0300
+        Fri, 7 Jun 2019 03:03:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59272 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbfFGHDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 03:03:06 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1DFC6C1EB214;
+        Fri,  7 Jun 2019 07:02:52 +0000 (UTC)
+Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECBA9783A4;
+        Fri,  7 Jun 2019 07:02:41 +0000 (UTC)
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        Vincent Stehle <Vincent.Stehle@arm.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+ <20190526161004.25232-27-eric.auger@redhat.com>
+ <20190603163139.70fe8839@x1.home>
+ <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+ <20190605154553.0d00ad8d@jacob-builder>
+ <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
+ <20190606132903.064f7ac4@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <10905d2d-16a5-7d6f-2db3-9cca10c3bde0@redhat.com>
+Date:   Fri, 7 Jun 2019 09:02:35 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190606132903.064f7ac4@jacob-builder>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 07 Jun 2019 07:03:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jon,
+Hi Jean, Jacob,
 
-On 06/06/2019 15.37, Jon Hunter wrote:
->> Looking at the drivers/dma/tegra210-adma.c for the
->> TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
->> remote FIFO size would fit.
->> There are fields for overflow and starvation(?) thresholds and TX/RX
->> size (assuming word length, 3 == 32bits?).
+On 6/6/19 10:29 PM, Jacob Pan wrote:
+> On Thu, 6 Jun 2019 19:54:05 +0100
+> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 > 
-> The TX/RX size are the FIFO size. So 3 equates to a FIFO size of 3 * 64
-> bytes.
-> 
->> Both threshold is set to one, so I assume currently ADMA is
->> pushing/pulling data word by word.
-> 
-> That's different. That indicates thresholds when transfers start.
-> 
->> Not sure what the burst size is used for, my guess would be that it is
->> used on the memory (DDR) side for optimized, more efficient accesses?
-> 
-> That is the actual burst size.
-> 
->> My guess is that the threshold values are the counter limits, if the DMA
->> request counter reaches it then ADMA would do a threshold limit worth of
->> push/pull to ADMAIF.
->> Or there is another register where the remote FIFO size can be written
->> and ADMA is counting back from there until it reaches the threshold (and
->> pushes/pulling again threshold amount of data) so it keeps the FIFO
->> filled with at least threshold amount of data?
+>> On 05/06/2019 23:45, Jacob Pan wrote:
+>>> On Tue, 4 Jun 2019 18:11:08 +0200
+>>> Auger Eric <eric.auger@redhat.com> wrote:
+>>>   
+>>>> Hi Alex,
+>>>>
+>>>> On 6/4/19 12:31 AM, Alex Williamson wrote:  
+>>>>> On Sun, 26 May 2019 18:10:01 +0200
+>>>>> Eric Auger <eric.auger@redhat.com> wrote:
+>>>>>     
+>>>>>> This patch registers a fault handler which records faults in
+>>>>>> a circular buffer and then signals an eventfd. This buffer is
+>>>>>> exposed within the fault region.
+>>>>>>
+>>>>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>>>>>
+>>>>>> ---
+>>>>>>
+>>>>>> v3 -> v4:
+>>>>>> - move iommu_unregister_device_fault_handler to vfio_pci_release
+>>>>>> ---
+>>>>>>  drivers/vfio/pci/vfio_pci.c         | 49
+>>>>>> +++++++++++++++++++++++++++++ drivers/vfio/pci/vfio_pci_private.h
+>>>>>> |  1 + 2 files changed, 50 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/vfio/pci/vfio_pci.c
+>>>>>> b/drivers/vfio/pci/vfio_pci.c index f75f61127277..520999994ba8
+>>>>>> 100644 --- a/drivers/vfio/pci/vfio_pci.c
+>>>>>> +++ b/drivers/vfio/pci/vfio_pci.c
+>>>>>> @@ -30,6 +30,7 @@
+>>>>>>  #include <linux/vfio.h>
+>>>>>>  #include <linux/vgaarb.h>
+>>>>>>  #include <linux/nospec.h>
+>>>>>> +#include <linux/circ_buf.h>
+>>>>>>  
+>>>>>>  #include "vfio_pci_private.h"
+>>>>>>  
+>>>>>> @@ -296,6 +297,46 @@ static const struct vfio_pci_regops
+>>>>>> vfio_pci_fault_prod_regops = { .add_capability =
+>>>>>> vfio_pci_fault_prod_add_capability, };
+>>>>>>  
+>>>>>> +int vfio_pci_iommu_dev_fault_handler(struct iommu_fault_event
+>>>>>> *evt, void *data) +{
+>>>>>> +	struct vfio_pci_device *vdev = (struct vfio_pci_device
+>>>>>> *) data;
+>>>>>> +	struct vfio_region_fault_prod *prod_region =
+>>>>>> +		(struct vfio_region_fault_prod
+>>>>>> *)vdev->fault_pages;
+>>>>>> +	struct vfio_region_fault_cons *cons_region =
+>>>>>> +		(struct vfio_region_fault_cons
+>>>>>> *)(vdev->fault_pages + 2 * PAGE_SIZE);
+>>>>>> +	struct iommu_fault *new =
+>>>>>> +		(struct iommu_fault *)(vdev->fault_pages +
+>>>>>> prod_region->offset +
+>>>>>> +			prod_region->prod *
+>>>>>> prod_region->entry_size);
+>>>>>> +	int prod, cons, size;
+>>>>>> +
+>>>>>> +	mutex_lock(&vdev->fault_queue_lock);
+>>>>>> +
+>>>>>> +	if (!vdev->fault_abi)
+>>>>>> +		goto unlock;
+>>>>>> +
+>>>>>> +	prod = prod_region->prod;
+>>>>>> +	cons = cons_region->cons;
+>>>>>> +	size = prod_region->nb_entries;
+>>>>>> +
+>>>>>> +	if (CIRC_SPACE(prod, cons, size) < 1)
+>>>>>> +		goto unlock;
+>>>>>> +
+>>>>>> +	*new = evt->fault;
+>>>>>> +	prod = (prod + 1) % size;
+>>>>>> +	prod_region->prod = prod;
+>>>>>> +	mutex_unlock(&vdev->fault_queue_lock);
+>>>>>> +
+>>>>>> +	mutex_lock(&vdev->igate);
+>>>>>> +	if (vdev->dma_fault_trigger)
+>>>>>> +		eventfd_signal(vdev->dma_fault_trigger, 1);
+>>>>>> +	mutex_unlock(&vdev->igate);
+>>>>>> +	return 0;
+>>>>>> +
+>>>>>> +unlock:
+>>>>>> +	mutex_unlock(&vdev->fault_queue_lock);
+>>>>>> +	return -EINVAL;
+>>>>>> +}
+>>>>>> +
+>>>>>>  static int vfio_pci_init_fault_region(struct vfio_pci_device
+>>>>>> *vdev) {
+>>>>>>  	struct vfio_region_fault_prod *header;
+>>>>>> @@ -328,6 +369,13 @@ static int vfio_pci_init_fault_region(struct
+>>>>>> vfio_pci_device *vdev) header = (struct vfio_region_fault_prod
+>>>>>> *)vdev->fault_pages; header->version = -1;
+>>>>>>  	header->offset = PAGE_SIZE;
+>>>>>> +
+>>>>>> +	ret =
+>>>>>> iommu_register_device_fault_handler(&vdev->pdev->dev,
+>>>>>> +
+>>>>>> vfio_pci_iommu_dev_fault_handler,
+>>>>>> +					vdev);
+>>>>>> +	if (ret)
+>>>>>> +		goto out;
+>>>>>> +
+>>>>>>  	return 0;
+>>>>>>  out:
+>>>>>>  	kfree(vdev->fault_pages);
+>>>>>> @@ -570,6 +618,7 @@ static void vfio_pci_release(void
+>>>>>> *device_data) if (!(--vdev->refcnt)) {
+>>>>>>  		vfio_spapr_pci_eeh_release(vdev->pdev);
+>>>>>>  		vfio_pci_disable(vdev);
+>>>>>> +
+>>>>>> iommu_unregister_device_fault_handler(&vdev->pdev->dev);    
+>>>>>
+>>>>>
+>>>>> But this can fail if there are pending faults which leaves a
+>>>>> device reference and then the system is broken :(    
+>>>> This series only features unrecoverable errors and for those the
+>>>> unregistration cannot fail. Now unrecoverable errors were added I
+>>>> admit this is confusing. We need to sort this out or clean the
+>>>> dependencies.  
+>>> As Alex pointed out in 4/29, we can make
+>>> iommu_unregister_device_fault_handler() never fail and clean up all
+>>> the pending faults in the host IOMMU belong to that device. But the
+>>> problem is that if a fault, such as PRQ, has already been injected
+>>> into the guest, the page response may come back after handler is
+>>> unregistered and registered again.  
 >>
->> I think in both cases the threshold would be the maxburst.
+>> I'm trying to figure out if that would be harmful in any way. I guess
+>> it can be a bit nasty if we handle the page response right after
+>> having injected a new page request that uses the same PRGI. In any
+>> other case we discard the page response, but here we forward it to
+>> the endpoint and:
 >>
->> I suppose you have the patch for adma on how to use the fifo_size
->> parameter? That would help understand what you are trying to achieve better.
+>> * If the response status is success, endpoint retries the
+>> translation. The guest probably hasn't had time to handle the new
+>> page request and translation will fail, which may lead the endpoint
+>> to give up (two unsuccessful translation requests). Or send a new
+>> request
+>>
+> Good point, there shouldn't be any harm if the page response is a
+> "fake" success. In fact it could happen in the normal operation when
+> PRQs to two devices share the same non-leaf translation structure. The
+> worst case is just a retry. I am not aware of the retry limit, is it in
+> the PCIe spec? I cannot find it.
 > 
-> Its quite simple, we would just use the FIFO size to set the fields
-> TEGRAXXX_ADMA_CH_FIFO_CTRL_TXSIZE/RXSIZE in the
-> TEGRAXXX_ADMA_CH_FIFO_CTRL register. That's all.
+> I think we should just document it, similar to having a spurious
+> interrupt. The PRQ trace event should capture that as well.
+> 
+>> * otherwise the endpoint won't retry the access, and could also
+>> disable PRI if the status is failure.
+>>
+> That would be true regardless this race condition with handler
+> registration. So should be fine.
+> 
+>>> We need a way to reject such page response belong
+>>> to the previous life of the handler. Perhaps a sync call to the
+>>> guest with your fault queue eventfd? I am not sure.  
+>>
+>> We could simply expect the device driver not to send any page response
+>> after unregistering the fault handler. Is there any reason VFIO would
+>> need to unregister and re-register the fault handler on a live guest?
+>>
+> There is no reason for VFIO to unregister and register again, I was
+> just thinking from security perspective. Someone could write a VFIO app
+> do this attack. But I agree the damage is within the device, may get
+> PRI disabled as a result.
 
-Hrm, it is still not clear how all of these fits together.
+At the moment the handler unregistration is done on the vfio-pci release
+function() when the last reference is released so I am not sure this can
+even be achieved.
+> 
+> So it seems we agree on the following:
+> - iommu_unregister_device_fault_handler() will never fail
+> - iommu driver cleans up all pending faults when handler is unregistered
+> - assume device driver or guest not sending more page response _after_
+>   handler is unregistered.
+> - system will tolerate rare spurious response
+> 
+> Sounds right?
 
-What happens if you configure ADMA side:
-BURST = 10
-TX/RXSIZE = 100 (100 * 64 bytes?) /* FIFO_SIZE? */
-*THRES = 5
+sounds good for me
 
-And if you change the *THRES to 10?
-And if you change the TX/RXSIZE to 50 (50 * 64 bytes?)
-And if you change the BURST to 5?
+Thanks
 
-In other words what is the relation between all of these?
-
-There must be a rule and constraints around these and if we do really
-need a new parameter for ADMA's FIFO_SIZE I'd like it to be defined in a
-generic way so others could benefit without 'misusing' a fifo_size
-parameter for similar, but not quite fifo_size information.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Eric
+> 
+>> Thanks,
+>> Jean
+> 
+> [Jacob Pan]
+> 
