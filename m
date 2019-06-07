@@ -2,138 +2,229 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AA4C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98228C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3964D2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6472089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PMb1KwUO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qyOSfdjE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbfFGPcx (ORCPT
+        id S1729938AbfFGPe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:32:53 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44883 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729956AbfFGPcv (ORCPT
+        Fri, 7 Jun 2019 11:34:29 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38364 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729047AbfFGPe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:32:51 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t16so1386275pfe.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:32:51 -0700 (PDT)
+        Fri, 7 Jun 2019 11:34:29 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f97so974763plb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I7ozsQLaOgj0MR9jFDS0vY/ACLnRjUvlCOsI+qsnQSE=;
-        b=PMb1KwUOxWy7M5vtJkbvKRrSeqFBXw5wn46RTCMPfk7VWqJr1DXAQEbeX8GP72niYE
-         BNlslRoKbVLV5qwrRTf85CnT3M8NmPmSXpjujnimL4GmQrn0m1xaVXFBTTHKCAv0oGqe
-         vbBCVaXK88Pepnh49gjS5NITkVkx8XKSOmaATWZIo/j4eI4sI0L7jWEam+302Vjpt3Eo
-         z46upIm7QkeU7Y6YbxlnA6vrrSD9mpgcLQEpPfBrBCGDrFLR1GNxj83pVvFlbud/+TS0
-         G75AdhHeb1ZimhF9U9rAVvQpR/+OpyCz1eZRSaNuVx6YG0qM67yIkaCO7JYgzahAYbZI
-         4k9g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h1nKFwhuq2ZEy0/ENH2G+07fPOyOK64gti3KBgl78Rg=;
+        b=qyOSfdjE5eweGadE+c1zpwMdiopx6p5B6y5hDjgg7mxbdYLW+L8J24CH5j4tGB24zV
+         frtVpsgEqgv6t0pEMPRIxFRqVIX0XgCddlV3xDyn1kxpBLE035ZJQOz6kto8nCXg+UZf
+         3l7L9b+cHyqGyCAwfT9+M4kKBg68+6SbY8qKCBLm2/GJrIinPcHKCZSBbzw38kfTeMMU
+         EMojC7jY+x/kucJIy1Ah1RqjKjPV4mWyT+oJ0ADB487CKYFz6hkJsgu7L1BlqgPV+3Uf
+         F6o4XVJKM5m2ohulV2gmIEOi8xdfpLXSLNqRCIqfa2kMPX3Ry3A3L97uY65WipPofcEt
+         6mgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I7ozsQLaOgj0MR9jFDS0vY/ACLnRjUvlCOsI+qsnQSE=;
-        b=GpxzLi6O9ohv2kb4RFM2gYpvYkY3lg1l8AA6lKQe8x4Y0XVSmDC9mQ7iUNWDcG+cSj
-         SD52fvq4t2LyNtVY8p0uFMrNuYGGDmxs1N32i8WNP+GK8gRvz3yeMJ8R2Ebm2v7YDg3X
-         G2hDyFLha6Uze2SVsDJ1CeQMxrWZ/w1+1Hhy9EE82mh5TpkukZPLSRpBtEgVnR7tLkei
-         LPYcnQNUfunUGiJv1wy+Z3yxJ4gontnw8k1Ahk9sr7PSAsbdLgC64EY6rhfo61g92wDf
-         KGpXD1hGC7zGnGPUGTZOqcrIn2EcZgI+Ao8s5jb7hvV61h1ey1QmwxnyyWwxQsJ0bKBg
-         9vYA==
-X-Gm-Message-State: APjAAAWRlDboKTxSaiFgymhvKQsQ2RfHVAp9jqqyBgvIY2tYTTIJvKiR
-        CUmOwkoNiH/oUY9d9DhBsO8a6g==
-X-Google-Smtp-Source: APXvYqw3v5+4N7H7TwAQ9NFuBhK+UkEA5KDHUocteGCJxUh3oXsf8cdtMrws3lGImj9jRjFZGfz6Uw==
-X-Received: by 2002:aa7:8ecb:: with SMTP id b11mr19920591pfr.220.1559921570760;
-        Fri, 07 Jun 2019 08:32:50 -0700 (PDT)
-Received: from google.com ([2620:0:1008:1100:dac3:f780:2846:b802])
-        by smtp.gmail.com with ESMTPSA id b7sm2432205pgq.71.2019.06.07.08.32.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 08:32:50 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 08:32:46 -0700
-From:   Tom Roeder <tmroeder@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Kaehlcke <mka@chromium.org>, zwisler@chromium.org,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RFC PATCH] kbuild: Add option to generate a Compilation Database
-Message-ID: <20190607153246.GB101503@google.com>
-References: <20190606203003.112040-1-rrangel@chromium.org>
- <20190606205406.GA120512@google.com>
- <CAKwvOd=RCL3hpHBVukomrRiXKhvJHMxe3HSrtd0MRcCe1B3ZGw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h1nKFwhuq2ZEy0/ENH2G+07fPOyOK64gti3KBgl78Rg=;
+        b=fiuqs38Q6J2Vaov+dK1mhfZ3UU0DJ+SsDYyJbfvy7AySbMjNUWqiKJtmMr8OEUn2Fm
+         /lMUW27opCrN4XbGH33MXnmMFjFGPwIB3ZRWIxGL9Uy8rl/RvBl9M+f2+4l8SI9vjQ9T
+         hTDzAJNDESTzcTlMyXo48tvOObFm2hQ9yktgujeOZKVe03tl8HyZO7ESEV423QDIY7rI
+         Ug5aWhTlQp9qoQctoig3OwFWS1dam82l4RJ6B2oj516X75A03OQIrVI6LDC1rEKTjNVv
+         vzvgl24BPutt/ic/TFcJLDLSeyNrOpZbMitr370BFv/9z5y6TrcI/TziQRq8WMwejMaf
+         14DQ==
+X-Gm-Message-State: APjAAAW/4PNlkoXbkMFbJeknBi081xQ8PvC1nmXcpXEmJCAnq8gbjBWs
+        3d8Bs2aWNyBrrzfzpLGVV9QX+dPtGYo73wnzyrE=
+X-Google-Smtp-Source: APXvYqw9nXGzWmX8nvxYPgthgjSRzhgkrmwKTLa6iOK+lafpfMeLjTUNEDhZpxPGfckotfg78xd7BTWVl8SfhZRFCxs=
+X-Received: by 2002:a17:902:112c:: with SMTP id d41mr55075010pla.33.1559921668118;
+ Fri, 07 Jun 2019 08:34:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=RCL3hpHBVukomrRiXKhvJHMxe3HSrtd0MRcCe1B3ZGw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190515210202.21169-1-richard@nod.at>
+In-Reply-To: <20190515210202.21169-1-richard@nod.at>
+From:   Emil Lenngren <emil.lenngren@gmail.com>
+Date:   Fri, 7 Jun 2019 17:34:16 +0200
+Message-ID: <CAO1O6sdU=kAYS2sTKwiagxrbg+fMer9nvbwA9C4LoFMgH7e1dQ@mail.gmail.com>
+Subject: Re: [PATCH] ubifs: Add support for zstd compression.
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org,
+        Sebastian Andrzej Siewior <sebastian@breakpoint.cc>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michele Dionisio <michele.dionisio@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 04:40:00PM -0700, Nick Desaulniers wrote:
-> On Thu, Jun 6, 2019 at 1:54 PM Tom Roeder <tmroeder@google.com> wrote:
-> >
-> > On Thu, Jun 06, 2019 at 02:30:03PM -0600, Raul E Rangel wrote:
-> > > Clang tooling requires a compilation database to figure out the build
-> > > options for each file. This enables tools like clang-tidy and
-> > > clang-check.
-> > >
-> > > See https://clang.llvm.org/docs/HowToSetupToolingForLLVM.html for more
-> > > information.
-> 
-> I'm also super happy to see this!
-> https://nickdesaulniers.github.io/blog/2017/05/31/running-clang-tidy-on-the-linux-kernel/
-> I don't know enough about GNU Make/Kbuild to answer the questions, but
-> hopefully Masahiro can help there.
-> 
-> > I'm glad to see someone adding this to the Makefile directly. I added
-> > scripts/gen_compile_commands.py in b302046 (in Dec 2018) when I was
-> 
-> Heh, cool.  I had a script that basically did this; we recently
-> dropped it from the Android trees when doing an audit of out of tree
-> patches.
-> 
-> > working on using clang-check to look for bugs in KVM. That script
-> 
-> I'm very interested in this work; my summer intern is looking into
-> static analyses of the Linux kernel.  Can you maybe reach out to me
-> off thread to tell me more about what you found (or didn't)?
-> 
-> > > Normally cmake is used to generate the compilation database, but the
-> > > linux kernel uses make. Another option is using
-> > > [BEAR](https://github.com/rizsotto/Bear) which instruments
-> > > exec to find clang invocations and generate the database that way.
-> 
-> It's probably possible to get this to work w/ GCC if the additional
-> dependency of bear exists on the host's system (and may reduce the
-> number of implementations).  Downside is the additional host
-> dependency.
-> 
-> Sounds like it may also be possible to just run
-> scripts/gen_compile_commands.py at build time if this config is
-> enabled?
+Hello,
 
-Yes, for scripts/gen_compile_commands.py, you run a build first with
-whatever configuration you want, then call the script to produce the
-compile_commands.json file.
+Den ons 15 maj 2019 kl 23:03 skrev Richard Weinberger <richard@nod.at>:
+>
+> From: Michele Dionisio <michele.dionisio@gmail.com>
+>
+> zstd shows a good compression rate and is faster than lzo,
+> also on slow ARM cores.
+>
+> Cc: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+> Signed-off-by: Michele Dionisio <michele.dionisio@gmail.com>
+> [rw: rewrote commit message]
+> Signed-off-by: Richard Weinberger <richard@nod.at>
+> ---
+>  fs/ubifs/Kconfig       | 10 ++++++++++
+>  fs/ubifs/compress.c    | 27 ++++++++++++++++++++++++++-
+>  fs/ubifs/super.c       |  2 ++
+>  fs/ubifs/ubifs-media.h |  2 ++
+>  4 files changed, 40 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/ubifs/Kconfig b/fs/ubifs/Kconfig
+> index 9da2f135121b..8d84d2ed096d 100644
+> --- a/fs/ubifs/Kconfig
+> +++ b/fs/ubifs/Kconfig
+> @@ -5,8 +5,10 @@ config UBIFS_FS
+>         select CRYPTO if UBIFS_FS_ADVANCED_COMPR
+>         select CRYPTO if UBIFS_FS_LZO
+>         select CRYPTO if UBIFS_FS_ZLIB
+> +       select CRYPTO if UBIFS_FS_ZSTD
+>         select CRYPTO_LZO if UBIFS_FS_LZO
+>         select CRYPTO_DEFLATE if UBIFS_FS_ZLIB
+> +       select CRYPTO_ZSTD if UBIFS_FS_ZSTD
+>         select CRYPTO_HASH_INFO
+>         select UBIFS_FS_XATTR if FS_ENCRYPTION
+>         depends on MTD_UBI
+> @@ -37,6 +39,14 @@ config UBIFS_FS_ZLIB
+>         help
+>           Zlib compresses better than LZO but it is slower. Say 'Y' if unsure.
+>
+> +config UBIFS_FS_ZSTD
+> +       bool "ZSTD compression support" if UBIFS_FS_ADVANCED_COMPR
+> +       depends on UBIFS_FS
+> +       default y
+> +       help
+> +         ZSTD compresses is a big win in speed over Zlib and
+> +         in compression ratio over LZO. Say 'Y' if unsure.
+> +
+>  config UBIFS_ATIME_SUPPORT
+>         bool "Access time support"
+>         default n
+> diff --git a/fs/ubifs/compress.c b/fs/ubifs/compress.c
+> index 565cb56d7225..89183aeeeb7a 100644
+> --- a/fs/ubifs/compress.c
+> +++ b/fs/ubifs/compress.c
+> @@ -71,6 +71,24 @@ static struct ubifs_compressor zlib_compr = {
+>  };
+>  #endif
+>
+> +#ifdef CONFIG_UBIFS_FS_ZSTD
+> +static DEFINE_MUTEX(zstd_enc_mutex);
+> +static DEFINE_MUTEX(zstd_dec_mutex);
+> +
+> +static struct ubifs_compressor zstd_compr = {
+> +       .compr_type = UBIFS_COMPR_ZSTD,
+> +       .comp_mutex = &zstd_enc_mutex,
+> +       .decomp_mutex = &zstd_dec_mutex,
+> +       .name = "zstd",
+> +       .capi_name = "zstd",
+> +};
+> +#else
+> +static struct ubifs_compressor zstd_compr = {
+> +       .compr_type = UBIFS_COMPR_ZSTD,
+> +       .name = "zstd",
+> +};
+> +#endif
+> +
+>  /* All UBIFS compressors */
+>  struct ubifs_compressor *ubifs_compressors[UBIFS_COMPR_TYPES_CNT];
+>
+> @@ -228,13 +246,19 @@ int __init ubifs_compressors_init(void)
+>         if (err)
+>                 return err;
+>
+> -       err = compr_init(&zlib_compr);
+> +       err = compr_init(&zstd_compr);
+>         if (err)
+>                 goto out_lzo;
+>
+> +       err = compr_init(&zlib_compr);
+> +       if (err)
+> +               goto out_zstd;
+> +
+>         ubifs_compressors[UBIFS_COMPR_NONE] = &none_compr;
+>         return 0;
+>
+> +out_zstd:
+> +       compr_exit(&zstd_compr);
+>  out_lzo:
+>         compr_exit(&lzo_compr);
+>         return err;
+> @@ -247,4 +271,5 @@ void ubifs_compressors_exit(void)
+>  {
+>         compr_exit(&lzo_compr);
+>         compr_exit(&zlib_compr);
+> +       compr_exit(&zstd_compr);
+>  }
+> diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
+> index 04b8ecfd3470..ea8615261936 100644
+> --- a/fs/ubifs/super.c
+> +++ b/fs/ubifs/super.c
+> @@ -1055,6 +1055,8 @@ static int ubifs_parse_options(struct ubifs_info *c, char *options,
+>                                 c->mount_opts.compr_type = UBIFS_COMPR_LZO;
+>                         else if (!strcmp(name, "zlib"))
+>                                 c->mount_opts.compr_type = UBIFS_COMPR_ZLIB;
+> +                       else if (!strcmp(name, "zstd"))
+> +                               c->mount_opts.compr_type = UBIFS_COMPR_ZSTD;
+>                         else {
+>                                 ubifs_err(c, "unknown compressor \"%s\"", name); //FIXME: is c ready?
+>                                 kfree(name);
+> diff --git a/fs/ubifs/ubifs-media.h b/fs/ubifs/ubifs-media.h
+> index 8b7c1844014f..697b1b89066a 100644
+> --- a/fs/ubifs/ubifs-media.h
+> +++ b/fs/ubifs/ubifs-media.h
+> @@ -348,12 +348,14 @@ enum {
+>   * UBIFS_COMPR_NONE: no compression
+>   * UBIFS_COMPR_LZO: LZO compression
+>   * UBIFS_COMPR_ZLIB: ZLIB compression
+> + * UBIFS_COMPR_ZSTD: ZSTD compression
+>   * UBIFS_COMPR_TYPES_CNT: count of supported compression types
+>   */
+>  enum {
+>         UBIFS_COMPR_NONE,
+>         UBIFS_COMPR_LZO,
+>         UBIFS_COMPR_ZLIB,
+> +       UBIFS_COMPR_ZSTD,
+>         UBIFS_COMPR_TYPES_CNT,
+>  };
+>
+> --
+> 2.16.4
+
+In fs/ubifs/sb.c we have
+
+static int get_default_compressor(struct ubifs_info *c)
+{
+    if (ubifs_compr_present(c, UBIFS_COMPR_LZO))
+        return UBIFS_COMPR_LZO;
+
+    if (ubifs_compr_present(c, UBIFS_COMPR_ZLIB))
+        return UBIFS_COMPR_ZLIB;
+
+    return UBIFS_COMPR_NONE;
+}
+
+Maybe add an entry for zstd here as well?
+
+/Emil
