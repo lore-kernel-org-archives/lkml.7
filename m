@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67529C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5067BC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B0E208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F31020657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922813;
-	bh=0cNahbLEwEq/Hfurk0qJRHCEeT2djCndh/ch06pjDlQ=;
+	s=default; t=1559922817;
+	bh=/dSKHomfInZL/wJonGRmHMQubPsbLli2SZ/mcO/4lCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YfCcupZfJrzLNc2n3cNA6n47izXcycADa00tuF2vHXOeex9nAqRoyDaRU1FxBWa1H
-	 i7wEVtWlY37wsJ37KULhX6uIL7aiz4KI+j0CWdHF2csXCvzr+A2W44UTSGfbCi7Utx
-	 /hio/7T+aN3fCK7slV90paublSqnJOG+FsTm05jE=
+	b=WLBRnuXBgrDr5CRJXoFFaqvw9vIQE8mxW8xUlbyvm4yTJ8gauKBMOMjcWGVGo8iwX
+	 xuhtYQOy9Ugku0U7Pul6xJik4hF5kRWNaGfgr6IQEbFDToTQMg1/2EEh6a8WgngYvw
+	 WaHQ91hNewrZFYp86Hpv1d/NBpg0Dk61vFeGW3Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbfFGPrt (ORCPT
+        id S1731651AbfFGPrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:47:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730970AbfFGPrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:47:42 -0400
+        id S1731618AbfFGPrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:47:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1C820840;
-        Fri,  7 Jun 2019 15:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8E0A20657;
+        Fri,  7 Jun 2019 15:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922461;
-        bh=0cNahbLEwEq/Hfurk0qJRHCEeT2djCndh/ch06pjDlQ=;
+        s=default; t=1559922458;
+        bh=/dSKHomfInZL/wJonGRmHMQubPsbLli2SZ/mcO/4lCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJaK5BNvtelddXtHFUSmQeVKl1E2bhcn6i6p0TRF1o9gbkVoLvjDwEYmecZpQQELu
-         k/V1ZqCCk67bQ4qaFkq7/pT6d5TkYJd7Y4WIV91x9ElyhnZMG7uF/OK8rzwlGBfzvZ
-         xPsaoXCAreen1iSWqDencfmNmqfcIm6Itl2+eeBQ=
+        b=qzmpy1VEqr1JnZs74JfkJa/S4Av6zcAQhketjo6CC37h2CSy/7h4r7omxtPC7CkJv
+         aCKAdye3PSAU08pc9MilBxRrFI3Nu1M2StwOh8YGhxbIdeeqFaMaYi8gqtM2mC/DF7
+         HAPMfDY4/u7rBDj62BvueLv+0k/bDEPh+OOXvK4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.1 21/85] Btrfs: fix wrong ctime and mtime of a directory after log replay
-Date:   Fri,  7 Jun 2019 17:39:06 +0200
-Message-Id: <20190607153851.854751490@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6b8e0fb820e570c59e19@syzkaller.appspotmail.com,
+        Tomas Bortoli <tomasbortoli@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.1 20/85] tracing: Avoid memory leak in predicate_parse()
+Date:   Fri,  7 Jun 2019 17:39:05 +0200
+Message-Id: <20190607153851.722507454@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -60,80 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-commit 5338e43abbab13791144d37fd8846847062351c6 upstream.
+commit dfb4a6f2191a80c8b790117d0ff592fd712d3296 upstream.
 
-When replaying a log that contains a new file or directory name that needs
-to be added to its parent directory, we end up updating the mtime and the
-ctime of the parent directory to the current time after we have set their
-values to the correct ones (set at fsync time), efectivelly losing them.
+In case of errors, predicate_parse() goes to the out_free label
+to free memory and to return an error code.
 
-Sample reproducer:
+However, predicate_parse() does not free the predicates of the
+temporary prog_stack array, thence leaking them.
 
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
+Link: http://lkml.kernel.org/r/20190528154338.29976-1-tomasbortoli@gmail.com
 
-  $ mkdir /mnt/dir
-  $ touch /mnt/dir/file
-
-  # fsync of the directory is optional, not needed
-  $ xfs_io -c fsync /mnt/dir
-  $ xfs_io -c fsync /mnt/dir/file
-
-  $ stat -c %Y /mnt/dir
-  1557856079
-
-  <power failure>
-
-  $ sleep 3
-  $ mount /dev/sdb /mnt
-  $ stat -c %Y /mnt/dir
-  1557856082
-
-    --> should have been 1557856079, the mtime is updated to the current
-        time when replaying the log
-
-Fix this by not updating the mtime and ctime to the current time at
-btrfs_add_link() when we are replaying a log tree.
-
-This could be triggered by my recent fsync fuzz tester for fstests, for
-which an fstests patch exists titled "fstests: generic, fsync fuzz tester
-with fsstress".
-
-Fixes: e02119d5a7b43 ("Btrfs: Add a write ahead tree log to optimize synchronous operations")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org
+Fixes: 80765597bc587 ("tracing: Rewrite filter logic to be simpler and faster")
+Reported-by: syzbot+6b8e0fb820e570c59e19@syzkaller.appspotmail.com
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+[ Added protection around freeing prog_stack[i].pred ]
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events_filter.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -6396,8 +6396,18 @@ int btrfs_add_link(struct btrfs_trans_ha
- 	btrfs_i_size_write(parent_inode, parent_inode->vfs_inode.i_size +
- 			   name_len * 2);
- 	inode_inc_iversion(&parent_inode->vfs_inode);
--	parent_inode->vfs_inode.i_mtime = parent_inode->vfs_inode.i_ctime =
--		current_time(&parent_inode->vfs_inode);
-+	/*
-+	 * If we are replaying a log tree, we do not want to update the mtime
-+	 * and ctime of the parent directory with the current time, since the
-+	 * log replay procedure is responsible for setting them to their correct
-+	 * values (the ones it had when the fsync was done).
-+	 */
-+	if (!test_bit(BTRFS_FS_LOG_RECOVERING, &root->fs_info->flags)) {
-+		struct timespec64 now = current_time(&parent_inode->vfs_inode);
-+
-+		parent_inode->vfs_inode.i_mtime = now;
-+		parent_inode->vfs_inode.i_ctime = now;
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -427,7 +427,7 @@ predicate_parse(const char *str, int nr_
+ 	op_stack = kmalloc_array(nr_parens, sizeof(*op_stack), GFP_KERNEL);
+ 	if (!op_stack)
+ 		return ERR_PTR(-ENOMEM);
+-	prog_stack = kmalloc_array(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
++	prog_stack = kcalloc(nr_preds, sizeof(*prog_stack), GFP_KERNEL);
+ 	if (!prog_stack) {
+ 		parse_error(pe, -ENOMEM, 0);
+ 		goto out_free;
+@@ -578,7 +578,11 @@ predicate_parse(const char *str, int nr_
+ out_free:
+ 	kfree(op_stack);
+ 	kfree(inverts);
+-	kfree(prog_stack);
++	if (prog_stack) {
++		for (i = 0; prog_stack[i].pred; i++)
++			kfree(prog_stack[i].pred);
++		kfree(prog_stack);
 +	}
- 	ret = btrfs_update_inode(trans, root, &parent_inode->vfs_inode);
- 	if (ret)
- 		btrfs_abort_transaction(trans, ret);
+ 	return ERR_PTR(ret);
+ }
+ 
 
 
