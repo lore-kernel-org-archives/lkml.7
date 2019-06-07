@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6117FC468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6CCC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6DF20657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA96208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923096;
-	bh=3de85AOfx0eQ4s/eIx9LLJEkQ43wcwNNs3tYwmb0X9w=;
+	s=default; t=1559923100;
+	bh=Q4JXfggz8nyiMRed+rl0trD9mJdD12aw0OQPXh78few=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6V6uCRaplSbKNbS8YYDJqLFq0JxkFjdycUk5jQHH306sdjSvLNUEkiILtFitTwi8
-	 UksjzfZRa0gmjRGcam2yUMV5WRa0xeb6SYANWTwjuAY/8rvJAWiOVe9jDCrct8BMqH
-	 vIUC+zFmfjKaCjyzc6uDscFlBA2L7d6slrCUggKY=
+	b=SjIJetP/yrnf+Pu2hjTVbdOjfJgxsphfSO+MiVqjZCr38D11opPTXMhjbr13ylQnh
+	 GDpKSK4gw3Z/7tFEBwOlwSFYgmNAWofUlKs/mmXtoCETPOBbmegSszSsJwunOvzY4Y
+	 PrbGJDVnm1zcae/Cf10OygoqUI1wOBofoBcFcoLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbfFGPnC (ORCPT
+        id S1731172AbfFGP6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53826 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730700AbfFGPm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:56 -0400
+        id S1730732AbfFGPnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:43:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB0292146E;
-        Fri,  7 Jun 2019 15:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AB372146F;
+        Fri,  7 Jun 2019 15:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922175;
-        bh=3de85AOfx0eQ4s/eIx9LLJEkQ43wcwNNs3tYwmb0X9w=;
+        s=default; t=1559922181;
+        bh=Q4JXfggz8nyiMRed+rl0trD9mJdD12aw0OQPXh78few=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KSgtU2zz0WdvKopZ/mkAWLzliWUBOpGyHgGXF95FbBMVqOFyqskDrFdk0CeEorqQs
-         AjEEKO95lfx64XMi8bbwjR4WxrtzDpketwJUIuGtkGqgad755U+RWkuXMOgsgmbdYN
-         M9SofejRrfCEhOhadFt1o0KPst8tzsexbZS23FfI=
+        b=cWHdL1BySpBErB5kJ+GULgXzz0djS8qmfW9XgWW3zfEjT/oSrNmM6oi4Wy03GEfgb
+         IGp6vTK+Xu+Mbo5wtUferJ71Sze/sC9S0e6MhWJTPHBrY8b6yfVCkXQl6mKEZbrZgx
+         T2hZtdSJJY7v4tD3+JmrtXf43508djsVB4xCoFQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.14 63/69] drm/rockchip: shutdown drm subsystem on shutdown
-Date:   Fri,  7 Jun 2019 17:39:44 +0200
-Message-Id: <20190607153855.738108376@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Sebor <msebor@gcc.gnu.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 4.14 65/69] include/linux/module.h: copy __init/__exit attrs to init/cleanup_module
+Date:   Fri,  7 Jun 2019 17:39:46 +0200
+Message-Id: <20190607153855.920043978@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -64,69 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vicente Bergas <vicencb@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-commit b8f9d7f37b6af829c34c49d1a4f73ce6ed58e403 upstream.
+commit a6e60d84989fa0e91db7f236eda40453b0e44afa upstream.
 
-As explained by Robin Murphy:
-> the IOMMU shutdown disables paging, so if the VOP is still
-> scanning out then that will result in whatever IOVAs it was using now going
-> straight out onto the bus as physical addresses.
+The upcoming GCC 9 release extends the -Wmissing-attributes warnings
+(enabled by -Wall) to C and aliases: it warns when particular function
+attributes are missing in the aliases but not in their target.
 
-We had a more radical approach before in commit
-7f3ef5dedb14 ("drm/rockchip: Allow driver to be shutdown on reboot/kexec")
-but that resulted in new warnings and oopses on shutdown on rk3399
-chromeos devices.
+In particular, it triggers for all the init/cleanup_module
+aliases in the kernel (defined by the module_init/exit macros),
+ending up being very noisy.
 
-So second try is resurrecting Vicentes shutdown change which should
-achieve the same result but in a less drastic way.
+These aliases point to the __init/__exit functions of a module,
+which are defined as __cold (among other attributes). However,
+the aliases themselves do not have the __cold attribute.
 
-Fixes: 63238173b2fa ("Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"")
-Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: stable@vger.kernel.org
-Suggested-by: JeffyChen <jeffy.chen@rock-chips.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-[adapted commit message to explain the history]
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Tested-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190402113753.10118-1-heiko@sntech.de
+Since the compiler behaves differently when compiling a __cold
+function as well as when compiling paths leading to calls
+to __cold functions, the warning is trying to point out
+the possibly-forgotten attribute in the alias.
+
+In order to keep the warning enabled, we decided to silence
+this case. Ideally, we would mark the aliases directly
+as __init/__exit. However, there are currently around 132 modules
+in the kernel which are missing __init/__exit in their init/cleanup
+functions (either because they are missing, or for other reasons,
+e.g. the functions being called from somewhere else); and
+a section mismatch is a hard error.
+
+A conservative alternative was to mark the aliases as __cold only.
+However, since we would like to eventually enforce __init/__exit
+to be always marked,  we chose to use the new __copy function
+attribute (introduced by GCC 9 as well to deal with this).
+With it, we copy the attributes used by the target functions
+into the aliases. This way, functions that were not marked
+as __init/__exit won't have their aliases marked either,
+and therefore there won't be a section mismatch.
+
+Note that the warning would go away marking either the extern
+declaration, the definition, or both. However, we only mark
+the definition of the alias, since we do not want callers
+(which only see the declaration) to be compiled as if the function
+was __cold (and therefore the paths leading to those calls
+would be assumed to be unlikely).
+
+Link: https://lore.kernel.org/lkml/20190123173707.GA16603@gmail.com/
+Link: https://lore.kernel.org/lkml/20190206175627.GA20399@gmail.com/
+Suggested-by: Martin Sebor <msebor@gcc.gnu.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/linux/module.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-@@ -425,6 +425,14 @@ static int rockchip_drm_platform_remove(
- 	return 0;
- }
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -128,13 +128,13 @@ extern void cleanup_module(void);
+ #define module_init(initfn)					\
+ 	static inline initcall_t __maybe_unused __inittest(void)		\
+ 	{ return initfn; }					\
+-	int init_module(void) __attribute__((alias(#initfn)));
++	int init_module(void) __copy(initfn) __attribute__((alias(#initfn)));
  
-+static void rockchip_drm_platform_shutdown(struct platform_device *pdev)
-+{
-+	struct drm_device *drm = platform_get_drvdata(pdev);
-+
-+	if (drm)
-+		drm_atomic_helper_shutdown(drm);
-+}
-+
- static const struct of_device_id rockchip_drm_dt_ids[] = {
- 	{ .compatible = "rockchip,display-subsystem", },
- 	{ /* sentinel */ },
-@@ -434,6 +442,7 @@ MODULE_DEVICE_TABLE(of, rockchip_drm_dt_
- static struct platform_driver rockchip_drm_platform_driver = {
- 	.probe = rockchip_drm_platform_probe,
- 	.remove = rockchip_drm_platform_remove,
-+	.shutdown = rockchip_drm_platform_shutdown,
- 	.driver = {
- 		.name = "rockchip-drm",
- 		.of_match_table = rockchip_drm_dt_ids,
+ /* This is only required if you want to be unloadable. */
+ #define module_exit(exitfn)					\
+ 	static inline exitcall_t __maybe_unused __exittest(void)		\
+ 	{ return exitfn; }					\
+-	void cleanup_module(void) __attribute__((alias(#exitfn)));
++	void cleanup_module(void) __copy(exitfn) __attribute__((alias(#exitfn)));
+ 
+ #endif
+ 
 
 
