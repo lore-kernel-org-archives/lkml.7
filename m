@@ -4,53 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DBEC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD0EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F97A21530
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FE52146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922157;
-	bh=Jf33kmLLFmEOiNWvM0nQgXO0kil+1qKY4cJex/Oqgak=;
+	s=default; t=1559922160;
+	bh=E662ldMK7Ydl5bGRnKGbVKVQQ2qKZcP+E3MCPpJb2sY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gQmnl8V8U76Bcz8blfY2wucfIMWLjpo+HowgojCNWTMVTZXGZYrQAt0V6p0VJODGR
-	 4BiGu6rLNyCjUvJqFCMwToNJhg5i0XfTxuMrud7Mzj0K4bMr0dqvL4khkuM2aj4fT1
-	 uRvgpDa5iEOSaaA/k3nPc70FOo0vaDlSR4Xm8sWo=
+	b=TEA7HGjzfF9yaY0bJQdLaYlvJSsfAywfrhPgZU1MlEYAKtTaZRuvyqN1EXFIllJsi
+	 QkhF62EF+xruYSzhcaz0h09X2GIvdSuHaOsU/qRHWAZOY3PpCxSqc8W9M49+k6fa/K
+	 JQJYhYxwz358Nhm/Po++KJVYzI/e+W7zqnU0A5vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbfFGPmg (ORCPT
+        id S1729809AbfFGPmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53278 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730604AbfFGPmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:33 -0400
+        id S1730619AbfFGPmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89132214C6;
-        Fri,  7 Jun 2019 15:42:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 319AD214AF;
+        Fri,  7 Jun 2019 15:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922153;
-        bh=Jf33kmLLFmEOiNWvM0nQgXO0kil+1qKY4cJex/Oqgak=;
+        s=default; t=1559922155;
+        bh=E662ldMK7Ydl5bGRnKGbVKVQQ2qKZcP+E3MCPpJb2sY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pr1dL4kri3GG4GAjxJHXoADY+SYs7TOMT0salUBXqtThkWAXPChF+CE5YzkbvkPQ2
-         clxFc1fHu7Fo+itRE2H0r8Tggity5k7Wh4CBI6XV4fesQxHdQ07P0kY7C2ClGa9cEw
-         bvZ5Z4E7ptrgIFI2bqULRr/Kgc+OQnrWGAjt59+g=
+        b=J7zLNKDM5WryMNQAXQYBYA5xgHojrLDNNpUg8ye2fvtALNpkHI0O3vilcoPc67T/i
+         R6QzN7pVBNhe5jJ35VRw8UlB+QwJ/71PDQ3y/j5ocEIQPyQXCKj1WgaE8MgD4lIbZD
+         uEMoLBt+mXD1tu1ikyoJW/QIpbYHuNs0gz6i8Zss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Rodin <mrodin@de.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "George G. Davis" <george_davis@mentor.com>
-Subject: [PATCH 4.14 56/69] serial: sh-sci: disable DMA for uart_console
-Date:   Fri,  7 Jun 2019 17:39:37 +0200
-Message-Id: <20190607153855.055695580@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 4.14 57/69] staging: vc04_services: prevent integer overflow in create_pagelist()
+Date:   Fri,  7 Jun 2019 17:39:38 +0200
+Message-Id: <20190607153855.153931634@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -63,46 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George G. Davis <george_davis@mentor.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 099506cbbc79c0bd52b19cb6b930f256dabc3950 upstream.
+commit ca641bae6da977d638458e78cd1487b6160a2718 upstream.
 
-As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
-console UART"), UART console lines use low-level PIO only access functions
-which will conflict with use of the line when DMA is enabled, e.g. when
-the console line is also used for systemd messages. So disable DMA
-support for UART console lines.
+The create_pagelist() "count" parameter comes from the user in
+vchiq_ioctl() and it could overflow.  If you look at how create_page()
+is called in vchiq_prepare_bulk_data(), then the "size" variable is an
+int so it doesn't make sense to allow negatives or larger than INT_MAX.
 
-Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
-Link: https://patchwork.kernel.org/patch/10929511/
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: stable@vger.kernel.org
-Signed-off-by: George G. Davis <george_davis@mentor.com>
+I don't know this code terribly well, but I believe that typical values
+of "count" are typically quite low and I don't think this check will
+affect normal valid uses at all.
+
+The "pagelist_size" calculation can also overflow on 32 bit systems, but
+not on 64 bit systems.  I have added an integer overflow check for that
+as well.
+
+The Raspberry PI doesn't offer the same level of memory protection that
+x86 does so these sorts of bugs are probably not super critical to fix.
+
+Fixes: 71bad7f08641 ("staging: add bcm2708 vchiq driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sh-sci.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -1479,6 +1479,13 @@ static void sci_request_dma(struct uart_
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -405,9 +405,18 @@ create_pagelist(char __user *buf, size_t
+ 	int dma_buffers;
+ 	dma_addr_t dma_addr;
  
- 	dev_dbg(port->dev, "%s: port %d\n", __func__, port->line);
- 
-+	/*
-+	 * DMA on console may interfere with Kernel log messages which use
-+	 * plain putchar(). So, simply don't use it with a console.
-+	 */
-+	if (uart_console(port))
-+		return;
++	if (count >= INT_MAX - PAGE_SIZE)
++		return NULL;
 +
- 	if (!port->dev->of_node)
- 		return;
+ 	offset = ((unsigned int)(unsigned long)buf & (PAGE_SIZE - 1));
+ 	num_pages = DIV_ROUND_UP(count + offset, PAGE_SIZE);
  
++	if (num_pages > (SIZE_MAX - sizeof(PAGELIST_T) -
++			 sizeof(struct vchiq_pagelist_info)) /
++			(sizeof(u32) + sizeof(pages[0]) +
++			 sizeof(struct scatterlist)))
++		return NULL;
++
+ 	pagelist_size = sizeof(PAGELIST_T) +
+ 			(num_pages * sizeof(u32)) +
+ 			(num_pages * sizeof(pages[0]) +
 
 
