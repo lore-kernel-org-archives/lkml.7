@@ -2,149 +2,165 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF865C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52AAC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31042146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9FB208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:47:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="T7OJIJn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbfFGOrU (ORCPT
+        id S1729419AbfFGOr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:47:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54104 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728198AbfFGOrS (ORCPT
+        Fri, 7 Jun 2019 10:47:28 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3251 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729374AbfFGOr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:47:18 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x57El2ld087474
-        for <linux-kernel@vger.kernel.org>; Fri, 7 Jun 2019 10:47:17 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2syqwsxq41-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:47:16 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Fri, 7 Jun 2019 15:47:15 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 7 Jun 2019 15:47:11 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x57El9GY21627024
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Jun 2019 14:47:09 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47EB611C05C;
-        Fri,  7 Jun 2019 14:47:09 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4CFB311C054;
-        Fri,  7 Jun 2019 14:47:06 +0000 (GMT)
-Received: from ram.ibm.com (unknown [9.85.131.246])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  7 Jun 2019 14:47:06 +0000 (GMT)
-Date:   Fri, 7 Jun 2019 07:47:03 -0700
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Ryan Grimm <grimm@linux.vnet.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [RFC PATCH 1/1] powerpc/pseries/svm: Unshare all pages before
- kexecing a new kernel
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <20190521044912.1375-1-bauerman@linux.ibm.com>
- <20190521044912.1375-13-bauerman@linux.ibm.com>
+        Fri, 7 Jun 2019 10:47:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cfa78fd0000>; Fri, 07 Jun 2019 07:47:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 07 Jun 2019 07:47:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 07 Jun 2019 07:47:27 -0700
+Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 14:47:27 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL112.nvidia.com
+ (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 14:47:26 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Jun 2019 14:47:26 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cfa78f80000>; Fri, 07 Jun 2019 07:47:26 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
+CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V9 03/15] PCI: dwc: Perform dbi regs write lock towards the end
+Date:   Fri, 7 Jun 2019 20:16:28 +0530
+Message-ID: <20190607144640.13427-4-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190607144640.13427-1-vidyas@nvidia.com>
+References: <20190607144640.13427-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521044912.1375-13-bauerman@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060714-0028-0000-0000-0000037848C8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060714-0029-0000-0000-000024382D1F
-Message-Id: <20190607144703.GB8604@ram.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906070104
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559918845; bh=w/Qcr78Q2OyVZjb22DTrmImVHqb8WONhp2PvCczvMOc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=T7OJIJn6kJ8gfC4myaa11QBOwYgAqOR2Ww0pOyE+HzEfo7h1p3qosZp6VFfYiuMZm
+         6jY81kAHrV3ZjjjE6GJkSQnhq6SjiU6QQhXSp716LJbfj5DBkJ5/A+rfzVHKpSG3jS
+         YF0P78nY7HSqEOUliBo/SYzog2TUbSxBLdu/m5ZjHpnAqf4Rgh7pXyHBn1/OGRjGtF
+         /Vx0CuazyEfhryut2vdsYUwmZp9cEyZP6Amz//pIZ9dPyMsY3CZEDiJxWahz8K8Fdg
+         cYhcvRNDwHYlz4mSIykPdOYq78arfXJu/IKbDMb29fxMsA6Rm3PrWnCs5t6WBWsU7q
+         PeBaJfgtTiKkg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-powerpc/pseries/svm: Unshare all pages before kexecing a new kernel.
-    
-A new kernel deserves a clean slate. Any pages shared with the
-hypervisor is unshared before invoking the new kernel. However there are
-exceptions.  If the new kernel is invoked to dump the current kernel, or
-if there is a explicit request to preserve the state of the current
-kernel, unsharing of pages is skipped.
- 
-NOTE: Reserve atleast 256M for crashkernel.  Otherwise SWIOTLB
-allocation fails and crash kernel fails to boot.
- 
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+Remove multiple write enable and disable sequences of dbi registers as
+Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
+DBI write-lock enable bit thereby not allowing any further writes to BAR-0
+register in config space to take place. Hence enabling write permission at
+the start of function and disabling the same only towards the end.
 
-diff --git a/arch/powerpc/include/asm/ultravisor-api.h b/arch/powerpc/include/asm/ultravisor-api.h
-index 8a6c5b4d..c8dd470 100644
---- a/arch/powerpc/include/asm/ultravisor-api.h
-+++ b/arch/powerpc/include/asm/ultravisor-api.h
-@@ -31,5 +31,6 @@
- #define UV_UNSHARE_PAGE			0xF134
- #define UV_PAGE_INVAL			0xF138
- #define UV_SVM_TERMINATE		0xF13C
-+#define UV_UNSHARE_ALL_PAGES		0xF140
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+---
+Changes since [v8]:
+* None
+
+Changes since [v7]:
+* None
+
+Changes since [v6]:
+* None
+
+Changes since [v5]:
+* Moved write enable to the beginning of the API and write disable to the end
+
+Changes since [v4]:
+* None
+
+Changes since [v3]:
+* None
+
+Changes since [v2]:
+* None
+
+Changes since [v1]:
+* None
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index f93252d0da5b..d3156446ff27 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	u32 val, ctrl, num_ctrls;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
  
- #endif /* _ASM_POWERPC_ULTRAVISOR_API_H */
-diff --git a/arch/powerpc/include/asm/ultravisor.h b/arch/powerpc/include/asm/ultravisor.h
-index bf5ac05..73c44ff 100644
---- a/arch/powerpc/include/asm/ultravisor.h
-+++ b/arch/powerpc/include/asm/ultravisor.h
-@@ -120,6 +120,12 @@ static inline int uv_unshare_page(u64 pfn, u64 npages)
- 	return ucall(UV_UNSHARE_PAGE, retbuf, pfn, npages);
++	/*
++	 * Enable DBI read-only registers for writing/updating configuration.
++	 * Write permission gets disabled towards the end of this function.
++	 */
++	dw_pcie_dbi_ro_wr_en(pci);
++
+ 	dw_pcie_setup(pci);
+ 
+ 	if (!pp->ops->msi_host_init) {
+@@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+ 
+ 	/* Setup interrupt pins */
+-	dw_pcie_dbi_ro_wr_en(pci);
+ 	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
+ 	val &= 0xffff00ff;
+ 	val |= 0x00000100;
+ 	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+-	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+ 	/* Setup bus numbers */
+ 	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+@@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 
+ 	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+ 
+-	/* Enable write permission for the DBI read-only register */
+-	dw_pcie_dbi_ro_wr_en(pci);
+ 	/* Program correct class for RC */
+ 	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+-	/* Better disable write permission right after the update */
+-	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+ 	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
+ 	val |= PORT_LOGIC_SPEED_CHANGE;
+ 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
++
++	dw_pcie_dbi_ro_wr_dis(pci);
  }
- 
-+static inline int uv_unshare_all_pages(void)
-+{
-+	unsigned long retbuf[UCALL_BUFSIZE];
-+
-+	return ucall(UV_UNSHARE_ALL_PAGES, retbuf);
-+}
- #endif /* !__ASSEMBLY__ */
- 
- #endif	/* _ASM_POWERPC_ULTRAVISOR_H */
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 75692c3..a93e3ab 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -329,6 +329,13 @@ void default_machine_kexec(struct kimage *image)
- #ifdef CONFIG_PPC_PSERIES
- 	kexec_paca.lppaca_ptr = NULL;
- #endif
-+
-+	if (is_svm_platform() && !(image->preserve_context ||
-+				   image->type == KEXEC_TYPE_CRASH)) {
-+		uv_unshare_all_pages();
-+		printk("kexec: Unshared all shared pages.\n");
-+	}
-+
- 	paca_ptrs[kexec_paca.paca_index] = &kexec_paca;
- 
- 	setup_paca(&kexec_paca);
+ EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+-- 
+2.17.1
 
