@@ -2,312 +2,72 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D95C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15050C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 04:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A152208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dP04lq8A"
+	by mail.kernel.org (Postfix) with ESMTP id E0BD320825
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 04:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFGD4T (ORCPT
+        id S1725971AbfFGE2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 23:56:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33901 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfFGD4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 23:56:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e16so671378wrn.1;
-        Thu, 06 Jun 2019 20:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rLoUwV9hdnwXBGWkChqk/K0NFJ0mreevqgCZuOFRNb4=;
-        b=dP04lq8A80jmsa78F+cg5A1X5taSZGEZwTK2cxKdXAb0COR5eSXyRoTs+IkVThOetP
-         gnYAnUdt2uZwHv3pVEHxPCDRrJd1nAUkI2Czl9vnSfencsIjZGt3HNHLSVBliYtoBIyY
-         yqMWNboW8EhFjAYpvfZO3RzlvnL3w3sRSvQJKXHWfDX2ZRIz2VQV6eTBgtBLeWgJb8gl
-         fC77QVWN3JaDT26mtrOGM2/7sz57qWPY+1RavUv+npkJp8+brxRfGr1kEY1eAuBkwAVG
-         TYLfA6eIP9JX29EAvNiF7WoMIZ+BxScGAtqvb85QcUnSKAmb5xXhmArT/Q9GcMt0sWvV
-         5Ssw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rLoUwV9hdnwXBGWkChqk/K0NFJ0mreevqgCZuOFRNb4=;
-        b=sJLs/MErS8maXjzpvG40u2527h7JoVQAi/DzRumaEKXLZL7XGk/dHblrIkH4KX7aKc
-         KW/3K203dFAeUVOwO5lgpUfRI8hqQ5V6bUKEq+0Mx6zcwXBCD2ATRasJm+T1MCCQar/3
-         ekkcdgEZeXujP6KbLplXOxTtVWJlQAWpoWVOiemaL6/rZDD2R2ocgwrpAKqLwcK1TwMq
-         5ReAiHX7hMlI592ZXpWUoikrB4k8ryfbeAugP/HOilxsUA/iSld5q8/TlhXyksW1gJ6B
-         TvzdtPLvPqlP9jkPOs6cUvcBL2HKcPqT6DDIwo0MiNU+a8GcvViTBYsDQ8lY5MRMSBIT
-         5N8A==
-X-Gm-Message-State: APjAAAVyb63VOMHV7iHJT38ae98fy/a0R1QbXFOsemINszEjC7HeiWdq
-        qfW6rgpjVtabwfBKgXIaVgxAiPmTO9gitp4JjC0=
-X-Google-Smtp-Source: APXvYqyBUvNAxqhdtOipPJf7cSYAGhJLMX2zhVGBUz/fXN2uiGQJUCWepNWiQaMhZAaY7xfJZALlA37XSvoTBDqp7js=
-X-Received: by 2002:a5d:6243:: with SMTP id m3mr1164628wrv.41.1559879776365;
- Thu, 06 Jun 2019 20:56:16 -0700 (PDT)
+        Fri, 7 Jun 2019 00:28:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47514 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbfFGE2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 00:28:16 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ECD05883BA;
+        Fri,  7 Jun 2019 04:28:15 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-59.ams2.redhat.com [10.36.116.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AE6280DB3;
+        Fri,  7 Jun 2019 04:28:11 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Joseph Myers <joseph@codesourcery.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, <linux-api@vger.kernel.org>,
+        <linux-arch@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Paul Burton <pburton@wavecomp.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        <linux-kernel@vger.kernel.org>, torvalds@linux-foundation.org
+Subject: Re: [PATCH] uapi: avoid namespace conflict in linux/posix_types.h
+References: <20190319165123.3967889-1-arnd@arndb.de>
+        <alpine.DEB.2.21.1905072249570.19308@digraph.polyomino.org.uk>
+Date:   Fri, 07 Jun 2019 06:28:09 +0200
+In-Reply-To: <alpine.DEB.2.21.1905072249570.19308@digraph.polyomino.org.uk>
+        (Joseph Myers's message of "Tue, 7 May 2019 22:50:49 +0000")
+Message-ID: <87tvd2j9ye.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <20190606152812.13141-1-weijiang.yang@intel.com> <20190606152812.13141-2-weijiang.yang@intel.com>
-In-Reply-To: <20190606152812.13141-2-weijiang.yang@intel.com>
-From:   Jidong Xiao <jidong.xiao@gmail.com>
-Date:   Thu, 6 Jun 2019 21:57:00 -0600
-Message-ID: <CAG4AFWZG2xKmnt4etNfrefy7WcX2joaJhMOthQUao_qHfrvi5A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] Documentation: Introduce EPT based Subpage Protection
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     KVM <kvm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com, yu.c.zhang@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 07 Jun 2019 04:28:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Weijiang,
+* Joseph Myers:
 
-Does this require some specific Intel processors or is it supported by
-older processors as well?
+> What happened with this patch (posted 19 March)?  I found today that we 
+> can't use Linux 5.1 headers in glibc testing because the namespace issues 
+> are still present in the headers as of the release.
 
--Jidong
+This regression fix still hasn't been merged into Linus' tree.  What is
+going on here?
 
-On Thu, Jun 6, 2019 at 9:33 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
->
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  Documentation/virtual/kvm/spp_kvm.txt | 216 ++++++++++++++++++++++++++
->  1 file changed, 216 insertions(+)
->  create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
->
-> diff --git a/Documentation/virtual/kvm/spp_kvm.txt b/Documentation/virtual/kvm/spp_kvm.txt
-> new file mode 100644
-> index 000000000000..4b5edcaf48b6
-> --- /dev/null
-> +++ b/Documentation/virtual/kvm/spp_kvm.txt
-> @@ -0,0 +1,216 @@
-> +EPT-Based Sub-Page Protection (SPP) for KVM
-> +=============================================
-> +
-> +1. Overview
-> +
-> +EPT-based Sub-Page Protection (SPP) capability to allow Virtual Machine
-> +Monitors to specify write-protection for guest physical memory at a
-> +sub-page (128 byte) granularity. When this capability is utilized, the
-> +CPU enforces write-access permissions for sub-page regions inside 4K pages
-> +as specified by the VMI tools.
-> +
-> +2. Operation of SPP
-> +
-> +Sub-Page Protection Table (SPPT) is introduced to manage sub-page
-> +write-access.
-> +
-> +SPPT is active when:
-> +a) moddule parameter spp=on is configured for kvm-intel.ko
-> +b) large paging is disabled on host
-> +c) "sub-page write protection" VM-execution control bit is set
-> +SPPT looks up the guest physical address to seek a 64-bit
-> +bitmap indicating sub-page write permission in SPPT leaf entry.
-> +
-> +When the "sub-page write protection" VM-execution control is 1, the SPPT
-> +is used to lookup write permission bits for the 128 byte sub-page regions
-> +contained in the 4KB guest physical page. EPT specifies the 4KB page
-> +write-protection privilege whereas SPPT defines the write permissions
-> +at 128-byte granularity within one 4KB page. Write accesses
-> +prevented due to sub-page permissions induces EPT violation VM exits.
-> +Similar to EPT, a logical processor uses SPPT to lookup sub-page level
-> +write permissions for guest-physical addresses only when those addresses
-> +are used to access memory.
-> +__________________________________________________________________________
-> +
-> +How SPP hardware works:
-> +__________________________________________________________________________
-> +
-> +Guest write access --> GPA --> Walk EPT --> EPT leaf entry -----|
-> +|---------------------------------------------------------------|
-> +|-> if VMexec_control.spp && ept_leaf_entry.spp_bit (bit 61)
-> +     |
-> +     |-> <false> --> EPT legacy behavior
-> +     |
-> +     |
-> +     |-> <true>  --> if ept_leaf_entry.writable
-> +                      |
-> +                      |-> <true>  --> Ignore SPP
-> +                      |
-> +                      |-> <false> --> GPA --> Walk SPP 4-level table--|
-> +                                                                      |
-> +|------------<----------get-the-SPPT-point-from-VMCS-filed-----<------|
-> +|
-> +Walk SPP L4E table
-> +|
-> +|---> if-entry-misconfiguration ------------>-------|-------<---------|
-> + |                                                  |                 |
-> +else                                                |                 |
-> + |                                                  |                 |
-> + |   |------------------SPP VMexit<-----------------|                 |
-> + |   |                                                                |
-> + |   |-> exit_qualification & sppt_misconfig --> sppt misconfig       |
-> + |   |                                                                |
-> + |   |-> exit_qualification & sppt_miss --> sppt miss                 |
-> + |---|                                                                |
-> +     |                                                                |
-> +walk SPPT L3E--|--> if-entry-misconfiguration------------>------------|
-> +               |                                                      |
-> +              else                                                    |
-> +               |                                                      |
-> +               |                                                      |
-> +        walk SPPT L2E --|--> if-entry-misconfiguration-------->-------|
-> +                        |                                             |
-> +                       else                                           |
-> +                        |                                             |
-> +                        |                                             |
-> +                 walk SPPT L1E --|-> if-entry-misconfiguration--->----|
-> +                                 |
-> +                               else
-> +                                 |
-> +                                 |-> if sub-page writable
-> +                                 |-> <true>  allow, write access
-> +                                 |-> <false> disallow, EPT violation
-> +______________________________________________________________________________
-> +
-> +3. Interfaces
-> +
-> +* Feature enabling
-> +
-> +Add "spp=on" to KVM module parameter to enable SPP feature, default is off.
-> +
-> +* Get/Set sub-page write access permission
-> +
-> +New KVM ioctl:
-> +
-> +KVM_SUBPAGES_GET_ACCESS:
-> +Get sub-pages write access bitmap corresponding to given rang of continuous gfn.
-> +
-> +KVM_SUBPAGES_SET_ACCESS
-> +Set sub-pages write access bitmap corresponding to given rang of continuous gfn.
-> +
-> +
-> +/* for KVM_SUBPAGES_GET_ACCESS and KVM_SUBPAGES_SET_ACCESS */
-> +struct kvm_subpage_info {
-> +    __u64 gfn;
-> +    __u64 npages; /* number of 4K pages */
-> +    __u64 *access_map; /* sub-page write-access bitmap array */
-> +};
-> +
-> +#define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, struct kvm_subpage_info)
-> +#define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, struct kvm_subpage_info)
-> +
-> +
-> +4. SPPT initialization
-> +
-> +* SPPT root page allocation
-> +
-> +  SPPT is referenced via a 64-bit control field called "sub-page
-> +  protection table pointer" (SPPTP, encoding 0x2030) which contains a
-> +  4K-align physical address.
-> +
-> +  SPPT is a 4-level paging structure similar as EPT. When KVM
-> +  loads mmu, it allocates a root page for SPPT L4 table as well.
-> +
-> +* EPT leaf entry SPP bit (bit 61)
-> +
-> +  Set 0 to SPP bit to close SPP.
-> +
-> +5. Set/Get Sub-Page access bitmap for a bunch of guest physical pages
-> +
-> +* To utilize SPP feature, system admin should set sub-page access via
-> +  SPP KVM ioctl `KVM_SUBPAGES_SET_ACCESS`, configuring EPT and SPPT in below flow:
-> +
-> +  (1) If the target 4KB pages to be protected are there, it locates EPT leaf entries
-> +      via the guest physical addresses, flags the bit 61 of the corresponding entries to
-> +      enable sub-page protection for the pages, then setup SPPT paging structure.
-> +  (2) otherwise, stores the [gfn,permission] mappings in KVM data structure. When
-> +      EPT page-fault is generated due to target protected page accessing, it settles
-> +      EPT entry configureation together with SPPT build-up.
-> +
-> +   The SPPT paging structure format is as below:
-> +
-> +   Format of the SPPT L4E, L3E, L2E:
-> +   | Bit    | Contents                                                                 |
-> +   | :----- | :------------------------------------------------------------------------|
-> +   | 0      | Valid entry when set; indicates whether the entry is present             |
-> +   | 11:1   | Reserved (0)                                                             |
-> +   | N-1:12 | Physical address of 4KB aligned SPPT LX-1 Table referenced by this entry |
-> +   | 51:N   | Reserved (0)                                                             |
-> +   | 63:52  | Reserved (0)                                                             |
-> +   Note: N is the physical address width supported by the processor. X is the page level
-> +
-> +   Format of the SPPT L1E:
-> +   | Bit   | Contents                                                          |
-> +   | :---- | :---------------------------------------------------------------- |
-> +   | 0+2i  | Write permission for i-th 128 byte sub-page region.               |
-> +   | 1+2i  | Reserved (0).                                                     |
-> +   Note: 0<=i<=31
-> +
-> +6. SPPT-induced vmexits
-> +
-> +* SPP VM exits
-> +
-> +Accesses using guest physical addresses may cause VM exits due to a SPPT
-> +misconfiguration or a SPPT missing.
-> +
-> +A SPPT misconfiguration vmexit occurs when, in the course of translating
-> +a guest physical address, the logical processor encounters a leaf EPT
-> +paging-structure entry mapping a 4KB page, with SPP enabled, during the
-> +SPPT lookup, a SPPT paging-structure entry contains an unsupported
-> +value.
-> +
-> +A SPPT missing vmexit occurs during the SPPT lookup there is no SPPT
-> +misconfiguration but any level of SPPT paging-structure entries are not
-> +present.
-> +
-> +NOTE. SPPT misconfigurations and SPPT miss can occur only due to an
-> +attempt to write memory with a guest physical address.
-> +
-> +* EPT violation vmexits due to SPPT
-> +
-> +EPT violations generated due to SPP sub-page
-> +permission are reported as EPT violation vmexits.
-> +
-> +7. SPPT-induced vmexits handling
-> +
-> +
-> +#define EXIT_REASON_SPP                 66
-> +
-> +static int (*const kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
-> +    ...
-> +    [EXIT_REASON_SPP]                     = handle_spp,
-> +    ...
-> +};
-> +
-> +
-> +New exit qualification for SPPT-induced vmexits.
-> +
-> +| Bit   | Contents                                                          |
-> +| :---- | :---------------------------------------------------------------- |
-> +| 10:0  | Reserved (0).                                                     |
-> +| 11    | SPPT VM exit type. Set for SPPT Miss, cleared for SPPT Misconfig. |
-> +| 12    | NMI unblocking due to IRET                                        |
-> +| 63:13 | Reserved (0)                                                      |
-> +
-> +In addition to the exit qualification, Guest Linear Address and Guest
-> +Physical Address fields will be reported.
-> +
-> +* SPPT miss and misconfiguration
-> +
-> +Allocate a page for the SPPT entry and set the entry correctly.
-> +
-> +* EPT violation vmexits due to SPPT
-> +
-> +While hardware traverses SPPT, If the sub-page region write
-> +permission bit is set, the write is allowed, otherwise it's prevented
-> +and an EPT violation is generated.
-> --
-> 2.17.2
->
+This might seem rather minor, but the namespace testing is actually
+relevant in practice.  It prevents accidental clashes with C/C++
+identifiers in user code.
+
+If this fairly central UAPI header is not made namespace-clean again,
+then we need to duplicate information from more UAPI headers in glibc,
+and I don't think that's something we'd want to do.
+
+Thanks,
+Florian
