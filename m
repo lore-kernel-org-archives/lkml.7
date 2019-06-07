@@ -2,222 +2,145 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE3AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713EEC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07175212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:04:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="K6LwWAr3"
+	by mail.kernel.org (Postfix) with ESMTP id 4A558208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfFGPE2 (ORCPT
+        id S1729511AbfFGPGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:04:28 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42777 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729005AbfFGPE1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:04:27 -0400
-Received: by mail-ed1-f66.google.com with SMTP id z25so3454549edq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tTTkzXVn2E3fC3MRVPFzUyBEH8NuiFonw8OSIpNN83o=;
-        b=K6LwWAr3cBnLh8mgXszP0ZbNMqER1JdG3JVKgSa3mmL9k5wTGLDO77Zu/Fmsd73Cw8
-         igjROZMjkxeeLDyv5NhmspKxKqP52jw+Cr3poPNbG1uIIriAeQgovw/mYt3pIHYVo4li
-         lZAWPrCi1SkKn2rS+Bf1BfHU7pRVUk/5TtVDs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=tTTkzXVn2E3fC3MRVPFzUyBEH8NuiFonw8OSIpNN83o=;
-        b=VfB/35i86BW24MK0wO2xzzEIZNg8UgkayJuGP803bRgaZlRE6WkPZUeqy9IjN7QPRr
-         flYdqmS4EeOBOLPgylAA0wVb8yTWRidiVxKuIVYmQO3yyUorDBiQW0pXWuHidQ2xRxlr
-         M4mC4C7gnhQRdFnxoXffzhm/M/ss5BqFg0p6L3KIp8P7j8D1esmZCk512J6TyRec/DGr
-         pZ0YkbPQurY85JiO1PYHxuxT5o8sUCsfhxhdw5COEhW3HjhBSOceYWsErEFecV2PLIbr
-         VwKCCE80FuLkecRsvgmBM3DbG6UluSeonJCTsQ2MWHRafzcrIQHCt2xLI8bhF2BEX+wM
-         fVpw==
-X-Gm-Message-State: APjAAAVqRp/SWgn7WyyDldKW8lgbjOyTkwZyInOe9cKjEvTvCsxytVb/
-        /0tXimw9vmkGGjcroZe27Ukq7Q==
-X-Google-Smtp-Source: APXvYqxltyNdua/vTPG0cZQn6vEiV/hWI8pxFFiAkEMuiv2YITwt0fCBGoHz53bNGsQxlV08sJhnoA==
-X-Received: by 2002:a17:906:7047:: with SMTP id r7mr47036191ejj.11.1559919865332;
-        Fri, 07 Jun 2019 08:04:25 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id a22sm420324ejj.3.2019.06.07.08.04.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 08:04:22 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 17:04:20 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/2] drm/vkms: Use index instead of 0 in possible crtc
-Message-ID: <20190607150420.GI21222@phenom.ffwll.local>
-Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <cover.1559860606.git.rodrigosiqueiramelo@gmail.com>
- <e3bc263b273d91182e0577ed820b1c4f096834ec.1559860606.git.rodrigosiqueiramelo@gmail.com>
- <20190607073957.GB21222@phenom.ffwll.local>
- <CADKXj+7OLRLrGo+YbxZjR7f90WNPPjT_rkcyt3GrxomCAjOjHA@mail.gmail.com>
+        Fri, 7 Jun 2019 11:06:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:51032 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728446AbfFGPGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:06:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 08:06:31 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO [10.7.198.156]) ([10.7.198.156])
+  by orsmga002.jf.intel.com with ESMTP; 07 Jun 2019 08:06:30 -0700
+Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
+ kprobe_page_fault()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <6e095842-0f7f-f428-653d-2b6e98fea6b3@intel.com>
+Date:   Fri, 7 Jun 2019 08:06:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADKXj+7OLRLrGo+YbxZjR7f90WNPPjT_rkcyt3GrxomCAjOjHA@mail.gmail.com>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:37:55AM -0300, Rodrigo Siqueira wrote:
-> On Fri, Jun 7, 2019 at 4:40 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Thu, Jun 06, 2019 at 07:40:38PM -0300, Rodrigo Siqueira wrote:
-> > > When vkms calls drm_universal_plane_init(), it sets 0 for the
-> > > possible_crtcs parameter which works well for a single encoder and
-> > > connector; however, this approach is not flexible and does not fit well
-> > > for vkms. This commit adds an index parameter for vkms_plane_init()
-> > > which makes code flexible and enables vkms to support other DRM features.
-> > >
-> > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> >
-> > I think a core patch to WARN_ON if this is NULL would be good. Since
-> > that's indeed a bit broken ... We'd need to check all callers to make sure
-> > there's not other such bugs anywhere ofc.
-> > -Daniel
-> 
-> Do you mean add WARN_ON in `drm_universal_plane_init()` if
-> `possible_crtcs` is equal to zero?
+On 6/7/19 3:34 AM, Anshuman Khandual wrote:
+> +static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+> +					      unsigned int trap)
+> +{
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * To be potentially processing a kprobe fault and to be allowed
+> +	 * to call kprobe_running(), we have to be non-preemptible.
+> +	 */
+> +	if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
+> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
+> +			ret = 1;
+> +	}
+> +	return ret;
+> +}
 
-Yeah, and same for endcoders I guess too. Altough with encoders I think
-there's a ton of broken drivers.
--Daniel
+Nits: Other that taking the nice, readable, x86 one and globbing it onto
+a single line, looks OK to me.  It does seem a _bit_ silly to go to the
+trouble of converting to 'bool' and then using 0/1 and an 'int'
+internally instead of true/false and a bool, though.  It's also not a
+horrible thing to add a single line comment to this sucker to say:
 
-> 
-> > > ---
-> > >  drivers/gpu/drm/vkms/vkms_drv.c    | 2 +-
-> > >  drivers/gpu/drm/vkms/vkms_drv.h    | 4 ++--
-> > >  drivers/gpu/drm/vkms/vkms_output.c | 6 +++---
-> > >  drivers/gpu/drm/vkms/vkms_plane.c  | 4 ++--
-> > >  4 files changed, 8 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-> > > index 738dd6206d85..92296bd8f623 100644
-> > > --- a/drivers/gpu/drm/vkms/vkms_drv.c
-> > > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> > > @@ -92,7 +92,7 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
-> > >       dev->mode_config.max_height = YRES_MAX;
-> > >       dev->mode_config.preferred_depth = 24;
-> > >
-> > > -     return vkms_output_init(vkmsdev);
-> > > +     return vkms_output_init(vkmsdev, 0);
-> > >  }
-> > >
-> > >  static int __init vkms_init(void)
-> > > diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-> > > index 81f1cfbeb936..e81073dea154 100644
-> > > --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> > > +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> > > @@ -113,10 +113,10 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
-> > >                              int *max_error, ktime_t *vblank_time,
-> > >                              bool in_vblank_irq);
-> > >
-> > > -int vkms_output_init(struct vkms_device *vkmsdev);
-> > > +int vkms_output_init(struct vkms_device *vkmsdev, int index);
-> > >
-> > >  struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
-> > > -                               enum drm_plane_type type);
-> > > +                               enum drm_plane_type type, int index);
-> > >
-> > >  /* Gem stuff */
-> > >  struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
-> > > diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-> > > index 3b162b25312e..1442b447c707 100644
-> > > --- a/drivers/gpu/drm/vkms/vkms_output.c
-> > > +++ b/drivers/gpu/drm/vkms/vkms_output.c
-> > > @@ -36,7 +36,7 @@ static const struct drm_connector_helper_funcs vkms_conn_helper_funcs = {
-> > >       .get_modes    = vkms_conn_get_modes,
-> > >  };
-> > >
-> > > -int vkms_output_init(struct vkms_device *vkmsdev)
-> > > +int vkms_output_init(struct vkms_device *vkmsdev, int index)
-> > >  {
-> > >       struct vkms_output *output = &vkmsdev->output;
-> > >       struct drm_device *dev = &vkmsdev->drm;
-> > > @@ -46,12 +46,12 @@ int vkms_output_init(struct vkms_device *vkmsdev)
-> > >       struct drm_plane *primary, *cursor = NULL;
-> > >       int ret;
-> > >
-> > > -     primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY);
-> > > +     primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY, index);
-> > >       if (IS_ERR(primary))
-> > >               return PTR_ERR(primary);
-> > >
-> > >       if (enable_cursor) {
-> > > -             cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR);
-> > > +             cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR, index);
-> > >               if (IS_ERR(cursor)) {
-> > >                       ret = PTR_ERR(cursor);
-> > >                       goto err_cursor;
-> > > diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-> > > index 0e67d2d42f0c..20ffc52f9194 100644
-> > > --- a/drivers/gpu/drm/vkms/vkms_plane.c
-> > > +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-> > > @@ -168,7 +168,7 @@ static const struct drm_plane_helper_funcs vkms_primary_helper_funcs = {
-> > >  };
-> > >
-> > >  struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
-> > > -                               enum drm_plane_type type)
-> > > +                               enum drm_plane_type type, int index)
-> > >  {
-> > >       struct drm_device *dev = &vkmsdev->drm;
-> > >       const struct drm_plane_helper_funcs *funcs;
-> > > @@ -190,7 +190,7 @@ struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
-> > >               funcs = &vkms_primary_helper_funcs;
-> > >       }
-> > >
-> > > -     ret = drm_universal_plane_init(dev, plane, 0,
-> > > +     ret = drm_universal_plane_init(dev, plane, 1 << index,
-> > >                                      &vkms_plane_funcs,
-> > >                                      formats, nformats,
-> > >                                      NULL, type, NULL);
-> > > --
-> > > 2.21.0
-> >
-> >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-> 
-> 
-> 
-> -- 
-> 
-> Rodrigo Siqueira
-> https://siqueira.tech
+/* returns true if kprobes handled the fault */
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+In any case, and even if you don't clean any of this up:
+
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
