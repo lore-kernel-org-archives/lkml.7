@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8CBC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0297EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A5A208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7642208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922976;
-	bh=2YaMuI3RJKFG5nQj8FFJEYnNadIMoqYra8uLWOutnmU=;
+	s=default; t=1559922982;
+	bh=9E2EX28Bw3gXuclGEY/bIpxg/tuh2wZhNIhvZVgFgtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HmFmg72ufTEuvFPSSZES8871ipgIZPVm5eJk06qN8DyNqmB6UPaEyIXUeLdaPgcaV
-	 mNQs6tia9+K3XOF2KjQb/eGDC2GuNo5qs/1HiCAGqQMiTpV0b02lZc+BLR4MxI4aCU
-	 Gnz+LiTNghOda7BYy8X8Oy+ZOf4YwEnqlwLOXYuw=
+	b=mM2JZJf1mEqvcdPTmj2sIVvSkkOZa+RpyaY1NRA6kxXtUgq8Aa40ZLi3bvyWzoKX+
+	 VSMMyZewv3HxXhtNwIigGAe4SYn0kdqaFCIpaRRz6ss1VQwFZNsSOsocqYXjFMeuYn
+	 ZyCKmD9zcbDxuYzcfIKlYbgPCm7vMSTAYBNUD1MI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731582AbfFGP4P (ORCPT
+        id S1731867AbfFGP4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:56:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56070 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731102AbfFGPoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:34 -0400
+        id S1731091AbfFGPo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00C45212F5;
-        Fri,  7 Jun 2019 15:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 735E22146E;
+        Fri,  7 Jun 2019 15:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922273;
-        bh=2YaMuI3RJKFG5nQj8FFJEYnNadIMoqYra8uLWOutnmU=;
+        s=default; t=1559922268;
+        bh=9E2EX28Bw3gXuclGEY/bIpxg/tuh2wZhNIhvZVgFgtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkdlIbswzYIWB6lbwgpBzfsmdXxzeoG4XX7HQLdHy+5tRFU99k9BAcrLlvdRj74CW
-         vywwhUcnSkBC7EgpiL+laJEuQD9lKtTywN3+bKpddlejx40duWc+zI5mtdKyVVdUO8
-         4+phs4gKdHch2w88C/xAW8lqFtCFAkpEmIgW23/o=
+        b=TvJeqlZVb4Fg8Lnsen9ItRxmDV5E8fmutke74rehTPPUB3qyRghZmdQOVXcRo+Vck
+         lcFPWJD5UmmpO7+XOPv4z93q5y9t49Y4BIpHupn7ypeJk4X4Cayax1MC+TbBTxef20
+         EL+q6gdwI0I8ekdpkpplJk+DjJdacmFMl54k291w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 4.19 28/73] s390/crypto: fix possible sleep during spinlock aquired
-Date:   Fri,  7 Jun 2019 17:39:15 +0200
-Message-Id: <20190607153852.183416788@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 26/73] iio: adc: ti-ads8688: fix timestamp is not updated in buffer
+Date:   Fri,  7 Jun 2019 17:39:13 +0200
+Message-Id: <20190607153851.952023814@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -61,104 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Sean Nyekjaer <sean@geanix.com>
 
-commit 1c2c7029c008922d4d48902cc386250502e73d51 upstream.
+commit e6d12298310fa1dc11f1d747e05b168016057fdd upstream.
 
-This patch fixes a complain about possible sleep during
-spinlock aquired
-"BUG: sleeping function called from invalid context at
-include/crypto/algapi.h:426"
-for the ctr(aes) and ctr(des) s390 specific ciphers.
+When using the hrtimer iio trigger timestamp isn't updated.
+If we use iio_get_time_ns it is updated correctly.
 
-Instead of using a spinlock this patch introduces a mutex
-which is save to be held in sleeping context. Please note
-a deadlock is not possible as mutex_trylock() is used.
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Reported-by: Julian Wiedmann <jwi@linux.ibm.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Fixes: 2a86487786b5c ("iio: adc: ti-ads8688: add trigger and buffer support")
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/crypto/aes_s390.c |    8 ++++----
- arch/s390/crypto/des_s390.c |    7 ++++---
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ drivers/iio/adc/ti-ads8688.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -27,14 +27,14 @@
- #include <linux/module.h>
- #include <linux/cpufeature.h>
- #include <linux/init.h>
--#include <linux/spinlock.h>
-+#include <linux/mutex.h>
- #include <linux/fips.h>
- #include <linux/string.h>
- #include <crypto/xts.h>
- #include <asm/cpacf.h>
- 
- static u8 *ctrblk;
--static DEFINE_SPINLOCK(ctrblk_lock);
-+static DEFINE_MUTEX(ctrblk_lock);
- 
- static cpacf_mask_t km_functions, kmc_functions, kmctr_functions,
- 		    kma_functions;
-@@ -698,7 +698,7 @@ static int ctr_aes_crypt(struct blkciphe
- 	unsigned int n, nbytes;
- 	int ret, locked;
- 
--	locked = spin_trylock(&ctrblk_lock);
-+	locked = mutex_trylock(&ctrblk_lock);
- 
- 	ret = blkcipher_walk_virt_block(desc, walk, AES_BLOCK_SIZE);
- 	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
-@@ -716,7 +716,7 @@ static int ctr_aes_crypt(struct blkciphe
- 		ret = blkcipher_walk_done(desc, walk, nbytes - n);
+--- a/drivers/iio/adc/ti-ads8688.c
++++ b/drivers/iio/adc/ti-ads8688.c
+@@ -397,7 +397,7 @@ static irqreturn_t ads8688_trigger_handl
  	}
- 	if (locked)
--		spin_unlock(&ctrblk_lock);
-+		mutex_unlock(&ctrblk_lock);
- 	/*
- 	 * final block may be < AES_BLOCK_SIZE, copy only nbytes
- 	 */
---- a/arch/s390/crypto/des_s390.c
-+++ b/arch/s390/crypto/des_s390.c
-@@ -14,6 +14,7 @@
- #include <linux/cpufeature.h>
- #include <linux/crypto.h>
- #include <linux/fips.h>
-+#include <linux/mutex.h>
- #include <crypto/algapi.h>
- #include <crypto/des.h>
- #include <asm/cpacf.h>
-@@ -21,7 +22,7 @@
- #define DES3_KEY_SIZE	(3 * DES_KEY_SIZE)
  
- static u8 *ctrblk;
--static DEFINE_SPINLOCK(ctrblk_lock);
-+static DEFINE_MUTEX(ctrblk_lock);
+ 	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+-			pf->timestamp);
++			iio_get_time_ns(indio_dev));
  
- static cpacf_mask_t km_functions, kmc_functions, kmctr_functions;
+ 	iio_trigger_notify_done(indio_dev->trig);
  
-@@ -387,7 +388,7 @@ static int ctr_desall_crypt(struct blkci
- 	unsigned int n, nbytes;
- 	int ret, locked;
- 
--	locked = spin_trylock(&ctrblk_lock);
-+	locked = mutex_trylock(&ctrblk_lock);
- 
- 	ret = blkcipher_walk_virt_block(desc, walk, DES_BLOCK_SIZE);
- 	while ((nbytes = walk->nbytes) >= DES_BLOCK_SIZE) {
-@@ -404,7 +405,7 @@ static int ctr_desall_crypt(struct blkci
- 		ret = blkcipher_walk_done(desc, walk, nbytes - n);
- 	}
- 	if (locked)
--		spin_unlock(&ctrblk_lock);
-+		mutex_unlock(&ctrblk_lock);
- 	/* final block may be < DES_BLOCK_SIZE, copy only nbytes */
- 	if (nbytes) {
- 		cpacf_kmctr(fc, ctx->key, buf, walk->src.virt.addr,
 
 
