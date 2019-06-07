@@ -2,115 +2,131 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80262C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3816EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A95208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559910452;
-	bh=RghxblOdxAl9vT+fMODN3C4V+Nv+9rHWY6u/K7RysWs=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Z2S00zkW5/9dKQgKYnSAcDd4kIRos45e1II8Ke6Lo9+6bCU/zDNGJbB8u0n+h2Sha
-	 HzCJk9fs75VAiSy+g4Gsnfe+5iEOXWWVx/3T2p8XpvwEm8lPE74dCz5xiTDtpFyP7A
-	 vzTRUNUIP8esKcrfTGUqBjoP29iNUExOfQGbFFv4=
+	by mail.kernel.org (Postfix) with ESMTP id 04DA2208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:28:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="stzuUfiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbfFGM1b (ORCPT
+        id S1729044AbfFGM2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:27:31 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45950 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728526AbfFGM1a (ORCPT
+        Fri, 7 Jun 2019 08:28:13 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:58245 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728526AbfFGM2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:27:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=fT9pSf+IL07UlUK5BjK6jBDL0c+x4KokMXc+n2SMsnk=; b=NEKqh4F6JOnL
-        ciErXnfiiBTQIXlHBNc7IuyXgTjcDsW3RGA8pwVmDSAL+6GxTghkoMIdGZg1np5077NKUzM0jjCtm
-        553Pc8IJ0pIA801UjZWiChf7M4ARj6xBDA6DwEHNDDiATS6wirkRfNNNw08Yrxab9vsCeHJToalyh
-        T5sW8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hZDxu-0002Bc-7V; Fri, 07 Jun 2019 12:27:26 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 2ECD9440046; Fri,  7 Jun 2019 13:27:25 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Jiri Kosina <trivial@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: cpcap: Spelling s/configuraion/configuration/" to the regulator tree
-In-Reply-To: <20190607112640.13842-1-geert+renesas@glider.be>
-X-Patchwork-Hint: ignore
-Message-Id: <20190607122725.2ECD9440046@finisterre.sirena.org.uk>
-Date:   Fri,  7 Jun 2019 13:27:25 +0100 (BST)
+        Fri, 7 Jun 2019 08:28:12 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190607122810euoutp023e99ad23f5f6c1b26a084a2db320e748~l6lOhtfS93241232412euoutp02V
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 12:28:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190607122810euoutp023e99ad23f5f6c1b26a084a2db320e748~l6lOhtfS93241232412euoutp02V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559910490;
+        bh=9ASUxj5X1jrQpmL6ymTtSaqw6S2iiehLeIZIb8+AUG0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=stzuUfiCzBPMrY/dOydbh/X7bUDcyYRE2aGiHbSXhWzJLgY75hG1onK2RiplkoE8q
+         PbFjt4pLuJdH1QRbs3jGtb4UVDAt0NzLZWhO07aCcorai2AAa1KiyC4B/c5BERT+DW
+         SuSb4Xe0Vo4IKBKFOrXKGAolkKrsoNrM+Ujg3NYM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190607122810eucas1p23d355b67172644319b33da983470fa7b~l6lN44hFl1570215702eucas1p2F;
+        Fri,  7 Jun 2019 12:28:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 79.15.04298.9585AFC5; Fri,  7
+        Jun 2019 13:28:09 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b~l6lNBRerP2586425864eucas1p1B;
+        Fri,  7 Jun 2019 12:28:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190607122808eusmtrp1b6c64dcb6fa45ee2bbdec3679166624a~l6lMr1xjQ0101101011eusmtrp1W;
+        Fri,  7 Jun 2019 12:28:08 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-5f-5cfa5859e5f6
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 4D.52.04140.8585AFC5; Fri,  7
+        Jun 2019 13:28:08 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607122808eusmtip196c285aad43a27f8e1d7abff8c48477f~l6lMNXgVS2223722237eusmtip1U;
+        Fri,  7 Jun 2019 12:28:08 +0000 (GMT)
+Subject: Re: [PATCH v2] video: fbdev: imxfb: add COMPILE_TEST support
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-ID: <73094ead-2fbc-ba3e-3760-01918673ba30@samsung.com>
+Date:   Fri, 7 Jun 2019 14:28:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <33fc4837-599d-0d5c-c530-58b283c4c095@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAKsWRmVeSWpSXmKPExsWy7djPc7qREb9iDE481LO48vU9m8XDq/4W
+        q6buZLHY9Pgaq8WJvg+sFl2/VjJbXN41h83i7/ZNLBYvtohb3J44mdGBy2PnrLvsHptWdbJ5
+        3O8+zuSxeUm9x8Z3O5g8+v8aeHzeJBfAHsVlk5Kak1mWWqRvl8CV8fjEY+aCm0wV2/++ZWtg
+        nMfUxcjJISFgInHz/WfmLkYuDiGBFYwSX9s/giWEBL4wSvz6kQaR+Mwo0fbuGhtMx52L39kg
+        EssZJV53TYBqf8sosW7rBrAqYQFXiYnbuplBbDYBK4mJ7asYQWwRAQeJKTcmsIM0MAtcZpI4
+        /HMPWIJXwE7izcTFLCA2i4CKxN91J8HiogIREvePbWCFqBGUODnzCVgNp4C9xNtL88EWMAuI
+        S9x6Mp8JwpaX2P52DthFEgLX2CVuTdkC1MAB5LhIXJ/mAfGCsMSr41vYIWwZidOTe1gg6tcx
+        SvzteAHVvJ1RYvnkf1BPW0scPn6RFWQQs4CmxPpd+hBhR4kj/Z1MEPP5JG68FYS4gU9i0rbp
+        zBBhXomONiGIajWJDcs2sMGs7dq5knkCo9IsJJ/NQvLNLCTfzELYu4CRZRWjeGppcW56arFh
+        Xmq5XnFibnFpXrpecn7uJkZgujr97/inHYxfLyUdYhTgYFTi4fVg/xkjxJpYVlyZe4hRgoNZ
+        SYS37MKPGCHelMTKqtSi/Pii0pzU4kOM0hwsSuK81QwPooUE0hNLUrNTUwtSi2CyTBycUg2M
+        y1omdGhu9Ghd6vLlx99s2WDRJY837N+SUj+r6kr8lT+mBUwagYlPe7X/fHSJ3LpMNPgx3+Oc
+        fWv7Fn78+rYhxfo2K99KQaG5NTumRDoZXZZ6pB/ze+rvy2FOS1dvO79is9Fv3YDSqd5/rM7P
+        2R7+bm5ljmvh+jcur2b/Wxfgw8NZt77PrJ1XR4mlOCPRUIu5qDgRACW5sLdTAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xu7oREb9iDM6eNbG48vU9m8XDq/4W
+        q6buZLHY9Pgaq8WJvg+sFl2/VjJbXN41h83i7/ZNLBYvtohb3J44mdGBy2PnrLvsHptWdbJ5
+        3O8+zuSxeUm9x8Z3O5g8+v8aeHzeJBfAHqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdo
+        bB5rZWSqpG9nk5Kak1mWWqRvl6CX8fjEY+aCm0wV2/++ZWtgnMfUxcjJISFgInHn4ne2LkYu
+        DiGBpYwSlzufMnYxcgAlZCSOry+DqBGW+HOtiw3EFhJ4zSgx+48oiC0s4CoxcVs3M4jNJmAl
+        MbF9FSOILSLgIDHlxgR2kJnMAleZJB7tX8gK0WwnsfnmDnYQmxfIfjNxMQuIzSKgIvF33Umw
+        ZlGBCIkz71ewQNQISpyc+QTM5hSwl3h7aT7YMmYBdYk/8y5B2eISt57MZ4Kw5SW2v53DPIFR
+        aBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwOjcduznlh2MXe+C
+        DzEKcDAq8fDOYPoZI8SaWFZcmXuIUYKDWUmEt+zCjxgh3pTEyqrUovz4otKc1OJDjKZAz01k
+        lhJNzgcmjrySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYx7K/9/
+        NukVYVqdYlu9XSa6JOBE+3kBrbZb+uwlLEnCIgddHKWFD/mVS/IbSuitWPPuw+Nt3QL7nN7I
+        /xGTP6Pp9zLxvO21Z7Ms+re4na5nv/LyW2BF6pF559brq3c8Spu+OzygJFB7TUbkYrZDE1bs
+        2XprxW3rf4uzzHdrJQdPmLZ+3eYGp21KLMUZiYZazEXFiQDUMIby5AIAAA==
+X-CMS-MailID: 20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b
+References: <33fc4837-599d-0d5c-c530-58b283c4c095@samsung.com>
+        <CGME20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   regulator: cpcap: Spelling s/configuraion/configuration/
+On 5/21/19 12:47 PM, Bartlomiej Zolnierkiewicz wrote:
+> Add COMPILE_TEST support to imxfb driver for better compile
+> testing coverage.
+> 
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-has been applied to the regulator tree at
+I queued the patch for v5.3.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 25a7d03dae3ac8dcc3fa00cc0ec17935eb08260d Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Fri, 7 Jun 2019 13:26:40 +0200
-Subject: [PATCH] regulator: cpcap: Spelling s/configuraion/configuration/
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/cpcap-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/cpcap-regulator.c b/drivers/regulator/cpcap-regulator.c
-index d3284361e594..f80781d58a28 100644
---- a/drivers/regulator/cpcap-regulator.c
-+++ b/drivers/regulator/cpcap-regulator.c
-@@ -90,7 +90,7 @@
- #define CPCAP_REG_OFF_MODE_SEC		BIT(15)
- 
- /**
-- * SoC specific configuraion for CPCAP regulator. There are at least three
-+ * SoC specific configuration for CPCAP regulator. There are at least three
-  * different SoCs each with their own parameters: omap3, omap4 and tegra2.
-  *
-  * The assign_reg and assign_mask seem to allow toggling between primary
--- 
-2.20.1
-
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
