@@ -2,383 +2,94 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E5CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E934C2BA1D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6375D20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D464208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZBdnFlj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfFGCG2 (ORCPT
+        id S1726808AbfFGCKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 22:06:28 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58420 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728032AbfFGCFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 22:05:22 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D7E5A12702FA95EB115D;
-        Fri,  7 Jun 2019 10:05:17 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 7 Jun 2019 10:05:10 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 08/12] net: hns3: small changes for magic numbers
-Date:   Fri, 7 Jun 2019 10:03:09 +0800
-Message-ID: <1559872993-14507-9-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559872993-14507-1-git-send-email-tanhuazhong@huawei.com>
-References: <1559872993-14507-1-git-send-email-tanhuazhong@huawei.com>
+        Thu, 6 Jun 2019 22:10:52 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44792 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFGCKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 22:10:52 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so577321edr.11;
+        Thu, 06 Jun 2019 19:10:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ThOXkYce0vYPq+T2x3kRAGENrENTl6Mt6vUE0HQEfpQ=;
+        b=vZBdnFljbXPzoW+6v6jYu+caHGlQkyDDaSIQ+3vYsCJDOqISxVlL98fIAzmoiw9eMG
+         ZxBXoI5/5ChuSVGoAI3DG0+K2mYM82Tg2eHE4rffRyzdjNJ0W8WQPoCV+++TftsxedkD
+         UO7iRZIqDJ4eIEvu/AfpqY8oAVyxIAq2/j79vmZWm1w43enVrdYhudsz5HfcPR/79Cny
+         rS3zRK2qGfaM/3bBqRZk5w7VJcGOiTWJgTq5AcZiox8zY0fBaM7AkguUJkop+YT+XzYz
+         WKMo57lpIhcGWswJE9+m23PGFSz+kMn+LVgPGQdmi+UnXlxr74X505VhCcJkT8TJ7zla
+         HCZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ThOXkYce0vYPq+T2x3kRAGENrENTl6Mt6vUE0HQEfpQ=;
+        b=qG9bsye00R7/6FA71yalpKuXX0XNoST/mtDR+qgEoKFy4Aq0x3NZD38ozouac8Th0b
+         EsSK0b4Hcykak3Xky0iaN59NiHy8zEByB6dw3fV6yjHqHhwi2PavQmATS+qCxf+DleeF
+         zF0B0mnLlNY+n5H/tqmljRREXlqMQFYWHm2hAToADHHTNf4hHvwi6cHgNh2yfGlK451U
+         gmnb73Rr5SVbCkfJXEpMqeSgaaemT9E6iyxk/lHQ41iKEX5wnkNPX/Cs13wX5C7BEXg2
+         OsXhy4sDZmJOK6etiBgfNl3nnFoFtqB4t/VHps7tQpHbh1+hLa84RzQd8pzhSJHFOgxM
+         e7yQ==
+X-Gm-Message-State: APjAAAVGrq9/GVDUCc91dSMXhUoofH5d7F9dWxf4kwU70MT3Cp/hwyVX
+        x7iBaPqePp7ScStGVdG/hTQ=
+X-Google-Smtp-Source: APXvYqyBAOMYsalSRWOktfhuLtSLXM3lYKeO2jiNUzKayLcm0tycPyQRykUJD5Uwd/nhg/0H+a2p5Q==
+X-Received: by 2002:a17:906:261b:: with SMTP id h27mr44103209ejc.97.1559873450093;
+        Thu, 06 Jun 2019 19:10:50 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id s5sm161252edh.3.2019.06.06.19.10.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 19:10:49 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 19:10:47 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Joe Korty <Joe.Korty@concurrent-rt.com>
+Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alistair Strachan <astrachan@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: Re: [BUG 4.4.178] x86_64 compat mode futexes broken
+Message-ID: <20190607021047.GA53764@archlinux-epyc>
+References: <20190606211140.GA52454@zipoli.concurrent-rt.com>
+ <20190606231130.GA69331@archlinux-epyc>
+ <20190607010128.GB24007@zipoli.concurrent-rt.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607010128.GB24007@zipoli.concurrent-rt.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+On Fri, Jun 07, 2019 at 01:01:36AM +0000, Joe Korty wrote:
+> Hi Nathan,
+> I started with 4.4.179-rt181 and worked backwards from there.  Per your
+> suggestion, I tried 4.4.180 and it does work properly.
+> 
+> Thanks,
+> Joe
 
-In order to improve readability, this patch uses macros to
-replace some magic numbers, and adds some comments for some
-others.
+Great, thank you for testing and sorry for the breakage in the first
+place, I missed those commits in my series :(
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 118 +++++++++++----------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  24 +++--
- 2 files changed, 79 insertions(+), 63 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 9fe00a8..36a92a1 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -4490,19 +4490,19 @@ static bool hclge_fd_convert_tuple(u32 tuple_bit, u8 *key_x, u8 *key_y,
- 	case 0:
- 		return false;
- 	case BIT(INNER_DST_MAC):
--		for (i = 0; i < 6; i++) {
--			calc_x(key_x[5 - i], rule->tuples.dst_mac[i],
-+		for (i = 0; i < ETH_ALEN; i++) {
-+			calc_x(key_x[ETH_ALEN - 1 - i], rule->tuples.dst_mac[i],
- 			       rule->tuples_mask.dst_mac[i]);
--			calc_y(key_y[5 - i], rule->tuples.dst_mac[i],
-+			calc_y(key_y[ETH_ALEN - 1 - i], rule->tuples.dst_mac[i],
- 			       rule->tuples_mask.dst_mac[i]);
- 		}
- 
- 		return true;
- 	case BIT(INNER_SRC_MAC):
--		for (i = 0; i < 6; i++) {
--			calc_x(key_x[5 - i], rule->tuples.src_mac[i],
-+		for (i = 0; i < ETH_ALEN; i++) {
-+			calc_x(key_x[ETH_ALEN - 1 - i], rule->tuples.src_mac[i],
- 			       rule->tuples.src_mac[i]);
--			calc_y(key_y[5 - i], rule->tuples.src_mac[i],
-+			calc_y(key_y[ETH_ALEN - 1 - i], rule->tuples.src_mac[i],
- 			       rule->tuples.src_mac[i]);
- 		}
- 
-@@ -4538,19 +4538,19 @@ static bool hclge_fd_convert_tuple(u32 tuple_bit, u8 *key_x, u8 *key_y,
- 
- 		return true;
- 	case BIT(INNER_SRC_IP):
--		calc_x(tmp_x_l, rule->tuples.src_ip[3],
--		       rule->tuples_mask.src_ip[3]);
--		calc_y(tmp_y_l, rule->tuples.src_ip[3],
--		       rule->tuples_mask.src_ip[3]);
-+		calc_x(tmp_x_l, rule->tuples.src_ip[IPV4_INDEX],
-+		       rule->tuples_mask.src_ip[IPV4_INDEX]);
-+		calc_y(tmp_y_l, rule->tuples.src_ip[IPV4_INDEX],
-+		       rule->tuples_mask.src_ip[IPV4_INDEX]);
- 		*(__le32 *)key_x = cpu_to_le32(tmp_x_l);
- 		*(__le32 *)key_y = cpu_to_le32(tmp_y_l);
- 
- 		return true;
- 	case BIT(INNER_DST_IP):
--		calc_x(tmp_x_l, rule->tuples.dst_ip[3],
--		       rule->tuples_mask.dst_ip[3]);
--		calc_y(tmp_y_l, rule->tuples.dst_ip[3],
--		       rule->tuples_mask.dst_ip[3]);
-+		calc_x(tmp_x_l, rule->tuples.dst_ip[IPV4_INDEX],
-+		       rule->tuples_mask.dst_ip[IPV4_INDEX]);
-+		calc_y(tmp_y_l, rule->tuples.dst_ip[IPV4_INDEX],
-+		       rule->tuples_mask.dst_ip[IPV4_INDEX]);
- 		*(__le32 *)key_x = cpu_to_le32(tmp_x_l);
- 		*(__le32 *)key_y = cpu_to_le32(tmp_y_l);
- 
-@@ -4799,6 +4799,7 @@ static int hclge_fd_check_spec(struct hclge_dev *hdev,
- 		*unused |= BIT(INNER_SRC_MAC) | BIT(INNER_DST_MAC) |
- 			BIT(INNER_IP_TOS);
- 
-+		/* check whether src/dst ip address used */
- 		if (!tcp_ip6_spec->ip6src[0] && !tcp_ip6_spec->ip6src[1] &&
- 		    !tcp_ip6_spec->ip6src[2] && !tcp_ip6_spec->ip6src[3])
- 			*unused |= BIT(INNER_SRC_IP);
-@@ -4823,6 +4824,7 @@ static int hclge_fd_check_spec(struct hclge_dev *hdev,
- 			BIT(INNER_IP_TOS) | BIT(INNER_SRC_PORT) |
- 			BIT(INNER_DST_PORT);
- 
-+		/* check whether src/dst ip address used */
- 		if (!usr_ip6_spec->ip6src[0] && !usr_ip6_spec->ip6src[1] &&
- 		    !usr_ip6_spec->ip6src[2] && !usr_ip6_spec->ip6src[3])
- 			*unused |= BIT(INNER_SRC_IP);
-@@ -4966,14 +4968,14 @@ static int hclge_fd_get_tuple(struct hclge_dev *hdev,
- 	case SCTP_V4_FLOW:
- 	case TCP_V4_FLOW:
- 	case UDP_V4_FLOW:
--		rule->tuples.src_ip[3] =
-+		rule->tuples.src_ip[IPV4_INDEX] =
- 				be32_to_cpu(fs->h_u.tcp_ip4_spec.ip4src);
--		rule->tuples_mask.src_ip[3] =
-+		rule->tuples_mask.src_ip[IPV4_INDEX] =
- 				be32_to_cpu(fs->m_u.tcp_ip4_spec.ip4src);
- 
--		rule->tuples.dst_ip[3] =
-+		rule->tuples.dst_ip[IPV4_INDEX] =
- 				be32_to_cpu(fs->h_u.tcp_ip4_spec.ip4dst);
--		rule->tuples_mask.dst_ip[3] =
-+		rule->tuples_mask.dst_ip[IPV4_INDEX] =
- 				be32_to_cpu(fs->m_u.tcp_ip4_spec.ip4dst);
- 
- 		rule->tuples.src_port = be16_to_cpu(fs->h_u.tcp_ip4_spec.psrc);
-@@ -4992,14 +4994,14 @@ static int hclge_fd_get_tuple(struct hclge_dev *hdev,
- 
- 		break;
- 	case IP_USER_FLOW:
--		rule->tuples.src_ip[3] =
-+		rule->tuples.src_ip[IPV4_INDEX] =
- 				be32_to_cpu(fs->h_u.usr_ip4_spec.ip4src);
--		rule->tuples_mask.src_ip[3] =
-+		rule->tuples_mask.src_ip[IPV4_INDEX] =
- 				be32_to_cpu(fs->m_u.usr_ip4_spec.ip4src);
- 
--		rule->tuples.dst_ip[3] =
-+		rule->tuples.dst_ip[IPV4_INDEX] =
- 				be32_to_cpu(fs->h_u.usr_ip4_spec.ip4dst);
--		rule->tuples_mask.dst_ip[3] =
-+		rule->tuples_mask.dst_ip[IPV4_INDEX] =
- 				be32_to_cpu(fs->m_u.usr_ip4_spec.ip4dst);
- 
- 		rule->tuples.ip_tos = fs->h_u.usr_ip4_spec.tos;
-@@ -5016,14 +5018,14 @@ static int hclge_fd_get_tuple(struct hclge_dev *hdev,
- 	case TCP_V6_FLOW:
- 	case UDP_V6_FLOW:
- 		be32_to_cpu_array(rule->tuples.src_ip,
--				  fs->h_u.tcp_ip6_spec.ip6src, 4);
-+				  fs->h_u.tcp_ip6_spec.ip6src, IPV6_SIZE);
- 		be32_to_cpu_array(rule->tuples_mask.src_ip,
--				  fs->m_u.tcp_ip6_spec.ip6src, 4);
-+				  fs->m_u.tcp_ip6_spec.ip6src, IPV6_SIZE);
- 
- 		be32_to_cpu_array(rule->tuples.dst_ip,
--				  fs->h_u.tcp_ip6_spec.ip6dst, 4);
-+				  fs->h_u.tcp_ip6_spec.ip6dst, IPV6_SIZE);
- 		be32_to_cpu_array(rule->tuples_mask.dst_ip,
--				  fs->m_u.tcp_ip6_spec.ip6dst, 4);
-+				  fs->m_u.tcp_ip6_spec.ip6dst, IPV6_SIZE);
- 
- 		rule->tuples.src_port = be16_to_cpu(fs->h_u.tcp_ip6_spec.psrc);
- 		rule->tuples_mask.src_port =
-@@ -5039,14 +5041,14 @@ static int hclge_fd_get_tuple(struct hclge_dev *hdev,
- 		break;
- 	case IPV6_USER_FLOW:
- 		be32_to_cpu_array(rule->tuples.src_ip,
--				  fs->h_u.usr_ip6_spec.ip6src, 4);
-+				  fs->h_u.usr_ip6_spec.ip6src, IPV6_SIZE);
- 		be32_to_cpu_array(rule->tuples_mask.src_ip,
--				  fs->m_u.usr_ip6_spec.ip6src, 4);
-+				  fs->m_u.usr_ip6_spec.ip6src, IPV6_SIZE);
- 
- 		be32_to_cpu_array(rule->tuples.dst_ip,
--				  fs->h_u.usr_ip6_spec.ip6dst, 4);
-+				  fs->h_u.usr_ip6_spec.ip6dst, IPV6_SIZE);
- 		be32_to_cpu_array(rule->tuples_mask.dst_ip,
--				  fs->m_u.usr_ip6_spec.ip6dst, 4);
-+				  fs->m_u.usr_ip6_spec.ip6dst, IPV6_SIZE);
- 
- 		rule->tuples.ip_proto = fs->h_u.usr_ip6_spec.l4_proto;
- 		rule->tuples_mask.ip_proto = fs->m_u.usr_ip6_spec.l4_proto;
-@@ -5389,16 +5391,16 @@ static int hclge_get_fd_rule_info(struct hnae3_handle *handle,
- 	case TCP_V4_FLOW:
- 	case UDP_V4_FLOW:
- 		fs->h_u.tcp_ip4_spec.ip4src =
--				cpu_to_be32(rule->tuples.src_ip[3]);
-+				cpu_to_be32(rule->tuples.src_ip[IPV4_INDEX]);
- 		fs->m_u.tcp_ip4_spec.ip4src =
--				rule->unused_tuple & BIT(INNER_SRC_IP) ?
--				0 : cpu_to_be32(rule->tuples_mask.src_ip[3]);
-+			rule->unused_tuple & BIT(INNER_SRC_IP) ?
-+			0 : cpu_to_be32(rule->tuples_mask.src_ip[IPV4_INDEX]);
- 
- 		fs->h_u.tcp_ip4_spec.ip4dst =
--				cpu_to_be32(rule->tuples.dst_ip[3]);
-+				cpu_to_be32(rule->tuples.dst_ip[IPV4_INDEX]);
- 		fs->m_u.tcp_ip4_spec.ip4dst =
--				rule->unused_tuple & BIT(INNER_DST_IP) ?
--				0 : cpu_to_be32(rule->tuples_mask.dst_ip[3]);
-+			rule->unused_tuple & BIT(INNER_DST_IP) ?
-+			0 : cpu_to_be32(rule->tuples_mask.dst_ip[IPV4_INDEX]);
- 
- 		fs->h_u.tcp_ip4_spec.psrc = cpu_to_be16(rule->tuples.src_port);
- 		fs->m_u.tcp_ip4_spec.psrc =
-@@ -5418,16 +5420,16 @@ static int hclge_get_fd_rule_info(struct hnae3_handle *handle,
- 		break;
- 	case IP_USER_FLOW:
- 		fs->h_u.usr_ip4_spec.ip4src =
--				cpu_to_be32(rule->tuples.src_ip[3]);
-+				cpu_to_be32(rule->tuples.src_ip[IPV4_INDEX]);
- 		fs->m_u.tcp_ip4_spec.ip4src =
--				rule->unused_tuple & BIT(INNER_SRC_IP) ?
--				0 : cpu_to_be32(rule->tuples_mask.src_ip[3]);
-+			rule->unused_tuple & BIT(INNER_SRC_IP) ?
-+			0 : cpu_to_be32(rule->tuples_mask.src_ip[IPV4_INDEX]);
- 
- 		fs->h_u.usr_ip4_spec.ip4dst =
--				cpu_to_be32(rule->tuples.dst_ip[3]);
-+				cpu_to_be32(rule->tuples.dst_ip[IPV4_INDEX]);
- 		fs->m_u.usr_ip4_spec.ip4dst =
--				rule->unused_tuple & BIT(INNER_DST_IP) ?
--				0 : cpu_to_be32(rule->tuples_mask.dst_ip[3]);
-+			rule->unused_tuple & BIT(INNER_DST_IP) ?
-+			0 : cpu_to_be32(rule->tuples_mask.dst_ip[IPV4_INDEX]);
- 
- 		fs->h_u.usr_ip4_spec.tos = rule->tuples.ip_tos;
- 		fs->m_u.usr_ip4_spec.tos =
-@@ -5446,20 +5448,22 @@ static int hclge_get_fd_rule_info(struct hnae3_handle *handle,
- 	case TCP_V6_FLOW:
- 	case UDP_V6_FLOW:
- 		cpu_to_be32_array(fs->h_u.tcp_ip6_spec.ip6src,
--				  rule->tuples.src_ip, 4);
-+				  rule->tuples.src_ip, IPV6_SIZE);
- 		if (rule->unused_tuple & BIT(INNER_SRC_IP))
--			memset(fs->m_u.tcp_ip6_spec.ip6src, 0, sizeof(int) * 4);
-+			memset(fs->m_u.tcp_ip6_spec.ip6src, 0,
-+			       sizeof(int) * IPV6_SIZE);
- 		else
- 			cpu_to_be32_array(fs->m_u.tcp_ip6_spec.ip6src,
--					  rule->tuples_mask.src_ip, 4);
-+					  rule->tuples_mask.src_ip, IPV6_SIZE);
- 
- 		cpu_to_be32_array(fs->h_u.tcp_ip6_spec.ip6dst,
--				  rule->tuples.dst_ip, 4);
-+				  rule->tuples.dst_ip, IPV6_SIZE);
- 		if (rule->unused_tuple & BIT(INNER_DST_IP))
--			memset(fs->m_u.tcp_ip6_spec.ip6dst, 0, sizeof(int) * 4);
-+			memset(fs->m_u.tcp_ip6_spec.ip6dst, 0,
-+			       sizeof(int) * IPV6_SIZE);
- 		else
- 			cpu_to_be32_array(fs->m_u.tcp_ip6_spec.ip6dst,
--					  rule->tuples_mask.dst_ip, 4);
-+					  rule->tuples_mask.dst_ip, IPV6_SIZE);
- 
- 		fs->h_u.tcp_ip6_spec.psrc = cpu_to_be16(rule->tuples.src_port);
- 		fs->m_u.tcp_ip6_spec.psrc =
-@@ -5474,20 +5478,22 @@ static int hclge_get_fd_rule_info(struct hnae3_handle *handle,
- 		break;
- 	case IPV6_USER_FLOW:
- 		cpu_to_be32_array(fs->h_u.usr_ip6_spec.ip6src,
--				  rule->tuples.src_ip, 4);
-+				  rule->tuples.src_ip, IPV6_SIZE);
- 		if (rule->unused_tuple & BIT(INNER_SRC_IP))
--			memset(fs->m_u.usr_ip6_spec.ip6src, 0, sizeof(int) * 4);
-+			memset(fs->m_u.usr_ip6_spec.ip6src, 0,
-+			       sizeof(int) * IPV6_SIZE);
- 		else
- 			cpu_to_be32_array(fs->m_u.usr_ip6_spec.ip6src,
--					  rule->tuples_mask.src_ip, 4);
-+					  rule->tuples_mask.src_ip, IPV6_SIZE);
- 
- 		cpu_to_be32_array(fs->h_u.usr_ip6_spec.ip6dst,
--				  rule->tuples.dst_ip, 4);
-+				  rule->tuples.dst_ip, IPV6_SIZE);
- 		if (rule->unused_tuple & BIT(INNER_DST_IP))
--			memset(fs->m_u.usr_ip6_spec.ip6dst, 0, sizeof(int) * 4);
-+			memset(fs->m_u.usr_ip6_spec.ip6dst, 0,
-+			       sizeof(int) * IPV6_SIZE);
- 		else
- 			cpu_to_be32_array(fs->m_u.usr_ip6_spec.ip6dst,
--					  rule->tuples_mask.dst_ip, 4);
-+					  rule->tuples_mask.dst_ip, IPV6_SIZE);
- 
- 		fs->h_u.usr_ip6_spec.l4_proto = rule->tuples.ip_proto;
- 		fs->m_u.usr_ip6_spec.l4_proto =
-@@ -6390,6 +6396,10 @@ static int hclge_init_umv_space(struct hclge_dev *hdev)
- 
- 	mutex_init(&hdev->umv_mutex);
- 	hdev->max_umv_size = allocated_size;
-+	/* divide max_umv_size by (hdev->num_req_vfs + 2), in order to
-+	 * preserve some unicast mac vlan table entries shared by pf
-+	 * and its vfs.
-+	 */
- 	hdev->priv_umv_size = hdev->max_umv_size / (hdev->num_req_vfs + 2);
- 	hdev->share_umv_size = hdev->priv_umv_size +
- 			hdev->max_umv_size % (hdev->num_req_vfs + 2);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 414f7db..f0d99d4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -474,6 +474,7 @@ enum HCLGE_FD_KEY_TYPE {
- enum HCLGE_FD_STAGE {
- 	HCLGE_FD_STAGE_1,
- 	HCLGE_FD_STAGE_2,
-+	MAX_STAGE_NUM,
- };
- 
- /* OUTER_XXX indicates tuples in tunnel header of tunnel packet
-@@ -528,7 +529,7 @@ enum HCLGE_FD_META_DATA {
- 
- struct key_info {
- 	u8 key_type;
--	u8 key_length;
-+	u8 key_length; /* use bit as unit */
- };
- 
- static const struct key_info meta_data_key_info[] = {
-@@ -612,18 +613,23 @@ struct hclge_fd_key_cfg {
- 
- struct hclge_fd_cfg {
- 	u8 fd_mode;
--	u16 max_key_length;
-+	u16 max_key_length; /* use bit as unit */
- 	u32 proto_support;
--	u32 rule_num[2]; /* rule entry number */
--	u16 cnt_num[2]; /* rule hit counter number */
--	struct hclge_fd_key_cfg key_cfg[2];
-+	u32 rule_num[MAX_STAGE_NUM]; /* rule entry number */
-+	u16 cnt_num[MAX_STAGE_NUM]; /* rule hit counter number */
-+	struct hclge_fd_key_cfg key_cfg[MAX_STAGE_NUM];
- };
- 
-+#define IPV4_INDEX	3
-+#define IPV6_SIZE	4
- struct hclge_fd_rule_tuples {
--	u8 src_mac[6];
--	u8 dst_mac[6];
--	u32 src_ip[4];
--	u32 dst_ip[4];
-+	u8 src_mac[ETH_ALEN];
-+	u8 dst_mac[ETH_ALEN];
-+	/* Be compatible for ip address of both ipv4 and ipv6.
-+	 * For ipv4 address, we store it in src/dst_ip[3].
-+	 */
-+	u32 src_ip[IPV6_SIZE];
-+	u32 dst_ip[IPV6_SIZE];
- 	u16 src_port;
- 	u16 dst_port;
- 	u16 vlan_tag1;
--- 
-2.7.4
-
+Cheers,
+Nathan
