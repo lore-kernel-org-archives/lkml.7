@@ -2,126 +2,166 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B278C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C327C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2320020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116D9212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vd9U2BVx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Job7TbfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfFGMHa (ORCPT
+        id S1728398AbfFGMI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:07:30 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43007 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfFGMHa (ORCPT
+        Fri, 7 Jun 2019 08:08:29 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34167 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfFGMI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:07:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x17so1902036wrl.9;
-        Fri, 07 Jun 2019 05:07:28 -0700 (PDT)
+        Fri, 7 Jun 2019 08:08:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so1216558iot.1;
+        Fri, 07 Jun 2019 05:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/OaEJfBR0xsC2fNRDUtUonZ/nH//Pb0hepbkfyw3/RI=;
-        b=Vd9U2BVxBdN4mlMul4jehfdsI+khyQ8bNYC+PbZUd+MLkJldq0QvPqlw67/TBgEj9a
-         YisCswUD8lyWjT+ne+NbBXnB0880+Q22bXGI2ydtUN9nduFOqOQ/jbTnnVUPzTmcwn7h
-         hCVLa+O8KOLJmFRB8X6lYdlYhQNDnwMLoE8hzkhT+SkuSzmxRDkQoAbJvOBvmx27pg/f
-         4WMav4+lrDRJnm/4dY9Sy1iLFnHWD+EwvWTMNrMXpyI0a6dWYI415XEBdVEeciUzBgfu
-         Y9nuI3HvDTAir5TfDv7sTbHd9bJlKcm3F9cWjGcw7DAPTEkhyJR8PANVX06uYpYwVOLM
-         j5LA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9Jt/byb9nrWN493RX0emzJG/99YlfQT5TXBjwjLl2N4=;
+        b=Job7TbfOu9s088soz/nsa2sgbToNs00hR89VRmIuZRIqNtJQQEh+Q3S6X88Ry4ijPT
+         28Yal5waNO2LxU86T3tUeQ5JFydaMLnrtgrPg23JGfHWvYJXi4XrWq0H3BBtLYFeWPI2
+         +h7T5JTq8XyaGuBwYIq+bt7gXq3oTjk/Cx0emnHpl50UPJC4Q3Da4qZLLS+i/52UtQOU
+         BrrRfuVW3eh4/mR3uLEpqZ8H8A8uSPJnsY8btmoWko1Tz3uB7ElTLSIL7T2/Qn0/ctJ1
+         F3Ld5/DXM1H+MkdOfFcdvolEvrHlHTlcT4o1PuMkIEo+9ffaucCMc8iTGAye3snpPVLv
+         xXvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/OaEJfBR0xsC2fNRDUtUonZ/nH//Pb0hepbkfyw3/RI=;
-        b=Sf0GXxoLInMTiiMEqTzgNteUa80VdkoXd+IQBRbp092v1uoP4lydQeYW1Ongzi2wpA
-         Wl/NXWwbA+Vl/nvTsDqH0Y9lqbtpLXVOMeQwpeLCFyZJdmkQuIslq8ezuMJQaKJ379zK
-         35MM7zlnvEeD0mlPvKcVDp6cqJxPr0VcS4gKhM0Y4N8GpIM7glr1qbroRVE39SgxAkw3
-         SnafJjZXljo6M2U6X+B0kvbmq7YR0NXYAZno4v8EnspPbSj2cfugNKbZ169/JBxg1GUX
-         tztRgjc6vE0VJ02oioSSQBmvT+Mn01JHJa8GII97RMdtXvo4kGsY90uGtoGcftwYKnm4
-         XYEw==
-X-Gm-Message-State: APjAAAWwyFVaoA3VrDksDwNl6xzGjppZQRj+9dW74pm7AcbHASTHsuvF
-        giKkFzvIxDZ7lhoYuhQ9DMA=
-X-Google-Smtp-Source: APXvYqzK/mt+UcZm1I3NP7PZiM+wVGTONiRjzP3kZpRLqca6N+PZrk2C6d/t/Ahk4y5O/JMEvU7JqA==
-X-Received: by 2002:adf:de8b:: with SMTP id w11mr9424156wrl.134.1559909248247;
-        Fri, 07 Jun 2019 05:07:28 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([108.61.173.19])
-        by smtp.gmail.com with ESMTPSA id o3sm1543243wrv.94.2019.06.07.05.07.23
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9Jt/byb9nrWN493RX0emzJG/99YlfQT5TXBjwjLl2N4=;
+        b=adKhDAVZbWojln5Ki9sdHOwpPrhvXbqwF5BgjKvWlw7FYGy+DRwVhFtAye7Yfdp8qS
+         W8lXptORhNd4VZJdf0I+Ky/mSivwo5bXrvWRkq+Y/ed/fxfpBwqWI6XqjwSSgSn5EgRn
+         VcmAtnUH77VShuskab1d8xxpnoi+QGDL76C86EXUuEyNvJ+amWGHT5YML6GF9sbKGGfe
+         k80JvwIkUfXbxlMyhxtZx1GsvNE66M0S6AQzeytqQRMubBUStEmAqnXbFGt4K2CgFaTZ
+         30KGX2LyoqchIoTtbiT9bEodqsaG++dftjFKRZ/qqT81w0DbWuPyQqfeiz36gFITBlhP
+         yXrA==
+X-Gm-Message-State: APjAAAU7VkAlzQ7Wn4QYWpwTvurKTYKVnyZlz4J4eoTQTXp7H6WA9Rys
+        hpxqaujVkX0S9yUdW0eN5gk=
+X-Google-Smtp-Source: APXvYqw3bKY9W1oEVOwpnvqB4F4RM1/VoD6twJgvgAgqMSlp9qSxqx383gdyYlN192OnYZZHzExHsg==
+X-Received: by 2002:a5d:9550:: with SMTP id a16mr2468747ios.106.1559909308461;
+        Fri, 07 Jun 2019 05:08:28 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-170-54.pppoe.mtu-net.ru. [91.76.170.54])
+        by smtp.googlemail.com with ESMTPSA id c91sm4692772itd.4.2019.06.07.05.08.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 05:07:27 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 20:07:17 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Stephen Boyd <sboyd@kernel.org>, mturquette@baylibre.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: fix a missing-free bug in clk_cpy_name()
-Message-ID: <20190607120717.GA3109@zhanggen-UX430UQ>
-References: <20190531011424.GA4374@zhanggen-UX430UQ>
- <eb8e2d33-e8f7-93a5-c8bc-98731c0d63b6@suse.cz>
- <20190605160043.GA4351@zhanggen-UX430UQ>
- <20190606201646.B4CC4206BB@mail.kernel.org>
- <20190607015258.GA2660@zhanggen-UX430UQ>
- <e5b4639b-3077-59bb-6383-0c2bccdd9191@suse.cz>
+        Fri, 07 Jun 2019 05:08:28 -0700 (PDT)
+Subject: Re: [PATCH V1 6/6] i2c: tegra: remove BUG, BUG_ON
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
+ <1559908507-31192-6-git-send-email-bbiswas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4aec6d7a-0dea-18c9-efde-96cc1a54b945@gmail.com>
+Date:   Fri, 7 Jun 2019 15:08:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e5b4639b-3077-59bb-6383-0c2bccdd9191@suse.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1559908507-31192-6-git-send-email-bbiswas@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:10:37AM +0200, Jiri Slaby wrote:
-> On 07. 06. 19, 3:52, Gen Zhang wrote:
-> >>>>> @@ -3491,6 +3492,8 @@ static int clk_core_populate_parent_map(struct clk_core *core)
-> >>>>>                             kfree_const(parents[i].name);
-> >>>>>                             kfree_const(parents[i].fw_name);
-> >>>>>                     } while (--i >= 0);
-> >>>>> +                   kfree_const(parent->name);
-> >>>>> +                   kfree_const(parent->fw_name);
-> >>>>
-> >>>> Both of them were just freed in the loop above, no?
-> >>> for (i = 0, parent = parents; i < num_parents; i++, parent++)
-> >>> Is 'parent' the same as the one from the loop above?
-> >>
-> >> Yes. Did it change somehow?
-> > parent++?
+07.06.2019 14:55, Bitan Biswas пишет:
+> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+> as needed. Replace BUG() with error handling code.
+> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
 > 
-> parent++ is done after the loop body. Or what do you mean?
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> >>> Moreover, should 'parents[i].name' and 'parents[i].fw_name' be freed by
-> >>> kfree_const()?
-> >>>
-> >>
-> >> Yes? They're allocated with kstrdup_const() in clk_cpy_name(), or
-> >> they're NULL by virtue of the kcalloc and then kfree_const() does
-> >> nothing.
-> > I re-examined clk_cpy_name(). They are the second parameter of 
-> > clk_cpy_name(). The first parameter is allocated, not the second one.
-> > So 'parent->name' and 'parent->fw_name' should be freed, not 
-> > 'parents[i].name' or 'parents[i].fw_name'. Am I totally misunderstanding
-> > this clk_cpy_name()? :-(
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 4dfb4c1..c407bd7 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -73,6 +73,7 @@
+>  #define I2C_ERR_NO_ACK				BIT(0)
+>  #define I2C_ERR_ARBITRATION_LOST		BIT(1)
+>  #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
+> +#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
+>  
+>  #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+>  #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+> @@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  	 * prevent overwriting past the end of buf
+>  	 */
+>  	if (rx_fifo_avail > 0 && buf_remaining > 0) {
+> -		BUG_ON(buf_remaining > 3);
+>  		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
+>  		val = cpu_to_le32(val);
+>  		memcpy(buf, &val, buf_remaining);
+> @@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  		rx_fifo_avail--;
+>  	}
+>  
+> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+>  	i2c_dev->msg_buf_remaining = buf_remaining;
+>  	i2c_dev->msg_buf = buf;
+>  
+> @@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  	 * boundary and fault.
+>  	 */
+>  	if (tx_fifo_avail > 0 && buf_remaining > 0) {
+> -		BUG_ON(buf_remaining > 3);
+>  		memcpy(&val, buf, buf_remaining);
+>  		val = le32_to_cpu(val);
+>  
+> @@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>  
+>  	if (!i2c_dev->is_curr_dma_xfer) {
+>  		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
+> -			if (i2c_dev->msg_buf_remaining)
+> +			if (i2c_dev->msg_buf_remaining) {
+>  				tegra_i2c_empty_rx_fifo(i2c_dev);
+> -			else
+> -				BUG();
+> +			} else {
+> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
+> +				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
+> +				goto err;
+> +			}
+>  		}
+>  
+>  		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
+> @@ -876,7 +877,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>  	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
+>  		if (i2c_dev->is_curr_dma_xfer)
+>  			i2c_dev->msg_buf_remaining = 0;
+> -		BUG_ON(i2c_dev->msg_buf_remaining);
+> +		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
+>  		complete(&i2c_dev->msg_complete);
+>  	}
+>  	goto done;
 > 
-> The second parameter (the source) is parent_data[i].*, not parents[i].*
-> (the destination). parent->fw_name and parent->name are properly freed
-> in the do {} while loop as parents[i].name and parents[i].fw_name, given
-> i hasn't changed yet. I am not sure what you mean at all. Are you
-> uncertain about the C code flow?
-> 
-> thanks,
-> -- 
-> js
-> suse labs
-Thanks your patient explainaton. I think I need some time to figure out
-this part of code.
 
-Thanks
-Gen
+Very nice, thank you very much! BTW, I think it may worth to add another
+patch that will reset hardware state in a case of the warning since we
+know that something gone wrong.
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
