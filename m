@@ -2,72 +2,114 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6737C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F45C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B022020657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="eHbx2qJx"
+	by mail.kernel.org (Postfix) with ESMTP id 80C5A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559922895;
+	bh=lhup+GxE6NjPA2SqoQevbexaE1RfhCEU0FEh9xcnTZ0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uYxFiy2D3Nb8aEYa3RZ9ih33Ra0d5ZbVt/Sos9vOYluG4YjInl+d8QoyWKkflK7Sz
+	 3s3bY/7+HyQi7Xlp4VAziWLFOQngJyYgZILHRWtSddMWRa30F1Z2gdgf8/Dh4J3nnz
+	 SjjEZeE+iquY42QFNHin99VoYO8enqVBK7hy/oqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbfFGPyt (ORCPT
+        id S1731387AbfFGPqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:54:49 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:58506 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729293AbfFGPyr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:54:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559922885; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=vxBqAc96EhZ4PSZvc1D8uQDGXjEbUQwnCFYwSOLsi0g=;
-        b=eHbx2qJx4yi3WXwd2S/9fgnqwkhFpgGCIQx8ZE7jjc+xD088BN55f7hx3cE4zREhIPqw81
-        lJj+Gh7LxLHkC4c4WfC9Cr1p3aDEtdQnTpXFDoxDz26xQWjrGzFot9MAerdTcW60kd+ols
-        BULH75jKY5N9WPgFrFWbFnTZeBnBSWA=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     od@zcrc.me, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] rtc: jz4740: Make probe function __init_or_module
-Date:   Fri,  7 Jun 2019 17:54:38 +0200
-Message-Id: <20190607155438.14342-1-paul@crapouillou.net>
+        Fri, 7 Jun 2019 11:46:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731378AbfFGPqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51A2A2146E;
+        Fri,  7 Jun 2019 15:46:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559922379;
+        bh=lhup+GxE6NjPA2SqoQevbexaE1RfhCEU0FEh9xcnTZ0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=L3DuMIpBji4looPVVyBvZdZtyC510gP59lJ23tTqNZgu3M2BXtLF9VUNEkqboUNvU
+         yBfoM56LBvw8FUzS4t6VKWeSRDnGcMW6XQPBFWXzXEYRQHbP5miU4U8VBkaeCjmk6h
+         0J9SJ8QNG6IjbBdrIxglqmyE1gqpoD1Ue+b3cUi8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Todd Kjos <tkjos@google.com>
+Subject: [PATCH 4.19 65/73] Revert "binder: fix handling of misaligned binder object"
+Date:   Fri,  7 Jun 2019 17:39:52 +0200
+Message-Id: <20190607153856.164180391@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
+References: <20190607153848.669070800@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the probe function to be dropped after the kernel finished
-its initialization, in the case where the driver was not compiled as a
-module.
+From: Todd Kjos <tkjos@android.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+This reverts commit 6bf7d3c5c0c5dad650bfc4345ed553c18b69d59e.
+
+The commit message is for a different patch. Reverting and then adding
+the same patch back with the correct commit message.
+
+Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc: stable <stable@vger.kernel.org> # 4.19
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/rtc/rtc-jz4740.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/android/binder_alloc.c |   18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index 9e7b3a04debc..a20e7dc794dd 100644
---- a/drivers/rtc/rtc-jz4740.c
-+++ b/drivers/rtc/rtc-jz4740.c
-@@ -303,7 +303,7 @@ static const struct of_device_id jz4740_rtc_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, jz4740_rtc_of_match);
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -958,13 +958,14 @@ enum lru_status binder_alloc_free_page(s
  
--static int jz4740_rtc_probe(struct platform_device *pdev)
-+static int __init_or_module jz4740_rtc_probe(struct platform_device *pdev)
- {
- 	int ret;
- 	struct jz4740_rtc *rtc;
--- 
-2.21.0.593.g511ec345e18
+ 	index = page - alloc->pages;
+ 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
+-
+-	mm = alloc->vma_vm_mm;
+-	if (!mmget_not_zero(mm))
+-		goto err_mmget;
+-	if (!down_write_trylock(&mm->mmap_sem))
+-		goto err_down_write_mmap_sem_failed;
+ 	vma = binder_alloc_get_vma(alloc);
++	if (vma) {
++		if (!mmget_not_zero(alloc->vma_vm_mm))
++			goto err_mmget;
++		mm = alloc->vma_vm_mm;
++		if (!down_write_trylock(&mm->mmap_sem))
++			goto err_down_write_mmap_sem_failed;
++	}
+ 
+ 	list_lru_isolate(lru, item);
+ 	spin_unlock(lock);
+@@ -977,9 +978,10 @@ enum lru_status binder_alloc_free_page(s
+ 			       PAGE_SIZE);
+ 
+ 		trace_binder_unmap_user_end(alloc, index);
++
++		up_write(&mm->mmap_sem);
++		mmput(mm);
+ 	}
+-	up_write(&mm->mmap_sem);
+-	mmput(mm);
+ 
+ 	trace_binder_unmap_kernel_start(alloc, index);
+ 
+
 
