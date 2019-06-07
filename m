@@ -2,150 +2,121 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82F0C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC4EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99A120868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C143420868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Acl8jG+6"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tT7XutRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfFGLzi (ORCPT
+        id S1729020AbfFGLzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:55:38 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16089 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728964AbfFGLzf (ORCPT
+        Fri, 7 Jun 2019 07:55:45 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36104 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728930AbfFGLz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:55:35 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfa50b40001>; Fri, 07 Jun 2019 04:55:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 07 Jun 2019 04:55:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 07 Jun 2019 04:55:34 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 11:55:34 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 7 Jun 2019 11:55:34 +0000
-Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cfa50b30000>; Fri, 07 Jun 2019 04:55:34 -0700
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Subject: [PATCH V1 6/6] i2c: tegra: remove BUG, BUG_ON
-Date:   Fri, 7 Jun 2019 04:55:07 -0700
-Message-ID: <1559908507-31192-6-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
-References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 7 Jun 2019 07:55:29 -0400
+Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7F1CCB91;
+        Fri,  7 Jun 2019 13:55:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1559908527;
+        bh=f4IcuPAfvdFAu7Z4BDYW1kHQDCa3MFndDR+AG3MCt+g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tT7XutRp0wnnEFrCbFHyD8wvd/Ih78T4+TTjkFHMHi0QOXrIrH5YxuNZoMNumbIW6
+         S0pJgv0lBbOH2kFFmh3pWqQsssRBhjJfXCGgetWBm+Nwoo5mf5KXx0McdSmQRMrf+e
+         tVEghr3/O5TniRlbMN4seVaRbIqUtj2H3t9atqpw=
+Date:   Fri, 7 Jun 2019 14:55:13 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/20] drm: rcar-du: group: Enable DU's CMM extension
+Message-ID: <20190607115513.GG7593@pendragon.ideasonboard.com>
+References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
+ <20190606142220.1392-19-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559908532; bh=1KF7I2XxeE4S46ZIJpD3Hl231pnB7gPNBtrprmStcHo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=Acl8jG+6slfPJzF8dGXiItn/+BSRY57JZe0SQCT4sWyE6atwi7yfcBlcQQYxgZ09t
-         dr/CRa36lmRb7GJ835olJrm4FIRBczWh0is5HE4Xf28Q3rv8d71/7WEJzFtGU1HdZR
-         WX4zxd+dWWoXcLJNXY46Xpv5UPMd6XP/4VM0zZ6v8ze/PNsyib/XT3omB23Ok8sIW6
-         BNjHt6OFlztHCvm4WWyECgyUfySkROCC7HEwdg7RBdiBtRqI77vxq2gzLdxb+f9Ipo
-         88ZfQ2VMwaR3JIbJqBW5GdpuEBfCT7cizFCHt7MfqyWwAcnXC+soLrEqfKwBYLRMi9
-         PmH5ZQbY8Eljw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190606142220.1392-19-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
-as needed. Replace BUG() with error handling code.
-Define I2C_ERR_UNEXPECTED_STATUS for error handling.
+Hi Jacopo,
 
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
----
- drivers/i2c/busses/i2c-tegra.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+Thank you for the patch.
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 4dfb4c1..c407bd7 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -73,6 +73,7 @@
- #define I2C_ERR_NO_ACK				BIT(0)
- #define I2C_ERR_ARBITRATION_LOST		BIT(1)
- #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
-+#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
- 
- #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
- #define PACKET_HEADER0_PACKET_ID_SHIFT		16
-@@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * prevent overwriting past the end of buf
- 	 */
- 	if (rx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
- 		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
- 		val = cpu_to_le32(val);
- 		memcpy(buf, &val, buf_remaining);
-@@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 		rx_fifo_avail--;
- 	}
- 
--	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
- 	i2c_dev->msg_buf_remaining = buf_remaining;
- 	i2c_dev->msg_buf = buf;
- 
-@@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * boundary and fault.
- 	 */
- 	if (tx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
- 		memcpy(&val, buf, buf_remaining);
- 		val = le32_to_cpu(val);
- 
-@@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 
- 	if (!i2c_dev->is_curr_dma_xfer) {
- 		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
--			if (i2c_dev->msg_buf_remaining)
-+			if (i2c_dev->msg_buf_remaining) {
- 				tegra_i2c_empty_rx_fifo(i2c_dev);
--			else
--				BUG();
-+			} else {
-+				dev_err(i2c_dev->dev, "unexpected rx data request\n");
-+				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
-+				goto err;
-+			}
- 		}
- 
- 		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-@@ -876,7 +877,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
- 		if (i2c_dev->is_curr_dma_xfer)
- 			i2c_dev->msg_buf_remaining = 0;
--		BUG_ON(i2c_dev->msg_buf_remaining);
-+		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
- 		complete(&i2c_dev->msg_complete);
- 	}
- 	goto done;
+On Thu, Jun 06, 2019 at 04:22:18PM +0200, Jacopo Mondi wrote:
+> Enable the CMM units through the display unit extensional function control
+> group register DEFR7.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> index 9eee47969e77..d252c9bb9809 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> @@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>  
+>  	rcar_du_group_setup_pins(rgrp);
+>  
+> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
+
+This is a good enough reason to keep RCAR_DU_FEATURE_CMM :-/
+
+> +		u32 defr7 = DEFR7_CODE |
+> +			    (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
+> +			    (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+> +
+> +		rcar_du_group_write(rgrp, DEFR7, defr7);
+
+It would be nice to disable the CMM when the LUT isn't used, but that
+would be difficult at the moment. We can revisit this when Kieran's DU
+group handling series will land.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +	}
+> +
+>  	if (rcdu->info->gen >= 2) {
+>  		rcar_du_group_setup_defr8(rgrp);
+>  		rcar_du_group_setup_didsr(rgrp);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> index bc87f080b170..fb9964949368 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> @@ -197,6 +197,11 @@
+>  #define DEFR6_MLOS1		(1 << 2)
+>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+>  
+> +#define DEFR7			0x000ec
+> +#define DEFR7_CODE		(0x7779 << 16)
+> +#define DEFR7_CMME1		BIT(6)
+> +#define DEFR7_CMME0		BIT(4)
+> +
+>  /* -----------------------------------------------------------------------------
+>   * R8A7790-only Control Registers
+>   */
+
 -- 
-2.7.4
+Regards,
 
+Laurent Pinchart
