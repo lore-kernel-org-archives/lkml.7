@@ -2,568 +2,458 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01373C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66338C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3351208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:36:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GInea9jR"
+	by mail.kernel.org (Postfix) with ESMTP id 408832133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559936182;
+	bh=gG0fzbTga8LoGGVYD2WsUM6GEgTPSTFuyJUyiTwEX+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LulgXnxWfOcxFfudlLtDsRHViezJV7lfaE2KjBFHcTGQYwwVO449dmvdDZtpcagP2
+	 RsaTmSwy7c7i0m26ud7bYDUKbPkKYyYrnZdsiczDN6P1vgXJtGdyPLn4RD3j4/eIFB
+	 WUGFH4iJnhvl64vO79hFOxtm6hB6Zl2/sdMgpqiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbfFGTgB (ORCPT
+        id S1730781AbfFGTgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:36:01 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:32918 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729809AbfFGTgB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:36:01 -0400
-Received: by mail-yw1-f65.google.com with SMTP id k8so1146389ywh.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:36:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LLMplcRthApST7fPhz+Teeo2I7zPacehr+nxpuw89iI=;
-        b=GInea9jRO4T6PXyZmE2AcaMFo6O0GkBNgvQMPA9dwYkocUQzKrRykjLwBrKR/ax1Uv
-         fc1ITQw+WuJ1Z2DPw4CxJstyUqGNj1NFVw283d2f1XFHoyT8Auv1yJLQOhpGSraPCyNK
-         DMtpNefg06OsLhO+T43YnM53H5bHdM35wl491ID5eFydG4WX+axlvV0i4KXFZsC9BwPj
-         Q+UQhRxPGVwXfqI0cHc/MIiWHzmDC17Y1SKJP1/GcP/UCJ1dd4K3fnS1dRgsdKk9Qv8E
-         bzGdrm04ko0XhBaG+lQs9yAU1VxSSXWr5bzL5hrhYHJ95Xpb4l6R+J9Db9ocfEFN4elQ
-         Wt+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LLMplcRthApST7fPhz+Teeo2I7zPacehr+nxpuw89iI=;
-        b=LlMTj1/k16yQWPtMXRDWurieWpBqrwJAyeDf4Qy6HrgKNeVORprxd1X35Srk4S+BJq
-         X9G7IowFVwz8p07weMt1/2SYolnFhYy+caYjIkdFnuoCIJ2+iJiB9m2qkWYbNH3hHme3
-         sFOhoMawj3fSYJFEtqpoFX4tb2HgWR/b44G86xrqk8QVWhh4doGZBJ/XredJ0/8T88lx
-         4tTQvkn7sUYgD0XaTed8RwTpv1DlVY/4Clg+p0jqwBhzqNiCjDgqIZwvmuC+Lql8778l
-         jDQLE5cF6Ah+zBhG8cryrH5gG2ZuhcPEAFlgYA9kJ7IeazzrOauK/90pUZdhhoRcTTkA
-         VqEw==
-X-Gm-Message-State: APjAAAXRy0Btd+lGkxBERRLtPY9sfnWD8lPHWWcVM70AqFrj+pgyYEux
-        vg/odc3IIRuH4BQPYW69k6eWgkp5S3P5SqENAYgGfYovxB0=
-X-Google-Smtp-Source: APXvYqzOK1ghpsDqKcD6CKNnD+cSwm4cKiYq2Fa4NWDsSU3XpQ72hPCvS9qhkd9Ih44s/Ev49fNIHFXFh0NIN5UlzBU=
-X-Received: by 2002:a81:a804:: with SMTP id f4mr28671568ywh.70.1559936159759;
- Fri, 07 Jun 2019 12:35:59 -0700 (PDT)
+        Fri, 7 Jun 2019 15:36:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729809AbfFGTgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 15:36:21 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E3F208C3;
+        Fri,  7 Jun 2019 19:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559936180;
+        bh=gG0fzbTga8LoGGVYD2WsUM6GEgTPSTFuyJUyiTwEX+g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hv/M4uJ0fax16PoH5DpbyJodbXUenOQcy+ag8FX26U/I/YRZ6OzNjAX+3ECXC+eH4
+         MC7CRfrlxTwMXbbeMKveNOvji0m2NL/uud+kvTUqOv9/ZjACm7cTK840GBqOs5FOMf
+         tkrXHyfd+40xcas2DwBBKaw3ZDyXH3T01nwH6YN4=
+Date:   Fri, 7 Jun 2019 15:36:18 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com
+Subject: Re: [PATCH 1/1 v2] Add dm verity root hash pkcs7 sig validation.
+Message-ID: <20190607193618.GN29739@sasha-vm>
+References: <20190524230411.9238-1-jaskarankhurana@linux.microsoft.com>
+ <20190524230411.9238-2-jaskarankhurana@linux.microsoft.com>
 MIME-Version: 1.0
-References: <20190607102710.23800-1-enric.balletbo@collabora.com>
- <decdbdf5285d76b4dab5b8f337023631a96ffc15.camel@collabora.com> <CAHX4x84G-f=HabyWCqAGOEBZdBgobW0BTB0iUbZcXYxBh3XcaQ@mail.gmail.com>
-In-Reply-To: <CAHX4x84G-f=HabyWCqAGOEBZdBgobW0BTB0iUbZcXYxBh3XcaQ@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Fri, 7 Jun 2019 12:35:48 -0700
-Message-ID: <CABXOdTdGYmGnrmzRbUPX3cwXg=m=aX3cXXEk=OEphA5_GKKvJQ@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/chrome: cros_ec_lpc: Choose Microchip EC at runtime
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Duncan Laurie <dlaurie@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190524230411.9238-2-jaskarankhurana@linux.microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 12:27 PM Nick Crews <ncrews@chromium.org> wrote:
+On Fri, May 24, 2019 at 04:04:11PM -0700, Jaskaran Khurana wrote:
+>The verification is to support cases where the roothash is not secured by
+>Trusted Boot, UEFI Secureboot or similar technologies.
+>One of the use cases for this is for dm-verity volumes mounted after boot,
+>the root hash provided during the creation of the dm-verity volume has to
+>be secure and thus in-kernel validation implemented here will be used
+>before we trust the root hash and allow the block device to be created.
 >
-> Hi!
+>The signature being provided for verification must verify the root hash and
+>must be trusted by the builtin keyring for verification to succeed.
 >
-> On Fri, Jun 7, 2019 at 12:03 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> >
-> > On Fri, 2019-06-07 at 12:27 +0200, Enric Balletbo i Serra wrote:
-> > > On many boards, communication between the kernel and the Embedded
-> > > Controller happens over an LPC bus. In these cases, the kernel config
-> > > CONFIG_CROS_EC_LPC is enabled. Some of these LPC boards contain a
-> > > Microchip Embedded Controller (MEC) that is different from the regular
-> > > EC. On these devices, the same LPC bus is used, but the protocol is
-> > > a little different. In these cases, the CONFIG_CROS_EC_LPC_MEC kernel
-> > > config is enabled. Currently, the kernel decides at compile-time whether
-> > > or not to use the MEC variant, and, when that kernel option is selected
-> > > it breaks the other boards. We would like a kind of runtime detection to
-> > > avoid this.
-> > >
-> > > This patch adds that detection mechanism by probing the protocol at
-> > > runtime, first we assume that a MEC variant is connected, and if the
-> > > protocol fails it fallbacks to the regular EC. This adds a bit of
-> > > overload because we try to read twice on those LPC boards that doesn't
-> > > contain a MEC variant, but is a better solution than having to select the
-> > > EC variant at compile-time.
-> > >
-> > > While here also fix the alignment in Kconfig file for this config option
-> > > replacing the spaces by tabs.
-> > >
-> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > > ---
-> > > Hi,
-> > >
-> > > This is the second attempt to solve the issue to be able to select at
-> > > runtime the CrOS MEC variant. My first thought was check for a device
-> > > ID,
-> > > the MEC1322 has a register that contains the device ID, however I am not
-> > > sure if we can read that register from the host without modifying the
-> > > firmware. Also, I am not sure if the MEC1322 is the only device used
-> > > that supports that LPC protocol variant, so I ended with a more easy
-> > > solution, check if the protocol fails or not. Some background on this
-> > > issue can be found [1] and [2]
-> > >
-> > > The patch has been tested on:
-> > >  - Acer Chromebook R11 (Cyan - MEC variant)
-> > >  - Pixel Chromebook 2015 (Samus - non-MEC variant)
-> > >  - Dell Chromebook 11 (Wolf - non-MEC variant)
-> > >  - Toshiba Chromebook (Leon - non-MEC variant)
-> > >
-> > > Nick, could you test the patch for Wilco?
-> > >
-> > > Best regards,
-> > >  Enric
-> > >
-> > > [1] https://bugs.chromium.org/p/chromium/issues/detail?id=932626
-> > > [2] https://chromium-review.googlesource.com/c/chromiumos/overlays/chromiumos-overlay/+/1474254
-> > >
-> > > Changes in v2:
-> > > - Remove global bool to indicate the kind of variant as suggested by Ezequiel.
-> > > - Create an internal operations struct to allow different variants.
-> > >
-> > >  drivers/platform/chrome/Kconfig           | 29 +++------
-> > >  drivers/platform/chrome/Makefile          |  3 +-
-> > >  drivers/platform/chrome/cros_ec_lpc.c     | 76 ++++++++++++++++-------
-> > >  drivers/platform/chrome/cros_ec_lpc_reg.c | 39 +++---------
-> > >  drivers/platform/chrome/cros_ec_lpc_reg.h | 26 ++++++++
-> > >  drivers/platform/chrome/wilco_ec/Kconfig  |  2 +-
-> > >  6 files changed, 98 insertions(+), 77 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> > > index 2826f7136f65..453e69733842 100644
-> > > --- a/drivers/platform/chrome/Kconfig
-> > > +++ b/drivers/platform/chrome/Kconfig
-> > > @@ -83,28 +83,17 @@ config CROS_EC_SPI
-> > >         'pre-amble' bytes before the response actually starts.
-> > >
-> > >  config CROS_EC_LPC
-> > > -        tristate "ChromeOS Embedded Controller (LPC)"
-> > > -        depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
-> > > -        help
-> > > -          If you say Y here, you get support for talking to the ChromeOS EC
-> > > -          over an LPC bus. This uses a simple byte-level protocol with a
-> > > -          checksum. This is used for userspace access only. The kernel
-> > > -          typically has its own communication methods.
-> > > -
-> > > -          To compile this driver as a module, choose M here: the
-> > > -          module will be called cros_ec_lpc.
-> > > -
-> > > -config CROS_EC_LPC_MEC
-> > > -     bool "ChromeOS Embedded Controller LPC Microchip EC (MEC) variant"
-> > > -     depends on CROS_EC_LPC
-> > > -     default n
-> > > +     tristate "ChromeOS Embedded Controller (LPC)"
-> > > +     depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
-> > >       help
-> > > -       If you say Y here, a variant LPC protocol for the Microchip EC
-> > > -       will be used. Note that this variant is not backward compatible
-> > > -       with non-Microchip ECs.
-> > > +       If you say Y here, you get support for talking to the ChromeOS EC
-> > > +       over an LPC bus, including the LPC Microchip EC (MEC) variant.
-> > > +       This uses a simple byte-level protocol with a checksum. This is
-> > > +       used for userspace access only. The kernel typically has its own
-> > > +       communication methods.
-> > >
-> > > -       If you have a ChromeOS Embedded Controller Microchip EC variant
-> > > -       choose Y here.
-> > > +       To compile this driver as a module, choose M here: the
-> > > +       module will be called cros_ec_lpcs.
-> > >
-> > >  config CROS_EC_PROTO
-> > >          bool
-> > > diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> > > index 1b2f1dcfcd5c..d6416411888f 100644
-> > > --- a/drivers/platform/chrome/Makefile
-> > > +++ b/drivers/platform/chrome/Makefile
-> > > @@ -9,8 +9,7 @@ obj-$(CONFIG_CHROMEOS_TBMC)           += chromeos_tbmc.o
-> > >  obj-$(CONFIG_CROS_EC_I2C)            += cros_ec_i2c.o
-> > >  obj-$(CONFIG_CROS_EC_RPMSG)          += cros_ec_rpmsg.o
-> > >  obj-$(CONFIG_CROS_EC_SPI)            += cros_ec_spi.o
-> > > -cros_ec_lpcs-objs                    := cros_ec_lpc.o cros_ec_lpc_reg.o
-> > > -cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)       += cros_ec_lpc_mec.o
-> > > +cros_ec_lpcs-objs                    := cros_ec_lpc.o cros_ec_lpc_reg.o cros_ec_lpc_mec.o
-> > >  obj-$(CONFIG_CROS_EC_LPC)            += cros_ec_lpcs.o
-> > >  obj-$(CONFIG_CROS_EC_PROTO)          += cros_ec_proto.o cros_ec_trace.o
-> > >  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT) += cros_kbd_led_backlight.o
-> > > diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-> > > index c9c240fbe7c6..91cb4dd34764 100644
-> > > --- a/drivers/platform/chrome/cros_ec_lpc.c
-> > > +++ b/drivers/platform/chrome/cros_ec_lpc.c
-> > > @@ -28,6 +28,22 @@
-> > >  #define DRV_NAME "cros_ec_lpcs"
-> > >  #define ACPI_DRV_NAME "GOOG0004"
-> > >
-> > > +/**
-> > > + * struct lpc_ops - LPC driver methods
-> > > + *
-> > > + * @read: Read bytes from a given LPC-mapped address.
-> > > + * @write: Write bytes to a given LPC-mapped address.
-> > > + */
-> > > +struct lpc_ops {
-> > > +     u8      (*read)(unsigned int offset, unsigned int length, u8 *dest);
-> > > +     u8      (*write)(unsigned int offset, unsigned int length, u8 *msg);
-> > > +};
-> > > +
-> > > +static struct lpc_ops cros_ec_lpc_ops = {
-> > > +     .read   = cros_ec_lpc_mec_read_bytes,
-> > > +     .write  = cros_ec_lpc_mec_write_bytes,
-> > > +};
-> > > +
-> >
-> > While this is better than a global boolean, it's still not
-> > per-device.
-> >
-> > I guess it's not an issue given you typically (always?)
-> > have one cros-ec device per platform.
-> >
-> > However, I'm still wondering if it's not better to make it
-> > per-device (as the bus is per-device?).
+>The hash is added as a key of type "user" and the description is passed to
+>the kernel so it can look it up and use it for verification.
 >
-> Enric and I were discussing this. Up to this point, there has only been
-> one EC device per platform, and I think this is a reasonable
-> expectation to maintain. I'm adding Stefan Reinauer, the Chrome OS
-> EC lead, for their thoughts. Stefan, we are discussing whether or not we
-> need to support multiple communication protocols at the same time,
-> for instance if a device had multiple ECs, each with a different protocol.
+>Adds DM_VERITY_VERIFY_ROOTHASH_SIG: roothash verification
+>against the roothash signature file *if* specified, if signature file is
+>specified verification must succeed prior to creation of device mapper
+>block device.
 >
-> If we really wanted to support multiple ECs, there would be some other
-> work to do besides this one fix, since the memory addresses that
-> we write to are hardcoded into the drivers. In order to support
-> multiple devices,
-> not only would we need to make the xfer algorithms per-device, but would
-> also need to make the memory addresses per-device. I would love
-> some feedback on this, but my initial thought would be to add a
-> "void *xfer_protocol_data" field to struct cros_ec_device, alongside
-> the two existing
-> int (*cmd_xfer)(struct cros_ec_device *ec, struct cros_ec_command *msg);
-> int (*pkt_xfer)(struct cros_ec_device *ec, struct cros_ec_command *msg);
-> fields. Then, each different protocol (lpc, i2c, spi, rpmsg, ishtp;
-> some of these
-> are only in the Chromium tree as of now) would be able to use this
-> field as needed,
-> for example to store the I2C address or the is_MEC flag for each device.
+>Adds DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE: roothash signature *must* be
+>specified for all dm verity volumes and verification must succeed prior
+>to creation of device mapper block device.
 >
+>Signed-off-by: Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+>---
+> drivers/md/Kconfig                |  23 +++++
+> drivers/md/Makefile               |   2 +-
+> drivers/md/dm-verity-target.c     |  34 +++++++-
+> drivers/md/dm-verity-verify-sig.c | 137 ++++++++++++++++++++++++++++++
+> drivers/md/dm-verity-verify-sig.h |  31 +++++++
+> 5 files changed, 222 insertions(+), 5 deletions(-)
+> create mode 100644 drivers/md/dm-verity-verify-sig.c
+> create mode 100644 drivers/md/dm-verity-verify-sig.h
+>
+>diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
+>index db269a348b20..da4115753f25 100644
+>--- a/drivers/md/Kconfig
+>+++ b/drivers/md/Kconfig
+>@@ -489,6 +489,29 @@ config DM_VERITY
+>
+> 	  If unsure, say N.
+>
+>+config DM_VERITY_VERIFY_ROOTHASH_SIG
+>+	def_bool n
+>+	bool "Verity data device root hash signature verification support"
+>+	depends on DM_VERITY
+>+	select SYSTEM_DATA_VERIFICATION
+>+	  help
+>+	  The device mapper target created by DM-VERITY can be validated if the
+>+	  pre-generated tree of cryptographic checksums passed has a pkcs#7
+>+	  signature file that can validate the roothash of the tree.
+>+
+>+	  If unsure, say N.
+>+
+>+config DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE
+>+	def_bool n
+>+	bool "Forces all dm verity data device root hash should be signed"
+>+	depends on DM_VERITY_VERIFY_ROOTHASH_SIG
+>+	  help
+>+	  The device mapper target created by DM-VERITY will succeed only if the
+>+	  pre-generated tree of cryptographic checksums passed also has a pkcs#7
+>+	  signature file that can validate the roothash of the tree.
+>+
+>+	  If unsure, say N.
+>+
+> config DM_VERITY_FEC
+> 	bool "Verity forward error correction support"
+> 	depends on DM_VERITY
+>diff --git a/drivers/md/Makefile b/drivers/md/Makefile
+>index be7a6eb92abc..8a8c142bcfe1 100644
+>--- a/drivers/md/Makefile
+>+++ b/drivers/md/Makefile
+>@@ -61,7 +61,7 @@ obj-$(CONFIG_DM_LOG_USERSPACE)	+= dm-log-userspace.o
+> obj-$(CONFIG_DM_ZERO)		+= dm-zero.o
+> obj-$(CONFIG_DM_RAID)	+= dm-raid.o
+> obj-$(CONFIG_DM_THIN_PROVISIONING)	+= dm-thin-pool.o
+>-obj-$(CONFIG_DM_VERITY)		+= dm-verity.o
+>+obj-$(CONFIG_DM_VERITY)		+= dm-verity.o dm-verity-verify-sig.o
+> obj-$(CONFIG_DM_CACHE)		+= dm-cache.o
+> obj-$(CONFIG_DM_CACHE_SMQ)	+= dm-cache-smq.o
+> obj-$(CONFIG_DM_ERA)		+= dm-era.o
+>diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+>index f4c31ffaa88e..56276669ac20 100644
+>--- a/drivers/md/dm-verity-target.c
+>+++ b/drivers/md/dm-verity-target.c
+>@@ -16,7 +16,7 @@
+>
+> #include "dm-verity.h"
+> #include "dm-verity-fec.h"
+>-
+>+#include "dm-verity-verify-sig.h"
+> #include <linux/module.h>
+> #include <linux/reboot.h>
+>
+>@@ -34,7 +34,8 @@
+> #define DM_VERITY_OPT_IGN_ZEROES	"ignore_zero_blocks"
+> #define DM_VERITY_OPT_AT_MOST_ONCE	"check_at_most_once"
+>
+>-#define DM_VERITY_OPTS_MAX		(2 + DM_VERITY_OPTS_FEC)
+>+#define DM_VERITY_OPTS_MAX		(2 + DM_VERITY_OPTS_FEC + \
+>+					 DM_VERITY_ROOT_HASH_VERIFICATION_OPTS)
+>
+> static unsigned dm_verity_prefetch_cluster = DM_VERITY_DEFAULT_PREFETCH_SIZE;
+>
+>@@ -855,7 +856,8 @@ static int verity_alloc_zero_digest(struct dm_verity *v)
+> 	return r;
+> }
+>
+>-static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v)
+>+static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
+>+				 struct dm_verity_sig_opts *verify_args)
+> {
+> 	int r;
+> 	unsigned argc;
+>@@ -904,6 +906,14 @@ static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v)
+> 			if (r)
+> 				return r;
+> 			continue;
+>+		} else if (verity_verify_is_sig_opt_arg(arg_name)) {
+>+			r = verity_verify_sig_parse_opt_args(as, v,
+>+							     verify_args,
+>+							     &argc, arg_name);
+>+			if (r)
+>+				return r;
+>+			continue;
+>+
+> 		}
+>
+> 		ti->error = "Unrecognized verity feature request";
+>@@ -930,6 +940,7 @@ static int verity_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v)
+> static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+> {
+> 	struct dm_verity *v;
+>+	struct dm_verity_sig_opts verify_args = {0};
+> 	struct dm_arg_set as;
+> 	unsigned int num;
+> 	unsigned long long num_ll;
+>@@ -937,6 +948,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+> 	int i;
+> 	sector_t hash_position;
+> 	char dummy;
+>+	char *root_hash_digest_to_validate = NULL;
 
-I understand that the current implementation may be insufficient if
-there is ever more than one EC in a given system. Maybe I am missing
-something, but why even consider it right now, with no such system in
-existence ? We would not even know if a more flexible implementation
-actually works, since there would be no means to test it.
+Does it need to be initialized here? There's nothing that relies on this
+logic later.
 
+> 	v = kzalloc(sizeof(struct dm_verity), GFP_KERNEL);
+> 	if (!v) {
+>@@ -1070,6 +1082,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+> 		r = -EINVAL;
+> 		goto bad;
+> 	}
+>+	root_hash_digest_to_validate = argv[8];
+>
+> 	if (strcmp(argv[9], "-")) {
+> 		v->salt_size = strlen(argv[9]) / 2;
+>@@ -1095,11 +1108,20 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+> 		as.argc = argc;
+> 		as.argv = argv;
+>
+>-		r = verity_parse_opt_args(&as, v);
+>+		r = verity_parse_opt_args(&as, v, &verify_args);
+> 		if (r < 0)
+> 			goto bad;
+> 	}
+>
+>+	/* Root hash signature is  a optional parameter*/
+				  an
+>+	r = verity_verify_root_hash(root_hash_digest_to_validate,
+>+				    strlen(root_hash_digest_to_validate),
+>+				    verify_args.sig,
+>+				    verify_args.sig_size);
+>+	if (r < 0) {
+>+		ti->error = "Root hash verification failed";
+>+		goto bad;
+>+	}
+> 	v->hash_per_block_bits =
+> 		__fls((1 << v->hash_dev_block_bits) / v->digest_size);
+>
+>@@ -1165,9 +1187,13 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
+> 	ti->per_io_data_size = roundup(ti->per_io_data_size,
+> 				       __alignof__(struct dm_verity_io));
+>
+>+	verity_verify_sig_opts_cleanup(&verify_args);
+>+
+> 	return 0;
+>
+> bad:
+>+
+>+	verity_verify_sig_opts_cleanup(&verify_args);
+> 	verity_dtr(ti);
+>
+> 	return r;
+>diff --git a/drivers/md/dm-verity-verify-sig.c b/drivers/md/dm-verity-verify-sig.c
+>new file mode 100644
+>index 000000000000..ba87c9342d55
+>--- /dev/null
+>+++ b/drivers/md/dm-verity-verify-sig.c
+>@@ -0,0 +1,137 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+/*
+>+ * Copyright (C) 2019 Microsoft Corporation.
+>+ *
+>+ * Author:  Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+>+ *
+>+ * This file is released under the GPLv2.
+
+There's no need to explicitly state licensing here, we have the SPDX
+line at the beginning for that.
+
+>+ */
+>+#include <linux/device-mapper.h>
+>+#include <linux/verification.h>
+>+#include <keys/user-type.h>
+>+#include "dm-verity.h"
+>+#include "dm-verity-verify-sig.h"
+>+
+>+#define DM_VERITY_VERIFY_ERR(s) DM_VERITY_ROOT_HASH_VERIFICATION " " s
+>+
+>+
+>+bool verity_verify_is_sig_opt_arg(const char *arg_name)
+>+{
+>+	return (!strcasecmp(arg_name,
+>+			    DM_VERITY_ROOT_HASH_VERIFICATION_OPT_SIG_KEY));
+>+}
+>+EXPORT_SYMBOL_GPL(verity_verify_is_sig_opt_arg);
+
+Why are you exporting all these symbols?
+
+>+static int verity_verify_get_sig_from_key(const char *key_desc,
+>+					struct dm_verity_sig_opts *sig_opts)
+>+{
+>+	struct key *key;
+>+	const struct user_key_payload *ukp;
+>+	int ret = 0;
+>+
+>+	key = request_key(&key_type_user,
+>+			key_desc, NULL);
+>+	if (IS_ERR(key))
+>+		return PTR_ERR(key);
+>+
+>+	down_read(&key->sem);
+>+
+>+	ukp = user_key_payload_locked(key);
+>+	if (!ukp) {
+>+		ret = -EKEYREVOKED;
+>+		goto end;
+>+	}
+>+
+>+	sig_opts->sig = kmalloc(ukp->datalen, GFP_KERNEL);
+>+	if (!sig_opts->sig) {
+>+		ret = -ENOMEM;
+>+		goto end;
+>+	}
+>+	sig_opts->sig_size = ukp->datalen;
+>+
+>+	memcpy(sig_opts->sig, ukp->data, sig_opts->sig_size);
+>+
+>+end:
+>+	up_read(&key->sem);
+>+	key_put(key);
+>+
+>+	return ret;
+>+}
+>+
+>+int verity_verify_sig_parse_opt_args(struct dm_arg_set *as,
+>+				     struct dm_verity *v,
+>+				     struct dm_verity_sig_opts *sig_opts,
+>+				     unsigned int *argc,
+>+				     const char *arg_name)
+>+{
+>+	struct dm_target *ti = v->ti;
+>+	int ret = 0;
+>+	const char *sig_key = NULL;
+>+
+>+	if (!*argc) {
+>+		ti->error = DM_VERITY_VERIFY_ERR("Signature key not specified");
+>+		return -EINVAL;
+>+	}
+>+
+>+	sig_key = dm_shift_arg(as);
+>+	(*argc)--;
+>+
+>+	if (!IS_ENABLED(CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG))
+>+		return 0;
+
+Do we need to explicitly check it here? It would be nicer if we just
+rely on verity_verify_get_sig_from_key() to "succeed" if the config
+option isn't set.
+
+>+
+>+	ret = verity_verify_get_sig_from_key(sig_key, sig_opts);
+>+	if (ret < 0)
+>+		ti->error = DM_VERITY_VERIFY_ERR("Invalid key specified");
+>+
+>+	return ret;
+>+}
+>+EXPORT_SYMBOL_GPL(verity_verify_sig_parse_opt_args);
+>+
+>+#ifdef CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG
+>+/*
+>+ * verify_verify_roothash - Verify the root hash of the verity hash device
+>+ *			     using builtin trusted keys.
+>+ *
+>+ * @root_hash: For verity, the roothash/data to be verified.
+>+ * @root_hash_len: Size of the roothash/data to be verified.
+>+ * @sig_data: The trusted signature that verifies the roothash/data.
+>+ * @sig_len: Size of the signature.
+>+ *
+>+ */
+>+int verity_verify_root_hash(const void *root_hash, size_t root_hash_len,
+>+			    const void *sig_data, size_t sig_len)
+>+{
+>+	int ret;
+>+
+>+	if (!root_hash || root_hash_len == 0)
+>+		return -EINVAL;
+>+
+>+	if (!sig_data  || sig_len == 0) {
+>+		if (IS_ENABLED(CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE))
+>+			return -EINVAL;
+
+Is -EINVAL the right error here?
+
+>+		else
+>+			return 0;
+>+	}
+>+
+>+	ret = verify_pkcs7_signature(root_hash, root_hash_len, sig_data,
+>+				sig_len, NULL, VERIFYING_UNSPECIFIED_SIGNATURE,
+>+				NULL, NULL);
+>+
+>+	return ret;
+>+}
+>+#else
+>+int verity_verify_root_hash(const void *root_hash, size_t root_hash_len,
+>+			    const void *sig_data, size_t sig_len)
+>+{
+>+	return 0;
+>+}
+>+#endif
+>+EXPORT_SYMBOL_GPL(verity_verify_root_hash);
+>+
+>+void verity_verify_sig_opts_cleanup(struct dm_verity_sig_opts *sig_opts)
+
+Why doesn't all of this cleanup code live in verity_dtr()?
+
+
+--
 Thanks,
-Guenter
+Sasha
 
-> Thanks,
-> Nick
+>+{
+>+	kfree(sig_opts->sig);
+>+	sig_opts->sig = NULL;
+>+	sig_opts->sig_size = 0;
+>+}
+>+EXPORT_SYMBOL_GPL(verity_verify_sig_opts_cleanup);
+>diff --git a/drivers/md/dm-verity-verify-sig.h b/drivers/md/dm-verity-verify-sig.h
+>new file mode 100644
+>index 000000000000..4cdb5eeb90d4
+>--- /dev/null
+>+++ b/drivers/md/dm-verity-verify-sig.h
+>@@ -0,0 +1,31 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+/*
+>+ * Copyright (C) 2019 Microsoft Corporation.
+>+ *
+>+ * Author:  Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+>+ *
+>+ * This file is released under the GPLv2.
+>+ */
+>+#ifndef DM_VERITY_SIG_VERIFICATION_H
+>+#define DM_VERITY_SIG_VERIFICATION_H
+>+
+>+#define DM_VERITY_ROOT_HASH_VERIFICATION "DM Verity Sig Verification"
+>+#define DM_VERITY_ROOT_HASH_VERIFICATION_OPT_SIG_KEY "root_hash_sig_key_desc"
+>+#define DM_VERITY_ROOT_HASH_VERIFICATION_OPTS 2
+>+
+>+struct dm_verity_sig_opts {
+>+	unsigned int sig_size;
+>+	u8 *sig;
+>+};
+>+int verity_verify_root_hash(const void *data, size_t data_len,
+>+			    const void *sig_data, size_t sig_len);
+>+
+>+bool verity_verify_is_sig_opt_arg(const char *arg_name);
+>+
+>+int verity_verify_sig_parse_opt_args(struct dm_arg_set *as, struct dm_verity *v,
+>+				    struct dm_verity_sig_opts *sig_opts,
+>+				    unsigned int *argc, const char *arg_name);
+>+
+>+void verity_verify_sig_opts_cleanup(struct dm_verity_sig_opts *sig_opts);
+>+
+>+#endif /* DM_VERITY_SIG_VERIFICATION_H */
+>-- 
+>2.17.1
 >
-> >
-> > >  /* True if ACPI device is present */
-> > >  static bool cros_ec_lpc_acpi_device_found;
-> > >
-> > > @@ -38,7 +54,7 @@ static int ec_response_timed_out(void)
-> > >
-> > >       usleep_range(200, 300);
-> > >       do {
-> > > -             if (!(cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_CMD, 1, &data) &
-> > > +             if (!(cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_CMD, 1, &data) &
-> > >                   EC_LPC_STATUS_BUSY_MASK))
-> > >                       return 0;
-> > >               usleep_range(100, 200);
-> > > @@ -58,11 +74,11 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
-> > >       ret = cros_ec_prepare_tx(ec, msg);
-> > >
-> > >       /* Write buffer */
-> > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_PACKET, ret, ec->dout);
-> > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_PACKET, ret, ec->dout);
-> > >
-> > >       /* Here we go */
-> > >       sum = EC_COMMAND_PROTOCOL_3;
-> > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_CMD, 1, &sum);
-> > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_CMD, 1, &sum);
-> > >
-> > >       if (ec_response_timed_out()) {
-> > >               dev_warn(ec->dev, "EC responsed timed out\n");
-> > > @@ -71,15 +87,15 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
-> > >       }
-> > >
-> > >       /* Check result */
-> > > -     msg->result = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_DATA, 1, &sum);
-> > > +     msg->result = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_DATA, 1, &sum);
-> > >       ret = cros_ec_check_result(ec, msg);
-> > >       if (ret)
-> > >               goto done;
-> > >
-> > >       /* Read back response */
-> > >       dout = (u8 *)&response;
-> > > -     sum = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PACKET, sizeof(response),
-> > > -                                  dout);
-> > > +     sum = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PACKET, sizeof(response),
-> > > +                                dout);
-> > >
-> > >       msg->result = response.result;
-> > >
-> > > @@ -92,9 +108,9 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
-> > >       }
-> > >
-> > >       /* Read response and process checksum */
-> > > -     sum += cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PACKET +
-> > > -                                   sizeof(response), response.data_len,
-> > > -                                   msg->data);
-> > > +     sum += cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PACKET +
-> > > +                                 sizeof(response), response.data_len,
-> > > +                                 msg->data);
-> > >
-> > >       if (sum) {
-> > >               dev_err(ec->dev,
-> > > @@ -134,17 +150,17 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
-> > >       sum = msg->command + args.flags + args.command_version + args.data_size;
-> > >
-> > >       /* Copy data and update checksum */
-> > > -     sum += cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_PARAM, msg->outsize,
-> > > -                                    msg->data);
-> > > +     sum += cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_PARAM, msg->outsize,
-> > > +                                  msg->data);
-> > >
-> > >       /* Finalize checksum and write args */
-> > >       args.checksum = sum;
-> > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
-> > > -                             (u8 *)&args);
-> > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
-> > > +                           (u8 *)&args);
-> > >
-> > >       /* Here we go */
-> > >       sum = msg->command;
-> > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_CMD, 1, &sum);
-> > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_CMD, 1, &sum);
-> > >
-> > >       if (ec_response_timed_out()) {
-> > >               dev_warn(ec->dev, "EC responsed timed out\n");
-> > > @@ -153,14 +169,13 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
-> > >       }
-> > >
-> > >       /* Check result */
-> > > -     msg->result = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_DATA, 1, &sum);
-> > > +     msg->result = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_DATA, 1, &sum);
-> > >       ret = cros_ec_check_result(ec, msg);
-> > >       if (ret)
-> > >               goto done;
-> > >
-> > >       /* Read back args */
-> > > -     cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
-> > > -                            (u8 *)&args);
-> > > +     cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_ARGS, sizeof(args), (u8 *)&args);
-> > >
-> > >       if (args.data_size > msg->insize) {
-> > >               dev_err(ec->dev,
-> > > @@ -174,8 +189,8 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
-> > >       sum = msg->command + args.flags + args.command_version + args.data_size;
-> > >
-> > >       /* Read response and update checksum */
-> > > -     sum += cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PARAM, args.data_size,
-> > > -                                   msg->data);
-> > > +     sum += cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PARAM, args.data_size,
-> > > +                                 msg->data);
-> > >
-> > >       /* Verify checksum */
-> > >       if (args.checksum != sum) {
-> > > @@ -205,13 +220,13 @@ static int cros_ec_lpc_readmem(struct cros_ec_device *ec, unsigned int offset,
-> > >
-> > >       /* fixed length */
-> > >       if (bytes) {
-> > > -             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + offset, bytes, s);
-> > > +             cros_ec_lpc_ops.read(EC_LPC_ADDR_MEMMAP + offset, bytes, s);
-> > >               return bytes;
-> > >       }
-> > >
-> > >       /* string */
-> > >       for (; i < EC_MEMMAP_SIZE; i++, s++) {
-> > > -             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + i, 1, s);
-> > > +             cros_ec_lpc_ops.read(EC_LPC_ADDR_MEMMAP + i, 1, s);
-> > >               cnt++;
-> > >               if (!*s)
-> > >                       break;
-> > > @@ -248,10 +263,23 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
-> > >               return -EBUSY;
-> > >       }
-> > >
-> > > -     cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2, buf);
-> > > +     /*
-> > > +      * Read the mapped ID twice, the first one is assuming the
-> > > +      * EC is a Microchip Embedded Controller (MEC) variant, if the
-> > > +      * protocol fails, fallback to the non MEC variant and try to
-> > > +      * read again the ID.
-> > > +      */
-> > > +     cros_ec_lpc_mec_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2, buf);
-> > >       if (buf[0] != 'E' || buf[1] != 'C') {
-> > > -             dev_err(dev, "EC ID not detected\n");
-> > > -             return -ENODEV;
-> > > +             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2,
-> > > +                                    buf);
-> > > +             if (buf[0] != 'E' || buf[1] != 'C') {
-> > > +                     dev_err(dev, "EC ID not detected\n");
-> > > +                     return -ENODEV;
-> > > +             }
-> > > +             /* Re-assign read/write operations for the non MEC variant */
-> > > +             cros_ec_lpc_ops.read = cros_ec_lpc_read_bytes;
-> > > +             cros_ec_lpc_ops.write = cros_ec_lpc_write_bytes;
-> > >       }
-> > >
-> > >       if (!devm_request_region(dev, EC_HOST_CMD_REGION0,
-> > > diff --git a/drivers/platform/chrome/cros_ec_lpc_reg.c b/drivers/platform/chrome/cros_ec_lpc_reg.c
-> > > index 0f5cd0ac8b49..389d3329616f 100644
-> > > --- a/drivers/platform/chrome/cros_ec_lpc_reg.c
-> > > +++ b/drivers/platform/chrome/cros_ec_lpc_reg.c
-> > > @@ -9,7 +9,7 @@
-> > >
-> > >  #include "cros_ec_lpc_mec.h"
-> > >
-> > > -static u8 lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > +u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > >  {
-> > >       int i;
-> > >       int sum = 0;
-> > > @@ -23,7 +23,7 @@ static u8 lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > >       return sum;
-> > >  }
-> > >
-> > > -static u8 lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > +u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > >  {
-> > >       int i;
-> > >       int sum = 0;
-> > > @@ -37,9 +37,8 @@ static u8 lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > >       return sum;
-> > >  }
-> > >
-> > > -#ifdef CONFIG_CROS_EC_LPC_MEC
-> > > -
-> > > -u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > +u8 cros_ec_lpc_mec_read_bytes(unsigned int offset, unsigned int length,
-> > > +                           u8 *dest)
-> > >  {
-> > >       int in_range = cros_ec_lpc_mec_in_range(offset, length);
-> > >
-> > > @@ -50,10 +49,12 @@ u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > >               cros_ec_lpc_io_bytes_mec(MEC_IO_READ,
-> > >                                        offset - EC_HOST_CMD_REGION0,
-> > >                                        length, dest) :
-> > > -             lpc_read_bytes(offset, length, dest);
-> > > +             cros_ec_lpc_read_bytes(offset, length, dest);
-> > > +
-> > >  }
-> > >
-> > > -u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > +u8 cros_ec_lpc_mec_write_bytes(unsigned int offset, unsigned int length,
-> > > +                            u8 *msg)
-> > >  {
-> > >       int in_range = cros_ec_lpc_mec_in_range(offset, length);
-> > >
-> > > @@ -64,7 +65,7 @@ u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > >               cros_ec_lpc_io_bytes_mec(MEC_IO_WRITE,
-> > >                                        offset - EC_HOST_CMD_REGION0,
-> > >                                        length, msg) :
-> > > -             lpc_write_bytes(offset, length, msg);
-> > > +             cros_ec_lpc_write_bytes(offset, length, msg);
-> > >  }
-> > >
-> > >  void cros_ec_lpc_reg_init(void)
-> > > @@ -77,25 +78,3 @@ void cros_ec_lpc_reg_destroy(void)
-> > >  {
-> > >       cros_ec_lpc_mec_destroy();
-> > >  }
-> > > -
-> > > -#else /* CONFIG_CROS_EC_LPC_MEC */
-> > > -
-> > > -u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > -{
-> > > -     return lpc_read_bytes(offset, length, dest);
-> > > -}
-> > > -
-> > > -u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > -{
-> > > -     return lpc_write_bytes(offset, length, msg);
-> > > -}
-> > > -
-> > > -void cros_ec_lpc_reg_init(void)
-> > > -{
-> > > -}
-> > > -
-> > > -void cros_ec_lpc_reg_destroy(void)
-> > > -{
-> > > -}
-> > > -
-> > > -#endif /* CONFIG_CROS_EC_LPC_MEC */
-> > > diff --git a/drivers/platform/chrome/cros_ec_lpc_reg.h b/drivers/platform/chrome/cros_ec_lpc_reg.h
-> > > index 416fd2572182..e8d53fb8a2bc 100644
-> > > --- a/drivers/platform/chrome/cros_ec_lpc_reg.h
-> > > +++ b/drivers/platform/chrome/cros_ec_lpc_reg.h
-> > > @@ -28,6 +28,32 @@ u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest);
-> > >   */
-> > >  u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg);
-> > >
-> > > +/**
-> > > + * cros_ec_lpc_mec_read_bytes() - Read bytes from a given LPC-mapped address.
-> > > + * @offset: Base read address
-> > > + * @length: Number of bytes to read
-> > > + * @dest: Destination buffer
-> > > + *
-> > > + * This function is for the MEC (Microchip Embedded Controller) variant.
-> > > + *
-> > > + * Return: 8-bit checksum of all bytes read.
-> > > + */
-> > > +u8 cros_ec_lpc_mec_read_bytes(unsigned int offset, unsigned int length,
-> > > +                           u8 *dest);
-> > > +
-> > > +/**
-> > > + * cros_ec_lpc_mec_write_bytes - Write bytes to a given LPC-mapped address.
-> > > + * @offset: Base write address
-> > > + * @length: Number of bytes to write
-> > > + * @msg: Write data buffer
-> > > + *
-> > > + * This function is for the MEC (Microchip Embedded Controller) variant.
-> > > + *
-> > > + * Return: 8-bit checksum of all bytes written.
-> > > + */
-> > > +u8 cros_ec_lpc_mec_write_bytes(unsigned int offset, unsigned int length,
-> > > +                            u8 *msg);
-> > > +
-> > >  /**
-> > >   * cros_ec_lpc_reg_init
-> > >   *
-> > > diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-> > > index fd29cbfd3d5d..c63ff2508409 100644
-> > > --- a/drivers/platform/chrome/wilco_ec/Kconfig
-> > > +++ b/drivers/platform/chrome/wilco_ec/Kconfig
-> > > @@ -1,7 +1,7 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > >  config WILCO_EC
-> > >       tristate "ChromeOS Wilco Embedded Controller"
-> > > -     depends on ACPI && X86 && CROS_EC_LPC && CROS_EC_LPC_MEC
-> > > +     depends on ACPI && X86 && CROS_EC_LPC
-> > >       help
-> > >         If you say Y here, you get support for talking to the ChromeOS
-> > >         Wilco EC over an eSPI bus. This uses a simple byte-level protocol
-> > > --
-> > > 2.20.1
-> > >
-> > >
-> >
-> >
