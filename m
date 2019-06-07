@@ -2,168 +2,149 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFF1C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE65C46476
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26150208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C6E208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="wHjUglFN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f4Y/Z1dO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfFGG6Y (ORCPT
+        id S1726708AbfFGHB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:58:24 -0400
-Received: from mail-eopbgr740081.outbound.protection.outlook.com ([40.107.74.81]:15280
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726891AbfFGG6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:58:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pKjBHGhH/wJcjTXje/fojuz6JzyLJn0zVl1WKgrfH28=;
- b=wHjUglFNVpFmsKJWNPNifaA5vP6o1Zen/jseIuZ7XctbkvLlgz89/0A70KW5d3E/8lqUe44PTc77Qa9rLuVD7gix2qZOKjNvE9bag2IahPe7CoeNvKct/RP7JU0ySzhQu0WigxA1NZ6Vs3cSQXkHh5etLPCLKjtLxIGHPdhSGI4=
-Received: from MN2PR02MB6400.namprd02.prod.outlook.com (52.132.175.209) by
- MN2PR02MB6333.namprd02.prod.outlook.com (52.132.175.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Fri, 7 Jun 2019 06:58:15 +0000
-Received: from MN2PR02MB6400.namprd02.prod.outlook.com
- ([fe80::6001:ad1f:d548:2b71]) by MN2PR02MB6400.namprd02.prod.outlook.com
- ([fe80::6001:ad1f:d548:2b71%6]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
- 06:58:14 +0000
-From:   Appana Durga Kedareswara Rao <appanad@xilinx.com>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        "wg@grandegger.com" <wg@grandegger.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Michal Simek <michals@xilinx.com>
-CC:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srinivas Neeli <sneeli@xilinx.com>
-Subject: RE: [PATCH 0/6] net: can: xilinx_can: Bug fixes and Enhancements
-Thread-Topic: [PATCH 0/6] net: can: xilinx_can: Bug fixes and Enhancements
-Thread-Index: AQHU3X5pxtrhGyT8f0y/0R8BjEz816YUgSyAgAEkNOCAM9QFwIBGxw/Q
-Date:   Fri, 7 Jun 2019 06:58:14 +0000
-Message-ID: <MN2PR02MB64007451AEE68134E7B304A1DC100@MN2PR02MB6400.namprd02.prod.outlook.com>
-References: <1552908766-26753-1-git-send-email-appana.durga.rao@xilinx.com>
- <d1cd73cc-e200-7c06-dd6e-3c5e2e35709c@pengutronix.de>
- <DM5PR02MB21875918C65EF8757E34C574DC420@DM5PR02MB2187.namprd02.prod.outlook.com>
- <DM5PR02MB2187137A63481B2BB2E12920DC230@DM5PR02MB2187.namprd02.prod.outlook.com>
-In-Reply-To: <DM5PR02MB2187137A63481B2BB2E12920DC230@DM5PR02MB2187.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=appanad@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ba809c67-1da0-45b5-4162-08d6eb158354
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR02MB6333;
-x-ms-traffictypediagnostic: MN2PR02MB6333:
-x-ms-exchange-purlcount: 2
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR02MB6333F21B56A7142C46C027E2DC100@MN2PR02MB6333.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0061C35778
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(376002)(136003)(346002)(39860400002)(199004)(189003)(13464003)(256004)(66066001)(2906002)(71200400001)(53936002)(107886003)(4326008)(53386004)(74316002)(6116002)(3846002)(76116006)(2501003)(73956011)(71190400001)(66446008)(66946007)(5660300002)(64756008)(76176011)(102836004)(52536014)(8936002)(8676002)(81156014)(81166006)(99286004)(7696005)(66476007)(53546011)(6506007)(6436002)(55016002)(186003)(446003)(229853002)(7736002)(6306002)(305945005)(9686003)(476003)(66556008)(478600001)(26005)(14444005)(316002)(86362001)(14454004)(966005)(68736007)(6246003)(11346002)(6636002)(110136005)(2201001)(25786009)(486006)(54906003)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6333;H:MN2PR02MB6400.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KjCwsLk52Xuuxjt/qA+rHs7hF4ZGFQCRk/jDgGmV9XDYG/d0HyrtdYPaKOcHwsYsgJqIXkAarERGhbFNNuIliSQeJwTGOkoO4zWjF8D1CoPL/OWZPSOG+Atxv6eXUYA+EFW6ZuK75rP1XMl+VmYl+UxNeZMmm+ugS9LcArYtHesQxDnIurdPBWCodCvyeie4QHPkGmDTEQWL84I8vS+JIvoFKO/iBvQDNVMoeyrwvjkxtf/H605dm8A/8WbtjOUZo7OssNfAMui60UTbu2BBGw06SoYAoefTDLcvsXyxw1gXoWXHAEJ03xZZV4RCb939Yq46vBa6hrXlqSNqmFWORDZ4X7JRklc8xuMbdeNPrFVDyIDGYlXx+4MXPfzlFr7lsfFGGC7BTxWd+t4aeYuLfl09sb3OlGwnFcYi0+4cGZs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 7 Jun 2019 03:01:56 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45988 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfFGHBz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 03:01:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x575ngl4006282;
+        Fri, 7 Jun 2019 00:49:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559886582;
+        bh=MEagnH+kxa/s49pg8767gTrJDW79F25A6Ljg2yywMAM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=f4Y/Z1dOPufN9GWrG/ITdjZw+4v5bZsUm/7AJAaIo619OzOzhBVvcN2odiJZm8sY/
+         QhrE2jn/CsinbMhp47a42n+xS1VDzkj/LadgxyoESHMLtVVWawgGCc9g1lp1btvZMu
+         AvSg8JmBOvuHak6DBMnRTm/uQHH/BuYO8hnw4dbE=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x575ngto024423
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Jun 2019 00:49:42 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
+ 2019 00:49:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 7 Jun 2019 00:49:42 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x575ndR3104523;
+        Fri, 7 Jun 2019 00:49:40 -0500
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+ <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d0db90e3-3d05-dfba-8768-28511d9ee3ac@ti.com>
+Date:   Fri, 7 Jun 2019 08:50:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba809c67-1da0-45b5-4162-08d6eb158354
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 06:58:14.7872
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: appanad@xilinx.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6333
+In-Reply-To: <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFyYywNCg0KRnJpZW5kbHkgcGluZyAhIQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8NCj4gU2VudDogVHVlc2Rh
-eSwgQXByaWwgMjMsIDIwMTkgMTI6MDggUE0NCj4gVG86ICdNYXJjIEtsZWluZS1CdWRkZScgPG1r
-bEBwZW5ndXRyb25peC5kZT47ICd3Z0BncmFuZGVnZ2VyLmNvbScNCj4gPHdnQGdyYW5kZWdnZXIu
-Y29tPjsgJ2RhdmVtQGRhdmVtbG9mdC5uZXQnIDxkYXZlbUBkYXZlbWxvZnQubmV0PjsNCj4gTWlj
-aGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5jb20+DQo+IENjOiAnbGludXgtY2FuQHZnZXIua2Vy
-bmVsLm9yZycgPGxpbnV4LWNhbkB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiAnbmV0ZGV2QHZnZXIua2Vy
-bmVsLm9yZycgPG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc+OyAnbGludXgtYXJtLQ0KPiBrZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZycgPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-Zz47ICdsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZycgPGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggMC82XSBuZXQ6IGNhbjogeGlsaW54
-X2NhbjogQnVnIGZpeGVzIGFuZCBFbmhhbmNlbWVudHMNCj4gDQo+IEhpIE1hcmMsDQo+IA0KPiA+
-IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogQXBwYW5hIER1cmdhIEtlZGFy
-ZXN3YXJhIFJhbw0KPiA+IFNlbnQ6IFRodXJzZGF5LCBNYXJjaCAyMSwgMjAxOSAxMjowNiBQTQ0K
-PiA+IFRvOiAnTWFyYyBLbGVpbmUtQnVkZGUnIDxta2xAcGVuZ3V0cm9uaXguZGU+OyB3Z0BncmFu
-ZGVnZ2VyLmNvbTsNCj4gPiBkYXZlbUBkYXZlbWxvZnQubmV0OyBNaWNoYWwgU2ltZWsgPG1pY2hh
-bHNAeGlsaW54LmNvbT4NCj4gPiBDYzogbGludXgtY2FuQHZnZXIua2VybmVsLm9yZzsgbmV0ZGV2
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gU3ViamVjdDogUkU6IFtQQVRD
-SCAwLzZdIG5ldDogY2FuOiB4aWxpbnhfY2FuOiBCdWcgZml4ZXMgYW5kDQo+ID4gRW5oYW5jZW1l
-bnRzDQo+ID4NCj4gPiBIaSBNYXJjLA0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
-LS0tLQ0KPiA+ID4gRnJvbTogTWFyYyBLbGVpbmUtQnVkZGUgPG1rbEBwZW5ndXRyb25peC5kZT4N
-Cj4gPiA+IFNlbnQ6IFdlZG5lc2RheSwgTWFyY2ggMjAsIDIwMTkgNjozOSBQTQ0KPiA+ID4gVG86
-IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8gPGFwcGFuYWRAeGlsaW54LmNvbT47DQo+ID4g
-PiB3Z0BncmFuZGVnZ2VyLmNvbTsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldDsgTWljaGFsIFNpbWVrDQo+
-ID4gPiA8bWljaGFsc0B4aWxpbnguY29tPg0KPiA+ID4gQ2M6IGxpbnV4LWNhbkB2Z2VyLmtlcm5l
-bC5vcmc7IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiA+IGtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gPiBT
-dWJqZWN0OiBSZTogW1BBVENIIDAvNl0gbmV0OiBjYW46IHhpbGlueF9jYW46IEJ1ZyBmaXhlcyBh
-bmQNCj4gPiA+IEVuaGFuY2VtZW50cw0KPiA+ID4NCj4gPiA+IE9uIDMvMTgvMTkgMTI6MzIgUE0s
-IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSByYW8gd3JvdGU6DQo+ID4gPiA+IFRoaXMgcGF0Y2gg
-c2VyaWVzIGRvZXMgdGhlIGJlbG93DQo+ID4gPiA+IC0tPiBBZGRlZCBzdXBwb3J0IGZvciBDQU5G
-RCBGRCBmcmFtZXMgRml4IENoZWNrcGF0Y2ggcmVwb3J0ZWQNCj4gPiA+ID4gLS0+IHdhcm5pbmdz
-IGFuZCBjaGVja3MNCj4gPiA+ID4NCj4gPiA+ID4gQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIHJh
-byAoNik6DQo+ID4gPiA+ICAgbmV0OiBjYW46IHhpbGlueF9jYW46IEZpeCBzdHlsZSBpc3N1ZXMN
-Cj4gPiA+ID4gICBuZXQ6IGNhbjogeGlsaW54X2NhbjogRml4IGZsYWdzIGZpZWxkIGluaXRpYWxp
-emF0aW9uIGZvciBheGkgY2FuIGFuZA0KPiA+ID4gPiAgICAgY2FucHMNCj4gPiA+ID4gICBuZXQ6
-IGNhbjogeGlsaW54X2NhbjogQWRkIGNhbnR5cGUgcGFyYW1ldGVyIGluIHhjYW5fZGV2dHlwZV9k
-YXRhDQo+ID4gPiA+ICAgICBzdHJ1Y3QNCj4gPiA+ID4gICBuZXQ6IGNhbjogeGlsaW54X2Nhbjog
-QWRkIHN1cHBvcnQgZm9yIENBTkZEIEZEIGZyYW1lcw0KPiA+ID4gPiAgIG5ldDogY2FuOiB4aWxp
-bnhfY2FuOiBBZGQgU1BEWCBsaWNlbnNlDQo+ID4gPiA+ICAgbmV0OiBjYW46IHhpbGlueF9jYW46
-IEZpeCBrZXJuZWwgZG9jIHdhcm5pbmdzDQo+ID4gPiA+DQo+ID4gPiA+ICBkcml2ZXJzL25ldC9j
-YW4veGlsaW54X2Nhbi5jIHwgMzAzDQo+ID4gPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKy0tLS0tLS0NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNTcgaW5zZXJ0aW9u
-cygrKSwgNDYgZGVsZXRpb25zKC0pDQo+ID4gPg0KPiA+ID4gQXBwbGllZCB0byBsaW51eC1jYW4t
-bmV4dC90ZXN0aW5nLCBidXQgaW4gb3JkZXIuIEZpcnN0IGZpeGVzIHRoYW4NCj4gPiA+IGVuaGFu
-Y2VtZW50czoNCj4gPg0KPiA+IFRoYW5rcy4uLg0KPiA+IEkgY291bGRuJ3QgZmluZCB0aGUgcGF0
-Y2hlcyBoZXJlDQo+ID4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5l
-bC9naXQvbWtsL2xpbnV4LWNhbi0NCj4gPiBuZXh0LmdpdC9sb2cvZHJpdmVycy9uZXQvY2FuL3hp
-bGlueF9jYW4uYz9oPXRlc3RpbmcNCj4gPiBBbSBJIHJlZmVycmluZyB3cm9uZyByZXBvL2JyYW5j
-aD8/DQo+IA0KPiBUaGVyZSBhcmUgYSBjb3VwbGUgb2YgYnVnIGZpeGVzIGF2YWlsYWJsZSBmb3Ig
-dGhpcyBkcml2ZXIgb24gdG9wIG9mIHRoaXMgcGF0Y2gNCj4gc2VyaWVzLg0KPiBQbGVhc2UgbGV0
-IG1lIGtub3cgdGhlIGJyYW5jaCB3aGVyZSB0aGlzIHBhdGNoIHNlcmllcyBnb3QgYXBwbGllZCwg
-d2lsbCBzZW5kDQo+IHRoZSBidWcgZml4ZXMgb24gdG9wIG9mIHRoYXQgYnJhbmNoLg0KPiANCg0K
-UmVnYXJkcywNCktlZGFyLg0KDQo+IFJlZ2FyZHMsDQo+IEtlZGFyLg0KPiA+DQo+ID4gUmVnYXJk
-cywNCj4gPiBLZWRhci4NCj4gPiA+DQo+ID4gPiA+IDI0MTgyNjMwMjg1NCBuZXQ6IGNhbjogeGls
-aW54X2NhbjogRml4IHN0eWxlIGlzc3Vlcw0KPiA+ID4gPiA3MGZiMjZmYWRjMjcgbmV0OiBjYW46
-IHhpbGlueF9jYW46IEZpeCBrZXJuZWwgZG9jIHdhcm5pbmdzDQo+ID4gPiA+IDdiZWI2NDM1MWZm
-MSBuZXQ6IGNhbjogeGlsaW54X2NhbjogQWRkIFNQRFggbGljZW5zZSBkZDk0OTEwYmNlYWUgbmV0
-Og0KPiA+ID4gPiBjYW46IHhpbGlueF9jYW46IEZpeCBmbGFncyBmaWVsZCBpbml0aWFsaXphdGlv
-biBmb3IgYXhpIGNhbiBhbmQNCj4gPiA+ID4gY2FucHMNCj4gPiA+ID4gNmJkMDVjZWNlNTY3IG5l
-dDogY2FuOiB4aWxpbnhfY2FuOiBBZGQgY2FudHlwZSBwYXJhbWV0ZXIgaW4NCj4gPiA+ID4geGNh
-bl9kZXZ0eXBlX2RhdGEgc3RydWN0DQo+ID4gPiA+IDM0ZTI4MDE3MDczNiBuZXQ6IGNhbjogeGls
-aW54X2NhbjogQWRkIHN1cHBvcnQgZm9yIENBTkZEIEZEIGZyYW1lcw0KPiA+ID4NCj4gPiA+IE1h
-cmMNCj4gPiA+DQo+ID4gPiAtLQ0KPiA+ID4gUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAg
-ICAgIHwgTWFyYyBLbGVpbmUtQnVkZGUgICAgICAgICAgIHwNCj4gPiA+IEluZHVzdHJpYWwgTGlu
-dXggU29sdXRpb25zICAgICAgICB8IFBob25lOiArNDktMjMxLTI4MjYtOTI0ICAgICB8DQo+ID4g
-PiBWZXJ0cmV0dW5nIFdlc3QvRG9ydG11bmQgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2
-OTE3LTU1NTUgfA0KPiA+ID4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgIHwgaHR0
-cDovL3d3dy5wZW5ndXRyb25peC5kZSAgIHwNCg0K
+Jon,
+
+On 06/06/2019 15.37, Jon Hunter wrote:
+>> Looking at the drivers/dma/tegra210-adma.c for the
+>> TEGRA*_FIFO_CTRL_DEFAULT definition it is still not clear where the
+>> remote FIFO size would fit.
+>> There are fields for overflow and starvation(?) thresholds and TX/RX
+>> size (assuming word length, 3 == 32bits?).
+> 
+> The TX/RX size are the FIFO size. So 3 equates to a FIFO size of 3 * 64
+> bytes.
+> 
+>> Both threshold is set to one, so I assume currently ADMA is
+>> pushing/pulling data word by word.
+> 
+> That's different. That indicates thresholds when transfers start.
+> 
+>> Not sure what the burst size is used for, my guess would be that it is
+>> used on the memory (DDR) side for optimized, more efficient accesses?
+> 
+> That is the actual burst size.
+> 
+>> My guess is that the threshold values are the counter limits, if the DMA
+>> request counter reaches it then ADMA would do a threshold limit worth of
+>> push/pull to ADMAIF.
+>> Or there is another register where the remote FIFO size can be written
+>> and ADMA is counting back from there until it reaches the threshold (and
+>> pushes/pulling again threshold amount of data) so it keeps the FIFO
+>> filled with at least threshold amount of data?
+>>
+>> I think in both cases the threshold would be the maxburst.
+>>
+>> I suppose you have the patch for adma on how to use the fifo_size
+>> parameter? That would help understand what you are trying to achieve better.
+> 
+> Its quite simple, we would just use the FIFO size to set the fields
+> TEGRAXXX_ADMA_CH_FIFO_CTRL_TXSIZE/RXSIZE in the
+> TEGRAXXX_ADMA_CH_FIFO_CTRL register. That's all.
+
+Hrm, it is still not clear how all of these fits together.
+
+What happens if you configure ADMA side:
+BURST = 10
+TX/RXSIZE = 100 (100 * 64 bytes?) /* FIFO_SIZE? */
+*THRES = 5
+
+And if you change the *THRES to 10?
+And if you change the TX/RXSIZE to 50 (50 * 64 bytes?)
+And if you change the BURST to 5?
+
+In other words what is the relation between all of these?
+
+There must be a rule and constraints around these and if we do really
+need a new parameter for ADMA's FIFO_SIZE I'd like it to be defined in a
+generic way so others could benefit without 'misusing' a fifo_size
+parameter for similar, but not quite fifo_size information.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
