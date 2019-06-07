@@ -2,83 +2,131 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913CEC28EBB
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EADBC04AB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E4520B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559867068;
-	bh=/JAzBqFy3SXtb7a5Gpv8iuNYJP18hnVQYOVV9nk078o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BNz2y2hdVFjF6mQLgKLNdlSXMVHt2aOUT3k7gOj28hqWXnv5enseQY79dJFN0i5vU
-	 01z3u7kr16AncFYfCiVdEm4WccTDawqwCFaMvKkP1KBnBZj4hU0QxCiGTIUEaIuiud
-	 RVZJVWBwvKzgkKWIQj4nL9E/SAD1EJ0rtcyCFEBc=
+	by mail.kernel.org (Postfix) with ESMTP id 518A7206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfFGAY1 (ORCPT
+        id S1728365AbfFGAZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 20:24:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728156AbfFGAY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 20:24:27 -0400
-Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B49206DF;
-        Fri,  7 Jun 2019 00:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559867066;
-        bh=/JAzBqFy3SXtb7a5Gpv8iuNYJP18hnVQYOVV9nk078o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XQITSzJaKYh2jRSUJLHAvMFiTSY7mDuVBUb42yYODcuHYG9Pb2XlrLx3YcKUY5Rzx
-         sA/xnOf1q02lTG4PLQ8a0vlZXqKJJIG7vd8s0gjLVqA/U4eTBm1L1CWPRd/SfqO6cj
-         v5FHE7zzDqZ9HToPdlXts97NcqPqn147/4uJN+0I=
-Date:   Fri, 7 Jun 2019 08:24:08 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: linux-next: Fixes tag needs some work in the imx-mxs tree
-Message-ID: <20190607002407.GY29853@dragon>
-References: <20190607074652.4b3d0c97@canb.auug.org.au>
+        Thu, 6 Jun 2019 20:25:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33024 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728329AbfFGAY6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 20:24:58 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v29so219354ljv.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 17:24:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jjpV/GVZC7/6NIkIkxAR62f8LfbTURZiuQDu/JwjMc4=;
+        b=ftO77Bu2IdirJOWIFYUrO8vXx/MtJsdRUYOnVAD7GbclfjJY7ff4AIrkhCdqwQmiDM
+         EAXdYb8q9/7lB9AJYMXeNeyWUP2prQ965aohHk7mucpRFvjBHpXcmBhVJ+EwHFcKAn9o
+         /G+naUNohEV1/buCDv83hCOOjK4P8BCgLOHA3RG95MCiYyLqVeOFG7OW2rFNLs9RQs/E
+         FiIzRjYKUqeR6sQ1kjMDqDAr6XuQroC34mfWz4qglJiID3nupF6av3jqdpxvOulQzdj+
+         OlSapjScuBEb+H24qu0rgxeS5c0kNFwGdpbFGWDu8U6hTBuHT9BJBPAvS5hR7owakAZ6
+         VlfA==
+X-Gm-Message-State: APjAAAVYD6okJ9XgaR4SEqvz89xEbTSwFArePpRJlDHyr0tTw7rAfFo8
+        9H+Gf56lD6d8zq4FSyYuc+BBYsKV4X4UBUWTzrs9pQ==
+X-Google-Smtp-Source: APXvYqwugrE+HvpR1/J4UXMXJZT0jDeaBBB2NZMXth8iUXpfhZxwaHA9es7vfuwPufY+SwVTgs5F2CrkwWpGfygSiyg=
+X-Received: by 2002:a2e:83ca:: with SMTP id s10mr22921626ljh.163.1559867096646;
+ Thu, 06 Jun 2019 17:24:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607074652.4b3d0c97@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190530035339.hJr4GziBa%akpm@linux-foundation.org>
+ <5a9fc4e5-eb29-99a9-dff6-2d4fdd5eb748@infradead.org> <2b1e5628-cc36-5a33-9259-08100a01d579@infradead.org>
+In-Reply-To: <2b1e5628-cc36-5a33-9259-08100a01d579@infradead.org>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Fri, 7 Jun 2019 02:24:20 +0200
+Message-ID: <CAGnkfhyO0gtg=RGUMGHYH43UhUV1htmqa-56nuK2tt_CACzOfg@mail.gmail.com>
+Subject: Re: mmotm 2019-05-29-20-52 uploaded (mpls) +linux-next
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        mhocko@suse.cz, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 07:46:52AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   f6a8ff82ce68 ("clk: imx: imx8mm: correct audio_pll2_clk to audio_pll2_out")
-> 
-> Fixes tag
-> 
->   Fixes: ba5625c3e27 ("clk: imx: Add clock driver support for imx8mm")
-> 
-> has these problem(s):
-> 
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+On Wed, Jun 5, 2019 at 12:29 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 5/30/19 3:28 PM, Randy Dunlap wrote:
+> > On 5/29/19 8:53 PM, akpm@linux-foundation.org wrote:
+> >> The mm-of-the-moment snapshot 2019-05-29-20-52 has been uploaded to
+> >>
+> >>    http://www.ozlabs.org/~akpm/mmotm/
+> >>
+> >> mmotm-readme.txt says
+> >>
+> >> README for mm-of-the-moment:
+> >>
+> >> http://www.ozlabs.org/~akpm/mmotm/
+> >>
+> >> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> >> more than once a week.
+> >>
+> >> You will need quilt to apply these patches to the latest Linus release (5.x
+> >> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> >> http://ozlabs.org/~akpm/mmotm/series
+> >>
+> >> The file broken-out.tar.gz contains two datestamp files: .DATE and
+> >> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> >> followed by the base kernel version against which this patch series is to
+> >> be applied.
+> >>
+> >
+> > on i386 or x86_64:
+> >
+> > when CONFIG_PROC_SYSCTL is not set/enabled:
+> >
+> > ld: net/mpls/af_mpls.o: in function `mpls_platform_labels':
+> > af_mpls.c:(.text+0x162a): undefined reference to `sysctl_vals'
+> > ld: net/mpls/af_mpls.o:(.rodata+0x830): undefined reference to `sysctl_vals'
+> > ld: net/mpls/af_mpls.o:(.rodata+0x838): undefined reference to `sysctl_vals'
+> > ld: net/mpls/af_mpls.o:(.rodata+0x870): undefined reference to `sysctl_vals'
+> >
+>
+> Hi,
+> This now happens in linux-next 20190604.
+>
+>
+> --
+> ~Randy
 
-Hi Stephen,
+Hi,
+I've just sent a patch to fix it.
 
-Thanks for reporting.  I just got it fixed, will be more careful about
-that in the future.
+It seems that there is a lot of sysctl related code is built
+regardless of the CONFIG_SYSCTL value, but produces a build error only
+with my patch because I add a reference to sysctl_vals which is in
+kernel/sysctl.c.
 
-@Peng, please check your git configuration as suggested above, thanks.
+And it seems also that the compiler is unable to optimize out the
+unused code, which gets somehow in the final binary:
 
-Shawn
+$ grep PROC_SYSCTL .config
+# CONFIG_PROC_SYSCTL is not set
+$ readelf vmlinux -x .rodata |grep -A 2 platform_lab
+  0xffffffff81b09180 2e630070 6c617466 6f726d5f 6c616265 .c.platform_labe
+  0xffffffff81b09190 6c730069 705f7474 6c5f7072 6f706167 ls.ip_ttl_propag
+  0xffffffff81b091a0 61746500 64656661 756c745f 74746c00 ate.default_ttl.
+
+If the purpose of disabling sysctl is to save space, probably this
+code and definitions should all go under an #ifdef
+
+Regards,
+-- 
+Matteo Croce
+per aspera ad upstream
