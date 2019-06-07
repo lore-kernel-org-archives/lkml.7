@@ -3,89 +3,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E11C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87220C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E49208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:46:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXVFD4Sn"
+	by mail.kernel.org (Postfix) with ESMTP id 5F5E4208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:46:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559933186;
+	bh=J0nw1E2EN/TtoXc1Q4Yuy9LdBjugC1jeuRsyc4v7azA=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=Roz9TGg2CtUVemYsmeGltd3zXkg2YXdP9aekYNa2HSZh+eWgQJcB3uUozNG7UwNUb
+	 ETcoteGh3ZaTX+xJ5/diKpEdK/6pMg2mwSFzIy/zHhf/9SXDFBN1tnioTkIIojB/Mp
+	 MM+WpAdLSItDnOI3NZnGGr5KFNmltq4Qatbb2aCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbfFGSqV (ORCPT
+        id S1732005AbfFGSqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:46:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45075 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728873AbfFGSqV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:46:21 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w34so1589163pga.12;
-        Fri, 07 Jun 2019 11:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z4R/A+c7peE9kIyceAe4LW8kI17iOhPfKiTxuGTvFbY=;
-        b=WXVFD4SniiQTHxsMMnzHf4YxH3jkD3TbVbIj9A71Hn+NpbxejpDtqXTrtn50E/+l5f
-         LT7UPXxWQflrHAurUnAgMV0+dpuWY0tkeicdMqIaey/dqWpY39aAiiqRCUmxSgSc2xc1
-         kOLOZMdU4D1RvgaQ2sXIg9p548OFbx9TkXWKuIMdAvmM1t/lTMLxOEQYjr6XSj2veL6D
-         0EIcScKvLqQVQqNda0uFyFlQWhlTuZBFn7xLqJdYmdtT+SZLEPWzwD6GJFx/T0c5mEMu
-         VWXv7Bz4yMUn6ePZNZK/o2clj0jsJj/uePBA0tYkFeefNOqXCBomhau6yYWBeONiVDVY
-         sclg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z4R/A+c7peE9kIyceAe4LW8kI17iOhPfKiTxuGTvFbY=;
-        b=SUkF1qiJtERqHX4BCy2kpA9gZTkfd4TcRhG/p6+LfpSuHogUKqd0zzBGvqW+5U2Ey4
-         bbw6sgjU4OCaNvZVOiNGeBddewJo5YOnPoa7GllE9WmSe/xR2Okd6pIaCUyBUzoN8Qyr
-         1Dbm6rrETc+Lzp/MfQkmkJHuYwk5gjNqvnLdBZra8HSAjkKJOSrLzXOfq21NLFBlchq3
-         9zzI+o8lwDzQswrVl7FIMM2fp2EUiNIQmakdnwtbNJR4rx9RPi2HCj8fOVbj1yoONBUT
-         FyLe0F8XUUk2H0OF69eLCUmqauEof74rrdnnXTbE2F3Whuw0ELPrFegZr8dM8Jn4yANc
-         t91A==
-X-Gm-Message-State: APjAAAXtKNF20FTZaQsdweK2wjOEnFCgD6wuTa/vlryhREFZrMyTmj9d
-        yzLGIIGWpg3M6bmOmTn6pgE5QckwdQI=
-X-Google-Smtp-Source: APXvYqzxUUOczQlFQk080F3RPgI6vBdOsB4jni2YUcIV01O1vCjRDDK19TNf84AfKB68VP5Dz3sbhw==
-X-Received: by 2002:aa7:83d4:: with SMTP id j20mr62285296pfn.90.1559933180050;
-        Fri, 07 Jun 2019 11:46:20 -0700 (PDT)
-Received: from [172.27.227.254] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id l23sm7423762pgh.68.2019.06.07.11.46.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 11:46:18 -0700 (PDT)
-Subject: Re: [PATCH linux-next v2] mpls: don't build sysctl related code when
- sysctl is disabled
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-References: <20190607003646.10411-1-mcroce@redhat.com>
- <ea97df59-481b-3f05-476c-33e733b5c4ba@gmail.com>
- <CAGnkfhx_h1d6k+wZk7xZXnECDZ+Z+oLw9zAWvDFRe+mHLksszA@mail.gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <3dd078f1-c8a7-6b9f-b14c-444b48eda3ab@gmail.com>
-Date:   Fri, 7 Jun 2019 12:46:16 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Fri, 7 Jun 2019 14:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728873AbfFGSqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 14:46:22 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5C3F212F5;
+        Fri,  7 Jun 2019 18:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559933181;
+        bh=J0nw1E2EN/TtoXc1Q4Yuy9LdBjugC1jeuRsyc4v7azA=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=Z47c1q/I05xsmjxvEUBEAn9G+zpsYmIOQeKwpy7p4Btrw2EpCxb0q8fJGbpPHUUmU
+         aNTuF4bwgnnRPh1KEcMQ9msRSOofsnngKvr2604IcjxKCESd1FvjyA7KT3jARjeqSQ
+         95Z/vIJbonxZgUyzNQ2EOd3GFUTSDOBC/uqGjPY0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAGnkfhx_h1d6k+wZk7xZXnECDZ+Z+oLw9zAWvDFRe+mHLksszA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAGb2v64VnzXv1-fDDM1bBFWEH7NZp=s5Uw3qRP05WiDvbyqVJA@mail.gmail.com>
+References: <20190520080421.12575-1-wens@kernel.org> <20190520090327.iejd3q7c3iwomzlz@flea> <CAGb2v64VnzXv1-fDDM1bBFWEH7NZp=s5Uw3qRP05WiDvbyqVJA@mail.gmail.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 00/25] clk: sunxi-ng: clk parent rewrite part 1
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+User-Agent: alot/0.8.1
+Date:   Fri, 07 Jun 2019 11:46:21 -0700
+Message-Id: <20190607184621.D5C3F212F5@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 12:20 PM, Matteo Croce wrote:
-> This would explain why so much code went under the #ifdef.
-> Should we select or depend on sysctl maybe?
+Quoting Chen-Yu Tsai (2019-06-03 09:38:22)
+> Hi Stephen,
+>=20
+> On Mon, May 20, 2019 at 5:03 PM Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> >
+> > On Mon, May 20, 2019 at 04:03:56PM +0800, Chen-Yu Tsai wrote:
+> > > From: Chen-Yu Tsai <wens@csie.org>
+> > >
+> > > Hi everyone,
+> > >
+> > > This is series is the first part of a large series (I haven't done the
+> > > rest) of patches to rewrite the clk parent relationship handling with=
+in
+> > > the sunxi-ng clk driver. This is based on Stephen's recent work allow=
+ing
+> > > clk drivers to specify clk parents using struct clk_hw * or parsing DT
+> > > phandles in the clk node.
+> > >
+> > > This series can be split into a few major parts:
+> > >
+> > > 1) The first patch is a small fix for clk debugfs representation. This
+> > >    was done before commit 1a079560b145 ("clk: Cache core in
+> > >    clk_fetch_parent_index() without names") was posted, so it might or
+> > >    might not be needed. Found this when checking my work using
+> > >    clk_possible_parents.
+> > >
+> > > 2) A bunch of CLK_HW_INIT_* helper macros are added. These cover the
+> > >    situations I encountered, or assume I will encounter, such as sing=
+le
+> > >    internal (struct clk_hw *) parent, single DT (struct clk_parent_da=
+ta
+> > >    .fw_name), multiple internal parents, and multiple mixed (internal=
+ +
+> > >    DT) parents. A special variant for just an internal single parent =
+is
+> > >    added, CLK_HW_INIT_HWS, which lets the driver share the singular
+> > >    list, instead of having the compiler create a compound literal eve=
+ry
+> > >    time. It might even make sense to only keep this variant.
+> > >
+> > > 3) A bunch of CLK_FIXED_FACTOR_* helper macros are added. The rationa=
+le
+> > >    is the same as the single parent CLK_HW_INIT_* helpers.
+> > >
+> > > 4) Bulk conversion of CLK_FIXED_FACTOR to use local parent references,
+> > >    either struct clk_hw * or DT .fw_name types, whichever the hardware
+> > >    requires.
+> > >
+> > > 5) The beginning of SUNXI_CCU_GATE conversion to local parent
+> > >    references. This part is not done. They are included as justificat=
+ion
+> > >    and examples for the shared list of clk parents case.
+> >
+> > That series is pretty neat. As far as sunxi is concerned, you can add my
+> > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > > I realize this is going to be many patches every time I convert a clo=
+ck
+> > > type. Going forward would the people involved prefer I send out
+> > > individual patches like this series, or squash them all together?
+> >
+> > For bisection, I guess it would be good to keep the approach you've
+> > had in this series. If this is really too much, I guess we can always
+> > change oru mind later on.
+>=20
+> Any thoughts on this series and how to proceed?
+>=20
 
-I think so
+I have a few minor nitpicks but otherwise the series looks good to me.
+I'm perfectly happy to see the individual patches unless you want to
+squash them into one big patch. I can review the conversions either way.
+
+Did you need me to apply any patches here? Or can I assume you'll resend
+with a pull request so it can be merged into clk-next?
+
+BTW, did you have to update any DT bindings or documentation? I didn't
+see anything, so I'm a little surprised that all that stuff was already
+in place.
+
