@@ -2,106 +2,107 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725B2C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11320C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8A720868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFDFF20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rqrv2fw0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ8X5t7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfFGWE0 (ORCPT
+        id S1730129AbfFGWFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:04:26 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40217 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfFGWE0 (ORCPT
+        Fri, 7 Jun 2019 18:05:18 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40877 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfFGWFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:04:26 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a9so2699606lff.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:04:25 -0700 (PDT)
+        Fri, 7 Jun 2019 18:05:17 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a93so1316490pla.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:05:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iSGQwLEBuCK9zP7NpUSQEjWlt9syiyScK1Qv82y9zDY=;
-        b=Rqrv2fw0OYkyZCGgpZZfV8pHIKnnDqeqwB/GSfmW0R1GWq17BPPCFxCOmyyKhSmTAC
-         iJ+sTJVzs1dN0I5UydjVGQ/TqRBiXREqAbxKmvClzTTM48MzK67ENGlUmnLCepOJMIOw
-         Z7nx0Vp+Bh+nyEcsbhQrrLRhtFtXmrRcFUrF0qok9m27CoHzyIS5dsfr8ZcX1kL5yBkG
-         7aqg+uWDat7P7iT6MkrjKUrlMppj8gQPtNFAaujnmx3ebL2sKEbPHsIT+TPGjMXGefUi
-         BWB2G69ZLk6Qc+TeqJcVwk54B4r6gqFueiRlVhZwcClRpV5B7PZa4B4PmArip/cFaRUz
-         LquQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C3WCTEPJuMhnDtyj4nCQQWf8hst+6hFcFTW9HCjkuQc=;
+        b=eQ8X5t7ShcbHZ2iAaeihT56yVGm93DJwoGdLe+RAL+T33ZJeM5dpHTBSOFHnV6exd2
+         McjPg9HRK4VzL2d97TDKLdk4cgN6l4tkjv6zJgwUwj1poxqn1D4faGt9f0dgLEJvD4kI
+         nlj2hFdkXuXE9V6dflG5xHbpe+pelkqjFJDVStQgh4TZr8C3CXVWdShiPtMOmz92io3F
+         G/7PZiS1LCcwJLyHB6DMjE+r1mSTqQMSaVXt4uniH3d8iUxxoPLLsGtjpKOqkzsTcqbY
+         izGdDivK3ySoKFH5HXbVfJ1MkBO+mwjFUh9lObsesRKIEoo/4P5NBkxPi/L9gGPIPE7F
+         GoDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iSGQwLEBuCK9zP7NpUSQEjWlt9syiyScK1Qv82y9zDY=;
-        b=QQSqIphg+JzyTGTpA0EVKL8UIWlGn+qxYFDXQ8YeCPX2uTfJFWz+81BR2qNh9sJpsb
-         UjOC8vM2VnBMxfxiSl65W0DVqn8e8gZBUMk+FaytYCLG7B8q3LwZM1kFj0HtHw28YZwG
-         Q7b4ZBQlIlIpJI0EVNX8cEgxmlu1XEvEKg6ODdO7zT9DZc2BdcCjEWJVFLMzht86agm5
-         VS5PysG9h0T6X1CUfiVYgf83OCt2gkxUFHtcI6nDO5uaG3ssFgYWzgDkFYVyOWBDQDbW
-         AVhvrjADr7OhkFl7hieQKXDLXZxO6EPBxX/UZqD4oxVxxKLlcxj4qcH0IGqsvPmmX1zw
-         p57g==
-X-Gm-Message-State: APjAAAV+pKbFt2ga+QCSbJBrSA34s6uqZkBL9i/ZSgnn77EsO7WjWFGr
-        1Etie9Cb5eOHN5H+73xr/tlypaecK870iZkfr01yEg==
-X-Google-Smtp-Source: APXvYqwVpDLv8iqMxP0olSZYnqLx5zmax/077YaDYBmmnV4PB62sxN/GRgbQx9K+fhcwLTxaiRy5bNBfMaxV6Y9CtKo=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr26914521lfn.165.1559945064357;
- Fri, 07 Jun 2019 15:04:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C3WCTEPJuMhnDtyj4nCQQWf8hst+6hFcFTW9HCjkuQc=;
+        b=ibG/TX7pXPRt2F5N6JlgQCMxEDSHEjP+zlP5+PAohwir/XC6RNg6HZEZY3d+Qd0Rfr
+         I60KfZiasrtUJGk4Zj5dPwtS7lbJI8+ES5jiIt9L36k8uOjO1N1ke8x/OC/aeSB2LveO
+         /LfrOpX1UMJneLelOyq1rQmMzr23LqXbPpQnwxeP6t+rhXTCs2zSNu3LB9UYpYpp+19J
+         nPPRxzpOzPW1ggnTWu78UbV4easJQWtuWwqFZffjkqc+ijVIn1dXEB/JkyWAx1TIoN+Z
+         zEHVDbcoo8P8mmSEWCH4jTCcPkrSvj86zREg13yyRIWOMKQMUXmtB8H+LMg01ERMt5M+
+         jKaA==
+X-Gm-Message-State: APjAAAXujCS4l42+WUFCvG7dHn6HceVKCHdQv3yxDDzlYes8BPK4aAmq
+        IFG17wbnyv/XGAsMxBpl+ok=
+X-Google-Smtp-Source: APXvYqw79sGEGu7vaJbDLnMprFiFeHzfXZWGcQnVHInNP3xeYbkjRgBIAgRsCI7J7qswMroRiib5FA==
+X-Received: by 2002:a17:902:6ac6:: with SMTP id i6mr44253449plt.233.1559945116817;
+        Fri, 07 Jun 2019 15:05:16 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id d3sm3843748pfa.176.2019.06.07.15.05.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 15:05:16 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 15:05:18 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     shengjiu.wang@nxp.com, timur@kernel.org, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC/RFT PATCH] Revert "ASoC: fsl_esai: ETDR and TX0~5 registers
+ are non volatile"
+Message-ID: <20190607220517.GA3824@Asurada-Nvidia.nvidia.com>
+References: <20190606230105.4385-1-nicoleotsuka@gmail.com>
+ <20190607111244.GE2456@sirena.org.uk>
 MIME-Version: 1.0
-References: <9bb9ca6102e795dc2495d92b7b661779509adebc.1559651758.git.hns@goldelico.com>
-In-Reply-To: <9bb9ca6102e795dc2495d92b7b661779509adebc.1559651758.git.hns@goldelico.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 00:04:15 +0200
-Message-ID: <CACRpkda6Hk1hE322KGC==0OFr5YZ+Qsvh6Dird_xjS5xop4bEw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: hack to fix 24 bit gpio expanders
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607111244.GE2456@sirena.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 2:36 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+Hello Mark,
 
-> 24 bit expanders use REG_ADDR_AI in combination with register addressing. This
-> conflicts with regmap which takes this bit as part of the register number,
-> i.e. a second cache entry is defined for accessed with REG_ADDR_AI being
-> set although on the chip it is the same register as with REG_ADDR_AI being
-> cleared.
->
-> The problem was introduced by
->
->         commit b32cecb46bdc ("gpio: pca953x: Extract the register address mangling to single function")
->
-> but only became visible by
->
->         commit 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
->
-> because before, the regmap size was effectively ignored and
-> pca953x_writeable_register() did know to ignore REG_ADDR_AI. Still, there
-> were two separate cache entries created.
->
-> Since the use of REG_ADDR_AI seems to be static we can work around this
-> issue by simply increasing the size of the regmap to cover the "virtual"
-> registers with REG_ADDR_AI being set. This only means that half of the
-> regmap buffer will be unused.
->
-> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+On Fri, Jun 07, 2019 at 12:12:44PM +0100, Mark Brown wrote:
+> On Thu, Jun 06, 2019 at 04:01:05PM -0700, Nicolin Chen wrote:
+> > This reverts commit 8973112aa41b8ad956a5b47f2fe17bc2a5cf2645.
+> 
+> Please use subject lines matching the style for the subsystem.  This
+> makes it easier for people to identify relevant patches.
+> 
+> > 1) Though ETDR and TX0~5 are not volatile but write-only registers,
+> >    they should not be cached either. According to the definition of
+> >    "volatile_reg", one should be put in the volatile list if it can
+> >    not be cached.
+> 
+> There's no problem with caching write only registers, having a cache
+> allows one to do read/modify/write cycles on them and can help with
+> debugging.  The original reason we had cache code in ASoC was for write
+> only devices.
 
-Patch queued for fixes, let's think about better solutions going
-forward.
+Maybe because my paragraph doesn't state it clearly -- it's nothing
+wrong with regmap caching write-only registers; but it caching data
+registers would potentially cause dirty data or channel swap/shift.
+So the reason (1) here is "cannot cached" == "should be volatile".
 
-Yours,
-Linus Walleij
+I will revise the commit message for review and fix the subject.
+
+Thank you
+Nicolin
