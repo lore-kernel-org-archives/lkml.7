@@ -2,97 +2,126 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F38C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14288C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADB32133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C8D20840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfFGQWx (ORCPT
+        id S1730295AbfFGQYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:22:53 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57740 "EHLO mga12.intel.com"
+        Fri, 7 Jun 2019 12:24:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:44006 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbfFGQWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:22:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:22:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,563,1557212400"; 
-   d="scan'208";a="182719233"
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2019 09:22:52 -0700
-Message-ID: <388e702bfa4ed38f460327ae09ebc9b18b582bb5.camel@intel.com>
-Subject: Re: [PATCH v7 05/27] x86/fpu/xstate: Add XSAVES system states for
- shadow stack
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Fri, 07 Jun 2019 09:14:50 -0700
-In-Reply-To: <20190607070725.GN3419@hirez.programming.kicks-ass.net>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
-         <20190606200646.3951-6-yu-cheng.yu@intel.com>
-         <20190607070725.GN3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1730066AbfFGQYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:24:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE2F02B;
+        Fri,  7 Jun 2019 09:24:03 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFE553F71A;
+        Fri,  7 Jun 2019 09:24:02 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 17:24:00 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Qian Cai <cai@lca.pw>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: Don't unconditionally add -Wno-psabi to
+ KBUILD_CFLAGS
+Message-ID: <20190607162400.GI28398@e103592.cambridge.arm.com>
+References: <20190607161201.73430-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607161201.73430-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 09:07 +0200, Peter Zijlstra wrote:
-> On Thu, Jun 06, 2019 at 01:06:24PM -0700, Yu-cheng Yu wrote:
-> > Intel Control-flow Enforcement Technology (CET) introduces the
-> > following MSRs.
-> > 
-> >     MSR_IA32_U_CET (user-mode CET settings),
-> >     MSR_IA32_PL3_SSP (user-mode shadow stack),
-> >     MSR_IA32_PL0_SSP (kernel-mode shadow stack),
-> >     MSR_IA32_PL1_SSP (Privilege Level 1 shadow stack),
-> >     MSR_IA32_PL2_SSP (Privilege Level 2 shadow stack).
-> > 
-> > Introduce them into XSAVES system states.
-> > 
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> > ---
-> >  arch/x86/include/asm/fpu/types.h            | 22 +++++++++++++++++++++
-> >  arch/x86/include/asm/fpu/xstate.h           |  4 +++-
-> >  arch/x86/include/uapi/asm/processor-flags.h |  2 ++
-> >  arch/x86/kernel/fpu/xstate.c                | 10 ++++++++++
-> >  4 files changed, 37 insertions(+), 1 deletion(-)
+On Fri, Jun 07, 2019 at 09:12:01AM -0700, Nathan Chancellor wrote:
+> This is a GCC only option, which warns about ABI changes within GCC, so
+> unconditionally adding breaks Clang with tons of:
 > 
-> And yet, no changes to msr-index.h !?
+> warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+> 
+> and link time failures:
+> 
+> ld.lld: error: undefined symbol: __efistub___stack_chk_guard
+> >>> referenced by arm-stub.c:73
+> (/home/nathan/cbl/linux/drivers/firmware/efi/libstub/arm-stub.c:73)
+> >>>               arm-stub.stub.o:(__efistub_install_memreserve_table)
+> in archive ./drivers/firmware/efi/libstub/lib.a
+> 
+> I suspect the link time failure comes from some flags not being added
+> via cc-option, which will always fail when an unknown flag is
+> unconditionally added to KBUILD_CFLAGS because -Werror is added after
+> commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
+> support clang").
+> 
+> $ echo "int main() { return 0; }" | clang -Wno-psabi -o /dev/null -x c -
+> warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
+> 1 warning generated.
+> 
+> $ echo $?
+> 0
+> 
+> $ echo "int main() { return 0; }" | clang -Werror -Wno-psabi -o /dev/null -x c -
+> error: unknown warning option '-Wno-psabi' [-Werror,-Wunknown-warning-option]
+> 
+> $ echo $?
+> 1
+> 
+> This side effect is user visible (aside from the inordinate amount of
+> -Wunknown-warning-option and build failure), as some warnings that are
+> normally disabled like -Waddress-of-packed-member or
+> -Wunused-const-variable show up.
+> 
+> Use cc-disable-warning so that it gets disabled for GCC and does nothing
+> for Clang.
+> 
+> Fixes: ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI drift")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/511
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-You are right.  I will move msr-index.h changes to here.
+FWIW,
+Acked-by: Dave Martin <Dave.Martin@arm.com>
 
-Yu-cheng
+Cheers
+---Dave
+
+> ---
+>  arch/arm64/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 8fbd583b18e1..e9d2e578cbe6 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -51,7 +51,7 @@ endif
+>  
+>  KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
+>  KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+> -KBUILD_CFLAGS	+= -Wno-psabi
+> +KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
+>  KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
+>  
+>  KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
+> -- 
+> 2.22.0.rc3
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
