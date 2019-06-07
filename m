@@ -2,182 +2,120 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C83C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D86BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F45A20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574812133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559934029;
+	bh=UszEn/JpKSNYEk8a9nY3GlGefPE+tI0KaJgJuLLFVI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W1rPfh81ZLZv4V4A5noJBR5ZCI5oW1Mcu6E1yJp3DxkTLIW6AexlPDw0HgZxLx12l
+	 hFF3f0UtbWlaftySCcXIli7n8qIyuSJq2fBBDJvFzZXAje/PnI2Urt2ztNRTEv/R6Z
+	 PjaNgWPgYImel79hmpLmMr5P4rWYp9aayFgT45AA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbfFGS6W (ORCPT
+        id S1729690AbfFGTA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:58:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:37364 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728727AbfFGS6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:58:20 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 11:58:19 -0700
-X-ExtLoop1: 1
-Received: from ray.jf.intel.com (HELO [10.7.198.156]) ([10.7.198.156])
-  by orsmga005.jf.intel.com with ESMTP; 07 Jun 2019 11:58:19 -0700
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
- <20190606200926.4029-4-yu-cheng.yu@intel.com>
- <20190607080832.GT3419@hirez.programming.kicks-ass.net>
- <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
- <20190607174336.GM3436@hirez.programming.kicks-ass.net>
- <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
- <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <352e6172-938d-f8e4-c195-9fd1b881bdee@intel.com>
-Date:   Fri, 7 Jun 2019 11:58:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 15:00:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56178 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbfFGTA2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 15:00:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Shd1VsepN7SYP3yVPk9hMU0yqhXpPeTv75Jd3AVt0P0=; b=XD6H6uP30Tyt1i9a43MsXvcpS
+        u78tzMpMXmRFJi7+J2OFniP5Opgl+cB03BvPJacjiQl+7IAu/TaqpTTWGOT1M/U2zPwBvIaufMXQv
+        Xvm+65sI1aUsFdYWBEjaxYeUQDYYkpIHh/QMis5XsshMiclrpjwYA7l6Y1Lcry9biLmqs=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hZK6A-0003fU-Th; Fri, 07 Jun 2019 19:00:22 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id E88C1440046; Fri,  7 Jun 2019 20:00:21 +0100 (BST)
+Date:   Fri, 7 Jun 2019 20:00:21 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        tomeu.vizoso@collabora.com, mgalka@collabora.com,
+        matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, "kernelci.org bot" <bot@kernelci.org>,
+        linux-kernel@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] next/master boot bisection: next-20190528 on
+ sun8i-h3-libretech-all-h3-cc
+Message-ID: <20190607190021.GK2456@sirena.org.uk>
+References: <5cef9f66.1c69fb81.39f30.21e8@mx.google.com>
+ <s5hr28gszvj.wl-tiwai@suse.de>
+ <8ca25787-fc03-7942-0705-3ec7d88862a6@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y+dl6OcicAkN96vR"
+Content-Disposition: inline
+In-Reply-To: <8ca25787-fc03-7942-0705-3ec7d88862a6@collabora.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 11:29 AM, Andy Lutomirski wrote:
-...
->> I think this new MSR probably needs to get included in oops output when
->> CET is enabled.
-> 
-> This shouldn’t be able to OOPS because it only happens at CPL 3,
-> right?  We should put it into core dumps, though.
 
-Good point.
+--y+dl6OcicAkN96vR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yu-cheng, can you just confirm that the bitmap can't be referenced in
-ring-0, no matter what?  We should also make sure that no funny business
-happens if we put an address in the bitmap that faults, or is
-non-canonical.  Do we have any self-tests for that?
+On Fri, Jun 07, 2019 at 05:31:12PM +0100, Guillaume Tucker wrote:
+> On 30/05/2019 16:53, Takashi Iwai wrote:
 
-Let's say userspace gets a fault on this.  Do they have the
-introspection capability to figure out why they faulted, say in their
-signal handler?
+> >> +	mutex_lock(&client_mutex);
+> >>  	for_each_rtdcom(rtd, rtdcom) {
+> >>  		component =3D rtdcom->component;
+> >> =20
+> >>  		if (component->driver->remove_order =3D=3D order)
+> >>  			soc_remove_component(component);
+> >>  	}
+> >> +	mutex_unlock(&client_mutex);
 
->> Why don't we require that a VMA be in place for the entire bitmap?
->> Don't we need a "get" prctl function too in case something like a JIT is
->> running and needs to find the location of this bitmap to set bits itself?
->>
->> Or, do we just go whole-hog and have the kernel manage the bitmap
->> itself. Our interface here could be:
->>
->>    prctl(PR_MARK_CODE_AS_LEGACY, start, size);
->>
->> and then have the kernel allocate and set the bitmap for those code
->> locations.
-> 
-> Given that the format depends on the VA size, this might be a good
-> idea.
+> > Ranjani, which code path your patch tries to address?  Maybe better to
+> > wrap client_mutex() in the caller side like snd_soc_unbind_card()?
 
-Yeah, making userspace know how large the address space is or could be
-is rather nasty, especially if we ever get any fancy CPU features that
-eat up address bits (a la ARM top-byte-ignore or SPARC ADI).
+> Is anyone looking into this issue?
 
-> Hmm.  Can we be creative and skip populating it with zeros?  The CPU
-should only ever touch a page if we miss an ENDBR on it, so, in normal
-operation, we don’t need anything to be there.  We could try to prevent
-anyone from *reading* it outside of ENDBR tracking if we want to avoid
-people accidentally wasting lots of memory by forcing it to be fully
-populated when the read it.
+> It is still occurring in next-20190606, there was a bisection
+> today which landed on the same commit.  There just hasn't been
+> any new bisection reports because they have been temporarily
+> disabled while we fix some issues on kernelci.org.
 
-Won't reads on a big, contiguous private mapping get the huge zero page
-anyway?
+I was expecting that Ranjani or one of the other Intel people was
+looking into it...
 
-> The one downside is this forces it to be per-mm, but that seems like
-> a generally reasonable model anyway.
+--y+dl6OcicAkN96vR
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yeah, practically, you could only make it shared if you shared the
-layout of all code in the address space.  I'm sure the big database(s)
-do that cross-process, but I bet nobody else does.  User ASLR
-practically guarantees that nobody can do this.
+-----BEGIN PGP SIGNATURE-----
 
-> This also gives us an excellent opportunity to make it read-only as
-> seen from userspace to prevent exploits from just poking it full of
-> ones before redirecting execution.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz6tEQACgkQJNaLcl1U
+h9Dh3wf/TNLGXITYp6q9mQ9egkequDBS+4Phd+1FUwWoAvAmPXJ1f5U3mBFy/7mT
+5ZiqLcBmGCrEJWoeohd9oqBw6vCq9g+qGUKxcv/1qG0eI4kTvLi5Vrq8VvJpzYop
+wRcBL30vIj27Z6AlWCEHqzQkFdKo06UiWtvb1GbDgIfpII1pr/m8hfenlcmR5b8j
+JvGLkVxJ248cTy73FsK4/RiS+Cb45Dgbrj90jTKP5FT7SHE67KnDCV54K7HRK3qA
+5SxBggCaEgEk93RcuwbhhbPIXv8qsNhsrtC6sJpFQ7WM68oeJ0zIkofpnfv85g27
+DzUdFQChfcThUIgj21AdnLC/rXxgrA==
+=9vhX
+-----END PGP SIGNATURE-----
 
-That would be fun.
-
+--y+dl6OcicAkN96vR--
