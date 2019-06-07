@@ -2,106 +2,301 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51263C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C5CC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EB5208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A03320B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Z8ebDry0"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kP5e63c1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfFGFYh (ORCPT
+        id S1726788AbfFGFZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 01:24:37 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33432 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFGFYg (ORCPT
+        Fri, 7 Jun 2019 01:25:14 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18534 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFGFZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 01:24:36 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g21so375892plq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 22:24:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=wqe6kl8DbEpNzk+gxBdngVVPGBYURaHyfgLLC4qaii0=;
-        b=Z8ebDry0731Ww7qRvJu1pqbm3GJ+szf2+j7eytajaqJtwAmW3D6btMQIC9TE6+64jo
-         O+/0zIVJSEEkB0+07WKzaru0XazGerN1yQ9YckR5JZUneUhZIFdtEbAnT7tC7DvMpJKJ
-         rpQFIFw6hao9QHiivNPi/3R/tftDhjPcTDJ1N7wOsNPKGhUmguPFRRG9J1gM/spcEeXV
-         qIZEhuP55biu4fwH99gVGj7NKohBhWO26CnMlm8NVHmCypHSY+A9TCeJylTpXyV6YY6X
-         IJ8lwnD03PZ7c65ptZXQcHsUXprO4wtMuHRCQcZBRQ8U7A10xh2EIzznYo7A9WKotKJr
-         sD5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=wqe6kl8DbEpNzk+gxBdngVVPGBYURaHyfgLLC4qaii0=;
-        b=NUeLjTY8QIH//ck0h3QKz3uDHwcQBERyBQ+ODZuEjsicRRubMXM9un1w18VXIjjqAR
-         8HEtjbNCirbYCYfA61IDsFRMOnqnarL6xyKW7ciTyCWQ9v6DhHa2OrRCWiRyhNCKSxNc
-         tZNlh/grKRzdKaKFE5m3FDaDjSEwGM5W4VyiIYJ7ioRr7A9wDGcdBRrgVnZuwPElZGBM
-         ECcRwswIi2oowVn3sec/YpgnfpwU3Y8gCeCIhx6uFCx3XSvmjmXYRXPIMcQ18VZOetgq
-         LRVnn4KpIS9xOg9zLkm582vEfQsu6eIugjK2a6iZZGMUVOyLXM2T3Pq4jiz9UrARa7Ul
-         iarw==
-X-Gm-Message-State: APjAAAXKX3JKAiQvvzwzDMA5y3Rnwnf9R2VSovPoYJxF+ssWvwCoGJO/
-        nUys2TPvTkiH/1vco9vFeZN3MA==
-X-Google-Smtp-Source: APXvYqzQFNiED7FnxJJgBrM9ljjzZaPd8GsA5Es9uz10QhQqODIm1yA+jRKiFrpyJIhkn2S/CAFDyQ==
-X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr54404661plp.241.1559885076185;
-        Thu, 06 Jun 2019 22:24:36 -0700 (PDT)
-Received: from localhost ([14.141.105.52])
-        by smtp.gmail.com with ESMTPSA id t187sm881078pfb.64.2019.06.06.22.24.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 22:24:35 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 22:24:33 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
-        robh@kernel.org, mark.rutland@arm.com
-cc:     linux-riscv@lists.infradead.org, Atish Patra <atish.patra@wdc.com>,
-        palmer@sifive.com, linux-kernel@vger.kernel.org
-Subject: Re: Patches for v5.2-rc and v5.3 merge window
-In-Reply-To: <7hr288exi7.fsf@baylibre.com>
-Message-ID: <alpine.DEB.2.21.9999.1906062219490.28147@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1905201019010.15580@viisi.sifive.com> <7hr288exi7.fsf@baylibre.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 7 Jun 2019 01:25:13 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf9f5280001>; Thu, 06 Jun 2019 22:24:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 22:25:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 22:25:11 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 05:25:10 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL102.nvidia.com
+ (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 05:25:10 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Jun 2019 05:25:10 +0000
+Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cf9f5330004>; Thu, 06 Jun 2019 22:25:10 -0700
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>,
+        "Bitan Biswas" <bbiswas@nvidia.com>
+Subject: [PATCH V5] drivers: i2c: tegra: fix warning/check/error
+Date:   Thu, 6 Jun 2019 22:25:03 -0700
+Message-ID: <1559885103-9113-1-git-send-email-bbiswas@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559885096; bh=a2MvqGILYC5ZQNriBv/9DExtcDdPEDPALMU7yuU4DPw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=kP5e63c1S1RpgvaIrYSxhH6MHnaEMUiQQOgGRlb2HK46e08eIf0IEX6BIsPYnvsnz
+         +0hrI80Qa7DcHPzdiITHHe+DIvOyjx1eC6lJadyIq7UaJkIcnxp9iob42GUiRdbLk8
+         2AZ38hYQ6knDKUvyShtj1oVuB4P0spFz0M6M407GpuFwK0cTopJRhqZ35KQiD7yiyI
+         b80Q1qpnixYKEdagAgqTQIZBzYz+mNFdR4Sgpr00P66ny3e/fvH9hKPIjBPiA3pdOI
+         fXlZlLAM8PY7/al9YHBJYlzmxVsgtMLbpix/l9kEnSEv15kqxBQ5bCKmcDRqio4InI
+         fCSa+OiUaQo/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Rob, devicetree@, Mark
+Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
 
-On Wed, 5 Jun 2019, Kevin Hilman wrote:
+Ignore checkpatch WARNING for 80 character line limit at
+places where renaming fields compromises readability.
 
-> Paul Walmsley <paul.walmsley@sifive.com> writes:
-> 
-> > Palmer has asked me to collect patches for the v5.2-rc releases and v5.3 
-> > merge window, so I'll be doing so.  This is just a heads-up so no one is 
-> > surprised to see 'patch queued' responses from me.
-> 
-> Speaking of v5.2-rc, any chance your DT series will make it for v5.2?
+Delay of approximately 1msec in flush i2c FIFO polling loop
+achieved by usleep_range call as msleep can take 20msecs.
 
-Ideally it would be nice to get acks from the DT folks first for:
+Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+as needed. Replace BUG() with error handling code.
+Define I2C_ERR_UNEXPECTED_STATUS for error handling.
 
-https://lore.kernel.org/linux-riscv/20190602080500.31700-3-paul.walmsley@sifive.com/T/#u
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 61 ++++++++++++++++++++++--------------------
+ 1 file changed, 32 insertions(+), 29 deletions(-)
 
-https://lore.kernel.org/linux-riscv/20190602080500.31700-4-paul.walmsley@sifive.com/T/#u
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 1dbba39..161eb28 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -67,17 +67,18 @@
+ 
+ #define DVC_CTRL_REG1				0x000
+ #define DVC_CTRL_REG1_INTR_EN			BIT(10)
+-#define DVC_CTRL_REG2				0x004
+-#define DVC_CTRL_REG3				0x008
++#define DVC_CTRL_REG2				BIT(2)
++#define DVC_CTRL_REG3				BIT(3)
+ #define DVC_CTRL_REG3_SW_PROG			BIT(26)
+ #define DVC_CTRL_REG3_I2C_DONE_INTR_EN		BIT(30)
+ #define DVC_STATUS				0x00c
+ #define DVC_STATUS_I2C_DONE_INTR		BIT(30)
+ 
+-#define I2C_ERR_NONE				0x00
+-#define I2C_ERR_NO_ACK				0x01
+-#define I2C_ERR_ARBITRATION_LOST		0x02
+-#define I2C_ERR_UNKNOWN_INTERRUPT		0x04
++#define I2C_ERR_NONE				0x0
++#define I2C_ERR_NO_ACK				BIT(0)
++#define I2C_ERR_ARBITRATION_LOST		BIT(1)
++#define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
++#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
+ 
+ #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+ #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+@@ -280,6 +281,7 @@ struct tegra_i2c_dev {
+ 	u32 bus_clk_rate;
+ 	u16 clk_divisor_non_hs_mode;
+ 	bool is_multimaster_mode;
++	/* xfer_lock: lock to serialize transfer submission and processing */
+ 	spinlock_t xfer_lock;
+ 	struct dma_chan *tx_dma_chan;
+ 	struct dma_chan *rx_dma_chan;
+@@ -306,7 +308,7 @@ static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
+  * to the I2C block inside the DVC block
+  */
+ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
+-	unsigned long reg)
++					unsigned long reg)
+ {
+ 	if (i2c_dev->is_dvc)
+ 		reg += (reg >= I2C_TX_FIFO) ? 0x10 : 0x40;
+@@ -314,7 +316,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
+ }
+ 
+ static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
+-	unsigned long reg)
++		       unsigned long reg)
+ {
+ 	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
+ 
+@@ -329,13 +331,13 @@ static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
+ }
+ 
+ static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
+-	unsigned long reg, int len)
++			unsigned long reg, int len)
+ {
+ 	writesl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
+ }
+ 
+ static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
+-	unsigned long reg, int len)
++		       unsigned long reg, int len)
+ {
+ 	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
+ }
+@@ -486,7 +488,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ 			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
+ 			return -ETIMEDOUT;
+ 		}
+-		msleep(1);
++		usleep_range(1000, 2000);
+ 	}
+ 	return 0;
+ }
+@@ -525,7 +527,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+ 	 * prevent overwriting past the end of buf
+ 	 */
+ 	if (rx_fifo_avail > 0 && buf_remaining > 0) {
+-		BUG_ON(buf_remaining > 3);
+ 		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
+ 		val = cpu_to_le32(val);
+ 		memcpy(buf, &val, buf_remaining);
+@@ -533,7 +534,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+ 		rx_fifo_avail--;
+ 	}
+ 
+-	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+ 	i2c_dev->msg_buf_remaining = buf_remaining;
+ 	i2c_dev->msg_buf = buf;
+ 
+@@ -591,7 +591,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+ 	 * boundary and fault.
+ 	 */
+ 	if (tx_fifo_avail > 0 && buf_remaining > 0) {
+-		BUG_ON(buf_remaining > 3);
+ 		memcpy(&val, buf, buf_remaining);
+ 		val = le32_to_cpu(val);
+ 
+@@ -680,10 +679,11 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
+ 		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
+ 		if (in_interrupt())
+ 			err = readl_poll_timeout_atomic(addr, val, val == 0,
+-					1000, I2C_CONFIG_LOAD_TIMEOUT);
++							1000,
++							I2C_CONFIG_LOAD_TIMEOUT);
+ 		else
+-			err = readl_poll_timeout(addr, val, val == 0,
+-					1000, I2C_CONFIG_LOAD_TIMEOUT);
++			err = readl_poll_timeout(addr, val, val == 0, 1000,
++						 I2C_CONFIG_LOAD_TIMEOUT);
+ 
+ 		if (err) {
+ 			dev_warn(i2c_dev->dev,
+@@ -856,10 +856,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 
+ 	if (!i2c_dev->is_curr_dma_xfer) {
+ 		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
+-			if (i2c_dev->msg_buf_remaining)
++			if (i2c_dev->msg_buf_remaining) {
+ 				tegra_i2c_empty_rx_fifo(i2c_dev);
+-			else
+-				BUG();
++			} else {
++				dev_err(i2c_dev->dev, "unexpected rx data request\n");
++				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
++				goto err;
++			}
+ 		}
+ 
+ 		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
+@@ -885,7 +888,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
+ 		if (i2c_dev->is_curr_dma_xfer)
+ 			i2c_dev->msg_buf_remaining = 0;
+-		BUG_ON(i2c_dev->msg_buf_remaining);
++		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
+ 		complete(&i2c_dev->msg_complete);
+ 	}
+ 	goto done;
+@@ -1024,7 +1027,7 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
+ }
+ 
+ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+-	struct i2c_msg *msg, enum msg_end_type end_state)
++			      struct i2c_msg *msg, enum msg_end_type end_state)
+ {
+ 	u32 packet_header;
+ 	u32 int_mask;
+@@ -1161,9 +1164,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 		if (err)
+ 			return err;
+ 
+-		time_left = wait_for_completion_timeout(
+-						&i2c_dev->dma_complete,
+-						msecs_to_jiffies(xfer_time));
++		time_left = wait_for_completion_timeout(&i2c_dev->dma_complete,
++							msecs_to_jiffies(xfer_time));
+ 		if (time_left == 0) {
+ 			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
+ 			dmaengine_terminate_sync(i2c_dev->msg_read ?
+@@ -1225,7 +1227,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ }
+ 
+ static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
+-	int num)
++			  int num)
+ {
+ 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
+ 	int i;
+@@ -1273,12 +1275,12 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
+ 	int ret;
+ 
+ 	ret = of_property_read_u32(np, "clock-frequency",
+-			&i2c_dev->bus_clk_rate);
++				   &i2c_dev->bus_clk_rate);
+ 	if (ret)
+ 		i2c_dev->bus_clk_rate = 100000; /* default clock rate */
+ 
+ 	i2c_dev->is_multimaster_mode = of_property_read_bool(np,
+-			"multi-master");
++							     "multi-master");
+ }
+ 
+ static const struct i2c_algorithm tegra_i2c_algo = {
+@@ -1622,7 +1624,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, i2c_dev->irq,
+-			tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
++			       tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to request irq %i\n", i2c_dev->irq);
+ 		goto release_dma;
+@@ -1715,6 +1717,7 @@ static const struct dev_pm_ops tegra_i2c_pm = {
+ 	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
+ 			   NULL)
+ };
++
+ #define TEGRA_I2C_PM	(&tegra_i2c_pm)
+ #else
+ #define TEGRA_I2C_PM	NULL
+-- 
+2.7.4
 
-If those come soon, I'd be fine with submitting them for v5.2-rc.  But if 
-that stretches much further into the v5.2-rc series, it seems best to 
-schedule it for v5.3.
-
-
-> I'm hoping to have upstream v5.2 ready for testing in kernelCI, and
-> that's one of the last missing pieces.  I just tested it on v5.2-rc3 and
-> it's working great with mainline u-boot.
-
-OK, great.  Thanks again for your testing help.
-
-
-- Paul
