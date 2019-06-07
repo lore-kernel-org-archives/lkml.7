@@ -2,142 +2,195 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF25C04AB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A611BC46460
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B1720840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B60B20840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YFPe9L12"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="r18etF92"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfFGAoS (ORCPT
+        id S1727580AbfFGAr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 20:44:18 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15867 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfFGAoR (ORCPT
+        Thu, 6 Jun 2019 20:47:59 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:34371 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfFGAr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 20:44:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf9b35e0000>; Thu, 06 Jun 2019 17:44:14 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 17:44:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 17:44:16 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 00:44:16 +0000
-Subject: Re: [PATCH 2/5] mm/hmm: Clean up some coding style and comments
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>
-References: <20190506232942.12623-1-rcampbell@nvidia.com>
- <20190506232942.12623-3-rcampbell@nvidia.com>
- <20190606155719.GA8896@ziepe.ca>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <3a91e9a7-e533-863b-ee5f-c34f1e10433c@nvidia.com>
-Date:   Thu, 6 Jun 2019 17:44:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
-MIME-Version: 1.0
-In-Reply-To: <20190606155719.GA8896@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Thu, 6 Jun 2019 20:47:59 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id DD1BE886BF;
+        Fri,  7 Jun 2019 12:47:55 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1559868475;
+        bh=h8GfrivEaJj042vYLp1gJzMOsrQwukxIiCoNK8N8T9s=;
+        h=From:To:CC:Subject:Date:References;
+        b=r18etF92Ubre9H+ccz6XnvCIPBNCqF1QKY9xST4bnJmQU0Bimo25TWOBUK0dOG7ky
+         Bgm70JZS+0pvk9tXCLzrdcKLgJjgVESSLWhbVHZ/d4uUMi+2IjEgdHled7QU6blonc
+         +BEnzkO4oeomDWmS6mzwxveagc1+1abdRjB55+90bRCNmhnhRnx6KrrWkvXu7nrVkM
+         u0OBrpsXnX+S85XgLl1qjpfswwRTBWJpE67In9FH6hyjoZeA5CgLpY+QVnkhxHbqCm
+         j9Oi7ddf8UWeDLNo/nm6D41JoUNJDB6dCyjLnd4IISjTSqcj+RaGhTFkMWp7PkpdfM
+         uggLVCXQb+SKg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5cf9b43c0000>; Fri, 07 Jun 2019 12:47:56 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Fri, 7 Jun 2019 12:47:51 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Fri, 7 Jun 2019 12:47:51 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "jlu@pengutronix.de" <jlu@pengutronix.de>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 0/9] EDAC drivers for Armada XP L2 and DDR
+Thread-Topic: [PATCH v8 0/9] EDAC drivers for Armada XP L2 and DDR
+Thread-Index: AQHVBxlTMstd+GrP+EKH5co1CKKfyQ==
+Date:   Fri, 7 Jun 2019 00:47:50 +0000
+Message-ID: <9d41bbc106b24670a5dfe0993bd54274@svr-chch-ex1.atlnz.lc>
+References: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559868254; bh=+Mit/5a+rC2Wlxiu6u6imSr0LN6DP+ltnocf5OY9+X8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YFPe9L12IwlVFW/uqZXMuLBzFKRY4kU3BNWs7W76LnhmesrNFPJru/HQ0xy/VzFq7
-         iFqW/b8g6EGJGXC3ipAcfMEEgdVqJ+2B5Qrod5NcuYzHnGO2makj85RecVap7Qahsq
-         BGrWOKjjUAkZ9dSKp0uN3V8bf9uCsZsafyvSRsDFxFbttruxdRiTJU0P0vlCIES0Jy
-         UoY9M63J7l2A0EenhMJegmbfcEg45stvVce39dcwAUUokWhazrFOCWYNSymbJwfZMD
-         dh2Q/lRs3T5Mp7NDJS/TJOPEhmq8AGBKL4clWVFq1oVY9AUEPnTAWftTnLu646cdCo
-         uu6whBYo7fVGg==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 6/6/19 8:57 AM, Jason Gunthorpe wrote:
-> On Mon, May 06, 2019 at 04:29:39PM -0700, rcampbell@nvidia.com wrote:
->> @@ -924,6 +922,7 @@ int hmm_range_register(struct hmm_range *range,
->>   		       unsigned page_shift)
->>   {
->>   	unsigned long mask = ((1UL << page_shift) - 1UL);
->> +	struct hmm *hmm;
->>   
->>   	range->valid = false;
->>   	range->hmm = NULL;
-> 
-> I was finishing these patches off and noticed that 'hmm' above is
-> never initialized.
-> 
-> I added the below to this patch:
-> 
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 678873eb21930a..8e7403f081f44a 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -932,19 +932,20 @@ int hmm_range_register(struct hmm_range *range,
->   	range->start = start;
->   	range->end = end;
->   
-> -	range->hmm = hmm_get_or_create(mm);
-> -	if (!range->hmm)
-> +	hmm = hmm_get_or_create(mm);
-> +	if (!hmm)
->   		return -EFAULT;
->   
->   	/* Check if hmm_mm_destroy() was call. */
-> -	if (range->hmm->mm == NULL || range->hmm->dead) {
-> -		hmm_put(range->hmm);
-> +	if (hmm->mm == NULL || hmm->dead) {
-> +		hmm_put(hmm);
->   		return -EFAULT;
->   	}
->   
->   	/* Initialize range to track CPU page table updates. */
-> -	mutex_lock(&range->hmm->lock);
-> +	mutex_lock(&hmm->lock);
->   
-> +	range->hmm = hmm;
->   	list_add_rcu(&range->list, &hmm->ranges);
->   
->   	/*
-> 
-> Which I think was the intent of adding the 'struct hmm *'. I prefer
-> this arrangement as it does not set an leave an invalid hmm pointer in
-> the range if there is a failure..
-> 
-> Most probably the later patches fixed this up?
-> 
-> Please confirm, thanks
-> 
-> Regards,
-> Jason
-> 
-
-Yes, you understand correctly. That was the intended clean up.
-I must have split my original patch set incorrectly.
+Hi All,=0A=
+=0A=
+On 10/05/19 10:15 PM, Chris Packham wrote:=0A=
+> The Reviews/Acks have been given so this should be good to go in via the =
+ARM=0A=
+> tree as planned.=0A=
+> =0A=
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2017-August/525561.=
+html=0A=
+> =0A=
+> This series adds drivers for the L2 cache and DDR RAM ECC functionality a=
+s=0A=
+> found on the MV78230/MV78x60 SoCs. Jan has tested these changes with the=
+=0A=
+> MV78460 (on a custom board with a DDR3 ECC DIMM), Chris has tested these=
+=0A=
+> changes with 88F6820 and 98dx3236 (both a custom boards with fixed DDR3 +=
+ ECC).=0A=
+> =0A=
+> Also contained in this series is an additional debugfs wrapper.=0A=
+=0A=
+Ping?=0A=
+=0A=
+> =0A=
+> Compared to the previous v7 series this has been rebased against 5.1 requ=
+iring=0A=
+> some changes in the devicetree binding documentation.=0A=
+> =0A=
+> Compared to the previous v6 series I've dropped the marvell,ecc-disable=
+=0A=
+> property.=0A=
+> =0A=
+> Compared to the previous v5 series I've split the dt-binding documentatio=
+n into=0A=
+> its own patch and updated armada_xp_edac.c to use a SPDX license.=0A=
+> =0A=
+> Compared to the previous v4 series I've added my s-o-b to some of Jan's=
+=0A=
+> patches and rebased against v4.19.0.=0A=
+> =0A=
+> Compared to the previous v3 series, the following changes have been made:=
+=0A=
+> - Use shorter names for the AURORA ECC and parity registers=0A=
+> - Numerous formatting changes to edac/armada_xp.c (as requested by Boris)=
+=0A=
+> - Added support for Armada-38x and 98dx3236 SoCs=0A=
+> =0A=
+> Compared to the previous v2 series, the following changes have been made:=
+=0A=
+> - Allocate EDAC structures later during probing and drop devres support=
+=0A=
+>    patches (requested by Boris)=0A=
+> - Make drvdata->width usage consistent according to the comment (suggeste=
+d by=0A=
+>    Chris)=0A=
+> =0A=
+> Compared to the previous v1 series, the following changes have been made:=
+=0A=
+> - Add the aurora-l2 register defines earlier in the series (suggested by=
+=0A=
+>    Russell King and Gregory CLEMENT )=0A=
+> - Changed the DT vendor prefix from "arm" to "marvell" for the ecc-enable=
+/disable=0A=
+>    properties on the aurora-l2 (suggested by Russell King)=0A=
+> - Fix some warnings reported by checkpatch=0A=
+> =0A=
+> Compared to the original RFC series, the following changes have been made=
+:=0A=
+> - Integrated Chris' patches for parity and ECC configuration via DT=0A=
+> - Merged the DDR RAM and L2 cache drivers (as requested by Boris, analogo=
+us=0A=
+>    to fsl_ddr_edac.c and mpc85xx_edac.c)=0A=
+> - Added myself to MAINTAINERS (requested by Boris)=0A=
+> - L2 cache: Track the msg size and use snprintf (review comment by Chris)=
+=0A=
+> - L2 cache: Split error injection from the check function (review comment=
+ by=0A=
+>    Chris)=0A=
+> - DDR RAM: Allow 16 bit width in addition to 32 and 64 bit (review commen=
+t by=0A=
+>    Chris)=0A=
+> - Use of_match_ptr() (review comments by Chris)=0A=
+> - Minor checkpatch cleanups=0A=
+> =0A=
+> =0A=
+> Chris Packham (4):=0A=
+>    ARM: l2x0: support parity-enable/disable on aurora=0A=
+>    dt-bindings: ARM: document marvell,ecc-enable binding=0A=
+>    ARM: l2x0: add marvell,ecc-enable property for aurora=0A=
+>    EDAC: armada_xp: Add support for more SoCs=0A=
+> =0A=
+> Jan Luebbe (5):=0A=
+>    ARM: l2c: move cache-aurora-l2.h to asm/hardware=0A=
+>    ARM: aurora-l2: add prefix to MAX_RANGE_SIZE=0A=
+>    ARM: aurora-l2: add defines for parity and ECC registers=0A=
+>    EDAC: Add missing debugfs_create_x32 wrapper=0A=
+>    EDAC: Add driver for the Marvell Armada XP SDRAM and L2 cache ECC=0A=
+> =0A=
+>   .../devicetree/bindings/arm/l2c2x0.yaml       |   4 +=0A=
+>   MAINTAINERS                                   |   6 +=0A=
+>   .../asm/hardware}/cache-aurora-l2.h           |  50 +-=0A=
+>   arch/arm/mm/cache-l2x0.c                      |  18 +-=0A=
+>   drivers/edac/Kconfig                          |   7 +=0A=
+>   drivers/edac/Makefile                         |   1 +=0A=
+>   drivers/edac/armada_xp_edac.c                 | 635 ++++++++++++++++++=
+=0A=
+>   drivers/edac/debugfs.c                        |  11 +=0A=
+>   drivers/edac/edac_module.h                    |   5 +=0A=
+>   9 files changed, 733 insertions(+), 4 deletions(-)=0A=
+>   rename arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h (50%)=
+=0A=
+>   create mode 100644 drivers/edac/armada_xp_edac.c=0A=
+> =0A=
+=0A=
