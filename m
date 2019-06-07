@@ -2,125 +2,169 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EC8C04AB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF51DC28EB9
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70AF206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB713208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:23:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZbBcKB07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfFGAXL (ORCPT
+        id S1728200AbfFGAX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 20:23:11 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11184 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbfFGAXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 20:23:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 17:23:10 -0700
-X-ExtLoop1: 1
-Received: from pgsmsx105.gar.corp.intel.com ([10.221.44.96])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Jun 2019 17:23:08 -0700
-Received: from pgsmsx114.gar.corp.intel.com ([169.254.4.99]) by
- PGSMSX105.gar.corp.intel.com ([169.254.4.53]) with mapi id 14.03.0415.000;
- Fri, 7 Jun 2019 08:23:07 +0800
-From:   "Ong, Boon Leong" <boon.leong.ong@intel.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "Voon, Weifeng" <weifeng.voon@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>,
-        biao huang <biao.huang@mediatek.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
-Subject: RE: [PATCH net-next v6 2/5] net: stmmac: introducing support for
- DWC xPCS logics
-Thread-Topic: [PATCH net-next v6 2/5] net: stmmac: introducing support for
- DWC xPCS logics
-Thread-Index: AQHVGsR8mZhQFRvu0EOiETyHTmqFxaaLcWMAgAET3gCAATg0IA==
-Date:   Fri, 7 Jun 2019 00:23:06 +0000
-Message-ID: <AF233D1473C1364ABD51D28909A1B1B75C12D381@pgsmsx114.gar.corp.intel.com>
-References: <1559674736-2190-1-git-send-email-weifeng.voon@intel.com>
- <1559674736-2190-3-git-send-email-weifeng.voon@intel.com>
- <05cf54dc-7c40-471e-f08a-7fdf5fe4ef54@gmail.com>
- <78EB27739596EE489E55E81C33FEC33A0B93EF69@DE02WEMBXB.internal.synopsys.com>
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B93EF69@DE02WEMBXB.internal.synopsys.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMmQ4ZWFhNWMtOTIxZS00YmRmLWJhNDUtZTkxZDZkMTQ2ZDBmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNzY2c2YxY0p5Z2RUcVwvM3RWOTFabHVBaHBvR3ZKZm1aUUV3dGNoWWsrdWtYSG1hRW5YcEpGc0lVWVVKUWxsclwvIn0=
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.206]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 6 Jun 2019 20:23:57 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40768 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbfFGAX5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 20:23:57 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so99615pla.7;
+        Thu, 06 Jun 2019 17:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7baCNdLYbYtbBAPVnrR79aDif7IQ3JuxKMalrA0cRxA=;
+        b=ZbBcKB07wsg9y7AD+2DP8kQU5c3rUKUoc0Ed/BLK4KML4KtGql3UPPMpgRb4Wv/hAR
+         syKZOuXPtLp3OZDEC1DaJou9faUFDUCzX+BvR4sumhJ0UM4C+Rdo6tKsf/Y/cgKuMKur
+         iisQURKAMJC/qmrFsavP0/73UJnmk6NN7EiKJlt1U5n5Gr0kgrZNZTv/S1wtCUgwGu28
+         NK57IpeCsxT2rZPD/91layNcGKX+HcTI+5+FxdutgowrZEAYHKhjv6JAUSY3MGfVcROW
+         Qn6gPzQ29eywCCfFdjnmG0v90VxleYZk5AF9ZnNJ+CZiCYDeQ3g8SeNCIkGBdZbGBkvm
+         m0Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7baCNdLYbYtbBAPVnrR79aDif7IQ3JuxKMalrA0cRxA=;
+        b=GmMyFl9K7/hEGScKrA5fRoWKPyER+Q8zXN6M0cPAgdPB/afGFnOKq6O+L1VDSNfLvF
+         zywuH60405WinIh2D+2rBgTe9FfuWFEtrd3xFVSxFTK12CnrnrrdOIa374qjeV3TNMCY
+         Uj1POIlaehGfGiYMTdIQzIX481nbS9geHB0dEe/WxQ3+HotWI2shQK/st45MuAlYB1PQ
+         /FW4qmn1fChB4dDOOlvNxPRmvF6umOfFkocloyOxfwZKC2H8AIQlltmiytFdb9ctZqws
+         h16gMQVRto4J3wLIoVqQ7YHJhFqyQh+zn8kDd5Lg7NYF+b7jjn+Z4KhwZbxlJEdoSFJr
+         Cvdw==
+X-Gm-Message-State: APjAAAV5/TFpStT13vKACW8D+z/QhsbflG/f8vo8M2dYQ7CIOXNq5yw0
+        nb/IP+1uleLxYAghLsGnMqM9bsq+
+X-Google-Smtp-Source: APXvYqxtaG/tzrII8Zf6fcs7LA9Fi0ya9WLZ0bXdbFajZQo6MNRju4UsO8VUXVamzAmikc0WynKdhA==
+X-Received: by 2002:a17:902:d701:: with SMTP id w1mr46986994ply.12.1559867036005;
+        Thu, 06 Jun 2019 17:23:56 -0700 (PDT)
+Received: from localhost.localdomain ([167.220.98.69])
+        by smtp.gmail.com with ESMTPSA id o13sm324179pfh.23.2019.06.06.17.23.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 17:23:55 -0700 (PDT)
+From:   Prakhar Srivastava <prsriva02@gmail.com>
+To:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     zohar@linux.ibm.com, roberto.sassu@huawei.com, vgoyal@redhat.com,
+        Prakhar Srivastava <prsriva02@gmail.com>
+Subject: [PATCH v7 0/3] add new ima hook ima_kexec_cmdline to measure kexec boot cmdline args
+Date:   Thu,  6 Jun 2019 17:23:27 -0700
+Message-Id: <20190607002330.2999-1-prsriva02@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogSm9zZSBBYnJldSBbbWFpbHRvOkpv
-c2UuQWJyZXVAc3lub3BzeXMuY29tXQ0KPlNlbnQ6IFdlZG5lc2RheSwgSnVuZSA1LCAyMDE5IDk6
-MTMgUE0NCj5UbzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+OyBWb29u
-LCBXZWlmZW5nDQo+PHdlaWZlbmcudm9vbkBpbnRlbC5jb20+OyBEYXZpZCBTLiBNaWxsZXIgPGRh
-dmVtQGRhdmVtbG9mdC5uZXQ+Ow0KPk1heGltZSBDb3F1ZWxpbiA8bWNvcXVlbGluLnN0bTMyQGdt
-YWlsLmNvbT47IFJ1c3NlbGwgS2luZw0KPjxsaW51eEBhcm1saW51eC5vcmcudWs+DQo+Q2M6IG5l
-dGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEdpdXNl
-cHBlDQo+Q2F2YWxsYXJvIDxwZXBwZS5jYXZhbGxhcm9Ac3QuY29tPjsgQW5kcmV3IEx1bm4gPGFu
-ZHJld0BsdW5uLmNoPjsNCj5BbGV4YW5kcmUgVG9yZ3VlIDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNv
-bT47IGJpYW8gaHVhbmcNCj48Ymlhby5odWFuZ0BtZWRpYXRlay5jb20+OyBPbmcsIEJvb24gTGVv
-bmcNCj48Ym9vbi5sZW9uZy5vbmdAaW50ZWwuY29tPjsgS3dlaCwgSG9jayBMZW9uZw0KPjxob2Nr
-Lmxlb25nLmt3ZWhAaW50ZWwuY29tPg0KPlN1YmplY3Q6IFJFOiBbUEFUQ0ggbmV0LW5leHQgdjYg
-Mi81XSBuZXQ6IHN0bW1hYzogaW50cm9kdWNpbmcgc3VwcG9ydCBmb3INCj5EV0MgeFBDUyBsb2dp
-Y3MNCj4NCj5Gcm9tOiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4NCj4N
-Cj4+ICtSdXNzZWxsLA0KPj4NCj4+IE9uIDYvNC8yMDE5IDExOjU4IEFNLCBWb29uIFdlaWZlbmcg
-d3JvdGU6DQo+PiA+IEZyb206IE9uZyBCb29uIExlb25nIDxib29uLmxlb25nLm9uZ0BpbnRlbC5j
-b20+DQo+PiA+DQo+PiA+IHhQQ1MgaXMgRFdDIEV0aGVybmV0IFBoeXNpY2FsIENvZGluZyBTdWJs
-YXllciB0aGF0IG1heSBiZSBpbnRlZ3JhdGVkDQo+PiA+IGludG8gYSBHYkUgY29udHJvbGxlciB0
-aGF0IHVzZXMgRFdDIEVRb1MgTUFDIGNvbnRyb2xsZXIuIEFuIGV4YW1wbGUgb2YNCj4+ID4gSFcg
-Y29uZmlndXJhdGlvbiBpcyBzaG93biBiZWxvdzotDQo+PiA+DQo+PiA+ICAgPC0tLS0tLS0tLS0t
-LS0tLS0tR0JFIENvbnRyb2xsZXItLS0tLS0tLS0tPnw8LS1FeHRlcm5hbCBQSFkgY2hpcC0tPg0K
-Pj4gPg0KPj4gPiAgICstLS0tLS0tLS0tKyAgICAgICAgICstLS0tKyAgICArLS0tKyAgICAgICAg
-ICAgICAgICstLS0tLS0tLS0tLS0tLSsNCj4+ID4gICB8ICAgRVFvUyAgIHwgPC1HTUlJLT58IERX
-IHw8LS0+fFBIWXwgPC0tIFNHTUlJIC0tPiB8IEV4dGVybmFsIEdiRSB8DQo+PiA+ICAgfCAgIE1B
-QyAgICB8ICAgICAgICAgfHhQQ1N8ICAgIHxJRiB8ICAgICAgICAgICAgICAgfCBQSFkgQ2hpcCAg
-ICAgfA0KPj4gPiAgICstLS0tLS0tLS0tKyAgICAgICAgICstLS0tKyAgICArLS0tKyAgICAgICAg
-ICAgICAgICstLS0tLS0tLS0tLS0tLSsNCj4+ID4gICAgICAgICAgXiAgICAgICAgICAgICAgIF4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXg0KPj4gPiAgICAgICAgICB8ICAgICAg
-ICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+PiA+ICAgICAg
-ICAgICstLS0tLS0tLS0tLS0tLS0tLS0tLS1NRElPLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsN
-Cj4+ID4NCj4+ID4geFBDUyBpcyBhIENsYXVzZS00NSBNRElPIE1hbmFnZWFibGUgRGV2aWNlIChN
-TUQpIGFuZCB3ZSBuZWVkIGEgd2F5DQo+dG8NCj4+ID4gZGlmZmVyZW50aWF0ZSBpdCBmcm9tIGV4
-dGVybmFsIFBIWSBjaGlwIHRoYXQgaXMgZGlzY292ZXJlZCBvdmVyIE1ESU8uDQo+PiA+IFRoZXJl
-Zm9yZSwgeHBjc19waHlfYWRkciBpcyBpbnRyb2R1Y2VkIGluIHN0bW1hYyBwbGF0Zm9ybSBkYXRh
-DQo+PiA+IChwbGF0X3N0bW1hY2VuZXRfZGF0YSkgZm9yIGRpZmZlcmVudGlhdGluZyB4UENTIGZy
-b20gJ3BoeV9hZGRyJyB0aGF0DQo+PiA+IGJlbG9uZ3MgdG8gZXh0ZXJuYWwgUEhZLg0KPj4NCj4+
-IEFzc3VtaW5nIHRoaXMgRFcgeFBDUyBjYW4gYmUgZm91bmQgd2l0aCBkZXNpZ25zIG90aGVyIHRo
-YW4gU1RNTUFDDQo+d291bGQNCj4+IG5vdCBpdCBtYWtlIHNlbnNlIHRvIG1vZGVsIHRoaXMgYXMg
-c29tZSBraW5kIG9mIFBIWS9NRElPIGJyaWRnZT8gQQ0KPj4gbGl0dGxlIGJpdCBsaWtlIHdoYXQg
-ZHJpdmVycy9uZXQvcGh5L3hpbGlueF9nbWlpMnJnbWlpLmMgdHJpZXMgdG8gZG8/DQo+DQo+WWVz
-LCBEVyBYUENTIGlzIGEgc2VwYXJhdGUgSVAgdGhhdCBjYW4gYmUgc29sZCB3aXRob3V0IHRoZSBN
-QUMuDQoNCkhpIEZsb3JpYW4sIHRoYW5rcyBmb3IgcG9pbnRpbmcgb3V0IHRoZSBQSFkgZHJpdmVy
-IGZvciBHTUlJIHRvIFJHTUlJIGNvbnZlcnRlcg0KaW1wbGVtZW50YXRpb24uIEl0IHNlZW1zIGxp
-a2UgY29tbXVuaXR5IHdvdWxkIGxpa2UgZHd4cGNzIHRvIHRha2UgdGhlDQpjb252ZXJ0ZXIgcGh5
-IGRyaXZlciBkaXJlY3Rpb24uIA0KDQpXZSB3b3VsZCBsaWtlIHRvIGNoZWNrIHdpdGggY29tbXVu
-aXR5IHdoYXQgaXMgdGhlIE1BQyBjb250cm9sbGVyIHRoYXQgaXMNCnVzaW5nIGFib3ZlIFBIWSBk
-cml2ZXIgc28gdGhhdCB3ZSBjYW4gZGlnIGRlZXBlciBpbnRvIHRoZSBQSFkgJiBNQUMgZHJpdmVy
-DQphcmNoaXRlY3R1cmUuIFdlIHdvdWxkIGxpa2UgdG8gbWFwIHRoZSBleGlzdGluZyB1c2FnZSBv
-ZiBkd3hwY3MuYyBpbiAzLzUgb2YNCnRoaXMgc2VyaWVzIGlzIGFyY2hpdGVjdHVyYWxseSByZWFk
-eSBmb3IgUEhZIGRyaXZlciBmcmFtZXdvcmsgb3IgbmV3IEFQSXMNCndvdWxkIG5lZWQgdG8gYmUg
-ZGVmaW5lZC4gDQoNClRoYW5rcw0KQm9vbiBMZW9uZw0K
+The motive behind the patch series is to measure the boot cmdline args
+used for soft reboot/kexec case.
+
+For secure boot attestation, it is necessary to measure the kernel
+command line and the kernel version. For cold boot, the boot loader
+can be enhanced to measure these parameters.
+(https://mjg59.dreamwidth.org/48897.html)
+However, for attestation across soft reboot boundary, these values 
+also need to be measured during kexec_file_load.
+
+Currently for Kexec(kexec_file_load)/soft reboot scenario the boot cmdline
+args for the next kernel are not measured. For 
+normal case of boot/hardreboot the cmdline args are measured into the TPM.
+The hash of boot command line is calculated and added to the current 
+running kernel's measurement list.
+On a soft reboot like kexec, no cmdline arguments measurement takes place.
+
+To achive the above the patch series does the following
+  -adds a new ima hook: ima_kexec_cmdline which measures the cmdline args
+   into the ima log, behind a new ima policy entry KEXEC_CMDLINE.
+  -since the cmldine args cannot be appraised, a new template field(buf) is
+   added. The template field contains the buffer passed(cmldine args), which
+   can be used to appraise/attest at a later stage.
+  -call the ima_kexec_cmdline(...) hook from kexec_file_load call.
+
+The ima logs need to be carried over to the next kernel, which will be followed
+up by other patchsets for x86_64 and arm64.
+
+The kexec cmdline hash can be verified using
+sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements | 
+  grep  kexec-cmdline | cut -d' ' -f 6 | xxd -r -p | sha256sum
+
+Changelog:
+V7:
+  - rebased to next-queued-testing
+  https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/log/?h=next-queued-testing
+
+V6:
+  -add a new ima hook and policy to measure the cmdline
+    args(ima_kexec_cmdline)
+  -add a new template field buf to contain the buffer measured.
+  [suggested by Mimi Zohar]
+   add new fields to ima_event_data to store/read buffer data.
+  [suggested by Roberto]
+  -call ima_kexec_cmdline from kexec_file_load path
+
+v5:
+  -add a new ima hook and policy to measure the cmdline
+    args(ima_kexec_cmdline)
+  -add a new template field buf to contain the buffer measured.
+    [suggested by Mimi Zohar]
+  -call ima_kexec_cmdline from kexec_file_load path
+
+v4:
+  - per feedback from LSM community, removed the LSM hook and renamed the
+    IMA policy to KEXEC_CMDLINE
+
+v3: (rebase changes to next-general)
+  - Add policy checks for buffer[suggested by Mimi Zohar]
+  - use the IMA_XATTR to add buffer
+  - Add kexec_cmdline used for kexec file load
+  - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+
+v2:
+  - Add policy checks for buffer[suggested by Mimi Zohar]
+  - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+  - use the IMA_XATTR to add buffer instead of sig template
+
+v1:
+  -Add kconfigs to control the ima_buffer_check
+  -measure the cmdline args suffixed with the kernel file name
+  -add the buffer to the template sig field.
+
+Prakhar Srivastava (3):
+  Add a new ima hook ima_kexec_cmdline to measure cmdline args
+  add a new ima template field buf
+  call ima_kexec_cmdline to measure the cmdline args
+
+ Documentation/ABI/testing/ima_policy      |  1 +
+ Documentation/security/IMA-templates.rst  |  2 +-
+ include/linux/ima.h                       |  2 +
+ kernel/kexec_file.c                       |  8 ++-
+ security/integrity/ima/ima.h              |  3 +
+ security/integrity/ima/ima_api.c          |  5 +-
+ security/integrity/ima/ima_init.c         |  2 +-
+ security/integrity/ima/ima_main.c         | 80 +++++++++++++++++++++++
+ security/integrity/ima/ima_policy.c       |  9 +++
+ security/integrity/ima/ima_template.c     |  2 +
+ security/integrity/ima/ima_template_lib.c | 20 ++++++
+ security/integrity/ima/ima_template_lib.h |  4 ++
+ 12 files changed, 131 insertions(+), 7 deletions(-)
+
+-- 
+2.17.1
+
