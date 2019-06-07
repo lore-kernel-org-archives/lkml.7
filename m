@@ -2,126 +2,102 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F99C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AC3C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFEC2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869292089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:01:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PZ7A+XLI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="NvvbWXHu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbfFGRAi (ORCPT
+        id S1731171AbfFGRBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:00:38 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:36310 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728974AbfFGRAi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:00:38 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57GwwjZ153112;
-        Fri, 7 Jun 2019 17:00:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=qJWNPqVnOuZdNUVs/8DblqBQeJjxerPcG8WYUK6blAg=;
- b=PZ7A+XLIaQ0oHDMUwYf9cYEejGBEg5xhO87mHVCWlC0HNRwi0vBgOFBUUYirNalwlLBh
- LlKYvgBxuRCxABAtZk+QqyJYrUPhSweiWaEB+sa5l/bE9A9PFGLeAB4Me7TJ7zDcvIGw
- 8l9xXAAsDRSr7q7aJNx0cguMh4O5dxhYFfCy8f1qB1UQd4T2RyCrYbrIBnnXsr1SK0Ya
- sLcTSl+UTojUPEm8zsk2mlloWASyYoBFcjoE+Hlk5XLF37rNHZkLNfz+lp0l9TWgatRC
- 2YjMBqJEsidL+FfGOgIiTyRqYQ/k+t2LjYgh3yZtNZlxGlNmaXroXQM31dJptzJt6x57 kg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2sugstyfn7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 17:00:34 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57GvckQ021941;
-        Fri, 7 Jun 2019 16:58:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2swngn6abk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 16:58:34 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x57GwXiM032176;
-        Fri, 7 Jun 2019 16:58:33 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 09:58:32 -0700
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Subject: Re: [PATCH] drivers/ata: print trim features at device initialization
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <155989287898.1506.14253954112551051148.stgit@buzz>
-Date:   Fri, 07 Jun 2019 12:58:30 -0400
-In-Reply-To: <155989287898.1506.14253954112551051148.stgit@buzz> (Konstantin
-        Khlebnikov's message of "Fri, 07 Jun 2019 10:34:39 +0300")
-Message-ID: <yq1wohxib7t.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Fri, 7 Jun 2019 13:01:44 -0400
+Received: from nbd.name ([46.4.11.11]:59356 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731099AbfFGRBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 13:01:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=UP3HYaBRyyZCgrGkjreuXPoJQnusxc/pp3ork1+U7J0=; b=NvvbWXHuJRSTpWUc/rF5CX0QxG
+        wG2uEqYO38wVscQkr6Apxn9JLac0sUUMgviV7orNAv5vVOSXymrV0r6gSaj4maQgAGKbq+cSzg6Gg
+        7Y2F1Bc8IifKwDNxZm1EKYe3tzjPDb7gGTy7yGkQ2zy3AMRwo8DhdtYa61Q/yUpDiVyM=;
+Received: from p4ff13bc7.dip0.t-ipconnect.de ([79.241.59.199] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1hZIFF-00011f-Hm; Fri, 07 Jun 2019 19:01:37 +0200
+Subject: Re: [PATCH] mt76: Remove set but not used variables 'pid' and
+ 'final_mpdu'
+To:     YueHaibing <yuehaibing@huawei.com>, lorenzo.bianconi83@gmail.com,
+        ryder.lee@mediatek.com, royluo@google.com, kvalo@codeaurora.org,
+        matthias.bgg@gmail.com, sgruszka@redhat.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, davem@davemloft.net
+References: <20190529145356.13872-1-yuehaibing@huawei.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <f3e5d386-e1de-d707-397d-2ef99e09f345@nbd.name>
+Date:   Fri, 7 Jun 2019 19:01:36 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=681
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=727 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070113
+In-Reply-To: <20190529145356.13872-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-05-29 16:53, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warnings:
+> 
+> drivers/net/wireless/mediatek/mt76/mt7603/mac.c: In function mt7603_fill_txs:
+> drivers/net/wireless/mediatek/mt76/mt7603/mac.c:969:5: warning: variable pid set but not used [-Wunused-but-set-variable]
+> drivers/net/wireless/mediatek/mt76/mt7603/mac.c:961:7: warning: variable final_mpdu set but not used [-Wunused-but-set-variable]
+> drivers/net/wireless/mediatek/mt76/mt7615/mac.c: In function mt7615_fill_txs:
+> drivers/net/wireless/mediatek/mt76/mt7615/mac.c:555:5: warning: variable pid set but not used [-Wunused-but-set-variable]
+> drivers/net/wireless/mediatek/mt76/mt7615/mac.c:552:19: warning: variable final_mpdu set but not used [-Wunused-but-set-variable]
+> 
+> They are never used, so can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Konstantin,
+Applied, thanks.
 
-> +			if (dev->horkage & ATA_HORKAGE_NOTRIM)
-> +				trim_status = "backlisted";
-
-blacklisted
-
-> +			else
-> +				trim_status = "supported";
-> +
-> +			if (!ata_fpdma_dsm_supported(dev))
-> +				trim_queued = "no";
-> +			else if (dev->horkage & ATA_HORKAGE_NO_NCQ_TRIM)
-> +				trim_queued = "backlisted";
-
-ditto
-
-> +			else
-> +				trim_queued = "yes";
-
-Why is trim_status "supported" and trim_queued/trim_zero "yes"?
-
-> +
-> +			if (!ata_id_has_zero_after_trim(id))
-> +				trim_zero = "no";
-> +			else if (dev->horkage & ATA_HORKAGE_ZERO_AFTER_TRIM)
-> +				trim_zero = "yes";
-> +			else
-> +				trim_zero = "maybe";
-> +
-> +			ata_dev_info(dev, "trim: %s, queued: %s, zero_after_trim: %s\n",
-> +				     trim_status, trim_queued, trim_zero);
-> +		}
-> +
-
-Otherwise no particular objections. We were trying to limit noise during
-boot which is why this information originally went to sysfs instead of
-being printed during probe.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+- Felix
