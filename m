@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830FFC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4007C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576EB208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D33208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559941216;
-	bh=qUiTD/dsBmED2JaZcS8ytEiu7iFpnKUam9jTCI7bGzs=;
+	s=default; t=1559941219;
+	bh=DEB6rxrxE4Pk007HFmygcb4gQ6NM6zTB9Vt7DEB2APg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=zUxh7rND3CBKoKmgWC+APRiQQE5wiDa0q42JNqQf1a/X3lYFZT1t4b7hriBOa4cvE
-	 FrhWE0a7JuTeAfltZ1QdPvmqdgfzIjx9GujsbWMS7lIhChw1HaOv0HW5Kc+VhjmFcp
-	 Vz1OKMzYDJty5ii/QxQjmPmxMTJEYQK5aRfF8yQQ=
+	b=nEvJluZH95mGzoOtU4hu5egbK31DHHCVC3Mb5KAEA7LNLx9ey8MF2x+nTD2a686ey
+	 aZJCe92KcKaufB592qV8ZRBYcQ7kRjeShm/KSZUOzyyrUz/sUb125Yh0kQCpVuzKcF
+	 mo6kWDsvCUDXf4ZcNtGQFH0X4jjUdsR5XfYrryvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730883AbfFGVAP (ORCPT
+        id S1730914AbfFGVAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 17:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36150 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 17:00:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730740AbfFGVAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 17:00:12 -0400
-Subject: Re: [GIT PULL] Kbuild fixes for v5.2-rc4
+        id S1730798AbfFGVAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 17:00:13 -0400
+Subject: Re: [GIT PULL] hwmon fixes for hwmon-for-v5.2-rc4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559941212;
-        bh=qUiTD/dsBmED2JaZcS8ytEiu7iFpnKUam9jTCI7bGzs=;
+        s=default; t=1559941213;
+        bh=DEB6rxrxE4Pk007HFmygcb4gQ6NM6zTB9Vt7DEB2APg=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=uLrHICDXLhehQqdkCax6ULkTpvEd06MOlnJmrI1fAfxaKpToUPIDmduUACL7NpF2/
-         EsVCRP3u8zGYLZBuIrQiq46e77MUTIm9mvOpgdL0lPf0OwlrU5byaBUHwSZcowlRYq
-         ciRKoXpY7J1kfXZOwnz0UaUwKBoaOg5qV+0abcwE=
+        b=dmZItiCXVUkLsXLEvA2IKkJ+M/0Hjg4PAsxOXAywX/9HPwh4b7c5Zx8c2kET3pKFP
+         JYFKp4x4acC0rlQ7Sm7nb3pTd2bbMDmhjkwdyqqTvH0jXQeBdKiDPgSZY622L04Zlw
+         nMnr2b6ir+ZUKEqxobVdtxtOYCs0bThSIKcDEu5Q=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAK7LNAQZ2FAZcc367eCPqhwYRVvP+65hDa5hx6qfTwh2qVGL=w@mail.gmail.com>
-References: <CAK7LNAQZ2FAZcc367eCPqhwYRVvP+65hDa5hx6qfTwh2qVGL=w@mail.gmail.com>
+In-Reply-To: <1559938508-12610-1-git-send-email-linux@roeck-us.net>
+References: <1559938508-12610-1-git-send-email-linux@roeck-us.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAK7LNAQZ2FAZcc367eCPqhwYRVvP+65hDa5hx6qfTwh2qVGL=w@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
- tags/kbuild-fixes-v5.2-2
-X-PR-Tracked-Commit-Id: 913ab9780fc021298949cc5514d6255a008e69f9
+X-PR-Tracked-Message-Id: <1559938508-12610-1-git-send-email-linux@roeck-us.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
+ hwmon-for-v5.2-rc4
+X-PR-Tracked-Commit-Id: 4a60570dce658e3f8885bbcf852430b99f65aca5
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 33de0d1c68a5127e923363349c349d90c7da06a1
-Message-Id: <155994121244.4194.14272650752821099142.pr-tracker-bot@kernel.org>
-Date:   Fri, 07 Jun 2019 21:00:12 +0000
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+X-PR-Merge-Commit-Id: d4425649c63018e96e5402807c9e7bc5272f7b3b
+Message-Id: <155994121319.4194.15465585918583975195.pr-tracker-bot@kernel.org>
+Date:   Fri, 07 Jun 2019 21:00:13 +0000
+To:     Guenter Roeck <linux@roeck-us.net>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        masahiroy@kernel.org
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 8 Jun 2019 00:52:56 +0900:
+The pull request you sent on Fri,  7 Jun 2019 13:15:08 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-fixes-v5.2-2
+> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.2-rc4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/33de0d1c68a5127e923363349c349d90c7da06a1
+https://git.kernel.org/torvalds/c/d4425649c63018e96e5402807c9e7bc5272f7b3b
 
 Thank you!
 
