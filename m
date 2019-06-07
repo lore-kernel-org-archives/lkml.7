@@ -1,65 +1,143 @@
 Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=BODY_SINGLE_WORD,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF640C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16891C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99110208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5272133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:52:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLHx4i9T"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O4Q4lH3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731176AbfFGTwT (ORCPT
+        id S1731211AbfFGTws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:52:19 -0400
-Received: from mail-it1-f172.google.com ([209.85.166.172]:35193 "EHLO
-        mail-it1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729548AbfFGTwT (ORCPT
+        Fri, 7 Jun 2019 15:52:48 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49818 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729548AbfFGTwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:52:19 -0400
-Received: by mail-it1-f172.google.com with SMTP id n189so4593844itd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Vyf/WXCNzO2X4wtwg+6QhvUGv3EtzlO22nBwEXIhIIQ=;
-        b=gLHx4i9Tum1PFG/FyvmU20c2bflVGdEqAeYc/RTWhORGtX0bTRnyCTohdToY1YKBdt
-         UQp8ZpV5bAeIZ4aVtOu4YH5OtIFzMj1xGeZgVsK+D4xRuLezx16OPUpfNhXa565h9NQb
-         PejMN0hfW2xSpfZrl9W1Ttb3WyZi7fPhmnLZ/1EeamQ9EnSHeL2BCLAnm26T5e+RMXMC
-         CSuNy4h3shC4b41jqzT61ITHeXUz6Liru3rgPyDMCQdTDwYZe+Jfyg4E6aByVJWwH6y9
-         wAy+8s+Qnae7dF1CJYH9cAji7ZgogWOo9JfwhreuVwyUpI0EXygWzp0zHf4WbBXabMGv
-         NiHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Vyf/WXCNzO2X4wtwg+6QhvUGv3EtzlO22nBwEXIhIIQ=;
-        b=BjD2fA1TcWaYwQFB1bxUwlo8ndBMDOiOUAgmamyGOIEszvNBScRI2lo2BK6VKArSg8
-         zhxThOJ2mTTRpgYLCCQNFQna5pRjBiyENEBXLLme3PU53Wp/I8aAG64yOkSj8S9TJ7xR
-         D3kxM7VO2uPbUtbireu2ZNHdi3kjMDDHepM0nRzshGk7JiT4zkvjZ7letrVT1q1iAnpU
-         pbEVvOl6YfUWY6pq4ZQUZe2vUNQPli8bOXTGylVRy6nQUzrmw2nN1K9HNfeSrEdA7yA1
-         /nz5KizKlr09giOVJ/kT/EtFiKHG7csr0Aq2bcL3o+v7b6aJtdvloCfioylmtU49Gc0K
-         N1pg==
-X-Gm-Message-State: APjAAAX9CxH8HLdER200jK6RA4/XZjqb1pUL8w7M6ejc/9Gi53qn87kj
-        y8OOjVMqo2uKbDBEPT6SuAkBVEFhkMbSBEsJiOAuuBfJrR/irg==
-X-Google-Smtp-Source: APXvYqxLPqRiRP+rl8hwWOR/QgkwfLpwkyBBtYErRafVtVbsFNq3BpYce0TewyRI3AE6sDdjbL+kwfubmeDR/lenBtE=
-X-Received: by 2002:a24:44e:: with SMTP id 75mr5635274itb.22.1559937138521;
- Fri, 07 Jun 2019 12:52:18 -0700 (PDT)
-MIME-Version: 1.0
-From:   Damian Tometzki <damian.tometzki@gmail.com>
-Date:   Fri, 7 Jun 2019 21:52:02 +0200
-Message-ID: <CAKUTLK81aj6CyDrv7Ppd_rh5H_3gOziYzFnT83-_g=4KcMEN5Q@mail.gmail.com>
-Subject: tt
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 7 Jun 2019 15:52:47 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57JiKEL098463;
+        Fri, 7 Jun 2019 19:52:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=2Hqgg1/dO7uDJAgCGo7yaezXbdAI6xjToJ1CY+fruaU=;
+ b=O4Q4lH3bRZ7MwIrivSjLjEanSp/1BldkeSoNEhDGZB9H8i68MirSK5kT1G9vfxNC3u4G
+ tobWGASbTP9Drb1g9Mp6AfG8qM1rx37y+y4jziC7fhhXc85/r1nyZdjc0AvVPgR6CHSx
+ mIG1Ihxno+1jVFyxrLhM0kOMgrsCEXUfm8XfDOuuOU7vnXmbp6UA1fNJI3jhDUe7a+Kj
+ 2hmnQAljFlUykUzJfFxc07Lcm1cms6sQ9cH5eVDN5A51sxAKeJHRt4ypV3oFix9CV0pf
+ SvSI14XmrW8h5CL/zA1fBwxGuMoBQ9DLdBog4cttYZAO5Rx24YoPOe0lSjwY171+j0cH Eg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2suj0r05yx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Jun 2019 19:52:33 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57JpA1j022963;
+        Fri, 7 Jun 2019 19:52:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2swngn8kcn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Jun 2019 19:52:32 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x57JqRQt020424;
+        Fri, 7 Jun 2019 19:52:28 GMT
+Received: from oracle.com (/75.80.107.76)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Jun 2019 12:52:27 -0700
+From:   Larry Bassel <larry.bassel@oracle.com>
+To:     mike.kravetz@oracle.com, willy@infradead.org,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Cc:     Larry Bassel <larry.bassel@oracle.com>
+Subject: [RFC PATCH v2 0/2] Share PMDs for FS/DAX on x86
+Date:   Fri,  7 Jun 2019 12:51:01 -0700
+Message-Id: <1559937063-8323-1-git-send-email-larry.bassel@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=641
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906070132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=682 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906070132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tt
+Changes from v1 to v2:
+
+* Rebased on v5.2-rc3
+
+* An incorrect reference to "page table entries" was fixed (pointed
+out by Kirill Shutemov)
+
+* Renamed CONFIG_ARCH_WANT_HUGE_PMD_SHARE
+to CONFIG_ARCH_HAS_HUGE_PMD_SHARE instead of introducing
+a new config option (suggested by Dan Williams)
+
+* Removed some unnecessary #ifdef stubs (suggested by Matt Wilcox)
+
+* A previously overlooked case involving mprotect() is now handled
+properly (pointed out by Mike Kravetz)
+
+---
+
+This patchset implements sharing of page tables pointing
+to 2MiB pages (PMDs) for FS/DAX on x86.
+
+Only shared mmapings of files (i.e. neither private mmapings nor
+anonymous pages) are eligible for PMD sharing.
+
+Due to the characteristics of DAX, this code is simpler and
+less intrusive than the general case would be.
+
+In our use case (high end Oracle database using DAX/XFS/PMEM/2MiB
+pages) there would be significant memory savings.
+
+A future system might have 6 TiB of PMEM on it and
+there might be 10000 processes each mapping all of this 6 TiB.
+Here the savings would be approximately
+(6 TiB / 2 MiB) * 8 bytes (page table size) * 10000 = 240 GiB
+(and these page tables themselves would probably be in
+non-PMEM (ordinary RAM)).
+
+There would also be a reduction in page faults because in
+some cases the page fault has already been satisfied and
+the page table entry has been filled in (and so the processes
+after the first would not take a fault).
+
+The code for detecting whether PMDs can be shared and
+the implementation of sharing and unsharing is based
+on, but somewhat different than that in mm/hugetlb.c,
+though some of the code from this file could be reused and
+thus was made non-static.
+
+Larry Bassel (2):
+  Rename CONFIG_ARCH_WANT_HUGE_PMD_SHARE to
+    CONFIG_ARCH_HAS_HUGE_PMD_SHARE
+  Implement sharing/unsharing of PMDs for FS/DAX
+
+ arch/arm64/Kconfig          |   2 +-
+ arch/arm64/mm/hugetlbpage.c |   2 +-
+ arch/x86/Kconfig            |   2 +-
+ include/linux/hugetlb.h     |   4 ++
+ mm/huge_memory.c            |  37 +++++++++++++++
+ mm/hugetlb.c                |  14 +++---
+ mm/memory.c                 | 108 +++++++++++++++++++++++++++++++++++++++++++-
+ 7 files changed, 158 insertions(+), 11 deletions(-)
+
+-- 
+1.8.3.1
+
