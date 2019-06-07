@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3657C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB95C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B216720657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FB020657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923182;
-	bh=xFULexyD9/K5lBAkx3sJQH53ybfnXEHI3FhWIIrHfFE=;
+	s=default; t=1559923197;
+	bh=oYudx6GRFL5to2nlzf9auCcRhrsv3IIMd6j94J16tRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=biHYPSDY0xor8cKVRTYgzEnuQsFtBH7348d0INkdFh7iYTMGOL0drv5T2dHCWv63y
-	 IO1Odc5hJsU5ULupsanNp9dS7YJUu69t/p7L1GYMciL59+IrEAAujgbD1LaHdyuAHK
-	 gN54P3hE6DhedlbjAlmGShhQI+tdBmpYYJwB7hBM=
+	b=zElec6TtI+7ufBIKb5IO0PR+zOI/egqbJRuESb6weOGqXkFOFgILudqmWTVViQT56
+	 hzNlJOr6hBDm0aEqVrW2ui5CuidzGuWbfSv93WXOzQkzyIAF6JPM31iy6ru3rVwplm
+	 lHwUSKw8Y9i+Ojn1ZuL30rk3O3vN5hgb6DGeB/zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfFGP7m (ORCPT
+        id S1730206AbfFGPlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:59:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730334AbfFGPlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:41:35 -0400
+        id S1729783AbfFGPlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:41:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41D46212F5;
-        Fri,  7 Jun 2019 15:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1AD42146F;
+        Fri,  7 Jun 2019 15:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922094;
-        bh=xFULexyD9/K5lBAkx3sJQH53ybfnXEHI3FhWIIrHfFE=;
+        s=default; t=1559922060;
+        bh=oYudx6GRFL5to2nlzf9auCcRhrsv3IIMd6j94J16tRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qy1zL8lQ9L7y85llGR65LzRwVFv/wL94eHUnOQ4aC9g6Npb7rmmx38jOrf6z2Fx8N
-         oJ4VGT6BNBCzsuxiouV8tANYJPfvsB7jrVGflVuVkZgnys1Dn3EfIXu4WvMZgfu2bT
-         kIqW7buDaZX/IQPTB5gLoJm1qLEx74KhzkmsP6Bg=
+        b=BHcR9id+CLoVYDP38tzixSGZTQ7R9RM5+43j1KdgmA9yTGMnYPtezlhB37t8qbDkA
+         tK8gvOyzOcdjEQstWzHy3WNBVvsMpPw3lVC5Fc7YRB4IfjZU7j9pqzp0LaKD1kiWvu
+         7o4P8ZJLtYap59y7RVXS3xt7mHQ4SpAhd0dlEcKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.14 33/69] USB: rio500: fix memory leak in close after disconnect
-Date:   Fri,  7 Jun 2019 17:39:14 +0200
-Message-Id: <20190607153852.479966741@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 05/69] net-gro: fix use-after-free read in napi_gro_frags()
+Date:   Fri,  7 Jun 2019 17:38:46 +0200
+Message-Id: <20190607153848.925279853@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -58,47 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit e0feb73428b69322dd5caae90b0207de369b5575 upstream.
+[ Upstream commit a4270d6795b0580287453ea55974d948393e66ef ]
 
-If a disconnected device is closed, rio_close() must free
-the buffers.
+If a network driver provides to napi_gro_frags() an
+skb with a page fragment of exactly 14 bytes, the call
+to gro_pull_from_frag0() will 'consume' the fragment
+by calling skb_frag_unref(skb, 0), and the page might
+be freed and reused.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
+Reading eth->h_proto at the end of napi_frags_skb() might
+read mangled data, or crash under specific debugging features.
+
+BUG: KASAN: use-after-free in napi_frags_skb net/core/dev.c:5833 [inline]
+BUG: KASAN: use-after-free in napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
+Read of size 2 at addr ffff88809366840c by task syz-executor599/8957
+
+CPU: 1 PID: 8957 Comm: syz-executor599 Not tainted 5.2.0-rc1+ #32
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+ __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ kasan_report+0x12/0x20 mm/kasan/common.c:614
+ __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
+ napi_frags_skb net/core/dev.c:5833 [inline]
+ napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
+ tun_get_user+0x2f3c/0x3ff0 drivers/net/tun.c:1991
+ tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
+ call_write_iter include/linux/fs.h:1872 [inline]
+ do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+ do_iter_write fs/read_write.c:970 [inline]
+ do_iter_write+0x184/0x610 fs/read_write.c:951
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+ do_writev+0x15b/0x330 fs/read_write.c:1058
+
+Fixes: a50e233c50db ("net-gro: restore frag0 optimization")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/misc/rio500.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ net/core/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/misc/rio500.c
-+++ b/drivers/usb/misc/rio500.c
-@@ -99,9 +99,22 @@ static int close_rio(struct inode *inode
- {
- 	struct rio_usb_data *rio = &rio_instance;
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5067,7 +5067,6 @@ static struct sk_buff *napi_frags_skb(st
+ 	skb_reset_mac_header(skb);
+ 	skb_gro_reset_offset(skb);
  
--	rio->isopen = 0;
-+	/* against disconnect() */
-+	mutex_lock(&rio500_mutex);
-+	mutex_lock(&(rio->lock));
- 
--	dev_info(&rio->rio_dev->dev, "Rio closed.\n");
-+	rio->isopen = 0;
-+	if (!rio->present) {
-+		/* cleanup has been delayed */
-+		kfree(rio->ibuf);
-+		kfree(rio->obuf);
-+		rio->ibuf = NULL;
-+		rio->obuf = NULL;
-+	} else {
-+		dev_info(&rio->rio_dev->dev, "Rio closed.\n");
-+	}
-+	mutex_unlock(&(rio->lock));
-+	mutex_unlock(&rio500_mutex);
- 	return 0;
- }
- 
+-	eth = skb_gro_header_fast(skb, 0);
+ 	if (unlikely(skb_gro_header_hard(skb, hlen))) {
+ 		eth = skb_gro_header_slow(skb, hlen, 0);
+ 		if (unlikely(!eth)) {
+@@ -5077,6 +5076,7 @@ static struct sk_buff *napi_frags_skb(st
+ 			return NULL;
+ 		}
+ 	} else {
++		eth = (const struct ethhdr *)skb->data;
+ 		gro_pull_from_frag0(skb, hlen);
+ 		NAPI_GRO_CB(skb)->frag0 += hlen;
+ 		NAPI_GRO_CB(skb)->frag0_len -= hlen;
 
 
