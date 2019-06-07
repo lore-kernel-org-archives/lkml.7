@@ -2,278 +2,114 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71356C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEB8C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2BC20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE333206E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="hYmpl/RJ"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="23ufbG15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbfFGOLn (ORCPT
+        id S1728669AbfFGOOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:11:43 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35561 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729463AbfFGOLQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:11:16 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p26so3253615edr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kinvolk.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=11EhXksDgdLmWhW501RogfILPsFHkHJiIn4iFOtsvjs=;
-        b=hYmpl/RJIdtBL+tsRx46QDZM7ntWEZeAb9P3BhBKmYfHgIuLyh9vvmb9zYXwPIVTat
-         dKl6Ldm0GyqhJeZkADC8h+04FfW+VTO+LTu9Ns56Dr11icJr10317+FdshImeHEJaDn3
-         jOxE9gYyRaoqV8HHHUAEaWJQqrScNxcW7TZMM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=11EhXksDgdLmWhW501RogfILPsFHkHJiIn4iFOtsvjs=;
-        b=mGV6chOw/Y1tQ0KhFNz3zhEWJNjZGr1yYAoSqAnMwkBKgx/2ywsa7fWw4cA/flKxWP
-         3kxGwGHgVFYx4sWxcYqzdUM2TcxGV5me3kyQ70ks2kIvDGtNY8fzfWVCLwa9ovypUshz
-         MmruO6CMRc957dWUfWI/hONoZGIwzwOEZlF/wKJl7cHQOPjsKneEUkX6I8pB2g05VQkY
-         jnpfiDORNNMV5PxztGEDf1tnSZ8AhBqM049q++umM7lAYUonxkR9GGTemYmRSbmM7Yv9
-         PjSMzZGYu3xx5XdZxMIDGBc2VrJV+Efnz00/4/NkVO6ngpAJ3xKyoMYFIXWnqMCL2Uxe
-         n1Qw==
-X-Gm-Message-State: APjAAAXovRtFdp9ZaogQzHNpjqf3KRGQrmyfConRHgVGE8CEAeTdz4re
-        vh77OxwsAvdiZfcyE/kq5VifkQ==
-X-Google-Smtp-Source: APXvYqz2740/Zq7SORSpBbmq18iS12DgOvm5oFAPmO/N4K7hGYYvdn+cIQ/hX/Zj7omaxLUCzzTvrQ==
-X-Received: by 2002:a17:906:4cc3:: with SMTP id q3mr22467661ejt.27.1559916674717;
-        Fri, 07 Jun 2019 07:11:14 -0700 (PDT)
-Received: from locke-xps13.fritz.box (dslb-002-205-069-198.002.205.pools.vodafone-ip.de. [2.205.69.198])
-        by smtp.gmail.com with ESMTPSA id a40sm546116edd.1.2019.06.07.07.11.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 07:11:14 -0700 (PDT)
-From:   =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>
-To:     john.fastabend@gmail.com, ast@kernel.org, daniel@iogearbox.net
-Cc:     alban@kinvolk.io, krzesimir@kinvolk.io, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v5 3/4] selftests: bpf: read netns_ino from struct bpf_sock_ops
-Date:   Fri,  7 Jun 2019 16:11:05 +0200
-Message-Id: <20190607141106.32148-4-iago@kinvolk.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190607141106.32148-1-iago@kinvolk.io>
-References: <20190607141106.32148-1-iago@kinvolk.io>
+        Fri, 7 Jun 2019 10:14:16 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:54643 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727915AbfFGOOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:14:15 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id cb936dc6
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 7 Jun 2019 13:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :from:date:message-id:subject:to:cc:content-type; s=mail; bh=OeF
+        uQrPwu5IL9s3FkHC48tIdkYU=; b=23ufbG15/HAhhqr0dMAC739K1BgGl/I8Utg
+        AsVQ+mNyxec8wC3umkFHVSI7ZuASjfEZm3t9+Ddfy/ULakh3bcxhqU8hvXWvAr8e
+        grZtwRSUNZoHixB0LiWjjsWpylQPnTuVOo2kV9DXK+8TYnqBK+u2AMcHbHDXm6GA
+        fyf555l2QowcmHE2KJ1cv1j8uT4wvqEDhRO5cBeIflLLqkyOVX/1kqWwH7yPtegZ
+        gpJqw+ToK1UEufsPWUd6X387qv/BAhCzoJYSI1JfdewHUx8aI0xko9Kb4Z7tQJzT
+        wMOteKpD+zngSlONO0raVlzz37iFA5j2FSvwRg4J1bPhXwAUa/Q==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f229aa2e (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 7 Jun 2019 13:42:35 +0000 (UTC)
+Received: by mail-ot1-f44.google.com with SMTP id r21so1969409otq.6
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:14:12 -0700 (PDT)
+X-Gm-Message-State: APjAAAU+4q/2W/pPwJDOZo33PtVMXK+c0YzTHYZsSfpcQtC6Gl61jmtG
+        OxrwLsTH3f44aL/VHWs8VfIlIwf98Jor6fuHrQ8=
+X-Google-Smtp-Source: APXvYqxg1/3IwWP3Q+X6sa+o268T3x+BLaVlnwR5sQtXYEWGYFh+6ptuH/NNVB1vpMQyH8Vn635GR+B+GHu7Rr5xZ+k=
+X-Received: by 2002:a9d:67d5:: with SMTP id c21mr1179546otn.243.1559916851654;
+ Fri, 07 Jun 2019 07:14:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Fri, 7 Jun 2019 16:14:00 +0200
+X-Gmail-Original-Message-ID: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
+Message-ID: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
+Subject: infinite loop in read_hpet from ktime_get_boot_fast_ns
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, clemens@ladisch.de,
+        Sultan Alsawaf <sultan@kerneltoast.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alban Crequy <alban@kinvolk.io>
+Hey Thomas,
 
-This shows how a sockops program could be restricted to a specific
-network namespace. The sockops program looks at the current netns via
-(struct bpf_sock_ops)->netns_ino and checks if the value matches the
-configuration in the new BPF map "sock_netns".
+After some discussions here prior about the different clocks
+available, WireGuard uses ktime_get_boot_fast_ns() pretty extensively.
+The requirement is for a quasi-accurate monotonic counter that takes
+into account sleep time, and this seems to fit the bill pretty well.
+Sultan (CC'd) reported to me a non-reproducible bug he encountered in
+4.19.47 (arch's linux-lts package), where the CPU was hung in
+read_hpet.
 
-The test program ./test_sockmap accepts a new parameter "--netns"; the
-default value is the current netns found by stat() on /proc/self/ns/net,
-so the previous tests still pass:
+CPU: 1 PID: 7927 Comm: kworker/1:3 Tainted: G           OE     4.19.47-1-lts #1
+Hardware name: Dell Inc. XPS 15 9570/02MJVY, BIOS 1.10.1 04/26/2019
+Workqueue: wg-crypt-interface wg_packet_tx_worker [wireguard]
+RIP: 0010:read_hpet+0x67/0xc0
+Code: c0 75 11 ba 01 00 00 00 f0 0f b1 15 a3 3d 1a 01 85 c0 74 37 48
+89 cf 57 9d 0f 1f 44 00 00 48 c1 ee 20 eb 04 85 c9 74 12 f3 90 <49> 8b
+08 48 89 ca 48 c1 ea 20 89 d0 39 f2 74 ea c3 48 8b 05 89 56
+RSP: 0018:ffffb8d382533e18 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
+RAX: 0000000018a4c89e RBX: 0000000000000000 RCX: 18a4c89e00000001
+RDX: 0000000018a4c89e RSI: 0000000018a4c89e RDI: ffffffffb8227980
+RBP: 000006c1c3f602a2 R08: ffffffffb8205040 R09: 0000000000000000
+R10: 000001d58fd28efc R11: 0000000000000000 R12: ffffffffb8259a80
+R13: 00000000ffffffff R14: 0000000518a0d8c4 R15: 000000000010fa5a
+FS:  0000000000000000(0000) GS:ffff9b90ac240000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00003663b14d9ce8 CR3: 000000030f20a006 CR4: 00000000003606e0
+Call Trace:
+ ktime_get_mono_fast_ns+0x53/0xa0
+ ktime_get_boot_fast_ns+0x5/0x10
+ wg_packet_tx_worker+0x183/0x220 [wireguard]
+ process_one_work+0x1f4/0x3e0
+ worker_thread+0x2d/0x3e0
+ ? process_one_work+0x3e0/0x3e0
+ kthread+0x112/0x130
+ ? kthread_park+0x80/0x80
+ ret_from_fork+0x35/0x40
+watchdog: BUG: soft lockup - CPU#1 stuck for 23s! [kworker/1:3:7927]
 
-sudo ./test_sockmap
-...
-Summary: 412 PASSED 0 FAILED
-...
-Summary: 824 PASSED 0 FAILED
+It looks like RIP is spinning in this loop in read_hpet:
 
-I run my additional test in the following way:
+do {
+    cpu_relax();
+    new.lockval = READ_ONCE(hpet.lockval);
+} while ((new.value == old.value) && arch_spin_is_locked(&new.lock));
 
-NETNS=$(readlink /proc/self/ns/net | sed 's/^net:\[\(.*\)\]$/\1/')
-CGR=/sys/fs/cgroup/unified/user.slice/user-1000.slice/session-5.scope/
-sudo ./test_sockmap --cgroup $CGR --netns $NETNS &
+I imagine this could be a bug in the hpet code, or a failure of the
+hpet hardware. But I thought it'd be most prudent to check, first,
+whether there are actually very particular conditions on when and
+where ktime_get_boot_fast_ns and friends can be called. In other
+words, maybe the bug is actually in my code. I was under the
+impression that invoking it from anywhere was fine, given the
+documentation says "NMI safe", but maybe there are still some
+requirements I should keep in mind?
 
-cat /sys/kernel/debug/tracing/trace_pipe
-
-echo foo | nc -l 127.0.0.1 8080 &
-echo bar | nc 127.0.0.1 8080
-
-=> the connection goes through the sockmap
-
-When testing with a wrong $NETNS, I get the trace_pipe log:
-> not binding connection on netns 4026531992
-
-Signed-off-by: Alban Crequy <alban@kinvolk.io>
-
----
-
-Changes since v1:
-- tools/include/uapi/linux/bpf.h: update with netns_dev
-- tools/testing/selftests/bpf/test_sockmap_kern.h: print debugs with
-  both netns_dev and netns_ino
-
-Changes since v2:
-- update commitmsg to refer to netns_ino
----
- tools/testing/selftests/bpf/test_sockmap.c    | 38 +++++++++++++++++--
- .../testing/selftests/bpf/test_sockmap_kern.h | 22 +++++++++++
- 2 files changed, 57 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/test_sockmap.c b/tools/testing/selftests/bpf/test_sockmap.c
-index 3845144e2c91..5a1b9c96fca1 100644
---- a/tools/testing/selftests/bpf/test_sockmap.c
-+++ b/tools/testing/selftests/bpf/test_sockmap.c
-@@ -2,6 +2,7 @@
- // Copyright (c) 2017-2018 Covalent IO, Inc. http://covalent.io
- #include <stdio.h>
- #include <stdlib.h>
-+#include <stdint.h>
- #include <sys/socket.h>
- #include <sys/ioctl.h>
- #include <sys/select.h>
-@@ -21,6 +22,7 @@
- #include <sys/resource.h>
- #include <sys/types.h>
- #include <sys/sendfile.h>
-+#include <sys/stat.h>
- 
- #include <linux/netlink.h>
- #include <linux/socket.h>
-@@ -63,8 +65,8 @@ int s1, s2, c1, c2, p1, p2;
- int test_cnt;
- int passed;
- int failed;
--int map_fd[8];
--struct bpf_map *maps[8];
-+int map_fd[9];
-+struct bpf_map *maps[9];
- int prog_fd[11];
- 
- int txmsg_pass;
-@@ -84,6 +86,7 @@ int txmsg_ingress;
- int txmsg_skb;
- int ktls;
- int peek_flag;
-+uint64_t netns_opt;
- 
- static const struct option long_options[] = {
- 	{"help",	no_argument,		NULL, 'h' },
-@@ -111,6 +114,7 @@ static const struct option long_options[] = {
- 	{"txmsg_skb", no_argument,		&txmsg_skb, 1 },
- 	{"ktls", no_argument,			&ktls, 1 },
- 	{"peek", no_argument,			&peek_flag, 1 },
-+	{"netns",	required_argument,	NULL, 'n'},
- 	{0, 0, NULL, 0 }
- };
- 
-@@ -1585,6 +1589,7 @@ char *map_names[] = {
- 	"sock_bytes",
- 	"sock_redir_flags",
- 	"sock_skb_opts",
-+	"sock_netns",
- };
- 
- int prog_attach_type[] = {
-@@ -1619,6 +1624,8 @@ static int populate_progs(char *bpf_file)
- 	struct bpf_object *obj;
- 	int i = 0;
- 	long err;
-+	struct stat netns_sb;
-+	uint64_t netns_ino;
- 
- 	obj = bpf_object__open(bpf_file);
- 	err = libbpf_get_error(obj);
-@@ -1655,6 +1662,28 @@ static int populate_progs(char *bpf_file)
- 		}
- 	}
- 
-+	if (netns_opt == 0) {
-+		err = stat("/proc/self/ns/net", &netns_sb);
-+		if (err) {
-+			fprintf(stderr,
-+				"ERROR: cannot stat network namespace: %ld (%s)\n",
-+				err, strerror(errno));
-+			return -1;
-+		}
-+		netns_ino = netns_sb.st_ino;
-+	} else {
-+		netns_ino = netns_opt;
-+	}
-+	i = 1;
-+	err = bpf_map_update_elem(map_fd[8], &netns_ino, &i, BPF_ANY);
-+	if (err) {
-+		fprintf(stderr,
-+			"ERROR: bpf_map_update_elem (netns):  %ld (%s)\n",
-+			err, strerror(errno));
-+		return -1;
-+	}
-+
-+
- 	return 0;
- }
- 
-@@ -1738,7 +1767,7 @@ int main(int argc, char **argv)
- 	if (argc < 2)
- 		return test_suite(-1);
- 
--	while ((opt = getopt_long(argc, argv, ":dhvc:r:i:l:t:p:q:",
-+	while ((opt = getopt_long(argc, argv, ":dhvc:r:i:l:t:p:q:n:",
- 				  long_options, &longindex)) != -1) {
- 		switch (opt) {
- 		case 's':
-@@ -1805,6 +1834,9 @@ int main(int argc, char **argv)
- 				return -1;
- 			}
- 			break;
-+		case 'n':
-+			netns_opt = strtoull(optarg, NULL, 10);
-+			break;
- 		case 0:
- 			break;
- 		case 'h':
-diff --git a/tools/testing/selftests/bpf/test_sockmap_kern.h b/tools/testing/selftests/bpf/test_sockmap_kern.h
-index e7639f66a941..317406dad6cf 100644
---- a/tools/testing/selftests/bpf/test_sockmap_kern.h
-+++ b/tools/testing/selftests/bpf/test_sockmap_kern.h
-@@ -91,6 +91,13 @@ struct bpf_map_def SEC("maps") sock_skb_opts = {
- 	.max_entries = 1
- };
- 
-+struct bpf_map_def SEC("maps") sock_netns = {
-+	.type = BPF_MAP_TYPE_HASH,
-+	.key_size = sizeof(__u64),
-+	.value_size = sizeof(int),
-+	.max_entries = 16
-+};
-+
- SEC("sk_skb1")
- int bpf_prog1(struct __sk_buff *skb)
- {
-@@ -132,9 +139,24 @@ int bpf_sockmap(struct bpf_sock_ops *skops)
- {
- 	__u32 lport, rport;
- 	int op, err = 0, index, key, ret;
-+	int i = 0;
-+	__u64 netns_dev, netns_ino;
-+	int *allowed;
- 
- 
- 	op = (int) skops->op;
-+	netns_dev = skops->netns_dev;
-+	netns_ino = skops->netns_ino;
-+	bpf_printk("bpf_sockmap: netns_dev = %lu netns_ino = %lu\n",
-+		   netns_dev, netns_ino);
-+
-+	// Only allow sockmap connection on the configured network namespace
-+	allowed = bpf_map_lookup_elem(&sock_netns, &netns_ino);
-+	if (allowed == NULL || *allowed == 0) {
-+		bpf_printk("not binding connection on netns_ino %lu\n",
-+			   netns_ino);
-+		return 0;
-+	}
- 
- 	switch (op) {
- 	case BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB:
--- 
-2.21.0
-
+Thanks,
+Jason
