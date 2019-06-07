@@ -2,75 +2,99 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A1DC468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D3C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC035208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:05:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UDg/xRtW"
+	by mail.kernel.org (Postfix) with ESMTP id 13484208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559923544;
+	bh=kd5GsWGzTUp4RqE1pDbtp5fb3I07nUQQ5XgJZ3PPlVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jVP6QnZLj2uDyrDE4kDC1LQMKhULPMachb8N4xJZ4EDdC0rxTv6NoR7tBwUOzyryV
+	 aq1a6BYytUtZLYyvIGsYZNSnCmm8x5J0LzDmpXOOiWYxbJN2i2GQ9Fml31F6X4Wtb/
+	 jH/50uVaE8Ks2Bv9sJhwKj/aYVZa/U2/c3DjhncY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbfFGQFK (ORCPT
+        id S1730160AbfFGQFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:05:10 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:40382 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729606AbfFGQFJ (ORCPT
+        Fri, 7 Jun 2019 12:05:43 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45112 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729133AbfFGQFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:05:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559923508; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=hNMNkjEA3+4rNF+yp5nWqqoJfF6+ddjC2q7b5Wtp9Vo=;
-        b=UDg/xRtWKDpep/pPM+s7gBNeP1FLR4eKwaUveYyy0cPx688uODdZ+9JeBTZP8cjJ3A8weK
-        ZScRPGwxuoWkuZ2hNwzGj/K1Ot7ezBKiHyhpmZh2at/IZe9JCM2F6AX781iV7+i/lEnOkm
-        h3sjWnPoneAoss7qB8zXKqoVNB7UjN0=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Artur Rojek <contact@artur-rojek.eu>, od@zcrc.me,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] iio: ingenic-adc: Make probe function __init_or_module
-Date:   Fri,  7 Jun 2019 18:05:01 +0200
-Message-Id: <20190607160501.16369-1-paul@crapouillou.net>
+        Fri, 7 Jun 2019 12:05:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AtaSTkf1DBf94OVADGmL4073qC0dMdKOc6GCWJ2B5nE=; b=kVMKtQN2lU5qDB9hwkgVECukB
+        6m8Mk4mxg+JZJ9GxZOxj9OFP/nyuP84YEZKcp145Ff+lrth76K8hff7HxAMH3ldl9Al5Qv6enqToF
+        j1pKTsQpQVvXN9dcMyqsPUVAJnYfQ0JWiJWzfImh63ZcoUnPIMotXgIRIduj70+poP+UI=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hZHN6-0002tA-C9; Fri, 07 Jun 2019 16:05:40 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id CFAEF440046; Fri,  7 Jun 2019 17:05:39 +0100 (BST)
+Date:   Fri, 7 Jun 2019 17:05:39 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     od@zcrc.me, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: spi-gpio: Make probe function __init_or_module
+Message-ID: <20190607160539.GI2456@sirena.org.uk>
+References: <20190607155631.15072-1-paul@crapouillou.net>
+ <20190607155907.GH2456@sirena.org.uk>
+ <1559923340.1918.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LPYkZes1JsE9T1lX"
+Content-Disposition: inline
+In-Reply-To: <1559923340.1918.0@crapouillou.net>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the probe function to be dropped after the kernel finished
-its initialization, in the case where the driver was not compiled as a
-module.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/iio/adc/ingenic-adc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--LPYkZes1JsE9T1lX
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-index 92b1d5037ac9..027f710df843 100644
---- a/drivers/iio/adc/ingenic-adc.c
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -279,7 +279,7 @@ static const struct iio_chan_spec ingenic_channels[] = {
- 	},
- };
- 
--static int ingenic_adc_probe(struct platform_device *pdev)
-+static int __init_or_module ingenic_adc_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct iio_dev *iio_dev;
--- 
-2.21.0.593.g511ec345e18
+On Fri, Jun 07, 2019 at 06:02:20PM +0200, Paul Cercueil wrote:
+> Le ven. 7 juin 2019 =E0 17:59, Mark Brown <broonie@kernel.org> a =E9crit :
 
+> > Hopefully not since we might probe later on if something registers a new
+> > device...
+
+> Makes sense. Sorry for the noise.
+
+No problem.  There used to be an annotation for probe() and remove()
+functions but it got removed since hotplug and deferred probe made it
+very difficult to ever practically take advanage of it.
+
+--LPYkZes1JsE9T1lX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz6i1IACgkQJNaLcl1U
+h9Ctggf/ZkWVbeBDP7S/xhHdF5lonQeFIVA24awMWy1BPO+zdDas4oSFwUBik4c4
+u+krCzZdQzwLx5ZTHPFSP+cxhvYy0HV3hQxIXjhCFS7JupiL1npDKoCLGjvKSCYI
+5hMjEASlUQYk0XiRBVfnEKshR7dPq0UBcRkgCnmo7xOpxaeg75vfjtePZmGYNPKA
+q3aDOK9Z7fGJFzF8qSDAUrofo7D2DiWZRuH8/aB6W46IAstodUZjLOS9cnU+SC0e
+GQ+hj4XaJg7Jfmy3SAeck6fmDOF6+Xq5hulHItYU+nzYLOLGZiJrjiHzf9ilPNyG
+7wU+IQpIiKYRkfo5BIueEGnAvKUf3A==
+=UR4I
+-----END PGP SIGNATURE-----
+
+--LPYkZes1JsE9T1lX--
