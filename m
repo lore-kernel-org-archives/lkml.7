@@ -2,286 +2,110 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ACBC46460
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0746BC28EBD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA7B206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C320F206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ft87MKAo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gWJqJqZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfFGC7b (ORCPT
+        id S1726822AbfFGDFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 22:59:31 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45513 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbfFGC7b (ORCPT
+        Thu, 6 Jun 2019 23:05:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44696 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbfFGDFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 22:59:31 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j19so645691qtr.12;
-        Thu, 06 Jun 2019 19:59:30 -0700 (PDT)
+        Thu, 6 Jun 2019 23:05:51 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c5so231213pll.11
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 20:05:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tzz8DYGRcQFgk5DYQCQBlcDGLCLl8klfo3nj5i4KBBk=;
-        b=ft87MKAop5+OUpVOVZ9cJmgSeVuB8uSVQAJJnzG+MbN0aNjkgW8e1mAq5VirYnmHjS
-         drBPymHvvueaDEfs0xl7R9/M98E0yirhCNrhWruOyRnXEkBUU8XDcr1tCTWeH9fndvgQ
-         9fh5Kxu/AQO2T9dLuDFfZg6KSFrQJ1YlyV3vacCj46WOk0CLbjD9OzSZkQq5T3fYzPMJ
-         h2oQGYiW2LgBIZeeTio7ICWAzHzJDCcY0Bbu758uc+7nVjOmmjIbtMZcGiuHwTHxBJX6
-         PaRX0ykqWOJPEdvNT2HRthymzzcADW5ktuVIaJgRH4Q2Yiv8sNH8QUvJLe0YSFxBKP1i
-         wiGQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H7CLFdoBPP7l3IEmTINBabW4dT5YeAQBXDwoCOrfxvs=;
+        b=gWJqJqZ/rTPWluupY1DKV0rs4A0c12jlcS2mQCrIgvFlvE4DLaYkH0Mpnaqh6CFTRk
+         hQ5vDNYBgxu2Mp6ixcG6H+sfcV7pgJI89ga9Gbii2TFfvWvN+kSVqR8IFnA4xblRNN+V
+         0xrL9CLXQNm4N0vSzsdojo6s2BbCNoo2nC9Qm/Sp8qDo2UT6U0XjkalIqnBqaKhVTJKl
+         dmriwLNb/yJj5YShFvsJRqGETxyylTOFYNIUf1j8iq1dTvBPYyPDDgWTXhKqsDIXuYCU
+         ouPHkzdk4erPChcVHtkKctfxV+MGw/a0OJUQNxgrPH+6eRUHzmcT1c11gypDlW1AXZqb
+         kSaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tzz8DYGRcQFgk5DYQCQBlcDGLCLl8klfo3nj5i4KBBk=;
-        b=qv7tlCCoZPsxHbGfLdycoigl/cPVkx2ZLXh5FpE4YDWeKSc0cdTznnmOXGwDUfADP2
-         UXEMMmUfOuLd9hsOwyp2hu7WSYJiT0nP9Ln7gacWYjFlaO65do6uZ6ToQWAc2up3BuMn
-         B2ThXYzVpadjynATgR9d99tmXNIvgggZk/6ou8nRaTHi4fxA9+WqM3TnyWxqAcQLwZf4
-         eeerapDjojVrUFgns6V2PDEBLgE+gV1+uez8qZh6D3NOtR2DBm+UeG0YzvMpbYHCN2Be
-         /8SbAB7Em2io2PFOCchNYKBjGSjWt2KllX3dW38Y5fS0l/PihpqzNcputg2DNv11/ijP
-         Vw8g==
-X-Gm-Message-State: APjAAAVaNYRN+piPwgOfC85z6jr2DJigF7pfH/wcS6LhIlbG8SKj9Wel
-        ROry313FCCnXXpYcb7LRXB11JKZCl35CSsR2sls=
-X-Google-Smtp-Source: APXvYqwlaPeSqjrbyFt9cVtD+DKO+lrFZOKYkr8KHvZSNAJyBXPE2JPgr+wW/xEaA5K+VYkIkvgV/7morZ47ffACM+I=
-X-Received: by 2002:a0c:9e02:: with SMTP id p2mr20709481qve.150.1559876369550;
- Thu, 06 Jun 2019 19:59:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H7CLFdoBPP7l3IEmTINBabW4dT5YeAQBXDwoCOrfxvs=;
+        b=fn7qE60FuVf5NgcCKePBi4FVOQokDv7hVhcgiGwWrXH3KwhbVrTu23SD2b4p+BmOym
+         UOjU1ssQU6/6sCaYLB+aDfynUwZx21N29H+DaXY1j/Qmk3liAEoPvhyxdQmBUWl+ePzl
+         4ptdShcJZUePgfKDN1qvymnk+rNXjdOGQqOd+zall3z+DgpzC8vVVyXCMiHdGNZv7WXO
+         W8OoLkqC6LL+ihlCeOS61LaETxe+kmuyscLfA/T/G//Q8gw0s7K5o+TDS9Z3GDaw9qsH
+         HLDcfbn4AX1KjEa7KotJRnkVkxmDuMAx61hbwjtbCrWzjE+245p1Wj1+Jhoya5o/e5u0
+         nJeg==
+X-Gm-Message-State: APjAAAUkn5jkN5b/CpbByqtUCryhawbChGwOqN0rKYi+eLpuSIRTuQ9S
+        YE4YFObtl6I1nvSyPaak1jHQiA==
+X-Google-Smtp-Source: APXvYqzOsQK1uUlnEwMVs04oCLLIhbjE1dCIGxyd7z/1Wp6i3/lBhIk8qFnzdWcwXwlca7/ZPbULGQ==
+X-Received: by 2002:a17:902:2ae6:: with SMTP id j93mr54928338plb.130.1559876750555;
+        Thu, 06 Jun 2019 20:05:50 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id n184sm529337pfn.21.2019.06.06.20.05.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 20:05:48 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 08:35:46 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     David Arcari <darcari@redhat.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] cpufreq: pcc-cpufreq: Fail initialization if driver
+ cannot be registered
+Message-ID: <20190607030546.7kjg466wbkzxfym4@vireshk-i7>
+References: <20190606185052.71959-1-darcari@redhat.com>
 MIME-Version: 1.0
-References: <a6a31da39debb8bde6ca5085b0f4e43a96a88ea5.camel@fb.com> <20190606185427.7558-1-mmullins@fb.com>
-In-Reply-To: <20190606185427.7558-1-mmullins@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 6 Jun 2019 19:59:18 -0700
-Message-ID: <CAEf4BzYdRGfJgQ6-Hb8NkCgUqFRVs304KE0KMfAy9vbbTOMp5g@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf: fix nested bpf tracepoints with per-cpu data
-To:     Matt Mullins <mmullins@fb.com>
-Cc:     hall@fb.com, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606185052.71959-1-darcari@redhat.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 1:17 PM Matt Mullins <mmullins@fb.com> wrote:
->
-> BPF_PROG_TYPE_RAW_TRACEPOINTs can be executed nested on the same CPU, as
-> they do not increment bpf_prog_active while executing.
->
-> This enables three levels of nesting, to support
->   - a kprobe or raw tp or perf event,
->   - another one of the above that irq context happens to call, and
->   - another one in nmi context
-
-Can NMIs be nested?
-
-> (at most one of which may be a kprobe or perf event).
->
-> Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sample_data")
+On 06-06-19, 14:50, David Arcari wrote:
+> Make pcc_cpufreq_init() return error codes when the driver cannot be
+> registered.  Otherwise the driver can shows up loaded via lsmod even
+> though it failed initialization.  This is confusing to the user.
+> 
+> Signed-off-by: David Arcari <darcari@redhat.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
-> This is more lines of code, but possibly less intrusive than the
-> per-array-element approach.
->
-> I don't necessarily like that I duplicated the nest_level logic in two
-> places, but I don't see a way to unify them:
->   - kprobes' bpf_perf_event_output doesn't use bpf_raw_tp_regs, and does
->     use the perf_sample_data,
->   - raw tracepoints' bpf_get_stackid uses bpf_raw_tp_regs, but not
->     the perf_sample_data, and
->   - raw tracepoints' bpf_perf_event_output uses both...
->
->  kernel/trace/bpf_trace.c | 95 +++++++++++++++++++++++++++++++++-------
->  1 file changed, 80 insertions(+), 15 deletions(-)
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index f92d6ad5e080..4f5419837ddd 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -410,8 +410,6 @@ static const struct bpf_func_proto bpf_perf_event_read_value_proto = {
->         .arg4_type      = ARG_CONST_SIZE,
->  };
->
-> -static DEFINE_PER_CPU(struct perf_sample_data, bpf_trace_sd);
-> -
->  static __always_inline u64
->  __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
->                         u64 flags, struct perf_sample_data *sd)
-> @@ -442,24 +440,47 @@ __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
->         return perf_event_output(event, sd, regs);
->  }
->
-> +/*
-> + * Support executing tracepoints in normal, irq, and nmi context that each call
-> + * bpf_perf_event_output
-> + */
-> +struct bpf_trace_sample_data {
-> +       struct perf_sample_data sds[3];
-> +};
-> +
-> +static DEFINE_PER_CPU(struct bpf_trace_sample_data, bpf_trace_sds);
-> +static DEFINE_PER_CPU(int, bpf_trace_nest_level);
->  BPF_CALL_5(bpf_perf_event_output, struct pt_regs *, regs, struct bpf_map *, map,
->            u64, flags, void *, data, u64, size)
->  {
-> -       struct perf_sample_data *sd = this_cpu_ptr(&bpf_trace_sd);
-> +       struct bpf_trace_sample_data *sds = this_cpu_ptr(&bpf_trace_sds);
-> +       struct perf_sample_data *sd;
-> +       int nest_level = this_cpu_inc_return(bpf_trace_nest_level);
+>  drivers/cpufreq/pcc-cpufreq.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/pcc-cpufreq.c b/drivers/cpufreq/pcc-cpufreq.c
+> index 1e5e64643c3a..fdc767fdbe6a 100644
+> --- a/drivers/cpufreq/pcc-cpufreq.c
+> +++ b/drivers/cpufreq/pcc-cpufreq.c
+> @@ -582,10 +582,10 @@ static int __init pcc_cpufreq_init(void)
+>  
+>  	/* Skip initialization if another cpufreq driver is there. */
+>  	if (cpufreq_get_current_driver())
+> -		return 0;
+> +		return -EEXIST;
+>  
+>  	if (acpi_disabled)
+> -		return 0;
+> +		return -ENODEV;
+>  
+>  	ret = pcc_cpufreq_probe();
+>  	if (ret) {
 
-reverse Christmas tree?
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
->         struct perf_raw_record raw = {
->                 .frag = {
->                         .size = size,
->                         .data = data,
->                 },
->         };
-> +       int err = -EBUSY;
->
-> +       if (WARN_ON_ONCE(nest_level > ARRAY_SIZE(sds->sds)))
-> +               goto out;
-
-consider this a nit, but I find it much simpler to follow when err is
-set just before goto, so that it's clear what's going to be returned:
-
-int err;
-
-if (something_bad) {
-    err = -EBAD_ERR_CODE1;
-    goto out;
-}
-
-
-> +
-> +       sd = &sds->sds[nest_level - 1];
-> +
-> +       err = -EINVAL;
->         if (unlikely(flags & ~(BPF_F_INDEX_MASK)))
-> -               return -EINVAL;
-> +               goto out;
-
-Same here.
-
->
->         perf_sample_data_init(sd, 0, 0);
->         sd->raw = &raw;
->
-> -       return __bpf_perf_event_output(regs, map, flags, sd);
-> +       err = __bpf_perf_event_output(regs, map, flags, sd);
-> +
-> +out:
-> +       this_cpu_dec(bpf_trace_nest_level);
-> +       return err;
->  }
->
->  static const struct bpf_func_proto bpf_perf_event_output_proto = {
-> @@ -822,16 +843,48 @@ pe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
->  /*
->   * bpf_raw_tp_regs are separate from bpf_pt_regs used from skb/xdp
->   * to avoid potential recursive reuse issue when/if tracepoints are added
-> - * inside bpf_*_event_output, bpf_get_stackid and/or bpf_get_stack
-> + * inside bpf_*_event_output, bpf_get_stackid and/or bpf_get_stack.
-> + *
-> + * Since raw tracepoints run despite bpf_prog_active, support concurrent usage
-> + * in normal, irq, and nmi context.
->   */
-> -static DEFINE_PER_CPU(struct pt_regs, bpf_raw_tp_regs);
-> +struct bpf_raw_tp_regs {
-> +       struct pt_regs regs[3];
-> +};
-> +static DEFINE_PER_CPU(struct bpf_raw_tp_regs, bpf_raw_tp_regs);
-> +static DEFINE_PER_CPU(int, bpf_raw_tp_nest_level);
-> +static struct pt_regs *get_bpf_raw_tp_regs(void)
-> +{
-> +       struct bpf_raw_tp_regs *tp_regs = this_cpu_ptr(&bpf_raw_tp_regs);
-> +       int nest_level = this_cpu_inc_return(bpf_raw_tp_nest_level);
-> +
-> +       if (WARN_ON_ONCE(nest_level > ARRAY_SIZE(tp_regs->regs))) {
-> +               this_cpu_dec(bpf_raw_tp_nest_level);
-> +               return ERR_PTR(-EBUSY);
-> +       }
-> +
-> +       return &tp_regs->regs[nest_level - 1];
-> +}
-> +
-> +static void put_bpf_raw_tp_regs(void)
-> +{
-> +       this_cpu_dec(bpf_raw_tp_nest_level);
-> +}
-> +
->  BPF_CALL_5(bpf_perf_event_output_raw_tp, struct bpf_raw_tracepoint_args *, args,
->            struct bpf_map *, map, u64, flags, void *, data, u64, size)
->  {
-> -       struct pt_regs *regs = this_cpu_ptr(&bpf_raw_tp_regs);
-> +       struct pt_regs *regs = get_bpf_raw_tp_regs();
-> +       int ret;
-> +
-> +       if (IS_ERR(regs))
-> +               return PTR_ERR(regs);
->
->         perf_fetch_caller_regs(regs);
-> -       return ____bpf_perf_event_output(regs, map, flags, data, size);
-> +       ret = ____bpf_perf_event_output(regs, map, flags, data, size);
-> +
-> +       put_bpf_raw_tp_regs();
-> +       return ret;
->  }
->
->  static const struct bpf_func_proto bpf_perf_event_output_proto_raw_tp = {
-> @@ -848,12 +901,18 @@ static const struct bpf_func_proto bpf_perf_event_output_proto_raw_tp = {
->  BPF_CALL_3(bpf_get_stackid_raw_tp, struct bpf_raw_tracepoint_args *, args,
->            struct bpf_map *, map, u64, flags)
->  {
-> -       struct pt_regs *regs = this_cpu_ptr(&bpf_raw_tp_regs);
-> +       struct pt_regs *regs = get_bpf_raw_tp_regs();
-> +       int ret;
-> +
-> +       if (IS_ERR(regs))
-> +               return PTR_ERR(regs);
->
->         perf_fetch_caller_regs(regs);
->         /* similar to bpf_perf_event_output_tp, but pt_regs fetched differently */
-> -       return bpf_get_stackid((unsigned long) regs, (unsigned long) map,
-> -                              flags, 0, 0);
-> +       ret = bpf_get_stackid((unsigned long) regs, (unsigned long) map,
-> +                             flags, 0, 0);
-> +       put_bpf_raw_tp_regs();
-> +       return ret;
->  }
->
->  static const struct bpf_func_proto bpf_get_stackid_proto_raw_tp = {
-> @@ -868,11 +927,17 @@ static const struct bpf_func_proto bpf_get_stackid_proto_raw_tp = {
->  BPF_CALL_4(bpf_get_stack_raw_tp, struct bpf_raw_tracepoint_args *, args,
->            void *, buf, u32, size, u64, flags)
->  {
-> -       struct pt_regs *regs = this_cpu_ptr(&bpf_raw_tp_regs);
-> +       struct pt_regs *regs = get_bpf_raw_tp_regs();
-> +       int ret;
-> +
-> +       if (IS_ERR(regs))
-> +               return PTR_ERR(regs);
->
->         perf_fetch_caller_regs(regs);
-> -       return bpf_get_stack((unsigned long) regs, (unsigned long) buf,
-> -                            (unsigned long) size, flags, 0);
-> +       ret = bpf_get_stack((unsigned long) regs, (unsigned long) buf,
-> +                           (unsigned long) size, flags, 0);
-> +       put_bpf_raw_tp_regs();
-> +       return ret;
->  }
->
->  static const struct bpf_func_proto bpf_get_stack_proto_raw_tp = {
-> --
-> 2.17.1
->
+-- 
+viresh
