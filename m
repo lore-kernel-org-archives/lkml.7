@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1B4C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FA2C46470
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E386A208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA568208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfFGGIQ (ORCPT
+        id S1727166AbfFGGIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:08:16 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:50096 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726948AbfFGGIP (ORCPT
+        Fri, 7 Jun 2019 02:08:17 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:52306 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726637AbfFGGIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:08:15 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TTcZLUN_1559887677;
+        Fri, 7 Jun 2019 02:08:14 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TTcZLUN_1559887677;
 Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TTcZLUN_1559887677)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 07 Jun 2019 14:08:11 +0800
+          Fri, 07 Jun 2019 14:08:10 +0800
 From:   Yang Shi <yang.shi@linux.alibaba.com>
 To:     ktkhai@virtuozzo.com, kirill.shutemov@linux.intel.com,
         hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
         shakeelb@google.com, rientjes@google.com, akpm@linux-foundation.org
 Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] mm: shrinker: make shrinker not depend on memcg kmem
-Date:   Fri,  7 Jun 2019 14:07:39 +0800
-Message-Id: <1559887659-23121-5-git-send-email-yang.shi@linux.alibaba.com>
+Subject: [PATCH 1/4] mm: thp: extract split_queue_* into a struct
+Date:   Fri,  7 Jun 2019 14:07:36 +0800
+Message-Id: <1559887659-23121-2-git-send-email-yang.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1559887659-23121-1-git-send-email-yang.shi@linux.alibaba.com>
 References: <1559887659-23121-1-git-send-email-yang.shi@linux.alibaba.com>
@@ -42,139 +42,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently shrinker is just allocated and can work when memcg kmem is
-enabled.  But, THP deferred split shrinker is not slab shrinker, it
-doesn't make too much sense to have such shrinker depend on memcg kmem.
-It should be able to reclaim THP even though memcg kmem is disabled.
+Put split_queue, split_queue_lock and split_queue_len into a struct in
+order to reduce code duplication when we convert deferred_split to memcg
+aware in the later patches.
 
-Introduce a new shrinker flag, SHRINKER_NONSLAB, for non-slab shrinker,
-i.e. THP deferred split shrinker.  When memcg kmem is disabled, just
-such shrinkers can be called in shrinking memcg slab.
-
+Suggested-by: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
 Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
 Cc: Hugh Dickins <hughd@google.com>
 Cc: Shakeel Butt <shakeelb@google.com>
 Cc: David Rientjes <rientjes@google.com>
 Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- include/linux/shrinker.h |  3 +--
- mm/huge_memory.c         |  3 ++-
- mm/vmscan.c              | 27 ++++++---------------------
- 3 files changed, 9 insertions(+), 24 deletions(-)
+ include/linux/mmzone.h | 12 +++++++++---
+ mm/huge_memory.c       | 45 +++++++++++++++++++++++++--------------------
+ mm/page_alloc.c        |  8 +++++---
+ 3 files changed, 39 insertions(+), 26 deletions(-)
 
-diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
-index 9443caf..e14f68e 100644
---- a/include/linux/shrinker.h
-+++ b/include/linux/shrinker.h
-@@ -69,10 +69,8 @@ struct shrinker {
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 70394ca..7799166 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -676,6 +676,14 @@ struct zonelist {
+ extern struct page *mem_map;
+ #endif
  
- 	/* These are for internal use */
- 	struct list_head list;
--#ifdef CONFIG_MEMCG_KMEM
- 	/* ID in shrinker_idr */
- 	int id;
--#endif
- 	/* objs pending delete, per node */
- 	atomic_long_t *nr_deferred;
- };
-@@ -81,6 +79,7 @@ struct shrinker {
- /* Flags */
- #define SHRINKER_NUMA_AWARE	(1 << 0)
- #define SHRINKER_MEMCG_AWARE	(1 << 1)
-+#define SHRINKER_NONSLAB	(1 << 2)
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++struct deferred_split {
++	spinlock_t split_queue_lock;
++	struct list_head split_queue;
++	unsigned long split_queue_len;
++};
++#endif
++
+ /*
+  * On NUMA machines, each NUMA node would have a pg_data_t to describe
+  * it's memory layout. On UMA machines there is a single pglist_data which
+@@ -755,9 +763,7 @@ struct zonelist {
+ #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
  
- extern int prealloc_shrinker(struct shrinker *shrinker);
- extern void register_shrinker_prepared(struct shrinker *shrinker);
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	spinlock_t split_queue_lock;
+-	struct list_head split_queue;
+-	unsigned long split_queue_len;
++	struct deferred_split deferred_split_queue;
+ #endif
+ 
+ 	/* Fields commonly accessed by the page reclaim scanner */
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 50f4720..e77a9fc 100644
+index 9f8bce9..81cf759 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -2913,7 +2913,8 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
- 	.count_objects = deferred_split_count,
- 	.scan_objects = deferred_split_scan,
- 	.seeks = DEFAULT_SEEKS,
--	.flags = SHRINKER_NUMA_AWARE | SHRINKER_MEMCG_AWARE,
-+	.flags = SHRINKER_NUMA_AWARE | SHRINKER_MEMCG_AWARE |
-+		 SHRINKER_NONSLAB,
- };
- 
- #ifdef CONFIG_DEBUG_FS
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 7acd0af..62000ae 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -174,8 +174,6 @@ struct scan_control {
- static LIST_HEAD(shrinker_list);
- static DECLARE_RWSEM(shrinker_rwsem);
- 
--#ifdef CONFIG_MEMCG_KMEM
--
- /*
-  * We allow subsystems to populate their shrinker-related
-  * LRU lists before register_shrinker_prepared() is called
-@@ -227,16 +225,6 @@ static void unregister_memcg_shrinker(struct shrinker *shrinker)
- 	idr_remove(&shrinker_idr, id);
- 	up_write(&shrinker_rwsem);
- }
--#else /* CONFIG_MEMCG_KMEM */
--static int prealloc_memcg_shrinker(struct shrinker *shrinker)
--{
--	return 0;
--}
--
--static void unregister_memcg_shrinker(struct shrinker *shrinker)
--{
--}
--#endif /* CONFIG_MEMCG_KMEM */
- 
- #ifdef CONFIG_MEMCG
- static bool global_reclaim(struct scan_control *sc)
-@@ -579,7 +567,6 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
- 	return freed;
- }
- 
--#ifdef CONFIG_MEMCG_KMEM
- static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 			struct mem_cgroup *memcg, int priority)
+@@ -2658,6 +2658,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
  {
-@@ -587,7 +574,7 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 	unsigned long ret, freed = 0;
- 	int i;
+ 	struct page *head = compound_head(page);
+ 	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+ 	struct anon_vma *anon_vma = NULL;
+ 	struct address_space *mapping = NULL;
+ 	int count, mapcount, extra_pins, ret;
+@@ -2744,17 +2745,17 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 	}
  
--	if (!memcg_kmem_enabled() || !mem_cgroup_online(memcg))
-+	if (!mem_cgroup_online(memcg))
- 		return 0;
- 
- 	if (!down_read_trylock(&shrinker_rwsem))
-@@ -613,6 +600,11 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 			continue;
+ 	/* Prevent deferred_split_scan() touching ->_refcount */
+-	spin_lock(&pgdata->split_queue_lock);
++	spin_lock(&ds_queue->split_queue_lock);
+ 	count = page_count(head);
+ 	mapcount = total_mapcount(head);
+ 	if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
+ 		if (!list_empty(page_deferred_list(head))) {
+-			pgdata->split_queue_len--;
++			ds_queue->split_queue_len--;
+ 			list_del(page_deferred_list(head));
  		}
+ 		if (mapping)
+ 			__dec_node_page_state(page, NR_SHMEM_THPS);
+-		spin_unlock(&pgdata->split_queue_lock);
++		spin_unlock(&ds_queue->split_queue_lock);
+ 		__split_huge_page(page, list, end, flags);
+ 		if (PageSwapCache(head)) {
+ 			swp_entry_t entry = { .val = page_private(head) };
+@@ -2771,7 +2772,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 			dump_page(page, "total_mapcount(head) > 0");
+ 			BUG();
+ 		}
+-		spin_unlock(&pgdata->split_queue_lock);
++		spin_unlock(&ds_queue->split_queue_lock);
+ fail:		if (mapping)
+ 			xa_unlock(&mapping->i_pages);
+ 		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
+@@ -2794,52 +2795,56 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ void free_transhuge_page(struct page *page)
+ {
+ 	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+ 	unsigned long flags;
  
-+		/* Call non-slab shrinkers even though kmem is disabled */
-+		if (!memcg_kmem_enabled() &&
-+		    !(shrinker->flags & SHRINKER_NONSLAB))
-+			continue;
-+
- 		ret = do_shrink_slab(&sc, shrinker, priority);
- 		if (ret == SHRINK_EMPTY) {
- 			clear_bit(i, map->map);
-@@ -649,13 +641,6 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 	up_read(&shrinker_rwsem);
- 	return freed;
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+ 	if (!list_empty(page_deferred_list(page))) {
+-		pgdata->split_queue_len--;
++		ds_queue->split_queue_len--;
+ 		list_del(page_deferred_list(page));
+ 	}
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ 	free_compound_page(page);
  }
--#else /* CONFIG_MEMCG_KMEM */
--static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
--			struct mem_cgroup *memcg, int priority)
--{
--	return 0;
--}
--#endif /* CONFIG_MEMCG_KMEM */
  
- /**
-  * shrink_slab - shrink slab caches
+ void deferred_split_huge_page(struct page *page)
+ {
+ 	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+ 	unsigned long flags;
+ 
+ 	VM_BUG_ON_PAGE(!PageTransHuge(page), page);
+ 
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+ 	if (list_empty(page_deferred_list(page))) {
+ 		count_vm_event(THP_DEFERRED_SPLIT_PAGE);
+-		list_add_tail(page_deferred_list(page), &pgdata->split_queue);
+-		pgdata->split_queue_len++;
++		list_add_tail(page_deferred_list(page), &ds_queue->split_queue);
++		ds_queue->split_queue_len++;
+ 	}
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ }
+ 
+ static unsigned long deferred_split_count(struct shrinker *shrink,
+ 		struct shrink_control *sc)
+ {
+ 	struct pglist_data *pgdata = NODE_DATA(sc->nid);
+-	return READ_ONCE(pgdata->split_queue_len);
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
++	return READ_ONCE(ds_queue->split_queue_len);
+ }
+ 
+ static unsigned long deferred_split_scan(struct shrinker *shrink,
+ 		struct shrink_control *sc)
+ {
+ 	struct pglist_data *pgdata = NODE_DATA(sc->nid);
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+ 	unsigned long flags;
+ 	LIST_HEAD(list), *pos, *next;
+ 	struct page *page;
+ 	int split = 0;
+ 
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+ 	/* Take pin on all head pages to avoid freeing them under us */
+-	list_for_each_safe(pos, next, &pgdata->split_queue) {
++	list_for_each_safe(pos, next, &ds_queue->split_queue) {
+ 		page = list_entry((void *)pos, struct page, mapping);
+ 		page = compound_head(page);
+ 		if (get_page_unless_zero(page)) {
+@@ -2847,12 +2852,12 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
+ 		} else {
+ 			/* We lost race with put_compound_page() */
+ 			list_del_init(page_deferred_list(page));
+-			pgdata->split_queue_len--;
++			ds_queue->split_queue_len--;
+ 		}
+ 		if (!--sc->nr_to_scan)
+ 			break;
+ 	}
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ 
+ 	list_for_each_safe(pos, next, &list) {
+ 		page = list_entry((void *)pos, struct page, mapping);
+@@ -2866,15 +2871,15 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
+ 		put_page(page);
+ 	}
+ 
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+-	list_splice_tail(&list, &pgdata->split_queue);
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
++	list_splice_tail(&list, &ds_queue->split_queue);
++	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ 
+ 	/*
+ 	 * Stop shrinker if we didn't split any page, but the queue is empty.
+ 	 * This can happen if pages were freed under us.
+ 	 */
+-	if (!split && list_empty(&pgdata->split_queue))
++	if (!split && list_empty(&ds_queue->split_queue))
+ 		return SHRINK_STOP;
+ 	return split;
+ }
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3b13d39..a82104a 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6581,9 +6581,11 @@ static unsigned long __init calc_memmap_size(unsigned long spanned_pages,
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ static void pgdat_init_split_queue(struct pglist_data *pgdat)
+ {
+-	spin_lock_init(&pgdat->split_queue_lock);
+-	INIT_LIST_HEAD(&pgdat->split_queue);
+-	pgdat->split_queue_len = 0;
++	struct deferred_split *ds_queue = &pgdat->deferred_split_queue;
++
++	spin_lock_init(&ds_queue->split_queue_lock);
++	INIT_LIST_HEAD(&ds_queue->split_queue);
++	ds_queue->split_queue_len = 0;
+ }
+ #else
+ static void pgdat_init_split_queue(struct pglist_data *pgdat) {}
 -- 
 1.8.3.1
 
