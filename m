@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6632DC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9187C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D410208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839C32133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922904;
-	bh=FW5w7A6SuCFU64s92XNLYs79VvKZL7XkFiSjqhtCBGw=;
+	s=default; t=1559922906;
+	bh=UH2GyxQrvGwqm+gjCdaD8qaU9d7TkDrKOxpL2vBeJg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPWObZd3ZH4GvstCgydiXcbo0vRzFt9KHO3IHcqHcV1D5Oa/8VEb9T/TRFsmCAd3Q
-	 ZklnLQf3Ngu7gzB1e5dpHs0wGWb9LCDcA3kxYwijhPKaeenNSQG7gh5XS0f6S6+GAk
-	 42tXkq6WQcKCYmwFeOoDS5/Z6oxdX4dFtBdZk+q8=
+	b=bUWCbLoUDTt/Ylz7N94AtcNNnGjBIeEPwA2qk+nRdS9JJ/TN9tPdfc4oTMMucAPVs
+	 RgUrm3oac2lLAnJLTeVEcJUE5fv80KnFwnCk/ZW8mgu2HlkmPuxbefezaFwPAIFhmM
+	 Q8lmHLFQxm7g3Engwb/fui0mUfY0sUncjvgEWX7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731349AbfFGPqQ (ORCPT
+        id S1731350AbfFGPqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:46:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58262 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:46:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730496AbfFGPqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:06 -0400
+        id S1729770AbfFGPqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F06B9212F5;
-        Fri,  7 Jun 2019 15:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B99621479;
+        Fri,  7 Jun 2019 15:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922366;
-        bh=FW5w7A6SuCFU64s92XNLYs79VvKZL7XkFiSjqhtCBGw=;
+        s=default; t=1559922363;
+        bh=UH2GyxQrvGwqm+gjCdaD8qaU9d7TkDrKOxpL2vBeJg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y6gFuFo50wwbWu/b6PiDoTDri6oMyTKfRMUBzHBKNujYijolyAMw9l+3t2IMUytEd
-         ASziqBDQwH021aaD8c2m7M3eIiUHv8s6BAh69h4F4S4aFJj8NhrlNQo9PCYEUTfctU
-         S2G8ZsjrCaaM1GLBtVMx/Wd5BF7RA8jUHWI87F64=
+        b=J2GfpeK0HLAEGVuMWhx0qYE5SCuEzPaA7MDx9Ok0e+D9Nso6JWaeJulGDOzyt5vBO
+         xsSSlJIgnoVFHtFmr31s4mXoyJiiG3sSqApJPmSdu5kPm6Oi+X1TjfDfowvH2SX8Gc
+         C9RXRS+PFs9vuBlUTSGf+Et369WXZiWjT8UQi6wY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Packard <keithp@keithp.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 4.19 61/73] drm/lease: Make sure implicit planes are leased
-Date:   Fri,  7 Jun 2019 17:39:48 +0200
-Message-Id: <20190607153855.793407973@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.19 60/73] drm/rockchip: shutdown drm subsystem on shutdown
+Date:   Fri,  7 Jun 2019 17:39:47 +0200
+Message-Id: <20190607153855.688780711@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -60,68 +64,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Vicente Bergas <vicencb@gmail.com>
 
-commit 204f640da6914844b3270b41b29c84f6e3b74083 upstream.
+commit b8f9d7f37b6af829c34c49d1a4f73ce6ed58e403 upstream.
 
-If userspace doesn't enable universal planes, then we automatically
-add the primary and cursor planes. But for universal userspace there's
-no such check (and maybe we only want to give the lessee one plane,
-maybe not even the primary one), hence we need to check for the
-implied plane.
+As explained by Robin Murphy:
+> the IOMMU shutdown disables paging, so if the VOP is still
+> scanning out then that will result in whatever IOVAs it was using now going
+> straight out onto the bus as physical addresses.
 
-v2: don't forget setcrtc ioctl.
+We had a more radical approach before in commit
+7f3ef5dedb14 ("drm/rockchip: Allow driver to be shutdown on reboot/kexec")
+but that resulted in new warnings and oopses on shutdown on rk3399
+chromeos devices.
 
-v3: Still allow disabling of the crtc in SETCRTC.
+So second try is resurrecting Vicentes shutdown change which should
+achieve the same result but in a less drastic way.
 
+Fixes: 63238173b2fa ("Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"")
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Brian Norris <briannorris@chromium.org>
+Cc: Doug Anderson <dianders@chromium.org>
 Cc: stable@vger.kernel.org
-Cc: Keith Packard <keithp@keithp.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190228144910.26488-6-daniel.vetter@ffwll.ch
+Suggested-by: JeffyChen <jeffy.chen@rock-chips.com>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Vicente Bergas <vicencb@gmail.com>
+[adapted commit message to explain the history]
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Tested-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190402113753.10118-1-heiko@sntech.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_crtc.c  |    4 ++++
- drivers/gpu/drm/drm_plane.c |    8 ++++++++
- 2 files changed, 12 insertions(+)
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/gpu/drm/drm_crtc.c
-+++ b/drivers/gpu/drm/drm_crtc.c
-@@ -595,6 +595,10 @@ int drm_mode_setcrtc(struct drm_device *
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+@@ -442,6 +442,14 @@ static int rockchip_drm_platform_remove(
+ 	return 0;
+ }
  
- 	plane = crtc->primary;
- 
-+	/* allow disabling with the primary plane leased */
-+	if (crtc_req->mode_valid && !drm_lease_held(file_priv, plane->base.id))
-+		return -EACCES;
++static void rockchip_drm_platform_shutdown(struct platform_device *pdev)
++{
++	struct drm_device *drm = platform_get_drvdata(pdev);
 +
- 	mutex_lock(&crtc->dev->mode_config.mutex);
- 	drm_modeset_acquire_init(&ctx, DRM_MODESET_ACQUIRE_INTERRUPTIBLE);
- retry:
---- a/drivers/gpu/drm/drm_plane.c
-+++ b/drivers/gpu/drm/drm_plane.c
-@@ -940,6 +940,11 @@ retry:
- 		if (ret)
- 			goto out;
- 
-+		if (!drm_lease_held(file_priv, crtc->cursor->base.id)) {
-+			ret = -EACCES;
-+			goto out;
-+		}
++	if (drm)
++		drm_atomic_helper_shutdown(drm);
++}
 +
- 		ret = drm_mode_cursor_universal(crtc, req, file_priv, &ctx);
- 		goto out;
- 	}
-@@ -1042,6 +1047,9 @@ int drm_mode_page_flip_ioctl(struct drm_
- 
- 	plane = crtc->primary;
- 
-+	if (!drm_lease_held(file_priv, plane->base.id))
-+		return -EACCES;
-+
- 	if (crtc->funcs->page_flip_target) {
- 		u32 current_vblank;
- 		int r;
+ static const struct of_device_id rockchip_drm_dt_ids[] = {
+ 	{ .compatible = "rockchip,display-subsystem", },
+ 	{ /* sentinel */ },
+@@ -451,6 +459,7 @@ MODULE_DEVICE_TABLE(of, rockchip_drm_dt_
+ static struct platform_driver rockchip_drm_platform_driver = {
+ 	.probe = rockchip_drm_platform_probe,
+ 	.remove = rockchip_drm_platform_remove,
++	.shutdown = rockchip_drm_platform_shutdown,
+ 	.driver = {
+ 		.name = "rockchip-drm",
+ 		.of_match_table = rockchip_drm_dt_ids,
 
 
