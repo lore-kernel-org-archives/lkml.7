@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D844AC468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68460C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83F820657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3545E20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922717;
-	bh=je00nHXy2hhHJLoChkbtjJCQOLib/hdvZbih/h8p3Aw=;
+	s=default; t=1559922729;
+	bh=6VkPEARVCZ06+Ygd8cQ/SxPRE/BuGmGgIbuGgVSEmAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nU6kbYC9czPF/04kZFqbquXGMiD/3k4v/S8bxjFgwedfeCoEJsDHspHbJ3VIoWSac
-	 iOA8utFmKd8LEg3ly6QZK+F1JNN20yLFnRVH5ZV303SZ/UJe4SU9O3mFYSHll2v5AT
-	 64FL/LrwilzC5s015S/oE+MlBm6ssYdoeasz1+Es=
+	b=I83oczgyhOblD5aZHVPE5Sg8gSm9SgDeBNn0zgW/1ppCncH94M0nha8XKeXBQgp2T
+	 vlnJRZ3W9Jfkprk4X+o24bF4LY0jVV73YkbgFUcupOIxqf4JnJLx5gMmRs3gLGtbBB
+	 tNxQjZED0LxSZ982ugmZQYfWBmQ4H9tLIGDZtXKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbfFGPt5 (ORCPT
+        id S1731931AbfFGPwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36164 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:52:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731626AbfFGPtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:49:53 -0400
+        id S1731388AbfFGPtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:49:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EAC120840;
-        Fri,  7 Jun 2019 15:49:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8AC02147A;
+        Fri,  7 Jun 2019 15:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922592;
-        bh=je00nHXy2hhHJLoChkbtjJCQOLib/hdvZbih/h8p3Aw=;
+        s=default; t=1559922582;
+        bh=6VkPEARVCZ06+Ygd8cQ/SxPRE/BuGmGgIbuGgVSEmAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xnk/M67UsZdFwJPGjYml4Di37Ogg/+PwkTDDPvDLpZFygIzuWLeAFa+IR4UC7qk4p
-         WRGfyO0BJRZExGvRk3n92fGu+zGer4ErbhZy8h3GRS/d6N/6OVsy0/gQJqQReUGIUu
-         SqjM1F0zabi75OqtVXNzuPdEoUSEQsxrHFDUrW7c=
+        b=lX/A85vq1H+ieqEz2T63YSz1H+d7vNMOrpkjosdXsUTuOevtZBJvgAeJ70+ENG/MO
+         2OFXOy13DuwOGfDRxbI5z+p1tl4W6jh3vr/zSHqIkZeh9HwJdZwTt3E7Imyuy4QowM
+         kQ2FARwux6ebzWpPtiBiRzfk+iZeOOZY47E4fJ+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 5.1 32/85] s390/crypto: fix gcm-aes-s390 selftest failures
-Date:   Fri,  7 Jun 2019 17:39:17 +0200
-Message-Id: <20190607153853.224903648@linuxfoundation.org>
+        stable@vger.kernel.org, Ruslan Babayev <ruslan@babayev.com>,
+        xe-linux-external@cisco.com, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.1 28/85] iio: dac: ds4422/ds4424 fix chip verification
+Date:   Fri,  7 Jun 2019 17:39:13 +0200
+Message-Id: <20190607153852.736791159@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -61,258 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Ruslan Babayev <ruslan@babayev.com>
 
-commit bef9f0ba300a55d79a69aa172156072182176515 upstream.
+commit 60f2208699ec08ff9fdf1f97639a661a92a18f1c upstream.
 
-The current kernel uses improved crypto selftests. These
-tests showed that the current implementation of gcm-aes-s390
-is not able to deal with chunks of output buffers which are
-not a multiple of 16 bytes. This patch introduces a rework
-of the gcm aes s390 scatter walk handling which now is able
-to handle any input and output scatter list chunk sizes
-correctly.
+The ds4424_get_value function takes channel number as it's 3rd
+argument and translates it internally into I2C address using
+DS4424_DAC_ADDR macro. The caller ds4424_verify_chip was passing an
+already translated I2C address as its last argument.
 
-Code has been verified by the crypto selftests, the tcrypt
-kernel module and additional tests ran via the af_alg interface.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Patrick Steuer <steuer@linux.ibm.com>
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+Cc: xe-linux-external@cisco.com
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/crypto/aes_s390.c |  148 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 107 insertions(+), 41 deletions(-)
+ drivers/iio/dac/ds4424.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -826,19 +826,45 @@ static int gcm_aes_setauthsize(struct cr
- 	return 0;
- }
- 
--static void gcm_sg_walk_start(struct gcm_sg_walk *gw, struct scatterlist *sg,
--			      unsigned int len)
-+static void gcm_walk_start(struct gcm_sg_walk *gw, struct scatterlist *sg,
-+			   unsigned int len)
+--- a/drivers/iio/dac/ds4424.c
++++ b/drivers/iio/dac/ds4424.c
+@@ -166,7 +166,7 @@ static int ds4424_verify_chip(struct iio
  {
- 	memset(gw, 0, sizeof(*gw));
- 	gw->walk_bytes_remain = len;
- 	scatterwalk_start(&gw->walk, sg);
- }
+ 	int ret, val;
  
--static int gcm_sg_walk_go(struct gcm_sg_walk *gw, unsigned int minbytesneeded)
-+static inline unsigned int _gcm_sg_clamp_and_map(struct gcm_sg_walk *gw)
-+{
-+	struct scatterlist *nextsg;
-+
-+	gw->walk_bytes = scatterwalk_clamp(&gw->walk, gw->walk_bytes_remain);
-+	while (!gw->walk_bytes) {
-+		nextsg = sg_next(gw->walk.sg);
-+		if (!nextsg)
-+			return 0;
-+		scatterwalk_start(&gw->walk, nextsg);
-+		gw->walk_bytes = scatterwalk_clamp(&gw->walk,
-+						   gw->walk_bytes_remain);
-+	}
-+	gw->walk_ptr = scatterwalk_map(&gw->walk);
-+	return gw->walk_bytes;
-+}
-+
-+static inline void _gcm_sg_unmap_and_advance(struct gcm_sg_walk *gw,
-+					     unsigned int nbytes)
-+{
-+	gw->walk_bytes_remain -= nbytes;
-+	scatterwalk_unmap(&gw->walk);
-+	scatterwalk_advance(&gw->walk, nbytes);
-+	scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
-+	gw->walk_ptr = NULL;
-+}
-+
-+static int gcm_in_walk_go(struct gcm_sg_walk *gw, unsigned int minbytesneeded)
- {
- 	int n;
- 
--	/* minbytesneeded <= AES_BLOCK_SIZE */
- 	if (gw->buf_bytes && gw->buf_bytes >= minbytesneeded) {
- 		gw->ptr = gw->buf;
- 		gw->nbytes = gw->buf_bytes;
-@@ -851,13 +877,11 @@ static int gcm_sg_walk_go(struct gcm_sg_
- 		goto out;
- 	}
- 
--	gw->walk_bytes = scatterwalk_clamp(&gw->walk, gw->walk_bytes_remain);
--	if (!gw->walk_bytes) {
--		scatterwalk_start(&gw->walk, sg_next(gw->walk.sg));
--		gw->walk_bytes = scatterwalk_clamp(&gw->walk,
--						   gw->walk_bytes_remain);
-+	if (!_gcm_sg_clamp_and_map(gw)) {
-+		gw->ptr = NULL;
-+		gw->nbytes = 0;
-+		goto out;
- 	}
--	gw->walk_ptr = scatterwalk_map(&gw->walk);
- 
- 	if (!gw->buf_bytes && gw->walk_bytes >= minbytesneeded) {
- 		gw->ptr = gw->walk_ptr;
-@@ -869,51 +893,90 @@ static int gcm_sg_walk_go(struct gcm_sg_
- 		n = min(gw->walk_bytes, AES_BLOCK_SIZE - gw->buf_bytes);
- 		memcpy(gw->buf + gw->buf_bytes, gw->walk_ptr, n);
- 		gw->buf_bytes += n;
--		gw->walk_bytes_remain -= n;
--		scatterwalk_unmap(&gw->walk);
--		scatterwalk_advance(&gw->walk, n);
--		scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
--
-+		_gcm_sg_unmap_and_advance(gw, n);
- 		if (gw->buf_bytes >= minbytesneeded) {
- 			gw->ptr = gw->buf;
- 			gw->nbytes = gw->buf_bytes;
- 			goto out;
- 		}
--
--		gw->walk_bytes = scatterwalk_clamp(&gw->walk,
--						   gw->walk_bytes_remain);
--		if (!gw->walk_bytes) {
--			scatterwalk_start(&gw->walk, sg_next(gw->walk.sg));
--			gw->walk_bytes = scatterwalk_clamp(&gw->walk,
--							gw->walk_bytes_remain);
-+		if (!_gcm_sg_clamp_and_map(gw)) {
-+			gw->ptr = NULL;
-+			gw->nbytes = 0;
-+			goto out;
- 		}
--		gw->walk_ptr = scatterwalk_map(&gw->walk);
- 	}
- 
- out:
- 	return gw->nbytes;
- }
- 
--static void gcm_sg_walk_done(struct gcm_sg_walk *gw, unsigned int bytesdone)
-+static int gcm_out_walk_go(struct gcm_sg_walk *gw, unsigned int minbytesneeded)
- {
--	int n;
-+	if (gw->walk_bytes_remain == 0) {
-+		gw->ptr = NULL;
-+		gw->nbytes = 0;
-+		goto out;
-+	}
-+
-+	if (!_gcm_sg_clamp_and_map(gw)) {
-+		gw->ptr = NULL;
-+		gw->nbytes = 0;
-+		goto out;
-+	}
- 
-+	if (gw->walk_bytes >= minbytesneeded) {
-+		gw->ptr = gw->walk_ptr;
-+		gw->nbytes = gw->walk_bytes;
-+		goto out;
-+	}
-+
-+	scatterwalk_unmap(&gw->walk);
-+	gw->walk_ptr = NULL;
-+
-+	gw->ptr = gw->buf;
-+	gw->nbytes = sizeof(gw->buf);
-+
-+out:
-+	return gw->nbytes;
-+}
-+
-+static int gcm_in_walk_done(struct gcm_sg_walk *gw, unsigned int bytesdone)
-+{
- 	if (gw->ptr == NULL)
--		return;
-+		return 0;
- 
- 	if (gw->ptr == gw->buf) {
--		n = gw->buf_bytes - bytesdone;
-+		int n = gw->buf_bytes - bytesdone;
- 		if (n > 0) {
- 			memmove(gw->buf, gw->buf + bytesdone, n);
--			gw->buf_bytes -= n;
-+			gw->buf_bytes = n;
- 		} else
- 			gw->buf_bytes = 0;
--	} else {
--		gw->walk_bytes_remain -= bytesdone;
--		scatterwalk_unmap(&gw->walk);
--		scatterwalk_advance(&gw->walk, bytesdone);
--		scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
--	}
-+	} else
-+		_gcm_sg_unmap_and_advance(gw, bytesdone);
-+
-+	return bytesdone;
-+}
-+
-+static int gcm_out_walk_done(struct gcm_sg_walk *gw, unsigned int bytesdone)
-+{
-+	int i, n;
-+
-+	if (gw->ptr == NULL)
-+		return 0;
-+
-+	if (gw->ptr == gw->buf) {
-+		for (i = 0; i < bytesdone; i += n) {
-+			if (!_gcm_sg_clamp_and_map(gw))
-+				return i;
-+			n = min(gw->walk_bytes, bytesdone - i);
-+			memcpy(gw->walk_ptr, gw->buf + i, n);
-+			_gcm_sg_unmap_and_advance(gw, n);
-+		}
-+	} else
-+		_gcm_sg_unmap_and_advance(gw, bytesdone);
-+
-+	return bytesdone;
- }
- 
- static int gcm_aes_crypt(struct aead_request *req, unsigned int flags)
-@@ -926,7 +989,7 @@ static int gcm_aes_crypt(struct aead_req
- 	unsigned int pclen = req->cryptlen;
- 	int ret = 0;
- 
--	unsigned int len, in_bytes, out_bytes,
-+	unsigned int n, len, in_bytes, out_bytes,
- 		     min_bytes, bytes, aad_bytes, pc_bytes;
- 	struct gcm_sg_walk gw_in, gw_out;
- 	u8 tag[GHASH_DIGEST_SIZE];
-@@ -963,14 +1026,14 @@ static int gcm_aes_crypt(struct aead_req
- 	*(u32 *)(param.j0 + ivsize) = 1;
- 	memcpy(param.k, ctx->key, ctx->key_len);
- 
--	gcm_sg_walk_start(&gw_in, req->src, len);
--	gcm_sg_walk_start(&gw_out, req->dst, len);
-+	gcm_walk_start(&gw_in, req->src, len);
-+	gcm_walk_start(&gw_out, req->dst, len);
- 
- 	do {
- 		min_bytes = min_t(unsigned int,
- 				  aadlen > 0 ? aadlen : pclen, AES_BLOCK_SIZE);
--		in_bytes = gcm_sg_walk_go(&gw_in, min_bytes);
--		out_bytes = gcm_sg_walk_go(&gw_out, min_bytes);
-+		in_bytes = gcm_in_walk_go(&gw_in, min_bytes);
-+		out_bytes = gcm_out_walk_go(&gw_out, min_bytes);
- 		bytes = min(in_bytes, out_bytes);
- 
- 		if (aadlen + pclen <= bytes) {
-@@ -997,8 +1060,11 @@ static int gcm_aes_crypt(struct aead_req
- 			  gw_in.ptr + aad_bytes, pc_bytes,
- 			  gw_in.ptr, aad_bytes);
- 
--		gcm_sg_walk_done(&gw_in, aad_bytes + pc_bytes);
--		gcm_sg_walk_done(&gw_out, aad_bytes + pc_bytes);
-+		n = aad_bytes + pc_bytes;
-+		if (gcm_in_walk_done(&gw_in, n) != n)
-+			return -ENOMEM;
-+		if (gcm_out_walk_done(&gw_out, n) != n)
-+			return -ENOMEM;
- 		aadlen -= aad_bytes;
- 		pclen -= pc_bytes;
- 	} while (aadlen + pclen > 0);
+-	ret = ds4424_get_value(indio_dev, &val, DS4424_DAC_ADDR(0));
++	ret = ds4424_get_value(indio_dev, &val, 0);
+ 	if (ret < 0)
+ 		dev_err(&indio_dev->dev,
+ 				"%s failed. ret: %d\n", __func__, ret);
 
 
