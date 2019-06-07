@@ -2,184 +2,228 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E272C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24161C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7652089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A922089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:24:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ItLnYD6x"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="byzmTdhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbfFGPXf (ORCPT
+        id S1729826AbfFGPYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:23:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46362 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728287AbfFGPXe (ORCPT
+        Fri, 7 Jun 2019 11:24:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40726 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729797AbfFGPYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:23:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57FIgZJ065043;
-        Fri, 7 Jun 2019 15:23:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=p/h/K8U+S9UnTSMqywSHyFTN/pAmAlatfrvFdGLk/l8=;
- b=ItLnYD6xsbm6K2ULW5f4F0sC4QrVHQxpoaLSaYag1a9WcwBzDVrv1WJpIB4Ecym8/DBd
- 9Mt36Mnnsk1P/W7GgpPWdHzOWkZ+vmOpE6xPwAeI9kv6WLa5WqdaX/mzHfFHILcXnThl
- xAX494GEg/Ycoxzmdhw0nNWmnMzieaZcLQ0SGpNI0keHbImQbsnYCzoXWikb1mvtlvRQ
- dlmX+AIrMNnE51RAxOiEvP1jngbzE5rQnx97jIQCVxJRD9mL1FvDxZ1+wBPY1QloLVDk
- 4nLPX5TZKHA2hWzYq24oeHCq1ioZExxgO9sJ2hn67F6iVBt+LPE0k0XdaVDEWm7snLIf cQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sugstxwmr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 15:23:02 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57FM0vF160167;
-        Fri, 7 Jun 2019 15:23:02 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2swngk2tcu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 15:23:01 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x57FN0mk005625;
-        Fri, 7 Jun 2019 15:23:00 GMT
-Received: from [10.175.171.136] (/10.175.171.136)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 08:23:00 -0700
-Subject: Re: [RFC PATCH 00/16] xenhost support
-To:     Juergen Gross <jgross@suse.com>
-Cc:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <5649cfd1-24df-2196-2888-b00fc3ace7ad@suse.com>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <ede6db03-121c-9ec6-f8eb-dbcc605977b4@oracle.com>
-Date:   Fri, 7 Jun 2019 16:22:56 +0100
+        Fri, 7 Jun 2019 11:24:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id x24so2190388otp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tejEOI/tX7FNKVM+CoLTw76zsOlMQPJj4RVZ/MPUAHI=;
+        b=byzmTdhe8GPLUJgF0izWUXQDBFk0FnSAv+KzTH9y220f/yor1a8c1S0UgUJfr1olT1
+         4HMvM9c6eIg/UwcX5CW0gHcyFmwGyWqJ78nn2zK9d8U7DF3i/bMrCOkbG1KL+Bwryxpb
+         TRgHArzPRXy31t2OxCMXBGANR9pMgb5FSauN5yKWnbvHNvrf0BLAXbLEArJ0SFxY0bz7
+         fKC0k/D2UYErX4LaV8Jf2NTFs6Fww8mJKTWcKsRpDb0f+iQbNopvtdmds8fnoyFO+qvv
+         GJbZRkYpQy7c+Q8HSAvvMK23E0ElkbLXCVNYkKPRHdKZPWNJBtB8dhhVTVaL/Xu0v8Lg
+         qYQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tejEOI/tX7FNKVM+CoLTw76zsOlMQPJj4RVZ/MPUAHI=;
+        b=aLekVSPExo9X7vvKC/N3wNuLjx7JNucn+H8j1k7teWrFmXH6IGrYYOhUVMpUvaKLBh
+         o+O0aRKZMVbun9zha49AEMyWmKyTylEYiLkEQWAJJoq85WKrGbjzS8EG1M9gZ0BaKw8X
+         BXrVBRcj4bOSe+JcqxzdBUARdlosmLTRzi5nwqDvawSJYfPkqym2fPzmn1OpmMPNb1U6
+         CpAQFLBDCwmIpZsO9sZDqEQLSvavmj93nop7x4jza+rY4OtaRzoT7KCDDAWlzUctti9f
+         QbLtlmz+Lvtoat+wmVbx9eig15K7CwuScgP0mqgNTP9bWebAmdbLxLeLorcq1LZx5Y50
+         zfQg==
+X-Gm-Message-State: APjAAAXzZSemdxsZTQUALGmaHjlRdQQWTD8myO3y5KCzHVSikrgHx+lT
+        dEOH6vuOZMgOwfN71I4Vpnm3xvjzhDlym4OPkP587g==
+X-Google-Smtp-Source: APXvYqwMUyeo9bVoYx3l1KR9n9bzeoG7oZcFvmWmrWd7uYQgk+B7crHCKrTdgByt1XX6EYGWhaAUrFTB1MJMD+sJIss=
+X-Received: by 2002:aca:fc50:: with SMTP id a77mr4310345oii.0.1559921045671;
+ Fri, 07 Jun 2019 08:24:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5649cfd1-24df-2196-2888-b00fc3ace7ad@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9280 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070107
+References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
+ <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
+ <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com>
+ <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com> <CAKv+Gu_ZYpey0dWYebFgCaziyJ-_x+KbCmOegWqFjwC0U-5QaA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_ZYpey0dWYebFgCaziyJ-_x+KbCmOegWqFjwC0U-5QaA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 7 Jun 2019 08:23:54 -0700
+Message-ID: <CAPcyv4jO5WhRJ-=Nz70Jc0mCHYBJ6NsHjJNk6AerwQXH43oemw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
+ for dax
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 3:51 PM, Juergen Gross wrote:
-> On 09.05.19 19:25, Ankur Arora wrote:
->> Hi all,
->>
->> This is an RFC for xenhost support, outlined here by Juergen here:
->> https://lkml.org/lkml/2019/4/8/67.
-> 
-> First: thanks for all the effort you've put into this series!
-> 
->> The high level idea is to provide an abstraction of the Xen
->> communication interface, as a xenhost_t.
->>
->> xenhost_t expose ops for communication between the guest and Xen
->> (hypercall, cpuid, shared_info/vcpu_info, evtchn, grant-table and on top
->> of those, xenbus, ballooning), and these can differ based on the kind
->> of underlying Xen: regular, local, and nested.
-> 
-> I'm not sure we need to abstract away hypercalls and cpuid. I believe in
-> case of nested Xen all contacts to the L0 hypervisor should be done via
-> the L1 hypervisor. So we might need to issue some kind of passthrough
-> hypercall when e.g. granting a page to L0 dom0, but this should be
-> handled via the grant abstraction (events should be similar).
-> 
-Just to be clear: By "kind of passthrough hypercall" you mean (e.g. for every
-access/modify of grant table frames) you would proxy hypercall to L0 Xen via L1 Xen?
+On Fri, Jun 7, 2019 at 5:29 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> On Sat, 1 Jun 2019 at 06:26, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Fri, May 31, 2019 at 8:30 AM Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> > >
+> > > On Fri, 31 May 2019 at 17:28, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >
+> > > > On Fri, May 31, 2019 at 1:30 AM Ard Biesheuvel
+> > > > <ard.biesheuvel@linaro.org> wrote:
+> > > > >
+> > > > > (cc Mike for memblock)
+> > > > >
+> > > > > On Fri, 31 May 2019 at 01:13, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > >
+> > > > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > > > > interpretation of the EFI Memory Types as "reserved for a special
+> > > > > > purpose".
+> > > > > >
+> > > > > > The proposed Linux behavior for specific purpose memory is that it is
+> > > > > > reserved for direct-access (device-dax) by default and not available for
+> > > > > > any kernel usage, not even as an OOM fallback. Later, through udev
+> > > > > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > > > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > > > > node identifier.
+> > > > > >
+> > > > > > This patch introduces 3 new concepts at once given the entanglement
+> > > > > > between early boot enumeration relative to memory that can optionally be
+> > > > > > reserved from the kernel page allocator by default. The new concepts
+> > > > > > are:
+> > > > > >
+> > > > > > - E820_TYPE_SPECIFIC: Upon detecting the EFI_MEMORY_SP attribute on
+> > > > > >   EFI_CONVENTIONAL memory, update the E820 map with this new type. Only
+> > > > > >   perform this classification if the CONFIG_EFI_SPECIFIC_DAX=y policy is
+> > > > > >   enabled, otherwise treat it as typical ram.
+> > > > > >
+> > > > >
+> > > > > OK, so now we have 'special purpose', 'specific' and 'app specific'
+> > > > > [below]. Do they all mean the same thing?
+> > > >
+> > > > I struggled with separating the raw-EFI-type name from the name of the
+> > > > Linux specific policy. Since the reservation behavior is optional I
+> > > > was thinking there should be a distinct Linux kernel name for that
+> > > > policy. I did try to go back and change all occurrences of "special"
+> > > > to "specific" from the RFC to this v2, but seems I missed one.
+> > > >
+> > >
+> > > OK
+> >
+> > I'll go ahead and use "application reserved" terminology consistently
+> > throughout the code to distinguish that Linux translation from the raw
+> > "EFI specific purpose" attribute.
+> >
+>
+> OK
+>
+> > >
+> > > > >
+> > > > > > - IORES_DESC_APPLICATION_RESERVED: Add a new I/O resource descriptor for
+> > > > > >   a device driver to search iomem resources for application specific
+> > > > > >   memory. Teach the iomem code to identify such ranges as "Application
+> > > > > >   Reserved".
+> > > > > >
+> > > > > > - MEMBLOCK_APP_SPECIFIC: Given the memory ranges can fallback to the
+> > > > > >   traditional System RAM pool the expectation is that they will have
+> > > > > >   typical SRAT entries. In order to support a policy of device-dax by
+> > > > > >   default with the option to hotplug later, the numa initialization code
+> > > > > >   is taught to avoid marking online MEMBLOCK_APP_SPECIFIC regions.
+> > > > > >
+> > > > >
+> > > > > Can we move the generic memblock changes into a separate patch please?
+> > > >
+> > > > Yeah, that can move to a lead-in patch.
+> > > >
+> > > > [..]
+> > > > > > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > > > > > index 91368f5ce114..b57b123cbdf9 100644
+> > > > > > --- a/include/linux/efi.h
+> > > > > > +++ b/include/linux/efi.h
+> > > > > > @@ -129,6 +129,19 @@ typedef struct {
+> > > > > >         u64 attribute;
+> > > > > >  } efi_memory_desc_t;
+> > > > > >
+> > > > > > +#ifdef CONFIG_EFI_SPECIFIC_DAX
+> > > > > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
+> > > > > > +{
+> > > > > > +       return md->type == EFI_CONVENTIONAL_MEMORY
+> > > > > > +               && (md->attribute & EFI_MEMORY_SP);
+> > > > > > +}
+> > > > > > +#else
+> > > > > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
+> > > > > > +{
+> > > > > > +       return false;
+> > > > > > +}
+> > > > > > +#endif
+> > > > > > +
+> > > > > >  typedef struct {
+> > > > > >         efi_guid_t guid;
+> > > > > >         u32 headersize;
+> > > > >
+> > > > > I'd prefer it if we could avoid this DAX policy distinction leaking
+> > > > > into the EFI layer.
+> > > > >
+> > > > > IOW, I am fine with having a 'is_efi_sp_memory()' helper here, but
+> > > > > whether that is DAX memory or not should be decided in the DAX layer.
+> > > >
+> > > > Ok, how about is_efi_sp_ram()? Since EFI_MEMORY_SP might be applied to
+> > > > things that aren't EFI_CONVENTIONAL_MEMORY.
+> > >
+> > > Yes, that is fine. As long as the #ifdef lives in the DAX code and not here.
+> >
+> > We still need some ifdef in the efi core because that is the central
+> > location to make the policy distinction to identify identify
+> > EFI_CONVENTIONAL_MEMORY differently depending on whether EFI_MEMORY_SP
+> > is present. I agree with you that "dax" should be dropped from the
+> > naming. So how about:
+> >
+> > #ifdef CONFIG_EFI_APPLICATION_RESERVED
+> > static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+> > {
+> >         return md->type == EFI_CONVENTIONAL_MEMORY
+> >                 && (md->attribute & EFI_MEMORY_SP);
+> > }
+> > #else
+> > static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+> > {
+> >         return false;
+> > }
+> > #endif
+>
+> I think this policy decision should not live inside the EFI subsystem.
+> EFI just gives you the memory map, and mangling that information
+> depending on whether you think a certain memory attribute should be
+> ignored is the job of the MM subsystem.
 
-> So IMO we should drop patches 2-5.
-> 
->> (Since this abstraction is largely about guest -- xenhost communication,
->> no ops are needed for timer, clock, sched, memory (MMU, P2M), VCPU mgmt.
->> etc.)
->>
->> Xenhost use-cases:
->>
->> Regular-Xen: the standard Xen interface presented to a guest,
->> specifically for comunication between Lx-guest and Lx-Xen.
->>
->> Local-Xen: a Xen like interface which runs in the same address space as
->> the guest (dom0). This, can act as the default xenhost.
->>
->> The major ways it differs from a regular Xen interface is in presenting
->> a different hypercall interface (call instead of a syscall/vmcall), and
->> in an inability to do grant-mappings: since local-Xen exists in the same
->> address space as Xen, there's no way for it to cheaply change the
->> physical page that a GFN maps to (assuming no P2M tables.)
->>
->> Nested-Xen: this channel is to Xen, one level removed: from L1-guest to
->> L0-Xen. The use case is that we want L0-dom0-backends to talk to
->> L1-dom0-frontend drivers which can then present PV devices which can
->> in-turn be used by the L1-dom0-backend drivers as raw underlying devices.
->> The interfaces themselves, broadly remain similar.
->>
->> Note: L0-Xen, L1-Xen represent Xen running at that nesting level
->> and L0-guest, L1-guest represent guests that are children of Xen
->> at that nesting level. Lx, represents any level.
->>
->> Patches 1-7,
->>    "x86/xen: add xenhost_t interface"
->>    "x86/xen: cpuid support in xenhost_t"
->>    "x86/xen: make hypercall_page generic"
->>    "x86/xen: hypercall support for xenhost_t"
->>    "x86/xen: add feature support in xenhost_t"
->>    "x86/xen: add shared_info support to xenhost_t"
->>    "x86/xen: make vcpu_info part of xenhost_t"
->> abstract out interfaces that setup hypercalls/cpuid/shared_info/vcpu_info etc.
->>
->> Patch 8, "x86/xen: irq/upcall handling with multiple xenhosts"
->> sets up the upcall and pv_irq ops based on vcpu_info.
->>
->> Patch 9, "xen/evtchn: support evtchn in xenhost_t" adds xenhost based
->> evtchn support for evtchn_2l.
->>
->> Patches 10 and 16, "xen/balloon: support ballooning in xenhost_t" and
->> "xen/grant-table: host_addr fixup in mapping on xenhost_r0"
->> implement support from GNTTABOP_map_grant_ref for xenhosts of type
->> xenhost_r0 (xenhost local.)
->>
->> Patch 12, "xen/xenbus: support xenbus frontend/backend with xenhost_t"
->> makes xenbus so that both its frontend and backend can be bootstrapped
->> separately via separate xenhosts.
->>
->> Remaining patches, 11, 13, 14, 15:
->>    "xen/grant-table: make grant-table xenhost aware"
->>    "drivers/xen: gnttab, evtchn, xenbus API changes"
->>    "xen/blk: gnttab, evtchn, xenbus API changes"
->>    "xen/net: gnttab, evtchn, xenbus API changes"
->> are mostly mechanical changes for APIs that now take xenhost_t *
->> as parameter.
->>
->> The code itself is RFC quality, and is mostly meant to get feedback before
->> proceeding further. Also note that the FIFO logic and some Xen drivers
->> (input, pciback, scsi etc) are mostly unchanged, so will not build.
->>
->>
->> Please take a look.
-> 
-> 
-> Juergen
-> 
+The problem is that we don't have an mm subsystem at the time a
+decision needs to be made. The reservation policy needs to be deployed
+before even memblock has been initialized in order to keep kernel
+allocations out of the reservation. I agree with the sentiment I just
+don't see how to practically achieve an optional "System RAM" vs
+"Application Reserved" routing decision without an early (before
+e820__memblock_setup()) conditional branch.
