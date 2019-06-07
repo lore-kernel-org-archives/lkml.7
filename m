@@ -2,121 +2,96 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36E4C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FF6C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99727208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:36:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZIENBkuV"
+	by mail.kernel.org (Postfix) with ESMTP id 3AB75208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfFGGgO (ORCPT
+        id S1727408AbfFGGgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:36:14 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:38401 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfFGGgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:36:13 -0400
-Received: by mail-vs1-f65.google.com with SMTP id b10so530468vsp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 23:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wUw9ISMPGHSgRh2KdM2HGIT34kJ3x6jiWvQJ3Y7JEOw=;
-        b=ZIENBkuV+65B17001zA6jR4EfLu0gUD5mQO9Uehe+MYtDvP7sg6FaHCpOTZn0V7moO
-         aeQeggPButGXdlh3l+1CJ0LRez4REvNOPCkvZfM0rdwngG6OTerORMZoab7XIizXIDdf
-         VCk2Ekwn0j6PHyUBOsWjmlyOjzKJU2vVWjdPY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wUw9ISMPGHSgRh2KdM2HGIT34kJ3x6jiWvQJ3Y7JEOw=;
-        b=YE17Uc8NJU4ftwo9HR3fQg6KykfA6LNNOkdGFhK6BILFZRGnNcK6Pu4FyO0PqshdtT
-         EMm9Oh43N6z568ex7YU9HLAGjS+oKDvqnGs4TfPAq8mPSXDD5Tup0W77RhURe+rD0EJq
-         yZ6QmeN4fK3+FjtloUWOcdemaG8ogsIFRtxCvIupmkceAgboEJCUsczg8nJJoQJxEuSk
-         n3o/R86WQZeaiUULDu+NgnYInExEX+aHNm+tl58MZHDIUFGFjDRpIZH3sSqhwhAfYkTv
-         SN1uBXlOhQXDPsUnalOECwHT4OgfAZeJRqM1IFtwhawqgys1PDaTZiWigI8QZ26Z4NVg
-         OkFw==
-X-Gm-Message-State: APjAAAUCI1vMQAq8uWo2zuzvEGiP2AKA9L6Le+RwEQxEZHp2jO1iC+KQ
-        k/xd2YwoN35saxusu+nAr/K/nUMkFCHe6XqOvLL/xQ==
-X-Google-Smtp-Source: APXvYqw9TJz+d26iMe8IX5YhwPQItF/uBMG5lcq6EkUJxtv8WLmxNcmMsoJw1P0kitqbTkvFQVVSXTEFjJuWpguXvAk=
-X-Received: by 2002:a67:ebcb:: with SMTP id y11mr476318vso.138.1559889372706;
- Thu, 06 Jun 2019 23:36:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190525123705.8588-1-yuehaibing@huawei.com>
-In-Reply-To: <20190525123705.8588-1-yuehaibing@huawei.com>
-From:   Sumit Saxena <sumit.saxena@broadcom.com>
-Date:   Fri, 7 Jun 2019 12:06:01 +0530
-Message-ID: <CAL2rwxroDkKSRCN9inYZTGD79h+8AWn6LO3+=ND316=BVm40ug@mail.gmail.com>
-Subject: Re: [PATCH -next] scsi: megaraid_sas: remove set but not used
- variable 'sge_sz'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 7 Jun 2019 02:36:23 -0400
+Received: from mga14.intel.com ([192.55.52.115]:52439 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbfFGGgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 02:36:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 23:36:22 -0700
+X-ExtLoop1: 1
+Received: from pg-eswbuild-angstrom-alpha.altera.com ([10.142.34.148])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Jun 2019 23:36:19 -0700
+From:   "Hean-Loong, Ong" <hean.loong.ong@intel.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com,
+        chin.liang.see@intel.com
+Subject: [PATCHv15 0/3] Intel FPGA Video and Image Processing Suite
+Date:   Fri,  7 Jun 2019 22:30:19 +0800
+Message-Id: <20190607143022.427-1-hean.loong.ong@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 25, 2019 at 6:07 PM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/scsi/megaraid/megaraid_sas_base.c: In function megasas_create_frame_pool:
-> drivers/scsi/megaraid/megaraid_sas_base.c:4124:6: warning: variable sge_sz set but not used [-Wunused-but-set-variable]
->
-> It's not used any more since
-> commit 200aed582d61 ("megaraid_sas: endianness related bug fixes and code optimization")
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+From: Hean-Loong Ong <hean.loong.ong@intel.com>
 
-> ---
->  drivers/scsi/megaraid/megaraid_sas_base.c | 11 -----------
->  1 file changed, 11 deletions(-)
->
-> diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-> index b26991dcf137..25281a2eb424 100644
-> --- a/drivers/scsi/megaraid/megaraid_sas_base.c
-> +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-> @@ -4121,22 +4121,11 @@ static int megasas_create_frame_pool(struct megasas_instance *instance)
->  {
->         int i;
->         u16 max_cmd;
-> -       u32 sge_sz;
->         u32 frame_count;
->         struct megasas_cmd *cmd;
->
->         max_cmd = instance->max_mfi_cmds;
->
-> -       /*
-> -        * Size of our frame is 64 bytes for MFI frame, followed by max SG
-> -        * elements and finally SCSI_SENSE_BUFFERSIZE bytes for sense buffer
-> -        */
-> -       sge_sz = (IS_DMA64) ? sizeof(struct megasas_sge64) :
-> -           sizeof(struct megasas_sge32);
-> -
-> -       if (instance->flag_ieee)
-> -               sge_sz = sizeof(struct megasas_sge_skinny);
-> -
->         /*
->          * For MFI controllers.
->          * max_num_sge = 60
-> --
-> 2.17.1
->
->
+The FPGA FrameBuffer Soft IP could be seen  as the GPU and the DRM driver
+patch here is allocating memory for information to be streamed from the
+ARM/Linux to the display port.
+
+Basically the driver just wraps the information such as the pixels to be
+drawn by the Sodt IP FrameBuffer 2.
+
+The piece of hardware in discussion is the SoC FPGA where Linux runs on
+the ARM chip and the FGPA is driven by its NIOS soft core with its own
+proprietary firmware.
+
+For example the application from the ARM Linux would have to write
+information on the /dev/fb0 with the information stored in the
+SDRAM to be fetched by the Framebuffer 2 Soft IP and displayed
+on the Display Port Monitor.
+
+Reviewed and ACKed need to merge this into drm-misc
+
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Ong Hean Loong (1):
+  ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
+
+Ong, Hean Loong (2):
+  ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
+  ARM:drm ivip Intel FPGA Video and Image Processing Suite
+
+ .../bindings/display/altr,vip-fb2.txt         |  63 ++++
+ MAINTAINERS                                   |   9 +
+ arch/arm/configs/socfpga_defconfig            |   8 +
+ drivers/gpu/drm/Kconfig                       |   2 +
+ drivers/gpu/drm/Makefile                      |   1 +
+ drivers/gpu/drm/ivip/Kconfig                  |  14 +
+ drivers/gpu/drm/ivip/Makefile                 |   6 +
+ drivers/gpu/drm/ivip/intel_vip_conn.c         |  93 +++++
+ drivers/gpu/drm/ivip/intel_vip_drv.c          | 335 ++++++++++++++++++
+ drivers/gpu/drm/ivip/intel_vip_drv.h          |  73 ++++
+ 10 files changed, 604 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+ create mode 100644 drivers/gpu/drm/ivip/Kconfig
+ create mode 100644 drivers/gpu/drm/ivip/Makefile
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.c
+ create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
+
+-- 
+2.17.1
+
