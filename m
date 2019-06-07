@@ -2,126 +2,150 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52208C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE98C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A3120B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:39:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+liCGMo"
+	by mail.kernel.org (Postfix) with ESMTP id 90BB820B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbfFGKjQ (ORCPT
+        id S1728197AbfFGKqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 06:39:16 -0400
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:39857 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfFGKjQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 06:39:16 -0400
-Received: by mail-lj1-f176.google.com with SMTP id v18so1291672ljh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 03:39:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ufgg86kQKWKmK+WFixqatapUs0G96Q5E9DutnoyVCl0=;
-        b=a+liCGMou39XsFuyMFoXxs0fhI2TulhehewrXPgrym1Z9ww7d9X8rSp2vWmuiyhexX
-         FvrRPlop0SI5R0rnKZ5HUsyh/mQZzPEkF8gaKI+9C1HXFvV2XipJ1b5nAz+IX9pbcwjX
-         6dNZKupmCz+enYiIx2UjRACnxgsKyzxQVapcapLDWlClKWossntTgsipBA10UAPQqRyb
-         fI5aOEfD+69PdT0dMyaZLWeuhuiilVPIrbPSndHPRnaRC80CDAGGGplZF2L6KjgEnhfz
-         2x2YiPGWSHxYvxeHR28rsuA7L1X9OjdQZxvxkHhw8SUDeiYrDw/1L2sJm48Fpdk8VSMy
-         0Krw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ufgg86kQKWKmK+WFixqatapUs0G96Q5E9DutnoyVCl0=;
-        b=CKEYd1XaplzcLxoZHjT+dR4zc9mtfqVgb2Rgzxf5xW+22oVNbCsoLyhexensqbeZWP
-         xUdgoilgWCy83pogm/SAOR05g9uovkST7zV99w5glhlt/95YC+B4Jc8w5vljnlkbWQzr
-         +2a6j9f4N/UDOJvOzG8JC6LDUPDHSMVVITW/Q4+9Xb0FIjfsMiG1BNHLWaqYoRASNBBW
-         mIdEXi21lsVSPMe1eGjl9bCdukSo1SAnY6u/k0kSXy7sHsQzmTriv+ulij7g9NbP44IE
-         nsoVbWlhdaxwXd8JqvJr5d4Llv2piiS+Gido8HGTP/fitRe4KIBvmgMlvJDSLTg/QLCL
-         FdPQ==
-X-Gm-Message-State: APjAAAUGOmlno6l0KYKLDGLqC1Bcsh7OJUXjO8r8GUgFmIzcdQTURQHA
-        PNwl3QTrWh7s3PzivqdrZgtXbg==
-X-Google-Smtp-Source: APXvYqxyYC6K60y/Nisr80rQsX2lNaVdM5Wfw2ZH50jKBIkUKybN8Iyi7OR05ngCGGROqMVaGOIiOw==
-X-Received: by 2002:a2e:3314:: with SMTP id d20mr14336735ljc.122.1559903953918;
-        Fri, 07 Jun 2019 03:39:13 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id n10sm345448lfe.24.2019.06.07.03.39.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 03:39:13 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC and MEMSTICK fixes for v5.2-rc4
-Date:   Fri,  7 Jun 2019 12:39:11 +0200
-Message-Id: <20190607103911.4623-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 7 Jun 2019 06:46:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54822 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727537AbfFGKqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 06:46:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 471C9AF0A;
+        Fri,  7 Jun 2019 10:46:36 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id DDD771E3FCA; Fri,  7 Jun 2019 12:36:36 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 12:36:36 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190607103636.GA12765@quack2.suse.cz>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
+ <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu 06-06-19 15:22:28, Ira Weiny wrote:
+> On Thu, Jun 06, 2019 at 04:51:15PM -0300, Jason Gunthorpe wrote:
+> > On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
+> > 
+> > > So I'd like to actually mandate that you *must* hold the file lease until
+> > > you unpin all pages in the given range (not just that you have an option to
+> > > hold a lease). And I believe the kernel should actually enforce this. That
+> > > way we maintain a sane state that if someone uses a physical location of
+> > > logical file offset on disk, he has a layout lease. Also once this is done,
+> > > sysadmin has a reasonably easy way to discover run-away RDMA application
+> > > and kill it if he wishes so.
+> > > 
+> > > The question is on how to exactly enforce that lease is taken until all
+> > > pages are unpinned. I belive it could be done by tracking number of
+> > > long-term pinned pages within a lease. Gup_longterm could easily increment
+> > > the count when verifying the lease exists, gup_longterm users will somehow
+> > > need to propagate corresponding 'filp' (struct file pointer) to
+> > > put_user_pages_longterm() callsites so that they can look up appropriate
+> > > lease to drop reference - probably I'd just transition all gup_longterm()
+> > > users to a saner API similar to the one we have in mm/frame_vector.c where
+> > > we don't hand out page pointers but an encapsulating structure that does
+> > > all the necessary tracking. Removing a lease would need to block until all
+> > > pins are released - this is probably the most hairy part since we need to
+> > > handle a case if application just closes the file descriptor which
+> > > would
+> > 
+> > I think if you are going to do this then the 'struct filp' that
+> > represents the lease should be held in the kernel (ie inside the RDMA
+> > umem) until the kernel is done with it.
+> 
+> Yea there seems merit to this.  I'm still not resolving how this helps track
+> who has the pin across a fork.
 
-Here's a PR with a couple of MMC and MEMSTICK fixes intended for v5.2-rc4.
-Details about the highlights are as usual found in the signed tag.
+Yes, my thought was that gup_longterm() would return a structure that would
+be tracking filp (or whatever is needed) and that would be embedded inside
+RDMA umem.
 
-Please pull this in!
+> > Actually does someone have a pointer to this userspace lease API, I'm
+> > not at all familiar with it, thanks
+> 
+> man fcntl
+> 	search for SETLEASE
+> 
+> But I had to add the F_LAYOUT lease type.  (Personally I'm for calling it
+> F_LONGTERM at this point.  I don't think LAYOUT is compatible with what we are
+> proposing here.)
 
-Kind regards
-Ulf Hansson
+I think F_LAYOUT still expresses it pretty well. The lease is pinning
+logical->physical file offset mapping, i.e. the file layout.
 
+> > 
+> > And yes, a better output format from GUP would be great..
+> > 
+> > > Maybe we could block only on explicit lease unlock and just drop the layout
+> > > lease on file close and if there are still pinned pages, send SIGKILL to an
+> > > application as a reminder it did something stupid...
+> > 
+> > Which process would you SIGKILL? At least for the rdma case a FD is
+> > holding the GUP, so to do the put_user_pages() the kernel needs to
+> > close the FD. I guess it would have to kill every process that has the
+> > FD open? Seems complicated...
+> 
+> Tending to agree...  But I'm still not opposed to killing bad actors...  ;-)
+> 
+> NOTE: Jason I think you need to be more clear about the FD you are speaking of.
+> I believe you mean the FD which refers to the RMDA context.  That is what I
+> called it in my other email.
 
-The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
+I keep forgetting that the file with RDMA context may be held by multiple
+processes so thanks for correcting me. My proposal with SIGKILL was jumping
+to conclusion too quickly :) We have two struct files here: A file with RDMA
+context that effectively is the owner of the page pins (let's call it
+"context file") and a file which is mapped and on which we hold the lease and
+whose blocks (pages) we are pinning (let's call it "buffer file"). Now once
+buffer file is closed (and this means that all file descriptors pointing to
+this struct file are closed - so just one child closing the file descriptor
+won't trigger this) we need to release the lease and I want to have a way
+of safely releasing remaining pins associated with this lease as well.
+Because the pins would be invisible to sysadmin from that point on. Now if
+the context file would be open only by the process closing the buffer file,
+SIGKILL would work as that would close the buffer file as a side effect.
+But as you properly pointed out, that's not necessarily the case. Walking
+processes that have the context file open is technically complex and too
+ugly to live so we have to come up with something better. The best I can
+currently come up with is to have a method associated with the lease that
+would invalidate the RDMA context that holds the pins in the same way that
+a file close would do it.
 
-  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.2-rc2
-
-for you to fetch changes up to 7397993145872c74871ab2aa7fa26a427144088a:
-
-  mmc: sdhci_am654: Fix SLOTTYPE write (2019-06-03 15:18:25 +0200)
-
-----------------------------------------------------------------
-MMC host:
- - sdhci: Fix SDIO IRQ thread deadlock
- - sdhci-tegra: Fix a warning message
- - sdhci_am654: Fix SLOTTYPE write
- - meson-gx: Fix IRQ ack
- - tmio: Fix SCC error handling to avoid false positive CRC error
-
-MEMSTICK core:
- - mspro_block: Fix returning a correct error code
-
-----------------------------------------------------------------
-Adrian Hunter (1):
-      mmc: sdhci: Fix SDIO IRQ thread deadlock
-
-Dan Carpenter (2):
-      memstick: mspro_block: Fix an error code in mspro_block_issue_req()
-      mmc: tegra: Fix a warning message
-
-Faiz Abbas (1):
-      mmc: sdhci_am654: Fix SLOTTYPE write
-
-Jerome Brunet (1):
-      mmc: meson-gx: fix irq ack
-
-Takeshi Saito (1):
-      mmc: tmio: fix SCC error handling to avoid false positive CRC error
-
- drivers/memstick/core/mspro_block.c | 13 ++++++-------
- drivers/mmc/host/meson-gx-mmc.c     |  6 +++---
- drivers/mmc/host/sdhci-tegra.c      |  2 +-
- drivers/mmc/host/sdhci.c            | 24 +++++++++++++-----------
- drivers/mmc/host/sdhci_am654.c      |  2 +-
- drivers/mmc/host/tmio_mmc_core.c    |  3 ++-
- 6 files changed, 26 insertions(+), 24 deletions(-)
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
