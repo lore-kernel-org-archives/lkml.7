@@ -2,90 +2,84 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
-	INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0810EC468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C309C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D265D20840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DBA20840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730443AbfFGQYR (ORCPT
+        id S1730513AbfFGQY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:24:17 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:50571 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730066AbfFGQYR (ORCPT
+        Fri, 7 Jun 2019 12:24:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40952 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730066AbfFGQY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:24:17 -0400
-Received: from [5.158.153.52] (helo=noscherz.tec.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hZHep-0000ei-KF; Fri, 07 Jun 2019 18:23:59 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [RFC PATCH v2 0/2] printk: new ringbuffer implementation
-Date:   Fri,  7 Jun 2019 18:29:47 +0206
-Message-Id: <20190607162349.18199-1-john.ogness@linutronix.de>
-X-Mailer: git-send-email 2.11.0
+        Fri, 7 Jun 2019 12:24:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so2759466wre.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 09:24:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5oup8aDf0v+i4nY2iXLwyIEfJBWa+tQFAZ2fj1dhWlA=;
+        b=BLA6htiezCqBVwvZjIMuSJiQMZnOcWxp6kajXcWwJmfz1ybUijAP0rFARQ/KTBittG
+         AF7ijh+sWKKkmKvUKCNXkuqGmuJALV2Rv6k6XocboTy6a7zzCxkMGfde0LSOQB+UzkqO
+         w0Xl2eRBxiqU229X1OJM1Bte82IWYDqyTjCNsdwFG4JdCFTl7HbuUWIe67Qd7txsXhOJ
+         OHrXh0BzU3EBWSMkcimsQPCv6I9NNar5ETp8Nw4r1VcA9PoAX51Qbnfym+lTbpQGAw+n
+         rhQlVkYD6N22wWTIt+varL++QFV8hnQR51utOqcxDNikFHOQPngwgJoPPZ4Ja589aWaf
+         /Q9Q==
+X-Gm-Message-State: APjAAAUNzcFgyhLANt9yVxjddzSLjEjqgP5bzigpx9EHGpk6WnjVo5lo
+        OPzr5t3RxdXT/PF1TAPaNdUFAQ02AXc=
+X-Google-Smtp-Source: APXvYqzLgpRRvfyTFa6/TEI5l10HeRd8tc36q34IPW/9wW2GzAxU5AlO2ZetyEIBACf1Y9qZK8wjWA==
+X-Received: by 2002:adf:aa0a:: with SMTP id p10mr33931090wrd.125.1559924664702;
+        Fri, 07 Jun 2019 09:24:24 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
+        by smtp.gmail.com with ESMTPSA id w6sm2524953wro.71.2019.06.07.09.24.23
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 09:24:24 -0700 (PDT)
+Subject: Re: [PATCH] KVM: nVMX: Rename prepare_vmcs02_*_full to
+ prepare_vmcs02_*_extra
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <1559834652-105872-1-git-send-email-pbonzini@redhat.com>
+ <20190606184117.GJ23169@linux.intel.com>
+ <8382fd94-aed1-51b4-007e-7579a0f35ece@redhat.com>
+ <20190607141847.GA9083@linux.intel.com>
+ <5762005d-1504-bb41-9583-ec549e107ce5@redhat.com>
+ <20190607160422.GE9083@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <525f4ee1-c111-aaa0-2dcd-6c5ce26e3088@redhat.com>
+Date:   Fri, 7 Jun 2019 18:24:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190607160422.GE9083@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 07/06/19 18:04, Sean Christopherson wrote:
+>> That's what came to mind first, but then "extended" had the same issue
+>> as "full" (i.e. encompassing the "basic" set as well) so I decided you
+>> knew better!
+> Ah, I was thinking of "basic" and "extended" as separate states, but your
+> interpretation is correct.
+> 
+> I probably have a slight preference for 'uncommon' over 'extra'?  I feel
+> like they have equal odds of being misinterpreted, so pick your poison :-)
 
-This is a follow-up RFC on the work to reimplement much of
-the core of printk. The original thread can be seen here[0].
+Among your proposals, in fact, I also thought of "uncommon" and "rare".
+ Uncommon is a bit long so I'll go with "rare", knowing that the meat
+reference will give me a chuckle every now and then.
 
-One of the results of that thread was that the work needs to
-be broken up into several pieces. A roadmap was laid out[1]
-and this RFC is for the base component of the first piece:
-a new ringbuffer implementation for printk.
-
-This series does not touch any existing printk code. It is
-only the ringbuffer implementation. I am particularly
-interested in feedback relating to the design of the
-ringbuffer and the use of memory barriers.
-
-The series also includes a test module that performs some
-heavy writer stress testing. I have successfully run these
-tests on a 16-core ARM64 platform.
-
-John Ogness
-
-[0] https://lkml.kernel.org/r/20190212143003.48446-1-john.ogness@linutronix.de
-[1] https://lkml.kernel.org/r/87y35hn6ih.fsf@linutronix.de
-
-John Ogness (2):
-  printk-rb: add a new printk ringbuffer implementation
-  printk-rb: add test module
-
- Documentation/core-api/index.rst             |   1 +
- Documentation/core-api/printk-ringbuffer.rst | 104 +++
- include/linux/printk_ringbuffer.h            | 238 +++++++
- lib/Makefile                                 |   2 +
- lib/printk_ringbuffer.c                      | 924 +++++++++++++++++++++++++++
- lib/test_prb.c                               | 237 +++++++
- 6 files changed, 1506 insertions(+)
- create mode 100644 Documentation/core-api/printk-ringbuffer.rst
- create mode 100644 include/linux/printk_ringbuffer.h
- create mode 100644 lib/printk_ringbuffer.c
- create mode 100644 lib/test_prb.c
-
--- 
-2.11.0
-
+Paolo
