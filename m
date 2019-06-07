@@ -2,156 +2,97 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17A7C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF6FC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19D92089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30C8208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:43:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIe7cDSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfFGJmk (ORCPT
+        id S1728226AbfFGJnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:42:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43122 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727512AbfFGJmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:42:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3CC5EAE15;
-        Fri,  7 Jun 2019 09:42:37 +0000 (UTC)
-Message-ID: <5dccf2500f023ce2c78d9ff3f41b53e36843298b.camel@suse.de>
-Subject: Re: [PATCH v2 2/7] clk: bcm283x: add driver interfacing with
- Raspberry Pi's firmware
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <wahrenst@gmx.net>, stefan.wahren@i2se.com,
-        linux-kernel@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
-        ptesarik@suse.com, sboyd@kernel.org, viresh.kumar@linaro.org,
-        mturquette@baylibre.com, linux-pm@vger.kernel.org,
-        rjw@rjwysocki.net, eric@anholt.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        mbrugger@suse.de, ssuloev@orpaltech.com
-Date:   Fri, 07 Jun 2019 11:42:34 +0200
-In-Reply-To: <3c4c8b56-eb02-be6f-9b3a-a94a895f10f0@gmx.net>
-References: <20190606142255.29454-1-nsaenzjulienne@suse.de>
-         <20190606142255.29454-3-nsaenzjulienne@suse.de>
-         <3c4c8b56-eb02-be6f-9b3a-a94a895f10f0@gmx.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-vYYrm15OHAAapvPJgPuT"
-User-Agent: Evolution 3.32.2 
+        Fri, 7 Jun 2019 05:43:19 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38091 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfFGJnS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 05:43:18 -0400
+Received: by mail-ed1-f65.google.com with SMTP id g13so2124944edu.5;
+        Fri, 07 Jun 2019 02:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J7QcgrWkSAFsej/rko9HTCODh2HodcbGMIhhGvJpZMY=;
+        b=RIe7cDSEB9dVHPlF58YojVZV76Cv64m0YUIrrb2RtjbA2NhRxdUbeoOc5Lug62nQdT
+         P+PBlzQgRRZmBPe7xoP25eQuHyl+ZRqaNUDnWoxi6CapwAfxfw3UkriVxLB8QlqwFLcS
+         vbNhOA2oJ9fVszRJ5bDIZ4bhgvw+jdjFCqv71APjLyT45uN2mO+5OHCC/0gz26UmWz13
+         UibvghNEVCBacIgpyRKvw9jOc2Tyh9LyVhKUDaOIM5fZ+SeL2a5LN7ahUCY/B6G9lcXj
+         Ix/bh3b6ty+8EizB31p5XUiWksb2sCSt4BIPAUwwFBv4QANkkLLpFg6P4zeGluomXtd2
+         aI+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J7QcgrWkSAFsej/rko9HTCODh2HodcbGMIhhGvJpZMY=;
+        b=CzDybA9yirvrthihgUghz5uiJ+bpzcw42s7seduM+b/XO3Z71j3hJWuhZFtR39YRXA
+         dJvH4qDDVeTRs6ZLsmaHWVY7EKA6G0DXHUMxm6fOc5+psUPA3xLjzgOjVFav9Hlrwt/F
+         Mee7FjQoez8FBtat0BH92z8Rnlv+Uhmp3Btcxxk3J9cLKNMZXmo9s44uxeanlmUI1AZg
+         WHnXpY23Zo8v/CoOSJVAR59ZpgK5znO4m9hYnUQbRfsKc7R/ivVcco2M6SiiqQ8tNQXF
+         ea96gUwSI8TmbUKy6dhPzUbQDPSB8kASlYuadVRyB0WUfJnvc3bokIUUo17JxVlYCop8
+         Idtw==
+X-Gm-Message-State: APjAAAVRyHPdLzYo1BvWTxMx7Rspq28LhJdEVKZ4hdh3s6rpb8I5ZasQ
+        ru3NcORoVvsqSsrRZl++CdzKx/pQuw5Lj3Fs+ak=
+X-Google-Smtp-Source: APXvYqwrsZSk/YdKpS4BMDFb0IJglKZzZn5HteH5JVRjUk0BOybK3YN3CZistVbvLYAlDL0TMHBMBkC59SkhcrIAuks=
+X-Received: by 2002:a17:906:4e8f:: with SMTP id v15mr14429327eju.47.1559900596768;
+ Fri, 07 Jun 2019 02:43:16 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190604170756.14338-1-olteanv@gmail.com> <20190604.202258.1443410652869724565.davem@davemloft.net>
+ <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
+ <CA+h21hrJYm4GLn+LpJ623_dpgxE2z-k3xTMD=z1QQ9WqXg7zrQ@mail.gmail.com>
+ <20190605174547.b4rwbfrzjqzujxno@localhost> <CA+h21hqdmu3+YQVMXyvckrUjXW7mstjG1MDafWGy4qFHB9zdtg@mail.gmail.com>
+ <20190606031135.6lyydjb6hqfeuzt3@localhost> <CA+h21hosUmUu98QdzKTJPUd2PEwa+sUg1SNY1ti95kD6kOqE6A@mail.gmail.com>
+ <20190607033242.expuqccmzhxdkwzq@localhost>
+In-Reply-To: <20190607033242.expuqccmzhxdkwzq@localhost>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 7 Jun 2019 12:43:05 +0300
+Message-ID: <CA+h21hpS=1Xq3y0C79KEZV9EX3g+aRm4c9NkCwiD7vDhyTwi=w@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 7 Jun 2019 at 06:32, Richard Cochran <richardcochran@gmail.com> wrote:
+>
+> On Thu, Jun 06, 2019 at 04:40:19PM +0300, Vladimir Oltean wrote:
+> > Plain and simply because it doesn't work very well.
+> > Even phc2sys from the system clock to the hardware (no timestamps
+> > involved) has trouble staying put (under 1000 ns offset).
+> > And using the hardware-corrected timestamps triggers a lot of clockchecks.
+>
+> It sounds like a bug in reading or adjusting the HW clock.  Is the HW
+> clock stable when you don't adjust its frequency?
 
---=-vYYrm15OHAAapvPJgPuT
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+How can I tell that for sure?
 
-On Fri, 2019-06-07 at 11:26 +0200, Stefan Wahren wrote:
-> Hi Nicolas,
->=20
-> Am 06.06.19 um 16:22 schrieb Nicolas Saenz Julienne:
-> > Raspberry Pi's firmware offers an interface though which update it's
-> > clock's frequencies. This is specially useful in order to change the CP=
-U
-> > clock (pllb_arm) which is 'owned' by the firmware and we're unable to
-> > scale using the register interface provided by clk-bcm2835.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Acked-by: Eric Anholt <eric@anholt.net>
-> >=20
-> > ---
-> >=20
-> > Changes since v1:
-> >   - Use BIT()
-> >   - Add Kconfig entry, with compile test
-> >   - remove prepare/unprepare
-> >   - Fix uninitialized init.name in pllb registration
-> >   - Add MODULE_ALIAS()
-> >   - Use determine_rate() instead of round_rate()
-> >   - Add small introduction explaining need for driver
-> >=20
-> >  drivers/clk/bcm/Kconfig           |   7 +
-> >  drivers/clk/bcm/Makefile          |   1 +
-> >  drivers/clk/bcm/clk-raspberrypi.c | 302 ++++++++++++++++++++++++++++++
-> >  3 files changed, 310 insertions(+)
-> >  create mode 100644 drivers/clk/bcm/clk-raspberrypi.c
-> >=20
-> > diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> > index 29ee7b776cd4..a4a2775d65e1 100644
-> > --- a/drivers/clk/bcm/Kconfig
-> > +++ b/drivers/clk/bcm/Kconfig
-> > @@ -64,3 +64,10 @@ config CLK_BCM_SR
-> >  	default ARCH_BCM_IPROC
-> >  	help
-> >  	  Enable common clock framework support for the Broadcom Stingray SoC
-> > +
-> > +config CLK_RASPBERRYPI
-> > +	tristate "Raspberry Pi firmware based clock support"
-> > +	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST &&
-> > !RASPBERRYPI_FIRMWARE)
-> > +	help
-> > +	  Enable common clock framework support for Raspberry Pi's firmware
-> > +	  dependent clocks
-> > diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> > index 002661d39128..eb7159099d82 100644
-> > --- a/drivers/clk/bcm/Makefile
-> > +++ b/drivers/clk/bcm/Makefile
-> > @@ -7,6 +7,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-bcm21664.o
-> >  obj-$(CONFIG_COMMON_CLK_IPROC)	+=3D clk-iproc-armpll.o clk-iproc-pll.o
-> > clk-iproc-asiu.o
-> >  obj-$(CONFIG_ARCH_BCM2835)	+=3D clk-bcm2835.o
-> >  obj-$(CONFIG_ARCH_BCM2835)	+=3D clk-bcm2835-aux.o
-> > +obj-$(CONFIG_CLK_RASPBERRYPI)	+=3D clk-raspberrypi.o
-> >  obj-$(CONFIG_ARCH_BCM_53573)	+=3D clk-bcm53573-ilp.o
-> >  obj-$(CONFIG_CLK_BCM_CYGNUS)	+=3D clk-cygnus.o
-> >  obj-$(CONFIG_CLK_BCM_HR2)	+=3D clk-hr2.o
->=20
-> not your fault but you better rebase your next version on linux-next
-> because Florian's latest patches ("clk: bcm: Make BCM2835 clock drivers
-> selectable") collide with this patch.
->=20
-> Checkpatch gives the following output about this patch:
->=20
-> WARNING: 'harware' may be misspelled - perhaps 'hardware'?
->=20
-> #58: FILE: drivers/clk/bcm/clk-raspberrypi.c:5:
-> + * Even though clk-bcm2835 provides an interface to the harware
-> registers for
->=20
-> ERROR: code indent should use tabs where possible
-> #197: FILE: drivers/clk/bcm/clk-raspberrypi.c:144:
-> +^I^I^I^I           struct clk_rate_request *req)$
-
-Noted, thanks.
-
-As this seems fairly calm, should I send v3 or wait little more?
-
-
---=-vYYrm15OHAAapvPJgPuT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz6MYsACgkQlfZmHno8
-x/4cAgf8C0p+K3P3lwXzF2aerFWGjQdQ5MTyixpeAFG52zhaabNg97gJ1Id0m0pa
-DpW++g2ioGud8UyqpllRIVQYkdyCTMR2EpK7IQ29LN9nwS8SwKBg33HhYDUYgVY9
-7Bl4zb+IavOd74KzxP+VBhdRrGIh8TsI/mfS7d2udj121AKJtpy9eFx6KrT60sPn
-xAAgkcj490MpT3c4kihVMVPy/kLBQoHYWKpui23sTNyMKT7+2arsYrOgKcy6THbl
-/JI1MO+kCGIQUVmkHk8jzoQMOVAGQqnqLYmjQVntn6Esdujc2PBqu5fqzV3mWrks
-7LsAb94I/Y1BUed/JKAFjT5DJ0qLPA==
-=zWl2
------END PGP SIGNATURE-----
-
---=-vYYrm15OHAAapvPJgPuT--
-
+>
+> Thanks,
+> Richard
