@@ -2,168 +2,498 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275D6C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2429C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCAA2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:20:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kme53K79"
+	by mail.kernel.org (Postfix) with ESMTP id 7636720B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfFGIUp (ORCPT
+        id S1727584AbfFGI2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 04:20:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39662 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfFGIUo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 04:20:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JazDGPTciCVZpSGhyhHqtjBiLtA80UeGIT+jhVKWr9o=; b=Kme53K79YiAo8gwQa7fNoeLwvt
-        lmUBsep1uyKFrtc32Scf/rZ4G5ZcIIBXbkjqlRYMGGDpeUdOoGHsQewbtazrvas1G4F0xalu4ytKh
-        TPgKn9eJoxMD3lsvqwMs0YGSrnGgUt6c5coJw0AwuDzic3q9zsRJWd9bJ2HhJgKad6Tm8iqt/y347
-        E2xKm1R2/lC3BgaTlHJuB+DxU2GsiJdedpVRsHdYYnbGzf0wtYVj+BIKHIFoVBSwmgm+CKIJQ1JnG
-        zpYQ0XlNm4jOuCxIEU2WLpe9syVirNmX/vFTfgaLkk4tr6Hqcfl3LlTskhUgG6r3PHUspNSXTCAbI
-        4zVLXuoQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZA6h-0006P7-8H; Fri, 07 Jun 2019 08:20:15 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 682C520227133; Fri,  7 Jun 2019 10:20:13 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 10:20:13 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
- instructions
-Message-ID: <20190607082013.GU3419@hirez.programming.kicks-ass.net>
-References: <20190605130753.327195108@infradead.org>
- <20190605131945.005681046@infradead.org>
- <7C13A4B6-6D5B-44C4-B238-58DC5926D7E1@vmware.com>
+        Fri, 7 Jun 2019 04:28:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50798 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbfFGI2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 04:28:20 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ACC65307B16B;
+        Fri,  7 Jun 2019 08:28:19 +0000 (UTC)
+Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BCCF5BBBD;
+        Fri,  7 Jun 2019 08:28:08 +0000 (UTC)
+Subject: Re: [PATCH v8 25/29] vfio-pci: Add a new VFIO_REGION_TYPE_NESTED
+ region type
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+ <20190526161004.25232-26-eric.auger@redhat.com>
+ <20190603163159.31e7ae23@x1.home>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <9c1ea2db-5ba0-3cf5-3b38-2c4a125460e6@redhat.com>
+Date:   Fri, 7 Jun 2019 10:28:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <20190603163159.31e7ae23@x1.home>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7C13A4B6-6D5B-44C4-B238-58DC5926D7E1@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 07 Jun 2019 08:28:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 05:41:42AM +0000, Nadav Amit wrote:
+Hi Alex,
 
-> > int poke_int3_handler(struct pt_regs *regs)
-> > {
-> > +	long ip = regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE;
-> > +	struct opcode {
-> > +		u8 insn;
-> > +		s32 rel;
-> > +	} __packed opcode;
-> > +
-> > 	/*
-> > 	 * Having observed our INT3 instruction, we now must observe
-> > 	 * bp_patching_in_progress.
-> > 	 *
-> > -	 * 	in_progress = TRUE		INT3
-> > -	 * 	WMB				RMB
-> > -	 * 	write INT3			if (in_progress)
-> > +	 *	in_progress = TRUE		INT3
-> > +	 *	WMB				RMB
-> > +	 *	write INT3			if (in_progress)
+On 6/4/19 12:31 AM, Alex Williamson wrote:
+> On Sun, 26 May 2019 18:10:00 +0200
+> Eric Auger <eric.auger@redhat.com> wrote:
 > 
-> I don’t see what has changed in this chunk… Whitespaces?
-
-Yep, my editor kept marking that stuff red (space before tab), which
-annoyed me enough to fix it.
-
-> > 	 *
-> > -	 * Idem for bp_int3_handler.
-> > +	 * Idem for bp_int3_opcode.
-> > 	 */
-> > 	smp_rmb();
-> > 
-> > @@ -943,8 +949,21 @@ int poke_int3_handler(struct pt_regs *re
-> > 	if (user_mode(regs) || regs->ip != (unsigned long)bp_int3_addr)
-> > 		return 0;
-> > 
-> > -	/* set up the specified breakpoint handler */
-> > -	regs->ip = (unsigned long) bp_int3_handler;
-> > +	opcode = *(struct opcode *)bp_int3_opcode;
-> > +
-> > +	switch (opcode.insn) {
-> > +	case 0xE8: /* CALL */
-> > +		int3_emulate_call(regs, ip + opcode.rel);
-> > +		break;
-> > +
-> > +	case 0xE9: /* JMP */
-> > +		int3_emulate_jmp(regs, ip + opcode.rel);
-> > +		break;
+>> This patch adds two new regions aiming to handle nested mode
+>> translation faults.
+>>
+>> The first region (two host kernel pages) is read-only from the
+>> user-space perspective. The first page contains an header
+>> that provides information about the circular buffer located in the
+>> second page. The circular buffer is put in a different page in
+>> the prospect to be mmappable.
+>>
+>> The max user API version supported by the kernel is returned
+>> through a dedicated fault region capability.
+>>
+>> The prod header contains
+>> - the user API version in use (potentially inferior to the one
+>>   returned in the capability),
+>> - the offset of the queue within the region,
+>> - the producer index relative to the start of the queue
+>> - the max number of fault records,
+>> - the size of each record.
+>>
+>> The second region is write-only from the user perspective. It
+>> contains the version of the requested fault ABI and the consumer
+>> index that is updated by the userspace each time this latter has
+>> consumed fault records.
+>>
+>> The natural order of operation for the userspace is:
+>> - retrieve the highest supported fault ABI version
+>> - set the requested fault ABI version in the consumer region
+>>
+>> Until the ABI version is not set by the userspace, the kernel
+>> cannot return a comprehensive set of information inside the
+>> prod header (entry size and number of entries in the fault queue).
 > 
-> Consider using RELATIVECALL_OPCODE and RELATIVEJUMP_OPCODE instead of the
-> constants (0xE8, 0xE9), just as you do later in the patch.
+> It's not clear to me why two regions are required for this.  If the
+> first page is not mmap capable, why does it need to be read-only?  If
+> it were not read-only couldn't the fields of the second region also fit
+> within this first page?  If you wanted to deal with an mmap capable
+> writeable region, it could just be yet a 3rd page in the first region.
+I thought it would be clearer for the userspace to have 2 separate
+regions, one for the producer and one for the consumer. Otherwise I will
+need to specify which fields are read-only or write-only. But this may
+be more self-contained in a single region.
+> 
+>>
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>
+>> ---
+>>
+>> v4 -> v5
+>> - check cons is not null in vfio_pci_check_cons_fault
+>>
+>> v3 -> v4:
+>> - use 2 separate regions, respectively in read and write modes
+>> - add the version capability
+>> ---
+>>  drivers/vfio/pci/vfio_pci.c         | 105 ++++++++++++++++++++++++++++
+>>  drivers/vfio/pci/vfio_pci_private.h |  17 +++++
+>>  drivers/vfio/pci/vfio_pci_rdwr.c    |  73 +++++++++++++++++++
+>>  include/uapi/linux/vfio.h           |  42 +++++++++++
+>>  4 files changed, 237 insertions(+)
+>>
+>> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+>> index cab71da46f4a..f75f61127277 100644
+>> --- a/drivers/vfio/pci/vfio_pci.c
+>> +++ b/drivers/vfio/pci/vfio_pci.c
+>> @@ -261,6 +261,106 @@ int vfio_pci_set_power_state(struct vfio_pci_device *vdev, pci_power_t state)
+>>  	return ret;
+>>  }
+>>  
+>> +void vfio_pci_fault_release(struct vfio_pci_device *vdev,
+>> +			    struct vfio_pci_region *region)
+>> +{
+>> +}
+>> +
+>> +static const struct vfio_pci_fault_abi fault_abi_versions[] = {
+>> +	[0] = {
+>> +		.entry_size = sizeof(struct iommu_fault),
+>> +	},
+>> +};
+>> +
+>> +#define NR_FAULT_ABIS ARRAY_SIZE(fault_abi_versions)
+> 
+> This looks like it's leading to some dangerous complicated code to
+> support multiple user selected ABIs.  How many ABIs do we plan to
+> support?  The region capability also exposes a type, sub-type, and
+> version.  How much of this could be exposed that way?  ie. if we need
+> to support multiple versions, expose multiple regions.
 
-Those are private to kprobes..
+This is something that was discussed earlier and suggested by
+Jean-Philippe that we may need to support several versions of the ABI
+(typicallu when adding PRI support).
+Exposing multiple region is an interesting idea and I will explore that
+direction.
+> 
+>> +
+>> +static int vfio_pci_fault_prod_add_capability(struct vfio_pci_device *vdev,
+>> +		struct vfio_pci_region *region, struct vfio_info_cap *caps)
+>> +{
+>> +	struct vfio_region_info_cap_fault cap = {
+>> +		.header.id = VFIO_REGION_INFO_CAP_PRODUCER_FAULT,
+>> +		.header.version = 1,
+>> +		.version = NR_FAULT_ABIS,
+>> +	};
+>> +	return vfio_info_add_capability(caps, &cap.header, sizeof(cap));
+>> +}
+>> +
+>> +static const struct vfio_pci_regops vfio_pci_fault_cons_regops = {
+>> +	.rw		= vfio_pci_fault_cons_rw,
+>> +	.release	= vfio_pci_fault_release,
+>> +};
+>> +
+>> +static const struct vfio_pci_regops vfio_pci_fault_prod_regops = {
+>> +	.rw		= vfio_pci_fault_prod_rw,
+>> +	.release	= vfio_pci_fault_release,
+>> +	.add_capability = vfio_pci_fault_prod_add_capability,
+>> +};
+>> +
+>> +static int vfio_pci_init_fault_region(struct vfio_pci_device *vdev)
+>> +{
+>> +	struct vfio_region_fault_prod *header;
+>> +	int ret;
+>> +
+>> +	mutex_init(&vdev->fault_queue_lock);
+>> +
+>> +	vdev->fault_pages = kzalloc(3 * PAGE_SIZE, GFP_KERNEL);
+>> +	if (!vdev->fault_pages)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = vfio_pci_register_dev_region(vdev,
+>> +		VFIO_REGION_TYPE_NESTED,
+>> +		VFIO_REGION_SUBTYPE_NESTED_FAULT_PROD,
+>> +		&vfio_pci_fault_prod_regops, 2 * PAGE_SIZE,
+>> +		VFIO_REGION_INFO_FLAG_READ, vdev->fault_pages);
+> 
+> If mmap isn't supported yet, why are we pushing the queue out to the
+> 2nd page?  We're just wasting space.  vfio_region_fault_prod.offset
+> allows us to relocate it when/if it is mmap capable.
+OK. mmap capability is introduced in 27/29 though.
+> 
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = vfio_pci_register_dev_region(vdev,
+>> +		VFIO_REGION_TYPE_NESTED,
+>> +		VFIO_REGION_SUBTYPE_NESTED_FAULT_CONS,
+>> +		&vfio_pci_fault_cons_regops,
+>> +		sizeof(struct vfio_region_fault_cons),
+>> +		VFIO_REGION_INFO_FLAG_WRITE,
+>> +		vdev->fault_pages + 2 * PAGE_SIZE);
+> 
+> What's the remaining (PAGE_SIZE - sizeof(struct vfio_region_fault_cons))
+> bytes used for?
+They are not used.
+> 
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	header = (struct vfio_region_fault_prod *)vdev->fault_pages;
+>> +	header->version = -1;
+>> +	header->offset = PAGE_SIZE;
+>> +	return 0;
+>> +out:
+>> +	kfree(vdev->fault_pages);
+>> +	return ret;
+>> +}
+>> +
+>> +int vfio_pci_check_cons_fault(struct vfio_pci_device *vdev,
+>> +			     struct vfio_region_fault_cons *cons_header)
+>> +{
+>> +	struct vfio_region_fault_prod *prod_header =
+>> +		(struct vfio_region_fault_prod *)vdev->fault_pages;
+>> +
+>> +	if (cons_header->version > NR_FAULT_ABIS)
+>> +		return -EINVAL;
+>> +
+>> +	if (!vdev->fault_abi) {
+>> +		vdev->fault_abi = cons_header->version;
+>> +		prod_header->entry_size =
+>> +			fault_abi_versions[vdev->fault_abi - 1].entry_size;
+>> +		prod_header->nb_entries = PAGE_SIZE / prod_header->entry_size;
+> 
+> Is this sufficient for 4K hosts?  Clearly a 64K host has 16x the number
+> of entries, so if this is a heuristic the results are vastly different.
+This series only deals with unrecoverable errors. We don't expect many
+of them so I did not consider the need to have a more complicated
+heuristic. Now if we consider the PRI use case we need to reconsider the
+size of the fault queue. If this feature is introduced later with a new
+region type, then we can handle this later?
 
-but I can do something like so:
+Practically the event queue size is set by the guest SMMUv3 driver and
+trapped at the SMMUV3 QEMU device level. So we could communicate this
+info through IOMMU MR notifiers but that's a rather complicated chain
+and I would rather avoid that complexity if not necessary.
+> 
+>> +		return 0;
+>> +	}
+>> +
+>> +	/* Fault ABI is set */
+>> +	if (cons_header->version != vdev->fault_abi)
+>> +		return -EINVAL;
+>> +
+>> +	if (cons_header->cons && cons_header->cons >= prod_header->nb_entries)
+> 
+> First test seems unnecessary.
+> 
+>> +		return -EINVAL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>>  {
+>>  	struct pci_dev *pdev = vdev->pdev;
+>> @@ -359,6 +459,10 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>>  		}
+>>  	}
+>>  
+>> +	ret = vfio_pci_init_fault_region(vdev);
+>> +	if (ret)
+>> +		goto disable_exit;
+>> +
+>>  	vfio_pci_probe_mmaps(vdev);
+>>  
+>>  	return 0;
+>> @@ -1374,6 +1478,7 @@ static void vfio_pci_remove(struct pci_dev *pdev)
+>>  
+>>  	vfio_iommu_group_put(pdev->dev.iommu_group, &pdev->dev);
+>>  	kfree(vdev->region);
+>> +	kfree(vdev->fault_pages);
+>>  	mutex_destroy(&vdev->ioeventfds_lock);
+>>  
+>>  	if (!disable_idle_d3)
+>> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+>> index 1812cf22fc4f..8e0a55682d3f 100644
+>> --- a/drivers/vfio/pci/vfio_pci_private.h
+>> +++ b/drivers/vfio/pci/vfio_pci_private.h
+>> @@ -122,9 +122,12 @@ struct vfio_pci_device {
+>>  	int			ioeventfds_nr;
+>>  	struct eventfd_ctx	*err_trigger;
+>>  	struct eventfd_ctx	*req_trigger;
+>> +	struct mutex		fault_queue_lock;
+>> +	int			fault_abi;
+>>  	struct list_head	dummy_resources_list;
+>>  	struct mutex		ioeventfds_lock;
+>>  	struct list_head	ioeventfds_list;
+>> +	u8			*fault_pages;
+>>  };
+>>  
+>>  #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
+>> @@ -153,6 +156,18 @@ extern ssize_t vfio_pci_vga_rw(struct vfio_pci_device *vdev, char __user *buf,
+>>  extern long vfio_pci_ioeventfd(struct vfio_pci_device *vdev, loff_t offset,
+>>  			       uint64_t data, int count, int fd);
+>>  
+>> +struct vfio_pci_fault_abi {
+>> +	u32 entry_size;
+>> +};
+>> +
+>> +extern size_t vfio_pci_fault_cons_rw(struct vfio_pci_device *vdev,
+>> +				     char __user *buf, size_t count,
+>> +				     loff_t *ppos, bool iswrite);
+>> +
+>> +extern size_t vfio_pci_fault_prod_rw(struct vfio_pci_device *vdev,
+>> +				     char __user *buf, size_t count,
+>> +				     loff_t *ppos, bool iswrite);
+>> +
+>>  extern int vfio_pci_init_perm_bits(void);
+>>  extern void vfio_pci_uninit_perm_bits(void);
+>>  
+>> @@ -166,6 +181,8 @@ extern int vfio_pci_register_dev_region(struct vfio_pci_device *vdev,
+>>  
+>>  extern int vfio_pci_set_power_state(struct vfio_pci_device *vdev,
+>>  				    pci_power_t state);
+>> +extern int vfio_pci_check_cons_fault(struct vfio_pci_device *vdev,
+>> +				     struct vfio_region_fault_cons *header);
+>>  
+>>  #ifdef CONFIG_VFIO_PCI_IGD
+>>  extern int vfio_pci_igd_init(struct vfio_pci_device *vdev);
+>> diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
+>> index a6029d0a5524..67cd9363f4e7 100644
+>> --- a/drivers/vfio/pci/vfio_pci_rdwr.c
+>> +++ b/drivers/vfio/pci/vfio_pci_rdwr.c
+>> @@ -277,6 +277,79 @@ ssize_t vfio_pci_vga_rw(struct vfio_pci_device *vdev, char __user *buf,
+>>  	return done;
+>>  }
+>>  
+>> +/* Read-only region */
+>> +size_t vfio_pci_fault_prod_rw(struct vfio_pci_device *vdev, char __user *buf,
+>> +			      size_t count, loff_t *ppos, bool iswrite)
+>> +{
+>> +	unsigned int i = VFIO_PCI_OFFSET_TO_INDEX(*ppos) - VFIO_PCI_NUM_REGIONS;
+>> +	void *base = vdev->region[i].data;
+>> +	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
+>> +	int ret = 0;
+>> +
+>> +	if (iswrite)
+>> +		return 0;
+>> +
+>> +	if (!vdev->fault_abi)
+>> +		return -EINVAL;
+>> +
+>> +	if (pos >= vdev->region[i].size)
+>> +		return -EINVAL;
+>> +
+>> +	count = min(count, (size_t)(vdev->region[i].size - pos));
+>> +
+>> +	mutex_lock(&vdev->fault_queue_lock);
+>> +
+>> +	if (copy_to_user(buf, base + pos, count)) {
+>> +		ret = -EFAULT;
+>> +		goto unlock;
+>> +	}
+>> +	*ppos += count;
+>> +	ret = count;
+>> +unlock:
+>> +	mutex_unlock(&vdev->fault_queue_lock);
+>> +	return ret;
+>> +}
+>> +
+>> +
+>> +/* write only */
+>> +size_t vfio_pci_fault_cons_rw(struct vfio_pci_device *vdev, char __user *buf,
+>> +			      size_t count, loff_t *ppos, bool iswrite)
+>> +{
+>> +	unsigned int i = VFIO_PCI_OFFSET_TO_INDEX(*ppos) - VFIO_PCI_NUM_REGIONS;
+>> +	void *base = vdev->region[i].data;
+>> +	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
+>> +	struct vfio_region_fault_cons *header;
+>> +	struct vfio_region_fault_cons orig_header =
+>> +		*(struct vfio_region_fault_cons *)base;
+>> +	int ret = 0;
+>> +
+>> +	if (!iswrite)
+>> +		return 0;
+>> +
+>> +	if (pos >= vdev->region[i].size)
+>> +		return -EINVAL;
+>> +
+>> +	count = min(count, (size_t)(vdev->region[i].size - pos));
+>> +
+>> +	mutex_lock(&vdev->fault_queue_lock);
+>> +
+>> +	if (copy_from_user(base + pos, buf, count)) {
+>> +		ret = -EFAULT;
+>> +		goto unlock;
+>> +	}
+>> +	header = (struct vfio_region_fault_cons *)base;
+>> +	ret = vfio_pci_check_cons_fault(vdev, header);
+>> +	if (ret) {
+>> +		*header = orig_header;
+>> +		goto unlock;
+>> +	}
+>> +	*ppos += count;
+>> +	ret = count;
+>> +unlock:
+>> +	mutex_unlock(&vdev->fault_queue_lock);
+>> +	return ret;
+>> +}
+>> +
+>>  static int vfio_pci_ioeventfd_handler(void *opaque, void *unused)
+>>  {
+>>  	struct vfio_pci_ioeventfd *ioeventfd = opaque;
+>> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+>> index 2774a1ab37ae..13e041b84d48 100644
+>> --- a/include/uapi/linux/vfio.h
+>> +++ b/include/uapi/linux/vfio.h
+>> @@ -307,6 +307,10 @@ struct vfio_region_info_cap_type {
+>>  #define VFIO_REGION_TYPE_GFX                    (1)
+>>  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
+>>  
+>> +#define VFIO_REGION_TYPE_NESTED			(2)
+>> +#define VFIO_REGION_SUBTYPE_NESTED_FAULT_PROD	(1)
+>> +#define VFIO_REGION_SUBTYPE_NESTED_FAULT_CONS	(2)
+>> +
+>>  /**
+>>   * struct vfio_region_gfx_edid - EDID region layout.
+>>   *
+>> @@ -701,6 +705,44 @@ struct vfio_device_ioeventfd {
+>>  
+>>  #define VFIO_DEVICE_IOEVENTFD		_IO(VFIO_TYPE, VFIO_BASE + 16)
+>>  
+>> +
+>> +/*
+>> + * Capability exposed by the Producer Fault Region
+>> + * @version: max fault ABI version supported by the kernel
+>> + */
+>> +#define VFIO_REGION_INFO_CAP_PRODUCER_FAULT	6
+>> +
+>> +struct vfio_region_info_cap_fault {
+>> +	struct vfio_info_cap_header header;
+>> +	__u32 version;
+>> +};
+>> +
+>> +/*
+>> + * Producer Fault Region (Read-Only from user space perspective)
+>> + * Contains the fault circular buffer and the producer index
+>> + * @version: version of the fault record uapi
+>> + * @entry_size: size of each fault record
+>> + * @offset: offset of the start of the queue
+>> + * @prod: producer index relative to the start of the queue
+>> + */
+>> +struct vfio_region_fault_prod {
+>> +	__u32   version;
+>> +	__u32	nb_entries;
+>> +	__u32   entry_size;
+>> +	__u32	offset;
+>> +	__u32   prod;
+>> +};
+>> +
+>> +/*
+>> + * Consumer Fault Region (Write-Only from the user space perspective)
+>> + * @version: ABI version requested by the userspace
+>> + * @cons: consumer index relative to the start of the queue
+>> + */
+>> +struct vfio_region_fault_cons {
+>> +	__u32 version;
+>> +	__u32 cons;
+>> +};
+> 
+> I think there are more common semantics than this prod/cons
+> terminology, for example head/tail.
+OK. The SMMUv3 event queue uses the prod/cons terminology. Now tail/head
+may be more prevalent in kernel.
 
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -48,8 +48,14 @@ static inline void int3_emulate_jmp(stru
- 	regs->ip = ip;
- }
- 
--#define INT3_INSN_SIZE 1
--#define CALL_INSN_SIZE 5
-+#define INT3_INSN_SIZE		1
-+#define INT3_INSN_OPCODE	0xCC
-+
-+#define CALL_INSN_SIZE		5
-+#define CALL_INSN_OPCODE	0xE8
-+
-+#define JMP_INSN_SIZE		5
-+#define JMP_INSN_OPCODE		0xE9
- 
- static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
- {
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -952,11 +952,11 @@ int poke_int3_handler(struct pt_regs *re
- 	opcode = *(struct opcode *)bp_int3_opcode;
- 
- 	switch (opcode.insn) {
--	case 0xE8: /* CALL */
-+	case CALL_INSN_OPCODE:
- 		int3_emulate_call(regs, ip + opcode.rel);
- 		break;
- 
--	case 0xE9: /* JMP */
-+	case JMP_INSN_OPCODE:
- 		int3_emulate_jmp(regs, ip + opcode.rel);
- 		break;
- 
+Thank you for the review
+
+Eric
+
+> 
+>> +
+>>  /* -------- API for Type1 VFIO IOMMU -------- */
+>>  
+>>  /**
+> 
