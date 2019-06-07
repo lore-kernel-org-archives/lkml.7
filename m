@@ -2,112 +2,102 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06434C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1104C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB0C2064A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A0B2133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559925127;
+	bh=x6NdTGK0hYCIN8oIEzNYU7W2dzDVrjuCU/waZSAP1Vk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UTD43c0P7oSPRjCdA2/EvNmyPWU7LK8KXUKcdriweJ9xKistzZKDfaQd2b3GbAp15
+	 cmW59EyWyd5mf330VA62Jt6cEreLc95DnmFpfWP3eE2rdpsK9bHSCC2WW4iPYI/Mun
+	 Rtsn/tJ/f0eK2Us2kbWO00QUwgt9vxdwACAF+JFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbfFGQbp (ORCPT
+        id S1730876AbfFGQcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:31:45 -0400
-Received: from mga17.intel.com ([192.55.52.151]:57251 "EHLO mga17.intel.com"
+        Fri, 7 Jun 2019 12:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728595AbfFGQbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:31:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:31:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,563,1557212400"; 
-   d="scan'208";a="182722617"
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2019 09:31:44 -0700
-Message-ID: <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Fri, 07 Jun 2019 09:23:43 -0700
-In-Reply-To: <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1730727AbfFGQcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:32:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEC1E2064A;
+        Fri,  7 Jun 2019 16:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559925126;
+        bh=x6NdTGK0hYCIN8oIEzNYU7W2dzDVrjuCU/waZSAP1Vk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vf8Jdw7EUoztUdVZsMMAR2d8ZQp6qsgQL4pIXjcRLEr2NiY5a4o/wMSGOIzRYHEtx
+         Vii8bfSatYN58xw5iQKZY1MH6GpoR6kb2LLkeCu6ZA39p7TXOjIlSmgB13qYfRraxK
+         DkQMkS47UAjkno146rmKADiU76eYpp4Pc4OSR/xg=
+Date:   Fri, 7 Jun 2019 18:32:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/69] 4.14.124-stable review
+Message-ID: <20190607163203.GA14514@kroah.com>
+References: <20190607153848.271562617@linuxfoundation.org>
+ <20190607161102.GA19615@roeck-us.net>
+ <20190607161627.GA9920@kroah.com>
+ <20190607162722.GA21998@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607162722.GA21998@roeck-us.net>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 10:08 +0200, Peter Zijlstra wrote:
-> On Thu, Jun 06, 2019 at 01:09:15PM -0700, Yu-cheng Yu wrote:
-> > Indirect Branch Tracking (IBT) provides an optional legacy code bitmap
-> > that allows execution of legacy, non-IBT compatible library by an
-> > IBT-enabled application.  When set, each bit in the bitmap indicates
-> > one page of legacy code.
+On Fri, Jun 07, 2019 at 09:27:22AM -0700, Guenter Roeck wrote:
+> On Fri, Jun 07, 2019 at 06:16:27PM +0200, Greg Kroah-Hartman wrote:
+> > On Fri, Jun 07, 2019 at 09:11:02AM -0700, Guenter Roeck wrote:
+> > > On Fri, Jun 07, 2019 at 05:38:41PM +0200, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.14.124 release.
+> > > > There are 69 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Sun 09 Jun 2019 03:37:08 PM UTC.
+> > > > Anything received after that time might be too late.
+> > > >
+> > > 
+> > > fs/btrfs/inode.c: In function 'btrfs_add_link':
+> > > fs/btrfs/inode.c:6590:27: error: invalid initializer
+> > >    struct timespec64 now = current_time(&parent_inode->vfs_inode);
+> > >                            ^~~~~~~~~~~~
+> > > fs/btrfs/inode.c:6592:35: error: incompatible types when assigning to type 'struct timespec' from type 'struct timespec64'
+> > >    parent_inode->vfs_inode.i_mtime = now;
+> > >                                    ^
+> > > fs/btrfs/inode.c:6593:35: error: incompatible types when assigning to type 'struct timespec' from type 'struct timespec64'
+> > >    parent_inode->vfs_inode.i_ctime = now;
+> > >                                    ^
 > > 
-> > The bitmap is allocated and setup from the application.
-> > +int cet_setup_ibt_bitmap(unsigned long bitmap, unsigned long size)
-> > +{
-> > +	u64 r;
-> > +
-> > +	if (!current->thread.cet.ibt_enabled)
-> > +		return -EINVAL;
-> > +
-> > +	if (!PAGE_ALIGNED(bitmap) || (size > TASK_SIZE_MAX))
-> > +		return -EINVAL;
-> > +
-> > +	current->thread.cet.ibt_bitmap_addr = bitmap;
-> > +	current->thread.cet.ibt_bitmap_size = size;
-> > +
-> > +	/*
-> > +	 * Turn on IBT legacy bitmap.
-> > +	 */
-> > +	modify_fpu_regs_begin();
-> > +	rdmsrl(MSR_IA32_U_CET, r);
-> > +	r |= (MSR_IA32_CET_LEG_IW_EN | bitmap);
-> > +	wrmsrl(MSR_IA32_U_CET, r);
-> > +	modify_fpu_regs_end();
-> > +
-> > +	return 0;
-> > +}
+> > What arch?  This builds for me here.  odd...
+> > 
 > 
-> So you just program a random user supplied address into the hardware.
-> What happens if there's not actually anything at that address or the
-> user munmap()s the data after doing this?
+> arm, i386, m68k, mips, parisc, xtensa, ppc, sh4
+> 
+> It was originally seen with v4.14.123-69-gcc46c1204f89 last night,
+> but I confirmed that v4.14.123-70-g94c5316fb246 is still affected.
 
-This function checks the bitmap's alignment and size, and anything else is the
-app's responsibility.  What else do you think the kernel should check?
+Ok, let me dig into this after dinner, I think it's due to the
+timespec64 change that happened before 4.19 (where this error is not
+showing up...)
 
-Yu-cheng
+thanks,
+
+greg k-h
