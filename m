@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F45C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CD9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C5A208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3219C2133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922895;
-	bh=lhup+GxE6NjPA2SqoQevbexaE1RfhCEU0FEh9xcnTZ0=;
+	s=default; t=1559922901;
+	bh=qsBYCJp0T9BTNFdojWwxp9gA8fp2Y3KEZMWRQhokJBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uYxFiy2D3Nb8aEYa3RZ9ih33Ra0d5ZbVt/Sos9vOYluG4YjInl+d8QoyWKkflK7Sz
-	 3s3bY/7+HyQi7Xlp4VAziWLFOQngJyYgZILHRWtSddMWRa30F1Z2gdgf8/Dh4J3nnz
-	 SjjEZeE+iquY42QFNHin99VoYO8enqVBK7hy/oqE=
+	b=gbSBOadeB0NjTEQ+f/caSbC7IEWIN0QNcK3HSDyCAiZb9VOn2A29HH8I4me+ZH11i
+	 15EYP1q23vxxYxYWELoW3hwSGxVNvcCk9Ff1l7u5U+E+TFyO0/wg0x4FRNKNVLA6x3
+	 qqYTOGdVgPq6uCGX7d2/1KrvVJpuPMsxcxJ0YOS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbfFGPqY (ORCPT
+        id S1731815AbfFGPzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:46:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58560 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:55:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731378AbfFGPqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:20 -0400
+        id S1731368AbfFGPqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51A2A2146E;
-        Fri,  7 Jun 2019 15:46:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B733A2146E;
+        Fri,  7 Jun 2019 15:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922379;
-        bh=lhup+GxE6NjPA2SqoQevbexaE1RfhCEU0FEh9xcnTZ0=;
+        s=default; t=1559922377;
+        bh=qsBYCJp0T9BTNFdojWwxp9gA8fp2Y3KEZMWRQhokJBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3DuMIpBji4looPVVyBvZdZtyC510gP59lJ23tTqNZgu3M2BXtLF9VUNEkqboUNvU
-         yBfoM56LBvw8FUzS4t6VKWeSRDnGcMW6XQPBFWXzXEYRQHbP5miU4U8VBkaeCjmk6h
-         0J9SJ8QNG6IjbBdrIxglqmyE1gqpoD1Ue+b3cUi8=
+        b=gk+LgiKRNRt+iUv4U1aiyzYP65+AGh8BXx/id6KwS6t1okJdtgkgOx5oeUCSMT2wk
+         6MVHrvafVD1Kkr2s9ZhfjN+f2jzP8uisTOKMkW+5xX6Ji91VRxy1TsTqr+79JyzsX8
+         pbhg1SIck1qUocwzcwt4dhjTdcCyBJ0+HAWOT6Es=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Todd Kjos <tkjos@google.com>
-Subject: [PATCH 4.19 65/73] Revert "binder: fix handling of misaligned binder object"
-Date:   Fri,  7 Jun 2019 17:39:52 +0200
-Message-Id: <20190607153856.164180391@linuxfoundation.org>
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH 4.19 38/73] tty: serial: msm_serial: Fix XON/XOFF
+Date:   Fri,  7 Jun 2019 17:39:25 +0200
+Message-Id: <20190607153853.392889944@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -60,56 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-This reverts commit 6bf7d3c5c0c5dad650bfc4345ed553c18b69d59e.
+commit 61c0e37950b88bad590056286c1d766b1f167f4e upstream.
 
-The commit message is for a different patch. Reverting and then adding
-the same patch back with the correct commit message.
+When the tty layer requests the uart to throttle, the current code
+executing in msm_serial will trigger "Bad mode in Error Handler" and
+generate an invalid stack frame in pstore before rebooting (that is if
+pstore is indeed configured: otherwise the user shall just notice a
+reboot with no further information dumped to the console).
 
-Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc: stable <stable@vger.kernel.org> # 4.19
-Signed-off-by: Todd Kjos <tkjos@google.com>
+This patch replaces the PIO byte accessor with the word accessor
+already used in PIO mode.
+
+Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/android/binder_alloc.c |   18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -958,13 +958,14 @@ enum lru_status binder_alloc_free_page(s
+---
+ drivers/tty/serial/msm_serial.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -860,6 +860,7 @@ static void msm_handle_tx(struct uart_po
+ 	struct circ_buf *xmit = &msm_port->uart.state->xmit;
+ 	struct msm_dma *dma = &msm_port->tx_dma;
+ 	unsigned int pio_count, dma_count, dma_min;
++	char buf[4] = { 0 };
+ 	void __iomem *tf;
+ 	int err = 0;
  
- 	index = page - alloc->pages;
- 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
--
--	mm = alloc->vma_vm_mm;
--	if (!mmget_not_zero(mm))
--		goto err_mmget;
--	if (!down_write_trylock(&mm->mmap_sem))
--		goto err_down_write_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
-+	if (vma) {
-+		if (!mmget_not_zero(alloc->vma_vm_mm))
-+			goto err_mmget;
-+		mm = alloc->vma_vm_mm;
-+		if (!down_write_trylock(&mm->mmap_sem))
-+			goto err_down_write_mmap_sem_failed;
-+	}
+@@ -869,10 +870,12 @@ static void msm_handle_tx(struct uart_po
+ 		else
+ 			tf = port->membase + UART_TF;
  
- 	list_lru_isolate(lru, item);
- 	spin_unlock(lock);
-@@ -977,9 +978,10 @@ enum lru_status binder_alloc_free_page(s
- 			       PAGE_SIZE);
- 
- 		trace_binder_unmap_user_end(alloc, index);
++		buf[0] = port->x_char;
 +
-+		up_write(&mm->mmap_sem);
-+		mmput(mm);
- 	}
--	up_write(&mm->mmap_sem);
--	mmput(mm);
+ 		if (msm_port->is_uartdm)
+ 			msm_reset_dm_count(port, 1);
  
- 	trace_binder_unmap_kernel_start(alloc, index);
- 
+-		iowrite8_rep(tf, &port->x_char, 1);
++		iowrite32_rep(tf, buf, 1);
+ 		port->icount.tx++;
+ 		port->x_char = 0;
+ 		return;
 
 
