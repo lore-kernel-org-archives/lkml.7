@@ -2,169 +2,119 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECF3C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2D6C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1419F2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:26:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ng9VAdE1"
+	by mail.kernel.org (Postfix) with ESMTP id BEE8F2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbfFGP0P (ORCPT
+        id S1729938AbfFGP0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:26:15 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40726 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbfFGP0P (ORCPT
+        Fri, 7 Jun 2019 11:26:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52882 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729878AbfFGP0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:26:15 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so962164pla.7;
-        Fri, 07 Jun 2019 08:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XVGisPA/tmje+GMmiDK8OnPmVMVeg+5zpouDsmuezH0=;
-        b=Ng9VAdE1hknVxgMRmGjp2lDv/vnEMUT819mfzZMuI8Vo6TE0MQGzCyXQIXbFSQSR9d
-         mKrNlvkbRFOoWrF67ukGOUJy4jylKGdkI6hIa+PapCfYavrA91o8rolb+/2gcZ89PHi4
-         TCKXDiJaTwa1LK8hu36NqCpMeFdtpAHiDM4lDcBoesgsWJUQKalZSIuLylNn8fC6ZpPa
-         jrw8KWHCbIrHI4lj+eQDHSVFYpOVYAS1GI7rAz/OImckqC1LWeXKUjZlS5GZhLJXoIQy
-         Q7PudF+uPC57APLwcHvHZjgTe0n5U3Fn6YNewGQKV/dgVXu9sEBuf67YsfvDIaQIy+MF
-         eFNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XVGisPA/tmje+GMmiDK8OnPmVMVeg+5zpouDsmuezH0=;
-        b=e3CBz1lCutw2gZP9krwcp9x8ZSoI7pD4t8A+sFMv1QK8iRNJH9kDcXmYV0z1IGK+ER
-         1w7BalgPNMKxhl/R/4S9yQDA1LPW/KvsNRuNCoJBwTrmV+1g8rT1a7d/gpQq2Hxx5CfW
-         9N2hep08BUmdJ4nLLZ90l249s9YOBW2APIe4r67x72KkrOfKaSJkrm8aPq+9+e2EebU9
-         eZLg2v/k+8MM5Zp7JlB6DGwckvfIhVnOTQQ+vOHmHr7Yw1BzEambZ2tO0z2uAcrEzvtl
-         F1ciCatdsfK8+CJyoiSyBAPKYKj+qpmyNCTG8uRZq3Jk4C/J/DKc+3dEHI3GGuk9KUWZ
-         jV1w==
-X-Gm-Message-State: APjAAAWi1FHCt3IfbltsoEJ7c0eehGtAG0dJGabnOx8jK9wGHa37Zzz8
-        wg5swwcovmIgE7ttHj5apqyX1Brt
-X-Google-Smtp-Source: APXvYqyb+ly9dDrO0mjWbQvwYi45rypLj3ZwkYwj101gOR+IwU70sx8VUSNY5cgcVG4+h34ABuZAJw==
-X-Received: by 2002:a17:902:294a:: with SMTP id g68mr57385663plb.169.1559921174428;
-        Fri, 07 Jun 2019 08:26:14 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id j7sm2461679pfa.184.2019.06.07.08.26.13
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 08:26:13 -0700 (PDT)
-Subject: Re: inet: frags: Turn fqdir->dead into an int for old Alphas
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-References: <20190603200301.GM28207@linux.ibm.com>
- <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
- <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
- <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <da5eedfe-92f9-6c50-b9e7-68886047dd25@gmail.com>
-Date:   Fri, 7 Jun 2019 08:26:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Jun 2019 11:26:17 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x57FIt85005515
+        for <linux-kernel@vger.kernel.org>; Fri, 7 Jun 2019 11:26:16 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2syst4td2g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:26:15 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 7 Jun 2019 16:26:11 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 7 Jun 2019 16:26:09 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x57FQ89940304766
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Jun 2019 15:26:08 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B397A4062;
+        Fri,  7 Jun 2019 15:26:08 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 066E1A405B;
+        Fri,  7 Jun 2019 15:26:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.81.48])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  7 Jun 2019 15:26:06 +0000 (GMT)
+Subject: Re: [PATCH v3 2/2] ima: add enforce-evm and log-evm modes to
+ strictly check EVM status
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        dmitry.kasatkin@huawei.com, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
+Date:   Fri, 07 Jun 2019 11:25:56 -0400
+In-Reply-To: <773c3301-7861-f28b-813a-1f2ff657bae8@huawei.com>
+References: <20190606112620.26488-1-roberto.sassu@huawei.com>
+         <20190606112620.26488-3-roberto.sassu@huawei.com>
+         <1559917462.4278.253.camel@linux.ibm.com>
+         <93459fe8-f9b6-fe45-1ca7-2efb8854dc8b@huawei.com>
+         <1559920112.4278.264.camel@linux.ibm.com>
+         <773c3301-7861-f28b-813a-1f2ff657bae8@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19060715-0020-0000-0000-000003481BC5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060715-0021-0000-0000-0000219B3678
+Message-Id: <1559921156.4278.276.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906070107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/7/19 7:09 AM, Herbert Xu wrote:
-> On Tue, Jun 04, 2019 at 09:04:55AM -0700, Linus Torvalds wrote:
->>
->> In fact, the alpha port was always subtly buggy exactly because of the
->> "byte write turns into a read-and-masked-write", even if I don't think
->> anybody ever noticed (we did fix cases where people _did_ notice,
->> though, and we might still have some cases where we use 'int' for
->> booleans because of alpha issues.).
+On Fri, 2019-06-07 at 17:14 +0200, Roberto Sassu wrote:
+> On 6/7/2019 5:08 PM, Mimi Zohar wrote:
+> > On Fri, 2019-06-07 at 16:40 +0200, Roberto Sassu wrote:
+> >>> On Thu, 2019-06-06 at 13:26 +0200, Roberto Sassu wrote:
+> > 
+> >>>> Although this choice appears legitimate, it might not be suitable for
+> >>>> hardened systems, where the administrator expects that access is denied if
+> >>>> there is any error. An attacker could intentionally delete the EVM keys
+> >>>> from the system and set the file digest in security.ima to the actual file
+> >>>> digest so that the final appraisal status is INTEGRITY_PASS.
+> >>>
+> >>> Assuming that the EVM HMAC key is stored in the initramfs, not on some
+> >>> other file system, and the initramfs is signed, INTEGRITY_UNKNOWN
+> >>> would be limited to the rootfs filesystem.
+> >>
+> >> There is another issue. The HMAC key, like the public keys, should be
+> >> loaded when appraisal is disabled. This means that we have to create a
+> >> trusted key at early boot and defer the unsealing.
+> > 
+> > There is no need for IMA to appraise the public key file signature,
+> > since the certificate is signed by a key on the builtin/secondary
+> > trusted keyring.  With CONFIG_IMA_LOAD_X509 enabled, the public key
+> > can be loaded onto the IMA keyring with IMA-appraisal enabled, but
+> > without verifying the file signature.
 > 
-> This is in fact a real bug in the code in question that no amount
-> of READ_ONCE/WRITE_ONCE would have caught.  The field fqdir->dead is
-> declared as boolean so writing to it is not atomic (on old Alphas).
-> 
-> I don't think it currently matters because padding would ensure
-> that it is in fact 64 bits long.  However, should someone add another
-> char/bool/bitfield in this struct in future it could become an issue.
-> 
-> So let's fix it.
+> Yes, but access to the files containing the master key and the EVM key
+> is denied if appraisal is enabled.
 
+This is a key loading ordering issue.  Assuming you load the IMA key
+first, you should be able to verify the master and EVM keys.
 
-There is common knowledge among us programmers that bit fields
-(or bool) sharing a common 'word' need to be protected
-with a common lock.
+Mimi
 
-Converting all bit fields to plain int/long would be quite a waste of memory.
-
-In this case, fqdir_exit() is called right before the whole
-struct fqdir is dismantled, and the only cpu that could possibly
-change the thing is ourself, and we are going to start an RCU grace period.
-
-Note that first cache line in 'struct fqdir' is read-only.
-Only ->dead field is flipped to one at exit time.
-
-Your patch would send a strong signal to programmers to not even try using
-bit fields.
-
-Do we really want that ?
-
-> 
-> ---8<--
-> The field fqdir->dead is meant to be written (and read) atomically.
-> As old Alpha CPUs can't write a single byte atomically, we need at
-> least an int for it to work.
-> 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
-> diff --git a/include/net/inet_frag.h b/include/net/inet_frag.h
-> index e91b79ad4e4a..8c458fba74ad 100644
-> --- a/include/net/inet_frag.h
-> +++ b/include/net/inet_frag.h
-> @@ -14,7 +14,9 @@ struct fqdir {
->  	int			max_dist;
->  	struct inet_frags	*f;
->  	struct net		*net;
-> -	bool			dead;
-> +
-> +	/* We can't use boolean because this needs atomic writes. */
-> +	int			dead;
->  
->  	struct rhashtable       rhashtable ____cacheline_aligned_in_smp;
->  
-> diff --git a/net/ipv4/inet_fragment.c b/net/ipv4/inet_fragment.c
-> index 35e9784fab4e..05aa7c145817 100644
-> --- a/net/ipv4/inet_fragment.c
-> +++ b/net/ipv4/inet_fragment.c
-> @@ -193,7 +193,7 @@ void fqdir_exit(struct fqdir *fqdir)
->  {
->  	fqdir->high_thresh = 0; /* prevent creation of new frags */
->  
-> -	fqdir->dead = true;
-> +	fqdir->dead = 1;
->  
->  	/* call_rcu is supposed to provide memory barrier semantics,
->  	 * separating the setting of fqdir->dead with the destruction
-> 
