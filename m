@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED69C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141F7C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A061208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C14208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559933778;
-	bh=HGnmzRYTd5i0q/n61AFbhzX0Bq3h5xNRCZIgXWazSPw=;
+	s=default; t=1559933781;
+	bh=DIrjoO9imqn3qS+CKp6UcqkDkRCJ7aCvuE/+3CuGY2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0GQB49Kjy+XmclYoTc4UW//r/iVkOOsKk7BLpaIzoLDdakYbMvbNM6YZR807xSEyJ
-	 s3xCe+0PnivB67koqzw2ND4s568zcBxF4fKLt7PuSJ+fWKB7locRAUFu4uyUvSsRc6
-	 SoJNuOVkRoTRoy+Ai01zxKrp4sXfOOZYwjwVmNVY=
+	b=YGbpe5+/jZERTFq6mg/r9BW8VnfCMb0irfXJ9x/rdVJL1L//NSHjN2AenSHhsrRQm
+	 pMqh8BnT2r0bYsdKecS4u9IlfR9u8vo9slPUl7jo07BZ1LU4vK/dvhrtPyD4C5iFys
+	 vlhNM962QyQqpucfuIyPWXGavq/Y11u2nP3tfpz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731044AbfFGS4R (ORCPT
+        id S1732336AbfFGS4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:56:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42300 "EHLO
+        Fri, 7 Jun 2019 14:56:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42304 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732071AbfFGSyk (ORCPT
+        with ESMTP id S1732070AbfFGSyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 14:54:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,18 +34,18 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=78L7zd88IqXfMHKxzazz3S43SQAX6wKuWyWb6jrb4ew=; b=q7aY4MVborpafsU7iQgHjHtkE6
-        nKvF1RG43TkIakvK3tqiv9jzPrSU6bdLzVsqRTI8VSG8XBdHX3TQM2JPpY9fVoIwa9r4AgWUg8tYI
-        Xd0h1f757oVGPwY9nGms8KQzEEcU7K8miOIhDfq5b2dcjVdkAf/TGfGlgsQoUv9/BGA/+frttZUfv
-        Sjs/qHB574OjEscU8USL4AwDmyrLZUjdiYu5hV/C8oiueNpxQS2jUnvzfUA9dfnDkyT6xoQyo0FQX
-        P6BCyONO2QA6kTPhgV8xDvgbdneuiVkGhiPwcdsBoa/zQFX+57fs2ZC643MvK27LCxnT1DoM0uz+d
-        SWPEueBw==;
+        bh=pmFDxSsRk1M8bfZ7S6JeBiIYyY9t9gaet+YP0uTnnHE=; b=c5mRiADSYebox16EqWTDJjfXpT
+        hPKcy1AtQ/hlVeRzKd/Dt9jAuZ4YT24Y/f2SLOAZfrSiJaImTsYcIysl9xD+13OYzax5dA2J9EFei
+        yGB63v8JuDSIHACpfSD1ujr3epcThKrTFg1d1Wfnj1vy8HeGxUtkJzju66ofeabZsFgY0cZbCR7dG
+        FYBwqrIHPPY1VGC6jdWiilYhDmpmmfR+LSujReyO/Y31ZFaPr9kmlCDeuF7trNEotlyk2jMUPaDhC
+        J5OaGFghBQabWLpIXciC7ufRo5ifqCInKKup1ZXc23WeY0AL97MLjkTDe6BwhDgavyEKLiCctc5nY
+        NPs9GEBw==;
 Received: from [179.181.119.115] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZK0d-0005se-JN; Fri, 07 Jun 2019 18:54:39 +0000
+        id 1hZK0d-0005sY-Jj; Fri, 07 Jun 2019 18:54:39 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZK0b-0007Ea-8r; Fri, 07 Jun 2019 15:54:37 -0300
+        id 1hZK0b-0007Eu-D9; Fri, 07 Jun 2019 15:54:37 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
@@ -53,9 +53,9 @@ Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Harry Wei <harryxiyou@gmail.com>,
         Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH v3 03/20] docs: zh_CN: get rid of basic_profiling.txt
-Date:   Fri,  7 Jun 2019 15:54:19 -0300
-Message-Id: <5763c80f208b4943cf487d2224f8fd32fb1c9bc9.1559933665.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v3 08/20] docs: zh_CN: avoid duplicate citation references
+Date:   Fri,  7 Jun 2019 15:54:24 -0300
+Message-Id: <3c26852c46db3a56cb5f42765db0cc5c64334986.1559933665.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
 References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
@@ -67,97 +67,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changeset 5700d1974818 ("docs: Get rid of the "basic profiling" guide")
-removed an old basic-profiling.txt file that was not updated over
-the last 11 years and won't reflect the post-perf era.
+    Documentation/process/management-style.rst:35: WARNING: duplicate label decisions, other instance in     Documentation/translations/zh_CN/process/management-style.rst
+    Documentation/process/programming-language.rst:37: WARNING: duplicate citation c-language, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+    Documentation/process/programming-language.rst:38: WARNING: duplicate citation gcc, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+    Documentation/process/programming-language.rst:39: WARNING: duplicate citation clang, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+    Documentation/process/programming-language.rst:40: WARNING: duplicate citation icc, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+    Documentation/process/programming-language.rst:41: WARNING: duplicate citation gcc-c-dialect-options, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+    Documentation/process/programming-language.rst:42: WARNING: duplicate citation gnu-extensions, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+    Documentation/process/programming-language.rst:43: WARNING: duplicate citation gcc-attribute-syntax, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
+    Documentation/process/programming-language.rst:44: WARNING: duplicate citation n2049, other instance in     Documentation/translations/zh_CN/process/programming-language.rst
 
-It makes no sense to keep its translation, so get rid of it too.
-
-Fixes: 5700d1974818 ("docs: Get rid of the "basic profiling" guide")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Alex Shi <alex.shi@linux.alibaba.com>
 ---
- .../translations/zh_CN/basic_profiling.txt    | 71 -------------------
- 1 file changed, 71 deletions(-)
- delete mode 100644 Documentation/translations/zh_CN/basic_profiling.txt
+ .../zh_CN/process/management-style.rst        |  4 +-
+ .../zh_CN/process/programming-language.rst    | 59 ++++++++++++++-----
+ 2 files changed, 47 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/basic_profiling.txt b/Documentation/translations/zh_CN/basic_profiling.txt
-deleted file mode 100644
-index 1e6bf0bdf8f5..000000000000
---- a/Documentation/translations/zh_CN/basic_profiling.txt
-+++ /dev/null
-@@ -1,71 +0,0 @@
--Chinese translated version of Documentation/basic_profiling
--
--If you have any comment or update to the content, please post to LKML directly.
--However, if you have problem communicating in English you can also ask the
--Chinese maintainer for help.  Contact the Chinese maintainer, if this
--translation is outdated or there is problem with translation.
--
--Chinese maintainer: Liang Xie <xieliang@xiaomi.com>
-----------------------------------------------------------------------
--Documentation/basic_profiling的中文翻译
--
--如果想评论或更新本文的内容，请直接发信到LKML。如果你使用英文交流有困难的话，也可
--以向中文版维护者求助。如果本翻译更新不及时或者翻译存在问题，请联系中文版维护者。
--
--中文版维护者： 谢良 Liang Xie <xieliang007@gmail.com>
--中文版翻译者： 谢良 Liang Xie <xieliang007@gmail.com>
--中文版校译者：
--以下为正文
-----------------------------------------------------------------------
--
--下面这些说明指令都是非常基础的，如果你想进一步了解请阅读相关专业文档：）
--请不要再在本文档增加新的内容，但可以修复文档中的错误：）(mbligh@aracnet.com)
--感谢John Levon，Dave Hansen等在撰写时的帮助
--
--<test> 用于表示要测量的目标
--请先确保您已经有正确的System.map / vmlinux配置！
--
--对于linux系统来说，配置vmlinuz最容易的方法可能就是使用“make install”，然后修改
--/sbin/installkernel将vmlinux拷贝到/boot目录，而System.map通常是默认安装好的
--
--Readprofile
-------------
--2.6系列内核需要版本相对较新的readprofile，比如util-linux 2.12a中包含的，可以从:
--
--http://www.kernel.org/pub/linux/utils/util-linux/ 下载
--
--大部分linux发行版已经包含了.
--
--启用readprofile需要在kernel启动命令行增加”profile=2“
--
--clear		readprofile -r
--		<test>
--dump output	readprofile -m /boot/System.map > captured_profile
--
--Oprofile
----------
--
--从http://oprofile.sourceforge.net/获取源代码（请参考Changes以获取匹配的版本）
--在kernel启动命令行增加“idle=poll”
--
--配置CONFIG_PROFILING=y和CONFIG_OPROFILE=y然后重启进入新kernel
--
--./configure --with-kernel-support
--make install
--
--想得到好的测量结果，请确保启用了本地APIC特性。如果opreport显示有0Hz CPU，
--说明APIC特性没有开启。另外注意idle=poll选项可能有损性能。
--
--One time setup:
--		opcontrol --setup --vmlinux=/boot/vmlinux
--
--clear		opcontrol --reset
--start		opcontrol --start
--		<test>
--stop		opcontrol --stop
--dump output	opreport >  output_file
--
--如果只看kernel相关的报告结果，请运行命令 opreport -l /boot/vmlinux > output_file
--
--通过reset选项可以清理过期统计数据，相当于重启的效果。
--
+diff --git a/Documentation/translations/zh_CN/process/management-style.rst b/Documentation/translations/zh_CN/process/management-style.rst
+index a181fa56d19e..c6a5bb285797 100644
+--- a/Documentation/translations/zh_CN/process/management-style.rst
++++ b/Documentation/translations/zh_CN/process/management-style.rst
+@@ -28,7 +28,7 @@ Linux内核管理风格
+ 
+ 不管怎样，这里是：
+ 
+-.. _decisions:
++.. _cn_decisions:
+ 
+ 1）决策
+ -------
+@@ -108,7 +108,7 @@ Linux内核管理风格
+ 但是，为了做好作为内核管理者的准备，最好记住不要烧掉任何桥梁，不要轰炸任何
+ 无辜的村民，也不要疏远太多的内核开发人员。事实证明，疏远人是相当容易的，而
+ 亲近一个疏远的人是很难的。因此，“疏远”立即属于“不可逆”的范畴，并根据
+-:ref:`decisions` 成为绝不可以做的事情。
++:ref:`cn_decisions` 成为绝不可以做的事情。
+ 
+ 这里只有几个简单的规则：
+ 
+diff --git a/Documentation/translations/zh_CN/process/programming-language.rst b/Documentation/translations/zh_CN/process/programming-language.rst
+index 51fd4ef48ea1..2a47a1d2ec20 100644
+--- a/Documentation/translations/zh_CN/process/programming-language.rst
++++ b/Documentation/translations/zh_CN/process/programming-language.rst
+@@ -8,21 +8,21 @@
+ 程序设计语言
+ ============
+ 
+-内核是用C语言 [c-language]_ 编写的。更准确地说，内核通常是用 ``gcc`` [gcc]_
+-在 ``-std=gnu89`` [gcc-c-dialect-options]_ 下编译的：ISO C90的 GNU 方言（
++内核是用C语言 :ref:`c-language <cn_c-language>` 编写的。更准确地说，内核通常是用 :ref:`gcc <cn_gcc>`
++在 ``-std=gnu89`` :ref:`gcc-c-dialect-options <cn_gcc-c-dialect-options>` 下编译的：ISO C90的 GNU 方言（
+ 包括一些C99特性）
+ 
+-这种方言包含对语言 [gnu-extensions]_ 的许多扩展，当然，它们许多都在内核中使用。
++这种方言包含对语言 :ref:`gnu-extensions <cn_gnu-extensions>` 的许多扩展，当然，它们许多都在内核中使用。
+ 
+-对于一些体系结构，有一些使用 ``clang`` [clang]_ 和 ``icc`` [icc]_ 编译内核
++对于一些体系结构，有一些使用 :ref:`clang <cn_clang>` 和 :ref:`icc <cn_icc>` 编译内核
+ 的支持，尽管在编写此文档时还没有完成，仍需要第三方补丁。
+ 
+ 属性
+ ----
+ 
+-在整个内核中使用的一个常见扩展是属性（attributes） [gcc-attribute-syntax]_
++在整个内核中使用的一个常见扩展是属性（attributes） :ref:`gcc-attribute-syntax <cn_gcc-attribute-syntax>`
+ 属性允许将实现定义的语义引入语言实体（如变量、函数或类型），而无需对语言进行
+-重大的语法更改（例如添加新关键字） [n2049]_
++重大的语法更改（例如添加新关键字） :ref:`n2049 <cn_n2049>`
+ 
+ 在某些情况下，属性是可选的（即不支持这些属性的编译器仍然应该生成正确的代码，
+ 即使其速度较慢或执行的编译时检查/诊断次数不够）
+@@ -31,11 +31,42 @@
+ ``__attribute__((__pure__))`` ），以检测可以使用哪些关键字和/或缩短代码, 具体
+ 请参阅 ``include/linux/compiler_attributes.h``
+ 
+-.. [c-language] http://www.open-std.org/jtc1/sc22/wg14/www/standards
+-.. [gcc] https://gcc.gnu.org
+-.. [clang] https://clang.llvm.org
+-.. [icc] https://software.intel.com/en-us/c-compilers
+-.. [gcc-c-dialect-options] https://gcc.gnu.org/onlinedocs/gcc/C-Dialect-Options.html
+-.. [gnu-extensions] https://gcc.gnu.org/onlinedocs/gcc/C-Extensions.html
+-.. [gcc-attribute-syntax] https://gcc.gnu.org/onlinedocs/gcc/Attribute-Syntax.html
+-.. [n2049] http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2049.pdf
++.. _cn_c-language:
++
++c-language
++   http://www.open-std.org/jtc1/sc22/wg14/www/standards
++
++.. _cn_gcc:
++
++gcc
++   https://gcc.gnu.org
++
++.. _cn_clang:
++
++clang
++   https://clang.llvm.org
++
++.. _cn_icc:
++
++icc
++   https://software.intel.com/en-us/c-compilers
++
++.. _cn_gcc-c-dialect-options:
++
++c-dialect-options
++   https://gcc.gnu.org/onlinedocs/gcc/C-Dialect-Options.html
++
++.. _cn_gnu-extensions:
++
++gnu-extensions
++   https://gcc.gnu.org/onlinedocs/gcc/C-Extensions.html
++
++.. _cn_gcc-attribute-syntax:
++
++gcc-attribute-syntax
++   https://gcc.gnu.org/onlinedocs/gcc/Attribute-Syntax.html
++
++.. _cn_n2049:
++
++n2049
++   http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2049.pdf
 -- 
 2.21.0
 
