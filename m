@@ -3,116 +3,185 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D12C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F80CC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2AE2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09ECF21530
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:05:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQKgYamV"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NHSK5GZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfFGMFT (ORCPT
+        id S1728734AbfFGMFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:05:19 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:38052 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727450AbfFGMFS (ORCPT
+        Fri, 7 Jun 2019 08:05:33 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60761 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727450AbfFGMFc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:05:18 -0400
-Received: by mail-it1-f196.google.com with SMTP id h9so2299941itk.3;
-        Fri, 07 Jun 2019 05:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=R8rMF4NWM+gzqhc/7f61HD6J6BbSZEmC6+MWbS8+98A=;
-        b=bQKgYamV2OFaRohxqeSIbRSvlQ0B8HVePGCC8vVqLW4uWXC73sRvpxhqkHe1nfoim/
-         nESzvwWqYyvbP6SgT95FhPsBM2CujVWr9vnJy84UnhvyU2Zhpf650+S/16QP2Dy+utg5
-         wIVFUDrF4JMrP1QfMnu9spPYiNXy1f24niUTACYfGT+pLxIgRgZGJNKYfHFGFi7jktwm
-         MmNv6GrSGfSpWK+zYNLirf/ff1OFqfdFQHE6mDg0c1qMZeyJJrvpKX8AbvdzxDcrlX9I
-         7eUjQv2Op5wgYjbUfwGto2Wu08ZlEEE2vU444eqn5IsJfQxxiSySa6HFK97N2VsPV+mI
-         UGfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R8rMF4NWM+gzqhc/7f61HD6J6BbSZEmC6+MWbS8+98A=;
-        b=SswXiSDw/2skdQurSCXtTmze2LXqaaHmGM4EstPntNkANtniluhPkJGys1UpXvMImr
-         rwIYw+m9Eu9Mruru+SHfgK3Ent/SWhqiZRvEwbFKDeR44xsi7uQxl9J5AnTtrTYqTPU5
-         oDYSNvCvSlXybFiHPo0PpSYS3JrUHh244LKzOlRotGreaVu6fy+8yct9eZd33pPVGO5y
-         D08XgXUjOdTzIWE5cvTv4d4tRS7g0Ub8+OSQ0ioPlHfi20tuyA+G62TCFB3d2BYb+6K/
-         L7REXcNQYEIMClK82Lb5ES0xpdNn5WbayYpQV4xEkXkYkt4t6kaxyJvw03wWnRJ/+pZh
-         1n7w==
-X-Gm-Message-State: APjAAAU7Ew2wgf0Re5mPq9mvMj5DEImxXA7/5padvloW68SsVVBMm8lU
-        U4z4+/DSB3kOc94bsJ9Z2bk=
-X-Google-Smtp-Source: APXvYqx6apaSio+tXoZqMjCxHF09HchzVgKLXDGGluH5LjKvwTq/Sxjo2wNkDgZqS1YR0ieomcqK2g==
-X-Received: by 2002:a02:ce37:: with SMTP id v23mr34491633jar.2.1559909117716;
-        Fri, 07 Jun 2019 05:05:17 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-170-54.pppoe.mtu-net.ru. [91.76.170.54])
-        by smtp.googlemail.com with ESMTPSA id g21sm699271ita.43.2019.06.07.05.05.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 05:05:17 -0700 (PDT)
-Subject: Re: [PATCH V1 5/6] i2c: tegra: fix msleep warning
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
- <1559908507-31192-5-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8751e121-d329-20fd-e302-79654519c87b@gmail.com>
-Date:   Fri, 7 Jun 2019 15:05:14 +0300
+        Fri, 7 Jun 2019 08:05:32 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190607120531euoutp010664edd0f50b8aa8ee40f18b626f2d66~l6RcLyY581972019720euoutp01D
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 12:05:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190607120531euoutp010664edd0f50b8aa8ee40f18b626f2d66~l6RcLyY581972019720euoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559909131;
+        bh=COHVb0UeeGmSgkAXwTwyqkaza60Y5M9a3mjtKEoAQBs=;
+        h=Subject:To:From:Cc:Date:In-Reply-To:References:From;
+        b=NHSK5GZuBqssg0L8cRZDRo3h+TWLUv/+H2t9HEmFCXI8/D2lV4uXUXKLGzayHJ/Dq
+         c/FsKsN7rlu2pAMJ3z233w/ubv1qrLFu4J+cleFw+gMByJJgvIewOP4OV0jCFcwbvS
+         afVwvERuwarYacS8vgzOOxp9dn5DryTrc/t5z8Zs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190607120529eucas1p18edacacf6f19b60087a2f81430102464~l6RbAkG0l1333013330eucas1p1D;
+        Fri,  7 Jun 2019 12:05:29 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1C.3F.04325.9035AFC5; Fri,  7
+        Jun 2019 13:05:29 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607120528eucas1p182869712159a1c29305842fa596c5712~l6RaI-h5M1333013330eucas1p1C;
+        Fri,  7 Jun 2019 12:05:28 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190607120528eusmtrp148aefe48cfbb0f4362fc9c7897a5f755~l6RZ5HnQ22024420244eusmtrp1g;
+        Fri,  7 Jun 2019 12:05:28 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-3c-5cfa53090139
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id AA.95.04146.8035AFC5; Fri,  7
+        Jun 2019 13:05:28 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190607120527eusmtip2eee646333b640feea00b97666f02f5a6~l6RY5VO9u0977709777eusmtip2G;
+        Fri,  7 Jun 2019 12:05:27 +0000 (GMT)
+Subject: Re: [PATCH 3/8] drivers: (video|gpu): fix warning same module names
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Anders Roxell <anders.roxell@linaro.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     marex@denx.de, stefan@agner.ch, airlied@linux.ie,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        a.hajda@samsung.com, mchehab@kernel.org, p.zabel@pengutronix.de,
+        hkallweit1@gmail.com, lee.jones@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org,
+        linux-media@vger.kernel.org
+Message-ID: <4c9681c0-5ead-3e4c-584b-c4e98cd94480@samsung.com>
+Date:   Fri, 7 Jun 2019 14:05:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1559908507-31192-5-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190607075728.GE21222@phenom.ffwll.local>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SeUiTYRjv/a59Sluv6/DBImmVYofZQb1dUhT0RScEXUq18kPNKzZnF9SK
+        qGmXZmUOyZXhRZhOcypZsUwNQcsiSlpzZGDZNFiaVsvcvkn+9+N3PL/ngYenlSVcEB+fnCpq
+        ktWJKs6fqW4cap3vt+NXdITVFEw6ylpZcrn1BUU6rv+mSJvNSpMbji6O3HHYaJLXdo4hb/r7
+        OPKrt0FG7vbdYom9/zkiA28MFDF/esuS5ivfWfK6Lo8jl8ofsuTb+TOIFJr/UKTRNIXYPjYz
+        xG0xM6S7KpBUll2QkQJnDb0GhIKfH2mhquQ9Jdw2NjNC/YCJEWqNNplgLk3nhA9vH3GCZaCT
+        FewXmyih8t5pobbGRQlX3RHClapSJLjM07cr9vqvihET49NEzYLIA/5xraaNR0oCjvW2VTN6
+        ZFJkID8e8BIoGuxnM5A/r8TFCJ4MDyGPoMQ/EGTmz5YEFwK7o5gdTWRaHIwkFCGwVbb54k4E
+        72qvMx7XRLwZGnr0lAdPwjuhuvKqdyyHV0DWhVLkCdA4i4G6LgvtEeQ4Eoxn7V7M4FngKnR7
+        B03Gu8HeWM5KngB4kdvl5f0wgZ99PV4/jQOhoyufknAwWJx5tKcAcDcPH3odvr3Xw3BWDifh
+        ifC1qUom4WnQkn2JkQJlCNyGbl/agqAo+68vsRKeNb0amcSPVITBg7oFEr0WCr47aQ8NWAHv
+        nAHSEgq4Vp3jo+VgOK+U3CFQXljOjdZm1JbQmUhlHHOaccw5xjHnGP/3mhBTigJFnTYpVtQu
+        ThaPhmvVSVpdcmz4oZQkMxp54Ja/Tf016PGfg1aEeaQaLxdkQ9FKVp2mPZ5kRcDTqknytJeD
+        0Up5jPr4CVGTsl+jSxS1VjSVZ1SB8pPjOqOUOFadKiaI4hFRM6pSvF+QHm2qWJ2QcD93fqRL
+        PvN38XD9Z5V+3Mujy/d9CV7PtJD2FKFuhrxzl6Lg8NKBvc9vdqhDsyMbp849eNu2LH966L4n
+        ywbXLTz1MD4i6NuiPfE1Vl2fbv+anvT2dqwXuQ1PwwxbLlZETZiRWm+dmdugjHMbYMm1kHOn
+        07cpovbMM59I2RqkYrRx6oVzaI1W/Q962XULvAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe89tZ9HquGa+SjeWZAgtj1P3GiZ9KU5QFHQh1LChp1k5Fzvb
+        yL5kElqrvJBdHKtWlugKtWneMrSVty4aFqMsXZahYbbC0jKtNlfgtz/P//d74IGHxqV3yRB6
+        f4aB12eo0+XUXOLx7/b+1fT2yaSIypow1FvRRaIzXZ0Y6i36haHuPieOzg0MUujqQB+OrN3H
+        CfTiu4dCk58fitA1z0USub+3AjT+4gSGHO9dJOrI+0Ki541WCp2uukOiTznHACp1TGGozbYI
+        9fV3EGi6zkGg4ZogVF2RK0Ilo/X4esiVTPTjXE35K4y7bOkguHvjNoJrsPSJOIf9JMW9cTVR
+        XN34W5Jzn2rHuOrrR7mG+jGMy5+O4PJq7IAbcyzdNj9BEafXGQ388jSdYFgnT2RRpIKNRYrI
+        qFgFq1TtWRsZLV8TH5fKp+838fo18XsVaV22TYfKAw5/7q4lsoBtvhmIachEwYK6AcIM5tJS
+        5gaAltEKkRnQ3mIxbK80+ZmFcMplpvzMCIAu9wWRr1jIbIYPR7IwX5Yxu2BLoY30Q80AFnl8
+        W8U0xayFhbl24CtwppCAY6UlM7aEiYeWbDfuywQT6p1PzwiBzG74xFNG+JkA2Fk8OJPFDIIT
+        npEZHmfC4NTlnn85CPYOXsH8eRmsG7XiBUBqmaVbZimWWYpllmIDhB3IeKOg1WgFViGotYIx
+        Q6NI0WkdwPs4tW0/q+tBz+3tTsDQQD5Psn7OzyQpqTYJmVongDQul0lMz34kSSWp6swjvF6X
+        rDem84ITRHuPK8RDAlN03jfMMCSz0awKxbIqpUoZg+RBkhPM/SQpo1Eb+IM8f4jX//cwWhyS
+        BTTfZItb7OPWd3EfNlxcpVFlL3m5szbm3aPpW1Xmpiji8MfzZa1VxVTwFLPt0XnJguzM3BXF
+        By7FHOx1Goc6Kwu+NVo3PsC7ZFGBw2ef83k7kp1/tjS1D6FhZeJQcM5XQ9hqa4K1KBoFlrYe
+        2LoyZV/4x6f5v17nN7tvfmHbTKGblXJCSFOz4bheUP8Fi3t/J04DAAA=
+X-CMS-MailID: 20190607120528eucas1p182869712159a1c29305842fa596c5712
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190607075735epcas3p17dfbe45a2079b12f4e2268ee1b6086fe
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190607075735epcas3p17dfbe45a2079b12f4e2268ee1b6086fe
+References: <20190606094712.23715-1-anders.roxell@linaro.org>
+        <CGME20190607075735epcas3p17dfbe45a2079b12f4e2268ee1b6086fe@epcas3p1.samsung.com>
+        <20190607075728.GE21222@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.06.2019 14:55, Bitan Biswas пишет:
-> Fix checkpatch.pl WARNING for delay of approximately 1msec
-> in flush i2c FIFO polling loop by using usleep_range(1000, 2000):
-> WARNING: msleep < 20ms can sleep for up to 20ms; see ...
-> Documentation/timers/timers-howto.txt
-> +               msleep(1);
-> 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index bececa6..4dfb4c1 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -476,7 +476,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
->  			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
->  			return -ETIMEDOUT;
->  		}
-> -		msleep(1);
-> +		usleep_range(1000, 2000);
->  	}
->  	return 0;
->  }
-> 
 
-Awesome!
+On 6/7/19 9:57 AM, Daniel Vetter wrote:
+> On Thu, Jun 06, 2019 at 11:47:12AM +0200, Anders Roxell wrote:
+>> When building with CONFIG_DRM_MXSFB and CONFIG_FB_MXS enabled as
+>> loadable modules, we see the following warning:
+>>
+>> warning: same module names found:
+>>   drivers/video/fbdev/mxsfb.ko
+>>   drivers/gpu/drm/mxsfb/mxsfb.ko
+>>
+>> Rework so the names matches the config fragment.
+>>
+>> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> 
+> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> 
+> I'm assuming Bart will pick this one up for fbdev.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+The DRM mxsfb has been a default for almost a year (since July
+2018) and I've just applied "[PATCH] video: fbdev: mxsfb: Remove
+driver" (https://marc.info/?l=dri-devel&m=155835758115686&w=2)
+so it seems that this patch is not needed any longer (sorry!).
+
+> -Daniel
+> 
+>> ---
+>>  drivers/gpu/drm/mxsfb/Makefile | 4 ++--
+>>  drivers/video/fbdev/Makefile   | 3 ++-
+>>  2 files changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/mxsfb/Makefile b/drivers/gpu/drm/mxsfb/Makefile
+>> index ff6e358088fa..5d49d7548e66 100644
+>> --- a/drivers/gpu/drm/mxsfb/Makefile
+>> +++ b/drivers/gpu/drm/mxsfb/Makefile
+>> @@ -1,3 +1,3 @@
+>>  # SPDX-License-Identifier: GPL-2.0-only
+>> -mxsfb-y := mxsfb_drv.o mxsfb_crtc.o mxsfb_out.o
+>> -obj-$(CONFIG_DRM_MXSFB)	+= mxsfb.o
+>> +drm-mxsfb-y := mxsfb_drv.o mxsfb_crtc.o mxsfb_out.o
+>> +obj-$(CONFIG_DRM_MXSFB)	+= drm-mxsfb.o
+>> diff --git a/drivers/video/fbdev/Makefile b/drivers/video/fbdev/Makefile
+>> index 655f2537cac1..7ee967525af2 100644
+>> --- a/drivers/video/fbdev/Makefile
+>> +++ b/drivers/video/fbdev/Makefile
+>> @@ -131,7 +131,8 @@ obj-$(CONFIG_FB_VGA16)            += vga16fb.o
+>>  obj-$(CONFIG_FB_OF)               += offb.o
+>>  obj-$(CONFIG_FB_MX3)		  += mx3fb.o
+>>  obj-$(CONFIG_FB_DA8XX)		  += da8xx-fb.o
+>> -obj-$(CONFIG_FB_MXS)		  += mxsfb.o
+>> +obj-$(CONFIG_FB_MXS)		  += fb-mxs.o
+>> +fb-mxs-objs			  := mxsfb.o
+>>  obj-$(CONFIG_FB_SSD1307)	  += ssd1307fb.o
+>>  obj-$(CONFIG_FB_SIMPLE)           += simplefb.o
+>>  
+>> -- 
+>> 2.20.1
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
