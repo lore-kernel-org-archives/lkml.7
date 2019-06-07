@@ -2,119 +2,71 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C640C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E2BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8079C2146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9AC212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfFGPBu (ORCPT
+        id S1729606AbfFGPCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:01:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:42000 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 11:02:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41500 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729262AbfFGPBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:01:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5FFD346;
-        Fri,  7 Jun 2019 08:01:48 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 316D33F71A;
-        Fri,  7 Jun 2019 08:01:46 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 16:01:44 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/18] drivers: firmware: psci: Simplify state node
- parsing
-Message-ID: <20190607150144.GD15577@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-6-ulf.hansson@linaro.org>
+        id S1728682AbfFGPCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:02:36 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C9DDE30058D9;
+        Fri,  7 Jun 2019 15:02:36 +0000 (UTC)
+Received: from Hades.local (dhcp-17-185.bos.redhat.com [10.18.17.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1026D104B50D;
+        Fri,  7 Jun 2019 15:02:34 +0000 (UTC)
+Subject: Re: [PATCH net] bonding: make debugging output more succinct
+To:     linux-kernel@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20190607145933.37058-1-jarod@redhat.com>
+ <20190607145933.37058-9-jarod@redhat.com>
+From:   Jarod Wilson <jarod@redhat.com>
+Message-ID: <0e12b390-9b47-ae24-3a1b-4f602c57a779@redhat.com>
+Date:   Fri, 7 Jun 2019 11:02:34 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513192300.653-6-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190607145933.37058-9-jarod@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 07 Jun 2019 15:02:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:22:47PM +0200, Ulf Hansson wrote:
-> Instead of iterating through all the state nodes in DT, to find out how
-> many states that needs to be allocated, let's use the number already known
-> by the cpuidle driver. In this way we can drop the iteration altogether.
+On 6/7/19 10:59 AM, Jarod Wilson wrote:
+> Seeing bonding debug log data along the lines of "event: 5" is a bit spartan,
+> and often requires a lookup table if you don't remember what every event is.
+> Make use of netdev_cmd_to_name for an improved debugging experience, so for
+> the prior example, you'll see: "bond_netdev_event received NETDEV_REGISTER"
+> instead (both are prefixed with the device for which the event pertains).
 > 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
-> 
-> Changes:
-> 	- None.
-> 
-> ---
->  drivers/firmware/psci/psci.c | 25 ++++++++++++-------------
->  1 file changed, 12 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index 88e90e0f06b9..9c2180bcee4c 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -306,26 +306,20 @@ static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
->  static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
->  			struct device_node *cpu_node, int cpu)
->  {
-> -	int i, ret = 0, count = 0;
-> +	int i, ret = 0, num_state_nodes = drv->state_count - 1;
->  	u32 *psci_states;
->  	struct device_node *state_node;
->  
-> -	/* Count idle states */
-> -	while ((state_node = of_parse_phandle(cpu_node, "cpu-idle-states",
-> -					      count))) {
-> -		count++;
-> -		of_node_put(state_node);
-> -	}
-> -
-> -	if (!count)
-> -		return -ENODEV;
-> -
-> -	psci_states = kcalloc(count, sizeof(*psci_states), GFP_KERNEL);
-> +	psci_states = kcalloc(num_state_nodes, sizeof(*psci_states),
-> +			GFP_KERNEL);
->  	if (!psci_states)
->  		return -ENOMEM;
->  
-> -	for (i = 0; i < count; i++) {
-> +	for (i = 0; i < num_state_nodes; i++) {
->  		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
+> There are also quite a few places that the netdev_dbg output could stand to
+> mention exactly which slave the message pertains to (gets messy if you have
+> multiple slaves all spewing at once to know which one they pertain to).
 
-Why not start using of_get_cpu_state_node here which was introduced in
-earlier patch as part of this simplification ?
+Argh. Please drop this one, detritus in my git tree when I hit git 
+send-email caused this earlier iteration of patch 1 of the set this is 
+threaded with to go out.
 
---
-Regards,
-Sudeep
+-- 
+Jarod Wilson
+jarod@redhat.com
