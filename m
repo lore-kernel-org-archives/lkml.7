@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FECC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AD1C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055A721473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980D6214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922654;
-	bh=iZR+1QcezVqXwWvl1sWCJiRdgYjq3LXYc5UxfNw24sA=;
+	s=default; t=1559922659;
+	bh=PRLpC5nwM9nO3KrtQa6s3Sz5d8KnuDm79+AssLvw99g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ugtpEukK0AnS6lj9QkZ/WB44wDqyO+jK00oKH0Xj5ERm4mU5d19ry/qJcXQ5tHiCZ
-	 R0etafLGWpFzUfWMKlsN/0MFS+ZFYyxenvdklG03KOrVQcTfJbpAnaldIAGnfAihgG
-	 ppmKA60x4+hvVRW6lcV8ZohjHQ8CgsM7ZpR66iqk=
+	b=N8L7IAIb08CDC8XFQP/95oV8YTx9DAGtEiEFF5KkWdDZH5sSe2s4rCeutpDgnQFxL
+	 AchUlh81G+r0L3GQRfmujbi1ixHO8QLkfM3Vwo7Xla08erg+3PDfV3JqAqWMS3Lw/4
+	 z+i0H5Ln7kdHbNR6/5xJB2P7tH+oPe9U0Jm3jH6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbfFGPux (ORCPT
+        id S1732254AbfFGPu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37966 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732219AbfFGPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:50:49 -0400
+        id S1731703AbfFGPuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:50:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52D53214AE;
-        Fri,  7 Jun 2019 15:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FCB2146E;
+        Fri,  7 Jun 2019 15:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922648;
-        bh=iZR+1QcezVqXwWvl1sWCJiRdgYjq3LXYc5UxfNw24sA=;
+        s=default; t=1559922654;
+        bh=PRLpC5nwM9nO3KrtQa6s3Sz5d8KnuDm79+AssLvw99g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQJVz5/FovjzeVFbHSx4pMo+mXbX6RBXgp1u82/ldVTGNYyXTcJxa2A+jNTJW09he
-         fZbXWBoe1bZtRjG7r9DblndGidgw3897LN7djy22GDQzOHrjkaWgcktAFieQY91nEy
-         kF+0oQP/grGJQjUuW9qfep1ZE0R+/JDrb57xD/FM=
+        b=Ec2J2IF6Yczjtm43g4QxqJZz9ZqsapLXXnzAZ+5+FdMaLBmTc0/jmXHxFJKQnHY9c
+         Wf1GQ1THMq9k4p1VLjrMiddqdXYyvrv5hPw6NPMErZttEK1JyGVMDVUdpwmA2KE0So
+         5J4kJA/JBFcBAB9d0GpO8iDGkGAxyaQ5Ugx6i3vI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.1 68/85] CIFS: cifs_read_allocate_pages: dont iterate through whole page array on ENOMEM
-Date:   Fri,  7 Jun 2019 17:39:53 +0200
-Message-Id: <20190607153856.765606620@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 5.1 70/85] gcc-plugins: Fix build failures under Darwin host
+Date:   Fri,  7 Jun 2019 17:39:55 +0200
+Message-Id: <20190607153856.934643216@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -61,37 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 31fad7d41e73731f05b8053d17078638cf850fa6 upstream.
+commit 7210e060155b9cf557fb13128353c3e494fa5ed3 upstream.
 
- In cifs_read_allocate_pages, in case of ENOMEM, we go through
-whole rdata->pages array but we have failed the allocation before
-nr_pages, therefore we may end up calling put_page with NULL
-pointer, causing oops
+The gcc-common.h file did not take into account certain macros that
+might have already been defined in the build environment. This updates
+the header to avoid redefining the macros, as seen on a Darwin host
+using gcc 4.9.2:
 
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+ HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o - due to: scripts/gcc-plugins/gcc-common.h
+In file included from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:0:
+scripts/gcc-plugins/gcc-common.h:153:0: warning: "__unused" redefined
+^
+In file included from /usr/include/stdio.h:64:0,
+                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/system.h:40,
+                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/gcc-plugin.h:28,
+                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/plugin.h:23,
+                from scripts/gcc-plugins/gcc-common.h:9,
+                from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:
+/usr/include/sys/cdefs.h:161:0: note: this is the location of the previous definition
+^
+
+Reported-and-tested-by: "H. Nikolaus Schaller" <hns@goldelico.com>
+Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ scripts/gcc-plugins/gcc-common.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3221,7 +3221,9 @@ cifs_read_allocate_pages(struct cifs_rea
- 	}
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -150,8 +150,12 @@ void print_gimple_expr(FILE *, gimple, i
+ void dump_gimple_stmt(pretty_printer *, gimple, int, int);
+ #endif
  
- 	if (rc) {
--		for (i = 0; i < nr_pages; i++) {
-+		unsigned int nr_page_failed = i;
-+
-+		for (i = 0; i < nr_page_failed; i++) {
- 			put_page(rdata->pages[i]);
- 			rdata->pages[i] = NULL;
- 		}
++#ifndef __unused
+ #define __unused __attribute__((__unused__))
++#endif
++#ifndef __visible
+ #define __visible __attribute__((visibility("default")))
++#endif
+ 
+ #define DECL_NAME_POINTER(node) IDENTIFIER_POINTER(DECL_NAME(node))
+ #define DECL_NAME_LENGTH(node) IDENTIFIER_LENGTH(DECL_NAME(node))
 
 
