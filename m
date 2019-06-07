@@ -2,69 +2,70 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582DFC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51263C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2830420825
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EB5208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="g4C+4UQ+"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Z8ebDry0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfFGFSY (ORCPT
+        id S1726738AbfFGFYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 01:18:24 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:44053 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFGFSX (ORCPT
+        Fri, 7 Jun 2019 01:24:37 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33432 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFGFYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 01:18:23 -0400
-Received: by mail-yw1-f65.google.com with SMTP id m80so240093ywd.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 22:18:23 -0700 (PDT)
+        Fri, 7 Jun 2019 01:24:36 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g21so375892plq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 22:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=eoRzeYAqZlJbfZh4zAUKVpebco1RBz3PtP4CtRfM7Do=;
-        b=g4C+4UQ+G7+n6CWfezVr0aU+9R1Vs3kM5/Tj5EFf6GBfexZsW6nX6JNP9adG0p6i8E
-         wdXtGRA56JO+0eu/mflysRFrPogTbP1VbXwahD9ERnp4SBGOQgNpohY0O+STd85SPZCp
-         0D14mot/I51dgtzY0kdlj6gVSirT/x6IcLJuMI9bSG0KelC8dSDTugSyTE8CxMTWJR4T
-         lAEbZ/iVjEfTfwuo/+JgN643SkO2F17oJ8v5n/4u0m+pXbefmLimiM0bmwM2A8TE8Jc/
-         vr+QMfSFfpIW0fC0zU/TzqEGHSYn59mw5RLpnIfbsfqGfxzH9aOHqZ+szgn4zGE3IyX/
-         3b5Q==
+        bh=wqe6kl8DbEpNzk+gxBdngVVPGBYURaHyfgLLC4qaii0=;
+        b=Z8ebDry0731Ww7qRvJu1pqbm3GJ+szf2+j7eytajaqJtwAmW3D6btMQIC9TE6+64jo
+         O+/0zIVJSEEkB0+07WKzaru0XazGerN1yQ9YckR5JZUneUhZIFdtEbAnT7tC7DvMpJKJ
+         rpQFIFw6hao9QHiivNPi/3R/tftDhjPcTDJ1N7wOsNPKGhUmguPFRRG9J1gM/spcEeXV
+         qIZEhuP55biu4fwH99gVGj7NKohBhWO26CnMlm8NVHmCypHSY+A9TCeJylTpXyV6YY6X
+         IJ8lwnD03PZ7c65ptZXQcHsUXprO4wtMuHRCQcZBRQ8U7A10xh2EIzznYo7A9WKotKJr
+         sD5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=eoRzeYAqZlJbfZh4zAUKVpebco1RBz3PtP4CtRfM7Do=;
-        b=IAqlWC0qT7JIM43XqU//YY6S54QzZcaR8q80xUqevy/cR3j/NIKpFFypqiWOlpyUs6
-         mbZy3bKwsdDDhahBoGE7cj/iNqMK4lo+KqJY8r8eR2Z58Gfm+qSq0Zsuk06JBEjxWGlp
-         uD62yEDBIQ3tv53dcEDinCaMe56byRB2cZ9O4kndgI+k9N63+BGhgn/D6KuioTMmtrAK
-         fk6HoLwgC1NlNeM6iaLudHqsSCw+fJGUWTPFUIvaeFMKH9tUNnaxw+4rTBWAZDLKxIsw
-         R0LX4tyiU6vzgjEJtOaV2x7w305qEK1p39Z6jo+oDcg2yex5i01yMWPK7NySCEzLvM0i
-         nTgA==
-X-Gm-Message-State: APjAAAXFRdFW1KQrAztBwUw3gQdh9j8MQAWkyi9Gu5xZ4JLzphLzmIFU
-        TtA8D/hc64S/pev+tivcsJm8+d4FQWw=
-X-Google-Smtp-Source: APXvYqzRtoKbEdmGiDBrHOJnawjQHJ5r7JhN0MHE+bODwJs8PBihqGbMjQEf3g9xcuXnaW8nrha44Q==
-X-Received: by 2002:a81:2702:: with SMTP id n2mr17821596ywn.464.1559884703085;
-        Thu, 06 Jun 2019 22:18:23 -0700 (PDT)
+        bh=wqe6kl8DbEpNzk+gxBdngVVPGBYURaHyfgLLC4qaii0=;
+        b=NUeLjTY8QIH//ck0h3QKz3uDHwcQBERyBQ+ODZuEjsicRRubMXM9un1w18VXIjjqAR
+         8HEtjbNCirbYCYfA61IDsFRMOnqnarL6xyKW7ciTyCWQ9v6DhHa2OrRCWiRyhNCKSxNc
+         tZNlh/grKRzdKaKFE5m3FDaDjSEwGM5W4VyiIYJ7ioRr7A9wDGcdBRrgVnZuwPElZGBM
+         ECcRwswIi2oowVn3sec/YpgnfpwU3Y8gCeCIhx6uFCx3XSvmjmXYRXPIMcQ18VZOetgq
+         LRVnn4KpIS9xOg9zLkm582vEfQsu6eIugjK2a6iZZGMUVOyLXM2T3Pq4jiz9UrARa7Ul
+         iarw==
+X-Gm-Message-State: APjAAAXKX3JKAiQvvzwzDMA5y3Rnwnf9R2VSovPoYJxF+ssWvwCoGJO/
+        nUys2TPvTkiH/1vco9vFeZN3MA==
+X-Google-Smtp-Source: APXvYqzQFNiED7FnxJJgBrM9ljjzZaPd8GsA5Es9uz10QhQqODIm1yA+jRKiFrpyJIhkn2S/CAFDyQ==
+X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr54404661plp.241.1559885076185;
+        Thu, 06 Jun 2019 22:24:36 -0700 (PDT)
 Received: from localhost ([14.141.105.52])
-        by smtp.gmail.com with ESMTPSA id 136sm298723yww.63.2019.06.06.22.18.21
+        by smtp.gmail.com with ESMTPSA id t187sm881078pfb.64.2019.06.06.22.24.35
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 22:18:22 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 22:18:18 -0700 (PDT)
+        Thu, 06 Jun 2019 22:24:35 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 22:24:33 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 X-X-Sender: paulw@viisi.sifive.com
-To:     Kevin Hilman <khilman@baylibre.com>
-cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 0/5] arch: riscv: add board and SoC DT file support
-In-Reply-To: <7h36kogchx.fsf@baylibre.com>
-Message-ID: <alpine.DEB.2.21.9999.1906062216220.28147@viisi.sifive.com>
-References: <20190602080500.31700-1-paul.walmsley@sifive.com> <7h36kogchx.fsf@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        robh@kernel.org, mark.rutland@arm.com
+cc:     linux-riscv@lists.infradead.org, Atish Patra <atish.patra@wdc.com>,
+        palmer@sifive.com, linux-kernel@vger.kernel.org
+Subject: Re: Patches for v5.2-rc and v5.3 merge window
+In-Reply-To: <7hr288exi7.fsf@baylibre.com>
+Message-ID: <alpine.DEB.2.21.9999.1906062219490.28147@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1905201019010.15580@viisi.sifive.com> <7hr288exi7.fsf@baylibre.com>
 User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -73,36 +74,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
++ Rob, devicetree@, Mark
 
 On Wed, 5 Jun 2019, Kevin Hilman wrote:
 
 > Paul Walmsley <paul.walmsley@sifive.com> writes:
 > 
-> > Add support for building flattened DT files from DT source files under
-> > arch/riscv/boot/dts.  Follow existing kernel precedent from other SoC
-> > architectures.  Start our board support by adding initial support for
-> > the SiFive FU540 SoC and the first development board that uses it, the
-> > SiFive HiFive Unleashed A00.
+> > Palmer has asked me to collect patches for the v5.2-rc releases and v5.3 
+> > merge window, so I'll be doing so.  This is just a heads-up so no one is 
+> > surprised to see 'patch queued' responses from me.
 > 
-> Tested this series on top of v5.2-rc3 on HiFive Unleashed board using
-> OpenSBI + mainline u-boot (master branch as of today).
-> 
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Speaking of v5.2-rc, any chance your DT series will make it for v5.2?
 
-Thanks very much!
+Ideally it would be nice to get acks from the DT folks first for:
 
-> > This patch series can be found, along with the PRCI patch set
-> > and the DT macro prerequisite patch, at:
-> >
-> > https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1
-> 
-> nit: I only see this series in that branch, not any of the prerequisite
-> patches you mentioned, which made me assume I could this series alone on
-> top of v5.2-rc3, which worked just fine.
+https://lore.kernel.org/linux-riscv/20190602080500.31700-3-paul.walmsley@sifive.com/T/#u
 
-Yep, just forgot to drop that part of the sentence from the series 
-description.  Those prerequisite patches were already merged.
+https://lore.kernel.org/linux-riscv/20190602080500.31700-4-paul.walmsley@sifive.com/T/#u
+
+If those come soon, I'd be fine with submitting them for v5.2-rc.  But if 
+that stretches much further into the v5.2-rc series, it seems best to 
+schedule it for v5.3.
+
+
+> I'm hoping to have upstream v5.2 ready for testing in kernelCI, and
+> that's one of the last missing pieces.  I just tested it on v5.2-rc3 and
+> it's working great with mainline u-boot.
+
+OK, great.  Thanks again for your testing help.
 
 
 - Paul
