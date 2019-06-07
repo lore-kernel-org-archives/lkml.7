@@ -4,54 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806F8C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8867FC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E0D214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C21821473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922633;
-	bh=piMpxsdyosbMoTcpghHO1UMOOd98rdM1cYQC+N5Zhhg=;
+	s=default; t=1559922637;
+	bh=g4i+fi4Vs91vZ8wIpfeHykjEmLh+K4yC8YFE2eDSh0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uzOvI/8XSPa125ZaNWzbzbY4cpRhCOh6b4E/9cVvuH387h8jJQx4z/yG+AjhktXmQ
-	 IQcVZPjklqBEi7dmUMFPNTTuOuqY3o6DQi5KxSCFYUwGYcD3+8moLQqAiAi6jF/EDT
-	 0rkKXt4NscvMJq294NVgds/+ufGHnZEdArMRv6Ic=
+	b=TMfGywTB+GlYOsdCA3qD2v6IJ4VoBKNTUi0TCMG8VGje0nt0aJ7gmRPBx8rd16hFN
+	 x1rAl+6urDgM1T2TrEYwEgo33Uva60VbLm5JefCeSTw6Bm6KiYBglq3VpTSoRdZymS
+	 ALJgs19qB1YLhCIe5jw8zEbNINP3pzGn4e2H0jAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732181AbfFGPuc (ORCPT
+        id S1731514AbfFGPuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:50:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37268 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:50:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732166AbfFGPu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:50:27 -0400
+        id S1732180AbfFGPuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:50:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5483214AF;
-        Fri,  7 Jun 2019 15:50:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 746CC2146E;
+        Fri,  7 Jun 2019 15:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922626;
-        bh=piMpxsdyosbMoTcpghHO1UMOOd98rdM1cYQC+N5Zhhg=;
+        s=default; t=1559922631;
+        bh=g4i+fi4Vs91vZ8wIpfeHykjEmLh+K4yC8YFE2eDSh0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q7C8VD2i7M2ZchmrWmcew2asdPK1E9k6XYFmMCc77WljJ/IW+OupsV5HvlE8vG+Ea
-         VQ/qCExmwBGErbV/VknnQi+D4J0zLkNHA235D7tX7rgRWv3/6gGHy1s0ZUXWZdt+N7
-         eNjSmFXH+VzH1HUttvngqmGNc0iAkesn4v/wwYNQ=
+        b=LugEjVEkNLQcF+QMSXFfXAIKSM4+dxMooA67uVSk6wXs73mBo293Gz0YiVz4QFcU5
+         qdElvQUITxvg1KZFq5w08hFtszcnFI1d5nf94LZHKvg8oyeAtskQ+55G4LXMzNmnil
+         JHIWSiCbkmhcxJAlbd30esLPCPdQt8rjIvBh3X4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 5.1 81/85] drm/rockchip: shutdown drm subsystem on shutdown
-Date:   Fri,  7 Jun 2019 17:40:06 +0200
-Message-Id: <20190607153857.871881883@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.1 65/85] staging: vc04_services: prevent integer overflow in create_pagelist()
+Date:   Fri,  7 Jun 2019 17:39:50 +0200
+Message-Id: <20190607153856.517114940@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -64,69 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vicente Bergas <vicencb@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit b8f9d7f37b6af829c34c49d1a4f73ce6ed58e403 upstream.
+commit ca641bae6da977d638458e78cd1487b6160a2718 upstream.
 
-As explained by Robin Murphy:
-> the IOMMU shutdown disables paging, so if the VOP is still
-> scanning out then that will result in whatever IOVAs it was using now going
-> straight out onto the bus as physical addresses.
+The create_pagelist() "count" parameter comes from the user in
+vchiq_ioctl() and it could overflow.  If you look at how create_page()
+is called in vchiq_prepare_bulk_data(), then the "size" variable is an
+int so it doesn't make sense to allow negatives or larger than INT_MAX.
 
-We had a more radical approach before in commit
-7f3ef5dedb14 ("drm/rockchip: Allow driver to be shutdown on reboot/kexec")
-but that resulted in new warnings and oopses on shutdown on rk3399
-chromeos devices.
+I don't know this code terribly well, but I believe that typical values
+of "count" are typically quite low and I don't think this check will
+affect normal valid uses at all.
 
-So second try is resurrecting Vicentes shutdown change which should
-achieve the same result but in a less drastic way.
+The "pagelist_size" calculation can also overflow on 32 bit systems, but
+not on 64 bit systems.  I have added an integer overflow check for that
+as well.
 
-Fixes: 63238173b2fa ("Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"")
-Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: stable@vger.kernel.org
-Suggested-by: JeffyChen <jeffy.chen@rock-chips.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-[adapted commit message to explain the history]
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Tested-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190402113753.10118-1-heiko@sntech.de
+The Raspberry PI doesn't offer the same level of memory protection that
+x86 does so these sorts of bugs are probably not super critical to fix.
+
+Fixes: 71bad7f08641 ("staging: add bcm2708 vchiq driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c |    9 +++++++++
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c |    9 +++++++++
  1 file changed, 9 insertions(+)
 
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-@@ -448,6 +448,14 @@ static int rockchip_drm_platform_remove(
- 	return 0;
- }
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+@@ -398,9 +398,18 @@ create_pagelist(char __user *buf, size_t
+ 	int dma_buffers;
+ 	dma_addr_t dma_addr;
  
-+static void rockchip_drm_platform_shutdown(struct platform_device *pdev)
-+{
-+	struct drm_device *drm = platform_get_drvdata(pdev);
++	if (count >= INT_MAX - PAGE_SIZE)
++		return NULL;
 +
-+	if (drm)
-+		drm_atomic_helper_shutdown(drm);
-+}
+ 	offset = ((unsigned int)(unsigned long)buf & (PAGE_SIZE - 1));
+ 	num_pages = DIV_ROUND_UP(count + offset, PAGE_SIZE);
+ 
++	if (num_pages > (SIZE_MAX - sizeof(struct pagelist) -
++			 sizeof(struct vchiq_pagelist_info)) /
++			(sizeof(u32) + sizeof(pages[0]) +
++			 sizeof(struct scatterlist)))
++		return NULL;
 +
- static const struct of_device_id rockchip_drm_dt_ids[] = {
- 	{ .compatible = "rockchip,display-subsystem", },
- 	{ /* sentinel */ },
-@@ -457,6 +465,7 @@ MODULE_DEVICE_TABLE(of, rockchip_drm_dt_
- static struct platform_driver rockchip_drm_platform_driver = {
- 	.probe = rockchip_drm_platform_probe,
- 	.remove = rockchip_drm_platform_remove,
-+	.shutdown = rockchip_drm_platform_shutdown,
- 	.driver = {
- 		.name = "rockchip-drm",
- 		.of_match_table = rockchip_drm_dt_ids,
+ 	pagelist_size = sizeof(struct pagelist) +
+ 			(num_pages * sizeof(u32)) +
+ 			(num_pages * sizeof(pages[0]) +
 
 
