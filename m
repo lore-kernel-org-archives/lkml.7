@@ -2,169 +2,111 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2495C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F3EC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878C120868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35642208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:31:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GquEmfpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731472AbfFGRam (ORCPT
+        id S1729921AbfFGRbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:30:42 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:42245 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729355AbfFGRal (ORCPT
+        Fri, 7 Jun 2019 13:31:53 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50960 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729355AbfFGRbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:30:41 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E50563C00DD;
-        Fri,  7 Jun 2019 19:30:36 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gB7ra8XJGT9k; Fri,  7 Jun 2019 19:30:28 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 177693C00D1;
-        Fri,  7 Jun 2019 19:30:28 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 7 Jun 2019
- 19:30:27 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
+        Fri, 7 Jun 2019 13:31:52 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57HIpx6178003;
+        Fri, 7 Jun 2019 17:30:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=g9qgPYWy2UeZZX7Q5xvayFUZ5+Jlv5AgZT4Wz1d17eI=;
+ b=GquEmfpf1HBT7vX2CzX+dMvzNB0wpOB4iQtcXeOAyF2DoiXBKIsxxFSTqxuQEeD3dFsE
+ NW/2qE6nTYp8yIdaZlmQWE+LLZF9hQdENVg3wyoapAls1vxX2q+9hAztXIlTcBohI7iE
+ puGOc+EVwd+Wj8du+nhWNsaHMeyQXzpQZb9TZBrehPH95mB9xQPTriWtztvyVvBfZJSY
+ ZvDGQ2w0kte1RG2ckQVBBt6EnYhIHB7zOIRVQHpveA/dR7UH9rQ/u//0E/s5itVU17r+
+ 9iPvrwQcznyJ2mXDhgxzinr5bV6Wic02t6r2sOO0mi4aLy1ulC69fy/YracyVTUd+Ixp yw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2suj0qyhpc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Jun 2019 17:30:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57HU97U102069;
+        Fri, 7 Jun 2019 17:30:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2swngk4vhc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Jun 2019 17:30:36 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x57HUY6s025234;
+        Fri, 7 Jun 2019 17:30:34 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Jun 2019 10:30:34 -0700
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Joshua Frkuska <joshua_frkuska@mentor.com>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically inverted IRQ
-Date:   Fri, 7 Jun 2019 19:29:58 +0200
-Message-ID: <20190607172958.20745-1-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.21.0
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Subject: Re: properly communicate queue limits to the DMA layer
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190605190836.32354-1-hch@lst.de>
+        <591cfa1e-fecb-7d00-c855-3b9eb8eb8a2a@kernel.dk>
+        <20190605192405.GA18243@lst.de>
+        <f07d0abf-b3eb-f530-37b9-e66454740b3f@kernel.dk>
+Date:   Fri, 07 Jun 2019 13:30:30 -0400
+In-Reply-To: <f07d0abf-b3eb-f530-37b9-e66454740b3f@kernel.dk> (Jens Axboe's
+        message of "Thu, 6 Jun 2019 23:52:35 -0600")
+Message-ID: <yq1o939i9qh.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.72.93.184]
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=528
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906070116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=574 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906070116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wl1837mod datasheet [1] says about the WL_IRQ pin:
 
- ---8<---
-SDIO available, interrupt out. Active high. [..]
-Set to rising edge (active high) on powerup.
- ---8<---
+Jens,
 
-That's the reason of seeing the interrupt configured as:
- - IRQ_TYPE_EDGE_RISING on HiKey 960/970
- - IRQ_TYPE_LEVEL_HIGH on a number of i.MX6 platforms
+>> The SCSI bits will need a bit more review, and possibly tweaking
+>> fo megaraid and mpt3sas.  But they are really independent of the
+>> other patches, so maybe skip them for now and leave them for Martin
+>> to deal with.
+>
+> I dropped the SCSI bits.
 
-We assert that all those platforms have the WL_IRQ pin connected
-to the SoC _directly_ (confirmed on HiKey 970 [2]).
+I'll monitor and merge them.
 
-That's not the case for R-Car Kingfisher extension target, which carries
-a WL1837MODGIMOCT IC. There is an SN74LV1T04DBVR inverter present
-between the WLAN_IRQ pin of the WL18* chip and the SoC, effectively
-reversing the requirement quoted from [1]. IOW, in Kingfisher DTS
-configuration we would need to use IRQ_TYPE_EDGE_FALLING or
-IRQ_TYPE_LEVEL_LOW.
-
-Unfortunately, v4.2-rc1 commit bd763482c82ea2 ("wl18xx: wlan_irq:
-support platform dependent interrupt types") made a special case out
-of these interrupt types. After this commit, it is impossible to provide
-an IRQ configuration via DTS which would describe an inverter present
-between the WL18* chip and the SoC, generating the need for workarounds
-like [3].
-
-Create a boolean OF property, called "invert-irq" to specify that
-the WLAN_IRQ pin of WL18* is connected to the SoC via an inverter.
-
-This solution has been successfully tested on R-Car H3ULCB-KF-M06 using
-the DTS configuration [4] combined with the "invert-irq" property.
-
-[1] http://www.ti.com/lit/ds/symlink/wl1837mod.pdf
-[2] https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/
-[3] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
-[4] https://patchwork.kernel.org/patch/10895879/
-    ("arm64: dts: ulcb-kf: Add support for TI WL1837")
-
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- drivers/net/wireless/ti/wl18xx/main.c     | 5 +++++
- drivers/net/wireless/ti/wlcore/sdio.c     | 2 ++
- drivers/net/wireless/ti/wlcore/wlcore_i.h | 4 ++++
- 3 files changed, 11 insertions(+)
-
-diff --git a/drivers/net/wireless/ti/wl18xx/main.c b/drivers/net/wireless/ti/wl18xx/main.c
-index 496b9b63cea1..cea91d1aee98 100644
---- a/drivers/net/wireless/ti/wl18xx/main.c
-+++ b/drivers/net/wireless/ti/wl18xx/main.c
-@@ -877,6 +877,8 @@ static int wl18xx_pre_boot(struct wl1271 *wl)
- 
- static int wl18xx_pre_upload(struct wl1271 *wl)
- {
-+	struct platform_device *pdev = wl->pdev;
-+	struct wlcore_platdev_data *pdata = dev_get_platdata(&pdev->dev);
- 	u32 tmp;
- 	int ret;
- 	u16 irq_invert;
-@@ -932,6 +934,9 @@ static int wl18xx_pre_upload(struct wl1271 *wl)
- 	if (ret < 0)
- 		goto out;
- 
-+	if (pdata->invert_irq)
-+		goto out;
-+
- 	ret = irq_get_trigger_type(wl->irq);
- 	if ((ret == IRQ_TYPE_LEVEL_LOW) || (ret == IRQ_TYPE_EDGE_FALLING)) {
- 		wl1271_info("using inverted interrupt logic: %d", ret);
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index 4d4b07701149..581f56b0b6a2 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -266,6 +266,8 @@ static int wlcore_probe_of(struct device *dev, int *irq, int *wakeirq,
- 	of_property_read_u32(np, "tcxo-clock-frequency",
- 			     &pdev_data->tcxo_clock_freq);
- 
-+	pdev_data->invert_irq = of_property_read_bool(np, "invert-irq");
-+
- 	return 0;
- }
- #else
-diff --git a/drivers/net/wireless/ti/wlcore/wlcore_i.h b/drivers/net/wireless/ti/wlcore/wlcore_i.h
-index 32ec121ccac2..01679f9d7170 100644
---- a/drivers/net/wireless/ti/wlcore/wlcore_i.h
-+++ b/drivers/net/wireless/ti/wlcore/wlcore_i.h
-@@ -213,6 +213,10 @@ struct wlcore_platdev_data {
- 	u32 ref_clock_freq;	/* in Hertz */
- 	u32 tcxo_clock_freq;	/* in Hertz, tcxo is always XTAL */
- 	bool pwr_in_suspend;
-+	bool invert_irq;	/* specify if there is a physical IRQ inverter
-+				 * between WL chip and SoC, like SN74LV1T04DBVR
-+				 * in case of R-Car Kingfisher board
-+				 */
- };
- 
- #define MAX_NUM_KEYS 14
 -- 
-2.21.0
-
+Martin K. Petersen	Oracle Linux Engineering
