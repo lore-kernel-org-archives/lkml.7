@@ -2,142 +2,175 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67332C2BA1D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 029E7C28EBD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D2B20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F0920868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhxM/LCl"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="S00yQNLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfFGBxH (ORCPT
+        id S1727907AbfFGBzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 21:53:07 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41832 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfFGBxH (ORCPT
+        Thu, 6 Jun 2019 21:55:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45963 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbfFGBzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 21:53:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c2so480396wrm.8;
-        Thu, 06 Jun 2019 18:53:06 -0700 (PDT)
+        Thu, 6 Jun 2019 21:55:00 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w34so257861pga.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 18:55:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HXbPnXaGhtf2NYvX8iWSqIWrGp6VGw0M5oS+kh5tYlw=;
-        b=YhxM/LClRdhOXLrXGoyig8gM2kzYsJK3ClPUrSk8fcH08+R/FeaQGN1FzsJ1hEAI8V
-         T1vIWi3coyHCm0EGClXmSsRPKJ6+G3iolZ8N0fHCOEMv9cWcTHMc1BrzkKI/ralknloR
-         k/5zPimvlBj2OBt220R2UcWK0Mm+zjpX2SJ+U/xQczafReLc2mxhm5dNg016YBqEg79K
-         nvgIrZ1hLvrUvDw79HGU/P5PqOecyyLi76Kq7qsux4ttza1LsVLMXbB96s6+OtSS4Rb+
-         EOkhBBbnbsntBs24oiEX1Xxv9rlsaipyvWRM0r+qLh3b84RETMzMuxYYwK7qk//72BVV
-         ruSQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=/XNZ/gn51wIkX7j4GJydFoEsiDY7sJR4sMnUtxZM9Ww=;
+        b=S00yQNLRvIJQua4YR2yQ8RVqPpjOLFHnBiFwSeuMasOSY6c6h0vWJcYdiY0Z5PM7YO
+         UipjM0ZF3UJgTbpzpruGqkllwmSh27VqFfBLmFFRQi48/y8vwP9lfsfd1fCr5GrWmx5U
+         +mrmTnh77qX/LJSmeUNVANIViSYH3SG9JLjQyxwvqhhXs4F5aW2xz3ZH+yMIfMncHUn7
+         BZCifuSpPT/N5rehXs3PF3WLzPimeqB/ooyW1/Bai8dhKtLnZ1mXZqIsmM2S1UwixE+q
+         zrtDne+gd7Z1LmEC/CuXvREAfd8SGdoCJ9NGUyq3IAdCLPX1ELUdL2u8V6EHYI+JY9jt
+         x5FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HXbPnXaGhtf2NYvX8iWSqIWrGp6VGw0M5oS+kh5tYlw=;
-        b=ZORfoHD30cO27nLyvOMCKzhhRKQvJBRMTNGgG3R3+ggSE6BYRvt2VMZBjRcWvL0Y7k
-         2aqxfc7yqh1omdplmMgeioans1+IZiF7eN4dAOjFo7AG4rTIDRsEBAueCzq1W7pwVJxh
-         hiIzJtMSaZLgU+OvFHUetQPftb1mVCgGmb3CdENIA3nw/V3uKNjjIHtEb6hh6Web2qgb
-         q5vVZ+1XWZJmQ5pm7fiUPTjw3Xem4H8xuDXw4I4xLzLlIt28QrUUkM2eW2g7Uit0Rsjf
-         FMNMihqBdkrYqkDMYm0vT+XNrpKtDHy2CAHB7sbwrf2qnLuJaZDlG1mS2t5+IwQORwVb
-         y1xg==
-X-Gm-Message-State: APjAAAVUB7vV/IS2TFjr+RML/9HnwPTrzEcRdzoovx4S8z5zXB6fmuMZ
-        4tixiZQLBH8f/6JL9FMuXH0=
-X-Google-Smtp-Source: APXvYqxrKI3cYKI8sa6Aq8nV6jOp2DQ6mq7nGAQXpG2pc6sNmTJDT0osxxNapHChjOID6yvlf9XaCw==
-X-Received: by 2002:a5d:4904:: with SMTP id x4mr4866906wrq.337.1559872385508;
-        Thu, 06 Jun 2019 18:53:05 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([108.61.173.19])
-        by smtp.gmail.com with ESMTPSA id s63sm544369wme.17.2019.06.06.18.53.02
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=/XNZ/gn51wIkX7j4GJydFoEsiDY7sJR4sMnUtxZM9Ww=;
+        b=S7dBZqFqzRuz8YivBgOiT+ReTokaDQCtgHbE81YmuQ9QtRpaRIO3I5/lTgPu8AXuCM
+         +QBrgq5J6fh6bkQ9FDwG7J6V9qKbIppJFNUW8DI1WlEIlbu73hSrI4sQrjHMJpABr90f
+         wJ5hl47Db+1qp+pL+xSReAODA8MNxCNNQ+9rg5eEids71QR5C/o3ZQ3v0uMrkCPWvX7Q
+         Jpr2UFjKeaet1HdP1L8CKokoD/BrofkIGJCdgHJqA2nV2y4fHJfgw5yHpzQrMBhVi39L
+         bpHqYtw+q6FZZpSPqyYCgZ87oCYMXW6whlUfRlOs7B0S2IqNae1RxmOY+hIPEekVflht
+         fERA==
+X-Gm-Message-State: APjAAAXJjOMFxZXGPg0oRechWdakM5AXKk4N6iz6TQ1G2FqHKTxP1shR
+        GEi3ESe0DHpwvYOJO1k3AuIDUQ==
+X-Google-Smtp-Source: APXvYqxx9s4fm3uOOHPSgMwgRlcgiy2DYwvEjaAWxVGCEthCLU5MAxClyI51h2SMQiGI5Wkj9aU4lw==
+X-Received: by 2002:a65:508b:: with SMTP id r11mr631484pgp.387.1559872499664;
+        Thu, 06 Jun 2019 18:54:59 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b02c:95e1:658b:ab88:7a44:1879? ([2600:1010:b02c:95e1:658b:ab88:7a44:1879])
+        by smtp.gmail.com with ESMTPSA id w190sm391940pgw.51.2019.06.06.18.54.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 18:53:04 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 09:52:58 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Jiri Slaby <jslaby@suse.cz>, mturquette@baylibre.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: fix a missing-free bug in clk_cpy_name()
-Message-ID: <20190607015258.GA2660@zhanggen-UX430UQ>
-References: <20190531011424.GA4374@zhanggen-UX430UQ>
- <eb8e2d33-e8f7-93a5-c8bc-98731c0d63b6@suse.cz>
- <20190605160043.GA4351@zhanggen-UX430UQ>
- <20190606201646.B4CC4206BB@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606201646.B4CC4206BB@mail.kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 06 Jun 2019 18:54:58 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v7 04/27] x86/fpu/xstate: Introduce XSAVES system states
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
+Date:   Thu, 6 Jun 2019 18:54:56 -0700
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2F0417F1-DA1E-4632-AFA2-757C09B3C4B4@amacapital.net>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com> <20190606200646.3951-5-yu-cheng.yu@intel.com> <0a2f8b9b-b96b-06c8-bae0-b78b2ca3b727@intel.com> <5EE146A8-6C8C-4C5D-B7C0-AB8AD1012F1E@amacapital.net> <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 01:16:45PM -0700, Stephen Boyd wrote:
-> Quoting Gen Zhang (2019-06-05 09:00:43)
-> > On Wed, Jun 05, 2019 at 08:38:00AM +0200, Jiri Slaby wrote:
-> > > On 31. 05. 19, 3:14, Gen Zhang wrote:
-> > > > In clk_cpy_name(), '*dst_p'('parent->name'and 'parent->fw_name') and 
-> > > > 'dst' are allcoted by kstrdup_const(). According to doc: "Strings 
-> > > > allocated by kstrdup_const should be freed by kfree_const". So 
-> > > > 'parent->name', 'parent->fw_name' and 'dst' should be freed.
-> > > > 
-> > > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > > > ---
-> > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > > > index aa51756..85c4d3f 100644
-> > > > --- a/drivers/clk/clk.c
-> > > > +++ b/drivers/clk/clk.c
-> > > > @@ -3435,6 +3435,7 @@ static int clk_cpy_name(const char **dst_p, const char *src, bool must_exist)
-> > > >     if (!dst)
-> > > >             return -ENOMEM;
-> > > >  
-> > > > +   kfree_const(dst);
-> > > 
-> > > So you are now returning a freed pointer in dst_p?
-> > Thanks for your reply. I re-examined the code, and this kfree is 
-> > incorrect and it should be deleted.
-> > > 
-> > > >     return 0;
-> > > >  }
-> > > >  
-> > > > @@ -3491,6 +3492,8 @@ static int clk_core_populate_parent_map(struct clk_core *core)
-> > > >                             kfree_const(parents[i].name);
-> > > >                             kfree_const(parents[i].fw_name);
-> > > >                     } while (--i >= 0);
-> > > > +                   kfree_const(parent->name);
-> > > > +                   kfree_const(parent->fw_name);
-> > > 
-> > > Both of them were just freed in the loop above, no?
-> > for (i = 0, parent = parents; i < num_parents; i++, parent++)
-> > Is 'parent' the same as the one from the loop above?
-> 
-> Yes. Did it change somehow?
-parent++?
-> 
-> > 
-> > Moreover, should 'parents[i].name' and 'parents[i].fw_name' be freed by
-> > kfree_const()?
-> > 
-> 
-> Yes? They're allocated with kstrdup_const() in clk_cpy_name(), or
-> they're NULL by virtue of the kcalloc and then kfree_const() does
-> nothing.
-I re-examined clk_cpy_name(). They are the second parameter of 
-clk_cpy_name(). The first parameter is allocated, not the second one.
-So 'parent->name' and 'parent->fw_name' should be freed, not 
-'parents[i].name' or 'parents[i].fw_name'. Am I totally misunderstanding
-this clk_cpy_name()? :-(
 
-Thanks
-Gen
-> 
-> I'm having a hard time following what this patch is trying to fix. It
-> looks unnecessary though so I'm going to drop it from the clk review
-> queue.
-> 
+
+> On Jun 6, 2019, at 3:08 PM, Dave Hansen <dave.hansen@intel.com> wrote:
+>=20
+>=20
+>=20
+> On 6/6/19 3:04 PM, Andy Lutomirski wrote:
+>>> But, that seems broken.  If we have supervisor state, we can't=20
+>>> always defer the load until return to userspace, so we'll never??=20
+>>> have TIF_NEED_FPU_LOAD.  That would certainly be true for=20
+>>> cet_kernel_state.
+>>=20
+>> Ugh. I was sort of imagining that we would treat supervisor state
+> completely separately from user state.  But can you maybe give
+> examples of exactly what you mean?
+
+I was imagining a completely separate area in memory for supervisor states. =
+ I guess this might defeat the modified optimization and is probably a bad i=
+dea.
+
+>>=20
+>>> It seems like we actually need three classes of XSAVE states: 1.=20
+>>> User state
+>>=20
+>> This is FPU, XMM, etc, right?
+>=20
+> Yep.
+>=20
+>>> 2. Supervisor state that affects user mode
+>>=20
+>> User CET?
+>=20
+> Yep.
+>=20
+>>> 3. Supervisor state that affects kernel mode
+>>=20
+>> Like supervisor CET?  If we start doing supervisor shadow stack, the=20
+>> context switches will be real fun.  We may need to handle this in=20
+>> asm.
+>=20
+> Yeah, that's what I was thinking.
+>=20
+> I have the feeling Yu-cheng's patches don't comprehend this since
+> Sebastian's patches went in after he started working on shadow stacks.
+
+Do we need to have TIF_LOAD_FPU mean =E2=80=9Cwe need to load *some* of the x=
+save state=E2=80=9D?  If so, maybe a bunch of the accessors should have thei=
+r interfaces reviewed to make sure they=E2=80=99re sill sensible.
+
+>=20
+>> Where does PKRU fit in?  Maybe we can treat it as #3?
+>=20
+> I thought Sebastian added specific PKRU handling to make it always
+> eager.  It's actually user state that affect kernel mode. :)
+
+Indeed.  But, if we document a taxonomy of states, we should make sure it fi=
+ts in. I guess it=E2=80=99s like supervisor CET except that user code can ca=
+n also read and write it.
+
+We should probably have self tests that make sure that the correct states, a=
+nd nothing else, show up in ptrace and signal states, and that trying to wri=
+te supervisor CET via ptrace and sigreturn is properly rejected.
+
+Just to double check my mental model: it=E2=80=99s okay to XSAVES twice to t=
+he same buffer with disjoint RFBM as long as we do something intelligent wit=
+h XSTATE_BV afterwards, right?  Because, unless we split up the buffers, I t=
+hink we will have to do this when we context switch while TIF_LOAD_FPU is se=
+t.
+
+Are there performance numbers for how the time needed to XRSTORS everything v=
+ersus the time to XRSTORS supervisor CET and then separately XRSTORS the FPU=
+?  This may affect whether we want context switches to have the new task eag=
+erly or lazily restored.
+
+Hmm. I wonder if we need some way for a selftest to reliably trigger TIF_LOA=
+D_FPU.
+
+=E2=80=94Andy=
