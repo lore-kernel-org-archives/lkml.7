@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56018C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F4EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F5320657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA80F208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923087;
-	bh=BDB3ig0QlMOY4R06RNujJ6k6tWZKmQbZv1OOduIroVM=;
+	s=default; t=1559923090;
+	bh=ihWvF9ruba1hnYDVsjmjftpcIcaGfogWK5Jvvp4ATI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z9B5/+2yg7XL9ETWVrE43g9VgCOzxa45Kl1OJD5YKK+0ygiZgxRegHqqivExEIF3f
-	 mbUfxIHDZ6b3oaER/lAGCNeIJcOD5ogGaUKxKIAjepYXb1qNl+UpVweLYTEjzt37CI
-	 h35UkinHa90QJNFoYvS5UwA1XvKnrllIMUjEpRrY=
+	b=aduqc++H12oHZahN1L5yGNklzqBXfo+l3Zbkd4t8ool0015bjeX7aaM3nzX1T/s94
+	 X6sH/cbCgnYqexOfpklqxCokMBaiiYxcG/bzPUgGTA3k7ZOsD85oZFj/GDia8HDY33
+	 l0oCPPAm1imb6J+P1BR2w8nh+/j/h0xwLBt6tkNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbfFGPnQ (ORCPT
+        id S1729842AbfFGPnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54280 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730798AbfFGPnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:43:12 -0400
+        id S1730784AbfFGPnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:43:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA4312147A;
-        Fri,  7 Jun 2019 15:43:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2E2221479;
+        Fri,  7 Jun 2019 15:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922192;
-        bh=BDB3ig0QlMOY4R06RNujJ6k6tWZKmQbZv1OOduIroVM=;
+        s=default; t=1559922189;
+        bh=ihWvF9ruba1hnYDVsjmjftpcIcaGfogWK5Jvvp4ATI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCUOXf20M4ge31aZBR+TtQ6rTfGxFsmbZ3nEGqct03UuQIPCfLUtVQKozsOaqHKEI
-         tQ39o7RIzAT8N0CYcEc1tLcrT+jyEOoB69IDjT+cjtgszHpsTu1d6iYcPGIJz/b81e
-         0BRJW5eNDW8NiDqLUNeQ3BglVXgomPAHyCQBcP6M=
+        b=Ysno1vbX22c9k4NCVY6wjIEXzBi9Jipoa4a+SFkLvv9tBSvNf7wIwlnqQ4neS0Ii0
+         RUBelejSwCnOsMHVxjK2iV/EmaXYhZ2QEnN6xU45wsJec9KCCTxfamC21qbMuZf5dG
+         +W35aiJbej54KtKavJXDrwhfH+I76BIiB7I1Buow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.14 69/69] media: uvcvideo: Fix uvc_alloc_entity() allocation alignment
-Date:   Fri,  7 Jun 2019 17:39:50 +0200
-Message-Id: <20190607153856.262197244@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "ben.hutchings@codethink.co.uk, Alexander.Levin@microsoft.com, Joel
+        Fernandes" <joel@joelfernandes.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: [PATCH 4.14 68/69] binder: fix race between munmap() and direct reclaim
+Date:   Fri,  7 Jun 2019 17:39:49 +0200
+Message-Id: <20190607153856.182759891@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -62,39 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nadav Amit <namit@vmware.com>
+From: Todd Kjos <tkjos@android.com>
 
-commit 89dd34caf73e28018c58cd193751e41b1f8bdc56 upstream.
+commit 5cec2d2e5839f9c0fec319c523a911e0a7fd299f upstream.
 
-The use of ALIGN() in uvc_alloc_entity() is incorrect, since the size of
-(entity->pads) is not a power of two. As a stop-gap, until a better
-solution is adapted, use roundup() instead.
+An munmap() on a binder device causes binder_vma_close() to be called
+which clears the alloc->vma pointer.
 
-Found by a static assertion. Compile-tested only.
+If direct reclaim causes binder_alloc_free_page() to be called, there
+is a race where alloc->vma is read into a local vma pointer and then
+used later after the mm->mmap_sem is acquired. This can result in
+calling zap_page_range() with an invalid vma which manifests as a
+use-after-free in zap_page_range().
 
-Fixes: 4ffc2d89f38a ("uvcvideo: Register subdevices for each entity")
+The fix is to check alloc->vma after acquiring the mmap_sem (which we
+were acquiring anyway) and skip zap_page_range() if it has changed
+to NULL.
 
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: stable <stable@vger.kernel.org> # 4.14
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/media/usb/uvc/uvc_driver.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/android/binder_alloc.c |   18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -903,7 +903,7 @@ static struct uvc_entity *uvc_alloc_enti
- 	unsigned int size;
- 	unsigned int i;
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -945,14 +945,13 @@ enum lru_status binder_alloc_free_page(s
  
--	extra_size = ALIGN(extra_size, sizeof(*entity->pads));
-+	extra_size = roundup(extra_size, sizeof(*entity->pads));
- 	num_inputs = (type & UVC_TERM_OUTPUT) ? num_pads : num_pads - 1;
- 	size = sizeof(*entity) + extra_size + sizeof(*entity->pads) * num_pads
- 	     + num_inputs;
+ 	index = page - alloc->pages;
+ 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
++
++	mm = alloc->vma_vm_mm;
++	if (!mmget_not_zero(mm))
++		goto err_mmget;
++	if (!down_write_trylock(&mm->mmap_sem))
++		goto err_down_write_mmap_sem_failed;
+ 	vma = binder_alloc_get_vma(alloc);
+-	if (vma) {
+-		if (!mmget_not_zero(alloc->vma_vm_mm))
+-			goto err_mmget;
+-		mm = alloc->vma_vm_mm;
+-		if (!down_write_trylock(&mm->mmap_sem))
+-			goto err_down_write_mmap_sem_failed;
+-	}
+ 
+ 	list_lru_isolate(lru, item);
+ 	spin_unlock(lock);
+@@ -965,10 +964,9 @@ enum lru_status binder_alloc_free_page(s
+ 			       PAGE_SIZE);
+ 
+ 		trace_binder_unmap_user_end(alloc, index);
+-
+-		up_write(&mm->mmap_sem);
+-		mmput(mm);
+ 	}
++	up_write(&mm->mmap_sem);
++	mmput(mm);
+ 
+ 	trace_binder_unmap_kernel_start(alloc, index);
+ 
 
 
