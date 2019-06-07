@@ -4,107 +4,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A72C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565D3C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59E620868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559933803;
-	bh=JMu7bqXbCdPv2mLi6a+kKpxaptHGbfvtoU0mUK/bfHY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2HbR8zTTCfPLh3Dpz4AYslLKz9lopfT3B4iQZDQy4+0fqRUl+xAKNxr5KQpIB+Asi
-	 y9BW9LIqIGsNTobruckW6nmCODmJ7mRq7x6K6TuX6EwE3PUit4qHezwgRfB9EZCvKB
-	 sdRcH+QBDgULfipgQA0sqz08Y4atNTFHJ1gZ1XRo=
+	by mail.kernel.org (Postfix) with ESMTP id 3451120868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JKBmHUup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732347AbfFGS4n (ORCPT
+        id S1732354AbfFGS4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:56:43 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45219 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732102AbfFGS4g (ORCPT
+        Fri, 7 Jun 2019 14:56:52 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34741 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729947AbfFGS4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:56:36 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so2611939lje.12
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:56:34 -0700 (PDT)
+        Fri, 7 Jun 2019 14:56:49 -0400
+Received: by mail-ed1-f66.google.com with SMTP id c26so4429778edt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:56:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ldUxE0mi4WaCkQbvj9tDP1Y3dc9QMW/mTJhHqgLzTEc=;
-        b=RKAsnvIg7cohPa9ftFN/RAF3uODOQevDuoFKHSPc0Xl7WdRdmcZdyGnMNLHluRHbqx
-         u1w+QeICOks1DEl+AX3rcan7uhfcKxu3t+qYGPITFJ/CPSgD+SwNUDgnEQevDh4687CE
-         28hm9HoLaAqEQO2OQjx2RFtlsWUqCO4SqrVko=
+        d=broadcom.com; s=google;
+        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
+         :subject:mime-version:content-transfer-encoding;
+        bh=pLHqHIiNEMpqBsq1VQWJdA+f/ogiGuALrvYvfOsre5w=;
+        b=JKBmHUupUT1En6Wm/PaAfDvWLs9G4reHIL/Dq7a28RXjQhW1bvj1OuB26Otd3Nzv/F
+         5ZMid02V6ON7krE7muBA6YEhkfXI5N+61Qho5iv95IBFh/MlqvIhkuqMpLLIh4Gx1vis
+         dD6p2HlT0owEbyLmy2rgkQ9McTJKn+DOb7v3g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ldUxE0mi4WaCkQbvj9tDP1Y3dc9QMW/mTJhHqgLzTEc=;
-        b=MXP/lsE4v19JeU2vDZi/yxb5iwetP3ARfGcyUZ8oIcY9ByTDvzDBEWZV/UKNajHZr5
-         itEC8yaaw1MKoyEa7nDmiS1PN1XqpsqRB+b652R/UCGi7y/uvZPsQUGRQT3NZVDUUBjQ
-         1HMSb7piew1vdZa5pk5XAb2qnSggBY5TY/D8ykwhZhanNd/LAVVOBh6Pg8aL4MPs/RwQ
-         AhMIe6a9eWZ50JMmvCy0tW+qMd6BDjvsB3asfzGo8zc3dsfZOAP/8YTF8CZrzRKXGQ3U
-         yVBG7PfFd5QmwwGjtzTxEEs4+yOcJHMqqs+aAp4RAoFUhw4lNNeyawmcrcKcTOZNMEu4
-         zA4g==
-X-Gm-Message-State: APjAAAXNqmdCB6FwTQTDFkrgxzhCmI2QDMJlfASNvbUKOSh4TbFf1oHJ
-        Xku+rUqgHSdGgiplAF4KVAA3cSIkBAA=
-X-Google-Smtp-Source: APXvYqw4k9h+8l5LYLSMziyoCreWth1YzG5MAY4PdS3bFULzowNlRHtRX7KCNXXIDKiN7H3Uf4Isvg==
-X-Received: by 2002:a2e:1201:: with SMTP id t1mr3323397lje.153.1559933793637;
-        Fri, 07 Jun 2019 11:56:33 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id t21sm502921ljg.60.2019.06.07.11.56.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 11:56:33 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id a21so2630359ljh.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:56:32 -0700 (PDT)
-X-Received: by 2002:a2e:635d:: with SMTP id x90mr19091410ljb.140.1559933792458;
- Fri, 07 Jun 2019 11:56:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:subject:mime-version
+         :content-transfer-encoding;
+        bh=pLHqHIiNEMpqBsq1VQWJdA+f/ogiGuALrvYvfOsre5w=;
+        b=FqcCShX+xF9qxAwnroakJ//oYYC3pJ5+nAHFXkW6fUvrOzH6Y0W0JQGdukzZJf0HV7
+         CLHE026S+7o5babuehKvaD96zDzBi0AaAuBDU3pw+U9tsZUENXQmiqPgMjNC9CZk/AfO
+         x+sPr4uW7yH9TtoXm5/nwnIWXg+0g5aQV2fBNnxjB8PuKPY1Tu2ZirNxPq0cajB6/0Tr
+         rRhu4GohQShz5LzqL8zfw06r/IsjER/o6CVXzfvuTIlEQ43+V/TMs+2TS8lfM6JFzIMx
+         UiOUuzzBg0l0gPCfdIfTrikDtcBtbe6zrkx70C/aBN9VaIfMvqpLoIC+TJzdmEADwx1b
+         auhw==
+X-Gm-Message-State: APjAAAV6ntjJzNpMxzWeNEb1RGWWomy1XsQXzCgitcPa6/m2SvMye2QO
+        f+xkdztXIkNbxuTPcS6ZPGfXJw==
+X-Google-Smtp-Source: APXvYqy/QInNnOY8qOmxzPqvg5vvvunnvhTKvbvtqEaMLJvI0LfXEgZqTasv/6lBtFt2xGxRunVBpA==
+X-Received: by 2002:a17:906:4ada:: with SMTP id u26mr28479238ejt.258.1559933807813;
+        Fri, 07 Jun 2019 11:56:47 -0700 (PDT)
+Received: from [192.168.178.17] (f140230.upc-f.chello.nl. [80.56.140.230])
+        by smtp.gmail.com with ESMTPSA id f9sm501183ejt.18.2019.06.07.11.56.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 07 Jun 2019 11:56:47 -0700 (PDT)
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+To:     Doug Anderson <dianders@chromium.org>
+CC:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        "linux-wireless" <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        "Chi-Hsien Lin" <chi-hsien.lin@cypress.com>,
+        netdev <netdev@vger.kernel.org>,
+        "brcm80211-dev-list" <brcm80211-dev-list@cypress.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Franky Lin <franky.lin@broadcom.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>
+Date:   Fri, 07 Jun 2019 20:56:43 +0200
+Message-ID: <16b334cd9f8.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+In-Reply-To: <CAD=FV=XVmCYWe9rtTFakq8yu67R-97EPyAHWck+o3dRXzHCchQ@mail.gmail.com>
+References: <20190603183740.239031-1-dianders@chromium.org>
+ <20190603183740.239031-4-dianders@chromium.org>
+ <42fc30b1-adab-7fa8-104c-cbb7855f2032@intel.com>
+ <CAD=FV=UPfCOr-syAbVZ-FjHQy7bgQf5BS5pdV-Bwd3hquRqEGg@mail.gmail.com>
+ <16b305a7110.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+ <ff0e7b7a-6a58-8bec-b182-944a8b64236d@intel.com>
+ <16b3223dea0.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+ <CAD=FV=XVmCYWe9rtTFakq8yu67R-97EPyAHWck+o3dRXzHCchQ@mail.gmail.com>
+User-Agent: AquaMail/1.20.0-1451 (build: 102000001)
+Subject: Re: [PATCH v2 3/3] brcmfmac: sdio: Disable auto-tuning around commands expected to fail
 MIME-Version: 1.0
-References: <20190319165123.3967889-1-arnd@arndb.de> <alpine.DEB.2.21.1905072249570.19308@digraph.polyomino.org.uk>
- <87tvd2j9ye.fsf@oldenburg2.str.redhat.com> <CAHk-=wio1e4=WUUwmo-Ph55BEgH_X3oXzBpvPyLQg2TxzfGYuw@mail.gmail.com>
- <871s05fd8o.fsf@oldenburg2.str.redhat.com>
-In-Reply-To: <871s05fd8o.fsf@oldenburg2.str.redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 7 Jun 2019 11:56:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg4ijSoPq-w7ct_VuZvgHx+tUv_QX-We-62dEwK+AOf2w@mail.gmail.com>
-Message-ID: <CAHk-=wg4ijSoPq-w7ct_VuZvgHx+tUv_QX-We-62dEwK+AOf2w@mail.gmail.com>
-Subject: Re: [PATCH] uapi: avoid namespace conflict in linux/posix_types.h
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Joseph Myers <joseph@codesourcery.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Paul Burton <pburton@wavecomp.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 11:43 AM Florian Weimer <fweimer@redhat.com> wrote:
+On June 7, 2019 8:06:30 PM Doug Anderson <dianders@chromium.org> wrote:
+
+> Hi,
 >
-> On the glibc side, we nowadays deal with this by splitting headers
-> further.  (We used to suppress definitions with macros, but that tended
-> to become convoluted.)  In this case, moving the definition of
-> __kernel_long_t to its own header, so that
-> include/uapi/asm-generic/socket.h can include that should fix it.
+> On Fri, Jun 7, 2019 at 6:32 AM Arend Van Spriel
+> <arend.vanspriel@broadcom.com> wrote:
+>>
+>> Right. I know it supports initial tuning, but I'm not sure about subsequent
+>> retuning initiated by the host controller.
+>
+> My evidence says that it supports subsequent tuning.  In fact, without
+> this series my logs would be filled with:
+>
+>   dwmmc_rockchip ff0d0000.dwmmc: Successfully tuned phase to XYZ
+>
+> ...where the phase varied by a few degrees each time.  AKA: it was
+> retuning over and over again and getting sane results which implies
+> that the tuning was working just fine.
 
-I think we should strive to do that on the kernel side too, since
-clearly we shouldn't expose that "val[]" thing in the core posix types
-due to namespace rules, but at the same time I think the patch to
-rename val[] is fundamentally broken too.
+Ok. Thanks for confirming this.
 
-Can you describe how you split things (perhaps even with a patch ;)?
-Is this literally the only issue you currently have? Because I'd
-expect similar issues to show up elsewhere too, but who knows.. You
-presumably do.
+Regards,
+Arend
 
-                Linus
+
