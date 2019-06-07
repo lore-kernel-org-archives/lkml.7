@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4CEC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E22C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6C5212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F20E2146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922188;
-	bh=GgIZ8eLPJY5n6oldnJA9c/z8gnD/onV7h+HKjMpu8R0=;
+	s=default; t=1559922191;
+	bh=bUkpDoWOEbrLwB7zrUSqeSUqVZH9xXs2KqtxME+PaVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jpNklHNpjMupOT4QlBEd9Vo9wfY2oLnlrXFCG5QHpUQCGb3FgQ4rkMiPbmxOwKfxv
-	 2Gv0NpFa6KwB2XboopdOkO412YsI7IDHHq86Trg25Cduowlohv1QL3PvgDNBUn3dSa
-	 hq07nEO9V1NR4d4bRPKVoNl7DUft2jkm8YCRDfqY=
+	b=ceSzi+hYZUSZeJ667RePEJxra3Y7oSoo3ha532tcq4bZmI39/hQdNpN1S0iohdlA7
+	 zpryLf/eumJ6ewC/zb/WOfM2xjhLBz1b832NuPwE+FPogxpUvgffUdPhf9npQ6h30W
+	 8x6Y5euSRk9t07RnGHSy+nO+4lqOk13jRb1ZRtKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfFGPnH (ORCPT
+        id S1730787AbfFGPnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:43:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54042 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730758AbfFGPnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:43:04 -0400
+        id S1730769AbfFGPnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:43:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AA1F2146E;
-        Fri,  7 Jun 2019 15:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42DD82133D;
+        Fri,  7 Jun 2019 15:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922183;
-        bh=GgIZ8eLPJY5n6oldnJA9c/z8gnD/onV7h+HKjMpu8R0=;
+        s=default; t=1559922186;
+        bh=bUkpDoWOEbrLwB7zrUSqeSUqVZH9xXs2KqtxME+PaVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQpKtaFt5X0pCm5k1tGt+do2WtRtx4hOCEDA0zHb6CYEzzarSe2hlQce6LAg4Gqlh
-         ZPS3ue7/2Hz7UoU8DRIsfouUyvEwToImJvsDOLqEa6cC4WZL+dnw8ZOIdBryEA0a94
-         5UG5ji5YfeIPUc44dQLYWTJjICLGuKXMR8pEpVuQ=
+        b=C9VqTehgwpJ4P97JRv3z18r1Il1vJWCa5KuKXYbtp0UBfKRGN4v25oIsuGcYaPbc4
+         QLdBqXFgtfGvQprOIJ0/kBdtwNM+2cXWkEo4ZLZNA3xP4YI6EHBrYgriMpOnRs63an
+         sDKLInFylc27Dal0Lt/YVgcEoPGbPMc9yfjx9DMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alec Ari <neotheuser@gmail.com>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 66/69] Revert "x86/build: Move _etext to actual end of .text"
-Date:   Fri,  7 Jun 2019 17:39:47 +0200
-Message-Id: <20190607153856.019104910@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Todd Kjos <tkjos@google.com>
+Subject: [PATCH 4.14 67/69] Revert "binder: fix handling of misaligned binder object"
+Date:   Fri,  7 Jun 2019 17:39:48 +0200
+Message-Id: <20190607153856.089839424@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -64,42 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Todd Kjos <tkjos@android.com>
 
-This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
+This reverts commit 33c6b9ca70a8b066a613e2a3d0331ae8f82aa31a.
 
-It seems to cause lots of problems when using the gold linker, and no
-one really needs this at the moment, so just revert it from the stable
-trees.
+The commit message is for a different patch. Reverting and then adding
+the same patch back with the correct commit message.
 
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Reported-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: Alec Ari <neotheuser@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc: stable <stable@vger.kernel.org> # 4.14
+Signed-off-by: Todd Kjos <tkjos@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/vmlinux.lds.S |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/android/binder_alloc.c |   18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -131,10 +131,10 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--	} :text = 0x9090
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -945,13 +945,14 @@ enum lru_status binder_alloc_free_page(s
  
--	/* End of text section */
--	_etext = .;
-+		/* End of text section */
-+		_etext = .;
-+	} :text = 0x9090
+ 	index = page - alloc->pages;
+ 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
+-
+-	mm = alloc->vma_vm_mm;
+-	if (!mmget_not_zero(mm))
+-		goto err_mmget;
+-	if (!down_write_trylock(&mm->mmap_sem))
+-		goto err_down_write_mmap_sem_failed;
+ 	vma = binder_alloc_get_vma(alloc);
++	if (vma) {
++		if (!mmget_not_zero(alloc->vma_vm_mm))
++			goto err_mmget;
++		mm = alloc->vma_vm_mm;
++		if (!down_write_trylock(&mm->mmap_sem))
++			goto err_down_write_mmap_sem_failed;
++	}
  
- 	NOTES :text :note
+ 	list_lru_isolate(lru, item);
+ 	spin_unlock(lock);
+@@ -964,9 +965,10 @@ enum lru_status binder_alloc_free_page(s
+ 			       PAGE_SIZE);
+ 
+ 		trace_binder_unmap_user_end(alloc, index);
++
++		up_write(&mm->mmap_sem);
++		mmput(mm);
+ 	}
+-	up_write(&mm->mmap_sem);
+-	mmput(mm);
+ 
+ 	trace_binder_unmap_kernel_start(alloc, index);
  
 
 
