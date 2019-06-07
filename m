@@ -2,124 +2,106 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565D3C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8474FC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3451120868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JKBmHUup"
+	by mail.kernel.org (Postfix) with ESMTP id 5DE8921473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559933859;
+	bh=7YyENcgYWnUWI0h+gXa3lXdPcIrCG64rkMR0qaxWefQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eQh17qzM6TF7R0WY75eW2rmTuP+bjeYSzXFuZ8p2JaNZ0Izz9NSSsBu+2AS/7HGfK
+	 8cUW3/f3Ar56N05SUWAynBVgcr/Hw9LRVPjU+z2My5yalybi73h0leC2wGlC8LZI7Q
+	 PRBJDrZPTOOjSfN1cthaifLOpsvmdFniO9kbQJAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732354AbfFGS4w (ORCPT
+        id S1729900AbfFGS5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:56:52 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34741 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729947AbfFGS4t (ORCPT
+        Fri, 7 Jun 2019 14:57:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51398 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbfFGS5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:56:49 -0400
-Received: by mail-ed1-f66.google.com with SMTP id c26so4429778edt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:56:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
-         :subject:mime-version:content-transfer-encoding;
-        bh=pLHqHIiNEMpqBsq1VQWJdA+f/ogiGuALrvYvfOsre5w=;
-        b=JKBmHUupUT1En6Wm/PaAfDvWLs9G4reHIL/Dq7a28RXjQhW1bvj1OuB26Otd3Nzv/F
-         5ZMid02V6ON7krE7muBA6YEhkfXI5N+61Qho5iv95IBFh/MlqvIhkuqMpLLIh4Gx1vis
-         dD6p2HlT0owEbyLmy2rgkQ9McTJKn+DOb7v3g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:subject:mime-version
-         :content-transfer-encoding;
-        bh=pLHqHIiNEMpqBsq1VQWJdA+f/ogiGuALrvYvfOsre5w=;
-        b=FqcCShX+xF9qxAwnroakJ//oYYC3pJ5+nAHFXkW6fUvrOzH6Y0W0JQGdukzZJf0HV7
-         CLHE026S+7o5babuehKvaD96zDzBi0AaAuBDU3pw+U9tsZUENXQmiqPgMjNC9CZk/AfO
-         x+sPr4uW7yH9TtoXm5/nwnIWXg+0g5aQV2fBNnxjB8PuKPY1Tu2ZirNxPq0cajB6/0Tr
-         rRhu4GohQShz5LzqL8zfw06r/IsjER/o6CVXzfvuTIlEQ43+V/TMs+2TS8lfM6JFzIMx
-         UiOUuzzBg0l0gPCfdIfTrikDtcBtbe6zrkx70C/aBN9VaIfMvqpLoIC+TJzdmEADwx1b
-         auhw==
-X-Gm-Message-State: APjAAAV6ntjJzNpMxzWeNEb1RGWWomy1XsQXzCgitcPa6/m2SvMye2QO
-        f+xkdztXIkNbxuTPcS6ZPGfXJw==
-X-Google-Smtp-Source: APXvYqy/QInNnOY8qOmxzPqvg5vvvunnvhTKvbvtqEaMLJvI0LfXEgZqTasv/6lBtFt2xGxRunVBpA==
-X-Received: by 2002:a17:906:4ada:: with SMTP id u26mr28479238ejt.258.1559933807813;
-        Fri, 07 Jun 2019 11:56:47 -0700 (PDT)
-Received: from [192.168.178.17] (f140230.upc-f.chello.nl. [80.56.140.230])
-        by smtp.gmail.com with ESMTPSA id f9sm501183ejt.18.2019.06.07.11.56.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 07 Jun 2019 11:56:47 -0700 (PDT)
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-To:     Doug Anderson <dianders@chromium.org>
-CC:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        "linux-wireless" <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        "Chi-Hsien Lin" <chi-hsien.lin@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        "brcm80211-dev-list" <brcm80211-dev-list@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Franky Lin <franky.lin@broadcom.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>
-Date:   Fri, 07 Jun 2019 20:56:43 +0200
-Message-ID: <16b334cd9f8.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <CAD=FV=XVmCYWe9rtTFakq8yu67R-97EPyAHWck+o3dRXzHCchQ@mail.gmail.com>
-References: <20190603183740.239031-1-dianders@chromium.org>
- <20190603183740.239031-4-dianders@chromium.org>
- <42fc30b1-adab-7fa8-104c-cbb7855f2032@intel.com>
- <CAD=FV=UPfCOr-syAbVZ-FjHQy7bgQf5BS5pdV-Bwd3hquRqEGg@mail.gmail.com>
- <16b305a7110.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <ff0e7b7a-6a58-8bec-b182-944a8b64236d@intel.com>
- <16b3223dea0.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <CAD=FV=XVmCYWe9rtTFakq8yu67R-97EPyAHWck+o3dRXzHCchQ@mail.gmail.com>
-User-Agent: AquaMail/1.20.0-1451 (build: 102000001)
-Subject: Re: [PATCH v2 3/3] brcmfmac: sdio: Disable auto-tuning around commands expected to fail
+        Fri, 7 Jun 2019 14:57:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7YyENcgYWnUWI0h+gXa3lXdPcIrCG64rkMR0qaxWefQ=; b=ijjX8AWy397IdifJa14T0D/YX
+        BkXzDVhOp95Tx13tZjLebfD1hROXcd8FgYT5w6FrrMVX5g50APbN9HlO+DU2oj4+jHhK6ljdqeRWg
+        3Egtq8SlTs5zgoZ8fZsJfi6AE5qQX5amn5S4BrEICT4xNuyJxzgfzfNHeOmG1u089SiLY=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hZK3N-0003f5-6I; Fri, 07 Jun 2019 18:57:29 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 7BF8C440046; Fri,  7 Jun 2019 19:57:28 +0100 (BST)
+Date:   Fri, 7 Jun 2019 19:57:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 17/20] dt: bindings: fix some broken links from
+ txt->yaml conversion
+Message-ID: <20190607185728.GJ2456@sirena.org.uk>
+References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+ <effeafed3023d8dc5f2440c8d5637ea31c02a533.1559933665.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hEaoa1KyNVzF3lFU"
+Content-Disposition: inline
+In-Reply-To: <effeafed3023d8dc5f2440c8d5637ea31c02a533.1559933665.git.mchehab+samsung@kernel.org>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On June 7, 2019 8:06:30 PM Doug Anderson <dianders@chromium.org> wrote:
 
-> Hi,
->
-> On Fri, Jun 7, 2019 at 6:32 AM Arend Van Spriel
-> <arend.vanspriel@broadcom.com> wrote:
->>
->> Right. I know it supports initial tuning, but I'm not sure about subsequent
->> retuning initiated by the host controller.
->
-> My evidence says that it supports subsequent tuning.  In fact, without
-> this series my logs would be filled with:
->
->   dwmmc_rockchip ff0d0000.dwmmc: Successfully tuned phase to XYZ
->
-> ...where the phase varied by a few degrees each time.  AKA: it was
-> retuning over and over again and getting sane results which implies
-> that the tuning was working just fine.
+--hEaoa1KyNVzF3lFU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ok. Thanks for confirming this.
+On Fri, Jun 07, 2019 at 03:54:33PM -0300, Mauro Carvalho Chehab wrote:
+> Some new files got converted to yaml, but references weren't
+> updated accordingly.
 
-Regards,
-Arend
+These should probably just be sent as normal patches rather than tied in
+with the rest of this series...
 
+--hEaoa1KyNVzF3lFU
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz6s5UACgkQJNaLcl1U
+h9CF/gf6A8YyjbtWR9vuIU+hiuuPGNe8l/3mKrBQmFg2nEkOiWE+N7jc0/RT0WYy
+PdT6jbc6Cwn5mJJ6fqF0h32OgglLotXMlY3ZtBPiTYfgyfXYLDw8717VzdoI3BBq
+AAprBuCMcg0qZJLD5pYXpWCO0cMo0YZU9dRMIFYeuw/U3RMw+oCd+mf38tXh5kce
+dFFdfcmYNcxsRyICaJl42uB5swb46QAtSo+9HiOLhTQy3kMJuBVAoKjG9OjVbgNX
+w9xYiPp4+6GikQO7Vl+901wH80kUHNSaZYfiTUfssYQHaorIrdRYZCd2RfmK9NO7
+LeseTuJ18aBVgxKkqDEkks1EQqQrEw==
+=sF8P
+-----END PGP SIGNATURE-----
+
+--hEaoa1KyNVzF3lFU--
