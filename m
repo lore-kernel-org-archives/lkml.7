@@ -7,139 +7,94 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1D9C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAE8C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D65F20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6792820868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559933695;
-	bh=ufSMB8V4snQSJ44eNgq5tnb3YCmVCIDhMr9J0ABCBj8=;
+	s=default; t=1559933701;
+	bh=48XGtTc0lTxanYsIUhRC88FUvVDLfp3UqQDfLE6hKn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MSilV3TaAnrPo8FvECAcyHJJQ96Hh5Uvww02qBS3KV/xM0R/rhZqf5ZBSzaItOVOE
-	 xUqkJITFocRhlAbm3VC2tH7QpXqDQPQ0H77HasPfNyc3JVitf/kbSJFSyJuuyT7aGU
-	 K1tgsyB8+zaY+4h4Z9fo+H8m4wHws1cW4BFr7vxM=
+	b=XTNcSp0utlxLARrGDuwTHr1ObreN3cqphJ2fJqKZMXHlvRERuqbenML7Zsy51Z7qE
+	 Z8D5XiSsoDweu6fARKn8koUdgatMMPO3xUUtAPvOy/RmoRnJf8e54IKWl0n64Vox1T
+	 iuKj5OELpqBvwn+tk2kuu7pY8gs316lXfovdcfaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732245AbfFGSyy (ORCPT
+        id S1732218AbfFGSyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:54:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42418 "EHLO
+        Fri, 7 Jun 2019 14:54:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42294 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732138AbfFGSym (ORCPT
+        with ESMTP id S1732068AbfFGSyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:54:42 -0400
+        Fri, 7 Jun 2019 14:54:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a08/7CnmoGCvdW3fg/j064hE6wBqrv1dsgLNs5Wzg9M=; b=g77KJxiYIq13fiIKP/xmovj1mc
-        JT2c8zGqMbdABpI0A3hLILbYAVz+2X/PXxEtlv9XKERhElZwyFcxEx05Ph1GEByYy10mr0xg1HtmB
-        YX/f4IFpn75jIyGlC+J7TAtlhqeK5Sl25dU5Z2ocCI6JFx8k5Nu4dOZErYtTUzJ5QkOSZfM69kktY
-        /qEeGeavT4+ij55UZR5aSM3FJW6/o+ogRzkMzlFchNt4U73T+czaVcxlpYEpwjSmMBK9bhcqX0iL5
-        YOOYzjBmHd0eIooZF9eVHYkXv4PwG/+t55sznxE5/hcLV2Wx2aj+66K6o+9LgF3+ocDltkCmoNk0b
-        f4mdUxSA==;
+        bh=WyA/RRUzEMCNSDUX0J/2kOmsPoE/y5/FaiFLeEY8Z7g=; b=iWSQ0qusvOUDaZsZnfA5nWGq0M
+        h8gnnaAG8NiL0zNkjhdC9PMv4V7jMXzPKAXCaR1sP2kClosffVEFnRCmsAsRrsO1WR7luVoEzh6tY
+        GXzCqnP2Zf3kGR/7SfE7vqvjIHPMc5iEVKJzqRobCZZ1rkJUZn2XflQWFnh4fqRInJj5KJOOEZ5At
+        2SjPg2/Esd+7jiK5Pv+rbWe/IQodTPyFkfYmwYDFN5+5iRlidSKjc6Sh/1NSZnaupiRUnSdI2JEYc
+        CIKqi5s3S5lrVQDu07XROMXpl86lxtWClns2Ubx2FndE1Ai1DorsjqbCeZKfTWYIG6YsG+a3KVfnk
+        a79sm00Q==;
 Received: from [179.181.119.115] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZK0d-0005sp-QE; Fri, 07 Jun 2019 18:54:39 +0000
+        id 1hZK0d-0005sh-Kv; Fri, 07 Jun 2019 18:54:39 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZK0b-0007Fp-NV; Fri, 07 Jun 2019 15:54:37 -0300
+        id 1hZK0b-0007FI-HT; Fri, 07 Jun 2019 15:54:37 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arch@vger.kernel.org, esc.storagedev@microsemi.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH v3 20/20] docs: pci: fix broken links due to conversion from pci.txt to pci.rst
-Date:   Fri,  7 Jun 2019 15:54:36 -0300
-Message-Id: <780cb6c2dfe860873394675df6580765ea5a2680.1559933665.git.mchehab+samsung@kernel.org>
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH v3 13/20] docs: net: dpio-driver.rst: fix two codeblock warnings
+Date:   Fri,  7 Jun 2019 15:54:29 -0300
+Message-Id: <111b55be881577bcf6516a572a6e44d64f84a05d.1559933665.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
 References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some documentation files were still pointing to the old place.
+    Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst:43: WARNING: Definition list ends without a blank line; unexpected unindent.
+    Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst:63: WARNING: Unexpected indentation. looking for now-outdated files... none found
 
-Fixes: 229b4e0728e0 ("Documentation: PCI: convert pci.txt to reST")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/memory-barriers.txt                    | 2 +-
- Documentation/translations/ko_KR/memory-barriers.txt | 2 +-
- drivers/scsi/hpsa.c                                  | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ .../networking/device_drivers/freescale/dpaa2/dpio-driver.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index f70ebcdfe592..f4170aae1d75 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -548,7 +548,7 @@ There are certain things that the Linux kernel memory barriers do not guarantee:
+diff --git a/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst b/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
+index 5045df990a4c..17dbee1ac53e 100644
+--- a/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
++++ b/Documentation/networking/device_drivers/freescale/dpaa2/dpio-driver.rst
+@@ -39,8 +39,7 @@ The Linux DPIO driver consists of 3 primary components--
  
- 	[*] For information on bus mastering DMA and coherency please read:
+    DPIO service-- provides APIs to other Linux drivers for services
  
--	    Documentation/PCI/pci.txt
-+	    Documentation/PCI/pci.rst
- 	    Documentation/DMA-API-HOWTO.txt
- 	    Documentation/DMA-API.txt
+-   QBman portal interface-- sends portal commands, gets responses
+-::
++   QBman portal interface-- sends portal commands, gets responses::
  
-diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
-index db0b9d8619f1..07725b1df002 100644
---- a/Documentation/translations/ko_KR/memory-barriers.txt
-+++ b/Documentation/translations/ko_KR/memory-barriers.txt
-@@ -569,7 +569,7 @@ ACQUIRE 는 해당 오퍼레이션의 로드 부분에만 적용되고 RELEASE 
+           fsl-mc          other
+            bus           drivers
+@@ -60,6 +59,7 @@ The Linux DPIO driver consists of 3 primary components--
  
- 	[*] 버스 마스터링 DMA 와 일관성에 대해서는 다음을 참고하시기 바랍니다:
- 
--	    Documentation/PCI/pci.txt
-+	    Documentation/PCI/pci.rst
- 	    Documentation/DMA-API-HOWTO.txt
- 	    Documentation/DMA-API.txt
- 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 1bef1da273c2..53df6f7dd3f9 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -7760,7 +7760,7 @@ static void hpsa_free_pci_init(struct ctlr_info *h)
- 	hpsa_disable_interrupt_mode(h);		/* pci_init 2 */
- 	/*
- 	 * call pci_disable_device before pci_release_regions per
--	 * Documentation/PCI/pci.txt
-+	 * Documentation/PCI/pci.rst
- 	 */
- 	pci_disable_device(h->pdev);		/* pci_init 1 */
- 	pci_release_regions(h->pdev);		/* pci_init 2 */
-@@ -7843,7 +7843,7 @@ static int hpsa_pci_init(struct ctlr_info *h)
- clean1:
- 	/*
- 	 * call pci_disable_device before pci_release_regions per
--	 * Documentation/PCI/pci.txt
-+	 * Documentation/PCI/pci.rst
- 	 */
- 	pci_disable_device(h->pdev);
- 	pci_release_regions(h->pdev);
+ The diagram below shows how the DPIO driver components fit with the other
+ DPAA2 Linux driver components::
++
+                                                    +------------+
+                                                    | OS Network |
+                                                    |   Stack    |
 -- 
 2.21.0
 
