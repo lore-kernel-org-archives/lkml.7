@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FA7C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333F3C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B51208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D122208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="zCTM3bLb"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="s5AxgnMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbfFGT3w (ORCPT
+        id S1730348AbfFGT35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:29:52 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:32962 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730117AbfFGT3v (ORCPT
+        Fri, 7 Jun 2019 15:29:57 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38077 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730237AbfFGT3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:29:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so3262817wru.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:29:50 -0700 (PDT)
+        Fri, 7 Jun 2019 15:29:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s15so486936wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:29:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
          :references:subject:to:from:cc;
-        bh=sJ5T+Z5HRLuJZN0gt3pR40uH2qtZesjRQTuawwndF/M=;
-        b=zCTM3bLb49tLuFDID+q7Aq5ml379wign8HtBm5CULMa/8I9B3ZuhuiW1vkDXn1CMqW
-         db7H7jeN5QgYcg2ga6MJVcJPZQkhtYErSPWTTJX1GLCGH4xqEnjb+6ZBSwcyYtmqc6k0
-         wpOtEegNWB+uQP1Kz4OqIyMcPdkC4y2LMefVyGwcBSGkrRSJASAlzLirxFUJ4wP3Uehc
-         PFYzG1H6WqjXQnHLVPeMjkCFz41+zUNiP/pzL0xI5oQHfmchHTVmFcpf5sAnbmELB3Bl
-         nQmz02pUl/jemtBFE+TjrHKuUwx0uMlggWUOV9v8WFhDs7PdQk3EUTafF9UyNMOUQKCx
-         Wi7Q==
+        bh=Ap2p4K3FsBhUMMLvzSSv6qGy6XWuBL+FfMivSOfqOJ8=;
+        b=s5AxgnMWDpn6CtYOzZSF9hjBWFmPBtZaEZn0wUfZIB7ELojrTR2LQUSgfegfbL9hWK
+         Dyu9kPxMVZdWzl0DYg0V0CGOqtDpDT2twfBZY6ZzcMt3RxybrsXK7JkmS99AwXFyW3vh
+         N1gycoyii5hZ5NUKE+8fJMrVPAQ3L/lyx+ycwDCrCL1SggRk2tI5Rd9ynSFe+KipGN2F
+         S//K6f2VOJiBAT94rAHPOPDGyr3m3nJwnZUN5EU69AuDqoG8bZtqIiswvsOMEXQOOyA6
+         0Pyax0QZsW777YthmhXgjXo0tsgQQQ9Gs8sbL09h2tWwi/9Lk9XVkVT6Pl4Xcl2LSRNj
+         d14w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=sJ5T+Z5HRLuJZN0gt3pR40uH2qtZesjRQTuawwndF/M=;
-        b=gVqZ7kK78MD4ILwqdNkxp7ItiyvziKEPtnAGRoaOLHLygCfbuoUJ6uR5k6Ql2dQUSE
-         8ZB6Z70LlelTMnVnXLENSh2Zoq59HhY6XE0AY4VuFRopchH9ybZXyIqPfxNKVUXLaalm
-         PrG0jybyM71UHn6v6Gc41J1iP1NU8lAZ+n+j3uwP9XIDjHNgSnw4/d6AtwWw3fNsGDw7
-         M0RgefpvrP714Lcqh7V66AUiVjBl5W2xvcqvw6lnq440gmfY6q5p5gvnqLUtxW+7/NhG
-         CRZ/33bBYgFNQE1OznuDeMjgeJdbUjbYosiLmmeKN95QbmiqJVwBXz7KIcmv2MJ/Ap0i
-         3vqg==
-X-Gm-Message-State: APjAAAXbg2Fe1+TVAlvbIT3up5lbo9tmtjogbB9EskWQ9ve4Qxhl6fT8
-        aw55JuJ3Mw/yxs2cs+qoSsvw7A==
-X-Google-Smtp-Source: APXvYqwRUoQ7RSKk3VIfPGOjS4thqVpAybZDzwWNvjshWmv3BhZTyi0fdUvKd1A6UNTzP9WQsoZg8Q==
-X-Received: by 2002:a5d:4bc7:: with SMTP id l7mr6678142wrt.96.1559935789901;
-        Fri, 07 Jun 2019 12:29:49 -0700 (PDT)
+        bh=Ap2p4K3FsBhUMMLvzSSv6qGy6XWuBL+FfMivSOfqOJ8=;
+        b=qevEPR/mtB7cfy0Yl9XcoqeuONcsweDxQu7zrsddheWf7xr+6nv+SuLoht8ElH5z3b
+         Dnqg/hpKC+6eFXzKe8ONoGpCH1dWUbf8bYifjz9GLiT7j9XY96O6FTz93rRFK3HTHNO1
+         28ilYnIF6BCNh19JaYeV26lEUESFjzrodZ40+vQQg9mDVn44xGW1mkO2CyT2nxnsyfYK
+         I3oAqs4y/3oYg3GgCTphzCMj5OUKNUOYBT6AH45ZH2dbPPMp4VRAtuIsaBT/JtkYs218
+         RnVCmIyy+SPynUdscCockA59r2SKQ/Og4dPo7QhWb61IyoDGUK1Y39GmTHvsqxamukTj
+         tpxw==
+X-Gm-Message-State: APjAAAWbtGdTxRCREpkkwcKhPpD/of7sa/KFWqJwCBk03LCfOOrwGYXc
+        6aU7OY7jWMJTTxVpT/vrCgrcUQ==
+X-Google-Smtp-Source: APXvYqzg8rN4XO2cEWlxa8W8vpTbdCYD+U6tzRJD13uX0yolhaXKgzY6lmmpxqR+wy8yGJR9WOBlcA==
+X-Received: by 2002:a1c:6a17:: with SMTP id f23mr4626066wmc.91.1559935791212;
+        Fri, 07 Jun 2019 12:29:51 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id o14sm3100647wrp.77.2019.06.07.12.29.49
+        by smtp.gmail.com with ESMTPSA id 128sm2810695wme.12.2019.06.07.12.29.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Fri, 07 Jun 2019 12:29:49 -0700 (PDT)
-Message-ID: <5cfabb2d.1c69fb81.105bd.34f4@mx.google.com>
+Message-ID: <5cfabb2d.1c69fb81.8cb0f.1984@mx.google.com>
 Date:   Fri, 07 Jun 2019 12:29:49 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.14.123-69-gcc46c1204f89
-X-Kernelci-Branch: linux-4.14.y
+X-Kernelci-Kernel: v4.19.48-73-gbcc090cdcd34
+X-Kernelci-Branch: linux-4.19.y
 X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
-References: <20190607153848.271562617@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/69] 4.14.124-stable review
+In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
+References: <20190607153848.669070800@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 00/73] 4.19.49-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 From:   "kernelci.org bot" <bot@kernelci.org>
@@ -81,21 +81,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 118 boots: 0 failed, 108 passed with 10 offlin=
-e (v4.14.123-69-gcc46c1204f89)
+stable-rc/linux-4.19.y boot: 123 boots: 0 failed, 112 passed with 10 offlin=
+e, 1 conflict (v4.19.48-73-gbcc090cdcd34)
 
 Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.123-69-gcc46c1204f89/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.123-69-gcc46c1204f89/
+-4.19.y/kernel/v4.19.48-73-gbcc090cdcd34/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.48-73-gbcc090cdcd34/
 
 Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.123-69-gcc46c1204f89
-Git Commit: cc46c1204f89505a33f1fb42e719ae0c8586cb68
+Branch: linux-4.19.y
+Git Describe: v4.19.48-73-gbcc090cdcd34
+Git Commit: bcc090cdcd3453e60d078bbce0f28dc4ebb8d79d
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
 e-rc.git
-Tested: 63 unique boards, 23 SoC families, 14 builds out of 201
+Tested: 68 unique boards, 23 SoC families, 14 builds out of 206
+
+Boot Regressions Detected:
+
+arm64:
+
+    defconfig:
+        gcc-8:
+          meson-gxl-s905x-khadas-vim:
+              lab-baylibre-seattle: new failure (last pass: v4.19.48)
 
 Offline Platforms:
 
@@ -127,6 +136,15 @@ arm64:
             apq8016-sbc: 1 offline lab
             juno-r2: 1 offline lab
             mt7622-rfb1: 1 offline lab
+
+Conflicting Boot Failure Detected: (These likely are not failures as other =
+labs are reporting PASS. Needs review.)
+
+arm64:
+    defconfig:
+        meson-gxl-s905x-khadas-vim:
+            lab-baylibre-seattle: FAIL (gcc-8)
+            lab-baylibre: PASS (gcc-8)
 
 ---
 For more info write to <info@kernelci.org>
