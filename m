@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667C2C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5A0C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A4D21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5CA2146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922278;
-	bh=je00nHXy2hhHJLoChkbtjJCQOLib/hdvZbih/h8p3Aw=;
+	s=default; t=1559922283;
+	bh=9J0yNPBijp9CKjVl5XU7MV5vKc+bAeRutjTRMItWFdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zZDra1tDvEdzFBJ9kxAhRyz049P7VgBV9YMcSG6OyE/UV2znMR37CUhGzt1rISpJ3
-	 GVeHU0fbxQfHrAm6afUwgDbTaYAbIuCR5fD6GTH4AF2EyJffLik+n9MPMDfrl3z8jV
-	 ILd8OZY6fe+E7zlz16MzThzg608ZBSlSc5AbMOEw=
+	b=S5REBqFBKHeOUEMX6F3++ukZ/LoBtEseFz7MOf0LOajhOT1Rk+MjJNS5lUKq57tGh
+	 Ah6LE2jo1Xt58rUNJsVoqHxNEkGdg0ZWMzqNAHGvnB+jUrm64oPl1mf+Y0zRwq11s8
+	 UksPRdMnYOBB06c8zNdIy0P9B6gpWCBoyOG9n3W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbfFGPog (ORCPT
+        id S1731127AbfFGPom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:44:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:44:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731095AbfFGPoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:32 -0400
+        id S1730379AbfFGPok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF422147A;
-        Fri,  7 Jun 2019 15:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 816CF2146E;
+        Fri,  7 Jun 2019 15:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922270;
-        bh=je00nHXy2hhHJLoChkbtjJCQOLib/hdvZbih/h8p3Aw=;
+        s=default; t=1559922279;
+        bh=9J0yNPBijp9CKjVl5XU7MV5vKc+bAeRutjTRMItWFdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NU5c+hF3LdsPp8a/sX+9DWKbByJ8gqw1d91mQt/FiJRpdpYu5pYtkPijZlU6qv5Pz
-         cqTri2BZL3ZrltMeGJNh39UFoPrubjEs8Rtl/zwb4A9Gx8BtIcyXdv+X9lLpRmqAm8
-         c2vut907jy3hqZPAZVA2oBPEn9dUSZ/QFteJeOkE=
+        b=rZsxUpnvH7ZuuugJe3/T2Vo4njusM3tj77theqU/yTUR0w3TvxhGD0SDi/JFkqPoi
+         o4RSxhJcv87pO3cCKFLy/gNPDEIxFR3zqa+OIs6X4CdOUp1ijEYv/Eqmvx7I9SNLWQ
+         eWzYKPOzZYtHOjhMH48d3KAtP0MDxmOQPN3HMxG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 4.19 27/73] s390/crypto: fix gcm-aes-s390 selftest failures
-Date:   Fri,  7 Jun 2019 17:39:14 +0200
-Message-Id: <20190607153852.068239624@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 03/73] xhci: update bounce buffer with correct sg num
+Date:   Fri,  7 Jun 2019 17:38:50 +0200
+Message-Id: <20190607153849.070712216@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -61,258 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Henry Lin <henryl@nvidia.com>
 
-commit bef9f0ba300a55d79a69aa172156072182176515 upstream.
+commit 597c56e372dab2c7f79b8d700aad3a5deebf9d1b upstream.
 
-The current kernel uses improved crypto selftests. These
-tests showed that the current implementation of gcm-aes-s390
-is not able to deal with chunks of output buffers which are
-not a multiple of 16 bytes. This patch introduces a rework
-of the gcm aes s390 scatter walk handling which now is able
-to handle any input and output scatter list chunk sizes
-correctly.
+This change fixes a data corruption issue occurred on USB hard disk for
+the case that bounce buffer is used during transferring data.
 
-Code has been verified by the crypto selftests, the tcrypt
-kernel module and additional tests ran via the af_alg interface.
+While updating data between sg list and bounce buffer, current
+implementation passes mapped sg number (urb->num_mapped_sgs) to
+sg_pcopy_from_buffer() and sg_pcopy_to_buffer(). This causes data
+not get copied if target buffer is located in the elements after
+mapped sg elements. This change passes sg number for full list to
+fix issue.
 
-Cc: <stable@vger.kernel.org>
-Reported-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Patrick Steuer <steuer@linux.ibm.com>
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Besides, for copying data from bounce buffer, calling dma_unmap_single()
+on the bounce buffer before copying data to sg list can avoid cache issue.
+
+Fixes: f9c589e142d0 ("xhci: TD-fragment, align the unsplittable case with a bounce buffer")
+Cc: <stable@vger.kernel.org> # v4.8+
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/crypto/aes_s390.c |  148 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 107 insertions(+), 41 deletions(-)
+ drivers/usb/host/xhci-ring.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -826,19 +826,45 @@ static int gcm_aes_setauthsize(struct cr
- 	return 0;
- }
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -656,6 +656,7 @@ static void xhci_unmap_td_bounce_buffer(
+ 	struct device *dev = xhci_to_hcd(xhci)->self.controller;
+ 	struct xhci_segment *seg = td->bounce_seg;
+ 	struct urb *urb = td->urb;
++	size_t len;
  
--static void gcm_sg_walk_start(struct gcm_sg_walk *gw, struct scatterlist *sg,
--			      unsigned int len)
-+static void gcm_walk_start(struct gcm_sg_walk *gw, struct scatterlist *sg,
-+			   unsigned int len)
- {
- 	memset(gw, 0, sizeof(*gw));
- 	gw->walk_bytes_remain = len;
- 	scatterwalk_start(&gw->walk, sg);
- }
- 
--static int gcm_sg_walk_go(struct gcm_sg_walk *gw, unsigned int minbytesneeded)
-+static inline unsigned int _gcm_sg_clamp_and_map(struct gcm_sg_walk *gw)
-+{
-+	struct scatterlist *nextsg;
-+
-+	gw->walk_bytes = scatterwalk_clamp(&gw->walk, gw->walk_bytes_remain);
-+	while (!gw->walk_bytes) {
-+		nextsg = sg_next(gw->walk.sg);
-+		if (!nextsg)
-+			return 0;
-+		scatterwalk_start(&gw->walk, nextsg);
-+		gw->walk_bytes = scatterwalk_clamp(&gw->walk,
-+						   gw->walk_bytes_remain);
-+	}
-+	gw->walk_ptr = scatterwalk_map(&gw->walk);
-+	return gw->walk_bytes;
-+}
-+
-+static inline void _gcm_sg_unmap_and_advance(struct gcm_sg_walk *gw,
-+					     unsigned int nbytes)
-+{
-+	gw->walk_bytes_remain -= nbytes;
-+	scatterwalk_unmap(&gw->walk);
-+	scatterwalk_advance(&gw->walk, nbytes);
-+	scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
-+	gw->walk_ptr = NULL;
-+}
-+
-+static int gcm_in_walk_go(struct gcm_sg_walk *gw, unsigned int minbytesneeded)
- {
- 	int n;
- 
--	/* minbytesneeded <= AES_BLOCK_SIZE */
- 	if (gw->buf_bytes && gw->buf_bytes >= minbytesneeded) {
- 		gw->ptr = gw->buf;
- 		gw->nbytes = gw->buf_bytes;
-@@ -851,13 +877,11 @@ static int gcm_sg_walk_go(struct gcm_sg_
- 		goto out;
+ 	if (!ring || !seg || !urb)
+ 		return;
+@@ -666,11 +667,14 @@ static void xhci_unmap_td_bounce_buffer(
+ 		return;
  	}
  
--	gw->walk_bytes = scatterwalk_clamp(&gw->walk, gw->walk_bytes_remain);
--	if (!gw->walk_bytes) {
--		scatterwalk_start(&gw->walk, sg_next(gw->walk.sg));
--		gw->walk_bytes = scatterwalk_clamp(&gw->walk,
--						   gw->walk_bytes_remain);
-+	if (!_gcm_sg_clamp_and_map(gw)) {
-+		gw->ptr = NULL;
-+		gw->nbytes = 0;
-+		goto out;
- 	}
--	gw->walk_ptr = scatterwalk_map(&gw->walk);
- 
- 	if (!gw->buf_bytes && gw->walk_bytes >= minbytesneeded) {
- 		gw->ptr = gw->walk_ptr;
-@@ -869,51 +893,90 @@ static int gcm_sg_walk_go(struct gcm_sg_
- 		n = min(gw->walk_bytes, AES_BLOCK_SIZE - gw->buf_bytes);
- 		memcpy(gw->buf + gw->buf_bytes, gw->walk_ptr, n);
- 		gw->buf_bytes += n;
--		gw->walk_bytes_remain -= n;
--		scatterwalk_unmap(&gw->walk);
--		scatterwalk_advance(&gw->walk, n);
--		scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
--
-+		_gcm_sg_unmap_and_advance(gw, n);
- 		if (gw->buf_bytes >= minbytesneeded) {
- 			gw->ptr = gw->buf;
- 			gw->nbytes = gw->buf_bytes;
- 			goto out;
- 		}
--
--		gw->walk_bytes = scatterwalk_clamp(&gw->walk,
--						   gw->walk_bytes_remain);
--		if (!gw->walk_bytes) {
--			scatterwalk_start(&gw->walk, sg_next(gw->walk.sg));
--			gw->walk_bytes = scatterwalk_clamp(&gw->walk,
--							gw->walk_bytes_remain);
-+		if (!_gcm_sg_clamp_and_map(gw)) {
-+			gw->ptr = NULL;
-+			gw->nbytes = 0;
-+			goto out;
- 		}
--		gw->walk_ptr = scatterwalk_map(&gw->walk);
- 	}
- 
- out:
- 	return gw->nbytes;
+-	/* for in tranfers we need to copy the data from bounce to sg */
+-	sg_pcopy_from_buffer(urb->sg, urb->num_mapped_sgs, seg->bounce_buf,
+-			     seg->bounce_len, seg->bounce_offs);
+ 	dma_unmap_single(dev, seg->bounce_dma, ring->bounce_buf_len,
+ 			 DMA_FROM_DEVICE);
++	/* for in tranfers we need to copy the data from bounce to sg */
++	len = sg_pcopy_from_buffer(urb->sg, urb->num_sgs, seg->bounce_buf,
++			     seg->bounce_len, seg->bounce_offs);
++	if (len != seg->bounce_len)
++		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %ld != %d\n",
++				len, seg->bounce_len);
+ 	seg->bounce_len = 0;
+ 	seg->bounce_offs = 0;
  }
+@@ -3104,6 +3108,7 @@ static int xhci_align_td(struct xhci_hcd
+ 	unsigned int unalign;
+ 	unsigned int max_pkt;
+ 	u32 new_buff_len;
++	size_t len;
  
--static void gcm_sg_walk_done(struct gcm_sg_walk *gw, unsigned int bytesdone)
-+static int gcm_out_walk_go(struct gcm_sg_walk *gw, unsigned int minbytesneeded)
- {
--	int n;
-+	if (gw->walk_bytes_remain == 0) {
-+		gw->ptr = NULL;
-+		gw->nbytes = 0;
-+		goto out;
-+	}
-+
-+	if (!_gcm_sg_clamp_and_map(gw)) {
-+		gw->ptr = NULL;
-+		gw->nbytes = 0;
-+		goto out;
-+	}
+ 	max_pkt = usb_endpoint_maxp(&urb->ep->desc);
+ 	unalign = (enqd_len + *trb_buff_len) % max_pkt;
+@@ -3134,8 +3139,12 @@ static int xhci_align_td(struct xhci_hcd
  
-+	if (gw->walk_bytes >= minbytesneeded) {
-+		gw->ptr = gw->walk_ptr;
-+		gw->nbytes = gw->walk_bytes;
-+		goto out;
-+	}
-+
-+	scatterwalk_unmap(&gw->walk);
-+	gw->walk_ptr = NULL;
-+
-+	gw->ptr = gw->buf;
-+	gw->nbytes = sizeof(gw->buf);
-+
-+out:
-+	return gw->nbytes;
-+}
-+
-+static int gcm_in_walk_done(struct gcm_sg_walk *gw, unsigned int bytesdone)
-+{
- 	if (gw->ptr == NULL)
--		return;
-+		return 0;
- 
- 	if (gw->ptr == gw->buf) {
--		n = gw->buf_bytes - bytesdone;
-+		int n = gw->buf_bytes - bytesdone;
- 		if (n > 0) {
- 			memmove(gw->buf, gw->buf + bytesdone, n);
--			gw->buf_bytes -= n;
-+			gw->buf_bytes = n;
- 		} else
- 			gw->buf_bytes = 0;
--	} else {
--		gw->walk_bytes_remain -= bytesdone;
--		scatterwalk_unmap(&gw->walk);
--		scatterwalk_advance(&gw->walk, bytesdone);
--		scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
--	}
-+	} else
-+		_gcm_sg_unmap_and_advance(gw, bytesdone);
-+
-+	return bytesdone;
-+}
-+
-+static int gcm_out_walk_done(struct gcm_sg_walk *gw, unsigned int bytesdone)
-+{
-+	int i, n;
-+
-+	if (gw->ptr == NULL)
-+		return 0;
-+
-+	if (gw->ptr == gw->buf) {
-+		for (i = 0; i < bytesdone; i += n) {
-+			if (!_gcm_sg_clamp_and_map(gw))
-+				return i;
-+			n = min(gw->walk_bytes, bytesdone - i);
-+			memcpy(gw->walk_ptr, gw->buf + i, n);
-+			_gcm_sg_unmap_and_advance(gw, n);
-+		}
-+	} else
-+		_gcm_sg_unmap_and_advance(gw, bytesdone);
-+
-+	return bytesdone;
- }
- 
- static int gcm_aes_crypt(struct aead_request *req, unsigned int flags)
-@@ -926,7 +989,7 @@ static int gcm_aes_crypt(struct aead_req
- 	unsigned int pclen = req->cryptlen;
- 	int ret = 0;
- 
--	unsigned int len, in_bytes, out_bytes,
-+	unsigned int n, len, in_bytes, out_bytes,
- 		     min_bytes, bytes, aad_bytes, pc_bytes;
- 	struct gcm_sg_walk gw_in, gw_out;
- 	u8 tag[GHASH_DIGEST_SIZE];
-@@ -963,14 +1026,14 @@ static int gcm_aes_crypt(struct aead_req
- 	*(u32 *)(param.j0 + ivsize) = 1;
- 	memcpy(param.k, ctx->key, ctx->key_len);
- 
--	gcm_sg_walk_start(&gw_in, req->src, len);
--	gcm_sg_walk_start(&gw_out, req->dst, len);
-+	gcm_walk_start(&gw_in, req->src, len);
-+	gcm_walk_start(&gw_out, req->dst, len);
- 
- 	do {
- 		min_bytes = min_t(unsigned int,
- 				  aadlen > 0 ? aadlen : pclen, AES_BLOCK_SIZE);
--		in_bytes = gcm_sg_walk_go(&gw_in, min_bytes);
--		out_bytes = gcm_sg_walk_go(&gw_out, min_bytes);
-+		in_bytes = gcm_in_walk_go(&gw_in, min_bytes);
-+		out_bytes = gcm_out_walk_go(&gw_out, min_bytes);
- 		bytes = min(in_bytes, out_bytes);
- 
- 		if (aadlen + pclen <= bytes) {
-@@ -997,8 +1060,11 @@ static int gcm_aes_crypt(struct aead_req
- 			  gw_in.ptr + aad_bytes, pc_bytes,
- 			  gw_in.ptr, aad_bytes);
- 
--		gcm_sg_walk_done(&gw_in, aad_bytes + pc_bytes);
--		gcm_sg_walk_done(&gw_out, aad_bytes + pc_bytes);
-+		n = aad_bytes + pc_bytes;
-+		if (gcm_in_walk_done(&gw_in, n) != n)
-+			return -ENOMEM;
-+		if (gcm_out_walk_done(&gw_out, n) != n)
-+			return -ENOMEM;
- 		aadlen -= aad_bytes;
- 		pclen -= pc_bytes;
- 	} while (aadlen + pclen > 0);
+ 	/* create a max max_pkt sized bounce buffer pointed to by last trb */
+ 	if (usb_urb_dir_out(urb)) {
+-		sg_pcopy_to_buffer(urb->sg, urb->num_mapped_sgs,
++		len = sg_pcopy_to_buffer(urb->sg, urb->num_sgs,
+ 				   seg->bounce_buf, new_buff_len, enqd_len);
++		if (len != seg->bounce_len)
++			xhci_warn(xhci,
++				"WARN Wrong bounce buffer write length: %ld != %d\n",
++				len, seg->bounce_len);
+ 		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
+ 						 max_pkt, DMA_TO_DEVICE);
+ 	} else {
 
 
