@@ -2,204 +2,104 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9DEC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7831CC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9630E2133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:12:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AwvVeXoM"
+	by mail.kernel.org (Postfix) with ESMTP id 4B299212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559906009;
+	bh=Hs7qTSXru+9dvrpFOzJ+XU1trpXEyPCPUYwQxgDQ0cI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jKL0UHMQQlGMCrZ9ms4U9ZWnwZWMSxmNyXsR3GUVFYO/5ADH0ddB2w72xZA5C2eSN
+	 eBpjUS8NUnhFpMj1vhF5Lu2HcQeZJAUllMkuFGwLMmJXSys07tRIouOyKDQz8tssd5
+	 N14Yb+sk4WLQE2PjwfkUu4MZWqATc8vHgrbArpqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfFGLMt (ORCPT
+        id S1728432AbfFGLN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:12:49 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:33639 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727765AbfFGLMs (ORCPT
+        Fri, 7 Jun 2019 07:13:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34238 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727765AbfFGLN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:12:48 -0400
-Received: by mail-it1-f196.google.com with SMTP id v193so4350615itc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 04:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hTNKtOKHHHI8OrPCvhB9+wouB0nXF3Kl/Zi686sIrd0=;
-        b=AwvVeXoMNi9tcUu/RnJEFnfeCf8doml7Cz80CvalFhZ2CGqbDab90V+bAWAM76d1+D
-         o/aI2xzU5pJuRcN3Z3N9cnb/lExQLzuwWPFVOP8kkQLw19gyr842NmpAjnudOKSd3fFy
-         rU8Ma9yUNSAbZzVG4lNGgMD3fmo3zk+VGy6U5JcF+42R5pCVcjG+EVr23yg0GzkBLAQR
-         wu2HuCasU4NM77D9uAiXzO6jk3+vQPr0Sl8WA6YXAB7KAnvClicH+c8YC0KptAGfbLA7
-         NgPslUvVlM1htXbOdJd5JCTBSfUCsOmmngfLHz4wFTxWixqXUpCLRZfbPWwkyQvbjsh1
-         TwRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hTNKtOKHHHI8OrPCvhB9+wouB0nXF3Kl/Zi686sIrd0=;
-        b=cDnV1xg2oeZWwub0r2WlktSw+sgMxJYegybQtTabdU+HeYJaLj34qZUKrxTtwIoI75
-         wlaT8MQJ+O9dpiiCjF4bqZTposQfWBQXCjKryDTYIeGFgQYGxiWVKWQgp6Roug2kSNPt
-         HviN75IXdEYn2DYFhyEKvXZcYBArWvtAyQ1WfLN0Wpzz/zixJimT30zkKdGJ7bF00+5y
-         9ivbR2DoGQuWgqYBTWchcHpTKtc/jKQua56ntPhPEVgjnkzliu3r7BQVwl6lzV9GKkaA
-         7taxtnx62yuwbjFxiEkaGnfl4X67CR8A/yZqxA1Qr4acpsT5JmsqM5BENp/iZsZnBXGl
-         2j+Q==
-X-Gm-Message-State: APjAAAVQdyuRXqBXDTBqz35PZNklOKuC/ljX5tHc1kl+M+QaatvuYEcj
-        lX0oL2aXHVNCu3pi/eOZdqfMuLbmMiStorj/9XnYAg==
-X-Google-Smtp-Source: APXvYqz5tOF3jV0oTY2mNwby2o78QXw0yLqWstPYftPQcuGoW05rYxmIZKkVHV4wRYupNqEQb4ZMrG/bJP79pbwo0oE=
-X-Received: by 2002:a24:4f88:: with SMTP id c130mr3477700itb.104.1559905967402;
- Fri, 07 Jun 2019 04:12:47 -0700 (PDT)
+        Fri, 7 Jun 2019 07:13:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AspmKVjY7mJ8HlX6+G0jU6RWDgqTyzyWO77BW5lTioo=; b=AWxRGyzYu+UByYRVNF7xUoTci
+        K9YJ7T+ee4KHFo/QooSYiSQYK+GMd9yWh6ldoSQK+1uBDAtTov4FoBIII1Z6AwYjhDhX7/7bJV4uK
+        +OI9NFxvCnZIOTyDT+ITbW5MQ2wOj5DEQV7XTUtGeasr5KyirCok5/hC6m8n9KyfKSJFM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hZCnd-0001iM-BW; Fri, 07 Jun 2019 11:12:45 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 4F0CA440046; Fri,  7 Jun 2019 12:12:44 +0100 (BST)
+Date:   Fri, 7 Jun 2019 12:12:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     shengjiu.wang@nxp.com, timur@kernel.org, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC/RFT PATCH] Revert "ASoC: fsl_esai: ETDR and TX0~5 registers
+ are non volatile"
+Message-ID: <20190607111244.GE2456@sirena.org.uk>
+References: <20190606230105.4385-1-nicoleotsuka@gmail.com>
 MIME-Version: 1.0
-References: <20190607082901.6491-1-lee.jones@linaro.org> <20190607082901.6491-4-lee.jones@linaro.org>
-In-Reply-To: <20190607082901.6491-4-lee.jones@linaro.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 7 Jun 2019 13:12:36 +0200
-Message-ID: <CAKv+Gu85kHUDYPDkYVLmZ2pq22wtKP-+8vPUX7qsV_2TixWcFA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] pinctrl: qcom: sdm845: Provide ACPI support
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        wsa+renesas@sang-engineering.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cnnC1+vf4lqgEF19"
+Content-Disposition: inline
+In-Reply-To: <20190606230105.4385-1-nicoleotsuka@gmail.com>
+X-Cookie: The other line moves faster.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 10:30, Lee Jones <lee.jones@linaro.org> wrote:
->
-> This patch provides basic support for booting with ACPI instead
-> of the currently supported Device Tree.  When doing so there are a
-> couple of differences which we need to taken into consideration.
->
-> Firstly, the SDM850 ACPI tables omit information pertaining to the
-> 4 reserved GPIOs on the platform.  If Linux attempts to touch/
-> initialise any of these lines, the firmware will restart the
-> platform.
->
-> Secondly, when booting with ACPI, it is expected that the firmware
-> will set-up things like; Regulators, Clocks, Pin Functions, etc in
-> their ideal configuration.  Thus, the possible Pin Functions
-> available to this platform are not advertised when providing the
-> higher GPIOD/Pinctrl APIs with pin information.
->
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/pinctrl/qcom/Kconfig          |  2 +-
->  drivers/pinctrl/qcom/pinctrl-sdm845.c | 35 ++++++++++++++++++++++++++-
->  2 files changed, 35 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-> index 2e66ab72c10b..aafbe932424f 100644
-> --- a/drivers/pinctrl/qcom/Kconfig
-> +++ b/drivers/pinctrl/qcom/Kconfig
-> @@ -168,7 +168,7 @@ config PINCTRL_SDM660
->
->  config PINCTRL_SDM845
->         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
-> -       depends on GPIOLIB && OF
-> +       depends on GPIOLIB && (OF || ACPI)
->         select PINCTRL_MSM
->         help
->           This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> index c97f20fca5fd..7188bee3cf3e 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> @@ -3,6 +3,7 @@
->   * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
->   */
->
-> +#include <linux/acpi.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> @@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
->         UFS_RESET(ufs_reset, 0x99f000),
->  };
->
-> +static const int sdm845_acpi_reserved_gpios[] = {
-> +       0, 1, 2, 3, 81, 82, 83, 84, -1
-> +};
-> +
->  static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
->         .pins = sdm845_pins,
->         .npins = ARRAY_SIZE(sdm845_pins),
-> @@ -1284,14 +1289,41 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
->         .nfunctions = ARRAY_SIZE(sdm845_functions),
->         .groups = sdm845_groups,
->         .ngroups = ARRAY_SIZE(sdm845_groups),
-> +       .reserved_gpios = sdm845_acpi_reserved_gpios,
-> +       .ngpios = 150,
-> +};
-> +
-> +static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
-> +       .pins = sdm845_pins,
-> +       .npins = ARRAY_SIZE(sdm845_pins),
-> +       .groups = sdm845_groups,
-> +       .ngroups = ARRAY_SIZE(sdm845_groups),
-> +       .reserved_gpios = sdm845_acpi_reserved_gpios,
->         .ngpios = 150,
->  };
->
->  static int sdm845_pinctrl_probe(struct platform_device *pdev)
->  {
-> -       return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
-> +       int ret;
-> +
-> +       if (pdev->dev.of_node) {
-> +               ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
-> +       } else if (ACPI_HANDLE(&pdev->dev)) {
 
-Please use has_acpi_companion() here
+--cnnC1+vf4lqgEF19
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +               ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
-> +       } else {
-> +               dev_err(&pdev->dev, "DT and ACPI disabled\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       return ret;
->  }
->
-> +static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
-> +       { "QCOM0217"},
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
-> +
+On Thu, Jun 06, 2019 at 04:01:05PM -0700, Nicolin Chen wrote:
+> This reverts commit 8973112aa41b8ad956a5b47f2fe17bc2a5cf2645.
 
-Put this in a #ifdef CONFIG_ACPI please
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
 
->  static const struct of_device_id sdm845_pinctrl_of_match[] = {
->         { .compatible = "qcom,sdm845-pinctrl", },
->         { },
-> @@ -1302,6 +1334,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
->                 .name = "sdm845-pinctrl",
->                 .pm = &msm_pinctrl_dev_pm_ops,
->                 .of_match_table = sdm845_pinctrl_of_match,
-> +               .acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
->         },
->         .probe = sdm845_pinctrl_probe,
->         .remove = msm_pinctrl_remove,
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 1) Though ETDR and TX0~5 are not volatile but write-only registers,
+>    they should not be cached either. According to the definition of
+>    "volatile_reg", one should be put in the volatile list if it can
+>    not be cached.
+
+There's no problem with caching write only registers, having a cache
+allows one to do read/modify/write cycles on them and can help with
+debugging.  The original reason we had cache code in ASoC was for write
+only devices.
+
+--cnnC1+vf4lqgEF19
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlz6RqkACgkQJNaLcl1U
+h9Co7Qf7Bkg3ndyaPGB0nY7y53/txpehf1drjHOKGiWoZ0+zJMVKS1VxMRflVs5s
+/jl1lph0ebC8gfz/UipI3j7ZrLPd1tRsasfmuIpa4aDTAd5h3ekJe2uMHyxDiATf
++riYjRV5ZiBQ5EFVZQN2j9VMvtJGfaLsDD6Wkc4laIvAevPThDKrs5YLyiH/ncrn
+q1RktO/C3gfdAuUd0x0oGbHOlpXuMw8AaT0I6NNonOM5GlLqDq0jUw9Or/WdOepk
+UMskpFmlTMYNm9AcJGvZ2JemvZ+fYCZUs+1nU2h6+MgEBIs1DqvdYagwnFXb4K1J
+ZkaAUBJ2IdDf+r2aYfr+BVFEUIjuPA==
+=AgxG
+-----END PGP SIGNATURE-----
+
+--cnnC1+vf4lqgEF19--
