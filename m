@@ -3,92 +3,255 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA24AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA4DC468BE
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A608208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:26:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z23mfVUe"
+	by mail.kernel.org (Postfix) with ESMTP id E7EEB208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559942902;
+	bh=jip5QGGHndv4oXMyz6SmOTMXUdzgvg7wHZcAsNnYwsk=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=np8JWJBk8HWb0Fz8DHQNLeVj7qfY1QMLLInflmuRoHX4vCn/s/vYqmfkVWxyiP/aG
+	 tuTjolYOVXgvt5LNNc95aeBjEqMlY1M5LrWrzDLdPQrR1Lkqa69vLl7rjgCYwkTT3B
+	 y76NY/zxvV9hjh4EejmyKs9n7DkvGaXmNHDukpTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730883AbfFGV0z (ORCPT
+        id S1730512AbfFGV2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 17:26:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36530 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729125AbfFGV0z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 17:26:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i21so2950967ljj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 14:26:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q6sGj4udjdudlOgOeP/H6pDDZcmuzFdAkSUlLYTz7Hc=;
-        b=z23mfVUe0uLJ/lnbrCPAfFLlJoZeq+fXYSy3t319XR2mXsJF2HJBlsHc72bDowYPbr
-         BKlcfggdOUpnzKEOcmo/gWDJBafNeMAp2aw7/FOy/CEMhLhZAkJiqltxY9gqYHhdPADe
-         LWRluJiEIcw2pJBdRmdTdrAVM13WBgOAg9klKPj6zLBbvJjcvG0SF3UGpq5K05+1nydQ
-         YVvrkZaXl+tnN/7TgP1T8xCinH9HAqs6lCo00edbK7wHMvW8WMzCuFvKYkfX8GduJi99
-         j0wanfih+iwQg+9v0kDSq7XaxRBoHZrhq0vIpY4sKoaShnKX2Gdts7XNyc78ZgcYCS/j
-         ih7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q6sGj4udjdudlOgOeP/H6pDDZcmuzFdAkSUlLYTz7Hc=;
-        b=E5hob0NtPhp9DiRpcqICc7nTOafW/KvplvyFl7VvVYXG44rvGl8eFkdfBfOguYBmtJ
-         xhW+ohoLxdGy/KNp+xSk1l0HrpYw8rF5hrqitLmwXuvU6tfLHMPIuKt318MuhL1tjs8k
-         90xp10bNg3BRykQDBnZnQUqShUnl8VD7ILLlo+IKa/JOCJfkti8b+hSvjhGkfZA5zWQH
-         T6TpRwsOMQ+QV9d+2KMgL9OVeUL+QmjvDe6SWvMIJh9PLdo0NT3gsC5Ee3XvAM2lKMX/
-         djSzoV7T+bgE0eqYcdfpx91upACcSQJfONQxbTi30FhXTjVXR8IFREpDuaIk/L7p9Abe
-         xbMw==
-X-Gm-Message-State: APjAAAXXfdUHlTqpc13Yn9MvJsFAcX00l7GrOmf/0QLYxqQW1hw3+EFg
-        5xrDxVxruCgJWZp9L4vpaXPsyQzLL4b5eNUMJcBuEg==
-X-Google-Smtp-Source: APXvYqwIajTpMSgCMZav18YPN+TlLmExrYklafV6rIWWxNFhS1pNAPS/UUbCntmRCn13SfjJkYCmG7CoaruMAno9FuY=
-X-Received: by 2002:a2e:7508:: with SMTP id q8mr13158846ljc.165.1559942813429;
- Fri, 07 Jun 2019 14:26:53 -0700 (PDT)
+        Fri, 7 Jun 2019 17:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729125AbfFGV2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 17:28:20 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5FAE208C3;
+        Fri,  7 Jun 2019 21:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559942899;
+        bh=jip5QGGHndv4oXMyz6SmOTMXUdzgvg7wHZcAsNnYwsk=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=NLRns9hhYpyFiwuWPVPT8RsL1h1oLxqUOZ9kl5DQXDdIJl+aQ3gRQ+7ZELX9aXwgx
+         GlvXOZskVmq59HnFbF3IDcSL/tymNE67jQtbNXWrgvwphEZ127r1mX/shW3p9nN4O8
+         9RCM8WHFjdq61jIrtbBd6lwnyBXKVy0ab0fNgab8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190604072001.9288-1-bjorn.andersson@linaro.org> <20190604072001.9288-2-bjorn.andersson@linaro.org>
-In-Reply-To: <20190604072001.9288-2-bjorn.andersson@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 7 Jun 2019 23:26:46 +0200
-Message-ID: <CACRpkdazzRV5XydKHmXRQiU2Mx+=HyRgNCEpNqsOsCdycXmMOg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: qcom: sdm845: Expose ufs_reset as gpio
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190521145141.9813-6-paul@crapouillou.net>
+References: <20190521145141.9813-1-paul@crapouillou.net> <20190521145141.9813-6-paul@crapouillou.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Michael Turquette <mturquette@baylibre.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v12 05/13] clk: ingenic: Add driver for the TCU clocks
+Cc:     Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me,
+        Paul Cercueil <paul@crapouillou.net>
+User-Agent: alot/0.8.1
+Date:   Fri, 07 Jun 2019 14:28:18 -0700
+Message-Id: <20190607212819.A5FAE208C3@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 9:20 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+Quoting Paul Cercueil (2019-05-21 07:51:33)
+> diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+> index 34dc0da79c39..434893133eb4 100644
+> --- a/drivers/clk/ingenic/Kconfig
+> +++ b/drivers/clk/ingenic/Kconfig
+> @@ -1,4 +1,4 @@
+> -menu "Ingenic JZ47xx CGU drivers"
+> +menu "Ingenic JZ47xx drivers"
+>         depends on MIPS
+> =20
+>  config INGENIC_CGU_COMMON
+> @@ -44,4 +44,13 @@ config INGENIC_CGU_JZ4780
+> =20
+>           If building for a JZ4780 SoC, you want to say Y here.
+> =20
+> +config INGENIC_TCU_CLK
+> +       bool "Ingenic JZ47xx TCU clocks driver"
+> +       default MACH_INGENIC
+> +       depends on COMMON_CLK
 
-> The ufs_reset pin is expected to be wired to the reset pin of the
-> primary UFS memory but is pretty much just a general purpose output pinr
->
-> Reorder the pins and expose it as gpio 150, so that the UFS driver can
-> toggle it.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Does the INGENIC_TCU_CLK config even exist if COMMON_CLK is disabled? I
+suspect it's all part of the menuconfig so this depends is not useful?
 
-Patch applied.
+> +       select INGENIC_TCU
+> +       help
+> +         Support the clocks of the Timer/Counter Unit (TCU) of the Ingen=
+ic
+> +         JZ47xx SoCs.
+> +
+>  endmenu
+> diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
+> new file mode 100644
+> index 000000000000..7249225a6994
+> --- /dev/null
+> +++ b/drivers/clk/ingenic/tcu.c
+> @@ -0,0 +1,458 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * JZ47xx SoCs TCU clocks driver
+> + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/mfd/ingenic-tcu.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/ingenic,tcu.h>
+> +
+> +/* 8 channels max + watchdog + OST */
+> +#define TCU_CLK_COUNT  10
+> +
+> +#define TCU_ERR(...) pr_crit("ingenic-tcu-clk: " __VA_ARGS__)
 
-Yours,
-Linus Walleij
+Why is it pr_crit instead of pr_err()?
+
+> +
+> +enum tcu_clk_parent {
+> +       TCU_PARENT_PCLK,
+> +       TCU_PARENT_RTC,
+> +       TCU_PARENT_EXT,
+> +};
+> +
+[...]
+> +
+> +static int __init ingenic_tcu_register_clock(struct ingenic_tcu *tcu,
+> +                       unsigned int idx, enum tcu_clk_parent parent,
+> +                       const struct ingenic_tcu_clk_info *info,
+> +                       struct clk_hw_onecell_data *clocks)
+> +{
+> +       struct ingenic_tcu_clk *tcu_clk;
+> +       int err;
+> +
+> +       tcu_clk =3D kzalloc(sizeof(*tcu_clk), GFP_KERNEL);
+> +       if (!tcu_clk)
+> +               return -ENOMEM;
+> +
+> +       tcu_clk->hw.init =3D &info->init_data;
+> +       tcu_clk->idx =3D idx;
+> +       tcu_clk->info =3D info;
+> +       tcu_clk->tcu =3D tcu;
+> +
+> +       /* Reset channel and clock divider, set default parent */
+> +       ingenic_tcu_enable_regs(&tcu_clk->hw);
+> +       regmap_update_bits(tcu->map, info->tcsr_reg, 0xffff, BIT(parent));
+> +       ingenic_tcu_disable_regs(&tcu_clk->hw);
+> +
+> +       err =3D clk_hw_register(NULL, &tcu_clk->hw);
+> +       if (err)
+> +               goto err_free_tcu_clk;
+> +
+> +       err =3D clk_hw_register_clkdev(&tcu_clk->hw, info->init_data.name=
+, NULL);
+
+Do you have a use for clkdev? If DT lookups work just as well it would
+be better to skip clkdev registration.
+
+> +       if (err)
+> +               goto err_clk_unregister;
+> +
+> +       clocks->hws[idx] =3D &tcu_clk->hw;
+> +
+> +       return 0;
+> +
+> +err_clk_unregister:
+> +       clk_hw_unregister(&tcu_clk->hw);
+> +err_free_tcu_clk:
+> +       kfree(tcu_clk);
+> +       return err;
+> +}
+> +
+> +static const struct ingenic_soc_info jz4740_soc_info =3D {
+> +       .num_channels =3D 8,
+> +       .has_ost =3D false,
+> +       .has_tcu_clk =3D true,
+> +};
+> +
+> +static const struct ingenic_soc_info jz4725b_soc_info =3D {
+> +       .num_channels =3D 6,
+> +       .has_ost =3D true,
+> +       .has_tcu_clk =3D true,
+> +};
+> +
+> +static const struct ingenic_soc_info jz4770_soc_info =3D {
+> +       .num_channels =3D 8,
+> +       .has_ost =3D true,
+> +       .has_tcu_clk =3D false,
+> +};
+> +
+> +static const struct of_device_id ingenic_tcu_of_match[] __initconst =3D {
+> +       { .compatible =3D "ingenic,jz4740-tcu", .data =3D &jz4740_soc_inf=
+o, },
+> +       { .compatible =3D "ingenic,jz4725b-tcu", .data =3D &jz4725b_soc_i=
+nfo, },
+> +       { .compatible =3D "ingenic,jz4770-tcu", .data =3D &jz4770_soc_inf=
+o, },
+> +       { }
+> +};
+> +
+> +static int __init ingenic_tcu_probe(struct device_node *np)
+> +{
+> +       const struct of_device_id *id =3D of_match_node(ingenic_tcu_of_ma=
+tch, np);
+> +       struct ingenic_tcu *tcu;
+> +       struct regmap *map;
+> +       unsigned int i;
+> +       int ret;
+> +
+> +       map =3D ingenic_tcu_get_regmap(np);
+> +       if (IS_ERR(map))
+> +               return PTR_ERR(map);
+> +
+> +       tcu =3D kzalloc(sizeof(*tcu), GFP_KERNEL);
+> +       if (!tcu)
+> +               return -ENOMEM;
+> +
+> +       tcu->map =3D map;
+> +       tcu->soc_info =3D id->data;
+> +
+> +       if (tcu->soc_info->has_tcu_clk) {
+> +               tcu->clk =3D of_clk_get_by_name(np, "tcu");
+
+Is this clk necessary to read/write registers in this clk driver? And
+this clk isn't the parent of the clks? Why is it managed by Linux at
+all? Will there be a time when it's turned off?
+
+I'm asking because it looks like we're calling clk APIs from within clk
+provider implementation. That works right now because of our locking
+scheme, but this will put up another roadblock to making the prepare and
+enable locks not recursive. I've seen some drivers take an approach of
+enabling the clk when the provider is PM runtime active, and disable the
+clk when the provider is runtime PM inactive. This gets it out of the
+provider path and into the runtime PM path. If you take that approach
+then when we move the runtime PM code in clk core outside of the prepare
+lock we should be able to avoid any recursive locking scenarios.
+
+> +               if (IS_ERR(tcu->clk)) {
+> +                       ret =3D PTR_ERR(tcu->clk);
+> +                       TCU_ERR("Cannot get TCU clock\n");
+> +                       goto err_free_tcu;
+> +               }
+> +
