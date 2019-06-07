@@ -3,120 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B18C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B07EC46476
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60AF20825
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CD520825
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I+DO+bXX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbtRyWfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfFGGAm (ORCPT
+        id S1726880AbfFGGAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:00:42 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37830 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfFGGAm (ORCPT
+        Fri, 7 Jun 2019 02:00:51 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40110 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbfFGGAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:00:42 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bh12so398939plb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 23:00:42 -0700 (PDT)
+        Fri, 7 Jun 2019 02:00:49 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a15so982171qtn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 23:00:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sNeYqqj7A5jsZjI23KJv1FicJVOUSHOJooPoBup8FeM=;
-        b=I+DO+bXX3/U0c5/tJe9YZdOfd9awmUKsKrvLQ6RM5e7ZPbpVdNQ6p467NhbVoMoarQ
-         ZTrXnuYi/GBo+EETAJBGN7Pbc4eyxedjJgINnFW2Ljv5sN9z7vOHs6OG+Gfjx+nUFata
-         r/SNJ3fb38yconRfVgfs5zO505iUUyDV4G/jHwXknqC1Y7Z1U8rC0v+rvDJyZqa/2SDY
-         dFJFBnKgq948wzi26ZcXJ+LY/RNrc3C7DV8bcYap3C5SQTdSlGOwcqCDiElfo5zU+Fni
-         UXim+fepv1U8X+0j4guVpm6nZtJBCDBnu6scNE5hLkz6jskKt97gH5ftrO8QkfNEvFqD
-         KgJA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dWh46ehTtF7XrRzrQS4UMj2mqF99ZWlKh15WhZd7opk=;
+        b=VbtRyWfh0kvCsghw4vQkoSYYEJBJkt40e8F3tOl//OUPrA30px/R4n4WjhT78ROsUA
+         RfCJm1xFS7KHaK1mntORy62MwR9gLl8grdBsBe5RP8LuwhaG+HIZn2khfCURtIO7AZxx
+         cCs5A53qGsXNDKFkG3YP/o8ywR7izGCE+VyssZEct9M+fZT1mUlT4kQkiioRVFvt7uQv
+         fUoNYVJPIClMm9wdHC4KYfsNYkVHqRKQyguBFf80v8ppKP1kUYsC8bT0o62Yzz91avTm
+         wvluBd/3/FkBJ1D+ZpnQmXK/MLJ4DdSLBCrLaXjSIBQU5MLCMoOHMvZV6tK2bNZtdvPp
+         tSig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sNeYqqj7A5jsZjI23KJv1FicJVOUSHOJooPoBup8FeM=;
-        b=oNGblWHca8vvKu1Oj5vtvXlYmt8Ce9JhRnAwann3SXaGW0K1Iw9VGpUOL/i7e8434j
-         l3OkfUwIYmpsa8vqIWLNUTR5rVchD8ilR4gXFniMhPR7zjHJcl2Cn6pfG7NMctundWWl
-         5CAViRsL5AYDIihSfVKjTbBiyZ2fUlR+qdclcBqMQCpPo+D+/XnCcu3ywNrF2cL01eha
-         1UtoBoplFGm76QfbuVUMSWlOYVOQ/SGSCLQJEK1I5xf067Sl35fgL419DvHaY2kH9enj
-         hS8vueMMHb3weinJylQzCPq9vPx30EdZDJ7jNvs59rUKP/tbZ3Kp6TbLhAYtR3bj2ID2
-         5Q0g==
-X-Gm-Message-State: APjAAAVU0cMxWWvIOyyG4AdlNhaWox6V02xrnBTY4funCZUKsaIlQUSA
-        q0h2ExTiUji+lpQHTB08iGK4tA==
-X-Google-Smtp-Source: APXvYqxOAWcArkn2cVZZlioTLt/qQbVmliWaDP7qBUla76loZRkDUMwoTY7MzTYQenlQtRiEFq12yQ==
-X-Received: by 2002:a17:902:6a4:: with SMTP id 33mr53039518plh.338.1559887241528;
-        Thu, 06 Jun 2019 23:00:41 -0700 (PDT)
-Received: from localhost ([122.172.66.84])
-        by smtp.gmail.com with ESMTPSA id s42sm1593160pjc.5.2019.06.06.23.00.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dWh46ehTtF7XrRzrQS4UMj2mqF99ZWlKh15WhZd7opk=;
+        b=NOfvcHzZgI8Rcg7SESvvuqwnfva3kk5lFBtyJo7n+zUewYZKGi8IeAmlPSk2SbFy6k
+         fl4XwsRfOVb6cXE2+csCY+Dh3Kx9r5Jl2QXsorGaT9gv8NqA3ie5mZdDUulWdLFoaw4k
+         RmaX3wfRxIQBxO80ix0EiSQnVPXa++5NxtIWUAcrpY3p30q7MH3IQ3IKCxbpbszEnb81
+         RIWvXc4OsBusaldX0QfxvpW6EJL+f/IXKuzk2MPwmS01JyZcBzAF99UPI2RKBNU5hGRT
+         Ct+1sZLBotq5ZydLpkTn/UWKkvPULUoIIXdxdVtJ5423I0KFmCGs7QAaJEcw4kH1EFOQ
+         7LEw==
+X-Gm-Message-State: APjAAAWbcE3fUuhXzKt82Vl/VijWfBft0D02Dlxjr1N0XiLUvWXiIZSy
+        mHso1UOsLVf9lAJzVajeiHc=
+X-Google-Smtp-Source: APXvYqzzmpJUF9IoRPMUxjasE/Eq5+9Yg1niCvXE8klMRI1pm12EcDjmShlXCjNiKSzkC3RmZoPNvA==
+X-Received: by 2002:aed:3ed5:: with SMTP id o21mr42958105qtf.369.1559887248462;
+        Thu, 06 Jun 2019 23:00:48 -0700 (PDT)
+Received: from ROOT.localdomain (modemcable124.134-176-173.mc.videotron.ca. [173.176.134.124])
+        by smtp.gmail.com with ESMTPSA id 39sm633787qtx.71.2019.06.06.23.00.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 23:00:40 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 11:30:37 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: arm64: Drop 'const' from argument of vq_present()
-Message-ID: <20190607060037.eaof3hllyombxlhc@vireshk-i7>
-References: <699121e5c938c6f4b7b14a7e2648fa15af590a4a.1559623368.git.viresh.kumar@linaro.org>
- <20190604095915.GW28398@e103592.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604095915.GW28398@e103592.cambridge.arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        Thu, 06 Jun 2019 23:00:48 -0700 (PDT)
+From:   Maxime Desroches <desroches.maxime@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Maxime Desroches <desroches.maxime@gmail.com>
+Subject: [PATCH] Staging: vc04_services : vchiq_core: Fix a brace issue
+Date:   Fri,  7 Jun 2019 01:59:45 -0400
+Message-Id: <20190607055945.21769-1-desroches.maxime@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-06-19, 10:59, Dave Martin wrote:
-> On Tue, Jun 04, 2019 at 10:13:19AM +0530, Viresh Kumar wrote:
-> > We currently get following compilation warning:
-> > 
-> > arch/arm64/kvm/guest.c: In function 'set_sve_vls':
-> > arch/arm64/kvm/guest.c:262:18: warning: passing argument 1 of 'vq_present' from incompatible pointer type
-> > arch/arm64/kvm/guest.c:212:13: note: expected 'const u64 (* const)[8]' but argument is of type 'u64 (*)[8]'
-> > 
-> > The argument can't be const, as it is copied at runtime using
-> > copy_from_user(). Drop const from the prototype of vq_present().
-> > 
-> > Fixes: 9033bba4b535 ("KVM: arm64/sve: Add pseudo-register for the guest's vector lengths")
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  arch/arm64/kvm/guest.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> > index 3ae2f82fca46..78f5a4f45e0a 100644
-> > --- a/arch/arm64/kvm/guest.c
-> > +++ b/arch/arm64/kvm/guest.c
-> > @@ -209,7 +209,7 @@ static int set_core_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-> >  #define vq_mask(vq) ((u64)1 << ((vq) - SVE_VQ_MIN) % 64)
-> >  
-> >  static bool vq_present(
-> > -	const u64 (*const vqs)[KVM_ARM64_SVE_VLS_WORDS],
-> > +	u64 (*const vqs)[KVM_ARM64_SVE_VLS_WORDS],
-> >  	unsigned int vq)
-> >  {
-> >  	return (*vqs)[vq_word(vq)] & vq_mask(vq);
-> 
-> Ack, but maybe this should just be converted to a macro?
+Remove braces in a single line if statement in the vchiq_core.c file
 
-I will send a patch with that if that's what you want.
+Signed-off-by: Maxime Desroches <desroches.maxime@gmail.com>
+---
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks.
-
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+index 44f0eb64952a..0dca6e834ffa 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
+@@ -3100,9 +3100,8 @@ VCHIQ_STATUS_T vchiq_bulk_transfer(VCHIQ_SERVICE_HANDLE_T handle,
+ 			       QMFLAGS_IS_BLOCKING |
+ 			       QMFLAGS_NO_MUTEX_LOCK |
+ 			       QMFLAGS_NO_MUTEX_UNLOCK);
+-	if (status != VCHIQ_SUCCESS) {
++	if (status != VCHIQ_SUCCESS)
+ 		goto unlock_both_error_exit;
+-	}
+ 
+ 	queue->local_insert++;
+ 
 -- 
-viresh
+2.17.1
+
