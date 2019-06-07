@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C29BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026D6C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF1821479
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE4F21479
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922545;
-	bh=qkNXViCj49Ut9Bq05gvEuHF57ravamNBtcJkC5IfgdU=;
+	s=default; t=1559922549;
+	bh=WL3vxbjU1dMtEmiUSmXm5+93WXu+jB8JtsEPTQopDYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tpjJEwBGuxb4cgDRvKDQRKXq3EffL6uVbaGPG8iiuRyINqZ6PGvQj8/tNGXzrgXMn
-	 roTl2p9FSpaZ3UWarW0G7qpX7o/V6e9TuVJ0QN+0UL1y4wjNZ97PtCr+9ah4dBw9mJ
-	 WtgS70jaRePHKj3TJCT3AlxWKwUegLhWybeceKAY=
+	b=ok63D9auW9vLAekMiI81LRaJVMtNYps5x8Axs6ZwUJ2j1niUaxM2p3K4rmbalBET5
+	 EebXb2Jp3P5CUUk4dhGzTn1cks9hEiq0w2ZwPVXK9TwJ+IMqmdqjgv6J/f5nGMF5Pz
+	 wEqvLDj0k1ySnjUQfjfewKf+a1hnLfQ5vibgUOL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbfFGPtE (ORCPT
+        id S1731484AbfFGPtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:49:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34596 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731869AbfFGPtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:49:00 -0400
+        id S1731869AbfFGPtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:49:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6613820657;
-        Fri,  7 Jun 2019 15:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB55E2146E;
+        Fri,  7 Jun 2019 15:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922539;
-        bh=qkNXViCj49Ut9Bq05gvEuHF57ravamNBtcJkC5IfgdU=;
+        s=default; t=1559922545;
+        bh=WL3vxbjU1dMtEmiUSmXm5+93WXu+jB8JtsEPTQopDYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rZNOQJNamgRc5IHZ/6wbGM4h6y8oH3cQmopWTyoJfZjFsvrPJG3XRecykU3nViYQB
-         uqW6rThY0Lz4DQuO3JspgmKPPe9YKK1Pwt8Kq58z9JNb/GkrbB7VcAzSaPxP1GPleA
-         w0qp67fZSu2/qyUvIrPRo+EW6KKTP89DB6thgna0=
+        b=N56H/X7ijZaXuJK+oqQ1eKiOdbWg50ZSbb0dkYzswxP94Zb5cgRejVZJFX9M5r9TL
+         QHeh0Jltkrdvm4oGzi4RD6SVPZH45KngbjU+3eaaa/kpb4Zt6kmPdlNXzMV90VqqxS
+         J1YTXfD6Hx8jz9PI9KdlSF4lwLBJOUEc1mVw2bDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Zhenliang Wei <weizhenliang@huawei.com>,
+        Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ivan Delalande <colona@arista.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 49/85] memcg: make it work on sparse non-0-node systems
-Date:   Fri,  7 Jun 2019 17:39:34 +0200
-Message-Id: <20190607153855.009533841@linuxfoundation.org>
+Subject: [PATCH 5.1 51/85] kernel/signal.c: trace_signal_deliver when signal_group_exit
+Date:   Fri,  7 Jun 2019 17:39:36 +0200
+Message-Id: <20190607153855.208382412@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -65,97 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Zhenliang Wei <weizhenliang@huawei.com>
 
-commit 3e8589963773a5c23e2f1fe4bcad0e9a90b7f471 upstream.
+commit 98af37d624ed8c83f1953b1b6b2f6866011fc064 upstream.
 
-We have a single node system with node 0 disabled:
-  Scanning NUMA topology in Northbridge 24
-  Number of physical nodes 2
-  Skipping disabled node 0
-  Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
-  NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
+In the fixes commit, removing SIGKILL from each thread signal mask and
+executing "goto fatal" directly will skip the call to
+"trace_signal_deliver".  At this point, the delivery tracking of the
+SIGKILL signal will be inaccurate.
 
-This causes crashes in memcg when system boots:
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-  #PF error: [normal kernel read fault]
-...
-  RIP: 0010:list_lru_add+0x94/0x170
-...
-  Call Trace:
-   d_lru_add+0x44/0x50
-   dput.part.34+0xfc/0x110
-   __fput+0x108/0x230
-   task_work_run+0x9f/0xc0
-   exit_to_usermode_loop+0xf5/0x100
+Therefore, we need to add trace_signal_deliver before "goto fatal" after
+executing sigdelset.
 
-It is reproducible as far as 4.12.  I did not try older kernels.  You have
-to have a new enough systemd, e.g.  241 (the reason is unknown -- was not
-investigated).  Cannot be reproduced with systemd 234.
+Note: SEND_SIG_NOINFO matches the fact that SIGKILL doesn't have any info.
 
-The system crashes because the size of lru array is never updated in
-memcg_update_all_list_lrus and the reads are past the zero-sized array,
-causing dereferences of random memory.
-
-The root cause are list_lru_memcg_aware checks in the list_lru code.  The
-test in list_lru_memcg_aware is broken: it assumes node 0 is always
-present, but it is not true on some systems as can be seen above.
-
-So fix this by avoiding checks on node 0.  Remember the memcg-awareness by
-a bool flag in struct list_lru.
-
-Link: http://lkml.kernel.org/r/20190522091940.3615-1-jslaby@suse.cz
-Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190425025812.91424-1-weizhenliang@huawei.com
+Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
+Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
+Reviewed-by: Christian Brauner <christian@brauner.io>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Ivan Delalande <colona@arista.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/list_lru.h |    1 +
- mm/list_lru.c            |    8 +++-----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ kernel/signal.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/include/linux/list_lru.h
-+++ b/include/linux/list_lru.h
-@@ -54,6 +54,7 @@ struct list_lru {
- #ifdef CONFIG_MEMCG_KMEM
- 	struct list_head	list;
- 	int			shrinker_id;
-+	bool			memcg_aware;
- #endif
- };
- 
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_l
- 
- static inline bool list_lru_memcg_aware(struct list_lru *lru)
- {
--	/*
--	 * This needs node 0 to be always present, even
--	 * in the systems supporting sparse numa ids.
--	 */
--	return !!lru->node[0].memcg_lrus;
-+	return lru->memcg_aware;
- }
- 
- static inline struct list_lru_one *
-@@ -451,6 +447,8 @@ static int memcg_init_list_lru(struct li
- {
- 	int i;
- 
-+	lru->memcg_aware = memcg_aware;
-+
- 	if (!memcg_aware)
- 		return 0;
- 
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2441,6 +2441,8 @@ relock:
+ 	if (signal_group_exit(signal)) {
+ 		ksig->info.si_signo = signr = SIGKILL;
+ 		sigdelset(&current->pending.signal, SIGKILL);
++		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
++				&sighand->action[SIGKILL - 1]);
+ 		recalc_sigpending();
+ 		goto fatal;
+ 	}
 
 
