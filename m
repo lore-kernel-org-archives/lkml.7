@@ -2,221 +2,133 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FDFC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93745C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDC320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D4220B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559896379;
+	bh=GabatJG+URwc/L3jrFGfQfwSdg5DMbnwNCD/Miw+Vbo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bIJTs+nHtMM6gq3GfqSM9caJJmmrQhw5mbZqkgZTYSNBeIgflWzXE+M/cZTs8Dwxi
+	 M93wja9t+3HPy2uY0I+YfjGi3iOjFT6UDqgp1SBlCuRLmyy4HXuqJ2I6eiwGeNzHKb
+	 tC/46W+byvew0r+y54P56UiNT91lTpd4tuDJ4OEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfFGIaR (ORCPT
+        id S1726880AbfFGIc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 04:30:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40196 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbfFGIaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 04:30:16 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D182581110;
-        Fri,  7 Jun 2019 08:30:15 +0000 (UTC)
-Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F59E81865;
-        Fri,  7 Jun 2019 08:30:03 +0000 (UTC)
-Subject: Re: [PATCH v8 24/29] vfio: VFIO_IOMMU_BIND/UNBIND_MSI
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com,
-        jean-philippe.brucker@arm.com, will.deacon@arm.com,
-        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
-        marc.zyngier@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190526161004.25232-1-eric.auger@redhat.com>
- <20190526161004.25232-25-eric.auger@redhat.com>
- <20190603163227.4d00476a@x1.home>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <0859eb67-4f77-1adb-7b34-2969060211c5@redhat.com>
-Date:   Fri, 7 Jun 2019 10:30:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 7 Jun 2019 04:32:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33208 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726116AbfFGIc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 04:32:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F3AAFAF22;
+        Fri,  7 Jun 2019 08:32:55 +0000 (UTC)
+Date:   Fri, 7 Jun 2019 10:32:55 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <zi.yan@cs.rutgers.edu>,
+        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
+ allocations"
+Message-ID: <20190607083255.GA18435@dhcp22.suse.cz>
+References: <20190503223146.2312-3-aarcange@redhat.com>
+ <alpine.DEB.2.21.1905151304190.203145@chino.kir.corp.google.com>
+ <20190520153621.GL18914@techsingularity.net>
+ <alpine.DEB.2.21.1905201018480.96074@chino.kir.corp.google.com>
+ <20190523175737.2fb5b997df85b5d117092b5b@linux-foundation.org>
+ <alpine.DEB.2.21.1905281907060.86034@chino.kir.corp.google.com>
+ <20190531092236.GM6896@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1905311430120.92278@chino.kir.corp.google.com>
+ <20190605093257.GC15685@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1906061451001.121338@chino.kir.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190603163227.4d00476a@x1.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 07 Jun 2019 08:30:16 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906061451001.121338@chino.kir.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
-
-On 6/4/19 12:32 AM, Alex Williamson wrote:
-> On Sun, 26 May 2019 18:09:59 +0200
-> Eric Auger <eric.auger@redhat.com> wrote:
+On Thu 06-06-19 15:12:40, David Rientjes wrote:
+> On Wed, 5 Jun 2019, Michal Hocko wrote:
 > 
->> This patch adds the VFIO_IOMMU_BIND/UNBIND_MSI ioctl which aim
->> to pass/withdraw the guest MSI binding to/from the host.
->>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->> v6 -> v7:
->> - removed the dev arg
->>
->> v3 -> v4:
->> - add UNBIND
->> - unwind on BIND error
->>
->> v2 -> v3:
->> - adapt to new proto of bind_guest_msi
->> - directly use vfio_iommu_for_each_dev
->>
->> v1 -> v2:
->> - s/vfio_iommu_type1_guest_msi_binding/vfio_iommu_type1_bind_guest_msi
->> ---
->>  drivers/vfio/vfio_iommu_type1.c | 64 +++++++++++++++++++++++++++++++++
->>  include/uapi/linux/vfio.h       | 29 +++++++++++++++
->>  2 files changed, 93 insertions(+)
->>
->> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->> index 6fda4fbc9bfa..18142cb078a3 100644
->> --- a/drivers/vfio/vfio_iommu_type1.c
->> +++ b/drivers/vfio/vfio_iommu_type1.c
->> @@ -1832,6 +1832,42 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
->>  	return iommu_cache_invalidate(dc->domain, dev, &ustruct->info);
->>  }
->>  
->> +static int
->> +vfio_bind_msi(struct vfio_iommu *iommu,
->> +	      dma_addr_t giova, phys_addr_t gpa, size_t size)
->> +{
->> +	struct vfio_domain *d;
->> +	int ret = 0;
->> +
->> +	mutex_lock(&iommu->lock);
->> +
->> +	list_for_each_entry(d, &iommu->domain_list, next) {
->> +		ret = iommu_bind_guest_msi(d->domain, giova, gpa, size);
->> +		if (ret)
->> +			goto unwind;
->> +	}
->> +	goto unlock;
->> +unwind:
->> +	list_for_each_entry_continue_reverse(d, &iommu->domain_list, next) {
->> +		iommu_unbind_guest_msi(d->domain, giova);
->> +	}
->> +unlock:
->> +	mutex_unlock(&iommu->lock);
->> +	return ret;
->> +}
->> +
->> +static void
->> +vfio_unbind_msi(struct vfio_iommu *iommu, dma_addr_t giova)
->> +{
->> +	struct vfio_domain *d;
->> +
->> +	mutex_lock(&iommu->lock);
->> +	list_for_each_entry(d, &iommu->domain_list, next) {
->> +		iommu_unbind_guest_msi(d->domain, giova);
->> +	}
->> +	mutex_unlock(&iommu->lock);
->> +}
->> +
->>  static long vfio_iommu_type1_ioctl(void *iommu_data,
->>  				   unsigned int cmd, unsigned long arg)
->>  {
->> @@ -1936,6 +1972,34 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->>  					    &ustruct);
->>  		mutex_unlock(&iommu->lock);
->>  		return ret;
->> +	} else if (cmd == VFIO_IOMMU_BIND_MSI) {
->> +		struct vfio_iommu_type1_bind_msi ustruct;
->> +
->> +		minsz = offsetofend(struct vfio_iommu_type1_bind_msi,
->> +				    size);
->> +
->> +		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
->> +			return -EFAULT;
->> +
->> +		if (ustruct.argsz < minsz || ustruct.flags)
->> +			return -EINVAL;
->> +
->> +		return vfio_bind_msi(iommu, ustruct.iova, ustruct.gpa,
->> +				     ustruct.size);
->> +	} else if (cmd == VFIO_IOMMU_UNBIND_MSI) {
->> +		struct vfio_iommu_type1_unbind_msi ustruct;
->> +
->> +		minsz = offsetofend(struct vfio_iommu_type1_unbind_msi,
->> +				    iova);
->> +
->> +		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
->> +			return -EFAULT;
->> +
->> +		if (ustruct.argsz < minsz || ustruct.flags)
->> +			return -EINVAL;
->> +
->> +		vfio_unbind_msi(iommu, ustruct.iova);
->> +		return 0;
->>  	}
->>  
->>  	return -ENOTTY;
->> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
->> index 055aa9b9745a..2774a1ab37ae 100644
->> --- a/include/uapi/linux/vfio.h
->> +++ b/include/uapi/linux/vfio.h
->> @@ -798,6 +798,35 @@ struct vfio_iommu_type1_cache_invalidate {
->>  };
->>  #define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 24)
->>  
->> +/**
->> + * VFIO_IOMMU_BIND_MSI - _IOWR(VFIO_TYPE, VFIO_BASE + 25,
->> + *			struct vfio_iommu_type1_bind_msi)
->> + *
->> + * Pass a stage 1 MSI doorbell mapping to the host so that this
->> + * latter can build a nested stage2 mapping
->> + */
->> +struct vfio_iommu_type1_bind_msi {
->> +	__u32   argsz;
->> +	__u32   flags;
->> +	__u64	iova;
->> +	__u64	gpa;
->> +	__u64	size;
->> +};
->> +#define VFIO_IOMMU_BIND_MSI      _IO(VFIO_TYPE, VFIO_BASE + 25)
->> +
->> +/**
->> + * VFIO_IOMMU_UNBIND_MSI - _IOWR(VFIO_TYPE, VFIO_BASE + 26,
->> + *			struct vfio_iommu_type1_unbind_msi)
->> + *
->> + * Unregister an MSI mapping
->> + */
->> +struct vfio_iommu_type1_unbind_msi {
->> +	__u32   argsz;
->> +	__u32   flags;
->> +	__u64	iova;
->> +};
->> +#define VFIO_IOMMU_UNBIND_MSI      _IO(VFIO_TYPE, VFIO_BASE + 26)
->> +
->>  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
->>  
->>  /*
+> > > That's fine, but we also must be mindful of users who have used 
+> > > MADV_HUGEPAGE over the past four years based on its hard-coded behavior 
+> > > that would now regress as a result.
+> > 
+> > Absolutely, I am all for helping those usecases. First of all we need to
+> > understand what those usecases are though. So far we have only seen very
+> > vague claims about artificial worst case examples when a remote access
+> > dominates the overall cost but that doesn't seem to be the case in real
+> > life in my experience (e.g. numa balancing will correct things or the
+> > over aggressive node reclaim tends to cause problems elsewhere etc.).
+> > 
 > 
-> And another pair of ioctls.  Maybe think about how we can reduce the
-> ioctl bloat of this series.  I don't want to impose an awkward
-> interface for the sake of fewer ioctls, but I also don't want us
-> casually burning through ioctls.
-OK, understood.
+> The usecase is a remap of a binary's text segment to transparent hugepages 
+> by doing mmap() -> madvise(MADV_HUGEPAGE) -> mremap() and when this 
+> happens on a locally fragmented node.  This happens at startup when we 
+> aren't concerned about allocation latency: we want to compact.  We are 
+> concerned with access latency thereafter as long as the process is 
+> running.
 
-Thanks
+You have indicated this previously but no call for a stand alone
+reproducer was successful. It is really hard to optimize for such a
+specialized workload without anything to play with. Btw. this is exactly
+a case where I would expect numa balancing to converge to the optimal
+placement. And if numabalancing is not an option than an explicit
+mempolicy (e.g. the one suggested here) would be a good fit.
 
-Eric
-> 
+[...]
+
+I will defer the compaction related stuff to Vlastimil and Mel who are
+much more familiar with the current code.
+
+> So my proposed change would be:
+>  - give the page allocator a consistent indicator that compaction failed
+>    because we are low on memory (make COMPACT_SKIPPED really mean this),
+>  - if we get this in the page allocator and we are allocating thp, fail,
+>    reclaim is unlikely to help here and is much more likely to be
+>    disruptive
+>      - we could retry compaction if we haven't scanned all memory and
+>        were contended,
+>  - if the hugepage allocation fails, have thp check watermarks for order-0 
+>    pages without any padding,
+>  - if watermarks succeed, fail the thp allocation: we can't allocate
+>    because of fragmentation and it's better to return node local memory,
+
+Doesn't this lead to the same THP low success rate we have seen with one
+of the previous patches though?
+
+Let me remind you of the previous semantic I was proposing
+http://lkml.kernel.org/r/20181206091405.GD1286@dhcp22.suse.cz and that
+didn't get shot down. Linus had some follow up ideas on how exactly
+the fallback order should look like and that is fine. We should just
+measure differences between local node cheep base page vs. remote THP on
+_real_ workloads. Any microbenchmark which just measures a latency is
+inherently misleading.
+
+And really, fundamental problem here is that MADV_HUGEPAGE has gained 
+a NUMA semantic without a due scrutiny leading to a broken interface
+with side effects that are simply making the interface unusable for a
+large part of usecases that the madvise was originaly designed for.
+Until we find an agreement on this point we will be looping in a dead
+end discussion, I am afraid.
+
+-- 
+Michal Hocko
+SUSE Labs
