@@ -2,203 +2,152 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85DCC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CD0C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0AB5208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACB4208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mtz4idoE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tf63b50a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730626AbfFGTdx (ORCPT
+        id S1730654AbfFGTeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:33:53 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:55623 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbfFGTdx (ORCPT
+        Fri, 7 Jun 2019 15:34:12 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38121 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730366AbfFGTeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:33:53 -0400
-Received: by mail-it1-f196.google.com with SMTP id i21so4433125ita.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:33:52 -0700 (PDT)
+        Fri, 7 Jun 2019 15:34:11 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f97so1197683plb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T9Tj5ZjKU2Dvst13bY90aPbdIlkQERL+pEiQI7+DM/c=;
-        b=mtz4idoEP9NXZfE9sJM8pP6vJNipA8lG0eo3b6vZE463N7ghaR4SPIbPO4df8si5+5
-         3fkLPdcJgpbXp9SselTVLUujvNG11FWbCNvXzrK7OnCrJ3j4/XE6sHeNe8+aazuwc+hb
-         g+DFf8m8/ddOHtgs7V63N3LBFT5CmEiKAqPaIGt7DI+XWQy5X+3GH5H0EYpD/WL9ES5O
-         R85konXlva+litJbCpGnuCpnddqpWjrR6UJ4zhNUnu54+AWFGly1aQ5KbHDDX2XtB28b
-         wpNtHXBqoNPapFl/4KEWxDZufDgKDyyfLmIMXEfX0Btx+yzpICT/UgAbdPuXd6hZdtgz
-         Dq+Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wpKUd2nT5fJdpxBIuy/BOsoGuLISr+yeuc18GcpDf6g=;
+        b=tf63b50aos3gIs6Uh0x0ZPeVIy4dEEbpe9EQmwGyT5+A2Gw+N/fvymG2EdZPGIy8L9
+         5xNyeQKO8zT6AP0IKirJTEmIaiKb0OS22rDKMOn0xOxkquKtpLyow98OJ4nggW92g6My
+         9pdMTgF13mlwfqUP3g8TWHhyUpxL9SbblVrXJdKjTdqxqojrU5td0HmAQ0uovPfbnxVC
+         drUELbnT0qtfXIoREosTwsWm+DTIQBTK17ZyUprcwTpWecwDd1KhtfUWf8qd3HewI/gj
+         yccWS8LfVbTTNCkPA7VUiFxQPzMCcZkELxdnOr46rMOQzYY/LSG5VMTANT0WWgP6jyeo
+         1SaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T9Tj5ZjKU2Dvst13bY90aPbdIlkQERL+pEiQI7+DM/c=;
-        b=IFGBB2ZA7/2ZcdBhT6mSKOWO9ivLQl7O7aUM7soS+3GkDtjFliHwHmCx3ZXPPst+RX
-         HGi+Vi0w1oVZrQwqy4EFt2YUpagKSUN3gAicCVpqIpZAMd6u+ceV7Hk5wpvNAR+KTnoZ
-         +Tli6ZKRd0gOa2jr627cFFDTlszCu+PVnf/odS4FPhturUBKWBXuHSb8rZcN8vCcLI5z
-         eAadzTtsBazpicUNz9txz4rUJqn1Z4NaWFoOkPNxEQWxehjvijaVvf7gaOv5ZLNSalOB
-         PcJLt2rtiz85/n65tK7OWLIf0bY8o5D8j21qLEkKmm2driC1IUoXAVRysBUm6Uu55XAT
-         vM9w==
-X-Gm-Message-State: APjAAAWAylEbY2YexbNUp8FduyqUmBbjZUIl+FSgxmPUmaAmQjCw6xBc
-        z7kaAlz+Q8rARMIzU0uA/gpc/12Gc5/HpHJ8H8GURA==
-X-Google-Smtp-Source: APXvYqyIzt+gS3ConXIodeeRJIgcUDgjzZUqKKTsCWXlpXgPJnTVfaLQpACElYgwvkNg6VfdHTgVBjvO2IaFejVJzgU=
-X-Received: by 2002:a24:14f:: with SMTP id 76mr5248389itk.115.1559936031969;
- Fri, 07 Jun 2019 12:33:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wpKUd2nT5fJdpxBIuy/BOsoGuLISr+yeuc18GcpDf6g=;
+        b=I+QArWf3MnvaJ/LpdSst2JoC6K6QgWM8XikTNqAQFmm0TWLfiIQGEIbIjbGrgdqso8
+         su1pEqLr0P+M2a2XXuo9e2vr0dvRurzVUXaY/D2KOxha/ncw4cQ73mmb6Shm7SgWXw7i
+         JbDFQAskRTdb1e/MDxIiXCQ2akVF0GSSU5qVnLK1s5gLJp4AN1vC4BSkkNfpZN0A1JKk
+         4Gd5Klf7fxsi6j0mkiefqXAIop84yKCe1vUsaTaI2/tQ48cgjlOtjM2Beh9h78lnYq0p
+         d3eAjy9w2d1wAY99xXw2PuzM/LSlARaPDI8gP45tSyLuLJ1uYdpyCSJlb1yjspewzZ6e
+         V3Ag==
+X-Gm-Message-State: APjAAAXmX+IZApaW0jtoUmrrP8l0jJSzJoj7g0Wbn7g7HBLRIYK90ATG
+        47AtPMXKbUcnD3CgofoCk0Ykxw==
+X-Google-Smtp-Source: APXvYqxSC7rw05vLxn/PlSEW90GOUry7OdvPp1Qde6epr5HHI6UoO46GU4ItChia53NkMezfJO+8dA==
+X-Received: by 2002:a17:902:2883:: with SMTP id f3mr57841151plb.111.1559936050681;
+        Fri, 07 Jun 2019 12:34:10 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o26sm2726497pgv.47.2019.06.07.12.34.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 12:34:10 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 12:34:07 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/18] ARM/ARM64: Support hierarchical CPU arrangement
+ for PSCI
+Message-ID: <20190607193407.GB24059@builder>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <CAJZ5v0gbK3AFCVC1b9LyXeMOM8fKR1=ECXZwaeSYRSqcK0UgYA@mail.gmail.com>
+ <CAPDyKFpU3u248Gi+FnrVdY-EWXJQuu14uNV9d3Xs0W-K-EMEhg@mail.gmail.com>
+ <20190607154210.GJ15577@e107155-lin>
 MIME-Version: 1.0
-References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
- <20190524173508.29044-2-mathieu.poirier@linaro.org> <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
- <20190607182047.GK21245@kernel.org>
-In-Reply-To: <20190607182047.GK21245@kernel.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 7 Jun 2019 13:33:41 -0600
-Message-ID: <CANLsYkykW=rf_c6-ci=fV05u7TP9M3rrEUSdUn-bKw1PHvfoZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/17] perf tools: Configure contextID tracing in
- CPU-wide mode
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Coresight ML <coresight@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607154210.GJ15577@e107155-lin>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 12:20, Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Fri, Jun 07, 2019 at 10:21:36AM +0100, Suzuki K Poulose escreveu:
-> > Hi Mathieu,
-> >
-> > On 24/05/2019 18:34, Mathieu Poirier wrote:
-> > > When operating in CPU-wide mode being notified of contextID changes is
-> > > required so that the decoding mechanic is aware of the process context
-> > > switch.
+On Fri 07 Jun 08:42 PDT 2019, Sudeep Holla wrote:
+
+> On Tue, May 14, 2019 at 10:58:04AM +0200, Ulf Hansson wrote:
+> > On Tue, 14 May 2019 at 10:08, Rafael J. Wysocki <rafael@kernel.org> wrote:
 > > >
-> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > On Mon, May 13, 2019 at 9:23 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > > >
+> > > > This series enables support for hierarchical CPU arrangement, managed by PSCI
+> > > > for ARM/ARM64. It's based on using the generic PM domain (genpd), which
+> > > > recently was extended to manage devices belonging to CPUs.
+> > >
+> > > ACK for the patches touching cpuidle in this series (from the
+> > > framework perspective), but I'm assuming it to be taken care of by
+> > > ARM/ARM64 maintainers.
 > >
+> > Thanks for the ack! Yes, this is for PSCI/ARM maintainers.
 > >
-> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > BTW, apologize for sending this in the merge window, but wanted to
+> > take the opportunity for people to have a look before OSPM Pisa next
+> > week.
 > >
-> > I am sorry but, I don't remember reviewing this patch in the previous
-> > postings. But here we go.
->
-> Can I keep it as is? I addressed one of your concerns below, please
-> check.
->
-> - Arnaldo
->
-> > > +++ b/tools/perf/util/cs-etm.h
-> > > @@ -103,6 +103,18 @@ struct intlist *traceid_list;
-> > >   #define KiB(x) ((x) * 1024)
-> > >   #define MiB(x) ((x) * 1024 * 1024)
-> > > +/*
-> > > + * Create a contiguous bitmask starting at bit position @l and ending at
-> > > + * position @h. For example
-> > > + * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-> > > + *
-> > > + * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
-> > > + */
-> > > +#define GENMASK(h, l) \
-> > > +   (((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-> > > +
-> >
-> > minor nit: Could this be placed in a more generic header file for the other
-> > parts of the perf tool to consume ?
-> >
->
-> Yeah, since we have:
->
-> Good catch, we have it already:
->
-> [acme@quaco perf]$ tail tools/include/linux/bits.h
->  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
->  */
-> #define GENMASK(h, l) \
->         (((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
->
-> #define GENMASK_ULL(h, l) \
->         (((~0ULL) - (1ULL << (l)) + 1) & \
->          (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
->
-> #endif  /* __LINUX_BITS_H */
-> [acme@quaco perf]$
-> [acme@quaco perf]$
->
-> So I'm adding this to the pile with a Suggested-by: Suzuki, ok?
->
-> commit 3217a621248824fbff8563d8447fdafe69c5316d
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Fri Jun 7 15:14:27 2019 -0300
->
->     perf cs-etm: Remove duplicate GENMASK() define, use linux/bits.h instead
->
->     Suzuki noticed that this should be more useful in a generic header, and
->     after looking I noticed we have it already in our copy of
->     include/linux/bits.h in tools/include, so just use it, test built on
->     x86-64 and ubuntu 19.04 with:
->
->       perfbuilder@46646c9e848e:/$ aarch64-linux-gnu-gcc --version |& head -1
->       aarch64-linux-gnu-gcc (Ubuntu/Linaro 8.3.0-6ubuntu1) 8.3.0
->       perfbuilder@46646c9e848e:/$
->
->     Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->     Link: https://lkml.kernel.org/r/68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Jiri Olsa <jolsa@redhat.com>
->     Cc: Leo Yan <leo.yan@linaro.org>
->     Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: coresight@lists.linaro.org
->     Cc: linux-arm-kernel@lists.infradead.org,
->     Link: https://lkml.kernel.org/n/tip-69pd3mqvxdlh2shddsc7yhyv@git.kernel.org
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-> index 33b57e748c3d..bc848fd095f4 100644
-> --- a/tools/perf/util/cs-etm.h
-> +++ b/tools/perf/util/cs-etm.h
-> @@ -9,6 +9,7 @@
->
->  #include "util/event.h"
->  #include "util/session.h"
-> +#include <linux/bits.h>
->
->  /* Versionning header in case things need tro change in the future.  That way
->   * decoding of old snapshot is still possible.
-> @@ -161,16 +162,6 @@ struct cs_etm_packet_queue {
->
->  #define CS_ETM_INVAL_ADDR 0xdeadbeefdeadbeefUL
->
-> -/*
-> - * Create a contiguous bitmask starting at bit position @l and ending at
-> - * position @h. For example
-> - * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-> - *
-> - * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
-> - */
-> -#define GENMASK(h, l) \
-> -       (((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-> -
+> 
+> I will start looking at this series. But I would request PSCI/other
+> maintainers to wait until we see some comparison data before we merge.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+What comparison are you asking for here? Do you want to see the
+improvement this series gives or are you hoping to compare it with some
+other mechanism?
 
->  #define BMVAL(val, lsb, msb)   ((val & GENMASK(msb, lsb)) >> lsb)
->
->  #define CS_ETM_HEADER_SIZE (CS_HEADER_VERSION_0_MAX * sizeof(u64))
+> If they are fine to merge w/o that, I am fine. As of now we have just
+> 1-2 platforms to test(that too not so simple to get started) and the
+> long term support for them are questionable.
+
+Why is the support for these platforms questionable? People are actively
+working on these platforms and the feature set constantly improving.
+
+> Also with SDM845 supporting PC, we have excellent opportunity to
+> compare and conclude the results found.
+
+That's correct, ATF exists for SDM845. But with the standard choice of
+firmware you will get OSI and I don't know of a board out there where
+you can switch between them and do a apple to apple comparison.
+
+Devices such as RB3 (96boards SDM845), Pixel3 and the Windows laptops
+are all OSI only.
+
+
+So landing this support is not a question of PC or OSI being the better
+choice, it's a question of do we want to be able to enter these lower
+power states - with the upstream kernel - on any past, present or future
+Qualcomm devices.
+
+Regards,
+Bjorn
