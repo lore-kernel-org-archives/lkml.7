@@ -2,132 +2,155 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UPPERCASE_50_75,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED3AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FC0C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B5720868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594AC20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ljtMKRsj"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K/gWI2ZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbfFGLyV (ORCPT
+        id S1728861AbfFGLzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:54:21 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:64681 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfFGLyU (ORCPT
+        Fri, 7 Jun 2019 07:55:16 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16068 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfFGLzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:54:20 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x57Bs4T6021276
-        for <linux-kernel@vger.kernel.org>; Fri, 7 Jun 2019 20:54:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x57Bs4T6021276
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559908445;
-        bh=yjJIkGv4N/Xf1t1dfhzEbr33tkWF/j1kDW4mhPzpoi8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ljtMKRsjd34H40D8XOCp892dtvuyr0JsD4TFSVL79eBcHny4O0bYUaPs/55qK6Oxs
-         w0EvELYb06nQ4FK80AX9WbnlTTX6oqGMZSfCggWZhgs5u7POvfEhVRATsvD+aj4sAC
-         2Ztb1TBX7+sk4oIQzNDsRJUB2p1p4wcG1W1zR31Wzs9pGyiLwzs5wv5Qtu8Y8HEpIx
-         twpZCw4jaS6OIPWLyWmUp/pfEJp9YKJWrvT6T22IAFxatq9xLCnyS/cA8MWWS+amvg
-         rXaoPSOTXtYFZQWiq8iSnOeWjYaP1fYRynKHL0p+VKqjaKu4MZXcIRnGNZ56PfeQmq
-         14ZTHh4o67sDQ==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id g24so962876vso.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 04:54:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAWXF2bM+izKZ1Df1Ko+xJKFdYTynnsoN2bIdr8hV+UK4nZbOuVo
-        2U63Wjpsb9+4/eW/H7Qbdr04jvGDlWUT9Ga/uFQ=
-X-Google-Smtp-Source: APXvYqx3nRjMerLd604okkquDXA2Hqfe1B88+1xal339VII15Zixeunjgspw3qhHsgZOa/YXUi7NIE8gcphAeFPfoMI=
-X-Received: by 2002:a67:de99:: with SMTP id r25mr27157338vsk.215.1559908443989;
- Fri, 07 Jun 2019 04:54:03 -0700 (PDT)
+        Fri, 7 Jun 2019 07:55:16 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cfa50a10000>; Fri, 07 Jun 2019 04:55:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 07 Jun 2019 04:55:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 07 Jun 2019 04:55:15 -0700
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 11:55:14 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Jun 2019 11:55:14 +0000
+Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cfa509f0002>; Fri, 07 Jun 2019 04:55:14 -0700
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Dmitry Osipenko <digetx@gmail.com>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>
+Subject: [PATCH V1 1/6] i2c: tegra: clean up macros
+Date:   Fri, 7 Jun 2019 04:55:02 -0700
+Message-ID: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20190604174412.13324-1-yamada.masahiro@socionext.com> <CAJZ5v0jXKNr3_W9B_raetj42UOdphA3GEE_Qh7nBSwDzwXfA1Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jXKNr3_W9B_raetj42UOdphA3GEE_Qh7nBSwDzwXfA1Q@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 7 Jun 2019 20:53:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASboJSJ969T_WZ041RTr1RvtARAyyxCg46zBu-vL0+jtw@mail.gmail.com>
-Message-ID: <CAK7LNASboJSJ969T_WZ041RTr1RvtARAyyxCg46zBu-vL0+jtw@mail.gmail.com>
-Subject: Re: [PATCH] kobject: return -ENOSPC when add_uevent_var() fails
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559908513; bh=BsdffSeI/z0hMf1SnzVclZFLM2ujU+uiWBTVdLCueZU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=K/gWI2ZE+CUkGq+M2QyJHxmAtybDtfRsqri8UI6cyVZRLi3UOXAzxGM2HCl1SfmjK
+         7d7Hd6D2WbqEufPGzNVfZAgD1fgixvy1eANolEXlDkCojZqucjXDallZC88BdOLWz9
+         EMj+ZZV2sV+ejjem6dllmJYBYuuQfpf+ENXMybP5NccchKYJKzZDAxmCGMJaV/TUxA
+         iTcemy3p67KsKWzEO/99kUf4p+V0WZWZsXFP0NBPidfEPRrb2oJz7hySCiudXjXNAz
+         JV89z6uj//og7TLoRBrt6S/HMr2VmhgUSvmo5aNVU4on2NqLb6mKJVGobJ8fSHy68o
+         Xw8FQfLtF2+og==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 5:53 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Jun 4, 2019 at 8:00 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > This function never attempts to allocate memory, so returning -ENOMEM
-> > looks weird to me.
->
-> And why is the "looks weird to me" a good enough reason for making
-> changes like this?
+Clean up macros by:
+1) removing unused macros
+2) replace constants by macro BIT()
 
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-Since the code is read much more than written,
-this change eliminates the question of "why -ENOMEM here?"
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 1dbba39..00692d8 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -54,20 +54,15 @@
+ #define I2C_INT_STATUS				0x068
+ #define I2C_INT_BUS_CLR_DONE			BIT(11)
+ #define I2C_INT_PACKET_XFER_COMPLETE		BIT(7)
+-#define I2C_INT_ALL_PACKETS_XFER_COMPLETE	BIT(6)
+-#define I2C_INT_TX_FIFO_OVERFLOW		BIT(5)
+-#define I2C_INT_RX_FIFO_UNDERFLOW		BIT(4)
+ #define I2C_INT_NO_ACK				BIT(3)
+ #define I2C_INT_ARBITRATION_LOST		BIT(2)
+ #define I2C_INT_TX_FIFO_DATA_REQ		BIT(1)
+ #define I2C_INT_RX_FIFO_DATA_REQ		BIT(0)
+ #define I2C_CLK_DIVISOR				0x06c
+ #define I2C_CLK_DIVISOR_STD_FAST_MODE_SHIFT	16
+-#define I2C_CLK_MULTIPLIER_STD_FAST_MODE	8
+ 
+ #define DVC_CTRL_REG1				0x000
+ #define DVC_CTRL_REG1_INTR_EN			BIT(10)
+-#define DVC_CTRL_REG2				0x004
+ #define DVC_CTRL_REG3				0x008
+ #define DVC_CTRL_REG3_SW_PROG			BIT(26)
+ #define DVC_CTRL_REG3_I2C_DONE_INTR_EN		BIT(30)
+@@ -75,24 +70,21 @@
+ #define DVC_STATUS_I2C_DONE_INTR		BIT(30)
+ 
+ #define I2C_ERR_NONE				0x00
+-#define I2C_ERR_NO_ACK				0x01
+-#define I2C_ERR_ARBITRATION_LOST		0x02
+-#define I2C_ERR_UNKNOWN_INTERRUPT		0x04
++#define I2C_ERR_NO_ACK				BIT(0)
++#define I2C_ERR_ARBITRATION_LOST		BIT(1)
++#define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
+ 
+ #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+ #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+ #define PACKET_HEADER0_CONT_ID_SHIFT		12
+ #define PACKET_HEADER0_PROTOCOL_I2C		BIT(4)
+ 
+-#define I2C_HEADER_HIGHSPEED_MODE		BIT(22)
+ #define I2C_HEADER_CONT_ON_NAK			BIT(21)
+-#define I2C_HEADER_SEND_START_BYTE		BIT(20)
+ #define I2C_HEADER_READ				BIT(19)
+ #define I2C_HEADER_10BIT_ADDR			BIT(18)
+ #define I2C_HEADER_IE_ENABLE			BIT(17)
+ #define I2C_HEADER_REPEAT_START			BIT(16)
+ #define I2C_HEADER_CONTINUE_XFER		BIT(15)
+-#define I2C_HEADER_MASTER_ADDR_SHIFT		12
+ #define I2C_HEADER_SLAVE_ADDR_SHIFT		1
+ 
+ #define I2C_BUS_CLEAR_CNFG			0x084
+@@ -106,8 +98,6 @@
+ 
+ #define I2C_CONFIG_LOAD				0x08C
+ #define I2C_MSTR_CONFIG_LOAD			BIT(0)
+-#define I2C_SLV_CONFIG_LOAD			BIT(1)
+-#define I2C_TIMEOUT_CONFIG_LOAD			BIT(2)
+ 
+ #define I2C_CLKEN_OVERRIDE			0x090
+ #define I2C_MST_CORE_CLKEN_OVR			BIT(0)
+@@ -133,7 +123,6 @@
+ #define I2C_STANDARD_MODE			100000
+ #define I2C_FAST_MODE				400000
+ #define I2C_FAST_PLUS_MODE			1000000
+-#define I2C_HS_MODE				3500000
+ 
+ /* Packet header size in bytes */
+ #define I2C_PACKET_HEADER_SIZE			12
+-- 
+2.7.4
 
-
-
-Masahiro Yamada
-
-
-> The existing behavior is known and documented AFAICS and is it really
-> so confusing?
->
-> > The reason of the failure is there is no more space
-> > in the given kobj_uevent_env structure.
-> >
-> > No caller of this function relies on this functing returning a specific
-> > error code, so just change it to return -ENOSPC. The intended change,
-> > if any, is the error number displayed in log messages.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  lib/kobject_uevent.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
-> > index 7998affa45d4..5ffd44bf4aad 100644
-> > --- a/lib/kobject_uevent.c
-> > +++ b/lib/kobject_uevent.c
-> > @@ -647,7 +647,7 @@ EXPORT_SYMBOL_GPL(kobject_uevent);
-> >   * @env: environment buffer structure
-> >   * @format: printf format for the key=value pair
-> >   *
-> > - * Returns 0 if environment variable was added successfully or -ENOMEM
-> > + * Returns 0 if environment variable was added successfully or -ENOSPC
-> >   * if no space was available.
-> >   */
-> >  int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
-> > @@ -657,7 +657,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
-> >
-> >         if (env->envp_idx >= ARRAY_SIZE(env->envp)) {
-> >                 WARN(1, KERN_ERR "add_uevent_var: too many keys\n");
-> > -               return -ENOMEM;
-> > +               return -ENOSPC;
-> >         }
-> >
-> >         va_start(args, format);
-> > @@ -668,7 +668,7 @@ int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...)
-> >
-> >         if (len >= (sizeof(env->buf) - env->buflen)) {
-> >                 WARN(1, KERN_ERR "add_uevent_var: buffer size too small\n");
-> > -               return -ENOMEM;
-> > +               return -ENOSPC;
-> >         }
-> >
-> >         env->envp[env->envp_idx++] = &env->buf[env->buflen];
-> > --
-> > 2.17.1
