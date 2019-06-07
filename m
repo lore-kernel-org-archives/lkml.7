@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBB2C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A194C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2717B2080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9CE2146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Zz3GGW7G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="I7GUj53S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfFGLLn (ORCPT
+        id S1728523AbfFGLL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:11:43 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:31125 "EHLO
+        Fri, 7 Jun 2019 07:11:26 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:30562 "EHLO
         mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728570AbfFGLLb (ORCPT
+        with ESMTP id S1728334AbfFGLL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:11:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559905889;
+        Fri, 7 Jun 2019 07:11:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559905882;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=z2Lawv9tCJkbiMtjftVTXc595vid1xyVceWlHWvLNYs=;
-        b=Zz3GGW7G7Yo8KUmRQfhOMyJXG3FylGTMLTtHutz5Myo45QPc8oh6B9Ns/oZW1Iiy1S
-        uSrodozZy1drqsX+TsmXf4/3a0HN3SYopBJMN40WfainsicWAo4CqCCh+z5VuTAUfAGE
-        5q/Icje+cuDJKCeADoW6PEBsDHrVW7OiPy0sNSnU1iSWkIbprH9fn7dZBKVfXAs60boN
-        LafBALv43YUSxDFy0lp4A2tcNRUENvvl3zGE5UGKd6gJQ5/44A46rquVi9FsasDHI7wE
-        0y3fSoqsj/7Qg3QysdXaTghnAv1Bz8Wt/Nnebn/xsWIBKjdLjSbqZGO7nDjLjawqlIDC
-        lx5w==
+        bh=7/qIHPW7YK3E/1WVa6JBhancuqJUkFLGU+ia6pFayDE=;
+        b=I7GUj53Se6Sz+iR5cftjDo2nuoeVBcffUdywF4sraQHhNamvSxBxpPSh88CkxSiQjC
+        K3e5PJGCAB0AgmYtJi+tkPlAIy97vCjVGRtW/un+GM6rej2wZ76bRy/aTXKEZMNx1d/g
+        GwjZ6+0bunW/WSbwah2V0W4VYenCZlH/hlUzdykhpF0PruDygR+qjmSj66vAc3UY7VSV
+        QazCzdzJ6L3jvUFZ+ebBldk0IX3hVbOSo7JeVb8By6qniIuxFl7TOgUZMeyv9a59Q6sJ
+        lmiYi8to0RrA5C2zrHFzZ8K40TYGbv+HB8LfMj4HKS1/OFpZTE+FJHW6ywjVSq9Lyhmj
+        YRNg==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAwkq13LM="
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.22 DYNA|AUTH)
-        with ESMTPSA id i01b98v57BBFPaT
+        with ESMTPSA id i01b98v57BBDPaO
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Fri, 7 Jun 2019 13:11:15 +0200 (CEST)
+        Fri, 7 Jun 2019 13:11:13 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
@@ -53,9 +53,9 @@ Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-omap@vger.kernel.org, letux-kernel@openphoenux.org,
         devicetree@vger.kernel.org,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 5/5] dt-bindings: drm/panel: simple: add sharp,lq070y3dg3b panel
-Date:   Fri,  7 Jun 2019 13:11:11 +0200
-Message-Id: <ee90ed56d2c294ce8ac3b44bf2229c5ab9f85e91.1559905870.git.hns@goldelico.com>
+Subject: [PATCH v3 1/5] drm/panel: simple: Add Sharp LQ070Y3DG3B panel support
+Date:   Fri,  7 Jun 2019 13:11:07 +0200
+Message-Id: <d16aaa1ac93e4f15c13cd7d621de95836257676a.1559905870.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1559905870.git.hns@goldelico.com>
 References: <cover.1559905870.git.hns@goldelico.com>
@@ -66,30 +66,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The change adds support for the Sharp LQ070Y3DG3B 7.0" TFT LCD panel.
+
+Tested on Letux7004.
+
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- .../bindings/display/panel/sharp,lq070y3dg3b.txt     | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt
+ drivers/gpu/drm/panel/panel-simple.c | 30 ++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt
-new file mode 100644
-index 000000000000..95534b55ee5f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt
-@@ -0,0 +1,12 @@
-+Sharp LQ070Y3DG3B 7.0" WVGA landscape TFT LCD panel
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 569be4efd8d1..5b27829c5a78 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2204,6 +2204,33 @@ static const struct panel_desc samsung_ltn140at29_301 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode sharp_lq070y3dg3b_mode = {
++	.clock = 33260,
++	.hdisplay = 800,
++	.hsync_start = 800 + 64,
++	.hsync_end = 800 + 64 + 128,
++	.htotal = 800 + 64 + 128 + 64,
++	.vdisplay = 480,
++	.vsync_start = 480 + 8,
++	.vsync_end = 480 + 8 + 2,
++	.vtotal = 480 + 8 + 2 + 35,
++	.vrefresh = 60,
++	.flags = DISPLAY_FLAGS_PIXDATA_POSEDGE,
++};
 +
-+Required properties:
-+- compatible: should be "sharp,lq070y3dg3b"
++static const struct panel_desc sharp_lq070y3dg3b = {
++	.modes = &sharp_lq070y3dg3b_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 152,	/* 152.4mm */
++		.height = 91,	/* 91.4mm */
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE |
++		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
++};
 +
-+Optional properties:
-+- enable-gpios: GPIO pin to enable or disable the panel
-+- backlight: phandle of the backlight device attached to the panel
-+- power-supply: phandle of the regulator that provides the supply voltage
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
+ static const struct drm_display_mode sharp_lq035q7db03_mode = {
+ 	.clock = 5500,
+ 	.hdisplay = 240,
+@@ -2786,6 +2813,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "sharp,lq035q7db03",
+ 		.data = &sharp_lq035q7db03,
++	}, {
++		.compatible = "sharp,lq070y3dg3b",
++		.data = &sharp_lq070y3dg3b,
+ 	}, {
+ 		.compatible = "sharp,lq101k1ly04",
+ 		.data = &sharp_lq101k1ly04,
 -- 
 2.19.1
 
