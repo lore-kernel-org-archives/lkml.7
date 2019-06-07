@@ -2,141 +2,203 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B753C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85DCC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B62208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0AB5208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWsr84uI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mtz4idoE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbfFGTdE (ORCPT
+        id S1730626AbfFGTdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:33:04 -0400
-Received: from mail-it1-f176.google.com ([209.85.166.176]:55968 "EHLO
-        mail-it1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbfFGTdD (ORCPT
+        Fri, 7 Jun 2019 15:33:53 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55623 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729081AbfFGTdx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:33:03 -0400
-Received: by mail-it1-f176.google.com with SMTP id i21so4429942ita.5;
-        Fri, 07 Jun 2019 12:33:03 -0700 (PDT)
+        Fri, 7 Jun 2019 15:33:53 -0400
+Received: by mail-it1-f196.google.com with SMTP id i21so4433125ita.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=04uJTo7m358ByRo9cA4dc6Sv7rmMryAY1l67cCAtOVE=;
-        b=XWsr84uI6tkrX9hKMZZXfrsnYYqyJJ8HQQNHD0Dd04qccooEkCMHcnr3OsLytjgky6
-         W/gSWE/Rm6lKqPKekX2gO6F5cFnW1mMLUUh9hY698fl0jAFkdpCz5aq1sC2SP931C9Aw
-         x4Ott88SIjzask0DlTHDLqwbG20erXXux4t3nx4gvi9b+1efULT/YawVNJbIbseiBXMh
-         sYPhyakxl6nEBuyquBx2IKhx4wAjFMZDwIqSOo+2V9Pu+AIs0gB5rErjD95g/58B4w0F
-         wM/FQs1DxT1RZMC7Vop+urYJfJhrnd6Rt1F8CGInLGQQRfDcseFdJcRG8/AU5ntedANy
-         c7VQ==
+        bh=T9Tj5ZjKU2Dvst13bY90aPbdIlkQERL+pEiQI7+DM/c=;
+        b=mtz4idoEP9NXZfE9sJM8pP6vJNipA8lG0eo3b6vZE463N7ghaR4SPIbPO4df8si5+5
+         3fkLPdcJgpbXp9SselTVLUujvNG11FWbCNvXzrK7OnCrJ3j4/XE6sHeNe8+aazuwc+hb
+         g+DFf8m8/ddOHtgs7V63N3LBFT5CmEiKAqPaIGt7DI+XWQy5X+3GH5H0EYpD/WL9ES5O
+         R85konXlva+litJbCpGnuCpnddqpWjrR6UJ4zhNUnu54+AWFGly1aQ5KbHDDX2XtB28b
+         wpNtHXBqoNPapFl/4KEWxDZufDgKDyyfLmIMXEfX0Btx+yzpICT/UgAbdPuXd6hZdtgz
+         Dq+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=04uJTo7m358ByRo9cA4dc6Sv7rmMryAY1l67cCAtOVE=;
-        b=TcvUtWnRXVNUNHgCUZ1I4fsZBdf+GuTnVx5LSjJy031PAvkInrQrDJarwclwsltTZZ
-         QBgvzg+GWolREQMY1uKx3wKKNLjtMec482um8FMbZ/NbmeTzEilmPfRjUmkgtX/o+WCh
-         ysFeSEAxQWNKO1MuFzyBxE9D8tMlyuTNL1gAtpgRclUImIRwAfdFGba1SEUa6bp48vBG
-         61vS7tUTRu9AbR/4+Ut5jeaMYL0JG2YK3rXnyuNAJHD3AkRjZp5/ll6buEYo3AgmxJC1
-         IVBpc818vJCfawD83KuNBJOigQ6CT5kkyHeQ7Q4ihgThyv/NgXhtThOXOID6N4bsl4k4
-         CrEw==
-X-Gm-Message-State: APjAAAVmknqM0n0WWhZt7d6FR0e3mxbbwgCJy4aBXgrzl97CKcJ2D2Pm
-        JHFuSD1XqwJsRJYYtYzCDyS9hH3KdLpfgYuycs0=
-X-Google-Smtp-Source: APXvYqxijbtfZEblcBZkVQnhcYbDIEXGcJuk2PxICqk1t0yVYYHwLWBNMPCSLKf+bha80GuRvaQCLcSwAZVUIwuQTzg=
-X-Received: by 2002:a05:660c:ace:: with SMTP id k14mr5206415itl.33.1559935982517;
- Fri, 07 Jun 2019 12:33:02 -0700 (PDT)
+        bh=T9Tj5ZjKU2Dvst13bY90aPbdIlkQERL+pEiQI7+DM/c=;
+        b=IFGBB2ZA7/2ZcdBhT6mSKOWO9ivLQl7O7aUM7soS+3GkDtjFliHwHmCx3ZXPPst+RX
+         HGi+Vi0w1oVZrQwqy4EFt2YUpagKSUN3gAicCVpqIpZAMd6u+ceV7Hk5wpvNAR+KTnoZ
+         +Tli6ZKRd0gOa2jr627cFFDTlszCu+PVnf/odS4FPhturUBKWBXuHSb8rZcN8vCcLI5z
+         eAadzTtsBazpicUNz9txz4rUJqn1Z4NaWFoOkPNxEQWxehjvijaVvf7gaOv5ZLNSalOB
+         PcJLt2rtiz85/n65tK7OWLIf0bY8o5D8j21qLEkKmm2driC1IUoXAVRysBUm6Uu55XAT
+         vM9w==
+X-Gm-Message-State: APjAAAWAylEbY2YexbNUp8FduyqUmBbjZUIl+FSgxmPUmaAmQjCw6xBc
+        z7kaAlz+Q8rARMIzU0uA/gpc/12Gc5/HpHJ8H8GURA==
+X-Google-Smtp-Source: APXvYqyIzt+gS3ConXIodeeRJIgcUDgjzZUqKKTsCWXlpXgPJnTVfaLQpACElYgwvkNg6VfdHTgVBjvO2IaFejVJzgU=
+X-Received: by 2002:a24:14f:: with SMTP id 76mr5248389itk.115.1559936031969;
+ Fri, 07 Jun 2019 12:33:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
- <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
- <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
- <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca> <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
- <20190521151537.xga4aiq3gjtiif4j@csclub.uwaterloo.ca> <CAKgT0UfpZ-ve3Hx26gDkb+YTDHvN3=MJ7NZd2NE7ewF5g=kHHw@mail.gmail.com>
- <20190521175456.zlkiiov5hry2l4q2@csclub.uwaterloo.ca> <CAKgT0UcR3q1maBmJz7xj_i+_oux_6FQxua9DOjXQSZzyq6FhkQ@mail.gmail.com>
- <20190522143956.quskqh33ko2wuf47@csclub.uwaterloo.ca> <20190607143906.wgi344jcc77qvh24@csclub.uwaterloo.ca>
-In-Reply-To: <20190607143906.wgi344jcc77qvh24@csclub.uwaterloo.ca>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 7 Jun 2019 12:32:51 -0700
-Message-ID: <CAKgT0Ue1M8_30PVPmoJy_EGo2mjM26ecz32Myx-hpnuq_6wdjw@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
-To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        e1000-devel@lists.sourceforge.net
+References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
+ <20190524173508.29044-2-mathieu.poirier@linaro.org> <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
+ <20190607182047.GK21245@kernel.org>
+In-Reply-To: <20190607182047.GK21245@kernel.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 7 Jun 2019 13:33:41 -0600
+Message-ID: <CANLsYkykW=rf_c6-ci=fV05u7TP9M3rrEUSdUn-bKw1PHvfoZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/17] perf tools: Configure contextID tracing in
+ CPU-wide mode
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Coresight ML <coresight@lists.linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 7:39 AM Lennart Sorensen
-<lsorense@csclub.uwaterloo.ca> wrote:
+On Fri, 7 Jun 2019 at 12:20, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
-> On Wed, May 22, 2019 at 10:39:56AM -0400, Lennart Sorensen wrote:
-> > OK I applied those two patches and get this:
+> Em Fri, Jun 07, 2019 at 10:21:36AM +0100, Suzuki K Poulose escreveu:
+> > Hi Mathieu,
 > >
-> > i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
-> > i40e: Copyright (c) 2013 - 2014 Intel Corporation.
-> > i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
-> > i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
-> > i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
-> > i40e 0000:3d:00.0: PFQF_HREGION[7]: 0x00000000
-> > i40e 0000:3d:00.0: PFQF_HREGION[6]: 0x00000000
-> > i40e 0000:3d:00.0: PFQF_HREGION[5]: 0x00000000
-> > i40e 0000:3d:00.0: PFQF_HREGION[4]: 0x00000000
-> > i40e 0000:3d:00.0: PFQF_HREGION[3]: 0x00000000
-> > i40e 0000:3d:00.0: PFQF_HREGION[2]: 0x00000000
-> > i40e 0000:3d:00.0: PFQF_HREGION[1]: 0x00000000
-> > i40e 0000:3d:00.0: PFQF_HREGION[0]: 0x00000000
-> > i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
-> > i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
-> > i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
-> > i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
-> > i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
-> > i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
-> > i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
-> > i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 27 input_mask:0x00000000002c0000
-> > i40e 0000:3d:00.0: flow_type: 26 input_mask:0x00000000002c0000
-> > i40e 0000:3d:00.0: flow type: 36 update input mask from:0x0006060000000000, to:0x0001801800000000
-> > i40e 0000:3d:00.0: flow type: 35 update input mask from:0x0006060000000000, to:0x0001801800000000
-> > i40e 0000:3d:00.0: flow type: 34 update input mask from:0x0006060780000000, to:0x0001801f80000000
-> > i40e 0000:3d:00.0: flow type: 33 update input mask from:0x0006060600000000, to:0x0001801e00000000
-> > i40e 0000:3d:00.0: flow type: 32 update input mask from:0x0006060600000000, to:0x0001801e00000000
-> > i40e 0000:3d:00.0: flow type: 31 update input mask from:0x0006060600000000, to:0x0001801e00000000
-> > i40e 0000:3d:00.0: flow type: 30 update input mask from:0x0006060600000000, to:0x0001801e00000000
-> > i40e 0000:3d:00.0: flow type: 29 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> > On 24/05/2019 18:34, Mathieu Poirier wrote:
+> > > When operating in CPU-wide mode being notified of contextID changes is
+> > > required so that the decoding mechanic is aware of the process context
+> > > switch.
+> > >
+> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > >
-> > So seems the regions are all 0.
 > >
-> > All ipsec packets still hitting queue 0.
+> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >
+> > I am sorry but, I don't remember reviewing this patch in the previous
+> > postings. But here we go.
 >
-> So any news or more ideas to try or are we stuck hoping someone can fix
-> the firmware?
+> Can I keep it as is? I addressed one of your concerns below, please
+> check.
+>
+> - Arnaldo
+>
+> > > +++ b/tools/perf/util/cs-etm.h
+> > > @@ -103,6 +103,18 @@ struct intlist *traceid_list;
+> > >   #define KiB(x) ((x) * 1024)
+> > >   #define MiB(x) ((x) * 1024 * 1024)
+> > > +/*
+> > > + * Create a contiguous bitmask starting at bit position @l and ending at
+> > > + * position @h. For example
+> > > + * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+> > > + *
+> > > + * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
+> > > + */
+> > > +#define GENMASK(h, l) \
+> > > +   (((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
+> > > +
+> >
+> > minor nit: Could this be placed in a more generic header file for the other
+> > parts of the perf tool to consume ?
+> >
+>
+> Yeah, since we have:
+>
+> Good catch, we have it already:
+>
+> [acme@quaco perf]$ tail tools/include/linux/bits.h
+>  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+>  */
+> #define GENMASK(h, l) \
+>         (((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
+>
+> #define GENMASK_ULL(h, l) \
+>         (((~0ULL) - (1ULL << (l)) + 1) & \
+>          (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
+>
+> #endif  /* __LINUX_BITS_H */
+> [acme@quaco perf]$
+> [acme@quaco perf]$
+>
+> So I'm adding this to the pile with a Suggested-by: Suzuki, ok?
+>
+> commit 3217a621248824fbff8563d8447fdafe69c5316d
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Fri Jun 7 15:14:27 2019 -0300
+>
+>     perf cs-etm: Remove duplicate GENMASK() define, use linux/bits.h instead
+>
+>     Suzuki noticed that this should be more useful in a generic header, and
+>     after looking I noticed we have it already in our copy of
+>     include/linux/bits.h in tools/include, so just use it, test built on
+>     x86-64 and ubuntu 19.04 with:
+>
+>       perfbuilder@46646c9e848e:/$ aarch64-linux-gnu-gcc --version |& head -1
+>       aarch64-linux-gnu-gcc (Ubuntu/Linaro 8.3.0-6ubuntu1) 8.3.0
+>       perfbuilder@46646c9e848e:/$
+>
+>     Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>     Link: https://lkml.kernel.org/r/68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com
+>     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>     Cc: Jiri Olsa <jolsa@redhat.com>
+>     Cc: Leo Yan <leo.yan@linaro.org>
+>     Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Cc: Peter Zijlstra <peterz@infradead.org>
+>     Cc: coresight@lists.linaro.org
+>     Cc: linux-arm-kernel@lists.infradead.org,
+>     Link: https://lkml.kernel.org/n/tip-69pd3mqvxdlh2shddsc7yhyv@git.kernel.org
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> index 33b57e748c3d..bc848fd095f4 100644
+> --- a/tools/perf/util/cs-etm.h
+> +++ b/tools/perf/util/cs-etm.h
+> @@ -9,6 +9,7 @@
+>
+>  #include "util/event.h"
+>  #include "util/session.h"
+> +#include <linux/bits.h>
+>
+>  /* Versionning header in case things need tro change in the future.  That way
+>   * decoding of old snapshot is still possible.
+> @@ -161,16 +162,6 @@ struct cs_etm_packet_queue {
+>
+>  #define CS_ETM_INVAL_ADDR 0xdeadbeefdeadbeefUL
+>
+> -/*
+> - * Create a contiguous bitmask starting at bit position @l and ending at
+> - * position @h. For example
+> - * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+> - *
+> - * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
+> - */
+> -#define GENMASK(h, l) \
+> -       (((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
+> -
 
-I had reached out to some folks over in the networking division hoping
-that they can get a reproduction as I don't have the hardware that you
-are seeing the issue on so I have no way to reproduce it.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Maybe someone from that group can reply and tell us where they are on that?
-
-Thanks.
-
-- Alex
+>  #define BMVAL(val, lsb, msb)   ((val & GENMASK(msb, lsb)) >> lsb)
+>
+>  #define CS_ETM_HEADER_SIZE (CS_HEADER_VERSION_0_MAX * sizeof(u64))
