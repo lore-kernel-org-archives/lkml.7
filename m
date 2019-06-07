@@ -2,266 +2,103 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89364C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8EAC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5694F20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D4020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gBrTD1yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfFGHDH (ORCPT
+        id S1727048AbfFGHHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 03:03:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59272 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbfFGHDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 03:03:06 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1DFC6C1EB214;
-        Fri,  7 Jun 2019 07:02:52 +0000 (UTC)
-Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECBA9783A4;
-        Fri,  7 Jun 2019 07:02:41 +0000 (UTC)
-Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        Vincent Stehle <Vincent.Stehle@arm.com>
-References: <20190526161004.25232-1-eric.auger@redhat.com>
- <20190526161004.25232-27-eric.auger@redhat.com>
- <20190603163139.70fe8839@x1.home>
- <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
- <20190605154553.0d00ad8d@jacob-builder>
- <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
- <20190606132903.064f7ac4@jacob-builder>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <10905d2d-16a5-7d6f-2db3-9cca10c3bde0@redhat.com>
-Date:   Fri, 7 Jun 2019 09:02:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 7 Jun 2019 03:07:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44026 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfFGHHz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 03:07:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3xG2gB2u3ltC4ECXHzkfqk/Rf8Lzs9XYnPxSdw9Djq4=; b=gBrTD1ywQqnghTyPb+u8oUuO1
+        n92Hi8a/rdgmVIhQ/moKpSzpN7IRYERjWycGLMqob6ui4vuJ0Lrag517vzAbE44qxJdkCSgxPKLT1
+        TPDM9DMcOeTrROrwysz2WUqaSu0h22M6pU9hi1I9cmfvloI+w1dJxzU3J6rnF+OWy4rCb0aDGY2of
+        b8kFhR/J3YJz62PeRqL2pk7arp5DAGDnFJX9NMH/Cj3Y2VoHWyDyUjEx/zl3iOjcEreXchO/Uxps0
+        vF2ga+x78jDgquKaiphXwBrUEmKnjdaG5QpFvxY68BuCmEZlEwI1DNDpMN8q58R1DKQ6b2F5Av84v
+        oC93ptfaw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZ8yG-00069g-2e; Fri, 07 Jun 2019 07:07:28 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7C8E4202CD6B2; Fri,  7 Jun 2019 09:07:25 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 09:07:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v7 05/27] x86/fpu/xstate: Add XSAVES system states for
+ shadow stack
+Message-ID: <20190607070725.GN3419@hirez.programming.kicks-ass.net>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+ <20190606200646.3951-6-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190606132903.064f7ac4@jacob-builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 07 Jun 2019 07:03:06 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606200646.3951-6-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean, Jacob,
+On Thu, Jun 06, 2019 at 01:06:24PM -0700, Yu-cheng Yu wrote:
+> Intel Control-flow Enforcement Technology (CET) introduces the
+> following MSRs.
+> 
+>     MSR_IA32_U_CET (user-mode CET settings),
+>     MSR_IA32_PL3_SSP (user-mode shadow stack),
+>     MSR_IA32_PL0_SSP (kernel-mode shadow stack),
+>     MSR_IA32_PL1_SSP (Privilege Level 1 shadow stack),
+>     MSR_IA32_PL2_SSP (Privilege Level 2 shadow stack).
+> 
+> Introduce them into XSAVES system states.
+> 
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> ---
+>  arch/x86/include/asm/fpu/types.h            | 22 +++++++++++++++++++++
+>  arch/x86/include/asm/fpu/xstate.h           |  4 +++-
+>  arch/x86/include/uapi/asm/processor-flags.h |  2 ++
+>  arch/x86/kernel/fpu/xstate.c                | 10 ++++++++++
+>  4 files changed, 37 insertions(+), 1 deletion(-)
 
-On 6/6/19 10:29 PM, Jacob Pan wrote:
-> On Thu, 6 Jun 2019 19:54:05 +0100
-> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
-> 
->> On 05/06/2019 23:45, Jacob Pan wrote:
->>> On Tue, 4 Jun 2019 18:11:08 +0200
->>> Auger Eric <eric.auger@redhat.com> wrote:
->>>   
->>>> Hi Alex,
->>>>
->>>> On 6/4/19 12:31 AM, Alex Williamson wrote:  
->>>>> On Sun, 26 May 2019 18:10:01 +0200
->>>>> Eric Auger <eric.auger@redhat.com> wrote:
->>>>>     
->>>>>> This patch registers a fault handler which records faults in
->>>>>> a circular buffer and then signals an eventfd. This buffer is
->>>>>> exposed within the fault region.
->>>>>>
->>>>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>>>>
->>>>>> ---
->>>>>>
->>>>>> v3 -> v4:
->>>>>> - move iommu_unregister_device_fault_handler to vfio_pci_release
->>>>>> ---
->>>>>>  drivers/vfio/pci/vfio_pci.c         | 49
->>>>>> +++++++++++++++++++++++++++++ drivers/vfio/pci/vfio_pci_private.h
->>>>>> |  1 + 2 files changed, 50 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/vfio/pci/vfio_pci.c
->>>>>> b/drivers/vfio/pci/vfio_pci.c index f75f61127277..520999994ba8
->>>>>> 100644 --- a/drivers/vfio/pci/vfio_pci.c
->>>>>> +++ b/drivers/vfio/pci/vfio_pci.c
->>>>>> @@ -30,6 +30,7 @@
->>>>>>  #include <linux/vfio.h>
->>>>>>  #include <linux/vgaarb.h>
->>>>>>  #include <linux/nospec.h>
->>>>>> +#include <linux/circ_buf.h>
->>>>>>  
->>>>>>  #include "vfio_pci_private.h"
->>>>>>  
->>>>>> @@ -296,6 +297,46 @@ static const struct vfio_pci_regops
->>>>>> vfio_pci_fault_prod_regops = { .add_capability =
->>>>>> vfio_pci_fault_prod_add_capability, };
->>>>>>  
->>>>>> +int vfio_pci_iommu_dev_fault_handler(struct iommu_fault_event
->>>>>> *evt, void *data) +{
->>>>>> +	struct vfio_pci_device *vdev = (struct vfio_pci_device
->>>>>> *) data;
->>>>>> +	struct vfio_region_fault_prod *prod_region =
->>>>>> +		(struct vfio_region_fault_prod
->>>>>> *)vdev->fault_pages;
->>>>>> +	struct vfio_region_fault_cons *cons_region =
->>>>>> +		(struct vfio_region_fault_cons
->>>>>> *)(vdev->fault_pages + 2 * PAGE_SIZE);
->>>>>> +	struct iommu_fault *new =
->>>>>> +		(struct iommu_fault *)(vdev->fault_pages +
->>>>>> prod_region->offset +
->>>>>> +			prod_region->prod *
->>>>>> prod_region->entry_size);
->>>>>> +	int prod, cons, size;
->>>>>> +
->>>>>> +	mutex_lock(&vdev->fault_queue_lock);
->>>>>> +
->>>>>> +	if (!vdev->fault_abi)
->>>>>> +		goto unlock;
->>>>>> +
->>>>>> +	prod = prod_region->prod;
->>>>>> +	cons = cons_region->cons;
->>>>>> +	size = prod_region->nb_entries;
->>>>>> +
->>>>>> +	if (CIRC_SPACE(prod, cons, size) < 1)
->>>>>> +		goto unlock;
->>>>>> +
->>>>>> +	*new = evt->fault;
->>>>>> +	prod = (prod + 1) % size;
->>>>>> +	prod_region->prod = prod;
->>>>>> +	mutex_unlock(&vdev->fault_queue_lock);
->>>>>> +
->>>>>> +	mutex_lock(&vdev->igate);
->>>>>> +	if (vdev->dma_fault_trigger)
->>>>>> +		eventfd_signal(vdev->dma_fault_trigger, 1);
->>>>>> +	mutex_unlock(&vdev->igate);
->>>>>> +	return 0;
->>>>>> +
->>>>>> +unlock:
->>>>>> +	mutex_unlock(&vdev->fault_queue_lock);
->>>>>> +	return -EINVAL;
->>>>>> +}
->>>>>> +
->>>>>>  static int vfio_pci_init_fault_region(struct vfio_pci_device
->>>>>> *vdev) {
->>>>>>  	struct vfio_region_fault_prod *header;
->>>>>> @@ -328,6 +369,13 @@ static int vfio_pci_init_fault_region(struct
->>>>>> vfio_pci_device *vdev) header = (struct vfio_region_fault_prod
->>>>>> *)vdev->fault_pages; header->version = -1;
->>>>>>  	header->offset = PAGE_SIZE;
->>>>>> +
->>>>>> +	ret =
->>>>>> iommu_register_device_fault_handler(&vdev->pdev->dev,
->>>>>> +
->>>>>> vfio_pci_iommu_dev_fault_handler,
->>>>>> +					vdev);
->>>>>> +	if (ret)
->>>>>> +		goto out;
->>>>>> +
->>>>>>  	return 0;
->>>>>>  out:
->>>>>>  	kfree(vdev->fault_pages);
->>>>>> @@ -570,6 +618,7 @@ static void vfio_pci_release(void
->>>>>> *device_data) if (!(--vdev->refcnt)) {
->>>>>>  		vfio_spapr_pci_eeh_release(vdev->pdev);
->>>>>>  		vfio_pci_disable(vdev);
->>>>>> +
->>>>>> iommu_unregister_device_fault_handler(&vdev->pdev->dev);    
->>>>>
->>>>>
->>>>> But this can fail if there are pending faults which leaves a
->>>>> device reference and then the system is broken :(    
->>>> This series only features unrecoverable errors and for those the
->>>> unregistration cannot fail. Now unrecoverable errors were added I
->>>> admit this is confusing. We need to sort this out or clean the
->>>> dependencies.  
->>> As Alex pointed out in 4/29, we can make
->>> iommu_unregister_device_fault_handler() never fail and clean up all
->>> the pending faults in the host IOMMU belong to that device. But the
->>> problem is that if a fault, such as PRQ, has already been injected
->>> into the guest, the page response may come back after handler is
->>> unregistered and registered again.  
->>
->> I'm trying to figure out if that would be harmful in any way. I guess
->> it can be a bit nasty if we handle the page response right after
->> having injected a new page request that uses the same PRGI. In any
->> other case we discard the page response, but here we forward it to
->> the endpoint and:
->>
->> * If the response status is success, endpoint retries the
->> translation. The guest probably hasn't had time to handle the new
->> page request and translation will fail, which may lead the endpoint
->> to give up (two unsuccessful translation requests). Or send a new
->> request
->>
-> Good point, there shouldn't be any harm if the page response is a
-> "fake" success. In fact it could happen in the normal operation when
-> PRQs to two devices share the same non-leaf translation structure. The
-> worst case is just a retry. I am not aware of the retry limit, is it in
-> the PCIe spec? I cannot find it.
-> 
-> I think we should just document it, similar to having a spurious
-> interrupt. The PRQ trace event should capture that as well.
-> 
->> * otherwise the endpoint won't retry the access, and could also
->> disable PRI if the status is failure.
->>
-> That would be true regardless this race condition with handler
-> registration. So should be fine.
-> 
->>> We need a way to reject such page response belong
->>> to the previous life of the handler. Perhaps a sync call to the
->>> guest with your fault queue eventfd? I am not sure.  
->>
->> We could simply expect the device driver not to send any page response
->> after unregistering the fault handler. Is there any reason VFIO would
->> need to unregister and re-register the fault handler on a live guest?
->>
-> There is no reason for VFIO to unregister and register again, I was
-> just thinking from security perspective. Someone could write a VFIO app
-> do this attack. But I agree the damage is within the device, may get
-> PRI disabled as a result.
-
-At the moment the handler unregistration is done on the vfio-pci release
-function() when the last reference is released so I am not sure this can
-even be achieved.
-> 
-> So it seems we agree on the following:
-> - iommu_unregister_device_fault_handler() will never fail
-> - iommu driver cleans up all pending faults when handler is unregistered
-> - assume device driver or guest not sending more page response _after_
->   handler is unregistered.
-> - system will tolerate rare spurious response
-> 
-> Sounds right?
-
-sounds good for me
-
-Thanks
-
-Eric
-> 
->> Thanks,
->> Jean
-> 
-> [Jacob Pan]
-> 
+And yet, no changes to msr-index.h !?
