@@ -2,116 +2,216 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642EC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9207EC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D187B20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D142133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cs.unibo.it header.i=@cs.unibo.it header.b="OLAWx9WO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfFGJlA (ORCPT
+        id S1728129AbfFGJlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:41:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:55092 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfFGJk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:40:59 -0400
-Received: by newverein.lst.de (Postfix, from userid 2005)
-        id 931BF68C65; Fri,  7 Jun 2019 11:40:30 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 11:40:30 +0200
-From:   Torsten Duwe <duwe@lst.de>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Harald Geyer <harald@ccbib.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345
- bridge on Teres-I
-Message-ID: <20190607094030.GA12373@lst.de>
-References: <20190604122150.29D6468B05@newverein.lst.de> <20190604122308.98D4868B20@newverein.lst.de> <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com> <20190605101317.GA9345@lst.de> <20190605120237.ekmytfxcwbjaqy3x@flea> <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at> <20190607062802.m5wslx3imiqooq5a@flea>
+        Fri, 7 Jun 2019 05:41:04 -0400
+Received: from mail.virtlab.unibo.it ([130.136.161.50]:59931 "EHLO
+        mail.virtlab.unibo.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbfFGJlB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 05:41:01 -0400
+Received: from cs.unibo.it (host5.studiodavoli.it [109.234.61.227])
+        by mail.virtlab.unibo.it (Postfix) with ESMTPSA id 61729225FC;
+        Fri,  7 Jun 2019 11:40:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=cs.unibo.it;
+        s=virtlab; t=1559900457;
+        bh=p3nmSHEzOUO5BOb54+2CKD74gBNjIPrvKQK7XPQshIU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OLAWx9WOHF7zcShpJLMQSW6BMxAgONoEQKFWJsyUDxY+AHqHlsg0DIziy9julLUWo
+         fJa0jfywY4wPOOdRxrBxZTeQ0SUGTJNNgXfdT3seJKiDfg2AdO2atoMacLIJ3MR4MC
+         ltOkCzh1WhNnI8RUMKh+v1Di5QRPEG49bVeIIvoQ=
+Date:   Fri, 7 Jun 2019 11:40:51 +0200
+From:   Renzo Davoli <renzo@cs.unibo.it>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Davide Libenzi <davidel@xmailserver.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 1/1] eventfd new tag EFD_VPOLL: generate epoll events
+Message-ID: <20190607094051.GA8353@cs.unibo.it>
+References: <20190526142521.GA21842@cs.unibo.it>
+ <20190527073332.GA13782@kroah.com>
+ <20190527133621.GC26073@cs.unibo.it>
+ <480f1bda66b67f740f5da89189bbfca3@suse.de>
+ <20190531104502.GE3661@cs.unibo.it>
+ <cd20672aaf13f939b4f798d0839d2438@suse.de>
+ <20190603150010.GE4312@cs.unibo.it>
+ <5d44edf655e193789823094d1b4301fd@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190607062802.m5wslx3imiqooq5a@flea>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <5d44edf655e193789823094d1b4301fd@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 08:28:02AM +0200, Maxime Ripard wrote:
-> On Thu, Jun 06, 2019 at 03:59:27PM +0200, Harald Geyer wrote:
-> >
-> > If think valid compatible properties would be:
-> > compatible = "innolux,n116bge", "simple-panel";
-> > compatible = "edp-connector", "simple-panel";
+Hi Roman,
+
+On Thu, Jun 06, 2019 at 10:11:57PM +0200, Roman Penyaev wrote:
+> Hi Renzo,
+> On 2019-06-03 17:00, Renzo Davoli wrote:
+> > Please, have a look of the README.md page here:
+> > https://github.com/virtualsquare/vuos
+> Is that similar to what user-mode linux does?  I mean the principle.
+
+let us write this proportion:
+user-mode-linux / umvu = linux / namespace
+
+In a comparison between user-mode linux and umvu,
+while the way to get the system call requests is the same (ptrace)
+the goal is different.
+
+user-mode linux catches all the system calls, none of them is forwarded to
+the real kernel: it uses a linux kernel compiled as a process to give processes
+the illusion to live in another machine.
+
+umvu catches all the system calls and then it decides if the syscall must be forwarded
+to the kernel (maybe modified) or entirely processed at user-level by the hypervisor
+(by means of specific plug-in modules like vufuse for file systems, vudev for devices
+ and so on).
+While the "illusion" of user-mode linux is a global illusion, the "illusion" provided by
+umvu is limited and configurable. After a "mount" of a filesystem using vufuse,
+the file system tree is the same *but* the subtree of the mountpoint.
+The illusion is limited to the subtree as only the system call requests for paths inside
+the subtree are processed by umvu and its modules.
+
+It is similar to a namespace implemented at user level.
+w.r.t. namespaces:
+* umvu does not change the attack surface of the kernel (it is just a virtualization
+		-- a.k.a. illusion -- provided by a user process to other user processes)
+* umvu can provide features not currently supported by the kernel (e.g. a file system
+		organization unavailable as kernel code, networking stacks at user level etc.)
+* ...
+
+umvu is an implementation of vuos concepts using ptrace. In a future maybe it will be
+possibile to reimplement the same idea of partial virtual machines using other
+syscall tracing/filtering tools.
 > 
-> A connector isn't a panel.
+> > I am not trying to port some tools to use user-space implemented
+> > stacks or device
+> > drivers/emulators, I am seeking to a general purpose approach.
 > 
-> > compatible = "innolux,n116bge", "edp-connector", "simple-panel";
+> You still intersect *each* syscall, why not to do the same for epoll_wait()
+> and replace events with correct value?  Seems you do something similar
+> already
+> in a vu_wrap_poll.c: wo_epoll_wait(), right?
 > 
-> And the innolux,n116bge is certainly not a connector either.
-> 
-> > compatible = "edp-connector", "innolux,n116bge", "simple-panel";
-> >
-> > I can't make up my mind which one I prefere. However neither of these
-> > variants requires actually implmenting an edp-connector driver.
-> 
-> No-one asked to do an edp-connector driver. You should use it in your
-> DT, but if you want to have some code in your driver that parses the
-> DT directly, I'm totally fine with that.
+> Don't get me wrong, I really want to understand whether everything really
+> looks so bad without proposed change. It seems not, because the whole
+> principle
+> is based on intersection of each syscall, thus one more one less - it does
+> not
+> become more clean and especially does not look like a generic purpose
+> solution,
+> which you seek.  I may be wrong.
+Your comments are precious. Thank you as I see that you have browsed into my code
+to have a better view of the problem.
 
-I must admit I fail to understand what that extra node would be good for.
-Logically, the eDP far side is connected to the well-known n116bge.
-Inside the laptop case it might as well be a flat ribbon cable or
-soldered directly.
-In good intention, that's all I wanted to express in the DT. I don't
-know whether the relevant mechanical dimensions of the panel and the
-connector are standardised, so whether one could in theory assemble it
-with a different panel than the one it came with.
+umvu is a modular tool. The executable of umvu is a dispatcher between the
+system call requests coming from the user processes and modules (loaded at
+run time as dynamic plug-in libraries)
 
-OTOH, as I checked during the discussion with anarsoul, the panel's
-supply voltage is permanently connected to the main 3.3V rail.
-We already agreed that the eDP output port must not neccessarily be
-specified, this setup is a good example why: because the panel is
-always powered, the anx6345 can always pull valid EDID data from it
-so at this stage there's no need for any OS driver to reach beyond
-the bridge. IIRC even the backlight got switched off for the blank
-screen without.
++-----------------+         +------+      +---------------------------------+
++processes running|<------->| umvu |<---->| module (e.g. vufuse/vudev/vunet)|
++  "inside" umvu  |         +------+      +---------------------------------+
++-----------------+
 
-All I wanted to say is that "there's usually an n116bge behind it";
-but this is mostly redundant.
+Each module "registers" to umvu its "responsabilities"
+It can register:
+* a pathname (it will receive the syscall requests for that subtree)
+* an address_family (all the syscall for sockets of that AF)
+* major/minor numbers of a char or block device
+* a systam call number
+* ....
+(each module can register more items)
 
-So, shall we just drop the output port specification (along with the
-panel node) in order to get one step further?
+The problem is not in the dialogue between umvu and the user processes
+(<---> on the left in the diagram above) but between umvu and its modules
+(<---> on the right). 
+(wi_epoll_wait, wd_epoll_wait, wo_epoll_wait are the three wrappers used
+ respectively before, during and after epoll_wait in the dialogue on the left with the
+user processes).
 
-> I guess you should describe why do you think it's "clear", because I'm
-> not sure this is obvious for everyone here. eDP allows to discover
-> which device is on the other side and its supported timings, just like
-> HDMI for example (or regular DP, for that matter). Would you think
-> it's clearly preferable to ship a DT with the DP/HDMI monitor
-> connected on the other side exposed as a panel as well?
+When a user process generates a "read" syscall request and umvu discovers that
+the fd is managed by vufuse, it forwards to vufuse a "read" request
+having the same signature of the "read" system call (plus a trailing fdprivate arg for
+syscalls using a fd. This arg can be used to speed up virtualization but can be safely
+ignored).
 
-Well, as I wrote: "in good intention". That's the panel that comes with
-the kit but it is very well detected automatically, just like you describe.
+If for the same "read" request the file descriptor is managed by vunet,
+it is forwarded to vunet (actually it is converted to "recvmsg": if fd is a socket
+recvmesg manages all read/recv/recvfrom/recvmsg, umvu tends to simplify the API 
+by unifying similar system calls).
 
-So, just leave it out?
+But what about poll/epoll/ppoll/select/pselect?
+umvu takes care of all the system call requests but it needs a clean way to ask
+modules some feedback when the expected events happen.
 
-	Torsten
+I think the clean way to do it is illustrated in test_modules/unrealsock.c
+This is a test module: it registers the address families AF_INET, AF_INET6 and AF_NETLINK
+then it forwards all the requests to the system calls.
+In this way when this module is loaded all system calls requests 
+related to sockets of the mentioned families are sent to unrealsock 
+which uses the system call.
 
+When unrealsock is loaded
+   vu_insmod unrealsock
+nothing apparently happens.
+It is possible to run ssh, ask for ip addresses using "ip addr" etc.
+The difference is that all the system call requests "pass through" umvu
+and are sent to the real kernel by unrealsock.
+
+We use modules like unrealsock to test umvu features in an independent manner (without
+specific modules and submodules).
+
+All the stuff related the virtualization of poll/ppoll/select/pselect/epoll is managed at
+line 77:
+		vu_syscall_handler(s, epoll_ctl) = epoll_ctl;
+
+It says: "dear module if I need to get informed by you about an event on a file descriptor
+I'll call an epoll_ctl". That's all.
+
+Here it works as I am diverting the request to the system call which is able to generate
+EPOLL_PRI and all other flavours of EPOLL_*.
+When I want to write a module able to virtualize a network stack I need to write my epoll_ctl 
+so I need a way to generate EPOLL_PRI when I receive an OOB packet, EPOLL_IN must be set 
+when the stack receives a packet and reset when the buffer gets empty, etc.
+
+For sure I could teach people aiming to write a module for umvu that there is a variable in
+proxima centaury (I mean an helper function using data.ptr of struct epoll_event) and
+then if they generate an EPOLL_IN it will be processed as if it were an EPOLL_PRI.
+why?
+
+Let us reverse the question.
+Why not giving linux programmers the ability to have file descriptors on which arbitrary 
+EPOLL events can be generated as they need/please? eventfd/EFD_VPOLL is (in my opinion) 
+a simple way to implement this feature, we can converge on a different API.
+It is not a Copernican revolution of the code. It seems to me that it is not a dangerous
+feature (I could be wrong, please tell me!). It is possible to generate signals normally
+sent by the kernel (e.g. SEGV), why it is not possible to generate an EPOLL_PRI?
+There is at least one happy user of the new feature (me) and other may come.
+It is just one (tiny) more degree of freedom.
+
+Many kernel features were added for one usage (e.g. seccomp was created to lend/rent processing
+power in a safe way) and then it was discovered that they are useful in other cases (e.g.
+sandboxes for browsers).
+
+Again thanks to everybody who will have read this message up to this point ;-)
+
+	renzo
