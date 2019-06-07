@@ -2,138 +2,143 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1B9C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DB9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7654420657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A477520868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfFGO3F (ORCPT
+        id S1729322AbfFGO3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:29:05 -0400
-Received: from mail.us.es ([193.147.175.20]:47050 "EHLO mail.us.es"
+        Fri, 7 Jun 2019 10:29:32 -0400
+Received: from mga12.intel.com ([192.55.52.136]:49514 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbfFGO3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:29:05 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id D884CBAE9F
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 16:29:01 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id CA0F7DA70B
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 16:29:01 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id B9E54DA707; Fri,  7 Jun 2019 16:29:01 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 433E5DA701;
-        Fri,  7 Jun 2019 16:28:59 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Fri, 07 Jun 2019 16:28:59 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 0386D4265A2F;
-        Fri,  7 Jun 2019 16:28:58 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 16:28:58 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, tyhicks@canonical.com,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, linux-kernel@vger.kernel.org,
-        richardrose@google.com, vapier@chromium.org, bhthompson@google.com,
-        smbarber@chromium.org, joelhockey@chromium.org,
-        ueberall@themenzentrisch.de
-Subject: Re: [PATCH RESEND net-next 1/2] br_netfilter: add struct netns_brnf
-Message-ID: <20190607142858.vgkljqohn34rxhe2@salvia>
-References: <20190606114142.15972-1-christian@brauner.io>
- <20190606114142.15972-2-christian@brauner.io>
- <20190606081440.61ea1c62@hermes.lan>
- <20190606151937.mdpalfk7urvv74ub@brauner.io>
- <20190606163035.x7rvqdwubxiai5t6@salvia>
- <20190607132516.q3zwmzrynvqo7mzn@brauner.io>
+        id S1729210AbfFGO3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:29:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 07:29:31 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga008.jf.intel.com with ESMTP; 07 Jun 2019 07:29:29 -0700
+Date:   Fri, 7 Jun 2019 22:28:31 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mst@redhat.com, rkrcmar@redhat.com,
+        jmattson@google.com, yu.c.zhang@intel.com
+Subject: Re: [PATCH v3 0/9] Enable Sub-page Write Protection Support
+Message-ID: <20190607142831.GA18075@local-michael-cet-test>
+References: <20190606152812.13141-1-weijiang.yang@intel.com>
+ <415e571a-47db-b0b5-0215-a7ef1b9be81d@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190607132516.q3zwmzrynvqo7mzn@brauner.io>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <415e571a-47db-b0b5-0215-a7ef1b9be81d@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 03:25:16PM +0200, Christian Brauner wrote:
-> On Thu, Jun 06, 2019 at 06:30:35PM +0200, Pablo Neira Ayuso wrote:
-> > On Thu, Jun 06, 2019 at 05:19:39PM +0200, Christian Brauner wrote:
-> > > On Thu, Jun 06, 2019 at 08:14:40AM -0700, Stephen Hemminger wrote:
-> > > > On Thu,  6 Jun 2019 13:41:41 +0200
-> > > > Christian Brauner <christian@brauner.io> wrote:
-> > > > 
-> > > > > +struct netns_brnf {
-> > > > > +#ifdef CONFIG_SYSCTL
-> > > > > +	struct ctl_table_header *ctl_hdr;
-> > > > > +#endif
-> > > > > +
-> > > > > +	/* default value is 1 */
-> > > > > +	int call_iptables;
-> > > > > +	int call_ip6tables;
-> > > > > +	int call_arptables;
-> > > > > +
-> > > > > +	/* default value is 0 */
-> > > > > +	int filter_vlan_tagged;
-> > > > > +	int filter_pppoe_tagged;
-> > > > > +	int pass_vlan_indev;
-> > > > > +};
-> > > > 
-> > > > Do you really need to waste four bytes for each
-> > > > flag value. If you use a u8 that would work just as well.
-> > > 
-> > > I think we had discussed something like this but the problem why we
-> > > can't do this stems from how the sysctl-table stuff is implemented.
-> > > I distinctly remember that it couldn't be done with a flag due to that.
+On Fri, Jun 07, 2019 at 03:27:01PM +0200, Paolo Bonzini wrote:
+> On 06/06/19 17:28, Yang Weijiang wrote:
+> > EPT-Based Sub-Page write Protection(SPP)is a HW capability which
+> > allows Virtual Machine Monitor(VMM) to specify write-permission for
+> > guest physical memory at a sub-page(128 byte) granularity. When this
+> > capability is enabled, the CPU enforces write-access check for
+> > sub-pages within a 4KB page.
 > > 
-> > Could you define a pernet_operations object? I mean, define the id and size
-> > fields, then pass it to register_pernet_subsys() for registration.
-> > Similar to what we do in net/ipv4/netfilter/ipt_CLUSTER.c, see
-> > clusterip_net_ops and clusterip_pernet() for instance.
+> > The feature is targeted to provide fine-grained memory protection
+> > for usages such as device virtualization, memory check-point and
+> > VM introspection etc.
+> > 
+> > SPP is active when the "sub-page write protection" (bit 23) is 1 in
+> > Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+> > Permission Table(SPPT), SPPT is referenced via a 64-bit control field
+> > called Sub-Page Permission Table Pointer (SPPTP) which contains a
+> > 4K-aligned physical address.
+> > 
+> > Right now, only 4KB physical pages are supported for SPP. To enable SPP
+> > for certain physical page, we need to first make the physical page
+> > write-protected, then set bit 61 of the corresponding EPT leaf entry. 
+> > While HW walks EPT, if bit 61 is set, it traverses SPPT with the guset
+> > physical address to find out the sub-page permissions at the leaf entry.
+> > If the corresponding bit is set, write to sub-page is permitted,
+> > otherwise, SPP induced EPT vilation is generated.
+> > 
+> > Please refer to the SPP introduction document in this patch set and Intel SDM
+> > for details:
+> > 
+> > Intel SDM:
+> > https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+> > 
+> > Previous patch:
+> > https://lkml.org/lkml/2018/11/30/605
+> > 
+> > Patch 1: Introduction to SPP.
+> > Patch 2: Add SPP related flags and control bits.
+> > Patch 3: Functions for SPPT setup.
+> > Patch 4: Add SPP access bitmaps for memslots.
+> > Patch 5: Low level implementation of SPP operations.
+> > Patch 6: Implement User space access IOCTLs.
+> > Patch 7: Handle SPP induced VMExit and EPT violation.
+> > Patch 8: Enable lazy mode SPPT setup.
+> > Patch 9: Handle memory remapping and reclaim.
+> > 
+> > 
+> > Change logs:
+> > 
+> > V2 - V3:                                                                
+> >  1. Rebased patches to kernel 5.1 release                                
+> >  2. Deferred SPPT setup to EPT fault handler if the page is not available
+> >     while set_subpage() is being called.                                 
+> >  3. Added init IOCTL to reduce extra cost if SPP is not used.            
+> >  4. Refactored patch structure, cleaned up cross referenced functions.    
+> >  5. Added code to deal with memory swapping/migration/shrinker cases.    
+> >                                                                            
+> > V2 - V1:                                                                
+> >  1. Rebased to 4.20-rc1                                                  
+> >  2. Move VMCS change to a separated patch.                               
+> >  3. Code refine and Bug fix 
+> > 
+> > 
+> > Yang Weijiang (9):
+> >   Documentation: Introduce EPT based Subpage Protection
+> >   KVM: VMX: Add control flags for SPP enabling
+> >   KVM: VMX: Implement functions for SPPT paging setup
+> >   KVM: VMX: Introduce SPP access bitmap and operation functions
+> >   KVM: VMX: Add init/set/get functions for SPP
+> >   KVM: VMX: Introduce SPP user-space IOCTLs
+> >   KVM: VMX: Handle SPP induced vmexit and page fault
+> >   KVM: MMU: Enable Lazy mode SPPT setup
+> >   KVM: MMU: Handle host memory remapping and reclaim
+> > 
+> >  Documentation/virtual/kvm/spp_kvm.txt | 216 ++++++++++++
+> >  arch/x86/include/asm/cpufeatures.h    |   1 +
+> >  arch/x86/include/asm/kvm_host.h       |  26 +-
+> >  arch/x86/include/asm/vmx.h            |  10 +
+> >  arch/x86/include/uapi/asm/vmx.h       |   2 +
+> >  arch/x86/kernel/cpu/intel.c           |   4 +
+> >  arch/x86/kvm/mmu.c                    | 469 ++++++++++++++++++++++++++
+> >  arch/x86/kvm/mmu.h                    |   1 +
+> >  arch/x86/kvm/vmx/capabilities.h       |   5 +
+> >  arch/x86/kvm/vmx/vmx.c                | 138 ++++++++
+> >  arch/x86/kvm/x86.c                    | 141 ++++++++
+> >  include/linux/kvm_host.h              |   9 +
+> >  include/uapi/linux/kvm.h              |  17 +
+> >  13 files changed, 1038 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+> > 
 > 
-> Hm, I don't think that would work. The sysctls for br_netfilter are
-> located in /proc/sys/net/bridge under /proc/sys/net which is tightly
-> integrated with the sysctls infrastructure for all of net/ and all the
-> folder underneath it including "core", "ipv4" and "ipv6".
-> I don't think creating and managing files manually in /proc/sys/net is
-> going to fly. It also doesn't seem very wise from a consistency and
-> complexity pov. I'm also not sure if this would work at all wrt to file
-> creation and reference counting if there are two different ways of
-> managing them in the same subfolder...
-> (clusterip creates files manually underneath /proc/net which probably is
-> the reason why it gets away with it.)
+> Please add testcases in tools/testing/selftests/kvm.
+> 
+> Paolo
 
-br_netfilter is now a module, and br_netfilter_hooks.c is part of it
-IIRC, this file registers these sysctl entries from the module __init
-path.
-
-It would be a matter of adding a new .init callback to the existing
-brnf_net_ops object in br_netfilter_hooks.c. Then, call
-register_net_sysctl() from this .init callback to register the sysctl
-entries per netns.
-
-There is already a brnf_net area that you can reuse for this purpose,
-to place these pernetns flags...
-
-struct brnf_net {
-        bool enabled;
-};
-
-which is going to be glad to have more fields (under the #ifdef
-CONFIG_SYSCTL) there.
+Thanks Paolo, will do that.
