@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034A5C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ADCC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CC120B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F6E20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfFGJ7L (ORCPT
+        id S1728203AbfFGJ7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:59:11 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:33792 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727915AbfFGJ7C (ORCPT
+        Fri, 7 Jun 2019 05:59:15 -0400
+Received: from albert.telenet-ops.be ([195.130.137.90]:54346 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbfFGJ7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 05:59:02 -0400
 Received: from ramsan ([84.194.111.163])
-        by baptiste.telenet-ops.be with bizsmtp
-        id Mlz02000b3XaVaC01lz0mh; Fri, 07 Jun 2019 11:59:00 +0200
+        by albert.telenet-ops.be with bizsmtp
+        id Mlz02000Q3XaVaC06lz0P6; Fri, 07 Jun 2019 11:59:01 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hZBeG-00040x-GT; Fri, 07 Jun 2019 11:59:00 +0200
+        id 1hZBeG-000416-Ik; Fri, 07 Jun 2019 11:59:00 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hZBeG-0002cZ-Fa; Fri, 07 Jun 2019 11:59:00 +0200
+        id 1hZBeG-0002ci-Hi; Fri, 07 Jun 2019 11:59:00 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -39,9 +39,9 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/4] irqchip/renesas-intc-irqpin: Use proper irq_chip name and parent
-Date:   Fri,  7 Jun 2019 11:58:55 +0200
-Message-Id: <20190607095858.10028-2-geert+renesas@glider.be>
+Subject: [PATCH 4/4] gpio: rcar: Use proper irq_chip name
+Date:   Fri,  7 Jun 2019 11:58:58 +0200
+Message-Id: <20190607095858.10028-5-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190607095858.10028-1-geert+renesas@glider.be>
 References: <20190607095858.10028-1-geert+renesas@glider.be>
@@ -50,28 +50,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The irq_chip .name field should contain the device's class (not
-instance) name, while .parent_device should point to the device itself.
+The irq_chip .name field should contain the device's class name, not the
+instance's name.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/irqchip/irq-renesas-intc-irqpin.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-rcar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
-index 04c05a18600cf71f..f82bc60a67931cd7 100644
---- a/drivers/irqchip/irq-renesas-intc-irqpin.c
-+++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
-@@ -508,7 +508,8 @@ static int intc_irqpin_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index 70e95fc4779fe262..3ae58f182a08718a 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -483,7 +483,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ 	gpio_chip->ngpio = npins;
  
  	irq_chip = &p->irq_chip;
 -	irq_chip->name = name;
-+	irq_chip->name = "intc-irqpin";
-+	irq_chip->parent_device = dev;
- 	irq_chip->irq_mask = disable_fn;
- 	irq_chip->irq_unmask = enable_fn;
- 	irq_chip->irq_set_type = intc_irqpin_irq_set_type;
++	irq_chip->name = "gpio-rcar";
+ 	irq_chip->parent_device = dev;
+ 	irq_chip->irq_mask = gpio_rcar_irq_disable;
+ 	irq_chip->irq_unmask = gpio_rcar_irq_enable;
 -- 
 2.17.1
 
