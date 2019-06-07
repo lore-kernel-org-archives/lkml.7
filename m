@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0677C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1783C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE922146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817732146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922587;
-	bh=PrD6rkDeS7M9HCGKUpTzQI8+wV+CQLqM8IBUuPREUzI=;
+	s=default; t=1559922591;
+	bh=Dpndc8p/r3PbUm9FkMP47ORcNiP1aD71MDgt/ZF6wjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUMfHsZMisi49tIeIqS+74zJASo368O3vsuh3a5kNxLGG0odj0W4tXrnOKyBc/g7E
-	 KVmKTTNI3GhPtTxfdCxbA0Sb+4Tz3d0+0cJmjvPrgQ+r4n3OV8WjVxZ2qsq3gZ+K19
-	 sa42p/hli9SILyNEcQhGx/iK/hmrztlUpHB5DQ6s=
+	b=gCz3B/DboLW2fY4ftxIW7783qq5YTMayqzf4bdreQXud80qt4x7sAhiwC0u2KBVm4
+	 IGPYQUsd0TVgN0y+fG4E6ELuPuYVQRIA257pXVYG1horXruym+lw6Uao96GLgbW4ZY
+	 f1192QnOTGdnBHIW/MWKYfNZ2ZcRMH/MhyT+DXwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732028AbfFGPtr (ORCPT
+        id S1732040AbfFGPtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732000AbfFGPtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:49:45 -0400
+        id S1729986AbfFGPtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:49:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744FA20657;
-        Fri,  7 Jun 2019 15:49:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC0D20840;
+        Fri,  7 Jun 2019 15:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922584;
-        bh=PrD6rkDeS7M9HCGKUpTzQI8+wV+CQLqM8IBUuPREUzI=;
+        s=default; t=1559922587;
+        bh=Dpndc8p/r3PbUm9FkMP47ORcNiP1aD71MDgt/ZF6wjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AA44OzIt0DCKcd22X5jqk4NUqY+7Ls+cZKgP5ZlO/w4rC7Sk9p1J8/H7CRtoeezLT
-         3A/jH/VNvfbhj0uB5AktvNNjUC/uvq/IdTlM5D11ZhiOQWdRNXN1zN0p0Z4ccv4qLW
-         W1KtxyXnv6EqxGx81y96j+TRSUkQ1JZjurKnIpWo=
+        b=KffXUTvs+oq0u+HZ0DErokF15D+tjat2Ll/wa0oc/YwDtNLL2tB1MhezVnahdvVPW
+         DVsyX7F0eMaOgxveuw2/uBHRyztwY6JeJjHJLPnGiz3EgTnIGgM+Yp4gs4yq7wBAMm
+         dtamIGcj9JCqLZ1Ffi1dpDJWkJEaeWLBkjmXvsj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Dan Murphy <dmurphy@ti.com>, Stable@vger.kernel.org,
+        stable@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>,
+        Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.1 29/85] iio: adc: ads124: avoid buffer overflow
-Date:   Fri,  7 Jun 2019 17:39:14 +0200
-Message-Id: <20190607153852.884905919@linuxfoundation.org>
+Subject: [PATCH 5.1 30/85] iio: adc: modify NPCM ADC read reference voltage
+Date:   Fri,  7 Jun 2019 17:39:15 +0200
+Message-Id: <20190607153852.991032877@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -62,35 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Stehlé <vincent.stehle@laposte.net>
+From: Tomer Maimon <tmaimon77@gmail.com>
 
-commit 0db8aa49a97e7f40852a64fd35abcc1292a7c365 upstream.
+commit 4e63ed6b90803eeb400c392e9ff493200d926b06 upstream.
 
-When initializing the priv->data array starting from index 1, there is one
-less element to consider than when initializing the full array.
+Checking if regulator is valid before reading
+NPCM ADC regulator voltage to avoid system crash
+in a case the regulator is not valid.
 
-Fixes: e717f8c6dfec8f76 ("iio: adc: Add the TI ads124s08 ADC code")
-Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/ti-ads124s08.c |    2 +-
+ drivers/iio/adc/npcm_adc.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/adc/ti-ads124s08.c
-+++ b/drivers/iio/adc/ti-ads124s08.c
-@@ -202,7 +202,7 @@ static int ads124s_read(struct iio_dev *
- 	};
- 
- 	priv->data[0] = ADS124S08_CMD_RDATA;
--	memset(&priv->data[1], ADS124S08_CMD_NOP, sizeof(priv->data));
-+	memset(&priv->data[1], ADS124S08_CMD_NOP, sizeof(priv->data) - 1);
- 
- 	ret = spi_sync_transfer(priv->spi, t, ARRAY_SIZE(t));
- 	if (ret < 0)
+--- a/drivers/iio/adc/npcm_adc.c
++++ b/drivers/iio/adc/npcm_adc.c
+@@ -149,7 +149,7 @@ static int npcm_adc_read_raw(struct iio_
+ 		}
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+-		if (info->vref) {
++		if (!IS_ERR(info->vref)) {
+ 			vref_uv = regulator_get_voltage(info->vref);
+ 			*val = vref_uv / 1000;
+ 		} else {
 
 
