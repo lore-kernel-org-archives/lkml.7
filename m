@@ -2,205 +2,96 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C07C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72926C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822A720868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:20:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alYl8sr8"
+	by mail.kernel.org (Postfix) with ESMTP id 585A420868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731589AbfFGSUy (ORCPT
+        id S1731680AbfFGSVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:20:54 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42483 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729474AbfFGSUy (ORCPT
+        Fri, 7 Jun 2019 14:21:20 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46773 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731495AbfFGSVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:20:54 -0400
-Received: by mail-qt1-f193.google.com with SMTP id s15so3351083qtk.9
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:20:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H7b0K6AHn3lhpoTm1wMSXCMZuAzx8sTZocmvHqLXA2w=;
-        b=alYl8sr8SbMctVNVQo3Va9KlGyawdQnhGteScnFY3nMLYOZvLhK1SvtT82TiGi8KTC
-         kNzd4D6oFgxpMGUTjWL5kxMUwKxK/5RRlKt5PdfcFSqvyjGuXDJY7kwQOmyz4s6M5WmS
-         dIY1W5U/X2yAkdm1iGVneGELzzEdbbEB3iSbly5uhtogv7aox27/iBZ/EpIEXnvf06uc
-         ffE41G0KJLFdmZOsc5f3NWVvnvrH5sDAvohiS8LsnMD36YpYVjF/CFoNx9y8nICw4mBt
-         Gl+5MWZQNsUfy/c17n9rmMpetw3bUhZkgWNj68PcW7NJ2y87AthglmdZFTRt34iS+aMM
-         WymA==
+        Fri, 7 Jun 2019 14:21:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id l26so2297438lfh.13
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:21:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H7b0K6AHn3lhpoTm1wMSXCMZuAzx8sTZocmvHqLXA2w=;
-        b=fLuA1MjQIXRRMA8qfegUSDKmBqLhGWIZ9s2nyAmv3R/5KwZsyMTmaAxBm7jHsTBuqF
-         dbhfuC9Y6Z30iK/aUjfg3njeSIEhZUsu5iBXJ1CFN2lt4sgBCYLQiAaEO2RouLbL7c6V
-         +gC5EpDWhsLBfCI1DmCS2piBdYXUnYQi37JDmbLNF+434pE4GCJkJEMogcAG9BjMpt2r
-         el4FzeTn7MA7Icb0ekc6jRErDsze1pJ/P003Pbk6JijhwJO7Gc2gYjds8Ny3Cxfsc+FF
-         /n5udf2PBi3R5LmYV7Y6r3ovW3WWunXuo4oHxulSaW9EiU4mvtuUI7hp+FElbWsgWBIK
-         MClg==
-X-Gm-Message-State: APjAAAXMyv/6xUGDe4fmp/T55EOAskLs/POMxH4Nrgvp6hq20k0zQkyN
-        PHHcKUDvk/BgwbsHq+0earM=
-X-Google-Smtp-Source: APXvYqxiQHx/woe8CEJLBaqaKb+PG+tdst3UEIZS36F0s1sf9se+z0/fwTThfPxqlISW5b4GktQGuw==
-X-Received: by 2002:aed:218b:: with SMTP id l11mr27818875qtc.66.1559931652639;
-        Fri, 07 Jun 2019 11:20:52 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (187-26-97-17.3g.claro.net.br. [187.26.97.17])
-        by smtp.gmail.com with ESMTPSA id x15sm1404897qtf.15.2019.06.07.11.20.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 11:20:51 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CEE8441149; Fri,  7 Jun 2019 15:20:47 -0300 (-03)
-Date:   Fri, 7 Jun 2019 15:20:47 -0300
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     mathieu.poirier@linaro.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, leo.yan@linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        coresight@lists.linaro.org
-Subject: Re: [PATCH v2 01/17] perf tools: Configure contextID tracing in
- CPU-wide mode
-Message-ID: <20190607182047.GK21245@kernel.org>
-References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
- <20190524173508.29044-2-mathieu.poirier@linaro.org>
- <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kcUcDDcC5mC90UP39oOfydyRccLWkfoYEANrC6Q5vzo=;
+        b=czjWYP8i4Gm8HmwpyiH5gE8cDBA7hjOb0lcRtT1JBIDLLMpvV4cw/MC7NikjTEy4Kv
+         KyVXN4YeqRq5dv3xKq8WD4GRcG7GSfkoLRYUAOAF5nm5UGwrmKa4Gu0lckv+a5oMtf5c
+         0oWBDpEs80IuQgZum8BwaFRy5g1sNLCbwdax5RVEBik/X1B2S4NJt2oEmsrC6ropHGR0
+         ulJjbsmKXCVeYLZETpvWOyYngFDtd5RgBEqTOaWZekcyJEjPnkQ6Wa3dl5UMwQ8CmDPC
+         xhxzQ5CHazOo6fosIUEZLXmjWzEHDbiS2HbSCDAVT+eWcz777lpA5eOqlHM4/Tp2y4kt
+         a1SA==
+X-Gm-Message-State: APjAAAW9/3XQE5TJ4NCJfi3Ng+Znr8R7WtzN0NUWtx88YP1kz1wpF3aE
+        J/fymVpYPQTaJUGoCkHuy29ugdnokK94V8/JbMck+Q==
+X-Google-Smtp-Source: APXvYqxS5uzW3XR5kdyFjRpxOZreggJNwlHKkhL6Tmcr675Z5ilYvHwgYSkiUD3WZM5T1zybdCcFiR7fD7A9J2bVdkU=
+X-Received: by 2002:a19:22d8:: with SMTP id i207mr25716706lfi.97.1559931677223;
+ Fri, 07 Jun 2019 11:21:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190607003646.10411-1-mcroce@redhat.com> <ea97df59-481b-3f05-476c-33e733b5c4ba@gmail.com>
+In-Reply-To: <ea97df59-481b-3f05-476c-33e733b5c4ba@gmail.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Fri, 7 Jun 2019 20:20:40 +0200
+Message-ID: <CAGnkfhx_h1d6k+wZk7xZXnECDZ+Z+oLw9zAWvDFRe+mHLksszA@mail.gmail.com>
+Subject: Re: [PATCH linux-next v2] mpls: don't build sysctl related code when
+ sysctl is disabled
+To:     David Ahern <dsahern@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Jun 07, 2019 at 10:21:36AM +0100, Suzuki K Poulose escreveu:
-> Hi Mathieu,
-> 
-> On 24/05/2019 18:34, Mathieu Poirier wrote:
-> > When operating in CPU-wide mode being notified of contextID changes is
-> > required so that the decoding mechanic is aware of the process context
-> > switch.
-> > 
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
-> 
-> > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
-> I am sorry but, I don't remember reviewing this patch in the previous
-> postings. But here we go.
+On Fri, Jun 7, 2019 at 7:14 PM David Ahern <dsahern@gmail.com> wrote:
+>
+> On 6/6/19 6:36 PM, Matteo Croce wrote:
+> > Some sysctl related code and data structures is never referenced
+> > when CONFIG_SYSCTL is not set.
+> > While this is usually harmless, it produces a build failure since sysctl
+> > shared variables exists, due to missing sysctl_vals symbol:
+> >
+> >     ld: net/mpls/af_mpls.o: in function `mpls_platform_labels':
+> >     af_mpls.c:(.text+0x162a): undefined reference to `sysctl_vals'
+> >     ld: net/mpls/af_mpls.o:(.rodata+0x830): undefined reference to `sysctl_vals'
+> >     ld: net/mpls/af_mpls.o:(.rodata+0x838): undefined reference to `sysctl_vals'
+> >     ld: net/mpls/af_mpls.o:(.rodata+0x870): undefined reference to `sysctl_vals'
+> >
+> > Fix this by moving all sysctl related code under #ifdef CONFIG_SYSCTL
+> >
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> > ---
+> >
+> > v1 -> v2: fix a crash on netns destroy
+> >
+> >  net/mpls/af_mpls.c | 393 ++++++++++++++++++++++++---------------------
+> >  1 file changed, 207 insertions(+), 186 deletions(-)
+> >
+>
+> As I recall you need to set platform_labels for the mpls code to even
+> work, so building mpls_router without sysctl is pointless.
 
-Can I keep it as is? I addressed one of your concerns below, please
-check.
+This would explain why so much code went under the #ifdef.
+Should we select or depend on sysctl maybe?
 
-- Arnaldo
- 
-> > +++ b/tools/perf/util/cs-etm.h
-> > @@ -103,6 +103,18 @@ struct intlist *traceid_list;
-> >   #define KiB(x) ((x) * 1024)
-> >   #define MiB(x) ((x) * 1024 * 1024)
-> > +/*
-> > + * Create a contiguous bitmask starting at bit position @l and ending at
-> > + * position @h. For example
-> > + * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-> > + *
-> > + * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
-> > + */
-> > +#define GENMASK(h, l) \
-> > +	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-> > +
-> 
-> minor nit: Could this be placed in a more generic header file for the other
-> parts of the perf tool to consume ?
-> 
-
-Yeah, since we have:
-
-Good catch, we have it already:
-
-[acme@quaco perf]$ tail tools/include/linux/bits.h
- * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
- */
-#define GENMASK(h, l) \
-	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-
-#define GENMASK_ULL(h, l) \
-	(((~0ULL) - (1ULL << (l)) + 1) & \
-	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
-
-#endif	/* __LINUX_BITS_H */
-[acme@quaco perf]$
-[acme@quaco perf]$
-
-So I'm adding this to the pile with a Suggested-by: Suzuki, ok?
-
-commit 3217a621248824fbff8563d8447fdafe69c5316d
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Fri Jun 7 15:14:27 2019 -0300
-
-    perf cs-etm: Remove duplicate GENMASK() define, use linux/bits.h instead
-    
-    Suzuki noticed that this should be more useful in a generic header, and
-    after looking I noticed we have it already in our copy of
-    include/linux/bits.h in tools/include, so just use it, test built on
-    x86-64 and ubuntu 19.04 with:
-    
-      perfbuilder@46646c9e848e:/$ aarch64-linux-gnu-gcc --version |& head -1
-      aarch64-linux-gnu-gcc (Ubuntu/Linaro 8.3.0-6ubuntu1) 8.3.0
-      perfbuilder@46646c9e848e:/$
-    
-    Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-    Link: https://lkml.kernel.org/r/68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Jiri Olsa <jolsa@redhat.com>
-    Cc: Leo Yan <leo.yan@linaro.org>
-    Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: coresight@lists.linaro.org
-    Cc: linux-arm-kernel@lists.infradead.org,
-    Link: https://lkml.kernel.org/n/tip-69pd3mqvxdlh2shddsc7yhyv@git.kernel.org
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-index 33b57e748c3d..bc848fd095f4 100644
---- a/tools/perf/util/cs-etm.h
-+++ b/tools/perf/util/cs-etm.h
-@@ -9,6 +9,7 @@
- 
- #include "util/event.h"
- #include "util/session.h"
-+#include <linux/bits.h>
- 
- /* Versionning header in case things need tro change in the future.  That way
-  * decoding of old snapshot is still possible.
-@@ -161,16 +162,6 @@ struct cs_etm_packet_queue {
- 
- #define CS_ETM_INVAL_ADDR 0xdeadbeefdeadbeefUL
- 
--/*
-- * Create a contiguous bitmask starting at bit position @l and ending at
-- * position @h. For example
-- * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-- *
-- * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
-- */
--#define GENMASK(h, l) \
--	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
--
- #define BMVAL(val, lsb, msb)	((val & GENMASK(msb, lsb)) >> lsb)
- 
- #define CS_ETM_HEADER_SIZE (CS_HEADER_VERSION_0_MAX * sizeof(u64))
+Regards,
+-- 
+Matteo Croce
+per aspera ad upstream
