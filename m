@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B86C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A195AC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092E8208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A52208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUsnAS4q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgNRd8LS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbfFGUDL (ORCPT
+        id S1731375AbfFGUDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:03:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44697 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728727AbfFGUDJ (ORCPT
+        Fri, 7 Jun 2019 16:03:20 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38840 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731356AbfFGUDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:03:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t16so1759432pfe.11;
-        Fri, 07 Jun 2019 13:03:08 -0700 (PDT)
+        Fri, 7 Jun 2019 16:03:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a186so1778906pfa.5;
+        Fri, 07 Jun 2019 13:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aYZSfsRzRqOrI6qY0NWyqSfMDNB1pcr696hD5QwTSek=;
-        b=TUsnAS4qPplCViRIOaq3wcbYSN3h/DpMQJxMcB1RI+7y8W9o+NocJJXehhEFDClZM9
-         k4l5FHkOvyGvuwgx6pqw3Ufd+FTvsgLrXT51Uif0Lu4d2eBc2Lw30LSeCjh9tK1udCW1
-         IHowS6VNZNw4idseyC+m54T/uSPfNSsAUvkdUlfWoIjVLGkP+r56pfui65EauL7T1KpO
-         TwXDe0JxziGErxvuc9KWURQxkZ1B2jXhaO83Z/qm88nj3zU1ZNLdUeMLuzlNRqHkjrh+
-         ZKpN2xPDqLvBY/ag3z5Sg08C6oSBIjeqc22vVolVAkhuponfbne4dEpXBZKMkRES8L1V
-         QCQg==
+        bh=4w4qky68sS5jtzYYwPL+DoWN4LFY4kdxoZDOz0CE2m0=;
+        b=LgNRd8LSitogz+gT+KWPVWiaFBHa94azY6rqI620v4uzWLQwBq513CRAZa26EkJx0e
+         LSB43j3SVg8h9DLdZUWir8zkzvulNvjhFijFCy7xTwEa42IHqxvrLboEQS+vFT9qXNQu
+         /fmxYdpsuSL0bqWPQar9sU3n9ZuVizlfiO/wvEedrM6442TB/NZ8K0jORP2TT2JTlO2/
+         tdoJ1g45kLfgSMHak/i8YfAEqbTphyyvhNgeGs9hlcINg+caVr4P0FsN7jQDIO8FEeYu
+         qbMUqbFdVJEV/YXTgHkoCLGb/dQvSquaA8c8vC2p0fwGNwflkXhaVRTEeHpQcSXDlIul
+         4CsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aYZSfsRzRqOrI6qY0NWyqSfMDNB1pcr696hD5QwTSek=;
-        b=ptWr9ZAexXOMWx2M75xDeSdtM5hLRfCMoNK4WrhulnyvqDMFA02hacxaOWKAiXdC1P
-         q4nBwi5CRRwJZoaXDJrGAWVoPHwniUXlfWeMwlMGm3zC2nwRA5hfrkgWq3Q+jUgpPMRM
-         kyYDukJxb8jEDy06mcV40j/PGi+jKIICSid7mtB+eixstGgWEZ7AVYJ1sajmSsnD3zBV
-         5I59KqSZtGfdZd7RUpA4AIXtzcZ9hO+CnOnDxdKSEOSnRXZ/L2FejcIcw/qhtlR/zTDt
-         mZcAUB7JrRssXWkAeKp8Jlgi/AdCNVhemWAadXn5Iw2IuwSSlE1xdKwJgFd/6OR4p9Sg
-         NndA==
-X-Gm-Message-State: APjAAAX0KdSWBth+oxp3NMtdfR6TM+XNCLvaUVts65ve0JZXsg+93grn
-        yodCLMCn5PqHxZtuq5+dsVWI3vywSR0=
-X-Google-Smtp-Source: APXvYqw2LL3D+toFpTvOuTc3ick8bMhfJmNpzlnyKoY/gwRAAF64aknY57YOUbHkyP/vyf//k4Xq9g==
-X-Received: by 2002:a65:60d2:: with SMTP id r18mr4595209pgv.217.1559937787700;
-        Fri, 07 Jun 2019 13:03:07 -0700 (PDT)
+        bh=4w4qky68sS5jtzYYwPL+DoWN4LFY4kdxoZDOz0CE2m0=;
+        b=lponJH9H3OUnwjTJWNjQFRBdGiUfNnvqG37O4mZce43SlyZxygRCpTZ2C+HFnXJUEI
+         Eq8XJL+FXT/lqkDHVM50zI53fEcqWxdwSjGhIY3H8jFR2QfitA74mRqylWusZziXT+ii
+         0eARCLPQg8XegosqWS1AjvMbiWe38tYeaUGHEDVMxEUBpWX+DANOlnF9vCXEX3xoeBHc
+         X95tTcEzrKdRBA2qircHL8RHIhiWIMeIMrQEqfFHANPfKTE6wpbG2NA/DVJJC8Ml5AaP
+         CXH/80sb0gcJ5kfPh23wIP20B0oxHFdh0+IupnBVTKUkXCj1QfCHuJJ3h2sq1Qc6yQT3
+         eXCQ==
+X-Gm-Message-State: APjAAAWF2kZlzmp44t2X/Lk9XSKSzBAgcM0w1PJzYjwKjM1SVAO3zrVY
+        yNsUq6aug6UtoR2AKWzm/BBGOwcMntA=
+X-Google-Smtp-Source: APXvYqwEKcpXbXXB0prW1dxsN3n80G75LdHkFxnoPW39VjKDXQ8wYzh5UzsyaJuilZbaOSVtjpbPOg==
+X-Received: by 2002:a63:c744:: with SMTP id v4mr4617896pgg.370.1559937792698;
+        Fri, 07 Jun 2019 13:03:12 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id s5sm3289405pgj.60.2019.06.07.13.03.04
+        by smtp.gmail.com with ESMTPSA id s5sm3289405pgj.60.2019.06.07.13.03.11
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 13:03:06 -0700 (PDT)
+        Fri, 07 Jun 2019 13:03:12 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Aymen Sghaier <aymen.sghaier@nxp.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] crypto: caam - move DMA mask selection into a function
-Date:   Fri,  7 Jun 2019 13:02:23 -0700
-Message-Id: <20190607200225.21419-3-andrew.smirnov@gmail.com>
+Subject: [PATCH v2 4/4] crypto: caam - always select job ring via RSR on i.MX8MQ
+Date:   Fri,  7 Jun 2019 13:02:25 -0700
+Message-Id: <20190607200225.21419-5-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607200225.21419-1-andrew.smirnov@gmail.com>
 References: <20190607200225.21419-1-andrew.smirnov@gmail.com>
@@ -81,10 +81,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exactly the same code to figure out DMA mask is repeated twice in the
-driver code. To avoid repetition, move that logic into a standalone
-subroutine in intern.h. While at it re-shuffle the code to make it
-more readable with early returns.
+Per feedback from NXP tech support the way to use register based
+service interface on i.MX8MQ is to follow the same set of steps
+outlined for the case when virtualization is enabled, regardless if it
+is. Current version of SRM for i.MX8MQ speaks of DECO DID_MS and DECO
+DID_LS registers, but apparently those are not implemented, so the
+case when SCFGR[VIRT_EN]=0 should be handles the same as the case when
+SCFGR[VIRT_EN]=1
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Spencer <christopher.spencer@sea.co.uk>
@@ -96,95 +99,27 @@ Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/crypto/caam/ctrl.c   | 11 +----------
- drivers/crypto/caam/intern.h | 20 ++++++++++++++++++++
- drivers/crypto/caam/jr.c     | 15 +--------------
- 3 files changed, 22 insertions(+), 24 deletions(-)
+ drivers/crypto/caam/ctrl.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 39334e71a14f..9750fcfd37fc 100644
+index 9750fcfd37fc..c50fc059a441 100644
 --- a/drivers/crypto/caam/ctrl.c
 +++ b/drivers/crypto/caam/ctrl.c
-@@ -717,16 +717,7 @@ static int caam_probe(struct platform_device *pdev)
- 			      JRSTART_JR1_START | JRSTART_JR2_START |
- 			      JRSTART_JR3_START);
+@@ -107,7 +107,12 @@ static inline int run_descriptor_deco0(struct device *ctrldev, u32 *desc,
+ 	int i;
  
--	if (sizeof(dma_addr_t) == sizeof(u64)) {
--		if (caam_dpaa2)
--			ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(49));
--		else if (of_device_is_compatible(nprop, "fsl,sec-v5.0"))
--			ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(40));
--		else
--			ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
--	} else {
--		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
--	}
-+	ret = dma_set_mask_and_coherent(dev, caam_get_dma_mask(dev));
- 	if (ret) {
- 		dev_err(dev, "dma_set_mask_and_coherent failed (%d)\n", ret);
- 		goto iounmap_ctrl;
-diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
-index 3392615dc91b..b0e32a91cdea 100644
---- a/drivers/crypto/caam/intern.h
-+++ b/drivers/crypto/caam/intern.h
-@@ -10,6 +10,8 @@
- #ifndef INTERN_H
- #define INTERN_H
  
-+#include "ctrl.h"
-+
- /* Currently comes from Kconfig param as a ^2 (driver-required) */
- #define JOBR_DEPTH (1 << CONFIG_CRYPTO_DEV_FSL_CAAM_RINGSIZE)
+-	if (ctrlpriv->virt_en == 1) {
++	if (ctrlpriv->virt_en == 1 ||
++	    /*
++	     * Apparently on i.MX8MQ it doesn't matter if virt_en == 1
++	     * and the following steps should be performed regardless
++	     */
++	    of_machine_is_compatible("fsl,imx8mq")) {
+ 		clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);
  
-@@ -127,4 +129,22 @@ DEFINE_SIMPLE_ATTRIBUTE(caam_fops_u32_ro, caam_debugfs_u32_get, NULL, "%llu\n");
- DEFINE_SIMPLE_ATTRIBUTE(caam_fops_u64_ro, caam_debugfs_u64_get, NULL, "%llu\n");
- #endif
- 
-+static inline u64 caam_get_dma_mask(struct device *dev)
-+{
-+	struct device_node *nprop = dev->of_node;
-+
-+	if (sizeof(dma_addr_t) != sizeof(u64))
-+		return DMA_BIT_MASK(32);
-+
-+	if (caam_dpaa2)
-+		return DMA_BIT_MASK(49);
-+
-+	if (of_device_is_compatible(nprop, "fsl,sec-v5.0-job-ring") ||
-+	    of_device_is_compatible(nprop, "fsl,sec-v5.0"))
-+		return DMA_BIT_MASK(40);
-+
-+	return DMA_BIT_MASK(36);
-+}
-+
-+
- #endif /* INTERN_H */
-diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-index 1de2562d0982..c2b99139a10a 100644
---- a/drivers/crypto/caam/jr.c
-+++ b/drivers/crypto/caam/jr.c
-@@ -502,20 +502,7 @@ static int caam_jr_probe(struct platform_device *pdev)
- 
- 	jrpriv->rregs = (struct caam_job_ring __iomem __force *)ctrl;
- 
--	if (sizeof(dma_addr_t) == sizeof(u64)) {
--		if (caam_dpaa2)
--			error = dma_set_mask_and_coherent(jrdev,
--							  DMA_BIT_MASK(49));
--		else if (of_device_is_compatible(nprop,
--						 "fsl,sec-v5.0-job-ring"))
--			error = dma_set_mask_and_coherent(jrdev,
--							  DMA_BIT_MASK(40));
--		else
--			error = dma_set_mask_and_coherent(jrdev,
--							  DMA_BIT_MASK(36));
--	} else {
--		error = dma_set_mask_and_coherent(jrdev, DMA_BIT_MASK(32));
--	}
-+	error = dma_set_mask_and_coherent(jrdev, caam_get_dma_mask(jrdev));
- 	if (error) {
- 		dev_err(jrdev, "dma_set_mask_and_coherent failed (%d)\n",
- 			error);
+ 		while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&
 -- 
 2.21.0
 
