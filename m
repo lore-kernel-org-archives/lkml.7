@@ -2,142 +2,102 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9624C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB22C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8CC208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vtFW7dQk"
+	by mail.kernel.org (Postfix) with ESMTP id 355F4208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfFGIp6 (ORCPT
+        id S1727512AbfFGIs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 04:45:58 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:55301 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfFGIp6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 04:45:58 -0400
-Received: by mail-it1-f194.google.com with SMTP id i21so1548428ita.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 01:45:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qxzzEblUMEA5qQdRiWIndWcO3q1z3D8GVOYc/iBF8T0=;
-        b=vtFW7dQkZ6w7ZKz2yBwH0nSO+7wnvEyhA4Zvn7m4ERt5orAakOZxJQbbAFC/6bqIFS
-         uCDWauPC0ld6wHGkBUqdwmgETG9jIkEIbMroRaI72GvlDslq/xqon9ikBm7s083yHQra
-         IhykEpUQTCYGci0d4VzKHelk7NysiKzea2wIstcbnvrIlfF8XFgzRrqfyZDaMILKkdKQ
-         WjV96dvEF4Azc46bdZhwb/N/XJXSaEEOyJZp7YYicqih0NjVW9rshSgXlGsFiWbwuHqw
-         a+7iET5Nl0R6tdI2itZ8hWXlsazF/vbxkHbhqqqj4aaojx2cg1dBZsTMaY491yeleVQO
-         +ctA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qxzzEblUMEA5qQdRiWIndWcO3q1z3D8GVOYc/iBF8T0=;
-        b=k0J4YtUeklSxnHU6nADGIsi4mwCvR7XvTNx1TZO28yZiO75dB4Oyy0ew/l6b42rIOc
-         Kty1d0KSaQSs6+ByTkv0XmGNhCVPSBHc4rthBhb+1P0giRZ9OUjhWwu7+6GL7c0MsKCS
-         N6jtrBOYUKjRC6btn+YoHDgBLJJ//XrABX74calLrwi50IuTnmqjPR/ecRt3eZnk6rAT
-         jqqXG9VotJOaLjfJXSL15bJHwaXSgRW3rShVGk9gCGWyhAxywhrgc/7x6DKAY8mNbosL
-         XDTlhLPS7uk+J8ZUbr6asM/Wq0T/6lJmQIcsDybnvfiBYrsnV6TAjLb4vZ3/TZjOUaHu
-         XnUg==
-X-Gm-Message-State: APjAAAUR97Q9cqlUXwEMJkZRHBUkmB0DENGes6jptPwsd22uljl+yMxY
-        15nOs+V0IJ+ev6iuB0TssRqqYXu8JO7xh5iLfDPaYA==
-X-Google-Smtp-Source: APXvYqyyIc3w38KtpRgwzInkX7C52C7qLNIhYaBz1KW51AZa/S8BPxu0J0HyjhtYLoeXbrcad31ZTGsAa4j675kCnjk=
-X-Received: by 2002:a02:22c6:: with SMTP id o189mr21527930jao.35.1559897157328;
- Fri, 07 Jun 2019 01:45:57 -0700 (PDT)
+        Fri, 7 Jun 2019 04:48:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:35822 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbfFGIsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 04:48:55 -0400
+X-Greylist: delayed 484 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Jun 2019 04:48:55 EDT
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3228D344;
+        Fri,  7 Jun 2019 01:40:51 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A3CB3F246;
+        Fri,  7 Jun 2019 01:40:50 -0700 (PDT)
+Subject: Re: [PATCH] Documentation: coresight: Update the generic device names
+To:     leo.yan@linaro.org
+Cc:     mathieu.poirier@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        corbet@lwn.net
+References: <1559229077-26436-1-git-send-email-suzuki.poulose@arm.com>
+ <20190603190133.GA20462@xps15> <99055755-6525-694e-a15d-5de7318a80da@arm.com>
+ <20190607022136.GE5970@leoy-ThinkPad-X240s>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <78c98c28-4f3f-825b-18e1-c71fb63a80eb@arm.com>
+Date:   Fri, 7 Jun 2019 09:40:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <000000000000f19676058ab7adc4@google.com>
-In-Reply-To: <000000000000f19676058ab7adc4@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 7 Jun 2019 10:45:45 +0200
-Message-ID: <CACT4Y+ZZy5nqduErU8hjKrwThHiybGpwd3QzOviAWftZFZ4d2A@mail.gmail.com>
-Subject: Re: linux-next boot error: WARNING: workqueue cpumask: online
- intersect > possible intersect
-To:     syzbot <syzbot+4d497898effeb1936245@syzkaller.appspotmail.com>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, mwb@linux.vnet.ibm.com
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190607022136.GE5970@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 10:33 AM syzbot
-<syzbot+4d497898effeb1936245@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    ae3cad8f Add linux-next specific files for 20190603
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=164f802ea00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7ccec0766d83706f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4d497898effeb1936245
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+4d497898effeb1936245@syzkaller.appspotmail.com
->
-> smpboot: CPU0: Intel(R) Xeon(R) CPU @ 2.30GHz (family: 0x6, model: 0x3f,
-> stepping: 0x0)
-> Performance Events: unsupported p6 CPU model 63 no PMU driver, software
-> events only.
-> rcu: Hierarchical SRCU implementation.
-> NMI watchdog: Perf NMI watchdog permanently disabled
-> smp: Bringing up secondary CPUs ...
-> x86: Booting SMP configuration:
-> .... node  #0, CPUs:      #1
-> MDS CPU bug present and SMT on, data leak possible. See
-> https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for
-> more details.
-> smp: Brought up 2 nodes, 2 CPUs
-> smpboot: Max logical packages: 1
-> smpboot: Total of 2 processors activated (9200.00 BogoMIPS)
-> devtmpfs: initialized
-> clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns:
-> 19112604462750000 ns
-> futex hash table entries: 512 (order: 4, 65536 bytes)
-> xor: automatically using best checksumming function   avx
-> PM: RTC time: 07:02:18, date: 2019-06-03
-> NET: Registered protocol family 16
-> audit: initializing netlink subsys (disabled)
-> cpuidle: using governor menu
-> ACPI: bus type PCI registered
-> dca service started, version 1.12.1
-> PCI: Using configuration type 1 for base access
-> WARNING: workqueue cpumask: online intersect > possible intersect
+Hi Leo,
 
-+workqueue maintainers and Michael who added this WARNING
+>>>>    A Coresight PMU works the same way as any other PMU, i.e the name of the PMU is
+>>>>    listed along with configuration options within forward slashes '/'.  Since a
+>>>>    Coresight system will typically have more than one sink, the name of the sink to
+>>>> -work with needs to be specified as an event option.  Names for sink to choose
+>>>> -from are listed in sysFS under ($SYSFS)/bus/coresight/devices:
+>>>> +work with needs to be specified as an event option.
+>>>> +On newer kernels the available sinks are listed in sysFS under:
+>>>> +($SYSFS)/bus/event_source/devices/cs_etm/sinks/
+>>>> -	root@linaro-nano:~# ls /sys/bus/coresight/devices/
+>>>> -		20010000.etf   20040000.funnel  20100000.stm  22040000.etm
+>>>> -		22140000.etm  230c0000.funnel  23240000.etm 20030000.tpiu
+>>>> -		20070000.etr     20120000.replicator  220c0000.funnel
+>>>> -		23040000.etm  23140000.etm     23340000.etm
+>>>> +	root@localhost:/sys/bus/event_source/devices/cs_etm/sinks# ls
+>>>> +	tmc_etf0  tmc_etr0  tpiu0
+>>>> -	root@linaro-nano:~# perf record -e cs_etm/@20070000.etr/u --per-thread program
+>>>> +On older kernels, this may need to be found from the list of coresight devices,
+>>>> +available under ($SYSFS)/bus/coresight/devices/:
+>>>> +
+>>>> +	root@localhost:/sys/bus/coresight/devices# ls
+>>>> +	etm0  etm1  etm2  etm3  etm4  etm5  funnel0  funnel1  funnel2  replicator0  stm0 tmc_etf0  tmc_etr0  tpiu0
+>>>> +
+>>>> +	root@linaro-nano:~# perf record -e cs_etm/@tmc_etr0/u --per-thread program
+>>>
+>>> On the "older" kernels you are referring to one would find the original naming
+>>> convention.  Everything else looks good to me.
+>>
+>> True, but do we care what we see there ? All we care about is the location,
+>> where to find them. I could fix it, if you think thats needed.
+> 
+> IIUC, either the old kernel or newer kernel, both we can find the event
+> from ($SYSFS)/bus/event_source/devices/cs_etm/sinks/; the only
+> difference between them is the naming convention.
 
-The WARNING was added in 2017, so I guess it's a change somewhere else
-that triggered it.
-The WARNING message does not seem to give enough info about the caller
-(should it be changed to WARN_ONCE to print a stack?). How can be root
-cause this and unbreak linux-next?
+The cs_etm/sinks was only added with the CPU-wide trace support. So, if someone
+refers to this document alone and then tries to do something on on older kernel,
+which is quite possible for a production device running a stable kernel, {s,}he
+might be surprised.
 
+> 
+> So the doc can use the same location to find event for both new and
+> old kernel, and explain the naming convention difference?
 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000f19676058ab7adc4%40google.com.
-> For more options, visit https://groups.google.com/d/optout.
+My question is really, does the naming convention matter ? What you see
+under the directory is the name. But yes, I am open to add a section to
+explain the fact that we changed the naming scheme, if everyone agrees
+to it.
+
+Cheers
+Suzuki
