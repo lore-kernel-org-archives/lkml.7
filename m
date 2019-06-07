@@ -2,124 +2,213 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AA0C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E4BC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC7220840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:40:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbDte6CG"
+	by mail.kernel.org (Postfix) with ESMTP id 228B72133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559922026;
+	bh=FyehNmskSxwTTABvJ159kNmgnxJUhpzmIVqPOUhndq0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o6mQpI6jCX/v28ZVD4Fylp3cJIXRWyRYMv6XH4ZgmCsPpQQs749Zfqk5iPe8yGl8j
+	 FVaf1cFOwSHLoP8N6t2FjRWFOVZFwJjEmjxc5wgrncFjw9tvIFso86SKMXTQPaor7l
+	 dPP34HOwlXxsTJ0VSPJP7pVvld8yyoJ9P5kQOy+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfFGPkP (ORCPT
+        id S1730038AbfFGPkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:40:15 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43774 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbfFGPkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:40:15 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w33so3605169edb.10;
-        Fri, 07 Jun 2019 08:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2Y4RUf49nvZm45YHDjjNhw1tLCuIx8QoAvl1tOKskzE=;
-        b=kbDte6CGOb2ST61SG9x9hqY0lRB8nn8zgCOYrJc652rqCclLy6YA5nRlsb8wEfAtb5
-         MZGgKGuCY+mog724nQP9sYYlXSDYzslktLsoDGTgQCqdERQNwPiuOSjeM4gwpFXA3Fqi
-         ConOcmfy5Ckw/wDCdpLlc1ea1V7nymtFr5VOpx7s7AguIip7Nh6nQnsptAKFJCI+iTcK
-         2bpU4R+NZn6A0FCK6hSYcVNpjtaBSqc9a/0JFI5nzR53Ua5zG6xAb3FKONGbK+/b42NR
-         vFyOA5xjUiljikRB9JGednCrGYC6bswdPdh4qn+nunROutn1Hdd9aT0kEafSIUzWr53i
-         e3rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2Y4RUf49nvZm45YHDjjNhw1tLCuIx8QoAvl1tOKskzE=;
-        b=Iu04EXJBS/uSjiQGI55Vra+JveSjNLLs+UPHPkN3c1pI+lPF6Ksc/JJCdlvpfBIQXb
-         wWhofXoI2dVDBYsXETQ3ShKDnq3k+EQ3jAmtM7YrJ4V83Z+vsFQQRMEKciseCHCC8Jiv
-         R1JpcZYLQu6WrmgNRz/dz9LHaCGX/WbU1nsEY5iGddxrTxSqTnxBkeJkLtXeg6uv2nH9
-         SiInYW5U69rCsFwM7tqoPw6AXPLN0/7ipWQ7vdavlRItw9h2nQxu5sAJvqbc5uVr6NT5
-         +uby5Ea5/Rg6ihs20KvX+knQiVfs6un8EgrWdm1qnBRMVGfxGi5npSPPEPUgQHR7AT6X
-         yQZA==
-X-Gm-Message-State: APjAAAWTNuWafXfaxlnHiyaN6mJE17nY1axa9oAGAcPnX48sxSAfQcjG
-        OZ86gO4ZnrVoQ9OMJIQMisE=
-X-Google-Smtp-Source: APXvYqyMpGRltJQMC8voSnI0XNseSfgwO+9HFUckN7SrunfF41iexjVLl4do8OglGFQAQcY7g2J2jw==
-X-Received: by 2002:a50:ba1b:: with SMTP id g27mr37488311edc.18.1559922013018;
-        Fri, 07 Jun 2019 08:40:13 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id y3sm427843ejp.41.2019.06.07.08.40.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 08:40:12 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 08:40:10 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: "arm64: Silence gcc warnings about arch ABI drift" breaks clang
-Message-ID: <20190607154010.GA41392@archlinux-epyc>
-References: <1559920965.6132.56.camel@lca.pw>
- <20190607152517.GC19862@fuggles.cambridge.arm.com>
- <1559921171.6132.57.camel@lca.pw>
+        Fri, 7 Jun 2019 11:40:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728783AbfFGPkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:40:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29DEF212F5;
+        Fri,  7 Jun 2019 15:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559922023;
+        bh=FyehNmskSxwTTABvJ159kNmgnxJUhpzmIVqPOUhndq0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NN2j7k0ikttloyYPChFUcwl6vtAHRE8iS9RIFTD8qd8y/DYOBpyYs3QXnyYq+5hlT
+         ufYnBr4a0yhOFo9XDcKiPIAe3x9iZTEltisfXxWGA1EBM9npyfpW6bGp7AvQK+Cjzz
+         MxMIiL5gbDCqDT+lTpG45t70TOZsdYJ6OXz7ODdQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Amit Klein <aksecurity@gmail.com>,
+        Benny Pinkas <benny@pinkas.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 01/69] inet: switch IP ID generator to siphash
+Date:   Fri,  7 Jun 2019 17:38:42 +0200
+Message-Id: <20190607153848.433338110@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
+References: <20190607153848.271562617@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559921171.6132.57.camel@lca.pw>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:26:11AM -0400, Qian Cai wrote:
-> On Fri, 2019-06-07 at 16:25 +0100, Will Deacon wrote:
-> > On Fri, Jun 07, 2019 at 11:22:45AM -0400, Qian Cai wrote:
-> > > The linux-next commit "arm64: Silence gcc warnings about arch ABI drift" [1]
-> > > breaks clang build where it screams that unknown option "-Wno-psabi" and
-> > > generates errors below,
-> > 
-> > So that can be easily fixed with cc-option...
-> > 
-> > > [1] https://lore.kernel.org/linux-arm-kernel/1559817223-32585-1-git-send-ema
-> > > il-D
-> > > ave.Martin@arm.com/
-> > > 
-> > > ./drivers/firmware/efi/libstub/arm-stub.stub.o: In function
-> > > `install_memreserve_table':
-> > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:73: undefined reference to
-> > > `__efistub___stack_chk_guard'
-> > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:73: undefined reference to
-> > > `__efistub___stack_chk_guard'
-> > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:93: undefined reference to
-> > > `__efistub___stack_chk_guard'
-> > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:93: undefined reference to
-> > > `__efistub___stack_chk_guard'
-> > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:94: undefined reference to
-> > > `__efistub___stack_chk_fail
-> > 
-> > ... but this looks unrelated. Are you saying you don't see these errors if
-> > you revert Dave's patch?
-> 
-> Yes.
+From: Eric Dumazet <edumazet@google.com>
 
-I suspect the reason for this is -Wunknown-warning-option causes
-cc-option to fail. I see some disabled warnings like
--Waddress-of-packed-member and -Wunused-const-variable when -Wno-psabi
-is unconditionally added.
+[ Upstream commit df453700e8d81b1bdafdf684365ee2b9431fb702 ]
 
-I'll do some further triage but I think the obvious fix as Will
-suggested is to use cc-disable-warning. I'll send a patch.
+According to Amit Klein and Benny Pinkas, IP ID generation is too weak
+and might be used by attackers.
 
-Cheers,
-Nathan
+Even with recent net_hash_mix() fix (netns: provide pure entropy for net_hash_mix())
+having 64bit key and Jenkins hash is risky.
+
+It is time to switch to siphash and its 128bit keys.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Reported-by: Benny Pinkas <benny@pinkas.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/siphash.h  |    5 +++++
+ include/net/netns/ipv4.h |    2 ++
+ net/ipv4/route.c         |   12 +++++++-----
+ net/ipv6/output_core.c   |   30 ++++++++++++++++--------------
+ 4 files changed, 30 insertions(+), 19 deletions(-)
+
+--- a/include/linux/siphash.h
++++ b/include/linux/siphash.h
+@@ -21,6 +21,11 @@ typedef struct {
+ 	u64 key[2];
+ } siphash_key_t;
+ 
++static inline bool siphash_key_is_zero(const siphash_key_t *key)
++{
++	return !(key->key[0] | key->key[1]);
++}
++
+ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key);
+ #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key);
+--- a/include/net/netns/ipv4.h
++++ b/include/net/netns/ipv4.h
+@@ -9,6 +9,7 @@
+ #include <linux/uidgid.h>
+ #include <net/inet_frag.h>
+ #include <linux/rcupdate.h>
++#include <linux/siphash.h>
+ 
+ struct tcpm_hash_bucket;
+ struct ctl_table_header;
+@@ -164,5 +165,6 @@ struct netns_ipv4 {
+ 	unsigned int	fib_seq;	/* protected by rtnl_mutex */
+ 
+ 	atomic_t	rt_genid;
++	siphash_key_t	ip_id_key;
+ };
+ #endif
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -517,15 +517,17 @@ EXPORT_SYMBOL(ip_idents_reserve);
+ 
+ void __ip_select_ident(struct net *net, struct iphdr *iph, int segs)
+ {
+-	static u32 ip_idents_hashrnd __read_mostly;
+ 	u32 hash, id;
+ 
+-	net_get_random_once(&ip_idents_hashrnd, sizeof(ip_idents_hashrnd));
++	/* Note the following code is not safe, but this is okay. */
++	if (unlikely(siphash_key_is_zero(&net->ipv4.ip_id_key)))
++		get_random_bytes(&net->ipv4.ip_id_key,
++				 sizeof(net->ipv4.ip_id_key));
+ 
+-	hash = jhash_3words((__force u32)iph->daddr,
++	hash = siphash_3u32((__force u32)iph->daddr,
+ 			    (__force u32)iph->saddr,
+-			    iph->protocol ^ net_hash_mix(net),
+-			    ip_idents_hashrnd);
++			    iph->protocol,
++			    &net->ipv4.ip_id_key);
+ 	id = ip_idents_reserve(hash, segs);
+ 	iph->id = htons(id);
+ }
+--- a/net/ipv6/output_core.c
++++ b/net/ipv6/output_core.c
+@@ -10,15 +10,25 @@
+ #include <net/secure_seq.h>
+ #include <linux/netfilter.h>
+ 
+-static u32 __ipv6_select_ident(struct net *net, u32 hashrnd,
++static u32 __ipv6_select_ident(struct net *net,
+ 			       const struct in6_addr *dst,
+ 			       const struct in6_addr *src)
+ {
++	const struct {
++		struct in6_addr dst;
++		struct in6_addr src;
++	} __aligned(SIPHASH_ALIGNMENT) combined = {
++		.dst = *dst,
++		.src = *src,
++	};
+ 	u32 hash, id;
+ 
+-	hash = __ipv6_addr_jhash(dst, hashrnd);
+-	hash = __ipv6_addr_jhash(src, hash);
+-	hash ^= net_hash_mix(net);
++	/* Note the following code is not safe, but this is okay. */
++	if (unlikely(siphash_key_is_zero(&net->ipv4.ip_id_key)))
++		get_random_bytes(&net->ipv4.ip_id_key,
++				 sizeof(net->ipv4.ip_id_key));
++
++	hash = siphash(&combined, sizeof(combined), &net->ipv4.ip_id_key);
+ 
+ 	/* Treat id of 0 as unset and if we get 0 back from ip_idents_reserve,
+ 	 * set the hight order instead thus minimizing possible future
+@@ -41,7 +51,6 @@ static u32 __ipv6_select_ident(struct ne
+  */
+ __be32 ipv6_proxy_select_ident(struct net *net, struct sk_buff *skb)
+ {
+-	static u32 ip6_proxy_idents_hashrnd __read_mostly;
+ 	struct in6_addr buf[2];
+ 	struct in6_addr *addrs;
+ 	u32 id;
+@@ -53,11 +62,7 @@ __be32 ipv6_proxy_select_ident(struct ne
+ 	if (!addrs)
+ 		return 0;
+ 
+-	net_get_random_once(&ip6_proxy_idents_hashrnd,
+-			    sizeof(ip6_proxy_idents_hashrnd));
+-
+-	id = __ipv6_select_ident(net, ip6_proxy_idents_hashrnd,
+-				 &addrs[1], &addrs[0]);
++	id = __ipv6_select_ident(net, &addrs[1], &addrs[0]);
+ 	return htonl(id);
+ }
+ EXPORT_SYMBOL_GPL(ipv6_proxy_select_ident);
+@@ -66,12 +71,9 @@ __be32 ipv6_select_ident(struct net *net
+ 			 const struct in6_addr *daddr,
+ 			 const struct in6_addr *saddr)
+ {
+-	static u32 ip6_idents_hashrnd __read_mostly;
+ 	u32 id;
+ 
+-	net_get_random_once(&ip6_idents_hashrnd, sizeof(ip6_idents_hashrnd));
+-
+-	id = __ipv6_select_ident(net, ip6_idents_hashrnd, daddr, saddr);
++	id = __ipv6_select_ident(net, daddr, saddr);
+ 	return htonl(id);
+ }
+ EXPORT_SYMBOL(ipv6_select_ident);
+
+
