@@ -2,101 +2,106 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1401C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E51C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD60208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB93208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:14:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559938470;
+	bh=FNC9Y0isIzc3Ks0du9mG7d3bGbesQlvu5vjkGwH80SI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xHVkZOD0XZ0RfOIyD8adJ+Qiu5wRPSVw8xrMhJSMvra5UJ2Q+shUEax2IUoHJFHjn
+	 HwMtcOk91YGQDkScoKy4v5hDTKO1VBj4fUdIdcD2RdLYV1Sb/DNe86wlWIlzOX40PL
+	 3jWO2vZmbi8s6GEqFVQKCS5rPC0zBaefd0K76Q4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbfFGUOP (ORCPT
+        id S1730381AbfFGUOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:14:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:41728 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbfFGUOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:14:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 13:14:14 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by orsmga002.jf.intel.com with ESMTP; 07 Jun 2019 13:14:12 -0700
-Message-ID: <0e505563f7dae3849b57fb327f578f41b760b6f7.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Fri, 07 Jun 2019 13:06:10 -0700
-In-Reply-To: <4b448cde-ee4e-1c95-0f7f-4fe694be7db6@intel.com>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
-         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
-         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
-         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
-         <4b448cde-ee4e-1c95-0f7f-4fe694be7db6@intel.com>
+        Fri, 7 Jun 2019 16:14:30 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42152 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729487AbfFGUO3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 16:14:29 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y13so2518832lfh.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:14:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oUEu5wST+UHrWo914sEu5kjdDbXuNNjK9ZP+p24WTJk=;
+        b=BCH3+i2RkSQKcHf+jy2IJ/CTFV2fxPDMCV0yygfkoiboPb59bnWZMo807PibOJ2plD
+         Uzjrx+QO3Nq0MQ317FiYIxzStxeM1kuEVYh+K84ZNuWFKtAvM5wPFRvOkAKdLL7zeJ6A
+         bzrmNyaYZqOEIK+oJwa8qi4l+leu534qbZlrw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oUEu5wST+UHrWo914sEu5kjdDbXuNNjK9ZP+p24WTJk=;
+        b=AsxnNkRABDNd7J4xpFADtVYk8XpolGPzi3ibrii3VE0vMi206gAgTYTw4Rrrvqcrif
+         3Gt2A/GkVXLMxnzRSx/7L7JLfqT3tRhU+xnrEW+V9H3ciavrCxwQMLVAp5I3WPcsS2aU
+         L7CxFG9Xpr3HiHOEq5fpFBbZq6imgC7NWB3bXCodr38KPMJizOWHCthf5St+Tmw6vxip
+         cWK1cWVop/NrPi3NHF6KWc+TMhp00+E5Po1l8K/qrf3/mosLokOYsylDVf53W4d83uES
+         +uTJGygYXv7Pa+vfQ+uQOcFfilcjCIFWGrxHzViSDG3USSs5aWq26HFdTNxR22ycAPUu
+         8bnA==
+X-Gm-Message-State: APjAAAWQ44qnX86LS/UTNedJHMNJ2ImfJIrfEYzZyJ7OhVfFqLB5q/ZS
+        Ygb8Mffx9/s2p9tN7n0C+xPl5po4uBM=
+X-Google-Smtp-Source: APXvYqyKBnWQw0T51nmBfHNQCkw5h8Y5qVullLSwJjbOWJEzQlwxaWD6m2K1ONkLmZwGIqoWAq0hjg==
+X-Received: by 2002:a19:740e:: with SMTP id v14mr29096235lfe.144.1559938466755;
+        Fri, 07 Jun 2019 13:14:26 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id v12sm521900ljv.49.2019.06.07.13.14.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 13:14:25 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id h11so2823228ljb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:14:25 -0700 (PDT)
+X-Received: by 2002:a2e:6109:: with SMTP id v9mr29356668ljb.205.1559938465306;
+ Fri, 07 Jun 2019 13:14:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
+ <20190605134849.28108-1-jglauber@marvell.com> <CAHk-=whPbMBGWiTdC3wqXMGMaCCHQ4WQh5ObB5iwa9gk-nCtzA@mail.gmail.com>
+ <20190606080317.GA10606@hc> <20190606094154.GB6795@fuggles.cambridge.arm.com>
+ <20190606102803.GA15499@hc> <20190607072652.GA5522@hc>
+In-Reply-To: <20190607072652.GA5522@hc>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 7 Jun 2019 13:14:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjwgOUP8ihvxcDmP4dr6gjSv-y9sJ4MzXM5NQFe0B7-pg@mail.gmail.com>
+Message-ID: <CAHk-=wjwgOUP8ihvxcDmP4dr6gjSv-y9sJ4MzXM5NQFe0B7-pg@mail.gmail.com>
+Subject: Re: [PATCH] lockref: Limit number of cmpxchg loop retries
+To:     Jan Glauber <jglauber@marvell.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Jan Glauber <jglauber@cavium.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 13:00 -0700, Dave Hansen wrote:
-> On 6/7/19 12:49 PM, Yu-cheng Yu wrote:
-> > > 
-> > > This also gives us an excellent opportunity to make it read-only as seen
-> > > from
-> > > userspace to prevent exploits from just poking it full of ones before
-> > > redirecting execution.
-> > 
-> > GLIBC sets bits only for legacy code, and then makes the bitmap read-
-> > only.  That
-> > avoids most issues:
-> > 
-> >   To populate bitmap pages, mprotect() is required.
-> >   Reading zero bitmap pages would not waste more physical memory, right?
-> 
-> Huh, how does glibc know about all possible past and future legacy code
-> in the application?
+On Fri, Jun 7, 2019 at 12:27 AM Jan Glauber <jglauber@marvell.com> wrote:
+>
+> To clarify, with 224 threads & CPUs queued_spin_lock_slowpath is the top hit
+> even without a retry limit in lockref. This could be unrelated to the lockref
+> fallback, it looks like it's coming from the spinlock in:
+>         do_sys_open -> get_unused_fd_flags -> __alloc_fd
 
-When dlopen() gets a legacy binary and the policy allows that, it will manage
-the bitmap:
+At some point I stop worrying about microbenchmarks just because it's
+easy to hit some locking paths in them, without it necessarily being
+relevant in real loads.
 
-  If a bitmap has not been created, create one.
-  Set bits for the legacy code being loaded.
+But I'll apply the lockref patch because I think the "limit cmpxchg
+loop" is conceptually a valid model, and while I think the "hitting
+the same dentry lockref over and over again" is likely also an
+artifact of a microbenchmark, I could at least imagine that it happens
+with some common dentries (root, cwd) in some situations.
 
-Yu-cheng
+                   Linus
