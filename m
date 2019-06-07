@@ -2,124 +2,120 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48035C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848ECC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173E1208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559938610;
-	bh=t/Vyv0uaKCis1VJG53gh7oHmtQRhMKw5HM16AnV9y1o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UVPu5Ke5ghiR0w9HWz9jw8HuGU80Q5z+bB/IYMPRGQwVu6lSa1iUNFcmPmmeX/Q2/
-	 TAHrhU187QAnx0ur7AN+0LEHDf3hXjLrkyloiJnJMV8g/O3qShlEVb3Mp9aju2BDbJ
-	 K57iwHQfu5HKfJQK4BSrgOJahLxioCX2OamWihfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 59B77208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:18:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="X60UPyi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbfFGUQt (ORCPT
+        id S1730480AbfFGUSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:16:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33736 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729487AbfFGUQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:16:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y17so2549930lfe.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:16:47 -0700 (PDT)
+        Fri, 7 Jun 2019 16:18:06 -0400
+Received: from mail-eopbgr800079.outbound.protection.outlook.com ([40.107.80.79]:26017
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729153AbfFGUSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 16:18:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+IlYOcz6MNUONhjjBYHuT8/QTI8M6rG//OnFFoEPmts=;
-        b=JamJvjNSga7wum4UHIzRpQ2ggGqR3TS0Ky3ghoX7KcWNz8Sk+A3tuB7WPgceeqShLW
-         nkFVY32F//ZpHLDi01RoWYF0DRnMpUJfvGw13D4xRwu8fxepDRERdpAgOw7kRX4gPwDp
-         1UYD90Jfac/Amyi8nekd0EYx6+jSjy9ePtfCY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+IlYOcz6MNUONhjjBYHuT8/QTI8M6rG//OnFFoEPmts=;
-        b=Kws2IpwwdDUDZP8GeXCSQxMo5OYjD7PnQRjdOSQG41IZ9Z31+heDSztCQUVTCRf5WQ
-         92mbCTuePARVceI6n4KhTL44mHG4CwRxVhb8J1Tgi5sZlC0wOUf9ISDdCQ4Zksf7nyhT
-         9WtbyesP6p9CkMbXYITjERg6SbQo8hQJfLtiwGOHKKXfHS54+UbfRNTYC2IVmdCQMJNZ
-         2hy/qMdJiBqbfNBtc/c3EFAaQBrQ9xvLNvn+FljpWGwoN5DczhbKnyXu6hHWFPayYAsc
-         7qN8v4MA+F/Ixc80wKBPPcZ3MzPz3CckqiYCETuobtKrn1QkErJGJWFjNFwD160HkWH3
-         6aHg==
-X-Gm-Message-State: APjAAAXu2Ose1YT8lPUzeAA2hP0i+7gmipKVucmzDb4Ft/HHV3NXC/Li
-        7E0JMXPYi2/a//AVwaixeGJIGFxR2DlIOA==
-X-Google-Smtp-Source: APXvYqx+hAAMBo7EN3VknH78kjWdDIN65u699S9BpENsrXqX4fXrxbNYDL4wUgg/bh4CFHDSH0Ixpw==
-X-Received: by 2002:a05:6512:64:: with SMTP id i4mr4677157lfo.32.1559938606324;
-        Fri, 07 Jun 2019 13:16:46 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id r76sm577053lfr.6.2019.06.07.13.16.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 13:16:46 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id k18so2790154ljc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:16:45 -0700 (PDT)
-X-Received: by 2002:a2e:4246:: with SMTP id p67mr29114030lja.44.1559938267141;
- Fri, 07 Jun 2019 13:11:07 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fkq2b4K2JVB93Su32TlmJp6P32s+wACtLQikYvy+1E4=;
+ b=X60UPyi14POPxmyxjwzftCnf/V7q/XQ4Vaxd9YnBfpThmhzJMbZEXZ2R8P+oKIyGnEtONIeixKDcDbo6oQam5db8l+is3yYphAC4qex/Gi5Q5vaIQjsvDkbO2rH4oX1Fhx4DAu3TUkErqEpu/hKExSFsOrYKCdZqkzyYs25U3Z4=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2704.namprd12.prod.outlook.com (52.135.103.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Fri, 7 Jun 2019 20:18:03 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
+ 20:18:03 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@suse.de" <bp@suse.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: [PATCH v4 0/5] Handle MCA banks in a per_cpu way
+Thread-Topic: [PATCH v4 0/5] Handle MCA banks in a per_cpu way
+Thread-Index: AQHVHW4cjHX2z5/X4UaDgJ2Dfh4dxA==
+Date:   Fri, 7 Jun 2019 20:18:03 +0000
+Message-ID: <20190607201752.221446-1-Yazen.Ghannam@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0501CA0109.namprd05.prod.outlook.com
+ (2603:10b6:803:42::26) To SN6PR12MB2639.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1fcf2f90-da48-4f4b-f3e3-08d6eb853e82
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2704;
+x-ms-traffictypediagnostic: SN6PR12MB2704:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SN6PR12MB27042CD572D8116B5A8B7650F8100@SN6PR12MB2704.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0061C35778
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(346002)(136003)(396003)(189003)(51444003)(199004)(6486002)(6436002)(72206003)(5640700003)(316002)(966005)(186003)(15650500001)(26005)(478600001)(4326008)(6306002)(68736007)(66946007)(6512007)(25786009)(73956011)(64756008)(66476007)(66556008)(66446008)(486006)(53936002)(2616005)(14454004)(476003)(66066001)(5660300002)(52116002)(256004)(2501003)(305945005)(2351001)(102836004)(386003)(71190400001)(71200400001)(6506007)(3846002)(6116002)(7736002)(81166006)(36756003)(6916009)(81156014)(8676002)(8936002)(1076003)(50226002)(99286004)(54906003)(86362001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2704;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: isl3y0/+9shq94dleqp9x0JbUaT6cb1oFWl7LKnkSEzKuPXtBWGriTnyHLvYH22mMnSKpkpWjbekQH/Hcz60SFpS7ltx1Mnw95FXpH/NFEvIwml9+yrM0QJvu5W2fOLXIKYyO2ifzrvnNicKviGRmcwRrk6xHO869kmK7pcXpoaoa0LdIvQcD3+Ei5zRIa8jam6QelK4iHMo5/sX8tvRgrkNN5F0NW2qa3TnydvrVfeyzRIw+IEqQRFQq6W6EzQIb/zuGyKKmyYrC+G08BYuPnoI6e0MjDbNu5xvStv3fzKb4bbDHDo5/NqevPSyqWaZ5zKdfBUZO57Kj1MQ41mrZCVmfDKVbv85To+vBpYYSLYVMNHZ7M9/FE9pR9K6NkHAoDG18TEm2vxdiCqvDUqgw+XYGb+7c5j/za5pOUcGHFo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <c8311f9b759e254308a8e57d9f6eb17728a686a7.1559649879.git.andreyknvl@google.com>
-In-Reply-To: <c8311f9b759e254308a8e57d9f6eb17728a686a7.1559649879.git.andreyknvl@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 7 Jun 2019 13:10:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjKy5503vYoj3ZizGz69iBos69wdrEujojuri67vV=BVQ@mail.gmail.com>
-Message-ID: <CAHk-=wjKy5503vYoj3ZizGz69iBos69wdrEujojuri67vV=BVQ@mail.gmail.com>
-Subject: Re: [PATCH v2] uaccess: add noop untagged_addr definition
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        sparclinux@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fcf2f90-da48-4f4b-f3e3-08d6eb853e82
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 20:18:03.3979
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yghannam@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2704
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 5:04 AM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> Architectures that support memory tagging have a need to perform untagging
-> (stripping the tag) in various parts of the kernel. This patch adds an
-> untagged_addr() macro, which is defined as noop for architectures that do
-> not support memory tagging.
-
-Ok, applied directly to my tree so that people can use this
-independently starting with rc4 (which I might release tomorrow rather
-than Sunday because I have some travel).
-
-                  Linus
+RnJvbTogWWF6ZW4gR2hhbm5hbSA8eWF6ZW4uZ2hhbm5hbUBhbWQuY29tPg0KDQpUaGUgZm9jdXMg
+b2YgdGhpcyBwYXRjaHNldCBpcyBkZWZpbmUgYW5kIHVzZSB0aGUgTUNBIGJhbmsgc3RydWN0dXJl
+cw0KYW5kIGJhbmsgY291bnQgcGVyIGxvZ2ljYWwgQ1BVLg0KDQpXaXRoIHRoZSBleGNlcHRpb24g
+b2YgcGF0Y2ggNCwgdGhpcyBzZXQgYXBwbGllcyB0byBzeXN0ZW1zIGluIHByb2R1Y3Rpb24NCnRv
+ZGF5Lg0KDQpQYXRjaCAxOg0KTW92ZXMgdGhlIGRlY2xhcmF0aW9uIG9mIHN0cnVjdCBtY2VfYmFu
+a3NbXSB0byB0aGUgb25seSBmaWxlIGl0J3MgdXNlZC4NCg0KUGF0Y2ggMjoNClNwbGl0cyBzdHJ1
+Y3QgbWNlX2JhbmsgaW50byBhIHN0cnVjdHVyZSBmb3IgZmllbGRzIGNvbW1vbiB0byBNQ0EgYmFu
+a3MNCm9uIGFsbCBDUFVzIGFuZCBhbm90aGVyIHN0cnVjdHVyZSB0aGF0IGNhbiBiZSB1c2VkIHBl
+cl9jcHUuDQoNClBhdGNoIDM6DQpCcmluZ3MgZnVsbCBjaXJjbGUgdGhlIHNhZ2Egb2YgdGhlIHRo
+cmVzaG9sZCBibG9jayBhZGRyZXNzZXMgb24gU01DQQ0Kc3lzdGVtcy4gQWZ0ZXIgdGFraW5nIGEg
+c3RlcCBiYWNrIGFuZCByZXZpZXdpbmcgdGhlIEFNRCBkb2N1bWVudGF0aW9uLCBJDQp0aGluayB0
+aGF0IHRoaXMgaW1wbGltZW50YXRpb24gaXMgdGhlIHNpbXBsZXN0IGFuZCBtb3JlIHJvYnVzdCB3
+YXkgdG8NCmZvbGxvdyB0aGUgc3BlYy4NCg0KUGF0Y2ggNDoNClNhdmVzIGFuZCB1c2VzIHRoZSBN
+Q0EgYmFuayBjb3VudCBhcyBhIHBlcl9jcHUgdmFyaWFibGUuIFRoaXMgaXMgdG8NCnN1cHBvcnQg
+c3lzdGVtcyB0aGF0IGhhdmUgTUNBIGJhbmsgY291bnRzIHRoYXQgYXJlIGRpZmZlcmVudCBiZXR3
+ZWVuDQpsb2dpY2FsIENQVXMuDQoNClBhdGNoIDU6DQpDaGVja3MgaWYgYW4gTUNBIGJhbmtzIGlz
+IGVuYWJsZWQgYWZ0ZXIgaW5pdGlhbGl6YXRpb24uDQoNCkxpbms6DQpodHRwczovL2xrbWwua2Vy
+bmVsLm9yZy9yLzIwMTkwNDMwMjAzMjA2LjEwNDE2My0xLVlhemVuLkdoYW5uYW1AYW1kLmNvbQ0K
+DQpUaGFua3MsDQpZYXplbg0KDQpZYXplbiBHaGFubmFtICg1KToNCiAgeDg2L01DRTogTWFrZSBz
+dHJ1Y3QgbWNlX2JhbmtzW10gc3RhdGljDQogIHg4Ni9NQ0U6IE1ha2UgbWNlX2JhbmtzIGEgcGVy
+LUNQVSBhcnJheQ0KICB4ODYvTUNFL0FNRDogRG9uJ3QgY2FjaGUgYmxvY2sgYWRkcmVzc2VzIG9u
+IFNNQ0Egc3lzdGVtcw0KICB4ODYvTUNFOiBNYWtlIHRoZSBudW1iZXIgb2YgTUNBIGJhbmtzIGEg
+cGVyLUNQVSB2YXJpYWJsZQ0KICB4ODYvTUNFOiBEZXRlcm1pbmUgTUNBIGJhbmtzJyBpbml0IHN0
+YXRlIHByb3Blcmx5DQoNCiBhcmNoL3g4Ni9rZXJuZWwvY3B1L21jZS9hbWQuYyAgICAgIHwgIDky
+ICsrKysrKysrKy0tLS0tLS0tDQogYXJjaC94ODYva2VybmVsL2NwdS9tY2UvY29yZS5jICAgICB8
+IDE2MSArKysrKysrKysrKysrKysrKysrKystLS0tLS0tLQ0KIGFyY2gveDg2L2tlcm5lbC9jcHUv
+bWNlL2ludGVybmFsLmggfCAgMTIgKy0tDQogMyBmaWxlcyBjaGFuZ2VkLCAxNjUgaW5zZXJ0aW9u
+cygrKSwgMTAwIGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMTcuMQ0KDQo=
