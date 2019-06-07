@@ -2,159 +2,108 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6840C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85A2C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7762320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718B1208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fYRHGnDB"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bZMIS76b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfFGItd (ORCPT
+        id S1727315AbfFGIwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 04:49:33 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:38238 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFGItd (ORCPT
+        Fri, 7 Jun 2019 04:52:02 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21112 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726531AbfFGIwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 04:49:33 -0400
-Received: by mail-it1-f193.google.com with SMTP id h9so1556606itk.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 01:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=adnKoWQTMzO2+3oj6bzIQQSJxMqy6PQK9AaINLk4VKk=;
-        b=fYRHGnDBC83ZNMfN01VXg8LH+MDfZ2+Mrl7HGcO/O0vYbnZ6xMKpuM3zSUENZko1o3
-         2j8a16D64nA8xzTKEwIBH/5oo0qfrFzjWrnMIGJZu8P0N3Rnqg3Hfjwdus2b8hdwaXKW
-         CQa8oRnRTooeVogOV9B6hmD1BL9+bUMH/rksuw9AoLdZgllJXQDP/I4WjKS3FBBPFy9B
-         8mzVB1VgTRZXF6SiF61kXAdkjnFD8Ejy4XeWG5f9Yq+s9gmeoDHfJ2SOUvxhB6e25YE4
-         9jXKe3Cbo5CBp6bJLSPMS9cKfzvwlnIbmrva6BrwqX+NqGZg0RCCUKxlbvUCaeJDi6+9
-         XcPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=adnKoWQTMzO2+3oj6bzIQQSJxMqy6PQK9AaINLk4VKk=;
-        b=Ury2NRjv56K2rUonWLslJb7L71TrQsrwTSQULwoFOj0vYz3/+KgjQUIb1tueS1Zu2N
-         bZLSOcbNDN3pWqhEgt3ySyg5H7QID0x0g7G1/bRVgv5btA/8E5llfjUah6edVO0fdw3R
-         BRvCQp301bAkgGTwhXY3gcTLv9+zGoiCbF2aQwOfMc2/SMeU16kf4gMI9kzxZ8Ngj3d7
-         2sgB68KQBk1tCUh4B/wZzXYN8bNA3eh21Tlak2q6dJV6Kv4KFOdgbDw5sD70nI1al1Ju
-         gkneJOwdew22UYqowVBEVUYbUeE+Rjf1ITUbZYoMEM4M86MQwi5Oere1ZSHQhD/ROEZx
-         iXWA==
-X-Gm-Message-State: APjAAAVhY2nGEcAa1Lm3jGvHyheP3qDy4y5hCzIRZMdG6rIXoBPoX/ll
-        fd4r6ttvEVMA+5BDBxSmFn2Ox53Jgu2UmI3DuRmjBWu0SIA19g==
-X-Google-Smtp-Source: APXvYqyO8g27gbZ/n5zmlwXplxQ6DyFH8ip6uXzyHI+o1yCx3Wapw0TWmXNpP3u8qN2VsWZcoB8baklytZ7g7GG1fLM=
-X-Received: by 2002:a02:b01c:: with SMTP id p28mr34991386jah.130.1559897372103;
- Fri, 07 Jun 2019 01:49:32 -0700 (PDT)
+        Fri, 7 Jun 2019 04:52:02 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x578lkLW020863;
+        Fri, 7 Jun 2019 10:51:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=289jIq72HReUea+FJ6403zWGNXEwuJ8Avm9se1eRFVs=;
+ b=bZMIS76bzCEimOuzXsuwDBL0euXeiX+OBUVUOd5Ebyd+ng9zQBLaAbMIjGQld/J10TJV
+ pOrSSJQzh9IpsrACyKc+FXSxyYEyT8l1eckxQ7zXW7weVyysLiE5GNtU6LRkqmGEkzGX
+ qXYGxj3Bnx28NG78BdGiO+3ZeP/Jd7PzjEnrlM7kgZdRb0l41uJMECiRA3+1MMhvNa+R
+ fXtBnQ9qYu0bzkGYyPaHHzH4qOu39N+GUm7o4wvlio+feXH26jCAO1wHW8kAy9yukqvv
+ 1geBMYSzZWtxHT63GmDdP1HgbyyI6yDOzzc5Z7JNV22UaoqbjIJe3iNRRq9KLRLKLcZt BQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sxqyag6ke-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 07 Jun 2019 10:51:48 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 838C631;
+        Fri,  7 Jun 2019 08:51:47 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 392C92418;
+        Fri,  7 Jun 2019 08:51:47 +0000 (GMT)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 7 Jun
+ 2019 10:51:46 +0200
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1347.000; Fri, 7 Jun 2019 10:51:46 +0200
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Vincent ABRIOU <vincent.abriou@st.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/stm: ltdc: No message if probe
+Thread-Topic: [PATCH] drm/stm: ltdc: No message if probe
+Thread-Index: AQHVGebHlINPLriVvEmsaJiAOSjopaaPxxgA
+Date:   Fri, 7 Jun 2019 08:51:46 +0000
+Message-ID: <ca5d4bcf-6020-e924-5577-d7cf9134958b@st.com>
+References: <1559550694-14042-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1559550694-14042-1-git-send-email-yannick.fertre@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7B55EC5FADFCC44EAE136C92B3552228@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190605130753.327195108@infradead.org> <20190605131945.125037517@infradead.org>
- <DD54886F-77C6-4230-A711-BF10DD44C52C@vmware.com> <20190607082851.GV3419@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190607082851.GV3419@hirez.programming.kicks-ass.net>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 7 Jun 2019 10:49:18 +0200
-Message-ID: <CAKv+Gu-rsZ2UsyEHbsZcSv9VVnFBqG70q+vk6thgMGFBi+vLSA@mail.gmail.com>
-Subject: Re: [PATCH 10/15] static_call: Add basic static call infrastructure
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nadav Amit <namit@vmware.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 10:29, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Jun 06, 2019 at 10:44:23PM +0000, Nadav Amit wrote:
-> > > + * Usage example:
-> > > + *
-> > > + *   # Start with the following functions (with identical prototypes=
-):
-> > > + *   int func_a(int arg1, int arg2);
-> > > + *   int func_b(int arg1, int arg2);
-> > > + *
-> > > + *   # Define a 'my_key' reference, associated with func_a() by defa=
-ult
-> > > + *   DEFINE_STATIC_CALL(my_key, func_a);
-> > > + *
-> > > + *   # Call func_a()
-> > > + *   static_call(my_key, arg1, arg2);
-> > > + *
-> > > + *   # Update 'my_key' to point to func_b()
-> > > + *   static_call_update(my_key, func_b);
-> > > + *
-> > > + *   # Call func_b()
-> > > + *   static_call(my_key, arg1, arg2);
-> >
-> > I think that this calling interface is not very intuitive.
->
-> Yeah, it is somewhat unfortunate..
->
-
-Another thing I brought up at the time is that it would be useful to
-have the ability to 'reset' a static call to its default target. E.g.,
-for crypto modules that implement an accelerated version of a library
-interface, removing the module should revert those call sites back to
-the original target, without putting a disproportionate burden on the
-module itself to implement the logic to support this.
-
-
-> > I understand that
-> > the macros/objtool cannot allow the calling interface to be completely
-> > transparent (as compiler plugin could). But, can the macros be used to
-> > paste the key with the =E2=80=9Cstatic_call=E2=80=9D? I think that havi=
-ng something like:
-> >
-> >   static_call__func(arg1, arg2)
-> >
-> > Is more readable than
-> >
-> >   static_call(func, arg1, arg2)
->
-> Doesn't really make it much better for me; I think I'd prefer to switch
-> to the GCC plugin scheme over this.  ISTR there being some propotypes
-> there, but I couldn't quickly locate them.
->
-
-I implemented the GCC plugin here
-
-https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=3Dsta=
-tic-calls
-
-but IIRC, all it does is annotate call sites exactly how objtool does it.
-
-> > > +}
-> > > +
-> > > +#define static_call_update(key, func)                               =
-       \
-> > > +({                                                                 \
-> > > +   BUILD_BUG_ON(!__same_type(func, STATIC_CALL_TRAMP(key)));       \
-> > > +   __static_call_update(&key, func);                               \
-> > > +})
-> >
-> > Is this safe against concurrent module removal?
->
-> It is for CONFIG_MODULE=3Dn :-)
+SGkgWWFubmljaywNCg0KVGhhbmsgeW91IGZvciB5b3VyIHBhdGNoDQoNCkFja2VkLWJ5OiBQaGls
+aXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KDQpQaGlsaXBwZSA6LSkNCg0KT24g
+Ni8zLzE5IDEwOjMxIEFNLCBZYW5uaWNrIEZlcnRyw6kgd3JvdGU6DQo+IFByaW50IGRpc3BsYXkg
+Y29udHJvbGxlciBoYXJkd2FyZSB2ZXJzaW9uIGluIGRlYnVnIG1vZGUgb25seS4NCj4gDQo+IFNp
+Z25lZC1vZmYtYnk6IFlhbm5pY2sgRmVydHLDqSA8eWFubmljay5mZXJ0cmVAc3QuY29tPg0KPiAt
+LS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYyB8IDIgKy0NCj4gICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+
+IGluZGV4IGE0MDg3MGIuLjJmZTZjNGEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9z
+dG0vbHRkYy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+IEBAIC0xMjI5
+LDcgKzEyMjksNyBAQCBpbnQgbHRkY19sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkZGV2KQ0KPiAg
+IAkJZ290byBlcnI7DQo+ICAgCX0NCj4gICANCj4gLQlEUk1fSU5GTygibHRkYyBodyB2ZXJzaW9u
+IDB4JTA4eCAtIHJlYWR5XG4iLCBsZGV2LT5jYXBzLmh3X3ZlcnNpb24pOw0KPiArCURSTV9ERUJV
+R19EUklWRVIoImx0ZGMgaHcgdmVyc2lvbiAweCUwOHhcbiIsIGxkZXYtPmNhcHMuaHdfdmVyc2lv
+bik7DQo+ICAgDQo+ICAgCS8qIEFkZCBlbmRwb2ludHMgcGFuZWxzIG9yIGJyaWRnZXMgaWYgYW55
+ICovDQo+ICAgCWZvciAoaSA9IDA7IGkgPCBNQVhfRU5EUE9JTlRTOyBpKyspIHsNCj4g
