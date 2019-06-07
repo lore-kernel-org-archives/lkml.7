@@ -2,214 +2,304 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03896C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33951C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D077C208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D39208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:40:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="io4ZHtOx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbfFGRj4 (ORCPT
+        id S1729873AbfFGRks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:39:56 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36843 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbfFGRj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:39:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 10:39:55 -0700
-X-ExtLoop1: 1
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 07 Jun 2019 10:39:55 -0700
-Date:   Fri, 7 Jun 2019 10:43:01 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Auger Eric <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        Vincent Stehle <Vincent.Stehle@arm.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
-Message-ID: <20190607104301.6b1bbd74@jacob-builder>
-In-Reply-To: <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
-References: <20190526161004.25232-1-eric.auger@redhat.com>
-        <20190526161004.25232-27-eric.auger@redhat.com>
-        <20190603163139.70fe8839@x1.home>
-        <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
-        <20190605154553.0d00ad8d@jacob-builder>
-        <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
-        <20190606132903.064f7ac4@jacob-builder>
-        <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 7 Jun 2019 13:40:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33715 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfFGRks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 13:40:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id u13so2064239iop.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OlxCx0LcVRqEwUVpBa/0X4MAmO56cf6FlxJFEgvmnmc=;
+        b=io4ZHtOx+pe44IJE28hPvzsRLOIt0VwvSmyD7ESSJ9h8O27pk1n+Hu2xfBOvwNgSP0
+         A0qXMDL1mnGbV4WnCyav2N0tLJLbq4v/mT6AQDbTltZ0G9/gl+GSIW8rX8K7AQLt9XQl
+         8vdSg87x62g2hXZTZjVmuhpcIqFjX6Lj1NY+K7gL075+JM7GVBcOPtyAAr7uM/Ydj2/S
+         BGA1YLbBlm+NOEuKupWaszdkWXxBmVFuUc3dbpGyqDCQCdgE2i2Iz3eDG10bb9P1+Rvi
+         twKS0O2ciONkTTOzsCLm6R4b4lAhv1H8P3Qt3IqVArTp7DyyNe36QpP3FOa7rkKzMW/R
+         LHSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OlxCx0LcVRqEwUVpBa/0X4MAmO56cf6FlxJFEgvmnmc=;
+        b=nB3xisvIKuMbE6U2OeX5ghbT1flidO17ptWTcazpk1Rh+sR0Bzf5c7g32ldalOZtl5
+         NQfQbc20VnUxhRBlP4AsxnwMj10Br1ZJSckmr+Qnk++y+v7nMPPedS7Yv6hF7bfrUksP
+         OFIgJeAS6TCEjr5hpu4zB1pnr/AnXCtNR7m/tXL1ID9REr6BV461zUfgbiWwLCW4ROXz
+         WWkmJ3ad8vvqgMqNpnNTw0ESmTIT4zUu1ZnxaHeUdPnOMAadHnMiM4q5OZiwvfDBADlH
+         ti76DY7mHkP+iqBcXDSZGRkzrxB11B+sqWF7/dNH9NdtF9nL9hMTW+h8p1AHCJmuWCKy
+         OJXA==
+X-Gm-Message-State: APjAAAXa/+PZCkUq082aq4nzgmrR1Zq0tbYeLzw60yvBf73hBCpXAR0K
+        THDSj+WlM7pPQRvh2bqVfVFHZssqvurcJ5rLgyZ3fg==
+X-Google-Smtp-Source: APXvYqyS/7a9/Dz1ggiv03hBOU54xjqxDo1Iciw3ODbbVW7tjvpMqHtRefyhNI4gWQstaMZPH3Y3mM+VTfb1fXN7wps=
+X-Received: by 2002:a6b:7d49:: with SMTP id d9mr14036127ioq.50.1559929247404;
+ Fri, 07 Jun 2019 10:40:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
+ <20190524173508.29044-2-mathieu.poirier@linaro.org> <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
+In-Reply-To: <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 7 Jun 2019 11:40:36 -0600
+Message-ID: <CANLsYkwrsvSXOpaxL7mFxiJF5A53Xk+3XDK14r_Z=wBLzDZy9A@mail.gmail.com>
+Subject: Re: [PATCH v2 01/17] perf tools: Configure contextID tracing in
+ CPU-wide mode
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 11:28:13 +0100
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+Hey Suzuki,
 
-> On 06/06/2019 21:29, Jacob Pan wrote:
-> >>>>>> iommu_unregister_device_fault_handler(&vdev->pdev->dev);      
-> >>>>>
-> >>>>>
-> >>>>> But this can fail if there are pending faults which leaves a
-> >>>>> device reference and then the system is broken :(      
-> >>>> This series only features unrecoverable errors and for those the
-> >>>> unregistration cannot fail. Now unrecoverable errors were added I
-> >>>> admit this is confusing. We need to sort this out or clean the
-> >>>> dependencies.    
-> >>> As Alex pointed out in 4/29, we can make
-> >>> iommu_unregister_device_fault_handler() never fail and clean up
-> >>> all the pending faults in the host IOMMU belong to that device.
-> >>> But the problem is that if a fault, such as PRQ, has already been
-> >>> injected into the guest, the page response may come back after
-> >>> handler is unregistered and registered again.    
-> >>
-> >> I'm trying to figure out if that would be harmful in any way. I
-> >> guess it can be a bit nasty if we handle the page response right
-> >> after having injected a new page request that uses the same PRGI.
-> >> In any other case we discard the page response, but here we
-> >> forward it to the endpoint and:
-> >>
-> >> * If the response status is success, endpoint retries the
-> >> translation. The guest probably hasn't had time to handle the new
-> >> page request and translation will fail, which may lead the endpoint
-> >> to give up (two unsuccessful translation requests). Or send a new
-> >> request
-> >>  
-> > Good point, there shouldn't be any harm if the page response is a
-> > "fake" success. In fact it could happen in the normal operation when
-> > PRQs to two devices share the same non-leaf translation structure.
-> > The worst case is just a retry. I am not aware of the retry limit,
-> > is it in the PCIe spec? I cannot find it.  
-> 
-> I don't think so, it's the implementation's choice. In general I don't
-> think devices will have a retry limit, but it doesn't seem like the
-> PCI spec prevents them from implementing one either. It could be
-> useful to stop retrying after a certain number of faults, for
-> preventing livelocks when the OS doesn't fix up the page tables and
-> the device would just repeat the fault indefinitely.
-> 
-> > I think we should just document it, similar to having a spurious
-> > interrupt. The PRQ trace event should capture that as well.
-> >   
-> >> * otherwise the endpoint won't retry the access, and could also
-> >> disable PRI if the status is failure.
-> >>  
-> > That would be true regardless this race condition with handler
-> > registration. So should be fine.  
-> 
-> We do give an invalid response for the old PRG (because of
-> unregistering), but also for the new one, which has a different
-> address that the guest might be able to page in and would normally
-> return success.
-> 
-> >>> We need a way to reject such page response belong
-> >>> to the previous life of the handler. Perhaps a sync call to the
-> >>> guest with your fault queue eventfd? I am not sure.    
-> >>
-> >> We could simply expect the device driver not to send any page
-> >> response after unregistering the fault handler. Is there any
-> >> reason VFIO would need to unregister and re-register the fault
-> >> handler on a live guest? 
-> > There is no reason for VFIO to unregister and register again, I was
-> > just thinking from security perspective. Someone could write a VFIO
-> > app do this attack. But I agree the damage is within the device,
-> > may get PRI disabled as a result.  
-> 
-> Yes I think the damage would always be contained within the
-> misbehaving software
-> 
-> > So it seems we agree on the following:
-> > - iommu_unregister_device_fault_handler() will never fail
-> > - iommu driver cleans up all pending faults when handler is
-> > unregistered
-> > - assume device driver or guest not sending more page response
-> > _after_ handler is unregistered.
-> > - system will tolerate rare spurious response
-> > 
-> > Sounds right?  
-> 
-> Yes, I'll add that to the fault series
-Hold on a second please, I think we need more clarifications. Ashok
-pointed out to me that the spurious response can be harmful to other
-devices when it comes to mdev, where PRQ group id is not per PASID,
-device may reuse the group number and receiving spurious page response
-can confuse the entire PF. Having spurious page response is also not
-abiding the PCIe spec. exactly.
+On Fri, 7 Jun 2019 at 03:21, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> Hi Mathieu,
+>
+> On 24/05/2019 18:34, Mathieu Poirier wrote:
+> > When operating in CPU-wide mode being notified of contextID changes is
+> > required so that the decoding mechanic is aware of the process context
+> > switch.
+> >
+> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>
+>
+> > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>
+> I am sorry but, I don't remember reviewing this patch in the previous
+> postings. But here we go.
 
-We have two options here:
-1. unregister handler will get -EBUSY if outstanding fault exists.
-	-PROs: block offending device unbind only, eventually timeout
-	will clear.
-	-CONs: flooded faults can prevent clearing
-2. unregister handle will block until all faults are clear in the host.
-   Never fails unregistration
-	-PROs: simple flow for VFIO, no need to worry about device
-	holding reference.
-	-CONs: spurious page response may come from
-	misbehaving/malicious guest if guest does unregister and
-	register back to back.
-It seems the only way to prevent spurious page response is to introduce
-a SW token or sequence# for each PRQ that needs a response. I still
-think option 2 is good.
+We definitely misunderstood each other - apologies for that.
 
-Consider the following time line:
-decoding
- PR#: page request
- G#:  group #
- P#:  PASID
- S#:  sequence #
- A#:  address
- PS#: page response
- (F): Fail
- (S): Success
+>
+> > ---
+> >   tools/perf/arch/arm/util/cs-etm.c | 126 +++++++++++++++++++++++++-----
+> >   tools/perf/util/cs-etm.h          |  12 +++
+> >   2 files changed, 119 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> > index 911426721170..3912f0bf04ed 100644
+> > --- a/tools/perf/arch/arm/util/cs-etm.c
+> > +++ b/tools/perf/arch/arm/util/cs-etm.c
+> > @@ -35,8 +35,100 @@ struct cs_etm_recording {
+> >       size_t                  snapshot_size;
+> >   };
+> >
+>
+>
+> >   static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
+> >
+> > +static int cs_etm_set_context_id(struct auxtrace_record *itr,
+> > +                              struct perf_evsel *evsel, int cpu)
+> > +{
+> > +     struct cs_etm_recording *ptr;
+> > +     struct perf_pmu *cs_etm_pmu;
+> > +     char path[PATH_MAX];
+> > +     int err = -EINVAL;
+> > +     u32 val;
+> > +
+> > +     ptr = container_of(itr, struct cs_etm_recording, itr);
+> > +     cs_etm_pmu = ptr->cs_etm_pmu;
+> > +
+> > +     if (!cs_etm_is_etmv4(itr, cpu))
+> > +             goto out;
+> > +
+> > +     /* Get a handle on TRCIRD2 */
+> > +     snprintf(path, PATH_MAX, "cpu%d/%s",
+> > +              cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2]);
+> > +     err = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
+> > +
+> > +     /* There was a problem reading the file, bailing out */
+> > +     if (err != 1) {
+> > +             pr_err("%s: can't read file %s\n",
+> > +                    CORESIGHT_ETM_PMU_NAME, path);
+> > +             goto out;
+> > +     }
+> > +
+> > +     /*
+> > +      * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextID tracing
+> > +      * is supported:
+> > +      *  0b00000 Context ID tracing is not supported.
+> > +      *  0b00100 Maximum of 32-bit Context ID size.
+> > +      *  All other values are reserved.
+> > +      */
+> > +     val = BMVAL(val, 5, 9);
+> > +     if (!val || val != 0x4) {
+> > +             err = -EINVAL;
+> > +             goto out;
+> > +     }
+> > +
+> > +     /* All good, let the kernel know */
+> > +     evsel->attr.config |= (1 << ETM_OPT_CTXTID);
+> > +     err = 0;
+> > +
+> > +out:
+> > +
+> > +     return err;
+> > +}
+> > +
+> > +static int cs_etm_set_option(struct auxtrace_record *itr,
+> > +                          struct perf_evsel *evsel, u32 option)
+> > +{
+> > +     int i, err = -EINVAL;
+> > +     struct cpu_map *event_cpus = evsel->evlist->cpus;
+> > +     struct cpu_map *online_cpus = cpu_map__new(NULL);
+> > +
+> > +     /* Set option of each CPU we have */
+> > +     for (i = 0; i < cpu__max_cpu(); i++) {
+> > +             if (!cpu_map__has(event_cpus, i) ||
+> > +                 !cpu_map__has(online_cpus, i))
+> > +                     continue;
+> > +
+> > +             switch (option) {
+> > +             case ETM_OPT_CTXTID:
+> > +                     err = cs_etm_set_context_id(itr, evsel, i);
+> > +                     if (err)
+> > +                             goto out;
+> > +                     break;
+> > +             default:
+> > +                     goto out;
+> > +             }
+> > +     }
+>
+> I am not too familiar with the perf tool code. But, isn't there a way
+> to force the config bit, right from the beginning when the events are
+> created, when we know that we are doing a CPU wide tracing, along with
+> the other config bits ?
+>
+>
 
-# Dev		Host		VFIO/QEMU	Guest
-===========================================================	
-1				<-reg(handler)
-2 PR1G1S1A1	->		inject	->	PR1G1S1A1
-3 PR2G1S2A2	->		inject	->	PR2G1S2A2
-4.				<-unreg(handler)
-5.	<-PR1G1S1A1(F)			| 
-6.	<-PR2G1S2A2(F)			V
-7.				<-unreg(handler)
-8.				<-reg(handler)
-9 PR3G1S3A1	->		inject	->	PR3G1S3A1
-10.						<-PS1G1S1A1
-11.		<reject S1>
-11.		<accept S3>			<-PS3G1S3A1
-12.PS3G1S3A1(S)
+This code is ran just after the event list is created.  In order to
+avoid this step and have the config bits set right from the beginning
+one would have to explicitly specify the options within the '/' '/' of
+the cs_etm event on the command line, which would be cumbersome and
+error prone.  Instead this code guarantees that all options needed for
+a CPU-wide session are set properly.
 
-The spurious page response comes in at step 10 where the guest sends
-response for the request in step 1. But since the sequence # is 1, host
-IOMMU driver will reject it. At step 11, we accept page response for
-the matching sequence # then respond SUCCESS to the device.
+>
+> > +     err = 0;
+> > +out:
+> > +     cpu_map__put(online_cpus);
+> > +     return err;
+> > +}
+> > +
+> >   static int cs_etm_parse_snapshot_options(struct auxtrace_record *itr,
+> >                                        struct record_opts *opts,
+> >                                        const char *str)
+> > @@ -105,8 +197,9 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+> >                               container_of(itr, struct cs_etm_recording, itr);
+> >       struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+> >       struct perf_evsel *evsel, *cs_etm_evsel = NULL;
+> > -     const struct cpu_map *cpus = evlist->cpus;
+> > +     struct cpu_map *cpus = evlist->cpus;
+> >       bool privileged = (geteuid() == 0 || perf_event_paranoid() < 0);
+> > +     int err = 0;
+> >
+> >       ptr->evlist = evlist;
+> >       ptr->snapshot_mode = opts->auxtrace_snapshot_mode;
+> > @@ -241,19 +334,24 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+> >
+> >       /*
+> >        * In the case of per-cpu mmaps, we need the CPU on the
+> > -      * AUX event.
+> > +      * AUX event.  We also need the contextID in order to be notified
+> > +      * when a context switch happened.
+> >        */
+> > -     if (!cpu_map__empty(cpus))
+> > +     if (!cpu_map__empty(cpus)) {
+> >               perf_evsel__set_sample_bit(cs_etm_evsel, CPU);
+> >
+> > +             err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_CTXTID);
+> > +             if (err)
+> > +                     goto out;
+> > +     }
+> > +
+> >       /* Add dummy event to keep tracking */
+> >       if (opts->full_auxtrace) {
+> >               struct perf_evsel *tracking_evsel;
+> > -             int err;
+> >
+> >               err = parse_events(evlist, "dummy:u", NULL);
+> >               if (err)
+> > -                     return err;
+> > +                     goto out;
+> >
+> >               tracking_evsel = perf_evlist__last(evlist);
+> >               perf_evlist__set_tracking_event(evlist, tracking_evsel);
+> > @@ -266,7 +364,8 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+> >                       perf_evsel__set_sample_bit(tracking_evsel, TIME);
+> >       }
+> >
+> > -     return 0;
+> > +out:
+> > +     return err;
+> >   }
+>
+>
+> > diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> > index 0e97c196147a..826c9eedaf5c 100644
+> > --- a/tools/perf/util/cs-etm.h
+> > +++ b/tools/perf/util/cs-etm.h
+> > @@ -103,6 +103,18 @@ struct intlist *traceid_list;
+> >   #define KiB(x) ((x) * 1024)
+> >   #define MiB(x) ((x) * 1024 * 1024)
+> >
+> > +/*
+> > + * Create a contiguous bitmask starting at bit position @l and ending at
+> > + * position @h. For example
+> > + * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+> > + *
+> > + * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
+> > + */
+> > +#define GENMASK(h, l) \
+> > +     (((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
+> > +
+>
+> minor nit: Could this be placed in a more generic header file for the other
+> parts of the perf tool to consume ?
 
-So would it be OK to add this sequence# to iommu_fault and page
-response, or could event reuse the time stamp for that purpose.
+Back when I wrote this code my thinking was to keep it private since
+nobody else in the perf tools had a need for it.  But I now that
+Arnaldo added the header back in August [1] there is no need for a
+private version.
 
+Arnaldo, do you want a patch on top of the current patchset or a new set?
 
-Jacob
+[1]. ba4aa02b417f0 (Arnaldo Carvalho de Melo 2018-09-25 10:55:59 -0300
+17)  * GENMASK_ULL(39, 21)
+
+>
+> > +#define BMVAL(val, lsb, msb) ((val & GENMASK(msb, lsb)) >> lsb)
+> > +
+>
+>
+> Cheers
+> Suzuki
