@@ -2,104 +2,144 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D4FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C254C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98142208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCE9208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:13:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfFGTMY (ORCPT
+        id S1729741AbfFGTNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:12:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42714 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728727AbfFGTMY (ORCPT
+        Fri, 7 Jun 2019 15:13:07 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:34996 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729474AbfFGTNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:12:24 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x57J26ce069745
-        for <linux-kernel@vger.kernel.org>; Fri, 7 Jun 2019 15:12:23 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2syt9wt4da-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:12:22 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Fri, 7 Jun 2019 20:12:21 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 7 Jun 2019 20:12:18 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x57JCG9x39321786
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Jun 2019 19:12:16 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 666D35204F;
-        Fri,  7 Jun 2019 19:12:16 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.199.252])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6018C52052;
-        Fri,  7 Jun 2019 19:12:15 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     zohar@linux.ibm.com, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>
-Subject: [PATCH] x86/ima: fix the Kconfig dependency for IMA_ARCH_POLICY
-Date:   Fri,  7 Jun 2019 15:12:06 -0400
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-x-cbid: 19060719-4275-0000-0000-000003405B06
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060719-4276-0000-0000-000038506435
-Message-Id: <1559934726-18650-1-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=817 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906070127
+        Fri, 7 Jun 2019 15:13:06 -0400
+Received: by mail-it1-f199.google.com with SMTP id 137so2639725itf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:13:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=cyqCrDVt2dXVqI86R5kiLgCbIofZNHXYbbR1FIOGENY=;
+        b=ulvpsspjULt4fe8LU8R2m8gxsS2Wd6RDOQZmdzu4piRQucudSicdAo7XkTvdp2r2uF
+         +j29S5moXR0ZqYO34roRWznJ9XPRorNx2I4w+FuCG5JyEaAR/z9XD5Yhe1BF0cKd/2F7
+         Dx+Iku5VGzE1hu2sYU2hx8wX1J1F0ltV2WTF6odBI0qE4hfC+p6xcDwiOhmfFjiVZ+U0
+         hRJ8HSMELqFrFcr+fbyujtiiJ3AC7EdaL6Hqb1dAYBdXEsVJHuTpjiQ1632mVMUeJN4m
+         cM4FWAiLmjB1+4wWNe4av4sR2suopZNxrJtY1VZUm2LMcB5f6whdpJrtVpDhYWphjt3J
+         E9Ag==
+X-Gm-Message-State: APjAAAUycrWwqkC1ImS+su6iT3Od2LcaMeLBU76QQs9EBQ/gcXmOYQeO
+        eeDoge76cbbrSkne5y9xBfeXdifeu4dmyAvuD/dcBUbRxxMT
+X-Google-Smtp-Source: APXvYqx/BdEP9lMOAedJ3yRv8lpTdqGerTLV44sx8ug8pFLGAgLn7Qp6CZoPRXvcthgfYfh0AMdPOBh/Q8emJuHLVG9uCw6Qhx3o
+MIME-Version: 1.0
+X-Received: by 2002:a5d:860e:: with SMTP id f14mr1413298iol.242.1559934786049;
+ Fri, 07 Jun 2019 12:13:06 -0700 (PDT)
+Date:   Fri, 07 Jun 2019 12:13:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cba2b6058ac09eeb@google.com>
+Subject: KMSAN: uninit-value in ax88178_bind
+From:   syzbot <syzbot+abd25d675d47f23f188c@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        lynxis@fe80.eu, marcel.ziswiler@toradex.com,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        yang.wei9@zte.com.cn, zhang.run@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If enabled, ima arch specific policies always adds the measurements rules,
-this makes it dependent on CONFIG_IMA. CONFIG_IMA_APPRAISE implicitly takes
-care of this, however it is needed explicitly for CONFIG_KEXEC_VERIFY_SIG.
+Hello,
 
-This patch adds the CONFIG_IMA dependency in combination with
-CONFIG_KEXEC_VERIFY_SIG for CONFIG_IMA_ARCH_POLICY
+syzbot found the following crash on:
 
-Fixes: d958083a8f640 (x86/ima: define arch_get_ima_policy() for x86)
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Dave Young <dyoung@redhat.com>
+HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b2622ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link: https://syzkaller.appspot.com/bug?extid=abd25d675d47f23f188c
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+abd25d675d47f23f188c@syzkaller.appspotmail.com
+
+usb 2-1: Using ep0 maxpacket: 8
+usb 2-1: config 0 has an invalid interface number: 81 but max is 0
+usb 2-1: config 0 has no interface number 0
+usb 2-1: New USB device found, idVendor=04bb, idProduct=0930, bcdDevice=  
+f.22
+usb 2-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 2-1: config 0 descriptor??
+==================================================================
+BUG: KMSAN: uninit-value in is_valid_ether_addr  
+include/linux/etherdevice.h:200 [inline]
+BUG: KMSAN: uninit-value in asix_set_netdev_dev_addr  
+drivers/net/usb/asix_devices.c:73 [inline]
+BUG: KMSAN: uninit-value in ax88178_bind+0x635/0xad0  
+drivers/net/usb/asix_devices.c:1087
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  is_valid_ether_addr include/linux/etherdevice.h:200 [inline]
+  asix_set_netdev_dev_addr drivers/net/usb/asix_devices.c:73 [inline]
+  ax88178_bind+0x635/0xad0 drivers/net/usb/asix_devices.c:1087
+  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Local variable description: ----buf@ax88178_bind
+Variable was created at:
+  ax88178_bind+0x60/0xad0 drivers/net/usb/asix_devices.c:1076
+  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
+==================================================================
+
+
 ---
- security/integrity/ima/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index a18f8c6d13b5..df65d2d41905 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -159,7 +159,8 @@ config IMA_APPRAISE
- 
- config IMA_ARCH_POLICY
-         bool "Enable loading an IMA architecture specific policy"
--        depends on KEXEC_VERIFY_SIG || IMA_APPRAISE && INTEGRITY_ASYMMETRIC_KEYS
-+        depends on (KEXEC_VERIFY_SIG && IMA) || IMA_APPRAISE \
-+		   && INTEGRITY_ASYMMETRIC_KEYS
-         default n
-         help
-           This option enables loading an IMA architecture specific policy
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
