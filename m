@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D01C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9F0C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16298214AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B044212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922086;
-	bh=bfZWmySO61ibUp60ui+SXJiThcWG0S7HkCoOlmzHoyw=;
+	s=default; t=1559922091;
+	bh=PHC6wVTNr/ilVN+aLfu0QMFCGVE1NOjtBg+sd/FYZzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UPnDSsfoNXh54vp96Je/LtFxEZ6fPl+HGBMz7Wc2CD4N6dSNbzKTQ2Vs/2R4wmCes
-	 hRQ5xsa5tKtVYaxT0o1U6/Rt8qNfiPW9lDmu/ANkQ8IvdyTR+cFIBDnSjncSSlglwt
-	 UbWsKnESVbB8WJJcHAh2zXyaBZ7iYoEh+Ej8ESAQ=
+	b=mqjTfehVV0FOVWgEzrJF5BJpYbw+zDwno+AQGAAXiIZRT5TQFzZ8tBhrGVed+im50
+	 g3R+MzGbjGsZeKn+Geqp3hFJ1GFmLDEczaDUR6fesEzYpy4iNI3A4B7dFdhP2O2Dka
+	 byTh/WgmY3S+ZHpcFnhf8buntN8oZpwiR0EX0R10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbfFGPlZ (ORCPT
+        id S1730322AbfFGPla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51220 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:41:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729325AbfFGPlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:41:23 -0400
+        id S1729325AbfFGPl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:41:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A23212F5;
-        Fri,  7 Jun 2019 15:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 777E9212F5;
+        Fri,  7 Jun 2019 15:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922082;
-        bh=bfZWmySO61ibUp60ui+SXJiThcWG0S7HkCoOlmzHoyw=;
+        s=default; t=1559922086;
+        bh=PHC6wVTNr/ilVN+aLfu0QMFCGVE1NOjtBg+sd/FYZzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ro55zj5wRke47k5GajAdr4qT+5ZSjLblYq25SXoxcljo/0je1uAPDcfxutVgUkj/a
-         dQjPz9f76xIKepeL9+UwM2ki+fRiE3STfv8MmaYauZa4zEQsFCcu22Gt+cVlgi1o0T
-         K4w3MqFiX5A1pYpIjauio+cZRnmoymXTJV98jQZ4=
+        b=y62JHmqJ8U54/QvC2v0msvqD6rnp9SAkezzAzKoRZGLJTH5BAicKcG9PSMkUWmSfJ
+         0fmBi2DjywDWe+yjy46+LhDFwv5/GQQt1x5tYCVsvE0HJwU1JO52jccNVmQ4AG53lI
+         wxiWfieDoLVFgHHzgzSN1gvvyM6qgHoVYHhLdbPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, oliver Neukum <oneukum@suse.com>,
-        syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 30/69] USB: sisusbvga: fix oops in error path of sisusb_probe
-Date:   Fri,  7 Jun 2019 17:39:11 +0200
-Message-Id: <20190607153852.103448909@linuxfoundation.org>
+        stable@vger.kernel.org, Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 4.14 31/69] USB: Add LPM quirk for Surface Dock GigE adapter
+Date:   Fri,  7 Jun 2019 17:39:12 +0200
+Message-Id: <20190607153852.230551775@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -59,55 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Maximilian Luz <luzmaximilian@gmail.com>
 
-commit 9a5729f68d3a82786aea110b1bfe610be318f80a upstream.
+commit ea261113385ac0a71c2838185f39e8452d54b152 upstream.
 
-The pointer used to log a failure of usb_register_dev() must
-be set before the error is logged.
+Without USB_QUIRK_NO_LPM ethernet will not work and rtl8152 will
+complain with
 
-v2: fix that minor is not available before registration
+    r8152 <device...>: Stop submitting intr, status -71
 
-Signed-off-by: oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
-Fixes: 7b5cd5fefbe02 ("USB: SisUSB2VGA: Convert printk to dev_* macros")
+Adding the quirk resolves this. As the dock is externally powered, this
+should not have any drawbacks.
+
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/sisusbvga/sisusb.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/misc/sisusbvga/sisusb.c
-+++ b/drivers/usb/misc/sisusbvga/sisusb.c
-@@ -3028,6 +3028,13 @@ static int sisusb_probe(struct usb_inter
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -64,6 +64,9 @@ static const struct usb_device_id usb_qu
+ 	/* Microsoft LifeCam-VX700 v2.0 */
+ 	{ USB_DEVICE(0x045e, 0x0770), .driver_info = USB_QUIRK_RESET_RESUME },
  
- 	mutex_init(&(sisusb->lock));
- 
-+	sisusb->sisusb_dev = dev;
-+	sisusb->vrambase   = SISUSB_PCI_MEMBASE;
-+	sisusb->mmiobase   = SISUSB_PCI_MMIOBASE;
-+	sisusb->mmiosize   = SISUSB_PCI_MMIOSIZE;
-+	sisusb->ioportbase = SISUSB_PCI_IOPORTBASE;
-+	/* Everything else is zero */
++	/* Microsoft Surface Dock Ethernet (RTL8153 GigE) */
++	{ USB_DEVICE(0x045e, 0x07c6), .driver_info = USB_QUIRK_NO_LPM },
 +
- 	/* Register device */
- 	retval = usb_register_dev(intf, &usb_sisusb_class);
- 	if (retval) {
-@@ -3038,13 +3045,7 @@ static int sisusb_probe(struct usb_inter
- 		goto error_1;
- 	}
+ 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
+ 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
  
--	sisusb->sisusb_dev = dev;
--	sisusb->minor      = intf->minor;
--	sisusb->vrambase   = SISUSB_PCI_MEMBASE;
--	sisusb->mmiobase   = SISUSB_PCI_MMIOBASE;
--	sisusb->mmiosize   = SISUSB_PCI_MMIOSIZE;
--	sisusb->ioportbase = SISUSB_PCI_IOPORTBASE;
--	/* Everything else is zero */
-+	sisusb->minor = intf->minor;
- 
- 	/* Allocate buffers */
- 	sisusb->ibufsize = SISUSB_IBUF_SIZE;
 
 
