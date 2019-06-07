@@ -2,87 +2,112 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C321BC468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC646C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9392A2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2C2208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:59:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aCgMbb81"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="L4akB9WN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbfFGQ7E (ORCPT
+        id S1731047AbfFGQ7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:59:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33200 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729241AbfFGQ7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:59:04 -0400
-Received: from zn.tnic (p200300EC2F066300951FA2F4E0AD5C5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:6300:951f:a2f4:e0ad:5c5f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 21F031EC0985;
-        Fri,  7 Jun 2019 18:59:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1559926742;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=/2NcNch3R68K7lUglKrZM9JHVa8TdBrm5yFg3WS60WU=;
-        b=aCgMbb81ahA64+mVjl7lpndBl9sa9MEar0rZrGyE1RXeMA5E+WwIyLmP2YNeZq455HoxKU
-        CqIf23HRuoqO+2J44ElTft1ANGYOUQwQA/GuKENfqTZtLiu1nr/hRKE3w5t/mGvdSfGbh6
-        mE1eAdp36Y4+CkAVjmD5SeaQLX43/ho=
-Date:   Fri, 7 Jun 2019 18:59:02 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
- hardware
-Message-ID: <20190607165902.GJ20269@zn.tnic>
-References: <20190517174817.GG13482@zn.tnic>
- <20190517180607.GA21710@agluck-desk>
- <20190517193431.GI13482@zn.tnic>
- <SN6PR12MB2639C5427366AC3004C35CC0F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190517200225.GK13482@zn.tnic>
- <SN6PR12MB26390759DB43763D3A482918F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190527232849.GC8209@cz.tnic>
- <SN6PR12MB263998ECCDF1E345FEB0869AF8100@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190607163723.GG20269@zn.tnic>
- <SN6PR12MB263968DE0DD98EBE14450698F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
+        Fri, 7 Jun 2019 12:59:55 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33832 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729241AbfFGQ7z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:59:55 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c85so1540487pfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 09:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=MNcJZMA4q9Qof1r/YfMqt/g7trBAYJtueHwu9fzJ0WI=;
+        b=L4akB9WNfbBACsOjFsABrYcUMZ0d45A2WBoImzWXvmDzcQfL5Z9zXF5ol6MTI1/Igh
+         7pKIWrGAuHb4n0nXZdg1NdjUDchGYPC9QOZxMuh5PCgJCTKwZsxN9o/q3Irps0B2LtlG
+         Lh2FWJdktH2VCUfpDaSfHxG62xGrNmB/kuoRpbzK4gS3dLpokLfSX2eW7ExInlFDuc1m
+         ziXEQzAH5J1A1ad/7Ud2x/Wii4u1RO/16chpf8v3a1Y4CSHsixCLtbRaPbd2B6RuCK4I
+         cMleBhOaoan2iZh3a0aZwuic7Cedsvi9+vfrLbNo3XN2Wp6J1kkJxyJ1Wgqj25K+yaSF
+         iUoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=MNcJZMA4q9Qof1r/YfMqt/g7trBAYJtueHwu9fzJ0WI=;
+        b=fqrq5dePRy1QBPzAlW/mGHAQzz1eEjvoX1fZ2oz+adSXsio4KG1Imk2cCj+79p/F09
+         Q5bFrMkZB9suxBOR7ERwAeiyqgTjnVCpGEK3DeqBZnCbsroLYfPv6EL8CG09OHCf4CBg
+         qluKsSJFHj/3P/2tNJbyNkmdngSRPM7ZdNPDtOmCem+4bl35m5nOrModPfoI4NXs/yDm
+         SRWn/2MWDG3a8yjngmSWpC7Er9tEKgEnwfrh2ETHUQb0YDkX5MlTrkH/0IAOCVXPLd52
+         UV02URYbkGuY4gnPSOjMd6UVdg3DiEqjZ2N7P9YgofrB0Jhg+VB7rcx6EOf0nIGbGj4z
+         vCIA==
+X-Gm-Message-State: APjAAAUPKw4G7EIiOQ9rV6wMrLWT8x+U9aePKvxYgTg5jVDn8+3N58e4
+        3cM2trHE0CdQ9WKdN33j2Ipgvg==
+X-Google-Smtp-Source: APXvYqxjjfrU5qo3ODqkgEdkborlSAFDI2qtFKnUIi8CiMXFsJ1sXPjdIpXVmVAhK7v1FC47cE9/Hw==
+X-Received: by 2002:a62:640e:: with SMTP id y14mr57808577pfb.109.1559926794332;
+        Fri, 07 Jun 2019 09:59:54 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id k6sm3828350pfi.86.2019.06.07.09.59.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 09:59:53 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/10] arm64: dts: meson-gxm-khadas-vim2: fix gpio-keys-polled node
+In-Reply-To: <c8144470-361b-ca26-71c7-d152f976ae19@baylibre.com>
+References: <20190527132200.17377-1-narmstrong@baylibre.com> <20190527132200.17377-2-narmstrong@baylibre.com> <7hy32ecwlu.fsf@baylibre.com> <c8144470-361b-ca26-71c7-d152f976ae19@baylibre.com>
+Date:   Fri, 07 Jun 2019 09:59:53 -0700
+Message-ID: <7hblz9covq.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SN6PR12MB263968DE0DD98EBE14450698F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 04:44:24PM +0000, Ghannam, Yazen wrote:
-> I have another version of this set that I can send today. It includes
-> the changes for this patch and also includes the fix for the locking
-> bug message.
+Neil Armstrong <narmstrong@baylibre.com> writes:
+
+> On 06/06/2019 22:00, Kevin Hilman wrote:
+>> Neil Armstrong <narmstrong@baylibre.com> writes:
+>> 
+>>> From: Christian Hewitt <christianshewitt@gmail.com>
+>>>
+>>> Fix DTC warnings:
+>>>
+>>> meson-gxm-khadas-vim2.dtb: Warning (avoid_unnecessary_addr_size):
+>>>    /gpio-keys-polled: unnecessary #address-cells/#size-cells
+>>> 	without "ranges" or child "reg" property
+>>>
+>>> Fixes: b8b74dda3908 ("ARM64: dts: meson-gxm: Add support for Khadas VIM2")
+>>> Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> 
+>> This patch is missing a S-o-B from the author (Christian?)
+>> 
+>> The From, Suggested-by and Signed-off-by send mixed messages.  Please
+>> clarify if if this is missing a signoff from Christian or if the author
+>> is Neil.
+>> 
+>> Thanks,
+>> 
+>> Kevin
+>> 
 >
-> Should I send out the new version? Or do you want me to wait for any
-> fixes on top of the current version?
+> The author is Christian Hewitt <christianshewitt@gmail.com>
+>
+> so s/Suggested-by/Signed-off-by/
+>
+> Do you need a resend ?
 
-I don't understand - I think we said to feel free to rework it all by using
+No need, I'll fix up locally.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=rc0%2b3-ras
+Thanks for clarifying,
 
-and reworking the whole branch to accomodate the changes and then
-sending a whole new series...
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Kevin
