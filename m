@@ -2,313 +2,139 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB016C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DDAC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B83720657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B49A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559923126;
+	bh=Mk5P4fya3KDDGfujSsNIgINShNzGSC6TdI4Mp4kjOcc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sleq7xmp/dXpzpYS93whVW4Dhk5Cx4cbArufMRPuWDqUVAIiwD9zAKqZs0cXKs01s
+	 hNVLvp+iDbpS6eApScr3JTPOKPd7oRLudMKmxFFtf2ltNa1zRAjOmhIJ2Cj9iUJY8F
+	 Pw40EDaF0rutFcDE8OqRQNDiaB6Hza4JS3MMifh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730688AbfFGPmy (ORCPT
+        id S1730579AbfFGPm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:42:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:43076 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 11:42:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbfFGPmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAEC3346;
-        Fri,  7 Jun 2019 08:42:48 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35F173F718;
-        Fri,  7 Jun 2019 08:42:47 -0700 (PDT)
-Subject: Re: [PATCH v3 4/8] arm64: Fix interrupt tracing in the presence of
- NMIs
-To:     Julien Thierry <julien.thierry@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        yuzenghui@huawei.com, wanghaibin.wang@huawei.com,
-        james.morse@arm.com, will.deacon@arm.com, catalin.marinas@arm.com,
-        mark.rutland@arm.com, liwei391@huawei.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-References: <1559813517-41540-1-git-send-email-julien.thierry@arm.com>
- <1559813517-41540-5-git-send-email-julien.thierry@arm.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <72cc234e-1c70-9356-bf53-0e3aa4ba43c5@arm.com>
-Date:   Fri, 7 Jun 2019 16:42:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1730561AbfFGPmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02E162147A;
+        Fri,  7 Jun 2019 15:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559922144;
+        bh=Mk5P4fya3KDDGfujSsNIgINShNzGSC6TdI4Mp4kjOcc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hT72/HQYU8RzCOYfsRNUECSnZ2QlV+FAevqlXOVNWajyv512lNbzx6KQU3oTOP4yJ
+         hxIRBbz25s0eXsQ2tmKZT/G5MNM913VDPC85GpbHH78V+9Fy9Ydf+OsM36xeVQ8x8I
+         QqrI/nP0A6W1SDC4zbz4YyyzMCv8m/1Ax+5vqYBk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 4.14 53/69] doc: Cope with the deprecation of AutoReporter
+Date:   Fri,  7 Jun 2019 17:39:34 +0200
+Message-Id: <20190607153854.768374834@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
+References: <20190607153848.271562617@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1559813517-41540-5-git-send-email-julien.thierry@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/06/2019 10:31, Julien Thierry wrote:
-> In the presence of any form of instrumentation, nmi_enter() should be
-> done before calling any traceable code and any instrumentation code.
-> 
-> Currently, nmi_enter() is done in handle_domain_nmi(), which is much
-> too late as instrumentation code might get called before. Move the
-> nmi_enter/exit() calls to the arch IRQ vector handler.
-> 
-> On arm64, it is not possible to know if the IRQ vector handler was
-> called because of an NMI before acknowledging the interrupt. However, It
-> is possible to know whether normal interrupts could be taken in the
-> interrupted context (i.e. if taking an NMI in that context could
-> introduce a potential race condition).
-> 
-> When interrupting a context with IRQs disabled, call nmi_enter() as soon
-> as possible. In contexts with IRQs enabled, defer this to the interrupt
-> controller, which is in a better position to know if an interrupt taken
-> is an NMI.
-> 
-> Fixes: bc3c03ccb ("arm64: Enable the support of pseudo-NMIs")
-> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  arch/arm64/kernel/entry.S    | 44 +++++++++++++++++++++++++++++++++-----------
->  arch/arm64/kernel/irq.c      | 17 +++++++++++++++++
->  drivers/irqchip/irq-gic-v3.c |  6 ++++++
->  kernel/irq/irqdesc.c         |  8 ++++++--
->  4 files changed, 62 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> index 89ab6bd..46358a3 100644
-> --- a/arch/arm64/kernel/entry.S
-> +++ b/arch/arm64/kernel/entry.S
-> @@ -435,6 +435,20 @@ tsk	.req	x28		// current thread_info
->  	irq_stack_exit
->  	.endm
-> 
-> +#ifdef CONFIG_ARM64_PSEUDO_NMI
-> +	/*
-> +	 * Set res to 0 if irqs were masked in interrupted context.
+From: Jonathan Corbet <corbet@lwn.net>
 
-Is that comment right? This macro seems to return 0 if PMR is equal to
-GIC_PRIO_IRQON, meaning that irqs are unmasked...
+commit 2404dad1f67f8917e30fc22a85e0dbcc85b99955 upstream.
 
-> +	 * Otherwise set res to non-0 value.
-> +	 */
-> +	.macro	test_irqs_unmasked res:req, pmr:req
-> +alternative_if ARM64_HAS_IRQ_PRIO_MASKING
-> +	sub	\res, \pmr, #GIC_PRIO_IRQON
-> +alternative_else
-> +	mov	\res, xzr
-> +alternative_endif
-> +	.endm
-> +#endif
-> +
->  	.text
-> 
->  /*
-> @@ -631,19 +645,19 @@ ENDPROC(el1_sync)
->  el1_irq:
->  	kernel_entry 1
->  	enable_da_f
-> -#ifdef CONFIG_TRACE_IRQFLAGS
-> +
->  #ifdef CONFIG_ARM64_PSEUDO_NMI
->  alternative_if ARM64_HAS_IRQ_PRIO_MASKING
->  	ldr	x20, [sp, #S_PMR_SAVE]
-> -alternative_else
-> -	mov	x20, #GIC_PRIO_IRQON
-> -alternative_endif
-> -	cmp	x20, #GIC_PRIO_IRQOFF
-> -	/* Irqs were disabled, don't trace */
-> -	b.ls	1f
-> +alternative_else_nop_endif
-> +	test_irqs_unmasked	res=x0, pmr=x20
-> +	cbz	x0, 1f
-> +	bl	asm_nmi_enter
-> +1:
->  #endif
-> +
-> +#ifdef CONFIG_TRACE_IRQFLAGS
->  	bl	trace_hardirqs_off
-> -1:
->  #endif
-> 
->  	irq_handler
-> @@ -662,14 +676,22 @@ alternative_else_nop_endif
->  	bl	preempt_schedule_irq		// irq en/disable is done inside
->  1:
->  #endif
-> -#ifdef CONFIG_TRACE_IRQFLAGS
-> +
->  #ifdef CONFIG_ARM64_PSEUDO_NMI
->  	/*
->  	 * if IRQs were disabled when we received the interrupt, we have an NMI
->  	 * and we are not re-enabling interrupt upon eret. Skip tracing.
->  	 */
-> -	cmp	x20, #GIC_PRIO_IRQOFF
-> -	b.ls	1f
-> +	test_irqs_unmasked	res=x0, pmr=x20
-> +	cbz	x0, 1f
-> +	bl	asm_nmi_exit
-> +1:
-> +#endif
-> +
-> +#ifdef CONFIG_TRACE_IRQFLAGS
-> +#ifdef CONFIG_ARM64_PSEUDO_NMI
-> +	test_irqs_unmasked	res=x0, pmr=x20
-> +	cbnz	x0, 1f
->  #endif
->  	bl	trace_hardirqs_on
->  1:
-> diff --git a/arch/arm64/kernel/irq.c b/arch/arm64/kernel/irq.c
-> index 92fa817..fdd9cb2 100644
-> --- a/arch/arm64/kernel/irq.c
-> +++ b/arch/arm64/kernel/irq.c
-> @@ -27,8 +27,10 @@
->  #include <linux/smp.h>
->  #include <linux/init.h>
->  #include <linux/irqchip.h>
-> +#include <linux/kprobes.h>
->  #include <linux/seq_file.h>
->  #include <linux/vmalloc.h>
-> +#include <asm/daifflags.h>
->  #include <asm/vmap_stack.h>
-> 
->  unsigned long irq_err_count;
-> @@ -76,3 +78,18 @@ void __init init_IRQ(void)
->  	if (!handle_arch_irq)
->  		panic("No interrupt controller found.");
->  }
-> +
-> +/*
-> + * Stubs to make nmi_enter/exit() code callable from ASM
-> + */
-> +asmlinkage void notrace asm_nmi_enter(void)
-> +{
-> +	nmi_enter();
-> +}
-> +NOKPROBE_SYMBOL(asm_nmi_enter);
-> +
-> +asmlinkage void notrace asm_nmi_exit(void)
-> +{
-> +	nmi_exit();
-> +}
-> +NOKPROBE_SYMBOL(asm_nmi_exit);
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index f44cd89..0bf0fc4 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -495,7 +495,13 @@ static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs
-> 
->  	if (gic_supports_nmi() &&
->  	    unlikely(gic_read_rpr() == GICD_INT_NMI_PRI)) {
-> +		if (interrupts_enabled(regs))
-> +			nmi_enter();
-> +
->  		gic_handle_nmi(irqnr, regs);
-> +
-> +		if (interrupts_enabled(regs))
-> +			nmi_exit();
+AutoReporter is going away; recent versions of sphinx emit a warning like:
 
-Just to be on the safe side, I'd rather sample interrupts_enabled(regs)
-and use the same value to decide whether to do nmi_exit or not.
+  Documentation/sphinx/kerneldoc.py:125:
+      RemovedInSphinx20Warning: AutodocReporter is now deprecated.
+      Use sphinx.util.docutils.switch_source_input() instead.
 
->  		return;
->  	}
-> 
-> diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-> index c52b737..a92b335 100644
-> --- a/kernel/irq/irqdesc.c
-> +++ b/kernel/irq/irqdesc.c
-> @@ -680,6 +680,8 @@ int __handle_domain_irq(struct irq_domain *domain, unsigned int hwirq,
->   * @hwirq:	The HW irq number to convert to a logical one
->   * @regs:	Register file coming from the low-level handling code
->   *
-> + *		This function must be called from an NMI context.
-> + *
->   * Returns:	0 on success, or -EINVAL if conversion has failed
->   */
->  int handle_domain_nmi(struct irq_domain *domain, unsigned int hwirq,
-> @@ -689,7 +691,10 @@ int handle_domain_nmi(struct irq_domain *domain, unsigned int hwirq,
->  	unsigned int irq;
->  	int ret = 0;
-> 
-> -	nmi_enter();
-> +	/*
-> +	 * NMI context needs to be setup earlier in order to deal with tracing.
-> +	 */
-> +	WARN_ON(!in_nmi());
-> 
->  	irq = irq_find_mapping(domain, hwirq);
-> 
-> @@ -702,7 +707,6 @@ int handle_domain_nmi(struct irq_domain *domain, unsigned int hwirq,
->  	else
->  		ret = -EINVAL;
-> 
-> -	nmi_exit();
->  	set_irq_regs(old_regs);
->  	return ret;
->  }
-> --
-> 1.9.1
-> 
+Make the switch.  But switch_source_input() only showed up in 1.7, so we
+have to do ugly version checks to keep things working in older versions.
 
-Thanks,
+Cc: stable@vger.kernel.org
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+---
+ Documentation/sphinx/kerneldoc.py |   34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
+
+--- a/Documentation/sphinx/kerneldoc.py
++++ b/Documentation/sphinx/kerneldoc.py
+@@ -37,7 +37,17 @@ import glob
+ from docutils import nodes, statemachine
+ from docutils.statemachine import ViewList
+ from docutils.parsers.rst import directives, Directive
+-from sphinx.ext.autodoc import AutodocReporter
++
++#
++# AutodocReporter is only good up to Sphinx 1.7
++#
++import sphinx
++
++Use_SSI = sphinx.__version__[:3] >= '1.7'
++if Use_SSI:
++    from sphinx.util.docutils import switch_source_input
++else:
++    from sphinx.ext.autodoc import AutodocReporter
+ 
+ __version__  = '1.0'
+ 
+@@ -117,13 +127,7 @@ class KernelDocDirective(Directive):
+                     lineoffset += 1
+ 
+             node = nodes.section()
+-            buf = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
+-            self.state.memo.reporter = AutodocReporter(result, self.state.memo.reporter)
+-            self.state.memo.title_styles, self.state.memo.section_level = [], 0
+-            try:
+-                self.state.nested_parse(result, 0, node, match_titles=1)
+-            finally:
+-                self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = buf
++            self.do_parse(result, node)
+ 
+             return node.children
+ 
+@@ -132,6 +136,20 @@ class KernelDocDirective(Directive):
+                          (" ".join(cmd), str(e)))
+             return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
+ 
++    def do_parse(self, result, node):
++        if Use_SSI:
++            with switch_source_input(self.state, result):
++                self.state.nested_parse(result, 0, node, match_titles=1)
++        else:
++            save = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
++            self.state.memo.reporter = AutodocReporter(result, self.state.memo.reporter)
++            self.state.memo.title_styles, self.state.memo.section_level = [], 0
++            try:
++                self.state.nested_parse(result, 0, node, match_titles=1)
++            finally:
++                self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = save
++
++
+ def setup(app):
+     app.add_config_value('kerneldoc_bin', None, 'env')
+     app.add_config_value('kerneldoc_srctree', None, 'env')
+
+
