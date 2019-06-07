@@ -2,80 +2,97 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09D8C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F38C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F692089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADB32133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730177AbfFGQVU (ORCPT
+        id S1730253AbfFGQWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:21:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60522 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728797AbfFGQVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:21:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5C466AC9A;
-        Fri,  7 Jun 2019 16:21:18 +0000 (UTC)
-Subject: Re: [RFC PATCH 00/16] xenhost support
-To:     Joao Martins <joao.m.martins@oracle.com>
-Cc:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <5649cfd1-24df-2196-2888-b00fc3ace7ad@suse.com>
- <ede6db03-121c-9ec6-f8eb-dbcc605977b4@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <c73a6ec5-687e-d3ef-e5d7-5700d240b4ec@suse.com>
-Date:   Fri, 7 Jun 2019 18:21:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <ede6db03-121c-9ec6-f8eb-dbcc605977b4@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
+        Fri, 7 Jun 2019 12:22:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:57740 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728486AbfFGQWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:22:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:22:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,563,1557212400"; 
+   d="scan'208";a="182719233"
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2019 09:22:52 -0700
+Message-ID: <388e702bfa4ed38f460327ae09ebc9b18b582bb5.camel@intel.com>
+Subject: Re: [PATCH v7 05/27] x86/fpu/xstate: Add XSAVES system states for
+ shadow stack
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Fri, 07 Jun 2019 09:14:50 -0700
+In-Reply-To: <20190607070725.GN3419@hirez.programming.kicks-ass.net>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+         <20190606200646.3951-6-yu-cheng.yu@intel.com>
+         <20190607070725.GN3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.06.19 17:22, Joao Martins wrote:
-> On 6/7/19 3:51 PM, Juergen Gross wrote:
->> On 09.05.19 19:25, Ankur Arora wrote:
->>> Hi all,
->>>
->>> This is an RFC for xenhost support, outlined here by Juergen here:
->>> https://lkml.org/lkml/2019/4/8/67.
->>
->> First: thanks for all the effort you've put into this series!
->>
->>> The high level idea is to provide an abstraction of the Xen
->>> communication interface, as a xenhost_t.
->>>
->>> xenhost_t expose ops for communication between the guest and Xen
->>> (hypercall, cpuid, shared_info/vcpu_info, evtchn, grant-table and on top
->>> of those, xenbus, ballooning), and these can differ based on the kind
->>> of underlying Xen: regular, local, and nested.
->>
->> I'm not sure we need to abstract away hypercalls and cpuid. I believe in
->> case of nested Xen all contacts to the L0 hypervisor should be done via
->> the L1 hypervisor. So we might need to issue some kind of passthrough
->> hypercall when e.g. granting a page to L0 dom0, but this should be
->> handled via the grant abstraction (events should be similar).
->>
-> Just to be clear: By "kind of passthrough hypercall" you mean (e.g. for every
-> access/modify of grant table frames) you would proxy hypercall to L0 Xen via L1 Xen?
+On Fri, 2019-06-07 at 09:07 +0200, Peter Zijlstra wrote:
+> On Thu, Jun 06, 2019 at 01:06:24PM -0700, Yu-cheng Yu wrote:
+> > Intel Control-flow Enforcement Technology (CET) introduces the
+> > following MSRs.
+> > 
+> >     MSR_IA32_U_CET (user-mode CET settings),
+> >     MSR_IA32_PL3_SSP (user-mode shadow stack),
+> >     MSR_IA32_PL0_SSP (kernel-mode shadow stack),
+> >     MSR_IA32_PL1_SSP (Privilege Level 1 shadow stack),
+> >     MSR_IA32_PL2_SSP (Privilege Level 2 shadow stack).
+> > 
+> > Introduce them into XSAVES system states.
+> > 
+> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> > ---
+> >  arch/x86/include/asm/fpu/types.h            | 22 +++++++++++++++++++++
+> >  arch/x86/include/asm/fpu/xstate.h           |  4 +++-
+> >  arch/x86/include/uapi/asm/processor-flags.h |  2 ++
+> >  arch/x86/kernel/fpu/xstate.c                | 10 ++++++++++
+> >  4 files changed, 37 insertions(+), 1 deletion(-)
+> 
+> And yet, no changes to msr-index.h !?
 
-It might be possible to spare some hypercalls by directly writing to
-grant frames mapped into L1 dom0, but in general you are right.
+You are right.  I will move msr-index.h changes to here.
 
-
-Juergen
+Yu-cheng
