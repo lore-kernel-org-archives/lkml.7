@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE26C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2ABC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57EEC212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9493021479
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922409;
-	bh=fODzMbhwNCnU9KZWF0dDSMSCfi+Kpxj4SJk1wz8uYx0=;
+	s=default; t=1559922412;
+	bh=qkNXViCj49Ut9Bq05gvEuHF57ravamNBtcJkC5IfgdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIMxMR3so1UIup4svNDoyTAXAVZNOq388PZVK5FxDHmV/NKkL4kcImpJoey6Jg11b
-	 lud4wso2HOo418u2vHmSedEA3ezu1sTLYkUw1ciiPGP0dcFO+HQNW6dHE3S4jlb3tw
-	 RxoVMS7tFTmu/LNSGY1jKdZOv5bdS/u02Os6duhQ=
+	b=VSzLp/bulqT6n7NNGLL9PzNZNP6gdl1mbyNzxqNbq9piCL3MGV21sTMr2rUCIoI/J
+	 SkKD8fDKNkDqnkpv+pkm2Am7PaCE8tIAHDXPGDefJb0WV6vmb7bWFNTHNzqc04t8AD
+	 vkr6nLzR8eFKp2jEuwKkzSB+vws3pgy2UzSWnPYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbfFGPqs (ORCPT
+        id S1731482AbfFGPqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:46:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59162 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729835AbfFGPqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:42 -0400
+        id S1731471AbfFGPqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA2172147A;
-        Fri,  7 Jun 2019 15:46:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C3B2168B;
+        Fri,  7 Jun 2019 15:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922402;
-        bh=fODzMbhwNCnU9KZWF0dDSMSCfi+Kpxj4SJk1wz8uYx0=;
+        s=default; t=1559922407;
+        bh=qkNXViCj49Ut9Bq05gvEuHF57ravamNBtcJkC5IfgdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KnhWR2OpPI4vleykwtki9CHaRiMxBDrC/WdsGFj+A8BoLGgeH2uAQMWVzg7aKBNbD
-         t9DXL6C45MaG2FzTb9zI9yYVTgM7Bk5QIeN8mY0xZwGzPJlfMToJWJFGq90Eu8mnyF
-         p21iwzgQrQDuRKv4qJ1dS7JVE33w1CDS3v7KAcUI=
+        b=vdrUasHUq4AYEbo0Nh0Tyxw0ZuCGIN/KT1zJ9BTvCVgSaG/K2XfCTJkXFybAgytl1
+         3Zf3dqIFbi4OKtR4pd8gO5Pq2Azy5E8j1pFj9rkRPuDh/6ckx79TWYn2Vr7xWNGUTm
+         MHCC2j6XMTunRU3hzliAu0oZJTXViNV1wCVX8vic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.19 73/73] media: uvcvideo: Fix uvc_alloc_entity() allocation alignment
-Date:   Fri,  7 Jun 2019 17:40:00 +0200
-Message-Id: <20190607153856.880547199@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 40/73] memcg: make it work on sparse non-0-node systems
+Date:   Fri,  7 Jun 2019 17:39:27 +0200
+Message-Id: <20190607153853.614948672@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -62,39 +65,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nadav Amit <namit@vmware.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 89dd34caf73e28018c58cd193751e41b1f8bdc56 upstream.
+commit 3e8589963773a5c23e2f1fe4bcad0e9a90b7f471 upstream.
 
-The use of ALIGN() in uvc_alloc_entity() is incorrect, since the size of
-(entity->pads) is not a power of two. As a stop-gap, until a better
-solution is adapted, use roundup() instead.
+We have a single node system with node 0 disabled:
+  Scanning NUMA topology in Northbridge 24
+  Number of physical nodes 2
+  Skipping disabled node 0
+  Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
+  NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
 
-Found by a static assertion. Compile-tested only.
+This causes crashes in memcg when system boots:
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+  #PF error: [normal kernel read fault]
+...
+  RIP: 0010:list_lru_add+0x94/0x170
+...
+  Call Trace:
+   d_lru_add+0x44/0x50
+   dput.part.34+0xfc/0x110
+   __fput+0x108/0x230
+   task_work_run+0x9f/0xc0
+   exit_to_usermode_loop+0xf5/0x100
 
-Fixes: 4ffc2d89f38a ("uvcvideo: Register subdevices for each entity")
+It is reproducible as far as 4.12.  I did not try older kernels.  You have
+to have a new enough systemd, e.g.  241 (the reason is unknown -- was not
+investigated).  Cannot be reproduced with systemd 234.
 
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>
+The system crashes because the size of lru array is never updated in
+memcg_update_all_list_lrus and the reads are past the zero-sized array,
+causing dereferences of random memory.
+
+The root cause are list_lru_memcg_aware checks in the list_lru code.  The
+test in list_lru_memcg_aware is broken: it assumes node 0 is always
+present, but it is not true on some systems as can be seen above.
+
+So fix this by avoiding checks on node 0.  Remember the memcg-awareness by
+a bool flag in struct list_lru.
+
+Link: http://lkml.kernel.org/r/20190522091940.3615-1-jslaby@suse.cz
+Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_driver.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/list_lru.h |    1 +
+ mm/list_lru.c            |    8 +++-----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -914,7 +914,7 @@ static struct uvc_entity *uvc_alloc_enti
- 	unsigned int size;
- 	unsigned int i;
+--- a/include/linux/list_lru.h
++++ b/include/linux/list_lru.h
+@@ -54,6 +54,7 @@ struct list_lru {
+ #ifdef CONFIG_MEMCG_KMEM
+ 	struct list_head	list;
+ 	int			shrinker_id;
++	bool			memcg_aware;
+ #endif
+ };
  
--	extra_size = ALIGN(extra_size, sizeof(*entity->pads));
-+	extra_size = roundup(extra_size, sizeof(*entity->pads));
- 	num_inputs = (type & UVC_TERM_OUTPUT) ? num_pads : num_pads - 1;
- 	size = sizeof(*entity) + extra_size + sizeof(*entity->pads) * num_pads
- 	     + num_inputs;
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_l
+ 
+ static inline bool list_lru_memcg_aware(struct list_lru *lru)
+ {
+-	/*
+-	 * This needs node 0 to be always present, even
+-	 * in the systems supporting sparse numa ids.
+-	 */
+-	return !!lru->node[0].memcg_lrus;
++	return lru->memcg_aware;
+ }
+ 
+ static inline struct list_lru_one *
+@@ -451,6 +447,8 @@ static int memcg_init_list_lru(struct li
+ {
+ 	int i;
+ 
++	lru->memcg_aware = memcg_aware;
++
+ 	if (!memcg_aware)
+ 		return 0;
+ 
 
 
