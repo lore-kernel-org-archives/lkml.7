@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E907C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA60C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5A1208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B3720657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922922;
-	bh=noMDM0+G7fvAYTkP+qTa1fHN6gTn8pJOT/sFJUBXcqQ=;
+	s=default; t=1559922932;
+	bh=CEg1spDROT8I4kU1zXMKX9TQSs6MvE3Zy6f+1mgUizM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WYbX02Bdvadj9WXce4uWGrYXZds8e3XFTFlzdVPCmw9IUxXhYNIm0kifWB+gAEEul
-	 +xSVhQCFNfO//52Tllv74AGHPVveCdQ/LtlmX8NgurSB+A2PXoT214txSEz3gLJnN+
-	 JjojL5VMybon7AIHcif17dm0VVywh1mqXmPaC8kY=
+	b=SUpLqpCZe8zkECzUABu/hBNQF7o2ULrBjw5mQy7zVARsAgIxqQD2zi6n5R2PSBu1U
+	 E9PGSAtnmmp/NLpVako4cLLKdxkErY8mFUk98qZ378U3sOBb8QQK5AHFRdHedDMtjp
+	 bFJwT5caJ4dGKYc3pQ1bboJy6bVSWFqzeCcGW18E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbfFGPzV (ORCPT
+        id S1731266AbfFGPpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57800 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731293AbfFGPpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:45:46 -0400
+        id S1731245AbfFGPpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:45:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3A0C2147A;
-        Fri,  7 Jun 2019 15:45:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 887432146E;
+        Fri,  7 Jun 2019 15:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922346;
-        bh=noMDM0+G7fvAYTkP+qTa1fHN6gTn8pJOT/sFJUBXcqQ=;
+        s=default; t=1559922335;
+        bh=CEg1spDROT8I4kU1zXMKX9TQSs6MvE3Zy6f+1mgUizM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WlLsq4TeJOAmaLUvo8r6Ymw7jSOAgAJWOc3Ab6Dh2Cb1544r/FxbDrGVrVAtTAKTM
-         OyyjRscfDVwk6e3BrgSEelCntoSSvLXNO9M9d2neO6gp/GPYXZcAPkL5UvcaIBwJKe
-         gJ4ZhpvfdiAFZrpra0mAkvxS7lETjiYaY9xO8ATc=
+        b=KdIGQVtQTOJSYB5Fixb5Gn65kQcLJI2q+7Pw2jX2DYaeBvD61UwvvGb+N4YdI5C9d
+         GAdzY7Ye//4HYHwUbL8ZiGTsdJaMlriJNYnI+uYJkwcQj2JWFiPws6C8mlEYSH5T2Q
+         oJEohJ9WwsPi3Q5Bxlsnr84VHT2dZv10hJ2FEnQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Okamoto Satoru <okamoto.satoru@socionext.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.19 37/73] i2c: synquacer: fix synquacer_i2c_doxfer() return value
-Date:   Fri,  7 Jun 2019 17:39:24 +0200
-Message-Id: <20190607153853.262623656@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Collier <osdevtc@gmail.com>
+Subject: [PATCH 4.19 51/73] staging: wlan-ng: fix adapter initialization failure
+Date:   Fri,  7 Jun 2019 17:39:38 +0200
+Message-Id: <20190607153854.772384672@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -62,35 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahisa Kojima <masahisa.kojima@linaro.org>
+From: Tim Collier <osdevtc@gmail.com>
 
-commit ff9378904d9d7a3fcb8406604e089e535e357b1d upstream.
+commit a67fedd788182764dc8ed59037c604b7e60349f1 upstream.
 
-master_xfer should return the number of messages successfully
-processed.
+Commit e895f00a8496 ("Staging: wlan-ng: hfa384x_usb.c Fixed too long
+code line warnings.") moved the retrieval of the transfer buffer from
+the URB from the top of function hfa384x_usbin_callback to a point
+after reposting of the URB via a call to submit_rx_urb. The reposting
+of the URB allocates a new transfer buffer so the new buffer is
+retrieved instead of the buffer containing the response passed into
+the callback. This results in failure to initialize the adapter with
+an error reported in the system log (something like "CTLX[1] error:
+state(Request failed)").
 
-Fixes: 0d676a6c4390 ("i2c: add support for Socionext SynQuacer I2C controller")
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Okamoto Satoru <okamoto.satoru@socionext.com>
-Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This change moves the retrieval to just before the point where the URB
+is reposted so that the correct transfer buffer is retrieved and
+initialization of the device succeeds.
+
+Signed-off-by: Tim Collier <osdevtc@gmail.com>
+Fixes: e895f00a8496 ("Staging: wlan-ng: hfa384x_usb.c Fixed too long code line warnings.")
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-synquacer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/wlan-ng/hfa384x_usb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/i2c/busses/i2c-synquacer.c
-+++ b/drivers/i2c/busses/i2c-synquacer.c
-@@ -356,7 +356,7 @@ static int synquacer_i2c_doxfer(struct s
- 	/* wait 2 clock periods to ensure the stop has been through the bus */
- 	udelay(DIV_ROUND_UP(2 * 1000, i2c->speed_khz));
+--- a/drivers/staging/wlan-ng/hfa384x_usb.c
++++ b/drivers/staging/wlan-ng/hfa384x_usb.c
+@@ -3119,7 +3119,9 @@ static void hfa384x_usbin_callback(struc
+ 		break;
+ 	}
  
--	return 0;
-+	return ret;
- }
++	/* Save values from the RX URB before reposting overwrites it. */
+ 	urb_status = urb->status;
++	usbin = (union hfa384x_usbin *)urb->transfer_buffer;
  
- static irqreturn_t synquacer_i2c_isr(int irq, void *dev_id)
+ 	if (action != ABORT) {
+ 		/* Repost the RX URB */
+@@ -3136,7 +3138,6 @@ static void hfa384x_usbin_callback(struc
+ 	/* Note: the check of the sw_support field, the type field doesn't
+ 	 *       have bit 12 set like the docs suggest.
+ 	 */
+-	usbin = (union hfa384x_usbin *)urb->transfer_buffer;
+ 	type = le16_to_cpu(usbin->type);
+ 	if (HFA384x_USB_ISRXFRM(type)) {
+ 		if (action == HANDLE) {
 
 
