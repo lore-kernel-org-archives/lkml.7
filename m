@@ -2,278 +2,130 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BD9C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98010C46476
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EF020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B63F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbfFGJN6 (ORCPT
+        id S1727848AbfFGJOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:13:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:36176 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfFGJN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:13:57 -0400
-X-Greylist: delayed 476 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Jun 2019 05:13:56 EDT
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 519CE28;
-        Fri,  7 Jun 2019 02:06:00 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 154723F246;
-        Fri,  7 Jun 2019 02:06:00 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id CA7E168240D; Fri,  7 Jun 2019 10:05:58 +0100 (BST)
-Date:   Fri, 7 Jun 2019 10:05:58 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v2 1/2] drm/komeda: Adds SMMU support
-Message-ID: <20190607090558.GA4173@e110455-lin.cambridge.arm.com>
-References: <1559814765-18455-1-git-send-email-lowry.li@arm.com>
- <1559814765-18455-2-git-send-email-lowry.li@arm.com>
+        Fri, 7 Jun 2019 05:14:22 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:36173 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfFGJOW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 05:14:22 -0400
+Received: from [192.168.1.162] ([37.4.249.160]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M2etD-1hXnMu3tcN-0049CZ; Fri, 07 Jun 2019 11:14:00 +0200
+Subject: Re: [PATCH v2 4/7] cpufreq: add driver for Raspbery Pi
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     f.fainelli@gmail.com, ptesarik@suse.com, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, mbrugger@suse.de, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+References: <20190606142255.29454-1-nsaenzjulienne@suse.de>
+ <20190606142255.29454-5-nsaenzjulienne@suse.de>
+ <20190606170949.4A46720652@mail.kernel.org>
+ <eb72a26b55cf17c29df6a7fd3c5def08182e00af.camel@suse.de>
+ <20190606173609.2C3952083D@mail.kernel.org>
+ <153579ddd7e6bd1e5c860a7a01115e47c78a1442.camel@suse.de>
+ <20190606182335.1D15F20872@mail.kernel.org>
+ <20190607030901.qdnjj7udw7ky3sfx@vireshk-i7>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <b021ae9d-a38e-b300-d82e-d4f88fb0fe7a@i2se.com>
+Date:   Fri, 7 Jun 2019 11:13:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190607030901.qdnjj7udw7ky3sfx@vireshk-i7>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1559814765-18455-2-git-send-email-lowry.li@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:dzBHllwQoC6lRPpa8G8aP63JOKNkgZ8EY82JJv10u1tvsvxLq4U
+ lw9QUuvcoVT3Fxo0s5Lo2EjjItN7dL6hC1ULxsyQhYUYKdpZMl7yD8G+PbRT5VyRVsrmRjy
+ ooc3AdUOm9zahvJ0igUPAOMgz0kF0FPGCZCGeksV9TR9kLtX5E/XSHpF6gnndv1TtmKXwSu
+ Oyo2zqU8T8fLX8kD4oFxA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ejinpiaIP6Q=:DxtkN/bF9QqcsKemJpIaaf
+ b3C9RbiTpxDd+gZYBiCgU25OyMvyFF/sBOWoqL9oi2zU9OoV8k5BuocWnd4N8LitXFs9geHKu
+ GszYHRVNhyRibl/3pphWE1kBvriVWIClPzk/OdEQY/UAlmHenrx8uhu52b84dguKO2RsheNHN
+ dE/vOY/k4LMxPrPXjEsVyag2wSF8SSGt+RyIiD22hBc1pXIPBj5jpGj294JV9pdZu6/AwDHhh
+ Vdk7U4uSctP2DqmvZw6AH6CxAGBN8lbPDvoRTja09FfZcBnNuxEUnCPmglTNzqVz7KZnF605A
+ QTrWx7g6Dk4Fc/epONuurPrgfhPjpsIt5ClHGIrnB9wdDnHbIylIQstu+CekOjkiYoW6YuLX5
+ hlstH8zB0arUHh2uHh43/3s2j9JMqcEhIGoUeYDe+ODnPBxtBf+FTDlMfj7tjjDiaRR+5U2QP
+ /5vV7N0mfR4l4V5hvvq4Bz91jWQf4UlZm+eZjab93/xYlAQ2QVf4fg1eVGO38zfFBXJuHbvM1
+ cJkk083WRhCC/NwENO3XsOhA4KMEXGO41U51f06hpdhfIe/CLZPZEwvNMkuZ1DBP2BS0A2kHj
+ LfR3U3zbXFFFLPmNufYhhSEN/3C0Ty2Gq7XamA6asw4IiDDJMaRhflvrsf9J8GrmpwRWSNtF5
+ YwZu7N5vV2zKgJ3h/0AFjdv4ESnXkcuKUvZGOCw61hoQOMD8jVPvp6UBcW/0l5WUo0VC/awNG
+ 0sx+52QngNxlASWxTZbpwVyOwJSDWzJyydgVQ4NgyGHKOlPWGO3uNBbnY44=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lowry,
+Hi Viresh,
 
-On Thu, Jun 06, 2019 at 10:53:05AM +0100, Lowry Li (Arm Technology China) wrote:
-> From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-> 
-> Adds iommu_connect and disconnect for SMMU support, and configures
-> TBU translation once SMMU has been attached to the display device.
-> 
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> ---
->  .../gpu/drm/arm/display/komeda/d71/d71_component.c |  5 +++
->  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c   | 49 ++++++++++++++++++++++
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.c    | 18 ++++++++
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.h    |  7 ++++
->  .../drm/arm/display/komeda/komeda_framebuffer.c    |  2 +
->  .../drm/arm/display/komeda/komeda_framebuffer.h    |  2 +
->  6 files changed, 83 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> index 4e26a80..4a48dd6 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> @@ -215,6 +215,8 @@ static void d71_layer_update(struct komeda_component *c,
->  	malidp_write32(reg, LAYER_FMT, kfb->format_caps->hw_id);
->  	malidp_write32(reg, BLK_IN_SIZE, HV_SIZE(st->hsize, st->vsize));
->  
-> +	if (kfb->is_va)
-> +		ctrl |= L_TBU_EN;
->  	malidp_write32_mask(reg, BLK_CONTROL, ctrl_mask, ctrl);
->  }
->  
-> @@ -348,6 +350,9 @@ static void d71_wb_layer_update(struct komeda_component *c,
->  			       fb->pitches[i] & 0xFFFF);
->  	}
->  
-> +	if (kfb->is_va)
-> +		ctrl |= LW_TBU_EN;
-> +
->  	malidp_write32(reg, LAYER_FMT, kfb->format_caps->hw_id);
->  	malidp_write32(reg, BLK_IN_SIZE, HV_SIZE(st->hsize, st->vsize));
->  	malidp_write32(reg, BLK_INPUT_ID0, to_d71_input_id(&state->inputs[0]));
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> index 8e682c7..1b9e734 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> @@ -517,6 +517,53 @@ static void d71_init_fmt_tbl(struct komeda_dev *mdev)
->  	table->n_formats = ARRAY_SIZE(d71_format_caps_table);
->  }
->  
-> +static int d71_connect_iommu(struct komeda_dev *mdev)
-> +{
-> +	struct d71_dev *d71 = mdev->chip_data;
-> +	u32 __iomem *reg = d71->gcu_addr;
-> +	u32 check_bits = (d71->num_pipelines == 2) ?
-> +			 GCU_STATUS_TCS0 | GCU_STATUS_TCS1 : GCU_STATUS_TCS0;
-> +	int i, ret;
-> +
-> +	if (!d71->integrates_tbu)
-> +		return -1;
-> +
-> +	malidp_write32_mask(reg, BLK_CONTROL, 0x7, TBU_CONNECT_MODE);
-> +
-> +	ret = dp_wait_cond(has_bits(check_bits, malidp_read32(reg, BLK_STATUS)),
-> +			100, 1000, 1000);
-> +	if (ret <= 0) {
+Am 07.06.19 um 05:09 schrieb Viresh Kumar:
+> On 06-06-19, 11:23, Stephen Boyd wrote:
+>> Yes, thanks. I see that largely follows the commit description so it
+>> looks OK to me.
+> Do you want to provide your Reviewed/Acked-by tag before I apply it ?
 
-You don't want to return -ETIMEDOUT if dp_wait_cond() returns zero. Maybe
-follow the same flow as in d71_disconnect_iommu() ?
+Nicolas wanted to send a V3 of this series and as a platform maintainer
+i need some time for testing this version.
 
-> +		DRM_ERROR("connect to TCU timeout!\n");
-> +		malidp_write32_mask(reg, BLK_CONTROL, 0x7, INACTIVE_MODE);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	for (i = 0; i < d71->num_pipelines; i++)
-> +		malidp_write32_mask(d71->pipes[i]->lpu_addr, LPU_TBU_CONTROL,
-> +				    LPU_TBU_CTRL_TLBPEN, LPU_TBU_CTRL_TLBPEN);
-> +	return 0;
-> +}
-> +
-> +static int d71_disconnect_iommu(struct komeda_dev *mdev)
-> +{
-> +	struct d71_dev *d71 = mdev->chip_data;
-> +	u32 __iomem *reg = d71->gcu_addr;
-> +	u32 check_bits = (d71->num_pipelines == 2) ?
-> +			 GCU_STATUS_TCS0 | GCU_STATUS_TCS1 : GCU_STATUS_TCS0;
-> +	int ret;
-> +
-> +	malidp_write32_mask(reg, BLK_CONTROL, 0x7, TBU_DISCONNECT_MODE);
-> +
-> +	ret = dp_wait_cond(((malidp_read32(reg, BLK_STATUS) & check_bits) == 0),
-> +			100, 1000, 1000);
-> +	if (ret < 0) {
-> +		DRM_ERROR("disconnect from TCU timeout!\n");
-> +		malidp_write32_mask(reg, BLK_CONTROL, 0x7, INACTIVE_MODE);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static struct komeda_dev_funcs d71_chip_funcs = {
->  	.init_format_table = d71_init_fmt_tbl,
->  	.enum_resources	= d71_enum_resources,
-> @@ -527,6 +574,8 @@ static void d71_init_fmt_tbl(struct komeda_dev *mdev)
->  	.on_off_vblank	= d71_on_off_vblank,
->  	.change_opmode	= d71_change_opmode,
->  	.flush		= d71_flush,
-> +	.connect_iommu	= d71_connect_iommu,
-> +	.disconnect_iommu = d71_disconnect_iommu,
->  };
->  
->  struct komeda_dev_funcs *
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> index c92e161..e80e673 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> @@ -253,6 +253,19 @@ struct komeda_dev *komeda_dev_create(struct device *dev)
->  	dev->dma_parms = &mdev->dma_parms;
->  	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
->  
-> +	mdev->iommu = iommu_get_domain_for_dev(mdev->dev);
-> +	if (!mdev->iommu)
-> +		DRM_INFO("continue without IOMMU support!\n");
-> +
-> +	if (mdev->iommu && mdev->funcs->connect_iommu) {
-> +		err = mdev->funcs->connect_iommu(mdev);
-> +		if (err) {
-> +			mdev->iommu = NULL;
-> +			DRM_ERROR("connect iommu failed.\n");
+Stefan
 
-I thought you're going to remove these extra DRM_ERRORs.
-
-Best regards,
-Liviu
-
-> +			goto err_cleanup;
-> +		}
-> +	}
-> +
->  	err = sysfs_create_group(&dev->kobj, &komeda_sysfs_attr_group);
->  	if (err) {
->  		DRM_ERROR("create sysfs group failed.\n");
-> @@ -282,6 +295,11 @@ void komeda_dev_destroy(struct komeda_dev *mdev)
->  	debugfs_remove_recursive(mdev->debugfs_root);
->  #endif
->  
-> +	if (mdev->iommu && mdev->funcs->disconnect_iommu)
-> +		if (mdev->funcs->disconnect_iommu(mdev))
-> +			DRM_ERROR("disconnect iommu failed.\n");
-> +	mdev->iommu = NULL;
-> +
->  	for (i = 0; i < mdev->n_pipelines; i++) {
->  		komeda_pipeline_destroy(mdev, mdev->pipelines[i]);
->  		mdev->pipelines[i] = NULL;
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> index 83ace71..dac1eda 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> @@ -92,6 +92,10 @@ struct komeda_dev_funcs {
->  	int (*enum_resources)(struct komeda_dev *mdev);
->  	/** @cleanup: call to chip to cleanup komeda_dev->chip data */
->  	void (*cleanup)(struct komeda_dev *mdev);
-> +	/** @connect_iommu: Optional, connect to external iommu */
-> +	int (*connect_iommu)(struct komeda_dev *mdev);
-> +	/** @disconnect_iommu: Optional, disconnect to external iommu */
-> +	int (*disconnect_iommu)(struct komeda_dev *mdev);
->  	/**
->  	 * @irq_handler:
->  	 *
-> @@ -184,6 +188,9 @@ struct komeda_dev {
->  	 */
->  	void *chip_data;
->  
-> +	/** @iommu: iommu domain */
-> +	struct iommu_domain *iommu;
-> +
->  	/** @debugfs_root: root directory of komeda debugfs */
->  	struct dentry *debugfs_root;
->  };
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> index d5822a3..360ab70 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> @@ -201,6 +201,8 @@ struct drm_framebuffer *
->  		goto err_cleanup;
->  	}
->  
-> +	kfb->is_va = mdev->iommu ? true : false;
-> +
->  	return &kfb->base;
->  
->  err_cleanup:
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.h b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.h
-> index 6cbb2f6..f4046e2 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.h
-> @@ -21,6 +21,8 @@ struct komeda_fb {
->  	 * extends drm_format_info for komeda specific information
->  	 */
->  	const struct komeda_format_caps *format_caps;
-> +	/** @is_va: if smmu is enabled, it will be true */
-> +	bool is_va;
->  	/** @aligned_w: aligned frame buffer width */
->  	u32 aligned_w;
->  	/** @aligned_h: aligned frame buffer height */
-> -- 
-> 1.9.1
-> 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
