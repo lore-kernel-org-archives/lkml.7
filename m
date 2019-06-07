@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6E7C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0087C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF2721473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85AB820825
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiLeaHHa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8xAidn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbfFGXLg (ORCPT
+        id S1731782AbfFGXLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 19:11:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37548 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731692AbfFGXLZ (ORCPT
+        Fri, 7 Jun 2019 19:11:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33745 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731692AbfFGXLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 19:11:25 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 22so3290050wmg.2;
-        Fri, 07 Jun 2019 16:11:23 -0700 (PDT)
+        Fri, 7 Jun 2019 19:11:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so3667852wru.0;
+        Fri, 07 Jun 2019 16:11:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZFHFRMwqhia+MVch9pKGgEBNeKukD3ZLzLQ+6+PB9fg=;
-        b=eiLeaHHak8jYQRZKjm/x1H8ej+KxQ2LjmoNyoxAAGEjakKrI7elSGX0wrr60ZoO5qj
-         9HU+8ZIVn3pNJvvh82yUhGxMElRvn7NJ7FPjqlXS7tS+rmnFy7UyH2NsO8qQY2GvvwTA
-         +Ks0iEPXlNlJy77jrZZ/TfqHLkhTrrBApCZj5lQzYAP9CfjT9ks1SOToNaHh+UrAgrne
-         B9+/uz12mb0rkzFBGXjZ23XnsQ/cnjjPyPzSMzCwKImGOrW4pZz69r0+QX1orVmhFcu8
-         dLfDhGHEnCL7q1FgbuP6sJYZnK9iZghCczKyDY70qnQ73o4xwyKnIwdcEF1luofmnTZK
-         kKyg==
+        bh=erM6d71aChyl+Iyy/eqYauRUQ2nKHoueD7cmlIRiQZ8=;
+        b=M8xAidn+V0cDdtxVKZcU0GsUhS0BGe2it4zhUBpyeNxNEcOr5R8PfJHWcgzm971XgL
+         PvhZ3yFhEiAAcHa9oTIOzu8Vc1N9kJTQV6TLaaLIXrRNsA6ZPQFDm9cR+y0wrwkWuN0b
+         uaHQCU7c/L0hmB2PT6DgmtblerDjdmxAFq/VKgc5xnyMTiygGLu5ZwfnMkQN3UuEUllq
+         Hmd8hBHmfLYjfIIhzdKSVzWL2sMqpCMW2HtaKVnBO9VoccEo05Xy4FuAwmc+RBopfb/w
+         SnCy8MzVtBRv8+jr5dU01qgL8aaKlL1+Dg1aYEIoou4Z90mTGMTljKR2RSkbmA2MdBn3
+         Vp2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZFHFRMwqhia+MVch9pKGgEBNeKukD3ZLzLQ+6+PB9fg=;
-        b=avr4bebehorIOb2O+9rvwI/dzLReEPXtQmIj7wigqjQxWyq8HPGdH1FPaaMZ1HAk6H
-         h8wWoMjXUktyKI0S+lcUZAHqa+yUrqQGCa8aqG+ImXTxL3Dm24wBgwn8w+ycnbbEqLxp
-         MTGYHwxDaEaEMauxdTVFtzVrUHylePis9ipRO881LIXukLrmN4LClc6nR+311Jz9998X
-         C5/+psCYoPG1+m6NnnDPOPKCKCvYryinh8ub4QpwdpqA+Rzg0XeNebkyBL//td61H9MB
-         bedRsWGuDYD2+5/o4ZeAkc/VD+YPeL/35fAKZbAo0yMslz9yrwDind+lpLWqGCA2G7Cm
-         oZvQ==
-X-Gm-Message-State: APjAAAXa5+wDQoJ4tqUBJJC6sRmRaIm3Ujg/yE2v7vuxpAjL4ToTPuG4
-        nC7lqNrJLhzqB0d5OZamkEU=
-X-Google-Smtp-Source: APXvYqwddSzhdksmvNkBbueAxfPvGpAbf9YR3GwvhZyX9J61/5+7yOtpn8VduLAqIR6fHtcd7KNeQQ==
-X-Received: by 2002:a7b:c018:: with SMTP id c24mr3051220wmb.37.1559949082496;
-        Fri, 07 Jun 2019 16:11:22 -0700 (PDT)
+        bh=erM6d71aChyl+Iyy/eqYauRUQ2nKHoueD7cmlIRiQZ8=;
+        b=VFkK4sVZhbTeKlczlysiVdf9FgBZnhfKNWn6KSD0oDleSOxLC0mIi8lSwJPJUQabL8
+         qlKGefp+r/pI/AcVRA8rELZfOla7gF9cjMj9PEkKddSYgQeNrwF8dcSJkLzEi3anLZm8
+         2NbITnElGpUHRL6a945bF+B7S/oJjt7TqNabiHR6C9IAVFsUNdgs4hXWBLWMA8aj8RvO
+         kXvYreyuvzp4TGmScKqXbdtL4mESCMHwrg+o9ZdHBFvYeViXG0eL6HeWfZtL/FEeRpt1
+         jQWE76/Vgp2pZfaYHOGD7hZc1p95jjsMPtTo6x3zB8AJDcaJZxSypHat5lMKTp0yGyzN
+         xDOg==
+X-Gm-Message-State: APjAAAUMKvZ9F2TUScPrxNlp6xzPwuJMjjI+A4pYodW0W31KOFT1R8yH
+        yBrPkf2io8z6b1UZsGMTAC8=
+X-Google-Smtp-Source: APXvYqzhAaNc1KaAVPMCpP/YKiDq4gEpDCjaNfnx+VL50LxQ1xgj3PKgBe8srCe5bCOuxpxnMq3tKg==
+X-Received: by 2002:a5d:4707:: with SMTP id y7mr4235805wrq.227.1559949077999;
+        Fri, 07 Jun 2019 16:11:17 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.21
+        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.17
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 16:11:21 -0700 (PDT)
+        Fri, 07 Jun 2019 16:11:17 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -66,11 +66,12 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
         linux-media@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
         Sean Young <sean@mess.org>
-Subject: [PATCH v5 13/13] arm64: defconfig: Enable IR SUNXI option
-Date:   Sat,  8 Jun 2019 01:11:00 +0200
-Message-Id: <20190607231100.5894-14-peron.clem@gmail.com>
+Subject: [PATCH v5 09/13] arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
+Date:   Sat,  8 Jun 2019 01:10:56 +0200
+Message-Id: <20190607231100.5894-10-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190607231100.5894-1-peron.clem@gmail.com>
 References: <20190607231100.5894-1-peron.clem@gmail.com>
@@ -82,27 +83,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable CONFIG_IR_SUNXI option for ARM64, so that Allwinner A64/H6 SoCs
-can use their IR receiver controller.
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
+OrangePi Win board contains IR receiver. Enable it.
+
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 Acked-by: Sean Young <sean@mess.org>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4d583514258c..5128029100d2 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -460,6 +460,7 @@ CONFIG_RC_CORE=m
- CONFIG_RC_DECODERS=y
- CONFIG_RC_DEVICES=y
- CONFIG_IR_MESON=m
-+CONFIG_IR_SUNXI=m
- CONFIG_MEDIA_SUPPORT=m
- CONFIG_MEDIA_CAMERA_SUPPORT=y
- CONFIG_MEDIA_ANALOG_TV_SUPPORT=y
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+index 510f661229dc..e05191b71adf 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+@@ -180,6 +180,10 @@
+ 	status = "okay";
+ };
+ 
++&r_ir {
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
 -- 
 2.20.1
 
