@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DB0C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACD9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD95C212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B992146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922392;
-	bh=gzbdFtPDIn/6qVtSP16tOSq7fv/C/IDGHaSBJekzbKU=;
+	s=default; t=1559922395;
+	bh=jvTtpQzbG1cEkU2B5JHc/GMR/EeiGG8BhcO0B2EMUYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gR68PBvyTDyAoJf8lq9TlhwEWTaqSelMotE1NMj32+5UJNLY0aLTe7XsY65wFbqur
-	 4TewI0UOlDvjK7mVXSl4gKSeOqd8YTeAcohX1ImWSERePOtDixt/5qOlLhy8ES63+b
-	 vjwh4d9+nBIaWBk04ageKNRFKyJbUcEj4nvMZ2lE=
+	b=V82SIdVzwk9zlg5hKDuAZj4Z7/f066yvb8BkWBYsP/7EdjnveO1UlIbAxnJPGqJWf
+	 x5w99S6C5L7cmG6gEpkNMzrRQuDR3sV6hyzui0ng/ikYVVhq85cghLFhsUD3Igsc0h
+	 Oum+hToO9bg0O4d7+gfsn8RLrFK3YX7TRH7YX3SM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbfFGPqb (ORCPT
+        id S1731428AbfFGPqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58782 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731399AbfFGPq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:29 -0400
+        id S1731417AbfFGPqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA39921473;
-        Fri,  7 Jun 2019 15:46:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3589C214D8;
+        Fri,  7 Jun 2019 15:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922388;
-        bh=gzbdFtPDIn/6qVtSP16tOSq7fv/C/IDGHaSBJekzbKU=;
+        s=default; t=1559922390;
+        bh=jvTtpQzbG1cEkU2B5JHc/GMR/EeiGG8BhcO0B2EMUYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bd1HFALwkmub3lNRgLuWggDv4ftXvBvwHcFPDdJHLb7pmCS1H65DZrM0F1ecJUlnQ
-         tCeTZYt1+qVJazBRj+VuZVKBcJIZyy4RFiVe/gd7k8eWCszOUZSUyLcwuh1IHq7ULF
-         3aPMQs3fS88aJAnFDO4UoyRdVneK7j2Ai6IEbyvo=
+        b=yxMBQTHt23EGSUv07w7Co1XOTr25WXvCJaq2htMeqNKzNLdIgjc65cAVryTL+hCZw
+         78kFvQZE0GEmM8Hv+3G/+ZpdbORjDXuQjhq3BX4ZpBJ0noc/ztLGRSCYKMVLl55GzX
+         bRhl1KbEj+bH4/KdB/+SwYsOCNJ5TLiFG9dKsQBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
         deneen.t.dock@intel.com, kernel-hardening@lists.openwall.com,
         kristen@linux.intel.com, linux_dti@icloud.com, will.deacon@arm.com,
@@ -57,9 +56,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rik van Riel <riel@surriel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 68/73] x86/ftrace: Set trampoline pages as executable
-Date:   Fri,  7 Jun 2019 17:39:55 +0200
-Message-Id: <20190607153856.432268221@linuxfoundation.org>
+Subject: [PATCH 4.19 69/73] x86/kprobes: Set instruction page as executable
+Date:   Fri,  7 Jun 2019 17:39:56 +0200
+Message-Id: <20190607153856.531407540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -72,18 +71,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c0dab44e22782359a0a706cbce72de99a22aa75 ]
+[ Upstream commit 7298e24f904224fa79eb8fd7e0fbd78950ccf2db ]
 
-Since alloc_module() will not set the pages as executable soon, set
-ftrace trampoline pages as executable after they are allocated.
+Set the page as executable after allocation.  This patch is a
+preparatory patch for a following patch that makes module allocated
+pages non-executable.
 
-For the time being, do not change ftrace to use the text_poke()
-interface. As a result, ftrace still breaks W^X.
+While at it, do some small cleanup of what appears to be unnecessary
+masking.
 
 Signed-off-by: Nadav Amit <namit@vmware.com>
 Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: <akpm@linux-foundation.org>
 Cc: <ard.biesheuvel@linaro.org>
 Cc: <deneen.t.dock@intel.com>
@@ -98,46 +97,55 @@ Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190426001143.4983-10-namit@vmware.com
+Link: https://lkml.kernel.org/r/20190426001143.4983-11-namit@vmware.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ftrace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kernel/kprobes/core.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 38c798b1dbd2..9f033dfd2766 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -761,6 +761,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	unsigned long end_offset;
- 	unsigned long op_offset;
- 	unsigned long offset;
-+	unsigned long npages;
- 	unsigned long size;
- 	unsigned long retq;
- 	unsigned long *ptr;
-@@ -793,6 +794,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 		return 0;
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 544bc2dfe408..e83a057564d1 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -431,8 +431,20 @@ void *alloc_insn_page(void)
+ 	void *page;
  
- 	*tramp_size = size + RET_SIZE + sizeof(void *);
-+	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
- 
- 	/* Copy ftrace_caller onto the trampoline memory */
- 	ret = probe_kernel_read(trampoline, (void *)start_offset, size);
-@@ -837,6 +839,12 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	/* ALLOC_TRAMP flags lets us know we created it */
- 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
- 
+ 	page = module_alloc(PAGE_SIZE);
+-	if (page)
+-		set_memory_ro((unsigned long)page & PAGE_MASK, 1);
++	if (!page)
++		return NULL;
++
 +	/*
-+	 * Module allocation needs to be completed by making the page
-+	 * executable. The page is still writable, which is a security hazard,
-+	 * but anyhow ftrace breaks W^X completely.
++	 * First make the page read-only, and only then make it executable to
++	 * prevent it from being W+X in between.
 +	 */
-+	set_memory_x((unsigned long)trampoline, npages);
- 	return (unsigned long)trampoline;
- fail:
- 	tramp_free(trampoline, *tramp_size);
++	set_memory_ro((unsigned long)page, 1);
++
++	/*
++	 * TODO: Once additional kernel code protection mechanisms are set, ensure
++	 * that the page was not maliciously altered and it is still zeroed.
++	 */
++	set_memory_x((unsigned long)page, 1);
+ 
+ 	return page;
+ }
+@@ -440,8 +452,12 @@ void *alloc_insn_page(void)
+ /* Recover page to RW mode before releasing it */
+ void free_insn_page(void *page)
+ {
+-	set_memory_nx((unsigned long)page & PAGE_MASK, 1);
+-	set_memory_rw((unsigned long)page & PAGE_MASK, 1);
++	/*
++	 * First make the page non-executable, and only then make it writable to
++	 * prevent it from being W+X in between.
++	 */
++	set_memory_nx((unsigned long)page, 1);
++	set_memory_rw((unsigned long)page, 1);
+ 	module_memfree(page);
+ }
+ 
 -- 
 2.20.1
 
