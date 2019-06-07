@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699D1C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E121BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435A820657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B772F214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922532;
-	bh=i9a0ZUahDI1c5+MI02r8x0XYn9rRDSysmbWvD6LbOn4=;
+	s=default; t=1559922534;
+	bh=8E41xG5V2jNOThd7gcCaz3MJfQ+y/Mx6tzLdEWFnsi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KBjatL8W+kerU5SrHUpj9jCzDt/nHawjEZeaEEe2pc4IxD7S+3OXQWPgSkM3c2S1m
-	 26WbA+Y/2Gk63z/5TaJYx5jJHFzZHrKZBeh7sHLtIVIC/02XrkUOIxh+KPwReaz79s
-	 972MWHt0biotKL9gjN3QVm8GuIDZDODuDJ3hIoJM=
+	b=CXOzoQkdGED1jqol3eSdMRmhJoEHbCMqauSbDLqp4Otne6Plu8mSosWMFdl2Hx0FV
+	 QhMsQL6fxzclU+ZX5FVaQhqIrlIJ5R/yGcCLEmsozsb2EHeNsjKSiJqV3gdeHJcfAF
+	 R94AzXywZtrSczuWM90l+x7Z8DipqMyAqq013bPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731855AbfFGPsv (ORCPT
+        id S1731860AbfFGPsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34174 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730010AbfFGPsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:48:43 -0400
+        id S1730217AbfFGPss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:48:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51BDB20840;
-        Fri,  7 Jun 2019 15:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9E0D20657;
+        Fri,  7 Jun 2019 15:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922522;
-        bh=i9a0ZUahDI1c5+MI02r8x0XYn9rRDSysmbWvD6LbOn4=;
+        s=default; t=1559922528;
+        bh=8E41xG5V2jNOThd7gcCaz3MJfQ+y/Mx6tzLdEWFnsi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tot3mFAgDPZtC5M54q2uS8J7OmINCAT69mZEFKtthmom7QkTB9Jn19n2vdTRHz43W
-         F5GI4sojtDhq4t9noq1IFiwzKo8D+BsYUgZ6j6b+2SV3tJe6MwpKQUwDz6JC/8vpND
-         /yz+XRixfw3k6Ff7DDZwyJeW6ahhHxLQIVsYBsPU=
+        b=2Dj6Ae3P39KsjT8uCFMuCfV0Jzlyc53Kw5UtvyE8e5y5h6nN1ohW3t7ZvbcQQBHX0
+         Qsko0kkBwby1PQXZBx1HqQowaZ4o+mG+IBGzW/ZuYayB46XJ23YqHGclXK4v5Zh9RG
+         KFQ48sd5QrhwNgTyHUJWzrbZC4UQB2ckm6iGqmdM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.1 26/85] Btrfs: incremental send, fix file corruption when no-holes feature is enabled
-Date:   Fri,  7 Jun 2019 17:39:11 +0200
-Message-Id: <20190607153852.505395646@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Okamoto Satoru <okamoto.satoru@socionext.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.1 45/85] i2c: synquacer: fix synquacer_i2c_doxfer() return value
+Date:   Fri,  7 Jun 2019 17:39:30 +0200
+Message-Id: <20190607153854.643228293@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -59,80 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Masahisa Kojima <masahisa.kojima@linaro.org>
 
-commit 6b1f72e5b82a5c2a4da4d1ebb8cc01913ddbea21 upstream.
+commit ff9378904d9d7a3fcb8406604e089e535e357b1d upstream.
 
-When using the no-holes feature, if we have a file with prealloc extents
-with a start offset beyond the file's eof, doing an incremental send can
-cause corruption of the file due to incorrect hole detection. Such case
-requires that the prealloc extent(s) exist in both the parent and send
-snapshots, and that a hole is punched into the file that covers all its
-extents that do not cross the eof boundary.
+master_xfer should return the number of messages successfully
+processed.
 
-Example reproducer:
-
-  $ mkfs.btrfs -f -O no-holes /dev/sdb
-  $ mount /dev/sdb /mnt/sdb
-
-  $ xfs_io -f -c "pwrite -S 0xab 0 500K" /mnt/sdb/foobar
-  $ xfs_io -c "falloc -k 1200K 800K" /mnt/sdb/foobar
-
-  $ btrfs subvolume snapshot -r /mnt/sdb /mnt/sdb/base
-
-  $ btrfs send -f /tmp/base.snap /mnt/sdb/base
-
-  $ xfs_io -c "fpunch 0 500K" /mnt/sdb/foobar
-
-  $ btrfs subvolume snapshot -r /mnt/sdb /mnt/sdb/incr
-
-  $ btrfs send -p /mnt/sdb/base -f /tmp/incr.snap /mnt/sdb/incr
-
-  $ md5sum /mnt/sdb/incr/foobar
-  816df6f64deba63b029ca19d880ee10a   /mnt/sdb/incr/foobar
-
-  $ mkfs.btrfs -f /dev/sdc
-  $ mount /dev/sdc /mnt/sdc
-
-  $ btrfs receive -f /tmp/base.snap /mnt/sdc
-  $ btrfs receive -f /tmp/incr.snap /mnt/sdc
-
-  $ md5sum /mnt/sdc/incr/foobar
-  cf2ef71f4a9e90c2f6013ba3b2257ed2   /mnt/sdc/incr/foobar
-
-    --> Different checksum, because the prealloc extent beyond the
-        file's eof confused the hole detection code and it assumed
-        a hole starting at offset 0 and ending at the offset of the
-        prealloc extent (1200Kb) instead of ending at the offset
-        500Kb (the file's size).
-
-Fix this by ensuring we never cross the file's size when issuing the
-write operations for a hole.
-
-Fixes: 16e7549f045d33 ("Btrfs: incompatible format change to remove hole extents")
-CC: stable@vger.kernel.org # 3.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 0d676a6c4390 ("i2c: add support for Socionext SynQuacer I2C controller")
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Okamoto Satoru <okamoto.satoru@socionext.com>
+Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/send.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/i2c/busses/i2c-synquacer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -5017,6 +5017,12 @@ static int send_hole(struct send_ctx *sc
- 	if (offset >= sctx->cur_inode_size)
- 		return 0;
+--- a/drivers/i2c/busses/i2c-synquacer.c
++++ b/drivers/i2c/busses/i2c-synquacer.c
+@@ -351,7 +351,7 @@ static int synquacer_i2c_doxfer(struct s
+ 	/* wait 2 clock periods to ensure the stop has been through the bus */
+ 	udelay(DIV_ROUND_UP(2 * 1000, i2c->speed_khz));
  
-+	/*
-+	 * Don't go beyond the inode's i_size due to prealloc extents that start
-+	 * after the i_size.
-+	 */
-+	end = min_t(u64, end, sctx->cur_inode_size);
-+
- 	if (sctx->flags & BTRFS_SEND_FLAG_NO_FILE_DATA)
- 		return send_update_extent(sctx, offset, end - offset);
+-	return 0;
++	return ret;
+ }
  
+ static irqreturn_t synquacer_i2c_isr(int irq, void *dev_id)
 
 
