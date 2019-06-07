@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842FFC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3651AC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDE7214AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F5E21479
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922299;
-	bh=cjaMWXG1wuSzMG16QrIqS8Mcr8Nc8UzIUt0oa+M9Ez0=;
+	s=default; t=1559922303;
+	bh=3UoyJAqKaAkq7YW0l6AYCcYWIc28Br0dzzQmyNze5os=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C9GWLowFOgusF7YmgNoxBPBAGGA2jNqcZqvsUMXWpkP7ORceBisbFl9J0HXAy/U90
-	 pMKQXl1PcYQp6gj7iMPzSJb5efo6X9sRXcKlGyW1ejpM4I1w+1Lr7xV6NqPXG6IqDR
-	 ph/rzeef8JM0gVdizNjbKqao16vxMSS0sEqtKjDY=
+	b=VoA4yhlnEL8+QdcpX9HBKW2QN6vluSNYiP1WEy9NnFcmb5xKqldZZtx9IR+sPXzJE
+	 UKDOnyWckkEprOCgKFUUL3f4st6vs9qaAqyW8I8+Zu2+JiD5GcEgCd0vBcqw6pdi1g
+	 SU7MMhPPIZoF9WyQiO6WZTyTzke42YxXsv9yW4Do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbfFGPo6 (ORCPT
+        id S1731169AbfFGPpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:44:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56516 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730474AbfFGPoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:54 -0400
+        id S1731154AbfFGPo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC66A2146E;
-        Fri,  7 Jun 2019 15:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51CE021473;
+        Fri,  7 Jun 2019 15:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922293;
-        bh=cjaMWXG1wuSzMG16QrIqS8Mcr8Nc8UzIUt0oa+M9Ez0=;
+        s=default; t=1559922295;
+        bh=3UoyJAqKaAkq7YW0l6AYCcYWIc28Br0dzzQmyNze5os=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AO8kxiid2dhP53YOKwnxBQH4YZbD5o55BpwW7szl0MhPM2wF+KfU9QS7vZCj/DRev
-         c5jyzEsxuzb61GzfdLeUcvkGXfcbF28xYRX5cdT/91YwCNJQyogg0uLpdu/V8ES+hP
-         BNcvIgfOSdcUqr9bLp7bQ0VsOfLqBbmlBcbL8x2Y=
+        b=AZiqiVKAyjFukte831fTtjUlKkhIVnxGBcwdlPMeYoVdYGkgxQPRy3/lhHCu9pv6v
+         HrBVL9Mlzai3jdu2Kcl8rBUKO6JUMLIYmokCuQy0XBqwTtL3k/o2OHWG/B0HjVd1NF
+         snNAYM4jQg6GY6nJeenEBWfVJ3iy0/x5LSEjNf/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4.19 34/73] KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
-Date:   Fri,  7 Jun 2019 17:39:21 +0200
-Message-Id: <20190607153852.901517671@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 04/73] xhci: Use %zu for printing size_t type
+Date:   Fri,  7 Jun 2019 17:38:51 +0200
+Message-Id: <20190607153849.194005166@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -62,111 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Huth <thuth@redhat.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit a86cb413f4bf273a9d341a3ab2c2ca44e12eb317 upstream.
+commit c1a145a3ed9a40f3b6145feb97789e8eb49c5566 upstream.
 
-KVM_CAP_MAX_VCPU_ID is currently always reporting KVM_MAX_VCPU_ID on all
-architectures. However, on s390x, the amount of usable CPUs is determined
-during runtime - it is depending on the features of the machine the code
-is running on. Since we are using the vcpu_id as an index into the SCA
-structures that are defined by the hardware (see e.g. the sca_add_vcpu()
-function), it is not only the amount of CPUs that is limited by the hard-
-ware, but also the range of IDs that we can use.
-Thus KVM_CAP_MAX_VCPU_ID must be determined during runtime on s390x, too.
-So the handling of KVM_CAP_MAX_VCPU_ID has to be moved from the common
-code into the architecture specific code, and on s390x we have to return
-the same value here as for KVM_CAP_MAX_VCPUS.
-This problem has been discovered with the kvm_create_max_vcpus selftest.
-With this change applied, the selftest now passes on s390x, too.
+Commit 597c56e372da ("xhci: update bounce buffer with correct sg num")
+caused the following build warnings:
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Message-Id: <20190523164309.13345-9-thuth@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+drivers/usb/host/xhci-ring.c:676:19: warning: format '%ld' expects argument of type 'long int', but argument 3 has type 'size_t {aka unsigned int}' [-Wformat=]
+
+Use %zu for printing size_t type in order to fix the warnings.
+
+Fixes: 597c56e372da ("xhci: update bounce buffer with correct sg num")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- arch/mips/kvm/mips.c       |    3 +++
- arch/powerpc/kvm/powerpc.c |    3 +++
- arch/s390/kvm/kvm-s390.c   |    1 +
- arch/x86/kvm/x86.c         |    3 +++
- virt/kvm/arm/arm.c         |    3 +++
- virt/kvm/kvm_main.c        |    2 --
- 6 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-ring.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/mips/kvm/mips.c
-+++ b/arch/mips/kvm/mips.c
-@@ -1099,6 +1099,9 @@ int kvm_vm_ioctl_check_extension(struct
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
- 		break;
-+	case KVM_CAP_MAX_VCPU_ID:
-+		r = KVM_MAX_VCPU_ID;
-+		break;
- 	case KVM_CAP_MIPS_FPU:
- 		/* We don't handle systems with inconsistent cpu_has_fpu */
- 		r = !!raw_cpu_has_fpu;
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -632,6 +632,9 @@ int kvm_vm_ioctl_check_extension(struct
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
- 		break;
-+	case KVM_CAP_MAX_VCPU_ID:
-+		r = KVM_MAX_VCPU_ID;
-+		break;
- #ifdef CONFIG_PPC_BOOK3S_64
- 	case KVM_CAP_PPC_GET_SMMU_INFO:
- 		r = 1;
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -489,6 +489,7 @@ int kvm_vm_ioctl_check_extension(struct
- 		break;
- 	case KVM_CAP_NR_VCPUS:
- 	case KVM_CAP_MAX_VCPUS:
-+	case KVM_CAP_MAX_VCPU_ID:
- 		r = KVM_S390_BSCA_CPU_SLOTS;
- 		if (!kvm_s390_use_sca_entries())
- 			r = KVM_MAX_VCPUS;
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2987,6 +2987,9 @@ int kvm_vm_ioctl_check_extension(struct
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
- 		break;
-+	case KVM_CAP_MAX_VCPU_ID:
-+		r = KVM_MAX_VCPU_ID;
-+		break;
- 	case KVM_CAP_NR_MEMSLOTS:
- 		r = KVM_USER_MEM_SLOTS;
- 		break;
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -223,6 +223,9 @@ int kvm_vm_ioctl_check_extension(struct
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
- 		break;
-+	case KVM_CAP_MAX_VCPU_ID:
-+		r = KVM_MAX_VCPU_ID;
-+		break;
- 	case KVM_CAP_NR_MEMSLOTS:
- 		r = KVM_USER_MEM_SLOTS;
- 		break;
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2965,8 +2965,6 @@ static long kvm_vm_ioctl_check_extension
- 	case KVM_CAP_MULTI_ADDRESS_SPACE:
- 		return KVM_ADDRESS_SPACE_NUM;
- #endif
--	case KVM_CAP_MAX_VCPU_ID:
--		return KVM_MAX_VCPU_ID;
- 	default:
- 		break;
- 	}
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -673,7 +673,7 @@ static void xhci_unmap_td_bounce_buffer(
+ 	len = sg_pcopy_from_buffer(urb->sg, urb->num_sgs, seg->bounce_buf,
+ 			     seg->bounce_len, seg->bounce_offs);
+ 	if (len != seg->bounce_len)
+-		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %ld != %d\n",
++		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %zu != %d\n",
+ 				len, seg->bounce_len);
+ 	seg->bounce_len = 0;
+ 	seg->bounce_offs = 0;
+@@ -3143,7 +3143,7 @@ static int xhci_align_td(struct xhci_hcd
+ 				   seg->bounce_buf, new_buff_len, enqd_len);
+ 		if (len != seg->bounce_len)
+ 			xhci_warn(xhci,
+-				"WARN Wrong bounce buffer write length: %ld != %d\n",
++				"WARN Wrong bounce buffer write length: %zu != %d\n",
+ 				len, seg->bounce_len);
+ 		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
+ 						 max_pkt, DMA_TO_DEVICE);
 
 
