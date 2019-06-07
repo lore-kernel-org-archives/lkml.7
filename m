@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32E6C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF1BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7946B2146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0C12133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922199;
-	bh=/PYpOuWtbavN9xB2JzD9aSkp9gW4QFJNMRvXyQgn8PE=;
+	s=default; t=1559922202;
+	bh=/OXER1Ejj6On/IPyGWXD/d4+RU7b36OA0PhjKQsOZ3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m5EyWBS1EdtfQdQt7FpewYjt3Zxjzrh2fPeCY92QHRRcs+NNbrx/Z78xVhSauWqFi
-	 npKq0OZ+LNmkD8+1ahQxpCqAis4yKttUZLh67Z8y/SKIXqXHCv9lL/GqvHQVzi+zYQ
-	 4d4SUsCEHgMURLvYr4fVAc1yL3j7ic4QfksHPvtY=
+	b=rQ7c0XXDGNw6i8y37rCjWnA+9xzKsT0+W5L8BTU4Mybmx8sKjt2My1kWT2m6+1goo
+	 vjJpoKB2paiq82ti/j3p6Wyf+tqqq182rYu6O0cRlGjjRsZ2bjf8tyZp/Ba6/HN1yW
+	 losiJcFCcIxF7OSs9TJGY2imqYN/+5vvMSheiH9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbfFGPnS (ORCPT
+        id S1730846AbfFGPnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:43:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54350 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:43:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730805AbfFGPnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:43:15 -0400
+        id S1730828AbfFGPnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:43:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69D7A2146F;
-        Fri,  7 Jun 2019 15:43:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C5502133D;
+        Fri,  7 Jun 2019 15:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922194;
-        bh=/PYpOuWtbavN9xB2JzD9aSkp9gW4QFJNMRvXyQgn8PE=;
+        s=default; t=1559922198;
+        bh=/OXER1Ejj6On/IPyGWXD/d4+RU7b36OA0PhjKQsOZ3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZypwXPyY86jVdBqfsWcVk0fC7SKCiQwIxzlTx1vBkrQESbsMEfZjUJa3DM8xjKUD5
-         w03AFQdUpuIwNdQokkiK+EsN68LyWWQWu7IbdsX4WOmAVDZiZN3189AQj2o5XEngnI
-         ahcQqhb1rN2eaZs+J7uB2WCcjW8ksvf2BaQzi5lo=
+        b=IFj44j642rKHBCy1aqWbvJG7FcIglOMJ01B1ANSVXTBlPxfIxf/wREZBkFc3zZ2uc
+         gxhLmKbgEp/QfK1hk7DjlzwtWV1uasjRXQU08R/4FrWpg1j0eQm2dz7cSmVbTOkT74
+         eBoDM4XFbq3PGl0G2H53d/UWkZUvA19jf/dYTwAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 44/69] powerpc/perf: Fix MMCRA corruption by bhrb_filter
-Date:   Fri,  7 Jun 2019 17:39:25 +0200
-Message-Id: <20190607153853.820106294@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 45/69] ALSA: hda/realtek - Set default power save node to 0
+Date:   Fri,  7 Jun 2019 17:39:26 +0200
+Message-Id: <20190607153853.952274138@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -61,106 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Kailang Yang <kailang@realtek.com>
 
-commit 3202e35ec1c8fc19cea24253ff83edf702a60a02 upstream.
+commit 317d9313925cd8388304286c0d3c8dda7f060a2d upstream.
 
-Consider a scenario where user creates two events:
+I measured power consumption between power_save_node=1 and power_save_node=0.
+It's almost the same.
+Codec will enter to runtime suspend and suspend.
+That pin also will enter to D3. Don't need to enter to D3 by single pin.
+So, Disable power_save_node as default. It will avoid more issues.
+Windows Driver also has not this option at runtime PM.
 
-  1st event:
-    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-    attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
-    fd = perf_event_open(attr, 0, 1, -1, 0);
-
-  This sets cpuhw->bhrb_filter to 0 and returns valid fd.
-
-  2nd event:
-    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-    attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
-    fd = perf_event_open(attr, 0, 1, -1, 0);
-
-  It overrides cpuhw->bhrb_filter to -1 and returns with error.
-
-Now if power_pmu_enable() gets called by any path other than
-power_pmu_add(), ppmu->config_bhrb(-1) will set MMCRA to -1.
-
-Fixes: 3925f46bb590 ("powerpc/perf: Enable branch stack sampling framework")
-Cc: stable@vger.kernel.org # v3.10+
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/perf/core-book3s.c |    6 ++++--
- arch/powerpc/perf/power8-pmu.c  |    3 +++
- arch/powerpc/perf/power9-pmu.c  |    3 +++
- 3 files changed, 10 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -1845,6 +1845,7 @@ static int power_pmu_event_init(struct p
- 	int n;
- 	int err;
- 	struct cpu_hw_events *cpuhw;
-+	u64 bhrb_filter;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7078,7 +7078,7 @@ static int patch_alc269(struct hda_codec
  
- 	if (!ppmu)
- 		return -ENOENT;
-@@ -1941,13 +1942,14 @@ static int power_pmu_event_init(struct p
- 	err = power_check_constraints(cpuhw, events, cflags, n + 1);
+ 	spec = codec->spec;
+ 	spec->gen.shared_mic_vref_pin = 0x18;
+-	codec->power_save_node = 1;
++	codec->power_save_node = 0;
  
- 	if (has_branch_stack(event)) {
--		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
-+		bhrb_filter = ppmu->bhrb_filter_map(
- 					event->attr.branch_sample_type);
- 
--		if (cpuhw->bhrb_filter == -1) {
-+		if (bhrb_filter == -1) {
- 			put_cpu_var(cpu_hw_events);
- 			return -EOPNOTSUPP;
- 		}
-+		cpuhw->bhrb_filter = bhrb_filter;
- 	}
- 
- 	put_cpu_var(cpu_hw_events);
---- a/arch/powerpc/perf/power8-pmu.c
-+++ b/arch/powerpc/perf/power8-pmu.c
-@@ -29,6 +29,7 @@ enum {
- #define	POWER8_MMCRA_IFM1		0x0000000040000000UL
- #define	POWER8_MMCRA_IFM2		0x0000000080000000UL
- #define	POWER8_MMCRA_IFM3		0x00000000C0000000UL
-+#define	POWER8_MMCRA_BHRB_MASK		0x00000000C0000000UL
- 
- /* PowerISA v2.07 format attribute structure*/
- extern struct attribute_group isa207_pmu_format_group;
-@@ -179,6 +180,8 @@ static u64 power8_bhrb_filter_map(u64 br
- 
- static void power8_config_bhrb(u64 pmu_bhrb_filter)
- {
-+	pmu_bhrb_filter &= POWER8_MMCRA_BHRB_MASK;
-+
- 	/* Enable BHRB filter in PMU */
- 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
- }
---- a/arch/powerpc/perf/power9-pmu.c
-+++ b/arch/powerpc/perf/power9-pmu.c
-@@ -100,6 +100,7 @@ enum {
- #define POWER9_MMCRA_IFM1		0x0000000040000000UL
- #define POWER9_MMCRA_IFM2		0x0000000080000000UL
- #define POWER9_MMCRA_IFM3		0x00000000C0000000UL
-+#define POWER9_MMCRA_BHRB_MASK		0x00000000C0000000UL
- 
- /* PowerISA v2.07 format attribute structure*/
- extern struct attribute_group isa207_pmu_format_group;
-@@ -289,6 +290,8 @@ static u64 power9_bhrb_filter_map(u64 br
- 
- static void power9_config_bhrb(u64 pmu_bhrb_filter)
- {
-+	pmu_bhrb_filter &= POWER9_MMCRA_BHRB_MASK;
-+
- 	/* Enable BHRB filter in PMU */
- 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
- }
+ #ifdef CONFIG_PM
+ 	codec->patch_ops.suspend = alc269_suspend;
 
 
