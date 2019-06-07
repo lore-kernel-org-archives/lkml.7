@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC81C468BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF81C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE483208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0057020657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923132;
-	bh=RjarfynonucbbUomEkYxKJcu/RBYzEt4rAvdZKxpgLc=;
+	s=default; t=1559923135;
+	bh=C0byHfkf1G8xmbejHAIrwBPScn8p+xmOkNkFaPbHxSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UMxPb1DVzE1LX7gLdWuk8gTa6SJkZ2T+mvTFTmsVpPbnOS7NirzTbyhdqch+MFsEl
-	 raFvrYYCS0nvMHV7nnThPRpA2KNTz5LEwJduOIFWkfwkCruBiev/RltfeLgc1ojk3l
-	 zdz9EfCmR4Icc/Tk+BvhV7aOTs03rSPaNGDw1TKk=
+	b=pgbvQcZTBaZ2w8EmUcmEPR3vxm1sVBv6UTvxg5LNADXu+BQy7dPZLeRv/jyUwSrt5
+	 sW0TVxRhGwA3BQ2YEBRTxRG8NOm3GfdkNZvKJ88j2ASYC8v/48SGzXOiJA7UDrgKFd
+	 0hYEBKS5LyliM8KAen9/iSQ4jnt21hWdq3GkBV6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbfFGPmU (ORCPT
+        id S1730396AbfFGP6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:42:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52766 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730515AbfFGPmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:16 -0400
+        id S1730536AbfFGPmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D96632146E;
-        Fri,  7 Jun 2019 15:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 535282133D;
+        Fri,  7 Jun 2019 15:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922136;
-        bh=RjarfynonucbbUomEkYxKJcu/RBYzEt4rAvdZKxpgLc=;
+        s=default; t=1559922138;
+        bh=C0byHfkf1G8xmbejHAIrwBPScn8p+xmOkNkFaPbHxSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sJ6MwBRtZg6NTdPt+Nt+HHwWF/cUb78FvGehSK0F+oeRXQ2w/NiympanJJm0yrVbu
-         3FBzCNztitr9akO9jEEWij/pNwQdb9thK5c+sSk9KxVCi81734mYKhN3Bj5nQjO2Tm
-         YJ/fjrdcCds5wmoOLdcrZUJp1A6JtfeIUk/R+XRw=
+        b=mz/cSUed6dIHL8eN1m+nzV6Bd599rBNzYOXZEtD+3IdWPQJ1q3jmAvW3L/t/7o7b+
+         zw6Bs+yeJ20asPhAb1JoPNxXTasRuiQjtN2pnHy7KsoheVVB6ZIOSQ+Lkb6MVs2621
+         b6/UL7+fTaYkB3QzBh4CJnBBSjD9uYQdMBxh8VFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 42/69] Btrfs: incremental send, fix file corruption when no-holes feature is enabled
-Date:   Fri,  7 Jun 2019 17:39:23 +0200
-Message-Id: <20190607153853.568519609@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenliang Wei <weizhenliang@huawei.com>,
+        Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ivan Delalande <colona@arista.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 51/69] kernel/signal.c: trace_signal_deliver when signal_group_exit
+Date:   Fri,  7 Jun 2019 17:39:32 +0200
+Message-Id: <20190607153854.589064785@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -59,80 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Zhenliang Wei <weizhenliang@huawei.com>
 
-commit 6b1f72e5b82a5c2a4da4d1ebb8cc01913ddbea21 upstream.
+commit 98af37d624ed8c83f1953b1b6b2f6866011fc064 upstream.
 
-When using the no-holes feature, if we have a file with prealloc extents
-with a start offset beyond the file's eof, doing an incremental send can
-cause corruption of the file due to incorrect hole detection. Such case
-requires that the prealloc extent(s) exist in both the parent and send
-snapshots, and that a hole is punched into the file that covers all its
-extents that do not cross the eof boundary.
+In the fixes commit, removing SIGKILL from each thread signal mask and
+executing "goto fatal" directly will skip the call to
+"trace_signal_deliver".  At this point, the delivery tracking of the
+SIGKILL signal will be inaccurate.
 
-Example reproducer:
+Therefore, we need to add trace_signal_deliver before "goto fatal" after
+executing sigdelset.
 
-  $ mkfs.btrfs -f -O no-holes /dev/sdb
-  $ mount /dev/sdb /mnt/sdb
+Note: SEND_SIG_NOINFO matches the fact that SIGKILL doesn't have any info.
 
-  $ xfs_io -f -c "pwrite -S 0xab 0 500K" /mnt/sdb/foobar
-  $ xfs_io -c "falloc -k 1200K 800K" /mnt/sdb/foobar
-
-  $ btrfs subvolume snapshot -r /mnt/sdb /mnt/sdb/base
-
-  $ btrfs send -f /tmp/base.snap /mnt/sdb/base
-
-  $ xfs_io -c "fpunch 0 500K" /mnt/sdb/foobar
-
-  $ btrfs subvolume snapshot -r /mnt/sdb /mnt/sdb/incr
-
-  $ btrfs send -p /mnt/sdb/base -f /tmp/incr.snap /mnt/sdb/incr
-
-  $ md5sum /mnt/sdb/incr/foobar
-  816df6f64deba63b029ca19d880ee10a   /mnt/sdb/incr/foobar
-
-  $ mkfs.btrfs -f /dev/sdc
-  $ mount /dev/sdc /mnt/sdc
-
-  $ btrfs receive -f /tmp/base.snap /mnt/sdc
-  $ btrfs receive -f /tmp/incr.snap /mnt/sdc
-
-  $ md5sum /mnt/sdc/incr/foobar
-  cf2ef71f4a9e90c2f6013ba3b2257ed2   /mnt/sdc/incr/foobar
-
-    --> Different checksum, because the prealloc extent beyond the
-        file's eof confused the hole detection code and it assumed
-        a hole starting at offset 0 and ending at the offset of the
-        prealloc extent (1200Kb) instead of ending at the offset
-        500Kb (the file's size).
-
-Fix this by ensuring we never cross the file's size when issuing the
-write operations for a hole.
-
-Fixes: 16e7549f045d33 ("Btrfs: incompatible format change to remove hole extents")
-CC: stable@vger.kernel.org # 3.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Link: http://lkml.kernel.org/r/20190425025812.91424-1-weizhenliang@huawei.com
+Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
+Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
+Reviewed-by: Christian Brauner <christian@brauner.io>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Ivan Delalande <colona@arista.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/send.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/signal.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -5013,6 +5013,12 @@ static int send_hole(struct send_ctx *sc
- 	u64 len;
- 	int ret = 0;
- 
-+	/*
-+	 * Don't go beyond the inode's i_size due to prealloc extents that start
-+	 * after the i_size.
-+	 */
-+	end = min_t(u64, end, sctx->cur_inode_size);
-+
- 	if (sctx->flags & BTRFS_SEND_FLAG_NO_FILE_DATA)
- 		return send_update_extent(sctx, offset, end - offset);
- 
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2271,6 +2271,8 @@ relock:
+ 	if (signal_group_exit(signal)) {
+ 		ksig->info.si_signo = signr = SIGKILL;
+ 		sigdelset(&current->pending.signal, SIGKILL);
++		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
++				&sighand->action[SIGKILL - 1]);
+ 		recalc_sigpending();
+ 		goto fatal;
+ 	}
 
 
