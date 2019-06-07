@@ -2,110 +2,100 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B83AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54484C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705D9208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB62216F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559933683;
+	bh=cstqjGjY0wj2LhsQmmZn8+Q6WJKqDXTRkU9X0AXhtSE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sHJdXp/VU3dQXtQFmM7NDZSmOUNAtvtg3ShqAv+/ld6XFhnx4I/FJjW7O5SCEkLwW
+	 Xy22kD1llGTRH9xtbxH7Y2IY8S1Hx3X849ISlS1j01ImX0tgPbaH8FlARhpLm9QcuT
+	 bJZvWxMf6p6Hcv51KrWbFsMWrLZYJVeDSfGraxKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbfFGSxR (ORCPT
+        id S1732143AbfFGSym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:53:17 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.178]:25064 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728736AbfFGSxR (ORCPT
+        Fri, 7 Jun 2019 14:54:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42276 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730969AbfFGSyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:53:17 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 5EDC8F4F9E
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 13:53:16 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ZJzIhtsmEdnCeZJzIhWy95; Fri, 07 Jun 2019 13:53:16 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.134.24] (port=47362 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hZJzH-002Xxo-A5; Fri, 07 Jun 2019 13:53:15 -0500
-Date:   Fri, 7 Jun 2019 13:53:14 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] remoteproc: Use struct_size() helper
-Message-ID: <20190607185314.GA15771@embeddedor>
+        Fri, 7 Jun 2019 14:54:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=NXx6PmnhUtUTm/ybGqV0WKQy6usM3ULP72To5/hYtqI=; b=G6awMd3Pb/sgDUCaFMGFadoXXC
+        FZIN/fwRwa6G71lnq01psWhTZk0HEZfYjNFQPkoRfopv5oOjk/80akMAR0l6VZyGzWE9kQnFBXBLu
+        /nxC2FlmRAe+tCtWLHrCvPepe4jtFysQ6aPKzwVDTRyvyF5Imy1YgF5py3pO1mTKHLNBA0Sfdn84p
+        lZAwzuS4FYkrnquHBo8j0QOxJicw2MSWgNu8Sgu/7DnZpm64mRVG5lAgj6bO1MLT6h9Z8M6n8nzhc
+        RKKLO4Q7XIAorOZqEnp3lv7VY6H390B7KlQkuVIcTQAYt972yDSJPuEjT8GIvWZZd8wDQ1v3eJZQV
+        GxAV0n1g==;
+Received: from [179.181.119.115] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZK0d-0005sZ-Ji; Fri, 07 Jun 2019 18:54:39 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hZK0b-0007Eq-CG; Fri, 07 Jun 2019 15:54:37 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org
+Subject: [PATCH v3 07/20] docs: amd-memory-encryption.rst get rid of warnings
+Date:   Fri,  7 Jun 2019 15:54:23 -0300
+Message-Id: <53b10d30d1341e4d4b6cbe8e49f96afe15e54693.1559933665.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.134.24
-X-Source-L: No
-X-Exim-ID: 1hZJzH-002Xxo-A5
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.134.24]:47362
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+Get rid of those warnings:
 
-struct resource_table {
-	...
-        u32 offset[0];
-} __packed;
+    Documentation/virtual/kvm/amd-memory-encryption.rst:244: WARNING: Citation [white-paper] is not referenced.
+    Documentation/virtual/kvm/amd-memory-encryption.rst:246: WARNING: Citation [amd-apm] is not referenced.
+    Documentation/virtual/kvm/amd-memory-encryption.rst:247: WARNING: Citation [kvm-forum] is not referenced.
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+For references that aren't mentioned at the text by adding an
+explicit reference to them.
 
-So, replace the following form:
-
-table->num * sizeof(table->offset[0]) + sizeof(struct resource_table)
-
-with:
-
-struct_size(table, offset, table->num)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/remoteproc/remoteproc_elf_loader.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/virtual/kvm/amd-memory-encryption.rst | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-index 215a4400f21e..606aae166eba 100644
---- a/drivers/remoteproc/remoteproc_elf_loader.c
-+++ b/drivers/remoteproc/remoteproc_elf_loader.c
-@@ -247,8 +247,7 @@ find_table(struct device *dev, struct elf32_hdr *ehdr, size_t fw_size)
- 		}
+diff --git a/Documentation/virtual/kvm/amd-memory-encryption.rst b/Documentation/virtual/kvm/amd-memory-encryption.rst
+index 659bbc093b52..d18c97b4e140 100644
+--- a/Documentation/virtual/kvm/amd-memory-encryption.rst
++++ b/Documentation/virtual/kvm/amd-memory-encryption.rst
+@@ -241,6 +241,9 @@ Returns: 0 on success, -negative on error
+ References
+ ==========
  
- 		/* make sure the offsets array isn't truncated */
--		if (table->num * sizeof(table->offset[0]) +
--				sizeof(struct resource_table) > size) {
-+		if (struct_size(table, offset, table->num) > size) {
- 			dev_err(dev, "resource table incomplete\n");
- 			return NULL;
- 		}
++
++See [white-paper]_, [api-spec]_, [amd-apm]_ and [kvm-forum]_ for more info.
++
+ .. [white-paper] http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2013/12/AMD_Memory_Encryption_Whitepaper_v7-Public.pdf
+ .. [api-spec] http://support.amd.com/TechDocs/55766_SEV-KM_API_Specification.pdf
+ .. [amd-apm] http://support.amd.com/TechDocs/24593.pdf (section 15.34)
 -- 
 2.21.0
 
