@@ -2,163 +2,104 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A09BC468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FE4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD5A20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0F020868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NZOPM/kS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N/c1f5tu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbfFGVRv (ORCPT
+        id S1731275AbfFGVTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 17:17:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52349 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730700AbfFGVRv (ORCPT
+        Fri, 7 Jun 2019 17:19:09 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35121 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730879AbfFGVTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 17:17:51 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x57LH0iB2663557
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 7 Jun 2019 14:17:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x57LH0iB2663557
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559942220;
-        bh=pcspIWbcUasCbDigRJvUefjE0KNrFLcytvAjYwz6uk0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=NZOPM/kSi4JSgPYd26hf9iebwQ+ZKu+6edt7WZ4o4ITqi7j9KBdtAEcqyoUOANUwY
-         XI/VwzdazqApSHUNcTfNxXSbb2hX36VvnV6bQsQvtteidGjrPKNGMTxNyMgNHs2hl7
-         msoYtCOivEUO0TcRzm8CXLZ533nVpMnM5AhgGJNurFcSIGbLDc6YOzrOt9bnkRcuJ0
-         i7/ZOMQKeHL+ZzaPT/b1Ydv0EaS5js975tAKB0jII0cF7QIdPsMyRIhAxFAKhYyzkY
-         4n0j6AtiLp+oOsefrSpOrULLQ9KeGi6YF43silL96Bp955XfO1bZgYNJJiGzl5++xb
-         SRRFK4stWPOxw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x57LGxHn2663554;
-        Fri, 7 Jun 2019 14:16:59 -0700
-Date:   Fri, 7 Jun 2019 14:16:59 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Baoquan He <tipbot@zytor.com>
-Message-ID: <tip-00e5a2bbcc31d5fea853f8daeba0f06c1c88c3ff@git.kernel.org>
-Cc:     keescook@chromium.org, kirill@linux.intel.com,
-        dave.hansen@linux.intel.com, bp@suse.de, luto@kernel.org,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, bhe@redhat.com,
-        mingo@kernel.org, stable@vger.kernel.org
-Reply-To: tglx@linutronix.de, stable@vger.kernel.org, mingo@kernel.org,
-          bhe@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, keescook@chromium.org, bp@suse.de,
-          luto@kernel.org, hpa@zytor.com, kirill@linux.intel.com,
-          dave.hansen@linux.intel.com
-In-Reply-To: <20190523025744.3756-1-bhe@redhat.com>
-References: <20190523025744.3756-1-bhe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/mm/KASLR: Compute the size of the vmemmap
- section properly
-Git-Commit-ID: 00e5a2bbcc31d5fea853f8daeba0f06c1c88c3ff
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 7 Jun 2019 17:19:09 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h11so2946349ljb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 14:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/uwQvvBLZhDAl9yhIggJq/EJTAtf+ICqBP+94QmKvpM=;
+        b=N/c1f5tuWKYL8TC+mpD5tnEP7gezj/Sv0CKNXvK+vVV9p3HMyq0wWcteem8zBam5DR
+         2XbGICxpKnalTKAESEL7c+epE+t4pCo88A27u4LOFET0um8g3iWYnRb4Z/5L8rkIylPi
+         2jcYbG4YVFXcQkQ4q3ja1Cq9gYsYE5YNTR38P0gQDlZ16R2rHS0QdwGkOhpUJwIsJ5Am
+         tWG0ZA9d55ys6+uAgGiJT/e0pgaq+cFehEqRSjDogyfw7AiX+d1jGhDPOni65wlYf/es
+         rB3OsOg+4YpCsJSh06Xw88BD/TiZfHR4V2FBbVKphXXzjJXKekeEuRCKgDzPi/TxNalg
+         cOVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/uwQvvBLZhDAl9yhIggJq/EJTAtf+ICqBP+94QmKvpM=;
+        b=rsVZA+RvQcLbLf20SjWhGqsP7u/ofZlFU2BqiS/AJUu9Y038KyTq9sxqr4aWh1/ZHX
+         s2Kll7Ey2OpcG9HulDOC+M6BwZ8nBuKZwjSmgqSIEKOLH1ik5BHsEx9uhTfJAsiNMCuf
+         5i2o7obW8hr9O1cB2Ft4S5vBvZBSoVSZWZmaH1XZGPgnikXjP4JcGn1OVMwSoPr2Ntcx
+         J3pHwhGEx0jFJQAfy6P4lWNbtsigZsfihQRE3FSbx5OQQmdhTHUnbZcaoUzuTLgZ+0Lb
+         UZy/voiHd1DRq/gfceMDOUq4+m0iohTV4WTWMQOnmU+kjn4kbNWx/pK6wGLuH/ZAUDSm
+         eCsA==
+X-Gm-Message-State: APjAAAXqzWgmWkp5QemCH5W7xTeUE0Cpotgxy7VJhNbeuOGj77ZwxA0F
+        CBkmld8Wet5RlAca5B5S5PCyDEc11hNDAfLzinEA+A==
+X-Google-Smtp-Source: APXvYqxoSrFtpdn+Y/8JUdQf+IzKlqg5LfxsLNBpOURN47jOXNKje3csy/VgjGKZFSN/pgipJ/qQdxmih3J6j1aUAJs=
+X-Received: by 2002:a2e:9753:: with SMTP id f19mr5296121ljj.113.1559942347590;
+ Fri, 07 Jun 2019 14:19:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190603073421.10314-1-manivannan.sadhasivam@linaro.org> <20190603073421.10314-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190603073421.10314-2-manivannan.sadhasivam@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 7 Jun 2019 23:18:59 +0200
+Message-ID: <CACRpkdY9j+4PGGyMC-bCKuhP3Cg6xj4mFBt1VuSOi_14JcphPw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: Add drive strength support for BM1880 SoC
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        alec.lin@bitmain.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  00e5a2bbcc31d5fea853f8daeba0f06c1c88c3ff
-Gitweb:     https://git.kernel.org/tip/00e5a2bbcc31d5fea853f8daeba0f06c1c88c3ff
-Author:     Baoquan He <bhe@redhat.com>
-AuthorDate: Thu, 23 May 2019 10:57:44 +0800
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Fri, 7 Jun 2019 23:12:13 +0200
+On Mon, Jun 3, 2019 at 9:35 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-x86/mm/KASLR: Compute the size of the vmemmap section properly
+> Add drive strength support for Bitmain BM1880 SoC.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-The size of the vmemmap section is hardcoded to 1 TB to support the
-maximum amount of system RAM in 4-level paging mode - 64 TB.
+Patch applied, no point in holding this back about nitpicking.
 
-However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
-the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
-64 TB of vmemmap area is needed:
+Follow up if you want to change the below:
 
-  4 * 1000^5 PB / 4096 bytes page size * 64 bytes per page struct / 1000^4 TB = 62.5 TB.
+> +static int bm1880_pinconf_drv_set(unsigned int mA, u32 width,
+> +                                 u32 *regval, u32 bit_offset)
+> +{
+> +       u32 _regval;
+> +
+> +       _regval = *regval;
 
-This hardcoding may cause vmemmap to corrupt the following
-cpu_entry_area section, if KASLR puts vmemmap very close to it and the
-actual vmemmap size is bigger than 1 TB.
+(... lots of fun with _reqval ...)
 
-So calculate the actual size of the vmemmap region needed and then align
-it up to 1 TB boundary.
+> +       *regval = _regval;
+> +
+> +       return 0;
 
-In 4-level paging mode it is always 1 TB. In 5-level it's adjusted on
-demand. The current code reserves 0.5 PB for vmemmap on 5-level. With
-this change, the space can be saved and thus used to increase entropy
-for the randomization.
+I would avoid using any _names and __names because of ambiguity
+(no clear semantic meaning) I would just call the variable in the
+function *regp and the _regval just "reg" but it's just me.
 
- [ bp: Spell out how the 64 TB needed for vmemmap is computed and massage commit
-   message. ]
-
-Fixes: eedb92abb9bb ("x86/mm: Make virtual memory layout dynamic for CONFIG_X86_5LEVEL=y")
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Kirill A. Shutemov <kirill@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: kirill.shutemov@linux.intel.com
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190523025744.3756-1-bhe@redhat.com
----
- arch/x86/mm/kaslr.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index dc3f058bdf9b..dc6182eecefa 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
- } kaslr_regions[] = {
- 	{ &page_offset_base, 0 },
- 	{ &vmalloc_base, 0 },
--	{ &vmemmap_base, 1 },
-+	{ &vmemmap_base, 0 },
- };
- 
- /* Get size in bytes used by the memory region */
-@@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
- 	unsigned long rand, memory_tb;
- 	struct rnd_state rand_state;
- 	unsigned long remain_entropy;
-+	unsigned long vmemmap_size;
- 
- 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
- 	vaddr = vaddr_start;
-@@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
- 	if (memory_tb < kaslr_regions[0].size_tb)
- 		kaslr_regions[0].size_tb = memory_tb;
- 
-+	/*
-+	 * Calculate the vmemmap region size in TBs, aligned to a TB
-+	 * boundary.
-+	 */
-+	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
-+			sizeof(struct page);
-+	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
-+
- 	/* Calculate entropy available between regions */
- 	remain_entropy = vaddr_end - vaddr_start;
- 	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
+Yours,
+Linus Walleij
