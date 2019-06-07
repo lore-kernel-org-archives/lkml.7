@@ -2,156 +2,166 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0695C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFA9C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A45208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:27:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBgZarhj"
+	by mail.kernel.org (Postfix) with ESMTP id 1B8BC20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfFGG1u (ORCPT
+        id S1727314AbfFGG2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:27:50 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42374 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfFGG1t (ORCPT
+        Fri, 7 Jun 2019 02:28:20 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:58893 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfFGG2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:27:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y13so698394lfh.9;
-        Thu, 06 Jun 2019 23:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rQ9b6+/u+diNabiHcRE//MFPJUhb+OGFksp8HDzi/hU=;
-        b=fBgZarhjfXorlEMGFSQnX2nUvbQdTLuG9hbfjj00rUQdWHreO7GeDMonHkak3356zy
-         r11ZrF2piYb/v3hUy7iiv/Wh8V7YlJFFJUDpv8hzwrJv/ptm0rKFAtnc4mrEMVdytLuJ
-         LgoD+hd7n7gpiWO7fp5Yej+S9s14nKj2Y+pvAhE3m/7QFftSoKlR/M1wX8n/ARkGinBK
-         zAF1+UeD0w4/Xg2ItOhwIdMTyLN97TS6Qly6rfggDx01T4dZvkOFp1HchvJBVtL425Fh
-         cYovjG/p8pjJGzJitCWdXShIj7C+HYJt0HZY9J0dciRM0SYxuc7SSEdZlemRXF/a6LXd
-         nKbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rQ9b6+/u+diNabiHcRE//MFPJUhb+OGFksp8HDzi/hU=;
-        b=oBtTO6hmOnfJcA+u2jdhRtXYo1GzhNuDajRDw3effiP8Xs4CtS4OmPdQmWu7k7utuZ
-         pMN3qCYy/AEK/9y2ro8tDMP2tdXGRs3xSW6AdaBm3mj8qie+teD5gaxIfr6RdBtAj8ub
-         OvC7OPYZ0XEIvQkq9v0y7CdyBxsUmrkMO5zxfh3NScZagudzcw+kB+oXsBoIITCZ2nw+
-         GMT4YLd5jZApJTiYn7hou6R5J8bRXeiiaBKiZdY/rgXckONbedZ+UQhI1FZpEqbUwQ2Q
-         uqxKN/IMQtb+nXuoKIIrLR0h5+syqJHUUnvW15ewAzHDJ2PUFIR0APlT+qCBaMUrh+eF
-         ND8Q==
-X-Gm-Message-State: APjAAAXN78kCMZWAzx65fm/kibM8DDdPHxm7WkebVpqkaaPBn/L40MGk
-        yYiCPD43RuuC34bXN/yjSKqDnxvR
-X-Google-Smtp-Source: APXvYqxgAO53ZX14VWcFn/HznS/BNE1wjsgjAQRx60U637GDtOlOSMD0nwqNg6QtiaOekwCEfkjKLA==
-X-Received: by 2002:a19:c14f:: with SMTP id r76mr15665324lff.70.1559888867472;
-        Thu, 06 Jun 2019 23:27:47 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.35.141])
-        by smtp.googlemail.com with ESMTPSA id k82sm212388ljb.84.2019.06.06.23.27.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 23:27:46 -0700 (PDT)
-Subject: Re: [PATCH V3] i2c: busses: tegra: Add suspend-resume support
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <21a2b722-cd1d-284f-2a4d-99bb12c98afd@gmail.com>
-Date:   Fri, 7 Jun 2019 09:27:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 7 Jun 2019 02:28:19 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id A363840003;
+        Fri,  7 Jun 2019 06:28:03 +0000 (UTC)
+Date:   Fri, 7 Jun 2019 08:28:02 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Harald Geyer <harald@ccbib.org>
+Cc:     Torsten Duwe <duwe@lst.de>, Vasily Khoruzhick <anarsoul@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Message-ID: <20190607062802.m5wslx3imiqooq5a@flea>
+References: <20190604122150.29D6468B05@newverein.lst.de>
+ <20190604122308.98D4868B20@newverein.lst.de>
+ <CA+E=qVckHLqRngsfK=AcvstrD0ymEfRkYyhS_kBtZ3YWdE3L=g@mail.gmail.com>
+ <20190605101317.GA9345@lst.de>
+ <20190605120237.ekmytfxcwbjaqy3x@flea>
+ <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
 MIME-Version: 1.0
-In-Reply-To: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.06.2019 8:37, Bitan Biswas пишет:
-> Post suspend I2C registers have power on reset values. Before any
-> transfer initialize I2C registers to prevent I2C transfer timeout
-> and implement suspend and resume callbacks needed. Fix below errors
-> post suspend:
-> 
-> 1) Tegra I2C transfer timeout during jetson tx2 resume:
-> 
-> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, parent: i2c-1
-> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
-> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
-> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
-> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns -110
-> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 after 127152 usecs
-> [   27.666194] PM: Device 1-0074 failed to resume: error -110
-> 
-> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
-> 
-> Remove i2c bus lock-unlock calls in resume callback as i2c_mark_adapter_*
-> (suspended-resumed) help ensure i2c core calls from client are not
-> executed before i2c-tegra resume.
-> 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index ebaa78d..1dbba39 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -1687,7 +1687,31 @@ static int tegra_i2c_remove(struct platform_device *pdev)
->  }
->  
->  #ifdef CONFIG_PM_SLEEP
-> +static int tegra_i2c_suspend(struct device *dev)
-> +{
-> +	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-> +
-> +	i2c_mark_adapter_suspended(&i2c_dev->adapter);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra_i2c_resume(struct device *dev)
-> +{
-> +	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-> +	int err;
-> +
-> +	err = tegra_i2c_init(i2c_dev, false);
-> +	if (err)
-> +		return err;
-> +
-> +	i2c_mark_adapter_resumed(&i2c_dev->adapter);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct dev_pm_ops tegra_i2c_pm = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
->  	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
->  			   NULL)
->  };
-> 
+On Thu, Jun 06, 2019 at 03:59:27PM +0200, Harald Geyer wrote:
+> Guys, this discussion is getting heated for no reason. Let's put
+> personal frustrations aside and discuss the issue on its merits:
+>
+> Maxime Ripard writes:
+> > On Wed, Jun 05, 2019 at 12:13:17PM +0200, Torsten Duwe wrote:
+> > > On Tue, Jun 04, 2019 at 08:08:40AM -0700, Vasily Khoruzhick wrote:
+> > > > On Tue, Jun 4, 2019 at 5:23 AM Torsten Duwe <duwe@lst.de> wrote:
+> > > > >
+> > > > > Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
+> > > > > the I2C controlling signals are connected to I2C0 bus. eDP output goes
+> > > > > to an Innolux N116BGE panel.
+> > > > >
+> > > > > Enable it in the device tree.
+> > > > >
+> > > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > > > Signed-off-by: Torsten Duwe <duwe@suse.de>
+> > > > > ---
+> > > > >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 65 ++++++++++++++++++++--
+> > > > >  1 file changed, 61 insertions(+), 4 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > > > > index 0ec46b969a75..a0ad438b037f 100644
+> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
+> > > > > @@ -65,6 +65,21 @@
+> > > > >                 };
+> > > > >         };
+> > > > >
+> > > > > +       panel: panel {
+> > > > > +               compatible ="innolux,n116bge", "simple-panel";
+> > > >
+> > > > It's still "simple-panel". I believe I already mentioned that Rob
+> > > > asked it to be edp-connector.
+>
+> Actually just dropping the "simple-panel" compatible would be a poor
+> choice. Even if "edp-connector" is specified as binding and implemented in a
+> driver, there are older kernel versions and other operating systems to
+> keep in mind.
 
-Thanks!
+Which older kernels? This is a new binding, adding a new driver, so if
+an older kernel uses a separate driver with its own binding, good for
+them, but we don't have to support it.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> If the HW works with "simple-panel" driver satisfactorily,
+> we should definitely keep the compatible as a fall back for cases where
+> the edp-connector driver is unavailable.
+>
+> If think valid compatible properties would be:
+> compatible = "innolux,n116bge", "simple-panel";
+> compatible = "edp-connector", "simple-panel";
 
--- 
-Dmitry
+A connector isn't a panel.
+
+> compatible = "innolux,n116bge", "edp-connector", "simple-panel";
+
+And the innolux,n116bge is certainly not a connector either.
+
+> compatible = "edp-connector", "innolux,n116bge", "simple-panel";
+>
+> I can't make up my mind which one I prefere. However neither of these
+> variants requires actually implmenting an edp-connector driver.
+
+No-one asked to do an edp-connector driver. You should use it in your
+DT, but if you want to have some code in your driver that parses the
+DT directly, I'm totally fine with that.
+
+> And each of these variants is clearly preferable to shipping DTs
+> without description of the panel at all and complies with bindings
+> after adding a stub for "edp-connector".
+
+I guess you should describe why do you think it's "clear", because I'm
+not sure this is obvious for everyone here. eDP allows to discover
+which device is on the other side and its supported timings, just like
+HDMI for example (or regular DP, for that matter). Would you think
+it's clearly preferable to ship a DT with the DP/HDMI monitor
+connected on the other side exposed as a panel as well?
+
+> > And the DT is considered an ABI, so yeah, we will witheld everything
+> > that doesn't fit what we would like.
+>
+> I fail to see how the patch in discussion adds new ABI.
+
+The binding itself is the ABI, and we will have to support that
+binding for pretty much forever.
+
+> While I understand the need to pester contributors for more work,
+> outright blocking DTs, that properly describe the HW
+
+Properly is arguable.
+
+> and comply with existing bindings
+
+And that's bindings meant for another use-case.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
