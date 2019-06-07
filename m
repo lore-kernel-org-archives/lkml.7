@@ -2,121 +2,116 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3874C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B75C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 865BF20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwCzrrnF"
+	by mail.kernel.org (Postfix) with ESMTP id 5AC4620868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbfFGTiX (ORCPT
+        id S1730750AbfFGTkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:38:23 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45126 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729809AbfFGTiX (ORCPT
+        Fri, 7 Jun 2019 15:40:31 -0400
+Received: from gateway36.websitewelcome.com ([50.116.125.2]:34265 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729353AbfFGTkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:38:23 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a14so2672837edv.12;
-        Fri, 07 Jun 2019 12:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zaTwR61OvFbwg4aUVtbQv05SUHVgNDxvbWkcGwjcChk=;
-        b=iwCzrrnF9dOrUNSpiNLz+zbd62iB967NcOq0S8G1ZKt8FlP3QKo+hQo/qNieQh3lXZ
-         Bn+n6ts/4mluCe5KTVccUZvFPphSgTHJgbiJII+9cD20+yplxS47yUTQLb1jXCI3M6uS
-         lN/9HEnpvYKfTaBmRTJ3PZI3Rc1JzrGvCbn5I6DiY2NjrpuoAQIqagyxxbtOtsGpBU3G
-         tDEYhGRKR/e4xPfmFyREvHONON2RN4FWqp6kFis1Znd2/XYbEP1Fm8V5aBg1jbFkXTbc
-         ax9h82u2IcwfQ4FJMZfv5SQVfOxcljCAt5au8umXq0iUIPNmfcNkiBeD3gfM/LTK9nv4
-         Lq0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zaTwR61OvFbwg4aUVtbQv05SUHVgNDxvbWkcGwjcChk=;
-        b=cc2pDhHDX8ysBx3xVUm/YO5821b1Su9K9k890xRBO8EstzMGvPOVkPtLnuT+1PEqtZ
-         PZRK9g8qiu0nAilXSc7XqyGbmmLJawdT29Z+05VpxJkmgnxfszDdzgmz78ivRD4ZZrR8
-         v2bJq8W83epTUMg1Kq5u3fwTlILwZhTmoQDf3XH673C9OouSV8jKTtPlZXZ5fHRARD6m
-         pgCYxHynZWhclMpFnjIZnmy4s2w/P/SmUd4KNae1+q5tW8Aud3W8QVhEHozyfbNKkvWP
-         VmVQIgjNBfaImo6zY51fOEhu9tvZmM7cZYYoeO9j79I3QUt0yh2mrAaKoR+EJkVclRil
-         MEfg==
-X-Gm-Message-State: APjAAAXA9x8jPh3LuWQDuRuefsVIt3EAD5P82JLVa5vvPNtIsL6xjYRU
-        XzSfGgSL+XLxmqjfuDrFVADov2BlIPNtIkaurRE=
-X-Google-Smtp-Source: APXvYqx+KVVO17c7aZO9447Pi7PBlltD3Jf63c8dfUVuA4gihVOsP/HGJQFrjbxqAH54FXPn83IUpviRzztY6lF2xdI=
-X-Received: by 2002:aa7:da4b:: with SMTP id w11mr51300775eds.36.1559936301614;
- Fri, 07 Jun 2019 12:38:21 -0700 (PDT)
+        Fri, 7 Jun 2019 15:40:31 -0400
+X-Greylist: delayed 1361 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Jun 2019 15:40:30 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 87DDD400CA603
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 13:38:49 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id ZKN3huKlLdnCeZKN3hXPwv; Fri, 07 Jun 2019 14:17:49 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.134.24] (port=48016 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hZKN1-002mT3-Kl; Fri, 07 Jun 2019 14:17:48 -0500
+Date:   Fri, 7 Jun 2019 14:17:45 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Igor Mitsyanko <imitsyanko@quantenna.com>,
+        Avinash Patil <avinashp@quantenna.com>,
+        Sergey Matyukevich <smatyukevich@quantenna.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] qtnfmac: Use struct_size() in kzalloc()
+Message-ID: <20190607191745.GA19120@embeddedor>
 MIME-Version: 1.0
-References: <20190604.202258.1443410652869724565.davem@davemloft.net>
- <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
- <20190605.114429.1672040440449676386.davem@davemloft.net> <20190607.121538.2106706546161674940.davem@davemloft.net>
-In-Reply-To: <20190607.121538.2106706546161674940.davem@davemloft.net>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 7 Jun 2019 22:38:10 +0300
-Message-ID: <CA+h21hqGWhpkHx_yG3PJbQPxv7iKuLMrD3H7GhjfzRr+TZ-wrQ@mail.gmail.com>
-Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
-To:     David Miller <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Richard Cochran <richardcochran@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.134.24
+X-Source-L: No
+X-Exim-ID: 1hZKN1-002mT3-Kl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.134.24]:48016
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 22:15, David Miller <davem@davemloft.net> wrote:
->
-> From: David Miller <davem@davemloft.net>
-> Date: Wed, 05 Jun 2019 11:44:29 -0700 (PDT)
->
-> > From: Vladimir Oltean <olteanv@gmail.com>
-> > Date: Wed, 5 Jun 2019 12:13:59 +0300
-> >
-> >> It is conflicting because net-next at the moment lacks this patch that
-> >> I submitted to net:
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=e8d67fa5696e2fcaf956dae36d11e6eff5246101
-> >> What would you like me to do: resubmit after you merge net into
-> >> net-next, add the above patch to this series (which you'll have to
-> >> skip upon the next merge), or you can just cherry-pick it and then the
-> >> series will apply?
-> >
-> > So let me bring this series back to state "Under Review" and I'll apply it
-> > after I next merge net into net-next.
->
-> So I applied the series but it doesn't even build:
->
-> ERROR: "sja1105_unpack" [drivers/net/dsa/sja1105/sja1105_ptp.ko] undefined!
-> ERROR: "sja1105_spi_send_packed_buf" [drivers/net/dsa/sja1105/sja1105_ptp.ko] undefined!
-> ERROR: "sja1105_pack" [drivers/net/dsa/sja1105/sja1105_ptp.ko] undefined!
-> ERROR: "sja1105_spi_send_int" [drivers/net/dsa/sja1105/sja1105_ptp.ko] undefined!
-> ERROR: "sja1105_get_ts_info" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-> ERROR: "sja1105pqrs_ptp_cmd" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-> ERROR: "sja1105_ptp_clock_unregister" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-> ERROR: "sja1105_ptpegr_ts_poll" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-> ERROR: "sja1105et_ptp_cmd" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-> ERROR: "sja1105_ptp_reset" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-> ERROR: "sja1105_tstamp_reconstruct" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-> ERROR: "sja1105_ptp_clock_register" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
->
-> You have to test better with the various modular/non-modular combinations.
->
-> Thanks.
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Ok, my bad, I'll resubmit it tomorrow.
+struct ieee80211_regdomain {
+	...
+        struct ieee80211_reg_rule reg_rules[];
+};
 
-Thanks!
--Vladimir
+instance = kzalloc(sizeof(*mac->rd) +
+                          sizeof(struct ieee80211_reg_rule) *
+                          count, GFP_KERNEL);
+
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+instance = kzalloc(struct_size(instance, reg_rules, count), GFP_KERNEL);
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/wireless/quantenna/qtnfmac/commands.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/commands.c b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+index 459f6b81d2eb..dc0c7244b60e 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/commands.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+@@ -1011,9 +1011,8 @@ qtnf_parse_variable_mac_info(struct qtnf_wmac *mac,
+ 	if (WARN_ON(resp->n_reg_rules > NL80211_MAX_SUPP_REG_RULES))
+ 		return -E2BIG;
+ 
+-	mac->rd = kzalloc(sizeof(*mac->rd) +
+-			  sizeof(struct ieee80211_reg_rule) *
+-			  resp->n_reg_rules, GFP_KERNEL);
++	mac->rd = kzalloc(struct_size(mac->rd, reg_rules, resp->n_reg_rules),
++			  GFP_KERNEL);
+ 	if (!mac->rd)
+ 		return -ENOMEM;
+ 
+-- 
+2.21.0
+
