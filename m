@@ -2,125 +2,175 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFA5C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1FFC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0899208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87231208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jT6H4Plu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730893AbfFGQxF (ORCPT
+        id S1730925AbfFGQ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:53:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40312 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbfFGQxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:53:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:53:04 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Jun 2019 09:53:03 -0700
-Message-ID: <ac8827d7b516f4b58e1df20f45b94998d36c418c.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Fri, 07 Jun 2019 09:45:02 -0700
-In-Reply-To: <76B7B1AE-3AEA-4162-B539-990EF3CCE2C2@amacapital.net>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-         <76B7B1AE-3AEA-4162-B539-990EF3CCE2C2@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
+        Fri, 7 Jun 2019 12:58:26 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42966 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729241AbfFGQ60 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:58:26 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y13so2135604lfh.9;
+        Fri, 07 Jun 2019 09:58:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sa5CPLr945oENhA42CHez0IG2yijXXEexO7nDRxrhcg=;
+        b=jT6H4PluKS7p0yHRpfnlgjRfXFf8iNnFbEGHVXe6ADiqaRNtyoXNohAd2PQwWJ1P4u
+         SvO9xYRp0xboi/J3TEaRdqXXmzfT1Ny4EP7ij/RSprlo7mvE6v3+BeEdqlFZoeyXNA3V
+         9LncR2gQb10OS5JLbGNDK3pdlyLmVl2gnu4SPMcWikz2dKxt2d0Gvl3bx6T+v2IxY5OG
+         6NaABP+J/Znm8Il0uOGuqrd5nYfJIBDKQWUbHBUFhNvrKCS7Mnafg1AtmqqP3vyNi1bn
+         +3rdrHWVp3/aoXY6ZZATP2PT/6I1I59Boc9WLrqWH0zC7N8qO4OacEFqKHAPNy4e+dW5
+         a2eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sa5CPLr945oENhA42CHez0IG2yijXXEexO7nDRxrhcg=;
+        b=t6nNOtXlOAnAXwCCwnftC1qgvq2+QpJjsiAWWQ9aXSMt7yZfkFo2SIQVNgsJygkm/N
+         EEdYypApFuxphsbKBpciKTCbE4xuxZ4q1vzuxo7NdRqKr8cuNf4SUjj+8eWyNuhFuGfq
+         LHl2v7NBAjpY+g6sHWDH7XGvZtNPjRi2X8Ulk7xsEGwWmHEhkQMFidQYk5hEgmT4771o
+         GOVzE3oLpvKJRg20Biy58A6UB1PGM3X8iEJrOyZsc/Y0JweZHg9aBHMHnEGPkW7+0Z8r
+         kipxFr3w66a/CwJ3+/4t4HqJAB8G9iGMG3BWMMw41ePy7ebdFVB59jeqegLIGxSV0BHr
+         CBQg==
+X-Gm-Message-State: APjAAAXHapQykGVtSCTVpC9wIslto1loGZtrpXxandXOCLb+PPynbJyF
+        Q0X/ONH2FK5VVt/QZgouAtyqQF66
+X-Google-Smtp-Source: APXvYqyTmsWuUCPMQn3oXC1I0d0ziInebRNTdYB2MXTJTjoM2go2TOjpG+F+/9OIc/fND+MzaW3J7Q==
+X-Received: by 2002:a05:6512:30a:: with SMTP id t10mr11839927lfp.22.1559926703037;
+        Fri, 07 Jun 2019 09:58:23 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-170-54.pppoe.mtu-net.ru. [91.76.170.54])
+        by smtp.googlemail.com with ESMTPSA id q22sm470197lje.75.2019.06.07.09.58.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 09:58:21 -0700 (PDT)
+Subject: Re: [PATCH v4 07/16] PM / devfreq: tegra: Properly disable interrupts
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190501233815.32643-1-digetx@gmail.com>
+ <20190501233815.32643-8-digetx@gmail.com> <20190604110744.GG16519@ulmo>
+ <c2f2a8c8-1f30-34aa-9b95-a7a44e0ec96f@gmail.com>
+ <2b09a162-a090-901b-01cf-46b116a87a7a@gmail.com>
+Message-ID: <7be61b38-62c7-8536-a102-36f5ac6668e2@gmail.com>
+Date:   Fri, 7 Jun 2019 19:58:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <2b09a162-a090-901b-01cf-46b116a87a7a@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 09:35 -0700, Andy Lutomirski wrote:
-> > On Jun 7, 2019, at 9:23 AM, Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
-> > 
-> > > On Fri, 2019-06-07 at 10:08 +0200, Peter Zijlstra wrote:
-> > > > On Thu, Jun 06, 2019 at 01:09:15PM -0700, Yu-cheng Yu wrote:
-> > > > Indirect Branch Tracking (IBT) provides an optional legacy code bitmap
-> > > > that allows execution of legacy, non-IBT compatible library by an
-> > > > IBT-enabled application.  When set, each bit in the bitmap indicates
-> > > > one page of legacy code.
-> > > > 
-> > > > The bitmap is allocated and setup from the application.
-> > > > +int cet_setup_ibt_bitmap(unsigned long bitmap, unsigned long size)
-> > > > +{
-> > > > +    u64 r;
-> > > > +
-> > > > +    if (!current->thread.cet.ibt_enabled)
-> > > > +        return -EINVAL;
-> > > > +
-> > > > +    if (!PAGE_ALIGNED(bitmap) || (size > TASK_SIZE_MAX))
-> > > > +        return -EINVAL;
-> > > > +
-> > > > +    current->thread.cet.ibt_bitmap_addr = bitmap;
-> > > > +    current->thread.cet.ibt_bitmap_size = size;
-> > > > +
-> > > > +    /*
-> > > > +     * Turn on IBT legacy bitmap.
-> > > > +     */
-> > > > +    modify_fpu_regs_begin();
-> > > > +    rdmsrl(MSR_IA32_U_CET, r);
-> > > > +    r |= (MSR_IA32_CET_LEG_IW_EN | bitmap);
-> > > > +    wrmsrl(MSR_IA32_U_CET, r);
-> > > > +    modify_fpu_regs_end();
-> > > > +
-> > > > +    return 0;
-> > > > +}
-> > > 
-> > > So you just program a random user supplied address into the hardware.
-> > > What happens if there's not actually anything at that address or the
-> > > user munmap()s the data after doing this?
-> > 
-> > This function checks the bitmap's alignment and size, and anything else is
-> > the
-> > app's responsibility.  What else do you think the kernel should check?
-> > 
+05.06.2019 1:55, Dmitry Osipenko пишет:
+> 04.06.2019 16:40, Dmitry Osipenko пишет:
+>> 04.06.2019 14:07, Thierry Reding пишет:
+>>> On Thu, May 02, 2019 at 02:38:06AM +0300, Dmitry Osipenko wrote:
+>>>> There is no guarantee that interrupt handling isn't running in parallel
+>>>> with tegra_actmon_disable_interrupts(), hence it is necessary to protect
+>>>> DEV_CTRL register accesses and clear IRQ status with ACTMON's IRQ being
+>>>> disabled in the Interrupt Controller in order to ensure that device
+>>>> interrupt is indeed being disabled.
+>>>>
+>>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/devfreq/tegra-devfreq.c | 21 +++++++++++++++------
+>>>>  1 file changed, 15 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
+>>>> index b65313fe3c2e..ce1eb97a2090 100644
+>>>> --- a/drivers/devfreq/tegra-devfreq.c
+>>>> +++ b/drivers/devfreq/tegra-devfreq.c
+>>>> @@ -171,6 +171,8 @@ struct tegra_devfreq {
+>>>>  	struct notifier_block	rate_change_nb;
+>>>>  
+>>>>  	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
+>>>> +
+>>>> +	int irq;
+>>>
+>>> Interrupts are typically unsigned int.
+>>>
+>>>>  };
+>>>>  
+>>>>  struct tegra_actmon_emc_ratio {
+>>>> @@ -417,6 +419,8 @@ static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
+>>>>  	u32 val;
+>>>>  	unsigned int i;
+>>>>  
+>>>> +	disable_irq(tegra->irq);
+>>>> +
+>>>>  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+>>>>  		dev = &tegra->devices[i];
+>>>>  
+>>>> @@ -427,9 +431,14 @@ static void tegra_actmon_disable_interrupts(struct tegra_devfreq *tegra)
+>>>>  		val &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+>>>>  
+>>>>  		device_writel(dev, val, ACTMON_DEV_CTRL);
+>>>> +
+>>>> +		device_writel(dev, ACTMON_INTR_STATUS_CLEAR,
+>>>> +			      ACTMON_DEV_INTR_STATUS);
+>>>>  	}
+>>>>  
+>>>>  	actmon_write_barrier(tegra);
+>>>> +
+>>>> +	enable_irq(tegra->irq);
+>>>
+>>> Why do we enable interrupts after this? Is there any use in having the
+>>> top-level interrupt enabled if nothing's going to generate an interrupt
+>>> anyway?
+>>
+>> There is no real point in having the interrupt enabled other than to
+>> keep the enable count balanced.
+>>
+>> IIUC, we will need to disable IRQ at the driver's probe time (after
+>> requesting the IRQ) if we want to avoid that (not really necessary)
+>> balancing. This is probably something that could be improved in a
+>> follow-up patches, if desired.
 > 
-> One might reasonably wonder why this state is privileged in the first place
-> and, given that, why we’re allowing it to be written like this.
+> Nah, it's not worth the effort. It is quite problematic that we can't
+> keep interrupt disabled during of devfreq_add_device() execution because
+> it asks governor to enable the interrupt and the interrupt shall be
+> disabled because we're using device's lock in the governor interrupt
+> handler.. device is getting assigned only after completion of the
+> devfreq_add_device() and hence ISR gets a NULL deref if it is fired
+> before device is assigned. So I'll leave this part as-is.
 > 
-> Arguably we should have another prctl to lock these values (until exec) as a
-> gardening measure.
+> Thierry, please answer to all of the remaining patches where you had
+> some concerns. I'll send out another series on top of this, addressing
+> yours comments and fixing another bug that I spotted today.
+> 
 
-We can prevent the bitmap from being set more than once.  I will test it.
+I looked at this once again and found that the interrupt could be kept
+disabled on request using the IRQ_NOAUTOEN flag and then the device
+could be assigned within the governor's event handler, so everything is
+resolved very nicely! :)
 
-Yu-cheng
+I'll send patches addressing this comment and the rest after getting
+relies from you guys. Please try to not postpone the responses too much
+as more interactivity in a review/apply process usually help quite a
+lot, thanks in advance!
