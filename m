@@ -2,141 +2,113 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5E4C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CDFC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C852D20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:08:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZzuXtFm"
+	by mail.kernel.org (Postfix) with ESMTP id 60DDF21473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfFGOI6 (ORCPT
+        id S1729389AbfFGOKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:08:58 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35578 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbfFGOI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:08:57 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so1514512ioo.2;
-        Fri, 07 Jun 2019 07:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pCTc9jsipUoi63VdTLHDq+J3b8osAzXSjDn0slmiFY4=;
-        b=oZzuXtFmut9n4jR87BPzOqCINKRM9d9nSOlA6LqyRGYVMnHoDIUSN9iFKe90wej7tj
-         ER264ZUFfBAIEY7euu1cZrEfDEYSPp1k0fUGak9xE4t3kiVlffd9gM6ifqgbIsLm0wQT
-         EXMSkFJAQxgYbX4a/bNoZiaxCcIzhpCcFC8l4ydxf7k4krU3sb05f4qZAtfeb5dsW+Zk
-         UkTV30CxUjgiJghfILJ3nDVUnr8+55ZF3+0gu1qLivvcLNjC6yfjL8nf5lmjjlwcneqQ
-         2xWGjRySqeiw2Gd4OVJpRzLJQ9KmFmZV4xJTMWPDTp4DspPpPCbJWx3pjTe8ZxPlb6QB
-         Rjlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pCTc9jsipUoi63VdTLHDq+J3b8osAzXSjDn0slmiFY4=;
-        b=pOoJ/nFaKP1jDW2JnG66Uta608iDW3JQ+2mrdW8dyqrF+zyaiqeLZs+cSUfCgAQUbC
-         B2CfQEB1J+gYr7iMlwpzSNXERJyBo/uaqwMsjft114YVmMla97tszl79VP/QTzqP7Suw
-         uytPWnubjPpW577vWGBwjQgawFmRNBQdSm+c8+ExyYEUP8Nsth7fX47dba7SXguQwpLi
-         uO4axy8FIS4UmXjEZN+2Qcz1s/boCqEXkj26jwvGTGPJEG9keG8RoGl6/NaRk0T48jim
-         1PCK+yFZCVLnpx4r0DMJ1kDEUCENenvuDtS0tHhtymovlAiS1qKAnlL7+5FcrhB1RMca
-         soFw==
-X-Gm-Message-State: APjAAAUwLzxOpMYkCCYGBhoWYDiltf2Yf2AHvdvTRRayF0xWuYfVgrDb
-        0nVoQcEHFumWsd1g7+itEW95EaE36PLZcoyFLYc=
-X-Google-Smtp-Source: APXvYqwbSPhjuuMf9/v2tEx2rOUvzTVYr08r5T2FJscY80vogA7xlSoSgNUAMJ8dWw2gCLnxFBofO3r6QgiBpUMMqxE=
-X-Received: by 2002:a05:6602:2001:: with SMTP id y1mr15641346iod.166.1559916536908;
- Fri, 07 Jun 2019 07:08:56 -0700 (PDT)
+        Fri, 7 Jun 2019 10:10:13 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:35370 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727840AbfFGOKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:10:13 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hZFZB-0006Q2-3B; Fri, 07 Jun 2019 22:10:01 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hZFYz-000796-Cp; Fri, 07 Jun 2019 22:09:49 +0800
+Date:   Fri, 7 Jun 2019 22:09:49 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+Subject: inet: frags: Turn fqdir->dead into an int for old Alphas
+Message-ID: <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
+References: <20190603200301.GM28207@linux.ibm.com>
+ <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
+ <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190528164616.38517-1-jeffrey.l.hugo@gmail.com>
- <20190528164803.38642-1-jeffrey.l.hugo@gmail.com> <20190606230050.2F33720645@mail.kernel.org>
-In-Reply-To: <20190606230050.2F33720645@mail.kernel.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Fri, 7 Jun 2019 08:08:46 -0600
-Message-ID: <CAOCk7NqYptsLkYyfUCSvh0J0FZd_9gPDZJoyjB5Ng4v8aLFUNw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 5:00 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Tue, Jun 04, 2019 at 09:04:55AM -0700, Linus Torvalds wrote:
 >
-> Quoting Jeffrey Hugo (2019-05-28 09:48:03)
-> > diff --git a/drivers/clk/qcom/gpucc-msm8998.c b/drivers/clk/qcom/gpucc-msm8998.c
-> > new file mode 100644
-> > index 000000000000..e45062e40718
-> > --- /dev/null
-> > +++ b/drivers/clk/qcom/gpucc-msm8998.c
-> > +
-> > +static int gpucc_msm8998_probe(struct platform_device *pdev)
-> > +{
-> > +       struct regmap *regmap;
-> > +       struct clk *xo;
-> > +
-> > +       /*
-> > +        * We must have a valid XO to continue until orphan probe defer is
-> > +        * implemented.
-> > +        */
-> > +       xo = clk_get(&pdev->dev, "xo");
->
-> Why is this necessary?
+> In fact, the alpha port was always subtly buggy exactly because of the
+> "byte write turns into a read-and-masked-write", even if I don't think
+> anybody ever noticed (we did fix cases where people _did_ notice,
+> though, and we might still have some cases where we use 'int' for
+> booleans because of alpha issues.).
 
-As you well know, XO is the root clock for pretty much everything on
-Qualcomm platforms.  We are trying to do things "properly" on 8998.
-We are planning on having rpmcc manage it (see my other series), and
-all the other components consume xo from there.  Unfortunately we
-cannot control the probe order, particularly when things are built as
-modules, so its possible gpucc might be the first thing to probe.
-Currently, the clock framework will allow that since everything in
-gpucc will just be an orphan.  However that doesn't prevent gpucc
-consumers from grabbing their clocks, and we've seen that cause
-issues.
+This is in fact a real bug in the code in question that no amount
+of READ_ONCE/WRITE_ONCE would have caught.  The field fqdir->dead is
+declared as boolean so writing to it is not atomic (on old Alphas).
 
-As you've previously explained, you have a ton of work to do to
-refactor things so that a clock will probe defer if its dependencies
-are not present.  We'd prefer that functionality, but are not really
-willing to wait for it.  Thus, we are implementing the same
-functionality in the driver until the framework handles it for us, at
-which point we'll gladly rip this out.
+I don't think it currently matters because padding would ensure
+that it is in fact 64 bits long.  However, should someone add another
+char/bool/bitfield in this struct in future it could become an issue.
 
->
-> > +       if (IS_ERR(xo))
-> > +               return PTR_ERR(xo);
-> > +       clk_put(xo);
-> > +
-> > +       regmap = qcom_cc_map(pdev, &gpucc_msm8998_desc);
-> > +       if (IS_ERR(regmap))
-> > +               return PTR_ERR(regmap);
-> > +
-> > +       /* force periph logic on to acoid perf counter corruption */
->
-> avoid?
+So let's fix it.
 
-Yes.  Do you want a v3 with this fixed?
+---8<--
+The field fqdir->dead is meant to be written (and read) atomically.
+As old Alpha CPUs can't write a single byte atomically, we need at
+least an int for it to work.
 
->
-> > +       regmap_write_bits(regmap, gfx3d_clk.clkr.enable_reg, BIT(13), BIT(13));
-> > +       /* tweak droop detector (GPUCC_GPU_DD_WRAP_CTRL) to reduce leakage */
-> > +       regmap_write_bits(regmap, gfx3d_clk.clkr.enable_reg, BIT(0), BIT(0));
-> > +
-> > +       return qcom_cc_really_probe(pdev, &gpucc_msm8998_desc, regmap);
-> > +}
-> > +
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/include/net/inet_frag.h b/include/net/inet_frag.h
+index e91b79ad4e4a..8c458fba74ad 100644
+--- a/include/net/inet_frag.h
++++ b/include/net/inet_frag.h
+@@ -14,7 +14,9 @@ struct fqdir {
+ 	int			max_dist;
+ 	struct inet_frags	*f;
+ 	struct net		*net;
+-	bool			dead;
++
++	/* We can't use boolean because this needs atomic writes. */
++	int			dead;
+ 
+ 	struct rhashtable       rhashtable ____cacheline_aligned_in_smp;
+ 
+diff --git a/net/ipv4/inet_fragment.c b/net/ipv4/inet_fragment.c
+index 35e9784fab4e..05aa7c145817 100644
+--- a/net/ipv4/inet_fragment.c
++++ b/net/ipv4/inet_fragment.c
+@@ -193,7 +193,7 @@ void fqdir_exit(struct fqdir *fqdir)
+ {
+ 	fqdir->high_thresh = 0; /* prevent creation of new frags */
+ 
+-	fqdir->dead = true;
++	fqdir->dead = 1;
+ 
+ 	/* call_rcu is supposed to provide memory barrier semantics,
+ 	 * separating the setting of fqdir->dead with the destruction
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
