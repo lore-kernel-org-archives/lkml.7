@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C852AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CF9C28EBD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B14020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F4920B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbfFGCFl (ORCPT
+        id S1728355AbfFGCFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 22:05:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58498 "EHLO huawei.com"
+        Thu, 6 Jun 2019 22:05:32 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58474 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728204AbfFGCFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 22:05:24 -0400
+        id S1728170AbfFGCFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 22:05:22 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EF31DEA096CB3D593D66;
+        by Forcepoint Email with ESMTP id DD5AADDEFCBC988AB9CA;
         Fri,  7 Jun 2019 10:05:17 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 7 Jun 2019 10:05:10 +0800
+ 14.3.439.0; Fri, 7 Jun 2019 10:05:09 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 06/12] net: hns3: trigger VF reset if a VF has an over_8bd_nfe_err
-Date:   Fri, 7 Jun 2019 10:03:07 +0800
-Message-ID: <1559872993-14507-7-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 03/12] net: hns3: make HW GRO handling compliant with SW GRO
+Date:   Fri, 7 Jun 2019 10:03:04 +0800
+Message-ID: <1559872993-14507-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1559872993-14507-1-git-send-email-tanhuazhong@huawei.com>
 References: <1559872993-14507-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,184 +47,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-We trigger PF reset when a RAS error of NIC named over_8bd_nfe_err
-occurred before. But it is possible that a VF causes that error, it's
-reasonable to trigger VF reset instead of PF reset in this case.
-This patch add detection of vf_id if a over_8bd_nfe_err occurs, if
-vf_id is 0, we trigger PF reset. Otherwise, we will trigger VF reset
-on the VF with error.
+Currently when a GRO packet is assembled by HW, the checksum is
+modified to reflect the entire packet by HW and skb->ip_summed is
+set to CHECKSUM_UNNECESSARY, which is not compliant with SW GRO.
 
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+This patch sets up skb's network and transport header, sets the
+GRO packet's checksum according to pseudo header and set the
+skb->ip_summed to CHECKSUM_PARTIAL.
+
+This patch also use gso_size to distinguish GRO packet from
+normal packet, use eth_type_vlan to check the VLAN type and set
+the SKB_GSO_TCP_FIXEDID according to BD info during HW GRO info
+processing.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h | 17 +++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 79 ++++++++++++++++++++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |  3 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |  2 +-
- 4 files changed, 99 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 44 +++++++++++++++++--------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 5e6c749..7d78b5a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -180,6 +180,9 @@ enum hclge_opcode_type {
- 	HCLGE_OPC_CFG_COM_TQP_QUEUE	= 0x0B20,
- 	HCLGE_OPC_RESET_TQP_QUEUE	= 0x0B22,
- 
-+	/* PPU commands */
-+	HCLGE_OPC_PPU_PF_OTHER_INT_DFX	= 0x0B4A,
-+
- 	/* TSO command */
- 	HCLGE_OPC_TSO_GENERIC_CONFIG	= 0x0C01,
- 	HCLGE_OPC_GRO_GENERIC_CONFIG    = 0x0C10,
-@@ -980,6 +983,20 @@ struct hclge_get_m7_bd_cmd {
- 	u8 rsv[20];
- };
- 
-+struct hclge_query_ppu_pf_other_int_dfx_cmd {
-+	__le16 over_8bd_no_fe_qid;
-+	__le16 over_8bd_no_fe_vf_id;
-+	__le16 tso_mss_cmp_min_err_qid;
-+	__le16 tso_mss_cmp_min_err_vf_id;
-+	__le16 tso_mss_cmp_max_err_qid;
-+	__le16 tso_mss_cmp_max_err_vf_id;
-+	__le16 tx_rd_fbd_poison_qid;
-+	__le16 tx_rd_fbd_poison_vf_id;
-+	__le16 rx_rd_fbd_poison_qid;
-+	__le16 rx_rd_fbd_poison_vf_id;
-+	u8 rsv[4];
-+};
-+
- int hclge_cmd_init(struct hclge_dev *hdev);
- static inline void hclge_write_reg(void __iomem *base, u32 reg, u32 value)
- {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index 4f2af3d..cb6ed8c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1687,6 +1687,81 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 	return PCI_ERS_RESULT_RECOVERED;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 0501b78..c37509e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -17,6 +17,7 @@
+ #include <linux/sctp.h>
+ #include <linux/vermagic.h>
+ #include <net/gre.h>
++#include <net/ip6_checksum.h>
+ #include <net/pkt_cls.h>
+ #include <net/tcp.h>
+ #include <net/vxlan.h>
+@@ -2384,13 +2385,13 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
+ 	}
  }
  
-+/* hclge_query_8bd_info: query information about over_8bd_nfe_err
-+ * @hdev: pointer to struct hclge_dev
-+ * @vf_id: Index of the virtual function with error
-+ * @q_id: Physical index of the queue with error
-+ *
-+ * This function get specific index of queue and function which causes
-+ * over_8bd_nfe_err by using command. If vf_id is 0, it means error is
-+ * caused by PF instead of VF.
-+ */
-+static int hclge_query_over_8bd_err_info(struct hclge_dev *hdev, u16 *vf_id,
-+					 u16 *q_id)
-+{
-+	struct hclge_query_ppu_pf_other_int_dfx_cmd *req;
-+	struct hclge_desc desc;
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_PPU_PF_OTHER_INT_DFX, true);
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret)
-+		return ret;
-+
-+	req = (struct hclge_query_ppu_pf_other_int_dfx_cmd *)desc.data;
-+	*vf_id = le16_to_cpu(req->over_8bd_no_fe_vf_id);
-+	*q_id = le16_to_cpu(req->over_8bd_no_fe_qid);
-+
-+	return 0;
-+}
-+
-+/* hclge_handle_over_8bd_err: handle MSI-X error named over_8bd_nfe_err
-+ * @hdev: pointer to struct hclge_dev
-+ * @reset_requests: reset level that we need to trigger later
-+ *
-+ * over_8bd_nfe_err is a special MSI-X because it may caused by a VF, in
-+ * that case, we need to trigger VF reset. Otherwise, a PF reset is needed.
-+ */
-+static void hclge_handle_over_8bd_err(struct hclge_dev *hdev,
-+				      unsigned long *reset_requests)
-+{
-+	struct device *dev = &hdev->pdev->dev;
-+	u16 vf_id;
-+	u16 q_id;
-+	int ret;
-+
-+	ret = hclge_query_over_8bd_err_info(hdev, &vf_id, &q_id);
-+	if (ret) {
-+		dev_err(dev, "fail(%d) to query over_8bd_no_fe info\n",
-+			ret);
-+		return;
-+	}
-+
-+	dev_warn(dev, "PPU_PF_ABNORMAL_INT_ST over_8bd_no_fe found, vf_id(%d), queue_id(%d)\n",
-+		 vf_id, q_id);
-+
-+	if (vf_id) {
-+		if (vf_id >= hdev->num_alloc_vport) {
-+			dev_err(dev, "invalid vf id(%d)\n", vf_id);
-+			return;
-+		}
-+
-+		/* If we need to trigger other reset whose level is higher
-+		 * than HNAE3_VF_FUNC_RESET, no need to trigger a VF reset
-+		 * here.
-+		 */
-+		if (*reset_requests != 0)
-+			return;
-+
-+		ret = hclge_inform_reset_assert_to_vf(&hdev->vport[vf_id]);
-+		if (ret)
-+			dev_warn(dev, "inform reset to vf(%d) failed %d!\n",
-+				 hdev->vport->vport_id, ret);
-+	} else {
-+		set_bit(HNAE3_FUNC_RESET, reset_requests);
-+	}
-+}
-+
- int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
- 			       unsigned long *reset_requests)
+-static int hns3_gro_complete(struct sk_buff *skb)
++static int hns3_gro_complete(struct sk_buff *skb, u32 l234info)
  {
-@@ -1799,6 +1874,10 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
- 		set_bit(reset_level, reset_requests);
+ 	__be16 type = skb->protocol;
+ 	struct tcphdr *th;
+ 	int depth = 0;
+ 
+-	while (type == htons(ETH_P_8021Q)) {
++	while (eth_type_vlan(type)) {
+ 		struct vlan_hdr *vh;
+ 
+ 		if ((depth + VLAN_HLEN) > skb_headlen(skb))
+@@ -2401,10 +2402,24 @@ static int hns3_gro_complete(struct sk_buff *skb)
+ 		depth += VLAN_HLEN;
  	}
  
-+	status = le32_to_cpu(*desc_data) & HCLGE_PPU_PF_OVER_8BD_ERR_MASK;
-+	if (status)
-+		hclge_handle_over_8bd_err(hdev, reset_requests);
++	skb_set_network_header(skb, depth);
 +
- 	/* clear all PF MSIx errors */
- 	hclge_cmd_reuse_desc(&desc[0], false);
- 	ret = hclge_cmd_send(&hdev->hw, &desc[0], pf_bd_num);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-index 6684733..be1186a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-@@ -83,7 +83,8 @@
- #define HCLGE_PPU_MPF_INT_ST3_MASK	GENMASK(7, 0)
- #define HCLGE_PPU_MPF_INT_ST2_MSIX_MASK	GENMASK(29, 28)
- #define HCLGE_PPU_PF_INT_RAS_MASK	0x18
--#define HCLGE_PPU_PF_INT_MSIX_MASK	0x27
-+#define HCLGE_PPU_PF_INT_MSIX_MASK	0x26
-+#define HCLGE_PPU_PF_OVER_8BD_ERR_MASK	0x01
- #define HCLGE_QCN_FIFO_INT_MASK		GENMASK(17, 0)
- #define HCLGE_QCN_ECC_INT_MASK		GENMASK(21, 0)
- #define HCLGE_NCSI_ECC_INT_MASK		GENMASK(1, 0)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index d20f017..2003817 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -93,7 +93,7 @@ int hclge_inform_reset_assert_to_vf(struct hclge_vport *vport)
- 	else if (hdev->reset_type == HNAE3_FLR_RESET)
- 		reset_type = HNAE3_VF_FULL_RESET;
+ 	if (type == htons(ETH_P_IP)) {
++		const struct iphdr *iph = ip_hdr(skb);
++
+ 		depth += sizeof(struct iphdr);
++		skb_set_transport_header(skb, depth);
++		th = tcp_hdr(skb);
++		th->check = ~tcp_v4_check(skb->len - depth, iph->saddr,
++					  iph->daddr, 0);
+ 	} else if (type == htons(ETH_P_IPV6)) {
++		const struct ipv6hdr *iph = ipv6_hdr(skb);
++
+ 		depth += sizeof(struct ipv6hdr);
++		skb_set_transport_header(skb, depth);
++		th = tcp_hdr(skb);
++		th->check = ~tcp_v6_check(skb->len - depth, &iph->saddr,
++					  &iph->daddr, 0);
+ 	} else {
+ 		netdev_err(skb->dev,
+ 			   "Error: FW GRO supports only IPv4/IPv6, not 0x%04x, depth: %d\n",
+@@ -2412,13 +2427,16 @@ static int hns3_gro_complete(struct sk_buff *skb)
+ 		return -EFAULT;
+ 	}
+ 
+-	th = (struct tcphdr *)(skb->data + depth);
+ 	skb_shinfo(skb)->gso_segs = NAPI_GRO_CB(skb)->count;
+ 	if (th->cwr)
+ 		skb_shinfo(skb)->gso_type |= SKB_GSO_TCP_ECN;
+ 
+-	skb->ip_summed = CHECKSUM_UNNECESSARY;
++	if (l234info & BIT(HNS3_RXD_GRO_FIXID_B))
++		skb_shinfo(skb)->gso_type |= SKB_GSO_TCP_FIXEDID;
+ 
++	skb->csum_start = (unsigned char *)th - skb->head;
++	skb->csum_offset = offsetof(struct tcphdr, check);
++	skb->ip_summed = CHECKSUM_PARTIAL;
+ 	return 0;
+ }
+ 
+@@ -2656,18 +2674,20 @@ static int hns3_set_gro_and_checksum(struct hns3_enet_ring *ring,
+ 				     struct sk_buff *skb, u32 l234info,
+ 				     u32 bd_base_info, u32 ol_info)
+ {
+-	u16 gro_count;
+ 	u32 l3_type;
+ 
+-	gro_count = hnae3_get_field(l234info, HNS3_RXD_GRO_COUNT_M,
+-				    HNS3_RXD_GRO_COUNT_S);
++	skb_shinfo(skb)->gso_size = hnae3_get_field(bd_base_info,
++						    HNS3_RXD_GRO_SIZE_M,
++						    HNS3_RXD_GRO_SIZE_S);
+ 	/* if there is no HW GRO, do not set gro params */
+-	if (!gro_count) {
++	if (!skb_shinfo(skb)->gso_size) {
+ 		hns3_rx_checksum(ring, skb, l234info, bd_base_info, ol_info);
+ 		return 0;
+ 	}
+ 
+-	NAPI_GRO_CB(skb)->count = gro_count;
++	NAPI_GRO_CB(skb)->count = hnae3_get_field(l234info,
++						  HNS3_RXD_GRO_COUNT_M,
++						  HNS3_RXD_GRO_COUNT_S);
+ 
+ 	l3_type = hnae3_get_field(l234info, HNS3_RXD_L3ID_M,
+ 				  HNS3_RXD_L3ID_S);
+@@ -2678,11 +2698,7 @@ static int hns3_set_gro_and_checksum(struct hns3_enet_ring *ring,
  	else
--		return -EINVAL;
-+		reset_type = HNAE3_VF_FUNC_RESET;
+ 		return -EFAULT;
  
- 	memcpy(&msg_data[0], &reset_type, sizeof(u16));
+-	skb_shinfo(skb)->gso_size = hnae3_get_field(bd_base_info,
+-						    HNS3_RXD_GRO_SIZE_M,
+-						    HNS3_RXD_GRO_SIZE_S);
+-
+-	return  hns3_gro_complete(skb);
++	return  hns3_gro_complete(skb, l234info);
+ }
  
+ static void hns3_set_rx_skb_rss_type(struct hns3_enet_ring *ring,
 -- 
 2.7.4
 
