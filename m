@@ -2,578 +2,180 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2E6C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7C1C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F7421479
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA47D20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wgm9na0X"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mB982WeD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbfFGNe5 (ORCPT
+        id S1729060AbfFGNfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 09:34:57 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43479 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbfFGNe5 (ORCPT
+        Fri, 7 Jun 2019 09:35:41 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45212 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbfFGNfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 09:34:57 -0400
-Received: by mail-io1-f66.google.com with SMTP id k20so1394053ios.10;
-        Fri, 07 Jun 2019 06:34:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TAwOiKdZDLFkmSa7LbdbIwehYAkzDcfXiMDU2gQvSqI=;
-        b=Wgm9na0XXMH5qO8xP7dinXWtXlE5j4hlfZf6EBf1sKMikdHZbCQChrPAAs7nN0RS2a
-         IcFM6H0mgXr8ES6OaD4DTW4fQBSTP+h+I7JpqO6BLGQBg9UMdP8yK8sAgkAAwCyfFUAc
-         VLWwR0FcYv1ubm25881VQs4AfA2CpAN0I9uXWEhAjBwUg1VOqC4KC41xxnHvDmL7yI0h
-         Clh0QG7M1aXicJv/cqWGijXPTD4cIbgiGi5b1J/94sHmSvvMYM7JXU0ncPL4zvmckoxU
-         J0jOMHsZvGMR1k/Gyd+YwDCHsJMlnTcMuwSSKzDo6Ck7WSbVU9gy79SRO2hy7C1K3UKH
-         6Tzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TAwOiKdZDLFkmSa7LbdbIwehYAkzDcfXiMDU2gQvSqI=;
-        b=Iz67vVAXMwi8ONQEi2+tc3NaHGPQcl/deO2ZiuTua0iZkxTuICVnrFKvKzEweaExHc
-         iCP9BMhcaeRs3FNdTbN/nOhh2YWzqu7Q9RCEgUv31Uwkig+jXHZzwYQqfofd35YgBGOU
-         YMRbm64+VRpL/Csf2pzcKvMtxbJvp0sPUR+ESy5wLIUGXMUtwAcDiqKcZXqcIUlYo78i
-         G19L10ZMJ6Gz7SWH1/Fo7Wp5wkOEIlOLnfDQ8+m2adpf8QxfhbkTUd9n7JLLP6s2D/9g
-         YrVbApjdugLevj+Jh3phhpq6CI4I/XtfStHgk6aOdRTO1E/likrxgGkYesAxm3nVP+Mb
-         EiTA==
-X-Gm-Message-State: APjAAAUhTixITjBrMzJDgmDWxOLm/y4ES2jjiG+sS4m7Nkx8BJWYR4IF
-        lPUy8oTxnzDoqkKFuiVPSJ0W7ZZZcBBNXxpAWh8=
-X-Google-Smtp-Source: APXvYqz9dGTCGsaO4SaGQcW2t5Kf4Wolte6lgl5beTnTMrASz4yJpZeIto2fse2kGnx8+4opVFsQWWoSzehz6IM0I20=
-X-Received: by 2002:a05:6602:220d:: with SMTP id n13mr20069237ion.104.1559914495695;
- Fri, 07 Jun 2019 06:34:55 -0700 (PDT)
+        Fri, 7 Jun 2019 09:35:40 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x57DZSMw126286;
+        Fri, 7 Jun 2019 08:35:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559914528;
+        bh=bmgnxqXqETSqwCHC4eaX3bDsAPKHDrU/WVJdeJVaAXk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=mB982WeDh1CcAdFl8czdDnb7rakbJ1z9aHhUpjafQd3rBxyRG6CpvCVbK9zRy5hvX
+         DDlHJrkdx+goQqLuJ8zprbOunyYhDl1T0xUxLp5dqV/i7/w7cvkuDuxJGjjHktyIvu
+         IggtTHLxTLBFBAiUyIHmYtFA7Vwnw/1aMlKOqgf0=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x57DZSHB121601
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Jun 2019 08:35:28 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
+ 2019 08:35:27 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 7 Jun 2019 08:35:27 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x57DZPKF073408;
+        Fri, 7 Jun 2019 08:35:25 -0500
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+ <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+ <d0db90e3-3d05-dfba-8768-28511d9ee3ac@ti.com>
+ <5208a50a-9ca0-8f24-9ad0-d7503ec53f1c@nvidia.com>
+ <ba845a19-5dfb-a891-719f-43821b2dd412@nvidia.com>
+ <e67a2d7c-5bd1-93ad-fe75-afcab38bc17c@ti.com>
+ <a65f2b07-4a3a-7f83-e21f-8b374844a4b9@nvidia.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <56aa6f45-cfd8-7f1e-9392-628ceb58093f@ti.com>
+Date:   Fri, 7 Jun 2019 16:35:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190525181329.18657-1-tiny.windzz@gmail.com> <20190525181329.18657-2-tiny.windzz@gmail.com>
- <20190527122752.uc7q6zkjti3zag4q@flea>
-In-Reply-To: <20190527122752.uc7q6zkjti3zag4q@flea>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Fri, 7 Jun 2019 21:34:44 +0800
-Message-ID: <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a65f2b07-4a3a-7f83-e21f-8b374844a4b9@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 27, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi!
->
-> Thanks for submitting a new version
->
-> On Sat, May 25, 2019 at 02:13:27PM -0400, Yangtao Li wrote:
-> > This patch adds the support for allwinner thermal sensor, within
-> > allwinner SoC. It will register sensors for thermal framework
-> > and use device tree to bind cooling device.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  MAINTAINERS                     |   7 +
-> >  drivers/thermal/Kconfig         |  14 +
-> >  drivers/thermal/Makefile        |   1 +
-> >  drivers/thermal/sun8i_thermal.c | 437 ++++++++++++++++++++++++++++++++
-> >  4 files changed, 459 insertions(+)
-> >  create mode 100644 drivers/thermal/sun8i_thermal.c
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2336dd26ece4..d312f9eecf0d 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -674,6 +674,13 @@ L:       linux-crypto@vger.kernel.org
-> >  S:   Maintained
-> >  F:   drivers/crypto/sunxi-ss/
-> >
-> > +ALLWINNER THERMAL DRIVER
-> > +M:   Yangtao Li <tiny.windzz@gmail.com>
-> > +L:   linux-pm@vger.kernel.org
-> > +S:   Maintained
-> > +F:   Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> > +F:   drivers/thermal/sun8i_thermal.c
-> > +
-> >  ALLWINNER VPU DRIVER
-> >  M:   Maxime Ripard <maxime.ripard@bootlin.com>
-> >  M:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> > index 9966364a6deb..e5465053d66f 100644
-> > --- a/drivers/thermal/Kconfig
-> > +++ b/drivers/thermal/Kconfig
-> > @@ -262,6 +262,20 @@ config SPEAR_THERMAL
-> >         Enable this to plug the SPEAr thermal sensor driver into the Linux
-> >         thermal framework.
-> >
-> > +config SUN8I_THERMAL
-> > +     tristate "Allwinner sun8i thermal driver"
-> > +     depends on ARCH_SUNXI || COMPILE_TEST
-> > +     depends on HAS_IOMEM
-> > +     depends on NVMEM_SUNXI_SID
->
-> Do you? It looks from your binding as if it's optional. Also, it's
-> pretty uncommon to depend on a given driver, usually you'll want to
-> depend on the framework instead.
->
-> > +     depends on OF
-> > +     depends on RESET_CONTROLLER
-> > +     help
-> > +       Support for the sun8i thermal sensor driver into the Linux thermal
-> > +       framework.
-> > +
-> > +       To compile this driver as a module, choose M here: the
-> > +       module will be called sun8i-thermal.
-> > +
-> >  config ROCKCHIP_THERMAL
-> >       tristate "Rockchip thermal driver"
-> >       depends on ARCH_ROCKCHIP || COMPILE_TEST
-> > diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> > index 74a37c7f847a..fa6f8b206281 100644
-> > --- a/drivers/thermal/Makefile
-> > +++ b/drivers/thermal/Makefile
-> > @@ -31,6 +31,7 @@ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-> >  obj-y                                += broadcom/
-> >  obj-$(CONFIG_THERMAL_MMIO)           += thermal_mmio.o
-> >  obj-$(CONFIG_SPEAR_THERMAL)  += spear_thermal.o
-> > +obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
-> >  obj-$(CONFIG_ROCKCHIP_THERMAL)       += rockchip_thermal.o
-> >  obj-$(CONFIG_RCAR_THERMAL)   += rcar_thermal.o
-> >  obj-$(CONFIG_RCAR_GEN3_THERMAL)      += rcar_gen3_thermal.o
-> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > new file mode 100644
-> > index 000000000000..a9cc2197f4cb
-> > --- /dev/null
-> > +++ b/drivers/thermal/sun8i_thermal.c
-> > @@ -0,0 +1,437 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Thermal sensor driver for Allwinner SOC
-> > + * Copyright (C) 2019 Yangtao Li
-> > + *
-> > + * Based on the work of Icenowy Zheng <icenowy@aosc.io>
-> > + * Based on the work of Ondrej Jirman <megous@megous.com>
-> > + * Based on the work of Josef Gajdusek <atx@atx.name>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/device.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/wait.h>
-> > +#include <linux/module.h>
-> > +#include <linux/nvmem-consumer.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/reset.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/thermal.h>
-> > +
-> > +#define MAX_SENSOR_NUM       4
-> > +
-> > +#define FT_TEMP_MASK                         GENMASK(11, 0)
-> > +#define TEMP_CALIB_MASK                              GENMASK(11, 0)
-> > +#define TEMP_TO_REG                          672
-> > +#define CALIBRATE_DEFAULT                    0x800
-> > +
-> > +#define SUN50I_THS_CTRL0                     0x00
-> > +#define SUN50I_H6_THS_ENABLE                 0x04
-> > +#define SUN50I_H6_THS_PC                     0x08
-> > +#define SUN50I_H6_THS_DIC                    0x10
-> > +#define SUN50I_H6_THS_DIS                    0x20
-> > +#define SUN50I_H6_THS_MFC                    0x30
-> > +#define SUN50I_H6_THS_TEMP_CALIB             0xa0
-> > +#define SUN50I_H6_THS_TEMP_DATA                      0xc0
-> > +
-> > +#define SUN50I_THS_CTRL0_T_ACQ(x)            ((GENMASK(15, 0) & (x)) << 16)
-> > +#define SUN50I_THS_FILTER_EN                 BIT(2)
-> > +#define SUN50I_THS_FILTER_TYPE(x)            (GENMASK(1, 0) & (x))
-> > +#define SUN50I_H6_THS_PC_TEMP_PERIOD(x)              ((GENMASK(19, 0) & (x)) << 12)
-> > +#define SUN50I_H6_THS_DATA_IRQ_STS(x)                BIT(x)
-> > +
-> > +/* millidegree celsius */
-> > +#define SUN50I_H6_FT_DEVIATION                       7000
-> > +
-> > +struct ths_device;
-> > +
-> > +struct tsensor {
-> > +     struct ths_device               *tmdev;
-> > +     struct thermal_zone_device      *tzd;
-> > +     int                             id;
-> > +     wait_queue_head_t               wait_queue;
-> > +};
-> > +
-> > +struct ths_thermal_chip {
-> > +     int             sensor_num;
-> > +     int             offset;
-> > +     int             scale;
-> > +     int             ft_deviation;
-> > +     int             temp_calib_base;
-> > +     int             temp_data_base;
-> > +     int             (*calibrate)(struct ths_device *tmdev);
-> > +     int             (*init)(struct ths_device *tmdev);
-> > +     irqreturn_t     (*irq_thread)(int irq, void *data);
-> > +};
->
-> Again, you should remove these quirks structure at the moment and only
-> deal with the H6.
->
-> > +struct ths_device {
-> > +     const struct ths_thermal_chip           *chip;
-> > +     struct device                           *dev;
-> > +     struct regmap                           *regmap;
-> > +     struct reset_control                    *reset;
-> > +     struct clk                              *bus_clk;
-> > +     struct tsensor                          sensor[MAX_SENSOR_NUM];
-> > +     int                                     data_ready;
-> > +};
-> > +
-> > +/* Temp Unit: millidegree Celsius */
-> > +static int sun8i_ths_reg2temp(struct ths_device *tmdev,
-> > +                           int reg)
-> > +{
-> > +     return (reg + tmdev->chip->offset) * tmdev->chip->scale;
-> > +}
-> > +
-> > +static int sun8i_ths_get_temp(void *data, int *temp)
-> > +{
-> > +     struct tsensor *s = data;
-> > +     struct ths_device *tmdev = s->tmdev;
-> > +     int val;
-> > +
-> > +     wait_event(s->wait_queue, tmdev->data_ready & BIT(s->id));
-> > +     tmdev->data_ready &= ~BIT(s->id);
-> > +
-> > +     regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
-> > +                 0x4 * s->id, &val);
-> > +
-> > +     *temp = sun8i_ths_reg2temp(tmdev, val);
-> > +     /*
-> > +      * XX - According to the original sdk, there are some platforms(rarely)
-> > +      * that add a fixed offset value after calculating the temperature
-> > +      * value. We can't simply put it on the formula for calculating the
-> > +      * temperature above, because the formula for calculating the
-> > +      * temperature above is also used when the sensor is calibrated. If
-> > +      * do this, the correct calibration formula is hard to know.
-> > +      */
-> > +     if (tmdev->chip->ft_deviation)
-> > +             *temp += tmdev->chip->ft_deviation;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct thermal_zone_of_device_ops ths_ops = {
-> > +     .get_temp = sun8i_ths_get_temp,
-> > +};
-> > +
-> > +static const struct regmap_config config = {
-> > +     .reg_bits = 32,
-> > +     .val_bits = 32,
-> > +     .reg_stride = 4,
-> > +     .fast_io = true,
-> > +};
-> > +
-> > +static irqreturn_t sun50i_h6_irq_thread(int irq, void *data)
-> > +{
-> > +     wait_queue_head_t *data_wait;
-> > +     struct ths_device *tmdev = data;
-> > +     int i, state;
-> > +
-> > +     regmap_read(tmdev->regmap, SUN50I_H6_THS_DIS, &state);
-> > +
-> > +     for (i = 0; i < tmdev->chip->sensor_num; i++) {
-> > +             data_wait = &tmdev->sensor[i].wait_queue;
->
-> You're only using data_wait in that scope, so you should define it
-> here.
->
-> > +
-> > +             if (state & SUN50I_H6_THS_DATA_IRQ_STS(i)) {
-> > +                     /* clear data irq pending */
-> > +                     regmap_write(tmdev->regmap, SUN50I_H6_THS_DIS,
-> > +                                  SUN50I_H6_THS_DATA_IRQ_STS(i));
-> > +
-> > +                     tmdev->data_ready |= BIT(i);
-> > +                     wake_up(data_wait);
-> > +             }
-> > +     }
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> > +{
-> > +     struct device *dev = tmdev->dev;
-> > +     struct platform_device *pdev = to_platform_device(dev);
-> > +     struct resource *mem;
-> > +     void __iomem *base;
-> > +     int ret, irq;
-> > +
-> > +     mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     base = devm_ioremap_resource(dev, mem);
-> > +     if (IS_ERR(base))
-> > +             return PTR_ERR(base);
-> > +
-> > +     tmdev->regmap = devm_regmap_init_mmio(dev, base, &config);
-> > +     if (IS_ERR(tmdev->regmap))
-> > +             return PTR_ERR(tmdev->regmap);
-> > +
-> > +     tmdev->reset = devm_reset_control_get(dev, 0);
-> > +     if (IS_ERR(tmdev->reset))
-> > +             return PTR_ERR(tmdev->reset);
-> > +
-> > +     tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
-> > +     if (IS_ERR(tmdev->bus_clk))
-> > +             return PTR_ERR(tmdev->bus_clk);
-> > +
-> > +     irq = platform_get_irq(pdev, 0);
-> > +     if (irq < 0)
-> > +             return irq;
-> > +
-> > +     ret = devm_request_threaded_irq(dev, irq, NULL,
-> > +                                     tmdev->chip->irq_thread,
-> > +                                     IRQF_ONESHOT, "ths", tmdev);
-> > +     if (ret)
-> > +             return ret;
->
-> Is there any particular reason to use a threaded interrupt?
 
-Just to improve real-time.
 
->
-> Also, starting from here you can start having interrupts...
->
-> > +
-> > +     ret = reset_control_deassert(tmdev->reset);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = clk_prepare_enable(tmdev->bus_clk);
-> > +     if (ret)
-> > +             goto assert_reset;
-> > +
-> > +     ret = tmdev->chip->calibrate(tmdev);
-> > +     if (ret)
-> > +             goto bus_disable;
->
-> While the device hasn't been properly initialized yet. Especially when
-> held in reset, some Allwinner controllers has been known to send
-> spurious interrupts, so we want to defer that to the very last minute
-> (so right before your call to sun8i_ths_register).
->
-> > +     return 0;
-> > +
-> > +bus_disable:
-> > +     clk_disable_unprepare(tmdev->bus_clk);
-> > +assert_reset:
-> > +     reset_control_assert(tmdev->reset);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int sun50i_ths_calibrate(struct ths_device *tmdev)
-> > +{
-> > +     struct nvmem_cell *calcell;
-> > +     struct device *dev = tmdev->dev;
-> > +     u16 *caldata;
-> > +     size_t callen;
-> > +     int ft_temp;
-> > +     int i, ret = 0;
-> > +
-> > +     calcell = devm_nvmem_cell_get(dev, "calib");
-> > +     if (IS_ERR(calcell)) {
-> > +             if (PTR_ERR(calcell) == -EPROBE_DEFER)
-> > +                     return -EPROBE_DEFER;
-> > +             /*
-> > +              * Even if the external calibration data stored in sid is
-> > +              * not accessible, the THS hardware can still work, although
-> > +              * the data won't be so accurate.
-> > +              *
-> > +              * The default value of calibration register is 0x800 for
-> > +              * every sensor, and the calibration value is usually 0x7xx
-> > +              * or 0x8xx, so they won't be away from the default value
-> > +              * for a lot.
-> > +              *
-> > +              * So here we do not return error if the calibartion data is
-> > +              * not available, except the probe needs deferring.
-> > +              */
-> > +             goto out;
-> > +     }
-> > +
-> > +     caldata = nvmem_cell_read(calcell, &callen);
-> > +     if (IS_ERR(caldata)) {
-> > +             ret = PTR_ERR(caldata);
-> > +             goto out;
-> > +     }
-> > +
-> > +     if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num) {
-> > +             ret = -EINVAL;
-> > +             goto out_free;
-> > +     }
-> > +
-> > +     /*
-> > +      * efuse layout:
-> > +      *
-> > +      *      0   11  16       32
-> > +      *      +-------+-------+-------+
-> > +      *      |temp|  |sensor0|sensor1|
-> > +      *      +-------+-------+-------+
-> > +      *
-> > +      * The calibration data on the H6 is the ambient temperature and
-> > +      * sensor values that are filled during the factory test stage.
-> > +      *
-> > +      * The unit of stored FT temperature is 0.1 degreee celusis.
-> > +      * Through the stored ambient temperature and the data read
-> > +      * by the sensor, after a certain calculation, the calibration
-> > +      * value to be compensated can be obtained.
-> > +      */
-> > +     ft_temp = caldata[0] & FT_TEMP_MASK;
-> > +
-> > +     for (i = 0; i < tmdev->chip->sensor_num; i++) {
-> > +             int reg = (int)caldata[i + 1];
-> > +             int sensor_temp = sun8i_ths_reg2temp(tmdev, reg);
-> > +             int delta, cdata, calib_offest;
-> > +
-> > +             /*
-> > +              * To calculate the calibration value:
-> > +              *
-> > +              * X(in Celsius) = Ts - ft_temp
-> > +              * delta = X * 10000 / TEMP_TO_REG
-> > +              * cdata = CALIBRATE_DEFAULT - delta
-> > +              *
-> > +              * cdata: calibration value
-> > +              */
-> > +             delta = (sensor_temp - ft_temp * 100) * 10 / TEMP_TO_REG;
-> > +             cdata = CALIBRATE_DEFAULT - delta;
-> > +             if (cdata & ~TEMP_CALIB_MASK) {
-> > +                     /*
-> > +                      * Calibration value more than 12-bit, but calibration
-> > +                      * register is 12-bit. In this case, ths hardware can
-> > +                      * still work without calibration, although the data
-> > +                      * won't be so accurate.
-> > +                      */
-> > +                     dev_warn(dev, "sensor%d is not calibrated.\n", i);
-> > +
-> > +                     continue;
-> > +             }
-> > +
-> > +             calib_offest = tmdev->chip->temp_calib_base + (i / 2) * 0x4;
-> > +
-> > +             if (i % 2) {
-> > +                     int val;
-> > +
-> > +                     regmap_read(tmdev->regmap, calib_offest, &val);
-> > +                     val = (val & TEMP_CALIB_MASK) | (cdata << 16);
-> > +                     regmap_write(tmdev->regmap, calib_offest, val);
-> > +             } else {
-> > +                     regmap_write(tmdev->regmap, calib_offest, cdata);
-> > +             }
-> > +     }
-> > +
-> > +out_free:
-> > +     kfree(caldata);
-> > +out:
-> > +     return ret;
-> > +}
-> > +
-> > +static int sun8i_ths_register(struct ths_device *tmdev)
-> > +{
-> > +     struct thermal_zone_device *tzd;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < tmdev->chip->sensor_num; i++) {
-> > +             tmdev->sensor[i].tmdev = tmdev;
-> > +             tmdev->sensor[i].id = i;
-> > +             tmdev->sensor[i].tzd =
-> > +                     devm_thermal_zone_of_sensor_register(tmdev->dev,
-> > +                                                          i,
-> > +                                                          &tmdev->sensor[i],
-> > +                                                          &ths_ops);
-> > +             if (IS_ERR(tmdev->sensor[i].tzd))
-> > +                     return PTR_ERR(tzd);
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int sun8i_ths_probe(struct platform_device *pdev)
-> > +{
-> > +     struct ths_device *tmdev;
-> > +     struct device *dev = &pdev->dev;
-> > +     int i, ret;
-> > +
-> > +     tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > +     if (!tmdev)
-> > +             return -ENOMEM;
-> > +
-> > +     tmdev->dev = dev;
-> > +     tmdev->chip = of_device_get_match_data(&pdev->dev);
-> > +     if (!tmdev->chip)
-> > +             return -EINVAL;
-> > +
-> > +     /*
-> > +      * Initialize wait_queue in advance, to avoid calling wake_up
-> > +      * before ths is registered in isr.
-> > +      */
-> > +     for (i = 0; i < tmdev->chip->sensor_num; i++)
-> > +             init_waitqueue_head(&tmdev->sensor[i].wait_queue);
-> > +
-> > +     platform_set_drvdata(pdev, tmdev);
-> > +
-> > +     ret = sun8i_ths_resource_init(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = tmdev->chip->init(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = sun8i_ths_register(tmdev);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int sun8i_ths_remove(struct platform_device *pdev)
-> > +{
-> > +     struct ths_device *tmdev = platform_get_drvdata(pdev);
-> > +
-> > +     clk_disable_unprepare(tmdev->bus_clk);
->
-> I know that we discussed that already, but I'm not sure why you switch
-> back to a regular call to regmap_init_mmio, while regmap_init_mmio_clk
-> will take care of enabling and disabling the bus clock for you?
+On 07/06/2019 15.58, Jon Hunter wrote:
+>> Imho if you can explain it without using 'HACK' in the sentences it
+>> might be OK, but it does not feel right.
+> 
+> I don't perceive this as a hack. Although from looking at the
+> description of the src/dst_maxburst these are burst size with regard to
+> the device, so maybe it is a stretch.
+> 
+>> However since your ADMA and ADMIF is highly coupled and it does needs
+>> special maxburst information (burst and allocated FIFO depth) I would
+>> rather use src_maxburst/dst_maxburst alone for DEV_TO_MEM/MEM_TO_DEV:
+>>
+>> ADMA_BURST_SIZE(maxburst)	((maxburst) & 0xff)
+>> ADMA_FIFO_SIZE(maxburst)	(((maxburst) >> 8) & 0xffffff)
+>>
+>> So lower 1 byte is the burst value you want from ADMA
+>> the other 3 bytes are the allocated FIFO size for the given ADMAIF channel.
+>>
+>> Sure, you need a header for this to make sure there is no
+>> misunderstanding between the two sides.
+> 
+> I don't like this because as I mentioned to Dmitry, the ADMA can perform
+> memory-to-memory transfers where such encoding would not be applicable.
 
-It seems that regmap_init_mmio_clk just get clk and prepare clk
-but no enable.
+mem2mem does not really use dma_slave_config, it is for used by
+is_slave_direction() == true type of transfers.
 
-Yangtao
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+But true, if you use ADMA against anything other than ADMAIF then this
+might be not right for non cyclic transfers.
+
+> That does not align with the description in the
+> include/linux/dmaengine.h either.
+
+True.
+
+>> Or pass the allocated FIFO size via maxburst and then the ADMA driver
+>> will pick a 'good/safe' burst value for it.
+>>
+>> Or new member, but do you need two of them for src/dst? Probably
+>> fifo_depth is better word for it, or allocated_fifo_depth.
+> 
+> Right, so looking at the struct dma_slave_config we have ...
+> 
+> u32 src_maxburst;
+> u32 dst_maxburst;
+> u32 src_port_window_size;
+> u32 dst_port_window_size;
+> 
+> Now if we could make these window sizes a union like the following this
+> could work ...
+> 
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 8fcdee1c0cf9..851251263527 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -360,8 +360,14 @@ struct dma_slave_config {
+>         enum dma_slave_buswidth dst_addr_width;
+>         u32 src_maxburst;
+>         u32 dst_maxburst;
+> -       u32 src_port_window_size;
+> -       u32 dst_port_window_size;
+> +       union {
+> +               u32 port_window_size;
+> +               u32 port_fifo_size;
+> +       } src;
+> +       union {
+> +               u32 port_window_size;
+> +               u32 port_fifo_size;
+> +       } dst;
+
+What if in the future someone will have a setup where they would need both?
+
+So not sure. Your problems are coming from a split DMA setup where the
+two are highly coupled, but sits in a different place and need to be
+configured as one device.
+
+I think xilinx_dma is facing with similar issues and they have a custom
+API to set parameters which does not fit or is peripheral specific:
+include/linux/dma/xilinx_dma.h
+
+Not sure if that is an acceptable solution.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
