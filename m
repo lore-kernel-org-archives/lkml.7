@@ -2,206 +2,152 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543F2C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE7DC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B0720868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S/cxodKr"
+	by mail.kernel.org (Postfix) with ESMTP id E37B720868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfFGLzZ (ORCPT
+        id S1728939AbfFGLz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:55:25 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17397 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfFGLzX (ORCPT
+        Fri, 7 Jun 2019 07:55:29 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:33431 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728889AbfFGLzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:55:23 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfa50aa0000>; Fri, 07 Jun 2019 04:55:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Jun 2019 04:55:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Jun 2019 04:55:22 -0700
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 11:55:22 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 7 Jun 2019 11:55:22 +0000
-Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cfa50a60000>; Fri, 07 Jun 2019 04:55:22 -0700
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Subject: [PATCH V1 3/6] i2c: tegra: fix alignment and spacing violations
-Date:   Fri, 7 Jun 2019 04:55:04 -0700
-Message-ID: <1559908507-31192-3-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
-References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 7 Jun 2019 07:55:24 -0400
+Received: from 5HSWXM1.fritz.box ([87.191.24.82]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPA (Nemesis) id
+ 1Mw8gc-1gjamE2nbQ-00s3b8; Fri, 07 Jun 2019 13:54:58 +0200
+From:   Rolf Evers-Fischer <embedded24@evers-fischer.de>
+To:     ysato@users.sourceforge.jp, dalias@libc.org,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rolf Evers-Fischer <embedded24@evers-fischer.de>
+Subject: [PATCH] sh: dma: Add missing IS_ERR test
+Date:   Fri,  7 Jun 2019 13:54:03 +0200
+Message-Id: <20190607115404.4557-1-embedded24@evers-fischer.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559908522; bh=LgZQmiJwdtHHDZHkPG5XRynz4q6S5LEc+fCQlFx6LPk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=S/cxodKrFiJqjy4KwAPdXe8843ZDNqQbfeukVMR2BElTJ8RZ220uPx2EXyqLxFB3b
-         kyoplW8JbwrQPd9XMLi8TCi9XRuo3+JCRF9jeO+oSpdU+2/2O0MOkGO79uyWLW000n
-         8jh7jtaMZsnXrJ6w+9jzCaU2l4/EyljlEoa0y8EuGbZ/Y4e6+ZXwEDhDx5EnWc4K7V
-         5DNhXZbQx1Iz0iAzkRR8EZM0xcFCt25xIUACtM+d1D7Q9EWtJdTYd3MXBzcNdSACMj
-         PDzH8uT/Alj0Wj1uebs51uSw3zLShfaWxZOvji02zmJUICauu8ovpeX4U0tQiGXiQC
-         wauuCIcM/Zx2g==
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:ce3ts2O0iZ57+RglddOjLV+R0qlmX9ewLMWZ1Bbc/nTeQW1plrV
+ jzudvx7RybZoXkQRwCyNmYdGsy2r/B2a8wgZxfHYBzqpJ1xmYaThftmalstTF/zo+HJ2SMI
+ Zkb6vq41xlK+G31qDKw8BNoAjlN3vs/59AZ9xSwzlWtR9rg+hKn5jBB8zY/wGTjhtyETOIE
+ t8SLrx9nAvlbrQdCxe/Ww==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QhXLAK0sRAo=:58gbdxswKj8/4gkyq4fcIW
+ giHTV5cOnZSo72dKaef3QqseMt7AuWOYRiBG50Y6m1OZGoPdGFk8CyzhdPB05s1BuK8qmsF9B
+ P2y2hXJTjH+euX47uSPe2ZN3DKNFMWGYp+SYl9zqLnv+JLXKii5nyDKWbAEab6kOIOftmM28e
+ 4FC7GGPhoYaNdYTfwnv1Lo77sf/PMPsQdyEq5EF4paQ8Zl0TrhhXNMBL7ku8x7IC7VTfieKH3
+ PFMj2jWZY17/H7Zuy8WDdBfFphRucLrpIKasiw3RDpOfhU2QC1VqZswBBsH1Q4Mg2gQ2FTQHs
+ 6Ll2pnUuVBipdjJXXU0qtaUebGrTzO4bg6fQnQtCg8foxL5ei9Z53K3wizu0A4E5Wcs7IbHfp
+ typPctz8LWAmrFy+PP3g0I2oUAPpZ+TCZtUL6sUMCtC12FwbuSoNq2ptD8blR6dD9R4wc4vmM
+ nQgt4QHv6MKeK/SzwmmhUXx8O9iiAoEfbVDnTYhobzyd15QFdPeKl+NGCTwRROkUdZe3ImFTq
+ eapN0Uvc7xP8GHHnF+rODqnei+01vS2seprnftS66Kar6YA87Qev9vZPdzImxiFmGqO1KYZZ/
+ 3S6nkOeZWZ/fOqX8HX68BheHFoJ+VjkTSFMOi+xyIN7Pptl4E2Clko7QZVk4O066EFQq8BMxV
+ vS5qLhnvnuGCBSPQIhng1Or0RsRnsW8rAXtHRhxJX8cvx1+93udRKRDRtJu2M88fT7ARapY8D
+ u561Ivqp1tQo7Y0rT2lm9MczXf26F9aUEJpmkOTrjCkrPzB+aznLMy++SSc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch.pl alignment and blank line check(s) in i2c-tegra.c
+get_dma_channel may return ERR_PTR, so a check is added.
 
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+Signed-off-by: Rolf Evers-Fischer <embedded24@evers-fischer.de>
 ---
- drivers/i2c/busses/i2c-tegra.c | 35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ arch/sh/drivers/dma/dma-api.c   | 20 +++++++++++++++++++-
+ arch/sh/drivers/dma/dma-sysfs.c |  2 +-
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index f7116b7..2d381de 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -295,7 +295,7 @@ static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
-  * to the I2C block inside the DVC block
-  */
- static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
--	unsigned long reg)
-+					unsigned long reg)
- {
- 	if (i2c_dev->is_dvc)
- 		reg += (reg >= I2C_TX_FIFO) ? 0x10 : 0x40;
-@@ -303,7 +303,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
- }
+diff --git a/arch/sh/drivers/dma/dma-api.c b/arch/sh/drivers/dma/dma-api.c
+index ab9170494dcc..5d6f1a46cc5e 100644
+--- a/arch/sh/drivers/dma/dma-api.c
++++ b/arch/sh/drivers/dma/dma-api.c
+@@ -94,7 +94,7 @@ int get_dma_residue(unsigned int chan)
+ 	struct dma_info *info = get_dma_info(chan);
+ 	struct dma_channel *channel = get_dma_channel(chan);
  
- static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
--	unsigned long reg)
-+		       unsigned long reg)
- {
- 	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
+-	if (info->ops->get_residue)
++	if (!IS_ERR(channel) && (info->ops->get_residue))
+ 		return info->ops->get_residue(channel);
  
-@@ -318,13 +318,13 @@ static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
- }
+ 	return 0;
+@@ -195,6 +195,9 @@ int request_dma(unsigned int chan, const char *dev_id)
+ 	int result;
  
- static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
--	unsigned long reg, int len)
-+			unsigned long reg, int len)
- {
- 	writesl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
- }
- 
- static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
--	unsigned long reg, int len)
-+		       unsigned long reg, int len)
- {
- 	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
- }
-@@ -669,10 +669,11 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
- 		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
- 		if (in_interrupt())
- 			err = readl_poll_timeout_atomic(addr, val, val == 0,
--					1000, I2C_CONFIG_LOAD_TIMEOUT);
-+							1000,
-+							I2C_CONFIG_LOAD_TIMEOUT);
- 		else
--			err = readl_poll_timeout(addr, val, val == 0,
--					1000, I2C_CONFIG_LOAD_TIMEOUT);
-+			err = readl_poll_timeout(addr, val, val == 0, 1000,
-+						 I2C_CONFIG_LOAD_TIMEOUT);
- 
- 		if (err) {
- 			dev_warn(i2c_dev->dev,
-@@ -1013,7 +1014,8 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
- }
- 
- static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
--	struct i2c_msg *msg, enum msg_end_type end_state)
-+			      struct i2c_msg *msg,
-+			      enum msg_end_type end_state)
- {
- 	u32 packet_header;
- 	u32 int_mask;
-@@ -1150,9 +1152,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 		if (err)
- 			return err;
- 
--		time_left = wait_for_completion_timeout(
--						&i2c_dev->dma_complete,
--						msecs_to_jiffies(xfer_time));
-+		time_left = wait_for_completion_timeout(&i2c_dev->dma_complete,
-+							msecs_to_jiffies(xfer_time));
- 		if (time_left == 0) {
- 			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
- 			dmaengine_terminate_sync(i2c_dev->msg_read ?
-@@ -1214,7 +1215,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- }
- 
- static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
--	int num)
-+			  int num)
- {
- 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
- 	int i;
-@@ -1260,14 +1261,15 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
- {
- 	struct device_node *np = i2c_dev->dev->of_node;
- 	int ret;
-+	bool multi_mode;
- 
- 	ret = of_property_read_u32(np, "clock-frequency",
--			&i2c_dev->bus_clk_rate);
-+				   &i2c_dev->bus_clk_rate);
- 	if (ret)
- 		i2c_dev->bus_clk_rate = 100000; /* default clock rate */
- 
--	i2c_dev->is_multimaster_mode = of_property_read_bool(np,
--			"multi-master");
-+	multi_mode = of_property_read_bool(np, "multi-master");
-+	i2c_dev->is_multimaster_mode = multi_mode;
- }
- 
- static const struct i2c_algorithm tegra_i2c_algo = {
-@@ -1611,7 +1613,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = devm_request_irq(&pdev->dev, i2c_dev->irq,
--			tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
-+			       tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to request irq %i\n", i2c_dev->irq);
- 		goto release_dma;
-@@ -1704,6 +1706,7 @@ static const struct dev_pm_ops tegra_i2c_pm = {
- 	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
- 			   NULL)
- };
+ 	channel = get_dma_channel(chan);
++	if (IS_ERR(channel))
++		return PTR_ERR(channel);
 +
- #define TEGRA_I2C_PM	(&tegra_i2c_pm)
- #else
- #define TEGRA_I2C_PM	NULL
+ 	if (atomic_xchg(&channel->busy, 1))
+ 		return -EBUSY;
+ 
+@@ -217,6 +220,9 @@ void free_dma(unsigned int chan)
+ 	struct dma_info *info = get_dma_info(chan);
+ 	struct dma_channel *channel = get_dma_channel(chan);
+ 
++	if (IS_ERR(channel))
++		return;
++
+ 	if (info->ops->free)
+ 		info->ops->free(channel);
+ 
+@@ -229,6 +235,9 @@ void dma_wait_for_completion(unsigned int chan)
+ 	struct dma_info *info = get_dma_info(chan);
+ 	struct dma_channel *channel = get_dma_channel(chan);
+ 
++	if (IS_ERR(channel))
++		return;
++
+ 	if (channel->flags & DMA_TEI_CAPABLE) {
+ 		wait_event(channel->wait_queue,
+ 			   (info->ops->get_residue(channel) == 0));
+@@ -274,6 +283,9 @@ void dma_configure_channel(unsigned int chan, unsigned long flags)
+ 	struct dma_info *info = get_dma_info(chan);
+ 	struct dma_channel *channel = get_dma_channel(chan);
+ 
++	if (IS_ERR(channel))
++		return;
++
+ 	if (info->ops->configure)
+ 		info->ops->configure(channel, flags);
+ }
+@@ -285,6 +297,9 @@ int dma_xfer(unsigned int chan, unsigned long from,
+ 	struct dma_info *info = get_dma_info(chan);
+ 	struct dma_channel *channel = get_dma_channel(chan);
+ 
++	if (IS_ERR(channel))
++		return PTR_ERR(channel);
++
+ 	channel->sar	= from;
+ 	channel->dar	= to;
+ 	channel->count	= size;
+@@ -299,6 +314,9 @@ int dma_extend(unsigned int chan, unsigned long op, void *param)
+ 	struct dma_info *info = get_dma_info(chan);
+ 	struct dma_channel *channel = get_dma_channel(chan);
+ 
++	if (IS_ERR(channel))
++		return PTR_ERR(channel);
++
+ 	if (info->ops->extend)
+ 		return info->ops->extend(channel, op, param);
+ 
+diff --git a/arch/sh/drivers/dma/dma-sysfs.c b/arch/sh/drivers/dma/dma-sysfs.c
+index 8ef318150f84..6ba5b569d446 100644
+--- a/arch/sh/drivers/dma/dma-sysfs.c
++++ b/arch/sh/drivers/dma/dma-sysfs.c
+@@ -30,7 +30,7 @@ static ssize_t dma_show_devices(struct device *dev,
+ 		struct dma_info *info = get_dma_info(i);
+ 		struct dma_channel *channel = get_dma_channel(i);
+ 
+-		if (unlikely(!info) || !channel)
++		if (unlikely(!info) || IS_ERR_OR_NULL(channel))
+ 			continue;
+ 
+ 		len += sprintf(buf + len, "%2d: %14s    %s\n",
 -- 
-2.7.4
+2.21.0
 
