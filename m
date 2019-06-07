@@ -2,125 +2,111 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4683EC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B577C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD6B20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42387212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0So86n8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PrfN5Q8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfFGHaZ (ORCPT
+        id S1727795AbfFGHbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 03:30:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33283 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFGHaZ (ORCPT
+        Fri, 7 Jun 2019 03:31:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47234 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFGHbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 03:30:25 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k187so205628pga.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 00:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L5Z2jE2hiR8M4s/s+RbNowguHNU4m4jFgbMfAGDtbrs=;
-        b=h0So86n8F43BSUeT5JqqEZz6m8os4UsSercQ21Q9ZOsOi7OhR/UDRaKcLrzU5qTgPr
-         jUHFSNSkOWtPuqnP9cv2qFk1jx1q03U9/u7ykrP6bq9dS3/vz/iCCF2hlnYBQgEZbkJL
-         dOjv/dhBN01b5kAb2k5rxCDRomTrRW/MywohTIxeEEsNTiLMMLShkkD/ujtyuJZ3MfsN
-         P+uhvIMJe92oPJR1/PjjuLYQNiTHDVzP7pluT9OfSBbWiy3JHlLEgWwhnE1JU6nPpYVh
-         VQQGqeqisSs37hW62kYsoO3NOWizXwvwKnT6SNBcBsorPNFnK1OKgVcna/TR2L7SRG74
-         qLcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L5Z2jE2hiR8M4s/s+RbNowguHNU4m4jFgbMfAGDtbrs=;
-        b=OVfWYxzvzM761R6oAhQgxYSHB4JN59Y2WMocBgYTmTLjU7y/NJ+cDpij6nRQQqElGJ
-         O9XMPm4d2YIOlDB++Ljq5BxCX6VzVHtviVQbgGaMstZfbbk55KuNmD68DN9tXiJKiIzH
-         rgXCqDaraCGFp9z/TH+cltZrGm2qoFOZWWfDPAGWgAChIeHsNodglLPWGredtXOzqNEJ
-         NeVpU8FiBGMBvKgSXxlfJy9YtxU/212MFyaMuiCcMOf4WjfQ57rrVdxcJNdUIhV8gjg2
-         QQoBddca/nr7Ha5h/YZy/y9fARwI1nEyniobg5xXJgwO2TzckUN38E/45L6m49S1MjB8
-         IYRQ==
-X-Gm-Message-State: APjAAAVQpIhyBDfEIhURIRmuAVE29IJtRrd611UGct4BOqGjf5fVq6ud
-        dXo24GyZfPgj4HVHB0MR6ko=
-X-Google-Smtp-Source: APXvYqw1oUzCSW0QdRUcITg8B26D/16r3u4gVAm/66+wx+nR1sX5il3np25ess0kyjNYWLMOsoDMIQ==
-X-Received: by 2002:a63:224c:: with SMTP id t12mr1544454pgm.227.1559892624472;
-        Fri, 07 Jun 2019 00:30:24 -0700 (PDT)
-Received: from localhost.localdomain ([110.227.95.145])
-        by smtp.gmail.com with ESMTPSA id 2sm1297060pfo.41.2019.06.07.00.30.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 00:30:24 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, straube.linux@gmail.com,
-        mamtashukla555@gmail.com, hariprasad.kelam@gmail.com,
-        benniciemanuel78@gmail.com, christophe.jaillet@wanadoo.fr,
-        puranjay12@gmail.com
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: os_dep: ioctl_linux.c: Remove return variables
-Date:   Fri,  7 Jun 2019 13:00:08 +0530
-Message-Id: <20190607073008.28690-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Fri, 7 Jun 2019 03:31:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z4s1HU+Ta9EFcVv62Up/dxFFdolam58FxKGBkLAELZE=; b=PrfN5Q8zV0PMbJwOh2nSW0qEu
+        whA3bMeZqjYW6FVebCOMZ+jOWcBf+KwA1YjMeNgOsUt0oXjsFsVtbgVjMkkSB2lXZiVsntQd5nIpO
+        GW/QhqhGfYGi3P0N9Kz2wphjaFQrHbOZos1aDDyNXV9IIbRjza8ZimXKp7rc3KXCR2qUaIUDiJx4D
+        5rSOUPZEafMrNVJUJROE8lISqEQD1e32yciSw6rgIUWvfgxL1u89OkOz+Hdjo60eCuPyV4oJuq5ZI
+        jCvlk67LYXzyPmh1q9o9aYoPPzyR0KFRwE/m9d1Eb5wGETSQGDQ/SGHQzPTldrqSlG+aLohd+cQ4E
+        nfdyfn8hA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hZ9Kx-0002HQ-Ah; Fri, 07 Jun 2019 07:30:55 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E4942202CD6B2; Fri,  7 Jun 2019 09:30:52 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 09:30:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v7 15/27] mm: Handle shadow stack page fault
+Message-ID: <20190607073052.GO3419@hirez.programming.kicks-ass.net>
+References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
+ <20190606200646.3951-16-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606200646.3951-16-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove return variables and return the values directly, as the functions
-all return 0 in all cases.
-Issue found with Coccinelle.
+On Thu, Jun 06, 2019 at 01:06:34PM -0700, Yu-cheng Yu wrote:
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+> index 75d9d68a6de7..ffcc0be7cadc 100644
+> --- a/include/asm-generic/pgtable.h
+> +++ b/include/asm-generic/pgtable.h
+> @@ -1188,4 +1188,12 @@ static inline bool arch_has_pfn_modify_check(void)
+>  #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
+>  #endif
+>  
+> +#ifndef CONFIG_ARCH_HAS_SHSTK
+> +#define pte_set_vma_features(pte, vma) pte
+> +#define arch_copy_pte_mapping(vma_flags) false
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-index 236a462a4936..a6fce63ad4db 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -2601,9 +2601,7 @@ static int rtw_p2p_set(struct net_device *dev,
-                                union iwreq_data *wrqu, char *extra)
- {
- 
--	int ret = 0;
--
--	return ret;
-+	return 0;
- 
- }
- 
-@@ -2612,9 +2610,7 @@ static int rtw_p2p_get(struct net_device *dev,
-                                union iwreq_data *wrqu, char *extra)
- {
- 
--	int ret = 0;
--
--	return ret;
-+	return 0;
- 
- }
- 
-@@ -2623,9 +2619,7 @@ static int rtw_p2p_get2(struct net_device *dev,
- 						union iwreq_data *wrqu, char *extra)
- {
- 
--	int ret = 0;
--
--	return ret;
-+	return 0;
- 
- }
- 
--- 
-2.19.1
+static inline pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma)
+{
+	return pte;
+}
 
+static inline bool arch_copy_pte_mapping(unsigned long vm_flags)
+{
+	return false;
+}
+
+Please, this way we retain function prototype checking.
+
+> +#else
+> +pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma);
+> +bool arch_copy_pte_mapping(vm_flags_t vm_flags);
+> +#endif
