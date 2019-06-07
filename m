@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3643C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F262C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9472D212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F6E20825
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:12:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="osOOwQ7k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+DoBBYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731813AbfFGXL7 (ORCPT
+        id S1731880AbfFGXMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 19:11:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33741 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731492AbfFGXLR (ORCPT
+        Fri, 7 Jun 2019 19:12:09 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50859 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731388AbfFGXLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 19:11:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so3667791wru.0;
-        Fri, 07 Jun 2019 16:11:16 -0700 (PDT)
+        Fri, 7 Jun 2019 19:11:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c66so3500476wmf.0;
+        Fri, 07 Jun 2019 16:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JnmvhZZD8Mx24yTeSpnfmQh3x3T3CVtR6CE0dBfbLB8=;
-        b=osOOwQ7kOJIxH7q1sP4SW46/2REatRj3dNel59nhnfmBYPb1CshTkAlqHnkQ/SlTha
-         3/jxPR3F1XDxNMResp+TI2Cw2Uz9+2hVrJjhM5I3ccY21BMxWVIH09kfNmOHIOJmG8Z1
-         ezIRLYjPhHsvkgm2+Of8ouKxGgY0ijFLk5uV3QewuxYLFJJRVimG9hcU6fJIqKCvxK73
-         /4p0wbCf9XBZvz/9a5z4GINxx1s4mJvWQCUYpjwJc1OwuioSjrz/BSzJo/JnakMaC0ij
-         TuIooNATlmyuU023PqcumCx+ct6OltX06coqN7ikDiPLyFqqldSMWz/UP080zco7VUxd
-         bu7g==
+        bh=7GEHwh/r4T7qgHwLm9BpliTLYMp1uwbqc4fRyWp+9LU=;
+        b=L+DoBBYW26kUIiCrZIML4fSKfVB4+Han2fYg+Y+AEfOvdl6df+liQaUdhkPwlO/6Sf
+         pRl9IKkOjj7XH+t7RhROSpgvi7iJ/cGIrO5K8x2XUaeBtCIlCN69lBw3xJGH0SCWdiTX
+         3/Drvnay9CxdWDckD/1+NYBBoK0hkiW9wwCfEan0KIFCVtSgVGWhkkYuA4IVk6aO7/uw
+         MSTuWMTP/BV2TLHL92zr7hK0rMHELO7ZjE35vSj9ASO3Xvkj8gj0+fCDol/d4lKNp26J
+         bWllR9eNc40qX/5xhp9XWmMYN6Pr/pCpzLnzIQFczG2w2E7FfYajR75sYXUxGsMbJfni
+         uECg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JnmvhZZD8Mx24yTeSpnfmQh3x3T3CVtR6CE0dBfbLB8=;
-        b=KZcrSMw/IarvKTTBggDLRJtztOcTQmRYNapmi1RacLSl4Dx6vRe+8fPSkpJ59W7MRq
-         WTlhbp7KOjhTIlmrC3FVqeY3WuT9uUaSrmd1dEjBT6O4lYBkLG+ROZKIaKfQ8IyOwcBQ
-         zRzOrw2rKyKyw/ReCUHM0mY4PZY0ZVglpCA+fWO7lg0WLP/loHJD1ckRvXtfu82NDq66
-         g5KT8ZbkUI2jEDKdH+Vtwu1+lvOHjQ8gqMTVO8MGH3Q22tkWMThr2G45ztV1G154e+TQ
-         6bHanx+jSLuFQH4914DHjZjbEGlCrZ2HtZtWt3Q6Td5jLi6uKrVlM/irJV4e61KTD1Dv
-         NaVA==
-X-Gm-Message-State: APjAAAVvN2+LNla3U9VGFNk6PSjd7asRaxuhPEkF/739/HnOJ2R2vsSW
-        9i8FRbkGFI8Ug0VkSBqijzE=
-X-Google-Smtp-Source: APXvYqxzvMi2E7q37ryIRkiVEGGK3LUQy/2+KYp1m6auhNzADjBso1u1JR0r+SFNXqWeSF4b4WrWYQ==
-X-Received: by 2002:adf:fe4e:: with SMTP id m14mr12060521wrs.21.1559949075256;
-        Fri, 07 Jun 2019 16:11:15 -0700 (PDT)
+        bh=7GEHwh/r4T7qgHwLm9BpliTLYMp1uwbqc4fRyWp+9LU=;
+        b=FE7bjhZZU3fBPWaguXgyY23ae1nvPUorh+eucO1V4TTekWx3o/sDHK8K2++AoUENfO
+         w+n78L3Dvxu5R9gIo/YLH7SjvI2PKmCBXPtMS5tP3ethXpnRUkxmSosb4sZVDs3Vo5Qw
+         11kya/1LLsuJPOOKlOOB5kf9Jvy7ffraSmklT8JkKZaw9oF+RT/VVp5h0VOfw0VlhAt8
+         f3frrakiKnFnlrmBcRUeBcilbxq6+s9x05bnArUtBbQ96Ew3oFyPViduPz9m9tqpqvIB
+         0iYvsmU0xQc0uEn5+hCo8sIyiNLz4W2V2ZO5RtnUOY1Mi2xF+wjyprkb5jAGK+FcwmAr
+         El7A==
+X-Gm-Message-State: APjAAAX16nrpnTEFsUdtYpTrF2jCMIJ0SOWu1+OzYY6AufZZHJfAx56X
+        DS5QHPtXB/qvBpA+gAWAXAA=
+X-Google-Smtp-Source: APXvYqwUfHoRNiyI8qxZ99qGY5vY4n9q91qmbDFEOvJJaMrhrSb6D3nxxuEgESrd+BAF3/p7lUwjyQ==
+X-Received: by 2002:a1c:1d83:: with SMTP id d125mr5140296wmd.63.1559949073446;
+        Fri, 07 Jun 2019 16:11:13 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.14
+        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.12
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 16:11:14 -0700 (PDT)
+        Fri, 07 Jun 2019 16:11:12 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -66,11 +66,10 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
         linux-media@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Sean Young <sean@mess.org>
-Subject: [PATCH v5 06/13] ARM: dts: sunxi: Prefer A31 bindings for IR
-Date:   Sat,  8 Jun 2019 01:10:53 +0200
-Message-Id: <20190607231100.5894-7-peron.clem@gmail.com>
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
+Date:   Sat,  8 Jun 2019 01:10:51 +0200
+Message-Id: <20190607231100.5894-5-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190607231100.5894-1-peron.clem@gmail.com>
 References: <20190607231100.5894-1-peron.clem@gmail.com>
@@ -82,29 +81,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since A31, memory mapping of the IR driver has changed.
+We are using RXINT bits definition when looking at RXSTA register.
 
-Prefer the A31 bindings instead of A13.
+These bits are equal but it's not really proper.
+
+Introduce the RXSTA bits and use them to have coherency.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Acked-by: Sean Young <sean@mess.org>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/rc/sunxi-cir.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 84977d4eb97a..f0f5ba349c1b 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -822,7 +822,7 @@
- 		};
+diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+index 0504ebfc831f..5690d0bd51bc 100644
+--- a/drivers/media/rc/sunxi-cir.c
++++ b/drivers/media/rc/sunxi-cir.c
+@@ -48,11 +48,11 @@
  
- 		ir: ir@1f02000 {
--			compatible = "allwinner,sun5i-a13-ir";
-+			compatible = "allwinner,sun6i-a31-ir";
- 			clocks = <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
- 			clock-names = "apb", "ir";
- 			resets = <&r_ccu RST_APB0_IR>;
+ /* Rx Interrupt Enable */
+ #define SUNXI_IR_RXINT_REG    0x2C
+-/* Rx FIFO Overflow */
++/* Rx FIFO Overflow Interrupt Enable */
+ #define REG_RXINT_ROI_EN		BIT(0)
+-/* Rx Packet End */
++/* Rx Packet End Interrupt Enable */
+ #define REG_RXINT_RPEI_EN		BIT(1)
+-/* Rx FIFO Data Available */
++/* Rx FIFO Data Available Interrupt Enable */
+ #define REG_RXINT_RAI_EN		BIT(4)
+ 
+ /* Rx FIFO available byte level */
+@@ -60,6 +60,12 @@
+ 
+ /* Rx Interrupt Status */
+ #define SUNXI_IR_RXSTA_REG    0x30
++/* Rx FIFO Overflow */
++#define REG_RXSTA_ROI			REG_RXINT_ROI_EN
++/* Rx Packet End */
++#define REG_RXSTA_RPE			REG_RXINT_RPEI_EN
++/* Rx FIFO Data Available */
++#define REG_RXSTA_RA			REG_RXINT_RAI_EN
+ /* RX FIFO Get Available Counter */
+ #define REG_RXSTA_GET_AC(val) (((val) >> 8) & (ir->fifo_size * 2 - 1))
+ /* Clear all interrupt status value */
+@@ -119,7 +125,7 @@ static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
+ 	/* clean all pending statuses */
+ 	writel(status | REG_RXSTA_CLEARALL, ir->base + SUNXI_IR_RXSTA_REG);
+ 
+-	if (status & (REG_RXINT_RAI_EN | REG_RXINT_RPEI_EN)) {
++	if (status & (REG_RXSTA_RA | REG_RXSTA_RPE)) {
+ 		/* How many messages in fifo */
+ 		rc  = REG_RXSTA_GET_AC(status);
+ 		/* Sanity check */
+@@ -135,9 +141,9 @@ static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
+ 		}
+ 	}
+ 
+-	if (status & REG_RXINT_ROI_EN) {
++	if (status & REG_RXSTA_ROI) {
+ 		ir_raw_event_reset(ir->rc);
+-	} else if (status & REG_RXINT_RPEI_EN) {
++	} else if (status & REG_RXSTA_RPE) {
+ 		ir_raw_event_set_idle(ir->rc, true);
+ 		ir_raw_event_handle(ir->rc);
+ 	}
 -- 
 2.20.1
 
