@@ -2,191 +2,162 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A121FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED69C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E538208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M4arfBVA"
+	by mail.kernel.org (Postfix) with ESMTP id 4A061208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559933778;
+	bh=HGnmzRYTd5i0q/n61AFbhzX0Bq3h5xNRCZIgXWazSPw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0GQB49Kjy+XmclYoTc4UW//r/iVkOOsKk7BLpaIzoLDdakYbMvbNM6YZR807xSEyJ
+	 s3xCe+0PnivB67koqzw2ND4s568zcBxF4fKLt7PuSJ+fWKB7locRAUFu4uyUvSsRc6
+	 SoJNuOVkRoTRoy+Ai01zxKrp4sXfOOZYwjwVmNVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfFGS4F (ORCPT
+        id S1731044AbfFGS4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:56:05 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15695 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732313AbfFGS4B (ORCPT
+        Fri, 7 Jun 2019 14:56:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42300 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732071AbfFGSyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:56:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfab33e0000>; Fri, 07 Jun 2019 11:55:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Jun 2019 11:56:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Jun 2019 11:56:00 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 18:55:57 +0000
-Subject: Re: [PATCH V1 6/6] i2c: tegra: remove BUG, BUG_ON
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
- <1559908507-31192-6-git-send-email-bbiswas@nvidia.com>
- <4aec6d7a-0dea-18c9-efde-96cc1a54b945@gmail.com>
- <2281ef29-6e69-78e7-4d07-77f33c2f2d5a@gmail.com>
- <9adcde41-2450-27dc-36a0-b3b99022b43d@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <75a7f16f-5d54-797d-fb72-445411f20424@nvidia.com>
-Date:   Fri, 7 Jun 2019 11:55:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 14:54:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=78L7zd88IqXfMHKxzazz3S43SQAX6wKuWyWb6jrb4ew=; b=q7aY4MVborpafsU7iQgHjHtkE6
+        nKvF1RG43TkIakvK3tqiv9jzPrSU6bdLzVsqRTI8VSG8XBdHX3TQM2JPpY9fVoIwa9r4AgWUg8tYI
+        Xd0h1f757oVGPwY9nGms8KQzEEcU7K8miOIhDfq5b2dcjVdkAf/TGfGlgsQoUv9/BGA/+frttZUfv
+        Sjs/qHB574OjEscU8USL4AwDmyrLZUjdiYu5hV/C8oiueNpxQS2jUnvzfUA9dfnDkyT6xoQyo0FQX
+        P6BCyONO2QA6kTPhgV8xDvgbdneuiVkGhiPwcdsBoa/zQFX+57fs2ZC643MvK27LCxnT1DoM0uz+d
+        SWPEueBw==;
+Received: from [179.181.119.115] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZK0d-0005se-JN; Fri, 07 Jun 2019 18:54:39 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hZK0b-0007Ea-8r; Fri, 07 Jun 2019 15:54:37 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v3 03/20] docs: zh_CN: get rid of basic_profiling.txt
+Date:   Fri,  7 Jun 2019 15:54:19 -0300
+Message-Id: <5763c80f208b4943cf487d2224f8fd32fb1c9bc9.1559933665.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <9adcde41-2450-27dc-36a0-b3b99022b43d@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559933758; bh=uCIuy8rH6YJsc+yfcuZuDGYINzs4oKq/K+wz218dMQY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=M4arfBVACmw1/pC2JeZFWgiz8tnHqrKaAdWNoIHxOKemsUv+YfBPsmCrmeFLH5MLA
-         cfg83/NLK5j8NvXYO5rA2zArplHXysMUKSxB+Nw0Ru7MUbswLOCvyCtVLYfCftQdHw
-         3mnodvVhLEGbw4cK9g0QSg1F5GhtM5sKqM7jJZAZpmW0Jl+a3tqm+cbtVHnK788k7P
-         O5HvvpUcdLGguNTjB88UJr5FcNIF5ZrAfmpzkSb9/XyUNI/5q8rIgDAn78qvVFxoUh
-         lLITiVRD0Za1AbRyGSV2+e3WAjd9masCdBhM1ultRq20Ir9jjK0OL10CCzmLS9APS5
-         XfZtRe420ANbg==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changeset 5700d1974818 ("docs: Get rid of the "basic profiling" guide")
+removed an old basic-profiling.txt file that was not updated over
+the last 11 years and won't reflect the post-perf era.
 
+It makes no sense to keep its translation, so get rid of it too.
 
-On 6/7/19 5:18 AM, Dmitry Osipenko wrote:
-> 07.06.2019 15:12, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 07.06.2019 15:08, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> 07.06.2019 14:55, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
->>>> as needed. Replace BUG() with error handling code.
->>>> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
->>>>
->>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->>>> ---
->>>>   drivers/i2c/busses/i2c-tegra.c | 15 ++++++++-------
->>>>   1 file changed, 8 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-t=
-egra.c
->>>> index 4dfb4c1..c407bd7 100644
->>>> --- a/drivers/i2c/busses/i2c-tegra.c
->>>> +++ b/drivers/i2c/busses/i2c-tegra.c
->>>> @@ -73,6 +73,7 @@
->>>>   #define I2C_ERR_NO_ACK				BIT(0)
->>>>   #define I2C_ERR_ARBITRATION_LOST		BIT(1)
->>>>   #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
->>>> +#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
->>>>  =20
->>>>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->>>>   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
->>>> @@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2=
-c_dev *i2c_dev)
->>>>   	 * prevent overwriting past the end of buf
->>>>   	 */
->>>>   	if (rx_fifo_avail > 0 && buf_remaining > 0) {
->>>> -		BUG_ON(buf_remaining > 3);
->>>>   		val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
->>>>   		val =3D cpu_to_le32(val);
->>>>   		memcpy(buf, &val, buf_remaining);
->>>> @@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2=
-c_dev *i2c_dev)
->>>>   		rx_fifo_avail--;
->>>>   	}
->>>>  =20
->>>> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
->>>>   	i2c_dev->msg_buf_remaining =3D buf_remaining;
->>>>   	i2c_dev->msg_buf =3D buf;
->>>>  =20
->>>> @@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c=
-_dev *i2c_dev)
->>>>   	 * boundary and fault.
->>>>   	 */
->>>>   	if (tx_fifo_avail > 0 && buf_remaining > 0) {
->>>> -		BUG_ON(buf_remaining > 3);
->>>>   		memcpy(&val, buf, buf_remaining);
->>>>   		val =3D le32_to_cpu(val);
->>>>  =20
->>>> @@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *=
-dev_id)
->>>>  =20
->>>>   	if (!i2c_dev->is_curr_dma_xfer) {
->>>>   		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
->>>> -			if (i2c_dev->msg_buf_remaining)
->>>> +			if (i2c_dev->msg_buf_remaining) {
->>>>   				tegra_i2c_empty_rx_fifo(i2c_dev);
->>>> -			else
->>>> -				BUG();
->>>> +			} else {
->>>> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
->>>> +				i2c_dev->msg_err |=3D I2C_ERR_UNEXPECTED_STATUS;
->>>> +				goto err;
->>>> +			}
->>>>   		}
->>>>  =20
->>>>   		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
->>>> @@ -876,7 +877,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *de=
-v_id)
->>>>   	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->>>>   		if (i2c_dev->is_curr_dma_xfer)
->>>>   			i2c_dev->msg_buf_remaining =3D 0;
->>>> -		BUG_ON(i2c_dev->msg_buf_remaining);
->>>> +		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
->>>>   		complete(&i2c_dev->msg_complete);
->>>>   	}
->>>>   	goto done;
->>>>
->>>
->>> Very nice, thank you very much! BTW, I think it may worth to add anothe=
-r
->>> patch that will reset hardware state in a case of the warning since we
->>> know that something gone wrong.
->>>
->>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>>
->>
->> Something like that:
->>
->>   	complete(&i2c_dev->msg_complete);
->>
->> 	if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining))
->> 		goto err;
->>
->=20
-> Ah, that's inside the ISR, so maybe will make sense to just not complete
-> the transfer and let it timeout:
->=20
-> 	if (!WARN_ON_ONCE(i2c_dev->msg_buf_remaining))
-> 		complete(&i2c_dev->msg_complete);
-OK. I shall send the updated patch.
+Fixes: 5700d1974818 ("docs: Get rid of the "basic profiling" guide")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Acked-by: Alex Shi <alex.shi@linux.alibaba.com>
+---
+ .../translations/zh_CN/basic_profiling.txt    | 71 -------------------
+ 1 file changed, 71 deletions(-)
+ delete mode 100644 Documentation/translations/zh_CN/basic_profiling.txt
 
--Thanks,
-  Bitan
+diff --git a/Documentation/translations/zh_CN/basic_profiling.txt b/Documentation/translations/zh_CN/basic_profiling.txt
+deleted file mode 100644
+index 1e6bf0bdf8f5..000000000000
+--- a/Documentation/translations/zh_CN/basic_profiling.txt
++++ /dev/null
+@@ -1,71 +0,0 @@
+-Chinese translated version of Documentation/basic_profiling
+-
+-If you have any comment or update to the content, please post to LKML directly.
+-However, if you have problem communicating in English you can also ask the
+-Chinese maintainer for help.  Contact the Chinese maintainer, if this
+-translation is outdated or there is problem with translation.
+-
+-Chinese maintainer: Liang Xie <xieliang@xiaomi.com>
+----------------------------------------------------------------------
+-Documentation/basic_profiling的中文翻译
+-
+-如果想评论或更新本文的内容，请直接发信到LKML。如果你使用英文交流有困难的话，也可
+-以向中文版维护者求助。如果本翻译更新不及时或者翻译存在问题，请联系中文版维护者。
+-
+-中文版维护者： 谢良 Liang Xie <xieliang007@gmail.com>
+-中文版翻译者： 谢良 Liang Xie <xieliang007@gmail.com>
+-中文版校译者：
+-以下为正文
+----------------------------------------------------------------------
+-
+-下面这些说明指令都是非常基础的，如果你想进一步了解请阅读相关专业文档：）
+-请不要再在本文档增加新的内容，但可以修复文档中的错误：）(mbligh@aracnet.com)
+-感谢John Levon，Dave Hansen等在撰写时的帮助
+-
+-<test> 用于表示要测量的目标
+-请先确保您已经有正确的System.map / vmlinux配置！
+-
+-对于linux系统来说，配置vmlinuz最容易的方法可能就是使用“make install”，然后修改
+-/sbin/installkernel将vmlinux拷贝到/boot目录，而System.map通常是默认安装好的
+-
+-Readprofile
+------------
+-2.6系列内核需要版本相对较新的readprofile，比如util-linux 2.12a中包含的，可以从:
+-
+-http://www.kernel.org/pub/linux/utils/util-linux/ 下载
+-
+-大部分linux发行版已经包含了.
+-
+-启用readprofile需要在kernel启动命令行增加”profile=2“
+-
+-clear		readprofile -r
+-		<test>
+-dump output	readprofile -m /boot/System.map > captured_profile
+-
+-Oprofile
+---------
+-
+-从http://oprofile.sourceforge.net/获取源代码（请参考Changes以获取匹配的版本）
+-在kernel启动命令行增加“idle=poll”
+-
+-配置CONFIG_PROFILING=y和CONFIG_OPROFILE=y然后重启进入新kernel
+-
+-./configure --with-kernel-support
+-make install
+-
+-想得到好的测量结果，请确保启用了本地APIC特性。如果opreport显示有0Hz CPU，
+-说明APIC特性没有开启。另外注意idle=poll选项可能有损性能。
+-
+-One time setup:
+-		opcontrol --setup --vmlinux=/boot/vmlinux
+-
+-clear		opcontrol --reset
+-start		opcontrol --start
+-		<test>
+-stop		opcontrol --stop
+-dump output	opreport >  output_file
+-
+-如果只看kernel相关的报告结果，请运行命令 opreport -l /boot/vmlinux > output_file
+-
+-通过reset选项可以清理过期统计数据，相当于重启的效果。
+-
+-- 
+2.21.0
 
