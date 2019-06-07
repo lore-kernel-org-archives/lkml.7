@@ -2,131 +2,124 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F31FBC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 04:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B63C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FB820B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 04:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3FA212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="A2EddGJE"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TNIHxn+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfFGE5E (ORCPT
+        id S1726543AbfFGFA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 00:57:04 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:24346 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfFGE5E (ORCPT
+        Fri, 7 Jun 2019 01:00:56 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36722 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFGFA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 00:57:04 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,562,1557212400"; 
-   d="scan'208";a="35981880"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Jun 2019 21:57:03 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Jun 2019 21:56:51 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Jun 2019 21:56:51 -0700
+        Fri, 7 Jun 2019 01:00:56 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d21so347097plr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 22:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WGFLO5SXSgT+0MtHrUXgfO62nTwkGHzvMjYzzdtgFdY=;
- b=A2EddGJEX19lhlac0BtNcLY+W4NodBKIxt3aXSz9mDPYfLuqiSY5JXIYTvqFtFE9w6bUi9KI0uL44FvDLaqbPMYlujq+pUaB/zLFBi080k3hpDOxPC01Ln9luFJ/b+Ve4Fcb+L9bk1zHbiaEiv4S/2fa4CHDzmeC1P3CwDy6gpQ=
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
- BN6PR11MB1905.namprd11.prod.outlook.com (10.175.97.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.22; Fri, 7 Jun 2019 04:56:49 +0000
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::e581:f807:acdc:cb36]) by BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::e581:f807:acdc:cb36%9]) with mapi id 15.20.1943.018; Fri, 7 Jun 2019
- 04:56:48 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <f.suligoi@asem.it>, <marek.vasut@gmail.com>,
-        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <bbrezillon@kernel.org>, <richard@nod.at>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mtd: spi-nor: change "error reading JEDEC id" from dbg to
- err
-Thread-Topic: [PATCH] mtd: spi-nor: change "error reading JEDEC id" from dbg
- to err
-Thread-Index: AQHVEj+6kixcbpPmk0yDW0lHff3j+KaPtkkA
-Date:   Fri, 7 Jun 2019 04:56:48 +0000
-Message-ID: <22344be3-bed0-8788-9fc4-22db3580e0c6@microchip.com>
-References: <1558709145-12088-1-git-send-email-f.suligoi@asem.it>
-In-Reply-To: <1558709145-12088-1-git-send-email-f.suligoi@asem.it>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0102CA0077.eurprd01.prod.exchangelabs.com
- (2603:10a6:803:15::18) To BN6PR11MB1842.namprd11.prod.outlook.com
- (2603:10b6:404:101::18)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [86.120.241.49]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a95ce119-0678-4dbf-bebb-08d6eb048c36
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1905;
-x-ms-traffictypediagnostic: BN6PR11MB1905:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BN6PR11MB19058A6D622A643D9F2E1E2FF0100@BN6PR11MB1905.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 0061C35778
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(366004)(376002)(396003)(136003)(199004)(189003)(66946007)(71190400001)(66556008)(8676002)(6116002)(486006)(316002)(53546011)(446003)(6246003)(102836004)(99286004)(6436002)(52116002)(36756003)(6512007)(2906002)(54906003)(110136005)(3846002)(6306002)(6486002)(476003)(5660300002)(2616005)(11346002)(186003)(4326008)(81166006)(386003)(71200400001)(305945005)(73956011)(6506007)(4744005)(86362001)(66476007)(76176011)(229853002)(7736002)(31696002)(68736007)(53936002)(31686004)(8936002)(81156014)(66066001)(478600001)(256004)(64756008)(25786009)(14444005)(966005)(66446008)(72206003)(14454004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1905;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cqqxXhWshHxl8S5e5cK+PjYvEyZgAXmyWbLpMIIYKNazeaplpInKhI1dzH1TU+mE65tZfqDR6a3yfu4QKc39juRn5CJVa+NQKoljmcQdwC5WKj54d9UFM2B2zo/Owknb0AaefyQ1d4AYCpbQHWqyt12D8urQ3iCBiaFqI51YxFyDm8gbbcbNo8btGumRXpRo7ucPa6M7AaiibkTgaCx7/hHYwLUrO2hrrMH42JTbrlO7V1xzj4I5tmX5sN+Q6Q0ydimZHCXXfNoEqcYPiBiV11MOoyxyvLbkKo3cmSVc0oeYeKiJXDwpp6rw0xLBvHBlXdze+P+dMXApi1CPdKLWO43ndGXYS5Wc7zomsYjffFOS9zc1NTJxQi5hN2vUxELa5r/0woT3LYDEJeJf3umyvPq6Sl7NK6BD/oMkAEFKPRk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BDB2E6DEFF1E084E96E95040583E1F41@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=GNyxhCfsORr2e6M8vPY8+L5gnSVQwdktACAugcErG1s=;
+        b=TNIHxn+tFESTWzJW+ZyuBRPd3t6RRyEnrDKP4AiawT/1wDdQyioePTAqbomtN0wWN2
+         y1c0b+3ePB/bOyDr+kf8D84Vc1txJKud22aFGd2KVgCwyqnLylvrnJWDrXvj33vqGOpN
+         OjLtZ+kqyLxgTCVJxkSpI71SYb/v4U6fH1gaOaHKHbcc70mxuZu/GuXAVp81oMqIknE8
+         2kQSUVCdXR68/ViRhMKfv/UXz7kH2otBS6Bo8LA9tb6J9JCEoXc5+bFUv1vYHdHC0Lt7
+         iVr6dKcezKhC5Aj5b9OFbBiu3Cf7MLLnlZu19VtFVi87q4n7ztQFWsGbPzSbdF/5GGoX
+         HjWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=GNyxhCfsORr2e6M8vPY8+L5gnSVQwdktACAugcErG1s=;
+        b=VoEMuOmC/UWgWk5lTqRyAdZm6hfDJ4Fa+HrCFwzxNke/LOqACAcdBXT6QwIr2GYLAF
+         P/NKsGr/o1BwOI4iJGz2BIC57eD7EW5XJjSJVFIKU+JMbXoh/VxvO54huCLzasOvkxxq
+         ntBMEqa7Ah5DzuKyQvwT+bm0oZaTQXYNrcWVVsaOzBtv+YV/li+bxrbNjIr4JhF8bnxh
+         Pj800tm27N7X+i5R12GX0H4LjBvruu6P3M4MwvLLESNOLaeGBdtJT5FkjsWkYWwgHxdx
+         GWNbX2BP44UCfWl7h5ZqoIML4bcR8Od/YJdfIsg67Ma9XstLNrDRW39xF50j4N5htYjj
+         Mnwg==
+X-Gm-Message-State: APjAAAVx2FwqTA/oa8W6XkxaApnLY+XkGu9JTCGz64NNONVCum/xt6l3
+        YzVCHdX48mlrkmEq6H9OFeRZEQ==
+X-Google-Smtp-Source: APXvYqyUw+DSN9BiUBvaRMwQnFBxQ6SFZJjWJHMVUssQoXJy4hDGI7eMn36g4CBZ3Y53pZ456i1wZA==
+X-Received: by 2002:a17:902:d715:: with SMTP id w21mr54153246ply.234.1559883655599;
+        Thu, 06 Jun 2019 22:00:55 -0700 (PDT)
+Received: from localhost ([14.141.105.52])
+        by smtp.gmail.com with ESMTPSA id 10sm811396pfh.179.2019.06.06.22.00.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 06 Jun 2019 22:00:54 -0700 (PDT)
+Date:   Thu, 6 Jun 2019 22:00:51 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 5/7] RISC-V: Parse cpu topology during boot.
+In-Reply-To: <20190529211340.17087-6-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1906062159380.28147@viisi.sifive.com>
+References: <20190529211340.17087-1-atish.patra@wdc.com> <20190529211340.17087-6-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a95ce119-0678-4dbf-bebb-08d6eb048c36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 04:56:48.8011
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1905
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDA1LzI0LzIwMTkgMDU6NDUgUE0sIEZsYXZpbyBTdWxpZ29pIHdyb3RlOg0KPiBFeHRl
-cm5hbCBFLU1haWwNCj4gDQo+IA0KPiBJbiBjYXNlIG9mIFNQSSBlcnJvciBkdXJpbmcgdGhlIHJl
-YWRpbmcgb2YgdGhlIG5vciBJZCwNCj4gdGhlIHByb2JlIGZhaWxzIHdpdGhvdXQgYW55IGVycm9y
-IG1lc3NhZ2UgcmVsYXRlZCB0bw0KPiB0aGUgSkVERUMgSWQgcmVhZGluZyBwcm9jZWR1cmUuDQo+
-IA0KPiBTaWduZWQtb2ZmLWJ5OiBGbGF2aW8gU3VsaWdvaSA8Zi5zdWxpZ29pQGFzZW0uaXQ+DQo+
-IC0tLQ0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMgfCAyICstDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQoNCkFwcGxpZWQgdG8g
-aHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvbXRkL2xpbnV4
-LmdpdCwNCnNwaS1ub3IvbmV4dCBicmFuY2guDQoNClRoYW5rcywNCnRhDQo=
+On Wed, 29 May 2019, Atish Patra wrote:
+
+> Currently, there are no topology defined for RISC-V.
+> Parse the cpu-map node from device tree and setup the
+> cpu topology.
+> 
+> CPU topology after applying the patch.
+> $cat /sys/devices/system/cpu/cpu2/topology/core_siblings_list
+> 0-3
+> $cat /sys/devices/system/cpu/cpu3/topology/core_siblings_list
+> 0-3
+> $cat /sys/devices/system/cpu/cpu3/topology/physical_package_id
+> 0
+> $cat /sys/devices/system/cpu/cpu3/topology/core_id
+> 3
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+
+Looks reasonable to me.
+
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
+
+We're assuming, on the RISC-V side, that these patches will go in via 
+another tree.
+
+
+- Paul
