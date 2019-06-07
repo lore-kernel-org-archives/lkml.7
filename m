@@ -2,599 +2,200 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D018C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A8CC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF68B208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702DA208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 20:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCsisRk8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rte0Jchy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbfFGUvO (ORCPT
+        id S1730409AbfFGUxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 16:51:14 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35211 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729640AbfFGUvO (ORCPT
+        Fri, 7 Jun 2019 16:53:47 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42698 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729640AbfFGUxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 16:51:14 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d23so3910486qto.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 13:51:13 -0700 (PDT)
+        Fri, 7 Jun 2019 16:53:47 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t28so2860359lje.9;
+        Fri, 07 Jun 2019 13:53:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6DJKoHp6uQ1lBSlRgW4boUVow9AMgqSP92vOO9fvZfM=;
-        b=WCsisRk8Wx7MgKCOhEVUslc5WpXCkOkWONKVZl/D/JCrj43VmEXXx4+pbwHZPw4ptx
-         8NyCh7cS3I/smzpaKfxUcPARXOxj90/V0/izrxjUIVKbUppMGWr95GMOgoENQzzkLjUD
-         nEaW5Dn/VbrPalm2czEa9zRDs1RQMsqRoZrqLVm/nZJzPOP/vJ4vy02YesyowcBhvtP2
-         ChsDU6QNuRFl0+HEnJ9lEWFCJ8CwlXFNDsTpk94vHbCUhB2QRFyF5zLhRzh3q8sH/yia
-         LYFA/XteAJhT9gBU2M8KF8TPUiKbzX1ElmT65tw+4/XG5HA1N5n1hOq2U4u5mjXdrSR3
-         HjLw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4IsnnAN6cEbNwBdTyu43WYRxzd5DcvJoa0HAPXMpHzI=;
+        b=Rte0JchyxvWRlDuOg1Db50viRdL+kmb0+mf+wgXGNXejxlkwDGfIUpu0kEibC6KiQ/
+         FgTK3wSVvCQ2wWuOEwicK0P51XeTxq2j+ytoCRFaeBTevqq0xqKa0M3CWRx1SMeLf0Is
+         g46pA19b89N9e+uHOM4x+Fw7OE/J43ds0S9VRF16nPISYgwyzzo29DwJvxrWRL5SHGEd
+         0eFK7dYkywpuawxManbXIUKgUts1O78i/cViAAt9+7qmItouCYPBdDV5n0IaD97hOljZ
+         rTbcYCc7pGJEVdjS11METMeSlSq2iCc9csZgWhXhuROhfhLy2J3/Kvw6ZMYjbDDj8xlk
+         Uh3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6DJKoHp6uQ1lBSlRgW4boUVow9AMgqSP92vOO9fvZfM=;
-        b=PbvRGztv/SMa66OT8146isWAHEAqAGAYFxt5yIZlu7Nu7lfCD3TPxtzWo3aF+5v4mS
-         DDuiSmXk67xozEgctWNXVF/gaxdGB0o6c5Jd7NEZQK9sE6rrlVCfEJJAyZukUgGCrvjl
-         0b4CbaxAoYKOW16kWAJAkODYfCWR0GnDBZrjCYBSwn/dV3nsm7Pid5BzUHZcR/jMZNK4
-         JcoWkwA1S439+m512/4Vcg+uKGfebdWnvXMnfhkzuEia3LZil84JSmPM8THNkOb05OPB
-         Sxi5LwRpDlhO+ot1jIiP2B4+wxViwlQcb36HzRCl8MK8Su9egS3APYMHbblQbhVagnjs
-         W+Fg==
-X-Gm-Message-State: APjAAAUO8q8Quo+usxClFPP4fU2YCyWitq345cK8LQOt9rEwsg9p0udc
-        9H0+HaegiUJG2gW+ITM0xoh52vNXXEE6Ojw2dEU=
-X-Google-Smtp-Source: APXvYqzBIVckafqUQIPixaJZyBfhexZzSj/PQObNNT+RoDQoQQa2Kdptt5GGkZdQj9zSS37GnUQQb36IiMwBDynB1S4=
-X-Received: by 2002:ad4:536b:: with SMTP id e11mr44694999qvv.163.1559940672330;
- Fri, 07 Jun 2019 13:51:12 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4IsnnAN6cEbNwBdTyu43WYRxzd5DcvJoa0HAPXMpHzI=;
+        b=tAZYW5ye26q1cPs/M+87vXCF+JIDLWcRA2EU/cXuZTjOsudMlPDmVzyQjb9vQFbbz+
+         gp0U1bn5y9KPHZEr76BOL0IkpVVANB1IfGjvIzZX57zMd08UOTZyYb7RrvJxzuww1ckP
+         Uo0UnzNQPYr3lD51nnUT6UMTzFdoj98zVK54n1v6/wGFS5oTHjhfJvvStI1JsluOgBSS
+         sDMg33s2xhNWXro/N9P6xPOipWtKYoFG4Rs7DQUx3EQDb12VBydunImwDC5OaeYGAW+Y
+         NaNZlnIPnyWNuaUMfEkAv/vltJ7OdtzVXjvoCoMp+2m9Lttiot8VdMYiYikaU0N2oTYD
+         BQTQ==
+X-Gm-Message-State: APjAAAWwMH7IrsRNwsCP1MKMuxJtOqYeOQHN8uZ7upo+UYqd/3dz6LVW
+        OXVt52Gxa8M1qSFF+x9U+0h04DkU
+X-Google-Smtp-Source: APXvYqwXN3wwyfhMzL9IHpPezoCpCCowQVd97OmX8RufhXxmw0ly5ersteMTeFB9syX6eET7D7ZXKA==
+X-Received: by 2002:a2e:2f12:: with SMTP id v18mr28240698ljv.196.1559940824833;
+        Fri, 07 Jun 2019 13:53:44 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-170-54.pppoe.mtu-net.ru. [91.76.170.54])
+        by smtp.googlemail.com with ESMTPSA id e26sm544534ljl.33.2019.06.07.13.53.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 13:53:43 -0700 (PDT)
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+Cc:     dan.j.williams@intel.com, tiwai@suse.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
+        mkumard@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+ <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+ <d0db90e3-3d05-dfba-8768-28511d9ee3ac@ti.com>
+ <5208a50a-9ca0-8f24-9ad0-d7503ec53f1c@nvidia.com>
+ <ba845a19-5dfb-a891-719f-43821b2dd412@nvidia.com>
+ <e67a2d7c-5bd1-93ad-fe75-afcab38bc17c@ti.com>
+ <a65f2b07-4a3a-7f83-e21f-8b374844a4b9@nvidia.com>
+ <56aa6f45-cfd8-7f1e-9392-628ceb58093f@ti.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <68e72598-8d53-115c-14a2-9d3042165aff@gmail.com>
+Date:   Fri, 7 Jun 2019 23:53:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190607102710.23800-1-enric.balletbo@collabora.com>
- <decdbdf5285d76b4dab5b8f337023631a96ffc15.camel@collabora.com>
- <CAHX4x84G-f=HabyWCqAGOEBZdBgobW0BTB0iUbZcXYxBh3XcaQ@mail.gmail.com> <CABXOdTdGYmGnrmzRbUPX3cwXg=m=aX3cXXEk=OEphA5_GKKvJQ@mail.gmail.com>
-In-Reply-To: <CABXOdTdGYmGnrmzRbUPX3cwXg=m=aX3cXXEk=OEphA5_GKKvJQ@mail.gmail.com>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Fri, 7 Jun 2019 22:51:01 +0200
-Message-ID: <CAFqH_52RMQLr_JW7Txm_WgLcZJkreQozx20j5TmESUMcGTUgtA@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/chrome: cros_ec_lpc: Choose Microchip EC at runtime
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Duncan Laurie <dlaurie@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <56aa6f45-cfd8-7f1e-9392-628ceb58093f@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+07.06.2019 16:35, Peter Ujfalusi пишет:
+> 
+> 
+> On 07/06/2019 15.58, Jon Hunter wrote:
+>>> Imho if you can explain it without using 'HACK' in the sentences it
+>>> might be OK, but it does not feel right.
+>>
+>> I don't perceive this as a hack. Although from looking at the
+>> description of the src/dst_maxburst these are burst size with regard to
+>> the device, so maybe it is a stretch.
+>>
+>>> However since your ADMA and ADMIF is highly coupled and it does needs
+>>> special maxburst information (burst and allocated FIFO depth) I would
+>>> rather use src_maxburst/dst_maxburst alone for DEV_TO_MEM/MEM_TO_DEV:
+>>>
+>>> ADMA_BURST_SIZE(maxburst)	((maxburst) & 0xff)
+>>> ADMA_FIFO_SIZE(maxburst)	(((maxburst) >> 8) & 0xffffff)
+>>>
+>>> So lower 1 byte is the burst value you want from ADMA
+>>> the other 3 bytes are the allocated FIFO size for the given ADMAIF channel.
+>>>
+>>> Sure, you need a header for this to make sure there is no
+>>> misunderstanding between the two sides.
+>>
+>> I don't like this because as I mentioned to Dmitry, the ADMA can perform
+>> memory-to-memory transfers where such encoding would not be applicable.
+> 
+> mem2mem does not really use dma_slave_config, it is for used by
+> is_slave_direction() == true type of transfers.
+> 
+> But true, if you use ADMA against anything other than ADMAIF then this
+> might be not right for non cyclic transfers.
+> 
+>> That does not align with the description in the
+>> include/linux/dmaengine.h either.
+> 
+> True.
+> 
+>>> Or pass the allocated FIFO size via maxburst and then the ADMA driver
+>>> will pick a 'good/safe' burst value for it.
+>>>
+>>> Or new member, but do you need two of them for src/dst? Probably
+>>> fifo_depth is better word for it, or allocated_fifo_depth.
+>>
+>> Right, so looking at the struct dma_slave_config we have ...
+>>
+>> u32 src_maxburst;
+>> u32 dst_maxburst;
+>> u32 src_port_window_size;
+>> u32 dst_port_window_size;
+>>
+>> Now if we could make these window sizes a union like the following this
+>> could work ...
+>>
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index 8fcdee1c0cf9..851251263527 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -360,8 +360,14 @@ struct dma_slave_config {
+>>         enum dma_slave_buswidth dst_addr_width;
+>>         u32 src_maxburst;
+>>         u32 dst_maxburst;
+>> -       u32 src_port_window_size;
+>> -       u32 dst_port_window_size;
+>> +       union {
+>> +               u32 port_window_size;
+>> +               u32 port_fifo_size;
+>> +       } src;
+>> +       union {
+>> +               u32 port_window_size;
+>> +               u32 port_fifo_size;
+>> +       } dst;
+> 
+> What if in the future someone will have a setup where they would need both?
+> 
+> So not sure. Your problems are coming from a split DMA setup where the
+> two are highly coupled, but sits in a different place and need to be
+> configured as one device.
+> 
+> I think xilinx_dma is facing with similar issues and they have a custom
+> API to set parameters which does not fit or is peripheral specific:
+> include/linux/dma/xilinx_dma.h
+> 
+> Not sure if that is an acceptable solution.
 
-Missatge de Guenter Roeck <groeck@google.com> del dia dv., 7 de juny
-2019 a les 22:11:
->
-> On Fri, Jun 7, 2019 at 12:27 PM Nick Crews <ncrews@chromium.org> wrote:
-> >
-> > Hi!
-> >
-> > On Fri, Jun 7, 2019 at 12:03 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > >
-> > > On Fri, 2019-06-07 at 12:27 +0200, Enric Balletbo i Serra wrote:
-> > > > On many boards, communication between the kernel and the Embedded
-> > > > Controller happens over an LPC bus. In these cases, the kernel config
-> > > > CONFIG_CROS_EC_LPC is enabled. Some of these LPC boards contain a
-> > > > Microchip Embedded Controller (MEC) that is different from the regular
-> > > > EC. On these devices, the same LPC bus is used, but the protocol is
-> > > > a little different. In these cases, the CONFIG_CROS_EC_LPC_MEC kernel
-> > > > config is enabled. Currently, the kernel decides at compile-time whether
-> > > > or not to use the MEC variant, and, when that kernel option is selected
-> > > > it breaks the other boards. We would like a kind of runtime detection to
-> > > > avoid this.
-> > > >
-> > > > This patch adds that detection mechanism by probing the protocol at
-> > > > runtime, first we assume that a MEC variant is connected, and if the
-> > > > protocol fails it fallbacks to the regular EC. This adds a bit of
-> > > > overload because we try to read twice on those LPC boards that doesn't
-> > > > contain a MEC variant, but is a better solution than having to select the
-> > > > EC variant at compile-time.
-> > > >
-> > > > While here also fix the alignment in Kconfig file for this config option
-> > > > replacing the spaces by tabs.
-> > > >
-> > > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > > > ---
-> > > > Hi,
-> > > >
-> > > > This is the second attempt to solve the issue to be able to select at
-> > > > runtime the CrOS MEC variant. My first thought was check for a device
-> > > > ID,
-> > > > the MEC1322 has a register that contains the device ID, however I am not
-> > > > sure if we can read that register from the host without modifying the
-> > > > firmware. Also, I am not sure if the MEC1322 is the only device used
-> > > > that supports that LPC protocol variant, so I ended with a more easy
-> > > > solution, check if the protocol fails or not. Some background on this
-> > > > issue can be found [1] and [2]
-> > > >
-> > > > The patch has been tested on:
-> > > >  - Acer Chromebook R11 (Cyan - MEC variant)
-> > > >  - Pixel Chromebook 2015 (Samus - non-MEC variant)
-> > > >  - Dell Chromebook 11 (Wolf - non-MEC variant)
-> > > >  - Toshiba Chromebook (Leon - non-MEC variant)
-> > > >
-> > > > Nick, could you test the patch for Wilco?
-> > > >
-> > > > Best regards,
-> > > >  Enric
-> > > >
-> > > > [1] https://bugs.chromium.org/p/chromium/issues/detail?id=932626
-> > > > [2] https://chromium-review.googlesource.com/c/chromiumos/overlays/chromiumos-overlay/+/1474254
-> > > >
-> > > > Changes in v2:
-> > > > - Remove global bool to indicate the kind of variant as suggested by Ezequiel.
-> > > > - Create an internal operations struct to allow different variants.
-> > > >
-> > > >  drivers/platform/chrome/Kconfig           | 29 +++------
-> > > >  drivers/platform/chrome/Makefile          |  3 +-
-> > > >  drivers/platform/chrome/cros_ec_lpc.c     | 76 ++++++++++++++++-------
-> > > >  drivers/platform/chrome/cros_ec_lpc_reg.c | 39 +++---------
-> > > >  drivers/platform/chrome/cros_ec_lpc_reg.h | 26 ++++++++
-> > > >  drivers/platform/chrome/wilco_ec/Kconfig  |  2 +-
-> > > >  6 files changed, 98 insertions(+), 77 deletions(-)
-> > > >
-> > > > diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> > > > index 2826f7136f65..453e69733842 100644
-> > > > --- a/drivers/platform/chrome/Kconfig
-> > > > +++ b/drivers/platform/chrome/Kconfig
-> > > > @@ -83,28 +83,17 @@ config CROS_EC_SPI
-> > > >         'pre-amble' bytes before the response actually starts.
-> > > >
-> > > >  config CROS_EC_LPC
-> > > > -        tristate "ChromeOS Embedded Controller (LPC)"
-> > > > -        depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
-> > > > -        help
-> > > > -          If you say Y here, you get support for talking to the ChromeOS EC
-> > > > -          over an LPC bus. This uses a simple byte-level protocol with a
-> > > > -          checksum. This is used for userspace access only. The kernel
-> > > > -          typically has its own communication methods.
-> > > > -
-> > > > -          To compile this driver as a module, choose M here: the
-> > > > -          module will be called cros_ec_lpc.
-> > > > -
-> > > > -config CROS_EC_LPC_MEC
-> > > > -     bool "ChromeOS Embedded Controller LPC Microchip EC (MEC) variant"
-> > > > -     depends on CROS_EC_LPC
-> > > > -     default n
-> > > > +     tristate "ChromeOS Embedded Controller (LPC)"
-> > > > +     depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
-> > > >       help
-> > > > -       If you say Y here, a variant LPC protocol for the Microchip EC
-> > > > -       will be used. Note that this variant is not backward compatible
-> > > > -       with non-Microchip ECs.
-> > > > +       If you say Y here, you get support for talking to the ChromeOS EC
-> > > > +       over an LPC bus, including the LPC Microchip EC (MEC) variant.
-> > > > +       This uses a simple byte-level protocol with a checksum. This is
-> > > > +       used for userspace access only. The kernel typically has its own
-> > > > +       communication methods.
-> > > >
-> > > > -       If you have a ChromeOS Embedded Controller Microchip EC variant
-> > > > -       choose Y here.
-> > > > +       To compile this driver as a module, choose M here: the
-> > > > +       module will be called cros_ec_lpcs.
-> > > >
-> > > >  config CROS_EC_PROTO
-> > > >          bool
-> > > > diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> > > > index 1b2f1dcfcd5c..d6416411888f 100644
-> > > > --- a/drivers/platform/chrome/Makefile
-> > > > +++ b/drivers/platform/chrome/Makefile
-> > > > @@ -9,8 +9,7 @@ obj-$(CONFIG_CHROMEOS_TBMC)           += chromeos_tbmc.o
-> > > >  obj-$(CONFIG_CROS_EC_I2C)            += cros_ec_i2c.o
-> > > >  obj-$(CONFIG_CROS_EC_RPMSG)          += cros_ec_rpmsg.o
-> > > >  obj-$(CONFIG_CROS_EC_SPI)            += cros_ec_spi.o
-> > > > -cros_ec_lpcs-objs                    := cros_ec_lpc.o cros_ec_lpc_reg.o
-> > > > -cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)       += cros_ec_lpc_mec.o
-> > > > +cros_ec_lpcs-objs                    := cros_ec_lpc.o cros_ec_lpc_reg.o cros_ec_lpc_mec.o
-> > > >  obj-$(CONFIG_CROS_EC_LPC)            += cros_ec_lpcs.o
-> > > >  obj-$(CONFIG_CROS_EC_PROTO)          += cros_ec_proto.o cros_ec_trace.o
-> > > >  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT) += cros_kbd_led_backlight.o
-> > > > diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-> > > > index c9c240fbe7c6..91cb4dd34764 100644
-> > > > --- a/drivers/platform/chrome/cros_ec_lpc.c
-> > > > +++ b/drivers/platform/chrome/cros_ec_lpc.c
-> > > > @@ -28,6 +28,22 @@
-> > > >  #define DRV_NAME "cros_ec_lpcs"
-> > > >  #define ACPI_DRV_NAME "GOOG0004"
-> > > >
-> > > > +/**
-> > > > + * struct lpc_ops - LPC driver methods
-> > > > + *
-> > > > + * @read: Read bytes from a given LPC-mapped address.
-> > > > + * @write: Write bytes to a given LPC-mapped address.
-> > > > + */
-> > > > +struct lpc_ops {
-> > > > +     u8      (*read)(unsigned int offset, unsigned int length, u8 *dest);
-> > > > +     u8      (*write)(unsigned int offset, unsigned int length, u8 *msg);
-> > > > +};
-> > > > +
-> > > > +static struct lpc_ops cros_ec_lpc_ops = {
-> > > > +     .read   = cros_ec_lpc_mec_read_bytes,
-> > > > +     .write  = cros_ec_lpc_mec_write_bytes,
-> > > > +};
-> > > > +
-> > >
-> > > While this is better than a global boolean, it's still not
-> > > per-device.
-> > >
+If there are no other drivers with the exactly same requirement, then
+the custom API is an a good variant given that there is a precedent
+already. It is always possible to convert to a common thing later on
+since that's all internal to kernel.
 
-Indeed
-
-> > > I guess it's not an issue given you typically (always?)
-> > > have one cros-ec device per platform.
-> > >
-
-I don't think is expected, at least now, we don't have a real use case with it.
-
-> > > However, I'm still wondering if it's not better to make it
-> > > per-device (as the bus is per-device?).
-> >
-> > Enric and I were discussing this. Up to this point, there has only been
-> > one EC device per platform, and I think this is a reasonable
-> > expectation to maintain. I'm adding Stefan Reinauer, the Chrome OS
-> > EC lead, for their thoughts. Stefan, we are discussing whether or not we
-> > need to support multiple communication protocols at the same time,
-> > for instance if a device had multiple ECs, each with a different protocol.
-> >
-
-My two cents to the discussion and the reason why I did not implement
-the per-device functionality:
-- Before this patch, we didn't have support per-device.
-- Make it per-device is not the purpose of this patch, the purpose is
-detect at run-time the protocol used.
-- Add support per-device needs more changes than the expected, which
-IMO are out of the scope of this patch.
-- We don't have a real use case and unlikely we will have in the
-future, so why worry now.
-
-> > If we really wanted to support multiple ECs, there would be some other
-> > work to do besides this one fix, since the memory addresses that
-> > we write to are hardcoded into the drivers. In order to support
-> > multiple devices,
-> > not only would we need to make the xfer algorithms per-device, but would
-> > also need to make the memory addresses per-device. I would love
-> > some feedback on this, but my initial thought would be to add a
-> > "void *xfer_protocol_data" field to struct cros_ec_device, alongside
-> > the two existing
-> > int (*cmd_xfer)(struct cros_ec_device *ec, struct cros_ec_command *msg);
-> > int (*pkt_xfer)(struct cros_ec_device *ec, struct cros_ec_command *msg);
-> > fields. Then, each different protocol (lpc, i2c, spi, rpmsg, ishtp;
-> > some of these
-> > are only in the Chromium tree as of now) would be able to use this
-> > field as needed,
-> > for example to store the I2C address or the is_MEC flag for each device.
-> >
->
-> I understand that the current implementation may be insufficient if
-> there is ever more than one EC in a given system. Maybe I am missing
-> something, but why even consider it right now, with no such system in
-> existence ? We would not even know if a more flexible implementation
-> actually works, since there would be no means to test it.
-
-Agree.
-
-Thanks,
- Enric
-
->
-> Thanks,
-> Guenter
->
-> > Thanks,
-> > Nick
-> >
-> > >
-> > > >  /* True if ACPI device is present */
-> > > >  static bool cros_ec_lpc_acpi_device_found;
-> > > >
-> > > > @@ -38,7 +54,7 @@ static int ec_response_timed_out(void)
-> > > >
-> > > >       usleep_range(200, 300);
-> > > >       do {
-> > > > -             if (!(cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_CMD, 1, &data) &
-> > > > +             if (!(cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_CMD, 1, &data) &
-> > > >                   EC_LPC_STATUS_BUSY_MASK))
-> > > >                       return 0;
-> > > >               usleep_range(100, 200);
-> > > > @@ -58,11 +74,11 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
-> > > >       ret = cros_ec_prepare_tx(ec, msg);
-> > > >
-> > > >       /* Write buffer */
-> > > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_PACKET, ret, ec->dout);
-> > > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_PACKET, ret, ec->dout);
-> > > >
-> > > >       /* Here we go */
-> > > >       sum = EC_COMMAND_PROTOCOL_3;
-> > > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_CMD, 1, &sum);
-> > > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_CMD, 1, &sum);
-> > > >
-> > > >       if (ec_response_timed_out()) {
-> > > >               dev_warn(ec->dev, "EC responsed timed out\n");
-> > > > @@ -71,15 +87,15 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
-> > > >       }
-> > > >
-> > > >       /* Check result */
-> > > > -     msg->result = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_DATA, 1, &sum);
-> > > > +     msg->result = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_DATA, 1, &sum);
-> > > >       ret = cros_ec_check_result(ec, msg);
-> > > >       if (ret)
-> > > >               goto done;
-> > > >
-> > > >       /* Read back response */
-> > > >       dout = (u8 *)&response;
-> > > > -     sum = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PACKET, sizeof(response),
-> > > > -                                  dout);
-> > > > +     sum = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PACKET, sizeof(response),
-> > > > +                                dout);
-> > > >
-> > > >       msg->result = response.result;
-> > > >
-> > > > @@ -92,9 +108,9 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
-> > > >       }
-> > > >
-> > > >       /* Read response and process checksum */
-> > > > -     sum += cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PACKET +
-> > > > -                                   sizeof(response), response.data_len,
-> > > > -                                   msg->data);
-> > > > +     sum += cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PACKET +
-> > > > +                                 sizeof(response), response.data_len,
-> > > > +                                 msg->data);
-> > > >
-> > > >       if (sum) {
-> > > >               dev_err(ec->dev,
-> > > > @@ -134,17 +150,17 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
-> > > >       sum = msg->command + args.flags + args.command_version + args.data_size;
-> > > >
-> > > >       /* Copy data and update checksum */
-> > > > -     sum += cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_PARAM, msg->outsize,
-> > > > -                                    msg->data);
-> > > > +     sum += cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_PARAM, msg->outsize,
-> > > > +                                  msg->data);
-> > > >
-> > > >       /* Finalize checksum and write args */
-> > > >       args.checksum = sum;
-> > > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
-> > > > -                             (u8 *)&args);
-> > > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
-> > > > +                           (u8 *)&args);
-> > > >
-> > > >       /* Here we go */
-> > > >       sum = msg->command;
-> > > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_CMD, 1, &sum);
-> > > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_CMD, 1, &sum);
-> > > >
-> > > >       if (ec_response_timed_out()) {
-> > > >               dev_warn(ec->dev, "EC responsed timed out\n");
-> > > > @@ -153,14 +169,13 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
-> > > >       }
-> > > >
-> > > >       /* Check result */
-> > > > -     msg->result = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_DATA, 1, &sum);
-> > > > +     msg->result = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_DATA, 1, &sum);
-> > > >       ret = cros_ec_check_result(ec, msg);
-> > > >       if (ret)
-> > > >               goto done;
-> > > >
-> > > >       /* Read back args */
-> > > > -     cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
-> > > > -                            (u8 *)&args);
-> > > > +     cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_ARGS, sizeof(args), (u8 *)&args);
-> > > >
-> > > >       if (args.data_size > msg->insize) {
-> > > >               dev_err(ec->dev,
-> > > > @@ -174,8 +189,8 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
-> > > >       sum = msg->command + args.flags + args.command_version + args.data_size;
-> > > >
-> > > >       /* Read response and update checksum */
-> > > > -     sum += cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PARAM, args.data_size,
-> > > > -                                   msg->data);
-> > > > +     sum += cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PARAM, args.data_size,
-> > > > +                                 msg->data);
-> > > >
-> > > >       /* Verify checksum */
-> > > >       if (args.checksum != sum) {
-> > > > @@ -205,13 +220,13 @@ static int cros_ec_lpc_readmem(struct cros_ec_device *ec, unsigned int offset,
-> > > >
-> > > >       /* fixed length */
-> > > >       if (bytes) {
-> > > > -             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + offset, bytes, s);
-> > > > +             cros_ec_lpc_ops.read(EC_LPC_ADDR_MEMMAP + offset, bytes, s);
-> > > >               return bytes;
-> > > >       }
-> > > >
-> > > >       /* string */
-> > > >       for (; i < EC_MEMMAP_SIZE; i++, s++) {
-> > > > -             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + i, 1, s);
-> > > > +             cros_ec_lpc_ops.read(EC_LPC_ADDR_MEMMAP + i, 1, s);
-> > > >               cnt++;
-> > > >               if (!*s)
-> > > >                       break;
-> > > > @@ -248,10 +263,23 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
-> > > >               return -EBUSY;
-> > > >       }
-> > > >
-> > > > -     cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2, buf);
-> > > > +     /*
-> > > > +      * Read the mapped ID twice, the first one is assuming the
-> > > > +      * EC is a Microchip Embedded Controller (MEC) variant, if the
-> > > > +      * protocol fails, fallback to the non MEC variant and try to
-> > > > +      * read again the ID.
-> > > > +      */
-> > > > +     cros_ec_lpc_mec_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2, buf);
-> > > >       if (buf[0] != 'E' || buf[1] != 'C') {
-> > > > -             dev_err(dev, "EC ID not detected\n");
-> > > > -             return -ENODEV;
-> > > > +             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2,
-> > > > +                                    buf);
-> > > > +             if (buf[0] != 'E' || buf[1] != 'C') {
-> > > > +                     dev_err(dev, "EC ID not detected\n");
-> > > > +                     return -ENODEV;
-> > > > +             }
-> > > > +             /* Re-assign read/write operations for the non MEC variant */
-> > > > +             cros_ec_lpc_ops.read = cros_ec_lpc_read_bytes;
-> > > > +             cros_ec_lpc_ops.write = cros_ec_lpc_write_bytes;
-> > > >       }
-> > > >
-> > > >       if (!devm_request_region(dev, EC_HOST_CMD_REGION0,
-> > > > diff --git a/drivers/platform/chrome/cros_ec_lpc_reg.c b/drivers/platform/chrome/cros_ec_lpc_reg.c
-> > > > index 0f5cd0ac8b49..389d3329616f 100644
-> > > > --- a/drivers/platform/chrome/cros_ec_lpc_reg.c
-> > > > +++ b/drivers/platform/chrome/cros_ec_lpc_reg.c
-> > > > @@ -9,7 +9,7 @@
-> > > >
-> > > >  #include "cros_ec_lpc_mec.h"
-> > > >
-> > > > -static u8 lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > > +u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > >  {
-> > > >       int i;
-> > > >       int sum = 0;
-> > > > @@ -23,7 +23,7 @@ static u8 lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > >       return sum;
-> > > >  }
-> > > >
-> > > > -static u8 lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > > +u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > >  {
-> > > >       int i;
-> > > >       int sum = 0;
-> > > > @@ -37,9 +37,8 @@ static u8 lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > >       return sum;
-> > > >  }
-> > > >
-> > > > -#ifdef CONFIG_CROS_EC_LPC_MEC
-> > > > -
-> > > > -u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > > +u8 cros_ec_lpc_mec_read_bytes(unsigned int offset, unsigned int length,
-> > > > +                           u8 *dest)
-> > > >  {
-> > > >       int in_range = cros_ec_lpc_mec_in_range(offset, length);
-> > > >
-> > > > @@ -50,10 +49,12 @@ u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > >               cros_ec_lpc_io_bytes_mec(MEC_IO_READ,
-> > > >                                        offset - EC_HOST_CMD_REGION0,
-> > > >                                        length, dest) :
-> > > > -             lpc_read_bytes(offset, length, dest);
-> > > > +             cros_ec_lpc_read_bytes(offset, length, dest);
-> > > > +
-> > > >  }
-> > > >
-> > > > -u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > > +u8 cros_ec_lpc_mec_write_bytes(unsigned int offset, unsigned int length,
-> > > > +                            u8 *msg)
-> > > >  {
-> > > >       int in_range = cros_ec_lpc_mec_in_range(offset, length);
-> > > >
-> > > > @@ -64,7 +65,7 @@ u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > >               cros_ec_lpc_io_bytes_mec(MEC_IO_WRITE,
-> > > >                                        offset - EC_HOST_CMD_REGION0,
-> > > >                                        length, msg) :
-> > > > -             lpc_write_bytes(offset, length, msg);
-> > > > +             cros_ec_lpc_write_bytes(offset, length, msg);
-> > > >  }
-> > > >
-> > > >  void cros_ec_lpc_reg_init(void)
-> > > > @@ -77,25 +78,3 @@ void cros_ec_lpc_reg_destroy(void)
-> > > >  {
-> > > >       cros_ec_lpc_mec_destroy();
-> > > >  }
-> > > > -
-> > > > -#else /* CONFIG_CROS_EC_LPC_MEC */
-> > > > -
-> > > > -u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
-> > > > -{
-> > > > -     return lpc_read_bytes(offset, length, dest);
-> > > > -}
-> > > > -
-> > > > -u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
-> > > > -{
-> > > > -     return lpc_write_bytes(offset, length, msg);
-> > > > -}
-> > > > -
-> > > > -void cros_ec_lpc_reg_init(void)
-> > > > -{
-> > > > -}
-> > > > -
-> > > > -void cros_ec_lpc_reg_destroy(void)
-> > > > -{
-> > > > -}
-> > > > -
-> > > > -#endif /* CONFIG_CROS_EC_LPC_MEC */
-> > > > diff --git a/drivers/platform/chrome/cros_ec_lpc_reg.h b/drivers/platform/chrome/cros_ec_lpc_reg.h
-> > > > index 416fd2572182..e8d53fb8a2bc 100644
-> > > > --- a/drivers/platform/chrome/cros_ec_lpc_reg.h
-> > > > +++ b/drivers/platform/chrome/cros_ec_lpc_reg.h
-> > > > @@ -28,6 +28,32 @@ u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest);
-> > > >   */
-> > > >  u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg);
-> > > >
-> > > > +/**
-> > > > + * cros_ec_lpc_mec_read_bytes() - Read bytes from a given LPC-mapped address.
-> > > > + * @offset: Base read address
-> > > > + * @length: Number of bytes to read
-> > > > + * @dest: Destination buffer
-> > > > + *
-> > > > + * This function is for the MEC (Microchip Embedded Controller) variant.
-> > > > + *
-> > > > + * Return: 8-bit checksum of all bytes read.
-> > > > + */
-> > > > +u8 cros_ec_lpc_mec_read_bytes(unsigned int offset, unsigned int length,
-> > > > +                           u8 *dest);
-> > > > +
-> > > > +/**
-> > > > + * cros_ec_lpc_mec_write_bytes - Write bytes to a given LPC-mapped address.
-> > > > + * @offset: Base write address
-> > > > + * @length: Number of bytes to write
-> > > > + * @msg: Write data buffer
-> > > > + *
-> > > > + * This function is for the MEC (Microchip Embedded Controller) variant.
-> > > > + *
-> > > > + * Return: 8-bit checksum of all bytes written.
-> > > > + */
-> > > > +u8 cros_ec_lpc_mec_write_bytes(unsigned int offset, unsigned int length,
-> > > > +                            u8 *msg);
-> > > > +
-> > > >  /**
-> > > >   * cros_ec_lpc_reg_init
-> > > >   *
-> > > > diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-> > > > index fd29cbfd3d5d..c63ff2508409 100644
-> > > > --- a/drivers/platform/chrome/wilco_ec/Kconfig
-> > > > +++ b/drivers/platform/chrome/wilco_ec/Kconfig
-> > > > @@ -1,7 +1,7 @@
-> > > >  # SPDX-License-Identifier: GPL-2.0-only
-> > > >  config WILCO_EC
-> > > >       tristate "ChromeOS Wilco Embedded Controller"
-> > > > -     depends on ACPI && X86 && CROS_EC_LPC && CROS_EC_LPC_MEC
-> > > > +     depends on ACPI && X86 && CROS_EC_LPC
-> > > >       help
-> > > >         If you say Y here, you get support for talking to the ChromeOS
-> > > >         Wilco EC over an eSPI bus. This uses a simple byte-level protocol
-> > > > --
-> > > > 2.20.1
-> > > >
-> > > >
-> > >
-> > >
+Jon / Sameer, you should check all the other drivers thoroughly to find
+anyone who is doing the same thing as you need in order to achieve
+something that is really common. I'm also wondering if it will be
+possible to make dma_slave_config more flexible in order to start
+accepting vendor specific properties in a somewhat common fashion, maybe
+Vinod and Dan already have some thoughts on it? Apparently there is
+already a need for the customization and people are just starting to
+invent their own thing, but maybe that's fine too. That's really up to
+subsys maintainer to decide in what direction to steer.
