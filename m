@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB75BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EE4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8213D21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C95E20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922560;
-	bh=2nSs+r0mkSEPa95yznIxQ/o92NaL/HmVqSOrpeVP8Es=;
+	s=default; t=1559922566;
+	bh=W6EXKwO2WLwrLah4By7DIUZSSEhhHmOZCXmMzKqlDxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oajLa/HEYUkCr25se7GNRnoMIF9FNGgLzLSDgCFC86TPzSs5fgWxYS54HpzT+wSPy
-	 gxfU3jOpJlWwP4xGyMCmPzomV6s32UT75m1FojwbMepT3AT8ICrR8CKnTKrev0GRCT
-	 D3QD2RXjgmydEMp1xUJ3CQ5stUqFnFk/+UCfnrEQ=
+	b=RdwP6ElXNphPsuMlE4220Yl8pcT39hBPCAV/7AW3vpvDE2yXghYV6Ha4jnzftSes8
+	 2SQUjexLRBORt/sXoqcDqTiZ6RCQqqEFORjifxvjIRSE+K8SpBZ1peZPwvIsHqkskM
+	 I2fRppE+j7zMBWdtEaUYfAE3gSNsqtb2wVmY3h0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731928AbfFGPtT (ORCPT
+        id S1731953AbfFGPtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:49:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35098 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbfFGPtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:49:17 -0400
+        id S1731937AbfFGPtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:49:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44F9221473;
-        Fri,  7 Jun 2019 15:49:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6557214C6;
+        Fri,  7 Jun 2019 15:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922556;
-        bh=2nSs+r0mkSEPa95yznIxQ/o92NaL/HmVqSOrpeVP8Es=;
+        s=default; t=1559922562;
+        bh=W6EXKwO2WLwrLah4By7DIUZSSEhhHmOZCXmMzKqlDxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eM1UZgx36oE5sz1FdkqpYRks8kDd9UjwqTeqPRozT/JntqtNKc4ZmveDVqo9+CKZK
-         /qlVTElOjEGoRfnzZcByzmZqzcoaTSRUGHBhG/Ay4hZUy52JY21q1Xi7LDjMPteNhn
-         VWsElZSQGlTTpyVwdbz30xWozljdV7ddybcq1QWM=
+        b=ftwywd6o58e5lUzPgj9PtmnbSAEuCuYQXEcdkGhZksoSv2HKGdeDZYt3aYRmT7Xco
+         UHDq8NJixtv7S+YvzunvyXXH1XNrUAR2xoGEhNT4gbdoaCZQ3+H0c7AtDGh/q79UVR
+         wkkSFXIh7WmnuhMM57uDhmWiUQiyUdNEG4KhVjmk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 5.1 54/85] arm64: Fix the arm64_personality() syscall wrapper redirection
-Date:   Fri,  7 Jun 2019 17:39:39 +0200
-Message-Id: <20190607153855.515650835@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 5.1 56/85] doc: Cope with the deprecation of AutoReporter
+Date:   Fri,  7 Jun 2019 17:39:41 +0200
+Message-Id: <20190607153855.717899507@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -60,36 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: Jonathan Corbet <corbet@lwn.net>
 
-commit 00377277166bac6939d8f72b429301369acaf2d8 upstream.
+commit 2404dad1f67f8917e30fc22a85e0dbcc85b99955 upstream.
 
-Following commit 4378a7d4be30 ("arm64: implement syscall wrappers"), the
-syscall function names gained the '__arm64_' prefix. Ensure that we
-have the correct #define for redirecting a default syscall through a
-wrapper.
+AutoReporter is going away; recent versions of sphinx emit a warning like:
 
-Fixes: 4378a7d4be30 ("arm64: implement syscall wrappers")
-Cc: <stable@vger.kernel.org> # 4.19.x-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+  Documentation/sphinx/kerneldoc.py:125:
+      RemovedInSphinx20Warning: AutodocReporter is now deprecated.
+      Use sphinx.util.docutils.switch_source_input() instead.
+
+Make the switch.  But switch_source_input() only showed up in 1.7, so we
+have to do ugly version checks to keep things working in older versions.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/sys.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/sphinx/kerneldoc.py |   34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
 
---- a/arch/arm64/kernel/sys.c
-+++ b/arch/arm64/kernel/sys.c
-@@ -50,7 +50,7 @@ SYSCALL_DEFINE1(arm64_personality, unsig
- /*
-  * Wrappers to pass the pt_regs argument.
-  */
--#define sys_personality		sys_arm64_personality
-+#define __arm64_sys_personality		__arm64_sys_arm64_personality
+--- a/Documentation/sphinx/kerneldoc.py
++++ b/Documentation/sphinx/kerneldoc.py
+@@ -37,7 +37,17 @@ import glob
+ from docutils import nodes, statemachine
+ from docutils.statemachine import ViewList
+ from docutils.parsers.rst import directives, Directive
+-from sphinx.ext.autodoc import AutodocReporter
++
++#
++# AutodocReporter is only good up to Sphinx 1.7
++#
++import sphinx
++
++Use_SSI = sphinx.__version__[:3] >= '1.7'
++if Use_SSI:
++    from sphinx.util.docutils import switch_source_input
++else:
++    from sphinx.ext.autodoc import AutodocReporter
  
- asmlinkage long sys_ni_syscall(const struct pt_regs *);
- #define __arm64_sys_ni_syscall	sys_ni_syscall
+ __version__  = '1.0'
+ 
+@@ -121,13 +131,7 @@ class KernelDocDirective(Directive):
+                     lineoffset += 1
+ 
+             node = nodes.section()
+-            buf = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
+-            self.state.memo.reporter = AutodocReporter(result, self.state.memo.reporter)
+-            self.state.memo.title_styles, self.state.memo.section_level = [], 0
+-            try:
+-                self.state.nested_parse(result, 0, node, match_titles=1)
+-            finally:
+-                self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = buf
++            self.do_parse(result, node)
+ 
+             return node.children
+ 
+@@ -136,6 +140,20 @@ class KernelDocDirective(Directive):
+                          (" ".join(cmd), str(e)))
+             return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
+ 
++    def do_parse(self, result, node):
++        if Use_SSI:
++            with switch_source_input(self.state, result):
++                self.state.nested_parse(result, 0, node, match_titles=1)
++        else:
++            save = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
++            self.state.memo.reporter = AutodocReporter(result, self.state.memo.reporter)
++            self.state.memo.title_styles, self.state.memo.section_level = [], 0
++            try:
++                self.state.nested_parse(result, 0, node, match_titles=1)
++            finally:
++                self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = save
++
++
+ def setup(app):
+     app.add_config_value('kerneldoc_bin', None, 'env')
+     app.add_config_value('kerneldoc_srctree', None, 'env')
 
 
