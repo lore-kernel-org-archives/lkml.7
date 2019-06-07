@@ -2,152 +2,154 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEABC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F74EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49F320657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="heZk/oQ9"
+	by mail.kernel.org (Postfix) with ESMTP id E9A25208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559923024;
+	bh=8zij8wJ8dgz1Uqyz6tJvFbzOLkke21OjWkjSFkRIi+I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CKx27Z7zDMHjxFkau4Ec8oD9MozGlxUO06ViGxFg4aOcxK0/dENfNeJTH5Z4aZs4g
+	 xDWpu4IZaSlJCbFARaS1OTirkdbrxRrsrZa8kR3XGYrMKqO8etuZmXNbOoKZE3tJ0w
+	 oZIMeES4BNZWP9/Z6lxxHEkLCSNV8MKw6bQ+M0z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbfFGP44 (ORCPT
+        id S1731396AbfFGP5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:56:56 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:48090 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730114AbfFGPoW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559922259; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uKjYmWMGTPMWyT68pwkqTgx+FiVn9ZInyiEbS0sgpd8=;
-        b=heZk/oQ9KnZtcfEMgGa9h5jz9LZyOlmXz8CxRJ4KshAT2D+HjqO1yZaJ+DrefNGhrrf0St
-        PC8rEM2dkvtcaZupu57PYbzk6mEo7eOUgTh4Ag7gvMgmOkQ1yy9rq1iImozvP5pBhJxV8S
-        vluR/Sx6JBHR7OwuA2KwlW0INfu+m+k=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/6] pwm: jz4740: Apply configuration atomically
-Date:   Fri,  7 Jun 2019 17:44:07 +0200
-Message-Id: <20190607154410.10633-4-paul@crapouillou.net>
-In-Reply-To: <20190607154410.10633-1-paul@crapouillou.net>
-References: <20190607154410.10633-1-paul@crapouillou.net>
+        Fri, 7 Jun 2019 11:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729761AbfFGPoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E29121479;
+        Fri,  7 Jun 2019 15:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559922259;
+        bh=8zij8wJ8dgz1Uqyz6tJvFbzOLkke21OjWkjSFkRIi+I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2kq1WyI7z8dxahiPSvGk4sdk+PyxIoTfPlHooSXjvbtJOzGMWf3uEU4L0teGDubTt
+         pzKRNWmGlUUa50woQnVtNW7p97M6VpH7xnCs2QoMo26Uqvs9f0vJBMuqlYuMbiYdLZ
+         u3zPQgcpROCCuriYYA1ZqwBBLCBIMloBunLEhf40=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 23/73] Btrfs: fix fsync not persisting changed attributes of a directory
+Date:   Fri,  7 Jun 2019 17:39:10 +0200
+Message-Id: <20190607153851.591790140@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
+References: <20190607153848.669070800@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is cleaner, more future-proof, and incidentally it also fixes the
-PWM resetting its config when stopped/started several times.
+From: Filipe Manana <fdmanana@suse.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+commit 60d9f50308e5df19bc18c2fefab0eba4a843900a upstream.
+
+While logging an inode we follow its ancestors and for each one we mark
+it as logged in the current transaction, even if we have not logged it.
+As a consequence if we change an attribute of an ancestor, such as the
+UID or GID for example, and then explicitly fsync it, we end up not
+logging the inode at all despite returning success to user space, which
+results in the attribute being lost if a power failure happens after
+the fsync.
+
+Sample reproducer:
+
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
+
+  $ mkdir /mnt/dir
+  $ chown 6007:6007 /mnt/dir
+
+  $ sync
+
+  $ chown 9003:9003 /mnt/dir
+  $ touch /mnt/dir/file
+  $ xfs_io -c fsync /mnt/dir/file
+
+  # fsync our directory after fsync'ing the new file, should persist the
+  # new values for the uid and gid.
+  $ xfs_io -c fsync /mnt/dir
+
+  <power failure>
+
+  $ mount /dev/sdb /mnt
+  $ stat -c %u:%g /mnt/dir
+  6007:6007
+
+    --> should be 9003:9003, the uid and gid were not persisted, despite
+        the explicit fsync on the directory prior to the power failure
+
+Fix this by not updating the logged_trans field of ancestor inodes when
+logging an inode, since we have not logged them. Let only future calls to
+btrfs_log_inode() to mark inodes as logged.
+
+This could be triggered by my recent fsync fuzz tester for fstests, for
+which an fstests patch exists titled "fstests: generic, fsync fuzz tester
+with fsstress".
+
+Fixes: 12fcfd22fe5b ("Btrfs: tree logging unlink/rename fixes")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
+ fs/btrfs/tree-log.c |   12 ------------
+ 1 file changed, 12 deletions(-)
 
-Notes:
-    v2: Rebase on v5.2-rc3
-
- drivers/pwm/pwm-jz4740.c | 37 ++++++++++++-------------------------
- 1 file changed, 12 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-index 5c8bb6192201..75254360621c 100644
---- a/drivers/pwm/pwm-jz4740.c
-+++ b/drivers/pwm/pwm-jz4740.c
-@@ -74,17 +74,16 @@ static void jz4740_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	jz4740_timer_disable(pwm->hwpwm);
- }
- 
--static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			     int duty_ns, int period_ns)
-+static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    struct pwm_state *state)
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -5312,7 +5312,6 @@ static noinline int check_parent_dirs_fo
  {
- 	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
- 	unsigned long long tmp;
- 	unsigned long period, duty;
- 	unsigned int prescaler = 0;
- 	uint16_t ctrl;
--	bool is_enabled;
+ 	int ret = 0;
+ 	struct dentry *old_parent = NULL;
+-	struct btrfs_inode *orig_inode = inode;
  
--	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
-+	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
- 	do_div(tmp, 1000000000);
- 	period = tmp;
- 
-@@ -96,16 +95,14 @@ static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (prescaler == 6)
- 		return -EINVAL;
- 
--	tmp = (unsigned long long)period * duty_ns;
--	do_div(tmp, period_ns);
-+	tmp = (unsigned long long)period * state->duty_cycle;
-+	do_div(tmp, state->period);
- 	duty = period - tmp;
- 
- 	if (duty >= period)
- 		duty = period - 1;
- 
--	is_enabled = jz4740_timer_is_enabled(pwm->hwpwm);
--	if (is_enabled)
--		jz4740_pwm_disable(chip, pwm);
-+	jz4740_pwm_disable(chip, pwm);
- 
- 	jz4740_timer_set_count(pwm->hwpwm, 0);
- 	jz4740_timer_set_duty(pwm->hwpwm, duty);
-@@ -116,18 +113,7 @@ static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
- 
--	if (is_enabled)
--		jz4740_pwm_enable(chip, pwm);
--
--	return 0;
--}
--
--static int jz4740_pwm_set_polarity(struct pwm_chip *chip,
--		struct pwm_device *pwm, enum pwm_polarity polarity)
--{
--	uint32_t ctrl = jz4740_timer_get_ctrl(pwm->pwm);
--
--	switch (polarity) {
-+	switch (state->polarity) {
- 	case PWM_POLARITY_NORMAL:
- 		ctrl &= ~JZ_TIMER_CTRL_PWM_ACTIVE_LOW;
- 		break;
-@@ -137,16 +123,17 @@ static int jz4740_pwm_set_polarity(struct pwm_chip *chip,
+ 	/*
+ 	 * for regular files, if its inode is already on disk, we don't
+@@ -5332,16 +5331,6 @@ static noinline int check_parent_dirs_fo
  	}
  
- 	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
-+
-+	if (state->enabled)
-+		jz4740_pwm_enable(chip, pwm);
-+
- 	return 0;
- }
+ 	while (1) {
+-		/*
+-		 * If we are logging a directory then we start with our inode,
+-		 * not our parent's inode, so we need to skip setting the
+-		 * logged_trans so that further down in the log code we don't
+-		 * think this inode has already been logged.
+-		 */
+-		if (inode != orig_inode)
+-			inode->logged_trans = trans->transid;
+-		smp_mb();
+-
+ 		if (btrfs_must_commit_transaction(trans, inode)) {
+ 			ret = 1;
+ 			break;
+@@ -6070,7 +6059,6 @@ void btrfs_record_unlink_dir(struct btrf
+ 	 * if this directory was already logged any new
+ 	 * names for this file/dir will get recorded
+ 	 */
+-	smp_mb();
+ 	if (dir->logged_trans == trans->transid)
+ 		return;
  
- static const struct pwm_ops jz4740_pwm_ops = {
- 	.request = jz4740_pwm_request,
- 	.free = jz4740_pwm_free,
--	.config = jz4740_pwm_config,
--	.set_polarity = jz4740_pwm_set_polarity,
--	.enable = jz4740_pwm_enable,
--	.disable = jz4740_pwm_disable,
-+	.apply = jz4740_pwm_apply,
- 	.owner = THIS_MODULE,
- };
- 
--- 
-2.21.0.593.g511ec345e18
+
 
