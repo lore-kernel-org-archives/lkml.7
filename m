@@ -2,180 +2,72 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7C1C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5527C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA47D20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F366212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mB982WeD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E234jJcA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfFGNfl (ORCPT
+        id S1729096AbfFGNgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 09:35:41 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45212 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbfFGNfk (ORCPT
+        Fri, 7 Jun 2019 09:36:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46432 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729061AbfFGNgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 09:35:40 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x57DZSMw126286;
-        Fri, 7 Jun 2019 08:35:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559914528;
-        bh=bmgnxqXqETSqwCHC4eaX3bDsAPKHDrU/WVJdeJVaAXk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mB982WeDh1CcAdFl8czdDnb7rakbJ1z9aHhUpjafQd3rBxyRG6CpvCVbK9zRy5hvX
-         DDlHJrkdx+goQqLuJ8zprbOunyYhDl1T0xUxLp5dqV/i7/w7cvkuDuxJGjjHktyIvu
-         IggtTHLxTLBFBAiUyIHmYtFA7Vwnw/1aMlKOqgf0=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x57DZSHB121601
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 7 Jun 2019 08:35:28 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
- 2019 08:35:27 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 7 Jun 2019 08:35:27 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x57DZPKF073408;
-        Fri, 7 Jun 2019 08:35:25 -0500
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
- <d0db90e3-3d05-dfba-8768-28511d9ee3ac@ti.com>
- <5208a50a-9ca0-8f24-9ad0-d7503ec53f1c@nvidia.com>
- <ba845a19-5dfb-a891-719f-43821b2dd412@nvidia.com>
- <e67a2d7c-5bd1-93ad-fe75-afcab38bc17c@ti.com>
- <a65f2b07-4a3a-7f83-e21f-8b374844a4b9@nvidia.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <56aa6f45-cfd8-7f1e-9392-628ceb58093f@ti.com>
-Date:   Fri, 7 Jun 2019 16:35:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 09:36:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lVEgFqucFox4g1IviFAgPH+wq2tolwksp9dr8CFQhYQ=; b=E234jJcArQlGrReDPRTDlQHQw
+        /51XA81tWbNBlNGxjegBAG8xYGT10JhKdGURd6yq4uCPjy6al62Aq3+i5MqZmTBQWE2Jxd9aEgq/b
+        wJN1kFrziNof1cTWsCOA+Kro46LMQL8l0tTMmo20PPlvS2PC9TbtRQUqklSoDNjY5uEhSQLS9nXow
+        R0foGNit83P0n3Jp6w76ssk7IkHaJl4axBNuofWSbBG9wzs4ALgYpEcy6+azMIrtkFq5rBdT76H7y
+        IVGo9zhzexKE60uh1YvVJPfp2JQ2kTZPq0+6O6pfvn828eCNoKFIUwfGg9DdWWPruXIHZExArLGYS
+        XtVrEgXIg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZF22-0001XU-1L; Fri, 07 Jun 2019 13:35:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E5C8D20216EFA; Fri,  7 Jun 2019 15:35:41 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 15:35:41 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
+        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+Message-ID: <20190607133541.GJ3436@hirez.programming.kicks-ass.net>
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
+ <20190530080358.GG2623@hirez.programming.kicks-ass.net>
+ <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
+ <20190603123705.GB3419@hirez.programming.kicks-ass.net>
+ <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <a65f2b07-4a3a-7f83-e21f-8b374844a4b9@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 05, 2019 at 09:04:02AM -0600, Jens Axboe wrote:
+> How about the following plan - if folks are happy with this sched patch,
+> we can queue it up for 5.3. Once that is in, I'll kill the block change
+> that special cases the polled task wakeup. For 5.2, we go with Oleg's
+> patch for the swap case.
 
+OK, works for me. I'll go write a proper patch.
 
-On 07/06/2019 15.58, Jon Hunter wrote:
->> Imho if you can explain it without using 'HACK' in the sentences it
->> might be OK, but it does not feel right.
-> 
-> I don't perceive this as a hack. Although from looking at the
-> description of the src/dst_maxburst these are burst size with regard to
-> the device, so maybe it is a stretch.
-> 
->> However since your ADMA and ADMIF is highly coupled and it does needs
->> special maxburst information (burst and allocated FIFO depth) I would
->> rather use src_maxburst/dst_maxburst alone for DEV_TO_MEM/MEM_TO_DEV:
->>
->> ADMA_BURST_SIZE(maxburst)	((maxburst) & 0xff)
->> ADMA_FIFO_SIZE(maxburst)	(((maxburst) >> 8) & 0xffffff)
->>
->> So lower 1 byte is the burst value you want from ADMA
->> the other 3 bytes are the allocated FIFO size for the given ADMAIF channel.
->>
->> Sure, you need a header for this to make sure there is no
->> misunderstanding between the two sides.
-> 
-> I don't like this because as I mentioned to Dmitry, the ADMA can perform
-> memory-to-memory transfers where such encoding would not be applicable.
-
-mem2mem does not really use dma_slave_config, it is for used by
-is_slave_direction() == true type of transfers.
-
-But true, if you use ADMA against anything other than ADMAIF then this
-might be not right for non cyclic transfers.
-
-> That does not align with the description in the
-> include/linux/dmaengine.h either.
-
-True.
-
->> Or pass the allocated FIFO size via maxburst and then the ADMA driver
->> will pick a 'good/safe' burst value for it.
->>
->> Or new member, but do you need two of them for src/dst? Probably
->> fifo_depth is better word for it, or allocated_fifo_depth.
-> 
-> Right, so looking at the struct dma_slave_config we have ...
-> 
-> u32 src_maxburst;
-> u32 dst_maxburst;
-> u32 src_port_window_size;
-> u32 dst_port_window_size;
-> 
-> Now if we could make these window sizes a union like the following this
-> could work ...
-> 
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 8fcdee1c0cf9..851251263527 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -360,8 +360,14 @@ struct dma_slave_config {
->         enum dma_slave_buswidth dst_addr_width;
->         u32 src_maxburst;
->         u32 dst_maxburst;
-> -       u32 src_port_window_size;
-> -       u32 dst_port_window_size;
-> +       union {
-> +               u32 port_window_size;
-> +               u32 port_fifo_size;
-> +       } src;
-> +       union {
-> +               u32 port_window_size;
-> +               u32 port_fifo_size;
-> +       } dst;
-
-What if in the future someone will have a setup where they would need both?
-
-So not sure. Your problems are coming from a split DMA setup where the
-two are highly coupled, but sits in a different place and need to be
-configured as one device.
-
-I think xilinx_dma is facing with similar issues and they have a custom
-API to set parameters which does not fit or is peripheral specific:
-include/linux/dma/xilinx_dma.h
-
-Not sure if that is an acceptable solution.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks!
