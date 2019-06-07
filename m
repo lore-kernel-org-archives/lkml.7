@@ -2,87 +2,94 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3B4C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D6FC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0B0206E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WHxWMfnT"
+	by mail.kernel.org (Postfix) with ESMTP id 1176F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:21:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559928063;
+	bh=iiHnfuhDgsegutLu9eSwGicxPI6KmhYK1/zRTdWv3yE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=z6wNJnCo7H9UzogIAEfp/vjm9syQlRP6B1kOgxQZtoN65lqlgVRdrAeEQCVr985J1
+	 4/luqd0q3Q+okjPUoKGFD7uMmJoO+p9RmzMJow6C9FBhzBoNag94hrF7WdNHDP1gej
+	 iVh22X8eWXbDJFgN622oOnNARIUgXcc6cuHQO7EE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731194AbfFGRU0 (ORCPT
+        id S1731271AbfFGRVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:20:26 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36770 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729829AbfFGRU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:20:26 -0400
-Received: from zn.tnic (p200300EC2F066300951FA2F4E0AD5C5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:6300:951f:a2f4:e0ad:5c5f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 11D6F1EC0985;
-        Fri,  7 Jun 2019 19:20:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1559928024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=YuJItu/kY1OR+PCaPR3EBpygwkTuPT71+DHP7rNgI4o=;
-        b=WHxWMfnTsuKeeaycfDr0wM5vkwX+Ut/TIaaiGjJCIhQhNNwGVkz47mEC2PrAglENkNLxrv
-        hH4QoJx8mhUpC9Vz1vX1B2FTGfYiDn3KE25KDKnjzgNCEpIIij1bR09dZqv0veZTI05qqQ
-        FfpHMiOus7pyMzn7/uFYXVYuMXyC6Tg=
-Date:   Fri, 7 Jun 2019 19:20:23 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
- hardware
-Message-ID: <20190607172023.GL20269@zn.tnic>
-References: <20190517193431.GI13482@zn.tnic>
- <SN6PR12MB2639C5427366AC3004C35CC0F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190517200225.GK13482@zn.tnic>
- <SN6PR12MB26390759DB43763D3A482918F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190527232849.GC8209@cz.tnic>
- <SN6PR12MB263998ECCDF1E345FEB0869AF8100@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190607163723.GG20269@zn.tnic>
- <SN6PR12MB263968DE0DD98EBE14450698F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190607165902.GJ20269@zn.tnic>
- <SN6PR12MB263905712C2375078012E833F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
+        Fri, 7 Jun 2019 13:21:02 -0400
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:43984 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729829AbfFGRVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 13:21:02 -0400
+Received: by mail-lf1-f49.google.com with SMTP id j29so2190076lfk.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4D91HzfNlEzUNnFN7tLM07Lh/kR1e806a5ZjRrM9eYA=;
+        b=Nd9RRPFRO2C5Q5+TuDI+2EliAG0BEJiHbUEtvqa2sciOCFIdPA9T6u5w8lx+m0b/zA
+         WlO74VC2uvGEdDbUcOenUGd0uBMJdkZw9gz+WcfFKOwn4ICV7YHHfpfwNL+3ffsQMQGD
+         IOa0Rnt4fVjhNTjZMvJnDHc2t1GFUqxdR+WKo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4D91HzfNlEzUNnFN7tLM07Lh/kR1e806a5ZjRrM9eYA=;
+        b=SrTfIfSOPMffz/FtQgH9Ju4We6s2MxQa0VqFo/Yk+wyor+zeACj8GtoDF8I1Epyq18
+         UQwMWtqetdhpPpnR1q9Ky1l0TgubrGCr6Xej0zTWoF8JAKzVUHWqzUeN9J0Qpg2Aa4BV
+         5ApJjeXPwc5JosV0Aaj5s3G0H/bGvAU4WvHmNcB8GPxfXirbemiS2ErNBwQSJ/Tfbw8Z
+         t6YajxYQm3dvuMCG81NlU0/Qq9u83VhO9lwZZImndkY52/7l16FSDla3VRaV5TyygJuj
+         fu5JRJp1z6AZRufqdQuEp4ZKO2Q2dF6IuO46HiDFWNLnVVIpopuWs7OeyYdgJGQdHPgj
+         LSCA==
+X-Gm-Message-State: APjAAAXk8mQ2mCYlHVeJwmvzAFLzWPg+sHCVvaIqyyNTY/WA0VlGvASp
+        i3j/VUnYokaWHX62qAbrxTwf7M0Glio=
+X-Google-Smtp-Source: APXvYqx9rtJHbA9x81c3sjXdEF6M+/rESn2AVmH+MPKVh79vlnJlEha4QL4HPho+ghQZ6AkeeOY7Sg==
+X-Received: by 2002:a19:3f16:: with SMTP id m22mr26619604lfa.104.1559928059933;
+        Fri, 07 Jun 2019 10:20:59 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id n7sm503889lfi.68.2019.06.07.10.20.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 10:20:59 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 16so2391628ljv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:20:59 -0700 (PDT)
+X-Received: by 2002:a2e:4246:: with SMTP id p67mr28756012lja.44.1559928058812;
+ Fri, 07 Jun 2019 10:20:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SN6PR12MB263905712C2375078012E833F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAPM=9tx_2-ANvU3CsasrHkaJsyRV+NxP1AoM0ZSu8teht3FuEg@mail.gmail.com>
+In-Reply-To: <CAPM=9tx_2-ANvU3CsasrHkaJsyRV+NxP1AoM0ZSu8teht3FuEg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 7 Jun 2019 10:20:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgOGPPO6owAcRiBd0KJpmjH-C83-=_N6QeQzyiCW4kb0w@mail.gmail.com>
+Message-ID: <CAHk-=wgOGPPO6owAcRiBd0KJpmjH-C83-=_N6QeQzyiCW4kb0w@mail.gmail.com>
+Subject: Re: [git pull] drm fixes for v5.2-rc4 (v2)
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 05:08:04PM +0000, Ghannam, Yazen wrote:
-> Right, I took that branch, squashed the locking fix into patch 2,
-> fixed up the remaining patches, and then redid the last patch.
+On Fri, Jun 7, 2019 at 12:24 AM Dave Airlie <airlied@gmail.com> wrote:
 >
-> I plan to send the result as a v4 of this patchset with all the links,
-> version history, etc. Is that what you mean?
+> I sent this out earlier, but I forgot the subject, and then Ben asked
+> about some nouveau firmware fixes.
 
-Yap, exactly!
+Well, the first one at least had the address to pull from, and the diffstat.
 
-> Sorry, if I misunderstood.
+The second one has the subject, and mentions nouveau, but doesn't
+actually have the tag name or the expected diffstat and shortlog.
 
-No worries, we're on the same page now :-)
+Third time is the charm?
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+                   Linus
