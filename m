@@ -2,91 +2,80 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DC1C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B6BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3DB7208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:22:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9RSlkf8"
+	by mail.kernel.org (Postfix) with ESMTP id 66D4520868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfFGDWM (ORCPT
+        id S1726741AbfFGDZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 23:22:12 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33569 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfFGDWL (ORCPT
+        Thu, 6 Jun 2019 23:25:01 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39956 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfFGDZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 23:22:11 -0400
-Received: by mail-qt1-f193.google.com with SMTP id 14so750729qtf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 20:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cDxKlx26C6I58M71iZg55l9IUELd+cCI69BULnCFGCU=;
-        b=R9RSlkf8+7etHBjAktMnCFls3HmJAeag61qEvUcSUdU9xFUNsgeiUVZ5f7YgxyNcBi
-         N27IoHFfbFQ2M6bz3/i7+VeU0s1eHY44W7olFyIoK1/bW/EixiJNzF2G66ZceV/HtamH
-         NkMizrSlre/hZSzJudvOsHmBsyAh5hglTFcDwwDDYefZ2rPCUZZEjRNXni1OuBmdb8Sz
-         NynK6du+kAFUdJgkqrCYO/hseSdxRbQVGDv5umg8hWiQg9pyxQx771QiVbhIRxavAnTW
-         5xaaEOY5DXpBtk0Wk30V7N/EeMfYwcR9CtfuuO3L6X7cxJxIClpI+pvYUVVgKwfU/rty
-         QI2Q==
+        Thu, 6 Jun 2019 23:25:01 -0400
+Received: by mail-io1-f71.google.com with SMTP id v11so598605iop.7
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 20:25:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cDxKlx26C6I58M71iZg55l9IUELd+cCI69BULnCFGCU=;
-        b=ElNhBTd1r98KbJS2LN2gINdzMzqPsbeziAis8zsvDf/y/bTnZJ5LHiNJs9Nx+j8UT6
-         P1amTz5rf5sKFgpVezgHj9bxJndKX7V4I8JD0ncC8QA7Pke5yyO8LHe0blasyaUP6urr
-         WGfW1vuxjC8ehwX7djgZ3M02XeEHGx3+6GUfNQgke7o8SYbSx0T7SHTb5IQtVdC8yDdL
-         x5nOoYUHGL4nRruVqAgFccSARtH0GNYWr+v2dXDBNwCBLdtH5zL28MaNJeUG+Udgc2uJ
-         Ony0/JXjVlhRT3NPg7J3bZtLxDXBwV4b1S2R6liZvBrIHKfGKV8SAgJGB/alh+fxVgtc
-         PbWA==
-X-Gm-Message-State: APjAAAWRPHA0haVHS+7kWACm0HKuvE7xRQv0GzAWDDx4rsVWnefciJ0B
-        G3qBvfbHnl/1ds9PYXV4wJy8KAkgKzjf2UQehU2gHSd+aK0BIA==
-X-Google-Smtp-Source: APXvYqwkb6t25wXyMzSzcciF75z4Yv0RMfPMvzsQaB38bQ/c+7VkK/VWzC8hiAymuBHnKBGjofSqcJ93hKHsr+hzIOg=
-X-Received: by 2002:a0c:88fc:: with SMTP id 57mr28115751qvo.178.1559877730487;
- Thu, 06 Jun 2019 20:22:10 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=e6etfNurQQo9Va6VpYHCA2sien54nXIZ+EIMOWfPhpg=;
+        b=Uue1ExTgnVAQF0UY3OSMHK9/d5pi5vwn99brUvZaPlfwaPUkHOX5Hae9A82HmrZ8G0
+         2JFzIQKqRRTbr7Xsly07HgrI2IjJwYzJtMMbWUHRlCKDRviWRTjyk7a9216ZmQ28Yein
+         n76NrHvZ3hpQRqLTtuxLnYyXP/slkaUjK50BT0S0Xe+M2+SJolDYjRSLBmuF01ML3S52
+         vn2f+sMWREGKc/iHNJF6IHDhX4ZXhmHwFgYJ5gJy9NzN7/Nh6xKPWto1Pq3WOc1f4fI0
+         +1Ao46O8hPhjLnX2rgGj2Y8gt/ski357Pwv6w5hwEQxDcMTUimXNX5Jr8tqR6a6QOC83
+         f/wA==
+X-Gm-Message-State: APjAAAXb77QkjXKGi/Chx5pmSbt56eA29uBB8sD22nmKvUTtU6TMD2ZS
+        7ztNiahF7bWLvXaCaNkXORj1kt5+EeS+59cs6nSG6vejWImn
+X-Google-Smtp-Source: APXvYqye5xa1Ca/EaWr+y6R3z3/VH0PShIIRB83YYxYRr5VL2+2o8N9WKQzv8UUonOlR9ZG4NAHpnj7r5bzEM/0sAQVJZSzGAe01
 MIME-Version: 1.0
-References: <1559855690.6132.50.camel@lca.pw>
-In-Reply-To: <1559855690.6132.50.camel@lca.pw>
-From:   Yuyang Du <duyuyang@gmail.com>
-Date:   Fri, 7 Jun 2019 11:21:58 +0800
-Message-ID: <CAHttsrYCD1xvL6hf6dXZ_6rB2pEra0HDZ+m5n8EMQr3+5AShnQ@mail.gmail.com>
-Subject: Re: "locking/lockdep: Consolidate lock usage bit initialization" is buggy
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a24:f807:: with SMTP id a7mr2825641ith.166.1559877900241;
+ Thu, 06 Jun 2019 20:25:00 -0700 (PDT)
+Date:   Thu, 06 Jun 2019 20:25:00 -0700
+In-Reply-To: <0000000000006b30f30587a5b569@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002314b3058ab3605c@google.com>
+Subject: Re: general protection fault in ip6_dst_lookup_tail (2)
+From:   syzbot <syzbot+58d8f704b86e4e3fb4d3@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, dsahern@gmail.com, dvyukov@google.com,
+        edumazet@google.com, kafai@fb.com, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the report, but
+syzbot has bisected this bug to:
 
-On Fri, 7 Jun 2019 at 05:14, Qian Cai <cai@lca.pw> wrote:
->
-> The linux-next commit "locking/lockdep: Consolidate lock usage bit
-> initialization" [1] will always generate a warning below.
+commit f40b6ae2b612446dc970d7b51eeec47bd1619f82
+Author: David Ahern <dsahern@gmail.com>
+Date:   Thu May 23 03:27:55 2019 +0000
 
-I never had such warning.
+     ipv6: Move pcpu cached routes to fib6_nh
 
-> Looking through the
-> commit that when mark_irqflags() returns 1 and check = 1, it will do one less
-> mark_lock() call than it used to.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13c969a6a00000
+start commit:   07c3bbdb samples: bpf: print a warning about headers_install
+git tree:       bpf-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=102969a6a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17c969a6a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7b54c66298f8420
+dashboard link: https://syzkaller.appspot.com/bug?extid=58d8f704b86e4e3fb4d3
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117f50e1a00000
 
-The four cases:
+Reported-by: syzbot+58d8f704b86e4e3fb4d3@syzkaller.appspotmail.com
+Fixes: f40b6ae2b612 ("ipv6: Move pcpu cached routes to fib6_nh")
 
-1. When check == 1 and mark_irqflags() returns 1;
-2. When check == 1 and mark_irqflags() returns 0;
-3. When check == 0 and mark_irqflags() returns 1;
-4. When check == 0 and mark_irqflags() returns 0;
-
-Before and after have exactly the same code to do.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
