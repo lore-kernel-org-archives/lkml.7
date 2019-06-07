@@ -2,256 +2,148 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31E4C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3116C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EA6208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3E920825
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcDjH9sb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCDey2um"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbfFGXIq (ORCPT
+        id S1731302AbfFGXLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 19:08:46 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43580 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730543AbfFGXIq (ORCPT
+        Fri, 7 Jun 2019 19:11:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39052 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfFGXLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 19:08:46 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z24so4206872qtj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 16:08:45 -0700 (PDT)
+        Fri, 7 Jun 2019 19:11:11 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x4so971040wrt.6;
+        Fri, 07 Jun 2019 16:11:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zeNaU9aVGypnd3hIRZTgqzjnQOf3ATJ3f3X8w52nCxY=;
-        b=dcDjH9sbMs5JwL+pN23wiprpa+qvGpbfTjgL2lMltR05KphsASrImNxXwF7fko2l0U
-         +g3lr5+KvDyQxfZwtI1cSgpFwb83I3ZeYaG7wxJyLzHqWjPry+E2m8H7Nte/F1umN/cx
-         YiIOwg4eDwDvBPSRKpW2LB6qhVsNPiaOvI3H1hsUr728CFEUbs7OWDwDCE/m1yYrddwK
-         ifZ1gpdwVnaPdDyNQdH/QItNYJGarvDiBumu20fq0+Nego5Xznqi/M3dG5bxjYcvujbH
-         Wp6iXkhF/YQpWd8H7pmzoozslr3uhZGpLPV5/iL9ebSuCJqU+t2vBphMyRxaXK3QIgZ1
-         viiQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4wfPe7o+pKiEiYzQKf2K8qPkbS6b/+iHkf3dAJkOwkg=;
+        b=VCDey2umgxvrMenWODCRhKJQDjsDcGl5TS+Y8nJqfGhrR0/n3Cn57kOrv+VICYltiY
+         JqARgHm+jRVjCPDFp4qKRWf8IEaYe4V/zCAmK8gB0VuBxPUzpHuMOfBDJlqHWbh0yfC2
+         tbc3BYRHjk/824UWEFpk6LK2unGwpHVNdHcNYPKICPzWEN++MToCGo/WP3DI61Is1PYH
+         vQWAWIfA+PkVZbXb+Kmn6DBRzreiHiGiiPIics+eBTI6MqMjTjx6PTPs3mnUX52fQfHD
+         EeJqHgORMKLQqckjpnBxqaSqqhFrYfZL8YCMWA4wHhoNLvVNAuDb+J9ke/39i5wrwT/R
+         K3vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zeNaU9aVGypnd3hIRZTgqzjnQOf3ATJ3f3X8w52nCxY=;
-        b=l7zxJlTM8zz6Bu22x1HR1kOQo8euSH4dOO7eaFaUw3ByHgnwHL9GGQyJ+mg9Usej03
-         aKlbzyQPaVWGJ2bnd/m8AuXJKCbb5FGNDdkeSQSo7xpWkTdlYKGw+nZ2FP2R1uiRhSFU
-         50AIqslZk6xVYCQwK/JbIiCiMRzGFoRPG/ToJ1KJSToV3AmeOpMD/F6FC0mvO3TLAZB3
-         egK7brGa3zqTWaJpb+TnLLjn8sLVnaC/CvkSzg2Z1lcVc4d/VbMAuJ2eeos3gi8IdNNd
-         E+UHhFTq47FjCKj/6vF8SVhebqB/S5uqNCRBKwPS0ark39ylIfl9o+P4Gr5nIvOtAOs7
-         K8pg==
-X-Gm-Message-State: APjAAAWe1aHtikymQojs+aFYNZ5FIpTgRrTNiumAIjT2Ibud83SwESki
-        CFXwo8wTMsxxp+J6AH6FBGDagilf4r9JFtutt2CbzfN6
-X-Google-Smtp-Source: APXvYqxc02ezOqgQ7kNpPeolZJ+kWSMpu8dJJW6WRR8SXjTW05J06sDwNFWl1oWcZtd6uYsLGI56PZtv8f8rKMyD4qM=
-X-Received: by 2002:ac8:3221:: with SMTP id x30mr49272111qta.176.1559948924674;
- Fri, 07 Jun 2019 16:08:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4wfPe7o+pKiEiYzQKf2K8qPkbS6b/+iHkf3dAJkOwkg=;
+        b=bo7znaDd7MGXj70s3GWSpR7bqkrVWed6Xnghk3c5RXcLsDFcp7GEuK/HB/5DgympZQ
+         1NGDIW8pxkCHx8ZGV5p+Vpt0kEtC6vmWPm4YYME/CM4a3jAVYBEHknLCplpaQfhu4Mnf
+         qt3kMqZWjZ25x7GGdm4QcIIefrLpng5UuNtmu+7FXN1IWch1VkS87ny5Txyhzhw6H07n
+         hCkE4iEWCQisU4FR1PCJVGlxtwVWc3atGaEOQxaX7blNUfDnQ3JMOkXAyO9b/Wk6BCyW
+         YNzKmEBh02llo+dTW0honmDyi6DRasfE0G0JWGzuttd48wvCqjyBMOjQ+rXBSdRq/CT2
+         2a5A==
+X-Gm-Message-State: APjAAAV8RQPOW/32K0G6ifHMo3rWkNGiVFmmZR1Btn0dh/Jd3CGF2g1o
+        Imq8b8+w5y8UHrJKr/Hrknw=
+X-Google-Smtp-Source: APXvYqw+PzKucyesHZ0bjq4qJTJx4ikEmxjo++sha0U0BPwPHx54569NJJVYz2yXIpfxd0xB0L/+DQ==
+X-Received: by 2002:adf:e30d:: with SMTP id b13mr17448803wrj.246.1559949069031;
+        Fri, 07 Jun 2019 16:11:09 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 07 Jun 2019 16:11:08 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v5 00/13] Allwinner A64/H6 IR support
+Date:   Sat,  8 Jun 2019 01:10:47 +0200
+Message-Id: <20190607231100.5894-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CAPM=9tx_2-ANvU3CsasrHkaJsyRV+NxP1AoM0ZSu8teht3FuEg@mail.gmail.com>
- <CAHk-=wgOGPPO6owAcRiBd0KJpmjH-C83-=_N6QeQzyiCW4kb0w@mail.gmail.com> <CAHk-=wipemA-iriz99pRYvoGszNjQn9cUHwzvV55HOrx-KEmWw@mail.gmail.com>
-In-Reply-To: <CAHk-=wipemA-iriz99pRYvoGszNjQn9cUHwzvV55HOrx-KEmWw@mail.gmail.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Sat, 8 Jun 2019 09:08:33 +1000
-Message-ID: <CAPM=9twF5Dcr+1UGMFcRJQjtYG0t5mTuC-QPV3o+YVmD-AE+CQ@mail.gmail.com>
-Subject: Re: [git pull] drm fixes for v5.2-rc4 (v2)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Jun 2019 at 03:24, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Jun 7, 2019 at 10:20 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > The second one has the subject, and mentions nouveau, but doesn't
-> > actually have the tag name or the expected diffstat and shortlog.
->
-> Hmm. I'm guessing you meant for me to pull the
->
->   'tags/drm-fixes-2019-06-07-1'
->
-> thing, which looks likely, but I'd like to have confirmation.
->
->                  Linus
+Hi,
 
-Oh man, sorry have a cold/flu thing, brain isn't running so well.
+A64 IR support series[1] pointed out that an A31 bindings should be
+introduced.
 
-Here's the missing bits.
+This series introduce the A31 compatible bindings, then switch it on
+the already existing board.
 
-drm-fixes-2019-06-07-1:
- drm i915, amdgpu, arm display, atomic update fixes + nouveau firmware
-loading fix
-The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+Finally introduce A64 and H6 support.
 
-  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
+I have reenable the other H6 boards IR support as Ondrej solve the issue.
 
-are available in the Git repository at:
+Regards,
+Clément
 
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-06-07-1
+[1] https://lore.kernel.org/patchwork/patch/1031390/#1221464
+[2] https://lkml.org/lkml/2019/5/27/321
+[3] https://patchwork.kernel.org/patch/10975563/
 
-for you to fetch changes up to 671e2ee5ee2127179ca884b439ab6001a623edd6:
+Changes since v4:
+ - Reuse defines for RXSTA bits definition
 
-  Merge branch 'linux-5.2' of git://github.com/skeggsb/linux into
-drm-fixes (2019-06-07 17:16:00 +1000)
+Changes since v3:
+ - Reenable IR for other H6 boards
+ - Add RXSTA bits definition
+ - Add Sean Young's "Acked-by" tags
 
-----------------------------------------------------------------
- drm i915, amdgpu, arm display, atomic update fixes + nouveau firmware
-loading fix
+Changes since v2:
+ - Disable IR for other H6 boards
+ - Split DTS patch for H3/H5
+ - Introduce IR quirks
 
-----------------------------------------------------------------
-Aleksei Gimbitskii (2):
-      drm/i915/gvt: Check if cur_pt_type is valid
-      drm/i915/gvt: Assign NULL to the pointer after memory free.
+Clément Péron (11):
+  dt-bindings: media: sunxi-ir: Add A31 compatible
+  media: rc: Introduce sunxi_ir_quirks
+  media: rc: sunxi: Add A31 compatible
+  media: rc: sunxi: Add RXSTA bits definition
+  ARM: dts: sunxi: Prefer A31 bindings for IR
+  ARM: dts: sunxi: Prefer A31 bindings for IR
+  dt-bindings: media: sunxi-ir: Add A64 compatible
+  dt-bindings: media: sunxi-ir: Add H6 compatible
+  arm64: dts: allwinner: h6: Add IR receiver node
+  arm64: dts: allwinner: h6: Enable IR on H6 boards
+  arm64: defconfig: Enable IR SUNXI option
 
-Ben Skeggs (6):
-      drm/nouveau/core: pass subdev into nvkm_firmware_get, rather than device
-      drm/nouveau/core: support versioned firmware loading
-      drm/nouveau/secboot: pass max supported FW version to LS load funcs
-      drm/nouveau/secboot: split out FW version-specific LS function pointers
-      drm/nouveau/secboot: enable loading of versioned LS PMU/SEC2 ACR
-msgqueue FW
-      drm/nouveau/secboot/gp10[2467]: support newer FW to fix SEC2
-failures on some boards
+Igors Makejevs (1):
+  arm64: dts: allwinner: a64: Add IR node
 
-Chengming Gui (1):
-      drm/amd/powerplay: add set_power_profile_mode for raven1_refresh
+Jernej Skrabec (1):
+  arm64: dts: allwinner: a64: Enable IR on Orange Pi Win
 
-Colin Xu (3):
-      drm/i915/gvt: Update force-to-nonpriv register whitelist
-      drm/i915/gvt: Fix GFX_MODE handling
-      drm/i915/gvt: Fix vGPU CSFE_CHICKEN1_REG mmio handler
+ .../devicetree/bindings/media/sunxi-ir.txt    | 11 ++-
+ arch/arm/boot/dts/sun6i-a31.dtsi              |  2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi              |  2 +-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  2 +-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  4 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 18 ++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 +
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  4 +
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  4 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 19 ++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/media/rc/sunxi-cir.c                  | 88 ++++++++++++++-----
+ 13 files changed, 135 insertions(+), 26 deletions(-)
 
-Dan Carpenter (1):
-      drm/komeda: Potential error pointer dereference
+-- 
+2.20.1
 
-Dave Airlie (6):
-      Merge tag 'drm-intel-fixes-2019-06-03' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-      Merge branch 'drm-fixes-5.2' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes
-      Merge tag 'drm-misc-fixes-2019-06-05' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
-      Merge branch 'malidp-fixes' of git://linux-arm.org/linux-ld into drm-fixes
-      Merge tag 'drm-intel-fixes-2019-06-06' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-      Merge branch 'linux-5.2' of git://github.com/skeggsb/linux into drm-fixes
-
-Gao, Fred (1):
-      drm/i915/gvt: Fix cmd length of VEB_DI_IECP
-
-Helen Koike (5):
-      drm/rockchip: fix fb references in async update
-      drm/amd: fix fb references in async update
-      drm/msm: fix fb references in async update
-      drm/vc4: fix fb references in async update
-      drm: don't block fb changes for async plane updates
-
-Joonas Lahtinen (2):
-      Merge tag 'gvt-fixes-2019-05-30' of
-https://github.com/intel/gvt-linux into drm-intel-fixes
-      Merge tag 'gvt-fixes-2019-06-05' of
-https://github.com/intel/gvt-linux into drm-intel-fixes
-
-Louis Li (1):
-      drm/amdgpu: fix ring test failure issue during s3 in vce 3.0 (V2)
-
-Lowry Li (Arm Technology China) (1):
-      drm/komeda: fixing of DMA mapping sg segment warning
-
-Lucas Stach (1):
-      udmabuf: actually unmap the scatterlist
-
-Prike Liang (1):
-      drm/amd/amdgpu: add RLC firmware to support raven1 refresh
-
-Robin Murphy (2):
-      drm/arm/hdlcd: Actually validate CRTC modes
-      drm/arm/hdlcd: Allow a bit of clock tolerance
-
-Tina Zhang (1):
-      drm/i915/gvt: Initialize intel_gvt_gtt_entry in stack
-
-Tvrtko Ursulin (1):
-      drm/i915/icl: Add WaDisableBankHangMode
-
-Weinan Li (1):
-      drm/i915/gvt: add F_CMD_ACCESS flag for wa regs
-
-Wen He (1):
-      drm/arm/mali-dp: Add a loop around the second set CVAL and try 5 times
-
-Xiaolin Zhang (1):
-      drm/i915/gvt: save RING_HEAD into vreg when vgpu switched out
-
-Xiong Zhang (1):
-      drm/i915/gvt: refine ggtt range validation
-
-YueHaibing (1):
-      drm/komeda: remove set but not used variable 'kcrtc'
-
-james qian wang (Arm Technology China) (1):
-      drm/komeda: Constify the usage of komeda_component/pipeline/dev_funcs
-
- drivers/dma-buf/udmabuf.c                          |  1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c         | 12 ++---
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c             | 15 ++++++
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.h             |  1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c            |  4 +-
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c              | 12 ++++-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  3 +-
- drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c        |  1 +
- drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c  | 31 ++++++++++--
- drivers/gpu/drm/amd/powerplay/inc/hwmgr.h          |  1 +
- .../gpu/drm/arm/display/komeda/d71/d71_component.c |  8 ++--
- drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c   |  4 +-
- drivers/gpu/drm/arm/display/komeda/komeda_crtc.c   |  2 +-
- drivers/gpu/drm/arm/display/komeda/komeda_dev.c    |  6 ++-
- drivers/gpu/drm/arm/display/komeda/komeda_dev.h    |  8 ++--
- .../gpu/drm/arm/display/komeda/komeda_pipeline.c   |  4 +-
- .../gpu/drm/arm/display/komeda/komeda_pipeline.h   | 10 ++--
- drivers/gpu/drm/arm/display/komeda/komeda_plane.c  |  4 +-
- drivers/gpu/drm/arm/hdlcd_crtc.c                   | 14 +++---
- drivers/gpu/drm/arm/malidp_drv.c                   | 13 ++++-
- drivers/gpu/drm/drm_atomic_helper.c                | 22 +++++----
- drivers/gpu/drm/i915/gvt/cmd_parser.c              |  2 +-
- drivers/gpu/drm/i915/gvt/gtt.c                     | 38 +++++++++++----
- drivers/gpu/drm/i915/gvt/handlers.c                | 49 ++++++++++++++++---
- drivers/gpu/drm/i915/gvt/reg.h                     |  2 +
- drivers/gpu/drm/i915/gvt/scheduler.c               | 25 ++++++++++
- drivers/gpu/drm/i915/gvt/scheduler.h               |  1 +
- drivers/gpu/drm/i915/i915_reg.h                    |  3 ++
- drivers/gpu/drm/i915/intel_workarounds.c           |  6 +++
- drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c         |  4 ++
- .../gpu/drm/nouveau/include/nvkm/core/firmware.h   | 16 +++----
- drivers/gpu/drm/nouveau/nvkm/core/firmware.c       | 33 +++++++++++--
- drivers/gpu/drm/nouveau/nvkm/engine/gr/gf100.c     |  4 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/secboot/acr.c  |  2 +-
- .../gpu/drm/nouveau/nvkm/subdev/secboot/acr_r352.c | 56 ++++++++++++++++------
- .../gpu/drm/nouveau/nvkm/subdev/secboot/acr_r352.h | 22 ++++++---
- .../gpu/drm/nouveau/nvkm/subdev/secboot/acr_r361.c | 50 +++++++++++++++----
- .../gpu/drm/nouveau/nvkm/subdev/secboot/acr_r361.h |  3 +-
- .../gpu/drm/nouveau/nvkm/subdev/secboot/acr_r367.c | 33 +++++++++----
- .../gpu/drm/nouveau/nvkm/subdev/secboot/acr_r370.c | 36 +++++++++++---
- .../gpu/drm/nouveau/nvkm/subdev/secboot/acr_r370.h |  1 +
- .../gpu/drm/nouveau/nvkm/subdev/secboot/acr_r375.c | 12 ++++-
- .../gpu/drm/nouveau/nvkm/subdev/secboot/ls_ucode.h | 12 +++--
- .../drm/nouveau/nvkm/subdev/secboot/ls_ucode_gr.c  | 22 +++++----
- .../nvkm/subdev/secboot/ls_ucode_msgqueue.c        | 38 ++++++++-------
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 51 ++++++++++----------
- drivers/gpu/drm/vc4/vc4_plane.c                    |  2 +-
- include/drm/drm_modeset_helper_vtables.h           |  8 ++++
- 48 files changed, 510 insertions(+), 197 deletions(-)
