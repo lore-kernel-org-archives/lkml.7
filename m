@@ -2,141 +2,159 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96186C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA687C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEB920B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8751F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:16:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kRCIKBb3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c/0zv+10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbfFGMOn (ORCPT
+        id S1728579AbfFGMQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:14:43 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:35264 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728064AbfFGMOn (ORCPT
+        Fri, 7 Jun 2019 08:16:45 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41104 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbfFGMQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:14:43 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190607121441euoutp01cf8f247504751d9bd52ad70f66f5d82b~l6ZdEY9Lk2518925189euoutp01Q
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 12:14:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190607121441euoutp01cf8f247504751d9bd52ad70f66f5d82b~l6ZdEY9Lk2518925189euoutp01Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559909681;
-        bh=Y0PHswQo3moF+imArv8WDzx/3UV2pAXhOR9DW6vz0jg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=kRCIKBb307zWFw/na98wFuhwvVYLSPJ/rXrY7XiaCoMOGw/yjS7jMRsANydCk3FJU
-         7XnUhFMGNTNxb7TMceaz0fKH8t3XN1Wgt3rekcftxZVpMBSuNbYqjrVwi37myINP5m
-         UyjonA45PuUxT71Xy0wl1zKRBkFsnnjQUpcf3YpA=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190607121441eucas1p16ac404b9de39463b748ae21a0b70208b~l6ZcmL9UL1604016040eucas1p1B;
-        Fri,  7 Jun 2019 12:14:41 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 60.73.04298.1355AFC5; Fri,  7
-        Jun 2019 13:14:41 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190607121440eucas1p2b3417ac3909535c3f7e24bb37d6b842b~l6ZbvWPHP1479714797eucas1p2z;
-        Fri,  7 Jun 2019 12:14:40 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190607121440eusmtrp161e9c4df5d352e1846dd1269b74b758b~l6ZbdAle12590725907eusmtrp1d;
-        Fri,  7 Jun 2019 12:14:40 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-6f-5cfa55317db4
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id B9.C0.04140.0355AFC5; Fri,  7
-        Jun 2019 13:14:40 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190607121439eusmtip14bff059c802953abfab4ff858ea82d7f~l6ZbLUfwE1348713487eusmtip16;
-        Fri,  7 Jun 2019 12:14:39 +0000 (GMT)
-Subject: Re: [PATCH 2/3] au1200fb: fix DMA API abuse
-To:     Manuel Lauss <manuel.lauss@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Linux-MIPS <linux-mips@vger.kernel.org>,
-        linux-fbdev <linux-fbdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <76042970-34b0-87a9-6aac-5fa27a113e21@samsung.com>
-Date:   Fri, 7 Jun 2019 14:14:42 +0200
+        Fri, 7 Jun 2019 08:16:45 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x57CGaOa060497;
+        Fri, 7 Jun 2019 07:16:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559909796;
+        bh=hkPfpbngutPvFXR5aOI+CaNTnL9VSn3RgrKNZtvqqKU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=c/0zv+10B7glhPSmVGUzX85geqkAvUCQZVvyYBqOzDrlddc5Q1fSFN+cIMNYqAJFQ
+         cqmWH6nAd84cXwEthl2ukx8um7aVvnH3vYtxsrBOTclBx3/xRj22+H8aM6lqw9yrQ3
+         qiA++cnNadMu/3nrhS2GmBTZkrTM+ndZfntzGMxc=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x57CGa7I027780
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Jun 2019 07:16:36 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
+ 2019 07:16:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 7 Jun 2019 07:16:36 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x57CGXmR093138;
+        Fri, 7 Jun 2019 07:16:33 -0500
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+ <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+ <d0db90e3-3d05-dfba-8768-28511d9ee3ac@ti.com>
+ <5208a50a-9ca0-8f24-9ad0-d7503ec53f1c@nvidia.com>
+ <ba845a19-5dfb-a891-719f-43821b2dd412@nvidia.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <e67a2d7c-5bd1-93ad-fe75-afcab38bc17c@ti.com>
+Date:   Fri, 7 Jun 2019 15:17:01 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAOLZvyG14NvbgX4PA5aafk=reLcHbqDswqS-8j4+7QJMx02d7A@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCKsWRmVeSWpSXmKPExsWy7djPc7qGob9iDCbdYLZYufook8WJvg+s
-        Fpd3zWGz6Ny0ldHi2pdH7A6sHjtn3WX32H2zgc3j8ya5AOYoLpuU1JzMstQifbsErowFHY0s
-        BQfYKlqe3GVqYFzI2sXIwSEhYCLRvD+yi5GLQ0hgBaPEzCOPWCGcL4wSrXuOMEI4nxklvq1c
-        B+RwgnUcvtPLBJFYziix9sV6dgjnLaPEwvfvmUCqhIGqDp1eywxiiwh4Srz/e5sVxGYWqJWY
-        +f0/mM0mYCUxsX0VI8gdvAJ2Eg/e+IKEWQRUJB6tn8EOYosKREjcP7YBrJxXQFDi5MwnLCDl
-        nAKBEl83M0NMFJe49WQ+E4QtL7H97RxmkHMkBCazS5zedZMZ4k0XiaVL+CDuF5Z4dXwLO4Qt
-        I3F6cg8LRP06Rom/HS+gmrczSiyf/I8Nospa4vDxi+DwYhbQlFi/Sx8i7Chx/dxPqPl8Ejfe
-        CkLcwCcxadt0qDCvREebEES1msSGZRvYYNZ27VzJPIFRaRaSx2Yh+WYWkm9mIexdwMiyilE8
-        tbQ4Nz212DAvtVyvODG3uDQvXS85P3cTIzCtnP53/NMOxq+Xkg4xCnAwKvHwerD/jBFiTSwr
-        rsw9xCjBwawkwlt24UeMEG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2ampBalF
-        MFkmDk6pBsY1ihGzf5QUlv3tXbQsx8d/YtgzmZkvZS7WOio7vjXL1/O6nxl4Te1i2Iu3U+/N
-        uaJr5fLg5of7xwLzz8W12/pM23T7OKd4RZmZ8ME9acJyc+I8Dht7H+i8EqBfdv7ko84z20pk
-        532K62TY3PnklYXRvKWcXGI71qncfzJ/2oXyI6xWn6p6N2UpsRRnJBpqMRcVJwIA11NxWicD
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsVy+t/xu7oGob9iDDrOsFisXH2UyeJE3wdW
-        i8u75rBZdG7aymhx7csjdgdWj52z7rJ77L7ZwObxeZNcAHOUnk1RfmlJqkJGfnGJrVK0oYWR
-        nqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsaCjkaWggNsFS1P7jI1MC5k7WLk5JAQ
-        MJE4fKeXqYuRi0NIYCmjxMnWhyxdjBxACRmJ4+vLIGqEJf5c62KDqHnNKPG99ykzSEIYqPnQ
-        6bVgtoiAp8T7v7fBhjIL1Ess6bkA1fCBUeLv3sWMIAk2ASuJie2rGEEW8ArYSTx44wsSZhFQ
-        kXi0fgY7iC0qECFx5v0KFhCbV0BQ4uTMJ2D3cAoESnzdzAwxXl3iz7xLULa4xK0n85kgbHmJ
-        7W/nME9gFJqFpHsWkpZZSFpmIWlZwMiyilEktbQ4Nz232EivODG3uDQvXS85P3cTIzCSth37
-        uWUHY9e74EOMAhyMSjy8M5h+xgixJpYVV+YeYpTgYFYS4S278CNGiDclsbIqtSg/vqg0J7X4
-        EKMp0G8TmaVEk/OBUZ5XEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNT
-        qoHRy8Kz7sXhV0vLLsWoTrp+6VeWldjtQNH6SNXkJQHHiuo/SK8uStipEWp2QM09TfBJpGHG
-        BQabPRvrPeW3xx25lPexn9lb7JsR06/pO7YYftx0uW/VHDUF9voJeaKqMco7rXZMv3ggcAXf
-        olPNp1acVBE23atwd+t07bP187PSrf8UrbTdWLJJiaU4I9FQi7moOBEAwUW/nboCAAA=
-X-CMS-MailID: 20190607121440eucas1p2b3417ac3909535c3f7e24bb37d6b842b
-X-Msg-Generator: CA
+In-Reply-To: <ba845a19-5dfb-a891-719f-43821b2dd412@nvidia.com>
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190515111114epcas1p10322ccf505be725a188b664baed2e183
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190515111114epcas1p10322ccf505be725a188b664baed2e183
-References: <20190509173849.11825-1-hch@lst.de>
-        <20190509173849.11825-3-hch@lst.de>
-        <CGME20190515111114epcas1p10322ccf505be725a188b664baed2e183@epcas1p1.samsung.com>
-        <CAOLZvyG14NvbgX4PA5aafk=reLcHbqDswqS-8j4+7QJMx02d7A@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 5/15/19 1:10 PM, Manuel Lauss wrote:
-> Servus Christoph,
-> 
-> On Thu, May 9, 2019 at 7:39 PM Christoph Hellwig <hch@lst.de> wrote:
->> Virtual addresses return from dma(m)_alloc_attrs are opaque in what
->> backs then, and drivers must not poke into them.  Similarly caching
->> modes are not supposed to be directly set by the driver.  Switch the
->> driver to use the generic DMA API mmap helper to avoid these problems.
+
+On 07/06/2019 13.27, Jon Hunter wrote:
+>>> Hrm, it is still not clear how all of these fits together.
+>>>
+>>> What happens if you configure ADMA side:
+>>> BURST = 10
+>>> TX/RXSIZE = 100 (100 * 64 bytes?) /* FIFO_SIZE? */
+>>> *THRES = 5
+>>>
+>>> And if you change the *THRES to 10?
+>>> And if you change the TX/RXSIZE to 50 (50 * 64 bytes?)
+>>> And if you change the BURST to 5?
+>>>
+>>> In other words what is the relation between all of these?
 >>
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
->> ---
->>  drivers/video/fbdev/au1200fb.c | 19 ++++---------------
->>  1 file changed, 4 insertions(+), 15 deletions(-)
+>> So the THRES values are only applicable when the FETCHING_POLICY (bit 31
+>> of the CH_FIFO_CTRL) is set. The FETCHING_POLICY bit defines two modes;
+>> a threshold based transfer mode or a burst based transfer mode. The
+>> burst mode transfer data as and when there is room for a burst in the FIFO.
+>>
+>> We use the burst mode and so we really should not be setting the THRES
+>> fields as they are not applicable. Oh well something else to correct,
+>> but this is side issue.
+>>
+>>> There must be a rule and constraints around these and if we do really
+>>> need a new parameter for ADMA's FIFO_SIZE I'd like it to be defined in a
+>>> generic way so others could benefit without 'misusing' a fifo_size
+>>> parameter for similar, but not quite fifo_size information.
+>>
+>> Yes I see what you are saying. One option would be to define both a
+>> src/dst_maxburst and src/dst_minburst size. Then we could use max for
+>> the FIFO size and min for the actual burst size.
 > 
-> Runs fine on my test system.
+> Actually, we don't even need to do that. We only use src_maxburst for
+> DEV_TO_MEM and dst_maxburst for MEM_TO_DEV. I don't see any reason why
+> we could not use both the src_maxburst for dst_maxburst for both
+> DEV_TO_MEM and MEM_TO_DEV, where one represents the FIFO size and one
+> represents that DMA burst size.
 > 
-> Tested-by: Manuel Lauss <manuel.lauss@gmail.com>
+> Sorry should have thought of that before. Any objections to using these
+> this way? Obviously we would document is clearly in the driver.
 
-Patch queued for v5.3, thanks.
+Imho if you can explain it without using 'HACK' in the sentences it
+might be OK, but it does not feel right.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+However since your ADMA and ADMIF is highly coupled and it does needs
+special maxburst information (burst and allocated FIFO depth) I would
+rather use src_maxburst/dst_maxburst alone for DEV_TO_MEM/MEM_TO_DEV:
+
+ADMA_BURST_SIZE(maxburst)	((maxburst) & 0xff)
+ADMA_FIFO_SIZE(maxburst)	(((maxburst) >> 8) & 0xffffff)
+
+So lower 1 byte is the burst value you want from ADMA
+the other 3 bytes are the allocated FIFO size for the given ADMAIF channel.
+
+Sure, you need a header for this to make sure there is no
+misunderstanding between the two sides.
+
+Or pass the allocated FIFO size via maxburst and then the ADMA driver
+will pick a 'good/safe' burst value for it.
+
+Or new member, but do you need two of them for src/dst? Probably
+fifo_depth is better word for it, or allocated_fifo_depth.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
