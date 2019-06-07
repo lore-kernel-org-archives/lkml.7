@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF81C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A37C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0057020657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2F220657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923135;
-	bh=C0byHfkf1G8xmbejHAIrwBPScn8p+xmOkNkFaPbHxSM=;
+	s=default; t=1559923144;
+	bh=cgBfD8u9cSMxS93P8T3sKF2WamQHBf60rbEgKWXCVzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgbvQcZTBaZ2w8EmUcmEPR3vxm1sVBv6UTvxg5LNADXu+BQy7dPZLeRv/jyUwSrt5
-	 sW0TVxRhGwA3BQ2YEBRTxRG8NOm3GfdkNZvKJ88j2ASYC8v/48SGzXOiJA7UDrgKFd
-	 0hYEBKS5LyliM8KAen9/iSQ4jnt21hWdq3GkBV6I=
+	b=Us10HQ60VFtegiiAU05bF5JtL2hC0S/6keF/2EhpZkSyuIUAmTHWlGRHNau8UX20S
+	 tqcEPa/quYsndORILiTL2X+yTjIbxt5rNuCTmWSTwG6/oPMc0Sf8rffcLC6UQ51JDP
+	 S3RN8Uxqb4sqhOSfIm5DCMiE2A8f1i/LBegWmavM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfFGP6y (ORCPT
+        id S1730486AbfFGPmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52844 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:42:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730536AbfFGPmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:19 -0400
+        id S1730416AbfFGPmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 535282133D;
-        Fri,  7 Jun 2019 15:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEDE2133D;
+        Fri,  7 Jun 2019 15:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922138;
-        bh=C0byHfkf1G8xmbejHAIrwBPScn8p+xmOkNkFaPbHxSM=;
+        s=default; t=1559922120;
+        bh=cgBfD8u9cSMxS93P8T3sKF2WamQHBf60rbEgKWXCVzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mz/cSUed6dIHL8eN1m+nzV6Bd599rBNzYOXZEtD+3IdWPQJ1q3jmAvW3L/t/7o7b+
-         zw6Bs+yeJ20asPhAb1JoPNxXTasRuiQjtN2pnHy7KsoheVVB6ZIOSQ+Lkb6MVs2621
-         b6/UL7+fTaYkB3QzBh4CJnBBSjD9uYQdMBxh8VFU=
+        b=E8R2aFB9ZbladUw3/PrD1/O/+6ANOKzRpqZS0i/7r382ruTdQDrz+0Lr0UAxeImJR
+         pAyC9/Mga1hhe7kTL0Csa3Dk6kC9/G8CsDpNylzo26ey2NcZdd79zzt5KbojGTPHDE
+         JXqHlayBf3pldbL7+Lf5YuTWZOAcm7Mp/Gb7rO1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenliang Wei <weizhenliang@huawei.com>,
-        Christian Brauner <christian@brauner.io>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ivan Delalande <colona@arista.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 51/69] kernel/signal.c: trace_signal_deliver when signal_group_exit
-Date:   Fri,  7 Jun 2019 17:39:32 +0200
-Message-Id: <20190607153854.589064785@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 08/69] tipc: Avoid copying bytes beyond the supplied data
+Date:   Fri,  7 Jun 2019 17:38:49 +0200
+Message-Id: <20190607153849.294133655@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -67,50 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenliang Wei <weizhenliang@huawei.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-commit 98af37d624ed8c83f1953b1b6b2f6866011fc064 upstream.
+TLV_SET is called with a data pointer and a len parameter that tells us
+how many bytes are pointed to by data. When invoking memcpy() we need
+to careful to only copy len bytes.
 
-In the fixes commit, removing SIGKILL from each thread signal mask and
-executing "goto fatal" directly will skip the call to
-"trace_signal_deliver".  At this point, the delivery tracking of the
-SIGKILL signal will be inaccurate.
+Previously we would copy TLV_LENGTH(len) bytes which would copy an extra
+4 bytes past the end of the data pointer which newer GCC versions
+complain about.
 
-Therefore, we need to add trace_signal_deliver before "goto fatal" after
-executing sigdelset.
+ In file included from test.c:17:
+ In function 'TLV_SET',
+     inlined from 'test' at test.c:186:5:
+ /usr/include/linux/tipc_config.h:317:3:
+ warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]
+ of object 'bearer_name' with type 'char[32]' [-Warray-bounds]
+     memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ test.c: In function 'test':
+ test.c::161:10: note:
+ 'bearer_name' declared here
+     char bearer_name[TIPC_MAX_BEARER_NAME];
+          ^~~~~~~~~~~
 
-Note: SEND_SIG_NOINFO matches the fact that SIGKILL doesn't have any info.
+We still want to ensure any padding bytes at the end are initialised, do
+this with a explicit memset() rather than copy bytes past the end of
+data. Apply the same logic to TCM_SET.
 
-Link: http://lkml.kernel.org/r/20190425025812.91424-1-weizhenliang@huawei.com
-Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
-Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
-Reviewed-by: Christian Brauner <christian@brauner.io>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Ivan Delalande <colona@arista.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/signal.c |    2 ++
- 1 file changed, 2 insertions(+)
+ include/uapi/linux/tipc_config.h |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2271,6 +2271,8 @@ relock:
- 	if (signal_group_exit(signal)) {
- 		ksig->info.si_signo = signr = SIGKILL;
- 		sigdelset(&current->pending.signal, SIGKILL);
-+		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
-+				&sighand->action[SIGKILL - 1]);
- 		recalc_sigpending();
- 		goto fatal;
- 	}
+--- a/include/uapi/linux/tipc_config.h
++++ b/include/uapi/linux/tipc_config.h
+@@ -302,8 +302,10 @@ static inline int TLV_SET(void *tlv, __u
+ 	tlv_ptr = (struct tlv_desc *)tlv;
+ 	tlv_ptr->tlv_type = htons(type);
+ 	tlv_ptr->tlv_len  = htons(tlv_len);
+-	if (len && data)
+-		memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
++	if (len && data) {
++		memcpy(TLV_DATA(tlv_ptr), data, len);
++		memset(TLV_DATA(tlv_ptr) + len, 0, TLV_SPACE(len) - tlv_len);
++	}
+ 	return TLV_SPACE(len);
+ }
+ 
+@@ -400,8 +402,10 @@ static inline int TCM_SET(void *msg, __u
+ 	tcm_hdr->tcm_len   = htonl(msg_len);
+ 	tcm_hdr->tcm_type  = htons(cmd);
+ 	tcm_hdr->tcm_flags = htons(flags);
+-	if (data_len && data)
++	if (data_len && data) {
+ 		memcpy(TCM_DATA(msg), data, data_len);
++		memset(TCM_DATA(msg) + data_len, 0, TCM_SPACE(data_len) - msg_len);
++	}
+ 	return TCM_SPACE(data_len);
+ }
+ 
 
 
