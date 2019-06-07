@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6F1C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53408C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19902146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2404220840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922578;
-	bh=6SKreW8A/rijOlLBCupg5FdbBGnRGcupoXGZRHcXZe0=;
+	s=default; t=1559922582;
+	bh=4CJuhXHiVHLwn//QvJbFWxdV9qoHj3F4tHEXDE50kSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1xvM73wc1N0J2w5UKjsLX2QXfVWOlQDoBqU5r+lYQdrtlH8LnTA0RQ0PnmsSg7jPt
-	 Xs42WmWDdezMaaWILizRmAgOmCoz8kPLuxkHc/r3oMFfYwlwIrbOdmdjXzLAzO4WF9
-	 hPZOz+aYyXO5cz0sTsB0ixrEQWKKD7EAN0Xd5r7U=
+	b=aNVocav6d/g6bZnwxoUovNysaqWV+tN/sQ6qu/0wilX55KGJB0OKWMLkHzz1xcaZJ
+	 nhyWk3YxrGwEXD8VAM1PC1KlI2KB5GMySRZpnY3NSYgodZhRAlsNYv8yWVFtCC8UAr
+	 yuxx4fE5u+F00hHOZHwc9/9CcIudYLK9zju2/2a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731997AbfFGPth (ORCPT
+        id S1732008AbfFGPtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35598 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:49:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731983AbfFGPte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:49:34 -0400
+        id S1731983AbfFGPth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:49:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B74C20840;
-        Fri,  7 Jun 2019 15:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2E5A2147A;
+        Fri,  7 Jun 2019 15:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922573;
-        bh=6SKreW8A/rijOlLBCupg5FdbBGnRGcupoXGZRHcXZe0=;
+        s=default; t=1559922577;
+        bh=4CJuhXHiVHLwn//QvJbFWxdV9qoHj3F4tHEXDE50kSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P2EKkZoC8vHACrv8k2xuJCd2Qcntp8tneSwLqEdtHaKreycz5Cq9rry1jjIRZZkfA
-         q5j38F0/pvgOjcUcxWWQ+uw6SdTizzdWh13rBoUmFwnrf9pIiYn0wAwgYPG6dzGnPM
-         bmTUojmnZuFlcymX5OqfMZJfpN/tpfRThCqSRAnE=
+        b=CmAOuuKRn/YJhwHCYYgqjUHFPPrSJswli27AC6lCgDxEnO1/xDKQFEvVLvAidiKXF
+         XfaOQODhuQgkkzX7vXYmUXwtDJ80Z21N2tFYpR8XxOuVoaxXHI4oDD7dMzpNm1Jc74
+         RF/A/ElHNriElNe4o6mkOkaqz0jGLLionu3FB1Ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
         Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.1 60/85] ima: show rules with IMA_INMASK correctly
-Date:   Fri,  7 Jun 2019 17:39:45 +0200
-Message-Id: <20190607153856.094748565@linuxfoundation.org>
+Subject: [PATCH 5.1 61/85] evm: check hash algorithm passed to init_desc()
+Date:   Fri,  7 Jun 2019 17:39:46 +0200
+Message-Id: <20190607153856.191954590@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -61,67 +61,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 8cdc23a3d9ec0944000ad43bad588e36afdc38cd upstream.
+commit 221be106d75c1b511973301542f47d6000d0b63e upstream.
 
-Show the '^' character when a policy rule has flag IMA_INMASK.
+This patch prevents memory access beyond the evm_tfm array by checking the
+validity of the index (hash algorithm) passed to init_desc(). The hash
+algorithm can be arbitrarily set if the security.ima xattr type is not
+EVM_XATTR_HMAC.
 
-Fixes: 80eae209d63ac ("IMA: allow reading back the current IMA policy")
+Fixes: 5feeb61183dde ("evm: Allow non-SHA1 digital signatures")
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/ima/ima_policy.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ security/integrity/evm/evm_crypto.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -1147,10 +1147,10 @@ enum {
- };
- 
- static const char *const mask_tokens[] = {
--	"MAY_EXEC",
--	"MAY_WRITE",
--	"MAY_READ",
--	"MAY_APPEND"
-+	"^MAY_EXEC",
-+	"^MAY_WRITE",
-+	"^MAY_READ",
-+	"^MAY_APPEND"
- };
- 
- #define __ima_hook_stringify(str)	(#str),
-@@ -1210,6 +1210,7 @@ int ima_policy_show(struct seq_file *m,
- 	struct ima_rule_entry *entry = v;
- 	int i;
- 	char tbuf[64] = {0,};
-+	int offset = 0;
- 
- 	rcu_read_lock();
- 
-@@ -1233,15 +1234,17 @@ int ima_policy_show(struct seq_file *m,
- 	if (entry->flags & IMA_FUNC)
- 		policy_func_show(m, entry->func);
- 
--	if (entry->flags & IMA_MASK) {
-+	if ((entry->flags & IMA_MASK) || (entry->flags & IMA_INMASK)) {
-+		if (entry->flags & IMA_MASK)
-+			offset = 1;
- 		if (entry->mask & MAY_EXEC)
--			seq_printf(m, pt(Opt_mask), mt(mask_exec));
-+			seq_printf(m, pt(Opt_mask), mt(mask_exec) + offset);
- 		if (entry->mask & MAY_WRITE)
--			seq_printf(m, pt(Opt_mask), mt(mask_write));
-+			seq_printf(m, pt(Opt_mask), mt(mask_write) + offset);
- 		if (entry->mask & MAY_READ)
--			seq_printf(m, pt(Opt_mask), mt(mask_read));
-+			seq_printf(m, pt(Opt_mask), mt(mask_read) + offset);
- 		if (entry->mask & MAY_APPEND)
--			seq_printf(m, pt(Opt_mask), mt(mask_append));
-+			seq_printf(m, pt(Opt_mask), mt(mask_append) + offset);
- 		seq_puts(m, " ");
+--- a/security/integrity/evm/evm_crypto.c
++++ b/security/integrity/evm/evm_crypto.c
+@@ -89,6 +89,9 @@ static struct shash_desc *init_desc(char
+ 		tfm = &hmac_tfm;
+ 		algo = evm_hmac;
+ 	} else {
++		if (hash_algo >= HASH_ALGO__LAST)
++			return ERR_PTR(-EINVAL);
++
+ 		tfm = &evm_tfm[hash_algo];
+ 		algo = hash_algo_name[hash_algo];
  	}
- 
 
 
