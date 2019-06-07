@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AA2C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0B5C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 492F520657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA6720657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923161;
-	bh=mpakMRqCJ6zt7o931qndqudXzv6c7d/YcTmSu5u+QLM=;
+	s=default; t=1559923167;
+	bh=hO+iJNCTBJCz8VaO3uLkaVy+9FLTW41H5opJfB9VlKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQkdAlMxOEWjc/ECW1/R+RcYzoPoRgdlFl4q3+K3Mwn1KUZMnosS3YIb3qGJFG+YA
-	 1dou2xoICcXxkEv+gC2Gw9JdM+5a1tA/n0fc/nSz0RLHOe2Qrmin/IhqROPDgLkZGC
-	 mXzYKk4qWPPh+YiTZoMfwd9c+XtxN/INTL50Ff7M=
+	b=gmnTJpfl0lgCtI7Cr2wLQqowZuFY5GkQKWxkGYuETZLve7v0EwnuShhr2q3yh2ZPm
+	 +cxDRK8vj5a2b4jCkdtNsfUHf5RvZbfzKPuUc2HpZj/Bzts3Bao9fFB2QN1bVLBCaw
+	 18HY/JwAGgqjH7Jd4Ss/G9sN6cm1huyXpb4PBnms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731203AbfFGP7U (ORCPT
+        id S1729550AbfFGPmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:59:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52538 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:42:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbfFGPmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:08 -0400
+        id S1730416AbfFGPlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:41:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F5E1212F5;
-        Fri,  7 Jun 2019 15:42:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAA912146F;
+        Fri,  7 Jun 2019 15:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922128;
-        bh=mpakMRqCJ6zt7o931qndqudXzv6c7d/YcTmSu5u+QLM=;
+        s=default; t=1559922112;
+        bh=hO+iJNCTBJCz8VaO3uLkaVy+9FLTW41H5opJfB9VlKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0qG+W+ARISqE7pNiOZbadR7w3CtHmhTAPxzrScBgVYDXY1QSI4XT1yZcsqtuZIsuj
-         N2ydOvb+4aj3rA5cdLjtGp45BEuQ+PweeZIJzDS7K6BefH+1TgCVz10LVMHeZxCzDl
-         6UqM4hPVIbvGQcoFBlM8CrPslGiQDi0/JfGm6rNo=
+        b=ohOnnKrDzqwx+g3FhWEJJj0iWySgPvhn2K/d7QGIc99P5Tcw9wH5R76VNMfnDLQEy
+         NAKKx8m4d37ChKArlm6RyugA8qPNC/DnNaK6YbYXPEVjLWdNLCs3FIjcpqgnWZ8Oxj
+         QDRbMQcku2rpk1K7sW1WMTrBINB0zYx2t2ChCVSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 11/69] ipv4/igmp: fix another memory leak in igmpv3_del_delrec()
-Date:   Fri,  7 Jun 2019 17:38:52 +0200
-Message-Id: <20190607153849.670806553@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 39/69] Btrfs: fix wrong ctime and mtime of a directory after log replay
+Date:   Fri,  7 Jun 2019 17:39:20 +0200
+Message-Id: <20190607153853.181498665@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -61,160 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 3580d04aa674383c42de7b635d28e52a1e5bc72c ]
+commit 5338e43abbab13791144d37fd8846847062351c6 upstream.
 
-syzbot reported memory leaks [1] that I have back tracked to
-a missing cleanup from igmpv3_del_delrec() when
-(im->sfmode != MCAST_INCLUDE)
+When replaying a log that contains a new file or directory name that needs
+to be added to its parent directory, we end up updating the mtime and the
+ctime of the parent directory to the current time after we have set their
+values to the correct ones (set at fsync time), efectivelly losing them.
 
-Add ip_sf_list_clear_all() and kfree_pmc() helpers to explicitely
-handle the cleanups before freeing.
+Sample reproducer:
 
-[1]
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
 
-BUG: memory leak
-unreferenced object 0xffff888123e32b00 (size 64):
-  comm "softirq", pid 0, jiffies 4294942968 (age 8.010s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 e0 00 00 01 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000006105011b>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<000000006105011b>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<000000006105011b>] slab_alloc mm/slab.c:3326 [inline]
-    [<000000006105011b>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-    [<000000004bba8073>] kmalloc include/linux/slab.h:547 [inline]
-    [<000000004bba8073>] kzalloc include/linux/slab.h:742 [inline]
-    [<000000004bba8073>] ip_mc_add1_src net/ipv4/igmp.c:1961 [inline]
-    [<000000004bba8073>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2085
-    [<00000000a46a65a0>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2475
-    [<000000005956ca89>] do_ip_setsockopt.isra.0+0x1795/0x1930 net/ipv4/ip_sockglue.c:957
-    [<00000000848e2d2f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1246
-    [<00000000b9db185c>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2616
-    [<000000003028e438>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
-    [<0000000015b65589>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-    [<00000000ac198ef0>] __do_sys_setsockopt net/socket.c:2089 [inline]
-    [<00000000ac198ef0>] __se_sys_setsockopt net/socket.c:2086 [inline]
-    [<00000000ac198ef0>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-    [<000000000a770437>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-    [<00000000d3adb93b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  $ mkdir /mnt/dir
+  $ touch /mnt/dir/file
 
-Fixes: 9c8bb163ae78 ("igmp, mld: Fix memory leak in igmpv3/mld_del_delrec()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Hangbin Liu <liuhangbin@gmail.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  # fsync of the directory is optional, not needed
+  $ xfs_io -c fsync /mnt/dir
+  $ xfs_io -c fsync /mnt/dir/file
+
+  $ stat -c %Y /mnt/dir
+  1557856079
+
+  <power failure>
+
+  $ sleep 3
+  $ mount /dev/sdb /mnt
+  $ stat -c %Y /mnt/dir
+  1557856082
+
+    --> should have been 1557856079, the mtime is updated to the current
+        time when replaying the log
+
+Fix this by not updating the mtime and ctime to the current time at
+btrfs_add_link() when we are replaying a log tree.
+
+This could be triggered by my recent fsync fuzz tester for fstests, for
+which an fstests patch exists titled "fstests: generic, fsync fuzz tester
+with fsstress".
+
+Fixes: e02119d5a7b43 ("Btrfs: Add a write ahead tree log to optimize synchronous operations")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/igmp.c |   47 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 17 deletions(-)
 
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -635,6 +635,24 @@ static void igmpv3_clear_zeros(struct ip
- 	}
- }
- 
-+static void ip_sf_list_clear_all(struct ip_sf_list *psf)
-+{
-+	struct ip_sf_list *next;
+---
+ fs/btrfs/inode.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -6580,8 +6580,18 @@ int btrfs_add_link(struct btrfs_trans_ha
+ 	btrfs_i_size_write(parent_inode, parent_inode->vfs_inode.i_size +
+ 			   name_len * 2);
+ 	inode_inc_iversion(&parent_inode->vfs_inode);
+-	parent_inode->vfs_inode.i_mtime = parent_inode->vfs_inode.i_ctime =
+-		current_time(&parent_inode->vfs_inode);
++	/*
++	 * If we are replaying a log tree, we do not want to update the mtime
++	 * and ctime of the parent directory with the current time, since the
++	 * log replay procedure is responsible for setting them to their correct
++	 * values (the ones it had when the fsync was done).
++	 */
++	if (!test_bit(BTRFS_FS_LOG_RECOVERING, &root->fs_info->flags)) {
++		struct timespec64 now = current_time(&parent_inode->vfs_inode);
 +
-+	while (psf) {
-+		next = psf->sf_next;
-+		kfree(psf);
-+		psf = next;
++		parent_inode->vfs_inode.i_mtime = now;
++		parent_inode->vfs_inode.i_ctime = now;
 +	}
-+}
-+
-+static void kfree_pmc(struct ip_mc_list *pmc)
-+{
-+	ip_sf_list_clear_all(pmc->sources);
-+	ip_sf_list_clear_all(pmc->tomb);
-+	kfree(pmc);
-+}
-+
- static void igmpv3_send_cr(struct in_device *in_dev)
- {
- 	struct ip_mc_list *pmc, *pmc_prev, *pmc_next;
-@@ -671,7 +689,7 @@ static void igmpv3_send_cr(struct in_dev
- 			else
- 				in_dev->mc_tomb = pmc_next;
- 			in_dev_put(pmc->interface);
--			kfree(pmc);
-+			kfree_pmc(pmc);
- 		} else
- 			pmc_prev = pmc;
- 	}
-@@ -1203,12 +1221,16 @@ static void igmpv3_del_delrec(struct in_
- 		im->crcount = in_dev->mr_qrv ?: net->ipv4.sysctl_igmp_qrv;
- 		if (im->sfmode == MCAST_INCLUDE) {
- 			im->tomb = pmc->tomb;
-+			pmc->tomb = NULL;
-+
- 			im->sources = pmc->sources;
-+			pmc->sources = NULL;
-+
- 			for (psf = im->sources; psf; psf = psf->sf_next)
- 				psf->sf_crcount = im->crcount;
- 		}
- 		in_dev_put(pmc->interface);
--		kfree(pmc);
-+		kfree_pmc(pmc);
- 	}
- 	spin_unlock_bh(&im->lock);
- }
-@@ -1229,21 +1251,18 @@ static void igmpv3_clear_delrec(struct i
- 		nextpmc = pmc->next;
- 		ip_mc_clear_src(pmc);
- 		in_dev_put(pmc->interface);
--		kfree(pmc);
-+		kfree_pmc(pmc);
- 	}
- 	/* clear dead sources, too */
- 	rcu_read_lock();
- 	for_each_pmc_rcu(in_dev, pmc) {
--		struct ip_sf_list *psf, *psf_next;
-+		struct ip_sf_list *psf;
- 
- 		spin_lock_bh(&pmc->lock);
- 		psf = pmc->tomb;
- 		pmc->tomb = NULL;
- 		spin_unlock_bh(&pmc->lock);
--		for (; psf; psf = psf_next) {
--			psf_next = psf->sf_next;
--			kfree(psf);
--		}
-+		ip_sf_list_clear_all(psf);
- 	}
- 	rcu_read_unlock();
- }
-@@ -2107,7 +2126,7 @@ static int ip_mc_add_src(struct in_devic
- 
- static void ip_mc_clear_src(struct ip_mc_list *pmc)
- {
--	struct ip_sf_list *psf, *nextpsf, *tomb, *sources;
-+	struct ip_sf_list *tomb, *sources;
- 
- 	spin_lock_bh(&pmc->lock);
- 	tomb = pmc->tomb;
-@@ -2119,14 +2138,8 @@ static void ip_mc_clear_src(struct ip_mc
- 	pmc->sfcount[MCAST_EXCLUDE] = 1;
- 	spin_unlock_bh(&pmc->lock);
- 
--	for (psf = tomb; psf; psf = nextpsf) {
--		nextpsf = psf->sf_next;
--		kfree(psf);
--	}
--	for (psf = sources; psf; psf = nextpsf) {
--		nextpsf = psf->sf_next;
--		kfree(psf);
--	}
-+	ip_sf_list_clear_all(tomb);
-+	ip_sf_list_clear_all(sources);
- }
- 
- /* Join a multicast group
+ 	ret = btrfs_update_inode(trans, root, &parent_inode->vfs_inode);
+ 	if (ret)
+ 		btrfs_abort_transaction(trans, ret);
 
 
