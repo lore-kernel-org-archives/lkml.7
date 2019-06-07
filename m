@@ -2,151 +2,229 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1C9C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98683C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A593208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6011E208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KVYYv0D0";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="L2c5TtKO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hn6T90Ip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbfFGTWK (ORCPT
+        id S1730180AbfFGTYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:22:10 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:52114 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730008AbfFGTWJ (ORCPT
+        Fri, 7 Jun 2019 15:24:21 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:19694 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729677AbfFGTYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:22:09 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x57J9UUm020611;
-        Fri, 7 Jun 2019 12:21:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=rTaHkelg5wszskIiWMkn6zGlnpLIr1bVCraXEWLwovw=;
- b=KVYYv0D01HjdU6qxnn7g/fGMAWMzt+Ke1WBh5NGShY5fcYAdgsckNUO0PHxPtMkkjk9F
- nGKxqYMZ4j5yAuWYIYWltVzCOZSZno7AVEhoRLpbmMY55URwXa46TXOuZk8CBtDS+p7c
- yju1KarUwCe28Bck7OQt2hrwkMKE55FOqfk= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sytr28sj9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 07 Jun 2019 12:21:08 -0700
-Received: from prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 7 Jun 2019 12:21:07 -0700
-Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
- prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 7 Jun 2019 12:21:06 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 7 Jun 2019 12:21:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rTaHkelg5wszskIiWMkn6zGlnpLIr1bVCraXEWLwovw=;
- b=L2c5TtKOkNqGkc90o8JsJXXIYO8g82H0cPHLzaA+WUUZeBCBwmLy56tk24WPaPXdXyZLhHRK42TPzYBt4JlN531skWM00Pb93Nk8OcVPU23QmJTgqnJW7Hh6UawnBUaUdUP/8cviDLip9q4mQ/JTG0qr5v4dfBT5yTOnPcATf/k=
-Received: from MW2PR1501MB1993.namprd15.prod.outlook.com (52.132.149.157) by
- MW2PR1501MB2073.namprd15.prod.outlook.com (52.132.150.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Fri, 7 Jun 2019 19:20:47 +0000
-Received: from MW2PR1501MB1993.namprd15.prod.outlook.com
- ([fe80::ede1:f275:2869:8156]) by MW2PR1501MB1993.namprd15.prod.outlook.com
- ([fe80::ede1:f275:2869:8156%7]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
- 19:20:46 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     =?utf-8?B?UmVuw6kgUmViZQ==?= <rene@exactcode.com>
-CC:     Adam Borowski <kilobyte@angband.pl>,
-        Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Kernel Team" <Kernel-team@fb.com>, Chris Mason <clm@fb.com>,
-        Julian Andres Klode <julian.klode@canonical.com>
-Subject: Re: [RESEND PATCH v2 0/2] Add support for ZSTD-compressed kernel
-Thread-Topic: [RESEND PATCH v2 0/2] Add support for ZSTD-compressed kernel
-Thread-Index: AQHTwX4w5Tc/5RmZHUq3duJllyvimaSH2sIAgABGewCAPObhgIAACrOAgAARzQCAABe+AIAADJaAgBAj6oCBumpMgIADcg8A
-Date:   Fri, 7 Jun 2019 19:20:46 +0000
-Message-ID: <9214536E-2A20-409A-81C7-822AF9269D95@fb.com>
-References: <20180322012943.4145794-1-terrelln@fb.com>
- <5B282FAD-EDCF-44C8-A131-A3C6FF3EA84F@fb.com>
- <3F598446-EA1D-47CE-B7A1-4D3002DA3972@exactcode.com>
- <8DE2BD14-0C9C-43AF-B9B7-F760F8434B6B@exactcode.com>
- <20180817165403.GC12066@tassilo.jf.intel.com>
- <20180817175746.d2brxipp7xa4y2uw@angband.pl>
- <20180817192244.GF12066@tassilo.jf.intel.com>
- <20180817200747.bzmsl5nfwewyksvg@angband.pl>
- <8117EBED-C57E-40AA-8E29-F4DFAB97E059@fb.com>
- <0ABE55AB-D29B-4E12-8E12-A9AFD6E39382@exactcode.com>
-In-Reply-To: <0ABE55AB-D29B-4E12-8E12-A9AFD6E39382@exactcode.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::5a24]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b13183d6-e023-4fc9-8f1e-08d6eb7d3e67
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MW2PR1501MB2073;
-x-ms-traffictypediagnostic: MW2PR1501MB2073:
-x-microsoft-antispam-prvs: <MW2PR1501MB2073DE66DE9094F8633C3A9BAB100@MW2PR1501MB2073.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0061C35778
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(366004)(136003)(39860400002)(346002)(199004)(189003)(66946007)(476003)(2616005)(76176011)(6512007)(478600001)(73956011)(66476007)(186003)(66446008)(64756008)(66556008)(486006)(7736002)(25786009)(33656002)(99286004)(305945005)(46003)(6436002)(446003)(76116006)(11346002)(68736007)(229853002)(6486002)(36756003)(6916009)(6116002)(82746002)(102836004)(86362001)(81156014)(81166006)(8676002)(6246003)(14454004)(2906002)(256004)(5660300002)(4744005)(316002)(54906003)(4326008)(6506007)(53546011)(8936002)(71190400001)(71200400001)(53936002)(83716004);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR1501MB2073;H:MW2PR1501MB1993.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oft62SC+sBm8C6Surv9ldrm0/DKVMRdeOTZp/ZJ3kG5QAcwl3O6+bZ+n+PA/p9ccWHxlp3TfzlNzf/PSB3L1vos3/prLC440IRGEh9tX+GkZdX8d69uQqDsf4CUbXIJ9JWjhLyIvcpG9kvs46cJd3Y7Xq5KF003PqLldYMGLfoktRPvVGg/BTTYDBY7kwQHZllRDpZzg6RJ2HU6m/eStsczTa07gXi1McUJDcWteC6+EkBiCEq6K2qhKvuHmK/EgdFC+BtQ82TjvMwbm36oLs2xN6sH7pkoyrdo/XwRrQjStiI8Y/A9wpEM62HBTf9KimqxYx0j91pIlA+3xkSAh0eXlojZxlYUO/OYGgkzhXh2aLqCipQcvcFyTg/qZXidQDaTc0wdUfkTI8EqMOaoUcQBxMX2QI4dGS6zgFGJln0U=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E02D19D696EA5049B4AB81D17E84CE6E@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 7 Jun 2019 15:24:21 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cfab9e20000>; Fri, 07 Jun 2019 12:24:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 07 Jun 2019 12:24:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 07 Jun 2019 12:24:19 -0700
+Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 19:24:15 +0000
+Subject: Re: [PATCH V1 6/6] i2c: tegra: remove BUG, BUG_ON
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
+ <1559908507-31192-6-git-send-email-bbiswas@nvidia.com>
+ <4aec6d7a-0dea-18c9-efde-96cc1a54b945@gmail.com>
+ <2281ef29-6e69-78e7-4d07-77f33c2f2d5a@gmail.com>
+ <9adcde41-2450-27dc-36a0-b3b99022b43d@gmail.com>
+ <75a7f16f-5d54-797d-fb72-445411f20424@nvidia.com>
+Message-ID: <40f730a0-d602-fe94-8e20-3e209b1c9eda@nvidia.com>
+Date:   Fri, 7 Jun 2019 12:24:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b13183d6-e023-4fc9-8f1e-08d6eb7d3e67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 19:20:46.8468
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: terrelln@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR1501MB2073
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=810 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906070128
-X-FB-Internal: deliver
+In-Reply-To: <75a7f16f-5d54-797d-fb72-445411f20424@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559935459; bh=9OnVoLPL1VBq2UFdZ/s4ALKZS6g3/wKx5xfzx/l4mFM=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hn6T90IpmnSpFrZQQfGkkiKA79Q5l5Uh5U8Yju0ZeX+FSV7RdktNOXfT9HJUgZWpc
+         9bT65++1K9scOSID0hXUitITYkrpjCfgFb/D3u3yQvUPQyAkIEqkhE5tDwa9uhQxan
+         2qsi0cKY9xAl1MMGyHuKNI+VDIf9OFaOnL1XvuuOR4TahcIt/b80lG7DmGmsmSQfhF
+         X9RrjVlebPFIB+mNVHcKUKJaqV+kzwe6Y6Ga5tGTQWZhb7b8fqTiqWyEvFJ7EgYJdU
+         pVxSKjQfKpuOHWX5TYaEV9RHM00+zZRvuHuwDzfBm1UMWwMJq1261zG4BfwJHsKkQi
+         irbmEiGDQ01gQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdW4gNSwgMjAxOSwgYXQgNzo0MyBBTSwgUmVuw6kgUmViZSA8cmVuZUBleGFjdGNvZGUu
-Y29tPiB3cm90ZToNCj4gDQo+IEhleSB0aGVyZSwNCj4gDQo+IGp1c3Qgd2FudGVkIHRvIGNoZWNr
-IGFib3V0IHRoZSBzdGF0dXMgb2YgenN0ZC1jb21wcmVzc2VkIGtlcm5lbC4NCj4gSXQgd29ya3Mg
-Z3JlYXQgZm9yIHVzLCBhbmQgdGhlIGluaXRyZCBwYXJ0IEkgdGVzdGVkIG9uIFBQQywgUFBDNjQs
-IFNQQVJDNjQsDQo+IEhQUEEsIE1JUFM2NCBhbmQgcHJvYmFibHkgb3RoZXIgcmFuZG9tIHRoaW5n
-cyB0aGF0IEkgbWF5IGZvcmdvdCBhYm91dCBpbiB0aGUNCj4gbWVhbnRpbWUuDQo+IA0KPiBXb3Vs
-ZCBiZSBncmVhdCBpZiBzb21ldGhpbmcgbGlrZSB0aGlzIGNvdWxkIGJlIG1haW5saW5lZC4NCg0K
-V2UnZCBsb3ZlIHRvIGdldCB0aGlzIG1haW5saW5lZCBhcyB3ZWxsIQ0KDQpXZSdyZSB1c2luZyB0
-aGVzZSBwYXRjaGVzIGludGVybmFsbHkgYXMgd2VsbC4gV2UncmUgc2VlaW5nIGFuIGltcHJvdmVt
-ZW50IG9uIGFuDQpJbnRlbCBBdG9tIE4zNzEwLCB3aGVyZSBib290IHRpbWUgaXMgcmVkdWNlZCBi
-eSBvbmUgc2Vjb25kIG92ZXIgdXNpbmcgYW4geHoNCmNvbXByZXNzZWQga2VybmVsLiBJdCBsb29r
-cyBsaWtlIFVidW50dSBqdXN0IHN3aXRjaGVkIHRvIGEgbHo0IGNvbXByZXNzZWQga2VybmVsLA0K
-YnV0IHpzdGQgaXMgbGlrZWx5IGEgYmV0dGVyIHRyYWRlIG9mZiwgYmVjYXVzZSBpdCBjb21wcmVz
-c2VzIG11Y2ggYmV0dGVyIGFuZCBzdGlsbCBoYXMNCmV4Y2VsbGVudCBkZWNvbXByZXNzaW9uIHNw
-ZWVkLg0KDQpTaW5jZSBpdHMgYmVlbiBuZWFybHkgYSB5ZWFyIHNpbmNlIEkgc2VudCB0aGVzZSBv
-dXQsIEkgd2lsbCB0YWtlIHNvbWUgdGltZSB0byByZWJhc2UNCmFuZCByZXRlc3QgdGhlIHBhdGNo
-ZXMgaW4gY2FzZSBhbnl0aGluZyBjaGFuZ2VkLCBhbmQgdGhlbiB0aGVuIHJlc2VuZCB0aGUgcGF0
-Y2hlcw0KaW4gdGhlIG5leHQgd2Vla3MuDQoNCk5pY2sNCg0KPiBbLi4uXQ==
+
+
+On 6/7/19 11:55 AM, Bitan Biswas wrote:
+>=20
+>=20
+> On 6/7/19 5:18 AM, Dmitry Osipenko wrote:
+>> 07.06.2019 15:12, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 07.06.2019 15:08, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 07.06.2019 14:55, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+>>>>> as needed. Replace BUG() with error handling code.
+>>>>> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
+>>>>>
+>>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>>> ---
+>>>>> =C2=A0 drivers/i2c/busses/i2c-tegra.c | 15 ++++++++-------
+>>>>> =C2=A0 1 file changed, 8 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c=20
+>>>>> b/drivers/i2c/busses/i2c-tegra.c
+>>>>> index 4dfb4c1..c407bd7 100644
+>>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>>> @@ -73,6 +73,7 @@
+>>>>> =C2=A0 #define I2C_ERR_NO_ACK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
+>>>>> =C2=A0 #define I2C_ERR_ARBITRATION_LOST=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 BIT(1)
+>>>>> =C2=A0 #define I2C_ERR_UNKNOWN_INTERRUPT=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 BIT(2)
+>>>>> +#define I2C_ERR_UNEXPECTED_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 BIT(3)
+>>>>> =C2=A0 #define PACKET_HEADER0_HEADER_SIZE_SHIFT=C2=A0=C2=A0=C2=A0 28
+>>>>> =C2=A0 #define PACKET_HEADER0_PACKET_ID_SHIFT=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 16
+>>>>> @@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct=20
+>>>>> tegra_i2c_dev *i2c_dev)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * prevent overwriting past the e=
+nd of buf
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rx_fifo_avail > 0 && buf_remaining=
+ > 0) {
+>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(buf_remaining > 3)=
+;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D i2c_re=
+adl(i2c_dev, I2C_RX_FIFO);
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D cpu_to=
+_le32(val);
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memcpy(buf, &v=
+al, buf_remaining);
+>>>>> @@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct=20
+>>>>> tegra_i2c_dev *i2c_dev)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rx_fifo_avail-=
+-;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> -=C2=A0=C2=A0=C2=A0 BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i2c_dev->msg_buf_remaining =3D buf_rem=
+aining;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i2c_dev->msg_buf =3D buf;
+>>>>> @@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct=20
+>>>>> tegra_i2c_dev *i2c_dev)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * boundary and fault.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (tx_fifo_avail > 0 && buf_remaining=
+ > 0) {
+>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(buf_remaining > 3)=
+;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memcpy(&val, b=
+uf, buf_remaining);
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D le32_t=
+o_cpu(val);
+>>>>> @@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq,=20
+>>>>> void *dev_id)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!i2c_dev->is_curr_dma_xfer) {
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (i2c_dev->m=
+sg_read && (status &=20
+>>>>> I2C_INT_RX_FIFO_DATA_REQ)) {
+>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
+f (i2c_dev->msg_buf_remaining)
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
+f (i2c_dev->msg_buf_remaining) {
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_i2c_empty_rx_fifo(i2c_dev);
+>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 e=
+lse
+>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 BUG();
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }=
+ else {
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(i2c_dev->dev, "unexpected rx data=20
+>>>>> request\n");
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 i2c_dev->msg_err |=3D I2C_ERR_UNEXPECTED_STATUS;
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 goto err;
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!i2c_dev->=
+msg_read && (status &=20
+>>>>> I2C_INT_TX_FIFO_DATA_REQ)) {
+>>>>> @@ -876,7 +877,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void=20
+>>>>> *dev_id)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (status & I2C_INT_PACKET_XFER_COMPL=
+ETE) {
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (i2c_dev->i=
+s_curr_dma_xfer)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 i2c_dev->msg_buf_remaining =3D 0;
+>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(i2c_dev->msg_buf_r=
+emaining);
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 WARN_ON_ONCE(i2c_dev->msg=
+_buf_remaining);
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 complete(&i2c_=
+dev->msg_complete);
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto done;
+>>>>>
+>>>>
+>>>> Very nice, thank you very much! BTW, I think it may worth to add=20
+>>>> another
+>>>> patch that will reset hardware state in a case of the warning since we
+>>>> know that something gone wrong.
+>>>>
+>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>
+>>>
+>>> Something like that:
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 complete(&i2c_dev->msg_complete);
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining))
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err;
+>>>
+>>
+>> Ah, that's inside the ISR, so maybe will make sense to just not complete
+>> the transfer and let it timeout:
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0if (!WARN_ON_ONCE(i2c_dev->msg_buf_remaining))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 complete(&i2c_dev->msg_comple=
+te);
+> OK. I shall send the updated patch.
+I see that there is already err label in the ISR that could be jumped=20
+into. Hence, planning to share updated patch with the error handling.
+
+-regards,
+  Bitan
+
