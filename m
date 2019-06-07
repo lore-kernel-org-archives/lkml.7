@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BC9C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE26C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE7621537
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EEC212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922403;
-	bh=vhhWLwsrtE0RUJvFMB7xnPDsVv+Kb3ZJL0+y0DVFHmM=;
+	s=default; t=1559922409;
+	bh=fODzMbhwNCnU9KZWF0dDSMSCfi+Kpxj4SJk1wz8uYx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXXdrqr3hL7q2PfPVk8Ssnfwdk7H/DO9NUqgJJylwu/3oA0U+74I6cgtxIRasU5nf
-	 Q0NyCweAYKWcmSHedngzioB+jFTmVxfPD4Th4GUAthlItjOLhxTnV0vAXCei8uQ4NT
-	 Pg7wiexpTbZjgT3P9nH2yF9Rj4UuPoZLM0hNPu9Y=
+	b=gIMxMR3so1UIup4svNDoyTAXAVZNOq388PZVK5FxDHmV/NKkL4kcImpJoey6Jg11b
+	 lud4wso2HOo418u2vHmSedEA3ezu1sTLYkUw1ciiPGP0dcFO+HQNW6dHE3S4jlb3tw
+	 RxoVMS7tFTmu/LNSGY1jKdZOv5bdS/u02Os6duhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731465AbfFGPqn (ORCPT
+        id S1731473AbfFGPqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:46:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59096 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:46:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731437AbfFGPql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:41 -0400
+        id S1729835AbfFGPqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18AA7212F5;
-        Fri,  7 Jun 2019 15:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA2172147A;
+        Fri,  7 Jun 2019 15:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922399;
-        bh=vhhWLwsrtE0RUJvFMB7xnPDsVv+Kb3ZJL0+y0DVFHmM=;
+        s=default; t=1559922402;
+        bh=fODzMbhwNCnU9KZWF0dDSMSCfi+Kpxj4SJk1wz8uYx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPmqwz7/2YqtmSswMLHMdSeZ8RmVxRrN+NvBxZeT0rlLNI3QjmElnbsOR+1l0f8cp
-         6pCvQkWak3qy2muKJFjyLQRqHMaWDLYuT0pbIGKiP/Q9ugaMz9nBlDuV5TEJlBzfZi
-         TplUTvY3EEtuIREeQQCJ2QDqp9vi1G4w10fj68KQ=
+        b=KnhWR2OpPI4vleykwtki9CHaRiMxBDrC/WdsGFj+A8BoLGgeH2uAQMWVzg7aKBNbD
+         t9DXL6C45MaG2FzTb9zI9yYVTgM7Bk5QIeN8mY0xZwGzPJlfMToJWJFGq90Eu8mnyF
+         p21iwzgQrQDuRKv4qJ1dS7JVE33w1CDS3v7KAcUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Tull <atull@kernel.org>,
-        Frank Rowand <frank.rowand@sony.com>,
-        Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH 4.19 72/73] of: overlay: set node fields from properties when add new overlay node
-Date:   Fri,  7 Jun 2019 17:39:59 +0200
-Message-Id: <20190607153856.786399932@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.19 73/73] media: uvcvideo: Fix uvc_alloc_entity() allocation alignment
+Date:   Fri,  7 Jun 2019 17:40:00 +0200
+Message-Id: <20190607153856.880547199@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -60,133 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Nadav Amit <namit@vmware.com>
 
-commit f96278810150fc39085d1872e5b39ea06366d03e upstream.
+commit 89dd34caf73e28018c58cd193751e41b1f8bdc56 upstream.
 
-Overlay nodes added by add_changeset_node() do not have the node
-fields name, phandle, and type set.
+The use of ALIGN() in uvc_alloc_entity() is incorrect, since the size of
+(entity->pads) is not a power of two. As a stop-gap, until a better
+solution is adapted, use roundup() instead.
 
-The node passed to __of_attach_node() when the add node changeset
-entry is processed does not contain any properties.  The node's
-properties are located in add property changeset entries that will
-be processed after the add node changeset is applied.
+Found by a static assertion. Compile-tested only.
 
-Set the node's fields in the node contained in the add node
-changeset entry and do not set them to incorrect values in
-add_changeset_node().
+Fixes: 4ffc2d89f38a ("uvcvideo: Register subdevices for each entity")
 
-A visible symptom that is fixed by this patch is the names of nodes
-added by overlays that have an entry in /sys/bus/platform/drivers/*/
-will contain the unit-address but the node-name will be <NULL>,  for
-example, "fc4ab000.<NULL>".  After applying the patch the name, in
-this example, for node restart@fc4ab000 is "fc4ab000.restart".
-
-Tested-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Cc: Phil Elwell <phil@raspberrypi.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/of/dynamic.c |   25 +++++++++++++++++--------
- drivers/of/overlay.c |   29 ++++++++++++++++++++++++-----
- 2 files changed, 41 insertions(+), 13 deletions(-)
+ drivers/media/usb/uvc/uvc_driver.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -205,15 +205,24 @@ static void __of_attach_node(struct devi
- 	const __be32 *phandle;
- 	int sz;
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -914,7 +914,7 @@ static struct uvc_entity *uvc_alloc_enti
+ 	unsigned int size;
+ 	unsigned int i;
  
--	np->name = __of_get_property(np, "name", NULL) ? : "<NULL>";
--	np->type = __of_get_property(np, "device_type", NULL) ? : "<NULL>";
-+	if (!of_node_check_flag(np, OF_OVERLAY)) {
-+		np->name = __of_get_property(np, "name", NULL);
-+		np->type = __of_get_property(np, "device_type", NULL);
-+		if (!np->name)
-+			np->name = "<NULL>";
-+		if (!np->type)
-+			np->type = "<NULL>";
- 
--	phandle = __of_get_property(np, "phandle", &sz);
--	if (!phandle)
--		phandle = __of_get_property(np, "linux,phandle", &sz);
--	if (IS_ENABLED(CONFIG_PPC_PSERIES) && !phandle)
--		phandle = __of_get_property(np, "ibm,phandle", &sz);
--	np->phandle = (phandle && (sz >= 4)) ? be32_to_cpup(phandle) : 0;
-+		phandle = __of_get_property(np, "phandle", &sz);
-+		if (!phandle)
-+			phandle = __of_get_property(np, "linux,phandle", &sz);
-+		if (IS_ENABLED(CONFIG_PPC_PSERIES) && !phandle)
-+			phandle = __of_get_property(np, "ibm,phandle", &sz);
-+		if (phandle && (sz >= 4))
-+			np->phandle = be32_to_cpup(phandle);
-+		else
-+			np->phandle = 0;
-+	}
- 
- 	np->child = NULL;
- 	np->sibling = np->parent->child;
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -307,10 +307,11 @@ static int add_changeset_property(struct
- 	int ret = 0;
- 	bool check_for_non_overlay_node = false;
- 
--	if (!of_prop_cmp(overlay_prop->name, "name") ||
--	    !of_prop_cmp(overlay_prop->name, "phandle") ||
--	    !of_prop_cmp(overlay_prop->name, "linux,phandle"))
--		return 0;
-+	if (target->in_livetree)
-+		if (!of_prop_cmp(overlay_prop->name, "name") ||
-+		    !of_prop_cmp(overlay_prop->name, "phandle") ||
-+		    !of_prop_cmp(overlay_prop->name, "linux,phandle"))
-+			return 0;
- 
- 	if (target->in_livetree)
- 		prop = of_find_property(target->np, overlay_prop->name, NULL);
-@@ -330,6 +331,10 @@ static int add_changeset_property(struct
- 
- 	if (!prop) {
- 		check_for_non_overlay_node = true;
-+		if (!target->in_livetree) {
-+			new_prop->next = target->np->deadprops;
-+			target->np->deadprops = new_prop;
-+		}
- 		ret = of_changeset_add_property(&ovcs->cset, target->np,
- 						new_prop);
- 	} else if (!of_prop_cmp(prop->name, "#address-cells")) {
-@@ -408,9 +413,10 @@ static int add_changeset_node(struct ove
- 		struct target *target, struct device_node *node)
- {
- 	const char *node_kbasename;
-+	const __be32 *phandle;
- 	struct device_node *tchild;
- 	struct target target_child;
--	int ret = 0;
-+	int ret = 0, size;
- 
- 	node_kbasename = kbasename(node->full_name);
- 
-@@ -424,6 +430,19 @@ static int add_changeset_node(struct ove
- 			return -ENOMEM;
- 
- 		tchild->parent = target->np;
-+		tchild->name = __of_get_property(node, "name", NULL);
-+		tchild->type = __of_get_property(node, "device_type", NULL);
-+
-+		if (!tchild->name)
-+			tchild->name = "<NULL>";
-+		if (!tchild->type)
-+			tchild->type = "<NULL>";
-+
-+		/* ignore obsolete "linux,phandle" */
-+		phandle = __of_get_property(node, "phandle", &size);
-+		if (phandle && (size == 4))
-+			tchild->phandle = be32_to_cpup(phandle);
-+
- 		of_node_set_flag(tchild, OF_OVERLAY);
- 
- 		ret = of_changeset_attach_node(&ovcs->cset, tchild);
+-	extra_size = ALIGN(extra_size, sizeof(*entity->pads));
++	extra_size = roundup(extra_size, sizeof(*entity->pads));
+ 	num_inputs = (type & UVC_TERM_OUTPUT) ? num_pads : num_pads - 1;
+ 	size = sizeof(*entity) + extra_size + sizeof(*entity->pads) * num_pads
+ 	     + num_inputs;
 
 
