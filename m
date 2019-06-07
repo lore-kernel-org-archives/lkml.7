@@ -2,204 +2,106 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE0BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74528C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB80F207E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0E6207E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731322AbfFGWId convert rfc822-to-8bit (ORCPT
+        id S1731362AbfFGWKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:08:33 -0400
-Received: from mga04.intel.com ([192.55.52.120]:20128 "EHLO mga04.intel.com"
+        Fri, 7 Jun 2019 18:10:04 -0400
+Received: from mga06.intel.com ([134.134.136.31]:58792 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfFGWId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:08:33 -0400
+        id S1727213AbfFGWKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 18:10:04 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 15:08:32 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 15:10:03 -0700
 X-ExtLoop1: 1
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by orsmga005.jf.intel.com with ESMTP; 07 Jun 2019 15:08:32 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.13]) by
- ORSMSX103.amr.corp.intel.com ([169.254.5.232]) with mapi id 14.03.0415.000;
- Fri, 7 Jun 2019 15:08:32 -0700
-From:   "Fujinaka, Todd" <todd.fujinaka@intel.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-CC:     "e1000-devel@lists.sourceforge.net" 
-        <e1000-devel@lists.sourceforge.net>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
-Subject: RE: [E1000-devel] [Intel-wired-lan] i40e X722 RSS problem with
- NAT-Traversal IPsec packets
-Thread-Topic: [E1000-devel] [Intel-wired-lan] i40e X722 RSS problem with
- NAT-Traversal IPsec packets
-Thread-Index: AQHVAGFrUp79tfxVUUm4svS7p3lcbqZXVdKAgAERcwCAAB83gIAAA7EAgAADSgCAAAeAgIAAEBkAgAAjdwCAATHTgIAAIwyAgAA9aYCAD3MygIAAI9MAgAFooQCAAy7FgIAAF0AAgAAA04CAAFKIAIABH72AgAALcoCAAFLpAIAF0r+AgAAazYCAABG2AIAAW3aAgAEAYwCAGSUSAIAAUhKAgAAVdAD//58hAA==
-Date:   Fri, 7 Jun 2019 22:08:31 +0000
-Message-ID: <9B4A1B1917080E46B64F07F2989DADD69AFBF090@ORSMSX115.amr.corp.intel.com>
-References: <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
- <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
- <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
- <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca>
- <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
- <20190521151537.xga4aiq3gjtiif4j@csclub.uwaterloo.ca>
- <CAKgT0UfpZ-ve3Hx26gDkb+YTDHvN3=MJ7NZd2NE7ewF5g=kHHw@mail.gmail.com>
- <20190521175456.zlkiiov5hry2l4q2@csclub.uwaterloo.ca>
- <CAKgT0UcR3q1maBmJz7xj_i+_oux_6FQxua9DOjXQSZzyq6FhkQ@mail.gmail.com>
- <20190522143956.quskqh33ko2wuf47@csclub.uwaterloo.ca>
- <20190607143906.wgi344jcc77qvh24@csclub.uwaterloo.ca>
- <CAKgT0Ue1M8_30PVPmoJy_EGo2mjM26ecz32Myx-hpnuq_6wdjw@mail.gmail.com>
- <alpine.NEB.2.21.9999.1906071343460.809@chris.i8u.org>
-In-Reply-To: <alpine.NEB.2.21.9999.1906071343460.809@chris.i8u.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWE0MWE5MTEtNjM2ZC00ZjQxLWEyM2QtMGQ0YzY5OWZkZTBlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSU5BYTNcL2VSSTVyNTQ2YmRaR0dWM1VIWGVpT3ZINUR5d3NibjJIUVhYR1ZQREZnMUtcL3NCbFdoK3l4MFhnWTVCIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+X-IronPort-AV: E=Sophos;i="5.63,564,1557212400"; 
+   d="scan'208";a="182814101"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2019 15:10:03 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v4 1/5] x86/cpufeatures: Enumerate user wait instructions
+Date:   Fri,  7 Jun 2019 15:00:33 -0700
+Message-Id: <1559944837-149589-2-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
+References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a quick update with the response I got and I'll make sure this is in our internal bug database.
+umonitor, umwait, and tpause are a set of user wait instructions.
 
-Here's what I got back, and it looks like you guys have tried this already:
+umonitor arms address monitoring hardware using an address. The
+address range is determined by using CPUID.0x5. A store to
+an address within the specified address range triggers the
+monitoring hardware to wake up the processor waiting in umwait.
 
-Have they tried these steps to configure RSS:
+umwait instructs the processor to enter an implementation-dependent
+optimized state while monitoring a range of addresses. The optimized
+state may be either a light-weight power/performance optimized state
+(C0.1 state) or an improved power/performance optimized state
+(C0.2 state).
 
-RSS Hash Flow
--------------
+tpause instructs the processor to enter an implementation-dependent
+optimized state C0.1 or C0.2 state and wake up when time-stamp counter
+reaches specified timeout.
 
-Allows you to set the hash bytes per flow type and any combination of one or
-more options for Receive Side Scaling (RSS) hash byte configuration.
+The three instructions may be executed at any privilege level.
 
-#ethtool -N <dev> rx-flow-hash <type> <option>
+The instructions provide power saving method while waiting in
+user space. Additionally, they can allow a sibling hyperthread to
+make faster progress while this thread is waiting. One example of an
+application usage of umwait is when waiting for input data from another
+application, such as a user level multi-threaded packet processing
+engine.
 
-Where <type> is:
-  tcp4  signifying TCP over IPv4
-  udp4  signifying UDP over IPv4
-  tcp6  signifying TCP over IPv6
-  udp6  signifying UDP over IPv6
-And <option> is one or more of:
-  s Hash on the IP source address of the rx packet.
-  d Hash on the IP destination address of the rx packet.
-  f Hash on bytes 0 and 1 of the Layer 4 header of the rx packet.
-  n Hash on bytes 2 and 3 of the Layer 4 header of the rx packet.
+Availability of the user wait instructions is indicated by the presence
+of the CPUID feature flag WAITPKG CPUID.0x07.0x0:ECX[5].
 
-Also, looks like the driver needs to be updated to latest version:
->>> 1.1767.0 i40e 0000:3d:00.0: The driver for the device detected a
->>> newer version of the NVM image than expected. Please install the
->>> most recent version of the network driver.
+Detailed information on the instructions and CPUID feature WAITPKG flag
+can be found in the latest Intel Architecture Instruction Set Extensions
+and Future Features Programming Reference and Intel 64 and IA-32
+Architectures Software Developer's Manual.
 
-Out of tree: https://sourceforge.net/projects/e1000/files/i40e%20stable/
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Todd Fujinaka
-Software Application Engineer
-Datacenter Engineering Group
-Intel Corporation
-todd.fujinaka@intel.com
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 75f27ee2c263..b8bd428ae5bc 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -322,6 +322,7 @@
+ #define X86_FEATURE_UMIP		(16*32+ 2) /* User Mode Instruction Protection */
+ #define X86_FEATURE_PKU			(16*32+ 3) /* Protection Keys for Userspace */
+ #define X86_FEATURE_OSPKE		(16*32+ 4) /* OS Protection Keys Enable */
++#define X86_FEATURE_WAITPKG		(16*32+ 5) /* UMONITOR/UMWAIT/TPAUSE Instructions */
+ #define X86_FEATURE_AVX512_VBMI2	(16*32+ 6) /* Additional AVX512 Vector Bit Manipulation Instructions */
+ #define X86_FEATURE_GFNI		(16*32+ 8) /* Galois Field New Instructions */
+ #define X86_FEATURE_VAES		(16*32+ 9) /* Vector AES */
+-- 
+2.19.1
 
-
------Original Message-----
-From: Hisashi T Fujinaka [mailto:htodd@twofifty.com] 
-Sent: Friday, June 7, 2019 1:50 PM
-To: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: e1000-devel@lists.sourceforge.net; Netdev <netdev@vger.kernel.org>; intel-wired-lan <intel-wired-lan@lists.osuosl.org>; LKML <linux-kernel@vger.kernel.org>; Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
-Subject: Re: [E1000-devel] [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
-
-On Fri, 7 Jun 2019, Alexander Duyck wrote:
-
-> On Fri, Jun 7, 2019 at 7:39 AM Lennart Sorensen 
-> <lsorense@csclub.uwaterloo.ca> wrote:
->>
->> On Wed, May 22, 2019 at 10:39:56AM -0400, Lennart Sorensen wrote:
->>> OK I applied those two patches and get this:
->>>
->>> i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 
->>> 2.1.7-k
->>> i40e: Copyright (c) 2013 - 2014 Intel Corporation.
->>> i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 
->>> 1.1767.0 i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
->>> i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87 i40e 0000:3d:00.0: 
->>> PFQF_HREGION[7]: 0x00000000 i40e 0000:3d:00.0: PFQF_HREGION[6]: 
->>> 0x00000000 i40e 0000:3d:00.0: PFQF_HREGION[5]: 0x00000000 i40e 
->>> 0000:3d:00.0: PFQF_HREGION[4]: 0x00000000 i40e 0000:3d:00.0: 
->>> PFQF_HREGION[3]: 0x00000000 i40e 0000:3d:00.0: PFQF_HREGION[2]: 
->>> 0x00000000 i40e 0000:3d:00.0: PFQF_HREGION[1]: 0x00000000 i40e 
->>> 0000:3d:00.0: PFQF_HREGION[0]: 0x00000000 i40e 0000:3d:00.0: 
->>> flow_type: 63 input_mask:0x0000000000004000 i40e 0000:3d:00.0: 
->>> flow_type: 46 input_mask:0x0007fff800000000 i40e 0000:3d:00.0: 
->>> flow_type: 45 input_mask:0x0007fff800000000 i40e 0000:3d:00.0: 
->>> flow_type: 44 input_mask:0x0007ffff80000000 i40e 0000:3d:00.0: 
->>> flow_type: 43 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
->>> flow_type: 42 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
->>> flow_type: 41 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
->>> flow_type: 40 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
->>> flow_type: 39 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
->>> flow_type: 36 input_mask:0x0006060000000000 i40e 0000:3d:00.0: 
->>> flow_type: 35 input_mask:0x0006060000000000 i40e 0000:3d:00.0: 
->>> flow_type: 34 input_mask:0x0006060780000000 i40e 0000:3d:00.0: 
->>> flow_type: 33 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
->>> flow_type: 32 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
->>> flow_type: 31 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
->>> flow_type: 30 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
->>> flow_type: 29 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
->>> flow_type: 27 input_mask:0x00000000002c0000 i40e 0000:3d:00.0: 
->>> flow_type: 26 input_mask:0x00000000002c0000 i40e 0000:3d:00.0: flow 
->>> type: 36 update input mask from:0x0006060000000000, 
->>> to:0x0001801800000000 i40e 0000:3d:00.0: flow type: 35 update input 
->>> mask from:0x0006060000000000, to:0x0001801800000000 i40e 
->>> 0000:3d:00.0: flow type: 34 update input mask 
->>> from:0x0006060780000000, to:0x0001801f80000000 i40e 0000:3d:00.0: 
->>> flow type: 33 update input mask from:0x0006060600000000, 
->>> to:0x0001801e00000000 i40e 0000:3d:00.0: flow type: 32 update input 
->>> mask from:0x0006060600000000, to:0x0001801e00000000 i40e 
->>> 0000:3d:00.0: flow type: 31 update input mask 
->>> from:0x0006060600000000, to:0x0001801e00000000 i40e 0000:3d:00.0: 
->>> flow type: 30 update input mask from:0x0006060600000000, 
->>> to:0x0001801e00000000 i40e 0000:3d:00.0: flow type: 29 update input 
->>> mask from:0x0006060600000000, to:0x0001801e00000000
->>>
->>> So seems the regions are all 0.
->>>
->>> All ipsec packets still hitting queue 0.
->>
->> So any news or more ideas to try or are we stuck hoping someone can 
->> fix the firmware?
->
-> I had reached out to some folks over in the networking division hoping 
-> that they can get a reproduction as I don't have the hardware that you 
-> are seeing the issue on so I have no way to reproduce it.
->
-> Maybe someone from that group can reply and tell us where they are on that?
->
-> Thanks.
->
-> - Alex
-
-For some reason this isn't showing up in my work email. We had an internal conference this week and I think people are away. I'll see if I can chase some people down if they're still here and not on the way home.
-
---
-Hisashi T Fujinaka - htodd@twofifty.com
-
-
-_______________________________________________
-E1000-devel mailing list
-E1000-devel@lists.sourceforge.net
-https://lists.sourceforge.net/lists/listinfo/e1000-devel
-To learn more about Intel&#174; Ethernet, visit http://communities.intel.com/community/wired
