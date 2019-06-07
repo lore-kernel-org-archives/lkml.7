@@ -2,70 +2,72 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EC3C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EC2C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC4320825
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD7920825
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:52:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCAa2tBO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lS/cbBKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfFGFw0 (ORCPT
+        id S1726947AbfFGFwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 01:52:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41543 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFGFw0 (ORCPT
+        Fri, 7 Jun 2019 01:52:36 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33572 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFGFwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 01:52:26 -0400
-Received: by mail-pl1-f194.google.com with SMTP id s24so385663plr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 22:52:25 -0700 (PDT)
+        Fri, 7 Jun 2019 01:52:35 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k187so73066pga.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 22:52:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0FoiuBjLg1UBbIKZrQJR0cHIwrk4ez4qkdIgo7/m+JI=;
-        b=lCAa2tBOhvpvbHKQYVJJK9xdcKBZQ8w0bMYmxLKz9SmQQOYD/UVsVinvz+wuS5OwWy
-         0Z/ARsfeteZO1VqgPrbTGBV7MP6cu/SnZkB9WXxlWba5dmXb+npC2d5dwKUlOqF6uY6c
-         sWl19LxFkxSWnTpDfAL+ScicQNYwxjuL9jgxEAbKin06N/xYXYxq3+g9DBEvGhGkqCdO
-         PaQl+ECh152rUPE9ouoh0G6KeHdKliIWH6oBUuwRLLap4A+Rw+TpN2OlEnj4M7usM67s
-         euONSZS/7durJ+8nBsj4fVzC6IxqwSlOJtFY2/PFmpwlJsPp37CEefIGWlqRRSiFbZ6N
-         Pdkw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CmFqEcJ3VNaj9ijKAKVAqwYyQZzMZfiX/GyQUpT57+o=;
+        b=lS/cbBKY+juSQwYNlefp5BGY1yMcvRTiEXjA4pofzJW7Zxz27IfgSt0B/PIN5Sy1p3
+         D1ckVjciYVf/Wba8neZ7il2ahHIIf5nr2GFohyeAc8CzCG9MDx1aYun2MUiMFP8iDPQO
+         vAIzjxzRikdoQi+EYBozcHcuV7zFs4sVwsPGpBwuXmAgAPy6Q01N1a38cyS5kgGc60Ig
+         8EHAsxhcb+L8aE0wlMe0tBm62NclFEGVQ2xq6RM6TTzAh3vof5QtQbXhs90YedVvhFV9
+         txo9t1mm1sO48D/Zu7ZHwumydtlZIlK+XFLTrUILqW7vgbeV2jSZbtrEDPml4oxnA2Jl
+         esjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0FoiuBjLg1UBbIKZrQJR0cHIwrk4ez4qkdIgo7/m+JI=;
-        b=lJcivGKazN+/fetVaze/+1vIuw1RQbytG10NUIbyfSO1BJo3AKzVKCJOt8698tGGhb
-         27sny4VyW/GA3hodAwEA3IJvj6+fbPKgUl3g1ICt1e33xt8sh1jMmdxa91ymEa1ilJD3
-         ESPgEqw6wBnujRyiGTv0zKnjwzeZcGMVBHEA5crUwbjMexShF8Hqc+KWhiNUOI4htcBP
-         CttfN6k8aQLthP4Uexln960pXuRuX+pzLnSif1aSADMHGXL4C8A1dLk6ZCUmx+eMqIFj
-         m2Q7RTRtbQIYgqVgvZDamIAhwtkQs7nd4Ev+5SEcja5v2INfknedsYflbN1o5qwH8RUy
-         6FMQ==
-X-Gm-Message-State: APjAAAW/9T/39K0K0qthX+vBPEKqe5Ap9yZSNMVeidog2K1BCmfxOSV+
-        RHUG5kWjv0VRnNaUJV2n1xs=
-X-Google-Smtp-Source: APXvYqynylZyHUR6Qr9SPx3GANNBO4MfRAuEkVYeOLLJhjRzqva3Ms99Qt92YE9aw3mRVmTfj6oqLw==
-X-Received: by 2002:a17:902:6bcb:: with SMTP id m11mr27545267plt.318.1559886745565;
-        Thu, 06 Jun 2019 22:52:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CmFqEcJ3VNaj9ijKAKVAqwYyQZzMZfiX/GyQUpT57+o=;
+        b=p+qzMbidSIaHCN+nmuQ8glLkGBjbXxa5KXsk6jhnVtW5pWybg957KnBGnrgOGR8raF
+         3MYssDgH+mzAYY4Xbna1Yt0uWItK2S4OF7JwaUr04yDr6glPL0NRySYfV+OKGGViZj42
+         z5Db7GbEm0QYpRYjEt23odq5BvUcJROo7PoMem6gRLyyiTaDUV8cZoSabF9Wr2gc/9AQ
+         yzTHANUwNJBAHe/3XREMgt5iadVRs5WPTttxTa6FZwUvy0lnl0Lz8Kvyv+SYaXp7qd9D
+         XRi+DlTOMRsPe7xSh2VOm87Pn7yT9IiZj/ythCoCElPkzecQsOIEBMuoHUOZ6zDjtT6W
+         LcWw==
+X-Gm-Message-State: APjAAAW5tWxsc4AAMCol/uKpgB31R7DSEkVrbySjYFua50EuxP8yifRU
+        B21Aw/0BStcHPx5vkBK7Dxw=
+X-Google-Smtp-Source: APXvYqzjY1stl/jV0RrG2iweKYKkCUns9qBVSUq7wSNzWpKgi1Nna7KarneX2XoPyCND2AY2Opjyvg==
+X-Received: by 2002:a65:64d9:: with SMTP id t25mr1305990pgv.130.1559886754882;
+        Thu, 06 Jun 2019 22:52:34 -0700 (PDT)
 Received: from localhost.localdomain ([110.227.95.145])
-        by smtp.gmail.com with ESMTPSA id d9sm861740pgl.20.2019.06.06.22.52.22
+        by smtp.gmail.com with ESMTPSA id d9sm861740pgl.20.2019.06.06.22.52.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 06 Jun 2019 22:52:24 -0700 (PDT)
+        Thu, 06 Jun 2019 22:52:34 -0700 (PDT)
 From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
 To:     larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
         gregkh@linuxfoundation.org, straube.linux@gmail.com,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH 1/3] staging: rtl8712: xmit_linux.c: Remove leading p from variable names
-Date:   Fri,  7 Jun 2019 11:22:06 +0530
-Message-Id: <20190607055209.20954-1-nishkadg.linux@gmail.com>
+Subject: [PATCH 2/3] staging: rtl8712: usb_ops.c: Remove leading p from variable names
+Date:   Fri,  7 Jun 2019 11:22:08 +0530
+Message-Id: <20190607055209.20954-3-nishkadg.linux@gmail.com>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190607055209.20954-1-nishkadg.linux@gmail.com>
+References: <20190607055209.20954-1-nishkadg.linux@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,106 +75,220 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove leading p from the names of the following pointer variables:
-- padapter
-- pxmitpriv
-- pnetdev
-- pxmitframe.
+Remove leading 'p' from the names of the following pointer variables:
+- pintfhdl
+- pintf_hdl (renamed to intfhdl in keeping with the convention in other
+functions)
+- poption
+- pops
+- pintfpriv.
 Issue found with Coccinelle.
 
 Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- drivers/staging/rtl8712/xmit_linux.c | 50 ++++++++++++++--------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ drivers/staging/rtl8712/usb_ops.c | 84 +++++++++++++++----------------
+ 1 file changed, 42 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/staging/rtl8712/xmit_linux.c b/drivers/staging/rtl8712/xmit_linux.c
-index 8bcb0775411f..223a4eba4bf4 100644
---- a/drivers/staging/rtl8712/xmit_linux.c
-+++ b/drivers/staging/rtl8712/xmit_linux.c
-@@ -93,22 +93,22 @@ void r8712_set_qos(struct pkt_file *ppktfile, struct pkt_attrib *pattrib)
+diff --git a/drivers/staging/rtl8712/usb_ops.c b/drivers/staging/rtl8712/usb_ops.c
+index eef52d5c730a..e64845e6adf3 100644
+--- a/drivers/staging/rtl8712/usb_ops.c
++++ b/drivers/staging/rtl8712/usb_ops.c
+@@ -22,7 +22,7 @@
+ #include "usb_ops.h"
+ #include "recv_osdep.h"
  
- void r8712_SetFilter(struct work_struct *work)
+-static u8 usb_read8(struct intf_hdl *pintfhdl, u32 addr)
++static u8 usb_read8(struct intf_hdl *intfhdl, u32 addr)
  {
--	struct _adapter *padapter = container_of(work, struct _adapter,
-+	struct _adapter *adapter = container_of(work, struct _adapter,
- 						wkFilterRxFF0);
- 	u8  oldvalue = 0x00, newvalue = 0x00;
- 	unsigned long irqL;
+ 	u8 request;
+ 	u8 requesttype;
+@@ -30,19 +30,19 @@ static u8 usb_read8(struct intf_hdl *pintfhdl, u32 addr)
+ 	u16 index;
+ 	u16 len;
+ 	__le32 data;
+-	struct intf_priv *pintfpriv = pintfhdl->pintfpriv;
++	struct intf_priv *intfpriv = intfhdl->pintfpriv;
  
--	oldvalue = r8712_read8(padapter, 0x117);
-+	oldvalue = r8712_read8(adapter, 0x117);
- 	newvalue = oldvalue & 0xfe;
--	r8712_write8(padapter, 0x117, newvalue);
-+	r8712_write8(adapter, 0x117, newvalue);
- 
--	spin_lock_irqsave(&padapter->lockRxFF0Filter, irqL);
--	padapter->blnEnableRxFF0Filter = 1;
--	spin_unlock_irqrestore(&padapter->lockRxFF0Filter, irqL);
-+	spin_lock_irqsave(&adapter->lockRxFF0Filter, irqL);
-+	adapter->blnEnableRxFF0Filter = 1;
-+	spin_unlock_irqrestore(&adapter->lockRxFF0Filter, irqL);
- 	do {
- 		msleep(100);
--	} while (padapter->blnEnableRxFF0Filter == 1);
--	r8712_write8(padapter, 0x117, oldvalue);
-+	} while (adapter->blnEnableRxFF0Filter == 1);
-+	r8712_write8(adapter, 0x117, oldvalue);
+ 	request = 0x05;
+ 	requesttype = 0x01; /* read_in */
+ 	index = 0;
+ 	wvalue = (u16)(addr & 0x0000ffff);
+ 	len = 1;
+-	r8712_usbctrl_vendorreq(pintfpriv, request, wvalue, index, &data, len,
+-			  requesttype);
++	r8712_usbctrl_vendorreq(intfpriv, request, wvalue, index, &data, len,
++				requesttype);
+ 	return (u8)(le32_to_cpu(data) & 0x0ff);
  }
  
- int r8712_xmit_resource_alloc(struct _adapter *padapter,
-@@ -147,36 +147,36 @@ void r8712_xmit_complete(struct _adapter *padapter, struct xmit_frame *pxframe)
- 	pxframe->pkt = NULL;
+-static u16 usb_read16(struct intf_hdl *pintfhdl, u32 addr)
++static u16 usb_read16(struct intf_hdl *intfhdl, u32 addr)
+ {
+ 	u8 request;
+ 	u8 requesttype;
+@@ -50,19 +50,19 @@ static u16 usb_read16(struct intf_hdl *pintfhdl, u32 addr)
+ 	u16 index;
+ 	u16 len;
+ 	__le32 data;
+-	struct intf_priv *pintfpriv = pintfhdl->pintfpriv;
++	struct intf_priv *intfpriv = intfhdl->pintfpriv;
+ 
+ 	request = 0x05;
+ 	requesttype = 0x01; /* read_in */
+ 	index = 0;
+ 	wvalue = (u16)(addr & 0x0000ffff);
+ 	len = 2;
+-	r8712_usbctrl_vendorreq(pintfpriv, request, wvalue, index, &data, len,
+-			  requesttype);
++	r8712_usbctrl_vendorreq(intfpriv, request, wvalue, index, &data, len,
++				requesttype);
+ 	return (u16)(le32_to_cpu(data) & 0xffff);
  }
  
--int r8712_xmit_entry(_pkt *pkt, struct  net_device *pnetdev)
-+int r8712_xmit_entry(_pkt *pkt, struct  net_device *netdev)
+-static u32 usb_read32(struct intf_hdl *pintfhdl, u32 addr)
++static u32 usb_read32(struct intf_hdl *intfhdl, u32 addr)
  {
--	struct xmit_frame *pxmitframe = NULL;
--	struct _adapter *padapter = netdev_priv(pnetdev);
--	struct xmit_priv *pxmitpriv = &(padapter->xmitpriv);
-+	struct xmit_frame *xmitframe = NULL;
-+	struct _adapter *adapter = netdev_priv(netdev);
-+	struct xmit_priv *xmitpriv = &(adapter->xmitpriv);
+ 	u8 request;
+ 	u8 requesttype;
+@@ -70,19 +70,19 @@ static u32 usb_read32(struct intf_hdl *pintfhdl, u32 addr)
+ 	u16 index;
+ 	u16 len;
+ 	__le32 data;
+-	struct intf_priv *pintfpriv = pintfhdl->pintfpriv;
++	struct intf_priv *intfpriv = intfhdl->pintfpriv;
  
--	if (!r8712_if_up(padapter))
-+	if (!r8712_if_up(adapter))
- 		goto _xmit_entry_drop;
+ 	request = 0x05;
+ 	requesttype = 0x01; /* read_in */
+ 	index = 0;
+ 	wvalue = (u16)(addr & 0x0000ffff);
+ 	len = 4;
+-	r8712_usbctrl_vendorreq(pintfpriv, request, wvalue, index, &data, len,
+-			  requesttype);
++	r8712_usbctrl_vendorreq(intfpriv, request, wvalue, index, &data, len,
++				requesttype);
+ 	return le32_to_cpu(data);
+ }
  
--	pxmitframe = r8712_alloc_xmitframe(pxmitpriv);
--	if (!pxmitframe)
-+	xmitframe = r8712_alloc_xmitframe(xmitpriv);
-+	if (!xmitframe)
- 		goto _xmit_entry_drop;
+-static void usb_write8(struct intf_hdl *pintfhdl, u32 addr, u8 val)
++static void usb_write8(struct intf_hdl *intfhdl, u32 addr, u8 val)
+ {
+ 	u8 request;
+ 	u8 requesttype;
+@@ -90,7 +90,7 @@ static void usb_write8(struct intf_hdl *pintfhdl, u32 addr, u8 val)
+ 	u16 index;
+ 	u16 len;
+ 	__le32 data;
+-	struct intf_priv *pintfpriv = pintfhdl->pintfpriv;
++	struct intf_priv *intfpriv = intfhdl->pintfpriv;
  
--	if ((!r8712_update_attrib(padapter, pkt, &pxmitframe->attrib)))
-+	if ((!r8712_update_attrib(adapter, pkt, &xmitframe->attrib)))
- 		goto _xmit_entry_drop;
+ 	request = 0x05;
+ 	requesttype = 0x00; /* write_out */
+@@ -98,11 +98,11 @@ static void usb_write8(struct intf_hdl *pintfhdl, u32 addr, u8 val)
+ 	wvalue = (u16)(addr & 0x0000ffff);
+ 	len = 1;
+ 	data = cpu_to_le32((u32)val & 0x000000ff);
+-	r8712_usbctrl_vendorreq(pintfpriv, request, wvalue, index, &data, len,
+-			  requesttype);
++	r8712_usbctrl_vendorreq(intfpriv, request, wvalue, index, &data, len,
++				requesttype);
+ }
  
--	padapter->ledpriv.LedControlHandler(padapter, LED_CTL_TX);
--	pxmitframe->pkt = pkt;
--	if (r8712_pre_xmit(padapter, pxmitframe)) {
-+	adapter->ledpriv.LedControlHandler(adapter, LED_CTL_TX);
-+	xmitframe->pkt = pkt;
-+	if (r8712_pre_xmit(adapter, xmitframe)) {
- 		/*dump xmitframe directly or drop xframe*/
- 		dev_kfree_skb_any(pkt);
--		pxmitframe->pkt = NULL;
-+		xmitframe->pkt = NULL;
- 	}
--	pxmitpriv->tx_pkts++;
--	pxmitpriv->tx_bytes += pxmitframe->attrib.last_txcmdsz;
-+	xmitpriv->tx_pkts++;
-+	xmitpriv->tx_bytes += xmitframe->attrib.last_txcmdsz;
- 	return 0;
- _xmit_entry_drop:
--	if (pxmitframe)
--		r8712_free_xmitframe(pxmitpriv, pxmitframe);
--	pxmitpriv->tx_drop++;
-+	if (xmitframe)
-+		r8712_free_xmitframe(xmitpriv, xmitframe);
-+	xmitpriv->tx_drop++;
- 	dev_kfree_skb_any(pkt);
- 	return 0;
+-static void usb_write16(struct intf_hdl *pintfhdl, u32 addr, u16 val)
++static void usb_write16(struct intf_hdl *intfhdl, u32 addr, u16 val)
+ {
+ 	u8 request;
+ 	u8 requesttype;
+@@ -110,7 +110,7 @@ static void usb_write16(struct intf_hdl *pintfhdl, u32 addr, u16 val)
+ 	u16 index;
+ 	u16 len;
+ 	__le32 data;
+-	struct intf_priv *pintfpriv = pintfhdl->pintfpriv;
++	struct intf_priv *intfpriv = intfhdl->pintfpriv;
+ 
+ 	request = 0x05;
+ 	requesttype = 0x00; /* write_out */
+@@ -118,11 +118,11 @@ static void usb_write16(struct intf_hdl *pintfhdl, u32 addr, u16 val)
+ 	wvalue = (u16)(addr & 0x0000ffff);
+ 	len = 2;
+ 	data = cpu_to_le32((u32)val & 0x0000ffff);
+-	r8712_usbctrl_vendorreq(pintfpriv, request, wvalue, index, &data, len,
+-			  requesttype);
++	r8712_usbctrl_vendorreq(intfpriv, request, wvalue, index, &data, len,
++				requesttype);
+ }
+ 
+-static void usb_write32(struct intf_hdl *pintfhdl, u32 addr, u32 val)
++static void usb_write32(struct intf_hdl *intfhdl, u32 addr, u32 val)
+ {
+ 	u8 request;
+ 	u8 requesttype;
+@@ -130,7 +130,7 @@ static void usb_write32(struct intf_hdl *pintfhdl, u32 addr, u32 val)
+ 	u16 index;
+ 	u16 len;
+ 	__le32 data;
+-	struct intf_priv *pintfpriv = pintfhdl->pintfpriv;
++	struct intf_priv *intfpriv = intfhdl->pintfpriv;
+ 
+ 	request = 0x05;
+ 	requesttype = 0x00; /* write_out */
+@@ -138,13 +138,13 @@ static void usb_write32(struct intf_hdl *pintfhdl, u32 addr, u32 val)
+ 	wvalue = (u16)(addr & 0x0000ffff);
+ 	len = 4;
+ 	data = cpu_to_le32(val);
+-	r8712_usbctrl_vendorreq(pintfpriv, request, wvalue, index, &data, len,
+-			  requesttype);
++	r8712_usbctrl_vendorreq(intfpriv, request, wvalue, index, &data, len,
++				requesttype);
+ }
+ 
+-void r8712_usb_set_intf_option(u32 *poption)
++void r8712_usb_set_intf_option(u32 *option)
+ {
+-	*poption = ((*poption) | _INTF_ASYNC_);
++	*option = ((*option) | _INTF_ASYNC_);
+ }
+ 
+ static void usb_intf_hdl_init(u8 *priv)
+@@ -163,24 +163,24 @@ static void usb_intf_hdl_close(u8 *priv)
+ {
+ }
+ 
+-void r8712_usb_set_intf_funs(struct intf_hdl *pintf_hdl)
++void r8712_usb_set_intf_funs(struct intf_hdl *intfhdl)
+ {
+-	pintf_hdl->intf_hdl_init = usb_intf_hdl_init;
+-	pintf_hdl->intf_hdl_unload = usb_intf_hdl_unload;
+-	pintf_hdl->intf_hdl_open = usb_intf_hdl_open;
+-	pintf_hdl->intf_hdl_close = usb_intf_hdl_close;
++	intfhdl->intf_hdl_init = usb_intf_hdl_init;
++	intfhdl->intf_hdl_unload = usb_intf_hdl_unload;
++	intfhdl->intf_hdl_open = usb_intf_hdl_open;
++	intfhdl->intf_hdl_close = usb_intf_hdl_close;
+ }
+ 
+-void r8712_usb_set_intf_ops(struct _io_ops	*pops)
++void r8712_usb_set_intf_ops(struct _io_ops *ops)
+ {
+-	memset((u8 *)pops, 0, sizeof(struct _io_ops));
+-	pops->_read8 = usb_read8;
+-	pops->_read16 = usb_read16;
+-	pops->_read32 = usb_read32;
+-	pops->_read_port = r8712_usb_read_port;
+-	pops->_write8 = usb_write8;
+-	pops->_write16 = usb_write16;
+-	pops->_write32 = usb_write32;
+-	pops->_write_mem = r8712_usb_write_mem;
+-	pops->_write_port = r8712_usb_write_port;
++	memset((u8 *)ops, 0, sizeof(struct _io_ops));
++	ops->_read8 = usb_read8;
++	ops->_read16 = usb_read16;
++	ops->_read32 = usb_read32;
++	ops->_read_port = r8712_usb_read_port;
++	ops->_write8 = usb_write8;
++	ops->_write16 = usb_write16;
++	ops->_write32 = usb_write32;
++	ops->_write_mem = r8712_usb_write_mem;
++	ops->_write_port = r8712_usb_write_port;
  }
 -- 
 2.19.1
