@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E121BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09F4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B772F214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BF520840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922534;
-	bh=8E41xG5V2jNOThd7gcCaz3MJfQ+y/Mx6tzLdEWFnsi0=;
+	s=default; t=1559922540;
+	bh=qsBYCJp0T9BTNFdojWwxp9gA8fp2Y3KEZMWRQhokJBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CXOzoQkdGED1jqol3eSdMRmhJoEHbCMqauSbDLqp4Otne6Plu8mSosWMFdl2Hx0FV
-	 QhMsQL6fxzclU+ZX5FVaQhqIrlIJ5R/yGcCLEmsozsb2EHeNsjKSiJqV3gdeHJcfAF
-	 R94AzXywZtrSczuWM90l+x7Z8DipqMyAqq013bPU=
+	b=czF6HsdF8Nxliut1xMA3N+8VpWQLoSSfaXz9vZjmXsO4HwUkkbrbHegkvjujdv0gR
+	 IIXbsYkjj2KnjAsGAn2hPkrL/0rRBcbY6q/k6X6rjdKG5LJdSwLQZVZOyLPvDyQlQD
+	 9zVy0aCDydM0SgfiZhzNOJcvvib2KLNBz/ixUhDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731860AbfFGPsx (ORCPT
+        id S1731866AbfFGPs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:48:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:48:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbfFGPss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:48:48 -0400
+        id S1731854AbfFGPsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:48:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9E0D20657;
-        Fri,  7 Jun 2019 15:48:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9088020840;
+        Fri,  7 Jun 2019 15:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922528;
-        bh=8E41xG5V2jNOThd7gcCaz3MJfQ+y/Mx6tzLdEWFnsi0=;
+        s=default; t=1559922531;
+        bh=qsBYCJp0T9BTNFdojWwxp9gA8fp2Y3KEZMWRQhokJBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Dj6Ae3P39KsjT8uCFMuCfV0Jzlyc53Kw5UtvyE8e5y5h6nN1ohW3t7ZvbcQQBHX0
-         Qsko0kkBwby1PQXZBx1HqQowaZ4o+mG+IBGzW/ZuYayB46XJ23YqHGclXK4v5Zh9RG
-         KFQ48sd5QrhwNgTyHUJWzrbZC4UQB2ckm6iGqmdM=
+        b=twolFrTcwe3XRwuvPYoWqy39Am+u1ABg6xmrS+RHaz6zgO/hnNyDPDd2+giSa9Eoz
+         dOW1yS2oRmonHk/VSvs3CbpddaSWg/7tTni3WZ27l5cY92NsFfxKb0jg3Hn0ourgng
+         fdYDrsPd/bTkhALkpJu+S/gXR/k1E6SKFoOlyvN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Okamoto Satoru <okamoto.satoru@socionext.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.1 45/85] i2c: synquacer: fix synquacer_i2c_doxfer() return value
-Date:   Fri,  7 Jun 2019 17:39:30 +0200
-Message-Id: <20190607153854.643228293@linuxfoundation.org>
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH 5.1 46/85] tty: serial: msm_serial: Fix XON/XOFF
+Date:   Fri,  7 Jun 2019 17:39:31 +0200
+Message-Id: <20190607153854.732886196@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -62,35 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahisa Kojima <masahisa.kojima@linaro.org>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-commit ff9378904d9d7a3fcb8406604e089e535e357b1d upstream.
+commit 61c0e37950b88bad590056286c1d766b1f167f4e upstream.
 
-master_xfer should return the number of messages successfully
-processed.
+When the tty layer requests the uart to throttle, the current code
+executing in msm_serial will trigger "Bad mode in Error Handler" and
+generate an invalid stack frame in pstore before rebooting (that is if
+pstore is indeed configured: otherwise the user shall just notice a
+reboot with no further information dumped to the console).
 
-Fixes: 0d676a6c4390 ("i2c: add support for Socionext SynQuacer I2C controller")
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Okamoto Satoru <okamoto.satoru@socionext.com>
-Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This patch replaces the PIO byte accessor with the word accessor
+already used in PIO mode.
+
+Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-synquacer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/msm_serial.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/i2c/busses/i2c-synquacer.c
-+++ b/drivers/i2c/busses/i2c-synquacer.c
-@@ -351,7 +351,7 @@ static int synquacer_i2c_doxfer(struct s
- 	/* wait 2 clock periods to ensure the stop has been through the bus */
- 	udelay(DIV_ROUND_UP(2 * 1000, i2c->speed_khz));
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -860,6 +860,7 @@ static void msm_handle_tx(struct uart_po
+ 	struct circ_buf *xmit = &msm_port->uart.state->xmit;
+ 	struct msm_dma *dma = &msm_port->tx_dma;
+ 	unsigned int pio_count, dma_count, dma_min;
++	char buf[4] = { 0 };
+ 	void __iomem *tf;
+ 	int err = 0;
  
--	return 0;
-+	return ret;
- }
+@@ -869,10 +870,12 @@ static void msm_handle_tx(struct uart_po
+ 		else
+ 			tf = port->membase + UART_TF;
  
- static irqreturn_t synquacer_i2c_isr(int irq, void *dev_id)
++		buf[0] = port->x_char;
++
+ 		if (msm_port->is_uartdm)
+ 			msm_reset_dm_count(port, 1);
+ 
+-		iowrite8_rep(tf, &port->x_char, 1);
++		iowrite32_rep(tf, buf, 1);
+ 		port->icount.tx++;
+ 		port->x_char = 0;
+ 		return;
 
 
