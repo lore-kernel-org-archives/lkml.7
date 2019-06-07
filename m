@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9D7C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D12C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74520208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE944208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nRDRC0+9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YMO8WDxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfFGNL2 (ORCPT
+        id S1729215AbfFGNLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 09:11:28 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:53165 "EHLO
+        Fri, 7 Jun 2019 09:11:32 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:53172 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbfFGNLV (ORCPT
+        with ESMTP id S1729175AbfFGNLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 09:11:21 -0400
+        Fri, 7 Jun 2019 09:11:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559913081; x=1591449081;
+  t=1559913090; x=1591449090;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Sceo+E3qPLPcf84lMk/uwJwqo0EhyjB73konNzrUp0U=;
-  b=nRDRC0+9/ZqL7o5LijwfvLGmhVQagD8pC0NoD6oPEaffmrwAiCYoNlum
-   IL9KmCT5L5sCb616+Bf2tlWoAXt22BVNQQ2R/SvlIZ1ogkJrK49xyZGpA
-   9/eGKX0/w1xoE0ynjvgNPxut+bcDPhWhaMN/ZtolcRGYQoHmJ0QHZT86/
-   Fu9oXNXTM5/L2o+GTdiGKa5aynekNiOWHiF/SQa4uS7zOo83roERBOHa/
-   QLCgYmxwFNp4p6jG3mWHHYfOjs8bhhVmOhBPz3mzWQtrm1OoTuYPCIW5d
-   s9LdVQftFPViZVRqesp3pL0ld6A0cFKSOMmwEZWLQQ9xNBez+fiduTB3i
-   A==;
+  bh=GKuA4EwOvjFtZaiDno+tWhs28ewLsbZ4n58bYeMECQo=;
+  b=YMO8WDxFNolUvfQJ6XuU0X7sea41p4spoEP7L2yPcim6XDLD4iMZ3IOx
+   5tHIup95RQcVjqSxzf6gDHctIW6jz3e1chNEw1qiBm/B9uR5z0FjsnCjK
+   Jv9bZDt1pREw1PAXRBz4IZ+ISR2fii43cJjnIlfkJZy5Tio6cd4Bqc+rm
+   JybUjBG452fxoQ7mZQz0Uq+ak4TDobRoel+cq3mCzpkgsxgU+F43V4QCo
+   ZX59EH1MIiB3X8zmxNI4Zj9TR0kWuWlcHovQzYy9u7DdIaDH7Ge3vtppq
+   5fEt03no47J1HgHv5PRWvwkllBw+mk0ffEQN/OE6HNko6xr6Jz1xppC4O
+   g==;
 X-IronPort-AV: E=Sophos;i="5.63,563,1557158400"; 
-   d="scan'208";a="110027777"
+   d="scan'208";a="110027805"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2019 21:11:21 +0800
-IronPort-SDR: PgjCzsjCngKeHtkpHB6v/6nAfh2E+la86qnVmyMmonkjaUb3+U1viEfGdnYyn5gPopchosiPRx
- pmp5ukB/FYPwXAQS7JbBcwc0mk6hK1ORRUlZkDC6JEYb1EuP09qBcZOXvOP21wIlwW30yxTmcW
- ctoJpHCyNYEZpHFdEbj+g+Mklaj5ZPEsXfYSdgKufl5UnrPWuADnOEX4pcvWuAZ8/dc6ggbx71
- 2oY2pHlAKCMn6E0z6MB6ZwtWxcMlfytE7US14pamjQH60pVflMcz6rlYd8/CbWe/cDQC2rPo1u
- yYiZF/h2KGKKr23KW2a38tWf
+  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2019 21:11:30 +0800
+IronPort-SDR: 1OIfbapfZ8VtWUpKgs/7OA+qj6hUL6crUF1Szh9nCzI9txnhUlz5SDaPQHzJuxbaDj6gqeghRe
+ cdtZZn9If49W1u9xT5hspYjnV2Q10p/U+rd5wjh428i88ET0+POnUEgmlK6Co2i6VWMiQ5vYj9
+ y8GcFhmPXl/ZeiuUuTdumaoqvpAYwGwxDJXmSSEWmpudw5dxiDWpO95uIYHUe6ouC5+0Kpimg2
+ FXc/tR3h4sxDPKBa9WONVkq8f4ACHDEKdHH2asZwUmCUdZV0aOsNpQ+aj6PN4Chchr/4+eJN+k
+ qGxEhW0qIDTmu5WgB74zPzJK
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 07 Jun 2019 05:48:38 -0700
-IronPort-SDR: 5ucARHwTib91o21SkMfarKE2KT4zGnVxo8EVkI21T36K4fSonyOo3Xu5NjiqAVPJrbuMVyiQvP
- 6iyQaugsHN91BVlRA6GdFB6ryWu9GZeD8KdPC+V2m+s3n7RdMSLpZhUUqMe0mrcC5pM+kzeEFt
- E/M5VRqrj+cCG4OLKVK9u90ntv3gB8ZLNc22JG9b0XeEN6iA4Ot0G3oeDykf4fjm7mGGTerptv
- KqX3M0mmEbuxDfUWqbEdDfLCls0DikrDjDTzWtxUnUXEpxusBOjIAZIoEobzh72gh2tvKk9PXr
- FTc=
+  by uls-op-cesaep02.wdc.com with ESMTP; 07 Jun 2019 05:48:47 -0700
+IronPort-SDR: pNdd9U/Q1+9d52KqBqHR5WKrQzu3sqL7DQ+1pWcp32GJBIpD+8D/yKbuS3sqOHQzsWAs8IjNjC
+ v8mnxl/NhUtia31KMMF1zMaI5/6cy4WXzThfkYF5pg2DjBpBR7R5BAARVye/eiO9v2hHHcEevp
+ cJYMvzeCbPlEtXr5fRIaNYF5vJWUosWF7oIAMrOzWi+7TIi9K0msaECOHvn2/DmlriPLE5chSA
+ tNfw13VbK2wttI3hOh4cqc7mwXXouLxurDB9IMdw6L1apSdMx+FX753sD/+CNVN7Z9PSzpHEs0
+ 41c=
 Received: from naota.dhcp.fujisawa.hgst.com (HELO naota.fujisawa.hgst.com) ([10.149.53.115])
-  by uls-op-cesaip02.wdc.com with ESMTP; 07 Jun 2019 06:11:19 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 07 Jun 2019 06:11:28 -0700
 From:   Naohiro Aota <naohiro.aota@wdc.com>
 To:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>
 Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
@@ -65,9 +65,9 @@ Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Bart Van Assche <bvanassche@acm.org>,
         Naohiro Aota <naohiro.aota@wdc.com>
-Subject: [PATCH 04/19] btrfs: disable fallocate in HMZONED mode
-Date:   Fri,  7 Jun 2019 22:10:10 +0900
-Message-Id: <20190607131025.31996-5-naohiro.aota@wdc.com>
+Subject: [PATCH 08/19] btrfs: make unmirroed BGs readonly only if we have at least one writable BG
+Date:   Fri,  7 Jun 2019 22:10:14 +0900
+Message-Id: <20190607131025.31996-9-naohiro.aota@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607131025.31996-1-naohiro.aota@wdc.com>
 References: <20190607131025.31996-1-naohiro.aota@wdc.com>
@@ -78,35 +78,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fallocate() is implemented by reserving actual extent instead of
-reservations. This can result in exposing the sequential write constraint
-of host-managed zoned block devices to the application, which would break
-the POSIX semantic for the fallocated file.  To avoid this, report
-fallocate() as not supported when in HMZONED mode for now.
-
-In the future, we may be able to implement "in-memory" fallocate() in
-HMZONED mode by utilizing space_info->bytes_may_use or so.
+If the btrfs volume has mirrored block groups, it unconditionally makes
+un-mirrored block groups read only. When we have mirrored block groups, but
+don't have writable block groups, this will drop all writable block groups.
+So, check if we have at least one writable mirrored block group before
+setting un-mirrored block groups read only.
 
 Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
 ---
- fs/btrfs/file.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/extent-tree.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index 89f5be2bfb43..e664b5363697 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -3027,6 +3027,10 @@ static long btrfs_fallocate(struct file *file, int mode,
- 	alloc_end = round_up(offset + len, blocksize);
- 	cur_offset = alloc_start;
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index ebd0d6eae038..3d41d840fe5c 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -10791,6 +10791,9 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+ 	}
  
-+	/* Do not allow fallocate in HMZONED mode */
-+	if (btrfs_fs_incompat(btrfs_sb(inode->i_sb), HMZONED))
-+		return -EOPNOTSUPP;
+ 	list_for_each_entry_rcu(space_info, &info->space_info, list) {
++		bool has_rw = false;
++		int i;
 +
- 	/* Make sure we aren't being give some crap mode */
- 	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |
- 		     FALLOC_FL_ZERO_RANGE))
+ 		if (!(get_alloc_profile(info, space_info->flags) &
+ 		      (BTRFS_BLOCK_GROUP_RAID10 |
+ 		       BTRFS_BLOCK_GROUP_RAID1 |
+@@ -10798,6 +10801,25 @@ int btrfs_read_block_groups(struct btrfs_fs_info *info)
+ 		       BTRFS_BLOCK_GROUP_RAID6 |
+ 		       BTRFS_BLOCK_GROUP_DUP)))
+ 			continue;
++
++		/* check if we have at least one writable mirroed block group */
++		for (i = 0; i < BTRFS_NR_RAID_TYPES; i++) {
++			if (i == BTRFS_RAID_RAID0 || i == BTRFS_RAID_SINGLE)
++				continue;
++			list_for_each_entry(cache, &space_info->block_groups[i],
++					    list) {
++				if (!cache->ro) {
++					has_rw = true;
++					break;
++				}
++			}
++			if (has_rw)
++				break;
++		}
++
++		if (!has_rw)
++			continue;
++
+ 		/*
+ 		 * avoid allocating from un-mirrored block group if there are
+ 		 * mirrored block groups.
 -- 
 2.21.0
 
