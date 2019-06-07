@@ -2,123 +2,142 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2476C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66726C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C4E208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXRJCsXe"
+	by mail.kernel.org (Postfix) with ESMTP id 3C5C8208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559949524;
+	bh=l2jzpqRVXHZxq5pLdpMGhXCEZg3vOypPYJk8LvJUja8=;
+	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
+	b=kb+d47lKwLv7yhv43Q+nfma7tQwSckp8KIQJF2l7A0Red8grTguntY5wqGOK8Flsq
+	 c4WkKENhgOVtAiTL79b11zz9baiXpSVld+WpKQrch0FhuI5Xo3LQESI1F+RTyVVHfF
+	 OHbWM5hYHcXrvKX58OMuBnE9uNJ/iaOUqAvVV+gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731907AbfFGXMP (ORCPT
+        id S1729883AbfFGXSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 19:12:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37543 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbfFGXLO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 19:11:14 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 22so3289852wmg.2;
-        Fri, 07 Jun 2019 16:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Lol1q6oip3iAiLWaqttTm7yI5iUN53ws0ToXRxpRMt8=;
-        b=oXRJCsXeB+er7f3oAowCoBA9MPGtd+CYB5T7BUiotF8B1kGDp8+d9K1KqzKfdShrhO
-         EzsDwPmv15ztStk620DR0HwNFQEcBix+D8fW3lgCK/kjelJcdZ/eyufnEQ9SFEp7CQqF
-         QuE6sW786uKiJbieQQjXWNzalxrGmb9Sa9/EKROMwFL5KJ7KRaYKt98DNX0BBiCKclf6
-         dQQcURi/LwIl9gKW+MYByw1F1CKHTOwEH07eQSwhwRa9olW4UVH7aONLVNvsuaeIDtyf
-         Z/Ejf4KPicB5vziOFFhqeruDnkIrNbB9sd66bqwTYwzRvOXLPpzQfirCvfY+m1slayQf
-         aaDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Lol1q6oip3iAiLWaqttTm7yI5iUN53ws0ToXRxpRMt8=;
-        b=pHVbYsDydEYfbgFIGoiGmH9rI6d/fnhPjiFz6R/8xZGMf+k15XebLbB51+EKSN+tfF
-         uyS+qNH42M+9bmRnczZSOi1D5AtmbLpgmaJRVFLzHxd/MoednLQp2+nS8YrfZt5dLWtx
-         7aWJ3K3E5FZcKRbzFOv7XNkTEhyd1oBsLFZ5+BMSDCWQaFOyZZ0THda+wH9jfqhYCFjj
-         lpa/NhEZGmicpLmxjjBlUC71yzgvyFmJkZLnLYo7VIxtcPEUJ+nt4WL6TioA03NC9H4a
-         S3AKoTEMIDySwopWJKNiEmb56ADgJIXjgOAft72jDMjiuGDrXNjAInt+hhLlF8lTBufz
-         +B+g==
-X-Gm-Message-State: APjAAAWNvqdozQVyxe1KLYsMXPlMj6CGMnLohkNNfvB87WZoxRPq57Ib
-        EigfqgnjT6HtDVZkeoKABgk=
-X-Google-Smtp-Source: APXvYqztHS7XCrwAZuxX3MKe/AIl2WKNXYx30cRsf1SdkQ5dTVEjbyQ1ZNptaV+f9m3ZRJVuntO8Aw==
-X-Received: by 2002:a1c:c282:: with SMTP id s124mr5382313wmf.141.1559949072272;
-        Fri, 07 Jun 2019 16:11:12 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id h84sm4108559wmf.43.2019.06.07.16.11.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 16:11:11 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fri, 7 Jun 2019 19:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727933AbfFGXSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 19:18:43 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D101120825;
+        Fri,  7 Jun 2019 23:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559949521;
+        bh=l2jzpqRVXHZxq5pLdpMGhXCEZg3vOypPYJk8LvJUja8=;
+        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
+        b=GCLGxU6azs6ie7ehXuwV0HZBgHSl5RVwKBY/sOot40PJFHo56qbAciZfPutbiiAEE
+         eivl+cvfIOPcr+av1XvzyMB9dswXq0KFVm/Fqc7M41ZxNBT7urjJ7MTTcHc9lH4Yv2
+         MFovqZaMbj0d9bpx/VN336ZjiVucLkR0eOpGHF5c=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAOCk7NrnnUzaXtnRvH0pHyHha4sTQDQCRoVPPatHfgVuEPZr0Q@mail.gmail.com>
+References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org> <933023a0-10fd-fedf-6715-381dae174ad9@codeaurora.org> <20190607203838.1361E208C3@mail.kernel.org> <CAOCk7NrnnUzaXtnRvH0pHyHha4sTQDQCRoVPPatHfgVuEPZr0Q@mail.gmail.com>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        David Brown <david.brown@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Sean Young <sean@mess.org>
-Subject: [PATCH v5 03/13] media: rc: sunxi: Add A31 compatible
-Date:   Sat,  8 Jun 2019 01:10:50 +0200
-Message-Id: <20190607231100.5894-4-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190607231100.5894-1-peron.clem@gmail.com>
-References: <20190607231100.5894-1-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 0/6] MSM8998 Multimedia Clock Controller
+User-Agent: alot/0.8.1
+Date:   Fri, 07 Jun 2019 16:18:41 -0700
+Message-Id: <20190607231841.D101120825@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwiner A31 has a different memory mapping so add the compatible
-we will need it later.
+Quoting Jeffrey Hugo (2019-06-07 14:31:13)
+> On Fri, Jun 7, 2019 at 2:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Jeffrey Hugo (2019-05-21 07:52:28)
+> > > On 5/21/2019 8:44 AM, Jeffrey Hugo wrote:
+> > > > The multimedia clock controller (mmcc) is the main clock controller=
+ for
+> > > > the multimedia subsystem and is required to enable things like disp=
+lay and
+> > > > camera.
+> > >
+> > > Stephen, I think this series is good to go, and I have display/gpu st=
+uff
+> > > I'm polishing that will depend on this.  Would you kindly pickup patc=
+hes
+> > > 1, 3, 4, and 5 for 5.3?  I can work with Bjorn to pick up patches 2 a=
+nd 6.
+> > >
+> >
+> > If I apply patch 3 won't it break boot until patch 2 is also in the
+> > tree? That seems to imply that I'll break bisection, and we have
+> > kernelci boot testing clk-next so this will probably set off alarms
+> > somewhere.
+>=20
+> Yes, it'll break boot.  Maybe you and Bjorn can make a deal?  (more below)
+>=20
+> Doesn't look like kernelci is running tests on 8998 anymore, so maybe
+> no one will complain?  As far as I am aware, Marc, Lee, Bjorn, and I
+> are the only ones whom care about 8998 presently, and I think we are
+> all good with a temporary breakage in order to get this basic
+> functionality in since the platform isn't really well supported yet.
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Acked-by: Sean Young <sean@mess.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- drivers/media/rc/sunxi-cir.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Ok.
 
-diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-index d02dcb6fd0a5..0504ebfc831f 100644
---- a/drivers/media/rc/sunxi-cir.c
-+++ b/drivers/media/rc/sunxi-cir.c
-@@ -343,6 +343,11 @@ static const struct sunxi_ir_quirks sun5i_a13_ir_quirks = {
- 	.fifo_size = 64,
- };
- 
-+static const struct sunxi_ir_quirks sun6i_a31_ir_quirks = {
-+	.has_reset = true,
-+	.fifo_size = 64,
-+};
-+
- static const struct of_device_id sunxi_ir_match[] = {
- 	{
- 		.compatible = "allwinner,sun4i-a10-ir",
-@@ -352,6 +357,10 @@ static const struct of_device_id sunxi_ir_match[] = {
- 		.compatible = "allwinner,sun5i-a13-ir",
- 		.data = &sun5i_a13_ir_quirks,
- 	},
-+	{
-+		.compatible = "allwinner,sun6i-a31-ir",
-+		.data = &sun6i_a31_ir_quirks,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, sunxi_ir_match);
--- 
-2.20.1
+>=20
+> >
+> > I thought we had some code that got removed that was going to make the
+> > transition "seamless" in the sense that it would search the tree for an
+> > RPM clk controller and then not add the XO fixed factor clk somehow.
+> > See commit 54823af9cd52 ("clk: qcom: Always add factor clock for xo
+> > clocks") for the code that we removed. So ideally we do something like
+> > this too, but now we search for a property on the calling node to see if
+> > the XO clk is there?
+> >
+>=20
+> Trying to remember back a bit.
+>=20
+> I don't think its possible.  Maybe I'm wrong.  I didn't see a solution
+> to the below:
+>=20
+> How does GCC know the following?
+> -RPMCC is compiled in the build (I guess this can be assumed)
+
+This is the IS_ENABLED part.
+
+> -RPMCC has probed
+> -RPMCC is not and will not be providing XO
+
+Presumably if it's enabled then it will be providing XO at some point in
+the future. I'm not suggesting the probe defer logic is removed, just
+that we don't get into a state where clk tree has merged all the patches
+for clk driver side and that then relies on DT to provide the clk but it
+doesn't do that.
+
+So the idea is to check if RPM is compiled in and also check the GCC DT
+node for the clocks property having the xo clk there. Then we assume
+that we have the clk patches in place for the RPM clk driver to provide
+that clk and we skip inserting the fake clk that RPM is going to
+provide.
+
+This is also a "general" solution to GCC not depending on or selecting
+the RPM clk driver. It may be better to just have a select statement in
+GCC Kconfig so that we can't enable the GCC driver without also enabling
+the RPM driver if it's an essential dependency to the clk tree working.
+But if we do this design then we can make the clk tree keep working
+regardless of RPM being there or not, which may be a good thing.
 
