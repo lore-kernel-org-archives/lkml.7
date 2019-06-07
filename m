@@ -2,240 +2,130 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D83FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559BBC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC2620657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206CC20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:34:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ATAqjNbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfFGO3s (ORCPT
+        id S1729107AbfFGOeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:29:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729065AbfFGO3s (ORCPT
+        Fri, 7 Jun 2019 10:34:08 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41404 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728203AbfFGOeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:29:48 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x57EP8mt088860
-        for <linux-kernel@vger.kernel.org>; Fri, 7 Jun 2019 10:29:47 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sypsu8rjb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:29:46 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 7 Jun 2019 15:29:10 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 7 Jun 2019 15:29:07 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x57ET4Yw55378118
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Jun 2019 14:29:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE414AE055;
-        Fri,  7 Jun 2019 14:29:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F137AE051;
-        Fri,  7 Jun 2019 14:29:04 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.168])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Jun 2019 14:29:04 +0000 (GMT)
-Date:   Fri, 7 Jun 2019 16:29:03 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v9 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-In-Reply-To: <2ffee52b-5e7f-f52a-069f-0a43d6418341@linux.ibm.com>
-References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
-        <1558452877-27822-4-git-send-email-pmorel@linux.ibm.com>
-        <2ffee52b-5e7f-f52a-069f-0a43d6418341@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 7 Jun 2019 10:34:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so2392738wrm.8
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:34:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nRZZPd4CuOKccCO9n20pj6NCx0PtOoXNGKdvtL/yQh8=;
+        b=ATAqjNbD3zSQ0mn1U+NeswlrlhdcptQ0U1v6/qsZKIIS8bxBmp4qpT9bwU3cwpsbc7
+         lFKJwrsnKY+MMG02u/ivCJHvzk+Q8vbC0gkep7WB5VhjPoAsOQv2bjDPPpOCnL94XJ9x
+         rN4wfb+Of4sR6npFW4RO65+j0dfHovQyaQ66c0bau89xx1jrwvRJfmNeMxeD0cWIQR3n
+         y9Kb/F+6uPHzfDTVBJ9uV0Qeu79vaJvVdA2UHBHTFzN3FVRgDdAThjGsWW2S5PAlLglX
+         0NaaTDbgXYpa+El8EXdEZApR8VnI3twXzIJd+fgS/+iDzgA4R1EWAZ8GAvtx5D0AjdtU
+         vv9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nRZZPd4CuOKccCO9n20pj6NCx0PtOoXNGKdvtL/yQh8=;
+        b=hHoSqHZe4dMfyx8v0qMUac6ROUC6tTZCJr9vlqYJ7PPb5/LwA4cEIR/UMLoVnTXErc
+         sqhOqiqYrtOEXVrHC6Wa6itXHkZbc8NdvDGnVRq3xhKFMAgwsjSVVf5iwZs4Kf32ijf9
+         zKaEyeIU94XcGLSbCNTRpbR4gna3vh2J8iurzioCF7+CPWUQYHDWBOKXYCKcSepEUOoM
+         RNVAKRnlAZli+5EyCimdv43/sGmfr6KIQL1WDELEu8finXTdgeOX2Ax1nyw1xbrMJEeA
+         4PcnLQg65KeyckqFUTuPF3dUY8bHhcWvFk3x+ZikdkO6JTPNGQ6liE7KyfPuxd/KGQNT
+         okkQ==
+X-Gm-Message-State: APjAAAVFy7E643YT4nTyBor6Iex7rEmSqHlTHKyDgSZo3Yqxoyo/H9Eo
+        NAEnvlaUG7r+Uw9NCsHdo6AZ6Q==
+X-Google-Smtp-Source: APXvYqzjPX0uTbJ4XdCTSAmUg9f2YMBqtaes35JdoKkeprFZ5Dvejyh+ekMdSkshyFKJ1LzaXyHy+g==
+X-Received: by 2002:adf:e34e:: with SMTP id n14mr14515474wrj.169.1559918046002;
+        Fri, 07 Jun 2019 07:34:06 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id h90sm4348456wrh.15.2019.06.07.07.34.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 07:34:05 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] ARM: davinci: da8xx: specify dma_coherent_mask for lcdc
+Date:   Fri,  7 Jun 2019 16:33:50 +0200
+Message-Id: <20190607143350.11214-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060714-0020-0000-0000-00000348174A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060714-0021-0000-0000-0000219B31B6
-Message-Id: <20190607162903.22fd959f.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906070102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019 15:38:51 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> On 5/21/19 11:34 AM, Pierre Morel wrote:
-> > We register a AP PQAP instruction hook during the open
-> > of the mediated device. And unregister it on release.
+The lcdc device is missing the dma_coherent_mask definition causing the
+following warning on da850-evm:
 
-[..]
+da8xx_lcdc da8xx_lcdc.0: found Sharp_LK043T1DG01 panel
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/dma/mapping.c:247 dma_alloc_attrs+0xc8/0x110
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.2.0-rc3-00077-g16d72dd4891f #18
+Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
+[<c000fce8>] (unwind_backtrace) from [<c000d900>] (show_stack+0x10/0x14)
+[<c000d900>] (show_stack) from [<c001a4f8>] (__warn+0xec/0x114)
+[<c001a4f8>] (__warn) from [<c001a634>] (warn_slowpath_null+0x3c/0x48)
+[<c001a634>] (warn_slowpath_null) from [<c0065860>] (dma_alloc_attrs+0xc8/0x110)
+[<c0065860>] (dma_alloc_attrs) from [<c02820f8>] (fb_probe+0x228/0x5a8)
+[<c02820f8>] (fb_probe) from [<c02d3e9c>] (platform_drv_probe+0x48/0x9c)
+[<c02d3e9c>] (platform_drv_probe) from [<c02d221c>] (really_probe+0x1d8/0x2d4)
+[<c02d221c>] (really_probe) from [<c02d2474>] (driver_probe_device+0x5c/0x168)
+[<c02d2474>] (driver_probe_device) from [<c02d2728>] (device_driver_attach+0x58/0x60)
+[<c02d2728>] (device_driver_attach) from [<c02d27b0>] (__driver_attach+0x80/0xbc)
+[<c02d27b0>] (__driver_attach) from [<c02d047c>] (bus_for_each_dev+0x64/0xb4)
+[<c02d047c>] (bus_for_each_dev) from [<c02d1590>] (bus_add_driver+0xe4/0x1d8)
+[<c02d1590>] (bus_add_driver) from [<c02d301c>] (driver_register+0x78/0x10c)
+[<c02d301c>] (driver_register) from [<c000a5c0>] (do_one_initcall+0x48/0x1bc)
+[<c000a5c0>] (do_one_initcall) from [<c05cae6c>] (kernel_init_freeable+0x10c/0x1d8)
+[<c05cae6c>] (kernel_init_freeable) from [<c048a000>] (kernel_init+0x8/0xf4)
+[<c048a000>] (kernel_init) from [<c00090e0>] (ret_from_fork+0x14/0x34)
+Exception stack(0xc6837fb0 to 0xc6837ff8)
+7fa0:                                     00000000 00000000 00000000 00000000
+7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+---[ end trace 8a8073511be81dd2 ]---
 
-> > +/**
-> > + * vfio_ap_wait_for_irqclear
-> > + * @apqn: The AP Queue number
-> > + *
-> > + * Checks the IRQ bit for the status of this APQN using ap_tapq.
-> > + * Returns if the ap_tapq function succedded and the bit is clear.
-> 
-> s/succedded/succeeded/
-> 
+Add a 32-bit mask to the platform device's definition.
 
-I'm gonna fix this up when picking.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/mach-davinci/devices-da8xx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> > + * Returns if ap_tapq function failed with invalid, deconfigured or
-> > + * checkstopped AP.
-> > + * Otherwise retries up to 5 times after waiting 20ms.
-> > + *
-> > + */
-> > +static void vfio_ap_wait_for_irqclear(int apqn)
-> > +{
-> > +	struct ap_queue_status status;
-> > +	int retry = 5;
-> > +
-> > +	do {
-> > +		status = ap_tapq(apqn, NULL);
-> > +		switch (status.response_code) {
-> > +		case AP_RESPONSE_NORMAL:
-> > +		case AP_RESPONSE_RESET_IN_PROGRESS:
-> > +			if (!status.irq_enabled)
-> > +				return;
-> > +			/* Fall through */
-> > +		case AP_RESPONSE_BUSY:
-> > +			msleep(20);
-> > +			break;
-> > +		case AP_RESPONSE_Q_NOT_AVAIL:
-> > +		case AP_RESPONSE_DECONFIGURED:
-> > +		case AP_RESPONSE_CHECKSTOPPED:
-> > +		default:
-> > +			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
-> > +				  status.response_code, apqn);
-> > +			return;
-> 
-> Why not just break out of the loop and just use the WARN_ONCE
-> outside of the loop?
-> 
-
-AFAIU the idea was to differentiate between got a strange response_code
-and ran out of retires.
-
-Actually I suspect that we are fine in case of AP_RESPONSE_Q_NOT_AVAIL,
- AP_RESPONSE_DECONFIGURED and AP_RESPONSE_CHECKSTOPPED in a sense that
-what should be the post-condition of this function is guaranteed to be
-reached. What do you think?
-
-While I think that we can do better here, I see this as something that
-should be done on top.
-
-> > +		}
-> > +	} while (--retry);
-> > +
-> > +	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
-> > +		  __func__, status.response_code, apqn);
-> > +}
-> > +
-> > +/**
-> > + * vfio_ap_free_aqic_resources
-> > + * @q: The vfio_ap_queue
-> > + *
-> > + * Unregisters the ISC in the GIB when the saved ISC not invalid.
-> > + * Unpin the guest's page holding the NIB when it exist.
-> > + * Reset the saved_pfn and saved_isc to invalid values.
-> > + * Clear the pointer to the matrix mediated device.
-> > + *
-> > + */
-
-[..]
-
-> > +struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
-> > +{
-> > +	struct ap_qirq_ctrl aqic_gisa = {};
-> > +	struct ap_queue_status status;
-> > +	int retries = 5;
-> > +
-> > +	do {
-> > +		status = ap_aqic(q->apqn, aqic_gisa, NULL);
-> > +		switch (status.response_code) {
-> > +		case AP_RESPONSE_OTHERWISE_CHANGED:
-> > +		case AP_RESPONSE_NORMAL:
-> > +			vfio_ap_wait_for_irqclear(q->apqn);
-> > +			goto end_free;
-> > +		case AP_RESPONSE_RESET_IN_PROGRESS:
-> > +		case AP_RESPONSE_BUSY:
-> > +			msleep(20);
-> > +			break;
-> > +		case AP_RESPONSE_Q_NOT_AVAIL:
-> > +		case AP_RESPONSE_DECONFIGURED:
-> > +		case AP_RESPONSE_CHECKSTOPPED:
-> > +		case AP_RESPONSE_INVALID_ADDRESS:
-> > +		default:
-> > +			/* All cases in default means AP not operational */
-> > +			WARN_ONCE(1, "%s: ap_aqic status %d\n", __func__,
-> > +				  status.response_code);
-> > +			goto end_free;
-> 
-> Why not just break out of the loop instead of repeating the WARN_ONCE
-> message?
-> 
-
-I suppose the reason is same as above. I'm not entirely happy with this
-code myself. E.g. why do we do retries here -- shouldn't we just fail the
-aqic by the guest?
-
-[..]
-
-> > +static int handle_pqap(struct kvm_vcpu *vcpu)
-> > +{
-> > +	uint64_t status;
-> > +	uint16_t apqn;
-> > +	struct vfio_ap_queue *q;
-> > +	struct ap_queue_status qstatus = {
-> > +			       .response_code = AP_RESPONSE_Q_NOT_AVAIL, };
-> > +	struct ap_matrix_mdev *matrix_mdev;
-> > +
-> > +	/* If we do not use the AIV facility just go to userland */
-> > +	if (!(vcpu->arch.sie_block->eca & ECA_AIV))
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	apqn = vcpu->run->s.regs.gprs[0] & 0xffff;
-> > +	mutex_lock(&matrix_dev->lock);
-> > +
-> > +	if (!vcpu->kvm->arch.crypto.pqap_hook)
-> 
-> Wasn't this already checked in patch 2 prior to calling this
-> function? In fact, doesn't the hook point to this function?
-> 
-
-Let us benevolently call this defensive programming. We are actually
-in that callback AFAICT, so it sure was set a moment ago, and I guess
-the client code still holds the kvm.lock so it is guaranteed to stay
-so unless somebody is playing foul.
-
-We can address this with a patch on top.
-
-Regards,
-Halil
+diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+index 9ff02de448c6..767cc6f7834c 100644
+--- a/arch/arm/mach-davinci/devices-da8xx.c
++++ b/arch/arm/mach-davinci/devices-da8xx.c
+@@ -683,6 +683,9 @@ static struct platform_device da8xx_lcdc_device = {
+ 	.id		= 0,
+ 	.num_resources	= ARRAY_SIZE(da8xx_lcdc_resources),
+ 	.resource	= da8xx_lcdc_resources,
++	.dev		= {
++		.coherent_dma_mask	= DMA_BIT_MASK(32)
++	}
+ };
+ 
+ int __init da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata)
+-- 
+2.21.0
 
