@@ -2,133 +2,95 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05794C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23D3C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40D32146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9846208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oZC9a6nv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQXTin5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732020AbfFGSuW (ORCPT
+        id S1732040AbfFGSup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:50:22 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34545 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbfFGSuV (ORCPT
+        Fri, 7 Jun 2019 14:50:45 -0400
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:46332 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730281AbfFGSuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:50:21 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m29so3509501qtu.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:50:21 -0700 (PDT)
+        Fri, 7 Jun 2019 14:50:44 -0400
+Received: by mail-ot1-f44.google.com with SMTP id z23so2769712ote.13;
+        Fri, 07 Jun 2019 11:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=981lOBbF7NntqOPGnU+wDEqlWf7ONqp9B0Ou4FbjqoU=;
-        b=oZC9a6nvcosvTmp2Xz2vW0f9gvXIuh4kitLGI6CjsLXK1+Gnu0mccx6TNO5esZKRWN
-         jpusXhxZ6diyXP/2IvDfe4Sozh6aFMls99kKfV0Oh9uEVYvzKsy1COSoqZhzVVpYwP9K
-         DlLyyRWwMTfr89qP7WlB75o9IQD+x/cE6xx3qucV0uEUL41Hb7JpWs/wMh4hLxr3HoJx
-         fc49CEJVp4R714dI4okPWcziniOd2LBG5fbQY9h/Cjd9k+Pglq+pi5j+zKX1QlmTE64r
-         wbxNASKedhU1orq0qO6Me5wbL2KGqE9NauEFAABsOyUfWfONSs2MlnU6mWezKlVjNiry
-         8Hvw==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mtzNzCUSsxdVxTwVxd+bIYbQvGHAfnBIn5rvBFTyjR8=;
+        b=OQXTin5D9dTshUeb7Y4bM60DsbmSUlShMmHN60dZZLL9XCDDB+ORnAUfy+Hr/bRkU4
+         Cv0yqr74BU8WBzsrZKhPHtnDdaY0de6HTTVhECsYW3ZFDhfnMueDBif/LMeSAfUlEn3h
+         UDnpCbe1YcCpVwHTuEqfOdBNQpHWtDtmXLvZG2FrS/El4fO7hc1A2zcnTOFbu7C5mW/Q
+         R8WpqASpMYH4b2zJL1KNqjkz+a3zX08H5kIsv0x12+gOBo0YS8HeS10XU5lcpnd1N66R
+         2jI8Uqy8aRSN0derlvny6iWoNLEhVmBJPssrItiTU/pRpjxCLC1oJG2fF5MGcFU9ZEFo
+         EXaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=981lOBbF7NntqOPGnU+wDEqlWf7ONqp9B0Ou4FbjqoU=;
-        b=t0t49XuACcXQ6m0zooFcO0MaCTJRfVNbi0wP3UZUkMvyDjvYbSrw+AIE+b3NhCFp7I
-         8j0T5Cy5ntciipp6TiIQEoJ4Sip70TqCWvuPcWumSlCXJ/iVPL3iv7X7aawDRTrDOF4k
-         lnmHXtlPfuTyCV8/i4ybXewavnO5Mc70ObbgwqtMMIUGxa19HZRnLLyjHCXn7vm9vdST
-         DXeyjDK8G3TWWmANcxXluFc4rPWeriR2SbckE/fy4qtSwsbmu6E/4wbvHo7366xoXtZ6
-         hh7WA9qVUX4MUxVCFrYnDqv9MYY9E1bVlOKdwz/zmGSYsjSTvaraLRhfRJGaifxNJWjv
-         5yVw==
-X-Gm-Message-State: APjAAAX3fsxic+6mb4E9D4LP3rZUWJ1EX1gPEsCTMWjn5jcdkXG7wSt8
-        WQWmuVCdxdYLr0Z7dFbMceQzoA==
-X-Google-Smtp-Source: APXvYqxHzZOVD73PAZq/gC6oUmCxE3JRfnnnGXli2ogTGkWJxAu+ueWdhS//gQBOh+cGCpWnmaBbVg==
-X-Received: by 2002:ac8:444c:: with SMTP id m12mr48345365qtn.306.1559933420780;
-        Fri, 07 Jun 2019 11:50:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id q2sm1527313qkf.44.2019.06.07.11.50.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 11:50:20 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hZJwR-0007vm-HB; Fri, 07 Jun 2019 15:50:19 -0300
-Date:   Fri, 7 Jun 2019 15:50:19 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190607185019.GP14802@ziepe.ca>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mtzNzCUSsxdVxTwVxd+bIYbQvGHAfnBIn5rvBFTyjR8=;
+        b=H0fcyPqpRI8W7Pll6j4/IMhvldc32YezU/Sf8yGbceUjERIWnOGgbV6OrxxtFS17YJ
+         qVUOHZJCkZCwXUsfi5B0HtVTW7CGlc7KIkMM1Zzw2MmE0mwgdgogbxACAHMOkBh+XZfg
+         itrHGeEKfY0ARVaJeUReSjD+s0rhl7cFzJENE1DHdzxx9OOnfwpVuCSM1Nn1OQWtNFhM
+         Y118iNyOBFXk5Q3IBNJ/x1peKpZhhRn8FFmYaLP1lemZtYxNfZK99cw+/BSW3qypSB4u
+         aHvNsi5trtOeSIyXOxHS8C3yVEuSo6sUxteVPNc+uuUpe75p5HpbTkFswXL2or0rPhYZ
+         iSOg==
+X-Gm-Message-State: APjAAAXrKynw+eRPD+GSkCp2Lc6B+zGiI8i7uEfLfKqVDmiK/gfgoj6z
+        mO3cRAX/j9EYKjc9RRJNICHvYLh3
+X-Google-Smtp-Source: APXvYqz4kHg4ws3IMu+HwC+T75hwpF0oGqhuGhXdapOMtWtwVH7DgtPV5tHN5bGG1FLCCtTfGvS7mw==
+X-Received: by 2002:a9d:7683:: with SMTP id j3mr20795572otl.290.1559933443940;
+        Fri, 07 Jun 2019 11:50:43 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id w22sm1034238otp.73.2019.06.07.11.50.42
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 11:50:43 -0700 (PDT)
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+ <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
+ <20190607172902.GA8183@lst.de>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <034e6860-8fa8-0510-96c2-0cf6e6a04868@lwfinger.net>
+Date:   Fri, 7 Jun 2019 13:50:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190607172902.GA8183@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
+On 6/7/19 12:29 PM, Christoph Hellwig wrote:
+> I don't think we should work around this in the driver, we need to fix
+> it in the core.  I'm curious why my previous patch didn't work.  Can
+> you throw in a few printks what failed?  I.e. did dma_direct_supported
+> return false?  Did the actual allocation fail?
 
-> And I think this is related to what Christoph Hellwig is doing with bio_vec and
-> dma.  Really we want drivers out of the page processing business.
+I agree that that patch should not be sent upstream. I posted it only so that 
+anyone running into the problem would have a work around.
 
-At least for RDMA, and a few other places I've noticed, I'd really
-like to get totally out of the handling struct pages game.
+I will try to see why your patch failed.
 
-We are DMA based and really only want DMA addresses for the target
-device. I know other places need CPU pages or more complicated
-things.. But I also know there are other drivers like RDMA..
+Larry
 
-So I think it would be very helpful to have a driver API something
-like:
-
-int get_user_mem_for_dma(struct device *dma_device,
-                void __user *mem, size_t length,
-                struct gup_handle *res,
-                struct 'bio dma list' *dma_list,
-                const struct dma_params *params);
-void put_user_mem_for_dma(struct gup_handle *res, 
-                 struct 'bio dma list' *dma_list);
-
-And we could hope to put in there all the specialty logic we want to
-have for this flow:
- - The weird HMM stuff in hmm_range_dma_map()
- - Interaction with DAX
- - Interaction with DMA BUF
- - Holding file leases
- - PCI peer 2 peer features
- - Optimizations for huge pages
- - Handling page dirtying from DMA
- - etc
-
-I think Matthew was suggesting something like this at LS/MM, so +1
-from here..
-
-When Christoph sends his BIO dma work I was thinking of investigating
-this avenue, as we already have something quite similiar in RDMA that
-could perhaps be hoisted out for re-use into mm/
-
-Jason
