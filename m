@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AD1C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF9EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980D6214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE4D21473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922659;
-	bh=PRLpC5nwM9nO3KrtQa6s3Sz5d8KnuDm79+AssLvw99g=;
+	s=default; t=1559922664;
+	bh=uCnlImr1sCXDHtdWF4PMIdW6NHznW4leojAu0sMNET4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N8L7IAIb08CDC8XFQP/95oV8YTx9DAGtEiEFF5KkWdDZH5sSe2s4rCeutpDgnQFxL
-	 AchUlh81G+r0L3GQRfmujbi1ixHO8QLkfM3Vwo7Xla08erg+3PDfV3JqAqWMS3Lw/4
-	 z+i0H5Ln7kdHbNR6/5xJB2P7tH+oPe9U0Jm3jH6k=
+	b=frEbxYcXmjvzR/4NeH5QsaGPjJVvYTQVKPvfgjp7N2QA842oKGvHwlTSj1jCpb5UZ
+	 Nhz2fhcu6ANFsdLF+zDgVEb9ZQ0x3pdaxejoHIWOMz+YibHj2InfmJL3Jmepgl2ZFi
+	 V7BKHb/7YjzCDIt7h8SHcsl9i2imd2M7IC3QyKaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732254AbfFGPu6 (ORCPT
+        id S1732275AbfFGPvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:50:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:51:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731703AbfFGPuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:50:55 -0400
+        id S1732259AbfFGPvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:51:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4FCB2146E;
-        Fri,  7 Jun 2019 15:50:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DA252146E;
+        Fri,  7 Jun 2019 15:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922654;
-        bh=PRLpC5nwM9nO3KrtQa6s3Sz5d8KnuDm79+AssLvw99g=;
+        s=default; t=1559922659;
+        bh=uCnlImr1sCXDHtdWF4PMIdW6NHznW4leojAu0sMNET4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ec2J2IF6Yczjtm43g4QxqJZz9ZqsapLXXnzAZ+5+FdMaLBmTc0/jmXHxFJKQnHY9c
-         Wf1GQ1THMq9k4p1VLjrMiddqdXYyvrv5hPw6NPMErZttEK1JyGVMDVUdpwmA2KE0So
-         5J4kJA/JBFcBAB9d0GpO8iDGkGAxyaQ5Ugx6i3vI=
+        b=lN1KI7cwD2QO/RNqtCF/s6UjKvS+C3Gkpmesc1fho92u9wVhOpGlJfmANiKStzAt0
+         /wVfCyxrU4dLhGZG2Bs8wDCHHPnNzonAvCu0ZO7daYJVEt6P/3dDA2r3pT2LoCvVAm
+         IOZRkWPXFWBPNl41S4WCvD3+MpZHEcmucM5JM/qA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 5.1 70/85] gcc-plugins: Fix build failures under Darwin host
-Date:   Fri,  7 Jun 2019 17:39:55 +0200
-Message-Id: <20190607153856.934643216@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Hellstrom <thellstrom@vmware.com>,
+        Deepak Rawat <drawat@vmware.com>
+Subject: [PATCH 5.1 72/85] drm/vmwgfx: Fix user space handle equal to zero
+Date:   Fri,  7 Jun 2019 17:39:57 +0200
+Message-Id: <20190607153857.107552334@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -59,52 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-commit 7210e060155b9cf557fb13128353c3e494fa5ed3 upstream.
+commit 8407f8a1d940fe28c4243ad4f0cb6a44dcee88f6 upstream.
 
-The gcc-common.h file did not take into account certain macros that
-might have already been defined in the build environment. This updates
-the header to avoid redefining the macros, as seen on a Darwin host
-using gcc 4.9.2:
+User-space handles equal to zero are interpreted as uninitialized or
+illegal by some drm systems (most notably kms). This means that a
+dumb buffer or surface with a zero user-space handle can never be
+used as a kms frame-buffer.
 
- HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o - due to: scripts/gcc-plugins/gcc-common.h
-In file included from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:0:
-scripts/gcc-plugins/gcc-common.h:153:0: warning: "__unused" redefined
-^
-In file included from /usr/include/stdio.h:64:0,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/system.h:40,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/gcc-plugin.h:28,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/plugin.h:23,
-                from scripts/gcc-plugins/gcc-common.h:9,
-                from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:
-/usr/include/sys/cdefs.h:161:0: note: this is the location of the previous definition
-^
-
-Reported-and-tested-by: "H. Nikolaus Schaller" <hns@goldelico.com>
-Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: <stable@vger.kernel.org>
+Fixes: c7eae62666ad ("drm/vmwgfx: Make the object handles idr-generated")
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/gcc-plugins/gcc-common.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/vmwgfx/ttm_object.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -150,8 +150,12 @@ void print_gimple_expr(FILE *, gimple, i
- void dump_gimple_stmt(pretty_printer *, gimple, int, int);
- #endif
- 
-+#ifndef __unused
- #define __unused __attribute__((__unused__))
-+#endif
-+#ifndef __visible
- #define __visible __attribute__((visibility("default")))
-+#endif
- 
- #define DECL_NAME_POINTER(node) IDENTIFIER_POINTER(DECL_NAME(node))
- #define DECL_NAME_LENGTH(node) IDENTIFIER_LENGTH(DECL_NAME(node))
+--- a/drivers/gpu/drm/vmwgfx/ttm_object.c
++++ b/drivers/gpu/drm/vmwgfx/ttm_object.c
+@@ -174,7 +174,7 @@ int ttm_base_object_init(struct ttm_obje
+ 	kref_init(&base->refcount);
+ 	idr_preload(GFP_KERNEL);
+ 	spin_lock(&tdev->object_lock);
+-	ret = idr_alloc(&tdev->idr, base, 0, 0, GFP_NOWAIT);
++	ret = idr_alloc(&tdev->idr, base, 1, 0, GFP_NOWAIT);
+ 	spin_unlock(&tdev->object_lock);
+ 	idr_preload_end();
+ 	if (ret < 0)
 
 
