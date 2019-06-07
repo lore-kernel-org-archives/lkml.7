@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EE1C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E638AC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E682146F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC68D214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922053;
-	bh=s5XUr4oAMYMkO/L1yXi+KcIP++cyMJwnAPtD+Pi+5qY=;
+	s=default; t=1559922056;
+	bh=5NxK3QZ4xXv0053/H9qoIGNYWfFSdPg+TupU4k+I13s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+Sjdl5auXZkpTlD/za1O7fiXcGovhav2PclEXitgoB8V/Lyok5WLH8JQj2wibTjD
-	 vJCVM/gljLGZ0HgzO0X5glRQmPCMKo7KJxxUacR22n4zIjmj5yvpO7sRcRgR6p5Lij
-	 6fUeCdaRxNqqP0rMNxA+cfhBpa6oV/hb9ZCCfhUM=
+	b=C4cRGi6ITSDDiqR2FYLqhQSJPTCtnZtTzxvYBmwgZOIm+ALW7tfSqn1fxEDaIsXTi
+	 QSngpWvYeh/EXBm9VLeDpQay8lC1Sf23RGToLgC5NY5nIL4WQnbCZbWOLisY6a3cIp
+	 Hwa7UAIDGQT2V1z17KcqKsmUFbjUGJ8ARSF3Sigw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbfFGPkw (ORCPT
+        id S1730170AbfFGPkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:40:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50202 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:40:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730135AbfFGPkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:40:47 -0400
+        id S1730135AbfFGPky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:40:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0FC4212F5;
-        Fri,  7 Jun 2019 15:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA182133D;
+        Fri,  7 Jun 2019 15:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922047;
-        bh=s5XUr4oAMYMkO/L1yXi+KcIP++cyMJwnAPtD+Pi+5qY=;
+        s=default; t=1559922052;
+        bh=5NxK3QZ4xXv0053/H9qoIGNYWfFSdPg+TupU4k+I13s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A73obezVzLQOzOnBO1YFSvuZlyTcGahv3TulGmPqgDJT7Y0MdHfGqrSbWl+RVm4kT
-         yuxmFQrEjrkhpOdoy/t3Mn0JD/cryH7exKxe3fQ7eESgMWVbjao/FrTAE9KrXJBlqw
-         6A5Chut4y59hJMZuKUMnQDVE+YP4/E5R002/pmL0=
+        b=EUqBSv+/ro2oenqXmWnE3iALsxmBZyzQ7xhyocVtP5024dlWyj9Nb4o4bIjU9E/kt
+         oHXrRN1DIhWKQvQ5sI85oT1pWWkeJOmouAJd+O0S2VrpKQoIlJoScueZ9543Pr8CTH
+         KrPubBaqtE7UcuYFAw5PynZ46K+oWUylOJmnOGRw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 18/69] xen/pciback: Dont disable PCI_COMMAND on PCI device reset.
-Date:   Fri,  7 Jun 2019 17:38:59 +0200
-Message-Id: <20190607153850.560174860@linuxfoundation.org>
+        stable@vger.kernel.org, Junwei Hu <hujunwei4@huawei.com>,
+        Wang Wang <wangwang2@huawei.com>,
+        syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com,
+        Kang Zhou <zhoukang7@huawei.com>,
+        Suanming Mou <mousuanming@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 20/69] tipc: fix modprobe tipc failed after switch order of device registration
+Date:   Fri,  7 Jun 2019 17:39:01 +0200
+Message-Id: <20190607153850.851689067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -62,56 +63,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+From: Junwei Hu <hujunwei4@huawei.com>
 
-commit 7681f31ec9cdacab4fd10570be924f2cef6669ba upstream.
+commit 526f5b851a96566803ee4bee60d0a34df56c77f8 upstream.
 
-There is no need for this at all. Worst it means that if
-the guest tries to write to BARs it could lead (on certain
-platforms) to PCI SERR errors.
+Error message printed:
+modprobe: ERROR: could not insert 'tipc': Address family not
+supported by protocol.
+when modprobe tipc after the following patch: switch order of
+device registration, commit 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
 
-Please note that with af6fc858a35b90e89ea7a7ee58e66628c55c776b
-"xen-pciback: limit guest control of command register"
-a guest is still allowed to enable those control bits (safely), but
-is not allowed to disable them and that therefore a well behaved
-frontend which enables things before using them will still
-function correctly.
+Because sock_create_kern(net, AF_TIPC, ...) called by
+tipc_topsrv_create_listener() in the initialization process
+of tipc_init_net(), so tipc_socket_init() must be execute before that.
+Meanwhile, tipc_net_id need to be initialized when sock_create()
+called, and tipc_socket_init() is no need to be called for each namespace.
 
-This is done via an write to the configuration register 0x4 which
-triggers on the backend side:
-command_write
-  \- pci_enable_device
-     \- pci_enable_device_flags
-        \- do_pci_enable_device
-           \- pcibios_enable_device
-              \-pci_enable_resourcess
-                [which enables the PCI_COMMAND_MEMORY|PCI_COMMAND_IO]
+I add a variable tipc_topsrv_net_ops, and split the
+register_pernet_subsys() of tipc into two parts, and split
+tipc_socket_init() with initialization of pernet params.
 
-However guests (and drivers) which don't do this could cause
-problems, including the security issues which XSA-120 sought
-to address.
+By the way, I fixed resources rollback error when tipc_bcast_init()
+failed in tipc_init_net().
 
-Reported-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Reviewed-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Fixes: 7e27e8d6130c ("tipc: switch order of device registration to fix a crash")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reported-by: syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com
+Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+Reviewed-by: Suanming Mou <mousuanming@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/xen-pciback/pciback_ops.c |    2 --
- 1 file changed, 2 deletions(-)
+ net/tipc/core.c   |   18 ++++++++++++------
+ net/tipc/subscr.c |   14 ++++++++++++--
+ net/tipc/subscr.h |    5 +++--
+ 3 files changed, 27 insertions(+), 10 deletions(-)
 
---- a/drivers/xen/xen-pciback/pciback_ops.c
-+++ b/drivers/xen/xen-pciback/pciback_ops.c
-@@ -127,8 +127,6 @@ void xen_pcibk_reset_device(struct pci_d
- 		if (pci_is_enabled(dev))
- 			pci_disable_device(dev);
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -71,9 +71,6 @@ static int __net_init tipc_init_net(stru
+ 		goto out_nametbl;
  
--		pci_write_config_word(dev, PCI_COMMAND, 0);
--
- 		dev->is_busmaster = 0;
- 	} else {
- 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 	INIT_LIST_HEAD(&tn->dist_queue);
+-	err = tipc_topsrv_start(net);
+-	if (err)
+-		goto out_subscr;
+ 
+ 	err = tipc_bcast_init(net);
+ 	if (err)
+@@ -82,8 +79,6 @@ static int __net_init tipc_init_net(stru
+ 	return 0;
+ 
+ out_bclink:
+-	tipc_bcast_stop(net);
+-out_subscr:
+ 	tipc_nametbl_stop(net);
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+@@ -93,7 +88,6 @@ out_sk_rht:
+ 
+ static void __net_exit tipc_exit_net(struct net *net)
+ {
+-	tipc_topsrv_stop(net);
+ 	tipc_net_stop(net);
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+@@ -107,6 +101,11 @@ static struct pernet_operations tipc_net
+ 	.size = sizeof(struct tipc_net),
+ };
+ 
++static struct pernet_operations tipc_topsrv_net_ops = {
++	.init = tipc_topsrv_init_net,
++	.exit = tipc_topsrv_exit_net,
++};
++
+ static int __init tipc_init(void)
+ {
+ 	int err;
+@@ -137,6 +136,10 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_socket;
+ 
++	err = register_pernet_subsys(&tipc_topsrv_net_ops);
++	if (err)
++		goto out_pernet_topsrv;
++
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -144,6 +147,8 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
++	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++out_pernet_topsrv:
+ 	tipc_socket_stop();
+ out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+@@ -161,6 +166,7 @@ out_netlink:
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
++	unregister_pernet_subsys(&tipc_topsrv_net_ops);
+ 	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+--- a/net/tipc/subscr.c
++++ b/net/tipc/subscr.c
+@@ -344,7 +344,7 @@ static void *tipc_subscrb_connect_cb(int
+ 	return (void *)tipc_subscrb_create(conid);
+ }
+ 
+-int tipc_topsrv_start(struct net *net)
++static int tipc_topsrv_start(struct net *net)
+ {
+ 	struct tipc_net *tn = net_generic(net, tipc_net_id);
+ 	const char name[] = "topology_server";
+@@ -382,7 +382,7 @@ int tipc_topsrv_start(struct net *net)
+ 	return tipc_server_start(topsrv);
+ }
+ 
+-void tipc_topsrv_stop(struct net *net)
++static void tipc_topsrv_stop(struct net *net)
+ {
+ 	struct tipc_net *tn = net_generic(net, tipc_net_id);
+ 	struct tipc_server *topsrv = tn->topsrv;
+@@ -391,3 +391,13 @@ void tipc_topsrv_stop(struct net *net)
+ 	kfree(topsrv->saddr);
+ 	kfree(topsrv);
+ }
++
++int __net_init tipc_topsrv_init_net(struct net *net)
++{
++	return tipc_topsrv_start(net);
++}
++
++void __net_exit tipc_topsrv_exit_net(struct net *net)
++{
++	tipc_topsrv_stop(net);
++}
+--- a/net/tipc/subscr.h
++++ b/net/tipc/subscr.h
+@@ -75,8 +75,9 @@ void tipc_subscrp_report_overlap(struct
+ void tipc_subscrp_convert_seq(struct tipc_name_seq *in, int swap,
+ 			      struct tipc_name_seq *out);
+ u32 tipc_subscrp_convert_seq_type(u32 type, int swap);
+-int tipc_topsrv_start(struct net *net);
+-void tipc_topsrv_stop(struct net *net);
++
++int __net_init tipc_topsrv_init_net(struct net *net);
++void __net_exit tipc_topsrv_exit_net(struct net *net);
+ 
+ void tipc_subscrp_put(struct tipc_subscription *subscription);
+ void tipc_subscrp_get(struct tipc_subscription *subscription);
 
 
