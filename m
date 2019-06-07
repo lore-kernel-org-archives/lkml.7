@@ -2,89 +2,103 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09485C28EBD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397EBC04AB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51C3208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559868100;
-	bh=1vBgXQP1RrooBCqpqPpJd49Z0ROP6YAncbyQUWEg38E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A+AwYtqt/XcstftseDPuPgAvOAKKj3fZ4PJPQ0Wb4YtrKfzEBgbbfQ7eTBpRHY0Tv
-	 piXKk4FE725B4ika7nVt/mnZlXqOWcLB7jD5yvej2AILmWH0+pZyWRyTRahX2PnnjT
-	 Ex7Ix8bKlnmnlc22onhyY9h3oJU5nDsA4CwJeWDk=
+	by mail.kernel.org (Postfix) with ESMTP id 13BA5208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfFGAlk (ORCPT
+        id S1728444AbfFGAlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 20:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfFGAlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Jun 2019 20:41:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58164 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727067AbfFGAlj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 20:41:39 -0400
-Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BF4B20840;
-        Fri,  7 Jun 2019 00:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559868099;
-        bh=1vBgXQP1RrooBCqpqPpJd49Z0ROP6YAncbyQUWEg38E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RfblBthgc+Z0mKHDGUh/hG3I+ddM9slbmysMntqXwK6uHew8pK3P9uBfAR0C26rH2
-         M3d22k7XkDog1lnm5AXAxFprI+6GH3qWBi4S9dAiA/VAxP+VGocEdVL1hEOzxfsYNj
-         B1jaIre4e8lxXu3jQaal2HsJ5+xikw6yp7BWGe2c=
-Date:   Fri, 7 Jun 2019 08:41:18 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Abel Vesa <abel.vesa@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND v2 00/18] clk: imx: Switch the imx6 and imx7 to clk_hw
- based API
-Message-ID: <20190607004117.GZ29853@dragon>
-References: <1559132773-12884-1-git-send-email-abel.vesa@nxp.com>
- <20190606182940.F0D8C20872@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606182940.F0D8C20872@mail.kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x570WDhK086483
+        for <linux-kernel@vger.kernel.org>; Thu, 6 Jun 2019 20:41:39 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sya05gbvh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 20:41:38 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <jejb@linux.ibm.com>;
+        Fri, 7 Jun 2019 01:41:37 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 7 Jun 2019 01:41:34 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x570fX4S22872512
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Jun 2019 00:41:33 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48B69B205F;
+        Fri,  7 Jun 2019 00:41:33 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 097E2B2065;
+        Fri,  7 Jun 2019 00:41:31 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.204.144])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  7 Jun 2019 00:41:30 +0000 (GMT)
+Subject: Re: [PATCH v2] drivers: scsi: remove unnecessary #ifdef MODULE
+From:   James Bottomley <jejb@linux.ibm.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     khalid@gonehiking.org, martin.petersen@oracle.com,
+        aacraid@microsemi.com, linux-scsi@vger.kernel.org
+Date:   Fri, 07 Jun 2019 03:41:29 +0300
+In-Reply-To: <1559833471-30534-1-git-send-email-info@metux.net>
+References: <1559833471-30534-1-git-send-email-info@metux.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19060700-0040-0000-0000-000004F9D52A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011225; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01214291; UDB=6.00638289; IPR=6.00995371;
+ MB=3.00027213; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-07 00:41:36
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060700-0041-0000-0000-00000905F536
+Message-Id: <1559868089.3233.1.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906070002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 11:29:40AM -0700, Stephen Boyd wrote:
-> Quoting Abel Vesa (2019-05-29 05:26:38)
-> > Resend for the following:
-> > 
-> > https://lkml.org/lkml/2019/5/2/170
+On Thu, 2019-06-06 at 17:04 +0200, Enrico Weigelt, metux IT consult
+wrote:
+> From: Enrico Weigelt <info@metux.net>
 > 
-> What's left after this series to convert over to clk_hw based APIs? I'm
-> happy to see this merge as long as we eventually delete the clk based
-> versions of the code in the imx driver so that we can complete the task.
+> The MODULE_DEVICE_TABLE() macro already checks for MODULE defined,
+> so the extra check here is not necessary.
 > 
-> I took a look over everything and nothing stuck out, so:
-> 
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> 
-> for the series.
+> Changes v2:
+>     * make dptids const to fix warning on unused variable
 
-I just applied the series to my for-next branch, so that it can be
-pulled into linux-next for testing.
+I don't think this works; in my version of gcc, const does not defeat
+the unused variable warning if I try with a test programme:
 
-Shawn
+jejb@jarvis:~> gcc -Wunused-variable -c test1.c
+test1.c:3:18: warning: ‘i’ defined but not used [-Wunused-cons
+t-variable=]
+ static const int i[] = { 1, 2, 3};
+
+James
+
