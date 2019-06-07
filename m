@@ -2,143 +2,148 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,URIBL_BLOCKED,USER_AGENT_GIT
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09623C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D91C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01D62089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E8B2146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqR33tXv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikYMHwpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbfFGQMH (ORCPT
+        id S1730259AbfFGQNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:12:07 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42011 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729440AbfFGQMG (ORCPT
+        Fri, 7 Jun 2019 12:13:12 -0400
+Received: from mail-pg1-f169.google.com ([209.85.215.169]:37757 "EHLO
+        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbfFGQNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:12:06 -0400
-Received: by mail-ed1-f66.google.com with SMTP id z25so3739363edq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 09:12:05 -0700 (PDT)
+        Fri, 7 Jun 2019 12:13:12 -0400
+Received: by mail-pg1-f169.google.com with SMTP id 20so1415563pgr.4;
+        Fri, 07 Jun 2019 09:13:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0JpUdTsOa7EIqirFoRpEdJ3i1kEV+MZYFQgC803VPU4=;
-        b=JqR33tXvj7r3SHSdAHfYwNexD3XwyD1ZvtvYnpUh+WuFIqsP+hRuv63fN0FauVOcjj
-         RtW7VNOkguzUN+evgxN0vU5f6Utscp5VDT9uCSvFv9ErP39f1DoZVwUcEudOh1cCg4xf
-         tXEHhviwSiYhRa8OVpLjGGzNq1UZOdWKHbbxVqkr7wucaWqoqdi9VfXzJ2u3vOnrJ6T5
-         FFQajWDRxOgOQOxXqEJyUwGhAWYf8n9qUP7QiVrxOXxdsH/MO7OnaTDxomnk5pjOseKK
-         yTYkGnLAsm7mvkh4RoLf/xq8TfoJt46ZDhv8N6jrBWO+qUc1gTrp1g6Lf4hKfaVUQ+pg
-         pg6w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+v/nyTrfUwKDiO60H6P7yrcb/AvGQ5TkB/DzgjrK9rk=;
+        b=ikYMHwpeMcyQt1k0NxYmY6v+CxikGuE+R1vUmmNbxcRy3tpwp60Z+t9SRyrc1oVY2u
+         rxSp/s9anWeYnx/yIErCPueV3dJWuJobVtQfce9FguRrJpvFCT4Eah90Yh2W4oGQVRgR
+         +07qXwLfYSuod0nvYdcEKD/rKD6VgcDXdKkypIarOLjimDkycc2HrP3JXOCnAZKt9zi4
+         8k8siRg0CQ2d8IQJ2supqLtUyhqXMSWDxF7OdIbEptL2xlsjrVXgLcR4/kEUQ/knTRGn
+         WnF3AM0NdMDkRtcM8m/r6bXXN7vPTCsZZZh7h97Hq9xmjqfTbR7fLDFKYAEzz2I6Q/8j
+         loUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0JpUdTsOa7EIqirFoRpEdJ3i1kEV+MZYFQgC803VPU4=;
-        b=W8RmEOfCOgnwTzVzIxSNC367E2WeowWBDcDjR/y8kFVkKYtJAbWMqyx3AjUSWaeuHv
-         kIr8uFyW5EVnQYHW4GVzGb4zUIrysj6+vUHDpkwPTr2PnTTdcr5CXjRFiWoHMuEzqwwE
-         ueNwDk7yraR8VJYTEhrK1GMpMA4uTQx9+F38KVjv7kjhK7Ny8M4OobPWvRxESRR+T5jB
-         EqcGMr9wpAfHkLhd75KQ5RLUvowlfmfRWW4IF3dQATAj+wroeSRVXSXDjCrnZswTRrwE
-         GwpJg73DnbnOQGo+5hetNuNiSHA+naN6LLeeJ+sPC+u+gub/fvFgYpfqFG2hYpanej2e
-         VBPg==
-X-Gm-Message-State: APjAAAUoka6k2Jpho0wz12P0HLcyd6LpT0Q3w7Ebk7Qo++fLKexG9TLp
-        ObVtlGgq1cmk4k78UK0avUQ=
-X-Google-Smtp-Source: APXvYqxaqFHNuIkJrpIMXSYPMvOKZbnkIur25HxoxqrDANRMZ9mZX+ezXOZ6faSEaGlGt95Y6uIsEQ==
-X-Received: by 2002:a17:906:53c8:: with SMTP id p8mr48103973ejo.18.1559923925065;
-        Fri, 07 Jun 2019 09:12:05 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id q24sm440117ejr.35.2019.06.07.09.12.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 09:12:04 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] arm64: Don't unconditionally add -Wno-psabi to KBUILD_CFLAGS
-Date:   Fri,  7 Jun 2019 09:12:01 -0700
-Message-Id: <20190607161201.73430-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0.rc3
+        bh=+v/nyTrfUwKDiO60H6P7yrcb/AvGQ5TkB/DzgjrK9rk=;
+        b=QCMJAUU+6fgL3hMMKPkYTCVMK1hi5VYsNXu6xm/HtmlYCXO0DHvGu5GEcGXrqlx0+U
+         aYjtHoztqYHCFR36R/s8TQJIRS8xnwXfHtb+8+uq99EbbmcDeSIGIiICcx8TVrjxroRD
+         kdBm8vwBugNCLvK/rwM/Q6SZXbyPfwMVtOSO+fFBfdvKdhhk9Dl+p3J6NP0bJz3QNmeb
+         Ar8e5tek99WSNXrFTrl8kkYW6WM1Dl11MIFVWu0zXarMf4nx60CRvxN2fu++eNV0MphL
+         TbrHh+JC+RPeLaICX1nXAexMnQyLjCU+FhnxTESm4TUPXWAzz47qmYsRD7dAgGHepKab
+         c9Kw==
+X-Gm-Message-State: APjAAAWU/TIj7eCW41xhm2xbExslwKyi2+7D9WvaBbD+e3wp5dW1JojH
+        l4Z5JnTCtiXHdJasPYXymS8=
+X-Google-Smtp-Source: APXvYqzQJ4jN+znFbh4NisIXmXtjlcm9RNiNM2+fTJLWxplzZ9amcx9SPe20QkrjChZPygPGF60fdw==
+X-Received: by 2002:a63:e603:: with SMTP id g3mr3628545pgh.167.1559923991556;
+        Fri, 07 Jun 2019 09:13:11 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id e5sm7214119pjj.2.2019.06.07.09.13.10
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 09:13:10 -0700 (PDT)
+Subject: Re: inet: frags: Turn fqdir->dead into an int for old Alphas
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+References: <20190603200301.GM28207@linux.ibm.com>
+ <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
+ <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
+ <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
+ <da5eedfe-92f9-6c50-b9e7-68886047dd25@gmail.com>
+ <20190607153226.gzt4yeq5c5i6bpqd@gondor.apana.org.au>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <f8908fc1-102e-c02f-6574-56cf053d791e@gmail.com>
+Date:   Fri, 7 Jun 2019 09:13:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190607153226.gzt4yeq5c5i6bpqd@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a GCC only option, which warns about ABI changes within GCC, so
-unconditionally adding breaks Clang with tons of:
 
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
 
-and link time failures:
+On 6/7/19 8:32 AM, Herbert Xu wrote:
+> On Fri, Jun 07, 2019 at 08:26:12AM -0700, Eric Dumazet wrote:
+>>
+>> There is common knowledge among us programmers that bit fields
+>> (or bool) sharing a common 'word' need to be protected
+>> with a common lock.
+>>
+>> Converting all bit fields to plain int/long would be quite a waste of memory.
+>>
+>> In this case, fqdir_exit() is called right before the whole
+>> struct fqdir is dismantled, and the only cpu that could possibly
+>> change the thing is ourself, and we are going to start an RCU grace period.
+>>
+>> Note that first cache line in 'struct fqdir' is read-only.
+>> Only ->dead field is flipped to one at exit time.
+>>
+>> Your patch would send a strong signal to programmers to not even try using
+>> bit fields.
+>>
+>> Do we really want that ?
+> 
+> If this were a bitfield then I'd think it would be safer because
+> anybody adding a new bitfield is unlikely to try modifying both
+> fields without locking or atomic ops.
+> 
+> However, because this is a boolean, I can certainly see someone
+> else coming along and adding another bool right next to it and
+> expecting writes them to still be atomic.
+> 
+> As it stands, my patch has zero impact on memory usage because
+> it's simply using existing padding.  Should this become an issue
+> in future, we can always revisit this and use a more appropriate
+> method of addressing it.
+> 
+> But the point is to alert future developers that this field is
+> not an ordinary boolean.
 
-ld.lld: error: undefined symbol: __efistub___stack_chk_guard
->>> referenced by arm-stub.c:73
-(/home/nathan/cbl/linux/drivers/firmware/efi/libstub/arm-stub.c:73)
->>>               arm-stub.stub.o:(__efistub_install_memreserve_table)
-in archive ./drivers/firmware/efi/libstub/lib.a
+Okay, but you added a quite redundant comment.
 
-I suspect the link time failure comes from some flags not being added
-via cc-option, which will always fail when an unknown flag is
-unconditionally added to KBUILD_CFLAGS because -Werror is added after
-commit c3f0d0bc5b01 ("kbuild, LLVMLinux: Add -Werror to cc-option to
-support clang").
+/* We can't use boolean because this needs atomic writes. */
 
-$ echo "int main() { return 0; }" | clang -Wno-psabi -o /dev/null -x c -
-warning: unknown warning option '-Wno-psabi' [-Wunknown-warning-option]
-1 warning generated.
+Should we add a similar comment in front of all bit-fields,
+or could we factorize this in a proper Documentation perhaps ?
 
-$ echo $?
-0
+Can we just add a proper bit-field and not the comment ?
 
-$ echo "int main() { return 0; }" | clang -Werror -Wno-psabi -o /dev/null -x c -
-error: unknown warning option '-Wno-psabi' [-Werror,-Wunknown-warning-option]
+unsigned int dead:1;
 
-$ echo $?
-1
+This way, next programmer can just apply normal rules to add a new bit.
 
-This side effect is user visible (aside from the inordinate amount of
--Wunknown-warning-option and build failure), as some warnings that are
-normally disabled like -Waddress-of-packed-member or
--Wunused-const-variable show up.
-
-Use cc-disable-warning so that it gets disabled for GCC and does nothing
-for Clang.
-
-Fixes: ebcc5928c5d9 ("arm64: Silence gcc warnings about arch ABI drift")
-Link: https://github.com/ClangBuiltLinux/linux/issues/511
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/arm64/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 8fbd583b18e1..e9d2e578cbe6 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -51,7 +51,7 @@ endif
- 
- KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)
- KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
--KBUILD_CFLAGS	+= -Wno-psabi
-+KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
- KBUILD_AFLAGS	+= $(lseinstr) $(brokengasinst)
- 
- KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
--- 
-2.22.0.rc3
+Thanks !
 
