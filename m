@@ -2,111 +2,85 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B577C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560BAC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42387212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87DE2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PrfN5Q8z"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bUaTQmhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfFGHbb (ORCPT
+        id S1727371AbfFGHee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 03:31:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47234 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFGHbb (ORCPT
+        Fri, 7 Jun 2019 03:34:34 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:59376 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726857AbfFGHee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 03:31:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z4s1HU+Ta9EFcVv62Up/dxFFdolam58FxKGBkLAELZE=; b=PrfN5Q8zV0PMbJwOh2nSW0qEu
-        whA3bMeZqjYW6FVebCOMZ+jOWcBf+KwA1YjMeNgOsUt0oXjsFsVtbgVjMkkSB2lXZiVsntQd5nIpO
-        GW/QhqhGfYGi3P0N9Kz2wphjaFQrHbOZos1aDDyNXV9IIbRjza8ZimXKp7rc3KXCR2qUaIUDiJx4D
-        5rSOUPZEafMrNVJUJROE8lISqEQD1e32yciSw6rgIUWvfgxL1u89OkOz+Hdjo60eCuPyV4oJuq5ZI
-        jCvlk67LYXzyPmh1q9o9aYoPPzyR0KFRwE/m9d1Eb5wGETSQGDQ/SGHQzPTldrqSlG+aLohd+cQ4E
-        nfdyfn8hA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hZ9Kx-0002HQ-Ah; Fri, 07 Jun 2019 07:30:55 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E4942202CD6B2; Fri,  7 Jun 2019 09:30:52 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 09:30:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v7 15/27] mm: Handle shadow stack page fault
-Message-ID: <20190607073052.GO3419@hirez.programming.kicks-ass.net>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
- <20190606200646.3951-16-yu-cheng.yu@intel.com>
+        Fri, 7 Jun 2019 03:34:34 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id E72182E0AF1;
+        Fri,  7 Jun 2019 10:34:30 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id CrueRdWKQS-YUOexwmw;
+        Fri, 07 Jun 2019 10:34:30 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1559892870; bh=hIxHkhsRKJhTFSv6sxT6gpvOPkCywFWid6mF4RBVF4w=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=bUaTQmhTO2YrwyoavpCCKH1bPQmaYbtkg//7Jl7wIDoilLXcD1o6XIX+VoGeO4q/G
+         pDz1CoXtN9aUwTpp1BKO0lNTxNozZWpzxJamUMY/q2daYvccLMRtskp5yZJbXctcEb
+         IeSQtt+CgUa5F7yoVv5nGKVQsuG8zSDX4mo1NTCo=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:b19a:10ab:8629:85d9])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id YBLwBguXM6-YUeaTPmH;
+        Fri, 07 Jun 2019 10:34:30 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] drivers/ata: remove flood "Enabling discard_zeroes_data"
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Date:   Fri, 07 Jun 2019 10:34:29 +0300
+Message-ID: <155989286981.1471.16344793966539115439.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606200646.3951-16-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 01:06:34PM -0700, Yu-cheng Yu wrote:
+Printing this at each SCSI READ_CAPACITY command is too verbose.
 
-> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-> index 75d9d68a6de7..ffcc0be7cadc 100644
-> --- a/include/asm-generic/pgtable.h
-> +++ b/include/asm-generic/pgtable.h
-> @@ -1188,4 +1188,12 @@ static inline bool arch_has_pfn_modify_check(void)
->  #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
->  #endif
->  
-> +#ifndef CONFIG_ARCH_HAS_SHSTK
-> +#define pte_set_vma_features(pte, vma) pte
-> +#define arch_copy_pte_mapping(vma_flags) false
+Flag "discard_zeroes_data" is deprecated since commit 48920ff2a5a9
+("block: remove the discard_zeroes_data flag").
 
-static inline pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma)
-{
-	return pte;
-}
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ drivers/ata/libata-scsi.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-static inline bool arch_copy_pte_mapping(unsigned long vm_flags)
-{
-	return false;
-}
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 391ac0503dc0..a475e94944b7 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -2735,10 +2735,8 @@ static unsigned int ata_scsiop_read_cap(struct ata_scsi_args *args, u8 *rbuf)
+ 			rbuf[14] |= 0x80; /* LBPME */
+ 
+ 			if (ata_id_has_zero_after_trim(args->id) &&
+-			    dev->horkage & ATA_HORKAGE_ZERO_AFTER_TRIM) {
+-				ata_dev_info(dev, "Enabling discard_zeroes_data\n");
++			    dev->horkage & ATA_HORKAGE_ZERO_AFTER_TRIM)
+ 				rbuf[14] |= 0x40; /* LBPRZ */
+-			}
+ 		}
+ 		if (ata_id_zoned_cap(args->id) ||
+ 		    args->dev->class == ATA_DEV_ZAC)
 
-Please, this way we retain function prototype checking.
-
-> +#else
-> +pte_t pte_set_vma_features(pte_t pte, struct vm_area_struct *vma);
-> +bool arch_copy_pte_mapping(vm_flags_t vm_flags);
-> +#endif
