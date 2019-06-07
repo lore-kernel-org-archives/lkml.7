@@ -2,140 +2,169 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F042C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2495C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C7420868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="g+D00ICT"
+	by mail.kernel.org (Postfix) with ESMTP id 878C120868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731438AbfFGRaS (ORCPT
+        id S1731472AbfFGRam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:30:18 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38676 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729355AbfFGRaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:30:17 -0400
-Received: from zn.tnic (p200300EC2F066300951FA2F4E0AD5C5F.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:6300:951f:a2f4:e0ad:5c5f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 7 Jun 2019 13:30:42 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:42245 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729355AbfFGRal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 13:30:41 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E50563C00DD;
+        Fri,  7 Jun 2019 19:30:36 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id gB7ra8XJGT9k; Fri,  7 Jun 2019 19:30:28 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5767C1EC0997;
-        Fri,  7 Jun 2019 19:30:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1559928616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=T0oiUeJJ4yH6JALjOP9aRLwwDXx5xLU0ccWzcZC6ki4=;
-        b=g+D00ICTFdwzwW2g2mw6pYLS2tw6CFd78aj88RlbG+UudJFX5v1G2Qr50L2t370gSzDuah
-        fbf1AxA1DawepNa5oYEDfZWdYREuWnV0rHFi2VZ3k1whhodsJAZip5vYDtMhH8QziCP7+l
-        EYhRUyv7hXiaT2CQkn/t6NX+JFZ2ngU=
-Date:   Fri, 7 Jun 2019 19:30:16 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Young <dyoung@redhat.com>, Pingfan Liu <kernelfans@gmail.com>
-Cc:     kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>, yinghai@kernel.org,
-        vgoyal@redhat.com, Randy Dunlap <rdunlap@infradead.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
- consistent with kaslr
-Message-ID: <20190607173016.GM20269@zn.tnic>
-References: <1548047768-7656-1-git-send-email-kernelfans@gmail.com>
- <20190125103924.GB27998@zn.tnic>
- <20190125134518.GA23595@dhcp-128-65.nay.redhat.com>
- <20190125140823.GC27998@zn.tnic>
- <20190128095809.GC3732@dhcp-128-65.nay.redhat.com>
- <20190128101831.GA27154@zn.tnic>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 177693C00D1;
+        Fri,  7 Jun 2019 19:30:28 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 7 Jun 2019
+ 19:30:27 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically inverted IRQ
+Date:   Fri, 7 Jun 2019 19:29:58 +0200
+Message-ID: <20190607172958.20745-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190128101831.GA27154@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 11:18:31AM +0100, Borislav Petkov wrote:
-> On Mon, Jan 28, 2019 at 05:58:09PM +0800, Dave Young wrote:
-> > Another reason is in case ,high we will need automatically reserve a
-> > region in low area for swiotlb.  So for example one use
-> > crashkernel=256M,high,  actual reserved memory is 256M above 4G and
-> > another 256M under 4G for swiotlb.  Normally it is not necessary for
-> > most people.  Thus we can not make ,high as default.
-> 
-> And how is the poor user to figure out that we decided for her/him that
-> swiotlb reservation is something not necessary for most people and thus
-> we fail the crashkernel= reservation?
-> 
-> IOW, that "logic" above doesn't make a whole lot of sense to me from
-> user friendliness perspective.
+The wl1837mod datasheet [1] says about the WL_IRQ pin:
 
-So to show what I mean: I'm trying to reserve a crash kernel region on a
-box here. I tried:
+ ---8<---
+SDIO available, interrupt out. Active high. [..]
+Set to rising edge (active high) on powerup.
+ ---8<---
 
-crashkernel=64M@16M
+That's the reason of seeing the interrupt configured as:
+ - IRQ_TYPE_EDGE_RISING on HiKey 960/970
+ - IRQ_TYPE_LEVEL_HIGH on a number of i.MX6 platforms
 
-as it is stated in Documentation/kdump/kdump.txt.
+We assert that all those platforms have the WL_IRQ pin connected
+to the SoC _directly_ (confirmed on HiKey 970 [2]).
 
-Box said:
+That's not the case for R-Car Kingfisher extension target, which carries
+a WL1837MODGIMOCT IC. There is an SN74LV1T04DBVR inverter present
+between the WLAN_IRQ pin of the WL18* chip and the SoC, effectively
+reversing the requirement quoted from [1]. IOW, in Kingfisher DTS
+configuration we would need to use IRQ_TYPE_EDGE_FALLING or
+IRQ_TYPE_LEVEL_LOW.
 
-[    0.000000] crashkernel reservation failed - memory is in use.
+Unfortunately, v4.2-rc1 commit bd763482c82ea2 ("wl18xx: wlan_irq:
+support platform dependent interrupt types") made a special case out
+of these interrupt types. After this commit, it is impossible to provide
+an IRQ configuration via DTS which would describe an inverter present
+between the WL18* chip and the SoC, generating the need for workarounds
+like [3].
 
-Oh great.
+Create a boolean OF property, called "invert-irq" to specify that
+the WLAN_IRQ pin of WL18* is connected to the SoC via an inverter.
 
-Then I tried:
+This solution has been successfully tested on R-Car H3ULCB-KF-M06 using
+the DTS configuration [4] combined with the "invert-irq" property.
 
-crashkernel=64M@64M
+[1] http://www.ti.com/lit/ds/symlink/wl1837mod.pdf
+[2] https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/
+[3] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
+[4] https://patchwork.kernel.org/patch/10895879/
+    ("arm64: dts: ulcb-kf: Add support for TI WL1837")
 
-Box said:
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+ drivers/net/wireless/ti/wl18xx/main.c     | 5 +++++
+ drivers/net/wireless/ti/wlcore/sdio.c     | 2 ++
+ drivers/net/wireless/ti/wlcore/wlcore_i.h | 4 ++++
+ 3 files changed, 11 insertions(+)
 
-[    0.000000] crashkernel reservation failed - memory is in use.
-
-So I simply did:
-
-crashkernel=64M
-
-and the box said:
-
-[    0.000000] Reserving 64MB of memory at 3392MB for crashkernel (System RAM: 16271MB)
-
-So I could've gone a long time poking at the memory to find a suitable
-address.
-
-So do you see what I mean with making this as user-friendly and as
-robust as possible?
-
-In this case I don't care about *where* my crash kernel is - I only want
-to have one loaded *somewhere*.
-
-And the same strategy should be applied to other reservation attempts
-- we should try hard to reserve and if we cannot reserve, then try an
-alternating range.
-
-I even think that
-
-crashkernel=X@Y
-
-should not simply fail if Y is occupied but keep trying and say
-
-[    0.000000] Reserving 64MB of memory at alternative address 3392MB for crashkernel (System RAM: 16271MB)
-
-and only fail when the user doesn't really want the kernel to try hard
-by booting with
-
-crashkernel=X@Y,strict
-
-But that's for another day.
-
+diff --git a/drivers/net/wireless/ti/wl18xx/main.c b/drivers/net/wireless/ti/wl18xx/main.c
+index 496b9b63cea1..cea91d1aee98 100644
+--- a/drivers/net/wireless/ti/wl18xx/main.c
++++ b/drivers/net/wireless/ti/wl18xx/main.c
+@@ -877,6 +877,8 @@ static int wl18xx_pre_boot(struct wl1271 *wl)
+ 
+ static int wl18xx_pre_upload(struct wl1271 *wl)
+ {
++	struct platform_device *pdev = wl->pdev;
++	struct wlcore_platdev_data *pdata = dev_get_platdata(&pdev->dev);
+ 	u32 tmp;
+ 	int ret;
+ 	u16 irq_invert;
+@@ -932,6 +934,9 @@ static int wl18xx_pre_upload(struct wl1271 *wl)
+ 	if (ret < 0)
+ 		goto out;
+ 
++	if (pdata->invert_irq)
++		goto out;
++
+ 	ret = irq_get_trigger_type(wl->irq);
+ 	if ((ret == IRQ_TYPE_LEVEL_LOW) || (ret == IRQ_TYPE_EDGE_FALLING)) {
+ 		wl1271_info("using inverted interrupt logic: %d", ret);
+diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+index 4d4b07701149..581f56b0b6a2 100644
+--- a/drivers/net/wireless/ti/wlcore/sdio.c
++++ b/drivers/net/wireless/ti/wlcore/sdio.c
+@@ -266,6 +266,8 @@ static int wlcore_probe_of(struct device *dev, int *irq, int *wakeirq,
+ 	of_property_read_u32(np, "tcxo-clock-frequency",
+ 			     &pdev_data->tcxo_clock_freq);
+ 
++	pdev_data->invert_irq = of_property_read_bool(np, "invert-irq");
++
+ 	return 0;
+ }
+ #else
+diff --git a/drivers/net/wireless/ti/wlcore/wlcore_i.h b/drivers/net/wireless/ti/wlcore/wlcore_i.h
+index 32ec121ccac2..01679f9d7170 100644
+--- a/drivers/net/wireless/ti/wlcore/wlcore_i.h
++++ b/drivers/net/wireless/ti/wlcore/wlcore_i.h
+@@ -213,6 +213,10 @@ struct wlcore_platdev_data {
+ 	u32 ref_clock_freq;	/* in Hertz */
+ 	u32 tcxo_clock_freq;	/* in Hertz, tcxo is always XTAL */
+ 	bool pwr_in_suspend;
++	bool invert_irq;	/* specify if there is a physical IRQ inverter
++				 * between WL chip and SoC, like SN74LV1T04DBVR
++				 * in case of R-Car Kingfisher board
++				 */
+ };
+ 
+ #define MAX_NUM_KEYS 14
 -- 
-Regards/Gruss,
-    Boris.
+2.21.0
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
