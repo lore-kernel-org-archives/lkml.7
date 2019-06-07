@@ -2,94 +2,123 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B07EC46476
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D74C2BCA1
 	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CD520825
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AF520825
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:00:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbtRyWfh"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="WfyEYkZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfFGGAv (ORCPT
+        id S1726819AbfFGGAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:00:51 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40110 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfFGGAt (ORCPT
+        Fri, 7 Jun 2019 02:00:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33877 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbfFGGAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:00:49 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so982171qtn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 23:00:48 -0700 (PDT)
+        Fri, 7 Jun 2019 02:00:47 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z24so836112oto.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 23:00:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dWh46ehTtF7XrRzrQS4UMj2mqF99ZWlKh15WhZd7opk=;
-        b=VbtRyWfh0kvCsghw4vQkoSYYEJBJkt40e8F3tOl//OUPrA30px/R4n4WjhT78ROsUA
-         RfCJm1xFS7KHaK1mntORy62MwR9gLl8grdBsBe5RP8LuwhaG+HIZn2khfCURtIO7AZxx
-         cCs5A53qGsXNDKFkG3YP/o8ywR7izGCE+VyssZEct9M+fZT1mUlT4kQkiioRVFvt7uQv
-         fUoNYVJPIClMm9wdHC4KYfsNYkVHqRKQyguBFf80v8ppKP1kUYsC8bT0o62Yzz91avTm
-         wvluBd/3/FkBJ1D+ZpnQmXK/MLJ4DdSLBCrLaXjSIBQU5MLCMoOHMvZV6tK2bNZtdvPp
-         tSig==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/KxNQ9MI1VotM1MpZhO1sXWtsUgIvWtrmcpqkBhjppA=;
+        b=WfyEYkZegPTmvynLc2fjjKs6d/TdRZHB2mGyi3svr8A4gfvWp7nBiukv2oNPMrRNu3
+         LF5pIX9mWCDEYPKHsg9x8FyxTEXL3Pp4DEsbFXvMjA67etlGXIbfY2hNbJLOqw4TuZAK
+         Bxvkt2hCh3F5rpXtMyj2CBZde6MBilulGBAwGobq2TdvBZsm+WUcNaCHcTKujMNYBYzA
+         Jz+YlbRdrvtxV6qQh4bHw4H4UOWvGsLOnQyJmjDAnpMCiSaVTnMqJomtxlE/4a38CErg
+         OEy8Ur6MMHV2bA7bkrmZl08c3aZp2RHd2Dpw55zuwf2rl9TE1d9/sN4lvF3IDzCodhLY
+         IFJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dWh46ehTtF7XrRzrQS4UMj2mqF99ZWlKh15WhZd7opk=;
-        b=NOfvcHzZgI8Rcg7SESvvuqwnfva3kk5lFBtyJo7n+zUewYZKGi8IeAmlPSk2SbFy6k
-         fl4XwsRfOVb6cXE2+csCY+Dh3Kx9r5Jl2QXsorGaT9gv8NqA3ie5mZdDUulWdLFoaw4k
-         RmaX3wfRxIQBxO80ix0EiSQnVPXa++5NxtIWUAcrpY3p30q7MH3IQ3IKCxbpbszEnb81
-         RIWvXc4OsBusaldX0QfxvpW6EJL+f/IXKuzk2MPwmS01JyZcBzAF99UPI2RKBNU5hGRT
-         Ct+1sZLBotq5ZydLpkTn/UWKkvPULUoIIXdxdVtJ5423I0KFmCGs7QAaJEcw4kH1EFOQ
-         7LEw==
-X-Gm-Message-State: APjAAAWbcE3fUuhXzKt82Vl/VijWfBft0D02Dlxjr1N0XiLUvWXiIZSy
-        mHso1UOsLVf9lAJzVajeiHc=
-X-Google-Smtp-Source: APXvYqzzmpJUF9IoRPMUxjasE/Eq5+9Yg1niCvXE8klMRI1pm12EcDjmShlXCjNiKSzkC3RmZoPNvA==
-X-Received: by 2002:aed:3ed5:: with SMTP id o21mr42958105qtf.369.1559887248462;
-        Thu, 06 Jun 2019 23:00:48 -0700 (PDT)
-Received: from ROOT.localdomain (modemcable124.134-176-173.mc.videotron.ca. [173.176.134.124])
-        by smtp.gmail.com with ESMTPSA id 39sm633787qtx.71.2019.06.06.23.00.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 23:00:48 -0700 (PDT)
-From:   Maxime Desroches <desroches.maxime@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Maxime Desroches <desroches.maxime@gmail.com>
-Subject: [PATCH] Staging: vc04_services : vchiq_core: Fix a brace issue
-Date:   Fri,  7 Jun 2019 01:59:45 -0400
-Message-Id: <20190607055945.21769-1-desroches.maxime@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/KxNQ9MI1VotM1MpZhO1sXWtsUgIvWtrmcpqkBhjppA=;
+        b=h72v4FMwAweZRAFOYlou5xh3rvfYzBY87ToR35ydc/fv0LxeOsFgCoXVoYI38oSmi+
+         x9gaMTbal7E66tlI2Kl0thQZZR1GMqW1IkgFgexEgU968+p4fCuKuip8uJjKh3zzH+2i
+         sJ6ckgtpQ1OWRxv4r+RMA0hKAqGG7wrusJsuteHNFzDSMm1ITxwClGivKuPz85Pyg5v7
+         mBK6KwrqrVD39YMgs2BUZoTWV/hbZsj7L2uYR7L4ax606tqxPg0tn4R29sSVOS0MNbZE
+         Tto1pIs4PsP4HEd+8Fzi5ePhKGcBeW0Nak8iCrNrjrdtPewg9PTcXY3b97Z7n/GiPj1E
+         gNXA==
+X-Gm-Message-State: APjAAAXFBWDZWQ8iuvPI7Y+WkZc3Enjrc4eTk+uVGCBIqZD4MjAnrpr3
+        ftmIgT0e9BzFjEEYBOOqKsq6+YM/DgBCelCm9geFXA==
+X-Google-Smtp-Source: APXvYqwgOBlvuuzB4VOYDbIT/0knuoEr43azK6XWvG7H+/gVjkfE0RSOiURNIXMgTP5DMZNdOklRtNkV5jBX8cvgDmo=
+X-Received: by 2002:a9d:6e96:: with SMTP id a22mr17778966otr.207.1559887246873;
+ Thu, 06 Jun 2019 23:00:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAPcyv4jyCDJTpGZB6qVX7_FiaxJfDzWA1cw8dfPjHM2j3j3yqQ@mail.gmail.com>
+ <20190214134622.GG4525@dhcp22.suse.cz> <CAPcyv4gxFKBQ9eVdn+pNEzBXRfw6Qwfmu21H2i5uj-PyFmRAGQ@mail.gmail.com>
+ <20190214191013.GA3420@redhat.com> <CAPcyv4jLTdJyTOy715qvBL_j_deiLoBmu_thkUnFKZKMvZL6hA@mail.gmail.com>
+ <20190214200840.GB12668@bombadil.infradead.org> <CAPcyv4hsDqvrV5yiDq8oWPuWb3WpuCEk_HB4qBxfiDpUwo75QQ@mail.gmail.com>
+ <20190605162204.jzou5hry5exly5wx@fiona>
+In-Reply-To: <20190605162204.jzou5hry5exly5wx@fiona>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 6 Jun 2019 23:00:35 -0700
+Message-ID: <CAPcyv4gZSsAA+GE9otf=WfKSkGMcTbxgdgSCErNys4sOCdCzuA@mail.gmail.com>
+Subject: Re: [Lsf-pc] [LSF/MM TOPIC] The end of the DAX experiment
+To:     Goldwyn Rodrigues <rgoldwyn@suse.de>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        lsf-pc@lists.linux-foundation.org,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove braces in a single line if statement in the vchiq_core.c file
+On Wed, Jun 5, 2019 at 9:22 AM Goldwyn Rodrigues <rgoldwyn@suse.de> wrote:
+>
+> Hi Dan/Jerome,
+>
+> On 12:20 14/02, Dan Williams wrote:
+> > On Thu, Feb 14, 2019 at 12:09 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > >
+> > > On Thu, Feb 14, 2019 at 11:31:24AM -0800, Dan Williams wrote:
+> > > > On Thu, Feb 14, 2019 at 11:10 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > > > I am just again working on my struct page mapping patchset as well as
+> > > > > the generic page write protection that sits on top. I hope to be able
+> > > > > to post the v2 in couple weeks. You can always look at my posting last
+> > > > > year to see more details.
+> > > >
+> > > > Yes, I have that in mind as one of the contenders. However, it's not
+> > > > clear to me that its a suitable fit for filesystem-reflink. Others
+> > > > have floated the 'page proxy' idea, so it would be good to discuss the
+> > > > merits of the general approaches.
+> > >
+> > > ... and my preferred option of putting pfn entries in the page cache.
+> >
+> > Another option to include the discussion.
+> >
+> > > Or is that what you meant by "page proxy"?
+> >
+> > Page proxy would be an object that a filesystem could allocate to
+> > point back to a single physical 'struct page *'. The proxy would
+> > contain an override for page->index.
+>
+> Was there any outcome on this and its implementation? I am specifically
+> interested in this for DAX support on btrfs/CoW: The TODO comment on
+> top of dax_associate_entry() :)
+>
+> If there are patches/git tree I could use to base my patches on, it would
+> be nice.
 
-Signed-off-by: Maxime Desroches <desroches.maxime@gmail.com>
----
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index 44f0eb64952a..0dca6e834ffa 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -3100,9 +3100,8 @@ VCHIQ_STATUS_T vchiq_bulk_transfer(VCHIQ_SERVICE_HANDLE_T handle,
- 			       QMFLAGS_IS_BLOCKING |
- 			       QMFLAGS_NO_MUTEX_LOCK |
- 			       QMFLAGS_NO_MUTEX_UNLOCK);
--	if (status != VCHIQ_SUCCESS) {
-+	if (status != VCHIQ_SUCCESS)
- 		goto unlock_both_error_exit;
--	}
- 
- 	queue->local_insert++;
- 
--- 
-2.17.1
-
+Half joking, but I was hoping that by the time I had circled back to
+finally reviewing the brtfs dax patches that a solution to this
+problem would be waiting. We spent more time on other DAX topics. I
+recall that Jerome and I were mutually skeptical of each others
+approaches at first glance, but we did not get into the details. So, I
+think it will be a matter of getting the idea coded up. I'm finally
+coming out from under a pile of mm work so I should have some time
+this cycle to push the page proxy idea forward.
