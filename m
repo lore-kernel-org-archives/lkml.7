@@ -2,165 +2,88 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5B7C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD70CC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C02212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73216208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:23:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kdR49OFN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6Uttyul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbfFGWXG (ORCPT
+        id S1731581AbfFGWXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:23:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39057 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730445AbfFGWXF (ORCPT
+        Fri, 7 Jun 2019 18:23:31 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35078 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730849AbfFGWXb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:23:05 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g9so1327386plm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:23:05 -0700 (PDT)
+        Fri, 7 Jun 2019 18:23:31 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h11so3047987ljb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OscIWC1H8BYVUTSTRMLtHcpa3RbQBWs93JhulNsk+jk=;
-        b=kdR49OFNsFx7GSx/8YCa4OAXnuGm9wR3mA3FGM2j9z9kYOvNzqrt6gDMUmNTCF4V83
-         UuY0GuaC7cU7suXulXpVOn5N4HicehNGLM2Gv1N1iXUCkOIxaL4tP0q7CFg3Zr0ELRoH
-         c1K2fAfx/OZnoqY6EocLtP4K2Gyk7fJHcbAd5+nbSwsumoNC9uZdy1ZbqRPl2ZGb2KR0
-         5790YANxN6yo4XDpToutn8HtDWJ9qc4x2RtxrkIe4yf2ys4A7CKPGFlNlR6vaeXcDbDI
-         eCRkI67w15jEuFPGTFzQI8EIXARxKyvN1+GR9F9Qoev+vDDjbBqEj+ZoKNPmKxLF0J5U
-         DgLQ==
+        bh=mKQ/jkVDmHzG3Imk3QoYm7ZRsrxgpBXEW32JYoXBK6c=;
+        b=b6Uttyul57zhK0WLRFY2uElrt+7RjU0A4CqB86e19BlOPEOButGb8d+RfNG8TmtLB/
+         hBYKaq1+NEQfc2TXYpAX9tB+2jG8DNuaZf5sdL85L4+yBSSqlQ0j0efAavrSbhlJ8QM9
+         dnMVqvx3u5kJJXi+BuQLcqU3D1MwwvOPoW0lo6mYfxYoE5VsfLGSZSc0/bMEdRBNrPHz
+         q99sHZs3QMahC9tKZJMU6C40PoGzO75S325tIkzoa6Ewy2EOI1HUtO2aG6v6ukATbBGP
+         PgIbNsEzUVwnw8k8NofrSWHlXcShNIz6Rp8GGnv+pA+JAaq3n0yRBc5FXY92rMC7E6lW
+         iOWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OscIWC1H8BYVUTSTRMLtHcpa3RbQBWs93JhulNsk+jk=;
-        b=OGpZjBQqA0pI8bvq8Q9XqD6rILlQIca/x1yHYIcrAPBtNp6ud5YVFL6QqFwTVAetrs
-         5lgCcWZlKgXNtPDkfO5goLJL2BfT8ZJpxZo8mz1BYyZQyuMv2SFwHqhmg5kTzrB/JJT1
-         EnF8iOYTYbkjHUsKjXms4DEgb4gkvV3CLiBi5Xtq+whUbi3KsiWRzxClOOjyOQ8ddUxu
-         VhPD6RGscSO0Eb61UEWoOZluZHAzfDitBW5PoM5Q8iLToRJi4Ph0V3NSf+HmRo6KSUJl
-         FCQ/YkQGAwiLS+Bafmb9smA6HmZncMyvbkN7uPhpj/Wc04bnpnF+bnck9+r4CkQLubUl
-         nBKA==
-X-Gm-Message-State: APjAAAXboFD3g5iEr2ddqpF/6+9VcPxd33kDCPzZngtFgZTk9fgmBJE3
-        F8z+fG75EfH6j6Sw5+q9dQW9FLWBr4B8Yh4QX3XHYw==
-X-Google-Smtp-Source: APXvYqxqRVfuyQEdyfJNNkPVX/y1rXYgnEMZVKj/CtJa0Fm8bihW1BebEYmymKIH0C8/tAoxb6DpKUorgA1wvW4QAXM=
-X-Received: by 2002:a17:902:624:: with SMTP id 33mr59045206plg.325.1559946184199;
- Fri, 07 Jun 2019 15:23:04 -0700 (PDT)
+        bh=mKQ/jkVDmHzG3Imk3QoYm7ZRsrxgpBXEW32JYoXBK6c=;
+        b=SqGd0blXVgJbUSSkp7u8WvBq8tVZClPifwBVo5Bmqz3jOI/ZRZcdFeYQMWaizGWnRY
+         WQ/n/1u8RwtSBPEBBS4sOoj0TFyTha2StmqC6JEaybrewKSQwPEPlzYfadw93zgajC7G
+         jtgOhaKudRcnqt3TJKYOxMu3m/uabLbb1tZtJP244IQUUpg/reXyi7oCMsql76+TSyKS
+         M65Kfw4Czu9q990f9rKbUswwUM5UXv9r5gQ2d73ua9Hf3CGFdH58rfksefI32iCmaqmH
+         eMaNNqwai4DwnQbF+lWztELy4lkqcc1zFn+bRwr9YXh9PXSrll190iwNeO/GJkCGIoxs
+         AS+A==
+X-Gm-Message-State: APjAAAWIA0VhCkzoTaDBVqm3gjh5Ejoqh35rpQqTmdf+biHjr5awyZHp
+        JayP0y172GupoCfZt9Jce00a5K6DTlA0k38nz+Nfww==
+X-Google-Smtp-Source: APXvYqwB2qJJmkpZg21BBIfS3DEIvPDBmZVSisAyl2+8KE4YGuHY6alNrysBJaP17ZsV+0U5Xx/P5PNamh/WkwZKcrM=
+X-Received: by 2002:a2e:9e85:: with SMTP id f5mr23337666ljk.104.1559946209241;
+ Fri, 07 Jun 2019 15:23:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190514221711.248228-1-brendanhiggins@google.com>
- <20190514221711.248228-18-brendanhiggins@google.com> <20190517182254.548EA20815@mail.kernel.org>
- <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com> <20190607190047.C3E7A20868@mail.kernel.org>
-In-Reply-To: <20190607190047.C3E7A20868@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 7 Jun 2019 15:22:53 -0700
-Message-ID: <CAFd5g475eUKnpNM3kDe_9PboCyZ=aanPeV2gTuzuJXRp-xbsWg@mail.gmail.com>
-Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Iurii Zaikin <yzaikin@google.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+References: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
+In-Reply-To: <1559685212-15857-1-git-send-email-hongweiz@ami.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 8 Jun 2019 00:23:21 +0200
+Message-ID: <CACRpkdb=NBkqG1qi6F66pcd7UaxmpT9LFVLaCLFrM2SXDihJng@mail.gmail.com>
+Subject: Re: [PATCH 1/3 linux dev-5.1 v2] ARM: dts: aspeed: Add SGPM pinmux
+To:     Hongwei Zhang <hongweiz@ami.com>
+Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 12:00 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Tue, Jun 4, 2019 at 11:53 PM Hongwei Zhang <hongweiz@ami.com> wrote:
+
+> Add SGPM pinmux to ast2500-pinctrl function and group, to prepare for
+> supporting SGPIO in AST2500 SoC.
 >
-> Quoting Iurii Zaikin (2019-06-05 18:29:42)
-> > On Fri, May 17, 2019 at 11:22 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> > >
-> > > Quoting Brendan Higgins (2019-05-14 15:17:10)
-> > > > diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
-> > > > new file mode 100644
-> > > > index 0000000000000..fe0f2bae66085
-> > > > --- /dev/null
-> > > > +++ b/kernel/sysctl-test.c
-> > > > +
-> > > > +
-> > > > +static void sysctl_test_dointvec_happy_single_negative(struct kunit *test)
-> > > > +{
-> > > > +       struct ctl_table table = {
-> > > > +               .procname = "foo",
-> > > > +               .data           = &test_data.int_0001,
-> > > > +               .maxlen         = sizeof(int),
-> > > > +               .mode           = 0644,
-> > > > +               .proc_handler   = proc_dointvec,
-> > > > +               .extra1         = &i_zero,
-> > > > +               .extra2         = &i_one_hundred,
-> > > > +       };
-> > > > +       char input[] = "-9";
-> > > > +       size_t len = sizeof(input) - 1;
-> > > > +       loff_t pos = 0;
-> > > > +
-> > > > +       table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
-> > > > +       KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
-> > > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
-> > > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
-> > > > +       KUNIT_EXPECT_EQ(test, -9, *(int *)table.data);
-> > >
-> > > Is the casting necessary? Or can the macro do a type coercion of the
-> > > second parameter based on the first type?
-> >  Data field is defined as void* so I believe casting is necessary to
-> > dereference it as a pointer to an array of ints. I don't think the
-> > macro should do any type coercion that == operator wouldn't do.
-> >  I did change the cast to make it more clear that it's a pointer to an
-> > array of ints being dereferenced.
->
-> Ok, I still wonder if we should make KUNIT_EXPECT_EQ check the types on
-> both sides and cause a build warning/error if the types aren't the same.
-> This would be similar to our min/max macros that complain about
-> mismatched types in the comparisons. Then if a test developer needs to
-> convert one type or the other they could do so with a
-> KUNIT_EXPECT_EQ_T() macro that lists the types to coerce both sides to
-> explicitly.
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
 
-Good point. I would definitely like to do this, for me it is only a
-question of how difficult it would be to make all that happen.
+Patch applied! I altered the subject a bit to match the change
+to the pinctrl subsystem.
 
-We will investigate and report back on it.
-
-Thanks for the suggestion! It's a really good idea!
-
-Cheers
+Yours,
+Linus Walleij
