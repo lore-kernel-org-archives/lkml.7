@@ -2,339 +2,261 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750B4C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1990C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C622133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7139C208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rzb1Vy3w"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="od5x55vL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfFGLsm (ORCPT
+        id S1728841AbfFGLuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:48:42 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15843 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728576AbfFGLsm (ORCPT
+        Fri, 7 Jun 2019 07:50:06 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36030 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728576AbfFGLuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:48:42 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfa4f150000>; Fri, 07 Jun 2019 04:48:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 07 Jun 2019 04:48:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 07 Jun 2019 04:48:39 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 11:48:35 +0000
-Subject: Re: [PATCH V5] drivers: i2c: tegra: fix warning/check/error
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559885103-9113-1-git-send-email-bbiswas@nvidia.com>
- <dc8e32c7-811e-e422-816a-34cf5329856d@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <b1c55d39-b4d3-49c3-d9de-0f3a683e4190@nvidia.com>
-Date:   Fri, 7 Jun 2019 04:48:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 07:50:06 -0400
+Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4EA04B91;
+        Fri,  7 Jun 2019 13:50:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1559908203;
+        bh=FDOC1ULR8LTU+PDG+Mkvwgn/iuf/Y7vWuv6Ybsn1n8o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=od5x55vLyPm1AXNOfpsJ6Hwk7tpyd5eF5yjPhJFf8AgGOeFJ3T4SaiQSMtc+SU3lT
+         R6UHIHLiCyF0ZVvYpMmMcVd7/hHoDIhZsCwqzurhhDvL946xuH53x2PyAaUi6dd48R
+         eJACeL6wRE1H3vvDDvlIidumOjm7ezM3fts/czGw=
+Date:   Fri, 7 Jun 2019 14:49:49 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 16/20] drm: rcar-du: kms: Collect CMM instances
+Message-ID: <20190607114949.GE7593@pendragon.ideasonboard.com>
+References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
+ <20190606142220.1392-17-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-In-Reply-To: <dc8e32c7-811e-e422-816a-34cf5329856d@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559908117; bh=8B6OyIhbpjR5kkAtvY6qwQAdLdINpOU37ixN750jM70=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=rzb1Vy3woO88UUaic1g20DHLnD5hD7dH7t4GIVBYHXuTyq8gOhoSjbW/htT5qoARi
-         LPBSOxrYHpCS/kxlkZEiMBAsck3kssmJCAelispG9Z44Dbm91XfgPUtvzM0Xm72Ejc
-         zS/PN7/7CL/akHrA8uQiELOc023Mkf4ShEr6tvSTWtqsBv9zPkVDK1Yr2ux2AwTIbb
-         iqc3IjejLZrwkOsXyyjLqIgOaGhxF8V1PgGf37zKmyZcqTPgE42hU07xOf63pPbboz
-         1+Fc/oj0KUD09tVaPKZqS0J3sTGykZCndT/ZU+wIbA6jys0Gbyrwu6CqkdUcNcbcOV
-         18pqXTVgLPl4g==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190606142220.1392-17-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacopo,
 
+Thank you for the patch.
 
-On 6/6/19 11:05 PM, Dmitry Osipenko wrote:
-> 07.06.2019 8:25, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
->>
->> Ignore checkpatch WARNING for 80 character line limit at
->> places where renaming fields compromises readability.
->>
->> Delay of approximately 1msec in flush i2c FIFO polling loop
->> achieved by usleep_range call as msleep can take 20msecs.
->>
->> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
->> as needed. Replace BUG() with error handling code.
->> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
->>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
->>   drivers/i2c/busses/i2c-tegra.c | 61 ++++++++++++++++++++++------------=
---------
->>   1 file changed, 32 insertions(+), 29 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
-ra.c
->> index 1dbba39..161eb28 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -67,17 +67,18 @@
->>  =20
->>   #define DVC_CTRL_REG1				0x000
->>   #define DVC_CTRL_REG1_INTR_EN			BIT(10)
->> -#define DVC_CTRL_REG2				0x004
->> -#define DVC_CTRL_REG3				0x008
->> +#define DVC_CTRL_REG2				BIT(2)
->> +#define DVC_CTRL_REG3				BIT(3)
->=20
-> This is incorrect change, register address should be kept as a hex value
-> because it is not a bitmask.
-I shall remove the modification.
+On Thu, Jun 06, 2019 at 04:22:16PM +0200, Jacopo Mondi wrote:
+> Implement device tree parsing to collect the available CMM instances
+> described by the 'cmms' property. Associate CMMs with CRTCs and store a
+> mask of active CMMs in the DU group for later enablement.
+> 
+> Also define a new feature to let each SoC claim support for CMM.
 
->=20
-> I'd also recommend to just remove the DVC_CTRL_REG2 since it's not used
-> anywhere in the code. You may also check all of other #defines and
-> remove everything unused.
-I shall remove the unused macro DVC_CTRL_REG2 and remove other unused=20
-macros.
+The feature is added in the previous patch.
 
->=20
-> You can also check all of variables for a need to be initialized, like
-> for example "ret" doesn't need to be init'ed in tegra_i2c_xfer() and
-> some other places. That will be a good clean up as well.
-I shall clean up the instances I can make out along and remove the ret=20
-initialization in tegra_i2c_xfer function.
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  |  7 ++++
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.h  |  2 +
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.h   |  3 ++
+>  drivers/gpu/drm/rcar-du/rcar_du_group.h |  2 +
+>  drivers/gpu/drm/rcar-du/rcar_du_kms.c   | 50 +++++++++++++++++++++++++
+>  5 files changed, 64 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 2da46e3dc4ae..9f270a54b164 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -1194,6 +1194,13 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	/* CMM might be disabled for this CRTC. */
+> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM) &&
+> +	    rcdu->cmms[swindex]) {
 
->=20
->>   #define DVC_CTRL_REG3_SW_PROG			BIT(26)
->>   #define DVC_CTRL_REG3_I2C_DONE_INTR_EN		BIT(30)
->>   #define DVC_STATUS				0x00c
->>   #define DVC_STATUS_I2C_DONE_INTR		BIT(30)
->>  =20
->> -#define I2C_ERR_NONE				0x00
->> -#define I2C_ERR_NO_ACK				0x01
->> -#define I2C_ERR_ARBITRATION_LOST		0x02
->> -#define I2C_ERR_UNKNOWN_INTERRUPT		0x04
->> +#define I2C_ERR_NONE				0x0
->> +#define I2C_ERR_NO_ACK				BIT(0)
->> +#define I2C_ERR_ARBITRATION_LOST		BIT(1)
->> +#define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
->> +#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
->>  =20
->>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->>   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
->> @@ -280,6 +281,7 @@ struct tegra_i2c_dev {
->>   	u32 bus_clk_rate;
->>   	u16 clk_divisor_non_hs_mode;
->>   	bool is_multimaster_mode;
->> +	/* xfer_lock: lock to serialize transfer submission and processing */
->>   	spinlock_t xfer_lock;
->>   	struct dma_chan *tx_dma_chan;
->>   	struct dma_chan *rx_dma_chan;
->> @@ -306,7 +308,7 @@ static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, =
-unsigned long reg)
->>    * to the I2C block inside the DVC block
->>    */
->>   static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
->> -	unsigned long reg)
->> +					unsigned long reg)
->>   {
->>   	if (i2c_dev->is_dvc)
->>   		reg +=3D (reg >=3D I2C_TX_FIFO) ? 0x10 : 0x40;
->> @@ -314,7 +316,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra=
-_i2c_dev *i2c_dev,
->>   }
->>  =20
->>   static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
->> -	unsigned long reg)
->> +		       unsigned long reg)
->>   {
->>   	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
->>  =20
->> @@ -329,13 +331,13 @@ static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev=
-, unsigned long reg)
->>   }
->>  =20
->>   static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
->> -	unsigned long reg, int len)
->> +			unsigned long reg, int len)
->>   {
->>   	writesl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
->>   }
->>  =20
->>   static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
->> -	unsigned long reg, int len)
->> +		       unsigned long reg, int len)
->>   {
->>   	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
->>   }
->> @@ -486,7 +488,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_de=
-v *i2c_dev)
->>   			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
->>   			return -ETIMEDOUT;
->>   		}
->> -		msleep(1);
->> +		usleep_range(1000, 2000);
->>   	}
->>   	return 0;
->>   }
->> @@ -525,7 +527,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_=
-dev *i2c_dev)
->>   	 * prevent overwriting past the end of buf
->>   	 */
->>   	if (rx_fifo_avail > 0 && buf_remaining > 0) {
->> -		BUG_ON(buf_remaining > 3);
->>   		val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
->>   		val =3D cpu_to_le32(val);
->>   		memcpy(buf, &val, buf_remaining);
->> @@ -533,7 +534,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_=
-dev *i2c_dev)
->>   		rx_fifo_avail--;
->>   	}
->>  =20
->> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
->>   	i2c_dev->msg_buf_remaining =3D buf_remaining;
->>   	i2c_dev->msg_buf =3D buf;
->>  =20
->> @@ -591,7 +591,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_d=
-ev *i2c_dev)
->>   	 * boundary and fault.
->>   	 */
->>   	if (tx_fifo_avail > 0 && buf_remaining > 0) {
->> -		BUG_ON(buf_remaining > 3);
->>   		memcpy(&val, buf, buf_remaining);
->>   		val =3D le32_to_cpu(val);
->>  =20
->> @@ -680,10 +679,11 @@ static int tegra_i2c_wait_for_config_load(struct t=
-egra_i2c_dev *i2c_dev)
->>   		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
->>   		if (in_interrupt())
->>   			err =3D readl_poll_timeout_atomic(addr, val, val =3D=3D 0,
->> -					1000, I2C_CONFIG_LOAD_TIMEOUT);
->> +							1000,
->> +							I2C_CONFIG_LOAD_TIMEOUT);
->>   		else
->> -			err =3D readl_poll_timeout(addr, val, val =3D=3D 0,
->> -					1000, I2C_CONFIG_LOAD_TIMEOUT);
->> +			err =3D readl_poll_timeout(addr, val, val =3D=3D 0, 1000,
->> +						 I2C_CONFIG_LOAD_TIMEOUT);
->>  =20
->>   		if (err) {
->>   			dev_warn(i2c_dev->dev,
->> @@ -856,10 +856,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *de=
-v_id)
->>  =20
->>   	if (!i2c_dev->is_curr_dma_xfer) {
->>   		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
->> -			if (i2c_dev->msg_buf_remaining)
->> +			if (i2c_dev->msg_buf_remaining) {
->>   				tegra_i2c_empty_rx_fifo(i2c_dev);
->> -			else
->> -				BUG();
->> +			} else {
->> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
->> +				i2c_dev->msg_err |=3D I2C_ERR_UNEXPECTED_STATUS;
->> +				goto err;
->> +			}
->>   		}
->>  =20
->>   		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
->> @@ -885,7 +888,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_=
-id)
->>   	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->>   		if (i2c_dev->is_curr_dma_xfer)
->>   			i2c_dev->msg_buf_remaining =3D 0;
->> -		BUG_ON(i2c_dev->msg_buf_remaining);
->> +		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
->>   		complete(&i2c_dev->msg_complete);
->>   	}
->>   	goto done;
->> @@ -1024,7 +1027,7 @@ static int tegra_i2c_issue_bus_clear(struct i2c_ad=
-apter *adap)
->>   }
->>  =20
->>   static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
->> -	struct i2c_msg *msg, enum msg_end_type end_state)
->> +			      struct i2c_msg *msg, enum msg_end_type end_state)
->=20
-> Probably won't hurt to carry the "enum msg_end_type end_state" to a new
-> line.
-OK
+You can skip testing RCAR_DU_FEATURE_CMM here as rcdu->cmms[swindex]
+can't be set if the feature isn't available.
 
->=20
->>   {
->>   	u32 packet_header;
->>   	u32 int_mask;
->> @@ -1161,9 +1164,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev=
- *i2c_dev,
->>   		if (err)
->>   			return err;
->>  =20
->> -		time_left =3D wait_for_completion_timeout(
->> -						&i2c_dev->dma_complete,
->> -						msecs_to_jiffies(xfer_time));
->> +		time_left =3D wait_for_completion_timeout(&i2c_dev->dma_complete,
->> +							msecs_to_jiffies(xfer_time));
->>   		if (time_left =3D=3D 0) {
->>   			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
->>   			dmaengine_terminate_sync(i2c_dev->msg_read ?
->> @@ -1225,7 +1227,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev=
- *i2c_dev,
->>   }
->>  =20
->>   static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg=
-s[],
->> -	int num)
->> +			  int num)
->>   {
->>   	struct tegra_i2c_dev *i2c_dev =3D i2c_get_adapdata(adap);
->>   	int i;
->> @@ -1273,12 +1275,12 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_=
-dev *i2c_dev)
->>   	int ret;
->>  =20
->>   	ret =3D of_property_read_u32(np, "clock-frequency",
->> -			&i2c_dev->bus_clk_rate);
->> +				   &i2c_dev->bus_clk_rate);
->>   	if (ret)
->>   		i2c_dev->bus_clk_rate =3D 100000; /* default clock rate */
->>  =20
->>   	i2c_dev->is_multimaster_mode =3D of_property_read_bool(np,
->> -			"multi-master");
->> +							     "multi-master");
->=20
-> You can avoid the line-split with something like this:
->=20
-> 	ret =3D of_property_read_bool(np, "multi-master");
-> 	i2c_dev->is_multimaster_mode =3D ret;
->=20
-OK.
+> +		rcrtc->cmm = rcdu->cmms[swindex];
+> +		rgrp->cmms_mask |= BIT(hwindex % 2);
+> +	}
+> +
+>  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
+>  
+>  	/* Start with vertical blanking interrupt reporting disabled. */
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> index 3b7fc668996f..5f2940c42225 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+> @@ -39,6 +39,7 @@ struct rcar_du_vsp;
+>   * @vblank_wait: wait queue used to signal vertical blanking
+>   * @vblank_count: number of vertical blanking interrupts to wait for
+>   * @group: CRTC group this CRTC belongs to
+> + * @cmm: CMM associated with this CRTC
+>   * @vsp: VSP feeding video to this CRTC
+>   * @vsp_pipe: index of the VSP pipeline feeding video to this CRTC
+>   * @writeback: the writeback connector
+> @@ -64,6 +65,7 @@ struct rcar_du_crtc {
+>  	unsigned int vblank_count;
+>  
+>  	struct rcar_du_group *group;
+> +	struct platform_device *cmm;
+>  	struct rcar_du_vsp *vsp;
+>  	unsigned int vsp_pipe;
+>  
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.h b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> index a00dccc447aa..300ec60ba31b 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
+> @@ -13,6 +13,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/wait.h>
+>  
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_group.h"
+>  #include "rcar_du_vsp.h"
+> @@ -70,6 +71,7 @@ struct rcar_du_device_info {
+>  
+>  #define RCAR_DU_MAX_CRTCS		4
+>  #define RCAR_DU_MAX_GROUPS		DIV_ROUND_UP(RCAR_DU_MAX_CRTCS, 2)
+> +#define RCAR_DU_MAX_CMMS		4
+>  #define RCAR_DU_MAX_VSPS		4
+>  
+>  struct rcar_du_device {
+> @@ -86,6 +88,7 @@ struct rcar_du_device {
+>  	struct rcar_du_encoder *encoders[RCAR_DU_OUTPUT_MAX];
+>  
+>  	struct rcar_du_group groups[RCAR_DU_MAX_GROUPS];
+> +	struct platform_device *cmms[RCAR_DU_MAX_CMMS];
+>  	struct rcar_du_vsp vsps[RCAR_DU_MAX_VSPS];
+>  
+>  	struct {
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.h b/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> index 87950c1f6a52..b0c1466593a3 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> @@ -22,6 +22,7 @@ struct rcar_du_device;
+>   * @mmio_offset: registers offset in the device memory map
+>   * @index: group index
+>   * @channels_mask: bitmask of populated DU channels in this group
+> + * @cmms_mask: bitmask of enabled CMMs in this group
+>   * @num_crtcs: number of CRTCs in this group (1 or 2)
+>   * @use_count: number of users of the group (rcar_du_group_(get|put))
+>   * @used_crtcs: number of CRTCs currently in use
+> @@ -37,6 +38,7 @@ struct rcar_du_group {
+>  	unsigned int index;
+>  
+>  	unsigned int channels_mask;
+> +	unsigned int cmms_mask;
+>  	unsigned int num_crtcs;
+>  	unsigned int use_count;
+>  	unsigned int used_crtcs;
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> index adbc4f5d8fc5..5a910a04e1d9 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> @@ -18,6 +18,7 @@
+>  #include <drm/drm_vblank.h>
+>  
+>  #include <linux/of_graph.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/wait.h>
+>  
+>  #include "rcar_du_crtc.h"
+> @@ -614,6 +615,48 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
+>  	return ret;
+>  }
+>  
+> +static int rcar_du_cmm_init(struct rcar_du_device *rcdu)
+> +{
+> +	const struct device_node *np = rcdu->dev->of_node;
+> +	unsigned int cells;
+> +	unsigned int i;
+> +
+> +	cells = of_property_count_u32_elems(np, "cmms");
+> +	if (cells > RCAR_DU_MAX_CMMS || cells > rcdu->num_crtcs) {
+> +		dev_err(rcdu->dev, "invalid 'cmms' property format\n");
+> +		return -EINVAL;
+> +	}
 
-I shall share the patches next.
+I don't think you need to count the elements first, you can loop over
+the number of CRTCs below.
 
--Thanks,
-  Bitan
+> +
+> +	for (i = 0; i < cells; ++i) {
+> +		struct platform_device *pdev;
+> +		struct device_node *cmm;
+> +
+> +		cmm = of_parse_phandle(np, "cmms", i);
+> +		if (IS_ERR(cmm)) {
+> +			dev_err(rcdu->dev, "failed to parse 'cmms' property\n");
+> +			return PTR_ERR(cmm);
+> +		}
+> +
+> +		pdev = of_find_device_by_node(cmm);
+> +		if (IS_ERR(pdev)) {
+> +			dev_err(rcdu->dev, "invalid property 'cmms'[%u]\n", i);
+
+How about "No device found for cmms[%u]\n" ?
+
+> +			of_node_put(cmm);
+> +			return PTR_ERR(pdev);
+> +		}
+> +
+> +		if (!of_device_is_available(cmm)) {
+> +			/* It's fine to have a phandle to a non-enabled CMM. */
+> +			of_node_put(cmm);
+> +			continue;
+> +		}
+> +
+> +		of_node_put(cmm);
+> +		rcdu->cmms[i] = pdev;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int rcar_du_modeset_init(struct rcar_du_device *rcdu)
+>  {
+>  	static const unsigned int mmio_offsets[] = {
+> @@ -704,6 +747,13 @@ int rcar_du_modeset_init(struct rcar_du_device *rcdu)
+>  			return ret;
+>  	}
+>  
+> +	/* Initialize the Color Management Modules. */
+> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
+
+Instead of using a feature, could we simply return 0 in
+rcar_du_cmm_init() if the cmms property doesn't exist ? This will
+preserve compatibility with older DTs.
+
+> +		ret = rcar_du_cmm_init(rcdu);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+>  	/* Create the CRTCs. */
+>  	for (swindex = 0, hwindex = 0; swindex < rcdu->num_crtcs; ++hwindex) {
+>  		struct rcar_du_group *rgrp;
+
+-- 
+Regards,
+
+Laurent Pinchart
