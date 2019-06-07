@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FACC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E8FC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D3421479
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B1A214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922337;
-	bh=wsqz7EIRFCO/oHDKIPRVpgBSk95KuV0Y+1Ux2HmXFmQ=;
+	s=default; t=1559922344;
+	bh=JyX84JqCTKs45PfWeKpnmGa2HeJsO7bMDBIhYz7qQaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0nUKT6GmRcJX9f93yONjF7FiiPu4qAqIL144d+eZKLJJG0RNeN0ZXBR7BhMZcFVnX
-	 AaULzQDsf88wPWWqk8v44hzvAWNvMcOmHoG8YJD8tGDpx9w9ljonOl4Y7Satek7xe7
-	 99N6OtktsfdGiStttALTNp+YPvx/TwTStsD/nr/A=
+	b=E0PuBTCU72Rn1xgc8r93cunKKL7tVrps/xCx2csF6i2BKq9yBB9J2Si/AkoRxLCBk
+	 WMkJgoeQtoAX5wpYvK9izeoyMignESnVHDn1gEbM6DseN0p+cXpd4gtaudixz2Y90h
+	 SKR96rk0SGjRs3JMzvS0+bzqEk4lW6oSWreH0LYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbfFGPpg (ORCPT
+        id S1731277AbfFGPpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:45:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57506 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731238AbfFGPpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:45:33 -0400
+        id S1731238AbfFGPpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:45:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE069214C6;
-        Fri,  7 Jun 2019 15:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A9D2146E;
+        Fri,  7 Jun 2019 15:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922332;
-        bh=wsqz7EIRFCO/oHDKIPRVpgBSk95KuV0Y+1Ux2HmXFmQ=;
+        s=default; t=1559922338;
+        bh=JyX84JqCTKs45PfWeKpnmGa2HeJsO7bMDBIhYz7qQaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sna4t1q/rN6xwnaMBWrX1Njb1p+ju1FG6rXEdOH5oOREqFn8Z8fajvOEbIfexH/M9
-         vYSUrQaEXx3b7xZJ2FfMAGIVS0TswSa97xkXkK+bnq4puoUn/0qwohm4Mw+hKhSAEM
-         tIbgJ2kEvBw1PTDawllA/dMbZ9VJLPNoU6JgDWys=
+        b=iMxjctYjJtoD0qQBoygY7v1vbRhUt9VeMhe488+xQgYGTJCtiVd5XboDaU8WKBE0M
+         CKzSvZyjajnVqCECAjymyRuG5Sb1X95NMBIqsQxJuLEbIjhDWRA/kD3LqzXYJniBO1
+         o5FP3h8z5cCn1ooZ4mIrd7evfVCRHR8st3QSkbTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.19 50/73] staging: vc04_services: prevent integer overflow in create_pagelist()
-Date:   Fri,  7 Jun 2019 17:39:37 +0200
-Message-Id: <20190607153854.691840870@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.19 52/73] cifs: fix memory leak of pneg_inbuf on -EOPNOTSUPP ioctl case
+Date:   Fri,  7 Jun 2019 17:39:39 +0200
+Message-Id: <20190607153854.878421027@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -58,56 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit ca641bae6da977d638458e78cd1487b6160a2718 upstream.
+commit 210782038b54ec8e9059a3c12d6f6ae173efa3a9 upstream.
 
-The create_pagelist() "count" parameter comes from the user in
-vchiq_ioctl() and it could overflow.  If you look at how create_page()
-is called in vchiq_prepare_bulk_data(), then the "size" variable is an
-int so it doesn't make sense to allow negatives or larger than INT_MAX.
+Currently in the case where SMB2_ioctl returns the -EOPNOTSUPP error
+there is a memory leak of pneg_inbuf. Fix this by returning via
+the out_free_inbuf exit path that will perform the relevant kfree.
 
-I don't know this code terribly well, but I believe that typical values
-of "count" are typically quite low and I don't think this check will
-affect normal valid uses at all.
-
-The "pagelist_size" calculation can also overflow on 32 bit systems, but
-not on 64 bit systems.  I have added an integer overflow check for that
-as well.
-
-The Raspberry PI doesn't offer the same level of memory protection that
-x86 does so these sorts of bugs are probably not super critical to fix.
-
-Fixes: 71bad7f08641 ("staging: add bcm2708 vchiq driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Addresses-Coverity: ("Resource leak")
+Fixes: 969ae8e8d4ee ("cifs: Accept validate negotiate if server return NT_STATUS_NOT_SUPPORTED")
+CC: Stable <stable@vger.kernel.org> # v5.1+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/cifs/smb2pdu.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -410,9 +410,18 @@ create_pagelist(char __user *buf, size_t
- 	int dma_buffers;
- 	dma_addr_t dma_addr;
- 
-+	if (count >= INT_MAX - PAGE_SIZE)
-+		return NULL;
-+
- 	offset = ((unsigned int)(unsigned long)buf & (PAGE_SIZE - 1));
- 	num_pages = DIV_ROUND_UP(count + offset, PAGE_SIZE);
- 
-+	if (num_pages > (SIZE_MAX - sizeof(PAGELIST_T) -
-+			 sizeof(struct vchiq_pagelist_info)) /
-+			(sizeof(u32) + sizeof(pages[0]) +
-+			 sizeof(struct scatterlist)))
-+		return NULL;
-+
- 	pagelist_size = sizeof(PAGELIST_T) +
- 			(num_pages * sizeof(u32)) +
- 			(num_pages * sizeof(pages[0]) +
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -887,7 +887,8 @@ int smb3_validate_negotiate(const unsign
+ 		 * not supported error. Client should accept it.
+ 		 */
+ 		cifs_dbg(VFS, "Server does not support validate negotiate\n");
+-		return 0;
++		rc = 0;
++		goto out_free_inbuf;
+ 	} else if (rc != 0) {
+ 		cifs_dbg(VFS, "validate protocol negotiate failed: %d\n", rc);
+ 		rc = -EIO;
 
 
