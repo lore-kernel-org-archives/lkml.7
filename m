@@ -2,102 +2,191 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4532C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A121FC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB4720868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559933748;
-	bh=gUsSRIgwGG5++KN4cLUf8V8Gg0DEky5PXVRQkRULZqg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eQ7zAtYVV85WDWCUpKeUkKcBbY6KqqzJle1s29eLmb/92bB7dHj1gTzHsLYprbPil
-	 dZEJgZdsRvpXoFcosyS+jMSSsSXLfziG5NszlxlwM+H5K40ZtDdX0MN7AObGcnmdYs
-	 3v2eEhfNiYsFCDwUErSds/jspWrxsOk3ThH8dFxE=
+	by mail.kernel.org (Postfix) with ESMTP id 7E538208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:56:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M4arfBVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbfFGSzm (ORCPT
+        id S1729345AbfFGS4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:55:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42364 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732086AbfFGSyk (ORCPT
+        Fri, 7 Jun 2019 14:56:05 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15695 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732313AbfFGS4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:54:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=e3C4ul1ER6PyCoizpBQg5C8nin/xYkn5bpb6N98bym8=; b=q/bqPLHcZic+BcN8nra57eHCqK
-        aqgJXfRNnHQXl3Np3DnZCzyGe+0ZNxz5OA+bDaokK4/Bl5iU0FviZ1wVp87vFTBLYVo40UKIUf4QP
-        uXy29Qe9zUL6buBMX1AkzSXONqIvGbtkX1NXd1+TtuyQdUxDSoOKtFrZO5sdT6NPnEay8AiWjRPBi
-        ishF7rW4vHXnb6vxoKlOLH055ytS7n8siudayrH89hmvS1t3YOM1VGbiHNaz6TJoXtp89ZxM8sW+M
-        Zh7xkzUy06WXNPJW3vi4x9U3IgX5XokSgjkku43slDxVNu7NlV+zn4AdftbZXMMAI/UUoRN4o3+TW
-        IjSSBCRw==;
-Received: from [179.181.119.115] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZK0d-0005sk-M2; Fri, 07 Jun 2019 18:54:39 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZK0b-0007Ei-AQ; Fri, 07 Jun 2019 15:54:37 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH v3 05/20] docs: bpf: get rid of two warnings
-Date:   Fri,  7 Jun 2019 15:54:21 -0300
-Message-Id: <bb7b4935e20f456e25f4d44c49a93bcad8df95c4.1559933665.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
-References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+        Fri, 7 Jun 2019 14:56:01 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cfab33e0000>; Fri, 07 Jun 2019 11:55:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 07 Jun 2019 11:56:00 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 07 Jun 2019 11:56:00 -0700
+Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 18:55:57 +0000
+Subject: Re: [PATCH V1 6/6] i2c: tegra: remove BUG, BUG_ON
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
+ <1559908507-31192-6-git-send-email-bbiswas@nvidia.com>
+ <4aec6d7a-0dea-18c9-efde-96cc1a54b945@gmail.com>
+ <2281ef29-6e69-78e7-4d07-77f33c2f2d5a@gmail.com>
+ <9adcde41-2450-27dc-36a0-b3b99022b43d@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <75a7f16f-5d54-797d-fb72-445411f20424@nvidia.com>
+Date:   Fri, 7 Jun 2019 11:55:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9adcde41-2450-27dc-36a0-b3b99022b43d@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559933758; bh=uCIuy8rH6YJsc+yfcuZuDGYINzs4oKq/K+wz218dMQY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=M4arfBVACmw1/pC2JeZFWgiz8tnHqrKaAdWNoIHxOKemsUv+YfBPsmCrmeFLH5MLA
+         cfg83/NLK5j8NvXYO5rA2zArplHXysMUKSxB+Nw0Ru7MUbswLOCvyCtVLYfCftQdHw
+         3mnodvVhLEGbw4cK9g0QSg1F5GhtM5sKqM7jJZAZpmW0Jl+a3tqm+cbtVHnK788k7P
+         O5HvvpUcdLGguNTjB88UJr5FcNIF5ZrAfmpzkSb9/XyUNI/5q8rIgDAn78qvVFxoUh
+         lLITiVRD0Za1AbRyGSV2+e3WAjd9masCdBhM1ultRq20Ir9jjK0OL10CCzmLS9APS5
+         XfZtRe420ANbg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation/bpf/btf.rst:154: WARNING: Unexpected indentation.
-Documentation/bpf/btf.rst:163: WARNING: Unexpected indentation.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
----
- Documentation/bpf/btf.rst | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/bpf/btf.rst b/Documentation/bpf/btf.rst
-index 8820360d00da..4ae022d274ab 100644
---- a/Documentation/bpf/btf.rst
-+++ b/Documentation/bpf/btf.rst
-@@ -151,6 +151,7 @@ for the type. The maximum value of ``BTF_INT_BITS()`` is 128.
- 
- The ``BTF_INT_OFFSET()`` specifies the starting bit offset to calculate values
- for this int. For example, a bitfield struct member has:
-+
-  * btf member bit offset 100 from the start of the structure,
-  * btf member pointing to an int type,
-  * the int type has ``BTF_INT_OFFSET() = 2`` and ``BTF_INT_BITS() = 4``
-@@ -160,6 +161,7 @@ from bits ``100 + 2 = 102``.
- 
- Alternatively, the bitfield struct member can be the following to access the
- same bits as the above:
-+
-  * btf member bit offset 102,
-  * btf member pointing to an int type,
-  * the int type has ``BTF_INT_OFFSET() = 0`` and ``BTF_INT_BITS() = 4``
--- 
-2.21.0
+On 6/7/19 5:18 AM, Dmitry Osipenko wrote:
+> 07.06.2019 15:12, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 07.06.2019 15:08, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 07.06.2019 14:55, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+>>>> as needed. Replace BUG() with error handling code.
+>>>> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
+>>>>
+>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>> ---
+>>>>   drivers/i2c/busses/i2c-tegra.c | 15 ++++++++-------
+>>>>   1 file changed, 8 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-t=
+egra.c
+>>>> index 4dfb4c1..c407bd7 100644
+>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>> @@ -73,6 +73,7 @@
+>>>>   #define I2C_ERR_NO_ACK				BIT(0)
+>>>>   #define I2C_ERR_ARBITRATION_LOST		BIT(1)
+>>>>   #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
+>>>> +#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
+>>>>  =20
+>>>>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+>>>>   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+>>>> @@ -515,7 +516,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2=
+c_dev *i2c_dev)
+>>>>   	 * prevent overwriting past the end of buf
+>>>>   	 */
+>>>>   	if (rx_fifo_avail > 0 && buf_remaining > 0) {
+>>>> -		BUG_ON(buf_remaining > 3);
+>>>>   		val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
+>>>>   		val =3D cpu_to_le32(val);
+>>>>   		memcpy(buf, &val, buf_remaining);
+>>>> @@ -523,7 +523,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2=
+c_dev *i2c_dev)
+>>>>   		rx_fifo_avail--;
+>>>>   	}
+>>>>  =20
+>>>> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+>>>>   	i2c_dev->msg_buf_remaining =3D buf_remaining;
+>>>>   	i2c_dev->msg_buf =3D buf;
+>>>>  =20
+>>>> @@ -581,7 +580,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c=
+_dev *i2c_dev)
+>>>>   	 * boundary and fault.
+>>>>   	 */
+>>>>   	if (tx_fifo_avail > 0 && buf_remaining > 0) {
+>>>> -		BUG_ON(buf_remaining > 3);
+>>>>   		memcpy(&val, buf, buf_remaining);
+>>>>   		val =3D le32_to_cpu(val);
+>>>>  =20
+>>>> @@ -847,10 +845,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *=
+dev_id)
+>>>>  =20
+>>>>   	if (!i2c_dev->is_curr_dma_xfer) {
+>>>>   		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
+>>>> -			if (i2c_dev->msg_buf_remaining)
+>>>> +			if (i2c_dev->msg_buf_remaining) {
+>>>>   				tegra_i2c_empty_rx_fifo(i2c_dev);
+>>>> -			else
+>>>> -				BUG();
+>>>> +			} else {
+>>>> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
+>>>> +				i2c_dev->msg_err |=3D I2C_ERR_UNEXPECTED_STATUS;
+>>>> +				goto err;
+>>>> +			}
+>>>>   		}
+>>>>  =20
+>>>>   		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
+>>>> @@ -876,7 +877,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *de=
+v_id)
+>>>>   	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
+>>>>   		if (i2c_dev->is_curr_dma_xfer)
+>>>>   			i2c_dev->msg_buf_remaining =3D 0;
+>>>> -		BUG_ON(i2c_dev->msg_buf_remaining);
+>>>> +		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
+>>>>   		complete(&i2c_dev->msg_complete);
+>>>>   	}
+>>>>   	goto done;
+>>>>
+>>>
+>>> Very nice, thank you very much! BTW, I think it may worth to add anothe=
+r
+>>> patch that will reset hardware state in a case of the warning since we
+>>> know that something gone wrong.
+>>>
+>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>
+>>
+>> Something like that:
+>>
+>>   	complete(&i2c_dev->msg_complete);
+>>
+>> 	if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining))
+>> 		goto err;
+>>
+>=20
+> Ah, that's inside the ISR, so maybe will make sense to just not complete
+> the transfer and let it timeout:
+>=20
+> 	if (!WARN_ON_ONCE(i2c_dev->msg_buf_remaining))
+> 		complete(&i2c_dev->msg_complete);
+OK. I shall send the updated patch.
+
+-Thanks,
+  Bitan
 
