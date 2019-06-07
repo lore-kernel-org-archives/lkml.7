@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11E7C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E907C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF83208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5A1208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922916;
-	bh=PRLpC5nwM9nO3KrtQa6s3Sz5d8KnuDm79+AssLvw99g=;
+	s=default; t=1559922922;
+	bh=noMDM0+G7fvAYTkP+qTa1fHN6gTn8pJOT/sFJUBXcqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R647pGzXzB153qHC5sktSgO4sSJTM0DMZWbVkFrHBCV2z0UU7Bl37ujdn6aa6VEHK
-	 AgUL08oBU8obRNNmAbajDwmT3yJJq4xVxCRE2TthGeSK1lK4jvvTkl3j7BYtcPoP68
-	 w/ldyduZyuO+wJ1/fNa1AlwuZdw3COC1lUhcZUxI=
+	b=WYbX02Bdvadj9WXce4uWGrYXZds8e3XFTFlzdVPCmw9IUxXhYNIm0kifWB+gAEEul
+	 +xSVhQCFNfO//52Tllv74AGHPVveCdQ/LtlmX8NgurSB+A2PXoT214txSEz3gLJnN+
+	 JjojL5VMybon7AIHcif17dm0VVywh1mqXmPaC8kY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731311AbfFGPpw (ORCPT
+        id S1731934AbfFGPzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:45:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57882 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730862AbfFGPpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:45:50 -0400
+        id S1731293AbfFGPpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:45:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B76932147A;
-        Fri,  7 Jun 2019 15:45:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3A0C2147A;
+        Fri,  7 Jun 2019 15:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922349;
-        bh=PRLpC5nwM9nO3KrtQa6s3Sz5d8KnuDm79+AssLvw99g=;
+        s=default; t=1559922346;
+        bh=noMDM0+G7fvAYTkP+qTa1fHN6gTn8pJOT/sFJUBXcqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2j88oaUW/AyxPlSlCj9QhVAnT7V66zyq4CKzCb55ipiQUW1F9I9FIfLBS7nADECPA
-         S9k0KIfahb5RnWxzGmW7jT9s5CXF/YSRwd+Y/+wMogIQXBYIbV14EFpWd47UGWsJyB
-         b1kQ3TIRLPUs+x5TT4c90jGs9gkwVbgelkqRRv58=
+        b=WlLsq4TeJOAmaLUvo8r6Ymw7jSOAgAJWOc3Ab6Dh2Cb1544r/FxbDrGVrVAtTAKTM
+         OyyjRscfDVwk6e3BrgSEelCntoSSvLXNO9M9d2neO6gp/GPYXZcAPkL5UvcaIBwJKe
+         gJ4ZhpvfdiAFZrpra0mAkvxS7lETjiYaY9xO8ATc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 4.19 55/73] gcc-plugins: Fix build failures under Darwin host
-Date:   Fri,  7 Jun 2019 17:39:42 +0200
-Message-Id: <20190607153855.192539950@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Okamoto Satoru <okamoto.satoru@socionext.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.19 37/73] i2c: synquacer: fix synquacer_i2c_doxfer() return value
+Date:   Fri,  7 Jun 2019 17:39:24 +0200
+Message-Id: <20190607153853.262623656@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -59,52 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Masahisa Kojima <masahisa.kojima@linaro.org>
 
-commit 7210e060155b9cf557fb13128353c3e494fa5ed3 upstream.
+commit ff9378904d9d7a3fcb8406604e089e535e357b1d upstream.
 
-The gcc-common.h file did not take into account certain macros that
-might have already been defined in the build environment. This updates
-the header to avoid redefining the macros, as seen on a Darwin host
-using gcc 4.9.2:
+master_xfer should return the number of messages successfully
+processed.
 
- HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o - due to: scripts/gcc-plugins/gcc-common.h
-In file included from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:0:
-scripts/gcc-plugins/gcc-common.h:153:0: warning: "__unused" redefined
-^
-In file included from /usr/include/stdio.h:64:0,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/system.h:40,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/gcc-plugin.h:28,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/plugin.h:23,
-                from scripts/gcc-plugins/gcc-common.h:9,
-                from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:
-/usr/include/sys/cdefs.h:161:0: note: this is the location of the previous definition
-^
-
-Reported-and-tested-by: "H. Nikolaus Schaller" <hns@goldelico.com>
-Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: 0d676a6c4390 ("i2c: add support for Socionext SynQuacer I2C controller")
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Okamoto Satoru <okamoto.satoru@socionext.com>
+Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/gcc-plugins/gcc-common.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/i2c/busses/i2c-synquacer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -150,8 +150,12 @@ void print_gimple_expr(FILE *, gimple, i
- void dump_gimple_stmt(pretty_printer *, gimple, int, int);
- #endif
+--- a/drivers/i2c/busses/i2c-synquacer.c
++++ b/drivers/i2c/busses/i2c-synquacer.c
+@@ -356,7 +356,7 @@ static int synquacer_i2c_doxfer(struct s
+ 	/* wait 2 clock periods to ensure the stop has been through the bus */
+ 	udelay(DIV_ROUND_UP(2 * 1000, i2c->speed_khz));
  
-+#ifndef __unused
- #define __unused __attribute__((__unused__))
-+#endif
-+#ifndef __visible
- #define __visible __attribute__((visibility("default")))
-+#endif
+-	return 0;
++	return ret;
+ }
  
- #define DECL_NAME_POINTER(node) IDENTIFIER_POINTER(DECL_NAME(node))
- #define DECL_NAME_LENGTH(node) IDENTIFIER_LENGTH(DECL_NAME(node))
+ static irqreturn_t synquacer_i2c_isr(int irq, void *dev_id)
 
 
