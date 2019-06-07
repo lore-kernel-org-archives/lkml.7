@@ -3,130 +3,217 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3816EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9181AC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DA2208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4AA208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:29:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="stzuUfiC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l4nQx5bF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbfFGM2N (ORCPT
+        id S1728925AbfFGM30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:28:13 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:58245 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728526AbfFGM2M (ORCPT
+        Fri, 7 Jun 2019 08:29:26 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44875 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfFGM30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:28:12 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190607122810euoutp023e99ad23f5f6c1b26a084a2db320e748~l6lOhtfS93241232412euoutp02V
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 12:28:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190607122810euoutp023e99ad23f5f6c1b26a084a2db320e748~l6lOhtfS93241232412euoutp02V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559910490;
-        bh=9ASUxj5X1jrQpmL6ymTtSaqw6S2iiehLeIZIb8+AUG0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=stzuUfiCzBPMrY/dOydbh/X7bUDcyYRE2aGiHbSXhWzJLgY75hG1onK2RiplkoE8q
-         PbFjt4pLuJdH1QRbs3jGtb4UVDAt0NzLZWhO07aCcorai2AAa1KiyC4B/c5BERT+DW
-         SuSb4Xe0Vo4IKBKFOrXKGAolkKrsoNrM+Ujg3NYM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190607122810eucas1p23d355b67172644319b33da983470fa7b~l6lN44hFl1570215702eucas1p2F;
-        Fri,  7 Jun 2019 12:28:10 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 79.15.04298.9585AFC5; Fri,  7
-        Jun 2019 13:28:09 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b~l6lNBRerP2586425864eucas1p1B;
-        Fri,  7 Jun 2019 12:28:09 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190607122808eusmtrp1b6c64dcb6fa45ee2bbdec3679166624a~l6lMr1xjQ0101101011eusmtrp1W;
-        Fri,  7 Jun 2019 12:28:08 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-5f-5cfa5859e5f6
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 4D.52.04140.8585AFC5; Fri,  7
-        Jun 2019 13:28:08 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190607122808eusmtip196c285aad43a27f8e1d7abff8c48477f~l6lMNXgVS2223722237eusmtip1U;
-        Fri,  7 Jun 2019 12:28:08 +0000 (GMT)
-Subject: Re: [PATCH v2] video: fbdev: imxfb: add COMPILE_TEST support
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-ID: <73094ead-2fbc-ba3e-3760-01918673ba30@samsung.com>
-Date:   Fri, 7 Jun 2019 14:28:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 7 Jun 2019 08:29:26 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so1236069iob.11
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 05:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZAvCebdzLCcSo6NRDYnZ6+WboqvZJ6BWkvuu4gNcNRU=;
+        b=l4nQx5bFXnCKwqIlYU0J3gLgZ0wR2UHkkyD80ob8NWqEzmyQRyDonYA1xejed7SD7I
+         kl8UJmHVctl7fGkgf+4DP5y24neUBNA+zxlxJY3S4HVfsZwYCbLpbC5X/rnEuTmx0XXh
+         TM3xqj2bbhQ5K2+gr7mtqkPtJTeLrCTJIkyzfvXg394Cl7G+Ji9ZKHSnA1ZN2SUSoI8i
+         uwU2sOnfICyeKhaZfC07P/kXjxtmj4uZ0679dcT9GHa3muXEwPVuvI4jtVZZhHeErlrd
+         8nBJksrkmuE8GCa9e4sgJfJqjQV2LI1VOgH3RQx135gNWHZBHKd/iVGw+7oY5dE1Bxte
+         Coew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZAvCebdzLCcSo6NRDYnZ6+WboqvZJ6BWkvuu4gNcNRU=;
+        b=QvZpEOzN70DQWg7Cl3nj7qa9FDRfthrQMFVNoc3p60rm55ejOuPzflnS+IbupllpeI
+         g47PZFa3Q0aYZOT3YbIFJQ5U2UhXKXqhZxHGGYgdmDO3fQz/6K7CotBu5FrA8zvCZVYG
+         NFmUxExbJAQcwdUizlK8y/sDAZbMtl+gjL4XnIlOpv8FEB72L6qDEyTY3POCSc0yjtAZ
+         cQODFf1NVemJGgiSeMlezOo+x/jjeSdGbZvwVroZ4oWZGHxUfg3ucaOM/BF2Lfl/9yqN
+         knzsYOUcIlUoiO4cDq5ay9xjR/a/f4YQgVZwd1ABiq+gI4vE9bf1gWdGqDOB89hBfwYU
+         955Q==
+X-Gm-Message-State: APjAAAXuFFoErhEQZ55kEhj6EfQSuwi5+knzR6D9NV0K+oESU0A+sU5a
+        +l1dTfnsn88lRGHMho7omddPok9e0ojMRnG+u0g0aQ==
+X-Google-Smtp-Source: APXvYqwpgjUncM9YwGMeAEjGhHkH4kygINBHDj2ErQa4lBEYa0dUkEHo5JqszczMdAM7yNXhdyvGEegvK6pJJXoP2q8=
+X-Received: by 2002:a5d:9402:: with SMTP id v2mr15677145ion.128.1559910565141;
+ Fri, 07 Jun 2019 05:29:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <33fc4837-599d-0d5c-c530-58b283c4c095@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAKsWRmVeSWpSXmKPExsWy7djPc7qREb9iDE481LO48vU9m8XDq/4W
-        q6buZLHY9Pgaq8WJvg+sFl2/VjJbXN41h83i7/ZNLBYvtohb3J44mdGBy2PnrLvsHptWdbJ5
-        3O8+zuSxeUm9x8Z3O5g8+v8aeHzeJBfAHsVlk5Kak1mWWqRvl8CV8fjEY+aCm0wV2/++ZWtg
-        nMfUxcjJISFgInHz/WfmLkYuDiGBFYwSX9s/giWEBL4wSvz6kQaR+Mwo0fbuGhtMx52L39kg
-        EssZJV53TYBqf8sosW7rBrAqYQFXiYnbuplBbDYBK4mJ7asYQWwRAQeJKTcmsIM0MAtcZpI4
-        /HMPWIJXwE7izcTFLCA2i4CKxN91J8HiogIREvePbWCFqBGUODnzCVgNp4C9xNtL88EWMAuI
-        S9x6Mp8JwpaX2P52DthFEgLX2CVuTdkC1MAB5LhIXJ/mAfGCsMSr41vYIWwZidOTe1gg6tcx
-        SvzteAHVvJ1RYvnkf1BPW0scPn6RFWQQs4CmxPpd+hBhR4kj/Z1MEPP5JG68FYS4gU9i0rbp
-        zBBhXomONiGIajWJDcs2sMGs7dq5knkCo9IsJJ/NQvLNLCTfzELYu4CRZRWjeGppcW56arFh
-        Xmq5XnFibnFpXrpecn7uJkZgujr97/inHYxfLyUdYhTgYFTi4fVg/xkjxJpYVlyZe4hRgoNZ
-        SYS37MKPGCHelMTKqtSi/Pii0pzU4kOM0hwsSuK81QwPooUE0hNLUrNTUwtSi2CyTBycUg2M
-        y1omdGhu9Ghd6vLlx99s2WDRJY837N+SUj+r6kr8lT+mBUwagYlPe7X/fHSJ3LpMNPgx3+Oc
-        fWv7Fn78+rYhxfo2K99KQaG5NTumRDoZXZZ6pB/ze+rvy2FOS1dvO79is9Fv3YDSqd5/rM7P
-        2R7+bm5ljmvh+jcur2b/Wxfgw8NZt77PrJ1XR4mlOCPRUIu5qDgRACW5sLdTAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xu7oREb9iDM6eNbG48vU9m8XDq/4W
-        q6buZLHY9Pgaq8WJvg+sFl2/VjJbXN41h83i7/ZNLBYvtohb3J44mdGBy2PnrLvsHptWdbJ5
-        3O8+zuSxeUm9x8Z3O5g8+v8aeHzeJBfAHqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdo
-        bB5rZWSqpG9nk5Kak1mWWqRvl6CX8fjEY+aCm0wV2/++ZWtgnMfUxcjJISFgInHn4ne2LkYu
-        DiGBpYwSlzufMnYxcgAlZCSOry+DqBGW+HOtiw3EFhJ4zSgx+48oiC0s4CoxcVs3M4jNJmAl
-        MbF9FSOILSLgIDHlxgR2kJnMAleZJB7tX8gK0WwnsfnmDnYQmxfIfjNxMQuIzSKgIvF33Umw
-        ZlGBCIkz71ewQNQISpyc+QTM5hSwl3h7aT7YMmYBdYk/8y5B2eISt57MZ4Kw5SW2v53DPIFR
-        aBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwOjcduznlh2MXe+C
-        DzEKcDAq8fDOYPoZI8SaWFZcmXuIUYKDWUmEt+zCjxgh3pTEyqrUovz4otKc1OJDjKZAz01k
-        lhJNzgcmjrySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYx7K/9/
-        NukVYVqdYlu9XSa6JOBE+3kBrbZb+uwlLEnCIgddHKWFD/mVS/IbSuitWPPuw+Nt3QL7nN7I
-        /xGTP6Pp9zLxvO21Z7Ms+re4na5nv/LyW2BF6pF559brq3c8Spu+OzygJFB7TUbkYrZDE1bs
-        2XprxW3rf4uzzHdrJQdPmLZ+3eYGp21KLMUZiYZazEXFiQDUMIby5AIAAA==
-X-CMS-MailID: 20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b
-References: <33fc4837-599d-0d5c-c530-58b283c4c095@samsung.com>
-        <CGME20190607122809eucas1p1d770153cc51e01ee04c531d35d22e32b@eucas1p1.samsung.com>
+References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
+ <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
+ <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com> <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com>
+In-Reply-To: <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 7 Jun 2019 14:29:12 +0200
+Message-ID: <CAKv+Gu_ZYpey0dWYebFgCaziyJ-_x+KbCmOegWqFjwC0U-5QaA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
+ for dax
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 1 Jun 2019 at 06:26, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Fri, May 31, 2019 at 8:30 AM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> >
+> > On Fri, 31 May 2019 at 17:28, Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > On Fri, May 31, 2019 at 1:30 AM Ard Biesheuvel
+> > > <ard.biesheuvel@linaro.org> wrote:
+> > > >
+> > > > (cc Mike for memblock)
+> > > >
+> > > > On Fri, 31 May 2019 at 01:13, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > > > interpretation of the EFI Memory Types as "reserved for a special
+> > > > > purpose".
+> > > > >
+> > > > > The proposed Linux behavior for specific purpose memory is that it is
+> > > > > reserved for direct-access (device-dax) by default and not available for
+> > > > > any kernel usage, not even as an OOM fallback. Later, through udev
+> > > > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > > > node identifier.
+> > > > >
+> > > > > This patch introduces 3 new concepts at once given the entanglement
+> > > > > between early boot enumeration relative to memory that can optionally be
+> > > > > reserved from the kernel page allocator by default. The new concepts
+> > > > > are:
+> > > > >
+> > > > > - E820_TYPE_SPECIFIC: Upon detecting the EFI_MEMORY_SP attribute on
+> > > > >   EFI_CONVENTIONAL memory, update the E820 map with this new type. Only
+> > > > >   perform this classification if the CONFIG_EFI_SPECIFIC_DAX=y policy is
+> > > > >   enabled, otherwise treat it as typical ram.
+> > > > >
+> > > >
+> > > > OK, so now we have 'special purpose', 'specific' and 'app specific'
+> > > > [below]. Do they all mean the same thing?
+> > >
+> > > I struggled with separating the raw-EFI-type name from the name of the
+> > > Linux specific policy. Since the reservation behavior is optional I
+> > > was thinking there should be a distinct Linux kernel name for that
+> > > policy. I did try to go back and change all occurrences of "special"
+> > > to "specific" from the RFC to this v2, but seems I missed one.
+> > >
+> >
+> > OK
+>
+> I'll go ahead and use "application reserved" terminology consistently
+> throughout the code to distinguish that Linux translation from the raw
+> "EFI specific purpose" attribute.
+>
 
-On 5/21/19 12:47 PM, Bartlomiej Zolnierkiewicz wrote:
-> Add COMPILE_TEST support to imxfb driver for better compile
-> testing coverage.
-> 
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+OK
 
-I queued the patch for v5.3.
+> >
+> > > >
+> > > > > - IORES_DESC_APPLICATION_RESERVED: Add a new I/O resource descriptor for
+> > > > >   a device driver to search iomem resources for application specific
+> > > > >   memory. Teach the iomem code to identify such ranges as "Application
+> > > > >   Reserved".
+> > > > >
+> > > > > - MEMBLOCK_APP_SPECIFIC: Given the memory ranges can fallback to the
+> > > > >   traditional System RAM pool the expectation is that they will have
+> > > > >   typical SRAT entries. In order to support a policy of device-dax by
+> > > > >   default with the option to hotplug later, the numa initialization code
+> > > > >   is taught to avoid marking online MEMBLOCK_APP_SPECIFIC regions.
+> > > > >
+> > > >
+> > > > Can we move the generic memblock changes into a separate patch please?
+> > >
+> > > Yeah, that can move to a lead-in patch.
+> > >
+> > > [..]
+> > > > > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > > > > index 91368f5ce114..b57b123cbdf9 100644
+> > > > > --- a/include/linux/efi.h
+> > > > > +++ b/include/linux/efi.h
+> > > > > @@ -129,6 +129,19 @@ typedef struct {
+> > > > >         u64 attribute;
+> > > > >  } efi_memory_desc_t;
+> > > > >
+> > > > > +#ifdef CONFIG_EFI_SPECIFIC_DAX
+> > > > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
+> > > > > +{
+> > > > > +       return md->type == EFI_CONVENTIONAL_MEMORY
+> > > > > +               && (md->attribute & EFI_MEMORY_SP);
+> > > > > +}
+> > > > > +#else
+> > > > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
+> > > > > +{
+> > > > > +       return false;
+> > > > > +}
+> > > > > +#endif
+> > > > > +
+> > > > >  typedef struct {
+> > > > >         efi_guid_t guid;
+> > > > >         u32 headersize;
+> > > >
+> > > > I'd prefer it if we could avoid this DAX policy distinction leaking
+> > > > into the EFI layer.
+> > > >
+> > > > IOW, I am fine with having a 'is_efi_sp_memory()' helper here, but
+> > > > whether that is DAX memory or not should be decided in the DAX layer.
+> > >
+> > > Ok, how about is_efi_sp_ram()? Since EFI_MEMORY_SP might be applied to
+> > > things that aren't EFI_CONVENTIONAL_MEMORY.
+> >
+> > Yes, that is fine. As long as the #ifdef lives in the DAX code and not here.
+>
+> We still need some ifdef in the efi core because that is the central
+> location to make the policy distinction to identify identify
+> EFI_CONVENTIONAL_MEMORY differently depending on whether EFI_MEMORY_SP
+> is present. I agree with you that "dax" should be dropped from the
+> naming. So how about:
+>
+> #ifdef CONFIG_EFI_APPLICATION_RESERVED
+> static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+> {
+>         return md->type == EFI_CONVENTIONAL_MEMORY
+>                 && (md->attribute & EFI_MEMORY_SP);
+> }
+> #else
+> static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+> {
+>         return false;
+> }
+> #endif
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+I think this policy decision should not live inside the EFI subsystem.
+EFI just gives you the memory map, and mangling that information
+depending on whether you think a certain memory attribute should be
+ignored is the job of the MM subsystem.
