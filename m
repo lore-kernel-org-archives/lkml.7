@@ -3,139 +3,183 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65BFC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C62DC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997CC2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0763B2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfFGPLr (ORCPT
+        id S1729885AbfFGPLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:11:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:42284 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 11:11:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:42296 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbfFGPLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:11:46 -0400
+        id S1729173AbfFGPLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:11:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE300B16;
-        Fri,  7 Jun 2019 08:11:45 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84117C0A;
+        Fri,  7 Jun 2019 08:11:46 -0700 (PDT)
 Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A97A3F802;
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F8053F718;
         Fri,  7 Jun 2019 08:11:44 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
- vmcoreinfo
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, bhupesh.linux@gmail.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-        Steve Capper <Steve.Capper@arm.com>
-References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
- <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
- <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
- <58c6cda9-9fd4-3b3e-740a-7b9b80b1f634@redhat.com>
- <a48bb02c-8f93-4e3b-085d-a6f0e5a1f3a0@arm.com>
- <66da4098-b221-408b-50ca-f3790b943965@redhat.com>
- <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+To:     "Shenhar, Talel" <talel@amazon.com>
+Cc:     "Hawa, Hanna" <hhhawa@amazon.com>, Borislav Petkov <bp@alien8.de>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
+ <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+ <20190531051400.GA2275@cz.tnic>
+ <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+ <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+ <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
 From:   James Morse <james.morse@arm.com>
-Message-ID: <2a4af3a0-1342-fdd2-1cfd-e37abb99d8bd@arm.com>
-Date:   Fri, 7 Jun 2019 16:11:43 +0100
+Message-ID: <25efb27c-b725-137d-5735-b3ab88323846@arm.com>
+Date:   Fri, 7 Jun 2019 16:11:42 +0100
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
+In-Reply-To: <71da083e-1a74-cf86-455d-260a34ee01fd@amazon.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bhupesh,
+Hi guys,
 
-(sorry for the delay on this)
-
-On 04/05/2019 13:53, Bhupesh Sharma wrote:
-> On 04/03/2019 11:24 PM, Bhupesh Sharma wrote:
->> On 04/02/2019 10:56 PM, James Morse wrote:
->>> Yes the kernel code is going to move around, this is why the information we expose via
->>> vmcoreinfo needs to be thought through: something we would always need, regardless of how
->>> the kernel implements it.
->>>
-
->>> Pointer-auth changes all this again, as we may prefer to use the bits for pointer-auth in
->>> one TTB or the other. PTRS_PER_PGD may show the 52bit value in this case, but neither TTBR
->>> is mapping 52bits of VA.
->>>
->>>
->>>> So far, I have generally come across discussions where the following variations of the
->>>> address spaces have been proposed/requested:
->>>> - 48bit kernel VA + 48-bit User VA,
->>>> - 48-bit kernel VA + 52-bit User VA,
->>>
->>> + 52bit kernel, because there is excessive quantities of memory, and the kernel maps it
->>> all, but 48-bit user, because it never maps all the memory, and we prefer the bits for
->>> pointer-auth.
->>>
->>>> - 52-bit kernel VA + 52-bit User VA.
->>>
->>> And...  all four may happen with the same built image. I don't see how you can tell these
->>> cases apart with the one (build-time-constant!) PTRS_PER_PGD value.
->>>
->>> I'm sure some of these cases are hypothetical, but by considering it all now, we can avoid
->>> three more kernel:vmcoreinfo updates, and three more fix-user-space-to-use-the-new-value.
+On 06/06/2019 12:37, Shenhar, Talel wrote:
+>>> Disagree. The various drivers don't depend on each other.
+>>> I think we should keep the drivers separated as they are distinct and independent IP
+>>> blocks.
+>> But they don't exist in isolation, they both depend on the integration-choices/firmware
+>> that makes up your platform.
 >>
->> Agree.
+>> Other platforms may have exactly the same IP blocks, configured differently, or with
+>> different features enabled in firmware. This means we can't just probe the driver based on
+>> the presence of the IP block, we need to know the integration choices and firmware
+>> settings match what the driver requires.
 >>
->>> I think you probably do need PTRS_PER_PGD, as this is the one value the mm is using to
->>> generate page tables. I'm pretty sure you also need T0SZ and T1SZ to know if that's
->>> actually in use, or the kernel is bodging round it with an offset.
+>> (Case in point, that A57 ECC support is optional, another A57 may not have it)
 >>
->> Sure, I am open to suggestions (as I realize that we need an additional VA_BITS_ACTUAL
->> variable export'ed for 52-bit kernel VA changes).
+>> Descriptions of what firmware did don't really belong in the DT. Its not a hardware
+>> property.
+>>
+>> This is why its better to probe this stuff based on the machine-compatible/platform-name,
+>> not the presence of the IP block in the DT.
+>>
+>>
+>> Will either of your separate drivers ever run alone? If they're probed from the same
+>> machine-compatible this won't happen.
+>>
+>>
+>> How does your memory controller report errors? Does it send back some data with an invalid
+>> checksum, or a specific poison/invalid flag? Will the cache report this as a cache error
+>> too, if its an extra signal, does the cache know what it is?
+>>
+>> All these are integration choices between the two IP blocks, done as separate drivers we
+>> don't have anywhere to store that information. Even if you don't care about this, making
+>> them separate drivers should only be done to make them usable on other platforms, where
+>> these choices may have been different.
 
-(stepping back a bit:)
+> From our perspective, l1/l2 has nothing to do with the ddr memory controller.
 
-I'm against exposing arch-specific #ifdefs that correspond to how we've configured the
-arch code's interactions with mm. These are all moving targets, we can't have any of it
-become ABI.
+I understand you're coming from the position that these things have counters, you want
+something to read and export them.
 
-I have a straw-man for this: What is the value of PTE_FILE_MAX_BITS on your system?
-I have no idea what this value is or means, an afternoon's archaeology would be needed(!).
-This is something that made sense for one kernel version, a better idea came along, and it
-was replaced. If we'd exposed this to user-space, we'd have to generate a value, even if
-it doesn't mean anything. Exposing VA_BITS_ACTUAL is the same.
-
-(Keep an eye out for when we change the kernel memory map, and any second-guessing based
-on VA_BITS turns out to be wrong)
-
-
-What we do have are the hardware properties. The kernel can't change these.
-
-
->> Also how do we standardize reading T0SZ and T1SZ in user-space. Do you propose I make an
->> enhancement in the cpu-feature-registers interface (see [1]) or the HWCAPS interface
->> (see [2]) for the same?
-
-cpufeature won't help you if you've already panic()d and only have the vmcore file. This
-stuff needs to go in vmcoreinfo.
-
-As long as there is a description of how userspace uses these values, I think adding
-key/values for TCR_EL1.TxSZ to the vmcoreinfo is a sensible way out of this. You probably
-need TTBR1_EL1.BADDR too. (it should be specific fields, to prevent 'new uses' becoming ABI)
-
-This tells you how the hardware was configured, and covers any combination of TxSZ tricks
-we play, and whether those address bits are used for VA, or ptrauth for TTBR0 or TTRB1.
+I'm coming at this from somewhere else. This stuff has to be considered all the way
+through the system. Just because each component supports error detection, doesn't mean you
+aren't going to get silent corruption. Likewise if another platform picks up two piecemeal
+edac drivers for hardware it happens to have in common with yours, it doesn't mean we're
+counting all the errors. This stuff has to be viewed for the whole platform.
 
 
-> Any comments on the above points? At the moment we have to carry these fixes in the
-> distribution kernels and I would like to have these fixed in upstream kernel itself.
+> Its right that they both use same edac subsystem but they are using totally different APIs
+> of it.
+> 
+> We also even want to have separate control for enabling/disabling l1/l2 edac vs memory
+> controller edac.
+
+Curious, what for? Surely you either care about counting errors, or you don't.
+
+
+> Even from technical point-of-view L1/L2 UE collection method is totally different from
+> collecting memory-controller UE. (CPU exception vs actual interrupts).
+> 
+> So there is less reason why to combine them vs giving each one its own file, e.g.
+> al_mc_edac, al_l1_l2_edac (I even don't see why Hanna combined l1 and l2...)
+
+> As we don't have any technical relation between the two we would rather avoid this
+> combination.
+> 
+> Also, Lets assume we have different setups with different memory controllers, having a dt
+> binding to control the difference is super easy and flexible.
+
+If the hardware is different you should describe this in the DT. I'm not suggesting you
+don't describe it.
+
+The discussion here is whether we should probe the driver based on a dummy-node
+compatible, (which this 'edac_l1_l2' is) or based on the machine compatible.
+
+At the extreme end: you should paint the CPU and cache nodes with a compatible describing
+your integration. (I've mangled Juno's DT here:)
+| A57_0: cpu@0 {
+| 	compatible = "amazon-al,cortex-a57", "arm,cortex-a57";
+| 	reg = <0x0 0x0>;
+| 	device_type = "cpu";
+| 	next-level-cache = <&A57_L2>;
+| };
+|
+[...]
+|
+| A57_L2: l2-cache0 {
+| 	compatible = "amazon-al,cache", "cache";
+|	cpu_map = <A57_0, A57_1>
+| };
+
+
+This is the most accurate way to describe what you have here. The driver can use this to
+know that this integration of CPU and Cache support the edac registers. (This doesn't tell
+us anything about whether firmware enabled this stuff, or made/left it all secure-only)
+
+But this doesn't give you a device you can bind a driver to, to kick this stuff off.
+This (I assume) is why you added a dummy 'edac_l1_l2' node, that just probes the driver.
+The hardware is to do with the CPU and caches, 'edac_l1'_l2' doesn't correspond to any
+distinct part of the soc.
+
+The request is to use the machine compatible, not a dummy node. This wraps up the firmware
+properties too, and any other platform property we don't know about today.
+
+Once you have this, you don't really need the cpu/cache integration annotations, and your
+future memory-controller support can be picked up as part of the platform driver.
+If you have otherwise identical platforms with different memory controllers, OF gives you
+the API to match the node in the DT.
+
+
+> Would having a dedicated folder for amazon ease the move to separate files?
+
+I don't think anyone cares about the number of files. Code duplication and extra
+boiler-plate, maybe.
 
 
 Thanks,
