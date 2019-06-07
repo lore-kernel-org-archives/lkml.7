@@ -2,175 +2,252 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1003C46476
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38079C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8EB208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047BB208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:27:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EPNmCJ8c"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ktNXUQwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfFGJYH (ORCPT
+        id S1728044AbfFGJ1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:24:07 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14264 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFGJYG (ORCPT
+        Fri, 7 Jun 2019 05:27:14 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60942 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbfFGJ1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:24:06 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cfa2d320000>; Fri, 07 Jun 2019 02:24:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Jun 2019 02:24:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Jun 2019 02:24:04 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 09:24:01 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
- <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
- <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
- <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
- <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
- <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
- <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
- <4b098fb6-1a5b-1100-ae16-978a887c9535@nvidia.com>
- <e6741e07-be0c-d16b-36d7-77a3288f0500@gmail.com>
- <a652b103-979d-7910-5e3f-ec4bca3a3a3b@nvidia.com>
- <457eb5e1-40cc-8c0f-e21c-3881c3c04de2@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a931c88c-0741-4332-832a-77458b55bfef@nvidia.com>
-Date:   Fri, 7 Jun 2019 10:24:00 +0100
+        Fri, 7 Jun 2019 05:27:13 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x579Q2tp108826;
+        Fri, 7 Jun 2019 04:26:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559899562;
+        bh=x+/jv4waw72NZPJ7GdwLNaaEhDeI1awerl2cDh5XcZY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ktNXUQwG/yZcCDBhASfElEin9+2Y1xTmL6BrRyKyHCR1eLaxfVXtY3E5Svcf0V1XS
+         uFiO8v6Ryunl5VgIk+F89bnlnAbNRwIzmoKMPzoPv5g1REU97rTg5iL1xoSaRhWIub
+         aNTBb2Zn/mWr243Q2ANpOdU7eyTpThdKF3bOLTzM=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x579Q2n5026948
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Jun 2019 04:26:02 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
+ 2019 04:26:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 7 Jun 2019 04:26:01 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x579Pvme094604;
+        Fri, 7 Jun 2019 04:25:58 -0500
+Subject: Re: [PATCH v7 1/6] dt-bindings: add binding for USBSS-DRD controller.
+To:     Pawel Laszczak <pawell@cadence.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel@ti.com" <jbergsagel@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        "peter.chen@nxp.com" <peter.chen@nxp.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>
+References: <1559729030-16390-1-git-send-email-pawell@cadence.com>
+ <1559729030-16390-2-git-send-email-pawell@cadence.com>
+ <f032b3f3-409d-b0fc-8d5f-01c898b4c7a7@ti.com>
+ <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <64be9d26-2a68-1b90-89c8-29b227e0cd9c@ti.com>
+Date:   Fri, 7 Jun 2019 12:25:57 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <457eb5e1-40cc-8c0f-e21c-3881c3c04de2@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
+In-Reply-To: <BYAPR07MB470903AF06C1F8A34BBB3C64DD100@BYAPR07MB4709.namprd07.prod.outlook.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559899442; bh=MxZqrJAfR23g+PE4CTEHYSJQaLJosZJv5V3qOu+iOQA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EPNmCJ8ckokrtSECVyzLoUKmjW5c8x5MO2dqqTBQFmVrT9YY92svfPIL2vOuwR9Hq
-         DBRv5gw0oh2lP8DsQHMu7Msr8i730fQNYuqSTUgGqGSaeIBDTETj21FbRvLDFftIoy
-         ocQqKQ5vppXmGMK+fRbyydftaGXCuXzA6d2xkO6nq0Zxko+tHOg63gDXyymHOhOSFm
-         Guk26tRHeQwIAfjboC0UOtdrqBJeAN1E2X/bMcdMy928HnEYqQx9qQK/uBI8PSsLM7
-         SZLP6Bzk/aUZOUqdgfPBprG8vWCO5vpqaj+/onvYaQ8vmQS0uVay0feNG+9SGP65V0
-         zeY8kmNw/VnfQ==
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 06/06/2019 18:25, Dmitry Osipenko wrote:
-> 06.06.2019 19:53, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+On 07/06/2019 07:46, Pawel Laszczak wrote:
+> 
 >>
->> On 06/06/2019 17:44, Dmitry Osipenko wrote:
->>> 06.06.2019 19:32, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>
->>>> On 06/06/2019 16:18, Dmitry Osipenko wrote:
->>>>
->>>> ...
->>>>
->>>>>>> If I understood everything correctly, the FIFO buffer is shared amo=
-ng
->>>>>>> all of the ADMA clients and hence it should be up to the ADMA drive=
-r to
->>>>>>> manage the quotas of the clients. So if there is only one client th=
-at
->>>>>>> uses ADMA at a time, then this client will get a whole FIFO buffer,=
- but
->>>>>>> once another client starts to use ADMA, then the ADMA driver will h=
-ave
->>>>>>> to reconfigure hardware to split the quotas.
->>>>>>
->>>>>> The FIFO quotas are managed by the ADMAIF driver (does not exist in
->>>>>> mainline currently but we are working to upstream this) because it i=
-s
->>>>>> this device that owns and needs to configure the FIFOs. So it is rea=
-lly
->>>>>> a means to pass the information from the ADMAIF to the ADMA.
->>>>>
->>>>> So you'd want to reserve a larger FIFO for an audio channel that has =
-a
->>>>> higher audio rate since it will perform reads more often. You could a=
-lso
->>>>> prioritize one channel over the others, like in a case of audio call =
-for
->>>>> example.
->>>>>
->>>>> Is the shared buffer smaller than may be needed by clients in a worst
->>>>> case scenario? If you could split the quotas statically such that eac=
-h
->>>>> client won't ever starve, then seems there is no much need in the
->>>>> dynamic configuration.
->>>>
->>>> Actually, this is still very much relevant for the static case. Even i=
-f
->>>> we defined a static configuration of the FIFO mapping in the ADMAIF
->>>> driver we still need to pass this information to the ADMA. I don't
->>>> really like the idea of having it statically defined in two different
->>>> drivers.
->>>
->>> Ah, so you need to apply the same configuration in two places. Correct?
->>>
->>> Are ADMAIF and ADMA really two different hardware blocks? Or you
->>> artificially decoupled the ADMA driver?
+>> Pawel,
 >>
->> These are two different hardware modules with their own register sets.
->> Yes otherwise, it would be a lot simpler!
->=20
-> The register sets are indeed separated, but it looks like that ADMAIF is
-> really a part of ADMA that is facing to Audio Crossbar. No? What is the
-> purpose of ADMAIF? Maybe you could amend the ADMA hardware description
-> with the ADMAIF addition until it's too late.
+>> On 05/06/2019 13:03, Pawel Laszczak wrote:
+>>> This patch aim at documenting USB related dt-bindings for the
+>>> Cadence USBSS-DRD controller.
+>>>
+>>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>
+>>> ---
+>>>  .../devicetree/bindings/usb/cdns-usb3.txt     | 30 +++++++++++++++++++
+>>>  1 file changed, 30 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/usb/cdns-usb3.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/cdns-usb3.txt b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+>>> new file mode 100644
+>>> index 000000000000..1d2b449e3cb4
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/cdns-usb3.txt
+>>> @@ -0,0 +1,30 @@
+>>> +Binding for the Cadence USBSS-DRD controller
+>>> +
+>>> +Required properties:
+>>> +  - reg: Physical base address and size of the controller's register areas.
+>>> +	 Controller has 3 different regions:
+>>> +	 region 1 - HOST registers area
+>>> +	 region 2 - DEVICE registers area
+>>> +	 region 3 - OTG/DRD registers area
+>>> +  - reg-names - register memory area names:
+>>> +	"xhci" - for HOST registers space
+>>> +	"dev" - for DEVICE registers space
+>>> +	"otg" - for OTG/DRD registers space
+>>> +  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
+>>> +  - interrupts: Interrupts used by cdns3 controller.
+>>
+>> Since we are requesting 3 separate named interrupts in code we need to
+>> mention them here.
+> 
+> Hi Roger, 
+> 
+> Yes, I know, but this code is Reviewed-by: Rob Herring, so I thought to add 
+> this as separate patch after putting this driver into kernel.
+> 
 
-The ADMA can perform the following transfers (per the CH_CONFIG
-register) ...
+Binding document should be updated as code changes.
 
-MEMORY_TO_MEMORY
-AHUB_TO_MEMORY
-MEMORY_TO_AHUB
-AHUB_TO_AHUB
+> I assume that after making some change in this file I should remove statement
+> Reviewed-by: Rob Herring <robh@kernel.org> from this patch to start reviving 
+> from the beginning.  
 
-Hence it is possible to use the ADMA to do memory-to-memory transfers
-that do not involve the ADMAIF.
+Yes.
 
-So no the ADMAIF is not part of the ADMA. It is purely the interface to
-the crossbar (AHUB/APE), but from a hardware standpoint they are
-separate. And so no we will not amend the hardware description.
+> 
+> What do you think about such dt-binding:
+> 
+> Required properties:
+>   - reg: Physical base address and size of the controller's register areas.
+>          Controller has 3 different regions:
+>          region 1 - HOST registers area
+>          region 2 - DEVICE registers area
+>          region 3 - OTG/DRD registers area
 
-Jon
+Is it so that region 1 is always HOST?
+offset 0 seems to be OTG though.
 
---=20
-nvpublic
+If it is implementation specific then you could get rid of numbering.
+
+>   - reg-names - register memory area names:
+>         "xhci" - for HOST registers space
+>         "dev" - for DEVICE registers space
+>         "otg" - for OTG/DRD registers space
+>   - compatible: Should contain:
+>         "cdns,usb3-1.0.0" - for 0x00024502 controller version
+>         "cdns,usb3-1.0.1" - for 0x00024509 controller version
+>         "cdns,usb3-1.0.2" - for 0x0002450C controller version
+>         "cdns,usb3-1.0.3" - for 0x0002450d controller version
+> 
+> - interrupts: Interrupts used by cdns3 controller:
+>         "host" - interrupt used by XHCI driver.
+>         "peripheral" - interrupt used by device driver
+>         "otg" - interrupt used by DRD/OTG  part of driver
+> 
+> Optional properties:
+>  - maximum-speed : valid arguments are "super-speed", "high-speed" and
+>                    "full-speed"; refer to usb/generic.txt
+>  - dr_mode: Should be one of "host", "peripheral" or "otg".
+>  - phys: reference to the USB PHY
+
+need to add 'phy-names' since you request the PHY with name.
+
+>  - on-chip-buff-size : size of memory intended as internal memory for endpoints
+>         buffers expressed in KB
+> 
+> Example:
+>         usb@f3000000 {
+>                 compatible = "cdns,usb3-1.0.1";
+>                 interrupts = <USB_HOST_IRQ  7 IRQ_TYPE_LEVEL_HIGH>
+
+coma missing.
+>                                 <USB_DEVICE_IRQ  7 IRQ_TYPE_LEVEL_HIGH>
+here too.
+>                                 <USB_OTG_IRQ  8 IRQ_TYPE_LEVEL_HIGH>;
+
+What is 7 and 8 ?
+
+>                 interrupt-names = "host", "peripheral", "otg";
+>                 reg = <0xf3000000 0x10000       /* memory area for HOST registers */
+
+should end with >,
+
+>                         0xf3010000 0x10000      /* memory area for DEVICE registers */
+here too
+
+>                         0xf3020000 0x10000>;    /* memory area for OTG/DRD registers */
+>                 reg-names = "xhci", "dev", "otg";
+>         };
+
+Isn't otg at offset 0, xhci at offset 0x10000 and dev at offset 0x20000?
+
+> 
+> Is this correct now ?
+> 
+> Maybe I should add something additionally for phy ?
+
+e.g.
+
+                        phys = <&usb3_phy>;
+                        phy-names = "cdns3,usbphy";
+
+> 
+> Regards,
+> Pawel
+> 
+>   
+>>
+>>> +
+>>> +Optional properties:
+>>> + - maximum-speed : valid arguments are "super-speed", "high-speed" and
+>>> +                   "full-speed"; refer to usb/generic.txt
+>>> + - dr_mode: Should be one of "host", "peripheral" or "otg".
+>>> + - phys: reference to the USB PHY
+>>> +
+>>> +Example:
+>>> +	usb@f3000000 {
+>>> +		compatible = "cdns,usb3-1.0.1";
+>>> +		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
+>>
+>> This example won't work as code requests for 3 separate interrupts.
+>>
+>>> +		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
+>>> +			0xf3010000 0x10000	/* memory area for DEVICE registers */
+>>> +			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
+>>> +		reg-names = "xhci", "dev", "otg";
+>>> +	};
+>>>
+>>
+
+
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
