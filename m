@@ -2,86 +2,97 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B119AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F3FC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A8C208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0242208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:18:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="HGyoiJk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfFGTPm (ORCPT
+        id S1729990AbfFGTSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:15:42 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:44362 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbfFGTPm (ORCPT
+        Fri, 7 Jun 2019 15:18:12 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42047 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729935AbfFGTSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:15:42 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 43D6D1504F979;
-        Fri,  7 Jun 2019 12:15:41 -0700 (PDT)
-Date:   Fri, 07 Jun 2019 12:15:38 -0700 (PDT)
-Message-Id: <20190607.121538.2106706546161674940.davem@davemloft.net>
-To:     olteanv@gmail.com
-Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
-        richardcochran@gmail.com, john.stultz@linaro.org,
-        tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA
- driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190605.114429.1672040440449676386.davem@davemloft.net>
-References: <20190604.202258.1443410652869724565.davem@davemloft.net>
-        <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
-        <20190605.114429.1672040440449676386.davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 07 Jun 2019 12:15:41 -0700 (PDT)
+        Fri, 7 Jun 2019 15:18:11 -0400
+Received: by mail-qt1-f193.google.com with SMTP id s15so3553948qtk.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:18:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=dBja0SaABhJ+vkH9oPP7a19xf2P1INI9IB5AOePiwvA=;
+        b=HGyoiJk46WZXALckZqXAv4TDiqPCegoidYZZjWY7PoqQNvjs9DPkpooeU4PvBTNaOi
+         PazRcvhLTQMU/UnjtO6jXv8SlzxazE+VJkcJ4Q5xItcQihAuw0SP3qnyz5a0wiiHiSue
+         qXlsA72lxUpE2qtlBg4nakCyxoFedqJA8BnAJXNqWsU/WRiAVNg/1RvHe7/OPP9pFe/5
+         7qU1PnoLmALXiQFoguW3R51sdTFFD1ps9euwnhwMujleUNf4YSOcijqw62yMcSFJitgR
+         jCTmb2A/q4dZAgp0XV1Dxafj5THK9WvZ72TXfqHVAnx1AZJa0HfbDpZr9RkG36Pvq4dK
+         Ycdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dBja0SaABhJ+vkH9oPP7a19xf2P1INI9IB5AOePiwvA=;
+        b=qxt23nRuoNFZTeh5BlPPRMnIQcHVyPT5SXeCoSF9r9kCOGALmOZjitl97ia7eeu4ic
+         k/1wyDKk7nxEvzx7AgC+ymbqV4JR6DYc9QqKc8tzIhHbaoYWORS7/y8/oRzbWk2WjXUf
+         AjUkzs6QyckMe529sTNovGo/jFSksCHJDSNRqqyqmxvoy+yaVHpTs9heCWy22PhlwUfk
+         t+u3tl6pvFP1iL7JYWvL/pbuik90dot+6vL7ltVRHX6Yjx6D4bQwpjsBVdH78Sq89m1A
+         1/8Wq/oTXoZ4kQcTtWtliFTRPUX0QsQEUGxtIkPM95X47I0WyR6IRtEK+bgSta26vxts
+         RS1A==
+X-Gm-Message-State: APjAAAVxwR+re1WlV1WcnuflABgq5NzDjx2TuLLFFiHdzikOxw5Co/po
+        Sr4ItUhqrEdg4qRJmMafOCe4OkDBX8o=
+X-Google-Smtp-Source: APXvYqxcKoB0QsUOsyool9cAmaWLxyFtfiCIl+a5IdSf0kYmEwuYWP82X6YRRmeVT8wz3gTTAO00GA==
+X-Received: by 2002:a0c:96b9:: with SMTP id a54mr26876867qvd.135.1559935090299;
+        Fri, 07 Jun 2019 12:18:10 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id h128sm1638507qkc.27.2019.06.07.12.18.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 12:18:09 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     ard.biesheuvel@linaro.org, dvhart@infradead.org,
+        andy@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [RESEND PATCH] x86/efi: fix a -Wtype-limits compilation warning
+Date:   Fri,  7 Jun 2019 15:17:47 -0400
+Message-Id: <1559935067-4076-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
-Date: Wed, 05 Jun 2019 11:44:29 -0700 (PDT)
+Compiling a kernel with W=1 generates this warning,
 
-> From: Vladimir Oltean <olteanv@gmail.com>
-> Date: Wed, 5 Jun 2019 12:13:59 +0300
-> 
->> It is conflicting because net-next at the moment lacks this patch that
->> I submitted to net:
->> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=e8d67fa5696e2fcaf956dae36d11e6eff5246101
->> What would you like me to do: resubmit after you merge net into
->> net-next, add the above patch to this series (which you'll have to
->> skip upon the next merge), or you can just cherry-pick it and then the
->> series will apply?
-> 
-> So let me bring this series back to state "Under Review" and I'll apply it
-> after I next merge net into net-next.
+arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
 
-So I applied the series but it doesn't even build:
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/x86/platform/efi/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-ERROR: "sja1105_unpack" [drivers/net/dsa/sja1105/sja1105_ptp.ko] undefined!
-ERROR: "sja1105_spi_send_packed_buf" [drivers/net/dsa/sja1105/sja1105_ptp.ko] undefined!
-ERROR: "sja1105_pack" [drivers/net/dsa/sja1105/sja1105_ptp.ko] undefined!
-ERROR: "sja1105_spi_send_int" [drivers/net/dsa/sja1105/sja1105_ptp.ko] undefined!
-ERROR: "sja1105_get_ts_info" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-ERROR: "sja1105pqrs_ptp_cmd" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-ERROR: "sja1105_ptp_clock_unregister" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-ERROR: "sja1105_ptpegr_ts_poll" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-ERROR: "sja1105et_ptp_cmd" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-ERROR: "sja1105_ptp_reset" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-ERROR: "sja1105_tstamp_reconstruct" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
-ERROR: "sja1105_ptp_clock_register" [drivers/net/dsa/sja1105/sja1105.ko] undefined!
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 632b83885867..3b9fd679cea9 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -728,7 +728,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
+ 	 * page faulting on these addresses isn't expected.
+ 	 */
+-	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
++	if (phys_addr <= 0x0fff)
+ 		return;
+ 
+ 	/*
+-- 
+1.8.3.1
 
-You have to test better with the various modular/non-modular combinations.
-
-Thanks.
