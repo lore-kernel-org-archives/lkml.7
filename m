@@ -2,123 +2,174 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAE5C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448A9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF07212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559920877;
-	bh=wSA9+DEHwIHYbrjI6rB2FJbnN9VPE/h6ycu0SC0xEOw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=J/b+5LafsiTbHs62pW/pmND+HfByFMES4lea2hbqC/tbgLJqiufDkbbehpSVbQF9y
-	 JxfZG/V6cMJEEeMKWxUR0D0WgmxWuGzbdnKOWe5Qwn5T9I21IHmiqq94xhUuztWnW+
-	 uXdhlR9BgOZUOPczVTCrA44t8UcOjuQWYCWm/O1s=
+	by mail.kernel.org (Postfix) with ESMTP id 1F8D8208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbfFGPVQ (ORCPT
+        id S1729652AbfFGPVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:21:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:42562 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbfFGPVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:21:16 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ED4D2089E;
-        Fri,  7 Jun 2019 15:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559920875;
-        bh=wSA9+DEHwIHYbrjI6rB2FJbnN9VPE/h6ycu0SC0xEOw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p343FTxfeSAM/E5VDYkxZLhAnjNQDez+iK0gcSp+nJAL7C70RhIrBquis3RHUyuPn
-         W3R5Fez3zQzDKBl4QiitU5/d1SA0qkebSYAdi+tU/VFeYf/BlZR4OoPqpgcaLmWVib
-         pWByQv15U6DMJvlz3iXDOBC73t0ou2cKDFAaUF+8=
-Date:   Sat, 8 Jun 2019 00:21:09 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 03/15] x86/kprobes: Fix frame pointer annotations
-Message-Id: <20190608002109.aee01e9a0e0787dc9e419e0c@kernel.org>
-In-Reply-To: <20190607133602.os7st57epo3otbc4@treble>
-References: <20190605130753.327195108@infradead.org>
-        <20190605131944.711054227@infradead.org>
-        <20190607220210.328ed88f2f7598e757c3564f@kernel.org>
-        <20190607133602.os7st57epo3otbc4@treble>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1728665AbfFGPVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:21:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99207337;
+        Fri,  7 Jun 2019 08:21:19 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9EEB3F718;
+        Fri,  7 Jun 2019 08:21:16 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 16:21:14 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/18] drivers: firmware: psci: Prepare to support PM
+ domains
+Message-ID: <20190607152114.GG15577@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-9-ulf.hansson@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513192300.653-9-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 09:36:02 -0400
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Mon, May 13, 2019 at 09:22:50PM +0200, Ulf Hansson wrote:
+> Subsequent changes implements support for PM domains to PSCI. Those changes
+> are mainly implemented in a new separate c-file, hence a couple of the
+> internal PSCI functions needs to be shared to be accessible. Let's do that
+> via adding a new PSCI header file.
+>
+> Moreover, to implement support for PM domains, switching the PSCI FW into
+> the OS initiated mode is sometimes needed. Therefore, let's share a new
+> function that implement this.
+>
 
-> On Fri, Jun 07, 2019 at 10:02:10PM +0900, Masami Hiramatsu wrote:
-> > On Wed, 05 Jun 2019 15:07:56 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > The kprobe trampolines have a FRAME_POINTER annotation that makes no
-> > > sense. It marks the frame in the middle of pt_regs, at the place of
-> > > saving BP.
-> > 
-> > commit ee213fc72fd67 introduced this code, and this is for unwinder which
-> > uses frame pointer. I think current code stores the address of previous
-> > (original context's) frame pointer into %rbp. So with that, if unwinder
-> > tries to decode frame pointer, it can get the original %rbp value,
-> > instead of &pt_regs from current %rbp.
-> > 
-> > > 
-> > > Change it to mark the pt_regs frame as per the ENCODE_FRAME_POINTER
-> > > from the respective entry_*.S.
-> > > 
-> > 
-> > With this change, I think stack unwinder can not get the original %rbp
-> > value. Peter, could you check the above commit?
-> 
-> The unwinder knows how to decode the encoded frame pointer.  So it can
-> find regs by decoding the new rbp value, and it also knows that regs->bp
-> is the original rbp value.
-> 
-> Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> 
+This looks fine.
 
-Ah, OK. My misunderstood. So this encode framepointer as same as other
-interrupt entry stack.
-Then, it looks good to me too.
+--
+Regards,
+Sudeep
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>
+> Changes:
+> 	- Convert psci_set_osi_mode() to return an int.
+> 	- Don't share psci_get_domain_state() as that's no longer needed.
+> 	- Update changelog.
+>
+> ---
+>  drivers/firmware/psci/psci.c | 17 ++++++++++++++---
+>  drivers/firmware/psci/psci.h | 16 ++++++++++++++++
+>  2 files changed, 30 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/firmware/psci/psci.h
+>
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index 4aec513136e4..0e91d864e346 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -34,6 +34,8 @@
+>  #include <asm/smp_plat.h>
+>  #include <asm/suspend.h>
+>
+> +#include "psci.h"
+> +
+>  /*
+>   * While a 64-bit OS can make calls with SMC32 calling conventions, for some
+>   * calls it is necessary to use SMC64 to pass or return 64-bit values.
+> @@ -96,7 +98,7 @@ static inline bool psci_has_ext_power_state(void)
+>  				PSCI_1_0_FEATURES_CPU_SUSPEND_PF_MASK;
+>  }
+>
+> -static inline bool psci_has_osi_support(void)
+> +bool psci_has_osi_support(void)
+>  {
+>  	return psci_cpu_suspend_feature & PSCI_1_0_OS_INITIATED;
+>  }
+> @@ -161,6 +163,15 @@ static u32 psci_get_version(void)
+>  	return invoke_psci_fn(PSCI_0_2_FN_PSCI_VERSION, 0, 0, 0);
+>  }
+>
+> +int psci_set_osi_mode(void)
+> +{
+> +	int err;
+> +
+> +	err = invoke_psci_fn(PSCI_1_0_FN_SET_SUSPEND_MODE,
+> +			     PSCI_1_0_SUSPEND_MODE_OSI, 0, 0);
+> +	return psci_to_linux_errno(err);
+> +}
+> +
+>  static int psci_cpu_suspend(u32 state, unsigned long entry_point)
+>  {
+>  	int err;
+> @@ -292,12 +303,12 @@ static inline u32 psci_get_domain_state(void)
+>  	return __this_cpu_read(domain_state);
+>  }
+>
+> -static inline void psci_set_domain_state(u32 state)
+> +void psci_set_domain_state(u32 state)
+>  {
+>  	__this_cpu_write(domain_state, state);
+>  }
+>
+> -static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
+> +int psci_dt_parse_state_node(struct device_node *np, u32 *state)
+>  {
+>  	int err = of_property_read_u32(np, "arm,psci-suspend-param", state);
+>
+> diff --git a/drivers/firmware/psci/psci.h b/drivers/firmware/psci/psci.h
+> new file mode 100644
+> index 000000000000..f2277c3ad405
+> --- /dev/null
+> +++ b/drivers/firmware/psci/psci.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __PSCI_H
+> +#define __PSCI_H
+> +
+> +struct device_node;
+> +
+> +int psci_set_osi_mode(void);
+> +bool psci_has_osi_support(void);
+> +
+> +#ifdef CONFIG_CPU_IDLE
+> +void psci_set_domain_state(u32 state);
+> +int psci_dt_parse_state_node(struct device_node *np, u32 *state);
+> +#endif
+> +
+> +#endif /* __PSCI_H */
+> --
+> 2.17.1
+>
 
-Thank you Josh!
-
-
-
-
-> -- 
-> Josh
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
