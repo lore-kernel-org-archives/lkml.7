@@ -2,83 +2,95 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F7BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FE1C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2465F2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3162089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbfFGPRM (ORCPT
+        id S1729723AbfFGPRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:17:12 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39659 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728446AbfFGPRL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:17:11 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so2549518wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:17:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sX/pioxuVMxljt5xFEWz/xGKhecKIEm1tNEtt9DHln0=;
-        b=aNa3lDNG5HNcY7rSr84L6AOAnY6+8zlPqcZpyht0C9fBh6kUaGPcG2dvlUeaFW8+bW
-         95IdrrPJsSYzKg+6mGabxlxAb1NF4e2mkFosyf3KfzFCx5wLbq7jld5T2pN3KxgrTfag
-         DLOHERQQof/RPSiIjDTr42fhfgPuMTltphWabrq4cYI/sBvMJA37k0ZTObosghYakBKi
-         k6q0KABxVD78WK9X+yM1PUrldUVxEihrMThw3JRTVUvErHjd4OhKff7s0Rh//lZcM2+I
-         y1yc4z2t5TFMLDCC9PKo2bP5X1Ni0fcjoc856EOc3gfXaQcNJVz70lzrCorQbwqpTv9l
-         YuVg==
-X-Gm-Message-State: APjAAAUUqCV5F7wzVv4EGITloHr6ilIcC4TmlHZy/VB8r5hen+HtItb9
-        X2oyPFIal686L8AqEG9YnFK0bQ==
-X-Google-Smtp-Source: APXvYqzAXTGUk9Z0sa4D/SLHGUJd6uodo7ETHrJjF2Inh/QnYCsHcWJybb0atPguJ+rdSbEb6HG83Q==
-X-Received: by 2002:a5d:4ac1:: with SMTP id y1mr5512703wrs.210.1559920630411;
-        Fri, 07 Jun 2019 08:17:10 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id o185sm984015wmo.45.2019.06.07.08.17.09
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 08:17:09 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nVMX: Rename prepare_vmcs02_*_full to
- prepare_vmcs02_*_extra
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1559834652-105872-1-git-send-email-pbonzini@redhat.com>
- <20190606184117.GJ23169@linux.intel.com>
- <8382fd94-aed1-51b4-007e-7579a0f35ece@redhat.com>
- <20190607141847.GA9083@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5762005d-1504-bb41-9583-ec549e107ce5@redhat.com>
-Date:   Fri, 7 Jun 2019 17:17:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 7 Jun 2019 11:17:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:42484 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728446AbfFGPRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:17:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B5A6367;
+        Fri,  7 Jun 2019 08:17:21 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F0F83F718;
+        Fri,  7 Jun 2019 08:17:18 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 16:17:16 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH 07/18] drivers: firmware: psci: Prepare to use OS
+ initiated suspend mode
+Message-ID: <20190607151716.GF15577@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-8-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190607141847.GA9083@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513192300.653-8-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/19 16:18, Sean Christopherson wrote:
-> On Fri, Jun 07, 2019 at 02:19:20PM +0200, Paolo Bonzini wrote:
->> On 06/06/19 20:41, Sean Christopherson wrote:
->>>> +static void prepare_vmcs02_early_extra(struct vcpu_vmx *vmx,
->>> Or maybe 'uncommon', 'rare' or 'ext'?  I don't I particularly love any of
->>> the names, but they're all better than 'full'.
->>
->> I thought 'ext' was short for 'extra'? :)
-> 
-> Ha, I (obviously) didn't make that connection.  ext == extended in my mind.
+On Mon, May 13, 2019 at 09:22:49PM +0200, Ulf Hansson wrote:
+> The per CPU variable psci_power_state, contains an array of fixed values,
+> which reflects the corresponding arm,psci-suspend-param parsed from DT, for
+> each of the available CPU idle states.
+>
+> This isn't sufficient when using the hierarchical CPU topology in DT in
+> combination with having PSCI OS initiated (OSI) mode enabled. More
+> precisely, in OSI mode, Linux is responsible of telling the PSCI FW what
+> idle state the cluster (a group of CPUs) should enter, while in PSCI
+> Platform Coordinated (PC) mode, each CPU independently votes for an idle
+> state of the cluster.
+>
+> For this reason, let's introduce an additional per CPU variable called
+> domain_state and implement two helper functions to read/write its values.
+> Following patches, which implements PM domain support for PSCI, will use
+> the domain_state variable and set it to corresponding bits that represents
+> the selected idle state for the cluster.
+>
+> Finally, in psci_cpu_suspend_enter() and psci_suspend_finisher(), let's
+> take into account the values in the domain_state, as to get the complete
+> suspend parameter.
+>
 
-That's what came to mind first, but then "extended" had the same issue
-as "full" (i.e. encompassing the "basic" set as well) so I decided you
-knew better!
+I understand it was split to ease review, but this patch also does
+nothing as domain_state = 0 always. I was trying hard to find where it's
+set, but I assume it will be done in later patches. Again may be this
+can be squashed into the first caller of psci_set_domain_state
 
-Paolo
+--
+Regards,
+Sudeep
