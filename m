@@ -2,120 +2,125 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BC1C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFA5C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BEE207E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:51:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0j1BrL//"
+	by mail.kernel.org (Postfix) with ESMTP id B0899208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbfFGQv5 (ORCPT
+        id S1730893AbfFGQxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:51:57 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32871 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729172AbfFGQv5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:51:57 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so1534909pfq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 09:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=KAdja4g+5K1yNRadSGa4iS254vjYz6FUIwDf3E1mgJA=;
-        b=0j1BrL//JTMqPk4S/qOTR9Ht6RSavMWK+fEjT0ZZAIKcAfr9Pi1BMrnKrD2aHUPPaN
-         vGzHheuuiH8JfT3i/I4/ZzTv8EoUJlo8/aw/LSSMrgKQXlRIfmxZXIBAlOYBh0vgHJfR
-         XiW+idkrDc8Ph2C+3T7dnrwJn/0m3v5VLS7kY7AOauaRYRBEy0zM1n6C2DEAa0/ksB9J
-         xuIP9TqP5hYs58ps5XHFrRiG4ezdyhfdhepMn9BTm+At8Ic/K+hJKqVmMDoeaG0h+HlI
-         1lvZqHyP0H5JgT+4iX0S6mm7AJo+94Wc3a80kv/eiFmp9IbiPJVKG7dzlYTl1gq2qgjY
-         TzUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=KAdja4g+5K1yNRadSGa4iS254vjYz6FUIwDf3E1mgJA=;
-        b=KfxjItH19BoEbeowy4q2I7OvlBFyMgl92C7Ao41AfYET6WAy7sICghPkqLau66djzo
-         5oW9XtGYCW34B0WTNv1UTpPzHPh+NYqncaDl78HV/llOWdmPD9At5bxRojpF7dGl0Kr/
-         yr4HFQSyTS/El3u7RG6CzH5t/+LcgzjopOvVtJD8wYMLC4gFBRuEyj/2EQ59SQbun863
-         PKHkIL9+Q9cxcm84GG50/G98MJBprDXvIkmZc1lNsK151b6siNCkNFcNRCoO7qJMiS0U
-         kgpnsbSsE6nU2uMZdVG6udJU0AWveyUwiFFtOFEBscoP9mR3b4rtgrVBl6ARoZLwaCib
-         369Q==
-X-Gm-Message-State: APjAAAXD28aKpXOhEJwvlTs3u0rikmxZPktQHLDrpR/fvJm2z593ct5m
-        7KSp1djjK+GJxOLLkx3kbjDk2Q==
-X-Google-Smtp-Source: APXvYqzw67ywps2BIX0frRcevuXgajIjxlqqSkbhuQB8Awha+f/Wfl1unsc2kcMs5EH4mXVA+dx7lw==
-X-Received: by 2002:a65:408d:: with SMTP id t13mr3497326pgp.373.1559926316302;
-        Fri, 07 Jun 2019 09:51:56 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id 2sm2705166pfo.41.2019.06.07.09.51.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 09:51:55 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Atish Patra <atish.patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v3 0/5] arch: riscv: add board and SoC DT file support
-In-Reply-To: <05010310-baa2-c711-cb54-96a9138f582a@wdc.com>
-References: <20190602080500.31700-1-paul.walmsley@sifive.com> <7h36kogchx.fsf@baylibre.com> <05010310-baa2-c711-cb54-96a9138f582a@wdc.com>
-Date:   Fri, 07 Jun 2019 09:51:55 -0700
-Message-ID: <7hftolcp90.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 7 Jun 2019 12:53:05 -0400
+Received: from mga06.intel.com ([134.134.136.31]:40312 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729172AbfFGQxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:53:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:53:04 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Jun 2019 09:53:03 -0700
+Message-ID: <ac8827d7b516f4b58e1df20f45b94998d36c418c.camel@intel.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Fri, 07 Jun 2019 09:45:02 -0700
+In-Reply-To: <76B7B1AE-3AEA-4162-B539-990EF3CCE2C2@amacapital.net>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+         <20190606200926.4029-4-yu-cheng.yu@intel.com>
+         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+         <76B7B1AE-3AEA-4162-B539-990EF3CCE2C2@amacapital.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Atish Patra <atish.patra@wdc.com> writes:
+On Fri, 2019-06-07 at 09:35 -0700, Andy Lutomirski wrote:
+> > On Jun 7, 2019, at 9:23 AM, Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+> > 
+> > > On Fri, 2019-06-07 at 10:08 +0200, Peter Zijlstra wrote:
+> > > > On Thu, Jun 06, 2019 at 01:09:15PM -0700, Yu-cheng Yu wrote:
+> > > > Indirect Branch Tracking (IBT) provides an optional legacy code bitmap
+> > > > that allows execution of legacy, non-IBT compatible library by an
+> > > > IBT-enabled application.  When set, each bit in the bitmap indicates
+> > > > one page of legacy code.
+> > > > 
+> > > > The bitmap is allocated and setup from the application.
+> > > > +int cet_setup_ibt_bitmap(unsigned long bitmap, unsigned long size)
+> > > > +{
+> > > > +    u64 r;
+> > > > +
+> > > > +    if (!current->thread.cet.ibt_enabled)
+> > > > +        return -EINVAL;
+> > > > +
+> > > > +    if (!PAGE_ALIGNED(bitmap) || (size > TASK_SIZE_MAX))
+> > > > +        return -EINVAL;
+> > > > +
+> > > > +    current->thread.cet.ibt_bitmap_addr = bitmap;
+> > > > +    current->thread.cet.ibt_bitmap_size = size;
+> > > > +
+> > > > +    /*
+> > > > +     * Turn on IBT legacy bitmap.
+> > > > +     */
+> > > > +    modify_fpu_regs_begin();
+> > > > +    rdmsrl(MSR_IA32_U_CET, r);
+> > > > +    r |= (MSR_IA32_CET_LEG_IW_EN | bitmap);
+> > > > +    wrmsrl(MSR_IA32_U_CET, r);
+> > > > +    modify_fpu_regs_end();
+> > > > +
+> > > > +    return 0;
+> > > > +}
+> > > 
+> > > So you just program a random user supplied address into the hardware.
+> > > What happens if there's not actually anything at that address or the
+> > > user munmap()s the data after doing this?
+> > 
+> > This function checks the bitmap's alignment and size, and anything else is
+> > the
+> > app's responsibility.  What else do you think the kernel should check?
+> > 
+> 
+> One might reasonably wonder why this state is privileged in the first place
+> and, given that, why we’re allowing it to be written like this.
+> 
+> Arguably we should have another prctl to lock these values (until exec) as a
+> gardening measure.
 
-> On 6/5/19 10:37 AM, Kevin Hilman wrote:
->> Hi Paul,
->> 
->> Paul Walmsley <paul.walmsley@sifive.com> writes:
->> 
->>> Add support for building flattened DT files from DT source files under
->>> arch/riscv/boot/dts.  Follow existing kernel precedent from other SoC
->>> architectures.  Start our board support by adding initial support for
->>> the SiFive FU540 SoC and the first development board that uses it, the
->>> SiFive HiFive Unleashed A00.
->>>
->>> This third version of the patch set adds I2C data for the chip,
->>> incorporates all remaining changes that riscv-pk was making
->>> automatically, and addresses a comment from Rob Herring
->>> <robh@kernel.org>.
->>>
->>> Boot-tested on v5.2-rc1 on a HiFive Unleashed A00 board, using the
->>> BBL and open-source FSBL, with modifications to pass in the DTB
->>> file generated by these patches.
->> 
->> Tested this series on top of v5.2-rc3 on HiFive Unleashed board using
->> OpenSBI + mainline u-boot (master branch as of today).
->> 
->> Tested-by: Kevin Hilman <khilman@baylibre.com>
->> 
->>> This patch series can be found, along with the PRCI patch set
->>> and the DT macro prerequisite patch, at:
->>>
->>> https://github.com/sifive/riscv-linux/tree/dev/paulw/dts-v5.2-rc1
->> 
->> nit: I only see this series in that branch, not any of the prerequisite
->> patches you mentioned, which made me assume I could this series alone on
->> top of v5.2-rc3, which worked just fine.
->> 
->
-> I tried only this series on top of v5.2-rc3. Kernel boots file with DT 
-> updated via U-Boot. But networking didn't come up.
->
-> Do you have networking up after the boot? If yes, can you please share 
-> the config.
+We can prevent the bitmap from being set more than once.  I will test it.
 
-I didn't test networking from the kernel initially, but looking now, I
-do not have networking come up in the kernel either.
-
-Kevin
+Yu-cheng
