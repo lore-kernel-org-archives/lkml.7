@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA8EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F829C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E362133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3C9208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922961;
-	bh=obaZKxvXgYEdqf/Y6HZ6mDMmMasYi5YEMaOeTMivmS8=;
+	s=default; t=1559922965;
+	bh=l6xlgdWuyu83Qg44TbTOUnGQ4jY817/wDW3olYQfI08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ivKGeNi3zouT6AI0IWoGVYWzLQQQEEOHl/UcMESaI0XtH65zr3oNbbHUZ5f/4/qr2
-	 WIJr2WO1JWc3aVnZVp+dHapW08kQa0o7civTYkZT5l7Tj/+rGgWK5wBt6ZGgY0E0Rw
-	 m2youSAp1h3R0hldsieUSxaSC+kzZeXCJ0D0s020=
+	b=b0p5ML7n0G67YLiCadXgYELdMGayrLCMEWeu3n0ZaxAVbkuOAe5BdDqNzZSyuv9QC
+	 h57q1187NVgTV+URU2wXweklmiWV4s5Lexc2sFiAjsTc+qbSD3Rv/4RCg36eBkb4rA
+	 dJZKJEUsE6atHVdcJjNGbPdd4xG+JAXSz0daQSbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbfFGP4A (ORCPT
+        id S1732047AbfFGP4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730474AbfFGPo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:44:59 -0400
+        id S1730410AbfFGPor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:44:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 403B521479;
-        Fri,  7 Jun 2019 15:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1815D2146E;
+        Fri,  7 Jun 2019 15:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922298;
-        bh=obaZKxvXgYEdqf/Y6HZ6mDMmMasYi5YEMaOeTMivmS8=;
+        s=default; t=1559922287;
+        bh=l6xlgdWuyu83Qg44TbTOUnGQ4jY817/wDW3olYQfI08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ik2scNxWMnKgOxiF2FHLj5wkgud410er3s7vDyJmGjgz8RqD7wPnb3gsFyo5x/eYc
-         Ox3qfFJNT6I7UQYOmMzXLQ1NG/nqvXhJc3tuVBLBVOzmgO3FZS4RTORKPUTDeJp5u3
-         bktYYWb+GjkiUEYZscnaFSlbDA83RpUMorV+PYWQ=
+        b=ZzDqkom6cSsMdY+9EbtcmyEu9yr9X6h61pUxqo5luYgBtFRclLU7Ni8aSgb8eO0dZ
+         wZZoE4JihAsKjjWWGUrHJEzLuH0z2F/YCCHaHfhHrR6W1l+/NZmTqL3qSsgDRtkdFt
+         YpcJ0mxYNtJyP8rZqC3iu4jzaP+LcSmv3dd0RfYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 05/73] xhci: Convert xhci_handshake() to use readl_poll_timeout_atomic()
-Date:   Fri,  7 Jun 2019 17:38:52 +0200
-Message-Id: <20190607153849.325088948@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 32/73] ALSA: hda/realtek - Set default power save node to 0
+Date:   Fri,  7 Jun 2019 17:39:19 +0200
+Message-Id: <20190607153852.665826960@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -60,76 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Kailang Yang <kailang@realtek.com>
 
-commit f7fac17ca925faa03fc5eb854c081a24075f8bad upstream.
+commit 317d9313925cd8388304286c0d3c8dda7f060a2d upstream.
 
-Xhci_handshake() implements the algorithm already captured by
-readl_poll_timeout_atomic(). Convert the former to use the latter to
-avoid repetition.
+I measured power consumption between power_save_node=1 and power_save_node=0.
+It's almost the same.
+Codec will enter to runtime suspend and suspend.
+That pin also will enter to D3. Don't need to enter to D3 by single pin.
+So, Disable power_save_node as default. It will avoid more issues.
+Windows Driver also has not this option at runtime PM.
 
-Turned out this patch also fixes a bug on the AMD Stoneyridge platform
-where usleep(1) sometimes takes over 10ms.
-This means a 5 second timeout can easily take over 15 seconds which will
-trigger the watchdog and reboot the system.
-
-[Add info about patch fixing a bug to commit message -Mathias]
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Tested-by: Raul E Rangel <rrangel@chromium.org>
-Reviewed-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci.c |   22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ sound/pci/hda/patch_realtek.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -9,6 +9,7 @@
-  */
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7558,7 +7558,7 @@ static int patch_alc269(struct hda_codec
  
- #include <linux/pci.h>
-+#include <linux/iopoll.h>
- #include <linux/irq.h>
- #include <linux/log2.h>
- #include <linux/module.h>
-@@ -52,7 +53,6 @@ static bool td_on_ring(struct xhci_td *t
- 	return false;
- }
+ 	spec = codec->spec;
+ 	spec->gen.shared_mic_vref_pin = 0x18;
+-	codec->power_save_node = 1;
++	codec->power_save_node = 0;
  
--/* TODO: copied from ehci-hcd.c - can this be refactored? */
- /*
-  * xhci_handshake - spin reading hc until handshake completes or fails
-  * @ptr: address of hc register to be read
-@@ -69,18 +69,16 @@ static bool td_on_ring(struct xhci_td *t
- int xhci_handshake(void __iomem *ptr, u32 mask, u32 done, int usec)
- {
- 	u32	result;
-+	int	ret;
- 
--	do {
--		result = readl(ptr);
--		if (result == ~(u32)0)		/* card removed */
--			return -ENODEV;
--		result &= mask;
--		if (result == done)
--			return 0;
--		udelay(1);
--		usec--;
--	} while (usec > 0);
--	return -ETIMEDOUT;
-+	ret = readl_poll_timeout_atomic(ptr, result,
-+					(result & mask) == done ||
-+					result == U32_MAX,
-+					1, usec);
-+	if (result == U32_MAX)		/* card removed */
-+		return -ENODEV;
-+
-+	return ret;
- }
- 
- /*
+ #ifdef CONFIG_PM
+ 	codec->patch_ops.suspend = alc269_suspend;
 
 
