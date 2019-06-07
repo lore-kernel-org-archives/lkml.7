@@ -2,756 +2,568 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C10C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01373C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77F3208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3351208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fOCL+ce0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GInea9jR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbfFGTfu (ORCPT
+        id S1730755AbfFGTgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:35:50 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58100 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729943AbfFGTfs (ORCPT
+        Fri, 7 Jun 2019 15:36:01 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:32918 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729809AbfFGTgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:35:48 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x57JZT6K085446;
-        Fri, 7 Jun 2019 14:35:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559936129;
-        bh=cAAtY/BJUn7iO79jToVtIHll/5ZQdyNmALRTaYjK+7U=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=fOCL+ce0w2H8xNelRB5QL8rqp5d7b5keq5sMXBCnQK0sz46tcG8LJ8UxUqwvIfKpI
-         Jfvrkt9C/IIT6q9TXXDIYUu9kYVVggthejZ2sNosS/mguHF67Gs9QbYWPgCrQ2u9SA
-         NK8JnV45EjO7o5AQNHf+B/3I+gR5Hs6sUX0OKD0g=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x57JZTc5029112
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 7 Jun 2019 14:35:29 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
- 2019 14:35:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 7 Jun 2019 14:35:29 -0500
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x57JZTgU130558;
-        Fri, 7 Jun 2019 14:35:29 -0500
-Received: from localhost ([10.250.68.219])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x57JZRm20302;
-        Fri, 7 Jun 2019 14:35:27 -0500 (CDT)
-From:   "Andrew F. Davis" <afd@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Tero Kristo <t-kristo@ti.com>,
-        William Mills <wmills@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-media@vger.kernel.org>, <linaro-mm-sig@lists.linaro.org>,
-        <linux-kernel@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>
-Subject: [RFC PATCH 2/2] soc: ti: Add Support for the TI Page-based Address Translator (PAT)
-Date:   Fri, 7 Jun 2019 15:35:23 -0400
-Message-ID: <20190607193523.25700-3-afd@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190607193523.25700-1-afd@ti.com>
-References: <20190607193523.25700-1-afd@ti.com>
+        Fri, 7 Jun 2019 15:36:01 -0400
+Received: by mail-yw1-f65.google.com with SMTP id k8so1146389ywh.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LLMplcRthApST7fPhz+Teeo2I7zPacehr+nxpuw89iI=;
+        b=GInea9jRO4T6PXyZmE2AcaMFo6O0GkBNgvQMPA9dwYkocUQzKrRykjLwBrKR/ax1Uv
+         fc1ITQw+WuJ1Z2DPw4CxJstyUqGNj1NFVw283d2f1XFHoyT8Auv1yJLQOhpGSraPCyNK
+         DMtpNefg06OsLhO+T43YnM53H5bHdM35wl491ID5eFydG4WX+axlvV0i4KXFZsC9BwPj
+         Q+UQhRxPGVwXfqI0cHc/MIiWHzmDC17Y1SKJP1/GcP/UCJ1dd4K3fnS1dRgsdKk9Qv8E
+         bzGdrm04ko0XhBaG+lQs9yAU1VxSSXWr5bzL5hrhYHJ95Xpb4l6R+J9Db9ocfEFN4elQ
+         Wt+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LLMplcRthApST7fPhz+Teeo2I7zPacehr+nxpuw89iI=;
+        b=LlMTj1/k16yQWPtMXRDWurieWpBqrwJAyeDf4Qy6HrgKNeVORprxd1X35Srk4S+BJq
+         X9G7IowFVwz8p07weMt1/2SYolnFhYy+caYjIkdFnuoCIJ2+iJiB9m2qkWYbNH3hHme3
+         sFOhoMawj3fSYJFEtqpoFX4tb2HgWR/b44G86xrqk8QVWhh4doGZBJ/XredJ0/8T88lx
+         4tTQvkn7sUYgD0XaTed8RwTpv1DlVY/4Clg+p0jqwBhzqNiCjDgqIZwvmuC+Lql8778l
+         jDQLE5cF6Ah+zBhG8cryrH5gG2ZuhcPEAFlgYA9kJ7IeazzrOauK/90pUZdhhoRcTTkA
+         VqEw==
+X-Gm-Message-State: APjAAAXRy0Btd+lGkxBERRLtPY9sfnWD8lPHWWcVM70AqFrj+pgyYEux
+        vg/odc3IIRuH4BQPYW69k6eWgkp5S3P5SqENAYgGfYovxB0=
+X-Google-Smtp-Source: APXvYqzOK1ghpsDqKcD6CKNnD+cSwm4cKiYq2Fa4NWDsSU3XpQ72hPCvS9qhkd9Ih44s/Ev49fNIHFXFh0NIN5UlzBU=
+X-Received: by 2002:a81:a804:: with SMTP id f4mr28671568ywh.70.1559936159759;
+ Fri, 07 Jun 2019 12:35:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190607102710.23800-1-enric.balletbo@collabora.com>
+ <decdbdf5285d76b4dab5b8f337023631a96ffc15.camel@collabora.com> <CAHX4x84G-f=HabyWCqAGOEBZdBgobW0BTB0iUbZcXYxBh3XcaQ@mail.gmail.com>
+In-Reply-To: <CAHX4x84G-f=HabyWCqAGOEBZdBgobW0BTB0iUbZcXYxBh3XcaQ@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Fri, 7 Jun 2019 12:35:48 -0700
+Message-ID: <CABXOdTdGYmGnrmzRbUPX3cwXg=m=aX3cXXEk=OEphA5_GKKvJQ@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/chrome: cros_ec_lpc: Choose Microchip EC at runtime
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Duncan Laurie <dlaurie@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a driver for the Page-based Address Translator (PAT)
-present on various TI SoCs. A PAT device performs address translation
-using tables stored in an internal SRAM. Each PAT supports a set number
-of pages, each occupying a programmable 4KB, 16KB, 64KB, or 1MB of
-addresses in a window for which an incoming transaction will be
-translated.
+On Fri, Jun 7, 2019 at 12:27 PM Nick Crews <ncrews@chromium.org> wrote:
+>
+> Hi!
+>
+> On Fri, Jun 7, 2019 at 12:03 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> >
+> > On Fri, 2019-06-07 at 12:27 +0200, Enric Balletbo i Serra wrote:
+> > > On many boards, communication between the kernel and the Embedded
+> > > Controller happens over an LPC bus. In these cases, the kernel config
+> > > CONFIG_CROS_EC_LPC is enabled. Some of these LPC boards contain a
+> > > Microchip Embedded Controller (MEC) that is different from the regular
+> > > EC. On these devices, the same LPC bus is used, but the protocol is
+> > > a little different. In these cases, the CONFIG_CROS_EC_LPC_MEC kernel
+> > > config is enabled. Currently, the kernel decides at compile-time whether
+> > > or not to use the MEC variant, and, when that kernel option is selected
+> > > it breaks the other boards. We would like a kind of runtime detection to
+> > > avoid this.
+> > >
+> > > This patch adds that detection mechanism by probing the protocol at
+> > > runtime, first we assume that a MEC variant is connected, and if the
+> > > protocol fails it fallbacks to the regular EC. This adds a bit of
+> > > overload because we try to read twice on those LPC boards that doesn't
+> > > contain a MEC variant, but is a better solution than having to select the
+> > > EC variant at compile-time.
+> > >
+> > > While here also fix the alignment in Kconfig file for this config option
+> > > replacing the spaces by tabs.
+> > >
+> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > ---
+> > > Hi,
+> > >
+> > > This is the second attempt to solve the issue to be able to select at
+> > > runtime the CrOS MEC variant. My first thought was check for a device
+> > > ID,
+> > > the MEC1322 has a register that contains the device ID, however I am not
+> > > sure if we can read that register from the host without modifying the
+> > > firmware. Also, I am not sure if the MEC1322 is the only device used
+> > > that supports that LPC protocol variant, so I ended with a more easy
+> > > solution, check if the protocol fails or not. Some background on this
+> > > issue can be found [1] and [2]
+> > >
+> > > The patch has been tested on:
+> > >  - Acer Chromebook R11 (Cyan - MEC variant)
+> > >  - Pixel Chromebook 2015 (Samus - non-MEC variant)
+> > >  - Dell Chromebook 11 (Wolf - non-MEC variant)
+> > >  - Toshiba Chromebook (Leon - non-MEC variant)
+> > >
+> > > Nick, could you test the patch for Wilco?
+> > >
+> > > Best regards,
+> > >  Enric
+> > >
+> > > [1] https://bugs.chromium.org/p/chromium/issues/detail?id=932626
+> > > [2] https://chromium-review.googlesource.com/c/chromiumos/overlays/chromiumos-overlay/+/1474254
+> > >
+> > > Changes in v2:
+> > > - Remove global bool to indicate the kind of variant as suggested by Ezequiel.
+> > > - Create an internal operations struct to allow different variants.
+> > >
+> > >  drivers/platform/chrome/Kconfig           | 29 +++------
+> > >  drivers/platform/chrome/Makefile          |  3 +-
+> > >  drivers/platform/chrome/cros_ec_lpc.c     | 76 ++++++++++++++++-------
+> > >  drivers/platform/chrome/cros_ec_lpc_reg.c | 39 +++---------
+> > >  drivers/platform/chrome/cros_ec_lpc_reg.h | 26 ++++++++
+> > >  drivers/platform/chrome/wilco_ec/Kconfig  |  2 +-
+> > >  6 files changed, 98 insertions(+), 77 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+> > > index 2826f7136f65..453e69733842 100644
+> > > --- a/drivers/platform/chrome/Kconfig
+> > > +++ b/drivers/platform/chrome/Kconfig
+> > > @@ -83,28 +83,17 @@ config CROS_EC_SPI
+> > >         'pre-amble' bytes before the response actually starts.
+> > >
+> > >  config CROS_EC_LPC
+> > > -        tristate "ChromeOS Embedded Controller (LPC)"
+> > > -        depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
+> > > -        help
+> > > -          If you say Y here, you get support for talking to the ChromeOS EC
+> > > -          over an LPC bus. This uses a simple byte-level protocol with a
+> > > -          checksum. This is used for userspace access only. The kernel
+> > > -          typically has its own communication methods.
+> > > -
+> > > -          To compile this driver as a module, choose M here: the
+> > > -          module will be called cros_ec_lpc.
+> > > -
+> > > -config CROS_EC_LPC_MEC
+> > > -     bool "ChromeOS Embedded Controller LPC Microchip EC (MEC) variant"
+> > > -     depends on CROS_EC_LPC
+> > > -     default n
+> > > +     tristate "ChromeOS Embedded Controller (LPC)"
+> > > +     depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
+> > >       help
+> > > -       If you say Y here, a variant LPC protocol for the Microchip EC
+> > > -       will be used. Note that this variant is not backward compatible
+> > > -       with non-Microchip ECs.
+> > > +       If you say Y here, you get support for talking to the ChromeOS EC
+> > > +       over an LPC bus, including the LPC Microchip EC (MEC) variant.
+> > > +       This uses a simple byte-level protocol with a checksum. This is
+> > > +       used for userspace access only. The kernel typically has its own
+> > > +       communication methods.
+> > >
+> > > -       If you have a ChromeOS Embedded Controller Microchip EC variant
+> > > -       choose Y here.
+> > > +       To compile this driver as a module, choose M here: the
+> > > +       module will be called cros_ec_lpcs.
+> > >
+> > >  config CROS_EC_PROTO
+> > >          bool
+> > > diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+> > > index 1b2f1dcfcd5c..d6416411888f 100644
+> > > --- a/drivers/platform/chrome/Makefile
+> > > +++ b/drivers/platform/chrome/Makefile
+> > > @@ -9,8 +9,7 @@ obj-$(CONFIG_CHROMEOS_TBMC)           += chromeos_tbmc.o
+> > >  obj-$(CONFIG_CROS_EC_I2C)            += cros_ec_i2c.o
+> > >  obj-$(CONFIG_CROS_EC_RPMSG)          += cros_ec_rpmsg.o
+> > >  obj-$(CONFIG_CROS_EC_SPI)            += cros_ec_spi.o
+> > > -cros_ec_lpcs-objs                    := cros_ec_lpc.o cros_ec_lpc_reg.o
+> > > -cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)       += cros_ec_lpc_mec.o
+> > > +cros_ec_lpcs-objs                    := cros_ec_lpc.o cros_ec_lpc_reg.o cros_ec_lpc_mec.o
+> > >  obj-$(CONFIG_CROS_EC_LPC)            += cros_ec_lpcs.o
+> > >  obj-$(CONFIG_CROS_EC_PROTO)          += cros_ec_proto.o cros_ec_trace.o
+> > >  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT) += cros_kbd_led_backlight.o
+> > > diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
+> > > index c9c240fbe7c6..91cb4dd34764 100644
+> > > --- a/drivers/platform/chrome/cros_ec_lpc.c
+> > > +++ b/drivers/platform/chrome/cros_ec_lpc.c
+> > > @@ -28,6 +28,22 @@
+> > >  #define DRV_NAME "cros_ec_lpcs"
+> > >  #define ACPI_DRV_NAME "GOOG0004"
+> > >
+> > > +/**
+> > > + * struct lpc_ops - LPC driver methods
+> > > + *
+> > > + * @read: Read bytes from a given LPC-mapped address.
+> > > + * @write: Write bytes to a given LPC-mapped address.
+> > > + */
+> > > +struct lpc_ops {
+> > > +     u8      (*read)(unsigned int offset, unsigned int length, u8 *dest);
+> > > +     u8      (*write)(unsigned int offset, unsigned int length, u8 *msg);
+> > > +};
+> > > +
+> > > +static struct lpc_ops cros_ec_lpc_ops = {
+> > > +     .read   = cros_ec_lpc_mec_read_bytes,
+> > > +     .write  = cros_ec_lpc_mec_write_bytes,
+> > > +};
+> > > +
+> >
+> > While this is better than a global boolean, it's still not
+> > per-device.
+> >
+> > I guess it's not an issue given you typically (always?)
+> > have one cros-ec device per platform.
+> >
+> > However, I'm still wondering if it's not better to make it
+> > per-device (as the bus is per-device?).
+>
+> Enric and I were discussing this. Up to this point, there has only been
+> one EC device per platform, and I think this is a reasonable
+> expectation to maintain. I'm adding Stefan Reinauer, the Chrome OS
+> EC lead, for their thoughts. Stefan, we are discussing whether or not we
+> need to support multiple communication protocols at the same time,
+> for instance if a device had multiple ECs, each with a different protocol.
+>
+> If we really wanted to support multiple ECs, there would be some other
+> work to do besides this one fix, since the memory addresses that
+> we write to are hardcoded into the drivers. In order to support
+> multiple devices,
+> not only would we need to make the xfer algorithms per-device, but would
+> also need to make the memory addresses per-device. I would love
+> some feedback on this, but my initial thought would be to add a
+> "void *xfer_protocol_data" field to struct cros_ec_device, alongside
+> the two existing
+> int (*cmd_xfer)(struct cros_ec_device *ec, struct cros_ec_command *msg);
+> int (*pkt_xfer)(struct cros_ec_device *ec, struct cros_ec_command *msg);
+> fields. Then, each different protocol (lpc, i2c, spi, rpmsg, ishtp;
+> some of these
+> are only in the Chromium tree as of now) would be able to use this
+> field as needed,
+> for example to store the I2C address or the is_MEC flag for each device.
+>
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- drivers/soc/ti/Kconfig      |   9 +
- drivers/soc/ti/Makefile     |   1 +
- drivers/soc/ti/ti-pat.c     | 569 ++++++++++++++++++++++++++++++++++++
- include/uapi/linux/ti-pat.h |  44 +++
- 4 files changed, 623 insertions(+)
- create mode 100644 drivers/soc/ti/ti-pat.c
- create mode 100644 include/uapi/linux/ti-pat.h
+I understand that the current implementation may be insufficient if
+there is ever more than one EC in a given system. Maybe I am missing
+something, but why even consider it right now, with no such system in
+existence ? We would not even know if a more flexible implementation
+actually works, since there would be no means to test it.
 
-diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-index f0be35d3dcba..b838ae74d01f 100644
---- a/drivers/soc/ti/Kconfig
-+++ b/drivers/soc/ti/Kconfig
-@@ -86,4 +86,13 @@ config TI_SCI_INTA_MSI_DOMAIN
- 	help
- 	  Driver to enable Interrupt Aggregator specific MSI Domain.
- 
-+config TI_PAT
-+	tristate "TI PAT DMA-BUF exporter"
-+	select REGMAP
-+	help
-+	  Driver for TI Page-based Address Translator (PAT). This driver
-+	  provides the an API allowing the remapping of a non-contiguous
-+	  DMA-BUF into a contiguous one that is sutable for devices needing
-+	  coniguous memory.
-+
- endif # SOC_TI
-diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
-index b3868d392d4f..1369642b40c3 100644
---- a/drivers/soc/ti/Makefile
-+++ b/drivers/soc/ti/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_AMX3_PM)			+= pm33xx.o
- obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
- obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
- obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
-+obj-$(CONFIG_TI_PAT)			+= ti-pat.o
-diff --git a/drivers/soc/ti/ti-pat.c b/drivers/soc/ti/ti-pat.c
-new file mode 100644
-index 000000000000..7359ea0f7ccf
---- /dev/null
-+++ b/drivers/soc/ti/ti-pat.c
-@@ -0,0 +1,569 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * TI PAT mapped DMA-BUF memory re-exporter
-+ *
-+ * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd@ti.com>
-+ */
-+
-+#include <linux/fs.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/uaccess.h>
-+#include <linux/miscdevice.h>
-+#include <linux/regmap.h>
-+#include <linux/dma-buf.h>
-+#include <linux/genalloc.h>
-+#include <linux/vmalloc.h>
-+#include <linux/slab.h>
-+
-+#include <linux/ti-pat.h>
-+
-+#define TI_PAT_DRIVER_NAME	"ti-pat"
-+
-+/* TI PAT MMRS registers */
-+#define TI_PAT_MMRS_PID		0x0 /* Revision Register */
-+#define TI_PAT_MMRS_CONFIG	0x4 /* Config Register */
-+#define TI_PAT_MMRS_CONTROL	0x10 /* Control Register */
-+
-+/* TI PAT CONTROL register field values */
-+#define TI_PAT_CONTROL_ARB_MODE_UF	0x0 /* Updates first */
-+#define TI_PAT_CONTROL_ARB_MODE_RR	0x2 /* Round-robin */
-+
-+#define TI_PAT_CONTROL_PAGE_SIZE_4KB	0x0
-+#define TI_PAT_CONTROL_PAGE_SIZE_16KB	0x1
-+#define TI_PAT_CONTROL_PAGE_SIZE_64KB	0x2
-+#define TI_PAT_CONTROL_PAGE_SIZE_1MB	0x3
-+
-+static unsigned int ti_pat_page_sizes[] = {
-+	[TI_PAT_CONTROL_PAGE_SIZE_4KB]  = 4 * 1024,
-+	[TI_PAT_CONTROL_PAGE_SIZE_16KB] = 16 * 1024,
-+	[TI_PAT_CONTROL_PAGE_SIZE_64KB] = 64 * 1024,
-+	[TI_PAT_CONTROL_PAGE_SIZE_1MB]  = 1024 * 1024,
-+};
-+
-+enum ti_pat_mmrs_fields {
-+	/* Revision */
-+	F_PID_MAJOR,
-+	F_PID_MINOR,
-+
-+	/* Controls */
-+	F_CONTROL_ARB_MODE,
-+	F_CONTROL_PAGE_SIZE,
-+	F_CONTROL_REPLACE_OID_EN,
-+	F_CONTROL_EN,
-+
-+	/* sentinel */
-+	F_MAX_FIELDS
-+};
-+
-+static const struct reg_field ti_pat_mmrs_reg_fields[] = {
-+	/* Revision */
-+	[F_PID_MAJOR]			= REG_FIELD(TI_PAT_MMRS_PID, 8, 10),
-+	[F_PID_MINOR]			= REG_FIELD(TI_PAT_MMRS_PID, 0, 5),
-+	/* Controls */
-+	[F_CONTROL_ARB_MODE]		= REG_FIELD(TI_PAT_MMRS_CONTROL, 6, 7),
-+	[F_CONTROL_PAGE_SIZE]		= REG_FIELD(TI_PAT_MMRS_CONTROL, 4, 5),
-+	[F_CONTROL_REPLACE_OID_EN]	= REG_FIELD(TI_PAT_MMRS_CONTROL, 1, 1),
-+	[F_CONTROL_EN]			= REG_FIELD(TI_PAT_MMRS_CONTROL, 0, 0),
-+};
-+
-+/**
-+ * struct ti_pat_data - PAT device instance data
-+ * @dev: PAT device structure
-+ * @mdev: misc device
-+ * @mmrs_map: Register map of MMRS region
-+ * @table_base: Base address of TABLE region
-+ */
-+struct ti_pat_data {
-+	struct device *dev;
-+	struct miscdevice mdev;
-+	struct regmap *mmrs_map;
-+	struct regmap_field *mmrs_fields[F_MAX_FIELDS];
-+	void __iomem *table_base;
-+	unsigned int page_count;
-+	unsigned int page_size;
-+	phys_addr_t window_base;
-+	struct gen_pool *pool;
-+};
-+
-+struct ti_pat_dma_buf_attachment {
-+	struct device *dev;
-+	struct sg_table *table;
-+	struct ti_pat_buffer *buffer;
-+	struct list_head list;
-+};
-+
-+struct ti_pat_buffer {
-+	struct ti_pat_data *pat;
-+	struct dma_buf *i_dma_buf;
-+	size_t size;
-+	unsigned long offset;
-+	struct dma_buf *e_dma_buf;
-+
-+	struct dma_buf_attachment *attachment;
-+	struct sg_table *sgt;
-+
-+	struct list_head attachments;
-+	int map_count;
-+
-+	struct mutex lock;
-+};
-+
-+static const struct regmap_config ti_pat_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static int ti_pat_dma_buf_attach(struct dma_buf *dmabuf,
-+				 struct dma_buf_attachment *attachment)
-+{
-+	struct ti_pat_dma_buf_attachment *a;
-+	struct ti_pat_buffer *buffer = dmabuf->priv;
-+
-+	a = kzalloc(sizeof(*a), GFP_KERNEL);
-+	if (!a)
-+		return -ENOMEM;
-+
-+	a->dev = attachment->dev;
-+	a->buffer = buffer;
-+	INIT_LIST_HEAD(&a->list);
-+
-+	a->table = kzalloc(sizeof(*a->table), GFP_KERNEL);
-+	if (!a->table) {
-+		kfree(a);
-+		return -ENOMEM;
-+	}
-+
-+	if (sg_alloc_table(a->table, 1, GFP_KERNEL)) {
-+		kfree(a->table);
-+		kfree(a);
-+		return -ENOMEM;
-+	}
-+
-+	sg_set_page(a->table->sgl, pfn_to_page(PFN_DOWN(buffer->offset)), buffer->size, 0);
-+
-+	attachment->priv = a;
-+
-+	mutex_lock(&buffer->lock);
-+	/* First time attachment we attach to parent */
-+	if (list_empty(&buffer->attachments)) {
-+		buffer->attachment = dma_buf_attach(buffer->i_dma_buf, buffer->pat->dev);
-+		if (IS_ERR(buffer->attachment)) {
-+			dev_err(buffer->pat->dev, "Unable to attach to parent DMA-BUF\n");
-+			mutex_unlock(&buffer->lock);
-+			kfree(a->table);
-+			kfree(a);
-+			return PTR_ERR(buffer->attachment);
-+		}
-+	}
-+	list_add(&a->list, &buffer->attachments);
-+	mutex_unlock(&buffer->lock);
-+
-+	return 0;
-+}
-+
-+static void ti_pat_dma_buf_detatch(struct dma_buf *dmabuf,
-+				   struct dma_buf_attachment *attachment)
-+{
-+	struct ti_pat_dma_buf_attachment *a = attachment->priv;
-+	struct ti_pat_buffer *buffer = dmabuf->priv;
-+
-+	mutex_lock(&buffer->lock);
-+	list_del(&a->list);
-+	/* Last attachment we detach from parent */
-+	if (list_empty(&buffer->attachments)) {
-+		dma_buf_detach(buffer->i_dma_buf, buffer->attachment);
-+		buffer->attachment = NULL;
-+	}
-+	mutex_unlock(&buffer->lock);
-+
-+	kfree(a);
-+}
-+
-+static void ti_pat_set_page(struct ti_pat_data *pat, size_t page_id, dma_addr_t dma_address)
-+{
-+	unsigned int j = page_id >> 8;
-+	unsigned int k = page_id & 0xff;
-+	dma_addr_t offset = (j * 0x1000) + (k * 0x8);
-+	void __iomem *table_base_l = pat->table_base + offset;
-+	void __iomem *table_base_h = table_base_l + 0x4;
-+
-+	u32 base_l = dma_address >> 12;
-+	u32 base_h = (dma_address >> 44) & GENMASK(3, 0);
-+
-+	dev_dbg(pat->dev, "Enabling PAT index: %zu pointing to %pad\n", page_id, &dma_address);
-+
-+	writel(base_l, table_base_l);
-+	writel(BIT(31) | base_h, table_base_h);
-+}
-+
-+static void ti_pat_unset_page(struct ti_pat_data *pat, size_t page_id)
-+{
-+	unsigned int j = page_id >> 8;
-+	unsigned int k = page_id & 0xff;
-+	dma_addr_t offset = (j * 0x1000) + (k * 0x8);
-+	void __iomem *table_base_l = pat->table_base + offset;
-+	void __iomem *table_base_h = table_base_l + 0x4;
-+
-+	dev_dbg(pat->dev, "Disabling PAT index: %zu\n", page_id);
-+
-+	writel(0, table_base_h);
-+}
-+
-+static struct sg_table *ti_pat_map_dma_buf(struct dma_buf_attachment *attachment,
-+					   enum dma_data_direction direction)
-+{
-+	struct ti_pat_dma_buf_attachment *a = attachment->priv;
-+	struct ti_pat_buffer *buffer = a->buffer;
-+	struct ti_pat_data *pat = buffer->pat;
-+	struct sg_table *table = a->table;
-+	struct scatterlist *s;
-+	unsigned int i, s_len;
-+	size_t page_id;
-+	int ret;
-+
-+	mutex_lock(&buffer->lock);
-+	/* First time mapping we map to parent */
-+	if (!buffer->map_count) {
-+		buffer->sgt = dma_buf_map_attachment(buffer->attachment, DMA_BIDIRECTIONAL);
-+		if (IS_ERR(buffer->sgt)) {
-+			dev_err(pat->dev, "Unable to map parent DMA-BUF\n");
-+			return buffer->sgt;
-+		}
-+
-+		/* And program PAT area for this set of pages */
-+		page_id = (buffer->offset - pat->window_base) / pat->page_size;
-+		for_each_sg(buffer->sgt->sgl, s, buffer->sgt->nents, i) {
-+			if (s->offset) {
-+				dev_err(pat->dev, "Cannot use offset buffers\n");
-+				ret = -EINVAL;
-+				goto unmap;
-+			}
-+
-+			if (s->length % pat->page_size) {
-+				dev_err(pat->dev, "Cannot use buffers not a multiple of page size\n");
-+				ret = -EINVAL;
-+				goto unmap;
-+			}
-+
-+			for (s_len = 0; s_len < s->length; s_len += pat->page_size)
-+				ti_pat_set_page(pat, page_id++, s->dma_address + s_len);
-+		}
-+	}
-+	buffer->map_count++;
-+	mutex_unlock(&buffer->lock);
-+
-+	/* Map the attached device's table to get DMA addresses */
-+	if (!dma_map_sg_attrs(attachment->dev, table->sgl, table->nents, direction, DMA_ATTR_SKIP_CPU_SYNC))
-+		return ERR_PTR(-ENOMEM);
-+
-+	return table;
-+
-+unmap:
-+	dma_buf_unmap_attachment(buffer->attachment, buffer->sgt, DMA_BIDIRECTIONAL);
-+	return ERR_PTR(ret);
-+}
-+
-+static void ti_pat_unmap_dma_buf(struct dma_buf_attachment *attachment,
-+				 struct sg_table *table,
-+				 enum dma_data_direction direction)
-+{
-+	struct ti_pat_dma_buf_attachment *a = attachment->priv;
-+	struct ti_pat_buffer *buffer = a->buffer;
-+	struct ti_pat_data *pat = buffer->pat;
-+
-+	/* Unmap the attached device's table */
-+	dma_unmap_sg_attrs(attachment->dev, table->sgl, table->nents, direction, DMA_ATTR_SKIP_CPU_SYNC);
-+
-+	mutex_lock(&buffer->lock);
-+	buffer->map_count--;
-+	/* Last mapping we unmap from parent */
-+	if (!buffer->map_count) {
-+		/* Disable PAT pages for this area */
-+		size_t page_start = (buffer->offset - pat->window_base) / pat->page_size;
-+		size_t page_end = page_start + (buffer->size / pat->page_size);
-+		for (; page_start < page_end; page_start++)
-+			ti_pat_unset_page(pat, page_start);
-+
-+		dma_buf_unmap_attachment(buffer->attachment, buffer->sgt, DMA_BIDIRECTIONAL);
-+		buffer->sgt = NULL;
-+	}
-+	mutex_unlock(&buffer->lock);
-+}
-+
-+static void ti_pat_dma_buf_release(struct dma_buf *dmabuf)
-+{
-+	struct ti_pat_buffer *buffer = dmabuf->priv;
-+
-+	if (buffer->attachment && buffer->sgt)
-+		dma_buf_unmap_attachment(buffer->attachment, buffer->sgt, DMA_BIDIRECTIONAL);
-+	if (buffer->i_dma_buf && !IS_ERR_OR_NULL(buffer->attachment))
-+		dma_buf_detach(buffer->i_dma_buf, buffer->attachment);
-+	if (buffer->i_dma_buf)
-+		dma_buf_put(buffer->i_dma_buf);
-+
-+	if (buffer->offset)
-+		gen_pool_free(buffer->pat->pool, buffer->offset, buffer->size);
-+
-+	kfree(buffer);
-+}
-+
-+void *ti_pat_dma_buf_map(struct dma_buf *dma_buf, unsigned long page_num)
-+{
-+	return NULL;
-+}
-+
-+int ti_pat_dma_buf_mmap(struct dma_buf *dma_buf, struct vm_area_struct *vma)
-+{
-+	return -EINVAL;
-+}
-+
-+static const struct dma_buf_ops dma_buf_ops = {
-+	.attach = ti_pat_dma_buf_attach,
-+	.detach = ti_pat_dma_buf_detatch,
-+
-+	.map_dma_buf = ti_pat_map_dma_buf,
-+	.unmap_dma_buf = ti_pat_unmap_dma_buf,
-+
-+	.release = ti_pat_dma_buf_release,
-+
-+	.map = ti_pat_dma_buf_map,
-+	.mmap = ti_pat_dma_buf_mmap,
-+};
-+
-+int ti_pat_export(struct ti_pat_data *pat,
-+		  struct dma_buf *i_dma_buf,
-+		  struct dma_buf **e_dma_buf)
-+{
-+	struct ti_pat_buffer *buffer;
-+	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-+	int ret;
-+
-+	buffer = kzalloc(sizeof(*buffer), GFP_KERNEL);
-+	if (!buffer)
-+		return -ENOMEM;
-+
-+	buffer->pat = pat;
-+	buffer->i_dma_buf = i_dma_buf;
-+	buffer->size = buffer->i_dma_buf->size;
-+	mutex_init(&buffer->lock);
-+	INIT_LIST_HEAD(&buffer->attachments);
-+	buffer->map_count = 0;
-+
-+	/* Reserve PAT space */
-+	buffer->offset = gen_pool_alloc(buffer->pat->pool, buffer->size);
-+	if (!buffer->offset) {
-+		ret = -ENOMEM;
-+		goto free_buffer;
-+	}
-+
-+	exp_info.ops = &dma_buf_ops;
-+	exp_info.size = buffer->size;
-+	exp_info.flags = O_RDWR;
-+	exp_info.priv = buffer;
-+
-+	*e_dma_buf = dma_buf_export(&exp_info);
-+	if (IS_ERR(*e_dma_buf)) {
-+		ret = PTR_ERR(*e_dma_buf);
-+		goto free_pool;
-+	}
-+
-+	return 0;
-+
-+free_pool:
-+	gen_pool_free(buffer->pat->pool, buffer->offset, buffer->size);
-+free_buffer:
-+	kfree(buffer);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(ti_pat_export);
-+
-+static long ti_pat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	struct ti_pat_data *pat = container_of(file->private_data, struct ti_pat_data, mdev);
-+
-+	switch (cmd) {
-+	case TI_PAT_IOC_EXPORT:
-+	{
-+		struct ti_pat_export_data export;
-+		struct dma_buf *i_dma_buf;
-+		struct dma_buf *e_dma_buf;
-+		int ret;
-+
-+		if (_IOC_SIZE(cmd) > sizeof(export))
-+			return -EINVAL;
-+
-+		if (copy_from_user(&export, (void __user *)arg, _IOC_SIZE(cmd)))
-+			return -EFAULT;
-+
-+		i_dma_buf = dma_buf_get(export.fd);
-+		if (IS_ERR(i_dma_buf))
-+			return PTR_ERR(i_dma_buf);
-+
-+		ret = ti_pat_export(pat, i_dma_buf, &e_dma_buf);
-+		if (ret) {
-+			dma_buf_put(i_dma_buf);
-+			return ret;
-+		}
-+
-+		export.fd = dma_buf_fd(e_dma_buf, O_CLOEXEC);
-+		if (export.fd < 0) {
-+			dma_buf_put(e_dma_buf);
-+			dma_buf_put(i_dma_buf);
-+			return export.fd;
-+		}
-+
-+		if (copy_to_user((void __user *)arg, &export, _IOC_SIZE(cmd)))
-+			return -EFAULT;
-+
-+		break;
-+	}
-+	default:
-+		return -ENOTTY;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct file_operations ti_pat_fops = {
-+	.owner          = THIS_MODULE,
-+	.unlocked_ioctl = ti_pat_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= ti_pat_ioctl,
-+#endif
-+};
-+
-+static const struct of_device_id ti_pat_of_match[] = {
-+	{ .compatible = "ti,j721e-pat", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ti_pat_of_match);
-+
-+static int ti_pat_probe(struct platform_device *pdev)
-+{
-+	struct ti_pat_data *pat;
-+	struct resource *res;
-+	void __iomem *base;
-+	unsigned int revision_major;
-+	unsigned int revision_minor;
-+	resource_size_t size;
-+	size_t page_size;
-+	int i, ret;
-+
-+	pat = devm_kzalloc(&pdev->dev, sizeof(*pat), GFP_KERNEL);
-+	if (!pat)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, pat);
-+	pat->dev = &pdev->dev;
-+
-+	/* MMRS */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(pat->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	pat->mmrs_map = devm_regmap_init_mmio(pat->dev, base, &ti_pat_regmap_config);
-+	if (IS_ERR(pat->mmrs_map)) {
-+		dev_err(pat->dev, "Unable to allocate MMRS register map\n");
-+		return PTR_ERR(pat->mmrs_map);
-+	}
-+
-+	for (i = 0; i < F_MAX_FIELDS; i++) {
-+		pat->mmrs_fields[i] = devm_regmap_field_alloc(pat->dev, pat->mmrs_map, ti_pat_mmrs_reg_fields[i]);
-+		if (IS_ERR(pat->mmrs_fields[i])) {
-+			dev_err(pat->dev, "Unable to allocate Regmap fields\n");
-+			return PTR_ERR(pat->mmrs_fields[i]);
-+		}
-+	}
-+
-+	ret = regmap_read(pat->mmrs_map, TI_PAT_MMRS_CONFIG, &pat->page_count);
-+	if (ret) {
-+		dev_err(pat->dev, "Unable to read device page count\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_field_read(pat->mmrs_fields[F_PID_MAJOR], &revision_major);
-+	if (ret) {
-+		dev_err(pat->dev, "Unable to read device major revision\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_field_read(pat->mmrs_fields[F_PID_MINOR], &revision_minor);
-+	if (ret) {
-+		dev_err(pat->dev, "Unable to read device minor revision\n");
-+		return ret;
-+	}
-+
-+	dev_info(pat->dev, "Found PAT Rev %d.%d with %d pages\n", revision_major, revision_minor, pat->page_count);
-+
-+	/* TABLE */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	if (!res) {
-+		dev_err(pat->dev, "Unable to find TABLE IO resource\n");
-+		return -ENOENT;
-+	}
-+	size = resource_size(res);
-+
-+	/* 256 pages per 4KB of table space */
-+	if (size != (pat->page_count << 4))
-+		dev_warn(pat->dev, "TABLE region size (%llu) does not match reported page count\n", size);
-+
-+	pat->table_base = devm_ioremap_resource(pat->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	/* WINDOW */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-+	if (!res) {
-+		dev_err(pat->dev, "Unable to find WINDOW IO resource\n");
-+		return -ENOENT;
-+	}
-+	pat->window_base = res->start;
-+	size = resource_size(res);
-+
-+	pat->page_size = PAGE_SIZE;
-+	for (page_size = 0; page_size < ARRAY_SIZE(ti_pat_page_sizes); page_size++)
-+		if (ti_pat_page_sizes[page_size] == pat->page_size)
-+			break;
-+	if (page_size == ARRAY_SIZE(ti_pat_page_sizes)) {
-+		dev_err(pat->dev, "Unsupported PAGE_SIZE (%d)\n", pat->page_size);
-+		return -EINVAL;
-+	}
-+	regmap_field_write(pat->mmrs_fields[F_CONTROL_PAGE_SIZE], page_size);
-+
-+	/* Enable this PAT module */
-+	regmap_field_write(pat->mmrs_fields[F_CONTROL_EN], 1);
-+
-+	pat->pool = gen_pool_create(PAGE_SHIFT, -1);
-+	if (!pat->pool)
-+		return -ENOMEM;
-+	gen_pool_add(pat->pool, pat->window_base, size, -1);
-+
-+	pat->mdev.minor = MISC_DYNAMIC_MINOR;
-+	pat->mdev.name = pdev->name;
-+	pat->mdev.fops = &ti_pat_fops;
-+	pat->mdev.parent = NULL;
-+	ret = misc_register(&pat->mdev);
-+	if (ret) {
-+		dev_err(pat->dev, "Unable to register misc device\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ti_pat_driver = {
-+	.probe = ti_pat_probe,
-+	.driver = {
-+		.name = TI_PAT_DRIVER_NAME,
-+		.of_match_table = ti_pat_of_match,
-+	},
-+};
-+module_platform_driver(ti_pat_driver);
-+
-+MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-+MODULE_DESCRIPTION("TI PAT mapped DMA-BUF memory exporter");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/uapi/linux/ti-pat.h b/include/uapi/linux/ti-pat.h
-new file mode 100644
-index 000000000000..b06d79454815
---- /dev/null
-+++ b/include/uapi/linux/ti-pat.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * TI PAT mapped DMA-BUF memory exporter UAPI
-+ *
-+ * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd@ti.com>
-+ */
-+
-+#ifndef _UAPI_LINUX_TI_PAT_H
-+#define _UAPI_LINUX_TI_PAT_H
-+
-+#include <linux/ioctl.h>
-+#include <linux/types.h>
-+
-+/**
-+ * DOC: TI PAT Userspace API
-+ *
-+ * create a client by opening /dev/ti-pat
-+ * most operations handled via following ioctls
-+ */
-+
-+/**
-+ * struct ti_pat_allocation_data - metadata passed from userspace for allocations
-+ * @fd:			populated with DMA-BUF FD for this allocation
-+ * @flags:		flags for the allocation
-+ *
-+ * Provided by userspace as an argument to the ioctl
-+ */
-+struct ti_pat_export_data {
-+	__u32 fd;
-+	__u32 flags;
-+};
-+
-+#define TI_PAT_IOC_MAGIC 'P'
-+
-+/**
-+ * DOC: TI_PAT_IOC_EXPORT - Re-export DMA-BUF through TI PAT
-+ *
-+ * Takes an ti_pat_export_data struct and returns it with the fd field
-+ * populated with the DMA-BUF handle for the new export.
-+ */
-+#define TI_PAT_IOC_EXPORT _IOWR(TI_PAT_IOC_MAGIC, 0, struct ti_pat_export_data)
-+
-+#endif /* _UAPI_LINUX_TI_PAT_H */
--- 
-2.17.1
+Thanks,
+Guenter
 
+> Thanks,
+> Nick
+>
+> >
+> > >  /* True if ACPI device is present */
+> > >  static bool cros_ec_lpc_acpi_device_found;
+> > >
+> > > @@ -38,7 +54,7 @@ static int ec_response_timed_out(void)
+> > >
+> > >       usleep_range(200, 300);
+> > >       do {
+> > > -             if (!(cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_CMD, 1, &data) &
+> > > +             if (!(cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_CMD, 1, &data) &
+> > >                   EC_LPC_STATUS_BUSY_MASK))
+> > >                       return 0;
+> > >               usleep_range(100, 200);
+> > > @@ -58,11 +74,11 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
+> > >       ret = cros_ec_prepare_tx(ec, msg);
+> > >
+> > >       /* Write buffer */
+> > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_PACKET, ret, ec->dout);
+> > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_PACKET, ret, ec->dout);
+> > >
+> > >       /* Here we go */
+> > >       sum = EC_COMMAND_PROTOCOL_3;
+> > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_CMD, 1, &sum);
+> > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_CMD, 1, &sum);
+> > >
+> > >       if (ec_response_timed_out()) {
+> > >               dev_warn(ec->dev, "EC responsed timed out\n");
+> > > @@ -71,15 +87,15 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
+> > >       }
+> > >
+> > >       /* Check result */
+> > > -     msg->result = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_DATA, 1, &sum);
+> > > +     msg->result = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_DATA, 1, &sum);
+> > >       ret = cros_ec_check_result(ec, msg);
+> > >       if (ret)
+> > >               goto done;
+> > >
+> > >       /* Read back response */
+> > >       dout = (u8 *)&response;
+> > > -     sum = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PACKET, sizeof(response),
+> > > -                                  dout);
+> > > +     sum = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PACKET, sizeof(response),
+> > > +                                dout);
+> > >
+> > >       msg->result = response.result;
+> > >
+> > > @@ -92,9 +108,9 @@ static int cros_ec_pkt_xfer_lpc(struct cros_ec_device *ec,
+> > >       }
+> > >
+> > >       /* Read response and process checksum */
+> > > -     sum += cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PACKET +
+> > > -                                   sizeof(response), response.data_len,
+> > > -                                   msg->data);
+> > > +     sum += cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PACKET +
+> > > +                                 sizeof(response), response.data_len,
+> > > +                                 msg->data);
+> > >
+> > >       if (sum) {
+> > >               dev_err(ec->dev,
+> > > @@ -134,17 +150,17 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
+> > >       sum = msg->command + args.flags + args.command_version + args.data_size;
+> > >
+> > >       /* Copy data and update checksum */
+> > > -     sum += cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_PARAM, msg->outsize,
+> > > -                                    msg->data);
+> > > +     sum += cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_PARAM, msg->outsize,
+> > > +                                  msg->data);
+> > >
+> > >       /* Finalize checksum and write args */
+> > >       args.checksum = sum;
+> > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
+> > > -                             (u8 *)&args);
+> > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
+> > > +                           (u8 *)&args);
+> > >
+> > >       /* Here we go */
+> > >       sum = msg->command;
+> > > -     cros_ec_lpc_write_bytes(EC_LPC_ADDR_HOST_CMD, 1, &sum);
+> > > +     cros_ec_lpc_ops.write(EC_LPC_ADDR_HOST_CMD, 1, &sum);
+> > >
+> > >       if (ec_response_timed_out()) {
+> > >               dev_warn(ec->dev, "EC responsed timed out\n");
+> > > @@ -153,14 +169,13 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
+> > >       }
+> > >
+> > >       /* Check result */
+> > > -     msg->result = cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_DATA, 1, &sum);
+> > > +     msg->result = cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_DATA, 1, &sum);
+> > >       ret = cros_ec_check_result(ec, msg);
+> > >       if (ret)
+> > >               goto done;
+> > >
+> > >       /* Read back args */
+> > > -     cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_ARGS, sizeof(args),
+> > > -                            (u8 *)&args);
+> > > +     cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_ARGS, sizeof(args), (u8 *)&args);
+> > >
+> > >       if (args.data_size > msg->insize) {
+> > >               dev_err(ec->dev,
+> > > @@ -174,8 +189,8 @@ static int cros_ec_cmd_xfer_lpc(struct cros_ec_device *ec,
+> > >       sum = msg->command + args.flags + args.command_version + args.data_size;
+> > >
+> > >       /* Read response and update checksum */
+> > > -     sum += cros_ec_lpc_read_bytes(EC_LPC_ADDR_HOST_PARAM, args.data_size,
+> > > -                                   msg->data);
+> > > +     sum += cros_ec_lpc_ops.read(EC_LPC_ADDR_HOST_PARAM, args.data_size,
+> > > +                                 msg->data);
+> > >
+> > >       /* Verify checksum */
+> > >       if (args.checksum != sum) {
+> > > @@ -205,13 +220,13 @@ static int cros_ec_lpc_readmem(struct cros_ec_device *ec, unsigned int offset,
+> > >
+> > >       /* fixed length */
+> > >       if (bytes) {
+> > > -             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + offset, bytes, s);
+> > > +             cros_ec_lpc_ops.read(EC_LPC_ADDR_MEMMAP + offset, bytes, s);
+> > >               return bytes;
+> > >       }
+> > >
+> > >       /* string */
+> > >       for (; i < EC_MEMMAP_SIZE; i++, s++) {
+> > > -             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + i, 1, s);
+> > > +             cros_ec_lpc_ops.read(EC_LPC_ADDR_MEMMAP + i, 1, s);
+> > >               cnt++;
+> > >               if (!*s)
+> > >                       break;
+> > > @@ -248,10 +263,23 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
+> > >               return -EBUSY;
+> > >       }
+> > >
+> > > -     cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2, buf);
+> > > +     /*
+> > > +      * Read the mapped ID twice, the first one is assuming the
+> > > +      * EC is a Microchip Embedded Controller (MEC) variant, if the
+> > > +      * protocol fails, fallback to the non MEC variant and try to
+> > > +      * read again the ID.
+> > > +      */
+> > > +     cros_ec_lpc_mec_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2, buf);
+> > >       if (buf[0] != 'E' || buf[1] != 'C') {
+> > > -             dev_err(dev, "EC ID not detected\n");
+> > > -             return -ENODEV;
+> > > +             cros_ec_lpc_read_bytes(EC_LPC_ADDR_MEMMAP + EC_MEMMAP_ID, 2,
+> > > +                                    buf);
+> > > +             if (buf[0] != 'E' || buf[1] != 'C') {
+> > > +                     dev_err(dev, "EC ID not detected\n");
+> > > +                     return -ENODEV;
+> > > +             }
+> > > +             /* Re-assign read/write operations for the non MEC variant */
+> > > +             cros_ec_lpc_ops.read = cros_ec_lpc_read_bytes;
+> > > +             cros_ec_lpc_ops.write = cros_ec_lpc_write_bytes;
+> > >       }
+> > >
+> > >       if (!devm_request_region(dev, EC_HOST_CMD_REGION0,
+> > > diff --git a/drivers/platform/chrome/cros_ec_lpc_reg.c b/drivers/platform/chrome/cros_ec_lpc_reg.c
+> > > index 0f5cd0ac8b49..389d3329616f 100644
+> > > --- a/drivers/platform/chrome/cros_ec_lpc_reg.c
+> > > +++ b/drivers/platform/chrome/cros_ec_lpc_reg.c
+> > > @@ -9,7 +9,7 @@
+> > >
+> > >  #include "cros_ec_lpc_mec.h"
+> > >
+> > > -static u8 lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
+> > > +u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
+> > >  {
+> > >       int i;
+> > >       int sum = 0;
+> > > @@ -23,7 +23,7 @@ static u8 lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
+> > >       return sum;
+> > >  }
+> > >
+> > > -static u8 lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
+> > > +u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
+> > >  {
+> > >       int i;
+> > >       int sum = 0;
+> > > @@ -37,9 +37,8 @@ static u8 lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
+> > >       return sum;
+> > >  }
+> > >
+> > > -#ifdef CONFIG_CROS_EC_LPC_MEC
+> > > -
+> > > -u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
+> > > +u8 cros_ec_lpc_mec_read_bytes(unsigned int offset, unsigned int length,
+> > > +                           u8 *dest)
+> > >  {
+> > >       int in_range = cros_ec_lpc_mec_in_range(offset, length);
+> > >
+> > > @@ -50,10 +49,12 @@ u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
+> > >               cros_ec_lpc_io_bytes_mec(MEC_IO_READ,
+> > >                                        offset - EC_HOST_CMD_REGION0,
+> > >                                        length, dest) :
+> > > -             lpc_read_bytes(offset, length, dest);
+> > > +             cros_ec_lpc_read_bytes(offset, length, dest);
+> > > +
+> > >  }
+> > >
+> > > -u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
+> > > +u8 cros_ec_lpc_mec_write_bytes(unsigned int offset, unsigned int length,
+> > > +                            u8 *msg)
+> > >  {
+> > >       int in_range = cros_ec_lpc_mec_in_range(offset, length);
+> > >
+> > > @@ -64,7 +65,7 @@ u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
+> > >               cros_ec_lpc_io_bytes_mec(MEC_IO_WRITE,
+> > >                                        offset - EC_HOST_CMD_REGION0,
+> > >                                        length, msg) :
+> > > -             lpc_write_bytes(offset, length, msg);
+> > > +             cros_ec_lpc_write_bytes(offset, length, msg);
+> > >  }
+> > >
+> > >  void cros_ec_lpc_reg_init(void)
+> > > @@ -77,25 +78,3 @@ void cros_ec_lpc_reg_destroy(void)
+> > >  {
+> > >       cros_ec_lpc_mec_destroy();
+> > >  }
+> > > -
+> > > -#else /* CONFIG_CROS_EC_LPC_MEC */
+> > > -
+> > > -u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest)
+> > > -{
+> > > -     return lpc_read_bytes(offset, length, dest);
+> > > -}
+> > > -
+> > > -u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg)
+> > > -{
+> > > -     return lpc_write_bytes(offset, length, msg);
+> > > -}
+> > > -
+> > > -void cros_ec_lpc_reg_init(void)
+> > > -{
+> > > -}
+> > > -
+> > > -void cros_ec_lpc_reg_destroy(void)
+> > > -{
+> > > -}
+> > > -
+> > > -#endif /* CONFIG_CROS_EC_LPC_MEC */
+> > > diff --git a/drivers/platform/chrome/cros_ec_lpc_reg.h b/drivers/platform/chrome/cros_ec_lpc_reg.h
+> > > index 416fd2572182..e8d53fb8a2bc 100644
+> > > --- a/drivers/platform/chrome/cros_ec_lpc_reg.h
+> > > +++ b/drivers/platform/chrome/cros_ec_lpc_reg.h
+> > > @@ -28,6 +28,32 @@ u8 cros_ec_lpc_read_bytes(unsigned int offset, unsigned int length, u8 *dest);
+> > >   */
+> > >  u8 cros_ec_lpc_write_bytes(unsigned int offset, unsigned int length, u8 *msg);
+> > >
+> > > +/**
+> > > + * cros_ec_lpc_mec_read_bytes() - Read bytes from a given LPC-mapped address.
+> > > + * @offset: Base read address
+> > > + * @length: Number of bytes to read
+> > > + * @dest: Destination buffer
+> > > + *
+> > > + * This function is for the MEC (Microchip Embedded Controller) variant.
+> > > + *
+> > > + * Return: 8-bit checksum of all bytes read.
+> > > + */
+> > > +u8 cros_ec_lpc_mec_read_bytes(unsigned int offset, unsigned int length,
+> > > +                           u8 *dest);
+> > > +
+> > > +/**
+> > > + * cros_ec_lpc_mec_write_bytes - Write bytes to a given LPC-mapped address.
+> > > + * @offset: Base write address
+> > > + * @length: Number of bytes to write
+> > > + * @msg: Write data buffer
+> > > + *
+> > > + * This function is for the MEC (Microchip Embedded Controller) variant.
+> > > + *
+> > > + * Return: 8-bit checksum of all bytes written.
+> > > + */
+> > > +u8 cros_ec_lpc_mec_write_bytes(unsigned int offset, unsigned int length,
+> > > +                            u8 *msg);
+> > > +
+> > >  /**
+> > >   * cros_ec_lpc_reg_init
+> > >   *
+> > > diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
+> > > index fd29cbfd3d5d..c63ff2508409 100644
+> > > --- a/drivers/platform/chrome/wilco_ec/Kconfig
+> > > +++ b/drivers/platform/chrome/wilco_ec/Kconfig
+> > > @@ -1,7 +1,7 @@
+> > >  # SPDX-License-Identifier: GPL-2.0-only
+> > >  config WILCO_EC
+> > >       tristate "ChromeOS Wilco Embedded Controller"
+> > > -     depends on ACPI && X86 && CROS_EC_LPC && CROS_EC_LPC_MEC
+> > > +     depends on ACPI && X86 && CROS_EC_LPC
+> > >       help
+> > >         If you say Y here, you get support for talking to the ChromeOS
+> > >         Wilco EC over an eSPI bus. This uses a simple byte-level protocol
+> > > --
+> > > 2.20.1
+> > >
+> > >
+> >
+> >
