@@ -2,69 +2,130 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F485C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4C4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F12212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E162080C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:11:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="NK5F3ZKT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbfFGLKl (ORCPT
+        id S1728569AbfFGLL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:10:41 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:45412 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728355AbfFGLKk (ORCPT
+        Fri, 7 Jun 2019 07:11:28 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:22244 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbfFGLL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:10:40 -0400
-Received: from ramsan ([84.194.111.163])
-        by laurent.telenet-ops.be with bizsmtp
-        id MnAe2000Q3XaVaC01nAepp; Fri, 07 Jun 2019 13:10:38 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hZCla-0004A5-BV; Fri, 07 Jun 2019 13:10:38 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hZCla-0003Ot-A0; Fri, 07 Jun 2019 13:10:38 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jiri Kosina <trivial@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial] net/mlx5e: Spelling s/configuraion/configuration/
-Date:   Fri,  7 Jun 2019 13:10:26 +0200
-Message-Id: <20190607111026.12995-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Fri, 7 Jun 2019 07:11:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1559905882;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Vi8XPkzvs3rsYu99yfQYh/pogLXeP+Q04MJbkT2ESyM=;
+        b=NK5F3ZKTAC39u8aPycwpBa9wTX/PLkPtIYeX1z8RLEj4cNg6YVVjz2bDQNPOSHYoXu
+        x+q0prwdyK3fmOxDkChTuDvARDWeUhjV4jZ+yl6i0EjdGVR+NENcKFE5hP4dAz0LB60S
+        jem5ua/4tkDW8z32rJHB+6iAFX18woeESJp8KuVGkb9M66Lh+r7KnJCMwIIJmMATjNzs
+        S2l1DaO5+bioro8pi5OEAQKLTXj39m5BteslAPRriGQF1I5xEdGyJABh3msSQqhEctf7
+        xxf1CWUcZKPUasbsjtGZizUT7njbjaTecAuYSkM6gwJEzPsjydqdE0GcB7yFtGozJFTf
+        ureQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAwkq13LM="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.22 DYNA|AUTH)
+        with ESMTPSA id i01b98v57BBDPaP
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 7 Jun 2019 13:11:13 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, tomi.valkeinen@ti.com,
+        imirkin@alum.mit.edu, marek.belisko@gmail.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, letux-kernel@openphoenux.org,
+        devicetree@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v3 2/5] drm/panel: simple: Add Ortustech COM37H3M panel support
+Date:   Fri,  7 Jun 2019 13:11:08 +0200
+Message-Id: <43b47034b618cff26cea0484591c6deafb7f0685.1559905870.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <cover.1559905870.git.hns@goldelico.com>
+References: <cover.1559905870.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The change adds support for the Ortustech COM37H3M05DTC/99DTC 3.7" TFT LCD panel.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-index 633b117eb13e8143..7b672ada63a39733 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-@@ -175,7 +175,7 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
-  *	@port_buffer: <output> port receive buffer configuration
-  *	@change: <output>
-  *
-- *	Update buffer configuration based on pfc configuraiton and
-+ *	Update buffer configuration based on pfc configuration and
-  *	priority to buffer mapping.
-  *	Buffer's lossy bit is changed to:
-  *		lossless if there is at least one PFC enabled priority
+Tested on Letux3704.
+
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/gpu/drm/panel/panel-simple.c | 33 ++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5b27829c5a78..1fb74908a269 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2007,6 +2007,33 @@ static const struct panel_desc ontat_yx700wv03 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ };
+ 
++static const struct drm_display_mode ortustech_com37h3m_mode  = {
++	.clock = 22153,
++	.hdisplay = 480,
++	.hsync_start = 480 + 8,
++	.hsync_end = 480 + 8 + 10,
++	.htotal = 480 + 8 + 10 + 10,
++	.vdisplay = 640,
++	.vsync_start = 640 + 4,
++	.vsync_end = 640 + 4 + 3,
++	.vtotal = 640 + 4 + 3 + 4,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++};
++
++static const struct panel_desc ortustech_com37h3m = {
++	.modes = &ortustech_com37h3m_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 56,	/* 56.16mm */
++		.height = 75,	/* 74.88mm */
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE |
++		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
++};
++
+ static const struct drm_display_mode ortustech_com43h4m85ulc_mode  = {
+ 	.clock = 25000,
+ 	.hdisplay = 480,
+@@ -2786,6 +2813,12 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "ontat,yx700wv03",
+ 		.data = &ontat_yx700wv03,
++	}, {
++		.compatible = "ortustech,com37h3m05dtc",
++		.data = &ortustech_com37h3m,
++	}, {
++		.compatible = "ortustech,com37h3m99dtc",
++		.data = &ortustech_com37h3m,
+ 	}, {
+ 		.compatible = "ortustech,com43h4m85ulc",
+ 		.data = &ortustech_com43h4m85ulc,
 -- 
-2.17.1
+2.19.1
 
