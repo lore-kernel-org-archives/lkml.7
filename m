@@ -3,243 +3,313 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8EAC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978EAC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C5F208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 510832089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=newmedia-net.de header.i=@newmedia-net.de header.b="Tq8NwgqJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYlVEXqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfFGGEQ (ORCPT
+        id S1726795AbfFGGGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:04:16 -0400
-Received: from webmail.newmedia-net.de ([185.84.6.166]:46165 "EHLO
-        webmail.newmedia-net.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfFGGEQ (ORCPT
+        Fri, 7 Jun 2019 02:06:45 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46351 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfFGGGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:04:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=newmedia-net.de; s=mikd;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=hbFWgnGZTUGaPNuuRP7tTcnFOL1g5weZZi+2V4ndpQE=;
-        b=Tq8NwgqJrq2oLvvM1ouxMds4Cpixnez/8rfCQr6PeASo2fV/u13nA7EJ6AsZXYDVfm3ZZIUaNeXwCiXqb5RcmjGiRIl5Juq2YNVm+erZMlMQpiNtvNqOHzVbAH/ZJOrp4+FFfTQ4hWNwzLebIfnr+hIn/Aov9jCbPkPAmF2fFXA=;
-Subject: Re: [PATCH v3 1/2] mt76: mt7615: enable support for mesh
-To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc:     Ryder Lee <ryder.lee@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
-        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Chih-Min Chen <chih-min.Chen@mediatek.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <a1ff446dfc06e2443552e7ec2d754099aacce7df.1559541944.git.ryder.lee@mediatek.com>
- <ade7ef01-8b06-ec7d-4caf-e581f4033819@newmedia-net.de>
- <CAJ0CqmVBogQrqf4Gckr5gQ6tCrdZG=p60ZiC+-WW-yxt93+40Q@mail.gmail.com>
-From:   Sebastian Gottschall <s.gottschall@newmedia-net.de>
-Message-ID: <a09e5c36-e610-e5eb-51c1-f1f634ee8591@newmedia-net.de>
-Date:   Fri, 7 Jun 2019 08:03:08 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 02:06:44 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m15so638398ljg.13;
+        Thu, 06 Jun 2019 23:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=q+G8+8MHXNvM7mUUZy451G5b9TljkJvqb80agD0tMHg=;
+        b=cYlVEXqC7nSWQrsMly8VnvKaavrJXKrVhpTQrGn/t6/skXLDnVspCRrmcK3wn9gfb/
+         tKWPjOHKXGdE+3ZW1C2F7y07Menie6bi+r+1GEmBcWyms7fKDz9tPLyjY/aDA26dkxrW
+         YL95IMrLjQBnxEDuDPDev4+3rhSoBxqfQ1BEWSUXoyme4nNpfEVM04FO9EhRntQPIBDS
+         y+C5W7zMA/dIuX46BEcNDuBHgYtez1DmLMuZj0PpX5tUoimGHCcQdaRmVANTSlZqib96
+         CmU+D8AwcYoH5jAwHwuBaiI2pb30IJrUXD/sSfZRBhOBeJGIu+ZV0g6W0SgJj5CRw0+y
+         +Fzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=q+G8+8MHXNvM7mUUZy451G5b9TljkJvqb80agD0tMHg=;
+        b=pQIgPt+a9zvjiZChRdeKXqBsDCEfQhIoECRSyBlkbZwxwWaf7Qi6EwQfcnHP7MVgAD
+         rsdmGsQyuFet1G+ARPeq00ct8zsFNM8AtLkhShxI2O0+mM6JxCQsiSuPEDJxY0gD6w58
+         110XHPBdTOCxPT0MNNKNhraOmorVDddMM2cWcY4rUwfkhM4nm00qVyt2s0pe+mqPeZiw
+         YamuDFSC6xXk0y3ejPaIp3OCN5qjnU6jBmy3Xb4oj6JIyXYfTW7tWpbGt5ucz1EPwxZU
+         e1+wYYKV/tOy5HudZ8uElys+gw+6iA4laH0kt+cc3IVcuAUqTQagW7i5nJrgMYzs55AV
+         VwjQ==
+X-Gm-Message-State: APjAAAWtpgSjCfQSN8CdP9FPazc5UPWffoCfA1fgZSQVgA4ASt8FzW/8
+        JDCPEcrr2JEdutRaRrbrw/A=
+X-Google-Smtp-Source: APXvYqz6m70HJPODywjUCcZPYUKDeE4t4dWD8TQefjL6mwcofEJnBT7Xsw6ht3H2e3fljskvOauRxQ==
+X-Received: by 2002:a2e:3a05:: with SMTP id h5mr16450576lja.114.1559887602047;
+        Thu, 06 Jun 2019 23:06:42 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id l15sm221098lfc.12.2019.06.06.23.06.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 23:06:41 -0700 (PDT)
+Subject: Re: [PATCH V5] drivers: i2c: tegra: fix warning/check/error
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559885103-9113-1-git-send-email-bbiswas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <dc8e32c7-811e-e422-816a-34cf5329856d@gmail.com>
+Date:   Fri, 7 Jun 2019 09:05:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAJ0CqmVBogQrqf4Gckr5gQ6tCrdZG=p60ZiC+-WW-yxt93+40Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1559885103-9113-1-git-send-email-bbiswas@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Received:  from [2003:c9:3f05:3a00:1884:73db:702a:507]
-        by webmail.newmedia-net.de with esmtpsa (TLSv1:AES128-SHA:128)
-        (Exim 4.72)
-        (envelope-from <s.gottschall@newmedia-net.de>)
-        id 1hZ7yk-0002vB-Kv; Fri, 07 Jun 2019 08:04:17 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+07.06.2019 8:25, Bitan Biswas пишет:
+> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
+> 
+> Ignore checkpatch WARNING for 80 character line limit at
+> places where renaming fields compromises readability.
+> 
+> Delay of approximately 1msec in flush i2c FIFO polling loop
+> achieved by usleep_range call as msleep can take 20msecs.
+> 
+> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+> as needed. Replace BUG() with error handling code.
+> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
+> 
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 61 ++++++++++++++++++++++--------------------
+>  1 file changed, 32 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 1dbba39..161eb28 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -67,17 +67,18 @@
+>  
+>  #define DVC_CTRL_REG1				0x000
+>  #define DVC_CTRL_REG1_INTR_EN			BIT(10)
+> -#define DVC_CTRL_REG2				0x004
+> -#define DVC_CTRL_REG3				0x008
+> +#define DVC_CTRL_REG2				BIT(2)
+> +#define DVC_CTRL_REG3				BIT(3)
 
-Am 06.06.2019 um 18:19 schrieb Lorenzo Bianconi:
->> i tested your patch against a qca 9984 chipset using SAE and without
->> encryption. both did not work. the devices are connecting, but no data
->> connection is possible
-> Hi Sebastian,
->
-> I tested Ryder's patch using mt76x2 as mesh peer and it works fine for me.
-> Could you please provide some more info?
+This is incorrect change, register address should be kept as a hex value
+because it is not a bitmask.
 
-the peer was a QCA9984 chipset running ath10k. the following wpa 
-supplicant config was used
-and encryption clearly cannot work since mt76_wcid_key_setup does 
-trigger a bug  since ieeee_get_key_rx_seq does not accept tid as 
-argument != 0 for aes_cmac (which is used for sae)
-consider the same setup works with ath5k, 9k and 10k perfect with no 
-issues. in my test setup i also connected now 3 devices. 2 9984 and 1 
-mt7615 to ensure that all is working. the qca 9984 devices can ping each 
-other, only the mt7615 does not work. the setups are all identical 
-(except for ips)
+I'd also recommend to just remove the DVC_CTRL_REG2 since it's not used
+anywhere in the code. You may also check all of other #defines and
+remove everything unused.
 
-fast_reauth=1
-eapol_version=1
-sae_groups=19 20 21
-network={
-         disable_ht40=1
-         ssid="mt7615-24"
-         mode=5
-         frequency=2452
-         htmode=HT20
-         scan_ssid=1
-         key_mgmt=SAE
-         ieee80211w=2
-         noscan=1
-         pairwise=CCMP
-         group=CCMP
-         proto=RSN
-         sae_password="12345678"
-}
+You can also check all of variables for a need to be initialized, like
+for example "ret" doesn't need to be init'ed in tegra_i2c_xfer() and
+some other places. That will be a good clean up as well.
 
-and the bug again
+>  #define DVC_CTRL_REG3_SW_PROG			BIT(26)
+>  #define DVC_CTRL_REG3_I2C_DONE_INTR_EN		BIT(30)
+>  #define DVC_STATUS				0x00c
+>  #define DVC_STATUS_I2C_DONE_INTR		BIT(30)
+>  
+> -#define I2C_ERR_NONE				0x00
+> -#define I2C_ERR_NO_ACK				0x01
+> -#define I2C_ERR_ARBITRATION_LOST		0x02
+> -#define I2C_ERR_UNKNOWN_INTERRUPT		0x04
+> +#define I2C_ERR_NONE				0x0
+> +#define I2C_ERR_NO_ACK				BIT(0)
+> +#define I2C_ERR_ARBITRATION_LOST		BIT(1)
+> +#define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
+> +#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
+>  
+>  #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+>  #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+> @@ -280,6 +281,7 @@ struct tegra_i2c_dev {
+>  	u32 bus_clk_rate;
+>  	u16 clk_divisor_non_hs_mode;
+>  	bool is_multimaster_mode;
+> +	/* xfer_lock: lock to serialize transfer submission and processing */
+>  	spinlock_t xfer_lock;
+>  	struct dma_chan *tx_dma_chan;
+>  	struct dma_chan *rx_dma_chan;
+> @@ -306,7 +308,7 @@ static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
+>   * to the I2C block inside the DVC block
+>   */
+>  static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
+> -	unsigned long reg)
+> +					unsigned long reg)
+>  {
+>  	if (i2c_dev->is_dvc)
+>  		reg += (reg >= I2C_TX_FIFO) ? 0x10 : 0x40;
+> @@ -314,7 +316,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
+>  }
+>  
+>  static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
+> -	unsigned long reg)
+> +		       unsigned long reg)
+>  {
+>  	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
+>  
+> @@ -329,13 +331,13 @@ static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
+>  }
+>  
+>  static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
+> -	unsigned long reg, int len)
+> +			unsigned long reg, int len)
+>  {
+>  	writesl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
+>  }
+>  
+>  static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
+> -	unsigned long reg, int len)
+> +		       unsigned long reg, int len)
+>  {
+>  	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
+>  }
+> @@ -486,7 +488,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+>  			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
+>  			return -ETIMEDOUT;
+>  		}
+> -		msleep(1);
+> +		usleep_range(1000, 2000);
+>  	}
+>  	return 0;
+>  }
+> @@ -525,7 +527,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  	 * prevent overwriting past the end of buf
+>  	 */
+>  	if (rx_fifo_avail > 0 && buf_remaining > 0) {
+> -		BUG_ON(buf_remaining > 3);
+>  		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
+>  		val = cpu_to_le32(val);
+>  		memcpy(buf, &val, buf_remaining);
+> @@ -533,7 +534,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  		rx_fifo_avail--;
+>  	}
+>  
+> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+>  	i2c_dev->msg_buf_remaining = buf_remaining;
+>  	i2c_dev->msg_buf = buf;
+>  
+> @@ -591,7 +591,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  	 * boundary and fault.
+>  	 */
+>  	if (tx_fifo_avail > 0 && buf_remaining > 0) {
+> -		BUG_ON(buf_remaining > 3);
+>  		memcpy(&val, buf, buf_remaining);
+>  		val = le32_to_cpu(val);
+>  
+> @@ -680,10 +679,11 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
+>  		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
+>  		if (in_interrupt())
+>  			err = readl_poll_timeout_atomic(addr, val, val == 0,
+> -					1000, I2C_CONFIG_LOAD_TIMEOUT);
+> +							1000,
+> +							I2C_CONFIG_LOAD_TIMEOUT);
+>  		else
+> -			err = readl_poll_timeout(addr, val, val == 0,
+> -					1000, I2C_CONFIG_LOAD_TIMEOUT);
+> +			err = readl_poll_timeout(addr, val, val == 0, 1000,
+> +						 I2C_CONFIG_LOAD_TIMEOUT);
+>  
+>  		if (err) {
+>  			dev_warn(i2c_dev->dev,
+> @@ -856,10 +856,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>  
+>  	if (!i2c_dev->is_curr_dma_xfer) {
+>  		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
+> -			if (i2c_dev->msg_buf_remaining)
+> +			if (i2c_dev->msg_buf_remaining) {
+>  				tegra_i2c_empty_rx_fifo(i2c_dev);
+> -			else
+> -				BUG();
+> +			} else {
+> +				dev_err(i2c_dev->dev, "unexpected rx data request\n");
+> +				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
+> +				goto err;
+> +			}
+>  		}
+>  
+>  		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
+> @@ -885,7 +888,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>  	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
+>  		if (i2c_dev->is_curr_dma_xfer)
+>  			i2c_dev->msg_buf_remaining = 0;
+> -		BUG_ON(i2c_dev->msg_buf_remaining);
+> +		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
+>  		complete(&i2c_dev->msg_complete);
+>  	}
+>  	goto done;
+> @@ -1024,7 +1027,7 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
+>  }
+>  
+>  static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+> -	struct i2c_msg *msg, enum msg_end_type end_state)
+> +			      struct i2c_msg *msg, enum msg_end_type end_state)
 
-WARNING: CPU: 2 PID: 22086 at 
-/home/seg/DEV/mt7621/src/router/private/compat-wireless-2017-09-03/net/mac80211/key.c:1096 
-mt76_wcid_key_setup+0x58/0x9c [mt76]
-Modules linked in: shortcut_fe gcm ghash_generic ctr gf128mul mt7615e 
-mt76 mac80211 compat
-CPU: 2 PID: 22086 Comm: wpa_supplicant Tainted: G        W 4.14.123 #106
-Stack : 00000000 87c2d000 00000000 8007d8b4 80480000 80482b9c 80610000 
-805a4390
-         8057e2b4 87c4b99c 870a59dc 805e4767 80578288 00000001 87c4b940 
-805e9f78
-         00000000 00000000 80640000 00000000 81147bb8 000006ce 00000007 
-00000000
-         00000000 80650000 80650000 20202020 80000000 00000000 80610000 
-872b9fe0
-         872a2b14 00000448 00000000 87c2d000 00000010 8022d660 00000008 
-80640008
-         ...
-Call Trace:
-[<800153e0>] show_stack+0x58/0x100
-[<8042e83c>] dump_stack+0x9c/0xe0
-[<800349f0>] __warn+0xe4/0x144
-[<8003468c>] warn_slowpath_null+0x1c/0x30
-[<872b9fe0>] mt76_wcid_key_setup+0x58/0x9c [mt76]
-[<87611690>] mt7615_eeprom_init+0x7b4/0xe9c [mt7615e]
----[ end trace e24aeb4b542e0df9 ]---
+Probably won't hurt to carry the "enum msg_end_type end_state" to a new
+line.
 
+>  {
+>  	u32 packet_header;
+>  	u32 int_mask;
+> @@ -1161,9 +1164,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>  		if (err)
+>  			return err;
+>  
+> -		time_left = wait_for_completion_timeout(
+> -						&i2c_dev->dma_complete,
+> -						msecs_to_jiffies(xfer_time));
+> +		time_left = wait_for_completion_timeout(&i2c_dev->dma_complete,
+> +							msecs_to_jiffies(xfer_time));
+>  		if (time_left == 0) {
+>  			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
+>  			dmaengine_terminate_sync(i2c_dev->msg_read ?
+> @@ -1225,7 +1227,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>  }
+>  
+>  static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
+> -	int num)
+> +			  int num)
+>  {
+>  	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
+>  	int i;
+> @@ -1273,12 +1275,12 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
+>  	int ret;
+>  
+>  	ret = of_property_read_u32(np, "clock-frequency",
+> -			&i2c_dev->bus_clk_rate);
+> +				   &i2c_dev->bus_clk_rate);
+>  	if (ret)
+>  		i2c_dev->bus_clk_rate = 100000; /* default clock rate */
+>  
+>  	i2c_dev->is_multimaster_mode = of_property_read_bool(np,
+> -			"multi-master");
+> +							     "multi-master");
 
->
-> Regards,
-> Lorenzo
->
->>
->> Sebastian
->>
->> Am 03.06.2019 um 08:08 schrieb Ryder Lee:
->>> Enable NL80211_IFTYPE_MESH_POINT and update its path.
->>>
->>> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
->>> ---
->>> Changes since v3 - fix a wrong expression
->>> Changes since v2 - remove unused definitions
->>> ---
->>>    drivers/net/wireless/mediatek/mt76/mt7615/init.c | 6 ++++++
->>>    drivers/net/wireless/mediatek/mt76/mt7615/main.c | 1 +
->>>    drivers/net/wireless/mediatek/mt76/mt7615/mcu.c  | 4 +++-
->>>    drivers/net/wireless/mediatek/mt76/mt7615/mcu.h  | 6 ------
->>>    4 files changed, 10 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/init.c b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
->>> index 59f604f3161f..f860af6a42da 100644
->>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/init.c
->>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/init.c
->>> @@ -133,6 +133,9 @@ static const struct ieee80211_iface_limit if_limits[] = {
->>>        {
->>>                .max = MT7615_MAX_INTERFACES,
->>>                .types = BIT(NL80211_IFTYPE_AP) |
->>> +#ifdef CONFIG_MAC80211_MESH
->>> +                      BIT(NL80211_IFTYPE_MESH_POINT) |
->>> +#endif
->>>                         BIT(NL80211_IFTYPE_STATION)
->>>        }
->>>    };
->>> @@ -195,6 +198,9 @@ int mt7615_register_device(struct mt7615_dev *dev)
->>>        dev->mt76.antenna_mask = 0xf;
->>>
->>>        wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
->>> +#ifdef CONFIG_MAC80211_MESH
->>> +                              BIT(NL80211_IFTYPE_MESH_POINT) |
->>> +#endif
->>>                                 BIT(NL80211_IFTYPE_AP);
->>>
->>>        ret = mt76_register_device(&dev->mt76, true, mt7615_rates,
->>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->>> index b0bb7cc12385..585e67fa2728 100644
->>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
->>> @@ -37,6 +37,7 @@ static int get_omac_idx(enum nl80211_iftype type, u32 mask)
->>>
->>>        switch (type) {
->>>        case NL80211_IFTYPE_AP:
->>> +     case NL80211_IFTYPE_MESH_POINT:
->>>                /* ap use hw bssid 0 and ext bssid */
->>>                if (~mask & BIT(HW_BSSID_0))
->>>                        return HW_BSSID_0;
->>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
->>> index 43f70195244c..e82297048449 100644
->>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
->>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
->>> @@ -754,6 +754,7 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
->>>
->>>        switch (vif->type) {
->>>        case NL80211_IFTYPE_AP:
->>> +     case NL80211_IFTYPE_MESH_POINT:
->>>                tx_wlan_idx = mvif->sta.wcid.idx;
->>>                conn_type = CONNECTION_INFRA_AP;
->>>                break;
->>> @@ -968,7 +969,7 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, struct ieee80211_vif *vif,
->>>                .rx_wtbl = {
->>>                        .tag = cpu_to_le16(WTBL_RX),
->>>                        .len = cpu_to_le16(sizeof(struct wtbl_rx)),
->>> -                     .rca1 = vif->type != NL80211_IFTYPE_AP,
->>> +                     .rca1 = vif->type == NL80211_IFTYPE_STATION,
->>>                        .rca2 = 1,
->>>                        .rv = 1,
->>>                },
->>> @@ -1042,6 +1043,7 @@ static void sta_rec_convert_vif_type(enum nl80211_iftype type, u32 *conn_type)
->>>    {
->>>        switch (type) {
->>>        case NL80211_IFTYPE_AP:
->>> +     case NL80211_IFTYPE_MESH_POINT:
->>>                if (conn_type)
->>>                        *conn_type = CONNECTION_INFRA_STA;
->>>                break;
->>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
->>> index e96efb13fa4d..0915cb735699 100644
->>> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
->>> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
->>> @@ -105,25 +105,19 @@ enum {
->>>    #define STA_TYPE_STA                BIT(0)
->>>    #define STA_TYPE_AP         BIT(1)
->>>    #define STA_TYPE_ADHOC              BIT(2)
->>> -#define STA_TYPE_TDLS                BIT(3)
->>>    #define STA_TYPE_WDS                BIT(4)
->>>    #define STA_TYPE_BC         BIT(5)
->>>
->>>    #define NETWORK_INFRA               BIT(16)
->>>    #define NETWORK_P2P         BIT(17)
->>>    #define NETWORK_IBSS                BIT(18)
->>> -#define NETWORK_MESH         BIT(19)
->>> -#define NETWORK_BOW          BIT(20)
->>>    #define NETWORK_WDS         BIT(21)
->>>
->>>    #define CONNECTION_INFRA_STA        (STA_TYPE_STA | NETWORK_INFRA)
->>>    #define CONNECTION_INFRA_AP (STA_TYPE_AP | NETWORK_INFRA)
->>>    #define CONNECTION_P2P_GC   (STA_TYPE_STA | NETWORK_P2P)
->>>    #define CONNECTION_P2P_GO   (STA_TYPE_AP | NETWORK_P2P)
->>> -#define CONNECTION_MESH_STA  (STA_TYPE_STA | NETWORK_MESH)
->>> -#define CONNECTION_MESH_AP   (STA_TYPE_AP | NETWORK_MESH)
->>>    #define CONNECTION_IBSS_ADHOC       (STA_TYPE_ADHOC | NETWORK_IBSS)
->>> -#define CONNECTION_TDLS              (STA_TYPE_STA | NETWORK_INFRA | STA_TYPE_TDLS)
->>>    #define CONNECTION_WDS              (STA_TYPE_WDS | NETWORK_WDS)
->>>    #define CONNECTION_INFRA_BC (STA_TYPE_BC | NETWORK_INFRA)
->>>
+You can avoid the line-split with something like this:
+
+	ret = of_property_read_bool(np, "multi-master");
+	i2c_dev->is_multimaster_mode = ret;
+
+-- 
+Dmitry
