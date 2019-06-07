@@ -2,117 +2,105 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51070C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93010C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CF7208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6060B208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qercaASS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfFGIjR (ORCPT
+        id S1727416AbfFGIjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 04:39:17 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46465 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFGIjR (ORCPT
+        Fri, 7 Jun 2019 04:39:22 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47822 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfFGIjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 04:39:17 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z23so1101662ote.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 01:39:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IEBaZDPZd7L7KgNJ6ypOJKuSsVmtOiA4l4zYpRROEo0=;
-        b=DbdAgu3bYlD/oQ38raLvIjWTZ7zC/dDBv/VSsm2YX532ls+htAGgrnpdrxXDPUlNET
-         stzT4uBln9ynZX2SUzP1QMCCoTroHW04EgmNiBfvvP9AW3DNDIKwJLkpfnlJzUu3rWJL
-         i9t/cP+PWms9g23XTnIHSQEoGBgyt64RmkPKiPOApghp30EtIR/0gSNnJ/ZrDqjk7O4X
-         7nZjCs3NiwbNuxWiF6k/PQH0WHYW2RUQ/nXd3cskZ+R9BRBvuJfWfkTE1XK4jaKjNJD0
-         PsoAZ63E9817K/BHM0RXVvdmuoPLESRxDti7Zi7JwCEzdhYUbQ/gYMH0Zh/u2bN8ZJAr
-         1HmA==
-X-Gm-Message-State: APjAAAVx9CMeI7hwQEtTGgI6S3ZykLFdJaTO84YmbxjIBGbAUgJXJwWo
-        lZ3m85PO+MBINXa9nvcHOJdmqE2ji47SxzYC48Mu5tCNdKA=
-X-Google-Smtp-Source: APXvYqzcPEzjWAhwz/eXHQbLT97yDgHMsd55igo2ERsepjIiDyFkf+6AtDrurtZyr02zLA7o+hq7J/3fARWsSX/apW0=
-X-Received: by 2002:a9d:6a8a:: with SMTP id l10mr8355597otq.197.1559896755579;
- Fri, 07 Jun 2019 01:39:15 -0700 (PDT)
+        Fri, 7 Jun 2019 04:39:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DI7Fs/1DQ5Cn1nmJ570WObqSu6i4Yj7LrxklY7389Uc=; b=qercaASSfzHrtRcjT1K1fZX7C4
+        kqaZNJDYXQFjZKzny6G6KDsxtdLld5enRuJ3KM7Fjb5cAWTjUouUe/psUNX1KMI5+wv+wpMCON9MI
+        UWD6s39s7yks1j/0GcxakXgvqGhc8Obzc+KBabseM57yRdkmRIDQJomr0jw1QZ/YZIYeSRp9x86IZ
+        djRqrUkzrKTqUriQdmwIuUhC1pjCM5HKymegKwpP8ZhRyCcqsqGfAu049QBJxGAfE496IcG9XPNi/
+        /cwSFfpo/QSRJ0JZp6TTx7N5+6aNJWr8xFT3hB/SqnPBRGctqBMKzSfLZh1gLigKaaIuttFemWy5o
+        Njr8aOiQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZAOd-0006Ya-Gu; Fri, 07 Jun 2019 08:38:48 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 520952097357A; Fri,  7 Jun 2019 10:38:46 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 10:38:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH 12/15] x86/static_call: Add out-of-line static call
+ implementation
+Message-ID: <20190607083846.GX3419@hirez.programming.kicks-ass.net>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131945.254721704@infradead.org>
+ <37C2FB32-3437-48CB-954D-05F683B7D80B@vmware.com>
 MIME-Version: 1.0
-References: <20190606092342.GA21672@zhanggen-UX430UQ>
-In-Reply-To: <20190606092342.GA21672@zhanggen-UX430UQ>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Fri, 7 Jun 2019 10:39:05 +0200
-Message-ID: <CAFqZXNuricWOMH3fQiCbPZyz2qwf7Gw1zmx1o+wLeTELSF=CUQ@mail.gmail.com>
-Subject: Re: [PATCH v3] selinux: lsm: fix a missing-check bug in
- selinux_add_mnt_opt( )
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <37C2FB32-3437-48CB-954D-05F683B7D80B@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 6, 2019 at 11:23 AM Gen Zhang <blackgod016574@gmail.com> wrote:
-> In selinux_add_mnt_opt(), 'val' is allocated by kmemdup_nul(). It returns
-> NULL when fails. So 'val' should be checked. And 'mnt_opts' should be
-> freed when error.
->
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> Fixes: 757cbe597fe8 ("LSM: new method: ->sb_add_mnt_opt()")
-> ---
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 3ec702c..4e4c1c6 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -1052,15 +1052,23 @@ static int selinux_add_mnt_opt(const char *option, const char *val, int len,
->         if (token == Opt_error)
->                 return -EINVAL;
->
-> -       if (token != Opt_seclabel)
-> -               val = kmemdup_nul(val, len, GFP_KERNEL);
-> +       if (token != Opt_seclabel) {
-> +                       val = kmemdup_nul(val, len, GFP_KERNEL);
-> +                       if (!val) {
-> +                               rc = -ENOMEM;
-> +                               goto free_opt;
-> +                       }
-> +       }
->         rc = selinux_add_opt(token, val, mnt_opts);
->         if (unlikely(rc)) {
->                 kfree(val);
-> -               if (*mnt_opts) {
-> -                       selinux_free_mnt_opts(*mnt_opts);
-> -                       *mnt_opts = NULL;
-> -               }
-> +               goto free_opt;
-> +       }
-> +       return rc;
+On Fri, Jun 07, 2019 at 06:13:58AM +0000, Nadav Amit wrote:
+> > On Jun 5, 2019, at 6:08 AM, Peter Zijlstra <peterz@infradead.org> wrote:
 
-At this point rc is guaranteed to be 0, so you can just 'return 0' for
-clarity. Also, I visually prefer an empty line between a return
-statement and a goto label, but I'm not sure what is the
-general/maintainer's preference.
+> > +void arch_static_call_transform(void *site, void *tramp, void *func)
+> > +{
+> > +	unsigned char opcodes[CALL_INSN_SIZE];
+> > +	unsigned char insn_opcode;
+> > +	unsigned long insn;
+> > +	s32 dest_relative;
+> > +
+> > +	mutex_lock(&text_mutex);
+> > +
+> > +	insn = (unsigned long)tramp;
+> > +
+> > +	insn_opcode = *(unsigned char *)insn;
+> > +	if (insn_opcode != 0xE9) {
+> > +		WARN_ONCE(1, "unexpected static call insn opcode 0x%x at %pS",
+> > +			  insn_opcode, (void *)insn);
+> > +		goto unlock;
+> 
+> This might happen if a kprobe is installed on the call, no?
+> 
+> I don’t know if you want to be more gentle handling of this case (or perhaps
+> modify can_probe() to prevent such a case).
+> 
 
-Also, you should drop the "lsm: " from the subject - it is redundant
-and doesn't follow the SELinux convention. See `git log --oneline --
-security/selinux/` for what the subjects usually look like - mostly we
-just go with "selinux: <description>" (or "LSM: <description>" when
-the changes affect the shared LSM interface).
-
-> +free_opt:
-> +       if (*mnt_opts) {
-> +               selinux_free_mnt_opts(*mnt_opts);
-> +               *mnt_opts = NULL;
->         }
->         return rc;
->  }
-
---
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
+yuck.. yes, that's something that needs consideration.
