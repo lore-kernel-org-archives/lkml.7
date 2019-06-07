@@ -2,106 +2,86 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D599EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1F4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9899120868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B415520868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 23:30:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m7cbzg/q"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1k1SzTsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730029AbfFGXY5 (ORCPT
+        id S1730348AbfFGX37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 19:24:57 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36339 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729738AbfFGXY5 (ORCPT
+        Fri, 7 Jun 2019 19:29:59 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44189 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730089AbfFGX37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 19:24:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i21so3120523ljj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 16:24:56 -0700 (PDT)
+        Fri, 7 Jun 2019 19:29:59 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so1981281pfe.11
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 16:29:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yxnf76CubLzSCgXqXpm3Tzi+epD/T4P0TuWJfUgCO5c=;
-        b=m7cbzg/qI+c44FkJJMtfka3ULkiYlcpI79X7AytRLLbncMH7UguQ+pmdFoSIdUQ4xb
-         395kdBEA+7vIzXou6mzkhFaOnbg2G6WVZhTjgjZPNPiTnn7mThymVTCdv9vmRwNjli6d
-         qr2CcHPVG2YAWGQ5HzNc8MSGj8lw8kgCTu22wQvaB22PTIPDMpRPp7FCzXhccEh9sOHR
-         YseeXQCtF4KngoJUx/oUlBuVKGXanwNSs4NDsZ1vXs6ca6MlZ+667a2xeAYC94qsAXmB
-         0DJdQlJq+UnSK/PlBL+kR3FZBg6+Lj0ESBAyT2iqyuQXZXAG6xtEzMt1Gjsxnhg7w6m0
-         y2Jg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=I1PywGpIKSbkW0TWj4vZQWbg6HMbsTN3+fpFYP0xgw0=;
+        b=1k1SzTsm1Ud8uu8kDrkNN7lSN+ROfcV2DHlbyFdUfCX7EoP2ofCPMwnre+fh5d5viP
+         SRIxgm3GiUBdi1KBfPHFwfeKuZkkrEVugtRwpqZbAYDhadtTcL2K4d6ZVa6RxIFTigOp
+         B30CZlHv+4uh3iefmsqR+fLOIuUvBPNNvyfUN6GM79sbHWQ9611jxaOzUWvFUOL0TYRm
+         5ivwaEQ8sTcsb405Ufw6GDs8EDXZoTKViSaQ7aqIays29uyTShHqAiKhIvnsdM4NSEiM
+         0sws9Kqlv2qD34Wn25NypjrqnR5g0BTDyCrTuLzKO6xHolWp0Tro2PoH+2nb53IZ5tms
+         g9QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yxnf76CubLzSCgXqXpm3Tzi+epD/T4P0TuWJfUgCO5c=;
-        b=SwF9k6BDFTdUWqYXdSCkV7KI9X50oKsj36OEKnZXBBPyI2FyWx4nSGLHEN/pckXO66
-         fUFTLeM7jFW2/n/ffdvpyWeCIpVmWXhVzBBIsVMDHephPtESVEb2GzX9Rz18mPJyjFOl
-         n/2kfVKbyLw+B2lrDlx9hxLh0rfiC7kRxmPSD5JHUM355bbewLjaMa/EwVp4knASMM4Y
-         e/sKneYecbZLo0FGYSfZkXMQYRQAWhyRiPIWmeNb0drtT/g1QdJ2b/mgqn+7ZjwRd74m
-         W+MQQ1w03/y3p2aXcN2h0E4RvuW5qZE8jC0ojqEE+haeY2SPrV+mefP8jdxB6J18oBqT
-         Qgrw==
-X-Gm-Message-State: APjAAAV/OX/5fQlju5j6bWoZQ70ySTe8chfIQbpROY1kL7UILBN6XCrK
-        W5jN4PZzl4SH9ias3ZSZdgJCaTS+6M4vg9V3lTECgQ==
-X-Google-Smtp-Source: APXvYqz+5A0YHaUqFPfF5fc/C7ZquljZneISf6m3UY24XIeHmwjuL30ItSQeeaMXOgZ8MXGYNR70QQM+S+zI5+UI0c0=
-X-Received: by 2002:a2e:5dc4:: with SMTP id v65mr20460259lje.138.1559949895389;
- Fri, 07 Jun 2019 16:24:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=I1PywGpIKSbkW0TWj4vZQWbg6HMbsTN3+fpFYP0xgw0=;
+        b=HMS8UMPzUUHMw9GPvVqr1z0D0aO/z0p4qHLpisUm47b8N6xQ23xVkh6s/iZnnpffno
+         wrxWsRYT2+5+6pO5NoAt9ZfToaX4P+7gpVkriobuAHWzw6TESMyHHoPvdUs0ptYqtG0W
+         GrLV2wp5H3LZy97SaqmX2xeXocgy0kDLA0NQgzCkLEGp/KWLyx4kAHMmWOyB0a/Sm40a
+         D9Ax2AYpOsNB7gTgjSTO7Frgfsc9c4ix/S0K7S8YHrxYNG0VCgA6oBVQYsA4FKfWQgsr
+         cFad1H4iFY2KWHWWse4ywhZuV60FbnWS4ShaAO9H5BzKhCLmR4oBrSbdXXdNBHFV7XZK
+         VqKw==
+X-Gm-Message-State: APjAAAWhsxS36NNuMSuUMSPL1vnwTd7q20RigVPWYcNg4AzXSXPDlWSe
+        ik9s+WWrO1ec4kIf4PARcy3Txw==
+X-Google-Smtp-Source: APXvYqwNQQJVPEemCv+XbvWWBEWm2pO4zGQmJGYgK94LzsBPnbkxSliCDyzqks25l326dpkQXcJgzg==
+X-Received: by 2002:a63:191b:: with SMTP id z27mr5107334pgl.327.1559950198221;
+        Fri, 07 Jun 2019 16:29:58 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id e184sm7910921pfa.169.2019.06.07.16.29.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 16:29:57 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
+        Loys Ollivier <lollivier@baylibre.com>
+Subject: Re: [PATCH] RISC-V: defconfig: enable clocks, serial console
+In-Reply-To: <20190605175042.13719-1-khilman@baylibre.com>
+References: <20190605175042.13719-1-khilman@baylibre.com>
+Date:   Fri, 07 Jun 2019 16:29:56 -0700
+Message-ID: <7h5zphas97.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190606231144.GA1402@embeddedor>
-In-Reply-To: <20190606231144.GA1402@embeddedor>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 01:24:47 +0200
-Message-ID: <CACRpkdYXxHZ2KmU5Fz1eDXN=Z9i=uqwAtOWmpHam6F0U-eYySA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: tb10x: Use flexible-array member and
- struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 1:11 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
+Palmer,
 
-> Update the code to use a flexible array member instead of a pointer in
-> structure tb10x_pinctrl and use the struct_size() helper:
->
-> struct tb10x_pinctrl {
->         ...
->         struct tb10x_of_pinfunc pinfuncs[];
-> };
->
-> Also, make use of the struct_size() helper instead of an open-coded
-> version in order to avoid any potential type mistakes.
->
-> So, replace the following form:
->
-> sizeof(struct tb10x_pinctrl) + of_get_child_count(of_node) * sizeof(struct tb10x_of_pinfunc)
->
-> with:
->
-> struct_size(state, pinfuncs, of_get_child_count(of_node))
->
-> This code was detected with the help of Coccinelle.
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
-> Changes in v2:
->  - Update changelog text.
->  - Add Kees' Reviewed-by tag.
+Kevin Hilman <khilman@baylibre.com> writes:
 
-Patch applied.
+> Enable PRCI clock driver and serial console by default, so the default
+> upstream defconfig is bootable to a serial console.
+>
+> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 
-Yours,
-Linus Walleij
+If possible, this would be great to have for v5.2-rc so we have a
+bootable upstream defconfig ready for kernelCI as soon as the DT series
+lands.
+
+Kevin
