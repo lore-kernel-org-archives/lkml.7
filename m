@@ -2,148 +2,331 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F23C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2CFC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74F6208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C6D208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfFGJof (ORCPT
+        id S1727552AbfFGJqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:44:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44352 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfFGJoe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:44:34 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hZBQG-0003p3-AQ; Fri, 07 Jun 2019 09:44:32 +0000
-Subject: Re: [PATCH][next] drm/bridge: sii902x: fix comparision of u32 with
- less than zero
-To:     Andrzej Hajda <a.hajda@samsung.com>, Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20190603142108epcas2p4625777c1aaea18257804ca86bcb64454@epcas2p4.samsung.com>
- <20190603142102.27191-1-colin.king@canonical.com>
- <60c72c12-472b-0b07-610b-f9edab4679c2@samsung.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <19bce79d-dfb0-778f-832a-1ea241e1e4ee@canonical.com>
-Date:   Fri, 7 Jun 2019 10:44:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 05:46:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:36792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727121AbfFGJqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 05:46:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DE0D28;
+        Fri,  7 Jun 2019 02:46:37 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 306233F96A;
+        Fri,  7 Jun 2019 02:48:17 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 83934682579; Fri,  7 Jun 2019 10:46:35 +0100 (BST)
+Date:   Fri, 7 Jun 2019 10:46:35 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc:     "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>
+Subject: Re: [PATCH 2/3] drm/komeda: Add split support for scaler
+Message-ID: <20190607094635.GB4173@e110455-lin.cambridge.arm.com>
+References: <20190520104411.6092-1-james.qian.wang@arm.com>
+ <20190520104411.6092-3-james.qian.wang@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <60c72c12-472b-0b07-610b-f9edab4679c2@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190520104411.6092-3-james.qian.wang@arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/2019 10:41, Andrzej Hajda wrote:
-> On 03.06.2019 16:21, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The less than check for the variable num_lanes is always going to be
->> false because the variable is a u32.  Fix this by making num_lanes an
->> int and also make loop index i an int too.
->>
->> Addresses-Coverity: ("Unsigned compared against 0")
+Hi James,
+
+On Mon, May 20, 2019 at 11:44:47AM +0100, james qian wang (Arm Technology China) wrote:
+> To achieve same caling effect compare with none split, the texel
+> calculation need to use the same scaling ratio before split, so add
+> "total_xxx" to pipeline to describe the hsize/vsize before split.
+> Update pipeline and d71_scaler_update accordingly.
 > 
+> Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
+> ---
+>  .../arm/display/komeda/d71/d71_component.c    | 47 +++++++++++++++++--
+>  .../drm/arm/display/komeda/komeda_pipeline.h  | 19 ++++++--
+>  .../display/komeda/komeda_pipeline_state.c    | 21 ++++++++-
+>  .../gpu/drm/arm/display/komeda/komeda_plane.c |  8 ++--
+>  .../arm/display/komeda/komeda_wb_connector.c  |  2 +-
+>  5 files changed, 81 insertions(+), 16 deletions(-)
 > 
-> Is there a rule in Kernel of adding such tags?
-> 
-> I have spotted only: Addresses-Coverity-ID?
+> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> index 3266bd54c936..d101a5cc2766 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+> @@ -642,23 +642,58 @@ static void d71_scaler_update(struct komeda_component *c,
+>  
+>  	malidp_write32(reg, BLK_IN_SIZE, HV_SIZE(st->hsize_in, st->vsize_in));
+>  	malidp_write32(reg, SC_OUT_SIZE, HV_SIZE(st->hsize_out, st->vsize_out));
+> +	malidp_write32(reg, SC_H_CROP, HV_CROP(st->left_crop, st->right_crop));
+> +
+> +	/* for right part, HW only sample the valid pixel which means the pixels
+> +	 * in left_crop will be jumpped, and the first sample pixel is:
+> +	 *
+> +	 * dst_a = st->total_hsize_out - st->hsize_out + st->left_crop + 0.5;
+> +	 *
+> +	 * Then the corresponding texel in src is:
+> +	 *
+> +	 * h_delta_phase = st->total_hsize_in / st->total_hsize_out;
+> +	 * src_a = dst_A * h_delta_phase;
+> +	 *
+> +	 * and h_init_phase is src_a deduct the real source start src_S;
+> +	 *
+> +	 * src_S = st->total_hsize_in - st->hsize_in;
+> +	 * h_init_phase = src_a - src_S;
+> +	 *
+> +	 * And HW precision for the initial/delta_phase is 16:16 fixed point,
+> +	 * the following is the simplified formula
+> +	 */
+> +	if (st->right_part) {
+> +		u32 dst_a = st->total_hsize_out - st->hsize_out + st->left_crop;
+> +
+> +		if (st->en_img_enhancement)
+> +			dst_a -= 1;
+> +
+> +		init_ph = ((st->total_hsize_in * (2 * dst_a + 1) -
+> +			    2 * st->total_hsize_out * (st->total_hsize_in -
+> +			    st->hsize_in)) << 15) / st->total_hsize_out;
+> +	} else {
+> +		init_ph = (st->total_hsize_in << 15) / st->total_hsize_out;
+> +	}
+>  
+> -	init_ph = (st->hsize_in << 15) / st->hsize_out;
+>  	malidp_write32(reg, SC_H_INIT_PH, init_ph);
+>  
+> -	delta_ph = (st->hsize_in << 16) / st->hsize_out;
+> +	delta_ph = (st->total_hsize_in << 16) / st->total_hsize_out;
+>  	malidp_write32(reg, SC_H_DELTA_PH, delta_ph);
+>  
+> -	init_ph = (st->vsize_in << 15) / st->vsize_out;
+> +	init_ph = (st->total_vsize_in << 15) / st->vsize_out;
+>  	malidp_write32(reg, SC_V_INIT_PH, init_ph);
+>  
+> -	delta_ph = (st->vsize_in << 16) / st->vsize_out;
+> +	delta_ph = (st->total_vsize_in << 16) / st->vsize_out;
+>  	malidp_write32(reg, SC_V_DELTA_PH, delta_ph);
+>  
+>  	ctrl = 0;
+>  	ctrl |= st->en_scaling ? SC_CTRL_SCL : 0;
+>  	ctrl |= st->en_alpha ? SC_CTRL_AP : 0;
+>  	ctrl |= st->en_img_enhancement ? SC_CTRL_IENH : 0;
+> +	/* If we use the hardware splitter we shouldn't set SC_CTRL_LS */
+> +	if (st->en_split &&
+> +	    state->inputs[0].component->id != KOMEDA_COMPONENT_SPLITTER)
+> +		ctrl |= SC_CTRL_LS;
+>  
+>  	malidp_write32(reg, BLK_CONTROL, ctrl);
+>  	malidp_write32(reg, BLK_INPUT_ID0, to_d71_input_id(&state->inputs[0]));
+> @@ -716,10 +751,12 @@ static int d71_scaler_init(struct d71_dev *d71,
+>  	}
+>  
+>  	scaler = to_scaler(c);
+> -	set_range(&scaler->hsize, 4, d71->max_line_size);
+> +	set_range(&scaler->hsize, 4, 2048);
+>  	set_range(&scaler->vsize, 4, 4096);
+>  	scaler->max_downscaling = 6;
+>  	scaler->max_upscaling = 64;
+> +	scaler->scaling_split_overlap = 8;
+> +	scaler->enh_split_overlap = 1;
+>  
+>  	malidp_write32(c->reg, BLK_CONTROL, 0);
+>  
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> index c92733736799..4e1cf8fd89bf 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
+> @@ -247,15 +247,22 @@ struct komeda_scaler {
+>  	struct malidp_range hsize, vsize;
+>  	u32 max_upscaling;
+>  	u32 max_downscaling;
+> +	u8 scaling_split_overlap; /* split overlap for scaling */
+> +	u8 enh_split_overlap; /* split overlap for image enhancement */
+>  };
+>  
+>  struct komeda_scaler_state {
+>  	struct komeda_component_state base;
+>  	u16 hsize_in, vsize_in;
+>  	u16 hsize_out, vsize_out;
+> +	u16 total_hsize_in, total_vsize_in;
+> +	u16 total_hsize_out; /* total_xxxx are size before split */
+> +	u16 left_crop, right_crop;
+>  	u8 en_scaling : 1,
+>  	   en_alpha : 1, /* enable alpha processing */
+> -	   en_img_enhancement : 1;
+> +	   en_img_enhancement : 1,
+> +	   en_split : 1,
+> +	   right_part; /* right part of split image */
+
+Should right_part be a 1 bit value here, same as in komeda_data_flow_cfg ?
+
+>  };
+>  
+>  struct komeda_compiz {
+> @@ -323,11 +330,16 @@ struct komeda_data_flow_cfg {
+>  	struct komeda_component_output input;
+>  	u16 in_x, in_y, in_w, in_h;
+>  	u32 out_x, out_y, out_w, out_h;
+> +	u16 total_in_h, total_in_w;
+> +	u16 total_out_w;
+> +	u16 left_crop, right_crop, overlap;
+>  	u32 rot;
+>  	int blending_zorder;
+>  	u8 pixel_blend_mode, layer_alpha;
+>  	u8 needs_scaling : 1,
+> -	   needs_img_enhancement : 1;
+> +	   needs_img_enhancement : 1,
+> +	   needs_split : 1,
+> +	   right_part : 1; /* right part of display image if split enabled */
+>  };
+>  
+>  /** struct komeda_pipeline_funcs */
+> @@ -488,6 +500,7 @@ void komeda_pipeline_disable(struct komeda_pipeline *pipe,
+>  void komeda_pipeline_update(struct komeda_pipeline *pipe,
+>  			    struct drm_atomic_state *old_state);
+>  
+> -void komeda_complete_data_flow_cfg(struct komeda_data_flow_cfg *dflow);
+> +void komeda_complete_data_flow_cfg(struct komeda_data_flow_cfg *dflow,
+> +				   struct drm_framebuffer *fb);
+>  
+>  #endif /* _KOMEDA_PIPELINE_H_*/
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> index fcd34164b3c2..9657dbfe0210 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> @@ -489,11 +489,19 @@ komeda_scaler_validate(void *user,
+>  	st->hsize_in = dflow->in_w;
+>  	st->vsize_in = dflow->in_h;
+>  	st->hsize_out = dflow->out_w;
+> -	st->vsize_out = dflow->out_w;
+> +	st->vsize_out = dflow->out_h;
+> +	st->right_crop = dflow->right_crop;
+> +	st->left_crop = dflow->left_crop;
+> +	st->total_vsize_in = dflow->total_in_h;
+> +	st->total_hsize_in = dflow->total_in_w;
+> +	st->total_hsize_out = dflow->total_out_w;
+> +
+>  	st->en_scaling = dflow->needs_scaling;
+>  	/* Enable alpha processing if the next stage needs the pixel alpha */
+>  	st->en_alpha = dflow->pixel_blend_mode != DRM_MODE_BLEND_PIXEL_NONE;
+>  	st->en_img_enhancement = dflow->needs_img_enhancement;
+> +	st->en_split = dflow->needs_split;
+> +	st->right_part = dflow->right_part;
+>  
+>  	komeda_component_add_input(&st->base, &dflow->input, 0);
+>  	komeda_component_set_output(&dflow->input, &scaler->base, 0);
+> @@ -647,14 +655,23 @@ komeda_timing_ctrlr_validate(struct komeda_timing_ctrlr *ctrlr,
+>  	return 0;
+>  }
+>  
+> -void komeda_complete_data_flow_cfg(struct komeda_data_flow_cfg *dflow)
+> +void komeda_complete_data_flow_cfg(struct komeda_data_flow_cfg *dflow,
+> +				   struct drm_framebuffer *fb)
+>  {
+>  	u32 w = dflow->in_w;
+>  	u32 h = dflow->in_h;
+>  
+> +	dflow->total_in_w = dflow->in_w;
+> +	dflow->total_in_h = dflow->in_h;
+> +	dflow->total_out_w = dflow->out_w;
+> +
+>  	if (drm_rotation_90_or_270(dflow->rot))
+>  		swap(w, h);
+>  
+> +	/* if format doesn't have alpha, fix blend mode to PIXEL_NONE */
+> +	if (!fb->format->has_alpha)
+> +		dflow->pixel_blend_mode = DRM_MODE_BLEND_PIXEL_NONE;
+> +
+>  	dflow->needs_scaling = (w != dflow->out_w) || (h != dflow->out_h);
+>  }
+>  
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> index aad766365bbb..75ef0e6c5d98 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
+> @@ -22,10 +22,7 @@ komeda_plane_init_data_flow(struct drm_plane_state *st,
+>  	memset(dflow, 0, sizeof(*dflow));
+>  
+>  	dflow->blending_zorder = st->normalized_zpos;
+> -
+> -	/* if format doesn't have alpha, fix blend mode to PIXEL_NONE */
+> -	dflow->pixel_blend_mode = fb->format->has_alpha ?
+> -			st->pixel_blend_mode : DRM_MODE_BLEND_PIXEL_NONE;
+> +	dflow->pixel_blend_mode = st->pixel_blend_mode;
+>  	dflow->layer_alpha = st->alpha >> 8;
+>  
+>  	dflow->out_x = st->crtc_x;
+> @@ -46,9 +43,10 @@ komeda_plane_init_data_flow(struct drm_plane_state *st,
+>  							fb->modifier));
+>  		return -EINVAL;
+>  	}
+> +
+>  	dflow->needs_img_enhancement = kplane_st->img_enhancement;
+>  
+> -	komeda_complete_data_flow_cfg(dflow);
+> +	komeda_complete_data_flow_cfg(dflow, fb);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> index eed521218ef3..20295291572f 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+> @@ -31,7 +31,7 @@ komeda_wb_init_data_flow(struct komeda_layer *wb_layer,
+>  	dflow->pixel_blend_mode = DRM_MODE_BLEND_PIXEL_NONE;
+>  	dflow->rot = DRM_MODE_ROTATE_0;
+>  
+> -	komeda_complete_data_flow_cfg(dflow);
+> +	komeda_complete_data_flow_cfg(dflow, fb);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.17.1
 > 
 
-Unfortunately I'm running a Coverity in-house and so the Coverity ID is
-not public, so it does not make sense for me to report the ID.
+Otherwise: Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
 
-Colin
+Best regards,
+Liviu
 
-> 
-> Beside this:
-> 
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> 
->  --
-> Regards
-> Andrzej
-> 
-> 
->> Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/gpu/drm/bridge/sii902x.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
->> index d6f98d388ac2..21a947603c88 100644
->> --- a/drivers/gpu/drm/bridge/sii902x.c
->> +++ b/drivers/gpu/drm/bridge/sii902x.c
->> @@ -719,7 +719,7 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
->>  		.max_i2s_channels = 0,
->>  	};
->>  	u8 lanes[4];
->> -	u32 num_lanes, i;
->> +	int num_lanes, i;
->>  
->>  	if (!of_property_read_bool(dev->of_node, "#sound-dai-cells")) {
->>  		dev_dbg(dev, "%s: No \"#sound-dai-cells\", no audio\n",
-> 
-> 
 
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
