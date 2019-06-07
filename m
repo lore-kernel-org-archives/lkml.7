@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA23C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A69C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D078F21479
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC80521530
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922178;
-	bh=4dRqwOCNbDrUOH84RUkkjW9jPHaTGW3Y2CIITnQ3V0Y=;
+	s=default; t=1559922181;
+	bh=BdPJGCj2AOTKJPkZVdOXogYObR9fm9JqGt86O8Y3gts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJDDh2jC8JHb//kDxAT1HrrQxgLOWtYZLxv/zL95HMpCxCt4l2UuzWEHkeeL3Xp7R
-	 M4ArZn7Z//v++F+oG9RKdHo8SYWIGrXBo/nDLjhoPm+G1NaPRiDdWqDX8rVcxlrojO
-	 MCOuJrQ1EzqIG/Tzf+xJvwsgDrPaenuoXTR8T0d4=
+	b=r+V8naKlZD0Fp9efmwPqs+eTiQMTorm6OdizUuTHu8u1Rb8eRJ7U6atsgcD2r35y/
+	 HzSA0jKwMwr+zth2mSOl3WbNxXdKSJDjGvFjngSHnAiVntJZWoYOPnq2nILd00II9K
+	 +ICsdhIy5UICEMOESWOjw/J0RyiKq/C90rOrcCfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbfFGPm6 (ORCPT
+        id S1730731AbfFGPnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:42:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730676AbfFGPmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:53 -0400
+        id S1730676AbfFGPm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1FE9212F5;
-        Fri,  7 Jun 2019 15:42:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 992EF2133D;
+        Fri,  7 Jun 2019 15:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922172;
-        bh=4dRqwOCNbDrUOH84RUkkjW9jPHaTGW3Y2CIITnQ3V0Y=;
+        s=default; t=1559922178;
+        bh=BdPJGCj2AOTKJPkZVdOXogYObR9fm9JqGt86O8Y3gts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myacOi7eH4Bq9UdNuQXoKv3Q9uv+NjCThzSS2Z6XDbKkgD0vURYp6sF6WPvBaRx+V
-         3GCWVeX3mA4cuLVuWLqd4G1p5dPI79SCNjwFMbo0YpuOhRFQPzBI0Dr8fj1gVN6prD
-         u8Pj7jg1P6bv5q6pFTJvLAt97S38I1djPIouBX5w=
+        b=C9aLh/OkRhJvU+bMLjaBPNswEx5bqUG38QAAz666XaPlBrRA7UXuyWorypKqIvDcn
+         Ksy1ioSa21HOGB4oCUJbqysrNFwpGBG81ZknHR03ZacswBD3mfqDDSkYt8d58wVPaF
+         GcjTz/T2MhJDJMXeID4loXQMrXxkXX9gkYur8Tds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hellstrom <thellstrom@vmware.com>,
-        Deepak Rawat <drawat@vmware.com>
-Subject: [PATCH 4.14 62/69] drm/vmwgfx: Dont send drm sysfs hotplug events on initial master set
-Date:   Fri,  7 Jun 2019 17:39:43 +0200
-Message-Id: <20190607153855.651941146@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Sebor <msebor@gcc.gnu.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 4.14 64/69] Compiler Attributes: add support for __copy (gcc >= 9)
+Date:   Fri,  7 Jun 2019 17:39:45 +0200
+Message-Id: <20190607153855.832901793@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -59,40 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-commit 63cb44441826e842b7285575b96db631cc9f2505 upstream.
+commit c0d9782f5b6d7157635ae2fd782a4b27d55a6013 upstream.
 
-This may confuse user-space clients like plymouth that opens a drm
-file descriptor as a result of a hotplug event and then generates a
-new event...
+>From the GCC manual:
 
-Cc: <stable@vger.kernel.org>
-Fixes: 5ea1734827bb ("drm/vmwgfx: Send a hotplug event at master_set")
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
+  copy
+  copy(function)
+
+    The copy attribute applies the set of attributes with which function
+    has been declared to the declaration of the function to which
+    the attribute is applied. The attribute is designed for libraries
+    that define aliases or function resolvers that are expected
+    to specify the same set of attributes as their targets. The copy
+    attribute can be used with functions, variables, or types. However,
+    the kind of symbol to which the attribute is applied (either
+    function or variable) must match the kind of symbol to which
+    the argument refers. The copy attribute copies only syntactic and
+    semantic attributes but not attributes that affect a symbol’s
+    linkage or visibility such as alias, visibility, or weak.
+    The deprecated attribute is also not copied.
+
+  https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html
+
+The upcoming GCC 9 release extends the -Wmissing-attributes warnings
+(enabled by -Wall) to C and aliases: it warns when particular function
+attributes are missing in the aliases but not in their target, e.g.:
+
+    void __cold f(void) {}
+    void __alias("f") g(void);
+
+diagnoses:
+
+    warning: 'g' specifies less restrictive attribute than
+    its target 'f': 'cold' [-Wmissing-attributes]
+
+Using __copy(f) we can copy the __cold attribute from f to g:
+
+    void __cold f(void) {}
+    void __copy(f) __alias("f") g(void);
+
+This attribute is most useful to deal with situations where an alias
+is declared but we don't know the exact attributes the target has.
+
+For instance, in the kernel, the widely used module_init/exit macros
+define the init/cleanup_module aliases, but those cannot be marked
+always as __init/__exit since some modules do not have their
+functions marked as such.
+
+Suggested-by: Martin Sebor <msebor@gcc.gnu.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Changes in v2:
+- Fix define of compatibility __copy macro (add symbol argument)
 
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-@@ -1245,7 +1245,13 @@ static int vmw_master_set(struct drm_dev
- 	}
+ include/linux/compiler-gcc.h   |    4 ++++
+ include/linux/compiler_types.h |    4 ++++
+ 2 files changed, 8 insertions(+)
+
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -343,6 +343,10 @@
+ #define __designated_init __attribute__((designated_init))
+ #endif
  
- 	dev_priv->active_master = vmaster;
--	drm_sysfs_hotplug_event(dev);
++#if GCC_VERSION >= 90100
++#define __copy(symbol)                 __attribute__((__copy__(symbol)))
++#endif
 +
-+	/*
-+	 * Inform a new master that the layout may have changed while
-+	 * it was gone.
-+	 */
-+	if (!from_open)
-+		drm_sysfs_hotplug_event(dev);
+ #endif	/* gcc version >= 40000 specific checks */
  
- 	return 0;
- }
+ #if !defined(__noclone)
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -230,6 +230,10 @@ struct ftrace_likely_data {
+ # define __latent_entropy
+ #endif
+ 
++#ifndef __copy
++# define __copy(symbol)
++#endif
++
+ #ifndef __randomize_layout
+ # define __randomize_layout __designated_init
+ #endif
 
 
