@@ -2,150 +2,115 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE98C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023A2C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90BB820B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBA320B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="xlwqQael"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfFGKqj (ORCPT
+        id S1728216AbfFGKrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 06:46:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54822 "EHLO mx1.suse.de"
+        Fri, 7 Jun 2019 06:47:03 -0400
+Received: from mail-eopbgr60049.outbound.protection.outlook.com ([40.107.6.49]:31989
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727537AbfFGKqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 06:46:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 471C9AF0A;
-        Fri,  7 Jun 2019 10:46:36 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id DDD771E3FCA; Fri,  7 Jun 2019 12:36:36 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 12:36:36 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190607103636.GA12765@quack2.suse.cz>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+        id S1726584AbfFGKrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 06:47:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+vwSFftsmnqIyChyg7ecvR/7CX3UXEeeSf5QwBkSCJg=;
+ b=xlwqQael+zlaM1aysWjIY33KMUcg9MPfdVbiTtZrugIpUu9cBxL3JrzRybnkgLvmYg8CSKeZtriROKY1ZZxT9odPAb6v7pBx/4XrwbqDqGTH5LH3ks3xr5Lqv2nPU2ExKCJMYP8tkYZn9PLViuVQtr4GQiAU3x4kv9chNy4w3Ks=
+Received: from AM0PR08MB4226.eurprd08.prod.outlook.com (20.179.36.17) by
+ AM0PR08MB3748.eurprd08.prod.outlook.com (20.178.21.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Fri, 7 Jun 2019 10:46:46 +0000
+Received: from AM0PR08MB4226.eurprd08.prod.outlook.com
+ ([fe80::bc0c:5148:629e:1a31]) by AM0PR08MB4226.eurprd08.prod.outlook.com
+ ([fe80::bc0c:5148:629e:1a31%6]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
+ 10:46:46 +0000
+From:   Ayan Halder <Ayan.Halder@arm.com>
+To:     Ayan Halder <Ayan.Halder@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     nd <nd@arm.com>
+Subject: [PATCH] drm/komeda: Avoid using DRIVER_IRQ_SHARED
+Thread-Topic: [PATCH] drm/komeda: Avoid using DRIVER_IRQ_SHARED
+Thread-Index: AQHVHR5MdDQKN6RFT0aBT7A4OfORUg==
+Date:   Fri, 7 Jun 2019 10:46:45 +0000
+Message-ID: <20190607104629.28791-1-ayan.halder@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P123CA0013.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:a6::25) To AM0PR08MB4226.eurprd08.prod.outlook.com
+ (2603:10a6:208:147::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Ayan.Halder@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.21.0
+x-originating-ip: [217.140.106.52]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 48e9b71b-2e03-41ca-ab9c-08d6eb356ee4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR08MB3748;
+x-ms-traffictypediagnostic: AM0PR08MB3748:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <AM0PR08MB37487644A2280DAA8DD6DD91E4100@AM0PR08MB3748.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:115;
+x-forefront-prvs: 0061C35778
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(346002)(376002)(39850400004)(199004)(189003)(81156014)(81166006)(8676002)(6512007)(4326008)(53936002)(36756003)(25786009)(8936002)(5660300002)(72206003)(6436002)(14454004)(102836004)(186003)(6486002)(26005)(2201001)(256004)(86362001)(5024004)(305945005)(7736002)(6506007)(14444005)(66066001)(386003)(66556008)(64756008)(66946007)(73956011)(66476007)(66446008)(68736007)(2906002)(44832011)(6116002)(2501003)(3846002)(316002)(486006)(110136005)(478600001)(2616005)(1076003)(476003)(71200400001)(71190400001)(50226002)(52116002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3748;H:AM0PR08MB4226.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UeVtXO5LsWjONiGucui/Lrkn/ByL12sHOWmfCNvG7UUVk2lSzJ+fb5PFExC4S+O8XQhh9akjjKnR/uc4S0fPItcyvPoEZ1wr0e3Sc7TJq2K9ttOV+oFALXJrSFt1uFE5E2sUDVi+FfNu9c4NYaKjeVcwkue6TqoR9U3Rw+tlwSwHCdunlmX8IlYnBkJKCifNabxvWOQ+sz0ZDEBk5h27EUf8PQ9hVXJzvTFaaRGrUYImeqvu/noEYxL5MHRkapcgpMrXeYKkUB6B0l75T6kFOGu79MAIWKY9avzBuUcJWKrg3Czu5BvajIW72luUyE/EnOG6JLFXn6CJA5F7bDvnpnJONDv5XP0QJ+biP7fXrR7gMwO6fJM3GLAKkGBPll/xDiCIaR4kFPkUVJueDQkL6HF5ZjfWCA5bPHGt4fhyk1E=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48e9b71b-2e03-41ca-ab9c-08d6eb356ee4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 10:46:45.9380
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ayan.Halder@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3748
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 06-06-19 15:22:28, Ira Weiny wrote:
-> On Thu, Jun 06, 2019 at 04:51:15PM -0300, Jason Gunthorpe wrote:
-> > On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
-> > 
-> > > So I'd like to actually mandate that you *must* hold the file lease until
-> > > you unpin all pages in the given range (not just that you have an option to
-> > > hold a lease). And I believe the kernel should actually enforce this. That
-> > > way we maintain a sane state that if someone uses a physical location of
-> > > logical file offset on disk, he has a layout lease. Also once this is done,
-> > > sysadmin has a reasonably easy way to discover run-away RDMA application
-> > > and kill it if he wishes so.
-> > > 
-> > > The question is on how to exactly enforce that lease is taken until all
-> > > pages are unpinned. I belive it could be done by tracking number of
-> > > long-term pinned pages within a lease. Gup_longterm could easily increment
-> > > the count when verifying the lease exists, gup_longterm users will somehow
-> > > need to propagate corresponding 'filp' (struct file pointer) to
-> > > put_user_pages_longterm() callsites so that they can look up appropriate
-> > > lease to drop reference - probably I'd just transition all gup_longterm()
-> > > users to a saner API similar to the one we have in mm/frame_vector.c where
-> > > we don't hand out page pointers but an encapsulating structure that does
-> > > all the necessary tracking. Removing a lease would need to block until all
-> > > pins are released - this is probably the most hairy part since we need to
-> > > handle a case if application just closes the file descriptor which
-> > > would
-> > 
-> > I think if you are going to do this then the 'struct filp' that
-> > represents the lease should be held in the kernel (ie inside the RDMA
-> > umem) until the kernel is done with it.
-> 
-> Yea there seems merit to this.  I'm still not resolving how this helps track
-> who has the pin across a fork.
-
-Yes, my thought was that gup_longterm() would return a structure that would
-be tracking filp (or whatever is needed) and that would be embedded inside
-RDMA umem.
-
-> > Actually does someone have a pointer to this userspace lease API, I'm
-> > not at all familiar with it, thanks
-> 
-> man fcntl
-> 	search for SETLEASE
-> 
-> But I had to add the F_LAYOUT lease type.  (Personally I'm for calling it
-> F_LONGTERM at this point.  I don't think LAYOUT is compatible with what we are
-> proposing here.)
-
-I think F_LAYOUT still expresses it pretty well. The lease is pinning
-logical->physical file offset mapping, i.e. the file layout.
-
-> > 
-> > And yes, a better output format from GUP would be great..
-> > 
-> > > Maybe we could block only on explicit lease unlock and just drop the layout
-> > > lease on file close and if there are still pinned pages, send SIGKILL to an
-> > > application as a reminder it did something stupid...
-> > 
-> > Which process would you SIGKILL? At least for the rdma case a FD is
-> > holding the GUP, so to do the put_user_pages() the kernel needs to
-> > close the FD. I guess it would have to kill every process that has the
-> > FD open? Seems complicated...
-> 
-> Tending to agree...  But I'm still not opposed to killing bad actors...  ;-)
-> 
-> NOTE: Jason I think you need to be more clear about the FD you are speaking of.
-> I believe you mean the FD which refers to the RMDA context.  That is what I
-> called it in my other email.
-
-I keep forgetting that the file with RDMA context may be held by multiple
-processes so thanks for correcting me. My proposal with SIGKILL was jumping
-to conclusion too quickly :) We have two struct files here: A file with RDMA
-context that effectively is the owner of the page pins (let's call it
-"context file") and a file which is mapped and on which we hold the lease and
-whose blocks (pages) we are pinning (let's call it "buffer file"). Now once
-buffer file is closed (and this means that all file descriptors pointing to
-this struct file are closed - so just one child closing the file descriptor
-won't trigger this) we need to release the lease and I want to have a way
-of safely releasing remaining pins associated with this lease as well.
-Because the pins would be invisible to sysadmin from that point on. Now if
-the context file would be open only by the process closing the buffer file,
-SIGKILL would work as that would close the buffer file as a side effect.
-But as you properly pointed out, that's not necessarily the case. Walking
-processes that have the context file open is technically complex and too
-ugly to live so we have to come up with something better. The best I can
-currently come up with is to have a method associated with the lease that
-would invalidate the RDMA context that holds the pins in the same way that
-a file close would do it.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+V2l0aCByZWZlcmVuY2UgdG8gbWFpbmxpbmUgY29tbWl0ICgxZmY0OTQ4MTNiYWZhMTI3ZWNiYTEx
+NjAyNjJiYTM5YjJmZGRlN2JhKSwNCkRSSVZFUl9JUlFfU0hBUkVEIGlzIHRvIGJlIHVzZWQgb25s
+eSBieSBsZWdhY3kgZHJpdmVycy4gRnVydGhlciwNCmRybV9pcnFfaW5zdGFsbCgpIGlnbm9yZXMg
+dGhpcyBmbGFnIGFsdG9nZXRoZXIuDQpPbmUgbmVlZHMgdG8gdXNlIGRldm1fcmVxdWVzdF9pcnEo
+KSBpbnN0ZWFkLCB3aXRoIElSUUZfU0hBUkVEIHRvIGNyZWF0ZSBhIHNoYXJlZA0KaW50ZXJydXB0
+IGhhbmRsZXIuDQoNClNpZ25lZC1vZmYtYnk6IEF5YW4gS3VtYXIgaGFsZGVyIDxheWFuLmhhbGRl
+ckBhcm0uY29tPg0KLS0tDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21l
+ZGFfa21zLmMgfCA0ICsrKy0NCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRl
+bGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29t
+ZWRhL2tvbWVkYV9rbXMuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29t
+ZWRhX2ttcy5jDQppbmRleCA4NmY2NTQyYWZiNDAuLjdiNWNkZTE0ZTNiYSAxMDA2NDQNCi0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ttcy5jDQorKysgYi9k
+cml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMuYw0KQEAgLTE5NCw3
+ICsxOTQsOSBAQCBzdHJ1Y3Qga29tZWRhX2ttc19kZXYgKmtvbWVkYV9rbXNfYXR0YWNoKHN0cnVj
+dCBrb21lZGFfZGV2ICptZGV2KQ0KIA0KIAlkcm1fbW9kZV9jb25maWdfcmVzZXQoZHJtKTsNCiAN
+Ci0JZXJyID0gZHJtX2lycV9pbnN0YWxsKGRybSwgbWRldi0+aXJxKTsNCisJZXJyID0gZGV2bV9y
+ZXF1ZXN0X2lycShkcm0tPmRldiwgbWRldi0+aXJxLA0KKwkJCSAgICAgICBrb21lZGFfa21zX2Ry
+aXZlci5pcnFfaGFuZGxlciwgSVJRRl9TSEFSRUQsDQorCQkJICAgICAgIGRybS0+ZHJpdmVyLT5u
+YW1lLCBkcm0pOw0KIAlpZiAoZXJyKQ0KIAkJZ290byBjbGVhbnVwX21vZGVfY29uZmlnOw0KIA0K
+LS0gDQoyLjIxLjANCg0K
