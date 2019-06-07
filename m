@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E937C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A39C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D915721473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA48214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922066;
-	bh=qxZ9rMqJ8eG6DGpDo67Bytw4sJ6TMxqP6+C9DYjK+XY=;
+	s=default; t=1559922069;
+	bh=KNFfvqEjrqV1o0Cnpl7tCj8fpBBoVZfiCSerGYW3EP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RMvmSLdsVvTMloePlilLdbXpi1d3s5mGIdr9TTM12+afi74H19gkquae3FfSVMbJR
-	 yuyYGu6K2eTgkioG7a+GxBfIsjSZQlJFbkHTHi05fNAYsNBiMRhrv6FzfmmZ8L7laM
-	 ZvucZdjaCiQFzvHswRTHbjR/0svt/+J7F7CyTQzs=
+	b=w21DTGTndzyBjx5XIkGoZuLb5rwHKlUe5ZdMTX5dxzKSHyTjL0M7fwYX0zABfPNhD
+	 oahbplLksE56sWdm6QdmQcMU+3hmHGmCg/0LVM9dMwvhhgrjHMe2AU3j1eAwGJBtcK
+	 xUZa2sSMM0Fk4MpsU5q/t24BNHh+NMpzptl4u33Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbfFGPlG (ORCPT
+        id S1730230AbfFGPlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50656 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:41:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730198AbfFGPlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:41:04 -0400
+        id S1730198AbfFGPlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:41:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6B02146E;
-        Fri,  7 Jun 2019 15:41:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBF1E2146F;
+        Fri,  7 Jun 2019 15:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922063;
-        bh=qxZ9rMqJ8eG6DGpDo67Bytw4sJ6TMxqP6+C9DYjK+XY=;
+        s=default; t=1559922066;
+        bh=KNFfvqEjrqV1o0Cnpl7tCj8fpBBoVZfiCSerGYW3EP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S8vBlVUvJDYblG8Yf9SaFwUUf9GaQrOFGoPtTmvdQ9+nOjwBd0Jwi69vd9E9nGOhF
-         fVfu8YVslITTczbcshUF5o4FlX1fosNyMBBLj73QsRXh88O8+qqXYBi9nQDlawfIr5
-         k4w+0rdczlMqVB5kIhVy4fSPAGYGJqFbV8hD0IvE=
+        b=O2t58nrYG286vssbsdYphTLCIkiQbVC67luTG/tK7JLihYcw2O9Pr2aCatgrGfZlL
+         IDuwwftkiiB2r9MiEEZRLgrV23DvGnUmCeDGen8QnQROaiu44/wvoEFAhXwRQKJ3Qe
+         Ay3hdM8vE7EAU8XoQELqbznP6FIJetXQBQqJzlA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Fabio Estevam <festevam@gmail.com>,
         Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 23/69] xhci: update bounce buffer with correct sg num
-Date:   Fri,  7 Jun 2019 17:39:04 +0200
-Message-Id: <20190607153851.228812132@linuxfoundation.org>
+Subject: [PATCH 4.14 24/69] xhci: Use %zu for printing size_t type
+Date:   Fri,  7 Jun 2019 17:39:05 +0200
+Message-Id: <20190607153851.370994242@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -59,82 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Lin <henryl@nvidia.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit 597c56e372dab2c7f79b8d700aad3a5deebf9d1b upstream.
+commit c1a145a3ed9a40f3b6145feb97789e8eb49c5566 upstream.
 
-This change fixes a data corruption issue occurred on USB hard disk for
-the case that bounce buffer is used during transferring data.
+Commit 597c56e372da ("xhci: update bounce buffer with correct sg num")
+caused the following build warnings:
 
-While updating data between sg list and bounce buffer, current
-implementation passes mapped sg number (urb->num_mapped_sgs) to
-sg_pcopy_from_buffer() and sg_pcopy_to_buffer(). This causes data
-not get copied if target buffer is located in the elements after
-mapped sg elements. This change passes sg number for full list to
-fix issue.
+drivers/usb/host/xhci-ring.c:676:19: warning: format '%ld' expects argument of type 'long int', but argument 3 has type 'size_t {aka unsigned int}' [-Wformat=]
 
-Besides, for copying data from bounce buffer, calling dma_unmap_single()
-on the bounce buffer before copying data to sg list can avoid cache issue.
+Use %zu for printing size_t type in order to fix the warnings.
 
-Fixes: f9c589e142d0 ("xhci: TD-fragment, align the unsplittable case with a bounce buffer")
-Cc: <stable@vger.kernel.org> # v4.8+
-Signed-off-by: Henry Lin <henryl@nvidia.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Fixes: 597c56e372da ("xhci: update bounce buffer with correct sg num")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-ring.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/usb/host/xhci-ring.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 --- a/drivers/usb/host/xhci-ring.c
 +++ b/drivers/usb/host/xhci-ring.c
-@@ -667,6 +667,7 @@ static void xhci_unmap_td_bounce_buffer(
- 	struct device *dev = xhci_to_hcd(xhci)->self.controller;
- 	struct xhci_segment *seg = td->bounce_seg;
- 	struct urb *urb = td->urb;
-+	size_t len;
- 
- 	if (!ring || !seg || !urb)
- 		return;
-@@ -677,11 +678,14 @@ static void xhci_unmap_td_bounce_buffer(
- 		return;
- 	}
- 
--	/* for in tranfers we need to copy the data from bounce to sg */
--	sg_pcopy_from_buffer(urb->sg, urb->num_mapped_sgs, seg->bounce_buf,
--			     seg->bounce_len, seg->bounce_offs);
- 	dma_unmap_single(dev, seg->bounce_dma, ring->bounce_buf_len,
- 			 DMA_FROM_DEVICE);
-+	/* for in tranfers we need to copy the data from bounce to sg */
-+	len = sg_pcopy_from_buffer(urb->sg, urb->num_sgs, seg->bounce_buf,
-+			     seg->bounce_len, seg->bounce_offs);
-+	if (len != seg->bounce_len)
-+		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %ld != %d\n",
-+				len, seg->bounce_len);
+@@ -684,7 +684,7 @@ static void xhci_unmap_td_bounce_buffer(
+ 	len = sg_pcopy_from_buffer(urb->sg, urb->num_sgs, seg->bounce_buf,
+ 			     seg->bounce_len, seg->bounce_offs);
+ 	if (len != seg->bounce_len)
+-		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %ld != %d\n",
++		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %zu != %d\n",
+ 				len, seg->bounce_len);
  	seg->bounce_len = 0;
  	seg->bounce_offs = 0;
- }
-@@ -3186,6 +3190,7 @@ static int xhci_align_td(struct xhci_hcd
- 	unsigned int unalign;
- 	unsigned int max_pkt;
- 	u32 new_buff_len;
-+	size_t len;
- 
- 	max_pkt = usb_endpoint_maxp(&urb->ep->desc);
- 	unalign = (enqd_len + *trb_buff_len) % max_pkt;
-@@ -3216,8 +3221,12 @@ static int xhci_align_td(struct xhci_hcd
- 
- 	/* create a max max_pkt sized bounce buffer pointed to by last trb */
- 	if (usb_urb_dir_out(urb)) {
--		sg_pcopy_to_buffer(urb->sg, urb->num_mapped_sgs,
-+		len = sg_pcopy_to_buffer(urb->sg, urb->num_sgs,
+@@ -3225,7 +3225,7 @@ static int xhci_align_td(struct xhci_hcd
  				   seg->bounce_buf, new_buff_len, enqd_len);
-+		if (len != seg->bounce_len)
-+			xhci_warn(xhci,
-+				"WARN Wrong bounce buffer write length: %ld != %d\n",
-+				len, seg->bounce_len);
+ 		if (len != seg->bounce_len)
+ 			xhci_warn(xhci,
+-				"WARN Wrong bounce buffer write length: %ld != %d\n",
++				"WARN Wrong bounce buffer write length: %zu != %d\n",
+ 				len, seg->bounce_len);
  		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
  						 max_pkt, DMA_TO_DEVICE);
- 	} else {
 
 
