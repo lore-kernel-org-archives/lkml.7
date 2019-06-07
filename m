@@ -2,103 +2,86 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6BBC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAA4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6892020449
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3C320449
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDqNDDQA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gw/ducDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731617AbfFGW1Z (ORCPT
+        id S1731331AbfFGWal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:27:25 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36888 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731343AbfFGW1Z (ORCPT
+        Fri, 7 Jun 2019 18:30:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46345 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730078AbfFGWal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:27:25 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 131so3046279ljf.4
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:27:24 -0700 (PDT)
+        Fri, 7 Jun 2019 18:30:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 81so1921524pfy.13
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sk6hPvdH3BWSbBnwR/y7MxMwBKDXfZfimHiTdJQ7FFU=;
-        b=HDqNDDQA5OUvAfv5ErMrdJxAulMyLpON958EjMhIAcyGxIJUP1kb+B46jbNu0+4dXM
-         5Je9yjehnmD7Zv2NuCq70LI794rhd3OCrwrPAK2Bkq2fZdvsFT2e0EUreoRTCKdqUNBy
-         XeC/Abhkf6qZX9ErnfN+DKKGYDP9BqOAMPDJEyVWmZBYnLbnj9lHzYM+xfbmcyghxFIM
-         iDyWCycTTXrddQxoi07tpAReu4/aquRc0gmhS34qgcA/nvw0K3lYoiapKHBYvyoBHyJ2
-         hGUc4WOp43VV2dlm8rPsQBSFipPR3Y4zM8jx8jOGLVvhPfSfpqX55bcf+3kNVzT/0qNF
-         zsVQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=XuNCqjePqDvn4lAEhRpdjQcT7X3J/79/6r+E49pUakU=;
+        b=gw/ducDlQdQHPd+e6gp+F3SvSKhifcRtoemwoSufIWDlzHTVLxsWk5tHcjkWqm2SO1
+         tN/RRohWoYf0MJ3QN9qsILayDbUxjOjAV3YMrwQjsRKgjeyiUQEoFOhFSArcIH3cBPZt
+         yIPZU1wsKCH4uCOmfTDiErxn0oQEMRvwp7ksoCo17k+Hz8AXuXxvPyQZ92Tg3HnyoauH
+         4z1tb1/YoR4PFKHxWiR/UM6lu4eW0+8z7Tomy+M1EaWfXSWlHBTMBnk6o7IwkWKvR5JF
+         3F5Q2NB7eMmMh0R+Qm1ZebZ69zXf48qNpY+W8L+J5kNJRX9hfI5K9Qyb91brjKj2EAw8
+         fegg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sk6hPvdH3BWSbBnwR/y7MxMwBKDXfZfimHiTdJQ7FFU=;
-        b=f0EctszqZzFKMLFLHcIog81TACZcpbFYFMqZVKotaxKXhD2NXQSCTI7iR3MpMItFid
-         bLO2Y8qR7IywXwDR1ddY3jsjSKd8eh5xGgd7JSDBDG9q1nWGnssmwZC64m5xrDC/gAdf
-         W1zJcFNJ1TYBEPAEsBuX3LboiMk3WzGGbNzHQO4efiJsbkHudEqgcmabiEj1X7dEIj+7
-         Oagfx0lyk+dJSF/VuoOErB7dxLXA2p9+jxKFZciscrphHPfbqGnByGOJTtxsUwTUH8sI
-         BB7ohUe1v75EkYK7cvYY3FYOvXLeLdQzbVaA6nBOyUUXYFJk8wxLCFwXluIdnqSRkwLk
-         8B9Q==
-X-Gm-Message-State: APjAAAVEM9mfN7eQaZNvUoRPGTGrLMlKVn7FVqG28XLyjsDs1sywTh2a
-        iVPKkAIiIaT18jayGUEYMcO+UucqeVaWOsW1G/izdQ==
-X-Google-Smtp-Source: APXvYqy/UI46+O5OT6qX2Cn14OJJPA3iOf6898d4EJfNCD4loFfPrXXvFp4sT2CgeK3eVLnXph8b+W0IiI28NUGwJXo=
-X-Received: by 2002:a05:651c:92:: with SMTP id 18mr1717937ljq.35.1559946442977;
- Fri, 07 Jun 2019 15:27:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=XuNCqjePqDvn4lAEhRpdjQcT7X3J/79/6r+E49pUakU=;
+        b=MLisZ6A5zEzXlvegwqjjtXg9GI3UB5a3ZI/RjvdUdTHh1o9u8/i8a7Tdi9ppqQowFp
+         3m684kn5sWeeDQ6/bJCHwdHfmwbYMXvBfOUpDqs/VKG5lzVeDXJ6bjimeLq5KbmcicIC
+         1WgDS44coMW6GdG8FK/Evy3hoJIMYyk9tgRkm0Ej67OsdSuhwU7oAPPI80qRZX6nDVns
+         UohlHghmmnRaNMM2mISiBd/UECmuH6waiOWuLAI6bh+Si9q0VsRcaMIKMC89O4lUATAR
+         k7xdeszJRHh8GoI3T/lsA96SVxH/4m0Oo7Aq08qjSZJvgDnI0W0QBXZ3eDYVzNQhJtob
+         liAg==
+X-Gm-Message-State: APjAAAUlAvyPI0uYL3/AWQ/zsMwhUpjbrd2igqvCnRAco8zvFUd326Uj
+        5HfJt5ixugBnnxovfW1x/1aqPw==
+X-Google-Smtp-Source: APXvYqwhZ/RJub3yjH06HYykOBY+dB3JKtBPnK4S+3FVx2KVlZSVwKWa7uqea2cume7geYK5drxJBw==
+X-Received: by 2002:a62:7656:: with SMTP id r83mr37066043pfc.56.1559946640632;
+        Fri, 07 Jun 2019 15:30:40 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.googlemail.com with ESMTPSA id 24sm3008135pgn.32.2019.06.07.15.30.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 15:30:36 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: meson-g12a-x96-max: bump bluetooth bus speed to 2Mbaud/s
+In-Reply-To: <20190607143618.32213-5-narmstrong@baylibre.com>
+References: <20190607143618.32213-1-narmstrong@baylibre.com> <20190607143618.32213-5-narmstrong@baylibre.com>
+Date:   Fri, 07 Jun 2019 15:30:36 -0700
+Message-ID: <7htvd1av03.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190607221911.118136-1-levinale@chromium.org>
-In-Reply-To: <20190607221911.118136-1-levinale@chromium.org>
-From:   Curtis Malainey <cujomalainey@google.com>
-Date:   Fri, 7 Jun 2019 15:27:11 -0700
-Message-ID: <CAOReqxi45h20K4aSfnGC7kQFx-nOyLrDCknKG_Lc5iyGS4+zrA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: Intel: sst: fix kmalloc call with wrong flags
-To:     Alex Levin <levinale@chromium.org>
-Cc:     ALSA development <alsa-devel@alsa-project.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Zhang <benzh@chromium.org>,
-        Curtis Malainey <cujomalainey@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 3:19 PM Alex Levin <levinale@chromium.org> wrote:
+Neil Armstrong <narmstrong@baylibre.com> writes:
+
+> Setting to 2Mbaud/s is the nominal bus speed for common usages.
 >
-> When calling kmalloc with GFP_KERNEL in case CONFIG_SLOB is unset,
-> kmem_cache_alloc_trace is called.
->
-> In case CONFIG_TRACING is set, kmem_cache_alloc_trace will ball
-nit: *call
-> slab_alloc, which will call slab_pre_alloc_hook which might_sleep_if.
->
-> The context in which it is called in this case, the
-> intel_sst_interrupt_mrfld, calling a sleeping kmalloc generates a BUG():
->
-> Fixes: 972b0d456e64 ("ASoC: Intel: remove GFP_ATOMIC, use GFP_KERNEL")
->
-> [   20.250671] BUG: sleeping function called from invalid context at mm/slab.h:422
-> [   20.250683] in_atomic(): 1, irqs_disabled(): 1, pid: 1791, name: Chrome_IOThread
-> [   20.250690] CPU: 0 PID: 1791 Comm: Chrome_IOThread Tainted: G        W         4.19.43 #61
-> [   20.250693] Hardware name: GOOGLE Kefka, BIOS Google_Kefka.7287.337.0 03/02/2017
-> [   20.250893] R10: 0000562dd1064d30 R11: 00003c8cc825b908 R12: 00003c8cc966d3c0
-> [   20.250896] R13: 00003c8cc9e280c0 R14: 0000000000000000 R15: 0000000000000000
->
-> Signed-off-by: Alex Levin <levinale@chromium.org>
-Reviewed-by: Curtis Malainey <cujomalainey@chromium.org>
-> ---
->
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+Queued for v5.3,
+
+Thanks,
+
+Kevin
