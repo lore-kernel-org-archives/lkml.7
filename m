@@ -2,157 +2,151 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C263C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FEAC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD6B212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05D4212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfFGKdH (ORCPT
+        id S1728243AbfFGKd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 06:33:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:48687 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfFGKdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 06:33:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id z19so1320356ioi.15
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 03:33:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ri4kh7VquzQYNilePfGGXnzZVizwUC0xdIzwwyPw8Jg=;
-        b=jpS7VCrAvV89GHffjz0BRJSt94iDpuLU8sOoKi1i8RpgHjPwAPpjHIfCxrtKz6ER2t
-         zHvn7ogrfk+5MIQ4uaK635BA8p22ZNdeOGVOK0G3ZdoaZ4e6m6DOJdN97O2cKcOeg3X9
-         kG6JjDAYKpEc12Gq7w+zuolWB1q6nj3Yixu+crqNt53n2AJdtjodi4XpB67fmeP8wUek
-         6LuNBWAqPAp5mvoSn12hKU0kHftlVRv7mIB1Sw2Jx7argoxTMSX9VQ8S2V7FYP2ObHJk
-         pq+kj9lldMAWZk2GhNq70so0MTPTyOwY1SzUEqREKMBvkOV+zqSFBG3+T+bjdGV+PavI
-         Bdtw==
-X-Gm-Message-State: APjAAAX6aDnRr4233vi1H/BMuSw86PH2YQEZ6iIm/wU/6MYDaq7V0C+2
-        JRmPA+FTEvwMxDSdxjItiOJ5XQj//QeHxlAQC6p9YVW/kkzg
-X-Google-Smtp-Source: APXvYqz7hpzC/Wwk28PWg8lXyteCwaKt3jO1uHe0MugGYuLjvuUNM6Y2WZYY5/UVNtioKknfPPXueJwCtwNp0qFraRWi/sDpHdOW
+        Fri, 7 Jun 2019 06:33:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:37534 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726584AbfFGKd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 06:33:57 -0400
+X-Greylist: delayed 337 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Jun 2019 06:33:57 EDT
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 622EF802;
+        Fri,  7 Jun 2019 03:28:20 -0700 (PDT)
+Received: from [192.168.0.4] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A11773F246;
+        Fri,  7 Jun 2019 03:29:56 -0700 (PDT)
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Auger Eric <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        Vincent Stehle <Vincent.Stehle@arm.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+ <20190526161004.25232-27-eric.auger@redhat.com>
+ <20190603163139.70fe8839@x1.home>
+ <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+ <20190605154553.0d00ad8d@jacob-builder>
+ <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
+ <20190606132903.064f7ac4@jacob-builder>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
+Date:   Fri, 7 Jun 2019 11:28:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b488:: with SMTP id d130mr27708772iof.58.1559903585612;
- Fri, 07 Jun 2019 03:33:05 -0700 (PDT)
-Date:   Fri, 07 Jun 2019 03:33:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001abc1c058ab95b3e@google.com>
-Subject: WARNING in aiptek_open/usb_submit_urb
-From:   syzbot <syzbot+75cccf2b7da87fb6f84b@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190606132903.064f7ac4@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 06/06/2019 21:29, Jacob Pan wrote:
+>>>>>> iommu_unregister_device_fault_handler(&vdev->pdev->dev);    
+>>>>>
+>>>>>
+>>>>> But this can fail if there are pending faults which leaves a
+>>>>> device reference and then the system is broken :(    
+>>>> This series only features unrecoverable errors and for those the
+>>>> unregistration cannot fail. Now unrecoverable errors were added I
+>>>> admit this is confusing. We need to sort this out or clean the
+>>>> dependencies.  
+>>> As Alex pointed out in 4/29, we can make
+>>> iommu_unregister_device_fault_handler() never fail and clean up all
+>>> the pending faults in the host IOMMU belong to that device. But the
+>>> problem is that if a fault, such as PRQ, has already been injected
+>>> into the guest, the page response may come back after handler is
+>>> unregistered and registered again.  
+>>
+>> I'm trying to figure out if that would be harmful in any way. I guess
+>> it can be a bit nasty if we handle the page response right after
+>> having injected a new page request that uses the same PRGI. In any
+>> other case we discard the page response, but here we forward it to
+>> the endpoint and:
+>>
+>> * If the response status is success, endpoint retries the
+>> translation. The guest probably hasn't had time to handle the new
+>> page request and translation will fail, which may lead the endpoint
+>> to give up (two unsuccessful translation requests). Or send a new
+>> request
+>>
+> Good point, there shouldn't be any harm if the page response is a
+> "fake" success. In fact it could happen in the normal operation when
+> PRQs to two devices share the same non-leaf translation structure. The
+> worst case is just a retry. I am not aware of the retry limit, is it in
+> the PCIe spec? I cannot find it.
 
-syzbot found the following crash on:
+I don't think so, it's the implementation's choice. In general I don't
+think devices will have a retry limit, but it doesn't seem like the PCI
+spec prevents them from implementing one either. It could be useful to
+stop retrying after a certain number of faults, for preventing livelocks
+when the OS doesn't fix up the page tables and the device would just
+repeat the fault indefinitely.
 
-HEAD commit:    69bbe8c7 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=140186c1a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=193d8457178b3229
-dashboard link: https://syzkaller.appspot.com/bug?extid=75cccf2b7da87fb6f84b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13e01351a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16573351a00000
+> I think we should just document it, similar to having a spurious
+> interrupt. The PRQ trace event should capture that as well.
+> 
+>> * otherwise the endpoint won't retry the access, and could also
+>> disable PRI if the status is failure.
+>>
+> That would be true regardless this race condition with handler
+> registration. So should be fine.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+75cccf2b7da87fb6f84b@syzkaller.appspotmail.com
+We do give an invalid response for the old PRG (because of unregistering),
+but also for the new one, which has a different address that the guest
+might be able to page in and would normally return success.
 
-usb 1-1: config 0 has no interface number 0
-usb 1-1: config 0 interface 237 altsetting 0 bulk endpoint 0x83 has invalid  
-maxpacket 255
-usb 1-1: New USB device found, idVendor=08ca, idProduct=0022,  
-bcdDevice=6d.4a
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-aiptek 1-1:0.237: Aiptek using 400 ms programming speed
-input: Aiptek as  
-/devices/platform/dummy_hcd.0/usb1/1-1/1-1:0.237/input/input5
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 0 PID: 108 at drivers/usb/core/urb.c:477  
-usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 108 Comm: kworker/0:2 Not tainted 5.2.0-rc1+ #10
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x292/0x6c9 kernel/panic.c:218
-  __warn.cold+0x20/0x4b kernel/panic.c:575
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Code: 4d 85 ed 74 2c e8 b8 06 e9 fd 4c 89 f7 e8 c0 44 13 ff 41 89 d8 44 89  
-e1 4c 89 ea 48 89 c6 48 c7 c7 20 1c 1a 86 e8 03 db be fd <0f> 0b e9 20 f4  
-ff ff e8 8c 06 e9 fd 4c 89 f2 48 b8 00 00 00 00 00
-RSP: 0018:ffff8881d41bf020 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8127e98d RDI: ffffed103a837df6
-RBP: ffff8881d246dc80 R08: ffff8881d7b4e000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff8881d170ee10 R14: ffff8881d05b4d20 R15: ffff8881d42c4300
-  aiptek_open+0xd5/0x130 drivers/input/tablet/aiptek.c:843
-  input_open_device+0x170/0x280 drivers/input/input.c:611
-  kbd_connect+0xfe/0x160 drivers/tty/vt/keyboard.c:1547
-  input_attach_handler+0x194/0x200 drivers/input/input.c:1004
-  input_register_device.cold+0xf5/0x246 drivers/input/input.c:2159
-  aiptek_probe.cold+0x286/0x30d drivers/input/tablet/aiptek.c:1886
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2268
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2414
-  kthread+0x30b/0x410 kernel/kthread.c:254
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+>>> We need a way to reject such page response belong
+>>> to the previous life of the handler. Perhaps a sync call to the
+>>> guest with your fault queue eventfd? I am not sure.  
+>>
+>> We could simply expect the device driver not to send any page response
+>> after unregistering the fault handler. Is there any reason VFIO would
+>> need to unregister and re-register the fault handler on a live guest?
+>>
+> There is no reason for VFIO to unregister and register again, I was
+> just thinking from security perspective. Someone could write a VFIO app
+> do this attack. But I agree the damage is within the device, may get
+> PRI disabled as a result.
 
+Yes I think the damage would always be contained within the misbehaving
+software
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> So it seems we agree on the following:
+> - iommu_unregister_device_fault_handler() will never fail
+> - iommu driver cleans up all pending faults when handler is unregistered
+> - assume device driver or guest not sending more page response _after_
+>   handler is unregistered.
+> - system will tolerate rare spurious response
+> 
+> Sounds right?
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Yes, I'll add that to the fault series
+
+Thanks,
+Jean
