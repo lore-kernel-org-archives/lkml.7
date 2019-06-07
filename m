@@ -4,58 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3E6C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E937C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0349F2146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D915721473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922062;
-	bh=KlwBN7wTpPzY3aeol3PGzhNPWo4vwzk6cXWEBS4kLsQ=;
+	s=default; t=1559922066;
+	bh=qxZ9rMqJ8eG6DGpDo67Bytw4sJ6TMxqP6+C9DYjK+XY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXBtBBU0x18JWMhREH7B3iGaBw0ZocWQC6l5VzyKBSbwGDIlWXjCWEmqbMYDZnAZP
-	 WskET4cIKkvggwYy3sdchbmUTiqsxFavXAIOxg3+TP1RkzFqkvu6XROdyVktBD4d3K
-	 re0eBQaq59y/DRruhsL8SBP6VLk1+lJtSo5MSQIk=
+	b=RMvmSLdsVvTMloePlilLdbXpi1d3s5mGIdr9TTM12+afi74H19gkquae3FfSVMbJR
+	 yuyYGu6K2eTgkioG7a+GxBfIsjSZQlJFbkHTHi05fNAYsNBiMRhrv6FzfmmZ8L7laM
+	 ZvucZdjaCiQFzvHswRTHbjR/0svt/+J7F7CyTQzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfFGPlB (ORCPT
+        id S1730218AbfFGPlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50454 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730178AbfFGPk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:40:58 -0400
+        id S1730198AbfFGPlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:41:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5161B21473;
-        Fri,  7 Jun 2019 15:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6B02146E;
+        Fri,  7 Jun 2019 15:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922057;
-        bh=KlwBN7wTpPzY3aeol3PGzhNPWo4vwzk6cXWEBS4kLsQ=;
+        s=default; t=1559922063;
+        bh=qxZ9rMqJ8eG6DGpDo67Bytw4sJ6TMxqP6+C9DYjK+XY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wTzmSkJgTpJ7OYojBoHplDOTXH0Lm1vrC+/a63VFzGJ7PsLU41/AWgr6sR92h+l2k
-         suFCQemEyILexTTBSWqSXHWhTFIaIukMp9rRgyywdeVp9ZiyyKhATr1f6iAhf2ZVN7
-         eNk+mfdQH8Nd92qhqct/m6sVCVt4OI/XYOR3NQl0=
+        b=S8vBlVUvJDYblG8Yf9SaFwUUf9GaQrOFGoPtTmvdQ9+nOjwBd0Jwi69vd9E9nGOhF
+         fVfu8YVslITTczbcshUF5o4FlX1fosNyMBBLj73QsRXh88O8+qqXYBi9nQDlawfIr5
+         k4w+0rdczlMqVB5kIhVy4fSPAGYGJqFbV8hD0IvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 4.14 22/69] include/linux/bitops.h: sanitize rotate primitives
-Date:   Fri,  7 Jun 2019 17:39:03 +0200
-Message-Id: <20190607153851.091848129@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.14 23/69] xhci: update bounce buffer with correct sg num
+Date:   Fri,  7 Jun 2019 17:39:04 +0200
+Message-Id: <20190607153851.228812132@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -68,133 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Henry Lin <henryl@nvidia.com>
 
-commit ef4d6f6b275c498f8e5626c99dbeefdc5027f843 upstream.
+commit 597c56e372dab2c7f79b8d700aad3a5deebf9d1b upstream.
 
-The ror32 implementation (word >> shift) | (word << (32 - shift) has
-undefined behaviour if shift is outside the [1, 31] range.  Similarly
-for the 64 bit variants.  Most callers pass a compile-time constant
-(naturally in that range), but there's an UBSAN report that these may
-actually be called with a shift count of 0.
+This change fixes a data corruption issue occurred on USB hard disk for
+the case that bounce buffer is used during transferring data.
 
-Instead of special-casing that, we can make them DTRT for all values of
-shift while also avoiding UB.  For some reason, this was already partly
-done for rol32 (which was well-defined for [0, 31]).  gcc 8 recognizes
-these patterns as rotates, so for example
+While updating data between sg list and bounce buffer, current
+implementation passes mapped sg number (urb->num_mapped_sgs) to
+sg_pcopy_from_buffer() and sg_pcopy_to_buffer(). This causes data
+not get copied if target buffer is located in the elements after
+mapped sg elements. This change passes sg number for full list to
+fix issue.
 
-  __u32 rol32(__u32 word, unsigned int shift)
-  {
-	return (word << (shift & 31)) | (word >> ((-shift) & 31));
-  }
+Besides, for copying data from bounce buffer, calling dma_unmap_single()
+on the bounce buffer before copying data to sg list can avoid cache issue.
 
-compiles to
-
-0000000000000020 <rol32>:
-  20:   89 f8                   mov    %edi,%eax
-  22:   89 f1                   mov    %esi,%ecx
-  24:   d3 c0                   rol    %cl,%eax
-  26:   c3                      retq
-
-Older compilers unfortunately do not do as well, but this only affects
-the small minority of users that don't pass constants.
-
-Due to integer promotions, ro[lr]8 were already well-defined for shifts
-in [0, 8], and ro[lr]16 were mostly well-defined for shifts in [0, 16]
-(only mostly - u16 gets promoted to _signed_ int, so if bit 15 is set,
-word << 16 is undefined).  For consistency, update those as well.
-
-Link: http://lkml.kernel.org/r/20190410211906.2190-1-linux@rasmusvillemoes.dk
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reported-by: Ido Schimmel <idosch@mellanox.com>
-Tested-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Will Deacon <will.deacon@arm.com>
-Cc: Vadim Pasternak <vadimp@mellanox.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Fixes: f9c589e142d0 ("xhci: TD-fragment, align the unsplittable case with a bounce buffer")
+Cc: <stable@vger.kernel.org> # v4.8+
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/bitops.h |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/usb/host/xhci-ring.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -59,7 +59,7 @@ static __always_inline unsigned long hwe
-  */
- static inline __u64 rol64(__u64 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (64 - shift));
-+	return (word << (shift & 63)) | (word >> ((-shift) & 63));
- }
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -667,6 +667,7 @@ static void xhci_unmap_td_bounce_buffer(
+ 	struct device *dev = xhci_to_hcd(xhci)->self.controller;
+ 	struct xhci_segment *seg = td->bounce_seg;
+ 	struct urb *urb = td->urb;
++	size_t len;
  
- /**
-@@ -69,7 +69,7 @@ static inline __u64 rol64(__u64 word, un
-  */
- static inline __u64 ror64(__u64 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (64 - shift));
-+	return (word >> (shift & 63)) | (word << ((-shift) & 63));
- }
+ 	if (!ring || !seg || !urb)
+ 		return;
+@@ -677,11 +678,14 @@ static void xhci_unmap_td_bounce_buffer(
+ 		return;
+ 	}
  
- /**
-@@ -79,7 +79,7 @@ static inline __u64 ror64(__u64 word, un
-  */
- static inline __u32 rol32(__u32 word, unsigned int shift)
- {
--	return (word << shift) | (word >> ((-shift) & 31));
-+	return (word << (shift & 31)) | (word >> ((-shift) & 31));
+-	/* for in tranfers we need to copy the data from bounce to sg */
+-	sg_pcopy_from_buffer(urb->sg, urb->num_mapped_sgs, seg->bounce_buf,
+-			     seg->bounce_len, seg->bounce_offs);
+ 	dma_unmap_single(dev, seg->bounce_dma, ring->bounce_buf_len,
+ 			 DMA_FROM_DEVICE);
++	/* for in tranfers we need to copy the data from bounce to sg */
++	len = sg_pcopy_from_buffer(urb->sg, urb->num_sgs, seg->bounce_buf,
++			     seg->bounce_len, seg->bounce_offs);
++	if (len != seg->bounce_len)
++		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %ld != %d\n",
++				len, seg->bounce_len);
+ 	seg->bounce_len = 0;
+ 	seg->bounce_offs = 0;
  }
+@@ -3186,6 +3190,7 @@ static int xhci_align_td(struct xhci_hcd
+ 	unsigned int unalign;
+ 	unsigned int max_pkt;
+ 	u32 new_buff_len;
++	size_t len;
  
- /**
-@@ -89,7 +89,7 @@ static inline __u32 rol32(__u32 word, un
-  */
- static inline __u32 ror32(__u32 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (32 - shift));
-+	return (word >> (shift & 31)) | (word << ((-shift) & 31));
- }
+ 	max_pkt = usb_endpoint_maxp(&urb->ep->desc);
+ 	unalign = (enqd_len + *trb_buff_len) % max_pkt;
+@@ -3216,8 +3221,12 @@ static int xhci_align_td(struct xhci_hcd
  
- /**
-@@ -99,7 +99,7 @@ static inline __u32 ror32(__u32 word, un
-  */
- static inline __u16 rol16(__u16 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (16 - shift));
-+	return (word << (shift & 15)) | (word >> ((-shift) & 15));
- }
- 
- /**
-@@ -109,7 +109,7 @@ static inline __u16 rol16(__u16 word, un
-  */
- static inline __u16 ror16(__u16 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (16 - shift));
-+	return (word >> (shift & 15)) | (word << ((-shift) & 15));
- }
- 
- /**
-@@ -119,7 +119,7 @@ static inline __u16 ror16(__u16 word, un
-  */
- static inline __u8 rol8(__u8 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (8 - shift));
-+	return (word << (shift & 7)) | (word >> ((-shift) & 7));
- }
- 
- /**
-@@ -129,7 +129,7 @@ static inline __u8 rol8(__u8 word, unsig
-  */
- static inline __u8 ror8(__u8 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (8 - shift));
-+	return (word >> (shift & 7)) | (word << ((-shift) & 7));
- }
- 
- /**
+ 	/* create a max max_pkt sized bounce buffer pointed to by last trb */
+ 	if (usb_urb_dir_out(urb)) {
+-		sg_pcopy_to_buffer(urb->sg, urb->num_mapped_sgs,
++		len = sg_pcopy_to_buffer(urb->sg, urb->num_sgs,
+ 				   seg->bounce_buf, new_buff_len, enqd_len);
++		if (len != seg->bounce_len)
++			xhci_warn(xhci,
++				"WARN Wrong bounce buffer write length: %ld != %d\n",
++				len, seg->bounce_len);
+ 		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
+ 						 max_pkt, DMA_TO_DEVICE);
+ 	} else {
 
 
