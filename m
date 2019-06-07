@@ -2,164 +2,69 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B212FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F485C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E002080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:10:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jDo5BRjl"
+	by mail.kernel.org (Postfix) with ESMTP id 34F12212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbfFGLKQ (ORCPT
+        id S1728517AbfFGLKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:10:16 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44908 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728265AbfFGLKQ (ORCPT
+        Fri, 7 Jun 2019 07:10:41 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:45412 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbfFGLKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:10:16 -0400
-Received: by mail-io1-f68.google.com with SMTP id s7so1071102iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 04:10:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qtT3xvK7Vazpl4o9exivAkvcEkMHtpOwXvVAPT2SJ40=;
-        b=jDo5BRjlVR3AVWDSSfo+gKcryeGPi/AmUttwaIMq0VxqJ+qVI2178K607NkM3CeySN
-         bBJCIl7N6/so3FXSZPrNsg3COjHe1B1atLZy+JgJHiMd9jSc8S4CwxPUM6KpZZWut1Ki
-         xcHnXQyeNRyWHaRgAcrIbDX07S1YcY1LGHUjDdLkg/rEBtcOlHPuiUzuOvE284Cn3XuW
-         cuJfglGXmCS+YULoWL89XM76DEtg5rZupYaC6jM/6ElBUMEg2tOGlKPglN2UFzQeSrkg
-         DGDDIKwDF2JCsDEdafcgCsWVVNTP3zHe6AU0YMfye1c3ZW0cWJg/BGgUKlW7y9Tbthif
-         UZQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qtT3xvK7Vazpl4o9exivAkvcEkMHtpOwXvVAPT2SJ40=;
-        b=NyK7A13pk5oHFeEe8IGULalL9n1C5Cr6Kelx3Rp5BzYqigD1YLhIJtX1zx295M3ZvZ
-         21LGFOXnP4fH3HCp6V5i6avZh41yxdM9uJtA+MXPVmcYqzD58gddexjlROlm9DqQ8KPp
-         fgFZu+JpysQCFPPlwhBJvYFL8A6i7yqfu1pzGE+Y9dwdEmfWIzOsiAbxUJpzJxeyTYri
-         X5rW+HIHXo2c6Zu1Zbx6Zd8Vj2Dvt20bBMAeST4CZ++YMY0odgRW8wC2LYQbAb+Kf1bn
-         eQ5lQUhJpydwRGmpxxTFny0gNhznJRZQpjrQo7dR/l8jnmIXsg32TiWrPlWZmfkTy74M
-         /zPQ==
-X-Gm-Message-State: APjAAAXqtx0Nl40Rx+ebRCyOXJh+t41pfVOYQC58uhhFnLeouLuXljxR
-        RpETBSgftCemGUiCoIv+DuXFkCR8HgR7vhqGVe182Q==
-X-Google-Smtp-Source: APXvYqwrUGnknS/zJMuvQI2wfL8thoDfsVGFqzJXzvtaPiQuD0VcSmpnabR9lJl/h/nYmF51UIoE2867Nj/5gi+piZI=
-X-Received: by 2002:a05:6602:98:: with SMTP id h24mr304941iob.49.1559905815366;
- Fri, 07 Jun 2019 04:10:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190607082901.6491-1-lee.jones@linaro.org> <20190607082901.6491-3-lee.jones@linaro.org>
-In-Reply-To: <20190607082901.6491-3-lee.jones@linaro.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 7 Jun 2019 13:10:04 +0200
-Message-ID: <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        wsa+renesas@sang-engineering.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 7 Jun 2019 07:10:40 -0400
+Received: from ramsan ([84.194.111.163])
+        by laurent.telenet-ops.be with bizsmtp
+        id MnAe2000Q3XaVaC01nAepp; Fri, 07 Jun 2019 13:10:38 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hZCla-0004A5-BV; Fri, 07 Jun 2019 13:10:38 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hZCla-0003Ot-A0; Fri, 07 Jun 2019 13:10:38 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial] net/mlx5e: Spelling s/configuraion/configuration/
+Date:   Fri,  7 Jun 2019 13:10:26 +0200
+Message-Id: <20190607111026.12995-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 10:29, Lee Jones <lee.jones@linaro.org> wrote:
->
-> When booting MSM based platforms with Device Tree or some ACPI
-> implementations, it is possible to provide a list of reserved pins
-> via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> However some ACPI tables are not populated with this information,
-> thus it has to come from a knowledgable device driver instead.
->
-> Here we provide the MSM common driver with additional support to
-> parse this informtion and correctly populate the widely used
-> 'valid_mask'.
->
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm not sure if this is the correct approach. Presumably, on ACPI
-systems, all the pinctl stuff is already set up by the firmware, and
-so we shouldn't touch *any* pins unless they have been requested
-explicitly. Is there any way we can support this in the current
-framework?
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
+index 633b117eb13e8143..7b672ada63a39733 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
+@@ -175,7 +175,7 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
+  *	@port_buffer: <output> port receive buffer configuration
+  *	@change: <output>
+  *
+- *	Update buffer configuration based on pfc configuraiton and
++ *	Update buffer configuration based on pfc configuration and
+  *	priority to buffer mapping.
+  *	Buffer's lossy bit is changed to:
+  *		lossless if there is at least one PFC enabled priority
+-- 
+2.17.1
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 18 ++++++++++++++++++
->  drivers/pinctrl/qcom/pinctrl-msm.h |  1 +
->  2 files changed, 19 insertions(+)
->
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index ee8119879c4c..3ac740b36508 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -607,8 +607,23 @@ static int msm_gpio_init_valid_mask(struct gpio_chip *chip)
->         int ret;
->         unsigned int len, i;
->         unsigned int max_gpios = pctrl->soc->ngpios;
-> +       const int *reserved = pctrl->soc->reserved_gpios;
->         u16 *tmp;
->
-> +       /* Driver provided reserved list overrides DT and ACPI */
-> +       if (reserved) {
-> +               bitmap_fill(chip->valid_mask, max_gpios);
-> +               for (i = 0; reserved[i] >= 0; i++) {
-> +                       if (i >= max_gpios || reserved[i] >= max_gpios) {
-> +                               dev_err(pctrl->dev, "invalid list of reserved GPIOs\n");
-> +                               return -EINVAL;
-> +                       }
-> +                       clear_bit(reserved[i], chip->valid_mask);
-> +               }
-> +
-> +               return 0;
-> +       }
-> +
->         /* The number of GPIOs in the ACPI tables */
->         len = ret = device_property_read_u16_array(pctrl->dev, "gpios", NULL,
->                                                    0);
-> @@ -964,6 +979,9 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
->
->  static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
->  {
-> +       if (pctrl->soc->reserved_gpios)
-> +               return true;
-> +
->         return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
->  }
->
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index c12048e54a6f..23b93ae92269 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -121,6 +121,7 @@ struct msm_pinctrl_soc_data {
->         bool pull_no_keeper;
->         const char *const *tiles;
->         unsigned int ntiles;
-> +       const int *reserved_gpios;
->  };
->
->  extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
