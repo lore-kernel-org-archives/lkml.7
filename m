@@ -2,118 +2,68 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7953FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A895DC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFF8208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9198B208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfFGRy2 (ORCPT
+        id S1730986AbfFGRzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:54:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33232 "EHLO mx1.redhat.com"
+        Fri, 7 Jun 2019 13:55:23 -0400
+Received: from ms.lwn.net ([45.79.88.28]:57982 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727391AbfFGRy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:54:28 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727391AbfFGRzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 13:55:23 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CCB3730F1BA6;
-        Fri,  7 Jun 2019 17:54:21 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 743CE5C896;
-        Fri,  7 Jun 2019 17:54:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri,  7 Jun 2019 19:54:21 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 19:54:13 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin LaHaise <bcrl@kvack.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Eric Wong <e@80x24.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-aio@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] aio: simplify read_events()
-Message-ID: <20190607175413.GA29187@redhat.com>
+        by ms.lwn.net (Postfix) with ESMTPSA id 6B1AB737;
+        Fri,  7 Jun 2019 17:55:22 +0000 (UTC)
+Date:   Fri, 7 Jun 2019 11:55:21 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 00/22] Some documentation fixes
+Message-ID: <20190607115521.6bf39030@lwn.net>
+In-Reply-To: <cover.1559656538.git.mchehab+samsung@kernel.org>
+References: <cover.1559656538.git.mchehab+samsung@kernel.org>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 07 Jun 2019 17:54:28 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change wait_event_hrtimeout() to not call __wait_event_hrtimeout()
-if timeout == 0, this matches other _timeout() helpers in wait.h.
+On Tue,  4 Jun 2019 11:17:34 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-This allows to simplify its only user, read_events(), it no longer
-needs to optimize the "until == 0" case by hand.
+> Fix several warnings and broken links.
+> 
+> This series was generated against linux-next, but was rebased to be applied at
+> docs-next. It should apply cleanly on either tree.
+> 
+> There's a git tree with all of them applied on the top of docs/docs-next
+> at:
+> 
+> https://git.linuxtv.org/mchehab/experimental.git/log/?h=fix_doc_links_v2
 
-Note: this patch doesn't use ___wait_cond_timeout because _hrtimeout()
-also differs in that it returns 0 if succeeds and -ETIME on timeout.
-Perhaps we should change this to make it fully compatible with other
-helpers.
+So I'll admit I've kind of lost track of which of these are applied, which
+have comments, etc.  When you feel things have settled, can you get me an
+updated set and I'll get them applied?
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- fs/aio.c             | 9 +++------
- include/linux/wait.h | 4 ++--
- 2 files changed, 5 insertions(+), 8 deletions(-)
+Thanks,
 
-diff --git a/fs/aio.c b/fs/aio.c
-index 5bdbef0..2bb3f2e 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1289,12 +1289,9 @@ static long read_events(struct kioctx *ctx, long min_nr, long nr,
- 	 * the ringbuffer empty. So in practice we should be ok, but it's
- 	 * something to be aware of when touching this code.
- 	 */
--	if (until == 0)
--		aio_read_events(ctx, min_nr, nr, event, &ret);
--	else
--		wait_event_interruptible_hrtimeout(ctx->wait,
--				aio_read_events(ctx, min_nr, nr, event, &ret),
--				until);
-+	wait_event_interruptible_hrtimeout(ctx->wait,
-+			aio_read_events(ctx, min_nr, nr, event, &ret),
-+			until);
- 	return ret;
- }
- 
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index b6f77cf..ddb9596 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -527,7 +527,7 @@ do {										\
- ({										\
- 	int __ret = 0;								\
- 	might_sleep();								\
--	if (!(condition))							\
-+	if (!(condition) && (timeout))						\
- 		__ret = __wait_event_hrtimeout(wq_head, condition, timeout,	\
- 					       TASK_UNINTERRUPTIBLE);		\
- 	__ret;									\
-@@ -553,7 +553,7 @@ do {										\
- ({										\
- 	long __ret = 0;								\
- 	might_sleep();								\
--	if (!(condition))							\
-+	if (!(condition) && (timeout))						\
- 		__ret = __wait_event_hrtimeout(wq, condition, timeout,		\
- 					       TASK_INTERRUPTIBLE);		\
- 	__ret;									\
--- 
-2.5.0
-
-
+jon
