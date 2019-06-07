@@ -2,175 +2,134 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029E7C28EBD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7C3C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F0920868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4560D20868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 01:57:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="S00yQNLR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fd2atQP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfFGBzB (ORCPT
+        id S1727939AbfFGB5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 21:55:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45963 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbfFGBzA (ORCPT
+        Thu, 6 Jun 2019 21:57:05 -0400
+Received: from mail-pg1-f174.google.com ([209.85.215.174]:43792 "EHLO
+        mail-pg1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfFGB5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 21:55:00 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w34so257861pga.12
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 18:55:00 -0700 (PDT)
+        Thu, 6 Jun 2019 21:57:04 -0400
+Received: by mail-pg1-f174.google.com with SMTP id f25so266283pgv.10;
+        Thu, 06 Jun 2019 18:57:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/XNZ/gn51wIkX7j4GJydFoEsiDY7sJR4sMnUtxZM9Ww=;
-        b=S00yQNLRvIJQua4YR2yQ8RVqPpjOLFHnBiFwSeuMasOSY6c6h0vWJcYdiY0Z5PM7YO
-         UipjM0ZF3UJgTbpzpruGqkllwmSh27VqFfBLmFFRQi48/y8vwP9lfsfd1fCr5GrWmx5U
-         +mrmTnh77qX/LJSmeUNVANIViSYH3SG9JLjQyxwvqhhXs4F5aW2xz3ZH+yMIfMncHUn7
-         BZCifuSpPT/N5rehXs3PF3WLzPimeqB/ooyW1/Bai8dhKtLnZ1mXZqIsmM2S1UwixE+q
-         zrtDne+gd7Z1LmEC/CuXvREAfd8SGdoCJ9NGUyq3IAdCLPX1ELUdL2u8V6EHYI+JY9jt
-         x5FA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=YFXox/VaEEDxs9pquSJLpjpCJcX389Fmf7dWJx9j5h8=;
+        b=fd2atQP1qdoyel71qRIYtGZmyNwY3U7xfG5j5j9PFq4fbQXsrW2UMnKBeFmoEhiguC
+         n9HlXRU+w0RAb+jWY4vGVguByv1Cc+fMjVTCT2u+yjFqOkDGn7MrLzJuhrWUg+uPGg4O
+         qk001HgwBTacceHi4x4kObsLZv8yj6FKmFozgzLShHEZ4LdSdTwGFyPHWgHb18mkoCwp
+         Vqm5287oGU0mulRrnaiz3OCyZe14Zdald/jqF67bC8QIM+EvPtQ4qDsaGd5H2Duwhant
+         kf9l92zvOmaU7UbQ9a2zCXYVIY4mreFUALU59myk3XAc63iX81hb7ftawXTZePIv6/fi
+         p+zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=/XNZ/gn51wIkX7j4GJydFoEsiDY7sJR4sMnUtxZM9Ww=;
-        b=S7dBZqFqzRuz8YivBgOiT+ReTokaDQCtgHbE81YmuQ9QtRpaRIO3I5/lTgPu8AXuCM
-         +QBrgq5J6fh6bkQ9FDwG7J6V9qKbIppJFNUW8DI1WlEIlbu73hSrI4sQrjHMJpABr90f
-         wJ5hl47Db+1qp+pL+xSReAODA8MNxCNNQ+9rg5eEids71QR5C/o3ZQ3v0uMrkCPWvX7Q
-         Jpr2UFjKeaet1HdP1L8CKokoD/BrofkIGJCdgHJqA2nV2y4fHJfgw5yHpzQrMBhVi39L
-         bpHqYtw+q6FZZpSPqyYCgZ87oCYMXW6whlUfRlOs7B0S2IqNae1RxmOY+hIPEekVflht
-         fERA==
-X-Gm-Message-State: APjAAAXJjOMFxZXGPg0oRechWdakM5AXKk4N6iz6TQ1G2FqHKTxP1shR
-        GEi3ESe0DHpwvYOJO1k3AuIDUQ==
-X-Google-Smtp-Source: APXvYqxx9s4fm3uOOHPSgMwgRlcgiy2DYwvEjaAWxVGCEthCLU5MAxClyI51h2SMQiGI5Wkj9aU4lw==
-X-Received: by 2002:a65:508b:: with SMTP id r11mr631484pgp.387.1559872499664;
-        Thu, 06 Jun 2019 18:54:59 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b02c:95e1:658b:ab88:7a44:1879? ([2600:1010:b02c:95e1:658b:ab88:7a44:1879])
-        by smtp.gmail.com with ESMTPSA id w190sm391940pgw.51.2019.06.06.18.54.57
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=YFXox/VaEEDxs9pquSJLpjpCJcX389Fmf7dWJx9j5h8=;
+        b=BaZfWOU8rFMVF+N66hPsF9nwHXZ5x2DyYXALQoCrcpmkpS8ByXFIGCJRk68nhOQvdC
+         FcwJ5QJx+J4oceG0tyN+hcvV5NOVcP+x7vnimIBunxAlMUE+y6YGdA6Z+Ox7G6qJuGwG
+         ZRqMZUAIcEBN3ZAv/+vYXQ/5pCb0OqtjWKC1bArFdTa0YH+75uGQXV7OJs27ETfyoy7q
+         vEASvv+JK/Nt7fhojBnbBuWkYgArIFuYOqdddgur+mM2CfIhhisgxIL8EIZQDiKKb9go
+         uPxduwr5WhpI9CFjJLk6Ht9qV8FszDIOE1u5f9TCiHzW1YBlKQIb/aDLUczlDyaIlPRu
+         YklQ==
+X-Gm-Message-State: APjAAAWjP1lJFlIl2HX7UXhinDJK/SE0NXPdaUuZeeOYnmsIFFnUNmFb
+        qfJPv8vxSRk+14GA5KNV4CQ=
+X-Google-Smtp-Source: APXvYqwAEMKapNCPLmFfVinmGpCE+xThuCljjQZSDJL2/DOYhYvG/45KTOx+TxQuwzxQL5Vqd0PGLQ==
+X-Received: by 2002:a62:a511:: with SMTP id v17mr54610684pfm.129.1559872624178;
+        Thu, 06 Jun 2019 18:57:04 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id r77sm385030pgr.93.2019.06.06.18.57.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2019 18:54:58 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v7 04/27] x86/fpu/xstate: Introduce XSAVES system states
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
-Date:   Thu, 6 Jun 2019 18:54:56 -0700
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2F0417F1-DA1E-4632-AFA2-757C09B3C4B4@amacapital.net>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com> <20190606200646.3951-5-yu-cheng.yu@intel.com> <0a2f8b9b-b96b-06c8-bae0-b78b2ca3b727@intel.com> <5EE146A8-6C8C-4C5D-B7C0-AB8AD1012F1E@amacapital.net> <4effb749-0cdc-6a49-6352-7b2d4aa7d866@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
+        Thu, 06 Jun 2019 18:57:03 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 07:26:58 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Thomas Winischhofer <thomas@winischhofer.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [Patch v2] USB: sisusbvga: Remove unneeded variable
+Message-ID: <20190607015658.GA4113@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+fix below warning reported by coccicheck
 
+drivers/usb/misc/sisusbvga/sisusb.c:1753:5-8: Unneeded variable: "ret".
+Return "0" on line 1877
 
-> On Jun 6, 2019, at 3:08 PM, Dave Hansen <dave.hansen@intel.com> wrote:
->=20
->=20
->=20
-> On 6/6/19 3:04 PM, Andy Lutomirski wrote:
->>> But, that seems broken.  If we have supervisor state, we can't=20
->>> always defer the load until return to userspace, so we'll never??=20
->>> have TIF_NEED_FPU_LOAD.  That would certainly be true for=20
->>> cet_kernel_state.
->>=20
->> Ugh. I was sort of imagining that we would treat supervisor state
-> completely separately from user state.  But can you maybe give
-> examples of exactly what you mean?
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+-----
+changes in v2: Change return type of sisusb_set_default_mode from int to void
+               as it never fails.
+---
+ drivers/usb/misc/sisusbvga/sisusb.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-I was imagining a completely separate area in memory for supervisor states. =
- I guess this might defeat the modified optimization and is probably a bad i=
-dea.
+diff --git a/drivers/usb/misc/sisusbvga/sisusb.c b/drivers/usb/misc/sisusbvga/sisusb.c
+index ea06f1f..2ab9600 100644
+--- a/drivers/usb/misc/sisusbvga/sisusb.c
++++ b/drivers/usb/misc/sisusbvga/sisusb.c
+@@ -1747,10 +1747,10 @@ static int sisusb_setup_screen(struct sisusb_usb_data *sisusb,
+ 	return ret;
+ }
+ 
+-static int sisusb_set_default_mode(struct sisusb_usb_data *sisusb,
++static void sisusb_set_default_mode(struct sisusb_usb_data *sisusb,
+ 		int touchengines)
+ {
+-	int ret = 0, i, j, modex, bpp, du;
++	int i, j, modex, bpp, du;
+ 	u8 sr31, cr63, tmp8;
+ 	static const char attrdata[] = {
+ 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+@@ -1873,8 +1873,6 @@ static int sisusb_set_default_mode(struct sisusb_usb_data *sisusb,
+ 	}
+ 
+ 	SETIREG(SISCR, 0x34, 0x44);	/* we just set std mode #44 */
+-
+-	return ret;
+ }
+ 
+ static int sisusb_init_gfxcore(struct sisusb_usb_data *sisusb)
+@@ -2019,7 +2017,7 @@ static int sisusb_init_gfxcore(struct sisusb_usb_data *sisusb)
+ 
+ 		ret |= SETIREG(SISCR, 0x83, 0x00);
+ 
+-		ret |= sisusb_set_default_mode(sisusb, 0);
++		sisusb_set_default_mode(sisusb, 0);
+ 
+ 		ret |= SETIREGAND(SISSR, 0x21, 0xdf);
+ 		ret |= SETIREGOR(SISSR, 0x01, 0x20);
+@@ -2246,7 +2244,7 @@ static int sisusb_init_gfxdevice(struct sisusb_usb_data *sisusb, int initscreen)
+ 		if (sisusb_init_gfxcore(sisusb) == 0) {
+ 			sisusb->gfxinit = 1;
+ 			sisusb_get_ramconfig(sisusb);
+-			ret |= sisusb_set_default_mode(sisusb, 1);
++			sisusb_set_default_mode(sisusb, 1);
+ 			ret |= sisusb_setup_screen(sisusb, 1, initscreen);
+ 		}
+ 	}
+-- 
+2.7.4
 
->>=20
->>> It seems like we actually need three classes of XSAVE states: 1.=20
->>> User state
->>=20
->> This is FPU, XMM, etc, right?
->=20
-> Yep.
->=20
->>> 2. Supervisor state that affects user mode
->>=20
->> User CET?
->=20
-> Yep.
->=20
->>> 3. Supervisor state that affects kernel mode
->>=20
->> Like supervisor CET?  If we start doing supervisor shadow stack, the=20
->> context switches will be real fun.  We may need to handle this in=20
->> asm.
->=20
-> Yeah, that's what I was thinking.
->=20
-> I have the feeling Yu-cheng's patches don't comprehend this since
-> Sebastian's patches went in after he started working on shadow stacks.
-
-Do we need to have TIF_LOAD_FPU mean =E2=80=9Cwe need to load *some* of the x=
-save state=E2=80=9D?  If so, maybe a bunch of the accessors should have thei=
-r interfaces reviewed to make sure they=E2=80=99re sill sensible.
-
->=20
->> Where does PKRU fit in?  Maybe we can treat it as #3?
->=20
-> I thought Sebastian added specific PKRU handling to make it always
-> eager.  It's actually user state that affect kernel mode. :)
-
-Indeed.  But, if we document a taxonomy of states, we should make sure it fi=
-ts in. I guess it=E2=80=99s like supervisor CET except that user code can ca=
-n also read and write it.
-
-We should probably have self tests that make sure that the correct states, a=
-nd nothing else, show up in ptrace and signal states, and that trying to wri=
-te supervisor CET via ptrace and sigreturn is properly rejected.
-
-Just to double check my mental model: it=E2=80=99s okay to XSAVES twice to t=
-he same buffer with disjoint RFBM as long as we do something intelligent wit=
-h XSTATE_BV afterwards, right?  Because, unless we split up the buffers, I t=
-hink we will have to do this when we context switch while TIF_LOAD_FPU is se=
-t.
-
-Are there performance numbers for how the time needed to XRSTORS everything v=
-ersus the time to XRSTORS supervisor CET and then separately XRSTORS the FPU=
-?  This may affect whether we want context switches to have the new task eag=
-erly or lazily restored.
-
-Hmm. I wonder if we need some way for a selftest to reliably trigger TIF_LOA=
-D_FPU.
-
-=E2=80=94Andy=
