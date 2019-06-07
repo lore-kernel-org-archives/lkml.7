@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41C3C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C59AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95B2208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F922089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nnwr/JXe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XqM8TSqQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfFGHU4 (ORCPT
+        id S1727625AbfFGHYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 03:20:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46161 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfFGHUz (ORCPT
+        Fri, 7 Jun 2019 03:24:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33724 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfFGHYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 03:20:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v9so668609pgr.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 00:20:55 -0700 (PDT)
+        Fri, 7 Jun 2019 03:24:09 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k187so197258pga.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 00:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3s2Am2EXinIk1Cx3geFx3zyzkfhWkzc/aAXsSIIwy/4=;
-        b=Nnwr/JXeTJIWPKjDDIY3rYwgxaUZr+W6/fvuDCn6Tpqm+ukyw2q216RHi9d4qF4UpQ
-         fWu+QbfXKuo3xSPuUof/XqDURKl4WO97/XWFRwqPh6bGTbXXxr6v6RD2kdqrI0Rpmx3k
-         ZkrasFu1neX7DISxTjaKQS9I+tuiaCWNlAXyL5mss6mLaNOlLGKFjtuWUmkuouF3hc3B
-         gF75blTIvbgRB/LF33pbbXxl8ytOaLD/5HvTl2L7jf38jhwib226nN83t6sTPrncQXAl
-         XywcMmtrqmN4EzupIK3zqk9UG2Qh2QBBTqTprQU0o2dZjnk1Y0cvZzNycSAaNrYoPvHE
-         GCNA==
+        bh=NXL/TO2ISYq8/butiqBjWgvY1wAMvzv3j7pmifqx/0U=;
+        b=XqM8TSqQO2SWcPDZbf2pP51yoc8emUS7eL+s0yqXWjsY/IZUYPqZfc6ciu4i+DYIi0
+         CNhoBxyX1rnE2GmUgeBZWdnohN/g/Oum/EFMv1jFSvqUdQ0Y1NXm8BGaIzAN+ZWs1rQb
+         1ybw1eLPgGegVYSRZRQC/Db8WKtVZ0tzcAm7X7Fucaljp9H+xVp90WX+Q2oRMVS8kLq0
+         PzDHRnI/eXFXd1QK9FQhVvGDlkOY33wiMCc3nkd5ItO8s+0Jh1GEMcV7o34ddhDA40Tz
+         e1q8bs+r+4ZZjQPvqrM3Ff8ox8G++zzDjZ8+0mmh3IFqN4mnLydhbW4soibsA1SygsPJ
+         myNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3s2Am2EXinIk1Cx3geFx3zyzkfhWkzc/aAXsSIIwy/4=;
-        b=sZo7BefvnaoG2AkrIyo17HdYCbpCy/KDshs0wF+0qeyJqdcRNx913uqFEzYOxVdlGD
-         cArL82Gg4ysO//KeFiuRLXfZJowP4/H0RFHEcvx/gpsWhyme9QVuJqIhATFbCqjkNdu0
-         wLhGJlJrP6WIsSWdRQyI18qzuNQRr8VgDXKhtruDA8ckaXPih/7dVwfFlSurdmvQgcUr
-         svBK/saLE7F1wKt8mYqBXlju0pPduKi0RUq9HijnHxwHzZ/aUXdh9r7Q3xvva+xHrvX9
-         vX446glyqEws1DciLj01htRQAgJB0aGKzrlX6757O7ZYiWxJIi1FhkT+NSc8lCU++GJ4
-         zSCA==
-X-Gm-Message-State: APjAAAVnBlXLF6QDNORpGbhtkqH3g83lwZnkZcqawydql+P3Zn4g8E19
-        NnHm6MymjU8/g9mHYW0jwCs=
-X-Google-Smtp-Source: APXvYqz4GA56O/vf+BShmfyDWKA++Cn5Rbi7jwTdvBjuCIhbipdUaQDpIT2JfB4Fiulm3lnYiGKjew==
-X-Received: by 2002:a17:90a:21ac:: with SMTP id q41mr4029805pjc.31.1559892055103;
-        Fri, 07 Jun 2019 00:20:55 -0700 (PDT)
+        bh=NXL/TO2ISYq8/butiqBjWgvY1wAMvzv3j7pmifqx/0U=;
+        b=Uv3Y5Z6s1NrXOHlVvUyd8Y/0U6gkBeIuOIumAuuipnNghXgrsgxqLDtZ72OxYSh5lr
+         RzVvsCxs+3XrTryK7Kr4Aq+E8ZzHPf1vzYiah1TtYGppggOv6eTABFMI2eAc9aCGetdt
+         gOE67+D9LxziIrrXTb9F9N/kYng5iiUkxfu2JNfOSo65+Y+mL3O6FWsNCxt7p62uqDdA
+         cPTKXGjXDKqLM48CWdGLE4dgZwygtLxFdbArVuuCMZDfAC6/XXTzXcFEm5apogT62o3V
+         iZAaF3MGFiBMgwosw61DZVIDQuZcI6HKz5VeezFlabtrAONFS93lsJir4JD0BrQPrMtf
+         Umdw==
+X-Gm-Message-State: APjAAAVG2lqnE6ZNT68dT5p6JrHf7psV0rtNfJ8ppMQGB3SGcoDJ9jNq
+        HmXgjibAwxS5s4MF0LAEPXqbcHec
+X-Google-Smtp-Source: APXvYqzp+jvAINFmyLt21EKAT/UJtK1F+tydde9f1RAarxBgk49baJ71b+AXQ9isNd0igYMhVZ791w==
+X-Received: by 2002:a62:a509:: with SMTP id v9mr55646875pfm.82.1559892249125;
+        Fri, 07 Jun 2019 00:24:09 -0700 (PDT)
 Received: from localhost.localdomain ([110.227.95.145])
-        by smtp.gmail.com with ESMTPSA id t24sm1178302pfh.113.2019.06.07.00.20.52
+        by smtp.gmail.com with ESMTPSA id t7sm1032435pjq.20.2019.06.07.00.24.07
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 00:20:54 -0700 (PDT)
+        Fri, 07 Jun 2019 00:24:08 -0700 (PDT)
 From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
 To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, hardiksingh.k@gmail.com
+        linux-kernel@vger.kernel.org
 Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: hal: hal_btcoex.c: Remove variable
-Date:   Fri,  7 Jun 2019 12:50:44 +0530
-Message-Id: <20190607072044.28481-1-nishkadg.linux@gmail.com>
+Subject: [PATCH] staging: rtl8723bs: hal: sdio_halinit.c: Remove variables
+Date:   Fri,  7 Jun 2019 12:53:57 +0530
+Message-Id: <20190607072357.28551-1-nishkadg.linux@gmail.com>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,36 +72,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove variable and use the values directly.
+Remove the variables RegRATR and RegRRSR as they are never used after
+initialisation and assignment.
 Issue found with Coccinelle.
 
 Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- drivers/staging/rtl8723bs/hal/hal_btcoex.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/staging/rtl8723bs/hal/sdio_halinit.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/hal/hal_btcoex.c b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-index 6caddd7834a1..aebe8b8977ad 100644
---- a/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-+++ b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
-@@ -362,15 +362,9 @@ static u32 halbtcoutsrc_GetBtPatchVer(PBTC_COEXIST pBtCoexist)
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+index 3c65a9c02bbd..55d21aa52e62 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+@@ -614,7 +614,6 @@ static void _InitOperationMode(struct adapter *padapter)
+ 	struct hal_com_data *pHalData;
+ 	struct mlme_ext_priv *pmlmeext;
+ 	u8 regBwOpMode = 0;
+-	u32 regRATR = 0, regRRSR = 0;
  
- static s32 halbtcoutsrc_GetWifiRssi(struct adapter *padapter)
- {
--	struct hal_com_data *pHalData;
--	s32 UndecoratedSmoothedPWDB = 0;
--
--
--	pHalData = GET_HAL_DATA(padapter);
--
--	UndecoratedSmoothedPWDB = pHalData->dmpriv.EntryMinUndecoratedSmoothedPWDB;
-+	struct hal_com_data *pHalData = GET_HAL_DATA(padapter);
+ 	pHalData = GET_HAL_DATA(padapter);
+ 	pmlmeext = &padapter->mlmeextpriv;
+@@ -626,34 +625,24 @@ static void _InitOperationMode(struct adapter *padapter)
+ 	switch (pmlmeext->cur_wireless_mode) {
+ 	case WIRELESS_MODE_B:
+ 		regBwOpMode = BW_OPMODE_20MHZ;
+-		regRATR = RATE_ALL_CCK;
+-		regRRSR = RATE_ALL_CCK;
+ 		break;
+ 	case WIRELESS_MODE_A:
+ /* 			RT_ASSERT(false, ("Error wireless a mode\n")); */
+ 		break;
+ 	case WIRELESS_MODE_G:
+ 		regBwOpMode = BW_OPMODE_20MHZ;
+-		regRATR = RATE_ALL_CCK | RATE_ALL_OFDM_AG;
+-		regRRSR = RATE_ALL_CCK | RATE_ALL_OFDM_AG;
+ 		break;
+ 	case WIRELESS_MODE_AUTO:
+ 		regBwOpMode = BW_OPMODE_20MHZ;
+-		regRATR = RATE_ALL_CCK | RATE_ALL_OFDM_AG | RATE_ALL_OFDM_1SS | RATE_ALL_OFDM_2SS;
+-		regRRSR = RATE_ALL_CCK | RATE_ALL_OFDM_AG;
+ 		break;
+ 	case WIRELESS_MODE_N_24G:
+ 		/*  It support CCK rate by default. */
+ 		/*  CCK rate will be filtered out only when associated AP does not support it. */
+ 		regBwOpMode = BW_OPMODE_20MHZ;
+-		regRATR = RATE_ALL_CCK | RATE_ALL_OFDM_AG | RATE_ALL_OFDM_1SS | RATE_ALL_OFDM_2SS;
+-		regRRSR = RATE_ALL_CCK | RATE_ALL_OFDM_AG;
+ 		break;
+ 	case WIRELESS_MODE_N_5G:
+ /* 			RT_ASSERT(false, ("Error wireless mode")); */
+ 		regBwOpMode = BW_OPMODE_5G;
+-		regRATR = RATE_ALL_OFDM_AG | RATE_ALL_OFDM_1SS | RATE_ALL_OFDM_2SS;
+-		regRRSR = RATE_ALL_OFDM_AG;
+ 		break;
  
--	return UndecoratedSmoothedPWDB;
-+	return pHalData->dmpriv.EntryMinUndecoratedSmoothedPWDB;
- }
- 
- static u8 halbtcoutsrc_GetWifiScanAPNum(struct adapter *padapter)
+ 	default: /* for MacOSX compiler warning. */
 -- 
 2.19.1
 
