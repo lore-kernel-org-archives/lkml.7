@@ -2,161 +2,156 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F0AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17A7C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3AB20684
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:42:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="s+/hX2/Z"
+	by mail.kernel.org (Postfix) with ESMTP id C19D92089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfFGJmE (ORCPT
+        id S1728215AbfFGJmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:42:04 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35128 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728170AbfFGJmE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:42:04 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190607094202euoutp0241f64bca9f88d51cb87faa5f3f20ffbc~l4UKqJLJQ1097610976euoutp02S
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 09:42:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190607094202euoutp0241f64bca9f88d51cb87faa5f3f20ffbc~l4UKqJLJQ1097610976euoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559900522;
-        bh=i04fqGKSBitdACcC66GRsSl53dxqFLrFmmFEFzkxRcg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=s+/hX2/ZKygoTzMu47BlvFgOF7VkiCK3Dsm3j4RnIEFTCJOHbIp6yRmj3ivp+ncdK
-         j+hXkk+VR+7rZuiXqsft+BqGXkA8cTurSO8TrF1BJ7Sqm4Yuth6QjwXQ5bzLm01tVb
-         BGfhb/agrTW9wFf/wQdozOiwAhlyPZIjtPadLbl8=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190607094201eucas1p17e5c03dfe2482d91ddbce03fca522640~l4UKPik6l3276132761eucas1p1r;
-        Fri,  7 Jun 2019 09:42:01 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 36.D1.04298.9613AFC5; Fri,  7
-        Jun 2019 10:42:01 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190607094201eucas1p2385e3db42eea3bde5f3d8ce372fc32b5~l4UJb_v2y2838028380eucas1p2n;
-        Fri,  7 Jun 2019 09:42:01 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190607094200eusmtrp288b5a00caa558dbc90834b94998a37c3~l4UJKsYgf0906509065eusmtrp2B;
-        Fri,  7 Jun 2019 09:42:00 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-af-5cfa31695515
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 30.B4.04146.8613AFC5; Fri,  7
-        Jun 2019 10:42:00 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190607094200eusmtip1452cfc5dce846486ecdeae0406ea94c8~l4UIcGpYr1414914149eusmtip1i;
-        Fri,  7 Jun 2019 09:41:59 +0000 (GMT)
-Subject: Re: [PATCH][next] drm/bridge: sii902x: fix comparision of u32 with
- less than zero
-To:     Colin King <colin.king@canonical.com>, Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <60c72c12-472b-0b07-610b-f9edab4679c2@samsung.com>
-Date:   Fri, 7 Jun 2019 11:41:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 7 Jun 2019 05:42:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43122 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727512AbfFGJmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 05:42:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3CC5EAE15;
+        Fri,  7 Jun 2019 09:42:37 +0000 (UTC)
+Message-ID: <5dccf2500f023ce2c78d9ff3f41b53e36843298b.camel@suse.de>
+Subject: Re: [PATCH v2 2/7] clk: bcm283x: add driver interfacing with
+ Raspberry Pi's firmware
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>, stefan.wahren@i2se.com,
+        linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
+        ptesarik@suse.com, sboyd@kernel.org, viresh.kumar@linaro.org,
+        mturquette@baylibre.com, linux-pm@vger.kernel.org,
+        rjw@rjwysocki.net, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        mbrugger@suse.de, ssuloev@orpaltech.com
+Date:   Fri, 07 Jun 2019 11:42:34 +0200
+In-Reply-To: <3c4c8b56-eb02-be6f-9b3a-a94a895f10f0@gmx.net>
+References: <20190606142255.29454-1-nsaenzjulienne@suse.de>
+         <20190606142255.29454-3-nsaenzjulienne@suse.de>
+         <3c4c8b56-eb02-be6f-9b3a-a94a895f10f0@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-vYYrm15OHAAapvPJgPuT"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-In-Reply-To: <20190603142102.27191-1-colin.king@canonical.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRj13f3YdbW4TmNPGkazPxZpg35cyixBY+Qf+9PEJjb1oqJO2dWV
-        aaRYMRVDrTCnpGCiZKTO1DSy8GusVKYJmqgTWjiskd9oZeZ2V/nvPOc5533OgZfCJN2EL5Wi
-        yWK1GnWajBThnUNboydT5D9Up/Q7AUzpqFnA/GwuJZmdznKMmVj/TjIlRXqC6Zj2Y4rKnwqZ
-        jz015AVKYcgvJRVvNupwRbW+ilB0bcwTCmuJSaAwTXUJFKtG/yhhjCgkkU1L0bHa4NBromSH
-        +TOW2Si6MVYxS+SjdqoYeVJAn4amyjlhMRJREroJgWWgFeeHNQS/ZpoIp0pCryJoeCD851ix
-        C3hRIwLz3CzBDw4EM5Yql8ObVsHOxn2Xyoe2IRiZ6MacC4wOgxe1M7gTk3QgbLd/Ip1YTIfC
-        8tS2y4zTx6ByeNKlOUhHg3WoleA1XmCusrl4z129wzLufvMIFHZUu7EUpm21rsNA9wnh7nC+
-        gM8dDm3D79zYGxZNL919DsNOd62bvw3WpjsYb9Yj6GjlUwN9FvpNY7spqN0LgdDSE8zTYVC3
-        1IU7aaAPwJTDi89wACo6KzGeFoP+noRXHwXrSIf7QSk0WNbJMiQz7Glm2NPGsKeN4f/dOoQ/
-        Q1I2m0tPYjm5hr0exKnTuWxNUlBCRroR7X6oD79NK6/Q+nh8H6IpJNsvVgi3VBJCreNy0vsQ
-        UJjMR6yzbKok4kR1zk1WmxGnzU5juT7kR+EyqTjXY/6qhE5SZ7GpLJvJav9uBZSnbz4qF5z3
-        73XUTmJhxufehugYhtJ/e7J+KzaiPk9pjO+89NiIFUfJ8+JOVJguat4X2Psjt1PqUxMi7I2L
-        lwtKMkM27bLBK8PhX3V6ZeyCh2zwXPVy7r5km0qbKtQVfilzRL7G1oi25pY5ZbeZDHiLDnED
-        wY+WHjbUnFHKexes0zKcS1bLj2NaTv0HiAUOO0wDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsVy+t/xu7oZhr9iDHpbNSx6z51ksvi9upfN
-        4v+2icwWV76+Z7Po7uxgtdh6S9qic+ISdovLu+awOXB4zGroZfPY+20Bi8fsjpmsHtu/PWD1
-        uN99nMnj+I3tTB6fN8kFsEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb
-        2aSk5mSWpRbp2yXoZbw9+Zi5YDlXxcVJd1kbGDdzdDFyckgImEis+PSCqYuRi0NIYCmjRNP3
-        f8wQCXGJ3fPfQtnCEn+udbFBFL1mlDj2/BgrSEJYIEbi/7c+sG4RgSeMEldX/2UCSTALOEqs
-        m3+HBcQWEpjIKLG5SxbEZhPQlPi7+SYbiM0rYCfx8cZfsEEsAioS089cB6sXFYiQOPN+BQtE
-        jaDEyZlPwGxOoPq3Fy4xQ8xXl/gzD8aWl2jeOhvKFpe49WQ+0wRGoVlI2mchaZmFpGUWkpYF
-        jCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAmNy27Gfm3cwXtoYfIhRgINRiYfXgeFnjBBr
-        YllxZe4hRgkOZiUR3rILP2KEeFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YLvJK4g1NDc0t
-        LA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTAKNpTHqjB27I9mXDz9ZU/miQOR
-        j60W1a5bfGFj94OqusLIUAs7uZNueQ6W13sW5fCHhy1VTVrxZYFUk/Peo3r9r+bEqvp973u/
-        OWTrZeMD2jpvbT5uz5b/W6mk4nZI9AHrU44p8+rWrlyzK77u4d20TeKntp+VYzZb3lCz9v88
-        k4uTJhVuaBZTYinOSDTUYi4qTgQABHO8dN8CAAA=
-X-CMS-MailID: 20190607094201eucas1p2385e3db42eea3bde5f3d8ce372fc32b5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190603142108epcas2p4625777c1aaea18257804ca86bcb64454
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190603142108epcas2p4625777c1aaea18257804ca86bcb64454
-References: <CGME20190603142108epcas2p4625777c1aaea18257804ca86bcb64454@epcas2p4.samsung.com>
-        <20190603142102.27191-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.06.2019 16:21, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The less than check for the variable num_lanes is always going to be
-> false because the variable is a u32.  Fix this by making num_lanes an
-> int and also make loop index i an int too.
->
-> Addresses-Coverity: ("Unsigned compared against 0")
+
+--=-vYYrm15OHAAapvPJgPuT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, 2019-06-07 at 11:26 +0200, Stefan Wahren wrote:
+> Hi Nicolas,
+>=20
+> Am 06.06.19 um 16:22 schrieb Nicolas Saenz Julienne:
+> > Raspberry Pi's firmware offers an interface though which update it's
+> > clock's frequencies. This is specially useful in order to change the CP=
+U
+> > clock (pllb_arm) which is 'owned' by the firmware and we're unable to
+> > scale using the register interface provided by clk-bcm2835.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Acked-by: Eric Anholt <eric@anholt.net>
+> >=20
+> > ---
+> >=20
+> > Changes since v1:
+> >   - Use BIT()
+> >   - Add Kconfig entry, with compile test
+> >   - remove prepare/unprepare
+> >   - Fix uninitialized init.name in pllb registration
+> >   - Add MODULE_ALIAS()
+> >   - Use determine_rate() instead of round_rate()
+> >   - Add small introduction explaining need for driver
+> >=20
+> >  drivers/clk/bcm/Kconfig           |   7 +
+> >  drivers/clk/bcm/Makefile          |   1 +
+> >  drivers/clk/bcm/clk-raspberrypi.c | 302 ++++++++++++++++++++++++++++++
+> >  3 files changed, 310 insertions(+)
+> >  create mode 100644 drivers/clk/bcm/clk-raspberrypi.c
+> >=20
+> > diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+> > index 29ee7b776cd4..a4a2775d65e1 100644
+> > --- a/drivers/clk/bcm/Kconfig
+> > +++ b/drivers/clk/bcm/Kconfig
+> > @@ -64,3 +64,10 @@ config CLK_BCM_SR
+> >  	default ARCH_BCM_IPROC
+> >  	help
+> >  	  Enable common clock framework support for the Broadcom Stingray SoC
+> > +
+> > +config CLK_RASPBERRYPI
+> > +	tristate "Raspberry Pi firmware based clock support"
+> > +	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST &&
+> > !RASPBERRYPI_FIRMWARE)
+> > +	help
+> > +	  Enable common clock framework support for Raspberry Pi's firmware
+> > +	  dependent clocks
+> > diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+> > index 002661d39128..eb7159099d82 100644
+> > --- a/drivers/clk/bcm/Makefile
+> > +++ b/drivers/clk/bcm/Makefile
+> > @@ -7,6 +7,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-bcm21664.o
+> >  obj-$(CONFIG_COMMON_CLK_IPROC)	+=3D clk-iproc-armpll.o clk-iproc-pll.o
+> > clk-iproc-asiu.o
+> >  obj-$(CONFIG_ARCH_BCM2835)	+=3D clk-bcm2835.o
+> >  obj-$(CONFIG_ARCH_BCM2835)	+=3D clk-bcm2835-aux.o
+> > +obj-$(CONFIG_CLK_RASPBERRYPI)	+=3D clk-raspberrypi.o
+> >  obj-$(CONFIG_ARCH_BCM_53573)	+=3D clk-bcm53573-ilp.o
+> >  obj-$(CONFIG_CLK_BCM_CYGNUS)	+=3D clk-cygnus.o
+> >  obj-$(CONFIG_CLK_BCM_HR2)	+=3D clk-hr2.o
+>=20
+> not your fault but you better rebase your next version on linux-next
+> because Florian's latest patches ("clk: bcm: Make BCM2835 clock drivers
+> selectable") collide with this patch.
+>=20
+> Checkpatch gives the following output about this patch:
+>=20
+> WARNING: 'harware' may be misspelled - perhaps 'hardware'?
+>=20
+> #58: FILE: drivers/clk/bcm/clk-raspberrypi.c:5:
+> + * Even though clk-bcm2835 provides an interface to the harware
+> registers for
+>=20
+> ERROR: code indent should use tabs where possible
+> #197: FILE: drivers/clk/bcm/clk-raspberrypi.c:144:
+> +^I^I^I^I           struct clk_rate_request *req)$
+
+Noted, thanks.
+
+As this seems fairly calm, should I send v3 or wait little more?
 
 
-Is there a rule in Kernel of adding such tags?
+--=-vYYrm15OHAAapvPJgPuT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-I have spotted only: Addresses-Coverity-ID?
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz6MYsACgkQlfZmHno8
+x/4cAgf8C0p+K3P3lwXzF2aerFWGjQdQ5MTyixpeAFG52zhaabNg97gJ1Id0m0pa
+DpW++g2ioGud8UyqpllRIVQYkdyCTMR2EpK7IQ29LN9nwS8SwKBg33HhYDUYgVY9
+7Bl4zb+IavOd74KzxP+VBhdRrGIh8TsI/mfS7d2udj121AKJtpy9eFx6KrT60sPn
+xAAgkcj490MpT3c4kihVMVPy/kLBQoHYWKpui23sTNyMKT7+2arsYrOgKcy6THbl
+/JI1MO+kCGIQUVmkHk8jzoQMOVAGQqnqLYmjQVntn6Esdujc2PBqu5fqzV3mWrks
+7LsAb94I/Y1BUed/JKAFjT5DJ0qLPA==
+=zWl2
+-----END PGP SIGNATURE-----
 
-Beside this:
-
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-
- --
-Regards
-Andrzej
-
-
-> Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/gpu/drm/bridge/sii902x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-> index d6f98d388ac2..21a947603c88 100644
-> --- a/drivers/gpu/drm/bridge/sii902x.c
-> +++ b/drivers/gpu/drm/bridge/sii902x.c
-> @@ -719,7 +719,7 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
->  		.max_i2s_channels = 0,
->  	};
->  	u8 lanes[4];
-> -	u32 num_lanes, i;
-> +	int num_lanes, i;
->  
->  	if (!of_property_read_bool(dev->of_node, "#sound-dai-cells")) {
->  		dev_dbg(dev, "%s: No \"#sound-dai-cells\", no audio\n",
-
+--=-vYYrm15OHAAapvPJgPuT--
 
