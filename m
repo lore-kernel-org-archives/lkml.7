@@ -2,123 +2,100 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB5C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46F9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9E02133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559934050;
-	bh=SaF9wNj2glMXJrUlhGfPV51XspfvGCl4GV+n5wOltIk=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=FfRm3oL6krQGKRLVKyw8qFCogOhn3dxePOwECAWQbQJU+3fPONnQvyrsRjC/nq94P
-	 tR6EdEcg3x0Ula8Q+M+9CNduy4VCTd5uYTJAj4Q588h0wejk8aasb2nAEqOWQqENs5
-	 CnBBkGtUK100z8fDZtB/nMfRyoGdStaVU3v8c4EI=
+	by mail.kernel.org (Postfix) with ESMTP id 5BD472133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:01:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="U0jHKnAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfFGTAt (ORCPT
+        id S1730056AbfFGTBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:00:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728595AbfFGTAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:00:48 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E7A20868;
-        Fri,  7 Jun 2019 19:00:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559934047;
-        bh=SaF9wNj2glMXJrUlhGfPV51XspfvGCl4GV+n5wOltIk=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=pOa773KinCbWZNwUdN0H2jdZol+fGp2XY6GywMUyTl3QZS5pW9hFAAcg/RQpuePFb
-         6lPWUUf3AvmyqHdMay0eDupbNJ7WbuBfNXwJ4jnDfqEl3Pw+6YKFdZVlrZIY2LFVvc
-         bfbI2V1LcTAYX/HU3jn8XFwP21qj/1NllQ+0AO60=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com>
-References: <20190514221711.248228-1-brendanhiggins@google.com> <20190514221711.248228-18-brendanhiggins@google.com> <20190517182254.548EA20815@mail.kernel.org> <CAAXuY3p4qhKVsSpQ44_kQeGDMfg7OuFLgFyxhcFWS3yf-5A_7g@mail.gmail.com>
-To:     Iurii Zaikin <yzaikin@google.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-User-Agent: alot/0.8.1
-Date:   Fri, 07 Jun 2019 12:00:47 -0700
-Message-Id: <20190607190047.C3E7A20868@mail.kernel.org>
+        Fri, 7 Jun 2019 15:01:01 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37439 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbfFGTBB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 15:01:01 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y57so3525823qtk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=OVNp7A8pa63b39LGeGO0+BUI6zrsYRO5zNAmwKq0LBc=;
+        b=U0jHKnAOAdAWxUOGDXNsmx5Jm95O6XYUZ7a94ZUt/5xsz86pDwdhT+eiceiklkvv5P
+         yipQfcAbQOcAmLgsS5zLM7Es8pJ6apk9uY3gc04yOg4O60xQrvwYFpUz1VHkLabmN8bM
+         6leFR6L964sQCVjVUHq2OmG+J49sbtkgeCtc2ncWJE1L2WzEhorDMfnqvXq1xRomEoX2
+         0ZNb0OP5Qm/P8b+Vf3nCFi2K6lA1X9WVeAEoF0Y61tRg1umrXIM5sq7MMGmhwWAk+qt2
+         6BLDs97on83MP6j8RYITQRD3/j/VTPOtMgDwc7JC1DdzFDRxPHa1SIPQLRR+vjuBNDxN
+         f08A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OVNp7A8pa63b39LGeGO0+BUI6zrsYRO5zNAmwKq0LBc=;
+        b=fbJa8U9iFw2vDfTM5Qvkj/3/Ydyi0teHD4GmK8gfnAjLE+L5FYCp22f7X6cqzRQG1Q
+         /IsEEIkf3C4/Bs7MORo2XL80D/ti5dkjtMEe6nlywnCLNq4C69Own5Vxi+lshyvr7aKW
+         biYTiTSxNZK8SIXmsMRTuvBF4rFnPz06wWCr8+eaR8067YijSbQzXeynJGlFWVgarSpE
+         GifKZdoFTeOrTkeDYz4PUjjEwZiCrEkvHrZjxTELOPbd5ytUBoXkHzFWhf7Ar0xANU6H
+         MZTqvAKHJqborkXSy/Gq4uqegul6ZplHY2T2JVgBemlwZ10fwvymFflClf0Qrp4BSrbJ
+         6ZAw==
+X-Gm-Message-State: APjAAAVlMU/U3+QJuE9OuT/IYWRqpiY3+BYjsxzXfrQIXEpA+F0qUkoj
+        WsdI7X+jQQsZkGRJzZoKCFJXRLidq84=
+X-Google-Smtp-Source: APXvYqxlT4Fv6qHKjsJBhlVTYAbYfaaK4ThAgs8mGMGlrUUmnDTMg4dBCsAJuivK4cI9z1dGRTwl/w==
+X-Received: by 2002:ad4:43c9:: with SMTP id o9mr38403271qvs.113.1559934059944;
+        Fri, 07 Jun 2019 12:00:59 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id r39sm1388147qtc.87.2019.06.07.12.00.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 12:00:59 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, sean@poorly.run,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [RESEND PATCH] gpu/drm_memory: fix a few warnings
+Date:   Fri,  7 Jun 2019 15:00:35 -0400
+Message-Id: <1559934035-3330-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Iurii Zaikin (2019-06-05 18:29:42)
-> On Fri, May 17, 2019 at 11:22 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-05-14 15:17:10)
-> > > diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
-> > > new file mode 100644
-> > > index 0000000000000..fe0f2bae66085
-> > > --- /dev/null
-> > > +++ b/kernel/sysctl-test.c
-> > > +
-> > > +
-> > > +static void sysctl_test_dointvec_happy_single_negative(struct kunit =
-*test)
-> > > +{
-> > > +       struct ctl_table table =3D {
-> > > +               .procname =3D "foo",
-> > > +               .data           =3D &test_data.int_0001,
-> > > +               .maxlen         =3D sizeof(int),
-> > > +               .mode           =3D 0644,
-> > > +               .proc_handler   =3D proc_dointvec,
-> > > +               .extra1         =3D &i_zero,
-> > > +               .extra2         =3D &i_one_hundred,
-> > > +       };
-> > > +       char input[] =3D "-9";
-> > > +       size_t len =3D sizeof(input) - 1;
-> > > +       loff_t pos =3D 0;
-> > > +
-> > > +       table.data =3D kunit_kzalloc(test, sizeof(int), GFP_USER);
-> > > +       KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len=
-, &pos));
-> > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
-> > > +       KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
-> > > +       KUNIT_EXPECT_EQ(test, -9, *(int *)table.data);
-> >
-> > Is the casting necessary? Or can the macro do a type coercion of the
-> > second parameter based on the first type?
->  Data field is defined as void* so I believe casting is necessary to
-> dereference it as a pointer to an array of ints. I don't think the
-> macro should do any type coercion that =3D=3D operator wouldn't do.
->  I did change the cast to make it more clear that it's a pointer to an
-> array of ints being dereferenced.
+The opening comment mark "/**" is reserved for kernel-doc comments, so
+it will generate a warning with "make W=1".
 
-Ok, I still wonder if we should make KUNIT_EXPECT_EQ check the types on
-both sides and cause a build warning/error if the types aren't the same.
-This would be similar to our min/max macros that complain about
-mismatched types in the comparisons. Then if a test developer needs to
-convert one type or the other they could do so with a
-KUNIT_EXPECT_EQ_T() macro that lists the types to coerce both sides to
-explicitly.
+drivers/gpu/drm/drm_memory.c:2: warning: Cannot understand  * \file
+drm_memory.c
+
+Also, silence a checkpatch warning by adding a license identfiter where
+it indicates the MIT license further down in the source file.
+
+WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/gpu/drm/drm_memory.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_memory.c b/drivers/gpu/drm/drm_memory.c
+index 132fef8ff1b6..683042c8ee2c 100644
+--- a/drivers/gpu/drm/drm_memory.c
++++ b/drivers/gpu/drm/drm_memory.c
+@@ -1,4 +1,5 @@
+-/**
++// SPDX-License-Identifier: MIT
++/*
+  * \file drm_memory.c
+  * Memory management wrappers for DRM
+  *
+-- 
+1.8.3.1
 
