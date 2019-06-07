@@ -2,102 +2,160 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD9EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343B6C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9793208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F5F212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G9jAqm4G"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nfa4aa26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbfFGWSb (ORCPT
+        id S1730945AbfFGWTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:18:31 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46846 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbfFGWSa (ORCPT
+        Fri, 7 Jun 2019 18:19:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46565 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbfFGWTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:18:30 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m15so2996913ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:18:29 -0700 (PDT)
+        Fri, 7 Jun 2019 18:19:16 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 81so1909885pfy.13
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gldb3yKNAdLFuCuMW3i8lSkcWD9AeAuQqWMCJcjMt1w=;
-        b=G9jAqm4GrJw44aseApNTMp1ZjQ/aMJNeUyiv8kQagv/gNhX33BEX/CzFFfoO08fSPB
-         FIRt58LdAq424pNBetPm0eg6QkNKMjoFW09a34suTKYEqckDAocINkl4cJNxDodCE96C
-         HhxaX0N2dtDsMgQTRenOa3Zz57TDPLOznIac0ahpARr0gBzRph6O+fMw7xfyM5gNCyc4
-         ZEwFIOTj8bRtPvpJ/TJwP+iooxqBStOJPX265Lu/PgJ4qiYq+EqEOfo3dHGcStjFlqV7
-         i7GxnfE3GpXg8kAr9/410RMqCH8UFTsX34P3RGCzpBMeWL/RtxobGuc1DPYjYqXccE1K
-         XzbA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G5DghZ8PPTikiU9X/j+4tCPHJAWwROuGMzt1uGNfZxg=;
+        b=nfa4aa26dP+W2SLl0AGTju8iFHimCwmA22RUcaVoSUtkRbCjSuFsIStiXwSI3+mgxd
+         04TRxqG9n7UVWtsKdsn+xVIbNNL8P2QGe5fvxcctipFUs56vZ49Oc72VXPEO3FGXls8/
+         nIj2/NJ0Gxy8o5NLusKojvxEixTDC2W9CQuag=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gldb3yKNAdLFuCuMW3i8lSkcWD9AeAuQqWMCJcjMt1w=;
-        b=JUSExYNDcA7ASzh7xsN/2++/oiTL9MSIvghG8T+ja70du0bhE9I/Bo/SeqMvnD64g2
-         0GiViVYRY+cE+6kmNzVbleOr5uuL3gn2Te/Y5u19kDZ+V/OXSmWoRVv3A3GhLbNleV8m
-         EX+LLFRqQCryBgmkez3N0itVCHANHGRu0iAqRxcVDcjqp++93nKUWWIN2D91uD8vJeO1
-         bIAz0alN71L2brsQ52oLV/Sqaxyd0RFEA+INqXUCQcp6rx475iwDBqzrZ87NSfRDNKpo
-         ZyWxKr5gwrg+nAILfN6OlFXhQrNsbPfHv4tzVXeLLBLbqKIPJUTTHRdiRxFs7bdPvtrW
-         VVpA==
-X-Gm-Message-State: APjAAAUTqVi5dUlSyFF9k+mn0RcOq1YZlJBR0lkjMZxQXHVt8MY1dGvB
-        x4TuNJIM13R0UAU/X6GjsXfoFxHYoCxpDj1m+T9ybrhq
-X-Google-Smtp-Source: APXvYqxOTBAeYX+u/Eh9xZoqx5z1jjeiP4aVzSBSOMzDg0FyT03H0TfU69azZbe7G7oS0gd/G5TcR0QxubMS3IbiYDI=
-X-Received: by 2002:a2e:5dc4:: with SMTP id v65mr20370501lje.138.1559945908563;
- Fri, 07 Jun 2019 15:18:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G5DghZ8PPTikiU9X/j+4tCPHJAWwROuGMzt1uGNfZxg=;
+        b=A0Pr9zN32bdXI9J2Gf5FAyGiSFJkabFR5lb/lsUX+NquuAk0ypd4i2ufj5Xf6wvjkP
+         Gt++CCi2myTtn+jBjLj6lFxvm+HZhheiob5oB87rucwHiCj99RmdqBpKchDD2EdyBplV
+         16JQeFjGWwwA3qmhHJ0Ggoe8nUkcWcuIqj4CN+/PqbQP5CKIhGyRidKK927aup14O6gP
+         sDB18zIvwi38uYCl1+BD3gapJZTfWD0wFpjfAtpwIVug5C8hjzZnMxYA0LCEAUl8Cxtn
+         v5CekKYlVmqHV+BZW1IdUO8k5WeUUswlKeaHg3x4fllDc09W/eqXnVfZE6tEeph5KUMo
+         iYjQ==
+X-Gm-Message-State: APjAAAW1eMfEz2cMhpQZG8OFSAmw4PHs9N/gEfSPiufj7e8pxE9Op2kX
+        gWmYQ81nrIFwOEh+f/HriQM8rA==
+X-Google-Smtp-Source: APXvYqzMhd/uupPOTxDJkDmURMyXVUhnZKymqId/tK/dqDZ5RWQedokZNvY86vrjWt7WoP/VMZ4Mtw==
+X-Received: by 2002:a62:83cb:: with SMTP id h194mr25838451pfe.201.1559945955449;
+        Fri, 07 Jun 2019 15:19:15 -0700 (PDT)
+Received: from localhost ([2620:15c:202:201:82b8:d8c4:6cb6:57f5])
+        by smtp.gmail.com with ESMTPSA id n13sm3201633pff.59.2019.06.07.15.19.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 15:19:15 -0700 (PDT)
+From:   Alex Levin <levinale@chromium.org>
+To:     alsa-devel@alsa-project.org
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alex Levin <levinale@chromium.org>,
+        linux-kernel@vger.kernel.org, benzh@chromium.org,
+        cujomalainey@chromium.org
+Subject: [PATCH] ASoC: Intel: sst: fix kmalloc call with wrong flags
+Date:   Fri,  7 Jun 2019 15:19:11 -0700
+Message-Id: <20190607221911.118136-1-levinale@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 MIME-Version: 1.0
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org> <20190604165802.7338-2-daniel.lezcano@linaro.org>
-In-Reply-To: <20190604165802.7338-2-daniel.lezcano@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 00:18:20 +0200
-Message-ID: <CACRpkdazSvjt0G58dQOr=cw6mJTptNd3ZmEXduXVh4=01YHNvQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Define values for the IPA
- governor for rock960
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 6:58 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+When calling kmalloc with GFP_KERNEL in case CONFIG_SLOB is unset,
+kmem_cache_alloc_trace is called.
 
-> The intelligent power allocator PID coefficient to be set in sysfs
-> are:
->
->     k_d: 0
->     k_po: 79
->     k_i: 10
->     k_pu: 50
+In case CONFIG_TRACING is set, kmem_cache_alloc_trace will ball
+slab_alloc, which will call slab_pre_alloc_hook which might_sleep_if.
 
-With all the other interesting parametrization in the device tree
-I kind of wonder why the PID regulator constants defaults are
-not set up from device tree?
+The context in which it is called in this case, the
+intel_sst_interrupt_mrfld, calling a sleeping kmalloc generates a BUG():
 
-Any specific reason?
+Fixes: 972b0d456e64 ("ASoC: Intel: remove GFP_ATOMIC, use GFP_KERNEL")
 
-To me it seems like the kind of stuff userpace will invariably just
-get wrong or forget about (somebody just runs a different
-distribution without the extra magic to set sysfs right) unless
-we supply good defaults.
+[   20.250671] BUG: sleeping function called from invalid context at mm/slab.h:422
+[   20.250683] in_atomic(): 1, irqs_disabled(): 1, pid: 1791, name: Chrome_IOThread
+[   20.250690] CPU: 0 PID: 1791 Comm: Chrome_IOThread Tainted: G        W         4.19.43 #61
+[   20.250693] Hardware name: GOOGLE Kefka, BIOS Google_Kefka.7287.337.0 03/02/2017
+[   20.250697] Call Trace:
+[   20.250704]  <IRQ>
+[   20.250716]  dump_stack+0x7e/0xc3
+[   20.250725]  ___might_sleep+0x12a/0x140
+[   20.250731]  kmem_cache_alloc_trace+0x53/0x1c5
+[   20.250736]  ? update_cfs_rq_load_avg+0x17e/0x1aa
+[   20.250740]  ? cpu_load_update+0x6c/0xc2
+[   20.250746]  sst_create_ipc_msg+0x2d/0x88
+[   20.250752]  intel_sst_interrupt_mrfld+0x12a/0x22c
+[   20.250758]  __handle_irq_event_percpu+0x133/0x228
+[   20.250764]  handle_irq_event_percpu+0x35/0x7a
+[   20.250768]  handle_irq_event+0x36/0x55
+[   20.250773]  handle_fasteoi_irq+0xab/0x16c
+[   20.250779]  handle_irq+0xd9/0x11e
+[   20.250785]  do_IRQ+0x54/0xe0
+[   20.250791]  common_interrupt+0xf/0xf
+[   20.250795]  </IRQ>
+[   20.250800] RIP: 0010:__lru_cache_add+0x4e/0xad
+[   20.250806] Code: 00 01 48 c7 c7 b8 df 01 00 65 48 03 3c 25 28 f1 00 00 48 8b 48 08 48 89 ca 48 ff ca f6 c1 01 48 0f 44 d0 f0 ff 42 34 0f b6 0f <89> ca fe c2 88 17 48 89 44 cf 08 80 fa 0f 74 0e 48 8b 08 66 85 c9
+[   20.250809] RSP: 0000:ffffa568810bfd98 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffd6
+[   20.250814] RAX: ffffd3b904eb1940 RBX: ffffd3b904eb1940 RCX: 0000000000000004
+[   20.250817] RDX: ffffd3b904eb1940 RSI: ffffa10ee5c47450 RDI: ffffa10efba1dfb8
+[   20.250821] RBP: ffffa568810bfda8 R08: ffffa10ef9c741c1 R09: dead000000000100
+[   20.250824] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa10ee8d52a40
+[   20.250827] R13: ffffa10ee8d52000 R14: ffffa10ee5c47450 R15: 800000013ac65067
+[   20.250835]  lru_cache_add_active_or_unevictable+0x4e/0xb8
+[   20.250841]  handle_mm_fault+0xd98/0x10c4
+[   20.250848]  __do_page_fault+0x235/0x42d
+[   20.250853]  ? page_fault+0x8/0x30
+[   20.250858]  do_page_fault+0x3d/0x17a
+[   20.250862]  ? page_fault+0x8/0x30
+[   20.250866]  page_fault+0x1e/0x30
+[   20.250872] RIP: 0033:0x7962fdea9304
+[   20.250875] Code: 0f 11 4c 17 f0 c3 48 3b 15 f1 26 31 00 0f 83 e2 00 00 00 48 39 f7 72 0f 74 12 4c 8d 0c 16 4c 39 cf 0f 82 63 01 00 00 48 89 d1 <f3> a4 c3 80 fa 08 73 12 80 fa 04 73 1e 80 fa 01 77 26 72 05 0f b6
+[   20.250879] RSP: 002b:00007962f4db5468 EFLAGS: 00010206
+[   20.250883] RAX: 00003c8cc9d47008 RBX: 0000000000000000 RCX: 0000000000001b48
+[   20.250886] RDX: 0000000000002b40 RSI: 00003c8cc9551000 RDI: 00003c8cc9d48000
+[   20.250890] RBP: 00007962f4db5820 R08: 0000000000000000 R09: 00003c8cc9552b48
+[   20.250893] R10: 0000562dd1064d30 R11: 00003c8cc825b908 R12: 00003c8cc966d3c0
+[   20.250896] R13: 00003c8cc9e280c0 R14: 0000000000000000 R15: 0000000000000000
 
-Yours,
-Linus Walleij
+Signed-off-by: Alex Levin <levinale@chromium.org>
+---
+
+ sound/soc/intel/atom/sst/sst_pvt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/intel/atom/sst/sst_pvt.c b/sound/soc/intel/atom/sst/sst_pvt.c
+index 00a37a09dc9b..dba0ca07ebf9 100644
+--- a/sound/soc/intel/atom/sst/sst_pvt.c
++++ b/sound/soc/intel/atom/sst/sst_pvt.c
+@@ -166,11 +166,11 @@ int sst_create_ipc_msg(struct ipc_post **arg, bool large)
+ {
+ 	struct ipc_post *msg;
+ 
+-	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
++	msg = kzalloc(sizeof(*msg), GFP_ATOMIC);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 	if (large) {
+-		msg->mailbox_data = kzalloc(SST_MAILBOX_SIZE, GFP_KERNEL);
++		msg->mailbox_data = kzalloc(SST_MAILBOX_SIZE, GFP_ATOMIC);
+ 		if (!msg->mailbox_data) {
+ 			kfree(msg);
+ 			return -ENOMEM;
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
+
