@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC39C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC56C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C1921473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BBC20840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922506;
-	bh=/i7XBox4D9HMZhtKXxxbrLBPtHMdRFV0IUY8OIHxEPU=;
+	s=default; t=1559922510;
+	bh=cwnOVLmKEpvRBFH0Ig6PE4Oh87H1P0aBPwbVLs1vVGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qs+CZ3ymtYQ9/3WBN2vP1hCSD/wngXobefZDCJNaXb2/ug5ph3woOiFa7SZ4hRmaa
-	 HBQaOKdK69Nb+iCwMvV5IYWOCKIjhaWmKUpm2hqJs3n8M+c/QIsJvD3I9qNgpa+rvQ
-	 Srmf2BiElhV1VxWjfEoZSfQYlRbiMlJhWiIsGPMI=
+	b=tg32iEMgyrSA1iscKQLuhl8uF1pvG9AH6kFhuzRZQ9qWDlxhsSN3SQSAt/ZsNW6Lt
+	 B4Ii4948ARWznPiP3ecWvWjoIPABNfooEtFdUpnvT7rWNF/dOOGI1xUSv2jAarzebP
+	 +LfH/dCt+idWV0KhkM6QNEr8BEP0WJfVdSER0NcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731778AbfFGPsZ (ORCPT
+        id S1731789AbfFGPs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:48:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729749AbfFGPsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:48:24 -0400
+        id S1729595AbfFGPs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:48:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9221C21530;
-        Fri,  7 Jun 2019 15:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A160B2146E;
+        Fri,  7 Jun 2019 15:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922503;
-        bh=/i7XBox4D9HMZhtKXxxbrLBPtHMdRFV0IUY8OIHxEPU=;
+        s=default; t=1559922506;
+        bh=cwnOVLmKEpvRBFH0Ig6PE4Oh87H1P0aBPwbVLs1vVGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPBXX0yIW1i3N/2c7E+K5kDSOIIw8xMwIgy8xzU/vXkiZn6Z/PZhH+UGMvvsHDeTn
-         wfUk68sNfD2jYA0FMiWffdRm3DVruPdBwn1dhage6/QiWi8NZX6edR2o9az4cjLYJ9
-         yHPbqVRcfftL+ueJ9RmCayHDYGM5HDCZKRpTyKbc=
+        b=xW6pz3zv5LCueT4gtQPdEBEv38P0PzckQapYO8jOV3yRUeSOdwn5bj3TP7W0EYdRt
+         BTfhRUmZar8DUwrVtUxOPm8Dm7T81ap8Rah45wrmbdBIOlzUElVfwTf0PRIbxPYv9r
+         iqr/JaIWfypi5ueDuYL2A8g+IuHaGiyqu1/V0NN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.1 37/85] powerpc/perf: Fix MMCRA corruption by bhrb_filter
-Date:   Fri,  7 Jun 2019 17:39:22 +0200
-Message-Id: <20190607153853.831878578@linuxfoundation.org>
+Subject: [PATCH 5.1 38/85] powerpc/kexec: Fix loading of kernel + initramfs with kexec_file_load()
+Date:   Fri,  7 Jun 2019 17:39:23 +0200
+Message-Id: <20190607153853.944107768@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -61,106 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-commit 3202e35ec1c8fc19cea24253ff83edf702a60a02 upstream.
+commit 8b909e3548706cbebc0a676067b81aadda57f47e upstream.
 
-Consider a scenario where user creates two events:
+Commit b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+changed kexec_add_buffer() to skip searching for a memory location if
+kexec_buf.mem is already set, and use the address that is there.
 
-  1st event:
-    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-    attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
-    fd = perf_event_open(attr, 0, 1, -1, 0);
+In powerpc code we reuse a kexec_buf variable for loading both the
+kernel and the initramfs by resetting some of the fields between those
+uses, but not mem. This causes kexec_add_buffer() to try to load the
+kernel at the same address where initramfs will be loaded, which is
+naturally rejected:
 
-  This sets cpuhw->bhrb_filter to 0 and returns valid fd.
+  # kexec -s -l --initrd initramfs vmlinuz
+  kexec_file_load failed: Invalid argument
 
-  2nd event:
-    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-    attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
-    fd = perf_event_open(attr, 0, 1, -1, 0);
+Setting the mem field before every call to kexec_add_buffer() fixes
+this regression.
 
-  It overrides cpuhw->bhrb_filter to -1 and returns with error.
-
-Now if power_pmu_enable() gets called by any path other than
-power_pmu_add(), ppmu->config_bhrb(-1) will set MMCRA to -1.
-
-Fixes: 3925f46bb590 ("powerpc/perf: Enable branch stack sampling framework")
-Cc: stable@vger.kernel.org # v3.10+
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+Cc: stable@vger.kernel.org # v5.0+
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Reviewed-by: Dave Young <dyoung@redhat.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/perf/core-book3s.c |    6 ++++--
- arch/powerpc/perf/power8-pmu.c  |    3 +++
- arch/powerpc/perf/power9-pmu.c  |    3 +++
- 3 files changed, 10 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/kexec_elf_64.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -1846,6 +1846,7 @@ static int power_pmu_event_init(struct p
- 	int n;
- 	int err;
- 	struct cpu_hw_events *cpuhw;
-+	u64 bhrb_filter;
+--- a/arch/powerpc/kernel/kexec_elf_64.c
++++ b/arch/powerpc/kernel/kexec_elf_64.c
+@@ -547,6 +547,7 @@ static int elf_exec_load(struct kimage *
+ 		kbuf.memsz = phdr->p_memsz;
+ 		kbuf.buf_align = phdr->p_align;
+ 		kbuf.buf_min = phdr->p_paddr + base;
++		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 		ret = kexec_add_buffer(&kbuf);
+ 		if (ret)
+ 			goto out;
+@@ -581,7 +582,8 @@ static void *elf64_load(struct kimage *i
+ 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
+ 				  .buf_max = ppc64_rma_size };
+ 	struct kexec_buf pbuf = { .image = image, .buf_min = 0,
+-				  .buf_max = ppc64_rma_size, .top_down = true };
++				  .buf_max = ppc64_rma_size, .top_down = true,
++				  .mem = KEXEC_BUF_MEM_UNKNOWN };
  
- 	if (!ppmu)
- 		return -ENOENT;
-@@ -1951,13 +1952,14 @@ static int power_pmu_event_init(struct p
- 	err = power_check_constraints(cpuhw, events, cflags, n + 1);
- 
- 	if (has_branch_stack(event)) {
--		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
-+		bhrb_filter = ppmu->bhrb_filter_map(
- 					event->attr.branch_sample_type);
- 
--		if (cpuhw->bhrb_filter == -1) {
-+		if (bhrb_filter == -1) {
- 			put_cpu_var(cpu_hw_events);
- 			return -EOPNOTSUPP;
- 		}
-+		cpuhw->bhrb_filter = bhrb_filter;
- 	}
- 
- 	put_cpu_var(cpu_hw_events);
---- a/arch/powerpc/perf/power8-pmu.c
-+++ b/arch/powerpc/perf/power8-pmu.c
-@@ -29,6 +29,7 @@ enum {
- #define	POWER8_MMCRA_IFM1		0x0000000040000000UL
- #define	POWER8_MMCRA_IFM2		0x0000000080000000UL
- #define	POWER8_MMCRA_IFM3		0x00000000C0000000UL
-+#define	POWER8_MMCRA_BHRB_MASK		0x00000000C0000000UL
- 
- /*
-  * Raw event encoding for PowerISA v2.07 (Power8):
-@@ -243,6 +244,8 @@ static u64 power8_bhrb_filter_map(u64 br
- 
- static void power8_config_bhrb(u64 pmu_bhrb_filter)
- {
-+	pmu_bhrb_filter &= POWER8_MMCRA_BHRB_MASK;
-+
- 	/* Enable BHRB filter in PMU */
- 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
- }
---- a/arch/powerpc/perf/power9-pmu.c
-+++ b/arch/powerpc/perf/power9-pmu.c
-@@ -92,6 +92,7 @@ enum {
- #define POWER9_MMCRA_IFM1		0x0000000040000000UL
- #define POWER9_MMCRA_IFM2		0x0000000080000000UL
- #define POWER9_MMCRA_IFM3		0x00000000C0000000UL
-+#define POWER9_MMCRA_BHRB_MASK		0x00000000C0000000UL
- 
- /* Nasty Power9 specific hack */
- #define PVR_POWER9_CUMULUS		0x00002000
-@@ -300,6 +301,8 @@ static u64 power9_bhrb_filter_map(u64 br
- 
- static void power9_config_bhrb(u64 pmu_bhrb_filter)
- {
-+	pmu_bhrb_filter &= POWER9_MMCRA_BHRB_MASK;
-+
- 	/* Enable BHRB filter in PMU */
- 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
- }
+ 	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
+ 	if (ret)
+@@ -606,6 +608,7 @@ static void *elf64_load(struct kimage *i
+ 		kbuf.bufsz = kbuf.memsz = initrd_len;
+ 		kbuf.buf_align = PAGE_SIZE;
+ 		kbuf.top_down = false;
++		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 		ret = kexec_add_buffer(&kbuf);
+ 		if (ret)
+ 			goto out;
+@@ -638,6 +641,7 @@ static void *elf64_load(struct kimage *i
+ 	kbuf.bufsz = kbuf.memsz = fdt_size;
+ 	kbuf.buf_align = PAGE_SIZE;
+ 	kbuf.top_down = true;
++	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 	ret = kexec_add_buffer(&kbuf);
+ 	if (ret)
+ 		goto out;
 
 
