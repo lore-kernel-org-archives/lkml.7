@@ -2,107 +2,130 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95E4C468BE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257F9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1A92089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA00214AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:09:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XNeJTWv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfFGPIx (ORCPT
+        id S1729570AbfFGPJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:08:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729220AbfFGPIx (ORCPT
+        Fri, 7 Jun 2019 11:09:43 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:54746 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729042AbfFGPJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:08:53 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x57F2jVt062193
-        for <linux-kernel@vger.kernel.org>; Fri, 7 Jun 2019 11:08:52 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2syrg8x4kj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:08:51 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 7 Jun 2019 16:08:49 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 7 Jun 2019 16:08:45 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x57F8ibE52101270
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Jun 2019 15:08:44 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 168FD52052;
-        Fri,  7 Jun 2019 15:08:44 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.81.48])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 0704652054;
-        Fri,  7 Jun 2019 15:08:42 +0000 (GMT)
-Subject: Re: [PATCH v3 2/2] ima: add enforce-evm and log-evm modes to
- strictly check EVM status
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        dmitry.kasatkin@huawei.com, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        silviu.vlasceanu@huawei.com
-Date:   Fri, 07 Jun 2019 11:08:32 -0400
-In-Reply-To: <93459fe8-f9b6-fe45-1ca7-2efb8854dc8b@huawei.com>
-References: <20190606112620.26488-1-roberto.sassu@huawei.com>
-         <20190606112620.26488-3-roberto.sassu@huawei.com>
-         <1559917462.4278.253.camel@linux.ibm.com>
-         <93459fe8-f9b6-fe45-1ca7-2efb8854dc8b@huawei.com>
+        Fri, 7 Jun 2019 11:09:42 -0400
+Received: by mail-it1-f195.google.com with SMTP id m138so1585112ita.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nSNwEwVBB35crYOfAcA03OB3tW5Yj6TRGwmQgBYzS/M=;
+        b=XNeJTWv5IXSPKxj4O4Mhj3ddn0md3FRvFIIWRXJE8yJDd7Ys9oWZo1L5YVOYAWERSg
+         nt6UPyZCSw5l/L9g1sx0bJXO+XoJOUTcB5+fPaFnQfDzH4h0BXIekTVxh29osI+nndYh
+         89KgZAmKZSRHoBH7RCHlinKsP3GvccK957wV0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nSNwEwVBB35crYOfAcA03OB3tW5Yj6TRGwmQgBYzS/M=;
+        b=aaYo5ZpYjh3REOXL2lXKpr6hp21sbJriTdvp97w4B8u+Y6aRZRUcuFkvDTPErNaTRA
+         j1q23tOLAKLimltWBOYIZrQXT8IO4yG7T2vZc8sonEDFfL8ihujqJiLW1/Q4LXYCGypf
+         IiOEuaiJZ8eSW671Y/J2ywh+r464IT4+1I2OaFtY1Fvjr9LnJFm/hSeqXCeAvjwGTuuy
+         fIcJhHXODECNFuLYyCUFjFRhwxoBj5BH+1zMDcsuwmz0U+XYIccTidQZsSIuSLqECPjI
+         Wfm2W4dT2S8oylCCFh60U7CVWjZfhN/HemSn1jMqmFU92JRyvcfmGfR9V87mrtlcTmUK
+         60BQ==
+X-Gm-Message-State: APjAAAXgrMpvVPLgLoqDI76hcBsQ80lorZ4JTIB8sD74a0eMZJC3njIJ
+        8VbOBFTQXXj+74AfO19G0sgQ10DFtrs=
+X-Google-Smtp-Source: APXvYqwmeT56rFD44CbnWdKgTmPP8E8Agh1cZ+s1Po7Ulh0KLoSLKZixh90UhI4tTmcSvSpPNH9XZw==
+X-Received: by 2002:a24:6508:: with SMTP id u8mr5004771itb.28.1559920181626;
+        Fri, 07 Jun 2019 08:09:41 -0700 (PDT)
+Received: from mail-it1-f180.google.com (mail-it1-f180.google.com. [209.85.166.180])
+        by smtp.gmail.com with ESMTPSA id i195sm944017ite.41.2019.06.07.08.09.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 08:09:40 -0700 (PDT)
+Received: by mail-it1-f180.google.com with SMTP id i21so3209949ita.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:09:40 -0700 (PDT)
+X-Received: by 2002:a24:b106:: with SMTP id o6mr3886319itf.97.1559920180064;
+ Fri, 07 Jun 2019 08:09:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <lsq.1549201507.384106140@decadent.org.uk> <lsq.1549201508.623062416@decadent.org.uk>
+In-Reply-To: <lsq.1549201508.623062416@decadent.org.uk>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 7 Jun 2019 08:09:27 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U263K-OEdnDzL=4oxLHXTkqgQygYCup=jSCRGvv+vMsw@mail.gmail.com>
+Message-ID: <CAD=FV=U263K-OEdnDzL=4oxLHXTkqgQygYCup=jSCRGvv+vMsw@mail.gmail.com>
+Subject: Re: [PATCH 3.16 025/305] media: uvcvideo: Fix uvc_alloc_entity()
+ allocation alignment
+To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        Nadav Amit <namit@vmware.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060715-0012-0000-0000-00000326484D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060715-0013-0000-0000-0000215F347A
-Message-Id: <1559920112.4278.264.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906070106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-07 at 16:40 +0200, Roberto Sassu wrote:
-> > On Thu, 2019-06-06 at 13:26 +0200, Roberto Sassu wrote:
+Hi,
 
-> >> Although this choice appears legitimate, it might not be suitable for
-> >> hardened systems, where the administrator expects that access is denied if
-> >> there is any error. An attacker could intentionally delete the EVM keys
-> >> from the system and set the file digest in security.ima to the actual file
-> >> digest so that the final appraisal status is INTEGRITY_PASS.
-> > 
-> > Assuming that the EVM HMAC key is stored in the initramfs, not on some
-> > other file system, and the initramfs is signed, INTEGRITY_UNKNOWN
-> > would be limited to the rootfs filesystem.
-> 
-> There is another issue. The HMAC key, like the public keys, should be
-> loaded when appraisal is disabled. This means that we have to create a
-> trusted key at early boot and defer the unsealing.
+On Sun, Feb 3, 2019 at 5:50 AM Ben Hutchings <ben@decadent.org.uk> wrote:
+>
+> 3.16.63-rc1 review patch.  If anyone has any objections, please let me know.
+>
+> ------------------
+>
+> From: Nadav Amit <namit@vmware.com>
+>
+> commit 89dd34caf73e28018c58cd193751e41b1f8bdc56 upstream.
+>
+> The use of ALIGN() in uvc_alloc_entity() is incorrect, since the size of
+> (entity->pads) is not a power of two. As a stop-gap, until a better
+> solution is adapted, use roundup() instead.
+>
+> Found by a static assertion. Compile-tested only.
+>
+> Fixes: 4ffc2d89f38a ("uvcvideo: Register subdevices for each entity")
+>
+> Signed-off-by: Nadav Amit <namit@vmware.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+> ---
+>  drivers/media/usb/uvc/uvc_driver.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -826,7 +826,7 @@ static struct uvc_entity *uvc_alloc_enti
+>         unsigned int size;
+>         unsigned int i;
+>
+> -       extra_size = ALIGN(extra_size, sizeof(*entity->pads));
+> +       extra_size = roundup(extra_size, sizeof(*entity->pads));
+>         num_inputs = (type & UVC_TERM_OUTPUT) ? num_pads : num_pads - 1;
+>         size = sizeof(*entity) + extra_size + sizeof(*entity->pads) * num_pads
+>              + num_inputs;
 
-There is no need for IMA to appraise the public key file signature,
-since the certificate is signed by a key on the builtin/secondary
-trusted keyring.  With CONFIG_IMA_LOAD_X509 enabled, the public key
-can be loaded onto the IMA keyring with IMA-appraisal enabled, but
-without verifying the file signature.
+Funny that this commit made its way to 3.16 but didn't make its way to
+4.19 (at least checking 4.19.43).  I haven't seen any actual crashes
+caused by the lack of this commit but it seems like the kind of thing
+we probably want picked back to other stable kernels too.
 
-Mimi
-
+-Doug
