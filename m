@@ -4,128 +4,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559BBC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0183C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206CC20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F23A2146F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:35:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ATAqjNbD"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o+ZjgQ6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfFGOeI (ORCPT
+        id S1729337AbfFGOf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:34:08 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41404 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbfFGOeH (ORCPT
+        Fri, 7 Jun 2019 10:35:29 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:40410 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729172AbfFGOf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:34:07 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so2392738wrm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nRZZPd4CuOKccCO9n20pj6NCx0PtOoXNGKdvtL/yQh8=;
-        b=ATAqjNbD3zSQ0mn1U+NeswlrlhdcptQ0U1v6/qsZKIIS8bxBmp4qpT9bwU3cwpsbc7
-         lFKJwrsnKY+MMG02u/ivCJHvzk+Q8vbC0gkep7WB5VhjPoAsOQv2bjDPPpOCnL94XJ9x
-         rN4wfb+Of4sR6npFW4RO65+j0dfHovQyaQ66c0bau89xx1jrwvRJfmNeMxeD0cWIQR3n
-         y9Kb/F+6uPHzfDTVBJ9uV0Qeu79vaJvVdA2UHBHTFzN3FVRgDdAThjGsWW2S5PAlLglX
-         0NaaTDbgXYpa+El8EXdEZApR8VnI3twXzIJd+fgS/+iDzgA4R1EWAZ8GAvtx5D0AjdtU
-         vv9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nRZZPd4CuOKccCO9n20pj6NCx0PtOoXNGKdvtL/yQh8=;
-        b=hHoSqHZe4dMfyx8v0qMUac6ROUC6tTZCJr9vlqYJ7PPb5/LwA4cEIR/UMLoVnTXErc
-         sqhOqiqYrtOEXVrHC6Wa6itXHkZbc8NdvDGnVRq3xhKFMAgwsjSVVf5iwZs4Kf32ijf9
-         zKaEyeIU94XcGLSbCNTRpbR4gna3vh2J8iurzioCF7+CPWUQYHDWBOKXYCKcSepEUOoM
-         RNVAKRnlAZli+5EyCimdv43/sGmfr6KIQL1WDELEu8finXTdgeOX2Ax1nyw1xbrMJEeA
-         4PcnLQg65KeyckqFUTuPF3dUY8bHhcWvFk3x+ZikdkO6JTPNGQ6liE7KyfPuxd/KGQNT
-         okkQ==
-X-Gm-Message-State: APjAAAVFy7E643YT4nTyBor6Iex7rEmSqHlTHKyDgSZo3Yqxoyo/H9Eo
-        NAEnvlaUG7r+Uw9NCsHdo6AZ6Q==
-X-Google-Smtp-Source: APXvYqzjPX0uTbJ4XdCTSAmUg9f2YMBqtaes35JdoKkeprFZ5Dvejyh+ekMdSkshyFKJ1LzaXyHy+g==
-X-Received: by 2002:adf:e34e:: with SMTP id n14mr14515474wrj.169.1559918046002;
-        Fri, 07 Jun 2019 07:34:06 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id h90sm4348456wrh.15.2019.06.07.07.34.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 07:34:05 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] ARM: davinci: da8xx: specify dma_coherent_mask for lcdc
-Date:   Fri,  7 Jun 2019 16:33:50 +0200
-Message-Id: <20190607143350.11214-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Jun 2019 10:35:28 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190607143526euoutp025df26db550b14aa15de245402b72f4ee~l8UWBW04C0257202572euoutp02E
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 14:35:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190607143526euoutp025df26db550b14aa15de245402b72f4ee~l8UWBW04C0257202572euoutp02E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559918126;
+        bh=VRDKye2EsO1AxFVr5sLghiB3/pqyTiHrDNIPj88z9vw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o+ZjgQ6o3OrETXyp2eMUafA1nk/tWdy7ayAxJ4mNR/JWE+XmjvkMyJd+v9lXaGjG/
+         QRPONREQurLuw8dc/Qv8PeRmXegldZmxtrOWmtR+iJeHb80MTQGHpZomgWer44SJwa
+         JHkF7dXGHidMhJ9Yk9tZHvyOkXxLV8QRBfVMlq8A=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190607143525eucas1p2408cbf845366ae26cf4713312d614e69~l8UVG3k0V2161821618eucas1p2P;
+        Fri,  7 Jun 2019 14:35:25 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 6D.89.04377.D267AFC5; Fri,  7
+        Jun 2019 15:35:25 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190607143524eucas1p22e6310f1a5f6e4bab771ebbbcc40f88c~l8UUKE1hj2700727007eucas1p2N;
+        Fri,  7 Jun 2019 14:35:24 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190607143524eusmtrp179429087b4d7ee937310acc01f73a833~l8UT6PaEJ1284512845eusmtrp1R;
+        Fri,  7 Jun 2019 14:35:24 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-b1-5cfa762d4492
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 34.C0.04140.C267AFC5; Fri,  7
+        Jun 2019 15:35:24 +0100 (BST)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607143523eusmtip12cb8a1fa24dec44a025b466df2ca3c6d~l8US93pol2927929279eusmtip1w;
+        Fri,  7 Jun 2019 14:35:23 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
+        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
+        gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v9 01/13] clk: samsung: add needed IDs for DMC clocks in
+ Exynos5420
+Date:   Fri,  7 Jun 2019 16:34:55 +0200
+Message-Id: <20190607143507.30286-2-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190607143507.30286-1-l.luba@partner.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSeUiTYRzu3Xfs22r6tY69mCZMogzUiogXuuyCj6CIjj9Ss1Z+qOUs9+m6
+        aWVpy5PWIU7RrNTUmhemw6ttac1yeaW2kuGgwytCi9SSnJ/Vf8/vOX7Py8uPwqT9hAcVGR3L
+        qqIVUXJSjFc1jdv8/NQTIasMNi9UlmEgUPfYJwLlWFoJVPzNCVD8fQOJdNZsAXqVpERpzkEM
+        2WylQvT6ypAQvdN4om/JfQTqMGaRaDTFAlCGrV6AHls+CFGbdQeyXy4kkXkokUBTb8tw1NC5
+        E9kn3dCPF/0gUMb8+H4TZ772XBMyek0bztRkfhAy5UVakmnILhEyKfEjJPNspFbApFYWAaai
+        5TwzWr50z9wg8YYwNipSzaoCNh0RR+hLm8CpWvczFZ8ygAZoJTeAiIL0Wqizp+M3gJiS0oUA
+        pmudgB/GABzI7iL4YRTAr53F2N9I1+3HQl4oALA1v478F2kf/jKtUBRJ+8PqohhXYCGdAaD+
+        8z6XB6OfYnDY/h64hAX0AXirspF0+XF6GZywCly0hN4MnaZBgi/zhsWljTPFIjoQ6quqZ7og
+        raVgifEqyZu2w4mc3tnAAjjQXCnksSds0SXjPOagJuUe4PEF6EzLnvWsh+bmNsL1Boz2hQZj
+        AE9vgY11zhka0m6wZ3i+i8am4c2quxhPS+D1BCnvXgErk98IeLwYFpTcmV3OwIQuh4D/HR2A
+        SZpUkA68M/+X5QJQBGRsHKcMZ7k10expf06h5OKiw/2PnVSWg+nLa5lqHqsGxl9HTYCmgHye
+        JHDOeIiUUKi5s0oTgBQmXyhRv/kZIpWEKc6eY1UnD6violjOBJZQuFwmOT/HESylwxWx7AmW
+        PcWq/qoCSuShAaKP5ku92s5Huy6C7YW6vv72zjtlvsa8B8Gluw/GmTLTLMt8vLZObjxmfhlB
+        PrFv6/NmB0IjgjY7nB0xTTV69VAu9rR7b8fI0KHj1ocBofLBWvfEfDfxqOm57N39/QbHeG1+
+        6PLgPKU560yfPTbWZ2er2+/lpwcNhLVnHR7SUL9IjnMRitUrMRWn+APeltQNdQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsVy+t/xu7o6Zb9iDNb/kbDYOGM9q8X1L89Z
+        LeYfOcdqsfrjY0aL5sXr2Swmn5rLZHGmO9ei//FrZovz5zewW5xtesNucatBxuJjzz1Wi8u7
+        5rBZfO49wmgx4/w+Jou1R+6yW1w85Wpxu3EFm8XhN+2sFv+ubWSx2H/Fy+L2bz6LbyceMTqI
+        e3z7OonF4/2NVnaP2Q0XWTx2zrrL7rFpVSebx/65a9g9epvfsXkcfLeHyaNvyypGj82nqz0+
+        b5IL4I7SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQ
+        y5i94RhjwR7+is3PZzA2MHbydjFyckgImEhcnbqWvYuRi0NIYCmjREPnE2aIhJjEpH3b2SFs
+        YYk/17rYIIo+MUosPb0SKMHBwSagJ7FjVSFIXERgDqPEz65tjCAOs8BZZondK94wgXQLCwRL
+        tD7/ygrSwCKgKvHrFFiYV8Be4vGh16wQC+QlVm84ALaYU8BBYva2HWwg5UJANaueO0xg5FvA
+        yLCKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMAa3Hfu5ZQdj17vgQ4wCHIxKPLwzmH7GCLEm
+        lhVX5h5ilOBgVhLhLbvwI0aINyWxsiq1KD++qDQntfgQoynQSROZpUST84HpIa8k3tDU0NzC
+        0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA6PuuWXFi3+rfWxP++AQnJseuet2
+        t8/F3Hy973tDt8rwHwt0lXJSP3h7ycor05MtdhhG636fl2jqUV/16aHbqefagf2XvaWV5aX8
+        dqoVsRuIf+zQ8UqfsO6Q2MPamrXadw56c6XLHt2pszSSwSzn/6FLSbvfqPGW/A7TOdHkL+z6
+        z0zl77OZQkosxRmJhlrMRcWJAG40kqjXAgAA
+X-CMS-MailID: 20190607143524eucas1p22e6310f1a5f6e4bab771ebbbcc40f88c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190607143524eucas1p22e6310f1a5f6e4bab771ebbbcc40f88c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190607143524eucas1p22e6310f1a5f6e4bab771ebbbcc40f88c
+References: <20190607143507.30286-1-l.luba@partner.samsung.com>
+        <CGME20190607143524eucas1p22e6310f1a5f6e4bab771ebbbcc40f88c@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Define new IDs for clocks used by Dynamic Memory Controller in
+Exynos5422 SoC.
 
-The lcdc device is missing the dma_coherent_mask definition causing the
-following warning on da850-evm:
-
-da8xx_lcdc da8xx_lcdc.0: found Sharp_LK043T1DG01 panel
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at kernel/dma/mapping.c:247 dma_alloc_attrs+0xc8/0x110
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper Not tainted 5.2.0-rc3-00077-g16d72dd4891f #18
-Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
-[<c000fce8>] (unwind_backtrace) from [<c000d900>] (show_stack+0x10/0x14)
-[<c000d900>] (show_stack) from [<c001a4f8>] (__warn+0xec/0x114)
-[<c001a4f8>] (__warn) from [<c001a634>] (warn_slowpath_null+0x3c/0x48)
-[<c001a634>] (warn_slowpath_null) from [<c0065860>] (dma_alloc_attrs+0xc8/0x110)
-[<c0065860>] (dma_alloc_attrs) from [<c02820f8>] (fb_probe+0x228/0x5a8)
-[<c02820f8>] (fb_probe) from [<c02d3e9c>] (platform_drv_probe+0x48/0x9c)
-[<c02d3e9c>] (platform_drv_probe) from [<c02d221c>] (really_probe+0x1d8/0x2d4)
-[<c02d221c>] (really_probe) from [<c02d2474>] (driver_probe_device+0x5c/0x168)
-[<c02d2474>] (driver_probe_device) from [<c02d2728>] (device_driver_attach+0x58/0x60)
-[<c02d2728>] (device_driver_attach) from [<c02d27b0>] (__driver_attach+0x80/0xbc)
-[<c02d27b0>] (__driver_attach) from [<c02d047c>] (bus_for_each_dev+0x64/0xb4)
-[<c02d047c>] (bus_for_each_dev) from [<c02d1590>] (bus_add_driver+0xe4/0x1d8)
-[<c02d1590>] (bus_add_driver) from [<c02d301c>] (driver_register+0x78/0x10c)
-[<c02d301c>] (driver_register) from [<c000a5c0>] (do_one_initcall+0x48/0x1bc)
-[<c000a5c0>] (do_one_initcall) from [<c05cae6c>] (kernel_init_freeable+0x10c/0x1d8)
-[<c05cae6c>] (kernel_init_freeable) from [<c048a000>] (kernel_init+0x8/0xf4)
-[<c048a000>] (kernel_init) from [<c00090e0>] (ret_from_fork+0x14/0x34)
-Exception stack(0xc6837fb0 to 0xc6837ff8)
-7fa0:                                     00000000 00000000 00000000 00000000
-7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
----[ end trace 8a8073511be81dd2 ]---
-
-Add a 32-bit mask to the platform device's definition.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 ---
- arch/arm/mach-davinci/devices-da8xx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index 9ff02de448c6..767cc6f7834c 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -683,6 +683,9 @@ static struct platform_device da8xx_lcdc_device = {
- 	.id		= 0,
- 	.num_resources	= ARRAY_SIZE(da8xx_lcdc_resources),
- 	.resource	= da8xx_lcdc_resources,
-+	.dev		= {
-+		.coherent_dma_mask	= DMA_BIT_MASK(32)
-+	}
- };
+diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+index 355f469943f1..02d5ac469a3d 100644
+--- a/include/dt-bindings/clock/exynos5420.h
++++ b/include/dt-bindings/clock/exynos5420.h
+@@ -60,6 +60,7 @@
+ #define CLK_MAU_EPLL		159
+ #define CLK_SCLK_HSIC_12M	160
+ #define CLK_SCLK_MPHY_IXTAL24	161
++#define CLK_SCLK_BPLL		162
  
- int __init da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata)
+ /* gate clocks */
+ #define CLK_UART0		257
+@@ -195,6 +196,16 @@
+ #define CLK_ACLK432_CAM		518
+ #define CLK_ACLK_FL1550_CAM	519
+ #define CLK_ACLK550_CAM		520
++#define CLK_CLKM_PHY0		521
++#define CLK_CLKM_PHY1		522
++#define CLK_ACLK_PPMU_DREX0_0	523
++#define CLK_ACLK_PPMU_DREX0_1	524
++#define CLK_ACLK_PPMU_DREX1_0	525
++#define CLK_ACLK_PPMU_DREX1_1	526
++#define CLK_PCLK_PPMU_DREX0_0	527
++#define CLK_PCLK_PPMU_DREX0_1	528
++#define CLK_PCLK_PPMU_DREX1_0	529
++#define CLK_PCLK_PPMU_DREX1_1	530
+ 
+ /* mux clocks */
+ #define CLK_MOUT_HDMI		640
+@@ -217,6 +228,8 @@
+ #define CLK_MOUT_EPLL		657
+ #define CLK_MOUT_MAU_EPLL	658
+ #define CLK_MOUT_USER_MAU_EPLL	659
++#define CLK_MOUT_SCLK_SPLL	660
++#define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
+ 
+ /* divider clocks */
+ #define CLK_DOUT_PIXEL		768
+@@ -248,8 +261,11 @@
+ #define CLK_DOUT_CCLK_DREX0	794
+ #define CLK_DOUT_CLK2X_PHY0	795
+ #define CLK_DOUT_PCLK_CORE_MEM	796
++#define CLK_FF_DOUT_SPLL2	797
++#define CLK_DOUT_PCLK_DREX0	798
++#define CLK_DOUT_PCLK_DREX1	799
+ 
+ /* must be greater than maximal clock id */
+-#define CLK_NR_CLKS		797
++#define CLK_NR_CLKS		800
+ 
+ #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5420_H */
 -- 
-2.21.0
+2.17.1
 
