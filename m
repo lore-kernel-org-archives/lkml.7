@@ -2,144 +2,107 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C254C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749DBC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCE9208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC76212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 19:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfFGTNH (ORCPT
+        id S1729843AbfFGTN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 15:13:07 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:34996 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729474AbfFGTNG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 15:13:06 -0400
-Received: by mail-it1-f199.google.com with SMTP id 137so2639725itf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 12:13:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cyqCrDVt2dXVqI86R5kiLgCbIofZNHXYbbR1FIOGENY=;
-        b=ulvpsspjULt4fe8LU8R2m8gxsS2Wd6RDOQZmdzu4piRQucudSicdAo7XkTvdp2r2uF
-         +j29S5moXR0ZqYO34roRWznJ9XPRorNx2I4w+FuCG5JyEaAR/z9XD5Yhe1BF0cKd/2F7
-         Dx+Iku5VGzE1hu2sYU2hx8wX1J1F0ltV2WTF6odBI0qE4hfC+p6xcDwiOhmfFjiVZ+U0
-         hRJ8HSMELqFrFcr+fbyujtiiJ3AC7EdaL6Hqb1dAYBdXEsVJHuTpjiQ1632mVMUeJN4m
-         cM4FWAiLmjB1+4wWNe4av4sR2suopZNxrJtY1VZUm2LMcB5f6whdpJrtVpDhYWphjt3J
-         E9Ag==
-X-Gm-Message-State: APjAAAUycrWwqkC1ImS+su6iT3Od2LcaMeLBU76QQs9EBQ/gcXmOYQeO
-        eeDoge76cbbrSkne5y9xBfeXdifeu4dmyAvuD/dcBUbRxxMT
-X-Google-Smtp-Source: APXvYqx/BdEP9lMOAedJ3yRv8lpTdqGerTLV44sx8ug8pFLGAgLn7Qp6CZoPRXvcthgfYfh0AMdPOBh/Q8emJuHLVG9uCw6Qhx3o
+        Fri, 7 Jun 2019 15:13:56 -0400
+Received: from mga07.intel.com ([134.134.136.100]:13955 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728752AbfFGTN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 15:13:56 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 12:13:54 -0700
+X-ExtLoop1: 1
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jun 2019 12:13:52 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 0BAED526; Fri,  7 Jun 2019 22:13:49 +0300 (EEST)
+Date:   Fri, 7 Jun 2019 22:13:49 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Peter Xu <peterx@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH 1/1] coredump: fix race condition between
+ collapse_huge_page() and core dumping
+Message-ID: <20190607191349.wvhhnnsd63vrz7xo@black.fi.intel.com>
+References: <20190607161558.32104-1-aarcange@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:860e:: with SMTP id f14mr1413298iol.242.1559934786049;
- Fri, 07 Jun 2019 12:13:06 -0700 (PDT)
-Date:   Fri, 07 Jun 2019 12:13:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cba2b6058ac09eeb@google.com>
-Subject: KMSAN: uninit-value in ax88178_bind
-From:   syzbot <syzbot+abd25d675d47f23f188c@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        lynxis@fe80.eu, marcel.ziswiler@toradex.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        yang.wei9@zte.com.cn, zhang.run@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607161558.32104-1-aarcange@redhat.com>
+User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Jun 07, 2019 at 04:15:58PM +0000, Andrea Arcangeli wrote:
+> When fixing the race conditions between the coredump and the mmap_sem
+> holders outside the context of the process, we focused on
+> mmget_not_zero()/get_task_mm() callers in commit
+> 04f5866e41fb70690e28397487d8bd8eea7d712a, but those aren't the only
+> cases where the mmap_sem can be taken outside of the context of the
+> process as Michal Hocko noticed while backporting that commit to
+> older -stable kernels.
+> 
+> If mmgrab() is called in the context of the process, but then the
+> mm_count reference is transferred outside the context of the process,
+> that can also be a problem if the mmap_sem has to be taken for writing
+> through that mm_count reference.
+> 
+> khugepaged registration calls mmgrab() in the context of the process,
+> but the mmap_sem for writing is taken later in the context of the
+> khugepaged kernel thread.
+> 
+> collapse_huge_page() after taking the mmap_sem for writing doesn't
+> modify any vma, so it's not obvious that it could cause a problem to
+> the coredump, but it happens to modify the pmd in a way that breaks an
+> invariant that pmd_trans_huge_lock() relies upon. collapse_huge_page()
+> needs the mmap_sem for writing just to block concurrent page faults
+> that call pmd_trans_huge_lock().
+> 
+> Specifically the invariant that "!pmd_trans_huge()" cannot become
+> a "pmd_trans_huge()" doesn't hold while collapse_huge_page() runs.
+> 
+> The coredump will call __get_user_pages() without mmap_sem for
+> reading, which eventually can invoke a lockless page fault which will
+> need a functional pmd_trans_huge_lock().
+> 
+> So collapse_huge_page() needs to use mmget_still_valid() to check it's
+> not running concurrently with the coredump... as long as the coredump
+> can invoke page faults without holding the mmap_sem for reading.
+> 
+> This has "Fixes: khugepaged" to facilitate backporting, but in my view
+> it's more a bug in the coredump code that will eventually have to be
+> rewritten to stop invoking page faults without the mmap_sem for
+> reading. So the long term plan is still to drop all
+> mmget_still_valid().
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: ba76149f47d8 ("thp: khugepaged")
+> Reported-by: Michal Hocko <mhocko@suse.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 
-syzbot found the following crash on:
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b2622ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
-dashboard link: https://syzkaller.appspot.com/bug?extid=abd25d675d47f23f188c
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+abd25d675d47f23f188c@syzkaller.appspotmail.com
-
-usb 2-1: Using ep0 maxpacket: 8
-usb 2-1: config 0 has an invalid interface number: 81 but max is 0
-usb 2-1: config 0 has no interface number 0
-usb 2-1: New USB device found, idVendor=04bb, idProduct=0930, bcdDevice=  
-f.22
-usb 2-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 2-1: config 0 descriptor??
-==================================================================
-BUG: KMSAN: uninit-value in is_valid_ether_addr  
-include/linux/etherdevice.h:200 [inline]
-BUG: KMSAN: uninit-value in asix_set_netdev_dev_addr  
-drivers/net/usb/asix_devices.c:73 [inline]
-BUG: KMSAN: uninit-value in ax88178_bind+0x635/0xad0  
-drivers/net/usb/asix_devices.c:1087
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-  is_valid_ether_addr include/linux/etherdevice.h:200 [inline]
-  asix_set_netdev_dev_addr drivers/net/usb/asix_devices.c:73 [inline]
-  ax88178_bind+0x635/0xad0 drivers/net/usb/asix_devices.c:1087
-  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
-  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
-  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
-  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x454/0x730 drivers/base/dd.c:844
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
-  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
-  device_add+0x288d/0x30e0 drivers/base/core.c:2106
-  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
-  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:254
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----buf@ax88178_bind
-Variable was created at:
-  ax88178_bind+0x60/0xad0 drivers/net/usb/asix_devices.c:1076
-  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+ Kirill A. Shutemov
