@@ -2,124 +2,84 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F9DC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB56C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FB2208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B8B208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731978AbfFGSk5 (ORCPT
+        id S1731926AbfFGSnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:40:57 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.163]:49194 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729449AbfFGSk5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:40:57 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 4C133400C5A8B
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 13:40:56 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id ZJnMhDofg2PzOZJnMhXdKE; Fri, 07 Jun 2019 13:40:56 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.134.24] (port=46982 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hZJnL-002Ree-1F; Fri, 07 Jun 2019 13:40:55 -0500
-Date:   Fri, 7 Jun 2019 13:40:53 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] scsi: megaraid_sas: Use struct_size() helper
-Message-ID: <20190607184053.GA11513@embeddedor>
+        Fri, 7 Jun 2019 14:43:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48226 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729449AbfFGSnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 14:43:15 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 19B81308FC4E;
+        Fri,  7 Jun 2019 18:43:15 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-64.ams2.redhat.com [10.36.116.64])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D2AD27856D;
+        Fri,  7 Jun 2019 18:43:05 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joseph Myers <joseph@codesourcery.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Paul Burton <pburton@wavecomp.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] uapi: avoid namespace conflict in linux/posix_types.h
+References: <20190319165123.3967889-1-arnd@arndb.de>
+        <alpine.DEB.2.21.1905072249570.19308@digraph.polyomino.org.uk>
+        <87tvd2j9ye.fsf@oldenburg2.str.redhat.com>
+        <CAHk-=wio1e4=WUUwmo-Ph55BEgH_X3oXzBpvPyLQg2TxzfGYuw@mail.gmail.com>
+Date:   Fri, 07 Jun 2019 20:43:03 +0200
+In-Reply-To: <CAHk-=wio1e4=WUUwmo-Ph55BEgH_X3oXzBpvPyLQg2TxzfGYuw@mail.gmail.com>
+        (Linus Torvalds's message of "Fri, 7 Jun 2019 11:27:57 -0700")
+Message-ID: <871s05fd8o.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.134.24
-X-Source-L: No
-X-Exim-ID: 1hZJnL-002Ree-1F
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.134.24]:46982
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 07 Jun 2019 18:43:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+* Linus Torvalds:
 
-struct MR_PD_CFG_SEQ_NUM_SYNC {
-	...
-        struct MR_PD_CFG_SEQ seq[1];
-} __packed;
+> If we're changing kernel header files, it's easy enough to change the
+> kernel users. I'd be more worried about user space that *uses* that
+> thing, and currently accesses 'val[]' by name.
+>
+> So the patch looks a bit odd to me. How are people supposed to use
+> fsid_t if they can't look at it?
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+The problem is that the header was previously not used pervasively in
+userspace headers.  See commit a623a7a1a5670c25a16881f5078072d272d96b71
+("y2038: fix socket.h header inclusion").  Very little code needed it
+before.
 
-So, replace the following form:
+On the glibc side, we nowadays deal with this by splitting headers
+further.  (We used to suppress definitions with macros, but that tended
+to become convoluted.)  In this case, moving the definition of
+__kernel_long_t to its own header, so that
+include/uapi/asm-generic/socket.h can include that should fix it.
 
-sizeof(struct MR_PD_CFG_SEQ_NUM_SYNC) + (sizeof(struct MR_PD_CFG_SEQ) * (MAX_PHYSICAL_DEVICES - 1))
+> So now that I _do_ see the patch, there's no way I'll apply it.
 
-with:
+Fair enough.
 
-struct_size(pd_sync, seq, MAX_PHYSICAL_DEVICES - 1)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/scsi/megaraid/megaraid_sas_fusion.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index a25b6b4b6548..56bd524dddbf 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -1191,7 +1191,7 @@ megasas_ioc_init_fusion(struct megasas_instance *instance)
- int
- megasas_sync_pd_seq_num(struct megasas_instance *instance, bool pend) {
- 	int ret = 0;
--	u32 pd_seq_map_sz;
-+	size_t pd_seq_map_sz;
- 	struct megasas_cmd *cmd;
- 	struct megasas_dcmd_frame *dcmd;
- 	struct fusion_context *fusion = instance->ctrl_context;
-@@ -1200,9 +1200,7 @@ megasas_sync_pd_seq_num(struct megasas_instance *instance, bool pend) {
- 
- 	pd_sync = (void *)fusion->pd_seq_sync[(instance->pd_seq_map_id & 1)];
- 	pd_seq_h = fusion->pd_seq_phys[(instance->pd_seq_map_id & 1)];
--	pd_seq_map_sz = sizeof(struct MR_PD_CFG_SEQ_NUM_SYNC) +
--			(sizeof(struct MR_PD_CFG_SEQ) *
--			(MAX_PHYSICAL_DEVICES - 1));
-+	pd_seq_map_sz = struct_size(pd_sync, seq, MAX_PHYSICAL_DEVICES - 1);
- 
- 	cmd = megasas_get_cmd(instance);
- 	if (!cmd) {
--- 
-2.21.0
-
+Thanks,
+Florian
