@@ -2,501 +2,126 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC23C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52208C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBEB2080C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A3120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 10:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+liCGMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfFGKf4 (ORCPT
+        id S1728155AbfFGKjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 06:35:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:37626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbfFGKfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 06:35:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91C3C707;
-        Fri,  7 Jun 2019 03:35:53 -0700 (PDT)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D70673F246;
-        Fri,  7 Jun 2019 03:37:24 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [RFC V3] mm: Generalize and rename notify_page_fault() as kprobe_page_fault()
-Date:   Fri,  7 Jun 2019 16:04:15 +0530
-Message-Id: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 7 Jun 2019 06:39:16 -0400
+Received: from mail-lj1-f176.google.com ([209.85.208.176]:39857 "EHLO
+        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbfFGKjQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 06:39:16 -0400
+Received: by mail-lj1-f176.google.com with SMTP id v18so1291672ljh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 03:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ufgg86kQKWKmK+WFixqatapUs0G96Q5E9DutnoyVCl0=;
+        b=a+liCGMou39XsFuyMFoXxs0fhI2TulhehewrXPgrym1Z9ww7d9X8rSp2vWmuiyhexX
+         FvrRPlop0SI5R0rnKZ5HUsyh/mQZzPEkF8gaKI+9C1HXFvV2XipJ1b5nAz+IX9pbcwjX
+         6dNZKupmCz+enYiIx2UjRACnxgsKyzxQVapcapLDWlClKWossntTgsipBA10UAPQqRyb
+         fI5aOEfD+69PdT0dMyaZLWeuhuiilVPIrbPSndHPRnaRC80CDAGGGplZF2L6KjgEnhfz
+         2x2YiPGWSHxYvxeHR28rsuA7L1X9OjdQZxvxkHhw8SUDeiYrDw/1L2sJm48Fpdk8VSMy
+         0Krw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ufgg86kQKWKmK+WFixqatapUs0G96Q5E9DutnoyVCl0=;
+        b=CKEYd1XaplzcLxoZHjT+dR4zc9mtfqVgb2Rgzxf5xW+22oVNbCsoLyhexensqbeZWP
+         xUdgoilgWCy83pogm/SAOR05g9uovkST7zV99w5glhlt/95YC+B4Jc8w5vljnlkbWQzr
+         +2a6j9f4N/UDOJvOzG8JC6LDUPDHSMVVITW/Q4+9Xb0FIjfsMiG1BNHLWaqYoRASNBBW
+         mIdEXi21lsVSPMe1eGjl9bCdukSo1SAnY6u/k0kSXy7sHsQzmTriv+ulij7g9NbP44IE
+         nsoVbWlhdaxwXd8JqvJr5d4Llv2piiS+Gido8HGTP/fitRe4KIBvmgMlvJDSLTg/QLCL
+         FdPQ==
+X-Gm-Message-State: APjAAAUGOmlno6l0KYKLDGLqC1Bcsh7OJUXjO8r8GUgFmIzcdQTURQHA
+        PNwl3QTrWh7s3PzivqdrZgtXbg==
+X-Google-Smtp-Source: APXvYqxyYC6K60y/Nisr80rQsX2lNaVdM5Wfw2ZH50jKBIkUKybN8Iyi7OR05ngCGGROqMVaGOIiOw==
+X-Received: by 2002:a2e:3314:: with SMTP id d20mr14336735ljc.122.1559903953918;
+        Fri, 07 Jun 2019 03:39:13 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id n10sm345448lfe.24.2019.06.07.03.39.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 03:39:13 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC and MEMSTICK fixes for v5.2-rc4
+Date:   Fri,  7 Jun 2019 12:39:11 +0200
+Message-Id: <20190607103911.4623-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Very similar definitions for notify_page_fault() are being used by multiple
-architectures duplicating much of the same code. This attempts to unify all
-of them into a generic implementation, rename it as kprobe_page_fault() and
-then move it to a common header.
+Hi Linus,
 
-kprobes_built_in() can detect CONFIG_KPROBES, hence new kprobe_page_fault()
-need not be wrapped again within CONFIG_KPROBES. Trap number argument can
-now contain upto an 'unsigned int' accommodating all possible platforms.
+Here's a PR with a couple of MMC and MEMSTICK fixes intended for v5.2-rc4.
+Details about the highlights are as usual found in the signed tag.
 
-kprobe_page_fault() goes the x86 way while dealing with preemption context.
-As explained in these following commits the invoking context in itself must
-be non-preemptible for kprobes processing context irrespective of whether
-kprobe_running() or perhaps smp_processor_id() is safe or not. It does not
-make much sense to continue when original context is preemptible. Instead
-just bail out earlier.
+Please pull this in!
 
-commit a980c0ef9f6d
-("x86/kprobes: Refactor kprobes_fault() like kprobe_exceptions_notify()")
+Kind regards
+Ulf Hansson
 
-commit b506a9d08bae ("x86: code clarification patch to Kprobes arch code")
 
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-ia64@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
-Cc: x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Testing:
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
 
-- Build and boot tested on arm64 and x86
-- Build tested on some other archs (arm, sparc64, alpha, powerpc etc)
+are available in the Git repository at:
 
-Changes in RFC V3:
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.2-rc2
 
-- Updated the commit message with an explaination for new preemption behaviour
-- Moved notify_page_fault() to kprobes.h with 'static nokprobe_inline' per Matthew
-- Changed notify_page_fault() return type from int to bool per Michael Ellerman
-- Renamed notify_page_fault() as kprobe_page_fault() per Peterz
+for you to fetch changes up to 7397993145872c74871ab2aa7fa26a427144088a:
 
-Changes in RFC V2: (https://patchwork.kernel.org/patch/10974221/)
+  mmc: sdhci_am654: Fix SLOTTYPE write (2019-06-03 15:18:25 +0200)
 
-- Changed generic notify_page_fault() per Mathew Wilcox
-- Changed x86 to use new generic notify_page_fault()
-- s/must not/need not/ in commit message per Matthew Wilcox
+----------------------------------------------------------------
+MMC host:
+ - sdhci: Fix SDIO IRQ thread deadlock
+ - sdhci-tegra: Fix a warning message
+ - sdhci_am654: Fix SLOTTYPE write
+ - meson-gx: Fix IRQ ack
+ - tmio: Fix SCC error handling to avoid false positive CRC error
 
-Changes in RFC V1: (https://patchwork.kernel.org/patch/10968273/)
+MEMSTICK core:
+ - mspro_block: Fix returning a correct error code
 
- arch/arm/mm/fault.c      | 24 +-----------------------
- arch/arm64/mm/fault.c    | 24 +-----------------------
- arch/ia64/mm/fault.c     | 24 +-----------------------
- arch/powerpc/mm/fault.c  | 23 ++---------------------
- arch/s390/mm/fault.c     | 16 +---------------
- arch/sh/mm/fault.c       | 18 ++----------------
- arch/sparc/mm/fault_64.c | 16 +---------------
- arch/x86/mm/fault.c      | 21 ++-------------------
- include/linux/kprobes.h  | 16 ++++++++++++++++
- 9 files changed, 27 insertions(+), 155 deletions(-)
+----------------------------------------------------------------
+Adrian Hunter (1):
+      mmc: sdhci: Fix SDIO IRQ thread deadlock
 
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index 58f69fa..94a97a4 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -30,28 +30,6 @@
- 
- #ifdef CONFIG_MMU
- 
--#ifdef CONFIG_KPROBES
--static inline int notify_page_fault(struct pt_regs *regs, unsigned int fsr)
--{
--	int ret = 0;
--
--	if (!user_mode(regs)) {
--		/* kprobe_running() needs smp_processor_id() */
--		preempt_disable();
--		if (kprobe_running() && kprobe_fault_handler(regs, fsr))
--			ret = 1;
--		preempt_enable();
--	}
--
--	return ret;
--}
--#else
--static inline int notify_page_fault(struct pt_regs *regs, unsigned int fsr)
--{
--	return 0;
--}
--#endif
--
- /*
-  * This is useful to dump out the page tables associated with
-  * 'addr' in mm 'mm'.
-@@ -266,7 +244,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	vm_fault_t fault;
- 	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
- 
--	if (notify_page_fault(regs, fsr))
-+	if (kprobe_page_fault(regs, fsr))
- 		return 0;
- 
- 	tsk = current;
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index a30818e..8fe4bbc 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -70,28 +70,6 @@ static inline const struct fault_info *esr_to_debug_fault_info(unsigned int esr)
- 	return debug_fault_info + DBG_ESR_EVT(esr);
- }
- 
--#ifdef CONFIG_KPROBES
--static inline int notify_page_fault(struct pt_regs *regs, unsigned int esr)
--{
--	int ret = 0;
--
--	/* kprobe_running() needs smp_processor_id() */
--	if (!user_mode(regs)) {
--		preempt_disable();
--		if (kprobe_running() && kprobe_fault_handler(regs, esr))
--			ret = 1;
--		preempt_enable();
--	}
--
--	return ret;
--}
--#else
--static inline int notify_page_fault(struct pt_regs *regs, unsigned int esr)
--{
--	return 0;
--}
--#endif
--
- static void data_abort_decode(unsigned int esr)
- {
- 	pr_alert("Data abort info:\n");
-@@ -446,7 +424,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 	unsigned long vm_flags = VM_READ | VM_WRITE;
- 	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
- 
--	if (notify_page_fault(regs, esr))
-+	if (kprobe_page_fault(regs, esr))
- 		return 0;
- 
- 	tsk = current;
-diff --git a/arch/ia64/mm/fault.c b/arch/ia64/mm/fault.c
-index 5baeb02..22582f8 100644
---- a/arch/ia64/mm/fault.c
-+++ b/arch/ia64/mm/fault.c
-@@ -21,28 +21,6 @@
- 
- extern int die(char *, struct pt_regs *, long);
- 
--#ifdef CONFIG_KPROBES
--static inline int notify_page_fault(struct pt_regs *regs, int trap)
--{
--	int ret = 0;
--
--	if (!user_mode(regs)) {
--		/* kprobe_running() needs smp_processor_id() */
--		preempt_disable();
--		if (kprobe_running() && kprobe_fault_handler(regs, trap))
--			ret = 1;
--		preempt_enable();
--	}
--
--	return ret;
--}
--#else
--static inline int notify_page_fault(struct pt_regs *regs, int trap)
--{
--	return 0;
--}
--#endif
--
- /*
-  * Return TRUE if ADDRESS points at a page in the kernel's mapped segment
-  * (inside region 5, on ia64) and that page is present.
-@@ -116,7 +94,7 @@ ia64_do_page_fault (unsigned long address, unsigned long isr, struct pt_regs *re
- 	/*
- 	 * This is to handle the kprobes on user space access instructions
- 	 */
--	if (notify_page_fault(regs, TRAP_BRKPT))
-+	if (kprobe_page_fault(regs, TRAP_BRKPT))
- 		return;
- 
- 	if (user_mode(regs))
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index ec6b7ad..f20ee668 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -42,26 +42,6 @@
- #include <asm/debug.h>
- #include <asm/kup.h>
- 
--static inline bool notify_page_fault(struct pt_regs *regs)
--{
--	bool ret = false;
--
--#ifdef CONFIG_KPROBES
--	/* kprobe_running() needs smp_processor_id() */
--	if (!user_mode(regs)) {
--		preempt_disable();
--		if (kprobe_running() && kprobe_fault_handler(regs, 11))
--			ret = true;
--		preempt_enable();
--	}
--#endif /* CONFIG_KPROBES */
--
--	if (unlikely(debugger_fault_handler(regs)))
--		ret = true;
--
--	return ret;
--}
--
- /*
-  * Check whether the instruction inst is a store using
-  * an update addressing form which will update r1.
-@@ -462,8 +442,9 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
- 	int is_write = page_fault_is_write(error_code);
- 	vm_fault_t fault, major = 0;
- 	bool must_retry = false;
-+	int kprobe_fault = kprobe_page_fault(regs, 11);
- 
--	if (notify_page_fault(regs))
-+	if (unlikely(debugger_fault_handler(regs) || kprobe_fault))
- 		return 0;
- 
- 	if (unlikely(page_fault_is_bad(error_code))) {
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index 91ce03f..bb77a2c 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -67,20 +67,6 @@ static int __init fault_init(void)
- }
- early_initcall(fault_init);
- 
--static inline int notify_page_fault(struct pt_regs *regs)
--{
--	int ret = 0;
--
--	/* kprobe_running() needs smp_processor_id() */
--	if (kprobes_built_in() && !user_mode(regs)) {
--		preempt_disable();
--		if (kprobe_running() && kprobe_fault_handler(regs, 14))
--			ret = 1;
--		preempt_enable();
--	}
--	return ret;
--}
--
- /*
-  * Find out which address space caused the exception.
-  * Access register mode is impossible, ignore space == 3.
-@@ -411,7 +397,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
- 	 */
- 	clear_pt_regs_flag(regs, PIF_PER_TRAP);
- 
--	if (notify_page_fault(regs))
-+	if (kprobe_page_fault(regs, 14))
- 		return 0;
- 
- 	mm = tsk->mm;
-diff --git a/arch/sh/mm/fault.c b/arch/sh/mm/fault.c
-index 6defd2c6..74cd4ac 100644
---- a/arch/sh/mm/fault.c
-+++ b/arch/sh/mm/fault.c
-@@ -24,20 +24,6 @@
- #include <asm/tlbflush.h>
- #include <asm/traps.h>
- 
--static inline int notify_page_fault(struct pt_regs *regs, int trap)
--{
--	int ret = 0;
--
--	if (kprobes_built_in() && !user_mode(regs)) {
--		preempt_disable();
--		if (kprobe_running() && kprobe_fault_handler(regs, trap))
--			ret = 1;
--		preempt_enable();
--	}
--
--	return ret;
--}
--
- static void
- force_sig_info_fault(int si_signo, int si_code, unsigned long address,
- 		     struct task_struct *tsk)
-@@ -415,14 +401,14 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
- 	if (unlikely(fault_in_kernel_space(address))) {
- 		if (vmalloc_fault(address) >= 0)
- 			return;
--		if (notify_page_fault(regs, vec))
-+		if (kprobe_page_fault(regs, vec))
- 			return;
- 
- 		bad_area_nosemaphore(regs, error_code, address);
- 		return;
- 	}
- 
--	if (unlikely(notify_page_fault(regs, vec)))
-+	if (unlikely(kprobe_page_fault(regs, vec)))
- 		return;
- 
- 	/* Only enable interrupts if they were on before the fault */
-diff --git a/arch/sparc/mm/fault_64.c b/arch/sparc/mm/fault_64.c
-index 8f8a604..6865f9c 100644
---- a/arch/sparc/mm/fault_64.c
-+++ b/arch/sparc/mm/fault_64.c
-@@ -38,20 +38,6 @@
- 
- int show_unhandled_signals = 1;
- 
--static inline __kprobes int notify_page_fault(struct pt_regs *regs)
--{
--	int ret = 0;
--
--	/* kprobe_running() needs smp_processor_id() */
--	if (kprobes_built_in() && !user_mode(regs)) {
--		preempt_disable();
--		if (kprobe_running() && kprobe_fault_handler(regs, 0))
--			ret = 1;
--		preempt_enable();
--	}
--	return ret;
--}
--
- static void __kprobes unhandled_fault(unsigned long address,
- 				      struct task_struct *tsk,
- 				      struct pt_regs *regs)
-@@ -285,7 +271,7 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
- 
- 	fault_code = get_thread_fault_code();
- 
--	if (notify_page_fault(regs))
-+	if (kprobe_page_fault(regs, 0))
- 		goto exit_exception;
- 
- 	si_code = SEGV_MAPERR;
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 46df4c6..5400f4e 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -46,23 +46,6 @@ kmmio_fault(struct pt_regs *regs, unsigned long addr)
- 	return 0;
- }
- 
--static nokprobe_inline int kprobes_fault(struct pt_regs *regs)
--{
--	if (!kprobes_built_in())
--		return 0;
--	if (user_mode(regs))
--		return 0;
--	/*
--	 * To be potentially processing a kprobe fault and to be allowed to call
--	 * kprobe_running(), we have to be non-preemptible.
--	 */
--	if (preemptible())
--		return 0;
--	if (!kprobe_running())
--		return 0;
--	return kprobe_fault_handler(regs, X86_TRAP_PF);
--}
--
- /*
-  * Prefetch quirks:
-  *
-@@ -1280,7 +1263,7 @@ do_kern_addr_fault(struct pt_regs *regs, unsigned long hw_error_code,
- 		return;
- 
- 	/* kprobes don't want to hook the spurious faults: */
--	if (kprobes_fault(regs))
-+	if (kprobe_page_fault(regs, X86_TRAP_PF))
- 		return;
- 
- 	/*
-@@ -1311,7 +1294,7 @@ void do_user_addr_fault(struct pt_regs *regs,
- 	mm = tsk->mm;
- 
- 	/* kprobes don't want to hook the spurious faults: */
--	if (unlikely(kprobes_fault(regs)))
-+	if (unlikely(kprobe_page_fault(regs, X86_TRAP_PF)))
- 		return;
- 
- 	/*
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 443d980..064dd15 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -458,4 +458,20 @@ static inline bool is_kprobe_optinsn_slot(unsigned long addr)
- }
- #endif
- 
-+static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
-+					      unsigned int trap)
-+{
-+	int ret = 0;
-+
-+	/*
-+	 * To be potentially processing a kprobe fault and to be allowed
-+	 * to call kprobe_running(), we have to be non-preemptible.
-+	 */
-+	if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
-+		if (kprobe_running() && kprobe_fault_handler(regs, trap))
-+			ret = 1;
-+	}
-+	return ret;
-+}
-+
- #endif /* _LINUX_KPROBES_H */
--- 
-2.7.4
+Dan Carpenter (2):
+      memstick: mspro_block: Fix an error code in mspro_block_issue_req()
+      mmc: tegra: Fix a warning message
 
+Faiz Abbas (1):
+      mmc: sdhci_am654: Fix SLOTTYPE write
+
+Jerome Brunet (1):
+      mmc: meson-gx: fix irq ack
+
+Takeshi Saito (1):
+      mmc: tmio: fix SCC error handling to avoid false positive CRC error
+
+ drivers/memstick/core/mspro_block.c | 13 ++++++-------
+ drivers/mmc/host/meson-gx-mmc.c     |  6 +++---
+ drivers/mmc/host/sdhci-tegra.c      |  2 +-
+ drivers/mmc/host/sdhci.c            | 24 +++++++++++++-----------
+ drivers/mmc/host/sdhci_am654.c      |  2 +-
+ drivers/mmc/host/tmio_mmc_core.c    |  3 ++-
+ 6 files changed, 26 insertions(+), 24 deletions(-)
