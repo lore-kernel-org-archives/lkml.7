@@ -2,63 +2,53 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890A0C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FECC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6297421473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055A721473
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922645;
-	bh=cd/ev9VaIWkYNYVnJKhJjuJBTw0BlAWFxLbrCgag56A=;
+	s=default; t=1559922654;
+	bh=iZR+1QcezVqXwWvl1sWCJiRdgYjq3LXYc5UxfNw24sA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dC4Vc1oBcOjrQztLs4DTpTBiJDaqwJ1z2v3BBXG3Fitsa0iZpU4+UU4/4CTKotpd8
-	 LymzZvJYKfbMX47ZwvvPpJuqjaK/DgPFTRyQStU7rHaxk97gIrI3apBsXmmZwXNeMZ
-	 mZYJucb4DVdlQNmc7o3TkoF6v749rCoAG+x3GkyQ=
+	b=ugtpEukK0AnS6lj9QkZ/WB44wDqyO+jK00oKH0Xj5ERm4mU5d19ry/qJcXQ5tHiCZ
+	 R0etafLGWpFzUfWMKlsN/0MFS+ZFYyxenvdklG03KOrVQcTfJbpAnaldIAGnfAihgG
+	 ppmKA60x4+hvVRW6lcV8ZohjHQ8CgsM7ZpR66iqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbfFGPuo (ORCPT
+        id S1732242AbfFGPux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:50:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37684 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:50:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732203AbfFGPul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:50:41 -0400
+        id S1732219AbfFGPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:50:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D85A420840;
-        Fri,  7 Jun 2019 15:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52D53214AE;
+        Fri,  7 Jun 2019 15:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922640;
-        bh=cd/ev9VaIWkYNYVnJKhJjuJBTw0BlAWFxLbrCgag56A=;
+        s=default; t=1559922648;
+        bh=iZR+1QcezVqXwWvl1sWCJiRdgYjq3LXYc5UxfNw24sA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ThUi9svs6vijyCILYkhcgNiYwi4lKkr/EOz265TC7Dc3+5LXz07kjbn2b6Ac/aeAG
-         BlbbADdg/lleLNo/J28USUNgd7xVxF3VpYBwvELO7o7V77UywhCg3k8Eb2ooaxOZDD
-         2bofmGaZPfuUW9C+7R6fZMcrbBxqQwajnK6w7LSQ=
+        b=PQJVz5/FovjzeVFbHSx4pMo+mXbX6RBXgp1u82/ldVTGNYyXTcJxa2A+jNTJW09he
+         fZbXWBoe1bZtRjG7r9DblndGidgw3897LN7djy22GDQzOHrjkaWgcktAFieQY91nEy
+         kF+0oQP/grGJQjUuW9qfep1ZE0R+/JDrb57xD/FM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
-        deneen.t.dock@intel.com, kernel-hardening@lists.openwall.com,
-        kristen@linux.intel.com, linux_dti@icloud.com, will.deacon@arm.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 85/85] x86/kprobes: Set instruction page as executable
-Date:   Fri,  7 Jun 2019 17:40:10 +0200
-Message-Id: <20190607153858.186248816@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.1 68/85] CIFS: cifs_read_allocate_pages: dont iterate through whole page array on ENOMEM
+Date:   Fri,  7 Jun 2019 17:39:53 +0200
+Message-Id: <20190607153856.765606620@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -71,83 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7298e24f904224fa79eb8fd7e0fbd78950ccf2db ]
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-Set the page as executable after allocation.  This patch is a
-preparatory patch for a following patch that makes module allocated
-pages non-executable.
+commit 31fad7d41e73731f05b8053d17078638cf850fa6 upstream.
 
-While at it, do some small cleanup of what appears to be unnecessary
-masking.
+ In cifs_read_allocate_pages, in case of ENOMEM, we go through
+whole rdata->pages array but we have failed the allocation before
+nr_pages, therefore we may end up calling put_page with NULL
+pointer, causing oops
 
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <akpm@linux-foundation.org>
-Cc: <ard.biesheuvel@linaro.org>
-Cc: <deneen.t.dock@intel.com>
-Cc: <kernel-hardening@lists.openwall.com>
-Cc: <kristen@linux.intel.com>
-Cc: <linux_dti@icloud.com>
-Cc: <will.deacon@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190426001143.4983-11-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/kprobes/core.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ fs/cifs/file.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index fed46ddb1eef..06058c44ab57 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -431,8 +431,20 @@ void *alloc_insn_page(void)
- 	void *page;
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3221,7 +3221,9 @@ cifs_read_allocate_pages(struct cifs_rea
+ 	}
  
- 	page = module_alloc(PAGE_SIZE);
--	if (page)
--		set_memory_ro((unsigned long)page & PAGE_MASK, 1);
-+	if (!page)
-+		return NULL;
+ 	if (rc) {
+-		for (i = 0; i < nr_pages; i++) {
++		unsigned int nr_page_failed = i;
 +
-+	/*
-+	 * First make the page read-only, and only then make it executable to
-+	 * prevent it from being W+X in between.
-+	 */
-+	set_memory_ro((unsigned long)page, 1);
-+
-+	/*
-+	 * TODO: Once additional kernel code protection mechanisms are set, ensure
-+	 * that the page was not maliciously altered and it is still zeroed.
-+	 */
-+	set_memory_x((unsigned long)page, 1);
- 
- 	return page;
- }
-@@ -440,8 +452,12 @@ void *alloc_insn_page(void)
- /* Recover page to RW mode before releasing it */
- void free_insn_page(void *page)
- {
--	set_memory_nx((unsigned long)page & PAGE_MASK, 1);
--	set_memory_rw((unsigned long)page & PAGE_MASK, 1);
-+	/*
-+	 * First make the page non-executable, and only then make it writable to
-+	 * prevent it from being W+X in between.
-+	 */
-+	set_memory_nx((unsigned long)page, 1);
-+	set_memory_rw((unsigned long)page, 1);
- 	module_memfree(page);
- }
- 
--- 
-2.20.1
-
++		for (i = 0; i < nr_page_failed; i++) {
+ 			put_page(rdata->pages[i]);
+ 			rdata->pages[i] = NULL;
+ 		}
 
 
