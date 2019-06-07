@@ -2,68 +2,94 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F15EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C121C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCDD920868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5F620868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 21:11:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xj+2Cqjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbfFGVKW (ORCPT
+        id S1731144AbfFGVLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 17:10:22 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:37304 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729915AbfFGVKW (ORCPT
+        Fri, 7 Jun 2019 17:11:08 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40169 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730540AbfFGVLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 17:10:22 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 8816780310; Fri,  7 Jun 2019 23:10:09 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 19:09:22 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
-Message-ID: <20190607170922.GA17017@xo-6d-61-c0.localdomain>
-References: <20190528002412.1625-1-dima@arista.com>
- <4a9c1b20-777d-079a-33f5-ddf0a39ff788@i-love.sakura.ne.jp>
- <20190528042208.GD26865@jagdpanzerIV>
- <90a22327-922d-6415-538a-6a3fcbe9f3e1@i-love.sakura.ne.jp>
- <20190528084825.GA9676@jagdpanzerIV>
- <966f1a8d-68ab-a808-9140-4ecf1453421d@i-love.sakura.ne.jp>
+        Fri, 7 Jun 2019 17:11:08 -0400
+Received: by mail-lf1-f68.google.com with SMTP id a9so2623990lff.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 14:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GPc4uqgBsBwvM/V5yLC3GgSCS1qEGuH2AgCesOfjZVs=;
+        b=Xj+2CqjydRXkCSQdyY7hh8PknmG976aSmUGB6M0CXKwV68YBSlt7lEEc+0Q42HLwWz
+         Kra3lWvzcZx8eZY4JLM9mGD+VkNWxtwDyVXjTFTgP11NG2vkLXXXisA4gdEpta8GgDB2
+         yxGporWlOf2R6G+iU1qVE/dS2KcDdPsOgzlWsQScxqbH7f/eMvtehgLWrh/1s1mMzjg1
+         BK/0CrHmik6HkETFYVX4kcOMMJv106KemH4Z0D8fzGvw9Y3KVrowv8NuJWMIEnm7Eorb
+         QD7hXFsgXb7V41En3COZDajj/mMY4wVVGLQ6hrmrSsj80bmLgb4VTYAq4+CJUHOuV9ia
+         B5IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GPc4uqgBsBwvM/V5yLC3GgSCS1qEGuH2AgCesOfjZVs=;
+        b=e40R9+2alxT+EabVBAaKDXy5J3kaqlsU1hrwjrF476d8o23ntoF4T9lPvLmAIrdtK1
+         TNHGp/DrhROUFlykPTlPxcCFtzQeHFhlQHhBQsqonUE/C/Tk9OpOZ1sH6IqGXjlbQCDC
+         9xoGtnLrNsrg23YABUnmVEDsC3X2++VuXELgL0n9rmQkvup5JgqAMWoDtndoH+wRz4Dx
+         IgGy80W2nBzoM2NicSfyWpANkh9j+kg+EqfTyvUjotBZvaF99s59hNPuW3NKASkyQDCo
+         2YDptAm0IYQPmlCpw0Eutfj9WjtdQVj5pTQQGSuBU0Dejv0cXWWz3tWlji1f0iM0bo1F
+         H3WA==
+X-Gm-Message-State: APjAAAWfW++BrtD/nHI44K0hjDA94iCpiNVmzRddZTD4IzzdGgKRIGvz
+        VDxhcATLqWEHa7YQDWv0Cqb2kTTTaeGf+BAAhQSbBn+k
+X-Google-Smtp-Source: APXvYqwLMWoxXQVxSrAqsjepyHJHrlxKQondxww0aj1IMUZLcbBmaGIZOjMLnDuUtqzxjWJr+xi7qFr48fEF7tdb+eo=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr26200028lfu.141.1559941866676;
+ Fri, 07 Jun 2019 14:11:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <966f1a8d-68ab-a808-9140-4ecf1453421d@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190603010455.17060-1-masneyb@onstation.org>
+In-Reply-To: <20190603010455.17060-1-masneyb@onstation.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 7 Jun 2019 23:10:58 +0200
+Message-ID: <CACRpkdYP2C1cUN9w9uguSbXV3vkCDrm3o84qNbpTiaD9TcdMog@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: qcom: msm8974-hammerhead: add touchscreen support
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>, frank.rowand@sony.com,
+        =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+        absahu@codeaurora.org, MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Jonathan Marek <jonathan@marek.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-05-28 19:15:43, Tetsuo Handa wrote:
-> On 2019/05/28 17:51, Sergey Senozhatsky wrote:
-> >> You are trying to omit passing KERN_UNSUPPRESSED by utilizing implicit printk
-> >> context information. But doesn't such attempt resemble find_printk_buffer() ?
-> > 
-> > Adding KERN_UNSUPPRESSED to all printks down the op_p->handler()
-> > line is hardly possible. At the same time I'd really prefer not
-> > to have buffering for sysrq.
-> 
-> I don't think it is hardly possible. And I really prefer having
-> deferred printing for SysRq.
+On Mon, Jun 3, 2019 at 3:05 AM Brian Masney <masneyb@onstation.org> wrote:
 
-Well, magic SysRq was meant for situation where system is in weird/broken state.
-"Give me backtrace where it is hung", etc. Direct printing is more likely to work
-in that cases.
-									Pavel
+> From: Jonathan Marek <jonathan@marek.ca>
+>
+> Add support for the Synaptics RMI4 touchscreen that is found on the
+> Nexus 5.
+>
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+
+Looks good to me:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
