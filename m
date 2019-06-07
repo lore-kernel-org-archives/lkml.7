@@ -2,140 +2,223 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347F4C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F886C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125A4208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2FB212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EL5NpsBT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWBbcelB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731867AbfFGSeX (ORCPT
+        id S1731877AbfFGSek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:34:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46316 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730978AbfFGSeW (ORCPT
+        Fri, 7 Jun 2019 14:34:40 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42989 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729878AbfFGSek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:34:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57ITMNN031647;
-        Fri, 7 Jun 2019 18:34:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=QolDy22uOLtBFa3YAasmOe69CPUw0iodu68OQSiZ4/I=;
- b=EL5NpsBTmOzBK4E1TTYSBNZF7Fboir2lPBs3P9MB4V6Y3256Qpzxxnr4BOFbyOiMzcUZ
- CwqkHii0C92he+/EbdutialG4GKTZmUW4oRRIJ/lPjlzcJgPcKL+Cifhtqf6IVvUgmpk
- hvp7wIHAFB6YKYW0ZatlB++vzVLP+VOkjJ4HJ1/9Q0QkhKtA5yju32rU52FCj3UuO/1R
- j6h4KtcEFibA1RFLcaHJaDES9I03Dzc8ZpiEfor1GRQnUX87RLCTs7MJBGn7d2+1h8sd
- OzIwQcwBAu17liXQGF03DhAhVrH825UM4tiPJlDrcLdccLNRLN06eTaFAI59rlPQRk7a Tg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sugstyxkr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 18:34:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57IXxrm045999;
-        Fri, 7 Jun 2019 18:34:12 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2swngk5pdp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 18:34:11 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x57IYB8s001900;
-        Fri, 7 Jun 2019 18:34:11 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 11:34:11 -0700
-Date:   Fri, 7 Jun 2019 11:34:10 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] Documentation: xfs: Fix typo
-Message-ID: <20190607183410.GF1871505@magnolia>
-References: <20190509030549.2253-1-ruansy.fnst@cn.fujitsu.com>
- <20190607114415.32cb32dd@lwn.net>
+        Fri, 7 Jun 2019 14:34:40 -0400
+Received: by mail-qk1-f193.google.com with SMTP id b18so1862708qkc.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8FTavkhD/U3nEQ58jCZ6nyHW3BIZ3uQK2evEJdGyByI=;
+        b=KWBbcelBqHz4SM9BWGrNUF1zTt4tuCpclsHaK2tEPnBd+RpgdiQ1ReEmqXyBTysXx4
+         l19AejEXYeA53wt7erHU5CB2ajtGASH5ifr+TKWxr2SjCha6l+QBJeKGc6GwIxyGyIfD
+         Anv55k0LyNI6wzPlFhLOhBkIaWPrJMhN75iwJ9FjyhJHfUK5wlGwWxuNP3BBza7tEKZ0
+         TPiuQ3PivzNIbJMw9oB5Zze+pBxpWepHz2y0o4aiKXaQm4snFz3tWw/Cf5rnqkmTCg7Q
+         4Lty7OABE6cS1YkdriLRGmxwbmWdGGm64o3aIDXBvdl72RAvkE/svhuMzImcMqD0sDMh
+         sm6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8FTavkhD/U3nEQ58jCZ6nyHW3BIZ3uQK2evEJdGyByI=;
+        b=kyHIrP0XRKOZuhJqcBc974Zs2Q7xKoknehatLEKbDOyqMdjXZ4pkkOf0Ne/WOeWPS5
+         zSUNcFPKx1p26Dq75qOQ8XeKzIucGW02gFdSXIHYJh9oMqxPhIGc4PwTfEtcZFA0ORaC
+         YH+2/WcnRVF0Zmzl+fiQ0v0UK8iGrt06EowfW0e/FoPbiJVXPGJoMP0BSgDdTSuY4ope
+         PdpTd8cjYhJRLu8WbxknVvM5pnWtzpIHuuDe+YpIMsI/ITzKLzocg5W3I9+rm3/sr6N5
+         vJpgI/S3Sj3t8puqfcNX9KWNWhjCgvqT6kkHhEsjWH5yKumIIy44f7ZyCpcicfgpDl15
+         j7xw==
+X-Gm-Message-State: APjAAAWAQPis2hzzkldzgSYjWy/7Xi3eFWrxZvJBYoF7LlNGdoDxrJvd
+        TNpKyX0416hHuhW63+clmPA=
+X-Google-Smtp-Source: APXvYqwj7+HWOc6CKPx++QAze7WF0RnuU6iSwKqcAY9hBYE7Jmw2rfjntzDrkobCVISN58r8zHIYdQ==
+X-Received: by 2002:a37:a093:: with SMTP id j141mr25893984qke.244.1559932478969;
+        Fri, 07 Jun 2019 11:34:38 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (187-26-97-17.3g.claro.net.br. [187.26.97.17])
+        by smtp.gmail.com with ESMTPSA id 32sm1456816qta.91.2019.06.07.11.34.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 07 Jun 2019 11:34:37 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D4DD441149; Fri,  7 Jun 2019 15:34:34 -0300 (-03)
+Date:   Fri, 7 Jun 2019 15:34:34 -0300
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Coresight ML <coresight@lists.linaro.org>
+Subject: Re: [PATCH v2 02/17] perf tools: Configure timestsamp generation in
+ CPU-wide mode
+Message-ID: <20190607183434.GO21245@kernel.org>
+References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
+ <20190524173508.29044-3-mathieu.poirier@linaro.org>
+ <c1507e8b-9ec8-a5c4-a398-20dcc47acaa8@arm.com>
+ <CANLsYkx6o9xgxTh4s-o7tVxKKLu_SQc5CLtoHzHK=8WtNK4dbQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190607114415.32cb32dd@lwn.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070123
+In-Reply-To: <CANLsYkx6o9xgxTh4s-o7tVxKKLu_SQc5CLtoHzHK=8WtNK4dbQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:44:15AM -0600, Jonathan Corbet wrote:
-> On Thu, 9 May 2019 11:05:49 +0800
-> Shiyang Ruan <ruansy.fnst@cn.fujitsu.com> wrote:
+Em Fri, Jun 07, 2019 at 11:46:32AM -0600, Mathieu Poirier escreveu:
+> On Fri, 7 Jun 2019 at 03:41, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> >
+> >
+> >
+> > On 24/05/2019 18:34, Mathieu Poirier wrote:
+> > > When operating in CPU-wide mode tracers need to generate timestamps in
+> > > order to correlate the code being traced on one CPU with what is executed
+> > > on other CPUs.
+> > >
+> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > ---
+> > >   tools/perf/arch/arm/util/cs-etm.c | 57 +++++++++++++++++++++++++++++++
+> > >   1 file changed, 57 insertions(+)
+> > >
+> > > diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> > > index 3912f0bf04ed..be1e4f20affa 100644
+> > > --- a/tools/perf/arch/arm/util/cs-etm.c
+> > > +++ b/tools/perf/arch/arm/util/cs-etm.c
+> > > @@ -99,6 +99,54 @@ static int cs_etm_set_context_id(struct auxtrace_record *itr,
+> > >       return err;
+> > >   }
+> > >
+> > > +static int cs_etm_set_timestamp(struct auxtrace_record *itr,
+> > > +                             struct perf_evsel *evsel, int cpu)
+> > > +{
+> > > +     struct cs_etm_recording *ptr;
+> > > +     struct perf_pmu *cs_etm_pmu;
+> > > +     char path[PATH_MAX];
+> > > +     int err = -EINVAL;
+> > > +     u32 val;
+> > > +
+> > > +     ptr = container_of(itr, struct cs_etm_recording, itr);
+> > > +     cs_etm_pmu = ptr->cs_etm_pmu;
+> > > +
+> > > +     if (!cs_etm_is_etmv4(itr, cpu))
+> > > +             goto out;
+> > > +
+> > > +     /* Get a handle on TRCIRD0 */
+> > > +     snprintf(path, PATH_MAX, "cpu%d/%s",
+> > > +              cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
+> > > +     err = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
+> > > +
+> > > +     /* There was a problem reading the file, bailing out */
+> > > +     if (err != 1) {
+> > > +             pr_err("%s: can't read file %s\n",
+> > > +                    CORESIGHT_ETM_PMU_NAME, path);
+> > > +             goto out;
+> > > +     }
+> > > +
+> > > +     /*
+> > > +      * TRCIDR0.TSSIZE, bit [28-24], indicates whether global timestamping
+> > > +      * is supported:
+> > > +      *  0b00000 Global timestamping is not implemented
+> > > +      *  0b00110 Implementation supports a maximum timestamp of 48bits.
+> > > +      *  0b01000 Implementation supports a maximum timestamp of 64bits.
+> > > +      */
+> > > +     val &= GENMASK(28, 24);
+> > > +     if (!val) {
+> > > +             err = -EINVAL;
+> > > +             goto out;
+> > > +     }
+> > > +
+> > > +     /* All good, let the kernel know */
+> > > +     evsel->attr.config |= (1 << ETM_OPT_TS);
+> > > +     err = 0;
+> > > +
+> > > +out:
+> > > +     return err;
+> > > +}
+> > > +
+> > >   static int cs_etm_set_option(struct auxtrace_record *itr,
+> > >                            struct perf_evsel *evsel, u32 option)
+> > >   {
+> > > @@ -118,6 +166,11 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
+> > >                       if (err)
+> > >                               goto out;
+> > >                       break;
+> > > +             case ETM_OPT_TS:
+> > > +                     err = cs_etm_set_timestamp(itr, evsel, i);
+> > > +                     if (err)
+> > > +                             goto out;
+> > > +                     break;
+> > >               default:
+> > >                       goto out;
+> > >               }
+> > > @@ -343,6 +396,10 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+> > >               err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_CTXTID);
+> > >               if (err)
+> > >                       goto out;
+> > > +
+> > > +             err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_TS);
+> > > +             if (err)
+> > > +                     goto out;
+> >
+> > nit: Could we not do this in one shot, say :
+> >
+> >         cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_TS | ETM_OPT_CTXTID) ?
+> >
+> > rather than iterating over the per-CPU events twice ? The cs_etm_set_option()
+> > could simply replace the switch() to :
+> >
+> >         if (option & ETM_OPT_1)
+> >                 do_something_for_1()
+> >         if (option & ETM_OPT_2)
+> >                 do_something_for_2();
+> >         if (option & ~(ETM_OPT_1 | ETM_OPT_2 |...))
+> >                 /* do unsupported option */
+> >
 > 
-> > In "Y+P" of this line, there are two non-ASCII characters(0xd9 0x8d)
-> > following behind the 'Y'.  Shown as a small '=' under the '+' in VIM
-> > and a '賺' in webpage[1].
-> > 
-> > I think it's a mistake and remove these strange characters.
-> > 
-> > [1]: https://www.kernel.org/doc/Documentation/filesystems/xfs-delayed-logging-design.txt
-> > 
-> > Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-> > ---
-> >  Documentation/filesystems/xfs-delayed-logging-design.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/filesystems/xfs-delayed-logging-design.txt b/Documentation/filesystems/xfs-delayed-logging-design.txt
-> > index 2ce36439c09f..9a6dd289b17b 100644
-> > --- a/Documentation/filesystems/xfs-delayed-logging-design.txt
-> > +++ b/Documentation/filesystems/xfs-delayed-logging-design.txt
-> > @@ -34,7 +34,7 @@ transaction:
-> >  	   D			A+B+C+D		X+n+m+o
-> >  	    <object written to disk>
-> >  	   E			   E		   Y (> X+n+m+o)
-> > -	   F			  E+F		  Yٍ+p
-> > +	   F			  E+F		  Y+p
+> Yes, that is a good optimization.
 > 
-> OK, that does look funky, applied.
-> 
-> This patch probably should have been copied to the XFS list (added), even
-> though get_maintainer.pl doesn't know that.
+> Arnaldo, do you prefer a new set or another patch on top of this one?
 
-Yeah, it's "Y+p" not "Y<weird plusequals thing>p" in the xfs
-documentation repo:
+On top of it, as this isn't a fix just an optimization, so no need to go
+back and fix history to avoid bisection, etc.
 
-https://git.kernel.org/pub/scm/fs/xfs/xfs-documentation.git/tree/design/XFS_Filesystem_Structure/delayed_logging.asciidoc
+Put it in your next set, no need to hurry.
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-I doubt the value of maintaining duplicate copies of this document in
-the kernel and the xfs documentation repo, and since the xfs docs and
-kernel licences aren't compatible maybe we should withdraw one...
-
-...but since Dave is the author I'm gonna punt to him.  IMHO either we
-should claim responsibility for those files in MAINTAINERS or drop them.
-:)
-
-Thanks for the heads-up,
---D
-
+- Arnaldo
+ 
 > Thanks,
+> Mathieu
 > 
-> jon
+> >
+> > Cheers
+> > Suzuki
+
+-- 
+
+- Arnaldo
