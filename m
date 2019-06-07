@@ -4,229 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F796C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE58C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 492352067C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA05D207E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ARWdiSgX"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="RrIGWttt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfFGQmS (ORCPT
+        id S1731007AbfFGQo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:42:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40345 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730192AbfFGQmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:42:17 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d30so1441386pgm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 09:42:17 -0700 (PDT)
+        Fri, 7 Jun 2019 12:44:28 -0400
+Received: from mail-eopbgr720070.outbound.protection.outlook.com ([40.107.72.70]:59104
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729577AbfFGQo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:44:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=3TTLOXXcpR9XuUBUyHDzbbYgbaX5kAwJMikkFjQ5N/Q=;
-        b=ARWdiSgXbp8dMuoSG523O+z9vmW+ibHq2p0MG2WPmsdkcYuPQezu8YE9UdlLPF8+at
-         VQqs5KBgoWx8uBd5GsHRkSLmSe9cdCmRb5mtYswRFXsXU6sqs4QDMwX9rQq9tMlZ5BJv
-         0LY4L1iWWm2ZpQpCf8Px/E4J3LQ5S2pwM0nXKAznQ9kLjmjQPjT34o4yFSoH5ksagKN+
-         Cjo0ttnZs9GmdITe/S8q2kS4QW0GP1+v+7o5ruxwcP5TC65q+VQFr4Yr7RT2I1GF4mtK
-         AEBgO6Bt5POb+ehUtLL+E1RE4jvi6r5sFZ3S9VnXfMUbunnfn94wLAio8AELyM2IVJDa
-         0u5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=3TTLOXXcpR9XuUBUyHDzbbYgbaX5kAwJMikkFjQ5N/Q=;
-        b=p4ONDqQmGwI0EbkVjhNDGf1ZTFKwXvdW2r492S49/SH5FCQ184O4uqlgZa4dXDahfu
-         6un+JAAvOj037CIBQJHTR7gcYvb0cKhElZQTwpH65jVu6BlY+nztuJJB9z74xxphAlVY
-         RCbGkRfjY/UebzG8ZBx+5L70rhsRRp0uxALLWw6kIkjF5hxTWTA0+qAGXldk4Z3xmhI0
-         BVjD3y7RuxJMP6kX7EdkOy39IvqdsLwdmVn5ZwnLDc5yGyXf7WivHUGhzHiXUAfBFQAA
-         N0i7SUrFv+3QX4V/QC4YeZ0dTwoeJS6fa6yOk6Z1ZmkZKzAZ2A5gZ8NKkGu+NJSWatod
-         Mh3Q==
-X-Gm-Message-State: APjAAAW5RAJiNp5AvXCpOfx/d/r41IWus22LpwAM1c+JRjLIry1ad1xg
-        p10P3lQIpDL4R+MpUVCv19DpRw==
-X-Google-Smtp-Source: APXvYqzPiFm/14Fg5xxpArs5EHeY4puuj4QftT2sbF2LauTZf3fWsWq+AimfMcWz+lKr4P3sasVeCw==
-X-Received: by 2002:a65:4c4b:: with SMTP id l11mr3762992pgr.9.1559925737003;
-        Fri, 07 Jun 2019 09:42:17 -0700 (PDT)
-Received: from ?IPv6:2600:1012:b044:6f30:60ea:7662:8055:2cca? ([2600:1012:b044:6f30:60ea:7662:8055:2cca])
-        by smtp.gmail.com with ESMTPSA id m5sm7584412pgn.59.2019.06.07.09.42.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 09:42:16 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages for flushing
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <B41673A7-6CA3-440D-87AA-59E07BE8B656@vmware.com>
-Date:   Fri, 7 Jun 2019 09:42:14 -0700
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B830032A-C36C-44F4-B790-922E6C572704@amacapital.net>
-References: <20190531063645.4697-1-namit@vmware.com> <20190531063645.4697-12-namit@vmware.com> <CALCETrU0=BpGy5OQezQ7or33n-EFgBVDNe5g8prSUjL2SoRAwA@mail.gmail.com> <5F153080-D7A7-4054-AB4A-AEDD5F82E0B9@vmware.com> <48CECB5C-CA5B-4AD0-9DA5-6759E8FEDED7@amacapital.net> <67BFA611-F69E-4AE4-A03F-2EF546DC291A@vmware.com> <B41673A7-6CA3-440D-87AA-59E07BE8B656@vmware.com>
-To:     Nadav Amit <namit@vmware.com>
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ODySeoQ0sWFxmrsl5aaxmy1G2bi5zPmJukPXGqdENYA=;
+ b=RrIGWtttli3Sz/vSadBVnCj9mPrqTJ31S+p2RARJGQHBovs0YTBf4DPsTUs0GxY+3Hc/iPsLYqFwRxYva/fqPTEolf/38rFG773V09jufXNTSD0Yqb7ooDQZtRi8qAaE39EsspQhq0KJyXU17l8I5LOkLIRJI50njwVmzp97AiQ=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2797.namprd12.prod.outlook.com (52.135.102.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Fri, 7 Jun 2019 16:44:24 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
+ 16:44:24 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "Luck, Tony" <tony.luck@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Topic: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Index: AQHU/5PPbonhoiIaT0+tpMBUt0fOpKZt/3MAgAAEtbCAAA1jAIAAAELggAAGlYCAADB8kIAABZ8AgAAG7YCAANzUAIAAUaUwgAAal4CAAA3JgIAABf+AgAAE/ICAABizgIAAAygAgAAEo4CACWuboIAGhWIAgBC3iXCAAB8mgIAAANXg
+Date:   Fri, 7 Jun 2019 16:44:24 +0000
+Message-ID: <SN6PR12MB263968DE0DD98EBE14450698F8100@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190517163729.GE13482@zn.tnic>
+ <20190517172648.GA18164@agluck-desk> <20190517174817.GG13482@zn.tnic>
+ <20190517180607.GA21710@agluck-desk> <20190517193431.GI13482@zn.tnic>
+ <SN6PR12MB2639C5427366AC3004C35CC0F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190517200225.GK13482@zn.tnic>
+ <SN6PR12MB26390759DB43763D3A482918F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190527232849.GC8209@cz.tnic>
+ <SN6PR12MB263998ECCDF1E345FEB0869AF8100@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190607163723.GG20269@zn.tnic>
+In-Reply-To: <20190607163723.GG20269@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [165.204.84.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b9603f73-4b25-4e7d-356e-08d6eb676621
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2797;
+x-ms-traffictypediagnostic: SN6PR12MB2797:
+x-microsoft-antispam-prvs: <SN6PR12MB2797BD682C427319F63D4621F8100@SN6PR12MB2797.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0061C35778
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(136003)(346002)(39860400002)(199004)(189003)(13464003)(81156014)(3846002)(5660300002)(7736002)(81166006)(6116002)(8936002)(52536014)(486006)(74316002)(8676002)(478600001)(305945005)(6506007)(53546011)(102836004)(476003)(11346002)(446003)(186003)(26005)(6916009)(256004)(99286004)(66066001)(54906003)(64756008)(55016002)(6436002)(66946007)(73956011)(6246003)(4326008)(229853002)(71190400001)(71200400001)(76116006)(53936002)(9686003)(2906002)(68736007)(76176011)(7696005)(86362001)(66446008)(66556008)(66476007)(25786009)(316002)(33656002)(14454004)(72206003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2797;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3DcVa6DiSImPiYmfDivIr7kg7yti3CVHHqr8m7i2VqIYBfA8rUUJMw09kguv0k0DYB/v3+cqH6km4hTiH5awg2NzoYTgPOybd+vn2stujE21KWlT8mVOfE87mLmm4fLH0mFw1ORT3Sora4Qx8Ne7mdMrlXC2VnS/LfD0bUWQXNZnfJ/sw+bCR524J7+OvH3IheI+ce33K1lg6LVwWEuichoeyVTrnJkaiKnzl5DZEZAmB42UT7TeKSY54YTa7HSlBY4RWweVuvy2IB+pP9xTUFQ+DoeZkcxVMVy0GJyMyoWsjlG66zgKx1I7D36Ubm/TFhyBc6OrEMZ0IW2ZAJcQxxcNI6S2NKBYtJgiRMCKALeGU2YsaDMTgMFYGqBvdd5+C3a/UM7IrHKwnbMur+upuLvirvBcXHdAnJv1Re+cvNY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9603f73-4b25-4e7d-356e-08d6eb676621
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 16:44:24.5506
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yghannam@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2797
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Jun 6, 2019, at 10:28 PM, Nadav Amit <namit@vmware.com> wrote:
-
->> On May 31, 2019, at 3:07 PM, Nadav Amit <namit@vmware.com> wrote:
->>=20
->>> On May 31, 2019, at 2:47 PM, Andy Lutomirski <luto@amacapital.net> wrote=
-:
->>>=20
->>>=20
->>> On May 31, 2019, at 2:33 PM, Nadav Amit <namit@vmware.com> wrote:
->>>=20
->>>>> On May 31, 2019, at 2:14 PM, Andy Lutomirski <luto@kernel.org> wrote:
->>>>>=20
->>>>>> On Thu, May 30, 2019 at 11:37 PM Nadav Amit <namit@vmware.com> wrote:=
-
->>>>>> When we flush userspace mappings, we can defer the TLB flushes, as lo=
-ng
->>>>>> the following conditions are met:
->>>>>>=20
->>>>>> 1. No tables are freed, since otherwise speculative page walks might
->>>>>> cause machine-checks.
->>>>>>=20
->>>>>> 2. No one would access userspace before flush takes place. Specifical=
-ly,
->>>>>> NMI handlers and kprobes would avoid accessing userspace.
->>>>>=20
->>>>> I think I need to ask the big picture question.  When someone calls
->>>>> flush_tlb_mm_range() (or the other entry points), if no page tables
->>>>> were freed, they want the guarantee that future accesses (initiated
->>>>> observably after the flush returns) will not use paging entries that
->>>>> were replaced by stores ordered before flush_tlb_mm_range().  We also
->>>>> need the guarantee that any effects from any memory access using the
->>>>> old paging entries will become globally visible before
->>>>> flush_tlb_mm_range().
->>>>>=20
->>>>> I'm wondering if receipt of an IPI is enough to guarantee any of this.=
-
->>>>> If CPU 1 sets a dirty bit and CPU 2 writes to the APIC to send an IPI
->>>>> to CPU 1, at what point is CPU 2 guaranteed to be able to observe the
->>>>> dirty bit?  An interrupt entry today is fully serializing by the time
->>>>> it finishes, but interrupt entries are epicly slow, and I don't know
->>>>> if the APIC waits long enough.  Heck, what if IRQs are off on the
->>>>> remote CPU?  There are a handful of places where we touch user memory
->>>>> with IRQs off, and it's (sadly) possible for user code to turn off
->>>>> IRQs with iopl().
->>>>>=20
->>>>> I *think* that Intel has stated recently that SMT siblings are
->>>>> guaranteed to stop speculating when you write to the APIC ICR to poke
->>>>> them, but SMT is very special.
->>>>>=20
->>>>> My general conclusion is that I think the code needs to document what
->>>>> is guaranteed and why.
->>>>=20
->>>> I think I might have managed to confuse you with a bug I made (last min=
-ute
->>>> bug when I was doing some cleanup). This bug does not affect the perfor=
-mance
->>>> much, but it might led you to think that I use the APIC sending as
->>>> synchronization.
->>>>=20
->>>> The idea is not for us to rely on write to ICR as something serializing=
-. The
->>>> flow should be as follows:
->>>>=20
->>>>=20
->>>> CPU0                    CPU1
->>>>=20
->>>> flush_tlb_mm_range()
->>>> __smp_call_function_many()
->>>> [ prepare call_single_data (csd) ]
->>>> [ lock csd ]=20
->>>> [ send IPI ]
->>>> (*)
->>>> [ wait for csd to be unlocked ]
->>>>                 [ interrupt ]
->>>>                 [ copy csd info to stack ]
->>>>                 [ csd unlock ]
->>>> [ find csd is unlocked ]
->>>> [ continue (**) ]
->>>>                 [ flush TLB ]
->>>>=20
->>>>=20
->>>> At (**) the pages might be recycled, written-back to disk, etc. Note th=
-at
->>>> during (*), CPU0 might do some local TLB flushes, making it very likely=
- that
->>>> CSD will be unlocked by the time it gets there.
->>>>=20
->>>> As you can see, I don=E2=80=99t rely on any special micro-architectural=
- behavior.
->>>> The synchronization is done purely in software.
->>>>=20
->>>> Does it make more sense now?
->>>=20
->>> Yes.  Have you benchmarked this?
->>=20
->> Partially. Numbers are indeed worse. Here are preliminary results, compar=
-ing
->> to v1 (concurrent):
->>=20
->>    n_threads    before        concurrent    +async
->>    ---------    ------        ----------    ------
->>    1        661        663        663
->>    2        1436        1225 (-14%)    1115 (-22%)
->>    4        1571        1421 (-10%)    1289 (-18%)
->>=20
->> Note that the benefit of =E2=80=9Casync" would be greater if the initiato=
-r does not
->> flush the TLB at all. This might happen in the case of kswapd, for exampl=
-e.
->> Let me try some micro-optimizations first, run more benchmarks and get ba=
-ck
->> to you.
->=20
-> So I ran some more benchmarking (my benchmark is not very suitable), and t=
-ried
-> more stuff that did not help (checking for more work before returning from=
- the
-> IPI handler, and avoid redundant IPIs in such case).
->=20
-> Anyhow, with a fixed version, I ran a more standard benchmark on DAX:
->=20
-> $ mkfs.ext4 /dev/pmem0
-> $ mount -o dax /dev/pmem0 /mnt/mem
-> $ cd /mnt/mem
-> $ bash -c 'echo 0 > /sys/devices/platform/e820_pmem/ndbus0/region0/namespa=
-ce0.0/block/pmem0/dax/write_cache=E2=80=99
-> $ sysbench fileio --file-total-size=3D3G --file-test-mode=3Drndwr    \
->    --file-io-mode=3Dmmap --threads=3D4 --file-fsync-mode=3Dfdatasync prepa=
-re
-> $ sysbench fileio --file-total-size=3D3G --file-test-mode=3Drndwr    \
->    --file-io-mode=3Dmmap --threads=3D4 --file-fsync-mode=3Dfdatasync run
->=20
-> ( as you can see, I disabled the write-cache, since my machine does not ha=
-ve
->  clwb/clflushopt and clflush appears to become a bottleneck otherwise )
->=20
->=20
-> The results are:
->                events (avg/stddev)
->                -------------------
-> base                1263689.0000/11481.10
-> concurrent            1310123.5000/19205.79    (+3.6%)
-> concurrent + async        1326750.2500/24563.61    (+4.9%)
->=20
-> So which version do you want me to submit? With or without the async part?=
-
-
-I think it would be best to submit it without the async part. You can always=
- submit that later.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogRnJpZGF5LCBKdW5lIDcsIDIwMTkgMTE6Mzcg
+QU0NCj4gVG86IEdoYW5uYW0sIFlhemVuIDxZYXplbi5HaGFubmFtQGFtZC5jb20+DQo+IENjOiBM
+dWNrLCBUb255IDx0b255Lmx1Y2tAaW50ZWwuY29tPjsgbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHg4NkBrZXJuZWwub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjMgNS82XSB4ODYvTUNFOiBTYXZlIE1DQSBjb250cm9sIGJpdHMgdGhh
+dCBnZXQgc2V0IGluIGhhcmR3YXJlDQo+IA0KPiBPbiBGcmksIEp1biAwNywgMjAxOSBhdCAwMjo0
+OTo0MlBNICswMDAwLCBHaGFubmFtLCBZYXplbiB3cm90ZToNCj4gPiBXb3VsZCB5b3UgbWluZCBp
+ZiB0aGUgZnVuY3Rpb24gbmFtZSBzdGF5ZWQgdGhlIHNhbWU/IFRoZSByZWFzb24gaXMNCj4gPiB0
+aGF0IE1DQV9DVEwgaXMgd3JpdHRlbiBoZXJlLCB3aGljaCBpcyB0aGUgImluaXQiIHBhcnQsIGFu
+ZCBNQ0FfU1RBVFVTDQo+ID4gaXMgY2xlYXJlZC4NCj4gPg0KPiA+IEkgY2FuIHVzZSBhbm90aGVy
+IG5hbWUgZm9yIHRoZSBjaGVjaywgZS5nLiBfX21jaGVja19jcHVfY2hlY2tfYmFua3MoKQ0KPiA+
+IG9yIF9fbWNoZWNrX2NwdV9iYW5rc19jaGVja19pbml0KCkuDQo+IA0KPiBOZXZlcm1pbmQsIGxl
+YXZlIGl0IGFzIGlzLiBJJ2xsIGZpeCBpdCB1cCBvbnRvcC4gSSBkb24ndCBsaWtlIHRoYXQNCj4g
+Il9fbWNoZWNrX2NwdV9pbml0IiBwcmVmaXhpbmcgdGhlcmUgd2hpY2ggaXMgYSBtb3V0aGZ1bCBh
+bmQgc2hvdWxkDQo+IHNpbXBseSBiZSAibWNlX2NwdV88ZG9fc3R1ZmY+IiB0byBkZW5vdGUgdGhh
+dCBpdCBpcyBhIGZ1bmN0aW9uIHdoaWNoIGlzDQo+IHJ1biBvbiBhIENQVSB0byBzZXR1cCBzdHVm
+Zi4NCj4gDQoNClllYWgsIEkgYWdyZWUuDQoNCkkgaGF2ZSBhbm90aGVyIHZlcnNpb24gb2YgdGhp
+cyBzZXQgdGhhdCBJIGNhbiBzZW5kIHRvZGF5LiBJdCBpbmNsdWRlcyB0aGUgY2hhbmdlcyBmb3Ig
+dGhpcyBwYXRjaCBhbmQgYWxzbyBpbmNsdWRlcyB0aGUgZml4IGZvciB0aGUgbG9ja2luZyBidWcg
+bWVzc2FnZS4NCg0KU2hvdWxkIEkgc2VuZCBvdXQgdGhlIG5ldyB2ZXJzaW9uPyBPciBkbyB5b3Ug
+d2FudCBtZSB0byB3YWl0IGZvciBhbnkgZml4ZXMgb24gdG9wIG9mIHRoZSBjdXJyZW50IHZlcnNp
+b24/DQoNClRoYW5rcywNCllhemVuDQo=
