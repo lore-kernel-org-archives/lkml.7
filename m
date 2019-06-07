@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0692EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3A0C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7C32133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977472146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922128;
-	bh=EdqMXB/LkJXXb5W/6cJPXjnwSD3wjlesuDYPuMt2eyI=;
+	s=default; t=1559922134;
+	bh=mSxpHAbBZi99iHthPLILZIexWMs7cfnTd2C/eAmeqss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y0687yOXBEArhV47aEyw2IOfvuCUBPh7wAMw06Su9nAPteTSYHV+qlHdbc9E6+Kxq
-	 PmFOfDNDr0YkI7WUQP21a9L+Jwv/E9uBZ21cn7AHjoukItH72WSZbDYVbKMFtL6HlQ
-	 +c0iOKtEF2wCdWwTaO//uDqFu+0ZcIG6te6c82Ao=
+	b=BxuRimISKm5MiqMgXlMeRe1CUZXA1DXV+iHJquClhqTxQjDq7rAAK+bBvLiPlVEkA
+	 DbyzWor6ApxBgfAC1XuVL8oQUcUD/jqTcTFg7wPaBHHOXIqqaUhWnz+yE0SAG5PUN/
+	 JaZ8cSr4B0XB7CjvX6VVuY5/lO/C5mJJv8DJMexc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbfFGPmH (ORCPT
+        id S1730514AbfFGPmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52230 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbfFGPl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:41:58 -0400
+        id S1730460AbfFGPmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BCF8212F5;
-        Fri,  7 Jun 2019 15:41:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF23B212F5;
+        Fri,  7 Jun 2019 15:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922117;
-        bh=EdqMXB/LkJXXb5W/6cJPXjnwSD3wjlesuDYPuMt2eyI=;
+        s=default; t=1559922125;
+        bh=mSxpHAbBZi99iHthPLILZIexWMs7cfnTd2C/eAmeqss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XeY1BeqZtztJzcceDeRleKwX3PHQHgAg37nrH4JtHqI7iE+Wz3Qmyo3TSYIjw3xjY
-         5IAFGyNLCgHepXPZ4+qFaNJnI9In/1/0CKpRaUbjN7nr8QVno2BJDCZ3dMeRvTa+cH
-         N/ht0jkOOuE5fiLIN55oNPR9CcD1gn98D2yqPyfc=
+        b=GtUY4P4LuS/iMPeFLde7/AMqwzdvSBD+WVhdhf0lRbIe2X2d72QIfPMmzhoyPoli7
+         L+6kBGBbisdskPNSM/4Qs5jbDrob/r2/hQgkxuOTpTwKgEo1DOg/u9Sbhj09L1Skkj
+         5MGcppaejuKIbJnbu2NS52U6OW2vYYjGZXmwWbF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jan=20Kl=C3=B6tzke?= <Jan.Kloetzke@preh.de>,
+        stable@vger.kernel.org, Rakesh Hemnani <rhemnani@fb.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 07/69] usbnet: fix kernel crash after disconnect
-Date:   Fri,  7 Jun 2019 17:38:48 +0200
-Message-Id: <20190607153849.161567094@linuxfoundation.org>
+Subject: [PATCH 4.14 10/69] bnxt_en: Fix aggregation buffer leak under OOM condition.
+Date:   Fri,  7 Jun 2019 17:38:51 +0200
+Message-Id: <20190607153849.556772096@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -60,90 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kloetzke Jan <Jan.Kloetzke@preh.de>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit ad70411a978d1e6e97b1e341a7bde9a79af0c93d ]
+[ Upstream commit 296d5b54163964b7ae536b8b57dfbd21d4e868e1 ]
 
-When disconnecting cdc_ncm the kernel sporadically crashes shortly
-after the disconnect:
+For every RX packet, the driver replenishes all buffers used for that
+packet and puts them back into the RX ring and RX aggregation ring.
+In one code path where the RX packet has one RX buffer and one or more
+aggregation buffers, we missed recycling the aggregation buffer(s) if
+we are unable to allocate a new SKB buffer.  This leads to the
+aggregation ring slowly running out of buffers over time.  Fix it
+by properly recycling the aggregation buffers.
 
-  [   57.868812] Unable to handle kernel NULL pointer dereference at virtual address 00000000
-  ...
-  [   58.006653] PC is at 0x0
-  [   58.009202] LR is at call_timer_fn+0xec/0x1b4
-  [   58.013567] pc : [<0000000000000000>] lr : [<ffffff80080f5130>] pstate: 00000145
-  [   58.020976] sp : ffffff8008003da0
-  [   58.024295] x29: ffffff8008003da0 x28: 0000000000000001
-  [   58.029618] x27: 000000000000000a x26: 0000000000000100
-  [   58.034941] x25: 0000000000000000 x24: ffffff8008003e68
-  [   58.040263] x23: 0000000000000000 x22: 0000000000000000
-  [   58.045587] x21: 0000000000000000 x20: ffffffc68fac1808
-  [   58.050910] x19: 0000000000000100 x18: 0000000000000000
-  [   58.056232] x17: 0000007f885aff8c x16: 0000007f883a9f10
-  [   58.061556] x15: 0000000000000001 x14: 000000000000006e
-  [   58.066878] x13: 0000000000000000 x12: 00000000000000ba
-  [   58.072201] x11: ffffffc69ff1db30 x10: 0000000000000020
-  [   58.077524] x9 : 8000100008001000 x8 : 0000000000000001
-  [   58.082847] x7 : 0000000000000800 x6 : ffffff8008003e70
-  [   58.088169] x5 : ffffffc69ff17a28 x4 : 00000000ffff138b
-  [   58.093492] x3 : 0000000000000000 x2 : 0000000000000000
-  [   58.098814] x1 : 0000000000000000 x0 : 0000000000000000
-  ...
-  [   58.205800] [<          (null)>]           (null)
-  [   58.210521] [<ffffff80080f5298>] expire_timers+0xa0/0x14c
-  [   58.215937] [<ffffff80080f542c>] run_timer_softirq+0xe8/0x128
-  [   58.221702] [<ffffff8008081120>] __do_softirq+0x298/0x348
-  [   58.227118] [<ffffff80080a6304>] irq_exit+0x74/0xbc
-  [   58.232009] [<ffffff80080e17dc>] __handle_domain_irq+0x78/0xac
-  [   58.237857] [<ffffff8008080cf4>] gic_handle_irq+0x80/0xac
-  ...
-
-The crash happens roughly 125..130ms after the disconnect. This
-correlates with the 'delay' timer that is started on certain USB tx/rx
-errors in the URB completion handler.
-
-The problem is a race of usbnet_stop() with usbnet_start_xmit(). In
-usbnet_stop() we call usbnet_terminate_urbs() to cancel all URBs in
-flight. This only makes sense if no new URBs are submitted
-concurrently, though. But the usbnet_start_xmit() can run at the same
-time on another CPU which almost unconditionally submits an URB. The
-error callback of the new URB will then schedule the timer after it was
-already stopped.
-
-The fix adds a check if the tx queue is stopped after the tx list lock
-has been taken. This should reliably prevent the submission of new URBs
-while usbnet_terminate_urbs() does its job. The same thing is done on
-the rx side even though it might be safe due to other flags that are
-checked there.
-
-Signed-off-by: Jan Klötzke <Jan.Kloetzke@preh.de>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Reported-by: Rakesh Hemnani <rhemnani@fb.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/usbnet.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -508,6 +508,7 @@ static int rx_submit (struct usbnet *dev
- 
- 	if (netif_running (dev->net) &&
- 	    netif_device_present (dev->net) &&
-+	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
- 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
- 	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
- 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
-@@ -1433,6 +1434,11 @@ netdev_tx_t usbnet_start_xmit (struct sk
- 		spin_unlock_irqrestore(&dev->txq.lock, flags);
- 		goto drop;
- 	}
-+	if (netif_queue_stopped(net)) {
-+		usb_autopm_put_interface_async(dev->intf);
-+		spin_unlock_irqrestore(&dev->txq.lock, flags);
-+		goto drop;
-+	}
- 
- #ifdef CONFIG_PM
- 	/* if this triggers the device is still a sleep */
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -1583,6 +1583,8 @@ static int bnxt_rx_pkt(struct bnxt *bp,
+ 		skb = bnxt_copy_skb(bnapi, data_ptr, len, dma_addr);
+ 		bnxt_reuse_rx_data(rxr, cons, data);
+ 		if (!skb) {
++			if (agg_bufs)
++				bnxt_reuse_rx_agg_bufs(bnapi, cp_cons, agg_bufs);
+ 			rc = -ENOMEM;
+ 			goto next_rx;
+ 		}
 
 
