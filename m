@@ -2,267 +2,95 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1FBC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B15C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB8C2083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A18B208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbfFGOjj (ORCPT
+        id S1729014AbfFGOkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:39:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:38177 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728198AbfFGOjj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:39:39 -0400
-Received: from orion.localdomain ([77.2.74.140]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mnq0I-1gkCgc1m4A-00pMLs; Fri, 07 Jun 2019 16:39:36 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Subject: [PATCH] input: keyboard: gpio_keys_polled: use gpio lookup table
-Date:   Fri,  7 Jun 2019 16:39:34 +0200
-Message-Id: <1559918374-7749-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:3X2lnydmm30AHyhp5y/Nd1eD95I/Iq/DSyTfK74YNXDUvwJ5AcY
- HTe95NLzE7bqDqUM+84a9PvWdBXezy9d7vVwCzK1eqtQ+6mhS2aE0qJ7gU//2EH17ZYvli6
- moUk6FHBSa1BYgWCPg98Kds2WJRxdjZpcVVp/WvbzprIE7Ra5q3Imknz6B7ywJcYn0ZMk0/
- Q06VZH+lPO5QpBOPJCDPA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:60VJaZjUlZY=:4tA3vbU6jRz7OYS0xskXO0
- VgiE4GqT8pTRbNPtp81kaYCQu4Ga3+1bk8Ssgyq5zwFK3AHPjhTNpO4wiBv5ieHvi0O23FFcn
- CT3YvDsumJkqR/kQbOVABqc/R4FeuveIR52DkgtfmX37tg9Hqdlvx59XCIzUp+kO24iR3caL/
- 81ipRPeA+drtKsfAtANPjz85471/Bxe+ecsYTciqBio3uzW1DtiJJI9uStRFMAqF5NpXNqJM3
- mQQnZc+njWUB6fvlUzXCMOwC2A7mkDSIAg5SFBaaMoE0ujPAnjLRHIfu5UinUQuXdxMl6tuPQ
- ddZe+MsI7b95nwxYiYhk3paboEyogNuDgbv2Ae1JsqTxwHr2/eUySApGIesmv+pSbWcllYIm0
- wALoeBuftE1Byvfkph7vqI/IUTJYK/7Wpk5shHkDCMu6XFBvq18AgLI9dnVXpcfdP0ATS7rhz
- 1SCkbSGfYLCawHRYZnYaOw2UOJZrZ0DEiPcvzGJQNIEnpyDv5v3vEa8M6C8xIGwNFsBOAk3lK
- KfrM19cnpmIGTlCQz5zBpHz4Q70RhkYpEbWsQ7V6DixtVQ+Lj4pRZm+rFKCqhq5ToBGvjSt+Y
- Y3KOrlY1Quw6hS3Zt7ytVKiV7Ov3csXh4+gUzyoaTLH2PBnkNrqqh2SKAl1GJgHRn9cwoe7nY
- HtCCHn2/tcu1ftYryaRXB6vPeXc0SAke4e9QwcEhjis4iodxH1s9pUqyB52GeSrltuAvMzfC/
- Qyr7aA1NNv2KrGAslze4wGlV5/t0RGfXPVIWzA==
+        Fri, 7 Jun 2019 10:40:40 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33001 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728198AbfFGOkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:40:39 -0400
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 5288EE6A9E88F4C4862A;
+        Fri,  7 Jun 2019 15:40:37 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 7 Jun
+ 2019 15:40:29 +0100
+Subject: Re: [PATCH v3 2/2] ima: add enforce-evm and log-evm modes to strictly
+ check EVM status
+To:     Mimi Zohar <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
+        <mjg59@google.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <stable@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>
+References: <20190606112620.26488-1-roberto.sassu@huawei.com>
+ <20190606112620.26488-3-roberto.sassu@huawei.com>
+ <1559917462.4278.253.camel@linux.ibm.com>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <93459fe8-f9b6-fe45-1ca7-2efb8854dc8b@huawei.com>
+Date:   Fri, 7 Jun 2019 16:40:37 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <1559917462.4278.253.camel@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+On 6/7/2019 4:24 PM, Mimi Zohar wrote:
+> Hi Roberto,
+> 
+> Thank you for updating the patch description.
 
-Support the recently introduced gpio lookup tables for
-attaching to gpio lines. So, harcoded gpio numbers aren't
-needed anymore.
+Hi Mimi
 
-changes v3:
-    * fix printf string in gpio_keys_polled_get_gpiod()
-    * fix unused variable 'error' in gpio_keys_polled_get_gpiod()
-    * fix uninitialized variable in gpio_keys_polled_get_gpiod_fwnode()
+no problem.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/input/keyboard/gpio_keys_polled.c | 166 +++++++++++++++++++++---------
- 1 file changed, 118 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index edc7262..683ab84 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_device.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/gpio/machine.h>
- #include <linux/gpio_keys.h>
- #include <linux/property.h>
- 
-@@ -227,6 +228,118 @@ static void gpio_keys_polled_set_abs_params(struct input_dev *input,
- };
- MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
- 
-+static struct gpio_desc *gpio_keys_polled_get_gpiod_fwnode(
-+	struct device *dev,
-+	int idx,
-+	const char *desc)
-+{
-+	struct gpio_desc *gpiod;
-+	struct fwnode_handle *child;
-+	int x = idx;
-+
-+	/* get the idx'th child node */
-+	child = device_get_next_child_node(dev, NULL);
-+	while (child && x) {
-+		child = device_get_next_child_node(dev, child);
-+		x--;
-+	}
-+
-+	if (!child) {
-+		dev_err(dev, "missing oftree child node #%d\n", idx);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	gpiod = devm_fwnode_get_gpiod_from_child(dev,
-+						 NULL,
-+						 child,
-+						 GPIOD_IN,
-+						 desc);
-+	if (IS_ERR(gpiod)) {
-+		if (PTR_ERR(gpiod) != -EPROBE_DEFER)
-+			dev_err(dev,
-+				"failed to get gpio: %ld\n",
-+				PTR_ERR(gpiod));
-+		fwnode_handle_put(child);
-+		return gpiod;
-+	}
-+
-+	return gpiod;
-+}
-+
-+static struct gpio_desc *gpio_keys_polled_get_gpiod_legacy(
-+	struct device *dev,
-+	int idx,
-+	const struct gpio_keys_button *button)
-+{
-+	/*
-+	 * Legacy GPIO number so request the GPIO here and
-+	 * convert it to descriptor.
-+	 */
-+	unsigned int flags = GPIOF_IN;
-+	struct gpio_desc *gpiod;
-+	int error;
-+
-+	dev_info(dev, "hardcoded gpio IDs are deprecated.\n");
-+
-+	if (button->active_low)
-+		flags |= GPIOF_ACTIVE_LOW;
-+
-+	error = devm_gpio_request_one(dev, button->gpio,
-+			flags, button->desc ? : DRV_NAME);
-+	if (error) {
-+		dev_err(dev,
-+			"unable to claim gpio %u, err=%d\n",
-+			button->gpio, error);
-+		return ERR_PTR(error);
-+	}
-+
-+	gpiod = gpio_to_desc(button->gpio);
-+	if (!gpiod) {
-+		dev_err(dev,
-+			"unable to convert gpio %u to descriptor\n",
-+			button->gpio);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return gpiod;
-+}
-+
-+static struct gpio_desc *gpio_keys_polled_get_gpiod(
-+	struct device *dev,
-+	int idx,
-+	const struct gpio_keys_button *button)
-+{
-+	struct gpio_desc *gpiod = NULL;
-+
-+	/* No legacy static platform data - use oftree */
-+	if (!dev_get_platdata(dev)) {
-+		return gpio_keys_polled_get_gpiod_fwnode(
-+			dev, idx, button->desc);
-+	}
-+
-+	gpiod = devm_gpiod_get_index(dev, NULL, idx, GPIOF_IN);
-+
-+	if (!IS_ERR(gpiod)) {
-+		dev_info(dev, "picked gpiod idx %d from gpio table\n", idx);
-+		gpiod_set_consumer_name(gpiod, button->desc ? : DRV_NAME);
-+		return gpiod;
-+	}
-+
-+	if (PTR_ERR(gpiod) != -ENOENT) {
-+		dev_err(dev, "failed fetching gpiod #%d: %ld\n",
-+			idx, PTR_ERR(gpiod));
-+		return gpiod;
-+	}
-+
-+	/* Use legacy gpio id, if defined */
-+	if (gpio_is_valid(button->gpio)) {
-+		return gpio_keys_polled_get_gpiod_legacy(
-+			dev, idx, button);
-+	}
-+
-+	return ERR_PTR(-ENOENT);
-+}
-+
- static int gpio_keys_polled_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -291,57 +404,14 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
- 
- 		if (button->wakeup) {
- 			dev_err(dev, DRV_NAME " does not support wakeup\n");
--			fwnode_handle_put(child);
- 			return -EINVAL;
- 		}
- 
--		if (!dev_get_platdata(dev)) {
--			/* No legacy static platform data */
--			child = device_get_next_child_node(dev, child);
--			if (!child) {
--				dev_err(dev, "missing child device node\n");
--				return -EINVAL;
--			}
--
--			bdata->gpiod = devm_fwnode_get_gpiod_from_child(dev,
--								NULL, child,
--								GPIOD_IN,
--								button->desc);
--			if (IS_ERR(bdata->gpiod)) {
--				error = PTR_ERR(bdata->gpiod);
--				if (error != -EPROBE_DEFER)
--					dev_err(dev,
--						"failed to get gpio: %d\n",
--						error);
--				fwnode_handle_put(child);
--				return error;
--			}
--		} else if (gpio_is_valid(button->gpio)) {
--			/*
--			 * Legacy GPIO number so request the GPIO here and
--			 * convert it to descriptor.
--			 */
--			unsigned flags = GPIOF_IN;
--
--			if (button->active_low)
--				flags |= GPIOF_ACTIVE_LOW;
--
--			error = devm_gpio_request_one(dev, button->gpio,
--					flags, button->desc ? : DRV_NAME);
--			if (error) {
--				dev_err(dev,
--					"unable to claim gpio %u, err=%d\n",
--					button->gpio, error);
--				return error;
--			}
--
--			bdata->gpiod = gpio_to_desc(button->gpio);
--			if (!bdata->gpiod) {
--				dev_err(dev,
--					"unable to convert gpio %u to descriptor\n",
--					button->gpio);
--				return -EINVAL;
--			}
-+		bdata->gpiod = gpio_keys_polled_get_gpiod(dev, i, button);
-+
-+		if (IS_ERR(bdata->gpiod)) {
-+			dev_err(dev, "failed to fetch gpiod #%d\n", i);
-+			return PTR_ERR(bdata->gpiod);
- 		}
- 
- 		bdata->last_state = -1;
+> On Thu, 2019-06-06 at 13:26 +0200, Roberto Sassu wrote:
+>> IMA and EVM have been designed as two independent subsystems: the first for
+>> checking the integrity of file data; the second for checking file metadata.
+>> Making them independent allows users to adopt them incrementally.
+>>
+>> The point of intersection is in IMA-Appraisal, which calls
+>> evm_verifyxattr() to ensure that security.ima wasn't modified during an
+>> offline attack. The design choice, to ensure incremental adoption, was to
+>> continue appraisal verification if evm_verifyxattr() returns
+>> INTEGRITY_UNKNOWN. This value is returned when EVM is not enabled in the
+>> kernel configuration, or if the HMAC key has not been loaded yet.
+>>
+>> Although this choice appears legitimate, it might not be suitable for
+>> hardened systems, where the administrator expects that access is denied if
+>> there is any error. An attacker could intentionally delete the EVM keys
+>> from the system and set the file digest in security.ima to the actual file
+>> digest so that the final appraisal status is INTEGRITY_PASS.
+> 
+> Assuming that the EVM HMAC key is stored in the initramfs, not on some
+> other file system, and the initramfs is signed, INTEGRITY_UNKNOWN
+> would be limited to the rootfs filesystem.
+
+There is another issue. The HMAC key, like the public keys, should be
+loaded when appraisal is disabled. This means that we have to create a
+trusted key at early boot and defer the unsealing.
+
+Roberto
+
 -- 
-1.9.1
-
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
