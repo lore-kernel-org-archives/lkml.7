@@ -2,129 +2,142 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C3AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C65BFC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B1B2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:10:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WYsyLuJw"
+	by mail.kernel.org (Postfix) with ESMTP id 997CC2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbfFGPKT (ORCPT
+        id S1729603AbfFGPLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:10:19 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41384 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729850AbfFGPKQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:10:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id s57so2627752qte.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mtF5cAWsrYgtNZcy7Xm0z7hOgyvsIAMepLY84jhBIIY=;
-        b=WYsyLuJwZJIQkQf8wUWCq+MKSRiYgAlB3cZg5uiR6sfXzmT5qRPbG9DhevssrlPWqT
-         btVD4AS17pELyqwsgZDkQw2P7FuITtTVQMrN8ttsGMNW1xgfpIRPBVOa0vjh1b2Q1GR1
-         KuOwYeQwWnuz6D+1FRguaiqcVs7bzdSKLArmkC9S3JiLqJpGoQtRUAt5WZRIgTPnLny4
-         IKSY1gSwXGY6RvgI08IKQsXM6qG3PGhAf3b+OAJpaapDK96fRJ2kOM5Yvdls9VHMdofH
-         LPFgCkV+imozC4VVLOAwHIKBZyqQ6Svl+UIUCGPXrQKi5OfcTa6MmnRnnxQ4x38JcA+k
-         g4gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mtF5cAWsrYgtNZcy7Xm0z7hOgyvsIAMepLY84jhBIIY=;
-        b=AGiyyNgjyrJpKaLnFTJNsSGNOctbb6KFER5TpVIWJ3l8EK41t3fDPebPdH0AGTw0as
-         WUkaYkQ3Z5HB8k4bTg8ov8my7RhgMvCe58nlUE4un42DBc1qKSRzRh1/lwQudTW9/EOK
-         qULYdhdEy8m0sLftoNYFP/cIXW9cooegYADTBsOdSwLDgq6R1jZUB4mKhhYAsZ1xV0KO
-         kadQicqRMfyYyA5liuxly5m0TsAtt6v5LRrtJFHTLoLbTM/2znnAZxmczGggaLGImn8P
-         FFSlMcG4jbfnkL0sLPdwQluqZ/36tVAGd2YOGoRGGWLIqcFSkTkxiCLd+geM8b2OoSm9
-         O0pA==
-X-Gm-Message-State: APjAAAXsda7r3b+obhWWwIDPt2xKHKOWMXP0J7Rnz4A234c+tExj1ABy
-        O2Dyuypu1MDSPniKjwLTdb3JmQ==
-X-Google-Smtp-Source: APXvYqz98pAEW8JOYRDiw9EYF+WsmnpCH5t6BgflMJ4duW3xWG4TSqN3U+4KRrwB7XAG90R+0pkeHA==
-X-Received: by 2002:ac8:4619:: with SMTP id p25mr14877922qtn.73.1559920216042;
-        Fri, 07 Jun 2019 08:10:16 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id a11sm1103592qkn.26.2019.06.07.08.10.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 08:10:15 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hZGVT-0006TX-4L; Fri, 07 Jun 2019 12:10:15 -0300
-Date:   Fri, 7 Jun 2019 12:10:15 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190607151015.GJ14802@ziepe.ca>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+        Fri, 7 Jun 2019 11:11:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:42284 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728446AbfFGPLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:11:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE300B16;
+        Fri,  7 Jun 2019 08:11:45 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A97A3F802;
+        Fri,  7 Jun 2019 08:11:44 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
+ vmcoreinfo
+To:     Bhupesh Sharma <bhsharma@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, bhupesh.linux@gmail.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
+        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        Steve Capper <Steve.Capper@arm.com>
+References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
+ <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
+ <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
+ <58c6cda9-9fd4-3b3e-740a-7b9b80b1f634@redhat.com>
+ <a48bb02c-8f93-4e3b-085d-a6f0e5a1f3a0@arm.com>
+ <66da4098-b221-408b-50ca-f3790b943965@redhat.com>
+ <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <2a4af3a0-1342-fdd2-1cfd-e37abb99d8bd@arm.com>
+Date:   Fri, 7 Jun 2019 16:11:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 07:52:13AM -0700, Ira Weiny wrote:
-> On Fri, Jun 07, 2019 at 09:17:29AM -0300, Jason Gunthorpe wrote:
-> > On Fri, Jun 07, 2019 at 12:36:36PM +0200, Jan Kara wrote:
-> > 
-> > > Because the pins would be invisible to sysadmin from that point on. 
-> > 
-> > It is not invisible, it just shows up in a rdma specific kernel
-> > interface. You have to use rdma netlink to see the kernel object
-> > holding this pin.
-> > 
-> > If this visibility is the main sticking point I suggest just enhancing
-> > the existing MR reporting to include the file info for current GUP
-> > pins and teaching lsof to collect information from there as well so it
-> > is easy to use.
-> > 
-> > If the ownership of the lease transfers to the MR, and we report that
-> > ownership to userspace in a way lsof can find, then I think all the
-> > concerns that have been raised are met, right?
-> 
-> I was contemplating some new lsof feature yesterday.  But what I don't think we
-> want is sysadmins to have multiple tools for multiple subsystems.  Or even have
-> to teach lsof something new for every potential new subsystem user of GUP pins.
+Hi Bhupesh,
 
-Well.. it is a bit tricky, but you'd have to arrange for the lease
-object to have a list of 'struct files' that are holding the
-lease open. 
+(sorry for the delay on this)
 
-The first would be the file that did the fcntl, the next would be all
-the files that did longterm GUP - which means longterm GUP has to have
-a chardev file/etc as well (seems OK)
+On 04/05/2019 13:53, Bhupesh Sharma wrote:
+> On 04/03/2019 11:24 PM, Bhupesh Sharma wrote:
+>> On 04/02/2019 10:56 PM, James Morse wrote:
+>>> Yes the kernel code is going to move around, this is why the information we expose via
+>>> vmcoreinfo needs to be thought through: something we would always need, regardless of how
+>>> the kernel implements it.
+>>>
 
-Then lsof could query the list of lease objects for each file it
-encounters and print them out too.
+>>> Pointer-auth changes all this again, as we may prefer to use the bits for pointer-auth in
+>>> one TTB or the other. PTRS_PER_PGD may show the 52bit value in this case, but neither TTBR
+>>> is mapping 52bits of VA.
+>>>
+>>>
+>>>> So far, I have generally come across discussions where the following variations of the
+>>>> address spaces have been proposed/requested:
+>>>> - 48bit kernel VA + 48-bit User VA,
+>>>> - 48-bit kernel VA + 52-bit User VA,
+>>>
+>>> + 52bit kernel, because there is excessive quantities of memory, and the kernel maps it
+>>> all, but 48-bit user, because it never maps all the memory, and we prefer the bits for
+>>> pointer-auth.
+>>>
+>>>> - 52-bit kernel VA + 52-bit User VA.
+>>>
+>>> And...  all four may happen with the same built image. I don't see how you can tell these
+>>> cases apart with the one (build-time-constant!) PTRS_PER_PGD value.
+>>>
+>>> I'm sure some of these cases are hypothetical, but by considering it all now, we can avoid
+>>> three more kernel:vmcoreinfo updates, and three more fix-user-space-to-use-the-new-value.
+>>
+>> Agree.
+>>
+>>> I think you probably do need PTRS_PER_PGD, as this is the one value the mm is using to
+>>> generate page tables. I'm pretty sure you also need T0SZ and T1SZ to know if that's
+>>> actually in use, or the kernel is bodging round it with an offset.
+>>
+>> Sure, I am open to suggestions (as I realize that we need an additional VA_BITS_ACTUAL
+>> variable export'ed for 52-bit kernel VA changes).
 
-Jason
+(stepping back a bit:)
+
+I'm against exposing arch-specific #ifdefs that correspond to how we've configured the
+arch code's interactions with mm. These are all moving targets, we can't have any of it
+become ABI.
+
+I have a straw-man for this: What is the value of PTE_FILE_MAX_BITS on your system?
+I have no idea what this value is or means, an afternoon's archaeology would be needed(!).
+This is something that made sense for one kernel version, a better idea came along, and it
+was replaced. If we'd exposed this to user-space, we'd have to generate a value, even if
+it doesn't mean anything. Exposing VA_BITS_ACTUAL is the same.
+
+(Keep an eye out for when we change the kernel memory map, and any second-guessing based
+on VA_BITS turns out to be wrong)
+
+
+What we do have are the hardware properties. The kernel can't change these.
+
+
+>> Also how do we standardize reading T0SZ and T1SZ in user-space. Do you propose I make an
+>> enhancement in the cpu-feature-registers interface (see [1]) or the HWCAPS interface
+>> (see [2]) for the same?
+
+cpufeature won't help you if you've already panic()d and only have the vmcore file. This
+stuff needs to go in vmcoreinfo.
+
+As long as there is a description of how userspace uses these values, I think adding
+key/values for TCR_EL1.TxSZ to the vmcoreinfo is a sensible way out of this. You probably
+need TTBR1_EL1.BADDR too. (it should be specific fields, to prevent 'new uses' becoming ABI)
+
+This tells you how the hardware was configured, and covers any combination of TxSZ tricks
+we play, and whether those address bits are used for VA, or ptrauth for TTBR0 or TTRB1.
+
+
+> Any comments on the above points? At the moment we have to carry these fixes in the
+> distribution kernels and I would like to have these fixed in upstream kernel itself.
+
+
+Thanks,
+
+James
