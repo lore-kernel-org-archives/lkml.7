@@ -2,106 +2,70 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AEEC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29A6C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F162133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:02:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fdNdUy/Y"
+	by mail.kernel.org (Postfix) with ESMTP id 748B3208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbfFGQCs (ORCPT
+        id S1730033AbfFGQEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:02:48 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:38078 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729965AbfFGQCp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:02:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559923363; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PVwrMcOcSydsdoB2Vv8m9KiILY45YMjy1Ki46blBbCg=;
-        b=fdNdUy/Y1risixnQhQvkBHePcQaIwgehM6qcOgDx1M2IwZdalgo6yQHnBIY+L6xpYqX4R5
-        b/yRV+3CRlark93gHlvidve0mEKWEPLb095TBxRda7LfRj0WDxIk7QKfYkjDyaY9N60LH/
-        lq9/Hduqj21qiSlmQj+Kd2a2s9DO9OQ=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     od@zcrc.me, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] mtd/rawnand: ingenic-nand: Make probe function __init_or_module
-Date:   Fri,  7 Jun 2019 18:02:00 +0200
-Message-Id: <20190607160200.16052-2-paul@crapouillou.net>
-In-Reply-To: <20190607160200.16052-1-paul@crapouillou.net>
-References: <20190607160200.16052-1-paul@crapouillou.net>
+        Fri, 7 Jun 2019 12:04:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:37185 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729133AbfFGQEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:04:24 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:04:23 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga006.jf.intel.com with ESMTP; 07 Jun 2019 09:04:22 -0700
+Date:   Fri, 7 Jun 2019 09:04:22 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: Rename prepare_vmcs02_*_full to
+ prepare_vmcs02_*_extra
+Message-ID: <20190607160422.GE9083@linux.intel.com>
+References: <1559834652-105872-1-git-send-email-pbonzini@redhat.com>
+ <20190606184117.GJ23169@linux.intel.com>
+ <8382fd94-aed1-51b4-007e-7579a0f35ece@redhat.com>
+ <20190607141847.GA9083@linux.intel.com>
+ <5762005d-1504-bb41-9583-ec549e107ce5@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5762005d-1504-bb41-9583-ec549e107ce5@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the probe function to be dropped after the kernel finished
-its initialization, in the case where the driver was not compiled as a
-module.
+On Fri, Jun 07, 2019 at 05:17:09PM +0200, Paolo Bonzini wrote:
+> On 07/06/19 16:18, Sean Christopherson wrote:
+> > On Fri, Jun 07, 2019 at 02:19:20PM +0200, Paolo Bonzini wrote:
+> >> On 06/06/19 20:41, Sean Christopherson wrote:
+> >>>> +static void prepare_vmcs02_early_extra(struct vcpu_vmx *vmx,
+> >>> Or maybe 'uncommon', 'rare' or 'ext'?  I don't I particularly love any of
+> >>> the names, but they're all better than 'full'.
+> >>
+> >> I thought 'ext' was short for 'extra'? :)
+> > 
+> > Ha, I (obviously) didn't make that connection.  ext == extended in my mind.
+> 
+> That's what came to mind first, but then "extended" had the same issue
+> as "full" (i.e. encompassing the "basic" set as well) so I decided you
+> knew better!
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/mtd/nand/raw/ingenic/ingenic_nand.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Ah, I was thinking of "basic" and "extended" as separate states, but your
+interpretation is correct.
 
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-index d7b7c0f13909..b7f2facb4b37 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
-@@ -302,7 +302,7 @@ static const struct nand_controller_ops ingenic_nand_controller_ops = {
- 	.attach_chip = ingenic_nand_attach_chip,
- };
- 
--static int ingenic_nand_init_chip(struct platform_device *pdev,
-+static int __init_or_module ingenic_nand_init_chip(struct platform_device *pdev,
- 				  struct ingenic_nfc *nfc,
- 				  struct device_node *np,
- 				  unsigned int chipnr)
-@@ -399,7 +399,7 @@ static void ingenic_nand_cleanup_chips(struct ingenic_nfc *nfc)
- 	}
- }
- 
--static int ingenic_nand_init_chips(struct ingenic_nfc *nfc,
-+static int __init_or_module ingenic_nand_init_chips(struct ingenic_nfc *nfc,
- 				   struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -427,7 +427,7 @@ static int ingenic_nand_init_chips(struct ingenic_nfc *nfc,
- 	return 0;
- }
- 
--static int ingenic_nand_probe(struct platform_device *pdev)
-+static int __init_or_module ingenic_nand_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	unsigned int num_banks;
-@@ -473,7 +473,7 @@ static int ingenic_nand_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int ingenic_nand_remove(struct platform_device *pdev)
-+static int __exit ingenic_nand_remove(struct platform_device *pdev)
- {
- 	struct ingenic_nfc *nfc = platform_get_drvdata(pdev);
- 
--- 
-2.21.0.593.g511ec345e18
-
+I probably have a slight preference for 'uncommon' over 'extra'?  I feel
+like they have equal odds of being misinterpreted, so pick your poison :-)
