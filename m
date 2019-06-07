@@ -2,101 +2,152 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B77C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58286C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64BF8207E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B79207E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="166+1VM+"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mpP+XR8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbfFGR1I (ORCPT
+        id S1731391AbfFGR1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:27:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35332 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbfFGR1I (ORCPT
+        Fri, 7 Jun 2019 13:27:41 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:52769 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730316AbfFGR1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:27:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57HIhbF170100;
-        Fri, 7 Jun 2019 17:27:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=sJ8louzcxQ+/SPIhPvWd1tKDp21eQEHrE1jVzge2LQE=;
- b=166+1VM+mm6mrDqJiJxkRNV+jFY0kgNKrlXigCn0Z8P+u7eSFbncZzJqod4QrudvvsXL
- 9j6QtE7aKpH6hEiC4CUsd/SQZP19AzOR3DV4ju1jqtxUuCNSoRY7J/wLQyo1uF3aDIbH
- t7ocbrgBVh5zvhspPvEjnB+XmHtw5hKAWtWo12WtHbr8ROY9oiyy8kSaydBZhK96OnHl
- wVG7PTO7cMWNB1CAjwFkJJ1P04LyDOpDQSLvVvGvNHchZoN4LKkK3m+SIausTO8KfnvL
- QLCA0NH/NqlR46tdOSTPjum/NtAJakET+crL5dHttVFrPFIUd23xuhfD8L5E3PP94NIE Qw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2sugstymb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 17:27:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57HQifN055246;
-        Fri, 7 Jun 2019 17:27:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2swnhdcn1s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 17:27:03 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x57HR29p020389;
-        Fri, 7 Jun 2019 17:27:02 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 10:27:02 -0700
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Subject: Re: [PATCH] drivers/ata: remove flood "Enabling discard_zeroes_data"
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <155989286981.1471.16344793966539115439.stgit@buzz>
-Date:   Fri, 07 Jun 2019 13:26:54 -0400
-In-Reply-To: <155989286981.1471.16344793966539115439.stgit@buzz> (Konstantin
-        Khlebnikov's message of "Fri, 07 Jun 2019 10:34:29 +0300")
-Message-ID: <yq1sgsli9wh.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=756
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=806 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070116
+        Fri, 7 Jun 2019 13:27:41 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190607172739euoutp01e3c42d635ead8ab8231c27649884fde0~l_qtM-9Oo1064710647euoutp01f
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 17:27:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190607172739euoutp01e3c42d635ead8ab8231c27649884fde0~l_qtM-9Oo1064710647euoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559928459;
+        bh=9P2QBaiZ1ihJh/1tM3pcrMJkLOkTqdSK1PLPgQqSMiE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=mpP+XR8riTvz3+EB83ULLiriH4kjRIA/vEiyco9G1xZcJX+/oEq3SUDANaJiHhJRk
+         Jb7UZlwa9Wjx1fg4mGfH9BeAzj26ZLmPhhH2yJtYWkEWhILjr+u+iWSqmPiGtPOh/z
+         5/uXOA4h4eamcH+Mbwbmcwzb4m9qyxPv5lUhXo5Y=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190607172738eucas1p2627736a149ba8c78382120878d834565~l_qsG9YJd2090420904eucas1p2Z;
+        Fri,  7 Jun 2019 17:27:38 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 77.14.04377.A8E9AFC5; Fri,  7
+        Jun 2019 18:27:38 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190607172737eucas1p28508d5e198907695bc77f9fd18ce233e~l_qrSiI7P2088520885eucas1p2f;
+        Fri,  7 Jun 2019 17:27:37 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190607172737eusmtrp16ca0b42e3052308b18bd7c0761fc4885~l_qrC_EhI1793017930eusmtrp1M;
+        Fri,  7 Jun 2019 17:27:37 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-64-5cfa9e8a82f5
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 62.40.04146.98E9AFC5; Fri,  7
+        Jun 2019 18:27:37 +0100 (BST)
+Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607172736eusmtip1c0e8143d5a848d2e993238f565d99b98~l_qqb3Xpi2562725627eusmtip1J;
+        Fri,  7 Jun 2019 17:27:36 +0000 (GMT)
+From:   Ilya Maximets <i.maximets@samsung.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Ilya Maximets <i.maximets@samsung.com>
+Subject: [PATCH bpf] xdp: check device pointer before clearing
+Date:   Fri,  7 Jun 2019 20:27:32 +0300
+Message-Id: <20190607172732.4710-1-i.maximets@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsWy7djP87pd837FGOzq47D407aB0eLzkeNs
+        FnPOt7BYXGn/yW5xedccNosVh06wWxxbIGaxvX8fowOHx5aVN5k8Fu95yeTRt2UVo8fnTXIB
+        LFFcNimpOZllqUX6dglcGVfPKBbs4Kw42vabsYHxEnsXIyeHhICJxK3eZ8xdjFwcQgIrGCUO
+        vv3JCJIQEvjCKLH7QihE4jOjxPXPd+A6en8dZIFILGeUWPtyJROE84NRYuu0vWBVbAI6EqdW
+        HwEbJSIgJfFxx3Z2kCJmgclMEi9f/gUrEhawk2jbNIMFxGYRUJX4dnwRWAOvgJXE2TtToNbJ
+        S6zecADsQAmBy2wS+/e+Y+1i5AByXCR+70qHqBGWeHV8C1S9jMTpyT0sEHa9xP2Wl4wQvR2M
+        EtMP/WOCSNhLbHl9jh1kDrOApsT6XfoQYUeJ6xtbmCHG80nceCsIEmYGMidtmw4V5pXoaBOC
+        qFaR+H1wOTOELSVx891nqAs8JL6/PsoECcVYicvLXrFPYJSbhbBrASPjKkbx1NLi3PTUYqO8
+        1HK94sTc4tK8dL3k/NxNjMA0cPrf8S87GHf9STrEKMDBqMTD+6LkV4wQa2JZcWXuIUYJDmYl
+        Ed6yCz9ihHhTEiurUovy44tKc1KLDzFKc7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTCG
+        vNJi2Jjack/60z3bNOe3UeE6anvFP8Qu/PrR3vAYV1/gA701k98sXnsgoHvKnVA7gW0bL1Q3
+        fZl2PnB9redxt+kHChZOZnV9vkJSNE2ZSea5Fl/rDbPEPxeXL0oSClUw/2ppWH9RWpDh0gy7
+        gi1+iZt5DyvWvnovvr3tgIvQ6h0Vj1TqLHOUWIozEg21mIuKEwG5EJv7/wIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsVy+t/xu7qd837FGCz+ymPxp20Do8XnI8fZ
+        LOacb2GxuNL+k93i8q45bBYrDp1gtzi2QMxie/8+RgcOjy0rbzJ5LN7zksmjb8sqRo/Pm+QC
+        WKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mq6e
+        USzYwVlxtO03YwPjJfYuRk4OCQETid5fB1m6GLk4hASWMkrMObuJDSIhJfHj1wVWCFtY4s+1
+        LjaIom+MEl96ZzKCJNgEdCROrT4CZosANXzcsZ0dpIhZYCaTxJ7+EywgCWEBO4m2TTPAbBYB
+        VYlvxxeBNfAKWEmcvTMF6gx5idUbDjBPYORZwMiwilEktbQ4Nz232FCvODG3uDQvXS85P3cT
+        IzAEtx37uXkH46WNwYcYBTgYlXh4X5T8ihFiTSwrrsw9xCjBwawkwlt24UeMEG9KYmVValF+
+        fFFpTmrxIUZToOUTmaVEk/OB8ZFXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1
+        CKaPiYNTqoGxzfkb215x+d8BjhJzttTLHbq7R+0m99MF31bzZ+xKm6l6ly3N+/r79og7W9tO
+        7fI/9SBBQv6EYdev3Ml5FZrRRz//evx6U7qJron2ngKt35a3VmgIKh130Lv8wdN4rZFfmudk
+        KbavvzL27tcpn82Q7sq+1L5VPTeX6XR24ze9q/fOKr8wWFqpxFKckWioxVxUnAgA+h3bmVcC
+        AAA=
+X-CMS-MailID: 20190607172737eucas1p28508d5e198907695bc77f9fd18ce233e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190607172737eucas1p28508d5e198907695bc77f9fd18ce233e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190607172737eucas1p28508d5e198907695bc77f9fd18ce233e
+References: <CGME20190607172737eucas1p28508d5e198907695bc77f9fd18ce233e@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We should not call 'ndo_bpf()' or 'dev_put()' with NULL argument.
 
-Konstantin,
+Fixes: c9b47cc1fabc ("xsk: fix bug when trying to use both copy and zero-copy on one queue id")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+---
 
-> Printing this at each SCSI READ_CAPACITY command is too verbose.
->
-> Flag "discard_zeroes_data" is deprecated since commit 48920ff2a5a9
-> ("block: remove the discard_zeroes_data flag").
+I'm not sure if this fixes any real NULL pointer dereference, but code
+is not consistent anyway and should be fixed.
 
-> -			    dev->horkage & ATA_HORKAGE_ZERO_AFTER_TRIM) {
-> -				ata_dev_info(dev, "Enabling discard_zeroes_data\n");
-> +			    dev->horkage & ATA_HORKAGE_ZERO_AFTER_TRIM)
->  				rbuf[14] |= 0x40; /* LBPRZ */
+ net/xdp/xdp_umem.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 2b18223e7eb8..9c6de4f114f8 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -143,6 +143,9 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
+ 	struct netdev_bpf bpf;
+ 	int err;
+ 
++	if (!umem->dev)
++		return;
++
+ 	if (umem->zc) {
+ 		bpf.command = XDP_SETUP_XSK_UMEM;
+ 		bpf.xsk.umem = NULL;
+@@ -156,11 +159,9 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
+ 			WARN(1, "failed to disable umem!\n");
+ 	}
+ 
+-	if (umem->dev) {
+-		rtnl_lock();
+-		xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
+-		rtnl_unlock();
+-	}
++	rtnl_lock();
++	xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
++	rtnl_unlock();
+ 
+ 	if (umem->zc) {
+ 		dev_put(umem->dev);
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.17.1
+
