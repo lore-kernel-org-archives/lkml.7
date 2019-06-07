@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2B7C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65266C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6B2208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A29F208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bf491hq+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Nli57SDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbfFGNMU (ORCPT
+        id S1729258AbfFGNLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 09:12:20 -0400
+        Fri, 7 Jun 2019 09:11:37 -0400
 Received: from esa4.hgst.iphmx.com ([216.71.154.42]:53172 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbfFGNLr (ORCPT
+        with ESMTP id S1729202AbfFGNLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 09:11:47 -0400
+        Fri, 7 Jun 2019 09:11:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1559913107; x=1591449107;
+  t=1559913092; x=1591449092;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4nLHyfI3fv6ZUFS/VY17ZQTSfHVHXl6J3Rsy55AAxfI=;
-  b=bf491hq+/rKLt8/g+b4N48dghEfF3xe3USJYMWnD7ppMF6LQB8yTmc71
-   neZPESzp/2wumT2NZT4Nsh6iR+OBt8fku88HbgzpJEzA7+CTE09+hupI+
-   hYd4Kvs9Po1hI3mHMS9BQbxmNJXPYlkMeVxEm3Wxp9TdOhq9rE5EbrW5h
-   ED8s/a2zZg+wURedhcVXYtl5k0vxdHtXDQXWFKLrbeeMD9t5THXGQqfyq
-   1niVLdPmaLjNUobvSWPLJhcd0UJvb+BzpnBffPhZ7y07AYCLEaINn4yLh
-   roujzsBYITr+4N++D3x6tHCa8Ha1Gb3Qvfvwmn13lIoUIW9i6jzRJdQOp
-   g==;
+  bh=3bAmdgIxyty7Z14az/12nbHorxCPMZonbxqA68tGk5c=;
+  b=Nli57SDBAOxmImS3eWAfyXQHH2rSMpLykA2yF0NpCF5WnC2yxi4fUbHX
+   kc03VXV5hBX1KpJyHOYdP2FSaC2A3t9bAoyln8pNUDjnANZcsady/Fwpg
+   L2sXn3aFQl8A9lkmFd4mtF52WwgvXHAUyyo/qz6xBkNT6TnbcxWx0rYpa
+   CRglnxDWW1dyVeHfHmBGvuNkmPVlU34+9T+pbsAluNoid360rLXZAU/qM
+   UWtwjZ0UvD2t4bseQ2X54+K1LWF1/HHC80jkuL07KVYap1pRmeXgmxj1P
+   +CLTtPTDmyNQVosf0yF0qFRVlhfWytwcaiQYLMqsAcVCRA66gOfrXRG9G
+   w==;
 X-IronPort-AV: E=Sophos;i="5.63,563,1557158400"; 
-   d="scan'208";a="110027828"
+   d="scan'208";a="110027808"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2019 21:11:47 +0800
-IronPort-SDR: vAHs450dXNQmH+P7+KLM7Qjm+T+Um6g0Zom6PfpnvVIxDCgMey18KJNeHKoqTQs3OK4d0HOYmJ
- 9F/Og9KPt5vsNctJXnlMmVBGcNiW8atEP0b7D4jApOGur+4Te5IsJgaTIlu/dhrAXgyCHG8+vv
- C5f3AnRMI8GFWFofVRGZbUVFfJMXmkBx8Zp3V6JqPnebHu+Hsx+qQGGDCKIhqKoPMIKS1LJIO6
- 0eAIwRx8XGaGjp58CV5N8YOcD5M9Cr7+pUlJmKbX8WteLwoytbXPN46H7FNezBwXx+S3tlZWPb
- hqSxBAAHuSMis9yU/8dgmy+F
+  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2019 21:11:32 +0800
+IronPort-SDR: CCqCKZuRz33+0hF/Fif4eTafdXCw53t/vEnu8l+lsei+Ws7h4klDz89W7W3UnK8/3bktc37P0n
+ oeUyENIZsJj9Z76jCHc31bsS3SI8PBQ9DljEHen2k4jqmud+zq0YLXryPSKVvvEV33+qh9WuJ2
+ B6aLFhEsDnZqCvin1rtSXOTJbIgSWt5eMV/5E7ocB8HKc30VTa+6MsarDdj9bMK8SSPwAJsPnQ
+ cTQpzSL5/NdU3ImxdEH51R8PA+f4gT5alMZVF1U4fvC/zXf43mfHfVOg8ojRbU9YV7mopmUBVQ
+ DceQaC2vgsKi2RZIhY4t8k1c
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 07 Jun 2019 05:49:04 -0700
-IronPort-SDR: G16LtUd5bpuNhdKAT+GJ64jCGJDCmSwixdGbkAjD/5aTmabaHr6g0WAuwCU2x2fTn64SgXiht6
- FeQRwPatSfUymMiWjfPDDSJ9uxFPy/TCJDAJVP5ogBrTg8hCVijGXwClBVICZPXiYwiR5j5JbR
- /ZL5kUv3H4f8z1jwvQFO4LtM9jZ3yNnkLtco4C1mRcmLhwEQfWLQS50T7EyD8xT7cdwKXlAV/w
- URI8YGhsb0RJJ4qffLiCffnlQlBQZ1MHrxDz35OJMFsR9RD0pFjTv6Nz4V7p9JUoREo83OqI6l
- gVY=
+  by uls-op-cesaep02.wdc.com with ESMTP; 07 Jun 2019 05:48:49 -0700
+IronPort-SDR: LERPIoMDAu8EulzSRTx1WTxMy0zUcYeAl54vVYEBP3Slghj8Dvvt864i3oygsiyTO5XtUrPWnv
+ 6E4BmyMBG9F39N8DUsb50gM1pCslo42THAkGwCra6FgvcDT+/12o/wXYK+TlVp7UmPLWyXtrU2
+ 837GKd30eqKoPR9wLdR+IXVUr5PTDvvaF0LTeLP4kZd14kDxPtxf0Y4+Mn3Y496YtBqPmtjMej
+ /WZDr6Om6YmQxx5bHmUOg5jq2athotKO1RWJ7epc/5qTJz1e0ZESdFCpf18Aex2I8/UIYzIqR1
+ 3Js=
 Received: from naota.dhcp.fujisawa.hgst.com (HELO naota.fujisawa.hgst.com) ([10.149.53.115])
-  by uls-op-cesaip02.wdc.com with ESMTP; 07 Jun 2019 06:11:45 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 07 Jun 2019 06:11:30 -0700
 From:   Naohiro Aota <naohiro.aota@wdc.com>
 To:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>
 Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
@@ -65,9 +65,9 @@ Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Bart Van Assche <bvanassche@acm.org>,
         Naohiro Aota <naohiro.aota@wdc.com>
-Subject: [PATCH 15/19] btrfs: reset zones of unused block groups
-Date:   Fri,  7 Jun 2019 22:10:21 +0900
-Message-Id: <20190607131025.31996-16-naohiro.aota@wdc.com>
+Subject: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
+Date:   Fri,  7 Jun 2019 22:10:15 +0900
+Message-Id: <20190607131025.31996-10-naohiro.aota@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607131025.31996-1-naohiro.aota@wdc.com>
 References: <20190607131025.31996-1-naohiro.aota@wdc.com>
@@ -78,56 +78,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For an HMZONED volume, a block group maps to a zone of the device. For
-deleted unused block groups, the zone of the block group can be reset to
-rewind the zone write pointer at the start of the zone.
+When in HMZONED mode, make sure that device super blocks are located in
+randomly writable zones of zoned block devices. That is, do not write super
+blocks in sequential write required zones of host-managed zoned block
+devices as update would not be possible.
 
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
 ---
- fs/btrfs/extent-tree.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ fs/btrfs/disk-io.c     | 11 +++++++++++
+ fs/btrfs/disk-io.h     |  1 +
+ fs/btrfs/extent-tree.c |  4 ++++
+ fs/btrfs/scrub.c       |  2 ++
+ 4 files changed, 18 insertions(+)
 
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 7c1404c76768..ddbb02906042 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3466,6 +3466,13 @@ struct buffer_head *btrfs_read_dev_super(struct block_device *bdev)
+ 	return latest;
+ }
+ 
++int btrfs_check_super_location(struct btrfs_device *device, u64 pos)
++{
++	/* any address is good on a regular (zone_size == 0) device */
++	/* non-SEQUENTIAL WRITE REQUIRED zones are capable on a zoned device */
++	return device->zone_size == 0 || !btrfs_dev_is_sequential(device, pos);
++}
++
+ /*
+  * Write superblock @sb to the @device. Do not wait for completion, all the
+  * buffer heads we write are pinned.
+@@ -3495,6 +3502,8 @@ static int write_dev_supers(struct btrfs_device *device,
+ 		if (bytenr + BTRFS_SUPER_INFO_SIZE >=
+ 		    device->commit_total_bytes)
+ 			break;
++		if (!btrfs_check_super_location(device, bytenr))
++			continue;
+ 
+ 		btrfs_set_super_bytenr(sb, bytenr);
+ 
+@@ -3561,6 +3570,8 @@ static int wait_dev_supers(struct btrfs_device *device, int max_mirrors)
+ 		if (bytenr + BTRFS_SUPER_INFO_SIZE >=
+ 		    device->commit_total_bytes)
+ 			break;
++		if (!btrfs_check_super_location(device, bytenr))
++			continue;
+ 
+ 		bh = __find_get_block(device->bdev,
+ 				      bytenr / BTRFS_BDEV_BLOCKSIZE,
+diff --git a/fs/btrfs/disk-io.h b/fs/btrfs/disk-io.h
+index a0161aa1ea0b..70e97cd6fa76 100644
+--- a/fs/btrfs/disk-io.h
++++ b/fs/btrfs/disk-io.h
+@@ -141,6 +141,7 @@ struct extent_map *btree_get_extent(struct btrfs_inode *inode,
+ 		struct page *page, size_t pg_offset, u64 start, u64 len,
+ 		int create);
+ int btrfs_get_num_tolerated_disk_barrier_failures(u64 flags);
++int btrfs_check_super_location(struct btrfs_device *device, u64 pos);
+ int __init btrfs_end_io_wq_init(void);
+ void __cold btrfs_end_io_wq_exit(void);
+ 
 diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index cb29a96c226b..ff4d55d6ef04 100644
+index 3d41d840fe5c..ae2c895d08c4 100644
 --- a/fs/btrfs/extent-tree.c
 +++ b/fs/btrfs/extent-tree.c
-@@ -2018,6 +2018,26 @@ int btrfs_discard_extent(struct btrfs_fs_info *fs_info, u64 bytenr,
- 				ASSERT(btrfs_test_opt(fs_info, DEGRADED));
- 				continue;
- 			}
-+
-+			if (btrfs_dev_is_sequential(stripe->dev,
-+						    stripe->physical) &&
-+			    stripe->length == stripe->dev->zone_size) {
-+				ret = blkdev_reset_zones(stripe->dev->bdev,
-+							 stripe->physical >>
-+								 SECTOR_SHIFT,
-+							 stripe->length >>
-+								 SECTOR_SHIFT,
-+							 GFP_NOFS);
-+				if (!ret)
-+					discarded_bytes += stripe->length;
-+				else
-+					break;
-+				set_bit(stripe->physical >>
-+						stripe->dev->zone_size_shift,
-+					stripe->dev->empty_zones);
-+				continue;
-+			}
-+
- 			req_q = bdev_get_queue(stripe->dev->bdev);
- 			if (!blk_queue_discard(req_q))
- 				continue;
-@@ -11430,7 +11450,8 @@ void btrfs_delete_unused_bgs(struct btrfs_fs_info *fs_info)
- 		spin_unlock(&space_info->lock);
+@@ -267,6 +267,10 @@ static int exclude_super_stripes(struct btrfs_block_group_cache *cache)
+ 			return ret;
+ 	}
  
- 		/* DISCARD can flip during remount */
--		trimming = btrfs_test_opt(fs_info, DISCARD);
-+		trimming = btrfs_test_opt(fs_info, DISCARD) ||
-+				btrfs_fs_incompat(fs_info, HMZONED);
++	/* we won't have super stripes in sequential zones */
++	if (cache->alloc_type == BTRFS_ALLOC_SEQ)
++		return 0;
++
+ 	for (i = 0; i < BTRFS_SUPER_MIRROR_MAX; i++) {
+ 		bytenr = btrfs_sb_offset(i);
+ 		ret = btrfs_rmap_block(fs_info, cache->key.objectid,
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index f7b29f9db5e2..36ad4fad7eaf 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -3720,6 +3720,8 @@ static noinline_for_stack int scrub_supers(struct scrub_ctx *sctx,
+ 		if (bytenr + BTRFS_SUPER_INFO_SIZE >
+ 		    scrub_dev->commit_total_bytes)
+ 			break;
++		if (!btrfs_check_super_location(scrub_dev, bytenr))
++			continue;
  
- 		/* Implicit trim during transaction commit. */
- 		if (trimming)
+ 		ret = scrub_pages(sctx, bytenr, BTRFS_SUPER_INFO_SIZE, bytenr,
+ 				  scrub_dev, BTRFS_EXTENT_FLAG_SUPER, gen, i,
 -- 
 2.21.0
 
