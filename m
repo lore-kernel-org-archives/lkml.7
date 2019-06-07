@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F4EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6117FC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA80F208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6DF20657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923090;
-	bh=ihWvF9ruba1hnYDVsjmjftpcIcaGfogWK5Jvvp4ATI8=;
+	s=default; t=1559923096;
+	bh=3de85AOfx0eQ4s/eIx9LLJEkQ43wcwNNs3tYwmb0X9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aduqc++H12oHZahN1L5yGNklzqBXfo+l3Zbkd4t8ool0015bjeX7aaM3nzX1T/s94
-	 X6sH/cbCgnYqexOfpklqxCokMBaiiYxcG/bzPUgGTA3k7ZOsD85oZFj/GDia8HDY33
-	 l0oCPPAm1imb6J+P1BR2w8nh+/j/h0xwLBt6tkNg=
+	b=i6V6uCRaplSbKNbS8YYDJqLFq0JxkFjdycUk5jQHH306sdjSvLNUEkiILtFitTwi8
+	 UksjzfZRa0gmjRGcam2yUMV5WRa0xeb6SYANWTwjuAY/8rvJAWiOVe9jDCrct8BMqH
+	 vIUC+zFmfjKaCjyzc6uDscFlBA2L7d6slrCUggKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbfFGPnO (ORCPT
+        id S1730744AbfFGPnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54208 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730784AbfFGPnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:43:10 -0400
+        id S1730700AbfFGPm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2E2221479;
-        Fri,  7 Jun 2019 15:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB0292146E;
+        Fri,  7 Jun 2019 15:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922189;
-        bh=ihWvF9ruba1hnYDVsjmjftpcIcaGfogWK5Jvvp4ATI8=;
+        s=default; t=1559922175;
+        bh=3de85AOfx0eQ4s/eIx9LLJEkQ43wcwNNs3tYwmb0X9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ysno1vbX22c9k4NCVY6wjIEXzBi9Jipoa4a+SFkLvv9tBSvNf7wIwlnqQ4neS0Ii0
-         RUBelejSwCnOsMHVxjK2iV/EmaXYhZ2QEnN6xU45wsJec9KCCTxfamC21qbMuZf5dG
-         +W35aiJbej54KtKavJXDrwhfH+I76BIiB7I1Buow=
+        b=KSgtU2zz0WdvKopZ/mkAWLzliWUBOpGyHgGXF95FbBMVqOFyqskDrFdk0CeEorqQs
+         AjEEKO95lfx64XMi8bbwjR4WxrtzDpketwJUIuGtkGqgad755U+RWkuXMOgsgmbdYN
+         M9SofejRrfCEhOhadFt1o0KPst8tzsexbZS23FfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "ben.hutchings@codethink.co.uk, Alexander.Levin@microsoft.com, Joel
-        Fernandes" <joel@joelfernandes.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 4.14 68/69] binder: fix race between munmap() and direct reclaim
-Date:   Fri,  7 Jun 2019 17:39:49 +0200
-Message-Id: <20190607153856.182759891@linuxfoundation.org>
+        stable@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.14 63/69] drm/rockchip: shutdown drm subsystem on shutdown
+Date:   Fri,  7 Jun 2019 17:39:44 +0200
+Message-Id: <20190607153855.738108376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -63,67 +64,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Vicente Bergas <vicencb@gmail.com>
 
-commit 5cec2d2e5839f9c0fec319c523a911e0a7fd299f upstream.
+commit b8f9d7f37b6af829c34c49d1a4f73ce6ed58e403 upstream.
 
-An munmap() on a binder device causes binder_vma_close() to be called
-which clears the alloc->vma pointer.
+As explained by Robin Murphy:
+> the IOMMU shutdown disables paging, so if the VOP is still
+> scanning out then that will result in whatever IOVAs it was using now going
+> straight out onto the bus as physical addresses.
 
-If direct reclaim causes binder_alloc_free_page() to be called, there
-is a race where alloc->vma is read into a local vma pointer and then
-used later after the mm->mmap_sem is acquired. This can result in
-calling zap_page_range() with an invalid vma which manifests as a
-use-after-free in zap_page_range().
+We had a more radical approach before in commit
+7f3ef5dedb14 ("drm/rockchip: Allow driver to be shutdown on reboot/kexec")
+but that resulted in new warnings and oopses on shutdown on rk3399
+chromeos devices.
 
-The fix is to check alloc->vma after acquiring the mmap_sem (which we
-were acquiring anyway) and skip zap_page_range() if it has changed
-to NULL.
+So second try is resurrecting Vicentes shutdown change which should
+achieve the same result but in a less drastic way.
 
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: stable <stable@vger.kernel.org> # 4.14
+Fixes: 63238173b2fa ("Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"")
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Brian Norris <briannorris@chromium.org>
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: stable@vger.kernel.org
+Suggested-by: JeffyChen <jeffy.chen@rock-chips.com>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Vicente Bergas <vicencb@gmail.com>
+[adapted commit message to explain the history]
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Tested-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190402113753.10118-1-heiko@sntech.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/android/binder_alloc.c |   18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -945,14 +945,13 @@ enum lru_status binder_alloc_free_page(s
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+@@ -425,6 +425,14 @@ static int rockchip_drm_platform_remove(
+ 	return 0;
+ }
  
- 	index = page - alloc->pages;
- 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
++static void rockchip_drm_platform_shutdown(struct platform_device *pdev)
++{
++	struct drm_device *drm = platform_get_drvdata(pdev);
 +
-+	mm = alloc->vma_vm_mm;
-+	if (!mmget_not_zero(mm))
-+		goto err_mmget;
-+	if (!down_write_trylock(&mm->mmap_sem))
-+		goto err_down_write_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
--	if (vma) {
--		if (!mmget_not_zero(alloc->vma_vm_mm))
--			goto err_mmget;
--		mm = alloc->vma_vm_mm;
--		if (!down_write_trylock(&mm->mmap_sem))
--			goto err_down_write_mmap_sem_failed;
--	}
- 
- 	list_lru_isolate(lru, item);
- 	spin_unlock(lock);
-@@ -965,10 +964,9 @@ enum lru_status binder_alloc_free_page(s
- 			       PAGE_SIZE);
- 
- 		trace_binder_unmap_user_end(alloc, index);
--
--		up_write(&mm->mmap_sem);
--		mmput(mm);
- 	}
-+	up_write(&mm->mmap_sem);
-+	mmput(mm);
- 
- 	trace_binder_unmap_kernel_start(alloc, index);
- 
++	if (drm)
++		drm_atomic_helper_shutdown(drm);
++}
++
+ static const struct of_device_id rockchip_drm_dt_ids[] = {
+ 	{ .compatible = "rockchip,display-subsystem", },
+ 	{ /* sentinel */ },
+@@ -434,6 +442,7 @@ MODULE_DEVICE_TABLE(of, rockchip_drm_dt_
+ static struct platform_driver rockchip_drm_platform_driver = {
+ 	.probe = rockchip_drm_platform_probe,
+ 	.remove = rockchip_drm_platform_remove,
++	.shutdown = rockchip_drm_platform_shutdown,
+ 	.driver = {
+ 		.name = "rockchip-drm",
+ 		.of_match_table = rockchip_drm_dt_ids,
 
 
