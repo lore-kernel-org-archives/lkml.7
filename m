@@ -8,101 +8,118 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB4C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC1C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466B4208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D426208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HphELCqz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpm6iVMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbfFGSZX (ORCPT
+        id S1731798AbfFGSZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:25:23 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44589 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731210AbfFGSZX (ORCPT
+        Fri, 7 Jun 2019 14:25:28 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33326 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731759AbfFGSZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:25:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so1564192pgp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:25:22 -0700 (PDT)
+        Fri, 7 Jun 2019 14:25:28 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x15so1665787pfq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:25:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LJsPxMHN5mRLNhdY8OET9hdOhfdqbOfb/Za+S2jI47w=;
-        b=HphELCqzG/dA6xqy7s90h9/+P4EvcS+84hXn397BERneYct0xpSifW9EfH06ato5Kz
-         SCJILbDs46qAYnyrJCwLhCYm+J+4E3NeQCgClpNnUraXDxGdwR1CxbKEF/7n7po6KsUD
-         ctpSUQYRvnXBYmQZp7shd4hlpivhIan1tFKLTWoN7NqgpfVIXuPHPc0P6dB8vDMCaipc
-         DSAH0EhAXf73Qlrj2zcBWQFxz61/SZFieteWUlcjb+m2cI4DMFQKvjCA2FnOy4TSjvYm
-         QFkqBQajmlNpM7Y6wDFNat7AfrFDVoTAIjlQMMoV0Pv+K9LHIAuia28AtF7W4kKWF6+2
-         kyVw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ughYalIGjkGsb98cUH1P99ZWcKHBcsvb9srQAxeeo2s=;
+        b=jpm6iVMCznr2vRYrorTPJP89oxr89YawAel6X5Azs1gy8vXeiCWt7zBZGY7b3ebpsk
+         FnUPKUZtQyaygKK2Bv4Pj1SVxnfQttx4WZ7czUTIaM4gvEu57zMPvMcW3h2wZs+7xGJL
+         Q9/OLmCotuxiwUGXIc2eQ660Q3cMPr6XaHyZyx2Z4cnkxLV57+VuNH1uTWbNQ9vJhTjj
+         HKpBQHrF7lSCvl3r2BSURh86HrqAHmMn+f9gW+TCFbb3ZkZMfyalbbQWfOe+CQOkNMNd
+         Ig5jcjQA8xohIgJ65/0t4FzHKZ5bkntCWtd476L5TjZZVVG4AC5fxjRH98Bg5+ysmMVL
+         nTOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LJsPxMHN5mRLNhdY8OET9hdOhfdqbOfb/Za+S2jI47w=;
-        b=hMUG0kSPp0d5gxnu1gbhZ9C8K9JHFuUgFIEXyCq2MyuQYYunYhWYSMXpH1P71phzci
-         XmjWomqeZbJx2dQGVcoVVe+YdtYKjbwy/zJDIsUtVAgWZM+p/VlDbs+fKLsvdQbkQoWo
-         CVOOISK9L+PqfI5WIZiHw4hh2y+Tt7NMApPNd0srdbSeyoyiPPDsTH2F1xLxklusZ8zz
-         /GFiFWaUgQk3HsKpL6tiP5WBiKJ/Vejp+5B6EhKrvtHH5qH8UgRqgtmWQpX9f7PKS3Vx
-         5kT/Dn+9p6gWOBYbUTVZGZVLUWY5e9/erJlqAbHfSXfLApsG0yB6KGbn8DsguZegrgtl
-         RC2A==
-X-Gm-Message-State: APjAAAWPW0OISGoj93V6PxQS36yIpWv4W8ywljRountt+aiIVw6t7n3k
-        ex+n7xoQjeXzP9vjUSiNpXDfRJ6BlDY=
-X-Google-Smtp-Source: APXvYqzf4cIcL8M8wtsn3/Fn558uV8MfwDb5hvePNv/HoV9kguUhkbsa0EgiPRLXFauGKukOub8g/Q==
-X-Received: by 2002:a17:90a:1706:: with SMTP id z6mr7055495pjd.108.1559931922601;
-        Fri, 07 Jun 2019 11:25:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ughYalIGjkGsb98cUH1P99ZWcKHBcsvb9srQAxeeo2s=;
+        b=SfOE7qPRYBOw/7r/1R7/v+f/MXGX1F51AhQokK+N2Y0A2Uk7gJmo4vCE7nZUB9Fb44
+         0pN69vBjMb4WTDCPG9/9okuDwOJrNPQ7BniWrZi7NwGG+b5srxW7eo8YqcsFnXNw9UhY
+         x0fVmpTxSOfVNaOeUnZPHhkBSk3whqQCiygimKHUnboRHAErEqrucuxXFB2xVOsSA5td
+         e4w0dVDak1SPh2WasnypKy4SeJrCUPP746te1JtD9vgFr8tfyf+fmI2DgKJQpOZNKkGg
+         yKbKw2e1aE2JSUW32nxFXCjWFznQUEQsVW1+YXKZikT35Qxka6lt3E5bNoiK7pjHYJCA
+         x3CA==
+X-Gm-Message-State: APjAAAXZH03bKFVBC7qdFCNOuh+f7dlzCZ3h1f+GvlZnpkw2bEuqgRco
+        AOJiMX55Z6QvSdFyTufUo60uqwOp/JQ=
+X-Google-Smtp-Source: APXvYqyOIEqpIyOsbHsg5sC1NUkTYO3xXp3lP33MPJtyFyNJu3ypqPoL5MYQlCTYk9G8/i64uOQkQA==
+X-Received: by 2002:a17:90a:9305:: with SMTP id p5mr7309230pjo.33.1559931927296;
+        Fri, 07 Jun 2019 11:25:27 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id b17sm3036466pfb.18.2019.06.07.11.25.19
+        by smtp.gmail.com with ESMTPSA id v64sm2788877pjb.3.2019.06.07.11.25.26
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 11:25:20 -0700 (PDT)
+        Fri, 07 Jun 2019 11:25:26 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     tytso@mit.edu, arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 1/5] random: remove unnecessary unlikely()
-Date:   Fri,  7 Jun 2019 14:25:13 -0400
-Message-Id: <20190607182517.28266-1-tiny.windzz@gmail.com>
+Subject: [PATCH 2/5] random: convert to ENTROPY_BITS
+Date:   Fri,  7 Jun 2019 14:25:14 -0400
+Message-Id: <20190607182517.28266-2-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
+In-Reply-To: <20190607182517.28266-1-tiny.windzz@gmail.com>
+References: <20190607182517.28266-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARN_ON() already contains an unlikely(), so it's not necessary to use
-unlikely.
+Use DEFINE_SHOW_ATTRIBUTE macro to enhance code readability.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/char/random.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/char/random.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 5d5ea4ce1442..bebf622c61c4 100644
+index bebf622c61c4..d714a458f088 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -759,10 +759,9 @@ static void credit_entropy_bits(struct entropy_store *r, int nbits)
- 		} while (unlikely(entropy_count < pool_size-2 && pnfrac));
- 	}
+@@ -788,7 +788,7 @@ static void credit_entropy_bits(struct entropy_store *r, int nbits)
+ 			if (entropy_bits < 128)
+ 				return;
+ 			crng_reseed(&primary_crng, r);
+-			entropy_bits = r->entropy_count >> ENTROPY_SHIFT;
++			entropy_bits = ENTROPY_BITS(r);
+ 		}
  
--	if (unlikely(entropy_count < 0)) {
-+	if (WARN_ON(entropy_count < 0)) {
- 		pr_warn("random: negative entropy/overflow: pool %s count %d\n",
- 			r->name, entropy_count);
--		WARN_ON(1);
- 		entropy_count = 0;
- 	} else if (entropy_count > pool_size)
- 		entropy_count = pool_size;
-@@ -1465,10 +1464,9 @@ static size_t account(struct entropy_store *r, size_t nbytes, int min,
- 	if (ibytes < min)
- 		ibytes = 0;
+ 		/* initialize the blocking pool if necessary */
+@@ -1396,8 +1396,7 @@ EXPORT_SYMBOL_GPL(add_disk_randomness);
+ static void _xfer_secondary_pool(struct entropy_store *r, size_t nbytes);
+ static void xfer_secondary_pool(struct entropy_store *r, size_t nbytes)
+ {
+-	if (!r->pull ||
+-	    r->entropy_count >= (nbytes << (ENTROPY_SHIFT + 3)) ||
++	if (!r->pull || ENTROPY_BITS(r) >= (nbytes << 3) ||
+ 	    r->entropy_count > r->poolinfo->poolfracbits)
+ 		return;
  
--	if (unlikely(entropy_count < 0)) {
-+	if (WARN_ON(entropy_count < 0)) {
- 		pr_warn("random: negative entropy count: pool %s count %d\n",
- 			r->name, entropy_count);
--		WARN_ON(1);
- 		entropy_count = 0;
+@@ -1435,8 +1434,7 @@ static void push_to_pool(struct work_struct *work)
+ 					      push_work);
+ 	BUG_ON(!r);
+ 	_xfer_secondary_pool(r, random_read_wakeup_bits/8);
+-	trace_push_to_pool(r->name, r->entropy_count >> ENTROPY_SHIFT,
+-			   r->pull->entropy_count >> ENTROPY_SHIFT);
++	trace_push_to_pool(r->name, ENTROPY_BITS(r), ENTROPY_BITS(r->pull));
+ }
+ 
+ /*
+@@ -1479,8 +1477,7 @@ static size_t account(struct entropy_store *r, size_t nbytes, int min,
+ 		goto retry;
+ 
+ 	trace_debit_entropy(r->name, 8 * ibytes);
+-	if (ibytes &&
+-	    (r->entropy_count >> ENTROPY_SHIFT) < random_write_wakeup_bits) {
++	if (ibytes && ENTROPY_BITS(r) < random_write_wakeup_bits) {
+ 		wake_up_interruptible(&random_write_wait);
+ 		kill_fasync(&fasync, SIGIO, POLL_OUT);
  	}
- 	nfrac = ibytes << (ENTROPY_SHIFT + 3);
 -- 
 2.17.0
 
