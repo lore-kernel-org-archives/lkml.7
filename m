@@ -2,153 +2,127 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17641C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5919FC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A5F2067C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:38:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="PCthEBHc"
+	by mail.kernel.org (Postfix) with ESMTP id 32FCF208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 16:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbfFGQiu (ORCPT
+        id S1731017AbfFGQjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 12:38:50 -0400
-Received: from mail-eopbgr790085.outbound.protection.outlook.com ([40.107.79.85]:39808
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729953AbfFGQit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 12:38:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u31db9cncyYvFwo7prcnAHGSX8++uNa7cP9ZwKvsRjM=;
- b=PCthEBHcgPg8lHyvg9FPooCbzsoRk0hlgj6mr8IwEhLQp6HkTwJhk2zqTxAgcRN9HmAlmZI6GyplDz52yxHPa/cOiL9RHAmtQNUNQHBNEYawvNHdX4n4cbtlo/ycvqx06798a5ynj5kY+mC0cDLjSkMtXvI9CQ3ZTY5uSKEnxSM=
-Received: from BL0PR05MB4772.namprd05.prod.outlook.com (20.177.145.81) by
- BL0PR05MB5026.namprd05.prod.outlook.com (20.177.241.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.12; Fri, 7 Jun 2019 16:38:45 +0000
-Received: from BL0PR05MB4772.namprd05.prod.outlook.com
- ([fe80::ac1f:2cd2:fa9c:a886]) by BL0PR05MB4772.namprd05.prod.outlook.com
- ([fe80::ac1f:2cd2:fa9c:a886%6]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
- 16:38:45 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Joseph Qi <joseph.qi@linux.alibaba.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Caspar Zhang <caspar@linux.alibaba.com>,
-        jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [bug report][stable] kernel tried to execute NX-protected page -
- exploit attempt? (uid: 0)
-Thread-Topic: [bug report][stable] kernel tried to execute NX-protected page -
- exploit attempt? (uid: 0)
-Thread-Index: AQHVG4jKPNn+Vxg1aUiHBnctqPni6KaP/2uAgABocgA=
-Date:   Fri, 7 Jun 2019 16:38:44 +0000
-Message-ID: <D0F0870A-B396-4390-B5F1-164B68E13C73@vmware.com>
-References: <5817eaac-29cc-6331-af3b-b9d85a7c1cd7@linux.alibaba.com>
- <bde5bf17-35d2-45d8-1d1d-59d0f027b9c0@linux.alibaba.com>
-In-Reply-To: <bde5bf17-35d2-45d8-1d1d-59d0f027b9c0@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5be428c3-8d60-477f-45aa-08d6eb669baf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR05MB5026;
-x-ms-traffictypediagnostic: BL0PR05MB5026:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BL0PR05MB50265010205D988939D95BC5D0100@BL0PR05MB5026.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1079;
-x-forefront-prvs: 0061C35778
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(346002)(366004)(376002)(199004)(189003)(53754006)(478600001)(54906003)(76176011)(7736002)(36756003)(64756008)(6506007)(66476007)(53546011)(25786009)(66446008)(66556008)(5660300002)(229853002)(446003)(73956011)(11346002)(91956017)(76116006)(83716004)(8936002)(86362001)(68736007)(66946007)(71200400001)(71190400001)(14454004)(66066001)(305945005)(82746002)(6246003)(966005)(102836004)(486006)(6916009)(316002)(2616005)(476003)(81166006)(81156014)(6436002)(6116002)(53936002)(2906002)(3846002)(8676002)(99286004)(14444005)(256004)(6486002)(33656002)(26005)(186003)(6512007)(6306002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR05MB5026;H:BL0PR05MB4772.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oOTHzMqTkv5ZyLYF7h7Pajbi6nZq5nEb/xB6+Z5kB8KWjYwGUYuRWymAsp6h862Wisc/MuEJXUDN7lSH5SlOt8B+Sj/Ju4me4nUaLlQmM0fA0wFQCCS0F78pSNoIa6l2L5uZQBHCQXcMsy3In/NkSQ+ayavkymLCsg0okn3wtu/2Bb7XxcuPOMXyNrCaQTRthik9ZpJuK6iz4OTZZJfG/oK74GhRLYrpctVMf/5CeEwm1vYIX/br/k2HzPKPewMYsKqMC6r1JQWjBhsgccsi6qlgdvWdQJfOx6yAOJbfoNW2xfd7TQ0lxPErxXq/9nbgWAOeQa6Do/Gnm/RC75EWl+j7EdwL5GGJJMTVA6M1TTQQTX63h2J2Wrs/gMDGToGZOdtg5yC4YE31rFG35bZY4JNUjPW0W2IEEZRmnOlI7MY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B9A7326C0CB6254DAE185F98A5E2CFA1@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 7 Jun 2019 12:39:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:64825 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729953AbfFGQjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 12:39:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 09:39:44 -0700
+X-ExtLoop1: 1
+Received: from ray.jf.intel.com (HELO [10.7.198.156]) ([10.7.198.156])
+  by orsmga002.jf.intel.com with ESMTP; 07 Jun 2019 09:39:42 -0700
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+To:     Andy Lutomirski <luto@amacapital.net>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+ <20190606200926.4029-4-yu-cheng.yu@intel.com>
+ <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+ <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+ <76B7B1AE-3AEA-4162-B539-990EF3CCE2C2@amacapital.net>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <00421c4e-c64b-57cf-882e-aa7b9a007661@intel.com>
+Date:   Fri, 7 Jun 2019 09:39:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5be428c3-8d60-477f-45aa-08d6eb669baf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 16:38:44.8621
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR05MB5026
+In-Reply-To: <76B7B1AE-3AEA-4162-B539-990EF3CCE2C2@amacapital.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 7, 2019, at 3:24 AM, Joseph Qi <joseph.qi@linux.alibaba.com> wrote=
-:
->=20
-> Hi all,
-> Any idea on this regression?=20
+On 6/7/19 9:35 AM, Andy Lutomirski wrote:
+> One might reasonably wonder why this state is privileged in the first
+> place and, given that, why we’re allowing it to be written like
+> this.
 
-Sorry for the late response (I assumed, for some reason, that you also foll=
-ow=20
-the second thread about this issue).
-
-Anyhow, it should be fixed by backporting some patches which were mistakenl=
-y
-missed.
-
-See https://lore.kernel.org/stable/20190606131558.GJ29739@sasha-vm/
-
-Regards,
-Nadav
-
-
-> Thanks,
-> Joseph
->=20
-> On 19/6/5 18:23, Joseph Qi wrote:
->> Hi,
->>=20
->> I have encountered a kernel BUG when running ltp ftrace-stress-test
->> on 4.19.48.
->>=20
->> [  209.704855] LTP: starting ftrace-stress-test (ftrace_stress_test.sh 9=
-0)
->> [  209.739412] Scheduler tracepoints stat_sleep, stat_iowait, stat_block=
-ed and stat_runtime require the kernel parameter schedstats=3Denable or ker=
-nel.sched_schedstats=3D1
->> [  212.054506] kernel tried to execute NX-protected page - exploit attem=
-pt? (uid: 0)
->> [  212.055595] BUG: unable to handle kernel paging request at ffffffffc0=
-349000
->> [  212.056589] PGD d00c067 P4D d00c067 PUD d00e067 PMD 23673e067 PTE 800=
-000023457f061
->> [  212.057759] Oops: 0011 [#1] SMP PTI
->> [  212.058303] CPU: 0 PID: 0 Comm: swapper/0 Kdump: loaded Not tainted 4=
-.19.48 #112
->>=20
->> After some investigation I have found that it is introduced by commit
->> 8715ce033eb3 ("x86/modules: Avoid breaking W^X while loading modules"),
->> and then revert this commit the issue is gone.
->>=20
->> I have also tested the same case on 5.2-rc3 as well as right at
->> upstream commit f2c65fb3221a ("x86/modules: Avoid breaking W^X while
->> loading modules"), which has been merged in 5.2-rc1, it doesn't
->> happen.
->>=20
->> So I don't know why only stable has this issue while upstream doesn't.
->>=20
->> Thanks,
->> Joseph
-
-
+I think it's generally a good architectural practice to make things like
+this privileged.  They're infrequent so can survive the cost of a trip
+in/out of the kernel and are a great choke point to make sure the OS is
+involved.  I wish we had the same for MPX or pkeys per-task "setup".
