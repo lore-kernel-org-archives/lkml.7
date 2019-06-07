@@ -2,61 +2,61 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4D2C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B0AC468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2E520868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E58720657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OGf9XI7l"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sxIV4KNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbfFGOhF (ORCPT
+        id S1728446AbfFGOhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:37:05 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:40446 "EHLO
+        Fri, 7 Jun 2019 10:37:14 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:40392 "EHLO
         mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729332AbfFGOfa (ORCPT
+        with ESMTP id S1728884AbfFGOf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:35:30 -0400
+        Fri, 7 Jun 2019 10:35:28 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190607143529euoutp02c6d2ff23f5c95e3148989405b4d66279~l8UYRupn70212802128euoutp02k
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 14:35:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190607143529euoutp02c6d2ff23f5c95e3148989405b4d66279~l8UYRupn70212802128euoutp02k
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190607143525euoutp0281549a28156eb92a611cfb2b64535d8d~l8UVH8IXm0250202502euoutp02O
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 14:35:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190607143525euoutp0281549a28156eb92a611cfb2b64535d8d~l8UVH8IXm0250202502euoutp02O
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559918129;
-        bh=3H94DwFFG3R37/yu4OYC3ESOKXTLkDswHp/nkojvINE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGf9XI7lCZH07DMl4W6WX1aTCLmhlgcyhwZb8A2kki5KyRnO/AU18aVF6uKItM7nC
-         jUhwH6lG+U39EkT39MDppflY1AlxqF4jpXsm9pjI1uNRNWTV88T4lpoGD8bIFYw3QB
-         jcpipUg/ny9oC7S53r4+6pb/+XA2zSLCJ9cxc4L4=
+        s=mail20170921; t=1559918125;
+        bh=LfIzVpHvL6QUADSI2AZywhT+Vizxo3HFKvCNEc672TY=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=sxIV4KNux0twg31+a20iskFvwrG/B9GblIIGYUyKjvCU8dPwRpuJT+UG1f0d50vOG
+         vRp8sGM7ohOQBLuGkemAXhmwcnB7spdzA0ecZNfjGv2qklQ+5yspFdHHMhvFKyGpd6
+         ifTLfbFYeDNK1ko+u+NOsOJg4uyiCa5FPcRwkfnU=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190607143527eucas1p2112eb8cfae9239238502e1c8f472794b~l8UW3kO6a2699926999eucas1p2l;
-        Fri,  7 Jun 2019 14:35:27 +0000 (GMT)
+        20190607143524eucas1p21c628de9975bf25a675e7c5ed9a4abe5~l8UUF_b072161821618eucas1p2N;
+        Fri,  7 Jun 2019 14:35:24 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 15.D0.04325.F267AFC5; Fri,  7
-        Jun 2019 15:35:27 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 32.D0.04325.C267AFC5; Fri,  7
+        Jun 2019 15:35:24 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190607143526eucas1p1b11e7a7bf57b80de893b5b5664d3fa09~l8UV5ltjR1609116091eucas1p12;
-        Fri,  7 Jun 2019 14:35:26 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190607143526eusmtrp25779065ac77e798cbfe3c469d90351b6~l8UVpzd591498514985eusmtrp2w;
-        Fri,  7 Jun 2019 14:35:26 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-91-5cfa762fe213
+        20190607143523eucas1p1015a614a64ed22f4c65ace8b795dd6d0~l8UTOYbT_1212112121eucas1p1v;
+        Fri,  7 Jun 2019 14:35:23 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190607143523eusmtrp1b65ec071b994034d5999dc9bd1d61174~l8US_je-S1284512845eusmtrp1Q;
+        Fri,  7 Jun 2019 14:35:23 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-8a-5cfa762c6bb7
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 44.56.04146.E267AFC5; Fri,  7
-        Jun 2019 15:35:26 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B2.C0.04140.B267AFC5; Fri,  7
+        Jun 2019 15:35:23 +0100 (BST)
 Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190607143525eusmtip144e7a6414157a416edcac107220d2e37~l8UUvAptN2929529295eusmtip1A;
-        Fri,  7 Jun 2019 14:35:25 +0000 (GMT)
+        20190607143522eusmtip19de1cde106eb8ef250a153c0d882ce54~l8USE36Pm2644726447eusmtip1s;
+        Fri,  7 Jun 2019 14:35:22 +0000 (GMT)
 From:   Lukasz Luba <l.luba@partner.samsung.com>
 To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
@@ -69,102 +69,230 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org,
         jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
         gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com,
         Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v9 03/13] clk: samsung: add BPLL rate table for Exynos 5422
- SoC
-Date:   Fri,  7 Jun 2019 16:34:57 +0200
-Message-Id: <20190607143507.30286-4-l.luba@partner.samsung.com>
+Subject: [PATCH v9 00/13] Exynos5 Dynamic Memory Controller driver
+Date:   Fri,  7 Jun 2019 16:34:54 +0200
+Message-Id: <20190607143507.30286-1-l.luba@partner.samsung.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190607143507.30286-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTURzHPbtPV5Pb0jypJC2iMtTKgoOGWRRc+iOKoKTsseqmkZu6qyvT
-        aCVmDx8tIU0dWpbKXExNbNnDxyxD0ylGik4xlZLKhtkkrVbOu+q/7+/z/X3P93A4NCZ9R/jQ
-        p5SJnEopj5WRYrzu5YwlMFg9G7Xup9YLVecbCdT77QOBils6CVQ5OQpQWqmRRLltOhF6fV2B
-        ckY/YchiqaJQx6XPFOrX+KHJzCEC9dQXkWgqqwWgfMtzEXrQMkih7rYdaOBiBYnMnzMI5Hhb
-        jaOGNzvRwA8PNP1qBER4s9P2mzhr60un2EJNN84+Lhik2Br9VZJt0BkoNivtC8k2fXkqYrNr
-        9YB92J7CTtUs273ggHjzCS72lJpTBYcfFceUPb2Cx9uYswZTh0gDnnhcA+40ZDbCxmyj6BoQ
-        01KmAkDd2DQQhm8AdlgzMWGYAtBRasX+RvR3ZwjBKAdQW1xJ/osUDL2bc2iaZIKgSZ/gDHgy
-        +QAWju917mDMIwxODFiB01jM7IHaFxmkU+PMSpjdNY47tYTZAq31TSKhzR9WVjXON7szEbCw
-        zkQKXEvDPFOqoLfDEdt1F18MP7bWUoL2g78fF7vO4aEm6w4QdCoczdG5dsKgubV7/s4YswYa
-        64MFvBUW9ZdQTgwZD9g3sciJsTl5sy4PE7AEXrksFbZXw9rMLlfRElhuuOVKsrBnjBceJxfA
-        X9WF4AbwL/jfVQKAHnhzSbwimuNDlNyZIF6u4JOU0UHH4xQ1YO7jtTta7Sbw/OexZsDQQLZQ
-        wlIzUVJCruaTFc0A0pjMU6Lu+h4llZyQJ5/jVHFHVEmxHN8MfGlc5i1JcRs+KGWi5YncaY6L
-        51R/XRHt7qMB+Y7htYfsr9p1F448PPT10cFn9tR9dg9jwvvjWsOisvjAcMOmiYCW3vTDfbeJ
-        Vnz4vrExJ0wpGulX+fYlz1q5FX6/vAzNIXf0LBcasm1/3HLaHCAOW94b5ec4eUGt3OBp9l9l
-        S8Y7OyPvFV3adaPKOzSy7Z7N7fxY6HjprfC8pdtkOB8jXx+AqXj5Hyqhu/90AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsVy+t/xu7p6Zb9iDP7dEbLYOGM9q8X1L89Z
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSfUzMcRzHfe93vwen4+dq7rskdsvkKRqzr3k27Kch5p+mxKXfKrqj++nk
+        Ye1kqHRXq61uPQwzqiuq0061ntwdUagWiZKHSsmJpNYDl87v8N/78/68Pvu899mHwiQtuDsV
+        oTzJqpTySBkhEpoejjUuX6YeD1pZ+ckVleiLcPTyRy+Orlqf4ahgsAugCzeKCJRWnyNAT64o
+        UHLXZww1NhaT6GmcjUSvNR5oMKkTRy0V2QQa0loB0jdWC9Bt6xsSNddvR+3n8whksV3Gkb21
+        RIhqnvuh9omZaOTRB7BZyowMpwqZr20XSSZL0yxkyjPfkIzRkEAwNTmFJKO9MEAw9wcqBYyu
+        1ACYuw1nmSGj594ZB0TrQ9nICDWrWrHxsCj8dbeOOFHBxLzX2oAGfFibCKZTkF4N7+gNZCIQ
+        URI6D8DuvByCL34A2BtXjfHFEIA3iyeFf0eMVQ8wh5bQuVNUfcy/iXjLpCARUBRB+8AyQ5SD
+        caP1AGb17XcwGH0Pg1/aO4CDcaW3QrNF6mCE9EJoGm/FHVpMb4LGzFsYv2s+LCiu/RMC0sMk
+        LCgdFPCNbTCr45sTcoX9daUkrz1gQ1qSMygHNdrrgNfnYFdyjpNZBy11zbgjA0YvhkUVK3h7
+        C0zvHvljQ3ombPsy22FjUzLVlIHxthjGX5LwtDcsTWpyhpkDcwvTSR5h4APtGf44B6Et9TOZ
+        Ajwz/6+6BoABSNloThHGcquU7CkfTq7gopVhPkeOK4xg6tUa7HXDZaD6Z4gZ0BSQuYgZcixI
+        gsvV3GmFGUAKk7mJ1U2jQRJxqPz0GVZ1/JAqOpLlzGAuJZRJxWenvQuU0GHyk+wxlj3Bqv52
+        BdR0dw0497EwOfBx7NjDyfK8zlc7XXbpdpPfrSHK/HVVdV6+Gbj/nrRFE56181LKQ/b1jQan
+        JNjag4e8e94zo/p8jDCJmnylHm5l/TH+dqNdmtGhswTEX/IzzerbcDRjgcuqX+ae1QMBEaHD
+        neFelUferYlq2ZErdl0a++jpC1322ygm8JlMyIXLfZdgKk7+G4m859ZmAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLIsWRmVeSWpSXmKPExsVy+t/xu7raZb9iDCZ8k7bYOGM9q8X1L89Z
         LeYfOcdqsfrjY0aL5sXr2Swmn5rLZHGmO9ei//FrZovz5zewW5xtesNucatBxuJjzz1Wi8u7
         5rBZfO49wmgx4/w+Jou1R+6yW1w85Wpxu3EFm8XhN+2sFv+ubWSx2H/Fy+L2bz6LbyceMTqI
         e3z7OonF4/2NVnaP2Q0XWTx2zrrL7rFpVSebx/65a9g9epvfsXkcfLeHyaNvyypGj82nqz0+
         b5IL4I7SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQ
-        y1i2p4Ol4L1AxZodZ5kaGHfzdTFyckgImEisWvSTtYuRi0NIYCmjxNVJ71ghEmISk/ZtZ4ew
-        hSX+XOtigyj6xCjRveETUIKDg01AT2LHqkKQuIjAHEaJn13bGEEcZoGzzBK7V7xhAukWFvCX
-        uH/3CSOIzSKgKtF34QULiM0rYC9xZ9dBJogN8hKrNxxgBrE5BRwkZm/bwQayQAioZtVzhwmM
-        fAsYGVYxiqSWFuem5xYb6hUn5haX5qXrJefnbmIERuG2Yz8372C8tDH4EKMAB6MSD68Dw88Y
-        IdbEsuLK3EOMEhzMSiK8ZRd+xAjxpiRWVqUW5ccXleakFh9iNAW6aSKzlGhyPjBB5JXEG5oa
-        mltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYORqEN5oVpvV9Mf7RLjzU4Ep
-        ryfMzvbg+GkluVO2fVtUwZyfp0pLXaznBlyJPBczI9V9XaiZTaqk3q36N6rnP3DemFlcF3H3
-        dUahqBlPa4cn/9TOP6tTKh7tmXx7pfehdXLfM+dd+35Wt7/n74Ef5ap525Z+X2t9eP6cbXNO
-        LXnSxRpQzCL9ul+JpTgj0VCLuag4EQD7rk4M2AIAAA==
-X-CMS-MailID: 20190607143526eucas1p1b11e7a7bf57b80de893b5b5664d3fa09
+        y7j1pI+tYJdHxcPeN4wNjI8suxg5OSQETCQ27T3K3MXIxSEksJRR4sCTBSwQCTGJSfu2s0PY
+        whJ/rnWxQRR9YpRYt+sokMPBwSagJ7FjVSFIXERgDqPEz65tjCAOs8BZZondK94wgRQJCzhJ
+        HDosDjKIRUBVYtuva6wgNq+AvcSmWcuYIRbIS6zecIB5AiPPAkaGVYwiqaXFuem5xUZ6xYm5
+        xaV56XrJ+bmbGIFRte3Yzy07GLveBR9iFOBgVOLhncH0M0aINbGsuDL3EKMEB7OSCG/ZhR8x
+        QrwpiZVVqUX58UWlOanFhxhNgZZPZJYSTc4HRnxeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB
+        9MSS1OzU1ILUIpg+Jg5OqQZGrXuMbxc8KeTU/Xv09WuVdxXz6uxWPFBfrrLed2pq4cSvtX8b
+        GQXX5Uy/cj4tpoFlZTCHxUtp+aObPup8UCreFKq/j8Hgini2wptVN50tlogtPXrI8Xacz7FJ
+        u58qVRdZhv21NqqbxdBV8Xd5sHnVcsl/FiVl76IO3v4ZuMr7guMrr0vJFhodSizFGYmGWsxF
+        xYkAlM/eVsACAAA=
+X-CMS-MailID: 20190607143523eucas1p1015a614a64ed22f4c65ace8b795dd6d0
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190607143526eucas1p1b11e7a7bf57b80de893b5b5664d3fa09
+X-RootMTR: 20190607143523eucas1p1015a614a64ed22f4c65ace8b795dd6d0
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190607143526eucas1p1b11e7a7bf57b80de893b5b5664d3fa09
-References: <20190607143507.30286-1-l.luba@partner.samsung.com>
-        <CGME20190607143526eucas1p1b11e7a7bf57b80de893b5b5664d3fa09@eucas1p1.samsung.com>
+X-CMS-RootMailID: 20190607143523eucas1p1015a614a64ed22f4c65ace8b795dd6d0
+References: <CGME20190607143523eucas1p1015a614a64ed22f4c65ace8b795dd6d0@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
-Controller frequencies for driver's DRAM timings.
+Hi all,
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/clk/samsung/clk-exynos5420.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+This is v9 which introduces minor changes. The patch set adds support of
+Dynamic Memory Controller for Exynos5422 SoC.
+The driver supports Dynamic Voltage and Frequency Scaling
+for the DMC and DRAM. It also provides needed timings for different
+speed operations of the DRAM memory.
+There is also new generic code in of_memory and headers which allows to parse
+LPDDR3 memories defined in device-tree.
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 514e16310227..16ad498e3f3f 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -1334,6 +1334,17 @@ static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __ini
- 	PLL_35XX_RATE(24 * MHZ, 200000000,  200, 3, 3),
- };
- 
-+static const struct samsung_pll_rate_table exynos5422_bpll_rate_table[] = {
-+	PLL_35XX_RATE(24 * MHZ, 825000000, 275, 4, 1),
-+	PLL_35XX_RATE(24 * MHZ, 728000000, 182, 3, 1),
-+	PLL_35XX_RATE(24 * MHZ, 633000000, 211, 4, 1),
-+	PLL_35XX_RATE(24 * MHZ, 543000000, 181, 2, 2),
-+	PLL_35XX_RATE(24 * MHZ, 413000000, 413, 6, 2),
-+	PLL_35XX_RATE(24 * MHZ, 275000000, 275, 3, 3),
-+	PLL_35XX_RATE(24 * MHZ, 206000000, 206, 3, 3),
-+	PLL_35XX_RATE(24 * MHZ, 165000000, 110, 2, 3),
-+};
-+
- static const struct samsung_pll_rate_table exynos5420_epll_24mhz_tbl[] = {
- 	PLL_36XX_RATE(24 * MHZ, 600000000U, 100, 2, 1, 0),
- 	PLL_36XX_RATE(24 * MHZ, 400000000U, 200, 3, 2, 0),
-@@ -1476,9 +1487,13 @@ static void __init exynos5x_clk_init(struct device_node *np,
- 		exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
- 		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
- 		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
--		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
- 	}
- 
-+	if (soc == EXYNOS5420)
-+		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
-+	else
-+		exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
-+
- 	samsung_clk_register_pll(ctx, exynos5x_plls, ARRAY_SIZE(exynos5x_plls),
- 					reg_base);
- 	samsung_clk_register_fixed_rate(ctx, exynos5x_fixed_rate_clks,
+The patch set has been cut to land mainline quickly and the dependency
+on PPMU patches are removed (which was in v7). It implies that the debugging
+code which was presenting details about traffic on the AXI slots has been
+removed. It will be added when this driver got mainline and the PPMU code
+got mainline. Also DT dependency of PPMU header has been removed.
+
+changes:
+v9:
+- disable bpll instead of spll clocks in the remove path
+- safely disable 'bypass' clocks when error was captured
+- removed unused clocks and related code
+- changed code to make 'if' statement clean as Krzysztof sugested
+- removed cloks from dt-binding and DT
+- minor fix for clocks to read the state for DIV with NOCACHE
+- removed spaces in #define and put tabs
+- removed duplicated entry for OPPs phandle in dt-binding
+- collected ACKs
+- based on v5.2-rc3 tag
+v8 [3]:
+- removed chipID dependency, as Krzysztof suggested and drop the whole checking
+  code in the driver (which also Marek suggested offline) (it might be needed
+  in future when other configuration would be supported). It also avoids
+  a misunderstandings and simplifies the documentation.
+- reordered clock IDs in 1st patch to keep the old IDs and add the new clocks
+  at the end as Chanwoo suggested (added also his ACK there)
+- in patch 6 (dt-bindings) added explicit clocks and names in the right order
+  needed for the driver
+- added proper address for the memory node in the documentation and in the DT
+  (lpddr3-timings@0 -> @80000000)
+- fixed wrong reg offset for pause feature
+- removed debug code which shows AXI slots traffic and removed DT ppmu events
+- in the driver code usage of 'dev', 'pdev->dev' has been aligned
+- manipulating clocks has been aligned as Krzysztof suggested, now it enables
+  only two clocks (and disables) and enables/disables the 'bypass' clocks
+  on demand
+- added comments in the documentation why there is a need of clock registers
+  to be accessed via syscon regmap
+- added proper link to Documentation/devicetree/bindings/ddr/lpddr3.txt
+  in dt-bindings for memory controller doc
+- removed unneeded prints when there was a deferred probe or during remove
+- added 'syscon' also to exynos5420-clock node as Krzysztof suggested
+- from 2nd patch removed blank line and added Acked-by: Chanwoo Choi
+- collecting ACKs, which makes the clock related 3 patches
+  ready to be merged (4 ACKs),
+- patches 4,5 got 'Reviewed-by' from Rob
+- it is now based on v5.2-rc3 tag
+v7 [2]:
+- added using regmap in chipid registers and clock registers
+- in DT added "syscon" to compatible field in clock and chipid
+- added two addition clocks in clocks definition file which were there
+  in first implementation but now are grouped and commented properly
+  (CLK_DOUT_PCLK_DREX0, CLK_DOUT_PCLK_DREX1)
+- the BPLL ratio table now is set for Exynos 5422 and 5800 and not for 5420
+- in DMC driver, changed code macro which generates functions for setup events
+  into normal three functions as Krzysztof suggested
+- moved 'clock_prepare_enable()' calls into the same function where 'disable'
+  were called
+- changed 'timing_reg' static variables into static const
+- in DMC driver: the proper device_node *np_ddr is now put correctly
+- in DMC driver: removed code related to counters_enabled
+- mapped only 0x100 from DREX registers
+- in DT memory node there is now 'reg' as Rob suggested instead of 'max-freq'
+- in Documentation/devicetree/bindings/lpddr2 renamed into 'ddr' and the lpdd3*
+  files landed there.
+- cleaned the commit subject and message as Rob suggested for the patch 4/10 in v6
+- added doxygen comments to exported functions in of_memory file
+- cleaned minor issues like: missing space, 2 empty lines, in the doc JESD209-2 ->
+  JESD209-3C, removed 'status = "okay"' from the doc file, etc
+- based on v5.1 (+ PPMU patches from [1])
+v6:
+- driver code has been converted to use generic code which parses DT memory
+  definition in drivers/memory/of_memory.c
+- extended of_memory by LPDDR3 support (there was LPDDR2 made by TI)
+- extended jedec_lpddr.h by the needed structures for LPDDR3 (AC timings)
+- driver file moved to proper directory, where other memory controllers
+  live, which is in this case drivers/memory/samsung/
+- driver code now uses regmap_{read|write} to access registers for pausing
+  and changing timings set, as suggested by Chanwoo
+- DT contains simple definition of memory device, similar to LPDDR2 made by TI
+- driver code generates the needed timings for registered OPPs, based on
+  memory description in DT
+- patch 1 contains Rob's ACK,
+- simplified memory bandwidth calculation
+- added debug information files with timings, raw counters and statistics
+- updated dt-bindings files accordingly
+- based on v5.1-rc5 (+ PPMU patches from [1])
+v5:
+- removed unneeded wrapper functions i.e. for regulator_set_voltage
+- removed unused defines
+- removed direct access to clock register base and used CCF for
+  pause and timing set usage
+- switched to OPP comming from DT according to Chanowoo's comments
+- switched to timings comming from DT, added parsing function
+- extended dt-binding with description of OPPs and timings
+- according to Rob Herring comment, moved dt-binding file before driver code
+  in the patch set.
+- rebased on top of v5.0
+v4:
+- removed unneeded DPLL and G3D clocks IDs
+- changed names of parent clocks for mout_mx_mspll_ccore_phy_p
+  and added one more parent: mout_sclk_epll
+- removed 933Mhz and 138MHz from the BPLL ratio table
+v3:
+- in DTS align to proper indent the clocks and clock-names entries
+v2:
+- changed file name exynos5-dmc.c -> exynos5422-dmc.c
+  and related entries in other files
+- changed dt-binding file name
+- changed config entry to CONFIG_ARM_EXYNOS5422_DMC_DEVFREQ
+- removed sysfs and print info messages (print only one line)
+- removed function exynos5_read_chip_info and compact code
+- changed dt-binding patch and move it up in the patch set
+- new entries in MAINTAINERS are added with the driver c code
+- clean-up in DTS file: renamed nodes to 'ppmu' and 'memory-controller',
+  entries moved to suggested location (before nocp nodes or after),
+  moved according to alfabetical order, compacted clocks names with right indent.
+
+Regards,
+Lukasz Luba
+
+[1] https://lkml.org/lkml/2019/4/19/158
+[2] https://lkml.org/lkml/2019/5/6/829
+[3] https://lkml.org/lkml/2019/6/5/687
+
+
+Lukasz Luba (13):
+  clk: samsung: add needed IDs for DMC clocks in Exynos5420
+  clk: samsung: add new clocks for DMC for Exynos5422 SoC
+  clk: samsung: add BPLL rate table for Exynos 5422 SoC
+  dt-bindings: ddr: rename lpddr2 directory
+  dt-bindings: ddr: add LPDDR3 memories
+  drivers: memory: extend of_memory by LPDDR3 support
+  dt-bindings: memory-controllers: add Exynos5422 DMC device description
+  drivers: memory: add DMC driver for Exynos5422
+  drivers: devfreq: events: add Exynos PPMU new events
+  ARM: dts: exynos: add chipid label and syscon compatible
+  ARM: dts: exynos: add syscon to clock compatible
+  ARM: dts: exynos: add DMC device for exynos5422
+  ARM: exynos_defconfig: enable DMC driver
+
+ .../{lpddr2 => ddr}/lpddr2-timings.txt        |    0
+ .../bindings/{lpddr2 => ddr}/lpddr2.txt       |    2 +-
+ .../bindings/ddr/lpddr3-timings.txt           |   58 +
+ .../devicetree/bindings/ddr/lpddr3.txt        |   97 ++
+ .../memory-controllers/exynos5422-dmc.txt     |   75 +
+ MAINTAINERS                                   |    8 +
+ arch/arm/boot/dts/exynos5.dtsi                |    4 +-
+ arch/arm/boot/dts/exynos5420.dtsi             |   75 +-
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  116 ++
+ arch/arm/boot/dts/exynos5800.dtsi             |    2 +-
+ arch/arm/configs/exynos_defconfig             |    1 +
+ drivers/clk/samsung/clk-exynos5420.c          |   78 +-
+ drivers/devfreq/event/exynos-ppmu.c           |    6 +
+ drivers/memory/of_memory.c                    |  154 ++
+ drivers/memory/of_memory.h                    |   18 +
+ drivers/memory/samsung/Kconfig                |   17 +
+ drivers/memory/samsung/Makefile               |    1 +
+ drivers/memory/samsung/exynos5422-dmc.c       | 1261 +++++++++++++++++
+ include/dt-bindings/clock/exynos5420.h        |   18 +-
+ include/memory/jedec_ddr.h                    |   62 +
+ 20 files changed, 2040 insertions(+), 13 deletions(-)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt (100%)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt (96%)
+ create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
+ create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+ create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+
 -- 
 2.17.1
 
