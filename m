@@ -2,111 +2,240 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F3EC468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D176BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35642208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FE620868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GquEmfpf"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sLLAwIUx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfFGRbx (ORCPT
+        id S1731524AbfFGRcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:31:53 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50960 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729355AbfFGRbw (ORCPT
+        Fri, 7 Jun 2019 13:32:04 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:43315 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729932AbfFGRbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 13:31:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57HIpx6178003;
-        Fri, 7 Jun 2019 17:30:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=g9qgPYWy2UeZZX7Q5xvayFUZ5+Jlv5AgZT4Wz1d17eI=;
- b=GquEmfpf1HBT7vX2CzX+dMvzNB0wpOB4iQtcXeOAyF2DoiXBKIsxxFSTqxuQEeD3dFsE
- NW/2qE6nTYp8yIdaZlmQWE+LLZF9hQdENVg3wyoapAls1vxX2q+9hAztXIlTcBohI7iE
- puGOc+EVwd+Wj8du+nhWNsaHMeyQXzpQZb9TZBrehPH95mB9xQPTriWtztvyVvBfZJSY
- ZvDGQ2w0kte1RG2ckQVBBt6EnYhIHB7zOIRVQHpveA/dR7UH9rQ/u//0E/s5itVU17r+
- 9iPvrwQcznyJ2mXDhgxzinr5bV6Wic02t6r2sOO0mi4aLy1ulC69fy/YracyVTUd+Ixp yw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2suj0qyhpc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 17:30:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x57HU97U102069;
-        Fri, 7 Jun 2019 17:30:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2swngk4vhc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jun 2019 17:30:36 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x57HUY6s025234;
-        Fri, 7 Jun 2019 17:30:34 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 10:30:34 -0700
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: Re: properly communicate queue limits to the DMA layer
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190605190836.32354-1-hch@lst.de>
-        <591cfa1e-fecb-7d00-c855-3b9eb8eb8a2a@kernel.dk>
-        <20190605192405.GA18243@lst.de>
-        <f07d0abf-b3eb-f530-37b9-e66454740b3f@kernel.dk>
-Date:   Fri, 07 Jun 2019 13:30:30 -0400
-In-Reply-To: <f07d0abf-b3eb-f530-37b9-e66454740b3f@kernel.dk> (Jens Axboe's
-        message of "Thu, 6 Jun 2019 23:52:35 -0600")
-Message-ID: <yq1o939i9qh.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=528
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906070116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=574 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906070116
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190607173150euoutp021f860e609b654352cd2181e091dc7270~l_uXBSTPW1359213592euoutp02j
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 17:31:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190607173150euoutp021f860e609b654352cd2181e091dc7270~l_uXBSTPW1359213592euoutp02j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1559928710;
+        bh=+73Xx1qoe9dIGh6MmIDsGi8BapXTIg12votyZnFlISI=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=sLLAwIUxOqhzZ7smW7FMmXst7BUn8JjHePJefEnWwGWPK8WWQOwkK9OysCQhjLi3F
+         LqynihpWKs6gBr5ghbXFqXq6BnjFW8xMiq9l1cfm+0zTaEwCUqzJOZAEpO2LU2iLmc
+         +bC4ZCRd9laT+5Hc39k+MkBxgV9g8fXxCBO/pb+M=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190607173149eucas1p11b7d792ce73f147ba7879ee56252cb97~l_uWWVTLb2870928709eucas1p13;
+        Fri,  7 Jun 2019 17:31:49 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 13.34.04377.58F9AFC5; Fri,  7
+        Jun 2019 18:31:49 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e~l_uVkCxMF2999029990eucas1p10;
+        Fri,  7 Jun 2019 17:31:49 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190607173148eusmtrp1086bbfb6ddf7478b05dda0e5f83a2bd9~l_uVUQeRM1793017930eusmtrp1c;
+        Fri,  7 Jun 2019 17:31:48 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-b2-5cfa9f85fc37
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E6.50.04146.48F9AFC5; Fri,  7
+        Jun 2019 18:31:48 +0100 (BST)
+Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607173148eusmtip15d73adf5d01bf9d16607a46150301b7a~l_uUtUX7t3005530055eusmtip1o;
+        Fri,  7 Jun 2019 17:31:48 +0000 (GMT)
+From:   Ilya Maximets <i.maximets@samsung.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Ilya Maximets <i.maximets@samsung.com>
+Subject: [PATCH bpf v2] xdp: fix hang while unregistering device bound to
+ xdp socket
+Date:   Fri,  7 Jun 2019 20:31:43 +0300
+Message-Id: <20190607173143.4919-1-i.maximets@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOIsWRmVeSWpSXmKPExsWy7djP87qt83/FGLSuUbL407aB0eLzkeNs
+        FnPOt7BYXGn/yW6xa91MZovLu+awWaw4dILd4tgCMYvt/fsYHTg9tqy8yeSxc9Zddo/Fe14y
+        efRtWcXo8XmTXABrFJdNSmpOZllqkb5dAlfGrcnH2QuapCqWHkxsYDwi0sXIySEhYCKx5MpX
+        1i5GLg4hgRWMEpfPdzKCJIQEvjBKvHwUAJH4zCjRvOERE0zH+fVd7BCJ5YwSr8+vZYFwfjBK
+        HD76lhWkik1AR+LU6iNgo0QEpCQ+7tgO1sEscIBJ4vacSWwgCWGBMImnnVvAbBYBVYlbc76w
+        g9i8AlYSXR0dbBDr5CVWbzjADNIsIfCYTaL91XR2iISLxJslJ6BuEpZ4dXwLVFxG4vTkHhYI
+        u17ifstLRojmDkaJ6Yf+QTXYS2x5fQ6ogQPoJE2J9bv0IcKOEt8vtYOFJQT4JG68FQQJMwOZ
+        k7ZNZ4YI80p0tAlBVKtI/D64nBnClpK4+e4z1AUeEqe2QCwSEoiVWHqzhXkCo9wshF0LGBlX
+        MYqnlhbnpqcWG+WllusVJ+YWl+al6yXn525iBCaH0/+Of9nBuOtP0iFGAQ5GJR7eFyW/YoRY
+        E8uKK3MPMUpwMCuJ8JZd+BEjxJuSWFmVWpQfX1Sak1p8iFGag0VJnLea4UG0kEB6Yklqdmpq
+        QWoRTJaJg1OqgTHpetnTK/V8c00W3Pj+qmLK/sWfJB0mTM85f+nmxTimr0mPVi6fvNI/7aS3
+        emnJ5fOCB55G/7h9Zv45JW1hY8/sw8t7gp9NWdKrIFogfnneyl/2hibpxa9VI/wMbrqvOi4t
+        u/vLwaf1FjcLL4W5P+X9ynlakH2y9++pGz8yCD4pW3PM22B149xYJZbijERDLeai4kQABz1a
+        HQoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsVy+t/xu7ot83/FGOzr07f407aB0eLzkeNs
+        FnPOt7BYXGn/yW6xa91MZovLu+awWaw4dILd4tgCMYvt/fsYHTg9tqy8yeSxc9Zddo/Fe14y
+        efRtWcXo8XmTXABrlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpO
+        Zllqkb5dgl7GrcnH2QuapCqWHkxsYDwi0sXIySEhYCJxfn0XexcjF4eQwFJGiU/rDrFDJKQk
+        fvy6wAphC0v8udbFBlH0jVHiyc/ZLCAJNgEdiVOrjzCC2CJADR93bAebxCxwjEni6rUnzCAJ
+        YYEQifOP/4JNYhFQlbg15wvYBl4BK4mujg42iA3yEqs3HGCewMizgJFhFaNIamlxbnpusaFe
+        cWJucWleul5yfu4mRmBYbjv2c/MOxksbgw8xCnAwKvHwvij5FSPEmlhWXJl7iFGCg1lJhLfs
+        wo8YId6UxMqq1KL8+KLSnNTiQ4ymQMsnMkuJJucDYyavJN7Q1NDcwtLQ3Njc2MxCSZy3Q+Bg
+        jJBAemJJanZqakFqEUwfEwenVANj7Qz+h39sNk9tKbyW+/eBhK5IgHeTfOy9l+V8VruvKpX5
+        BcevlPFTXTVFafOC5s8Z0Z5VtxZXHV8e/jwxNO1secs3IV2tE7fD+VhyJ5x2nj/liuX9Netm
+        h6fYt3FeXiGuv3TOMcULsuya/Bs2zoryVlzUkiJSes/abNud5iucTltXnJ2offGGEktxRqKh
+        FnNRcSIAOd1uoGECAAA=
+X-CMS-MailID: 20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e
+References: <CGME20190607173149eucas1p1d2ebedcab469ebd66acfe7c7dcd18d7e@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Device that bound to XDP socket will not have zero refcount until the
+userspace application will not close it. This leads to hang inside
+'netdev_wait_allrefs()' if device unregistering requested:
 
-Jens,
+  # ip link del p1
+  < hang on recvmsg on netlink socket >
 
->> The SCSI bits will need a bit more review, and possibly tweaking
->> fo megaraid and mpt3sas.  But they are really independent of the
->> other patches, so maybe skip them for now and leave them for Martin
->> to deal with.
->
-> I dropped the SCSI bits.
+  # ps -x | grep ip
+  5126  pts/0    D+   0:00 ip link del p1
 
-I'll monitor and merge them.
+  # journalctl -b
 
+  Jun 05 07:19:16 kernel:
+  unregister_netdevice: waiting for p1 to become free. Usage count = 1
+
+  Jun 05 07:19:27 kernel:
+  unregister_netdevice: waiting for p1 to become free. Usage count = 1
+  ...
+
+Fix that by implementing NETDEV_UNREGISTER event notification handler
+to properly clean up all the resources and unref device.
+
+This should also allow socket killing via ss(8) utility.
+
+Fixes: 965a99098443 ("xsk: add support for bind for Rx")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+---
+ net/xdp/xsk.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 61 insertions(+), 1 deletion(-)
+
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index a14e8864e4fa..3f3979579d21 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -693,6 +693,54 @@ static int xsk_mmap(struct file *file, struct socket *sock,
+ 			       size, vma->vm_page_prot);
+ }
+ 
++static int xsk_notifier(struct notifier_block *this,
++			unsigned long msg, void *ptr)
++{
++	struct sock *sk;
++	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
++	struct net *net = dev_net(dev);
++	int i, unregister_count = 0;
++
++	mutex_lock(&net->xdp.lock);
++	sk_for_each(sk, &net->xdp.list) {
++		struct xdp_sock *xs = xdp_sk(sk);
++
++		mutex_lock(&xs->mutex);
++		switch (msg) {
++		case NETDEV_UNREGISTER:
++			if (dev != xs->dev)
++				break;
++
++			sk->sk_err = ENETDOWN;
++			if (!sock_flag(sk, SOCK_DEAD))
++				sk->sk_error_report(sk);
++
++			/* Wait for driver to stop using the xdp socket. */
++			xdp_del_sk_umem(xs->umem, xs);
++			xs->dev = NULL;
++			synchronize_net();
++
++			/* Clear device references in umem. */
++			xdp_put_umem(xs->umem);
++			xs->umem = NULL;
++
++			unregister_count++;
++			break;
++		}
++		mutex_unlock(&xs->mutex);
++	}
++	mutex_unlock(&net->xdp.lock);
++
++	if (unregister_count) {
++		/* Wait for umem clearing completion. */
++		synchronize_net();
++		for (i = 0; i < unregister_count; i++)
++			dev_put(dev);
++	}
++
++	return NOTIFY_DONE;
++}
++
+ static struct proto xsk_proto = {
+ 	.name =		"XDP",
+ 	.owner =	THIS_MODULE,
+@@ -727,7 +775,8 @@ static void xsk_destruct(struct sock *sk)
+ 	if (!sock_flag(sk, SOCK_DEAD))
+ 		return;
+ 
+-	xdp_put_umem(xs->umem);
++	if (xs->umem)
++		xdp_put_umem(xs->umem);
+ 
+ 	sk_refcnt_debug_dec(sk);
+ }
+@@ -784,6 +833,10 @@ static const struct net_proto_family xsk_family_ops = {
+ 	.owner	= THIS_MODULE,
+ };
+ 
++static struct notifier_block xsk_netdev_notifier = {
++	.notifier_call	= xsk_notifier,
++};
++
+ static int __net_init xsk_net_init(struct net *net)
+ {
+ 	mutex_init(&net->xdp.lock);
+@@ -816,8 +869,15 @@ static int __init xsk_init(void)
+ 	err = register_pernet_subsys(&xsk_net_ops);
+ 	if (err)
+ 		goto out_sk;
++
++	err = register_netdevice_notifier(&xsk_netdev_notifier);
++	if (err)
++		goto out_pernet;
++
+ 	return 0;
+ 
++out_pernet:
++	unregister_pernet_subsys(&xsk_net_ops);
+ out_sk:
+ 	sock_unregister(PF_XDP);
+ out_proto:
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.17.1
+
