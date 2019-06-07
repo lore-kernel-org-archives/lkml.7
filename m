@@ -2,97 +2,146 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF6FC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B11C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30C8208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C085208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIe7cDSE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sSmDgj/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfFGJnT (ORCPT
+        id S1728227AbfFGJoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:43:19 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38091 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfFGJnS (ORCPT
+        Fri, 7 Jun 2019 05:44:03 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45478 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfFGJoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:43:18 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g13so2124944edu.5;
-        Fri, 07 Jun 2019 02:43:17 -0700 (PDT)
+        Fri, 7 Jun 2019 05:44:03 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m206so975590oib.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 02:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=J7QcgrWkSAFsej/rko9HTCODh2HodcbGMIhhGvJpZMY=;
-        b=RIe7cDSEB9dVHPlF58YojVZV76Cv64m0YUIrrb2RtjbA2NhRxdUbeoOc5Lug62nQdT
-         P+PBlzQgRRZmBPe7xoP25eQuHyl+ZRqaNUDnWoxi6CapwAfxfw3UkriVxLB8QlqwFLcS
-         vbNhOA2oJ9fVszRJ5bDIZ4bhgvw+jdjFCqv71APjLyT45uN2mO+5OHCC/0gz26UmWz13
-         UibvghNEVCBacIgpyRKvw9jOc2Tyh9LyVhKUDaOIM5fZ+SeL2a5LN7ahUCY/B6G9lcXj
-         Ix/bh3b6ty+8EizB31p5XUiWksb2sCSt4BIPAUwwFBv4QANkkLLpFg6P4zeGluomXtd2
-         aI+g==
+        bh=/SDwCL8ynt08bvLIbUkukhDwVZ2Lp8wrEvUT6aIHtho=;
+        b=sSmDgj/netUoTayQS/G0n32VJ2yGicr7nD4lLeAJvhZKap+GB+aiknebS4oYPh/LcA
+         rg1Uib01OFHv8TzKv+0IGIZ9JBFYe/NH5utLNF617EAy+hhrNHky+Z4XV2RWwG+D+3+J
+         0qPAid+SzBF2sE0FAnkwvTZFv5k7o/KvcXmW1KXfyVDtqOm3RlitHnv3uDQiGXmsMQJO
+         nrEApB2ia7hdP/3xjfeXcNf59r/NmEY6uMq7Wqh4YK3tBMx7LA4ObEH5usOs2QhkZVSo
+         r37vEUoP7K6lbuuw494nSdW2nRGusQdvwDbzh3NzXLD2w39odZbHB2we1UTeVKSK2zvI
+         2QlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=J7QcgrWkSAFsej/rko9HTCODh2HodcbGMIhhGvJpZMY=;
-        b=CzDybA9yirvrthihgUghz5uiJ+bpzcw42s7seduM+b/XO3Z71j3hJWuhZFtR39YRXA
-         dJvH4qDDVeTRs6ZLsmaHWVY7EKA6G0DXHUMxm6fOc5+psUPA3xLjzgOjVFav9Hlrwt/F
-         Mee7FjQoez8FBtat0BH92z8Rnlv+Uhmp3Btcxxk3J9cLKNMZXmo9s44uxeanlmUI1AZg
-         WHnXpY23Zo8v/CoOSJVAR59ZpgK5znO4m9hYnUQbRfsKc7R/ivVcco2M6SiiqQ8tNQXF
-         ea96gUwSI8TmbUKy6dhPzUbQDPSB8kASlYuadVRyB0WUfJnvc3bokIUUo17JxVlYCop8
-         Idtw==
-X-Gm-Message-State: APjAAAVRyHPdLzYo1BvWTxMx7Rspq28LhJdEVKZ4hdh3s6rpb8I5ZasQ
-        ru3NcORoVvsqSsrRZl++CdzKx/pQuw5Lj3Fs+ak=
-X-Google-Smtp-Source: APXvYqwrsZSk/YdKpS4BMDFb0IJglKZzZn5HteH5JVRjUk0BOybK3YN3CZistVbvLYAlDL0TMHBMBkC59SkhcrIAuks=
-X-Received: by 2002:a17:906:4e8f:: with SMTP id v15mr14429327eju.47.1559900596768;
- Fri, 07 Jun 2019 02:43:16 -0700 (PDT)
+        bh=/SDwCL8ynt08bvLIbUkukhDwVZ2Lp8wrEvUT6aIHtho=;
+        b=ACEhl1gjTyimuc7sFnLIyGPR8+T2LFyDijYsf665Px3gQVoFYC3MUptKgPEMdAEdIe
+         W2u0b/ORfoFGjnKJZJ4zpVYvEkg6cQ+4b8eQ40KV7bMYetidiIrAUyoae5pSh1Ywy2+x
+         ndroACd0+yqYC/RcX0ccYSoQkNzgtIpPrCoOtGr9OhkEhZHop78F+I9IEfi8ODoP2Lkx
+         cDNVAyrOSUa2Yx29BZOilnwIE4MjEiC5RX7fdAzSzzmNylJwxZHpFvi/SrHHE9tznsen
+         1yO3uPx7nfr9x38vtO4ZweCgD5saVciGSiEhpx88G/nWr2g1xYd5gsh1UVLmcCcBwptH
+         w6Gw==
+X-Gm-Message-State: APjAAAUzKNWFWcD2wQAOqD7n1Y50RS+tWnov7E2A/HPGNqA/KD9AvBAk
+        ENEQFf1/mrupxNOtNs7eGOTzhbX8Jri6C2DPouDeaQ==
+X-Google-Smtp-Source: APXvYqyUnV95DjtunF7kRqhGq1TUW8NOTsRdj2Mmp2QLEwJTq7h5znkLAqfxXgHu45yWlnL8XVsRJeON5peA1ihRegE=
+X-Received: by 2002:aca:e044:: with SMTP id x65mr3104140oig.70.1559900642006;
+ Fri, 07 Jun 2019 02:44:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190604170756.14338-1-olteanv@gmail.com> <20190604.202258.1443410652869724565.davem@davemloft.net>
- <CA+h21hq1_wcB6_ffYdtOEyz8-aE=c7MiZP4en_VKOBodo=3VSQ@mail.gmail.com>
- <CA+h21hrJYm4GLn+LpJ623_dpgxE2z-k3xTMD=z1QQ9WqXg7zrQ@mail.gmail.com>
- <20190605174547.b4rwbfrzjqzujxno@localhost> <CA+h21hqdmu3+YQVMXyvckrUjXW7mstjG1MDafWGy4qFHB9zdtg@mail.gmail.com>
- <20190606031135.6lyydjb6hqfeuzt3@localhost> <CA+h21hosUmUu98QdzKTJPUd2PEwa+sUg1SNY1ti95kD6kOqE6A@mail.gmail.com>
- <20190607033242.expuqccmzhxdkwzq@localhost>
-In-Reply-To: <20190607033242.expuqccmzhxdkwzq@localhost>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 7 Jun 2019 12:43:05 +0300
-Message-ID: <CA+h21hpS=1Xq3y0C79KEZV9EX3g+aRm4c9NkCwiD7vDhyTwi=w@mail.gmail.com>
-Subject: Re: [PATCH v3 net-next 00/17] PTP support for the SJA1105 DSA driver
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        John Stultz <john.stultz@linaro.org>,
+References: <20190531150828.157832-1-elver@google.com> <20190531150828.157832-3-elver@google.com>
+In-Reply-To: <20190531150828.157832-3-elver@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 7 Jun 2019 11:43:50 +0200
+Message-ID: <CANpmjNP_-J5dZVtDeHUeDk2TBBkOgoPvGKq42Qd7rezbnFWNGg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] x86: Use static_cpu_has in uaccess region to avoid instrumentation
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 06:32, Richard Cochran <richardcochran@gmail.com> wrote:
->
-> On Thu, Jun 06, 2019 at 04:40:19PM +0300, Vladimir Oltean wrote:
-> > Plain and simply because it doesn't work very well.
-> > Even phc2sys from the system clock to the hardware (no timestamps
-> > involved) has trouble staying put (under 1000 ns offset).
-> > And using the hardware-corrected timestamps triggers a lot of clockchecks.
->
-> It sounds like a bug in reading or adjusting the HW clock.  Is the HW
-> clock stable when you don't adjust its frequency?
+Gentle ping.  I would appreciate quick feedback if this approach is reasonable.
 
-How can I tell that for sure?
+Peter: since you suggested that we should not change objtool, did you
+have a particular approach in mind that is maybe different from v2 and
+v3? Or is this what you were thinking of?
 
+Many thanks!
+
+On Fri, 31 May 2019 at 17:11, Marco Elver <elver@google.com> wrote:
 >
-> Thanks,
-> Richard
+> This patch is a pre-requisite for enabling KASAN bitops instrumentation;
+> using static_cpu_has instead of boot_cpu_has avoids instrumentation of
+> test_bit inside the uaccess region. With instrumentation, the KASAN
+> check would otherwise be flagged by objtool.
+>
+> For consistency, kernel/signal.c was changed to mirror this change,
+> however, is never instrumented with KASAN (currently unsupported under
+> x86 32bit).
+>
+> Signed-off-by: Marco Elver <elver@google.com>
+> Suggested-by: H. Peter Anvin <hpa@zytor.com>
+> ---
+> Changes in v3:
+> * Use static_cpu_has instead of moving boot_cpu_has outside uaccess
+>   region.
+>
+> Changes in v2:
+> * Replaces patch: 'tools/objtool: add kasan_check_* to uaccess
+>   whitelist'
+> ---
+>  arch/x86/ia32/ia32_signal.c | 2 +-
+>  arch/x86/kernel/signal.c    | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
+> index 629d1ee05599..1cee10091b9f 100644
+> --- a/arch/x86/ia32/ia32_signal.c
+> +++ b/arch/x86/ia32/ia32_signal.c
+> @@ -358,7 +358,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
+>                 put_user_ex(ptr_to_compat(&frame->uc), &frame->puc);
+>
+>                 /* Create the ucontext.  */
+> -               if (boot_cpu_has(X86_FEATURE_XSAVE))
+> +               if (static_cpu_has(X86_FEATURE_XSAVE))
+>                         put_user_ex(UC_FP_XSTATE, &frame->uc.uc_flags);
+>                 else
+>                         put_user_ex(0, &frame->uc.uc_flags);
+> diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+> index 364813cea647..52eb1d551aed 100644
+> --- a/arch/x86/kernel/signal.c
+> +++ b/arch/x86/kernel/signal.c
+> @@ -391,7 +391,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
+>                 put_user_ex(&frame->uc, &frame->puc);
+>
+>                 /* Create the ucontext.  */
+> -               if (boot_cpu_has(X86_FEATURE_XSAVE))
+> +               if (static_cpu_has(X86_FEATURE_XSAVE))
+>                         put_user_ex(UC_FP_XSTATE, &frame->uc.uc_flags);
+>                 else
+>                         put_user_ex(0, &frame->uc.uc_flags);
+> --
+> 2.22.0.rc1.257.g3120a18244-goog
+>
