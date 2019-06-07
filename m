@@ -2,98 +2,108 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8851BC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB2CC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46676208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:49:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g6X2ExKq"
+	by mail.kernel.org (Postfix) with ESMTP id 7DE61208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfFGJtO (ORCPT
+        id S1728021AbfFGJum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:49:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42827 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfFGJtN (ORCPT
+        Fri, 7 Jun 2019 05:50:42 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:50476 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbfFGJum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:49:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so1472077wrl.9
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 02:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Qj24v20If9zgLt13neBHdsQHg4q/cs2v9iuEfMb+jR8=;
-        b=g6X2ExKqaEWGP16yZeToDxgi/hFe4wnLeV/g34TOGsJNHgdfDNK2QUkTqq13LwRWBx
-         sSmyEdrjhZcumVGP62IpizYxeuQl6Q7aw/E4CstzGn/CzN0YIDSdpJlD36itYzTfu6Sj
-         szvtkdN9e3bLkxGizqDY5jVsM0VJm18LSI4f3KF7FvZJnY/wZlXbcajq6p+Wk6w/Gk9n
-         Tu1if2GQlSzDTJXE5WNZAKZ1cjHlMpuu3X+C37VQvqM/Pbo4bQjiyFfj8oNiGbzdnMJa
-         xVPmidT/6pZi86OrAGGLwELTDe3J1CwlfvPAKcfjYh0o2tRtGa89RRAw6YZKv4HOGELw
-         ulEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Qj24v20If9zgLt13neBHdsQHg4q/cs2v9iuEfMb+jR8=;
-        b=ReBfJHrtMC0oSYhCG9MZmFx3255+rnMwbGGpa4OnC8rTVkPZUTN6IE29uU2s1QJtvk
-         h7iCkLBIk/31aeT9ymkWg/nXg8eUvSYtouX6+fevFqEv6cOMEaKwCpgpZBxPYBpSQgyl
-         OyMH+tmeoaQuKtjHyoLy6ZmcW0SbVDrQf5ZF+elGlM9PQj0vXByYtYzhHXadClqi7O1P
-         td5g8ZTUtYTQHXYTfA/OQhj7dMnDaP0X/zPUN1wdbmOmt4kAh+rbC8gqaf3oJmzxwzUA
-         l78lYbWbJE4PjMpYik1GhSMzrzdXTKDrvL1oJQDMYs1DbMq1zOvNJiTer2ZpdDcaYybY
-         +xLQ==
-X-Gm-Message-State: APjAAAXKcV1EWE95D6ruwQbEEoQxzlZk93lmA8x0Op/5Gr3iSK9gaqRG
-        U/+5ZxT6zGW44dQCEfo1Mk8ueNf5fQzl/g==
-X-Google-Smtp-Source: APXvYqwWGlXNT1rix2H5Zql0Hm0SBRVNRNthbupEGwYwbeXvTUfJiWy7Ye5ZMiyjXXaCEt/uPmp9Dw==
-X-Received: by 2002:a5d:4e50:: with SMTP id r16mr6576125wrt.197.1559900952280;
-        Fri, 07 Jun 2019 02:49:12 -0700 (PDT)
-Received: from localhost ([2620:10d:c092:180::1:56e0])
-        by smtp.gmail.com with ESMTPSA id z65sm1338145wme.37.2019.06.07.02.49.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 02:49:11 -0700 (PDT)
-From:   Loys Ollivier <lollivier@baylibre.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul@pwsan.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH v3 1/5] arch: riscv: add support for building DTB files from DT source data
-In-Reply-To: <alpine.DEB.2.21.9999.1906062208280.28147@viisi.sifive.com>
-References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-2-paul.walmsley@sifive.com> <86v9xlh0x8.fsf@baylibre.com> <alpine.DEB.2.21.9999.1906062208280.28147@viisi.sifive.com>
-Date:   Fri, 07 Jun 2019 11:49:10 +0200
-Message-ID: <86y32dwwrt.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 7 Jun 2019 05:50:42 -0400
+Received: from ramsan ([84.194.111.163])
+        by andre.telenet-ops.be with bizsmtp
+        id Mlqg200053XaVaC01lqgyh; Fri, 07 Jun 2019 11:50:40 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hZBWB-00040D-W7; Fri, 07 Jun 2019 11:50:40 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hZBWB-0002TP-Tp; Fri, 07 Jun 2019 11:50:39 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-renesas-soc@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] irqchip: Enable compile-testing for Renesas drivers
+Date:   Fri,  7 Jun 2019 11:50:36 +0200
+Message-Id: <20190607095036.9466-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 06 Jun 2019 at 22:12, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+Enable compile-testing for all Renesas interrupt controller drivers,
+except for RENESAS_H8300H_INTC.  The latter relies on a function
+(ctrl_bclr()) that is not available on other architectures.
 
-> On Tue, 4 Jun 2019, Loys Ollivier wrote:
->
->> Always build it ?
->> Any particular reason to drop ARCH_SIFIVE ?
->
-> Palmer had some reservations about it, so I dropped it for now.  But then 
-> as I was thinking about it, I remembered that I also had some reservations 
-> about it, years ago: that everyone should use CONFIG_SOC_* for this, 
-> rather than CONFIG_ARCH.  CONFIG_ARCH_* seems better reserved for 
-> CPU architectures.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/irqchip/Kconfig | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-Agree on the CONFIG_SOC.
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 2d3b5a27cc988ab6..fe509b88f99a8f10 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -217,17 +217,26 @@ config RDA_INTC
+ 	select IRQ_DOMAIN
+ 
+ config RENESAS_INTC_IRQPIN
+-	bool
++	bool "Renesas INTC External IRQ Pin Support" if COMPILE_TEST
+ 	select IRQ_DOMAIN
++	help
++	  Enable support for the Renesas Interrupt Controller for external
++	  interrupt pins, as found on SH/R-Mobile and R-Car Gen1 SoCs.
+ 
+ config RENESAS_IRQC
+-	bool
++	bool "Renesas R-Mobile APE6 and R-Car IRQC support" if COMPILE_TEST
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN
++	help
++	  Enable support for the Renesas Interrupt Controller for external
++	  devices, as found on R-Mobile APE6, R-Car Gen2, and R-Car Gen3 SoCs.
+ 
+ config RENESAS_RZA1_IRQC
+-	bool
++	bool "Renesas RZ/A1 IRQC support" if COMPILE_TEST
+ 	select IRQ_DOMAIN_HIERARCHY
++	help
++	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
++	  to 8 external interrupts with configurable sense select.
+ 
+ config ST_IRQCHIP
+ 	bool
+@@ -303,8 +312,11 @@ config RENESAS_H8300H_INTC
+ 	select IRQ_DOMAIN
+ 
+ config RENESAS_H8S_INTC
+-        bool
++	bool "Renesas H8S Interrupt Controller Support" if COMPILE_TEST
+ 	select IRQ_DOMAIN
++	help
++	  Enable support for the Renesas H8/300 Interrupt Controller, as found
++	  on Renesas H8S SoCs.
+ 
+ config IMX_GPCV2
+ 	bool
+-- 
+2.17.1
 
->
-> If you agree, would you like to send a followup series, based on the DT 
-> patches, to make the SiFive DT file builds depend on CONFIG_SOC_* instead?
-
-Sure, I'd be glad to follow up on that. I'll send a followup series to
-start a discussion.
-
---
-Loys
