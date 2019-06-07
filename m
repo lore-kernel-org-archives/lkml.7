@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8B2C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1637C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 748192147A
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B7F21479
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922380;
-	bh=cEvAHdLnGrikmcdwQTsTvbK6efKqvwf8/wwRsHU/Pxk=;
+	s=default; t=1559922382;
+	bh=GnmitQ/FmhUl1iQbeJpEQmDM6jx8+AikL4E/B9gvUfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YtRmyOuUm6/NkoY4VgrHgVVPt+pr3a7M+vC35279s6YuB5IwOZtdDgtwKZ9EXajMW
-	 fboHxWGpiQWZalRpwxcWI5HGbTqz7S1KJrlHmtQdkWSzaCqaZdfidQDP+0UL3eyicm
-	 kKyYi3zs6mBrXjJcVUwPVmDGvSc9lxnKI6kI1be8=
+	b=2okp3LMjLjZIPEE/TEgTRGib7nAwTsis2+nqem+nH9ajNtp2Fo5X/31z6o8nWN3+m
+	 kfb3E/yybkKd5TpF77vNOHhZsvzTu4Oapf3cX/1140dFuquV3n4rVOycgQRzGD1EgQ
+	 BjlgZltMu5zvRZinrIIES0Z8D7DIFJJ+Gxse7DXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731380AbfFGPqU (ORCPT
+        id S1731371AbfFGPqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731355AbfFGPqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:14 -0400
+        id S1730632AbfFGPqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3A4D212F5;
-        Fri,  7 Jun 2019 15:46:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CE92212F5;
+        Fri,  7 Jun 2019 15:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922374;
-        bh=cEvAHdLnGrikmcdwQTsTvbK6efKqvwf8/wwRsHU/Pxk=;
+        s=default; t=1559922369;
+        bh=GnmitQ/FmhUl1iQbeJpEQmDM6jx8+AikL4E/B9gvUfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qz3Q/XKzKamBEVcy/BxegMgSCtnUEag4azEgBajEX0jojn41+P3hY7xy7al0u17pU
-         oyAlOQYqZNaEcR7hp0z8rzYT+kQUF8udxekgVzZ9XD+EBhaoppDXQ1nTWyjGTS6Jot
-         lJUTLifvl5PdXOgc/8uN6pDqglXGXD9Xc61LvZuI=
+        b=qjm40VFZmaaZzjIQJcCdq6udW1VbiOrM/zD6xxFEN9bvF8xvnVZwM8b8egN/nX0Pc
+         pv47YppUeDnRseXsoP5IlK7HBnvtzAJtkiB1APAcCyMLwpB1NoP1qhEwpMp/xT7pmK
+         +Q0d8CQXfM03VbeUOI5IXAZitWnIhMhRIXP94wf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alec Ari <neotheuser@gmail.com>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 64/73] Revert "x86/build: Move _etext to actual end of .text"
-Date:   Fri,  7 Jun 2019 17:39:51 +0200
-Message-Id: <20190607153856.076256900@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Sebor <msebor@gcc.gnu.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 4.19 62/73] Compiler Attributes: add support for __copy (gcc >= 9)
+Date:   Fri,  7 Jun 2019 17:39:49 +0200
+Message-Id: <20190607153855.885568110@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -64,42 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
+commit c0d9782f5b6d7157635ae2fd782a4b27d55a6013 upstream.
 
-It seems to cause lots of problems when using the gold linker, and no
-one really needs this at the moment, so just revert it from the stable
-trees.
+>From the GCC manual:
 
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Reported-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: Alec Ari <neotheuser@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+  copy
+  copy(function)
+
+    The copy attribute applies the set of attributes with which function
+    has been declared to the declaration of the function to which
+    the attribute is applied. The attribute is designed for libraries
+    that define aliases or function resolvers that are expected
+    to specify the same set of attributes as their targets. The copy
+    attribute can be used with functions, variables, or types. However,
+    the kind of symbol to which the attribute is applied (either
+    function or variable) must match the kind of symbol to which
+    the argument refers. The copy attribute copies only syntactic and
+    semantic attributes but not attributes that affect a symbol’s
+    linkage or visibility such as alias, visibility, or weak.
+    The deprecated attribute is also not copied.
+
+  https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html
+
+The upcoming GCC 9 release extends the -Wmissing-attributes warnings
+(enabled by -Wall) to C and aliases: it warns when particular function
+attributes are missing in the aliases but not in their target, e.g.:
+
+    void __cold f(void) {}
+    void __alias("f") g(void);
+
+diagnoses:
+
+    warning: 'g' specifies less restrictive attribute than
+    its target 'f': 'cold' [-Wmissing-attributes]
+
+Using __copy(f) we can copy the __cold attribute from f to g:
+
+    void __cold f(void) {}
+    void __copy(f) __alias("f") g(void);
+
+This attribute is most useful to deal with situations where an alias
+is declared but we don't know the exact attributes the target has.
+
+For instance, in the kernel, the widely used module_init/exit macros
+define the init/cleanup_module aliases, but those cannot be marked
+always as __init/__exit since some modules do not have their
+functions marked as such.
+
+Suggested-by: Martin Sebor <msebor@gcc.gnu.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kernel/vmlinux.lds.S |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -151,10 +151,10 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
+---
+ include/linux/compiler-gcc.h   |    4 ++++
+ include/linux/compiler_types.h |    4 ++++
+ 2 files changed, 8 insertions(+)
+
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -201,6 +201,10 @@
+ #define COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW 1
  #endif
--	} :text = 0x9090
  
--	/* End of text section */
--	_etext = .;
-+		/* End of text section */
-+		_etext = .;
-+	} :text = 0x9090
++#if GCC_VERSION >= 90100
++#define __copy(symbol)                 __attribute__((__copy__(symbol)))
++#endif
++
+ #if !defined(__noclone)
+ #define __noclone	/* not needed */
+ #endif
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -180,6 +180,10 @@ struct ftrace_likely_data {
+ #define __diag_GCC(version, severity, string)
+ #endif
  
- 	NOTES :text :note
++#ifndef __copy
++# define __copy(symbol)
++#endif
++
+ #define __diag_push()	__diag(push)
+ #define __diag_pop()	__diag(pop)
  
 
 
