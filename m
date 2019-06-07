@@ -2,30 +2,31 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9F0C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D729C46476
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34195208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0192D208C0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfFGGeb (ORCPT
+        id S1727378AbfFGGef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:34:31 -0400
+        Fri, 7 Jun 2019 02:34:35 -0400
 Received: from mga02.intel.com ([134.134.136.20]:49508 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfFGGea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:34:30 -0400
+        id S1726825AbfFGGed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 02:34:33 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 23:34:29 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2019 23:34:32 -0700
 X-ExtLoop1: 1
 Received: from pg-eswbuild-angstrom-alpha.altera.com ([10.142.34.148])
-  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2019 23:34:26 -0700
+  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2019 23:34:29 -0700
 From:   "Hean-Loong, Ong" <hean.loong.ong@intel.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Dinh Nguyen <dinguyen@kernel.org>,
@@ -34,64 +35,149 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com,
-        chin.liang.see@intel.com
-Subject: [PATCHv15 0/3] Intel FPGA Video and Image Processing Suite
-Date:   Fri,  7 Jun 2019 22:28:24 +0800
-Message-Id: <20190607142827.329-1-hean.loong.ong@intel.com>
+        chin.liang.see@intel.com, Ong@vger.kernel.org
+Subject: [PATCHv15 1/3] ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
+Date:   Fri,  7 Jun 2019 22:28:25 +0800
+Message-Id: <20190607142827.329-2-hean.loong.ong@intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190607142827.329-1-hean.loong.ong@intel.com>
+References: <20190607142827.329-1-hean.loong.ong@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hean-Loong Ong <hean.loong.ong@intel.com>
+From: "Ong, Hean Loong" <hean.loong.ong@intel.com>
 
-The FPGA FrameBuffer Soft IP could be seen  as the GPU and the DRM driver
-patch here is allocating memory for information to be streamed from the
-ARM/Linux to the display port.
+Device tree binding for Intel FPGA Video and Image Processing Suite.
+The bindings would set the max width, max height,
+bits per pixel and memory port width.
+The device tree binding only supports the Intel
+Arria10 devkit and its variants. Vendor name retained as altr.
 
-Basically the driver just wraps the information such as the pixels to be
-drawn by the Sodt IP FrameBuffer 2.
-
-The piece of hardware in discussion is the SoC FPGA where Linux runs on
-the ARM chip and the FGPA is driven by its NIOS soft core with its own
-proprietary firmware.
-
-For example the application from the ARM Linux would have to write
-information on the /dev/fb0 with the information stored in the
-SDRAM to be fetched by the Framebuffer 2 Soft IP and displayed
-on the Display Port Monitor.
-
-Reviewed and ACKed need to merge this into drm-misc
-
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 Reviewed-by: Rob Herring <robh@kernel.org>
 
-Ong Hean Loong (1):
-  ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
+V15:
+Reviewed
 
-Ong, Hean Loong (2):
-  ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
-  ARM:drm ivip Intel FPGA Video and Image Processing Suite
+V14:
+No Change
 
- .../bindings/display/altr,vip-fb2.txt         |  63 ++++
- MAINTAINERS                                   |   9 +
- arch/arm/configs/socfpga_defconfig            |   8 +
- drivers/gpu/drm/Kconfig                       |   2 +
- drivers/gpu/drm/Makefile                      |   1 +
- drivers/gpu/drm/ivip/Kconfig                  |  14 +
- drivers/gpu/drm/ivip/Makefile                 |   6 +
- drivers/gpu/drm/ivip/intel_vip_conn.c         |  93 +++++
- drivers/gpu/drm/ivip/intel_vip_drv.c          | 335 ++++++++++++++++++
- drivers/gpu/drm/ivip/intel_vip_drv.h          |  73 ++++
- 10 files changed, 604 insertions(+)
+V13:
+No change
+
+V12:
+Wrap comments and fix commit message
+
+V11:
+No change
+
+V10:
+No change
+
+V9:
+Remove Display port node
+
+V8:
+*Add port to Display port decoder
+
+V7:
+*Fix OF graph for better description
+*Add description for encoder
+
+V6:
+*Description have not describe DT device in general
+
+V5:
+*remove bindings for bits per symbol as it has only one value which is 8
+
+V4:
+*fix properties that does not describe the values
+
+V3:
+*OF graph not in accordance to graph.txt
+
+V2:
+*Remove Linux driver description
+
+V1:
+*Missing vendor prefix
+
+Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
+---
+ .../bindings/display/altr,vip-fb2.txt         | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
- create mode 100644 drivers/gpu/drm/ivip/Kconfig
- create mode 100644 drivers/gpu/drm/ivip/Makefile
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.c
- create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
 
+diff --git a/Documentation/devicetree/bindings/display/altr,vip-fb2.txt b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+new file mode 100644
+index 000000000000..89a3b9e166a8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+@@ -0,0 +1,63 @@
++Intel Video and Image Processing(VIP) Frame Buffer II bindings
++
++Supported hardware: Intel FPGA SoC Arria10 and above with display port IP
++
++The Video Frame Buffer II in Video Image Processing (VIP) suite is an IP core
++that interfaces between system memory and Avalon-ST video ports. The IP core
++can be configured to support the memory reader (from memory to Avalon-ST)
++and/or memory writer (from Avalon-ST to memory) interfaces.
++
++More information the FPGA video IP component can be acquired from
++https://www.altera.com/content/dam/altera-www/global/en_US/pdfs\
++/literature/ug/ug_vip.pdf
++
++DT-Bindings:
++=============
++Required properties:
++----------------------------
++- compatible: "altr,vip-frame-buffer-2.0"
++- reg: Physical base address and length of the framebuffer controller's
++	registers.
++- altr,max-width: The maximum width of the framebuffer in pixels.
++- altr,max-height: The maximum height of the framebuffer in pixels.
++- altr,mem-port-width = the bus width of the avalon master port
++	on the frame reader
++
++Optional sub-nodes:
++- ports: The connection to the encoder
++
++Connections between the Frame Buffer II and other video IP cores in the system
++are modelled using the OF graph DT bindings. The Frame Buffer II node has up
++to two OF graph ports. When the memory writer interface is enabled, port 0
++maps to the Avalon-ST Input (din) port. When the memory reader interface is
++enabled, port 1 maps to the Avalon-ST Output (dout) port.
++
++The encoder is built into the FPGA HW design and therefore would not
++be accessible from the DDR.
++
++		Port 0				Port1
++---------------------------------------------------------
++ARRIA10 AVALON_ST (DIN)		AVALON_ST (DOUT)
++
++Required Properties Example:
++----------------------------
++
++framebuffer@100000280 {
++		compatible = "altr,vip-frame-buffer-2.0";
++		reg = <0x00000001 0x00000280 0x00000040>;
++		altr,max-width = <1280>;
++		altr,max-height = <720>;
++		altr,mem-port-width = <128>;
++
++		ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++			port@1 {
++				reg = <1>;
++					fb_output: endpoint {
++						remote-endpoint = <&dp_encoder_input>;
++					};
++			};
++		};
++};
 -- 
 2.17.1
 
