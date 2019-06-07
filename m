@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D40C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D8C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB812146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33B420657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922695;
-	bh=//FzWUZwojhZSX2h7n6QW9yj312ANGnl+VXJWOpRgLs=;
+	s=default; t=1559922701;
+	bh=hGiZwCLJZ5kXx2cEqrIQ0M0cdug7o1WlyxRzqNq1Bog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dZya5vj65Z2W7MfjhKwEu/duGjwzULK3DzWdbdFvzafAi4WMr4hHC+r0dTPcS/XQu
-	 Q+5SZB7ShwGzjdyASuj1vJPWabwOHLXzIw1HM2+YlXj6FPGauqztGJUJ2fFYLpS4GJ
-	 7TFJwo8Xo4lMkoOn+WrsVIaedwB4QTJSYr7bW7HA=
+	b=GSTjIYHVZwxGCGMrRngZIoLQJxkyN6d7U0Hn0jOB/nM0UOhAMt9zu/RbLm2Ld6KpE
+	 qbHQLIxJOlpsF3TzO1M8G5yKTCVzv9qGzrM3+sHDdzf6CxczwETJ1BuIkEUaSv58t9
+	 8CMiMR+XM3530ACsAsYTEJ0teQA5r2vlqaxeGW94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732287AbfFGPvf (ORCPT
+        id S1732156AbfFGPuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:50:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732172AbfFGPua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:50:30 -0400
+        id S1730951AbfFGPuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:50:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC6342146E;
-        Fri,  7 Jun 2019 15:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57CC620840;
+        Fri,  7 Jun 2019 15:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922629;
-        bh=//FzWUZwojhZSX2h7n6QW9yj312ANGnl+VXJWOpRgLs=;
+        s=default; t=1559922620;
+        bh=hGiZwCLJZ5kXx2cEqrIQ0M0cdug7o1WlyxRzqNq1Bog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gwg9WkTb13hCnvHM11+tU8LN9Y85J+SgTjLfU/eOm6rB3L/HvhPITV4Qc6oclzGTg
-         LjUDgqi4xOYMyFsHwYnal93md8H1Ukzjni12Rq5XMCJQQyFi9k+XF0vXNfPOAcWWY7
-         3mgfUuawsHvn2cbhBzG0wjeRVb7DoNjdJRJFgF0Q=
+        b=CfBN9L6pqbAGv1V8e2NZy+qbG/WAxjq609HgXbaGTFUB8xlAY+7nRAk1G13bc66UB
+         r2dUCz/Lj5RxF/LQ/JjEL/uns9N/QMn/m7c55cstOVbuMucwSdnitHWn8PD24DJwg8
+         PFQOEKcPNDs8ItRLxL+jp+QLczSJSUnXlf1zdTro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Keith Packard <keithp@keithp.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
+        Dave Airlie <airlied@redhat.com>,
         Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 5.1 82/85] drm/lease: Make sure implicit planes are leased
-Date:   Fri,  7 Jun 2019 17:40:07 +0200
-Message-Id: <20190607153857.941099432@linuxfoundation.org>
+Subject: [PATCH 5.1 79/85] drm/atomic: Wire file_priv through for property changes
+Date:   Fri,  7 Jun 2019 17:40:04 +0200
+Message-Id: <20190607153857.733115350@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -62,66 +62,165 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-commit 204f640da6914844b3270b41b29c84f6e3b74083 upstream.
+commit 36e4523aaf4a35de963e190064b53839fa131653 upstream.
 
-If userspace doesn't enable universal planes, then we automatically
-add the primary and cursor planes. But for universal userspace there's
-no such check (and maybe we only want to give the lessee one plane,
-maybe not even the primary one), hence we need to check for the
-implied plane.
-
-v2: don't forget setcrtc ioctl.
-
-v3: Still allow disabling of the crtc in SETCRTC.
+We need this to make sure lessees can only connect their
+plane/connectors to crtc objects they own. And note that this is
+irrespective of whether the lessor is atomic or not, lessor cannot
+prevent lessees from enabling atomic.
 
 Cc: stable@vger.kernel.org
 Cc: Keith Packard <keithp@keithp.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Dave Airlie <airlied@redhat.com>
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190228144910.26488-6-daniel.vetter@ffwll.ch
+Link: https://patchwork.freedesktop.org/patch/msgid/20190228144910.26488-7-daniel.vetter@ffwll.ch
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_crtc.c  |    4 ++++
- drivers/gpu/drm/drm_plane.c |    8 ++++++++
- 2 files changed, 12 insertions(+)
+ drivers/gpu/drm/drm_atomic_uapi.c   |   32 +++++++++++++++++++-------------
+ drivers/gpu/drm/drm_crtc_internal.h |    1 +
+ drivers/gpu/drm/drm_mode_object.c   |    5 +++--
+ 3 files changed, 23 insertions(+), 15 deletions(-)
 
---- a/drivers/gpu/drm/drm_crtc.c
-+++ b/drivers/gpu/drm/drm_crtc.c
-@@ -559,6 +559,10 @@ int drm_mode_setcrtc(struct drm_device *
+--- a/drivers/gpu/drm/drm_atomic_uapi.c
++++ b/drivers/gpu/drm/drm_atomic_uapi.c
+@@ -512,8 +512,8 @@ drm_atomic_crtc_get_property(struct drm_
+ }
  
- 	plane = crtc->primary;
+ static int drm_atomic_plane_set_property(struct drm_plane *plane,
+-		struct drm_plane_state *state, struct drm_property *property,
+-		uint64_t val)
++		struct drm_plane_state *state, struct drm_file *file_priv,
++		struct drm_property *property, uint64_t val)
+ {
+ 	struct drm_device *dev = plane->dev;
+ 	struct drm_mode_config *config = &dev->mode_config;
+@@ -521,7 +521,8 @@ static int drm_atomic_plane_set_property
+ 	int ret;
  
-+	/* allow disabling with the primary plane leased */
-+	if (crtc_req->mode_valid && !drm_lease_held(file_priv, plane->base.id))
-+		return -EACCES;
-+
- 	mutex_lock(&crtc->dev->mode_config.mutex);
- 	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx,
- 				   DRM_MODESET_ACQUIRE_INTERRUPTIBLE, ret);
---- a/drivers/gpu/drm/drm_plane.c
-+++ b/drivers/gpu/drm/drm_plane.c
-@@ -960,6 +960,11 @@ retry:
+ 	if (property == config->prop_fb_id) {
+-		struct drm_framebuffer *fb = drm_framebuffer_lookup(dev, NULL, val);
++		struct drm_framebuffer *fb;
++		fb = drm_framebuffer_lookup(dev, file_priv, val);
+ 		drm_atomic_set_fb_for_plane(state, fb);
+ 		if (fb)
+ 			drm_framebuffer_put(fb);
+@@ -537,7 +538,7 @@ static int drm_atomic_plane_set_property
+ 			return -EINVAL;
+ 
+ 	} else if (property == config->prop_crtc_id) {
+-		struct drm_crtc *crtc = drm_crtc_find(dev, NULL, val);
++		struct drm_crtc *crtc = drm_crtc_find(dev, file_priv, val);
+ 		return drm_atomic_set_crtc_for_plane(state, crtc);
+ 	} else if (property == config->prop_crtc_x) {
+ 		state->crtc_x = U642I64(val);
+@@ -681,14 +682,14 @@ static int drm_atomic_set_writeback_fb_f
+ }
+ 
+ static int drm_atomic_connector_set_property(struct drm_connector *connector,
+-		struct drm_connector_state *state, struct drm_property *property,
+-		uint64_t val)
++		struct drm_connector_state *state, struct drm_file *file_priv,
++		struct drm_property *property, uint64_t val)
+ {
+ 	struct drm_device *dev = connector->dev;
+ 	struct drm_mode_config *config = &dev->mode_config;
+ 
+ 	if (property == config->prop_crtc_id) {
+-		struct drm_crtc *crtc = drm_crtc_find(dev, NULL, val);
++		struct drm_crtc *crtc = drm_crtc_find(dev, file_priv, val);
+ 		return drm_atomic_set_crtc_for_connector(state, crtc);
+ 	} else if (property == config->dpms_property) {
+ 		/* setting DPMS property requires special handling, which
+@@ -747,8 +748,10 @@ static int drm_atomic_connector_set_prop
+ 		}
+ 		state->content_protection = val;
+ 	} else if (property == config->writeback_fb_id_property) {
+-		struct drm_framebuffer *fb = drm_framebuffer_lookup(dev, NULL, val);
+-		int ret = drm_atomic_set_writeback_fb_for_connector(state, fb);
++		struct drm_framebuffer *fb;
++		int ret;
++		fb = drm_framebuffer_lookup(dev, file_priv, val);
++		ret = drm_atomic_set_writeback_fb_for_connector(state, fb);
+ 		if (fb)
+ 			drm_framebuffer_put(fb);
+ 		return ret;
+@@ -943,6 +946,7 @@ out:
+ }
+ 
+ int drm_atomic_set_property(struct drm_atomic_state *state,
++			    struct drm_file *file_priv,
+ 			    struct drm_mode_object *obj,
+ 			    struct drm_property *prop,
+ 			    uint64_t prop_value)
+@@ -965,7 +969,8 @@ int drm_atomic_set_property(struct drm_a
+ 		}
+ 
+ 		ret = drm_atomic_connector_set_property(connector,
+-				connector_state, prop, prop_value);
++				connector_state, file_priv,
++				prop, prop_value);
+ 		break;
+ 	}
+ 	case DRM_MODE_OBJECT_CRTC: {
+@@ -993,7 +998,8 @@ int drm_atomic_set_property(struct drm_a
+ 		}
+ 
+ 		ret = drm_atomic_plane_set_property(plane,
+-				plane_state, prop, prop_value);
++				plane_state, file_priv,
++				prop, prop_value);
+ 		break;
+ 	}
+ 	default:
+@@ -1365,8 +1371,8 @@ retry:
+ 				goto out;
+ 			}
+ 
+-			ret = drm_atomic_set_property(state, obj, prop,
+-						      prop_value);
++			ret = drm_atomic_set_property(state, file_priv,
++						      obj, prop, prop_value);
+ 			if (ret) {
+ 				drm_mode_object_put(obj);
+ 				goto out;
+--- a/drivers/gpu/drm/drm_crtc_internal.h
++++ b/drivers/gpu/drm/drm_crtc_internal.h
+@@ -214,6 +214,7 @@ int drm_atomic_connector_commit_dpms(str
+ 				     struct drm_connector *connector,
+ 				     int mode);
+ int drm_atomic_set_property(struct drm_atomic_state *state,
++			    struct drm_file *file_priv,
+ 			    struct drm_mode_object *obj,
+ 			    struct drm_property *prop,
+ 			    uint64_t prop_value);
+--- a/drivers/gpu/drm/drm_mode_object.c
++++ b/drivers/gpu/drm/drm_mode_object.c
+@@ -451,6 +451,7 @@ static int set_property_legacy(struct dr
+ }
+ 
+ static int set_property_atomic(struct drm_mode_object *obj,
++			       struct drm_file *file_priv,
+ 			       struct drm_property *prop,
+ 			       uint64_t prop_value)
+ {
+@@ -477,7 +478,7 @@ retry:
+ 						       obj_to_connector(obj),
+ 						       prop_value);
+ 	} else {
+-		ret = drm_atomic_set_property(state, obj, prop, prop_value);
++		ret = drm_atomic_set_property(state, file_priv, obj, prop, prop_value);
  		if (ret)
  			goto out;
+ 		ret = drm_atomic_commit(state);
+@@ -520,7 +521,7 @@ int drm_mode_obj_set_property_ioctl(stru
+ 		goto out_unref;
  
-+		if (!drm_lease_held(file_priv, crtc->cursor->base.id)) {
-+			ret = -EACCES;
-+			goto out;
-+		}
-+
- 		ret = drm_mode_cursor_universal(crtc, req, file_priv, &ctx);
- 		goto out;
- 	}
-@@ -1062,6 +1067,9 @@ int drm_mode_page_flip_ioctl(struct drm_
+ 	if (drm_drv_uses_atomic_modeset(property->dev))
+-		ret = set_property_atomic(arg_obj, property, arg->value);
++		ret = set_property_atomic(arg_obj, file_priv, property, arg->value);
+ 	else
+ 		ret = set_property_legacy(arg_obj, property, arg->value);
  
- 	plane = crtc->primary;
- 
-+	if (!drm_lease_held(file_priv, plane->base.id))
-+		return -EACCES;
-+
- 	if (crtc->funcs->page_flip_target) {
- 		u32 current_vblank;
- 		int r;
 
 
