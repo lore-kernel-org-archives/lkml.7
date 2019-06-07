@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A37C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54366C468BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2F220657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AB920657
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559923144;
-	bh=cgBfD8u9cSMxS93P8T3sKF2WamQHBf60rbEgKWXCVzU=;
+	s=default; t=1559923146;
+	bh=6Ajabuw9ON+eshjxs/JE69Gi3UxizKO+uTGIS/9UZe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Us10HQ60VFtegiiAU05bF5JtL2hC0S/6keF/2EhpZkSyuIUAmTHWlGRHNau8UX20S
-	 tqcEPa/quYsndORILiTL2X+yTjIbxt5rNuCTmWSTwG6/oPMc0Sf8rffcLC6UQ51JDP
-	 S3RN8Uxqb4sqhOSfIm5DCMiE2A8f1i/LBegWmavM=
+	b=vCBiRHCBl/EdBzOwfHD/p72MNvu7Ln7otPsWNO6bU27hm0OY7klIihbda3aLpN2FQ
+	 fVAukat8W5lRMXnHjGJiDrB60/SaE4sK2Ck6i1Ui895PiCgBo25n1mkqApAOExIsf1
+	 QBKrJAJux7o+G3Z72gpxFVSfQfp35wVeY3Z033/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbfFGPmL (ORCPT
+        id S1730833AbfFGP7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52320 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:59:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730416AbfFGPmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:42:00 -0400
+        id S1730485AbfFGPmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:42:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEDE2133D;
-        Fri,  7 Jun 2019 15:41:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45B432133D;
+        Fri,  7 Jun 2019 15:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922120;
-        bh=cgBfD8u9cSMxS93P8T3sKF2WamQHBf60rbEgKWXCVzU=;
+        s=default; t=1559922130;
+        bh=6Ajabuw9ON+eshjxs/JE69Gi3UxizKO+uTGIS/9UZe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8R2aFB9ZbladUw3/PrD1/O/+6ANOKzRpqZS0i/7r382ruTdQDrz+0Lr0UAxeImJR
-         pAyC9/Mga1hhe7kTL0Csa3Dk6kC9/G8CsDpNylzo26ey2NcZdd79zzt5KbojGTPHDE
-         JXqHlayBf3pldbL7+Lf5YuTWZOAcm7Mp/Gb7rO1k=
+        b=dIfVvWNzF+VkCj5NQ9BqvdqGA+9+YKnAEMOs5wtl0g2lDX2/TCLLzjQJJbHT9KwLe
+         D6T8OAas57W+PkYoEK8R+OoDNLeOW209/6lf9W33fKj+0D2j48VfmdW2veyPUKbG0v
+         9tId+gbUS+UxC9eoWdMFXNuOZtJb9ZR2ImjCdMvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        kbuild test robot <lkp@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 08/69] tipc: Avoid copying bytes beyond the supplied data
-Date:   Fri,  7 Jun 2019 17:38:49 +0200
-Message-Id: <20190607153849.294133655@linuxfoundation.org>
+Subject: [PATCH 4.14 12/69] ipv4/igmp: fix build error if !CONFIG_IP_MULTICAST
+Date:   Fri,  7 Jun 2019 17:38:53 +0200
+Message-Id: <20190607153849.792403503@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
 References: <20190607153848.271562617@linuxfoundation.org>
@@ -60,67 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Eric Dumazet <edumazet@google.com>
 
-TLV_SET is called with a data pointer and a len parameter that tells us
-how many bytes are pointed to by data. When invoking memcpy() we need
-to careful to only copy len bytes.
+[ Upstream commit 903869bd10e6719b9df6718e785be7ec725df59f ]
 
-Previously we would copy TLV_LENGTH(len) bytes which would copy an extra
-4 bytes past the end of the data pointer which newer GCC versions
-complain about.
+ip_sf_list_clear_all() needs to be defined even if !CONFIG_IP_MULTICAST
 
- In file included from test.c:17:
- In function 'TLV_SET',
-     inlined from 'test' at test.c:186:5:
- /usr/include/linux/tipc_config.h:317:3:
- warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]
- of object 'bearer_name' with type 'char[32]' [-Warray-bounds]
-     memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- test.c: In function 'test':
- test.c::161:10: note:
- 'bearer_name' declared here
-     char bearer_name[TIPC_MAX_BEARER_NAME];
-          ^~~~~~~~~~~
-
-We still want to ensure any padding bytes at the end are initialised, do
-this with a explicit memset() rather than copy bytes past the end of
-data. Apply the same logic to TCM_SET.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Fixes: 3580d04aa674 ("ipv4/igmp: fix another memory leak in igmpv3_del_delrec()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/uapi/linux/tipc_config.h |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/ipv4/igmp.c |   22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
---- a/include/uapi/linux/tipc_config.h
-+++ b/include/uapi/linux/tipc_config.h
-@@ -302,8 +302,10 @@ static inline int TLV_SET(void *tlv, __u
- 	tlv_ptr = (struct tlv_desc *)tlv;
- 	tlv_ptr->tlv_type = htons(type);
- 	tlv_ptr->tlv_len  = htons(tlv_len);
--	if (len && data)
--		memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
-+	if (len && data) {
-+		memcpy(TLV_DATA(tlv_ptr), data, len);
-+		memset(TLV_DATA(tlv_ptr) + len, 0, TLV_SPACE(len) - tlv_len);
+--- a/net/ipv4/igmp.c
++++ b/net/ipv4/igmp.c
+@@ -190,6 +190,17 @@ static void ip_ma_put(struct ip_mc_list
+ 	     pmc != NULL;					\
+ 	     pmc = rtnl_dereference(pmc->next_rcu))
+ 
++static void ip_sf_list_clear_all(struct ip_sf_list *psf)
++{
++	struct ip_sf_list *next;
++
++	while (psf) {
++		next = psf->sf_next;
++		kfree(psf);
++		psf = next;
 +	}
- 	return TLV_SPACE(len);
++}
++
+ #ifdef CONFIG_IP_MULTICAST
+ 
+ /*
+@@ -635,17 +646,6 @@ static void igmpv3_clear_zeros(struct ip
+ 	}
  }
  
-@@ -400,8 +402,10 @@ static inline int TCM_SET(void *msg, __u
- 	tcm_hdr->tcm_len   = htonl(msg_len);
- 	tcm_hdr->tcm_type  = htons(cmd);
- 	tcm_hdr->tcm_flags = htons(flags);
--	if (data_len && data)
-+	if (data_len && data) {
- 		memcpy(TCM_DATA(msg), data, data_len);
-+		memset(TCM_DATA(msg) + data_len, 0, TCM_SPACE(data_len) - msg_len);
-+	}
- 	return TCM_SPACE(data_len);
- }
- 
+-static void ip_sf_list_clear_all(struct ip_sf_list *psf)
+-{
+-	struct ip_sf_list *next;
+-
+-	while (psf) {
+-		next = psf->sf_next;
+-		kfree(psf);
+-		psf = next;
+-	}
+-}
+-
+ static void kfree_pmc(struct ip_mc_list *pmc)
+ {
+ 	ip_sf_list_clear_all(pmc->sources);
 
 
