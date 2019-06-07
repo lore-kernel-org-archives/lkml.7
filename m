@@ -2,55 +2,54 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BFCC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40504C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FCC21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198B42146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922387;
-	bh=s47Uhp1iUbxMZiQQeK4TXSLc0gqXh9q1+g404qyEEcE=;
+	s=default; t=1559922390;
+	bh=kfMIMiKoeQQI6r3rC53yIBk9J8jiX9+NW1XjqgxSPUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BO+pSv7JbwGfVy/xhExays8pD7UJg3KagpmnwQoWtOIk0gUiKZ0scKQetwaIpWkXW
-	 sqRlFl1jSvJK4yN0+a0rndnVh8RfGR+ZIRrIBY02c++ypQZpVy8fE9vARiPws9+vEp
-	 0ILNgWk5RR5lrbWeWDwWKp8HK6QF+z1H2IIUZhwg=
+	b=S82mvmZ5fNxIn2N/NMmZbAMPtratWNz2E3mvL1s1PzSes6xn+icO2N0bytVClIZrk
+	 5cZf2o0vSOD8lPE7/7VqIBXMe/VYOSANCY4QzVf58lfPC8yKqiPwCsGcjiqwccrZQg
+	 zrcx8C1Ta97S6giGZ0HPxsIUIJGeEMeE39Han3+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbfFGPq0 (ORCPT
+        id S1731405AbfFGPq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:46:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729981AbfFGPqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:23 -0400
+        id S1730573AbfFGPq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 392B7212F5;
-        Fri,  7 Jun 2019 15:46:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA0F221479;
+        Fri,  7 Jun 2019 15:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922382;
-        bh=s47Uhp1iUbxMZiQQeK4TXSLc0gqXh9q1+g404qyEEcE=;
+        s=default; t=1559922385;
+        bh=kfMIMiKoeQQI6r3rC53yIBk9J8jiX9+NW1XjqgxSPUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2LZeNzwlG3W1bEXVo9Cx24FzP4UaLJ09ylRsMzOilsHxZ4i4bBviwoIM5wPYYc2Zs
-         3mdCYX7SvLLtJhkz+h6qajN0akyPWlIAZuTRP2rawgPNZzCBUQb6Iyrp0zUVYfo/DZ
-         gdbc/WvxoDgZJF72R85TU20tOqLTPlGIqibQs5uA=
+        b=O3TgJeuESlpwtGIPNU6jU2eE2udxdy0hVyMnJgRpoUtMCSADZj/AUythAeO3Gn7+q
+         VdIppSsxgY+ZiIYhInDT5O3kiLlKZNfQkR2nnRLkP6aEEbKnk2neu58Y4JUDRwbd4W
+         uQvh4vN0y8oBSX0TgZXNgaNGdn354k4oDL9hFwW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "ben.hutchings@codethink.co.uk, Alexander.Levin@microsoft.com, Joel
-        Fernandes" <joel@joelfernandes.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 4.19 66/73] binder: fix race between munmap() and direct reclaim
-Date:   Fri,  7 Jun 2019 17:39:53 +0200
-Message-Id: <20190607153856.244707743@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 67/73] x86/ftrace: Do not call function graph from dynamic trampolines
+Date:   Fri,  7 Jun 2019 17:39:54 +0200
+Message-Id: <20190607153856.353446303@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -63,67 +62,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+[ Upstream commit d2a68c4effd821f0871d20368f76b609349c8a3b ]
 
-commit 5cec2d2e5839f9c0fec319c523a911e0a7fd299f upstream.
+Since commit 79922b8009c07 ("ftrace: Optimize function graph to be
+called directly"), dynamic trampolines should not be calling the
+function graph tracer at the end. If they do, it could cause the function
+graph tracer to trace functions that it filtered out.
 
-An munmap() on a binder device causes binder_vma_close() to be called
-which clears the alloc->vma pointer.
+Right now it does not cause a problem because there's a test to check if
+the function graph tracer is attached to the same function as the
+function tracer, which for now is true. But the function graph tracer is
+undergoing changes that can make this no longer true which will cause
+the function graph tracer to trace other functions.
 
-If direct reclaim causes binder_alloc_free_page() to be called, there
-is a race where alloc->vma is read into a local vma pointer and then
-used later after the mm->mmap_sem is acquired. This can result in
-calling zap_page_range() with an invalid vma which manifests as a
-use-after-free in zap_page_range().
+ For example:
 
-The fix is to check alloc->vma after acquiring the mmap_sem (which we
-were acquiring anyway) and skip zap_page_range() if it has changed
-to NULL.
+ # cd /sys/kernel/tracing/
+ # echo do_IRQ > set_ftrace_filter
+ # mkdir instances/foo
+ # echo ip_rcv > instances/foo/set_ftrace_filter
+ # echo function_graph > current_tracer
+ # echo function > instances/foo/current_tracer
 
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: stable <stable@vger.kernel.org> # 4.19
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Would cause the function graph tracer to trace both do_IRQ and ip_rcv,
+if the current tests change.
+
+As the current tests prevent this from being a problem, this code does
+not need to be backported. But it does make the code cleaner.
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/android/binder_alloc.c |   18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ arch/x86/kernel/ftrace.c    | 41 ++++++++++++++++++++-----------------
+ arch/x86/kernel/ftrace_64.S |  8 ++++----
+ 2 files changed, 26 insertions(+), 23 deletions(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -958,14 +958,13 @@ enum lru_status binder_alloc_free_page(s
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 4d2a401c178b..38c798b1dbd2 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -752,18 +752,20 @@ union ftrace_op_code_union {
+ 	} __attribute__((packed));
+ };
  
- 	index = page - alloc->pages;
- 	page_addr = (uintptr_t)alloc->buffer + index * PAGE_SIZE;
++#define RET_SIZE		1
 +
-+	mm = alloc->vma_vm_mm;
-+	if (!mmget_not_zero(mm))
-+		goto err_mmget;
-+	if (!down_write_trylock(&mm->mmap_sem))
-+		goto err_down_write_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
--	if (vma) {
--		if (!mmget_not_zero(alloc->vma_vm_mm))
--			goto err_mmget;
--		mm = alloc->vma_vm_mm;
--		if (!down_write_trylock(&mm->mmap_sem))
--			goto err_down_write_mmap_sem_failed;
+ static unsigned long
+ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ {
+-	unsigned const char *jmp;
+ 	unsigned long start_offset;
+ 	unsigned long end_offset;
+ 	unsigned long op_offset;
+ 	unsigned long offset;
+ 	unsigned long size;
+-	unsigned long ip;
++	unsigned long retq;
+ 	unsigned long *ptr;
+ 	void *trampoline;
++	void *ip;
+ 	/* 48 8b 15 <offset> is movq <offset>(%rip), %rdx */
+ 	unsigned const char op_ref[] = { 0x48, 0x8b, 0x15 };
+ 	union ftrace_op_code_union op_ptr;
+@@ -783,27 +785,27 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 
+ 	/*
+ 	 * Allocate enough size to store the ftrace_caller code,
+-	 * the jmp to ftrace_epilogue, as well as the address of
+-	 * the ftrace_ops this trampoline is used for.
++	 * the iret , as well as the address of the ftrace_ops this
++	 * trampoline is used for.
+ 	 */
+-	trampoline = alloc_tramp(size + MCOUNT_INSN_SIZE + sizeof(void *));
++	trampoline = alloc_tramp(size + RET_SIZE + sizeof(void *));
+ 	if (!trampoline)
+ 		return 0;
+ 
+-	*tramp_size = size + MCOUNT_INSN_SIZE + sizeof(void *);
++	*tramp_size = size + RET_SIZE + sizeof(void *);
+ 
+ 	/* Copy ftrace_caller onto the trampoline memory */
+ 	ret = probe_kernel_read(trampoline, (void *)start_offset, size);
+-	if (WARN_ON(ret < 0)) {
+-		tramp_free(trampoline, *tramp_size);
+-		return 0;
 -	}
++	if (WARN_ON(ret < 0))
++		goto fail;
  
- 	list_lru_isolate(lru, item);
- 	spin_unlock(lock);
-@@ -978,10 +977,9 @@ enum lru_status binder_alloc_free_page(s
- 			       PAGE_SIZE);
+-	ip = (unsigned long)trampoline + size;
++	ip = trampoline + size;
  
- 		trace_binder_unmap_user_end(alloc, index);
--
--		up_write(&mm->mmap_sem);
--		mmput(mm);
- 	}
-+	up_write(&mm->mmap_sem);
-+	mmput(mm);
+-	/* The trampoline ends with a jmp to ftrace_epilogue */
+-	jmp = ftrace_jmp_replace(ip, (unsigned long)ftrace_epilogue);
+-	memcpy(trampoline + size, jmp, MCOUNT_INSN_SIZE);
++	/* The trampoline ends with ret(q) */
++	retq = (unsigned long)ftrace_stub;
++	ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
++	if (WARN_ON(ret < 0))
++		goto fail;
  
- 	trace_binder_unmap_kernel_start(alloc, index);
+ 	/*
+ 	 * The address of the ftrace_ops that is used for this trampoline
+@@ -813,17 +815,15 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	 * the global function_trace_op variable.
+ 	 */
  
+-	ptr = (unsigned long *)(trampoline + size + MCOUNT_INSN_SIZE);
++	ptr = (unsigned long *)(trampoline + size + RET_SIZE);
+ 	*ptr = (unsigned long)ops;
+ 
+ 	op_offset -= start_offset;
+ 	memcpy(&op_ptr, trampoline + op_offset, OP_REF_SIZE);
+ 
+ 	/* Are we pointing to the reference? */
+-	if (WARN_ON(memcmp(op_ptr.op, op_ref, 3) != 0)) {
+-		tramp_free(trampoline, *tramp_size);
+-		return 0;
+-	}
++	if (WARN_ON(memcmp(op_ptr.op, op_ref, 3) != 0))
++		goto fail;
+ 
+ 	/* Load the contents of ptr into the callback parameter */
+ 	offset = (unsigned long)ptr;
+@@ -838,6 +838,9 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
+ 
+ 	return (unsigned long)trampoline;
++fail:
++	tramp_free(trampoline, *tramp_size);
++	return 0;
+ }
+ 
+ static unsigned long calc_trampoline_call_offset(bool save_regs)
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 91b2cff4b79a..75f2b36b41a6 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -171,9 +171,6 @@ GLOBAL(ftrace_call)
+ 	restore_mcount_regs
+ 
+ 	/*
+-	 * The copied trampoline must call ftrace_epilogue as it
+-	 * still may need to call the function graph tracer.
+-	 *
+ 	 * The code up to this label is copied into trampolines so
+ 	 * think twice before adding any new code or changing the
+ 	 * layout here.
+@@ -185,7 +182,10 @@ GLOBAL(ftrace_graph_call)
+ 	jmp ftrace_stub
+ #endif
+ 
+-/* This is weak to keep gas from relaxing the jumps */
++/*
++ * This is weak to keep gas from relaxing the jumps.
++ * It is also used to copy the retq for trampolines.
++ */
+ WEAK(ftrace_stub)
+ 	retq
+ ENDPROC(ftrace_caller)
+-- 
+2.20.1
+
 
 
