@@ -2,165 +2,179 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC56C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D364CC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96E620657
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Quyw9qOD"
+	by mail.kernel.org (Postfix) with ESMTP id A73C7212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559917670;
+	bh=gpoMFWooueTQcAcnu+53x5cQNpLlXmAEYoHjD6z/m7k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hHxnLbBWyfrwzc3RM8CowALRg8cmYJKpKhrizBcIXo5iMLVnlyofveOaviDwVfRm7
+	 1LmXz29NMUZvYox5fK7VubYekqVVWyRGQziOJuB6p3q+qmEE0VShDKuuMpuiw+yrYt
+	 p6NwR4OeV/HaBohZioB7DlLxYT8X3hzPghi0sN4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbfFGO0h (ORCPT
+        id S1729088AbfFGO1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:26:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44219 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728667AbfFGO0g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:26:36 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k18so1904359ljc.11;
-        Fri, 07 Jun 2019 07:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=72tWwa0dcIt8Xo0+smV7Jx5Ec2g3rCWEBlAObPTLz0U=;
-        b=Quyw9qOD7tAC7+vKO/Ti/b8U2aQSuAwV62sUcW/dxj8F1IM/XPq4mdt6iLlo66b0uZ
-         xJAzrC7jTHmIFyk1FjpnwfvVEmArng0fsymszNKfJmiZM6asd2NtB1/StM59cv20Zqk7
-         cT1CC7BaCq9aZ3puiuC0oMBVVOg/3ti81TnYMIN8+jawBMsv4yw3oStaUpddRvlojaP+
-         U/Rhh6E+N6PgKoV2lPwAzS5N3fPrkMaGoHLjplrfTsZTCfBeSMo7sblg/A6ip3R5fre+
-         u1jEc9kwEWwm0xPBCQ1wM1+Y0p+HkUV5W7hL5SF/GVk9EOvI/kr2BVtRCNaKrQW2nfb0
-         3Jlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=72tWwa0dcIt8Xo0+smV7Jx5Ec2g3rCWEBlAObPTLz0U=;
-        b=Tr5wP5U2vNoNtpNAGZ0wiuWcHylbHB4XwbmoxvTszWhkwPGix8spq7qmx8IVpJvdCK
-         AMRU4r33y3rZKBY/HEMC1fTsk1iAS/G1v6AWi4CvSo6WGrWN0IEDV1z3jxgRio75ggdD
-         7pRWq3VXIj4g4W+/85J3Quy8HAmCMzf3ryGBBitgpA0tQ1ld+LGdRssvyXAFf1HzFVxS
-         8ukjJGVyvGmerRJvBfMleDHKdT1Irfs5p43GwH6V4v8EsUrkKj1Wl7VGnipGmm/xk9vZ
-         wIFDeYcsL7WDosUioWrBQFfw2IhpTTb50CwPDN9Vt+6HjI8N8s3PY+039jMd40rSjcN+
-         PbaQ==
-X-Gm-Message-State: APjAAAWx14wzT6FtPi0jq27mU5fKVKvRh/aeg4KkdRRU0dKlNVCmO2Tf
-        ffMGApqcgM0WqgVJh5tEHK0=
-X-Google-Smtp-Source: APXvYqw/4TOOoHDJgr7Ck0jOuvFeItX6JbVqu4ZEiItCsTrasrIybscN26Wy76qCrzC8ZZgwwAmqSw==
-X-Received: by 2002:a2e:864e:: with SMTP id i14mr28055127ljj.141.1559917594310;
-        Fri, 07 Jun 2019 07:26:34 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-170-54.pppoe.mtu-net.ru. [91.76.170.54])
-        by smtp.googlemail.com with ESMTPSA id u13sm434946lfl.61.2019.06.07.07.26.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 07:26:33 -0700 (PDT)
-Subject: Re: [PATCH V8 14/15] PCI: tegra: Add Tegra194 PCIe support
-To:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com
-Cc:     mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20190526043751.12729-1-vidyas@nvidia.com>
- <20190526043751.12729-15-vidyas@nvidia.com>
- <f30e7fc6-3f64-d321-c32c-5e273115a869@gmail.com>
- <cbdac43f-32f7-c992-832b-ed40bef2375b@gmail.com>
- <06f2f74e-d618-8688-14ae-beb4920bcbf6@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2a51622f-7bd8-2c6c-b3c5-8b87c2b5be0c@gmail.com>
-Date:   Fri, 7 Jun 2019 17:26:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <06f2f74e-d618-8688-14ae-beb4920bcbf6@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Jun 2019 10:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728311AbfFGO1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:27:49 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F38B20657;
+        Fri,  7 Jun 2019 14:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559917668;
+        bh=gpoMFWooueTQcAcnu+53x5cQNpLlXmAEYoHjD6z/m7k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k+p8AstVzyP+536XgnpxVRsJ1+fQ6U6uluFSXbFgndysnWO2qt+6W9yZrploqhoh0
+         tMqO8iIrJxr2F23+bCY10J+2Dh4tz/zXKyKE8zwQpGmtPUhNdNANPe5FCtCYqCbIiU
+         LoZisGMJ/GbJosPoe3/A8mEUB0bC4TOmJcEW3Ntg=
+Date:   Fri, 7 Jun 2019 23:27:42 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nadav Amit <namit@vmware.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-Id: <20190607232742.d331359f0d511c78d06e1703@kernel.org>
+In-Reply-To: <20190607082013.GU3419@hirez.programming.kicks-ass.net>
+References: <20190605130753.327195108@infradead.org>
+        <20190605131945.005681046@infradead.org>
+        <7C13A4B6-6D5B-44C4-B238-58DC5926D7E1@vmware.com>
+        <20190607082013.GU3419@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.06.2019 17:10, Vidya Sagar пишет:
-> On 6/7/2019 12:22 AM, Dmitry Osipenko wrote:
->> 06.06.2019 19:35, Dmitry Osipenko пишет:
->>> 26.05.2019 7:37, Vidya Sagar пишет:
->>>> Add support for Synopsys DesignWare core IP based PCIe host controller
->>>> present in Tegra194 SoC.
->>>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> ---
->>>> Changes since [v7]:
->>>> * Addressed review comments from Thierry
->>>>
->>>> Changes since [v6]:
->>>> * Removed code around "nvidia,disable-aspm-states" DT property
->>>> * Refactored code to remove code duplication
->>>>
->>>> Changes since [v5]:
->>>> * Addressed review comments from Thierry
->>>>
->>>> Changes since [v4]:
->>>> * None
->>>>
->>>> Changes since [v3]:
->>>> * None
->>>>
->>>> Changes since [v2]:
->>>> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
->>>> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
->>>> * Removed .runtime_suspend() & .runtime_resume() implementations
->>>>
->>>> Changes since [v1]:
->>>> * Made CONFIG_PCIE_TEGRA194 as 'm' by default from its previous 'y'
->>>> state
->>>> * Modified code as per changes made to DT documentation
->>>> * Refactored code to address Bjorn & Thierry's review comments
->>>> * Added goto to avoid recursion in tegra_pcie_dw_host_init() API
->>>> * Merged .scan_bus() of dw_pcie_host_ops implementation to
->>>> tegra_pcie_dw_host_init() API
->>>>
->>>>   drivers/pci/controller/dwc/Kconfig         |   10 +
->>>>   drivers/pci/controller/dwc/Makefile        |    1 +
->>>>   drivers/pci/controller/dwc/pcie-tegra194.c | 1621
->>>> ++++++++++++++++++++
->>>>   3 files changed, 1632 insertions(+)
->>>>   create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/Kconfig
->>>> b/drivers/pci/controller/dwc/Kconfig
->>>> index a6ce1ee51b4c..884112afc11b 100644
->>>> --- a/drivers/pci/controller/dwc/Kconfig
->>>> +++ b/drivers/pci/controller/dwc/Kconfig
->>>> @@ -220,6 +220,16 @@ config PCI_MESON
->>>>         and therefore the driver re-uses the DesignWare core
->>>> functions to
->>>>         implement the driver.
->>>>   +config PCIE_TEGRA194
->>>> +    tristate "NVIDIA Tegra194 (and later) PCIe controller"
->>>> +    depends on (TEGRA_BPMP && ARCH_TEGRA) || COMPILE_TEST
->>>
->>> TEGRA_BPMP will be enough here as it depends on other relevant options.
->>>
->>> Hence I mean:
->>>
->>>     depends on TEGRA_BPMP || COMPILE_TEST
->>
->> Maybe it's worth to even change TEGRA_BPMP to ARCH_TEGRA_194_SOC.
->> Although then you'll have to extend it with other platforms later on,
->> but probably that's fine.
-> I received an explicit comment previously to make this dependent on
-> TEGRA_BPMP
-> as the driver is using APIs to get certain jobs done by BPMP-FW. But, since
-> we can't boot kernel in the first place without having BPMP-FW in place,
-> I think
-> it should be fine to make it dependent on ARCH_TEGRA_194_SOC directly.
+On Fri, 7 Jun 2019 10:20:13 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-ARCH_TEGRA_194_SOC selects BPMP by itself (see
-drivers/soc/tegra/Kconfig), so it's indeed absolutely fine.
+> On Fri, Jun 07, 2019 at 05:41:42AM +0000, Nadav Amit wrote:
+> 
+> > > int poke_int3_handler(struct pt_regs *regs)
+> > > {
+> > > +	long ip = regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE;
+> > > +	struct opcode {
+> > > +		u8 insn;
+> > > +		s32 rel;
+> > > +	} __packed opcode;
+> > > +
+> > > 	/*
+> > > 	 * Having observed our INT3 instruction, we now must observe
+> > > 	 * bp_patching_in_progress.
+> > > 	 *
+> > > -	 * 	in_progress = TRUE		INT3
+> > > -	 * 	WMB				RMB
+> > > -	 * 	write INT3			if (in_progress)
+> > > +	 *	in_progress = TRUE		INT3
+> > > +	 *	WMB				RMB
+> > > +	 *	write INT3			if (in_progress)
+> > 
+> > I don$B!G(Bt see what has changed in this chunk$B!D(B Whitespaces?
+> 
+> Yep, my editor kept marking that stuff red (space before tab), which
+> annoyed me enough to fix it.
+> 
+> > > 	 *
+> > > -	 * Idem for bp_int3_handler.
+> > > +	 * Idem for bp_int3_opcode.
+> > > 	 */
+> > > 	smp_rmb();
+> > > 
+> > > @@ -943,8 +949,21 @@ int poke_int3_handler(struct pt_regs *re
+> > > 	if (user_mode(regs) || regs->ip != (unsigned long)bp_int3_addr)
+> > > 		return 0;
+> > > 
+> > > -	/* set up the specified breakpoint handler */
+> > > -	regs->ip = (unsigned long) bp_int3_handler;
+> > > +	opcode = *(struct opcode *)bp_int3_opcode;
+> > > +
+> > > +	switch (opcode.insn) {
+> > > +	case 0xE8: /* CALL */
+> > > +		int3_emulate_call(regs, ip + opcode.rel);
+> > > +		break;
+> > > +
+> > > +	case 0xE9: /* JMP */
+> > > +		int3_emulate_jmp(regs, ip + opcode.rel);
+> > > +		break;
+> > 
+> > Consider using RELATIVECALL_OPCODE and RELATIVEJUMP_OPCODE instead of the
+> > constants (0xE8, 0xE9), just as you do later in the patch.
+> 
+> Those are private to kprobes..
+> 
+> but I can do something like so:
+> 
+> --- a/arch/x86/include/asm/text-patching.h
+> +++ b/arch/x86/include/asm/text-patching.h
+> @@ -48,8 +48,14 @@ static inline void int3_emulate_jmp(stru
+>  	regs->ip = ip;
+>  }
+>  
+> -#define INT3_INSN_SIZE 1
+> -#define CALL_INSN_SIZE 5
+> +#define INT3_INSN_SIZE		1
+> +#define INT3_INSN_OPCODE	0xCC
+> +
+> +#define CALL_INSN_SIZE		5
+> +#define CALL_INSN_OPCODE	0xE8
+> +
+> +#define JMP_INSN_SIZE		5
+> +#define JMP_INSN_OPCODE		0xE9
+>  
+>  static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
+>  {
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -952,11 +952,11 @@ int poke_int3_handler(struct pt_regs *re
+>  	opcode = *(struct opcode *)bp_int3_opcode;
+>  
+>  	switch (opcode.insn) {
+> -	case 0xE8: /* CALL */
+> +	case CALL_INSN_OPCODE:
+>  		int3_emulate_call(regs, ip + opcode.rel);
+>  		break;
+>  
+> -	case 0xE9: /* JMP */
+> +	case JMP_INSN_OPCODE:
+>  		int3_emulate_jmp(regs, ip + opcode.rel);
+>  		break;
+>  
+
+This looks good. I don't want to make those opcode as private.
+I would like to share it.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
