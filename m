@@ -2,218 +2,272 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9181AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF43FC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4AA208E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l4nQx5bF"
+	by mail.kernel.org (Postfix) with ESMTP id A3CFE208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbfFGM30 (ORCPT
+        id S1729064AbfFGM3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:29:26 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44875 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728684AbfFGM30 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:29:26 -0400
-Received: by mail-io1-f65.google.com with SMTP id s7so1236069iob.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 05:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZAvCebdzLCcSo6NRDYnZ6+WboqvZJ6BWkvuu4gNcNRU=;
-        b=l4nQx5bFXnCKwqIlYU0J3gLgZ0wR2UHkkyD80ob8NWqEzmyQRyDonYA1xejed7SD7I
-         kl8UJmHVctl7fGkgf+4DP5y24neUBNA+zxlxJY3S4HVfsZwYCbLpbC5X/rnEuTmx0XXh
-         TM3xqj2bbhQ5K2+gr7mtqkPtJTeLrCTJIkyzfvXg394Cl7G+Ji9ZKHSnA1ZN2SUSoI8i
-         uwU2sOnfICyeKhaZfC07P/kXjxtmj4uZ0679dcT9GHa3muXEwPVuvI4jtVZZhHeErlrd
-         8nBJksrkmuE8GCa9e4sgJfJqjQV2LI1VOgH3RQx135gNWHZBHKd/iVGw+7oY5dE1Bxte
-         Coew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZAvCebdzLCcSo6NRDYnZ6+WboqvZJ6BWkvuu4gNcNRU=;
-        b=QvZpEOzN70DQWg7Cl3nj7qa9FDRfthrQMFVNoc3p60rm55ejOuPzflnS+IbupllpeI
-         g47PZFa3Q0aYZOT3YbIFJQ5U2UhXKXqhZxHGGYgdmDO3fQz/6K7CotBu5FrA8zvCZVYG
-         NFmUxExbJAQcwdUizlK8y/sDAZbMtl+gjL4XnIlOpv8FEB72L6qDEyTY3POCSc0yjtAZ
-         cQODFf1NVemJGgiSeMlezOo+x/jjeSdGbZvwVroZ4oWZGHxUfg3ucaOM/BF2Lfl/9yqN
-         knzsYOUcIlUoiO4cDq5ay9xjR/a/f4YQgVZwd1ABiq+gI4vE9bf1gWdGqDOB89hBfwYU
-         955Q==
-X-Gm-Message-State: APjAAAXuFFoErhEQZ55kEhj6EfQSuwi5+knzR6D9NV0K+oESU0A+sU5a
-        +l1dTfnsn88lRGHMho7omddPok9e0ojMRnG+u0g0aQ==
-X-Google-Smtp-Source: APXvYqwpgjUncM9YwGMeAEjGhHkH4kygINBHDj2ErQa4lBEYa0dUkEHo5JqszczMdAM7yNXhdyvGEegvK6pJJXoP2q8=
-X-Received: by 2002:a5d:9402:: with SMTP id v2mr15677145ion.128.1559910565141;
- Fri, 07 Jun 2019 05:29:25 -0700 (PDT)
+        Fri, 7 Jun 2019 08:29:42 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39844 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728597AbfFGM3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 08:29:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 05:29:41 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga007.jf.intel.com with ESMTP; 07 Jun 2019 05:29:35 -0700
+Subject: Re: [PATCH v2 3/3] brcmfmac: sdio: Disable auto-tuning around
+ commands expected to fail
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev <netdev@vger.kernel.org>,
+        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Franky Lin <franky.lin@broadcom.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>
+References: <20190603183740.239031-1-dianders@chromium.org>
+ <20190603183740.239031-4-dianders@chromium.org>
+ <42fc30b1-adab-7fa8-104c-cbb7855f2032@intel.com>
+ <CAD=FV=UPfCOr-syAbVZ-FjHQy7bgQf5BS5pdV-Bwd3hquRqEGg@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <2e9f80af-aa26-5590-9ff0-9889400068d6@intel.com>
+Date:   Fri, 7 Jun 2019 15:28:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
- <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
- <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com> <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com>
-In-Reply-To: <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 7 Jun 2019 14:29:12 +0200
-Message-ID: <CAKv+Gu_ZYpey0dWYebFgCaziyJ-_x+KbCmOegWqFjwC0U-5QaA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
- for dax
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAD=FV=UPfCOr-syAbVZ-FjHQy7bgQf5BS5pdV-Bwd3hquRqEGg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 1 Jun 2019 at 06:26, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Fri, May 31, 2019 at 8:30 AM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Fri, 31 May 2019 at 17:28, Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Fri, May 31, 2019 at 1:30 AM Ard Biesheuvel
-> > > <ard.biesheuvel@linaro.org> wrote:
-> > > >
-> > > > (cc Mike for memblock)
-> > > >
-> > > > On Fri, 31 May 2019 at 01:13, Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > >
-> > > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
-> > > > > interpretation of the EFI Memory Types as "reserved for a special
-> > > > > purpose".
-> > > > >
-> > > > > The proposed Linux behavior for specific purpose memory is that it is
-> > > > > reserved for direct-access (device-dax) by default and not available for
-> > > > > any kernel usage, not even as an OOM fallback. Later, through udev
-> > > > > scripts or another init mechanism, these device-dax claimed ranges can
-> > > > > be reconfigured and hot-added to the available System-RAM with a unique
-> > > > > node identifier.
-> > > > >
-> > > > > This patch introduces 3 new concepts at once given the entanglement
-> > > > > between early boot enumeration relative to memory that can optionally be
-> > > > > reserved from the kernel page allocator by default. The new concepts
-> > > > > are:
-> > > > >
-> > > > > - E820_TYPE_SPECIFIC: Upon detecting the EFI_MEMORY_SP attribute on
-> > > > >   EFI_CONVENTIONAL memory, update the E820 map with this new type. Only
-> > > > >   perform this classification if the CONFIG_EFI_SPECIFIC_DAX=y policy is
-> > > > >   enabled, otherwise treat it as typical ram.
-> > > > >
-> > > >
-> > > > OK, so now we have 'special purpose', 'specific' and 'app specific'
-> > > > [below]. Do they all mean the same thing?
-> > >
-> > > I struggled with separating the raw-EFI-type name from the name of the
-> > > Linux specific policy. Since the reservation behavior is optional I
-> > > was thinking there should be a distinct Linux kernel name for that
-> > > policy. I did try to go back and change all occurrences of "special"
-> > > to "specific" from the RFC to this v2, but seems I missed one.
-> > >
-> >
-> > OK
->
-> I'll go ahead and use "application reserved" terminology consistently
-> throughout the code to distinguish that Linux translation from the raw
-> "EFI specific purpose" attribute.
->
+On 7/06/19 12:37 AM, Doug Anderson wrote:
+> Hi,
+> 
+> On Thu, Jun 6, 2019 at 7:00 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 3/06/19 9:37 PM, Douglas Anderson wrote:
+>>> There are certain cases, notably when transitioning between sleep and
+>>> active state, when Broadcom SDIO WiFi cards will produce errors on the
+>>> SDIO bus.  This is evident from the source code where you can see that
+>>> we try commands in a loop until we either get success or we've tried
+>>> too many times.  The comment in the code reinforces this by saying
+>>> "just one write attempt may fail"
+>>>
+>>> Unfortunately these failures sometimes end up causing an "-EILSEQ"
+>>> back to the core which triggers a retuning of the SDIO card and that
+>>> blocks all traffic to the card until it's done.
+>>>
+>>> Let's disable retuning around the commands we expect might fail.
+>>
+>> It seems to me that re-tuning needs to be prevented before the
+>> first access otherwise it might be attempted there,
+> 
+> By this I think you mean I wasn't starting my section early enough to
+> catch the "1st KSO write".  Oops.  Thanks!
+> 
+> 
+>> and it needs
+>> to continue to be prevented during the transition when it might
+>> reasonably be expected to fail.
+>>
+>> What about something along these lines:
+>>
+>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>> index 4e15ea57d4f5..d932780ef56e 100644
+>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>> @@ -664,9 +664,18 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+>>         int err = 0;
+>>         int err_cnt = 0;
+>>         int try_cnt = 0;
+>> +       int need_retune = 0;
+>> +       bool retune_release = false;
+>>
+>>         brcmf_dbg(TRACE, "Enter: on=%d\n", on);
+>>
+>> +       /* Cannot re-tune if device is asleep */
+>> +       if (on) {
+>> +               need_retune = sdio_retune_get_needed(bus->sdiodev->func1); // TODO: host->can_retune ? host->need_retune : 0
+>> +               sdio_retune_hold_now(bus->sdiodev->func1); // TODO: add sdio_retune_hold_now()
+>> +               retune_release = true;
+>> +       }
+> 
+> The code below still has retries even for the "!on" case.  That
+> implies that you could still get CRC errors from the card in the "!on"
+> direction too.  Any reason why we shouldn't just hold retuning even
+> for the !on case?
 
-OK
+No
 
-> >
-> > > >
-> > > > > - IORES_DESC_APPLICATION_RESERVED: Add a new I/O resource descriptor for
-> > > > >   a device driver to search iomem resources for application specific
-> > > > >   memory. Teach the iomem code to identify such ranges as "Application
-> > > > >   Reserved".
-> > > > >
-> > > > > - MEMBLOCK_APP_SPECIFIC: Given the memory ranges can fallback to the
-> > > > >   traditional System RAM pool the expectation is that they will have
-> > > > >   typical SRAT entries. In order to support a policy of device-dax by
-> > > > >   default with the option to hotplug later, the numa initialization code
-> > > > >   is taught to avoid marking online MEMBLOCK_APP_SPECIFIC regions.
-> > > > >
-> > > >
-> > > > Can we move the generic memblock changes into a separate patch please?
-> > >
-> > > Yeah, that can move to a lead-in patch.
-> > >
-> > > [..]
-> > > > > diff --git a/include/linux/efi.h b/include/linux/efi.h
-> > > > > index 91368f5ce114..b57b123cbdf9 100644
-> > > > > --- a/include/linux/efi.h
-> > > > > +++ b/include/linux/efi.h
-> > > > > @@ -129,6 +129,19 @@ typedef struct {
-> > > > >         u64 attribute;
-> > > > >  } efi_memory_desc_t;
-> > > > >
-> > > > > +#ifdef CONFIG_EFI_SPECIFIC_DAX
-> > > > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
-> > > > > +{
-> > > > > +       return md->type == EFI_CONVENTIONAL_MEMORY
-> > > > > +               && (md->attribute & EFI_MEMORY_SP);
-> > > > > +}
-> > > > > +#else
-> > > > > +static inline bool is_efi_dax(efi_memory_desc_t *md)
-> > > > > +{
-> > > > > +       return false;
-> > > > > +}
-> > > > > +#endif
-> > > > > +
-> > > > >  typedef struct {
-> > > > >         efi_guid_t guid;
-> > > > >         u32 headersize;
-> > > >
-> > > > I'd prefer it if we could avoid this DAX policy distinction leaking
-> > > > into the EFI layer.
-> > > >
-> > > > IOW, I am fine with having a 'is_efi_sp_memory()' helper here, but
-> > > > whether that is DAX memory or not should be decided in the DAX layer.
-> > >
-> > > Ok, how about is_efi_sp_ram()? Since EFI_MEMORY_SP might be applied to
-> > > things that aren't EFI_CONVENTIONAL_MEMORY.
-> >
-> > Yes, that is fine. As long as the #ifdef lives in the DAX code and not here.
->
-> We still need some ifdef in the efi core because that is the central
-> location to make the policy distinction to identify identify
-> EFI_CONVENTIONAL_MEMORY differently depending on whether EFI_MEMORY_SP
-> is present. I agree with you that "dax" should be dropped from the
-> naming. So how about:
->
-> #ifdef CONFIG_EFI_APPLICATION_RESERVED
-> static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
-> {
->         return md->type == EFI_CONVENTIONAL_MEMORY
->                 && (md->attribute & EFI_MEMORY_SP);
-> }
-> #else
-> static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
-> {
->         return false;
-> }
-> #endif
+> 
+> 
+>> +
+>>         wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
+>>         /* 1st KSO write goes to AOS wake up core if device is asleep  */
+>>         brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
+>> @@ -711,8 +720,16 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+>>                         err_cnt = 0;
+>>                 }
+>>                 /* bail out upon subsequent access errors */
+>> -               if (err && (err_cnt++ > BRCMF_SDIO_MAX_ACCESS_ERRORS))
+>> -                       break;
+>> +               if (err && (err_cnt++ > BRCMF_SDIO_MAX_ACCESS_ERRORS)) {
+>> +                       if (!retune_release)
+>> +                               break;
+>> +                       /*
+>> +                        * Allow one more retry with re-tuning released in case
+>> +                        * it helps.
+>> +                        */
+>> +                       sdio_retune_release(bus->sdiodev->func1);
+>> +                       retune_release = false;
+> 
+> I would be tempted to wait before adding this logic until we actually
+> see that it's needed.  Sure, doing one more transfer probably won't
+> really hurt, but until we know that it actually helps it seems like
+> we're just adding extra complexity?
 
-I think this policy decision should not live inside the EFI subsystem.
-EFI just gives you the memory map, and mangling that information
-depending on whether you think a certain memory attribute should be
-ignored is the job of the MM subsystem.
+Depends, what is the downside of unnecessarily returning an error from
+brcmf_sdio_kso_control() in that case?
+
+> 
+> 
+>> +               }
+>>
+>>                 udelay(KSO_WAIT_US);
+>>                 brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val,
+>> @@ -727,6 +744,18 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+>>         if (try_cnt > MAX_KSO_ATTEMPTS)
+>>                 brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+>>
+>> +       if (retune_release) {
+>> +               /*
+>> +                * CRC errors are not unexpected during the transition but they
+>> +                * also trigger re-tuning. Clear that here to avoid an
+>> +                * unnecessary re-tune if it wasn't already triggered to start
+>> +                * with.
+>> +                */
+>> +               if (!need_retune)
+>> +                       sdio_retune_clear_needed(bus->sdiodev->func1); // TODO: host->need_retune = 0
+>> +               sdio_retune_release(bus->sdiodev->func1); // TODO: add sdio_retune_release()
+>> +       }
+> 
+> Every time I re-look at this I have to re-figure out all the subtle
+> differences between the variables and functions involved here.  Let me
+> see if I got everything right:
+> 
+> * need_retune: set to 1 if we can retune and some event happened that
+> makes us truly believe that we need to be retuned, like we got a CRC
+> error or a timer expired or our host controller told us to retune.
+> 
+> * retune_now: set to 1 it's an OK time to be retuning.  Specifically
+> if retune_now is false we won't send any retuning commands but we'll
+> still keep track of the need to retune.
+> 
+> * hold_retune: If this gets set to 1 by mmc_retune_hold_now() then a
+> future call to mmc_retune_hold() will _not_ schedule a retune by
+> setting retune_now (because mmc_retune_hold() will see that
+> hold_retune was already 1).  ...and a future call to
+> mmc_retune_recheck() between mmc_hold() and mmc_release() will also
+> not schedule a retune because hold_retune will be 2 (or generally >
+> 1).
+> 
+> ---
+> 
+> So overall trying to summarize what I think are the differences
+> between your patch and my patch.
+> 
+> 1. If we needed to re-tune _before_ calling brcmf_sdio_kso_control(),
+> with your patch we'll make sure that we don't actually attempt to
+> retune until brcmf_sdio_kso_control() finishes.
+> 
+> 2. If we needed to retune during brcmf_sdio_kso_control() (because a
+> timer expired?) then we wouldn't trigger that retune while
+> brcmf_sdio_kso_control() is running.
+> 
+> In the case of dw_mmc, which I'm most familiar with, we don't have any
+> sort of automated or timed-based retuning.  ...so we'll only re-tune
+> when we see the CRC error.  If I'm understanding things correctly then
+> that for dw_mmc my solution and yours behave the same.  That means the
+> difference is how we deal with other retuning requests, either ones
+> that come about because of an interrupt that the host controller
+> provided or because of a timer.  Did I get that right?
+> 
+> ...and I guess the reason we have to deal specially with these cases
+> is because any time that SDIO card is "sleeping" we don't want to
+> retune because it won't work.  Right?  NOTE: the solution that would
+> come to my mind first to solve this would be to hold the retuning for
+> the whole time that the card was sleeping and then release it once the
+> card was awake again.  ...but I guess we don't truly need to do that
+> because tuning only happens as a side effect of sending a command to
+> the card and the only command we send to the card is the "wake up"
+> command.  That's why your solution to hold tuning while sending the
+> "wake up" command works, right?
+> 
+> ---
+> 
+> OK, so assuming all the above is correct, I feel like we're actually
+> solving two problems and in fact I believe we actually need both our
+> approaches to solve everything correctly.  With just your patch in
+> place there's a problem because we will clobber any external retuning
+> requests that happened while we were waking up the card.  AKA, imagine
+> this:
+> 
+> A) brcmf_sdio_kso_control(on=True) gets called; need_retune starts as 0
+> 
+> B) We call sdio_retune_hold_now()
+> 
+> C) A retuning timer goes off or the SD Host controller tells us to retune
+> 
+> D) We get to the end of brcmf_sdio_kso_control() and clear the "retune
+> needed" since need_retune was 0 at the start.
+> 
+> ...so we dropped the retuning request from C), right?
+
+True
+
+> 
+> 
+> What we truly need is:
+> 
+> 1. CRC errors shouldn't trigger a retuning request when we're in
+> brcmf_sdio_kso_control()
+> 
+> 2. A separate patch that holds any retuning requests while the SDIO
+> card is off.  This patch _shouldn't_ do any clearing of retuning
+> requests, just defer them.
+> 
+> 
+> Does that make sense to you?  If so, I can try to code it up...
+
+Sounds good :-)
