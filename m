@@ -2,173 +2,154 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FDCC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30068C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEC32133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:02:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559916176;
-	bh=yANB6XpweTjBX/1ZhMGTcILFCBjA6g8yFg9pmt84a2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xD+qKx3rJJ/RjG6UjVN7Vsn+py+kAiYJwiMJFjC2yZQT718siKdbo/nbqq8wGq+nO
-	 Hzk+WeiihF0Lc/O+FTBpvNX2GvaRjhZheH0HwGPqrG9IZ5oBcgpsQdR5mxAZbSSLMq
-	 AtxQ3HmtT9mumTmGoK/PKubvWHILZp3/FjqPJq8U=
+	by mail.kernel.org (Postfix) with ESMTP id F33CD2133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:07:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHxLExnQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbfFGOCz (ORCPT
+        id S1729328AbfFGOHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729125AbfFGOCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:02:55 -0400
-Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE132208E3;
-        Fri,  7 Jun 2019 14:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559916173;
-        bh=yANB6XpweTjBX/1ZhMGTcILFCBjA6g8yFg9pmt84a2s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xf4RGhvOB+GfodvUhSWUM0Ps9zCJzbmqMyi5WIzZLyDKA8FgQxHcVgHPCWZDlA4nb
-         s1ffLNX1MNPhbnDaVNE94P6T7yPXl3nhq2eDAJbaugFeGY1Nv4WhO/TG2GYqg1IEQ3
-         Fc6EdmJ5OvxBo0W/lDrKpO/IhJ0t5HMpzoO2cGn4=
-Date:   Fri, 7 Jun 2019 16:02:50 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     YueHaibing <yuehaibing@huawei.com>, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] kernel/module: Fix mem leak in
- module_add_modinfo_attrs
-Message-ID: <20190607140250.GB4211@linux-8ccs>
-References: <20190530134304.4976-1-yuehaibing@huawei.com>
- <20190603144554.18168-1-yuehaibing@huawei.com>
- <alpine.LSU.2.21.1906041107510.16030@pobox.suse.cz>
+        Fri, 7 Jun 2019 10:07:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33617 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728199AbfFGOHO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:07:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x15so1286868pfq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w68ouI0UY8djBNDhDsJy+gGnHUNrSjiyh8Ahtch+loE=;
+        b=sHxLExnQRiiKepaTyp4J5/evrteT8xPFZk5OAWQUOLcVtiksseWOVDZ2jimQxpFJCQ
+         88XYGZndQ3WcnikN3kiv/3wpVazb+glKAm4Z0BryexF9P8Q2y0LGa3HpN6cqewVEnFvA
+         uoxS6tSmyQ6XiWLcwE1uU9OTYzFQhWE9m3tHgNqDFO0m4hopSWfjeSHMxiexL9GuOVhm
+         TpXrpI965V2yt3k+K/Icm7WhwI/u40esCYJzPnb+vYqj2FDOcdileW/Hs75M5yY+7Pit
+         OHjmBu3QBJP+t3daLVVXror4I7pDoy+tZw87OTbsurgd/NYuQB6wMjtoZvZxsQLz7/vt
+         X0jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w68ouI0UY8djBNDhDsJy+gGnHUNrSjiyh8Ahtch+loE=;
+        b=RBsSQlp1Q5MgRFvIr+ibS+EGBJcbeJ/VUfAkDqsdZ8Si3IVLVpU37Cvk3xyJSIgu7f
+         kZuHTl3gYYIDPgSuuiZTBD4E9fPDvoIU+OMAFBBjaWrlenmfzuTbisUGz0skKMcDZE8U
+         kNfC1AfjhZmIKSk2jMPqAe/GZgIG0GDBY7cHjHUzshPSLKc0dBYSAYptVZ57iZzSLYiu
+         TxFELeYZfYQnYnccwwyToxJAXqHZsQaWX0d9BaT0m61Zlmde8uYxO/P7jimrOQ3wykzd
+         DLtzFNfS4JsrdQBSxug5iDjMj13SLkF3IaYEFlvNWAmpCZlqifzF5xV2L0OU2Fv7mnT/
+         tT0w==
+X-Gm-Message-State: APjAAAV1cgl6mcieFsh2P+IaWpzayNJDIS/PMj7P0CvwcOQQfrKlPUYZ
+        nylTJqZo5pAwi2tcYGZirT4=
+X-Google-Smtp-Source: APXvYqyjaZ9v04OcHSwvjnhQp44PZBimRAIR9Jc6Q2E7NeuunokrETeS25wWWXDGnmFwoictBjx++w==
+X-Received: by 2002:a65:5302:: with SMTP id m2mr2771049pgq.369.1559916433683;
+        Fri, 07 Jun 2019 07:07:13 -0700 (PDT)
+Received: from localhost.localdomain ([110.227.95.145])
+        by smtp.gmail.com with ESMTPSA id j7sm7071983pjb.26.2019.06.07.07.07.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 07 Jun 2019 07:07:12 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, straube.linux@gmail.com,
+        larry.finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        colin.king@canonical.com, valdis.kletnieks@vt.edu,
+        tiny.windzz@gmail.com
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH 1/2] staging: rtl8712: r8712_setdatarate_cmd(): Change
+Date:   Fri,  7 Jun 2019 19:36:57 +0530
+Message-Id: <20190607140658.11932-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1906041107510.16030@pobox.suse.cz>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Miroslav Benes [04/06/19 12:46 +0200]:
->On Mon, 3 Jun 2019, YueHaibing wrote:
->
->> In module_add_modinfo_attrs if sysfs_create_file
->> fails, we forget to free allocated modinfo_attrs
->> and roll back the sysfs files.
->>
->> Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->> v3: reuse module_remove_modinfo_attrs
->> v2: free from '--i' instead of 'i--'
->> ---
->>  kernel/module.c | 21 ++++++++++++++++-----
->>  1 file changed, 16 insertions(+), 5 deletions(-)
->
->I'm afraid it is not completely correct.
->
->> diff --git a/kernel/module.c b/kernel/module.c
->> index 80c7c09..c6b8912 100644
->> --- a/kernel/module.c
->> +++ b/kernel/module.c
->> @@ -1697,6 +1697,8 @@ static int add_usage_links(struct module *mod)
->>  	return ret;
->>  }
->>
->> +static void module_remove_modinfo_attrs(struct module *mod, int end);
->> +
->>  static int module_add_modinfo_attrs(struct module *mod)
->>  {
->>  	struct module_attribute *attr;
->> @@ -1711,24 +1713,33 @@ static int module_add_modinfo_attrs(struct module *mod)
->>  		return -ENOMEM;
->>
->>  	temp_attr = mod->modinfo_attrs;
->> -	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
->> +	for (i = 0; (attr = modinfo_attrs[i]); i++) {
->>  		if (!attr->test || attr->test(mod)) {
->>  			memcpy(temp_attr, attr, sizeof(*temp_attr));
->>  			sysfs_attr_init(&temp_attr->attr);
->>  			error = sysfs_create_file(&mod->mkobj.kobj,
->>  					&temp_attr->attr);
->> +			if (error)
->> +				goto error_out;
->
->sysfs_create_file() failed, so we need to clear all previously processed
->attrs and not the current one.
->
->>  			++temp_attr;
->>  		}
->>  	}
->> +
->> +	return 0;
->> +
->> +error_out:
->> +	module_remove_modinfo_attrs(mod, --i);
->
->It says "call sysfs_remove_file() on all attrs ending with --i included
->(all correctly processed attrs).
->
->>  	return error;
->>  }
->>
->> -static void module_remove_modinfo_attrs(struct module *mod)
->> +static void module_remove_modinfo_attrs(struct module *mod, int end)
->>  {
->>  	struct module_attribute *attr;
->>  	int i;
->>
->>  	for (i = 0; (attr = &mod->modinfo_attrs[i]); i++) {
->> +		if (end >= 0 && i > end)
->> +			break;
->
->If end == 0, you break the loop without calling sysfs_remove_file(), which
->is a bug if you called module_remove_modinfo_attrs(mod, 0).
->
->Calling module_remove_modinfo_attrs(mod, i); in module_add_modinfo_attrs()
->under error_out label and changing the condition here to
->
->if (end >= 0 && i >= end)
->	break;
->
->should work as expected.
->
->But let me ask another question and it might be more to Jessica. Why is
->there even a call to attr->free(mod); (if it exists) in
->module_remove_modinfo_attrs()? The same is in free_modinfo() (as opposed
->to setup_modinfo() where attr->setup(mod) is called. Is it because
->free_modinfo() is called only in load_module()'s error path, while
->module_remove_modinfo_attrs() is called even in free_module() path?
->
->kfree() checks for NULL pointer, so there is no bug, but it is certainly
->not nice and it calls for cleanup. But I may be missing something.
+Change the return values of function r8712_setdatarate_cmd from _SUCCESS
+and _FAIL to 0 and -ENOMEM respectively.
+Change the return type of the function from u8 to int to reflect this.
+Change the call site of the function to check for 0 instead of _SUCCESS.
+(Checking that the return value != 0 is not necessary; the return value
+itself can simply be passed into the conditional.)
 
-No, you are right in that it is a bit clumsy and and the sysfs error
-path handling is asymmetrical. I think it could be cleaned up a bit.
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/staging/rtl8712/rtl871x_cmd.c         | 8 ++++----
+ drivers/staging/rtl8712/rtl871x_cmd.h         | 2 +-
+ drivers/staging/rtl8712/rtl871x_ioctl_linux.c | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-IMO, I think the attr->free() calls should either be (1) removed from
-module_remove_modinfo_attrs() as free_modinfo() takes care of that,
-otherwise we could potentially call attr->free() twice (once in the
-internal error handling of mod_sysfs_setup() and once again in the
-free_modinfo: label in load_module()) or option (2) would be to merge
-the attr->setup() calls into module_add_modinfo_attrs() so that it is
-symmetrical to module_remove_modinfo_attrs(). I'm leaning towards
-option 2 but have not carefully checked yet if moving the
-attr->setup() calls into module_add_modinfo_attrs() would break
-anything. In any case I will prepare some cleanup patches for this.
+diff --git a/drivers/staging/rtl8712/rtl871x_cmd.c b/drivers/staging/rtl8712/rtl871x_cmd.c
+index 05a78ac24987..e478c031f95f 100644
+--- a/drivers/staging/rtl8712/rtl871x_cmd.c
++++ b/drivers/staging/rtl8712/rtl871x_cmd.c
+@@ -242,7 +242,7 @@ u8 r8712_sitesurvey_cmd(struct _adapter *padapter,
+ 	return _SUCCESS;
+ }
+ 
+-u8 r8712_setdatarate_cmd(struct _adapter *padapter, u8 *rateset)
++int r8712_setdatarate_cmd(struct _adapter *padapter, u8 *rateset)
+ {
+ 	struct cmd_obj		*ph2c;
+ 	struct setdatarate_parm	*pbsetdataratepara;
+@@ -250,18 +250,18 @@ u8 r8712_setdatarate_cmd(struct _adapter *padapter, u8 *rateset)
+ 
+ 	ph2c = kmalloc(sizeof(*ph2c), GFP_ATOMIC);
+ 	if (!ph2c)
+-		return _FAIL;
++		return -ENOMEM;
+ 	pbsetdataratepara = kmalloc(sizeof(*pbsetdataratepara), GFP_ATOMIC);
+ 	if (!pbsetdataratepara) {
+ 		kfree(ph2c);
+-		return _FAIL;
++		return -ENOMEM;
+ 	}
+ 	init_h2fwcmd_w_parm_no_rsp(ph2c, pbsetdataratepara,
+ 				   GEN_CMD_CODE(_SetDataRate));
+ 	pbsetdataratepara->mac_id = 5;
+ 	memcpy(pbsetdataratepara->datarates, rateset, NumRates);
+ 	r8712_enqueue_cmd(pcmdpriv, ph2c);
+-	return _SUCCESS;
++	return 0;
+ }
+ 
+ u8 r8712_set_chplan_cmd(struct _adapter *padapter, int chplan)
+diff --git a/drivers/staging/rtl8712/rtl871x_cmd.h b/drivers/staging/rtl8712/rtl871x_cmd.h
+index 262984c58efb..800216cca2f6 100644
+--- a/drivers/staging/rtl8712/rtl871x_cmd.h
++++ b/drivers/staging/rtl8712/rtl871x_cmd.h
+@@ -719,7 +719,7 @@ u8 r8712_joinbss_cmd(struct _adapter *padapter,
+ u8 r8712_disassoc_cmd(struct _adapter *padapter);
+ u8 r8712_setopmode_cmd(struct _adapter *padapter,
+ 		 enum NDIS_802_11_NETWORK_INFRASTRUCTURE networktype);
+-u8 r8712_setdatarate_cmd(struct _adapter *padapter, u8 *rateset);
++int r8712_setdatarate_cmd(struct _adapter *padapter, u8 *rateset);
+ u8 r8712_set_chplan_cmd(struct _adapter  *padapter, int chplan);
+ u8 r8712_setbasicrate_cmd(struct _adapter *padapter, u8 *rateset);
+ u8 r8712_getrfreg_cmd(struct _adapter *padapter, u8 offset, u8 *pval);
+diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+index b424b8436fcf..761e2ba68a42 100644
+--- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
++++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
+@@ -1367,7 +1367,7 @@ static int r8711_wx_set_rate(struct net_device *dev,
+ 			datarates[i] = 0xff;
+ 		}
+ 	}
+-	if (r8712_setdatarate_cmd(padapter, datarates) != _SUCCESS)
++	if (r8712_setdatarate_cmd(padapter, datarates))
+ 		ret = -ENOMEM;
+ 	return ret;
+ }
+-- 
+2.19.1
 
-Thanks!
-
-Jessica
