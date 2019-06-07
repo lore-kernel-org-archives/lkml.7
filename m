@@ -2,103 +2,111 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD81C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB028C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2BC420868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559931001;
-	bh=Bu+793MjBdgwsS7TNlYKH+X3sGrKTTjIrCWYlqziT+0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1cywg6eCZXg3n4yVTZ2umWu6MjzHn5rwNjVorCSm3KJwnrNmZPr3oK79V4AxHPhc+
-	 sG90oEXrIbLbenCxj6/kTlciUXPg8P5Txy9i/We9BERQHc9WJcPz5+bn+1vhRMRHrF
-	 AWK+Lk2DH9TdT3aM9MUO8MYL8tnKrLHXDh316xSI=
+	by mail.kernel.org (Postfix) with ESMTP id 80606212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:10:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ouhlv+Sd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbfFGSKA (ORCPT
+        id S1730910AbfFGSKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:10:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41243 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730442AbfFGSJ7 (ORCPT
+        Fri, 7 Jun 2019 14:10:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37727 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730442AbfFGSKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:09:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s21so2532994lji.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:09:58 -0700 (PDT)
+        Fri, 7 Jun 2019 14:10:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so791411pfa.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:10:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MZt9HN8cGMdF69JUby4Fl+9oCqt6sT/iSareBA7Fniw=;
-        b=Qdo4w0jxKAKwm+D28iUQP+s4tbiCdRXmdUo7XLy5SPAitpxpXbfKyJwkFvnAZgHz9z
-         UiISb0kNKNiHNbthtPbmwpMALewaezDpxqw9axhE6qeWe7nwhKpYio286AAO9aMTmJly
-         4P0lgor1jtxZNE2o3QJeCD+ZVInUJJhoUSMUk=
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=RdV7PbyVkSYhNsrYGZ8E6Uu22GQTdcJL5heT1Y0FTF4=;
+        b=ouhlv+SddShDf250mCEoGIo+nD3wsUaOV8r6iUvcyecJcT9BKaJsjGfcoib34GTjau
+         JT5IqYoZJKDp2aMvAewcsfHqE4lEpdXwGIHjhGdrKrf0uwHZZKeEEigdG3cDgaaAnFAY
+         Dt4tvCwXwQVTsAAwmNAey4AC4Wkam2ift6+jrAqcVRj3A2yqKNbXd4qU6pJGq+rbtUDf
+         grmNyW+aaCuftmbdxMy23ItA3gtc+ssc26qODc9ED7fBm8jugx5GV203valW3JNmy2Sa
+         1IDqY79wev5+F+rHZhr9eVmJKKN0bc3xldGbeyc6vrZyuzzGdh56q4HtSump1b8J1lNc
+         YJGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MZt9HN8cGMdF69JUby4Fl+9oCqt6sT/iSareBA7Fniw=;
-        b=FzxmoOSw0YU4krDdywP5Y/xaIwcU0WcsJLZrqEWTZgTkzb8gFOkCZI3nix3+0fWcj2
-         oz8DRyKkzm81xbqEqvuY9nvLkiNqOn5M/q0puBKbVel22VBg+juIDthf6y2yvMXd6LIm
-         vbkQLg8pC/YffeI9tpsOZfypWrLyM/T6aOzKu8NK04ZeDr8/6T3PZnLAs4FrJowP+WR2
-         muYqBL9E2TYxVcoFf4sx+y3XpObLbcHUFb0TBZ11in8hfzruryNA6DiBCnjWPoMQ6jJX
-         UMKrPiEWxSfQrQHxPGt3WHS/1zieprgydYJ8RcfR4jOWnQgvqFLxgxZD8HLE5s1hKRGc
-         ZKzQ==
-X-Gm-Message-State: APjAAAXXxR4DDjOMdt0ZU1swYzQeM3xlK2W8/PffypNsxyLdxMcQjF+Q
-        CKNw/VukDIoZmDxR+Vct9q+ZVJiTx98=
-X-Google-Smtp-Source: APXvYqzrBhydtnRtlYmRxe8SwmS4ZUnxWX61awS3UFXnJj57vrKclmMpbecRhQu6VEeplnE60AR+3Q==
-X-Received: by 2002:a2e:9106:: with SMTP id m6mr14422866ljg.164.1559930996900;
-        Fri, 07 Jun 2019 11:09:56 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id n10sm522233lfk.39.2019.06.07.11.09.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 11:09:56 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id y13so2288274lfh.9
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 11:09:55 -0700 (PDT)
-X-Received: by 2002:a19:2d41:: with SMTP id t1mr27337806lft.79.1559930995535;
- Fri, 07 Jun 2019 11:09:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190607103122.GA22167@redhat.com> <20190607103154.GA22159@redhat.com>
- <CAHk-=wjzU4MmVomodhTVSWnKUxKOBpvhdXgf1_riBtSwZuwMSg@mail.gmail.com>
- <CAHk-=wif34nPB2uzU2YBXXYe5cFZhoLmU_zOtExd74X1WcYXJg@mail.gmail.com> <87imthclyt.fsf@xmission.com>
-In-Reply-To: <87imthclyt.fsf@xmission.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 7 Jun 2019 11:09:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgDgKA52SpzrW_dy76Jx6qxE393xzhiyQQ+rtic399PYw@mail.gmail.com>
-Message-ID: <CAHk-=wgDgKA52SpzrW_dy76Jx6qxE393xzhiyQQ+rtic399PYw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] aio: simplify the usage of restore_saved_sigmask_unless()
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin LaHaise <bcrl@kvack.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=RdV7PbyVkSYhNsrYGZ8E6Uu22GQTdcJL5heT1Y0FTF4=;
+        b=rd545R3l5f5G0iqdWoBZnLnhDGJxbiN6yjshC0oKFVok/nDEtkDDRwuHdb+ZT2NYcE
+         jBrKLIQsMtV7DteDDtYLJxahbbGfhY1ojXK5/Av8hETNipBXN55jk3pLhc2uNAjK42Z6
+         KhbRcYJKdzG+aFyqLFbIHIHXhMP2+ceGKr/ZuUWYd/iBZ9gOQZUoEUMUrZp1N5xXeSE/
+         uIAY6pf96gmwutWuPqXp8DIuwxSWC2BBbCREPTfDKcKKyFvfmBx+SQIJLhJOo+zE9XCM
+         ZxmrKl4/laNo6UINn7SiOSzGoSUt/lgq0ItqRVRgX/InouMmAilhAtkCCwag2Iok7RJE
+         xuMw==
+X-Gm-Message-State: APjAAAXVSNF9WwZ49sK6AHtFsLPE0e5utzN8GclJK9oEaoopRrJ+Ff0J
+        nQbgd//IIGYxOhVYZAYJ1P2ewg==
+X-Google-Smtp-Source: APXvYqwkUcL6yKwRhj7ZSLiEepZIDDJGiNTbd1sAki2fQ8TvQr1QVnYevXUeeY4S+Y9oFzS8hvri8g==
+X-Received: by 2002:aa7:9f1c:: with SMTP id g28mr37489871pfr.81.1559931021677;
+        Fri, 07 Jun 2019 11:10:21 -0700 (PDT)
+Received: from ?IPv6:2600:1012:b044:6f30:60ea:7662:8055:2cca? ([2600:1012:b044:6f30:60ea:7662:8055:2cca])
+        by smtp.gmail.com with ESMTPSA id j14sm2905412pfe.10.2019.06.07.11.10.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 11:10:20 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate instructions
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <20190607173427.GK3436@hirez.programming.kicks-ass.net>
+Date:   Fri, 7 Jun 2019 11:10:19 -0700
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
         David Laight <David.Laight@aculab.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Eric Wong <e@80x24.org>, linux-aio@kvack.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net>
+References: <20190605130753.327195108@infradead.org> <20190605131945.005681046@infradead.org> <20190608004708.7646b287151cf613838ce05f@kernel.org> <20190607173427.GK3436@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 11:03 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Unless I am misreading things io_pgetevents isn't restartable
-> either and ERESTARTNOHAND is a bug in that case.
->
-> Is the bug going the other way?
 
-Yeah, I think you're right, and that should be EINTR too.
 
-Or at least be conditional on whether it had a timeout or not. A NULL
-timeout obviously _is_ restartable. But I don't think it's worth being
-clever here.
+> On Jun 7, 2019, at 10:34 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> On Sat, Jun 08, 2019 at 12:47:08AM +0900, Masami Hiramatsu wrote:
+>=20
+>>> This fits almost all text_poke_bp() users, except
+>>> arch_unoptimize_kprobe() which restores random text, and for that site
+>>> we have to build an explicit emulate instruction.
+>>=20
+>> Hm, actually it doesn't restores randome text, since the first byte
+>> must always be int3. As the function name means, it just unoptimizes
+>> (jump based optprobe -> int3 based kprobe).
+>> Anyway, that is not an issue. With this patch, optprobe must still work.
+>=20
+> I thought it basically restored 5 bytes of original text (with no
+> guarantee it is a single instruction, or even a complete instruction),
+> with the first byte replaced with INT3.
+>=20
 
-                Linus
+I am surely missing some kprobe context, but is it really safe to use this m=
+echanism to replace more than one instruction?=
