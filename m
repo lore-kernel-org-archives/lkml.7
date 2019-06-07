@@ -2,175 +2,78 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D0FC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4E1C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31AB20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="J8BWELCf"
+	by mail.kernel.org (Postfix) with ESMTP id 00B81212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfFGNc3 (ORCPT
+        id S1728941AbfFGNeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 09:32:29 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40161 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728198AbfFGNc2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 09:32:28 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so1916329eds.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 06:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
-         :subject:mime-version:content-transfer-encoding;
-        bh=JFFl0hGcf6iXTgGWhmFXyXBsFiYNsrS1BSNNsA7L3uk=;
-        b=J8BWELCflWlt9mhbRHhPeEUuozGyv2cRoexw/Djro8OZPtu/YgdzZaM7bjR9wlVEtQ
-         EF9RPfC+QQFEqGrzKbEw2AWVO2K76+ctKE9dd8oPwClR6/PSrywuUPUSEQ+S1NKSPJS0
-         0Q18WLRMHQRoigeE4Deob/gwfSx6wi3dBGts4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:subject:mime-version
-         :content-transfer-encoding;
-        bh=JFFl0hGcf6iXTgGWhmFXyXBsFiYNsrS1BSNNsA7L3uk=;
-        b=MSxrIzlvWFaBUrwseKCa6IHvoLQMJxvD62w/1c5wMRSfIGt91CgduDfHULBtwihzWI
-         GoEhvOh/v+5beDykWXRq0ycXK5l7R54G9JU3KfGzrpwRMXwWGkXG3PeJDQ2fXmgFkCS5
-         GjiryOr3X9C/o/K3xtG+teQifCCM4l5cPWEuuPigc9dXkCicAKmU6Q5YSNzISfd6Di2o
-         v7zeQVGyZNaSYy7bEZIzQ4DRfY1bO29PIYK9zqEZHE8lmT7rZDWeKp0gjNYi1/4kF2A5
-         WbHv3J/XtqZaNbII3+HXzHM7b7IVk3CTPdpzUNNjbQ9d0GqHKYM/dRk6/j9lAkOlyCCg
-         08AQ==
-X-Gm-Message-State: APjAAAXh8X48vi/QBZa6qMR4QNE9kydtirOWiA7vAEhQ3eWSeyea73cH
-        o6s105uLVCkS/aXl3pM0piBexw==
-X-Google-Smtp-Source: APXvYqzb/6yVC5RrnRvUzD09ZH/2vf9pPWOsfx1+agyAhSxgyz9uMxv9L0pZhmieVY2c6iivXH+tbQ==
-X-Received: by 2002:a50:cdd0:: with SMTP id h16mr56291052edj.249.1559914346683;
-        Fri, 07 Jun 2019 06:32:26 -0700 (PDT)
-Received: from [192.168.178.17] (f140230.upc-f.chello.nl. [80.56.140.230])
-        by smtp.gmail.com with ESMTPSA id y2sm554410edc.26.2019.06.07.06.32.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 07 Jun 2019 06:32:25 -0700 (PDT)
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Doug Anderson <dianders@chromium.org>
-CC:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        "linux-wireless" <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        "Chi-Hsien Lin" <chi-hsien.lin@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        "brcm80211-dev-list" <brcm80211-dev-list@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Franky Lin <franky.lin@broadcom.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>
-Date:   Fri, 07 Jun 2019 15:32:20 +0200
-Message-ID: <16b3223dea0.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <ff0e7b7a-6a58-8bec-b182-944a8b64236d@intel.com>
-References: <20190603183740.239031-1-dianders@chromium.org>
- <20190603183740.239031-4-dianders@chromium.org>
- <42fc30b1-adab-7fa8-104c-cbb7855f2032@intel.com>
- <CAD=FV=UPfCOr-syAbVZ-FjHQy7bgQf5BS5pdV-Bwd3hquRqEGg@mail.gmail.com>
- <16b305a7110.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <ff0e7b7a-6a58-8bec-b182-944a8b64236d@intel.com>
-User-Agent: AquaMail/1.20.0-1451 (build: 102000001)
-Subject: Re: [PATCH v2 3/3] brcmfmac: sdio: Disable auto-tuning around commands expected to fail
+        Fri, 7 Jun 2019 09:34:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:40198 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728071AbfFGNeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 09:34:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37614337;
+        Fri,  7 Jun 2019 06:34:13 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33D0D3F96A;
+        Fri,  7 Jun 2019 06:34:12 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 14:34:10 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will.deacon@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Subject: Re: [PATCH V3 1/2] arm64/mm: Consolidate page fault information
+ capture
+Message-ID: <20190607133409.GJ16801@arrakis.emea.arm.com>
+References: <1559898786-28530-1-git-send-email-anshuman.khandual@arm.com>
+ <1559898786-28530-2-git-send-email-anshuman.khandual@arm.com>
+ <20190607103045.GB15753@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607103045.GB15753@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On June 7, 2019 2:40:04 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Fri, Jun 07, 2019 at 11:30:46AM +0100, Mark Rutland wrote:
+> On Fri, Jun 07, 2019 at 02:43:05PM +0530, Anshuman Khandual wrote:
+> > This consolidates page fault information capture and move them bit earlier.
+> > While here it also adds an wrapper is_write_abort(). It also saves some
+> > cycles by replacing multiple user_mode() calls into a single one earlier
+> > during the fault.
+> > 
+> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: James Morse <james.morse@arm.com>
+> > Cc: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+> >  arch/arm64/mm/fault.c | 26 +++++++++++++++++++-------
+> >  1 file changed, 19 insertions(+), 7 deletions(-)
+> 
+> As I mentioned previously, I doubt that this has any measureable impact
+> on performance, and other than commenting the caveats w.r.t. cache
+> maintenance, I'm not sure this makes things any clearer.
+> 
+> However, AFAICT it is correct, so I'll leave that to Catalin:
 
-> On 7/06/19 8:12 AM, Arend Van Spriel wrote:
->> On June 6, 2019 11:37:22 PM Doug Anderson <dianders@chromium.org> wrote:
->>>
->>> In the case of dw_mmc, which I'm most familiar with, we don't have any
->>> sort of automated or timed-based retuning.  ...so we'll only re-tune
->>> when we see the CRC error.  If I'm understanding things correctly then
->>> that for dw_mmc my solution and yours behave the same.  That means the
->>> difference is how we deal with other retuning requests, either ones
->>> that come about because of an interrupt that the host controller
->>> provided or because of a timer.  Did I get that right?
->> 
->> Right.
->> 
->>> ...and I guess the reason we have to deal specially with these cases
->>> is because any time that SDIO card is "sleeping" we don't want to
->>> retune because it won't work.  Right?  NOTE: the solution that would
->>> come to my mind first to solve this would be to hold the retuning for
->>> the whole time that the card was sleeping and then release it once the
->>> card was awake again.  ...but I guess we don't truly need to do that
->>> because tuning only happens as a side effect of sending a command to
->>> the card and the only command we send to the card is the "wake up"
->>> command.  That's why your solution to hold tuning while sending the
->>> "wake up" command works, right?
->> 
->> Yup.
->> 
->>> ---
->>>
->>> OK, so assuming all the above is correct, I feel like we're actually
->>> solving two problems and in fact I believe we actually need both our
->>> approaches to solve everything correctly.  With just your patch in
->>> place there's a problem because we will clobber any external retuning
->>> requests that happened while we were waking up the card.  AKA, imagine
->>> this:
->>>
->>> A) brcmf_sdio_kso_control(on=True) gets called; need_retune starts as 0
->>>
->>> B) We call sdio_retune_hold_now()
->>>
->>> C) A retuning timer goes off or the SD Host controller tells us to retune
->>>
->>> D) We get to the end of brcmf_sdio_kso_control() and clear the "retune
->>> needed" since need_retune was 0 at the start.
->>>
->>> ...so we dropped the retuning request from C), right?
->>>
->>>
->>> What we truly need is:
->>>
->>> 1. CRC errors shouldn't trigger a retuning request when we're in
->>> brcmf_sdio_kso_control()
->>>
->>> 2. A separate patch that holds any retuning requests while the SDIO
->>> card is off.  This patch _shouldn't_ do any clearing of retuning
->>> requests, just defer them.
->>>
->>>
->>> Does that make sense to you?  If so, I can try to code it up...
->> 
->> FWIW it does make sense to me. However, I am still not sure if our sdio
->> hardware supports retuning. Have to track down an asic designer who can tell
->> or dive into vhdl myself.
->
-> The card supports re-tuning if is handles CMD19, which it does.  It is not
-> the card that does any tuning, only the host.  The card just helps by
-> providing a known data pattern in response to CMD19.  It can be that a card
-> provides good enough signals that the host should not need to re-tune.  I
-> don't know if that can be affected by the board design though.
+I only merged the is_write_abort() wrapper from this patch (changed the
+commit log as well).
 
-Right. I know it supports initial tuning, but I'm not sure about subsequent 
-retuning initiated by the host controller.
-
-Regards,
-Arend
-
-
+-- 
+Catalin
