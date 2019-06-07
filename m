@@ -2,146 +2,256 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C59C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFF8C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8ACF2083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5571C2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:44:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hkUGAWYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbfFGOns (ORCPT
+        id S1729116AbfFGOoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:43:48 -0400
-Received: from mail.us.es ([193.147.175.20]:51498 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728699AbfFGOns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:43:48 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 59C5EBAE97
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 16:43:46 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 4AB26DA710
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 16:43:46 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 3D963DA709; Fri,  7 Jun 2019 16:43:46 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id EEC13DA706;
-        Fri,  7 Jun 2019 16:43:43 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Fri, 07 Jun 2019 16:43:43 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id B92C34265A2F;
-        Fri,  7 Jun 2019 16:43:43 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 16:43:43 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, tyhicks@canonical.com,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, linux-kernel@vger.kernel.org,
-        richardrose@google.com, vapier@chromium.org, bhthompson@google.com,
-        smbarber@chromium.org, joelhockey@chromium.org,
-        ueberall@themenzentrisch.de
-Subject: Re: [PATCH RESEND net-next 1/2] br_netfilter: add struct netns_brnf
-Message-ID: <20190607144343.nzdlnuo4csllcy7q@salvia>
-References: <20190606114142.15972-1-christian@brauner.io>
- <20190606114142.15972-2-christian@brauner.io>
- <20190606081440.61ea1c62@hermes.lan>
- <20190606151937.mdpalfk7urvv74ub@brauner.io>
- <20190606163035.x7rvqdwubxiai5t6@salvia>
- <20190607132516.q3zwmzrynvqo7mzn@brauner.io>
- <20190607142858.vgkljqohn34rxhe2@salvia>
+        Fri, 7 Jun 2019 10:44:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45840 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbfFGOoH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:44:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m206so1580084oib.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:44:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8/YG1pNvMhtPq+4D/wbH72srnMWO5h0vGaK5D7ISjxM=;
+        b=hkUGAWYiwktyF8XAUCRFTlr4xI1gbzfNuHnL0ZqV5wgdQRoVHoHBe17OW7ICbSF8+G
+         S3ubc5pB3To8JxlIx+K78TmL0YjqIkQ3qYe2A3H9VFxJ79fYxq/GFKTijf7DCWWHkw9/
+         EbaBsS2uMISNW1W4S9xao+K8J0akEMyZ/HaMU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8/YG1pNvMhtPq+4D/wbH72srnMWO5h0vGaK5D7ISjxM=;
+        b=ieE3eSQU0RcJXvM1BR3UW1BCEZKecqajjsK+WdeVyRpX2hSYQ5pziN/L0wQYy/Q74n
+         ZfGVWon7oIr7WuwYoCymYvYt/8c2pO1+nL4bbJ2c3PWfr7WAsNVE+Q4Rr3qm+AvNMQs3
+         HANvhVZpcNHdKZuA06/rDX0AaDayrmTntlIH4TAjtIk4LTLm9Qd+cGCiWZqV415DSPpZ
+         Vu7Nf29RUCH5mfRSG+wXz2Kh5G6hb8eCUKu7uxU66j8wBB/q/4eepFWDKknES/CT5iKQ
+         I+Z4/11k6kbtc7d3p7gbeSnrmd/CZ/0FuIRU9cB4BnLNlmyArc3Okpbq/xYMyvo2kI2F
+         WHXw==
+X-Gm-Message-State: APjAAAXuCUMNcKlcVtsbPAeTtHvayp9A/JD7L4S7qHVAtHr4Q9flk/50
+        JwqqIlk6u6dB3bSPFtm/0VukPOOTtJ73idGJ+CBh2A==
+X-Google-Smtp-Source: APXvYqyWzzjaSAsBe1eXBlUeemEQQMcPTFSvrjgyAA6IyzSW6eAQ89KOXjY91ifZBRMzVd+/veIXrDJHvZ3uiLJsYls=
+X-Received: by 2002:aca:62c2:: with SMTP id w185mr4176522oib.110.1559918646230;
+ Fri, 07 Jun 2019 07:44:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607142858.vgkljqohn34rxhe2@salvia>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <20190528090304.9388-1-daniel.vetter@ffwll.ch> <CGME20190606073852epcas2p27b586b93869a30e4658581c290960fee@epcas2p2.samsung.com>
+ <CAKMK7uHneUFYPiRr10X9xfWTkGtaoQBB=niDMGkAgJ-fgo5=mA@mail.gmail.com> <f848b4de-abab-116f-ad68-23348f1a4b76@samsung.com>
+In-Reply-To: <f848b4de-abab-116f-ad68-23348f1a4b76@samsung.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 7 Jun 2019 16:43:54 +0200
+Message-ID: <CAKMK7uFpOVGm1TEJfbPM14joPRqgYha5c_xDng+MOOusMc1Hdw@mail.gmail.com>
+Subject: Re: [PATCH 00/33] fbcon notifier begone v3!
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 04:28:58PM +0200, Pablo Neira Ayuso wrote:
-> On Fri, Jun 07, 2019 at 03:25:16PM +0200, Christian Brauner wrote:
-> > On Thu, Jun 06, 2019 at 06:30:35PM +0200, Pablo Neira Ayuso wrote:
-> > > On Thu, Jun 06, 2019 at 05:19:39PM +0200, Christian Brauner wrote:
-> > > > On Thu, Jun 06, 2019 at 08:14:40AM -0700, Stephen Hemminger wrote:
-> > > > > On Thu,  6 Jun 2019 13:41:41 +0200
-> > > > > Christian Brauner <christian@brauner.io> wrote:
-> > > > > 
-> > > > > > +struct netns_brnf {
-> > > > > > +#ifdef CONFIG_SYSCTL
-> > > > > > +	struct ctl_table_header *ctl_hdr;
-> > > > > > +#endif
-> > > > > > +
-> > > > > > +	/* default value is 1 */
-> > > > > > +	int call_iptables;
-> > > > > > +	int call_ip6tables;
-> > > > > > +	int call_arptables;
-> > > > > > +
-> > > > > > +	/* default value is 0 */
-> > > > > > +	int filter_vlan_tagged;
-> > > > > > +	int filter_pppoe_tagged;
-> > > > > > +	int pass_vlan_indev;
-> > > > > > +};
-> > > > > 
-> > > > > Do you really need to waste four bytes for each
-> > > > > flag value. If you use a u8 that would work just as well.
-> > > > 
-> > > > I think we had discussed something like this but the problem why we
-> > > > can't do this stems from how the sysctl-table stuff is implemented.
-> > > > I distinctly remember that it couldn't be done with a flag due to that.
-> > > 
-> > > Could you define a pernet_operations object? I mean, define the id and size
-> > > fields, then pass it to register_pernet_subsys() for registration.
-> > > Similar to what we do in net/ipv4/netfilter/ipt_CLUSTER.c, see
-> > > clusterip_net_ops and clusterip_pernet() for instance.
-> > 
-> > Hm, I don't think that would work. The sysctls for br_netfilter are
-> > located in /proc/sys/net/bridge under /proc/sys/net which is tightly
-> > integrated with the sysctls infrastructure for all of net/ and all the
-> > folder underneath it including "core", "ipv4" and "ipv6".
-> > I don't think creating and managing files manually in /proc/sys/net is
-> > going to fly. It also doesn't seem very wise from a consistency and
-> > complexity pov. I'm also not sure if this would work at all wrt to file
-> > creation and reference counting if there are two different ways of
-> > managing them in the same subfolder...
-> > (clusterip creates files manually underneath /proc/net which probably is
-> > the reason why it gets away with it.)
-> 
-> br_netfilter is now a module, and br_netfilter_hooks.c is part of it
-> IIRC, this file registers these sysctl entries from the module __init
-> path.
-> 
-> It would be a matter of adding a new .init callback to the existing
-> brnf_net_ops object in br_netfilter_hooks.c. Then, call
-> register_net_sysctl() from this .init callback to register the sysctl
-> entries per netns.
+On Fri, Jun 7, 2019 at 12:07 PM Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+>
+>
+> On 6/6/19 9:38 AM, Daniel Vetter wrote:
+> > Hi Bart,
+>
+> Hi Daniel,
+>
+> > On Tue, May 28, 2019 at 11:02:31AM +0200, Daniel Vetter wrote:
+> >> Hi all,
+> >>
+> >> I think we're slowly getting there. Previous cover letters with more
+> >> context:
+> >>
+> >> https://lists.freedesktop.org/archives/dri-devel/2019-May/218362.html
+> >>
+> >> tldr; I have a multi-year plan to improve fbcon locking, because the
+> >> current thing is a bit a mess.
+> >>
+> >> Cover letter of this version, where I detail a bit more the details
+> >> fixed in this one here:
+> >>
+> >> https://lists.freedesktop.org/archives/dri-devel/2019-May/218984.html
+> >>
+> >> Note that the locking plan in this one is already outdated, I overlooked a
+> >> few fun issues around any printk() going back to console_lock.
+> >>
+> >> I think remaining bits:
+> >>
+> >> - Ack from Daniel Thompson for the backlight bits, he wanted to check the
+> >>   big picture.
+> >
+> > I think Daniel is still on vacation until next week or so.
+> >
+> >> - Hash out actual merge plan.
+> >
+> > I'd like to stuff this into drm.git somehow, I guess topic branch works
+> > too.
+>
+> I would like to have topic branch for this patchset.
 
-Actually, this is what you patch is doing...
+Do you plan to prep that, or should I? Doesn't really matter to me,
+and assuming Daniel Thompson doesn't have any last minute concerns
+should still be enough time to get it all sorted and have a few weeks
+of testing left before the merge window.
 
-> There is already a brnf_net area that you can reuse for this purpose,
-> to place these pernetns flags...
-> 
-> struct brnf_net {
->         bool enabled;
-> };
-> 
-> which is going to be glad to have more fields (under the #ifdef
-> CONFIG_SYSCTL) there.
+> > Long term I think we need to reconsider how we handle fbdev, at least the
+> > core/fbcon pieces. Since a few years all the work in that area has been
+> > motivated by drm, and pushed by drm contributors. Having that maintained
+> > in a separate tree that doesn't regularly integrate imo doesn't make much
+> > sense, and we ended up merging almost everything through some drm tree.
+> > That one time we didn't (for some panel rotation stuff) it resulted in
+> > some good suprises.
+> >
+> > I think best solution is if we put the core and fbcon bits into drm-misc,
+> > as group maintained infrastructure piece. All the other gfx infra pieces
+> > are maintained in there already too. You'd obviously get commit rights.
+> > I think that would include
+> > - drivers/video/fbdev
+> > - drivers/video/*c
+> > - drivers/video/console
+>
+> Sounds fine to me.
+>
+> > I don't really care about what happens with the actual fbdev drivers
+> > (aside from the drm one in drm_fb_helper.c, but that's already maintained
+> > as part of drm). I guess we could also put those into drm-misc, or as a
+> > separate tree, depending what you want.
+> >
+> > Thoughts?
+>
+> I would like to handle fbdev changes for v5.3 merge window using fbdev
+> tree but after that everything (including changes to fbdev drivers) can go
+> through drm-misc tree.
 
-... except that struct brnf_net is not used to store the ctl_table.
+Fully agreed, no need to rush anything here. For the drm-misc account
+you need to request an SSH legacy account here by filing a issue:
 
-So what I'm propose should be result in a small update to your patch 2/2.
+https://gitlab.freedesktop.org/freedesktop/freedesktop/issues/new
+
+Select the "New SSH account" template, it has instructions with
+everything that's needed.
+
+For the getting started howto, see
+https://drm.pages.freedesktop.org/maintainer-tools/getting-started.html
+
+If that all looks good and you're set up I think best to test-drive
+the entire process with the MAINTAINERS patch to change the git repo
+for 5.4.
+
+Cheers, Daniel
+
+
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+>
+> > Cheers, Daniel
+> >
+> >
+> >>
+> >> I'm also cc'ing the entire pile to a lot more people on request.
+> >>
+> >> Thanks, Daniel
+> >>
+> >> Daniel Vetter (33):
+> >>   dummycon: Sprinkle locking checks
+> >>   fbdev: locking check for fb_set_suspend
+> >>   vt: might_sleep() annotation for do_blank_screen
+> >>   vt: More locking checks
+> >>   fbdev/sa1100fb: Remove dead code
+> >>   fbdev/cyber2000: Remove struct display
+> >>   fbdev/aty128fb: Remove dead code
+> >>   fbcon: s/struct display/struct fbcon_display/
+> >>   fbcon: Remove fbcon_has_exited
+> >>   fbcon: call fbcon_fb_(un)registered directly
+> >>   fbdev/sh_mobile: remove sh_mobile_lcdc_display_notify
+> >>   fbdev/omap: sysfs files can't disappear before the device is gone
+> >>   fbdev: sysfs files can't disappear before the device is gone
+> >>   staging/olpc: lock_fb_info can't fail
+> >>   fbdev/atyfb: lock_fb_info can't fail
+> >>   fbdev: lock_fb_info cannot fail
+> >>   fbcon: call fbcon_fb_bind directly
+> >>   fbdev: make unregister/unlink functions not fail
+> >>   fbdev: unify unlink_framebuffer paths
+> >>   fbdev/sh_mob: Remove fb notifier callback
+> >>   fbdev: directly call fbcon_suspended/resumed
+> >>   fbcon: Call fbcon_mode_deleted/new_modelist directly
+> >>   fbdev: Call fbcon_get_requirement directly
+> >>   Revert "backlight/fbcon: Add FB_EVENT_CONBLANK"
+> >>   fbmem: pull fbcon_fb_blanked out of fb_blank
+> >>   fbdev: remove FBINFO_MISC_USEREVENT around fb_blank
+> >>   fb: Flatten control flow in fb_set_var
+> >>   fbcon: replace FB_EVENT_MODE_CHANGE/_ALL with direct calls
+> >>   vgaswitcheroo: call fbcon_remap_all directly
+> >>   fbcon: Call con2fb_map functions directly
+> >>   fbcon: Document what I learned about fbcon locking
+> >>   staging/olpc_dcon: Add drm conversion to TODO
+> >>   backlight: simplify lcd notifier
+> >>
+> >>  arch/arm/mach-pxa/am200epd.c                  |  13 +-
+> >>  drivers/gpu/vga/vga_switcheroo.c              |  11 +-
+> >>  drivers/media/pci/ivtv/ivtvfb.c               |   6 +-
+> >>  drivers/staging/fbtft/fbtft-core.c            |   4 +-
+> >>  drivers/staging/olpc_dcon/TODO                |   7 +
+> >>  drivers/staging/olpc_dcon/olpc_dcon.c         |   6 +-
+> >>  drivers/tty/vt/vt.c                           |  18 +
+> >>  drivers/video/backlight/backlight.c           |   2 +-
+> >>  drivers/video/backlight/lcd.c                 |  12 -
+> >>  drivers/video/console/dummycon.c              |   6 +
+> >>  drivers/video/fbdev/aty/aty128fb.c            |  64 ---
+> >>  drivers/video/fbdev/aty/atyfb_base.c          |   3 +-
+> >>  drivers/video/fbdev/core/fbcmap.c             |   6 +-
+> >>  drivers/video/fbdev/core/fbcon.c              | 313 ++++++--------
+> >>  drivers/video/fbdev/core/fbcon.h              |   6 +-
+> >>  drivers/video/fbdev/core/fbmem.c              | 399 +++++++-----------
+> >>  drivers/video/fbdev/core/fbsysfs.c            |  20 +-
+> >>  drivers/video/fbdev/cyber2000fb.c             |   1 -
+> >>  drivers/video/fbdev/neofb.c                   |   9 +-
+> >>  .../video/fbdev/omap2/omapfb/omapfb-sysfs.c   |  21 +-
+> >>  drivers/video/fbdev/sa1100fb.c                |  25 --
+> >>  drivers/video/fbdev/savage/savagefb_driver.c  |   9 +-
+> >>  drivers/video/fbdev/sh_mobile_lcdcfb.c        | 132 +-----
+> >>  drivers/video/fbdev/sh_mobile_lcdcfb.h        |   5 -
+> >>  include/linux/console_struct.h                |   5 +-
+> >>  include/linux/fb.h                            |  45 +-
+> >>  include/linux/fbcon.h                         |  30 ++
+> >>  27 files changed, 396 insertions(+), 782 deletions(-)
+> >>
+> >> --
+> >> 2.20.1
+> >>
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
