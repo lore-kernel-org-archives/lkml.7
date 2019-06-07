@@ -2,113 +2,130 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CDFC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC8CC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DDF21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED1020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 14:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTn6I4Kj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbfFGOKN (ORCPT
+        id S1729407AbfFGOKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 10:10:13 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:35370 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727840AbfFGOKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 10:10:13 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hZFZB-0006Q2-3B; Fri, 07 Jun 2019 22:10:01 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hZFYz-000796-Cp; Fri, 07 Jun 2019 22:09:49 +0800
-Date:   Fri, 7 Jun 2019 22:09:49 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: inet: frags: Turn fqdir->dead into an int for old Alphas
-Message-ID: <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
-References: <20190603200301.GM28207@linux.ibm.com>
- <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
- <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
+        Fri, 7 Jun 2019 10:10:19 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43145 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727840AbfFGOKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 10:10:17 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so1233287pgv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 07:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WviGJBKgEpiJLqccK37TyqA/NvGYOeZQ8PBC4TwGa4M=;
+        b=VTn6I4KjwL5gWYewleunXOkbS0NLQfMjEErXokyNJ/coXmNRgEa8xOQsD6gSWor8RV
+         uder4DeV9PFezBtB8VwuL8dKxRSEG38yfm2maA4yyxeSEbPW0NSpj0l0FKCo76Fwd0rf
+         uSPTsjWzka+Gxo8ee6+ewx/PI6uHCLBF0kgxBbi4nXaezPRhbMuQa3aCTQw2Fk5WfFg6
+         EkpbxWI9yDUSOvTifCIbFQhQ9OjGNc7/OnlsXRGKMfmv539fYyUswNtgkfAr7JeuVzkd
+         4Zy3+vvjyeRb7YT8bjC99PbolxrTNpCLkaMmfN+ZEQmFw8RAVFkHv3xXKr1fFN0HFUzs
+         Z8Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WviGJBKgEpiJLqccK37TyqA/NvGYOeZQ8PBC4TwGa4M=;
+        b=NEzslSsTn+lYRUx8K3kTAWePprC0/eq/lsYBR80aSVGlVY7IsAFRvsUQFkKZaXEivP
+         6w4II5G9f0JuoJjCs7YwOQxsv69Vuw4DrLNZCvd+nztdIUuX0ckAixiA6vu+Q8j8HGnJ
+         ybCH8qAXxEHZ10otRzoImO1CNX/2L9oo+Ez6xy2hBve0BkEekIhJZiHyC4A5nKDcSxMh
+         Ac60zaYrO3myWR/AuGHLOwEGD2/LNs0dSoyL3na/AkTKEhk4XRRmRjxRd8r+X15IBuVD
+         mp3CQxSFBeyu9YkqakjPkjK5sdWlXvfczdglLibtLT05N7IZOdJ5bfw2rUeteX19VBdU
+         M5EA==
+X-Gm-Message-State: APjAAAXL7XziWcK2qICXRrXL4kKaawbMhvux6CWKPkF2R/7Sdv8Mul/S
+        ANmhM6ds80pIXEHOwE0qloc=
+X-Google-Smtp-Source: APXvYqwEekzVMmLl+SOJvzoI3Qwq5rO+7raqy2CKPQml0u9NmV8RXF94lZ0oCE6g1hDEhBYe3EaKWA==
+X-Received: by 2002:a17:90a:9f90:: with SMTP id o16mr5730591pjp.72.1559916617409;
+        Fri, 07 Jun 2019 07:10:17 -0700 (PDT)
+Received: from localhost.localdomain ([110.227.95.145])
+        by smtp.gmail.com with ESMTPSA id u20sm2526448pfm.145.2019.06.07.07.10.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 07 Jun 2019 07:10:16 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, straube.linux@gmail.com,
+        larry.finger@lwfinger.net, flbue@gmx.de
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH v2] staging: rtl8188eu: core: Replace function rtw_free_network_nolock()
+Date:   Fri,  7 Jun 2019 19:40:03 +0530
+Message-Id: <20190607141003.11998-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 09:04:55AM -0700, Linus Torvalds wrote:
->
-> In fact, the alpha port was always subtly buggy exactly because of the
-> "byte write turns into a read-and-masked-write", even if I don't think
-> anybody ever noticed (we did fix cases where people _did_ notice,
-> though, and we might still have some cases where we use 'int' for
-> booleans because of alpha issues.).
+Remove function rtw_free_network_nolock, as all it does is call
+_rtw_free_network_nolock, and rename _rtw_free_network_nolock to
+rtw_free_network_nolock.
+Keep the new rtw_free_network_nolock a static function and remove the
+old version from the header file.
 
-This is in fact a real bug in the code in question that no amount
-of READ_ONCE/WRITE_ONCE would have caught.  The field fqdir->dead is
-declared as boolean so writing to it is not atomic (on old Alphas).
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_mlme.c    | 9 ++-------
+ drivers/staging/rtl8188eu/include/rtw_mlme.h | 3 ---
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-I don't think it currently matters because padding would ensure
-that it is in fact 64 bits long.  However, should someone add another
-char/bool/bitfield in this struct in future it could become an issue.
-
-So let's fix it.
-
----8<--
-The field fqdir->dead is meant to be written (and read) atomically.
-As old Alpha CPUs can't write a single byte atomically, we need at
-least an int for it to work.
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/include/net/inet_frag.h b/include/net/inet_frag.h
-index e91b79ad4e4a..8c458fba74ad 100644
---- a/include/net/inet_frag.h
-+++ b/include/net/inet_frag.h
-@@ -14,7 +14,9 @@ struct fqdir {
- 	int			max_dist;
- 	struct inet_frags	*f;
- 	struct net		*net;
--	bool			dead;
-+
-+	/* We can't use boolean because this needs atomic writes. */
-+	int			dead;
+diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+index 0abb2df32645..d2f7a88e992e 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
++++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+@@ -159,7 +159,8 @@ static void _rtw_free_network(struct mlme_priv *pmlmepriv, struct wlan_network *
+ 	spin_unlock_bh(&free_queue->lock);
+ }
  
- 	struct rhashtable       rhashtable ____cacheline_aligned_in_smp;
- 
-diff --git a/net/ipv4/inet_fragment.c b/net/ipv4/inet_fragment.c
-index 35e9784fab4e..05aa7c145817 100644
---- a/net/ipv4/inet_fragment.c
-+++ b/net/ipv4/inet_fragment.c
-@@ -193,7 +193,7 @@ void fqdir_exit(struct fqdir *fqdir)
+-void _rtw_free_network_nolock(struct	mlme_priv *pmlmepriv, struct wlan_network *pnetwork)
++static void rtw_free_network_nolock(struct mlme_priv *pmlmepriv,
++				    struct wlan_network *pnetwork)
  {
- 	fqdir->high_thresh = 0; /* prevent creation of new frags */
+ 	struct __queue *free_queue = &pmlmepriv->free_bss_pool;
  
--	fqdir->dead = true;
-+	fqdir->dead = 1;
+@@ -276,12 +277,6 @@ static struct wlan_network *rtw_alloc_network(struct mlme_priv *pmlmepriv)
+ 	return _rtw_alloc_network(pmlmepriv);
+ }
  
- 	/* call_rcu is supposed to provide memory barrier semantics,
- 	 * separating the setting of fqdir->dead with the destruction
+-static void rtw_free_network_nolock(struct mlme_priv *pmlmepriv,
+-				    struct wlan_network *pnetwork)
+-{
+-	_rtw_free_network_nolock(pmlmepriv, pnetwork);
+-}
+-
+ int rtw_is_same_ibss(struct adapter *adapter, struct wlan_network *pnetwork)
+ {
+ 	int ret = true;
+diff --git a/drivers/staging/rtl8188eu/include/rtw_mlme.h b/drivers/staging/rtl8188eu/include/rtw_mlme.h
+index bfef66525944..9abb7c320192 100644
+--- a/drivers/staging/rtl8188eu/include/rtw_mlme.h
++++ b/drivers/staging/rtl8188eu/include/rtw_mlme.h
+@@ -335,9 +335,6 @@ void rtw_free_mlme_priv_ie_data(struct mlme_priv *pmlmepriv);
+ 
+ struct wlan_network *_rtw_alloc_network(struct mlme_priv *pmlmepriv);
+ 
+-void _rtw_free_network_nolock(struct mlme_priv *pmlmepriv,
+-			      struct wlan_network *pnetwork);
+-
+ int rtw_if_up(struct adapter *padapter);
+ 
+ u8 *rtw_get_capability_from_ie(u8 *ie);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.19.1
+
