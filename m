@@ -2,231 +2,97 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434D7C46476
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D600BC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161EF2133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C5020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:35:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cNtJuPJd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfFGIeF (ORCPT
+        id S1727047AbfFGIf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 04:34:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33462 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726808AbfFGIeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 04:34:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 123A7ABD5;
-        Fri,  7 Jun 2019 08:34:03 +0000 (UTC)
-Date:   Fri, 7 Jun 2019 10:33:58 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 08/12] mm/sparsemem: Support sub-section hotplug
-Message-ID: <20190607083351.GA5342@linux>
-References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155977192280.2443951.13941265207662462739.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Fri, 7 Jun 2019 04:35:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40145 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfFGIf3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 04:35:29 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so781830pgm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 01:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GOLXUpq3s4svc3Cb5o0cuO6zNdr2zIZ53GxxO13HULA=;
+        b=cNtJuPJdBf+76+FIHXRqrb62Gu0a3W5bwRWSGq/Awpg612ChWmX34W/4ee+7sMq6cB
+         OdsiTvGx/uswbz32NfXfuf9d0wREnzw5qCeujamyKkTpviW94LFzkTawp0gw1n6MZdyf
+         azN9VWlvdHaocIMwVVa5KskNRl++9A5zAlswQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GOLXUpq3s4svc3Cb5o0cuO6zNdr2zIZ53GxxO13HULA=;
+        b=cy3s7lfZxR/cS7g+gN8cuM/kI91DJTn2R15+uV5Vcu0I0kzCm3VpxNHbbNsRUwbgXa
+         Ymyi51sVfObxK87qb7WlW1fxj+b5Hyx2h2svpqW8bPxo8Eh2ZfBns/N6mDhvZwX0PJeW
+         wRFo1eFie0EYyzYrHDccagpG2vJVTElLyr0T0PIJ0xfi+WcFcLzA2b3f6PvqpIbK4N1S
+         9PDdMiS+0BllfdV2p4PikmlRgvuCvFmyyuLokYjMw9voXAFAVTlL/yrJ1ME/+I3Vikpk
+         0armXGjZmzprXVkQSowgCbSCbi3mSNHoiiiD+zoZJdrCQx+NJiUzkz2lLX78jZ1VWeFE
+         b7mQ==
+X-Gm-Message-State: APjAAAUrAAzLd0ocgMTVouxRlH6K6x/0U83+ag2mFvqF4yRn8J5hAody
+        J2kQPgLhMyWebeTOfc7pBrFC6w==
+X-Google-Smtp-Source: APXvYqyQFIagXtjKC+oKCI13OrcGrXZcIXeRXH0yCpp8sYK+T78yBASGcqSO+GyLmvngeJ8aX5FkvA==
+X-Received: by 2002:a17:90a:a410:: with SMTP id y16mr4268037pjp.62.1559896528709;
+        Fri, 07 Jun 2019 01:35:28 -0700 (PDT)
+Received: from tfiga.tok.corp.google.com ([2401:fa00:4:4:6d27:f13:a0fa:d4b6])
+        by smtp.gmail.com with ESMTPSA id l13sm1240509pjq.20.2019.06.07.01.35.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 01:35:28 -0700 (PDT)
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?q?Pawe=C5=82=20O=C5=9Bciak?= <posciak@chromium.org>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH] MAINTAINERS: media: Add Tomasz Figa as a videobuf2 reviewer
+Date:   Fri,  7 Jun 2019 17:35:18 +0900
+Message-Id: <20190607083518.90078-1-tfiga@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc1.311.g5d7573a151-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155977192280.2443951.13941265207662462739.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 02:58:42PM -0700, Dan Williams wrote:
-> The libnvdimm sub-system has suffered a series of hacks and broken
-> workarounds for the memory-hotplug implementation's awkward
-> section-aligned (128MB) granularity. For example the following backtrace
-> is emitted when attempting arch_add_memory() with physical address
-> ranges that intersect 'System RAM' (RAM) with 'Persistent Memory' (PMEM)
-> within a given section:
-> 
->  WARNING: CPU: 0 PID: 558 at kernel/memremap.c:300 devm_memremap_pages+0x3b5/0x4c0
->  devm_memremap_pages attempted on mixed region [mem 0x200000000-0x2fbffffff flags 0x200]
->  [..]
->  Call Trace:
->    dump_stack+0x86/0xc3
->    __warn+0xcb/0xf0
->    warn_slowpath_fmt+0x5f/0x80
->    devm_memremap_pages+0x3b5/0x4c0
->    __wrap_devm_memremap_pages+0x58/0x70 [nfit_test_iomap]
->    pmem_attach_disk+0x19a/0x440 [nd_pmem]
-> 
-> Recently it was discovered that the problem goes beyond RAM vs PMEM
-> collisions as some platform produce PMEM vs PMEM collisions within a
-> given section. The libnvdimm workaround for that case revealed that the
-> libnvdimm section-alignment-padding implementation has been broken for a
-> long while. A fix for that long-standing breakage introduces as many
-> problems as it solves as it would require a backward-incompatible change
-> to the namespace metadata interpretation. Instead of that dubious route
-> [1], address the root problem in the memory-hotplug implementation.
-> 
-> [1]: https://lore.kernel.org/r/155000671719.348031.2347363160141119237.stgit@dwillia2-desk3.amr.corp.intel.com
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  include/linux/memory_hotplug.h |    2 
->  mm/memory_hotplug.c            |    7 -
->  mm/page_alloc.c                |    2 
->  mm/sparse.c                    |  225 +++++++++++++++++++++++++++-------------
->  4 files changed, 155 insertions(+), 81 deletions(-)
-> 
-[...]
-> @@ -325,6 +332,15 @@ static void __meminit sparse_init_one_section(struct mem_section *ms,
->  		unsigned long pnum, struct page *mem_map,
->  		struct mem_section_usage *usage)
->  {
-> +	/*
-> +	 * Given that SPARSEMEM_VMEMMAP=y supports sub-section hotplug,
-> +	 * ->section_mem_map can not be guaranteed to point to a full
-> +	 *  section's worth of memory.  The field is only valid / used
-> +	 *  in the SPARSEMEM_VMEMMAP=n case.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP))
-> +		mem_map = NULL;
+I tend to review most of the vb2 patches anyway and we need some active
+reviewers, so let add me to the MAINTAINERS file as such.
 
-Will this be a problem when reading mem_map with the crash-tool?
-I do not expect it to be, but I am not sure if crash internally tries
-to read ms->section_mem_map and do some sort of translation.
-And since ms->section_mem_map SECTION_HAS_MEM_MAP, it might be that it expects
-a valid mem_map?
-
-> +static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> +		struct vmem_altmap *altmap)
-> +{
-> +	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
-> +	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
-> +	struct mem_section *ms = __pfn_to_section(pfn);
-> +	bool early_section = is_early_section(ms);
-> +	struct page *memmap = NULL;
-> +	unsigned long *subsection_map = ms->usage
-> +		? &ms->usage->subsection_map[0] : NULL;
-> +
-> +	subsection_mask_set(map, pfn, nr_pages);
-> +	if (subsection_map)
-> +		bitmap_and(tmp, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> +
-> +	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
-> +				"section already deactivated (%#lx + %ld)\n",
-> +				pfn, nr_pages))
-> +		return;
-> +
-> +	/*
-> +	 * There are 3 cases to handle across two configurations
-> +	 * (SPARSEMEM_VMEMMAP={y,n}):
-> +	 *
-> +	 * 1/ deactivation of a partial hot-added section (only possible
-> +	 * in the SPARSEMEM_VMEMMAP=y case).
-> +	 *    a/ section was present at memory init
-> +	 *    b/ section was hot-added post memory init
-> +	 * 2/ deactivation of a complete hot-added section
-> +	 * 3/ deactivation of a complete section from memory init
-> +	 *
-> +	 * For 1/, when subsection_map does not empty we will not be
-> +	 * freeing the usage map, but still need to free the vmemmap
-> +	 * range.
-> +	 *
-> +	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
-> +	 */
-> +	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
-> +		unsigned long section_nr = pfn_to_section_nr(pfn);
-> +
-> +		if (!early_section) {
-> +			kfree(ms->usage);
-> +			ms->usage = NULL;
-> +		}
-> +		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> +		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
-> +	}
-> +
-> +	if (early_section && memmap)
-> +		free_map_bootmem(memmap);
-> +	else
-> +		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +}
-> +
-> +static struct page * __meminit section_activate(int nid, unsigned long pfn,
-> +		unsigned long nr_pages, struct vmem_altmap *altmap)
-> +{
-> +	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
-> +	struct mem_section *ms = __pfn_to_section(pfn);
-> +	struct mem_section_usage *usage = NULL;
-> +	unsigned long *subsection_map;
-> +	struct page *memmap;
-> +	int rc = 0;
-> +
-> +	subsection_mask_set(map, pfn, nr_pages);
-> +
-> +	if (!ms->usage) {
-> +		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
-> +		if (!usage)
-> +			return ERR_PTR(-ENOMEM);
-> +		ms->usage = usage;
-> +	}
-> +	subsection_map = &ms->usage->subsection_map[0];
-> +
-> +	if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
-> +		rc = -EINVAL;
-> +	else if (bitmap_intersects(map, subsection_map, SUBSECTIONS_PER_SECTION))
-> +		rc = -EEXIST;
-> +	else
-> +		bitmap_or(subsection_map, map, subsection_map,
-> +				SUBSECTIONS_PER_SECTION);
-> +
-> +	if (rc) {
-> +		if (usage)
-> +			ms->usage = NULL;
-> +		kfree(usage);
-> +		return ERR_PTR(rc);
-> +	}
-
-We should not be really looking at subsection_map stuff when running on
-!CONFIG_SPARSE_VMEMMAP, right?
-Would it make sense to hide the bitmap dance behind
-
-if(IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP)) ?
-
-Sorry for nagging here
-
->  /**
-> - * sparse_add_one_section - add a memory section
-> + * sparse_add_section - add a memory section, or populate an existing one
->   * @nid: The node to add section on
->   * @start_pfn: start pfn of the memory range
-> + * @nr_pages: number of pfns to add in the section
->   * @altmap: device page map
->   *
->   * This is only intended for hotplug.
-
-Below this, the return codes are specified:
-
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 ---
- * Return:
- * * 0          - On success.
- * * -EEXIST    - Section has been present.
- * * -ENOMEM    - Out of memory.
- */
----
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-We can get rid of -EEXIST since we do not return that anymore.
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 98cd84977350..b5f65f61becb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16758,6 +16758,7 @@ VIDEOBUF2 FRAMEWORK
+ M:	Pawel Osciak <pawel@osciak.com>
+ M:	Marek Szyprowski <m.szyprowski@samsung.com>
+ M:	Kyungmin Park <kyungmin.park@samsung.com>
++R:	Tomasz Figa <tfiga@chromium.org>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	drivers/media/common/videobuf2/*
 -- 
-Oscar Salvador
-SUSE L3
+2.22.0.rc1.311.g5d7573a151-goog
+
