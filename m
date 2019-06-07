@@ -2,130 +2,129 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257F9C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C3AC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA00214AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B1B2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XNeJTWv5"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WYsyLuJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbfFGPJn (ORCPT
+        id S1729865AbfFGPKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:09:43 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54746 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729042AbfFGPJm (ORCPT
+        Fri, 7 Jun 2019 11:10:19 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41384 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729850AbfFGPKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:09:42 -0400
-Received: by mail-it1-f195.google.com with SMTP id m138so1585112ita.4
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:09:42 -0700 (PDT)
+        Fri, 7 Jun 2019 11:10:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id s57so2627752qte.8
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nSNwEwVBB35crYOfAcA03OB3tW5Yj6TRGwmQgBYzS/M=;
-        b=XNeJTWv5IXSPKxj4O4Mhj3ddn0md3FRvFIIWRXJE8yJDd7Ys9oWZo1L5YVOYAWERSg
-         nt6UPyZCSw5l/L9g1sx0bJXO+XoJOUTcB5+fPaFnQfDzH4h0BXIekTVxh29osI+nndYh
-         89KgZAmKZSRHoBH7RCHlinKsP3GvccK957wV0=
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mtF5cAWsrYgtNZcy7Xm0z7hOgyvsIAMepLY84jhBIIY=;
+        b=WYsyLuJwZJIQkQf8wUWCq+MKSRiYgAlB3cZg5uiR6sfXzmT5qRPbG9DhevssrlPWqT
+         btVD4AS17pELyqwsgZDkQw2P7FuITtTVQMrN8ttsGMNW1xgfpIRPBVOa0vjh1b2Q1GR1
+         KuOwYeQwWnuz6D+1FRguaiqcVs7bzdSKLArmkC9S3JiLqJpGoQtRUAt5WZRIgTPnLny4
+         IKSY1gSwXGY6RvgI08IKQsXM6qG3PGhAf3b+OAJpaapDK96fRJ2kOM5Yvdls9VHMdofH
+         LPFgCkV+imozC4VVLOAwHIKBZyqQ6Svl+UIUCGPXrQKi5OfcTa6MmnRnnxQ4x38JcA+k
+         g4gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nSNwEwVBB35crYOfAcA03OB3tW5Yj6TRGwmQgBYzS/M=;
-        b=aaYo5ZpYjh3REOXL2lXKpr6hp21sbJriTdvp97w4B8u+Y6aRZRUcuFkvDTPErNaTRA
-         j1q23tOLAKLimltWBOYIZrQXT8IO4yG7T2vZc8sonEDFfL8ihujqJiLW1/Q4LXYCGypf
-         IiOEuaiJZ8eSW671Y/J2ywh+r464IT4+1I2OaFtY1Fvjr9LnJFm/hSeqXCeAvjwGTuuy
-         fIcJhHXODECNFuLYyCUFjFRhwxoBj5BH+1zMDcsuwmz0U+XYIccTidQZsSIuSLqECPjI
-         Wfm2W4dT2S8oylCCFh60U7CVWjZfhN/HemSn1jMqmFU92JRyvcfmGfR9V87mrtlcTmUK
-         60BQ==
-X-Gm-Message-State: APjAAAXgrMpvVPLgLoqDI76hcBsQ80lorZ4JTIB8sD74a0eMZJC3njIJ
-        8VbOBFTQXXj+74AfO19G0sgQ10DFtrs=
-X-Google-Smtp-Source: APXvYqwmeT56rFD44CbnWdKgTmPP8E8Agh1cZ+s1Po7Ulh0KLoSLKZixh90UhI4tTmcSvSpPNH9XZw==
-X-Received: by 2002:a24:6508:: with SMTP id u8mr5004771itb.28.1559920181626;
-        Fri, 07 Jun 2019 08:09:41 -0700 (PDT)
-Received: from mail-it1-f180.google.com (mail-it1-f180.google.com. [209.85.166.180])
-        by smtp.gmail.com with ESMTPSA id i195sm944017ite.41.2019.06.07.08.09.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 08:09:40 -0700 (PDT)
-Received: by mail-it1-f180.google.com with SMTP id i21so3209949ita.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 08:09:40 -0700 (PDT)
-X-Received: by 2002:a24:b106:: with SMTP id o6mr3886319itf.97.1559920180064;
- Fri, 07 Jun 2019 08:09:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <lsq.1549201507.384106140@decadent.org.uk> <lsq.1549201508.623062416@decadent.org.uk>
-In-Reply-To: <lsq.1549201508.623062416@decadent.org.uk>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 7 Jun 2019 08:09:27 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U263K-OEdnDzL=4oxLHXTkqgQygYCup=jSCRGvv+vMsw@mail.gmail.com>
-Message-ID: <CAD=FV=U263K-OEdnDzL=4oxLHXTkqgQygYCup=jSCRGvv+vMsw@mail.gmail.com>
-Subject: Re: [PATCH 3.16 025/305] media: uvcvideo: Fix uvc_alloc_entity()
- allocation alignment
-To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mtF5cAWsrYgtNZcy7Xm0z7hOgyvsIAMepLY84jhBIIY=;
+        b=AGiyyNgjyrJpKaLnFTJNsSGNOctbb6KFER5TpVIWJ3l8EK41t3fDPebPdH0AGTw0as
+         WUkaYkQ3Z5HB8k4bTg8ov8my7RhgMvCe58nlUE4un42DBc1qKSRzRh1/lwQudTW9/EOK
+         qULYdhdEy8m0sLftoNYFP/cIXW9cooegYADTBsOdSwLDgq6R1jZUB4mKhhYAsZ1xV0KO
+         kadQicqRMfyYyA5liuxly5m0TsAtt6v5LRrtJFHTLoLbTM/2znnAZxmczGggaLGImn8P
+         FFSlMcG4jbfnkL0sLPdwQluqZ/36tVAGd2YOGoRGGWLIqcFSkTkxiCLd+geM8b2OoSm9
+         O0pA==
+X-Gm-Message-State: APjAAAXsda7r3b+obhWWwIDPt2xKHKOWMXP0J7Rnz4A234c+tExj1ABy
+        O2Dyuypu1MDSPniKjwLTdb3JmQ==
+X-Google-Smtp-Source: APXvYqz98pAEW8JOYRDiw9EYF+WsmnpCH5t6BgflMJ4duW3xWG4TSqN3U+4KRrwB7XAG90R+0pkeHA==
+X-Received: by 2002:ac8:4619:: with SMTP id p25mr14877922qtn.73.1559920216042;
+        Fri, 07 Jun 2019 08:10:16 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id a11sm1103592qkn.26.2019.06.07.08.10.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 08:10:15 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hZGVT-0006TX-4L; Fri, 07 Jun 2019 12:10:15 -0300
+Date:   Fri, 7 Jun 2019 12:10:15 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Nadav Amit <namit@vmware.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190607151015.GJ14802@ziepe.ca>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
+ <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz>
+ <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Jun 07, 2019 at 07:52:13AM -0700, Ira Weiny wrote:
+> On Fri, Jun 07, 2019 at 09:17:29AM -0300, Jason Gunthorpe wrote:
+> > On Fri, Jun 07, 2019 at 12:36:36PM +0200, Jan Kara wrote:
+> > 
+> > > Because the pins would be invisible to sysadmin from that point on. 
+> > 
+> > It is not invisible, it just shows up in a rdma specific kernel
+> > interface. You have to use rdma netlink to see the kernel object
+> > holding this pin.
+> > 
+> > If this visibility is the main sticking point I suggest just enhancing
+> > the existing MR reporting to include the file info for current GUP
+> > pins and teaching lsof to collect information from there as well so it
+> > is easy to use.
+> > 
+> > If the ownership of the lease transfers to the MR, and we report that
+> > ownership to userspace in a way lsof can find, then I think all the
+> > concerns that have been raised are met, right?
+> 
+> I was contemplating some new lsof feature yesterday.  But what I don't think we
+> want is sysadmins to have multiple tools for multiple subsystems.  Or even have
+> to teach lsof something new for every potential new subsystem user of GUP pins.
 
-On Sun, Feb 3, 2019 at 5:50 AM Ben Hutchings <ben@decadent.org.uk> wrote:
->
-> 3.16.63-rc1 review patch.  If anyone has any objections, please let me know.
->
-> ------------------
->
-> From: Nadav Amit <namit@vmware.com>
->
-> commit 89dd34caf73e28018c58cd193751e41b1f8bdc56 upstream.
->
-> The use of ALIGN() in uvc_alloc_entity() is incorrect, since the size of
-> (entity->pads) is not a power of two. As a stop-gap, until a better
-> solution is adapted, use roundup() instead.
->
-> Found by a static assertion. Compile-tested only.
->
-> Fixes: 4ffc2d89f38a ("uvcvideo: Register subdevices for each entity")
->
-> Signed-off-by: Nadav Amit <namit@vmware.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-> ---
->  drivers/media/usb/uvc/uvc_driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -826,7 +826,7 @@ static struct uvc_entity *uvc_alloc_enti
->         unsigned int size;
->         unsigned int i;
->
-> -       extra_size = ALIGN(extra_size, sizeof(*entity->pads));
-> +       extra_size = roundup(extra_size, sizeof(*entity->pads));
->         num_inputs = (type & UVC_TERM_OUTPUT) ? num_pads : num_pads - 1;
->         size = sizeof(*entity) + extra_size + sizeof(*entity->pads) * num_pads
->              + num_inputs;
+Well.. it is a bit tricky, but you'd have to arrange for the lease
+object to have a list of 'struct files' that are holding the
+lease open. 
 
-Funny that this commit made its way to 3.16 but didn't make its way to
-4.19 (at least checking 4.19.43).  I haven't seen any actual crashes
-caused by the lack of this commit but it seems like the kind of thing
-we probably want picked back to other stable kernels too.
+The first would be the file that did the fcntl, the next would be all
+the files that did longterm GUP - which means longterm GUP has to have
+a chardev file/etc as well (seems OK)
 
--Doug
+Then lsof could query the list of lease objects for each file it
+encounters and print them out too.
+
+Jason
