@@ -2,95 +2,182 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3148C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D609EC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA72621473
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA1F2146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559922125;
+	bh=7Dwi07MGBO9U6N2e0LqhLrsjBz2fdKOnllJzj59RAsw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aiAR34bT3ba1Zp3/ZGi5izUiva6Yjw/XinBbn4Kr9mYtek2Xsx339SM+f1CX783wZ
+	 LVNK0VWwILusazxBrnpCLNkKAOQKSE2FDwt/GSFCqa7RjRkJHBk07MltqKGwt5Rm+r
+	 zTbKsyRLTbSFESlxeW3YGw8sfkeusZMIU1DdwgRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbfFGPl4 (ORCPT
+        id S1729874AbfFGPmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:41:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:42968 "EHLO foss.arm.com"
+        Fri, 7 Jun 2019 11:42:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730403AbfFGPlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:41:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D456C337;
-        Fri,  7 Jun 2019 08:41:50 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98B363F718;
-        Fri,  7 Jun 2019 08:41:49 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 16:41:47 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Qian Cai <cai@lca.pw>, Dave Martin <Dave.Martin@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: "arm64: Silence gcc warnings about arch ABI drift" breaks clang
-Message-ID: <20190607154147.GD19862@fuggles.cambridge.arm.com>
-References: <1559920965.6132.56.camel@lca.pw>
- <20190607152517.GC19862@fuggles.cambridge.arm.com>
- <1559921171.6132.57.camel@lca.pw>
- <20190607154010.GA41392@archlinux-epyc>
+        id S1729349AbfFGPlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:41:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AFF121473;
+        Fri,  7 Jun 2019 15:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559922115;
+        bh=7Dwi07MGBO9U6N2e0LqhLrsjBz2fdKOnllJzj59RAsw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SlW8rUwcP9GlBDyW8kAxZ52cG4bCN/XNI7XgwkcwidXV9riPJKtrm6FgFOVmuOZ2m
+         PmA6P1QUJnNJNDopzWzBFR5Swfinn8/3dl+xLhZA3bHwPjRsaERvYKe0AeIvROeYCN
+         +wDsk6ETRnWDAEh/DJFPQ3wpIubrSMQG9ij80yM8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 40/69] Btrfs: fix race updating log root item during fsync
+Date:   Fri,  7 Jun 2019 17:39:21 +0200
+Message-Id: <20190607153853.310094093@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190607153848.271562617@linuxfoundation.org>
+References: <20190607153848.271562617@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607154010.GA41392@archlinux-epyc>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 08:40:10AM -0700, Nathan Chancellor wrote:
-> On Fri, Jun 07, 2019 at 11:26:11AM -0400, Qian Cai wrote:
-> > On Fri, 2019-06-07 at 16:25 +0100, Will Deacon wrote:
-> > > On Fri, Jun 07, 2019 at 11:22:45AM -0400, Qian Cai wrote:
-> > > > The linux-next commit "arm64: Silence gcc warnings about arch ABI drift" [1]
-> > > > breaks clang build where it screams that unknown option "-Wno-psabi" and
-> > > > generates errors below,
-> > > 
-> > > So that can be easily fixed with cc-option...
-> > > 
-> > > > [1] https://lore.kernel.org/linux-arm-kernel/1559817223-32585-1-git-send-ema
-> > > > il-D
-> > > > ave.Martin@arm.com/
-> > > > 
-> > > > ./drivers/firmware/efi/libstub/arm-stub.stub.o: In function
-> > > > `install_memreserve_table':
-> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:73: undefined reference to
-> > > > `__efistub___stack_chk_guard'
-> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:73: undefined reference to
-> > > > `__efistub___stack_chk_guard'
-> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:93: undefined reference to
-> > > > `__efistub___stack_chk_guard'
-> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:93: undefined reference to
-> > > > `__efistub___stack_chk_guard'
-> > > > ./linux/drivers/firmware/efi/libstub/arm-stub.c:94: undefined reference to
-> > > > `__efistub___stack_chk_fail
-> > > 
-> > > ... but this looks unrelated. Are you saying you don't see these errors if
-> > > you revert Dave's patch?
-> > 
-> > Yes.
-> 
-> I suspect the reason for this is -Wunknown-warning-option causes
-> cc-option to fail. I see some disabled warnings like
-> -Waddress-of-packed-member and -Wunused-const-variable when -Wno-psabi
-> is unconditionally added.
-> 
-> I'll do some further triage but I think the obvious fix as Will
-> suggested is to use cc-disable-warning. I'll send a patch.
+From: Filipe Manana <fdmanana@suse.com>
 
-Cheers, Nathan. I've already sent the pull for -rc4, but I can send your
-fix for -rc5 next week.
+commit 06989c799f04810f6876900d4760c0edda369cf7 upstream.
 
-Will
+When syncing the log, the final phase of a fsync operation, we need to
+either create a log root's item or update the existing item in the log
+tree of log roots, and that depends on the current value of the log
+root's log_transid - if it's 1 we need to create the log root item,
+otherwise it must exist already and we update it. Since there is no
+synchronization between updating the log_transid and checking it for
+deciding whether the log root's item needs to be created or updated, we
+end up with a tiny race window that results in attempts to update the
+item to fail because the item was not yet created:
+
+              CPU 1                                    CPU 2
+
+  btrfs_sync_log()
+
+    lock root->log_mutex
+
+    set log root's log_transid to 1
+
+    unlock root->log_mutex
+
+                                               btrfs_sync_log()
+
+                                                 lock root->log_mutex
+
+                                                 sets log root's
+                                                 log_transid to 2
+
+                                                 unlock root->log_mutex
+
+    update_log_root()
+
+      sees log root's log_transid
+      with a value of 2
+
+        calls btrfs_update_root(),
+        which fails with -EUCLEAN
+        and causes transaction abort
+
+Until recently the race lead to a BUG_ON at btrfs_update_root(), but after
+the recent commit 7ac1e464c4d47 ("btrfs: Don't panic when we can't find a
+root key") we just abort the current transaction.
+
+A sample trace of the BUG_ON() on a SLE12 kernel:
+
+  ------------[ cut here ]------------
+  kernel BUG at ../fs/btrfs/root-tree.c:157!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  SMP NR_CPUS=2048 NUMA pSeries
+  (...)
+  Supported: Yes, External
+  CPU: 78 PID: 76303 Comm: rtas_errd Tainted: G                 X 4.4.156-94.57-default #1
+  task: c00000ffa906d010 ti: c00000ff42b08000 task.ti: c00000ff42b08000
+  NIP: d000000036ae5cdc LR: d000000036ae5cd8 CTR: 0000000000000000
+  REGS: c00000ff42b0b860 TRAP: 0700   Tainted: G                 X  (4.4.156-94.57-default)
+  MSR: 8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 22444484  XER: 20000000
+  CFAR: d000000036aba66c SOFTE: 1
+  GPR00: d000000036ae5cd8 c00000ff42b0bae0 d000000036bda220 0000000000000054
+  GPR04: 0000000000000001 0000000000000000 c00007ffff8d37c8 0000000000000000
+  GPR08: c000000000e19c00 0000000000000000 0000000000000000 3736343438312079
+  GPR12: 3930373337303434 c000000007a3a800 00000000007fffff 0000000000000023
+  GPR16: c00000ffa9d26028 c00000ffa9d261f8 0000000000000010 c00000ffa9d2ab28
+  GPR20: c00000ff42b0bc48 0000000000000001 c00000ff9f0d9888 0000000000000001
+  GPR24: c00000ffa9d26000 c00000ffa9d261e8 c00000ffa9d2a800 c00000ff9f0d9888
+  GPR28: c00000ffa9d26028 c00000ffa9d2aa98 0000000000000001 c00000ffa98f5b20
+  NIP [d000000036ae5cdc] btrfs_update_root+0x25c/0x4e0 [btrfs]
+  LR [d000000036ae5cd8] btrfs_update_root+0x258/0x4e0 [btrfs]
+  Call Trace:
+  [c00000ff42b0bae0] [d000000036ae5cd8] btrfs_update_root+0x258/0x4e0 [btrfs] (unreliable)
+  [c00000ff42b0bba0] [d000000036b53610] btrfs_sync_log+0x2d0/0xc60 [btrfs]
+  [c00000ff42b0bce0] [d000000036b1785c] btrfs_sync_file+0x44c/0x4e0 [btrfs]
+  [c00000ff42b0bd80] [c00000000032e300] vfs_fsync_range+0x70/0x120
+  [c00000ff42b0bdd0] [c00000000032e44c] do_fsync+0x5c/0xb0
+  [c00000ff42b0be10] [c00000000032e8dc] SyS_fdatasync+0x2c/0x40
+  [c00000ff42b0be30] [c000000000009488] system_call+0x3c/0x100
+  Instruction dump:
+  7f43d378 4bffebb9 60000000 88d90008 3d220000 e8b90000 3b390009 e87a01f0
+  e8898e08 e8f90000 4bfd48e5 60000000 <0fe00000> e95b0060 39200004 394a0ea0
+  ---[ end trace 8f2dc8f919cabab8 ]---
+
+So fix this by doing the check of log_transid and updating or creating the
+log root's item while holding the root's log_mutex.
+
+Fixes: 7237f1833601d ("Btrfs: fix tree logs parallel sync")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/tree-log.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -2907,6 +2907,12 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 	log->log_transid = root->log_transid;
+ 	root->log_start_pid = 0;
+ 	/*
++	 * Update or create log root item under the root's log_mutex to prevent
++	 * races with concurrent log syncs that can lead to failure to update
++	 * log root item because it was not created yet.
++	 */
++	ret = update_log_root(trans, log);
++	/*
+ 	 * IO has been started, blocks of the log tree have WRITTEN flag set
+ 	 * in their headers. new modifications of the log will be written to
+ 	 * new positions. so it's safe to allow log writers to go in.
+@@ -2925,8 +2931,6 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 
+ 	mutex_unlock(&log_root_tree->log_mutex);
+ 
+-	ret = update_log_root(trans, log);
+-
+ 	mutex_lock(&log_root_tree->log_mutex);
+ 	if (atomic_dec_and_test(&log_root_tree->log_writers)) {
+ 		/*
+
+
