@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CD9C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6632DC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3219C2133D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D410208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922901;
-	bh=qsBYCJp0T9BTNFdojWwxp9gA8fp2Y3KEZMWRQhokJBQ=;
+	s=default; t=1559922904;
+	bh=FW5w7A6SuCFU64s92XNLYs79VvKZL7XkFiSjqhtCBGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gbSBOadeB0NjTEQ+f/caSbC7IEWIN0QNcK3HSDyCAiZb9VOn2A29HH8I4me+ZH11i
-	 15EYP1q23vxxYxYWELoW3hwSGxVNvcCk9Ff1l7u5U+E+TFyO0/wg0x4FRNKNVLA6x3
-	 qqYTOGdVgPq6uCGX7d2/1KrvVJpuPMsxcxJ0YOS0=
+	b=VPWObZd3ZH4GvstCgydiXcbo0vRzFt9KHO3IHcqHcV1D5Oa/8VEb9T/TRFsmCAd3Q
+	 ZklnLQf3Ngu7gzB1e5dpHs0wGWb9LCDcA3kxYwijhPKaeenNSQG7gh5XS0f6S6+GAk
+	 42tXkq6WQcKCYmwFeOoDS5/Z6oxdX4dFtBdZk+q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbfFGPzA (ORCPT
+        id S1731349AbfFGPqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58514 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731368AbfFGPqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:46:17 -0400
+        id S1730496AbfFGPqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:46:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B733A2146E;
-        Fri,  7 Jun 2019 15:46:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F06B9212F5;
+        Fri,  7 Jun 2019 15:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922377;
-        bh=qsBYCJp0T9BTNFdojWwxp9gA8fp2Y3KEZMWRQhokJBQ=;
+        s=default; t=1559922366;
+        bh=FW5w7A6SuCFU64s92XNLYs79VvKZL7XkFiSjqhtCBGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gk+LgiKRNRt+iUv4U1aiyzYP65+AGh8BXx/id6KwS6t1okJdtgkgOx5oeUCSMT2wk
-         6MVHrvafVD1Kkr2s9ZhfjN+f2jzP8uisTOKMkW+5xX6Ji91VRxy1TsTqr+79JyzsX8
-         pbhg1SIck1qUocwzcwt4dhjTdcCyBJ0+HAWOT6Es=
+        b=y6gFuFo50wwbWu/b6PiDoTDri6oMyTKfRMUBzHBKNujYijolyAMw9l+3t2IMUytEd
+         ASziqBDQwH021aaD8c2m7M3eIiUHv8s6BAh69h4F4S4aFJj8NhrlNQo9PCYEUTfctU
+         S2G8ZsjrCaaM1GLBtVMx/Wd5BF7RA8jUHWI87F64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 4.19 38/73] tty: serial: msm_serial: Fix XON/XOFF
-Date:   Fri,  7 Jun 2019 17:39:25 +0200
-Message-Id: <20190607153853.392889944@linuxfoundation.org>
+        stable@vger.kernel.org, Keith Packard <keithp@keithp.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH 4.19 61/73] drm/lease: Make sure implicit planes are leased
+Date:   Fri,  7 Jun 2019 17:39:48 +0200
+Message-Id: <20190607153855.793407973@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
 References: <20190607153848.669070800@linuxfoundation.org>
@@ -61,53 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-commit 61c0e37950b88bad590056286c1d766b1f167f4e upstream.
+commit 204f640da6914844b3270b41b29c84f6e3b74083 upstream.
 
-When the tty layer requests the uart to throttle, the current code
-executing in msm_serial will trigger "Bad mode in Error Handler" and
-generate an invalid stack frame in pstore before rebooting (that is if
-pstore is indeed configured: otherwise the user shall just notice a
-reboot with no further information dumped to the console).
+If userspace doesn't enable universal planes, then we automatically
+add the primary and cursor planes. But for universal userspace there's
+no such check (and maybe we only want to give the lessee one plane,
+maybe not even the primary one), hence we need to check for the
+implied plane.
 
-This patch replaces the PIO byte accessor with the word accessor
-already used in PIO mode.
+v2: don't forget setcrtc ioctl.
 
-Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
+v3: Still allow disabling of the crtc in SETCRTC.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Cc: Keith Packard <keithp@keithp.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190228144910.26488-6-daniel.vetter@ffwll.ch
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/msm_serial.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_crtc.c  |    4 ++++
+ drivers/gpu/drm/drm_plane.c |    8 ++++++++
+ 2 files changed, 12 insertions(+)
 
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -860,6 +860,7 @@ static void msm_handle_tx(struct uart_po
- 	struct circ_buf *xmit = &msm_port->uart.state->xmit;
- 	struct msm_dma *dma = &msm_port->tx_dma;
- 	unsigned int pio_count, dma_count, dma_min;
-+	char buf[4] = { 0 };
- 	void __iomem *tf;
- 	int err = 0;
+--- a/drivers/gpu/drm/drm_crtc.c
++++ b/drivers/gpu/drm/drm_crtc.c
+@@ -595,6 +595,10 @@ int drm_mode_setcrtc(struct drm_device *
  
-@@ -869,10 +870,12 @@ static void msm_handle_tx(struct uart_po
- 		else
- 			tf = port->membase + UART_TF;
+ 	plane = crtc->primary;
  
-+		buf[0] = port->x_char;
++	/* allow disabling with the primary plane leased */
++	if (crtc_req->mode_valid && !drm_lease_held(file_priv, plane->base.id))
++		return -EACCES;
 +
- 		if (msm_port->is_uartdm)
- 			msm_reset_dm_count(port, 1);
+ 	mutex_lock(&crtc->dev->mode_config.mutex);
+ 	drm_modeset_acquire_init(&ctx, DRM_MODESET_ACQUIRE_INTERRUPTIBLE);
+ retry:
+--- a/drivers/gpu/drm/drm_plane.c
++++ b/drivers/gpu/drm/drm_plane.c
+@@ -940,6 +940,11 @@ retry:
+ 		if (ret)
+ 			goto out;
  
--		iowrite8_rep(tf, &port->x_char, 1);
-+		iowrite32_rep(tf, buf, 1);
- 		port->icount.tx++;
- 		port->x_char = 0;
- 		return;
++		if (!drm_lease_held(file_priv, crtc->cursor->base.id)) {
++			ret = -EACCES;
++			goto out;
++		}
++
+ 		ret = drm_mode_cursor_universal(crtc, req, file_priv, &ctx);
+ 		goto out;
+ 	}
+@@ -1042,6 +1047,9 @@ int drm_mode_page_flip_ioctl(struct drm_
+ 
+ 	plane = crtc->primary;
+ 
++	if (!drm_lease_held(file_priv, plane->base.id))
++		return -EACCES;
++
+ 	if (crtc->funcs->page_flip_target) {
+ 		u32 current_vblank;
+ 		int r;
 
 
