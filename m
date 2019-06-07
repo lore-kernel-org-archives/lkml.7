@@ -4,217 +4,271 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9A3C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218B4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA8D212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E855920868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 11:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbfFGL6C (ORCPT
+        id S1728170AbfFGL7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 07:58:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39404 "EHLO mx1.suse.de"
+        Fri, 7 Jun 2019 07:59:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39742 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727388AbfFGL6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 07:58:01 -0400
+        id S1727388AbfFGL7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 07:59:37 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 32422AF19;
-        Fri,  7 Jun 2019 11:57:59 +0000 (UTC)
-Message-ID: <c1686c85beff2acbfec0b44fc2ad0e67099c6b94.camel@suse.de>
-Subject: Re: [PATCH v2 4/7] cpufreq: add driver for Raspbery Pi
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
-        ptesarik@suse.com, sboyd@kernel.org, mturquette@baylibre.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eric@anholt.net, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        mbrugger@suse.de, ssuloev@orpaltech.com
-Date:   Fri, 07 Jun 2019 13:57:57 +0200
-In-Reply-To: <c967bbfd-ce83-7c89-7f18-98f2c66aa333@i2se.com>
-References: <20190606142255.29454-1-nsaenzjulienne@suse.de>
-         <20190606142255.29454-5-nsaenzjulienne@suse.de>
-         <c967bbfd-ce83-7c89-7f18-98f2c66aa333@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-m2BvIrpJbVtYJFQFjMnr"
-User-Agent: Evolution 3.32.2 
+        by mx1.suse.de (Postfix) with ESMTP id BFE46AF8F;
+        Fri,  7 Jun 2019 11:59:35 +0000 (UTC)
+Subject: Re: [PATCH 1/2] btrfs: Implement DRW lock
+To:     paulmck@linux.ibm.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrea.parri@amarulasolutions.com, peterz@infradead.org
+References: <20190606135219.1086-1-nborisov@suse.com>
+ <20190606135219.1086-2-nborisov@suse.com>
+ <20190607105251.GB28207@linux.ibm.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7a1c1f42-6e2f-57fc-5cdd-8c2bea23dffa@suse.com>
+Date:   Fri, 7 Jun 2019 14:59:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190607105251.GB28207@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-m2BvIrpJbVtYJFQFjMnr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2019-06-07 at 13:42 +0200, Stefan Wahren wrote:
-> Hi Nicolas,
->=20
-> Am 06.06.19 um 16:22 schrieb Nicolas Saenz Julienne:
-> > Raspberry Pi's firmware offers and interface though which update it's
-> > performance requirements. It allows us to request for specific runtime
-> > frequencies, which the firmware might or might not respect, depending o=
-n
-> > the firmware configuration and thermals.
-> >=20
-> > As the maximum and minimum frequencies are configurable in the firmware
-> > there is no way to know in advance their values. So the Raspberry Pi
-> > cpufreq driver queries them, builds an opp frequency table to then
-> > launch cpufreq-dt.
-> >=20
-> > Also, as the firmware interface might be configured as a module, making
-> > the cpu clock unavailable during init, this implements a full fledged
-> > driver, as opposed to most drivers registering cpufreq-dt, which only
-> > make use of an init routine.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Acked-by: Eric Anholt <eric@anholt.net>
-> >=20
-> > ---
-> >=20
-> > Changes since v1:
-> >   - Remove compatible checks
-> >   - Add module support, now full fledged driver
-> >   - Use NULL in clk_get()
-> >=20
-> >  drivers/cpufreq/Kconfig.arm           |   8 +++
-> >  drivers/cpufreq/Makefile              |   1 +
-> >  drivers/cpufreq/raspberrypi-cpufreq.c | 100 ++++++++++++++++++++++++++
-> >  3 files changed, 109 insertions(+)
-> >  create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
-> >=20
-> > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> > index f8129edc145e..5e9204d443ff 100644
-> > --- a/drivers/cpufreq/Kconfig.arm
-> > +++ b/drivers/cpufreq/Kconfig.arm
-> > @@ -133,6 +133,14 @@ config ARM_QCOM_CPUFREQ_HW
-> >  	  The driver implements the cpufreq interface for this HW engine.
-> >  	  Say Y if you want to support CPUFreq HW.
-> > =20
-> > +config ARM_RASPBERRYPI_CPUFREQ
-> > +	tristate "Raspberry Pi cpufreq support"
-> > +	depends on CLK_RASPBERRYPI || COMPILE_TEST
-> > +	help
-> > +	  This adds the CPUFreq driver for Raspberry Pi
-> > +
-> > +	  If in doubt, say N.
-> > +
-> >  config ARM_S3C_CPUFREQ
-> >  	bool
-> >  	help
-> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> > index 689b26c6f949..121c1acb66c0 100644
-> > --- a/drivers/cpufreq/Makefile
-> > +++ b/drivers/cpufreq/Makefile
-> > @@ -64,6 +64,7 @@ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+=3D pxa2xx-cpufreq.=
-o
-> >  obj-$(CONFIG_PXA3xx)			+=3D pxa3xx-cpufreq.o
-> >  obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+=3D qcom-cpufreq-hw.o
-> >  obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+=3D qcom-cpufreq-kryo.o
-> > +obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+=3D raspberrypi-cpufreq.o
-> >  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+=3D s3c2410-cpufreq.o
-> >  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+=3D s3c2412-cpufreq.o
-> >  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+=3D s3c2416-cpufreq.o
-> > diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c
-> > b/drivers/cpufreq/raspberrypi-cpufreq.c
-> > new file mode 100644
-> > index 000000000000..99b59d5a50aa
-> > --- /dev/null
-> > +++ b/drivers/cpufreq/raspberrypi-cpufreq.c
-> > @@ -0,0 +1,100 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Raspberry Pi cpufreq driver
-> > + *
-> > + * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/cpu.h>
-> > +#include <linux/cpufreq.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_opp.h>
-> > +
-> > +static struct platform_device *cpufreq_dt;
-> > +
-> > +static int raspberrypi_cpufreq_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *cpu_dev;
-> > +	unsigned long min, max;
-> > +	unsigned long rate;
-> > +	struct clk *clk;
-> > +	int ret;
-> > +
-> > +	cpu_dev =3D get_cpu_device(0);
-> > +	if (!cpu_dev) {
-> > +		pr_err("Cannot get CPU for cpufreq driver\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	clk =3D clk_get(cpu_dev, NULL);
-> > +	if (IS_ERR(clk)) {
-> > +		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
-> > +		return PTR_ERR(clk);
-> > +	}
-> > +
-> > +	/*
-> > +	 * The max and min frequencies are configurable in the Raspberry Pi
-> > +	 * firmware, so we query them at runtime
-> > +	 */
-> > +	min =3D clk_round_rate(clk, 0);
-> > +	max =3D clk_round_rate(clk, ULONG_MAX);
-> > +	clk_put(clk);
-> > +
-> > +	for (rate =3D min; rate < max; rate +=3D 100000000) {
-> > +		ret =3D dev_pm_opp_add(cpu_dev, rate, 0);
-> > +		if (ret)
-> > +			goto remove_opp;
-> > +	}
->=20
-> i played a little bit with my Raspberry Pi Zero W and this series. Looks
-> fine so far.
->=20
-> Sorry for this nitpicking, but i expect user questions about the
-> differences between sysfs and vcgencmd measure_clock.
->=20
-> scaling_available_frequencies gives
->=20
-> 699999 799999 899999 999999
->=20
-> but vcgencmd measure_clock return the rounded up values.
->=20
-> I know we shouldn't fake anything, but adding the OPPs rounded up may
-> avoid confusion.
->=20
-> Stefan
+On 7.06.19 г. 13:52 ч., Paul E. McKenney wrote:
+> On Thu, Jun 06, 2019 at 04:52:18PM +0300, Nikolay Borisov wrote:
+>> A (D)ouble (R)eader (W)riter lock is a locking primitive that allows
+>> to have multiple readers or multiple writers but not multiple readers
+>> and writers holding it concurrently. The code is factored out from
+>> the existing open-coded locking scheme used to exclude pending
+>> snapshots from nocow writers and vice-versa. Current implementation
+>> actually favors Readers (that is snapshot creaters) to writers (nocow
+>> writers of the filesystem).
+>>
+>> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+> 
+> A preliminary question...
+> 
+> What prevents the following sequence of events from happening?
+> 
+> o	btrfs_drw_write_lock() invokes btrfs_drw_try_write_lock(),
+> 	which sees that lock->readers is zero and thus executes
+> 	percpu_counter_inc(&lock->writers).
+> 
+> o	btrfs_drw_read_lock() increments lock->readers, does the
+> 	smp_mb__after_atomic(), and then does the wait_event().
+> 	Because btrfs_drw_try_write_lock() incremented its CPU's
+> 	lock->writers, the sum is the value one, so it blocks.
+> 
+> o	btrfs_drw_try_write_lock() checks lock->readers, sees that
+> 	it is now nonzero, and thus invokes btrfs_drw_read_unlock()
+> 	(which decrements the current CPU's counter, so that a future
+> 	sum would get zero), and returns false.
 
-Agree, I'll change this in v3.
+btrfs_drw_read_unlock is actually btrfs_drw_write_unlock, my bad, Filipe
+already pointed that out and I've fixed it.
 
+The idea here is that if a reader came after we've incremented out
+percpu counter then it would have blocked, the writer would see that and
+invoke btrfs_drw_write_unlock which will decrement the percpu counter
+and will wakeup the reader that is now blocked on pending_readers.
 
---=-m2BvIrpJbVtYJFQFjMnr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlz6UUUACgkQlfZmHno8
-x/7JCgf/Zk1fHhJfUoEiHOt3zSZ7agmFFGFgo6lyeQtztQd0/4Igo7AglYuknLit
-NnXmmlyf7AtGDtkZo3KkNfc0s5NrMI5EiFc4z5zB0oAiUY/sFfThl2pBDxVEcTs6
-1Vn7SLScGnKk7RMZKug58GnCg2FvrKogeouOHtoWDdw8jtnflsQK0U/TwQXg0Qk8
-CVakyVtX6aSmhQyMih6/Ohn0RSfUUQQ8tQN/sZlujEIEWJjrmHAsMpWGUBVAi2se
-Cn/XRt4o6vn9rx4bGyVURAjWyGjDM0OQAyojjqbd4864aDjwJFBpjyvG1a3s5BQA
-JMTNhMuoEtBWIB/E182qN9Zgz2Y6RA==
-=hgrI
------END PGP SIGNATURE-----
-
---=-m2BvIrpJbVtYJFQFjMnr--
-
+> 
+> o	btrfs_drw_write_lock() therefore does its wait_event().
+> 	Because lock->readers is nonzero, it blocks.
+> 
+> o	Both tasks are now blocked.  In the absence of future calls
+> 	to these functions (and perhaps even given such future calls),
+> 	we have deadlock.
+> 
+> So what am I missing here?
+> 
+> 							Thanx, Paul
+> 
+>> ---
+>>  fs/btrfs/Makefile   |  2 +-
+>>  fs/btrfs/drw_lock.c | 71 +++++++++++++++++++++++++++++++++++++++++++++
+>>  fs/btrfs/drw_lock.h | 23 +++++++++++++++
+>>  3 files changed, 95 insertions(+), 1 deletion(-)
+>>  create mode 100644 fs/btrfs/drw_lock.c
+>>  create mode 100644 fs/btrfs/drw_lock.h
+>>
+>> diff --git a/fs/btrfs/Makefile b/fs/btrfs/Makefile
+>> index ca693dd554e9..dc60127791e6 100644
+>> --- a/fs/btrfs/Makefile
+>> +++ b/fs/btrfs/Makefile
+>> @@ -10,7 +10,7 @@ btrfs-y += super.o ctree.o extent-tree.o print-tree.o root-tree.o dir-item.o \
+>>  	   export.o tree-log.o free-space-cache.o zlib.o lzo.o zstd.o \
+>>  	   compression.o delayed-ref.o relocation.o delayed-inode.o scrub.o \
+>>  	   reada.o backref.o ulist.o qgroup.o send.o dev-replace.o raid56.o \
+>> -	   uuid-tree.o props.o free-space-tree.o tree-checker.o
+>> +	   uuid-tree.o props.o free-space-tree.o tree-checker.o drw_lock.o
+>>  
+>>  btrfs-$(CONFIG_BTRFS_FS_POSIX_ACL) += acl.o
+>>  btrfs-$(CONFIG_BTRFS_FS_CHECK_INTEGRITY) += check-integrity.o
+>> diff --git a/fs/btrfs/drw_lock.c b/fs/btrfs/drw_lock.c
+>> new file mode 100644
+>> index 000000000000..9681bf7544be
+>> --- /dev/null
+>> +++ b/fs/btrfs/drw_lock.c
+>> @@ -0,0 +1,71 @@
+>> +#include "drw_lock.h"
+>> +#include "ctree.h"
+>> +
+>> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock)
+>> +{
+>> +	atomic_set(&lock->readers, 0);
+>> +	percpu_counter_init(&lock->writers, 0, GFP_KERNEL);
+>> +	init_waitqueue_head(&lock->pending_readers);
+>> +	init_waitqueue_head(&lock->pending_writers);
+>> +}
+>> +
+>> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock)
+>> +{
+>> +	percpu_counter_destroy(&lock->writers);
+>> +}
+>> +
+>> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock)
+>> +{
+>> +	if (atomic_read(&lock->readers))
+>> +		return false;
+>> +
+>> +	percpu_counter_inc(&lock->writers);
+>> +
+>> +	/*
+>> +	 * Ensure writers count is updated before we check for
+>> +	 * pending readers
+>> +	 */
+>> +	smp_mb();
+>> +	if (atomic_read(&lock->readers)) {
+>> +		btrfs_drw_read_unlock(lock);
+>> +		return false;
+>> +	}
+>> +
+>> +	return true;
+>> +}
+>> +
+>> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock)
+>> +{
+>> +	while(true) {
+>> +		if (btrfs_drw_try_write_lock(lock))
+>> +			return;
+>> +		wait_event(lock->pending_writers, !atomic_read(&lock->readers));
+>> +	}
+>> +}
+>> +
+>> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock)
+>> +{
+>> +	percpu_counter_dec(&lock->writers);
+>> +	cond_wake_up(&lock->pending_readers);
+>> +}
+>> +
+>> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock)
+>> +{
+>> +	atomic_inc(&lock->readers);
+>> +	smp_mb__after_atomic();
+>> +
+>> +	wait_event(lock->pending_readers,
+>> +		   percpu_counter_sum(&lock->writers) == 0);
+>> +}
+>> +
+>> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock)
+>> +{
+>> +	/*
+>> +	 * Atomic RMW operations imply full barrier, so woken up writers
+>> +	 * are guaranteed to see the decrement
+>> +	 */
+>> +	if (atomic_dec_and_test(&lock->readers))
+>> +		wake_up(&lock->pending_writers);
+>> +}
+>> +
+>> +
+>> diff --git a/fs/btrfs/drw_lock.h b/fs/btrfs/drw_lock.h
+>> new file mode 100644
+>> index 000000000000..baff59561c06
+>> --- /dev/null
+>> +++ b/fs/btrfs/drw_lock.h
+>> @@ -0,0 +1,23 @@
+>> +#ifndef BTRFS_DRW_LOCK_H
+>> +#define BTRFS_DRW_LOCK_H
+>> +
+>> +#include <linux/atomic.h>
+>> +#include <linux/wait.h>
+>> +#include <linux/percpu_counter.h>
+>> +
+>> +struct btrfs_drw_lock {
+>> +	atomic_t readers;
+>> +	struct percpu_counter writers;
+>> +	wait_queue_head_t pending_writers;
+>> +	wait_queue_head_t pending_readers;
+>> +};
+>> +
+>> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock);
+>> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock);
+>> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock);
+>> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock);
+>> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock);
+>> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock);
+>> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock);
+>> +
+>> +#endif
+>> -- 
+>> 2.17.1
+>>
+> 
+> 
