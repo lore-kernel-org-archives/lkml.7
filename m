@@ -2,172 +2,250 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEE9C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B43AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325C220B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oEXWsRdK";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FPEoA2/l"
+	by mail.kernel.org (Postfix) with ESMTP id 4CCFA20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 09:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfFGJTZ (ORCPT
+        id S1728016AbfFGJVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 05:19:25 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58634 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfFGJTY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 05:19:24 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4D2FD604D4; Fri,  7 Jun 2019 09:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559899163;
-        bh=QBctI2mFEIpsc8FTsUaIRFrqjYlpJxAxchd4c9ax/dE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oEXWsRdKMlTHmy6l7fRe0TrEVyWZfPAu/B0b7F7GN9ztSFkvShlFNzD5KigjneoUo
-         rKmlR/9cOYNLUZVC/OToCYAIQnR6JBWvBFHo1ESyNLEHZymlRuQnK/oxAuSlVWyRHS
-         qvDKuxFgXXjJT76Xm/eAxjpAD2hpPeYoX0NEt16A=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A0164604D4;
-        Fri,  7 Jun 2019 09:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1559899162;
-        bh=QBctI2mFEIpsc8FTsUaIRFrqjYlpJxAxchd4c9ax/dE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FPEoA2/lj7X/5VOGLMHR2ofVFWYrye9B+X1UgV8+4Ff2Zodf48AVMcJX5KaE5OBVJ
-         j7y3zLeFBwpZPJGDP750bWuukn2digyrtJYlKNkkQaWcYuODpeKmLCijsdEyGOTjGw
-         LdekWcorY4prsayp50UKqQU9PrEJPLP/2ftMLlDg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A0164604D4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: pull-request: wireless-drivers 2019-06-07
-Date:   Fri, 07 Jun 2019 12:19:19 +0300
-Message-ID: <87a7etsqg8.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 7 Jun 2019 05:21:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:36282 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbfFGJVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 05:21:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 286A5360;
+        Fri,  7 Jun 2019 02:21:41 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0EB43F96A;
+        Fri,  7 Jun 2019 02:21:39 -0700 (PDT)
+Subject: Re: [PATCH v2 01/17] perf tools: Configure contextID tracing in
+ CPU-wide mode
+To:     mathieu.poirier@linaro.org, acme@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, leo.yan@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        coresight@lists.linaro.org
+References: <20190524173508.29044-1-mathieu.poirier@linaro.org>
+ <20190524173508.29044-2-mathieu.poirier@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
+Date:   Fri, 7 Jun 2019 10:21:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190524173508.29044-2-mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Hi Mathieu,
 
-here's a pull request to net tree for 5.2, more info below. Please let
-me know if there are any problems.
+On 24/05/2019 18:34, Mathieu Poirier wrote:
+> When operating in CPU-wide mode being notified of contextID changes is
+> required so that the decoding mechanic is aware of the process context
+> switch.
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Kalle
 
-The following changes since commit 3e66b7cc50ef921121babc91487e1fb98af1ba6e:
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-  net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE() (2019-05-26 21:50:11 -0700)
+I am sorry but, I don't remember reviewing this patch in the previous
+postings. But here we go.
 
-are available in the git repository at:
+> ---
+>   tools/perf/arch/arm/util/cs-etm.c | 126 +++++++++++++++++++++++++-----
+>   tools/perf/util/cs-etm.h          |  12 +++
+>   2 files changed, 119 insertions(+), 19 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index 911426721170..3912f0bf04ed 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -35,8 +35,100 @@ struct cs_etm_recording {
+>   	size_t			snapshot_size;
+>   };
+>   
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-06-07
 
-for you to fetch changes up to 69ae4f6aac1578575126319d3f55550e7e440449:
+>   static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
+>   
+> +static int cs_etm_set_context_id(struct auxtrace_record *itr,
+> +				 struct perf_evsel *evsel, int cpu)
+> +{
+> +	struct cs_etm_recording *ptr;
+> +	struct perf_pmu *cs_etm_pmu;
+> +	char path[PATH_MAX];
+> +	int err = -EINVAL;
+> +	u32 val;
+> +
+> +	ptr = container_of(itr, struct cs_etm_recording, itr);
+> +	cs_etm_pmu = ptr->cs_etm_pmu;
+> +
+> +	if (!cs_etm_is_etmv4(itr, cpu))
+> +		goto out;
+> +
+> +	/* Get a handle on TRCIRD2 */
+> +	snprintf(path, PATH_MAX, "cpu%d/%s",
+> +		 cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2]);
+> +	err = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
+> +
+> +	/* There was a problem reading the file, bailing out */
+> +	if (err != 1) {
+> +		pr_err("%s: can't read file %s\n",
+> +		       CORESIGHT_ETM_PMU_NAME, path);
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextID tracing
+> +	 * is supported:
+> +	 *  0b00000 Context ID tracing is not supported.
+> +	 *  0b00100 Maximum of 32-bit Context ID size.
+> +	 *  All other values are reserved.
+> +	 */
+> +	val = BMVAL(val, 5, 9);
+> +	if (!val || val != 0x4) {
+> +		err = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	/* All good, let the kernel know */
+> +	evsel->attr.config |= (1 << ETM_OPT_CTXTID);
+> +	err = 0;
+> +
+> +out:
+> +
+> +	return err;
+> +}
+> +
+> +static int cs_etm_set_option(struct auxtrace_record *itr,
+> +			     struct perf_evsel *evsel, u32 option)
+> +{
+> +	int i, err = -EINVAL;
+> +	struct cpu_map *event_cpus = evsel->evlist->cpus;
+> +	struct cpu_map *online_cpus = cpu_map__new(NULL);
+> +
+> +	/* Set option of each CPU we have */
+> +	for (i = 0; i < cpu__max_cpu(); i++) {
+> +		if (!cpu_map__has(event_cpus, i) ||
+> +		    !cpu_map__has(online_cpus, i))
+> +			continue;
+> +
+> +		switch (option) {
+> +		case ETM_OPT_CTXTID:
+> +			err = cs_etm_set_context_id(itr, evsel, i);
+> +			if (err)
+> +				goto out;
+> +			break;
+> +		default:
+> +			goto out;
+> +		}
+> +	}
 
-  mwifiex: Fix heap overflow in mwifiex_uap_parse_tail_ies() (2019-06-01 08:06:24 +0300)
+I am not too familiar with the perf tool code. But, isn't there a way
+to force the config bit, right from the beginning when the events are
+created, when we know that we are doing a CPU wide tracing, along with
+the other config bits ?
 
-----------------------------------------------------------------
-wireless-drivers fixes for 5.2
 
-First set of fixes for 5.2. Most important here are buffer overflow
-fixes for mwifiex.
 
-rtw88
+> +	err = 0;
+> +out:
+> +	cpu_map__put(online_cpus);
+> +	return err;
+> +}
+> +
+>   static int cs_etm_parse_snapshot_options(struct auxtrace_record *itr,
+>   					 struct record_opts *opts,
+>   					 const char *str)
+> @@ -105,8 +197,9 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>   				container_of(itr, struct cs_etm_recording, itr);
+>   	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+>   	struct perf_evsel *evsel, *cs_etm_evsel = NULL;
+> -	const struct cpu_map *cpus = evlist->cpus;
+> +	struct cpu_map *cpus = evlist->cpus;
+>   	bool privileged = (geteuid() == 0 || perf_event_paranoid() < 0);
+> +	int err = 0;
+>   
+>   	ptr->evlist = evlist;
+>   	ptr->snapshot_mode = opts->auxtrace_snapshot_mode;
+> @@ -241,19 +334,24 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>   
+>   	/*
+>   	 * In the case of per-cpu mmaps, we need the CPU on the
+> -	 * AUX event.
+> +	 * AUX event.  We also need the contextID in order to be notified
+> +	 * when a context switch happened.
+>   	 */
+> -	if (!cpu_map__empty(cpus))
+> +	if (!cpu_map__empty(cpus)) {
+>   		perf_evsel__set_sample_bit(cs_etm_evsel, CPU);
+>   
+> +		err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_CTXTID);
+> +		if (err)
+> +			goto out;
+> +	}
+> +
+>   	/* Add dummy event to keep tracking */
+>   	if (opts->full_auxtrace) {
+>   		struct perf_evsel *tracking_evsel;
+> -		int err;
+>   
+>   		err = parse_events(evlist, "dummy:u", NULL);
+>   		if (err)
+> -			return err;
+> +			goto out;
+>   
+>   		tracking_evsel = perf_evlist__last(evlist);
+>   		perf_evlist__set_tracking_event(evlist, tracking_evsel);
+> @@ -266,7 +364,8 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>   			perf_evsel__set_sample_bit(tracking_evsel, TIME);
+>   	}
+>   
+> -	return 0;
+> +out:
+> +	return err;
+>   }
 
-* fix out of bounds compiler warning
 
-* fix rssi handling to get 4x more throughput
+> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> index 0e97c196147a..826c9eedaf5c 100644
+> --- a/tools/perf/util/cs-etm.h
+> +++ b/tools/perf/util/cs-etm.h
+> @@ -103,6 +103,18 @@ struct intlist *traceid_list;
+>   #define KiB(x) ((x) * 1024)
+>   #define MiB(x) ((x) * 1024 * 1024)
+>   
+> +/*
+> + * Create a contiguous bitmask starting at bit position @l and ending at
+> + * position @h. For example
+> + * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+> + *
+> + * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
+> + */
+> +#define GENMASK(h, l) \
+> +	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
+> +
 
-* avoid circular locking
+minor nit: Could this be placed in a more generic header file for the other
+parts of the perf tool to consume ?
 
-rsi
+> +#define BMVAL(val, lsb, msb)	((val & GENMASK(msb, lsb)) >> lsb)
+> +
 
-* fix unitilised data warning, these are hopefully the last ones so
-  that the warning can be enabled by default
 
-mwifiex
-
-* fix buffer overflows
-
-iwlwifi
-
-* remove not used debugfs file
-
-* various fixes
-
-----------------------------------------------------------------
-Emmanuel Grumbach (1):
-      iwlwifi: fix load in rfkill flow for unified firmware
-
-Jia-Ju Bai (1):
-      iwlwifi: Fix double-free problems in iwl_req_fw_callback()
-
-Johannes Berg (1):
-      iwlwifi: mvm: remove d3_sram debugfs file
-
-Lior Cohen (1):
-      iwlwifi: mvm: change TLC config cmd sent by rs to be async
-
-Matt Chen (1):
-      iwlwifi: fix AX201 killer sku loading firmware issue
-
-Nathan Chancellor (1):
-      rsi: Properly initialize data in rsi_sdio_ta_reset
-
-Shahar S Matityahu (2):
-      iwlwifi: clear persistence bit according to device family
-      iwlwifi: print fseq info upon fw assert
-
-Stanislaw Gruszka (2):
-      rtw88: fix subscript above array bounds compiler warning
-      rtw88: avoid circular locking between local->iflist_mtx and rtwdev->mutex
-
-Takashi Iwai (3):
-      mwifiex: Fix possible buffer overflows at parsing bss descriptor
-      mwifiex: Abort at too short BSS descriptor element
-      mwifiex: Fix heap overflow in mwifiex_uap_parse_tail_ies()
-
-Yan-Hsuan Chuang (1):
-      rtw88: fix unassigned rssi_level in rtw_sta_info
-
-YueHaibing (1):
-      rtw88: Make some symbols static
-
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c        | 39 +++++++++++++++
- drivers/net/wireless/intel/iwlwifi/fw/dbg.h        |  2 +
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c       |  1 -
- drivers/net/wireless/intel/iwlwifi/iwl-prph.h      | 22 ++++++++-
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c        | 22 ---------
- drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c   | 57 ----------------------
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c        | 23 ++++++---
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c  |  2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h       |  4 +-
- drivers/net/wireless/intel/iwlwifi/mvm/ops.c       | 20 +++++---
- drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c     |  3 +-
- drivers/net/wireless/intel/iwlwifi/mvm/utils.c     |  2 +
- drivers/net/wireless/intel/iwlwifi/pcie/internal.h |  2 +-
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c    | 53 ++++++++++++++------
- drivers/net/wireless/marvell/mwifiex/ie.c          | 47 ++++++++++++------
- drivers/net/wireless/marvell/mwifiex/scan.c        | 19 ++++++++
- drivers/net/wireless/realtek/rtw88/fw.c            |  6 ++-
- drivers/net/wireless/realtek/rtw88/main.c          |  3 +-
- drivers/net/wireless/realtek/rtw88/phy.c           | 22 ++++++---
- drivers/net/wireless/rsi/rsi_91x_sdio.c            | 21 +++++---
- 20 files changed, 220 insertions(+), 150 deletions(-)
+Cheers
+Suzuki
