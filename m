@@ -2,530 +2,160 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7A4C28EBC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD895C04AB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856B9206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898DC206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 00:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iBJNl485"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u+E9n/fc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfFGAao (ORCPT
+        id S1728162AbfFGAgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 20:30:44 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:44358 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfFGAan (ORCPT
+        Thu, 6 Jun 2019 20:36:03 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:51840 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFGAgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 20:30:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8+AuuVQwp2vg7JCBlgfWhyxi/K1ZGGkAIy7A/DW1qrc=; b=iBJNl485Nbobtm7jDHlWxroVj1
-        nhhsUqpoO6euTOiWGbSBoHPpiCOcd7j9ofdMlmclDEIbGX37O4kX4V7M97vTx3OQ3r7DLlWq8RGf7
-        NyyyCKBTVhjbXcvj0KQi5EAtVCDYG0Bm9vsdAb/VttFT4++HArJ6oF3OvBhFhCPZAfKlOi3gXeopf
-        VnvDD4DxYRLBDD3XHIGPHc7+CVt+mPxW4wWVbick+RNdiSRFX1Yt/iELFOiGCojbJ4OOmYCahWHLz
-        zV1DcKZMxnadiUhn09CxbgnXgY5MM3USvZq7DrsIKF0189wHzv2htonmZ+W2Oq3brVEGV0JwdAP2O
-        R4Ve4qMQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hZ2mF-000891-RE; Fri, 07 Jun 2019 00:30:40 +0000
-Subject: Re: [PATCH linux-next] mpls: don't build sysctl related code when
- sysctl is disabled
-To:     Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org,
-        linux-next@vger.kernel.org, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20190606235742.1968-1-mcroce@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bc06bf54-9b3d-b1eb-5ce3-2c764e15e9ce@infradead.org>
-Date:   Thu, 6 Jun 2019 17:30:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 20:36:03 -0400
+Received: by mail-it1-f193.google.com with SMTP id m3so268643itl.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2019 17:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7A9RUvu0n3Bt4UhAjkzkVndEPIfQbQzuowpA9agMyKM=;
+        b=u+E9n/fcYZRBIG6EiOxDT0c67KRaVQVHtGEahegng3IZMA+9yNEYmGnxT6Au5lp3xS
+         DUrdtztMxD/Kp/PaZL0jhiAHwzfCX4CZylNl3sf+59X5Wt5gilaY15vcPdysh6h37xys
+         C8UWU6W3FTPCoNytPeNsyFFoiu8tHiB3a/NIC3mY01MpIrCmUNMLkRVPTHm9erFOCboE
+         Yy0Di1jgzPS4w10Q+UMZb7fwhXF1supmVLVPK76XfAS7HircfVRJ/9ujq6a0/j+HM11E
+         /42MHTZ9ImvuQbpJXIuvYvdfKsChLrXiycBJ2hOhrJvQWZVR43eqFGwFLuOP6QJxI3ZU
+         bb0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7A9RUvu0n3Bt4UhAjkzkVndEPIfQbQzuowpA9agMyKM=;
+        b=aOSNg3Ilv1VwkUg6j52NT/EG4MmWoHCRqGV2YNXuAOb3OVp9MvTq7byMosRpEYAO3i
+         kkcpeCq0NuCKqVI76h6SPJW5bqsrmVsSw7A/CJrU105KKqcc516HCh8cIrmRdrqoJUdr
+         T+5RJQ4+iznkurWvfYeYqZjbgKxOkkhsGIIdEookY3HhAjPyKpeiYDSXuIhDjJSgUO+i
+         Is06eXHy/gwAmWa/ZCkZ2t+T/LI/3s4xzB/WDJ2q/aALYnw4W24UEdh/6AqrRpbL2RfW
+         m+zzJT7UTgF7vL7QaTKNJnpsMNgHCLigBly8KOtwrRqvLOkQiojyVQOHZgWhQFM/uHC7
+         OIpw==
+X-Gm-Message-State: APjAAAWecOkAl2GMjUbzG0uv+O8Td5OMOIgHCpjUyv6ujQSGCNCr9oQB
+        q9S607Cq8QiKSe3L8seuOXuUVbaVgHzNOXSiFVhspA==
+X-Google-Smtp-Source: APXvYqyHqN66GDCIO8XLc++aamWWvQQKrduhAh07DngI3gLNjcuViZej77vdnJNs6dUOjxfZcuoMFMraNXWWbgERJdU=
+X-Received: by 2002:a24:6b52:: with SMTP id v79mr2047862itc.20.1559867762475;
+ Thu, 06 Jun 2019 17:36:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190606235742.1968-1-mcroce@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1558660583-28561-18-git-send-email-ricardo.neri-calderon@linux.intel.com>
+In-Reply-To: <1558660583-28561-18-git-send-email-ricardo.neri-calderon@linux.intel.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Thu, 6 Jun 2019 17:35:51 -0700
+Message-ID: <CABPqkBQP=JxpiQE7SVuJO3xPWvsFbAPj916RTYUgaMBDG1OdaQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 17/21] x86/tsc: Switch to perf-based hardlockup
+ detector if TSC become unstable
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Ricardo Neri <ricardo.neri@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 4:57 PM, Matteo Croce wrote:
-> Some sysctl related code and data structures are never referenced
-> when CONFIG_SYSCTL is not set.
-> While this is usually harmless, it produces a build failure since sysctl
-> shared variables exist, due to missing sysctl_vals symbol:
-> 
->     ld: net/mpls/af_mpls.o: in function `mpls_platform_labels':
->     af_mpls.c:(.text+0x162a): undefined reference to `sysctl_vals'
->     ld: net/mpls/af_mpls.o:(.rodata+0x830): undefined reference to `sysctl_vals'
->     ld: net/mpls/af_mpls.o:(.rodata+0x838): undefined reference to `sysctl_vals'
->     ld: net/mpls/af_mpls.o:(.rodata+0x870): undefined reference to `sysctl_vals'
-> 
-> Fix this by moving all sysctl related code under #ifdef CONFIG_SYSCTL
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Hi Ricardo,
+Thanks for your contribution here. It is very important to move the
+watchdog out of the PMU wherever possible.
 
-Builds for me.  Thanks.
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
+On Thu, May 23, 2019 at 6:17 PM Ricardo Neri
+<ricardo.neri-calderon@linux.intel.com> wrote:
+>
+> The HPET-based hardlockup detector relies on the TSC to determine if an
+> observed NMI interrupt was originated by HPET timer. Hence, this detector
+> can no longer be used with an unstable TSC.
+>
+> In such case, permanently stop the HPET-based hardlockup detector and
+> start the perf-based detector.
+>
+> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 > ---
->  net/mpls/af_mpls.c | 389 ++++++++++++++++++++++++---------------------
->  1 file changed, 204 insertions(+), 185 deletions(-)
-> 
-> diff --git a/net/mpls/af_mpls.c b/net/mpls/af_mpls.c
-> index c312741df2ce..5aacbf129ec5 100644
-> --- a/net/mpls/af_mpls.c
-> +++ b/net/mpls/af_mpls.c
-> @@ -37,9 +37,6 @@
->  
->  #define MPLS_NEIGH_TABLE_UNSPEC (NEIGH_LINK_TABLE + 1)
->  
-> -static int label_limit = (1 << 20) - 1;
-> -static int ttl_max = 255;
-> -
->  #if IS_ENABLED(CONFIG_NET_IP_TUNNEL)
->  static size_t ipgre_mpls_encap_hlen(struct ip_tunnel_encap *e)
->  {
-> @@ -1179,31 +1176,6 @@ static int mpls_netconf_msgsize_devconf(int type)
->  	return size;
->  }
->  
-> -static void mpls_netconf_notify_devconf(struct net *net, int event,
-> -					int type, struct mpls_dev *mdev)
-> -{
-> -	struct sk_buff *skb;
-> -	int err = -ENOBUFS;
-> -
-> -	skb = nlmsg_new(mpls_netconf_msgsize_devconf(type), GFP_KERNEL);
-> -	if (!skb)
-> -		goto errout;
-> -
-> -	err = mpls_netconf_fill_devconf(skb, mdev, 0, 0, event, 0, type);
-> -	if (err < 0) {
-> -		/* -EMSGSIZE implies BUG in mpls_netconf_msgsize_devconf() */
-> -		WARN_ON(err == -EMSGSIZE);
-> -		kfree_skb(skb);
-> -		goto errout;
-> -	}
-> -
-> -	rtnl_notify(skb, net, 0, RTNLGRP_MPLS_NETCONF, NULL, GFP_KERNEL);
-> -	return;
-> -errout:
-> -	if (err < 0)
-> -		rtnl_set_sk_err(net, RTNLGRP_MPLS_NETCONF, err);
-> -}
-> -
->  static const struct nla_policy devconf_mpls_policy[NETCONFA_MAX + 1] = {
->  	[NETCONFA_IFINDEX]	= { .len = sizeof(int) },
->  };
-> @@ -1362,6 +1334,36 @@ static int mpls_netconf_dump_devconf(struct sk_buff *skb,
->  #define MPLS_PERDEV_SYSCTL_OFFSET(field)	\
->  	(&((struct mpls_dev *)0)->field)
->  
-> +#ifdef CONFIG_SYSCTL
-> +
-> +static int label_limit = (1 << 20) - 1;
-> +static int ttl_max = 255;
-> +
-> +static void mpls_netconf_notify_devconf(struct net *net, int event,
-> +					int type, struct mpls_dev *mdev)
-> +{
-> +	struct sk_buff *skb;
-> +	int err = -ENOBUFS;
-> +
-> +	skb = nlmsg_new(mpls_netconf_msgsize_devconf(type), GFP_KERNEL);
-> +	if (!skb)
-> +		goto errout;
-> +
-> +	err = mpls_netconf_fill_devconf(skb, mdev, 0, 0, event, 0, type);
-> +	if (err < 0) {
-> +		/* -EMSGSIZE implies BUG in mpls_netconf_msgsize_devconf() */
-> +		WARN_ON(err == -EMSGSIZE);
-> +		kfree_skb(skb);
-> +		goto errout;
-> +	}
-> +
-> +	rtnl_notify(skb, net, 0, RTNLGRP_MPLS_NETCONF, NULL, GFP_KERNEL);
-> +	return;
-> +errout:
-> +	if (err < 0)
-> +		rtnl_set_sk_err(net, RTNLGRP_MPLS_NETCONF, err);
-> +}
-> +
->  static int mpls_conf_proc(struct ctl_table *ctl, int write,
->  			  void __user *buffer,
->  			  size_t *lenp, loff_t *ppos)
-> @@ -1445,6 +1447,173 @@ static void mpls_dev_sysctl_unregister(struct net_device *dev,
->  	mpls_netconf_notify_devconf(net, RTM_DELNETCONF, 0, mdev);
->  }
->  
-> +static int resize_platform_label_table(struct net *net, size_t limit)
-> +{
-> +	size_t size = sizeof(struct mpls_route *) * limit;
-> +	size_t old_limit;
-> +	size_t cp_size;
-> +	struct mpls_route __rcu **labels = NULL, **old;
-> +	struct mpls_route *rt0 = NULL, *rt2 = NULL;
-> +	unsigned index;
-> +
-> +	if (size) {
-> +		labels = kvzalloc(size, GFP_KERNEL);
-> +		if (!labels)
-> +			goto nolabels;
-> +	}
-> +
-> +	/* In case the predefined labels need to be populated */
-> +	if (limit > MPLS_LABEL_IPV4NULL) {
-> +		struct net_device *lo = net->loopback_dev;
-> +		rt0 = mpls_rt_alloc(1, lo->addr_len, 0);
-> +		if (IS_ERR(rt0))
-> +			goto nort0;
-> +		RCU_INIT_POINTER(rt0->rt_nh->nh_dev, lo);
-> +		rt0->rt_protocol = RTPROT_KERNEL;
-> +		rt0->rt_payload_type = MPT_IPV4;
-> +		rt0->rt_ttl_propagate = MPLS_TTL_PROP_DEFAULT;
-> +		rt0->rt_nh->nh_via_table = NEIGH_LINK_TABLE;
-> +		rt0->rt_nh->nh_via_alen = lo->addr_len;
-> +		memcpy(__mpls_nh_via(rt0, rt0->rt_nh), lo->dev_addr,
-> +		       lo->addr_len);
-> +	}
-> +	if (limit > MPLS_LABEL_IPV6NULL) {
-> +		struct net_device *lo = net->loopback_dev;
-> +		rt2 = mpls_rt_alloc(1, lo->addr_len, 0);
-> +		if (IS_ERR(rt2))
-> +			goto nort2;
-> +		RCU_INIT_POINTER(rt2->rt_nh->nh_dev, lo);
-> +		rt2->rt_protocol = RTPROT_KERNEL;
-> +		rt2->rt_payload_type = MPT_IPV6;
-> +		rt2->rt_ttl_propagate = MPLS_TTL_PROP_DEFAULT;
-> +		rt2->rt_nh->nh_via_table = NEIGH_LINK_TABLE;
-> +		rt2->rt_nh->nh_via_alen = lo->addr_len;
-> +		memcpy(__mpls_nh_via(rt2, rt2->rt_nh), lo->dev_addr,
-> +		       lo->addr_len);
-> +	}
-> +
-> +	rtnl_lock();
-> +	/* Remember the original table */
-> +	old = rtnl_dereference(net->mpls.platform_label);
-> +	old_limit = net->mpls.platform_labels;
-> +
-> +	/* Free any labels beyond the new table */
-> +	for (index = limit; index < old_limit; index++)
-> +		mpls_route_update(net, index, NULL, NULL);
-> +
-> +	/* Copy over the old labels */
-> +	cp_size = size;
-> +	if (old_limit < limit)
-> +		cp_size = old_limit * sizeof(struct mpls_route *);
-> +
-> +	memcpy(labels, old, cp_size);
-> +
-> +	/* If needed set the predefined labels */
-> +	if ((old_limit <= MPLS_LABEL_IPV6NULL) &&
-> +	    (limit > MPLS_LABEL_IPV6NULL)) {
-> +		RCU_INIT_POINTER(labels[MPLS_LABEL_IPV6NULL], rt2);
-> +		rt2 = NULL;
-> +	}
-> +
-> +	if ((old_limit <= MPLS_LABEL_IPV4NULL) &&
-> +	    (limit > MPLS_LABEL_IPV4NULL)) {
-> +		RCU_INIT_POINTER(labels[MPLS_LABEL_IPV4NULL], rt0);
-> +		rt0 = NULL;
-> +	}
-> +
-> +	/* Update the global pointers */
-> +	net->mpls.platform_labels = limit;
-> +	rcu_assign_pointer(net->mpls.platform_label, labels);
-> +
-> +	rtnl_unlock();
-> +
-> +	mpls_rt_free(rt2);
-> +	mpls_rt_free(rt0);
-> +
-> +	if (old) {
-> +		synchronize_rcu();
-> +		kvfree(old);
-> +	}
-> +	return 0;
-> +
-> +nort2:
-> +	mpls_rt_free(rt0);
-> +nort0:
-> +	kvfree(labels);
-> +nolabels:
-> +	return -ENOMEM;
-> +}
-> +
-> +static int mpls_platform_labels(struct ctl_table *table, int write,
-> +				void __user *buffer, size_t *lenp, loff_t *ppos)
-> +{
-> +	struct net *net = table->data;
-> +	int platform_labels = net->mpls.platform_labels;
-> +	int ret;
-> +	struct ctl_table tmp = {
-> +		.procname	= table->procname,
-> +		.data		= &platform_labels,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= table->mode,
-> +		.extra1		= SYSCTL_ZERO,
-> +		.extra2		= &label_limit,
-> +	};
-> +
-> +	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
-> +
-> +	if (write && ret == 0)
-> +		ret = resize_platform_label_table(net, platform_labels);
-> +
-> +	return ret;
-> +}
-> +
-> +#define MPLS_NS_SYSCTL_OFFSET(field)		\
-> +	(&((struct net *)0)->field)
-> +
-> +static const struct ctl_table mpls_table[] = {
-> +	{
-> +		.procname	= "platform_labels",
-> +		.data		= NULL,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= mpls_platform_labels,
-> +	},
-> +	{
-> +		.procname	= "ip_ttl_propagate",
-> +		.data		= MPLS_NS_SYSCTL_OFFSET(mpls.ip_ttl_propagate),
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec_minmax,
-> +		.extra1		= SYSCTL_ZERO,
-> +		.extra2		= SYSCTL_ONE,
-> +	},
-> +	{
-> +		.procname	= "default_ttl",
-> +		.data		= MPLS_NS_SYSCTL_OFFSET(mpls.default_ttl),
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec_minmax,
-> +		.extra1		= SYSCTL_ONE,
-> +		.extra2		= &ttl_max,
-> +	},
-> +	{ }
-> +};
-> +
-> +#else
-> +
-> +static int mpls_dev_sysctl_register(struct net_device *dev,
-> +				    struct mpls_dev *mdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void mpls_dev_sysctl_unregister(struct net_device *dev,
-> +				       struct mpls_dev *mdev)
-> +{
-> +}
-> +
-> +#endif
-> +
->  static struct mpls_dev *mpls_add_dev(struct net_device *dev)
->  {
->  	struct mpls_dev *mdev;
-> @@ -2497,168 +2666,12 @@ static int mpls_getroute(struct sk_buff *in_skb, struct nlmsghdr *in_nlh,
->  	return err;
->  }
->  
-> -static int resize_platform_label_table(struct net *net, size_t limit)
-> -{
-> -	size_t size = sizeof(struct mpls_route *) * limit;
-> -	size_t old_limit;
-> -	size_t cp_size;
-> -	struct mpls_route __rcu **labels = NULL, **old;
-> -	struct mpls_route *rt0 = NULL, *rt2 = NULL;
-> -	unsigned index;
-> -
-> -	if (size) {
-> -		labels = kvzalloc(size, GFP_KERNEL);
-> -		if (!labels)
-> -			goto nolabels;
-> -	}
-> -
-> -	/* In case the predefined labels need to be populated */
-> -	if (limit > MPLS_LABEL_IPV4NULL) {
-> -		struct net_device *lo = net->loopback_dev;
-> -		rt0 = mpls_rt_alloc(1, lo->addr_len, 0);
-> -		if (IS_ERR(rt0))
-> -			goto nort0;
-> -		RCU_INIT_POINTER(rt0->rt_nh->nh_dev, lo);
-> -		rt0->rt_protocol = RTPROT_KERNEL;
-> -		rt0->rt_payload_type = MPT_IPV4;
-> -		rt0->rt_ttl_propagate = MPLS_TTL_PROP_DEFAULT;
-> -		rt0->rt_nh->nh_via_table = NEIGH_LINK_TABLE;
-> -		rt0->rt_nh->nh_via_alen = lo->addr_len;
-> -		memcpy(__mpls_nh_via(rt0, rt0->rt_nh), lo->dev_addr,
-> -		       lo->addr_len);
-> -	}
-> -	if (limit > MPLS_LABEL_IPV6NULL) {
-> -		struct net_device *lo = net->loopback_dev;
-> -		rt2 = mpls_rt_alloc(1, lo->addr_len, 0);
-> -		if (IS_ERR(rt2))
-> -			goto nort2;
-> -		RCU_INIT_POINTER(rt2->rt_nh->nh_dev, lo);
-> -		rt2->rt_protocol = RTPROT_KERNEL;
-> -		rt2->rt_payload_type = MPT_IPV6;
-> -		rt2->rt_ttl_propagate = MPLS_TTL_PROP_DEFAULT;
-> -		rt2->rt_nh->nh_via_table = NEIGH_LINK_TABLE;
-> -		rt2->rt_nh->nh_via_alen = lo->addr_len;
-> -		memcpy(__mpls_nh_via(rt2, rt2->rt_nh), lo->dev_addr,
-> -		       lo->addr_len);
-> -	}
-> -
-> -	rtnl_lock();
-> -	/* Remember the original table */
-> -	old = rtnl_dereference(net->mpls.platform_label);
-> -	old_limit = net->mpls.platform_labels;
-> -
-> -	/* Free any labels beyond the new table */
-> -	for (index = limit; index < old_limit; index++)
-> -		mpls_route_update(net, index, NULL, NULL);
-> -
-> -	/* Copy over the old labels */
-> -	cp_size = size;
-> -	if (old_limit < limit)
-> -		cp_size = old_limit * sizeof(struct mpls_route *);
-> -
-> -	memcpy(labels, old, cp_size);
-> -
-> -	/* If needed set the predefined labels */
-> -	if ((old_limit <= MPLS_LABEL_IPV6NULL) &&
-> -	    (limit > MPLS_LABEL_IPV6NULL)) {
-> -		RCU_INIT_POINTER(labels[MPLS_LABEL_IPV6NULL], rt2);
-> -		rt2 = NULL;
-> -	}
-> -
-> -	if ((old_limit <= MPLS_LABEL_IPV4NULL) &&
-> -	    (limit > MPLS_LABEL_IPV4NULL)) {
-> -		RCU_INIT_POINTER(labels[MPLS_LABEL_IPV4NULL], rt0);
-> -		rt0 = NULL;
-> -	}
-> -
-> -	/* Update the global pointers */
-> -	net->mpls.platform_labels = limit;
-> -	rcu_assign_pointer(net->mpls.platform_label, labels);
-> -
-> -	rtnl_unlock();
-> -
-> -	mpls_rt_free(rt2);
-> -	mpls_rt_free(rt0);
-> -
-> -	if (old) {
-> -		synchronize_rcu();
-> -		kvfree(old);
-> -	}
-> -	return 0;
-> -
-> -nort2:
-> -	mpls_rt_free(rt0);
-> -nort0:
-> -	kvfree(labels);
-> -nolabels:
-> -	return -ENOMEM;
-> -}
-> -
-> -static int mpls_platform_labels(struct ctl_table *table, int write,
-> -				void __user *buffer, size_t *lenp, loff_t *ppos)
-> -{
-> -	struct net *net = table->data;
-> -	int platform_labels = net->mpls.platform_labels;
-> -	int ret;
-> -	struct ctl_table tmp = {
-> -		.procname	= table->procname,
-> -		.data		= &platform_labels,
-> -		.maxlen		= sizeof(int),
-> -		.mode		= table->mode,
-> -		.extra1		= SYSCTL_ZERO,
-> -		.extra2		= &label_limit,
-> -	};
-> -
-> -	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
-> -
-> -	if (write && ret == 0)
-> -		ret = resize_platform_label_table(net, platform_labels);
-> -
-> -	return ret;
-> -}
-> -
-> -#define MPLS_NS_SYSCTL_OFFSET(field)		\
-> -	(&((struct net *)0)->field)
-> -
-> -static const struct ctl_table mpls_table[] = {
-> -	{
-> -		.procname	= "platform_labels",
-> -		.data		= NULL,
-> -		.maxlen		= sizeof(int),
-> -		.mode		= 0644,
-> -		.proc_handler	= mpls_platform_labels,
-> -	},
-> -	{
-> -		.procname	= "ip_ttl_propagate",
-> -		.data		= MPLS_NS_SYSCTL_OFFSET(mpls.ip_ttl_propagate),
-> -		.maxlen		= sizeof(int),
-> -		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec_minmax,
-> -		.extra1		= SYSCTL_ZERO,
-> -		.extra2		= SYSCTL_ONE,
-> -	},
-> -	{
-> -		.procname	= "default_ttl",
-> -		.data		= MPLS_NS_SYSCTL_OFFSET(mpls.default_ttl),
-> -		.maxlen		= sizeof(int),
-> -		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec_minmax,
-> -		.extra1		= SYSCTL_ONE,
-> -		.extra2		= &ttl_max,
-> -	},
-> -	{ }
-> -};
-> -
->  static int mpls_net_init(struct net *net)
->  {
-> +#ifdef CONFIG_SYSCTL
->  	struct ctl_table *table;
->  	int i;
->  
-> -	net->mpls.platform_labels = 0;
-> -	net->mpls.platform_label = NULL;
-> -	net->mpls.ip_ttl_propagate = 1;
-> -	net->mpls.default_ttl = 255;
-> -
->  	table = kmemdup(mpls_table, sizeof(mpls_table), GFP_KERNEL);
->  	if (table == NULL)
->  		return -ENOMEM;
-> @@ -2674,6 +2687,12 @@ static int mpls_net_init(struct net *net)
->  		kfree(table);
->  		return -ENOMEM;
->  	}
-> +#endif
-> +
-> +	net->mpls.platform_labels = 0;
-> +	net->mpls.platform_label = NULL;
-> +	net->mpls.ip_ttl_propagate = 1;
-> +	net->mpls.default_ttl = 255;
->  
->  	return 0;
->  }
-> 
+>  arch/x86/include/asm/hpet.h    | 2 ++
+>  arch/x86/kernel/tsc.c          | 2 ++
+>  arch/x86/kernel/watchdog_hld.c | 7 +++++++
+>  3 files changed, 11 insertions(+)
+>
+> diff --git a/arch/x86/include/asm/hpet.h b/arch/x86/include/asm/hpet.h
+> index fd99f2390714..a82cbe17479d 100644
+> --- a/arch/x86/include/asm/hpet.h
+> +++ b/arch/x86/include/asm/hpet.h
+> @@ -128,6 +128,7 @@ extern int hardlockup_detector_hpet_init(void);
+>  extern void hardlockup_detector_hpet_stop(void);
+>  extern void hardlockup_detector_hpet_enable(unsigned int cpu);
+>  extern void hardlockup_detector_hpet_disable(unsigned int cpu);
+> +extern void hardlockup_detector_switch_to_perf(void);
+>  #else
+>  static inline struct hpet_hld_data *hpet_hardlockup_detector_assign_timer(void)
+>  { return NULL; }
+> @@ -136,6 +137,7 @@ static inline int hardlockup_detector_hpet_init(void)
+>  static inline void hardlockup_detector_hpet_stop(void) {}
+>  static inline void hardlockup_detector_hpet_enable(unsigned int cpu) {}
+>  static inline void hardlockup_detector_hpet_disable(unsigned int cpu) {}
+> +static void harrdlockup_detector_switch_to_perf(void) {}
+>  #endif /* CONFIG_X86_HARDLOCKUP_DETECTOR_HPET */
+>
+This does not compile for me when CONFIG_X86_HARDLOCKUP_DETECTOR_HPET
+is not enabled.
+because:
+   1- you have a typo on the function name
+    2- you are missing the inline keyword
 
 
--- 
-~Randy
+>  #else /* CONFIG_HPET_TIMER */
+> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> index 59b57605e66c..b2210728ce3d 100644
+> --- a/arch/x86/kernel/tsc.c
+> +++ b/arch/x86/kernel/tsc.c
+> @@ -1158,6 +1158,8 @@ void mark_tsc_unstable(char *reason)
+>
+>         clocksource_mark_unstable(&clocksource_tsc_early);
+>         clocksource_mark_unstable(&clocksource_tsc);
+> +
+> +       hardlockup_detector_switch_to_perf();
+>  }
+>
+>  EXPORT_SYMBOL_GPL(mark_tsc_unstable);
+> diff --git a/arch/x86/kernel/watchdog_hld.c b/arch/x86/kernel/watchdog_hld.c
+> index c2512d4c79c5..c8547c227a41 100644
+> --- a/arch/x86/kernel/watchdog_hld.c
+> +++ b/arch/x86/kernel/watchdog_hld.c
+> @@ -76,3 +76,10 @@ void watchdog_nmi_stop(void)
+>         if (detector_type == X86_HARDLOCKUP_DETECTOR_HPET)
+>                 hardlockup_detector_hpet_stop();
+>  }
+> +
+> +void hardlockup_detector_switch_to_perf(void)
+> +{
+> +       detector_type = X86_HARDLOCKUP_DETECTOR_PERF;
+> +       hardlockup_detector_hpet_stop();
+> +       hardlockup_start_all();
+> +}
+> --
+> 2.17.1
+>
