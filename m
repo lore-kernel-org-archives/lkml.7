@@ -2,58 +2,59 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C04CC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83245C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C5A2146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEFD20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 08:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jz5mKAbU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AyZfyAmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbfFGI3F (ORCPT
+        id S1728004AbfFGI3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 04:29:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45054 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727263AbfFGI3F (ORCPT
+        Fri, 7 Jun 2019 04:29:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35858 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727419AbfFGI3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 04:29:05 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b17so1213339wrq.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 01:29:04 -0700 (PDT)
+        Fri, 7 Jun 2019 04:29:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u8so1025707wmm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 01:29:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=nQjqkj1EN8NC8Ay0yEHmwn6X2HJX2TtkXyONunIjoOQ=;
-        b=jz5mKAbUNpc/2XrbWWbZCNJngHPyu1CFGXMDH3jsY6dBNiylltjRxlPmEIjFvwWsHB
-         G1s9vbvPWlTLMh5h0UuE5dNLrvZd8+Wp+SJU3n9JXQdMMbvR7PNj6ikzJHB6SWy9kpgw
-         2Mbhc2hqW2YDw+8oPUxyi4UcJXUWflUNc9hFXsZ94aEJWUlNlJDXYQuOkr5ViQaBGfUO
-         Q/NM4GLddz0ePkHqkojIxiNV4cl1J5V09BxBngzM1H4LgO3x1dYkWq/fnUvODE4L8CQz
-         E2IOMdqvU91OVm2QCcLf6C6cvnHAO30XIzPYH8mVqqnIYhNEs6SVCDupXrCIZMxiYhz6
-         U6gg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=nmWKh7PwMWUSmXx8hL09I0aV6DcSJSwvr9bLIGJ3tMI=;
+        b=AyZfyAmQeXNEiP7RPbbfDBumiDsi4J1GXIiKS5FtoVjZAhUXPa6Cj00boE1RmzpE7H
+         6TmLUUioK7k7lsUPncUpHomSWTfn0+GGfKjg1D71Sev6xfoob2h//ucywBfg5R7XzBf/
+         E3grARv8fTiWcaeHEbh9BBf/er7wN16flgMAXx7ErSQqlAYSXLuneo0QGx6YAAF8CAmp
+         iIgGNE7SW4mvY3vuMWpgTZCHtsZMH7tfWqI9FhfyYz/74oO6FRiwtMbGz+N8oxx+Vs5W
+         ivCVi2ZkYDKvOnNj8w5TA8X3FojMNPHlnDriNRUx2vAzh0xnZdzVuW0FD6Zoi0acKiLW
+         94Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nQjqkj1EN8NC8Ay0yEHmwn6X2HJX2TtkXyONunIjoOQ=;
-        b=lBFoNxf767PppJIRLACE7SRWiatUL0osfWEZl2VzII4XG6U5Bd+DwscW8Qu1gZo19K
-         1n88iTs69Szf2UbDmJX/u2Ma22ZunMRDRyEqB1+e6sf6o6dxfW9Dz9ZSEwKGZDHTBoMX
-         K1uRQcUt9ybIsXvUFNhg2LL0YoluNPSD5ggluKsUS6xuU0w+dT1mpOoN7qmDpu7JPlDA
-         2z7gbo9CkFi6LDhfoSNXKq0ZUD4zm98Qll09Mq1yiFmH1tv3E04NtKG8QO2VNIfhMDD/
-         cMr6K3uYFMInJY6MA16AQX+iyhsLfsCxfAV9cul6FkfTa3N2AsOav9XiH1IFT7BYoKiE
-         YPmQ==
-X-Gm-Message-State: APjAAAX7mzgb5HhDH956G7vL8Xwa/ORcx9Qhh1alp1zRerzOhWSrEy/S
-        vUuqzMFJeXqP7QrQv9qnAKtruw==
-X-Google-Smtp-Source: APXvYqw3tK85mPCJtNwImGvxXwtTRJVHn4uSWnyncRx2pOscbKR2RIrb27s86mnFP4xtyzHXWFKbKQ==
-X-Received: by 2002:adf:e691:: with SMTP id r17mr15939833wrm.67.1559896143573;
-        Fri, 07 Jun 2019 01:29:03 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=nmWKh7PwMWUSmXx8hL09I0aV6DcSJSwvr9bLIGJ3tMI=;
+        b=W0yhPBz+0wSgOXQTzm3LvRbbatdvhn7v55+KgHD185jvjKu+u09h0vJq0diJiOjDaw
+         WkPv8jl0wo9+kP4C742HdZnOsrAAe0izwwshSQuMhj7g1x3hUCfnM55cpXZIKlKuQvoa
+         T0AI1jYkBaiXL9EqKiz16gvasOVs73GYIfNUlvliuHWpTsova/g5kTsdlhjsF7/4Qok5
+         ehRFasbJPCseXIanyvkcj7Otg4BGd1DsUMnVLaVZk+PAGMHBmmb57u2kLtxBC7JhoiMa
+         TA+ktOArUklkg2OE6mzgfpS0b2Ml+apiQwJ1f1EI/EogAAmTIyLiOGpHCfF73zfTcmDu
+         hhkg==
+X-Gm-Message-State: APjAAAWf2vgsBssSokpWOOcIbLmnhVh3T/Y+WIm5J7mJe0luirXZHYhL
+        MIo2Oa9wGfodv55GjL4GRi96bQ==
+X-Google-Smtp-Source: APXvYqxhNGHprs5mobbbQQ3HtWKc5AtRyRdHHZ4SFkzTzb+ehcZsDkDnP806YoxTtV2cwPPWRyFnRQ==
+X-Received: by 2002:a1c:f116:: with SMTP id p22mr2673398wmh.70.1559896146876;
+        Fri, 07 Jun 2019 01:29:06 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.167.229])
-        by smtp.gmail.com with ESMTPSA id a3sm1092946wmb.35.2019.06.07.01.29.02
+        by smtp.gmail.com with ESMTPSA id a3sm1092946wmb.35.2019.06.07.01.29.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 01:29:02 -0700 (PDT)
+        Fri, 07 Jun 2019 01:29:06 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     alokc@codeaurora.org, andy.gross@linaro.org,
         david.brown@linaro.org, wsa+renesas@sang-engineering.com,
@@ -63,87 +64,125 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         jlhugo@gmail.com, linux-i2c@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
-Date:   Fri,  7 Jun 2019 09:28:54 +0100
-Message-Id: <20190607082901.6491-1-lee.jones@linaro.org>
+Subject: [PATCH v2 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+Date:   Fri,  7 Jun 2019 09:28:57 +0100
+Message-Id: <20190607082901.6491-4-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190607082901.6491-1-lee.jones@linaro.org>
+References: <20190607082901.6491-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a match table to allow automatic probing of ACPI device
-QCOM0220.  Ignore clock attainment errors.  Set default clock
-frequency value.
+This patch provides basic support for booting with ACPI instead
+of the currently supported Device Tree.  When doing so there are a
+couple of differences which we need to taken into consideration.
+
+Firstly, the SDM850 ACPI tables omit information pertaining to the
+4 reserved GPIOs on the platform.  If Linux attempts to touch/
+initialise any of these lines, the firmware will restart the
+platform.
+
+Secondly, when booting with ACPI, it is expected that the firmware
+will set-up things like; Regulators, Clocks, Pin Functions, etc in
+their ideal configuration.  Thus, the possible Pin Functions
+available to this platform are not advertised when providing the
+higher GPIOD/Pinctrl APIs with pin information.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/i2c/busses/i2c-qcom-geni.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/pinctrl/qcom/Kconfig          |  2 +-
+ drivers/pinctrl/qcom/pinctrl-sdm845.c | 35 ++++++++++++++++++++++++++-
+ 2 files changed, 35 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index db075bc0d952..0fa93b448e8d 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index 2e66ab72c10b..aafbe932424f 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -168,7 +168,7 @@ config PINCTRL_SDM660
+ 
+ config PINCTRL_SDM845
+        tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+-       depends on GPIOLIB && OF
++       depends on GPIOLIB && (OF || ACPI)
+        select PINCTRL_MSM
+        help
+          This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+index c97f20fca5fd..7188bee3cf3e 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
++++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+  */
  
 +#include <linux/acpi.h>
- #include <linux/clk.h>
- #include <linux/dma-mapping.h>
- #include <linux/err.h>
-@@ -483,6 +484,12 @@ static const struct i2c_algorithm geni_i2c_algo = {
- 	.functionality	= geni_i2c_func,
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -1277,6 +1278,10 @@ static const struct msm_pingroup sdm845_groups[] = {
+ 	UFS_RESET(ufs_reset, 0x99f000),
  };
  
-+static const struct acpi_device_id geni_i2c_acpi_match[] = {
-+	{ "QCOM0220"},
-+	{ },
++static const int sdm845_acpi_reserved_gpios[] = {
++	0, 1, 2, 3, 81, 82, 83, 84, -1
 +};
-+MODULE_DEVICE_TABLE(acpi, geni_i2c_acpi_match);
 +
- static int geni_i2c_probe(struct platform_device *pdev)
+ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+ 	.pins = sdm845_pins,
+ 	.npins = ARRAY_SIZE(sdm845_pins),
+@@ -1284,14 +1289,41 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
+ 	.nfunctions = ARRAY_SIZE(sdm845_functions),
+ 	.groups = sdm845_groups,
+ 	.ngroups = ARRAY_SIZE(sdm845_groups),
++	.reserved_gpios = sdm845_acpi_reserved_gpios,
++	.ngpios = 150,
++};
++
++static const struct msm_pinctrl_soc_data sdm845_acpi_pinctrl = {
++	.pins = sdm845_pins,
++	.npins = ARRAY_SIZE(sdm845_pins),
++	.groups = sdm845_groups,
++	.ngroups = ARRAY_SIZE(sdm845_groups),
++	.reserved_gpios = sdm845_acpi_reserved_gpios,
+ 	.ngpios = 150,
+ };
+ 
+ static int sdm845_pinctrl_probe(struct platform_device *pdev)
  {
- 	struct geni_i2c_dev *gi2c;
-@@ -502,7 +509,7 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(gi2c->se.base);
- 
- 	gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
--	if (IS_ERR(gi2c->se.clk)) {
-+	if (IS_ERR(gi2c->se.clk) && !ACPI_HANDLE(&pdev->dev)) {
- 		ret = PTR_ERR(gi2c->se.clk);
- 		dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
- 		return ret;
-@@ -510,12 +517,19 @@ static int geni_i2c_probe(struct platform_device *pdev)
- 
- 	ret = device_property_read_u32(&pdev->dev, "clock-frequency",
- 							&gi2c->clk_freq_out);
--	if (ret) {
-+	if (ret && !ACPI_HANDLE(&pdev->dev)) {
- 		dev_info(&pdev->dev,
- 			"Bus frequency not specified, default to 100kHz.\n");
- 		gi2c->clk_freq_out = KHZ(100);
- 	}
- 
-+	if (ACPI_HANDLE(&pdev->dev)) {
-+		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
+-	return msm_pinctrl_probe(pdev, &sdm845_pinctrl);
++	int ret;
 +
-+		/* Using default, same as the !ACPI case above */
-+		gi2c->clk_freq_out = KHZ(100);
++	if (pdev->dev.of_node) {
++		ret = msm_pinctrl_probe(pdev, &sdm845_pinctrl);
++	} else if (ACPI_HANDLE(&pdev->dev)) {
++		ret = msm_pinctrl_probe(pdev, &sdm845_acpi_pinctrl);
++	} else {
++		dev_err(&pdev->dev, "DT and ACPI disabled\n");
++		return -EINVAL;
 +	}
 +
- 	gi2c->irq = platform_get_irq(pdev, 0);
- 	if (gi2c->irq < 0) {
- 		dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
-@@ -660,6 +674,7 @@ static struct platform_driver geni_i2c_driver = {
- 		.name = "geni_i2c",
- 		.pm = &geni_i2c_pm_ops,
- 		.of_match_table = geni_i2c_dt_match,
-+		.acpi_match_table = ACPI_PTR(geni_i2c_acpi_match),
- 	},
- };
++	return ret;
+ }
  
++static const struct acpi_device_id sdm845_pinctrl_acpi_match[] = {
++	{ "QCOM0217"},
++	{ },
++};
++MODULE_DEVICE_TABLE(acpi, sdm845_pinctrl_acpi_match);
++
+ static const struct of_device_id sdm845_pinctrl_of_match[] = {
+ 	{ .compatible = "qcom,sdm845-pinctrl", },
+ 	{ },
+@@ -1302,6 +1334,7 @@ static struct platform_driver sdm845_pinctrl_driver = {
+ 		.name = "sdm845-pinctrl",
+ 		.pm = &msm_pinctrl_dev_pm_ops,
+ 		.of_match_table = sdm845_pinctrl_of_match,
++		.acpi_match_table = ACPI_PTR(sdm845_pinctrl_acpi_match),
+ 	},
+ 	.probe = sdm845_pinctrl_probe,
+ 	.remove = msm_pinctrl_remove,
 -- 
 2.17.1
 
