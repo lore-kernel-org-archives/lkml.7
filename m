@@ -2,43 +2,38 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148D2C28EBD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B13C2BA1D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9DD20868
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD0220868
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 02:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbfFGCFU (ORCPT
+        id S1728166AbfFGCFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 22:05:20 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58414 "EHLO huawei.com"
+        Thu, 6 Jun 2019 22:05:21 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58418 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727104AbfFGCFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727975AbfFGCFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 6 Jun 2019 22:05:20 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CA4D75E453A727DCBAC5;
+        by Forcepoint Email with ESMTP id CEACC6EB81A283EFD433;
         Fri,  7 Jun 2019 10:05:17 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 7 Jun 2019 10:05:11 +0800
+ 14.3.439.0; Fri, 7 Jun 2019 10:05:08 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yufeng Mo <moyufeng@huawei.com>,
-        Jian Shen <shenjian15@huawei.com>,
-        "Weihang Li" <liweihang@hisilicon.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 10/12] net: hns3: refactor PF/VF RSS hash key configuration
-Date:   Fri, 7 Jun 2019 10:03:11 +0800
-Message-ID: <1559872993-14507-11-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 00/12] net: hns3: some code optimizations & cleanups & bugfixes
+Date:   Fri, 7 Jun 2019 10:03:01 +0800
+Message-ID: <1559872993-14507-1-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1559872993-14507-1-git-send-email-tanhuazhong@huawei.com>
-References: <1559872993-14507-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -48,101 +43,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+This patch-set includes code optimizations, cleanups and bugfixes for
+the HNS3 ethernet controller driver.
 
-In order to make it more readable, this patch modifies PF/VF's
-RSS hash key configuring function.
+[patch 1/12] logs more detail error info for ROCE RAS errors.
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 15 +++++++--------
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 15 +++++++--------
- 2 files changed, 14 insertions(+), 16 deletions(-)
+[patch 2/12] fixes a wrong size issue for mailbox responding.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 755cc43..ee4e163 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3609,28 +3609,27 @@ static int hclge_set_rss_algo_key(struct hclge_dev *hdev,
- {
- 	struct hclge_rss_config_cmd *req;
- 	struct hclge_desc desc;
--	int key_offset;
-+	int key_offset = 0;
-+	int key_counts;
- 	int key_size;
- 	int ret;
- 
-+	key_counts = HCLGE_RSS_KEY_SIZE;
- 	req = (struct hclge_rss_config_cmd *)desc.data;
- 
--	for (key_offset = 0; key_offset < 3; key_offset++) {
-+	while (key_counts) {
- 		hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_RSS_GENERIC_CONFIG,
- 					   false);
- 
- 		req->hash_config |= (hfunc & HCLGE_RSS_HASH_ALGO_MASK);
- 		req->hash_config |= (key_offset << HCLGE_RSS_HASH_KEY_OFFSET_B);
- 
--		if (key_offset == 2)
--			key_size =
--			HCLGE_RSS_KEY_SIZE - HCLGE_RSS_HASH_KEY_NUM * 2;
--		else
--			key_size = HCLGE_RSS_HASH_KEY_NUM;
--
-+		key_size = min(HCLGE_RSS_HASH_KEY_NUM, key_counts);
- 		memcpy(req->hash_key,
- 		       key + key_offset * HCLGE_RSS_HASH_KEY_NUM, key_size);
- 
-+		key_counts -= key_size;
-+		key_offset++;
- 		ret = hclge_cmd_send(&hdev->hw, &desc, 1);
- 		if (ret) {
- 			dev_err(&hdev->pdev->dev,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 7fd25ab..c448774 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -539,13 +539,15 @@ static int hclgevf_set_rss_algo_key(struct hclgevf_dev *hdev,
- {
- 	struct hclgevf_rss_config_cmd *req;
- 	struct hclgevf_desc desc;
--	int key_offset;
-+	int key_offset = 0;
-+	int key_counts;
- 	int key_size;
- 	int ret;
- 
-+	key_counts = HCLGEVF_RSS_KEY_SIZE;
- 	req = (struct hclgevf_rss_config_cmd *)desc.data;
- 
--	for (key_offset = 0; key_offset < 3; key_offset++) {
-+	while (key_counts) {
- 		hclgevf_cmd_setup_basic_desc(&desc,
- 					     HCLGEVF_OPC_RSS_GENERIC_CONFIG,
- 					     false);
-@@ -554,15 +556,12 @@ static int hclgevf_set_rss_algo_key(struct hclgevf_dev *hdev,
- 		req->hash_config |=
- 			(key_offset << HCLGEVF_RSS_HASH_KEY_OFFSET_B);
- 
--		if (key_offset == 2)
--			key_size =
--			HCLGEVF_RSS_KEY_SIZE - HCLGEVF_RSS_HASH_KEY_NUM * 2;
--		else
--			key_size = HCLGEVF_RSS_HASH_KEY_NUM;
--
-+		key_size = min(HCLGEVF_RSS_HASH_KEY_NUM, key_counts);
- 		memcpy(req->hash_key,
- 		       key + key_offset * HCLGEVF_RSS_HASH_KEY_NUM, key_size);
- 
-+		key_counts -= key_size;
-+		key_offset++;
- 		ret = hclgevf_cmd_send(&hdev->hw, &desc, 1);
- 		if (ret) {
- 			dev_err(&hdev->pdev->dev,
+[patch 3/12] makes HW GRO handing compliant with SW one.
+
+[patch 4/12] refactors hns3_get_new_int_gl.
+
+[patch 5/12] adds handling for VF's over_8bd_nfe_err.
+
+[patch 6/12 - 12/12] adds some code optimizations and cleanups, to
+make the code more readable and compliant with some static code
+analysis tools, these modifications do not change the logic of
+the code.
+
+Change log:
+V1->V2: fixes comment from David Miller.
+
+Jian Shen (1):
+  net: hns3: small changes for magic numbers
+
+Weihang Li (2):
+  net: hns3: trigger VF reset if a VF has an over_8bd_nfe_err
+  net: hns3: fix some coding style issues
+
+Xiaofei Tan (1):
+  net: hns3: log detail error info of ROCEE ECC and AXI errors
+
+Yonglong Liu (1):
+  net: hns3: delete the redundant user NIC codes
+
+Yufeng Mo (3):
+  net: hns3: use macros instead of magic numbers
+  net: hns3: refactor PF/VF RSS hash key configuration
+  net: hns3: some modifications to simplify and optimize code
+
+Yunsheng Lin (3):
+  net: hns3: make HW GRO handling compliant with SW GRO
+  net: hns3: replace numa_node_id with numa_mem_id for buffer reusing
+  net: hns3: refactor hns3_get_new_int_gl function
+
+Zhongzhu Liu (1):
+  net: hns3: fix wrong size of mailbox responding data
+
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |   2 +-
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c        |  21 +-
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   7 -
+ drivers/net/ethernet/hisilicon/hns3/hns3_dcbnl.c   |  12 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 199 ++++++-----
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  43 +--
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  24 ++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c |  20 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 175 +++++++++-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   4 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 372 ++++++++++-----------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  26 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |   4 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  | 141 ++++----
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  85 ++---
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   3 +
+ 16 files changed, 658 insertions(+), 480 deletions(-)
+
 -- 
 2.7.4
 
