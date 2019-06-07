@@ -2,188 +2,110 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B9EC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B83AC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2296208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705D9208E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 18:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbfFGSva (ORCPT
+        id S1732066AbfFGSxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 14:51:30 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:51346 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729809AbfFGSva (ORCPT
+        Fri, 7 Jun 2019 14:53:17 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.178]:25064 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728736AbfFGSxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 14:51:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TTeuMkB_1559933482;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TTeuMkB_1559933482)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 08 Jun 2019 02:51:25 +0800
-Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
- eligibility
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190423175252.GP25106@dhcp22.suse.cz>
- <5a571d64-bfce-aa04-312a-8e3547e0459a@linux.alibaba.com>
- <859fec1f-4b66-8c2c-98ee-2aee9358a81a@linux.alibaba.com>
- <20190507104709.GP31017@dhcp22.suse.cz>
- <ec8a65c7-9b0b-9342-4854-46c732c99390@linux.alibaba.com>
- <217fc290-5800-31de-7d46-aa5c0f7b1c75@linux.alibaba.com>
- <alpine.LSU.2.11.1906070314001.1938@eggly.anvils>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <f5b9e7f5-20e7-76a7-e014-891d34780dc5@linux.alibaba.com>
-Date:   Fri, 7 Jun 2019 11:51:22 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 7 Jun 2019 14:53:17 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 5EDC8F4F9E
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 13:53:16 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id ZJzIhtsmEdnCeZJzIhWy95; Fri, 07 Jun 2019 13:53:16 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.134.24] (port=47362 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hZJzH-002Xxo-A5; Fri, 07 Jun 2019 13:53:15 -0500
+Date:   Fri, 7 Jun 2019 13:53:14 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] remoteproc: Use struct_size() helper
+Message-ID: <20190607185314.GA15771@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1906070314001.1938@eggly.anvils>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.134.24
+X-Source-L: No
+X-Exim-ID: 1hZJzH-002Xxo-A5
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.134.24]:47362
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
+struct resource_table {
+	...
+        u32 offset[0];
+} __packed;
 
-On 6/7/19 3:57 AM, Hugh Dickins wrote:
-> On Thu, 6 Jun 2019, Yang Shi wrote:
->> On 5/7/19 10:10 AM, Yang Shi wrote:
->>> On 5/7/19 3:47 AM, Michal Hocko wrote:
->>>> [Hmm, I thought, Hugh was CCed]
->>>>
->>>> On Mon 06-05-19 16:37:42, Yang Shi wrote:
->>>>> On 4/28/19 12:13 PM, Yang Shi wrote:
->>>>>> On 4/23/19 10:52 AM, Michal Hocko wrote:
->>>>>>> On Wed 24-04-19 00:43:01, Yang Shi wrote:
->>>>>>>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility
->>>>>>>> for each
->>>>>>>> vma") introduced THPeligible bit for processes' smaps. But, when
->>>>>>>> checking
->>>>>>>> the eligibility for shmem vma, __transparent_hugepage_enabled()
->>>>>>>> is
->>>>>>>> called to override the result from shmem_huge_enabled().  It may
->>>>>>>> result
->>>>>>>> in the anonymous vma's THP flag override shmem's.  For example,
->>>>>>>> running a
->>>>>>>> simple test which create THP for shmem, but with anonymous THP
->>>>>>>> disabled,
->>>>>>>> when reading the process's smaps, it may show:
->>>>>>>>
->>>>>>>> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
->>>>>>>> Size:               4096 kB
->>>>>>>> ...
->>>>>>>> [snip]
->>>>>>>> ...
->>>>>>>> ShmemPmdMapped:     4096 kB
->>>>>>>> ...
->>>>>>>> [snip]
->>>>>>>> ...
->>>>>>>> THPeligible:    0
->>>>>>>>
->>>>>>>> And, /proc/meminfo does show THP allocated and PMD mapped too:
->>>>>>>>
->>>>>>>> ShmemHugePages:     4096 kB
->>>>>>>> ShmemPmdMapped:     4096 kB
->>>>>>>>
->>>>>>>> This doesn't make too much sense.  The anonymous THP flag should
->>>>>>>> not
->>>>>>>> intervene shmem THP.  Calling shmem_huge_enabled() with checking
->>>>>>>> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
->>>>>>>> dax vma check since we already checked if the vma is shmem
->>>>>>>> already.
->>>>>>> Kirill, can we get a confirmation that this is really intended
->>>>>>> behavior
->>>>>>> rather than an omission please? Is this documented? What is a
->>>>>>> global
->>>>>>> knob to simply disable THP system wise?
->>>>>> Hi Kirill,
->>>>>>
->>>>>> Ping. Any comment?
->>>>> Talked with Kirill at LSFMM, it sounds this is kind of intended
->>>>> behavior
->>>>> according to him. But, we all agree it looks inconsistent.
->>>>>
->>>>> So, we may have two options:
->>>>>       - Just fix the false negative issue as what the patch does
->>>>>       - Change the behavior to make it more consistent
->>>>>
->>>>> I'm not sure whether anyone relies on the behavior explicitly or
->>>>> implicitly
->>>>> or not.
->>>> Well, I would be certainly more happy with a more consistent behavior.
->>>> Talked to Hugh at LSFMM about this and he finds treating shmem objects
->>>> separately from the anonymous memory. And that is already the case
->>>> partially when each mount point might have its own setup. So the primary
->>>> question is whether we need a one global knob to controll all THP
->>>> allocations. One argument to have that is that it might be helpful to
->>>> for an admin to simply disable source of THP at a single place rather
->>>> than crawling over all shmem mount points and remount them. Especially
->>>> in environments where shmem points are mounted in a container by a
->>>> non-root. Why would somebody wanted something like that? One example
->>>> would be to temporarily workaround high order allocations issues which
->>>> we have seen non trivial amount of in the past and we are likely not at
->>>> the end of the tunel.
->>> Shmem has a global control for such use. Setting shmem_enabled to "force"
->>> or "deny" would enable or disable THP for shmem globally, including non-fs
->>> objects, i.e. memfd, SYS V shmem, etc.
->>>
->>>> That being said I would be in favor of treating the global sysfs knob to
->>>> be global for all THP allocations. I will not push back on that if there
->>>> is a general consensus that shmem and fs in general are a different
->>>> class of objects and a single global control is not desirable for
->>>> whatever reasons.
->>> OK, we need more inputs from Kirill, Hugh and other folks.
->> [Forgot cc to mailing lists]
->>
->> Hi guys,
->>
->> How should we move forward for this one? Make the sysfs knob
->> (/sys/kernel/mm/transparent_hugepage/enabled) to be global for both anonymous
->> and tmpfs? Or just treat shmem objects separately from anon memory then fix
->> the false-negative of THP eligibility by this patch?
-> Sorry for not getting back to you sooner on this.
->
-> I don't like to drive design by smaps. I agree with the word "mess" used
-> several times of THP tunings in this thread, but it's too easy to make
-> that mess worse by unnecessary changes, so I'm very cautious here.
->
-> The addition of "THPeligible" without an "Anon" in its name was
-> unfortunate. I suppose we're two releases too late to change that.
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-The smaps shows it is anon vma or shmem vma for the most cases.
+So, replace the following form:
 
->
-> Applying process (PR_SET_THP_DISABLE) and mm (MADV_*HUGEPAGE)
-> limitations to shared filesystem objects doesn't work all that well.
+table->num * sizeof(table->offset[0]) + sizeof(struct resource_table)
 
-The THP eligibility indicator is per vma, it just reports whether THP is 
-eligible for a specific vma. So, I'm supposed it should keep consistent 
-with MMF_DISABLE_THP and MADV_*HUGEPAGE setting.
+with:
 
-The current implementation in shmem and kuhugepaged also checks these.
+struct_size(table, offset, table->num)
 
->
-> I recommend that you continue to treat shmem objects separately from
-> anon memory, and just make the smaps "THPeligible" more often accurate.
->
-> Is your v2 patch earlier in this thread the best for that?
+This code was detected with the help of Coccinelle.
 
-The v2 patch treats shmem objects separately from anon memory and it 
-makes the "THPeligible" more often accurate.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/remoteproc/remoteproc_elf_loader.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> No answer tonight, I'll re-examine later in the day.
->
-> Hugh
+diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
+index 215a4400f21e..606aae166eba 100644
+--- a/drivers/remoteproc/remoteproc_elf_loader.c
++++ b/drivers/remoteproc/remoteproc_elf_loader.c
+@@ -247,8 +247,7 @@ find_table(struct device *dev, struct elf32_hdr *ehdr, size_t fw_size)
+ 		}
+ 
+ 		/* make sure the offsets array isn't truncated */
+-		if (table->num * sizeof(table->offset[0]) +
+-				sizeof(struct resource_table) > size) {
++		if (struct_size(table, offset, table->num) > size) {
+ 			dev_err(dev, "resource table incomplete\n");
+ 			return NULL;
+ 		}
+-- 
+2.21.0
 
