@@ -2,129 +2,139 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF01C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09D8C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43EBD212F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69083212F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 13:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="W9EBJZop"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="razz/z/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfFGNm4 (ORCPT
+        id S1729144AbfFGNpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 09:42:56 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:33042 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728740AbfFGNmz (ORCPT
+        Fri, 7 Jun 2019 09:45:42 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:2102 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbfFGNpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 09:42:55 -0400
-Received: by mail-wr1-f42.google.com with SMTP id n9so2261713wru.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 06:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4AUXFpUXPjn/D6XXKI9xc56D2KD8UQ7KyhdoOpG1dt0=;
-        b=W9EBJZopw3q7ocZxpOTjEG4lU8Hfv75RlOKFZ+oSZR8uzCxkfZWDEi+EG+OJZ9kgmU
-         YEnwXp3EKuN8UwItqSqnE6nT1ShJ58q8PSngiL/wS0jbYQ2RsUiMXU2PzJfFHHkzel3l
-         7PhBRCRFCG5ZzBoe1pjlth3O9WL8T3KzW9+M67s2kPy4GF8GZEK8QbWGAMinPAqr7PWD
-         d+WwecuEHnKlH3CYDd3LnEYX4uBBi8JujK7fHJYhKSWSauFqKWu0rR6JbujUCbWPSSlm
-         ERO6WEnf2b5lQhKZMMp5VHavKZoHnp2xWzuEbTJEFyMrktrgu4wIdfCzj1M3WBGO3+uh
-         Htsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4AUXFpUXPjn/D6XXKI9xc56D2KD8UQ7KyhdoOpG1dt0=;
-        b=rnrbVs3v6/I7HjugqTku6YJjMPPlSR/0qVIU1ysGYdTyLcdGQGMRw0/MIddW9SqhyA
-         ZsH9sXKXf46Qr55UkRdS9L9fbFBmp2wN1vyJlZHvmtale5Pit37UBg9QsuEnUgOsSJAm
-         BXBCXKhWrp9B0yGsJuwfEaPneKeeywVhNOgkPd9nhJyd/das8+WKn7PWuihPRiio84Wt
-         UWURJAeh6lqNrguVnXGQz5j8K+ydr/nvWsKwFSD8Sg5WX2WvOLEEHWVpSvRKeWHKcdeQ
-         hL+E6wDECnqW12GSXx9DDryyQnxfUXlUsHhrskrCGm5uQeszOsqzj0POyW/gPq11wfKP
-         e8uA==
-X-Gm-Message-State: APjAAAV+B+PGoLqq/A5mFTtS8iIV4IY0Q+L0nmSOuV0ziO6xEEqvPVuH
-        eBUWv97r+NU4A7VSDSWncejYyw==
-X-Google-Smtp-Source: APXvYqwaTsH/eZFofHfstgoptsYOuYgOt60R13LqnJmCrPEK4t5VyPo4EaZlhlMp2GmZW/kwAglqWg==
-X-Received: by 2002:adf:9023:: with SMTP id h32mr34117799wrh.95.1559914974247;
-        Fri, 07 Jun 2019 06:42:54 -0700 (PDT)
-Received: from brauner.io (p54AC595E.dip0.t-ipconnect.de. [84.172.89.94])
-        by smtp.gmail.com with ESMTPSA id 32sm4118460wra.35.2019.06.07.06.42.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 06:42:53 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 15:42:53 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC]: Convention for naming syscall revisions
-Message-ID: <20190607134252.kf3e6ifm7qpw2cas@brauner.io>
-References: <20190606154224.7lln4zp6v3ey4icq@brauner.io>
- <20190606235435.GD23169@mit.edu>
+        Fri, 7 Jun 2019 09:45:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cfa6a850000>; Fri, 07 Jun 2019 06:45:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 07 Jun 2019 06:45:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 07 Jun 2019 06:45:41 -0700
+Received: from [10.25.74.159] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
+ 2019 13:45:35 +0000
+Subject: Re: [PATCH V8 13/15] phy: tegra: Add PCIe PIPE2UPHY support
+To:     Dmitry Osipenko <digetx@gmail.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>
+CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190526043751.12729-1-vidyas@nvidia.com>
+ <20190526043751.12729-14-vidyas@nvidia.com>
+ <c81c5d42-4292-ba6d-b5ab-afe1a604115f@gmail.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <5a5545c8-9e4c-b459-c40e-9e1c4e5daf5b@nvidia.com>
+Date:   Fri, 7 Jun 2019 19:15:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190606235435.GD23169@mit.edu>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <c81c5d42-4292-ba6d-b5ab-afe1a604115f@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559915141; bh=X7YbyMYnPU4o/uuTsDoXMzQCmQIN7PmhE/enZhHNCbs=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=razz/z/YkMUuZJAs2q0s0SSZ/bUR5omne4pEFftfOU61dLcPqJXKCsGHE3NcpO35+
+         8/F2iY2hVc46KAjY6gmEvqpg5fZ3KSxtuPhgOMOwYKMqeO9JIGY6v17MKg2Or+8u+H
+         KlITvD4TlEvUpP4ZaERzjMOe/Uw/MNFgiZuqHAY4aQAOWJUJ1FuVnWa356Z1OJu5RL
+         Y6R72p7/fJwuiWR/h3U5Eh8WMG0HEStRFp9Pr9OgZGW/VJAIAyZZoqfbqcIqzCExV0
+         phKG+yMITM2HvqQyAOuTLfbzBgJQSbyydm6e2I9WMYP+4QQY+Fq8/03gsOCNAchoQG
+         +1xx4qJ63FuHA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 07:54:35PM -0400, Theodore Ts'o wrote:
-> On Thu, Jun 06, 2019 at 05:42:25PM +0200, Christian Brauner wrote:
-> > Hey everyone,
-> > 
-> > I hope this is not going to start a trash fire.
-> > 
-> > While working on a new clone version I tried to find out what the
-> > current naming conventions for syscall revisions is. I was told and
-> > seemed to be able to confirm through the syscall list that revisions of
-> > syscalls are for the most part (for examples see [1]) named after the
-> > number of arguments and not for the number of revisions. But some also
-> > seem to escape that logic (e.g. clone2).
-> 
-> There are also examples which show that it's a revision number:
-> 
->       preadv2, pwritev2, mlock2, sync_file_range2
-> 
-> immediately come to mind.  It's also important to note that in some
-
-Exactly, that's what made it confusing in the first place.
-
-> cases, we do something very different (look aht the stat and fstat
-> variants), and that in some cases the number of parameters for a
-
-Sure, there will always be cases where we will revise a syscall but it
-makes sense to name it completely different than its predecessor.
-(Very different behavior, bad original naming immediately come to mind
-as reasons.)
-
-But for the general case where we do stuff like:
-dup()
-dup2()
-dup3()
-
-we could probably just make a call and document something like:
-
-"If a syscall is revised and a completely new name is not warranted by
-its design the consensus is to append the revision number."
-
-and then maybe also add a brief section about what we historically did
-and maybe also briefly point out what some good indicators are that a
-completely new name could be used.
-
-> system call vary between architectures (because of system call
-> argument passing limitations), and this gets papered over by glibc.
-> 
-> So we can define what the historical pattern, but there might be a big
-> difference between what might make sense as an internal naming
-> convention, and the names that we want to expose to userspace
-> application programmers --- especially if the number of arguments at
-
-Right, but I am specifically interested in naming conventions for the
-kernel not for userspace. :)
-
-Christian
+On 6/6/2019 10:00 PM, Dmitry Osipenko wrote:
+> 26.05.2019 7:37, Vidya Sagar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interfa=
+ce
+>> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
+>> For each PCIe lane of a controller, there is a P2U unit instantiated at
+>> hardware level. This driver provides support for the programming require=
+d
+>> for each P2U that is going to be used for a PCIe controller.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes since [v7]:
+>> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-=
+p2u.c
+>>
+>> Changes since [v6]:
+>> * None
+>>
+>> Changes since [v5]:
+>> * Addressed review comments from Thierry
+>>
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * Rebased on top of linux-next top of the tree
+>>
+>> Changes since [v2]:
+>> * Replaced spaces with tabs in Kconfig file
+>> * Sorted header file inclusion alphabetically
+>>
+>> Changes since [v1]:
+>> * Added COMPILE_TEST in Kconfig
+>> * Removed empty phy_ops implementations
+>> * Modified code according to DT documentation file modifications
+>>
+>>   drivers/phy/tegra/Kconfig            |   7 ++
+>>   drivers/phy/tegra/Makefile           |   1 +
+>>   drivers/phy/tegra/phy-tegra194-p2u.c | 109 +++++++++++++++++++++++++++
+>>   3 files changed, 117 insertions(+)
+>>   create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
+>>
+>> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+>> index a3b1de953fb7..c56fc8452e03 100644
+>> --- a/drivers/phy/tegra/Kconfig
+>> +++ b/drivers/phy/tegra/Kconfig
+>> @@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
+>>  =20
+>>   	  To compile this driver as a module, choose M here: the module will
+>>   	  be called phy-tegra-xusb.
+>> +
+>> +config PHY_TEGRA194_P2U
+>> +	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
+>> +	depends on ARCH_TEGRA || COMPILE_TEST
+>=20
+> ARCH_TEGRA is a bit too much, ARCH_TEGRA_194_SOC should fit better here.
+>=20
+Ok. I'll take care of it in the next patch series.
