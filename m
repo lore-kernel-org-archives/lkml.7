@@ -2,97 +2,171 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09E1C468BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051FBC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 710162089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50782133D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="W+XFkIEV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6pwUVZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfFGMDU (ORCPT
+        id S1728338AbfFGMDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:03:20 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36662 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfFGMDU (ORCPT
+        Fri, 7 Jun 2019 08:03:22 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:54705 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727693AbfFGMDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Jun 2019 08:03:20 -0400
-Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 817DE334;
-        Fri,  7 Jun 2019 14:03:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1559908998;
-        bh=84znYhgs5zYBGQHXQMi32sSSKWf+vibIjQy0J6VPl/k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W+XFkIEVyl5OCJAOjfsk5rQcwXyh69rVjOpQcMWrKGCSd64PRP0pscrFfMw9Ckr5T
-         jKAoCC3UmVmO87u5oVEPgynapV3JQwezuqbbzhRJ/8WBXJgkZy5JFL0xGALwwJpKZz
-         GWgeT/i/eruObyIPEzQmGyvw00zQPkObcSXtmFrk=
-Date:   Fri, 7 Jun 2019 15:03:04 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 19/20] drm: rcar-du: crtc: Register GAMMA_LUT properties
-Message-ID: <20190607120304.GH7593@pendragon.ideasonboard.com>
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-20-jacopo+renesas@jmondi.org>
+Received: by mail-it1-f195.google.com with SMTP id m138so644430ita.4;
+        Fri, 07 Jun 2019 05:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vK0DKcqym3vzBSu4KJC1xZCerlj844qmC8dWdm0jSRw=;
+        b=F6pwUVZW5eYgStsWlpFWxgewfcBvQ6XVieJGuDpSAk8ZGggR0ByYg+0K95B1l7u8GX
+         REvsXDU7+HISt/WpVh3/NfPIm5RzMdWI8+0Vv9GHjv4cU9YkbWOUruQIWiWXwRVbAZBu
+         ptaYBZKe8TQC9nqNlwDlQpRctsVv8rXmIMAwaXXc3IMBLvJSgyExcdrXmGexDmpG+bs1
+         b0v2Dlwf27ErfNkJ60CwjYVO6XvuICaR5iYo2CWWziBXSIXoIZfbzRohzKV6nrzwfrlm
+         fk58Ps3urLqew6q+/Ml3YWj/7Ij+1PwcDyCi05s+I7eauZ3w4RQsgpQHvgsGs6q1Bl2r
+         a3IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vK0DKcqym3vzBSu4KJC1xZCerlj844qmC8dWdm0jSRw=;
+        b=bpt1OZPXiOtm3Xamz8RDRZ3NYsIOzySDD9iQtDetpPWv4CAvY9e8hqi+Qv3nwahZeQ
+         rz9LctWWTbPVCpu9epye/HNrHiUpqmmA3whXJpYCBKTo2ayY/YyH4MqfjJm2bBgek6oi
+         q9jvKnQE+u5upji1p0EBR6NGrV0dU80K+zBHOU4QxSOtMZpfeQNF9Ore5Qq6H0KufWTL
+         R5cPp6yiREO8YfNXLnUqS1aULB0P1VSlKQbaEmZL733JUanOSixgwHdI1KyGg9SmjzlX
+         FoH08MoPrPMkERbHWRLTQ5Z2tUw9n6SOckEYKrV0V/5gZdATDc/HLhxRny+BDBDWt2rq
+         Jd0w==
+X-Gm-Message-State: APjAAAVvmHNdjYYnXXTx5rsNtsogl7VemEXiO2F5dhvrPWUEk52KR5DR
+        9Mhy4E9D+nX8W/X4HD5N2Eq7Cxxy
+X-Google-Smtp-Source: APXvYqzMj4O9PZeRoSLKXszNnLe8sd6qjK2upCU3s1sE0Ec0Uc/8vLASXAYRk9UQHXD/ZbiKzYGUIA==
+X-Received: by 2002:a24:5004:: with SMTP id m4mr3731371itb.19.1559908999714;
+        Fri, 07 Jun 2019 05:03:19 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-170-54.pppoe.mtu-net.ru. [91.76.170.54])
+        by smtp.googlemail.com with ESMTPSA id n21sm564386ioh.30.2019.06.07.05.03.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 05:03:18 -0700 (PDT)
+Subject: Re: [PATCH V1 1/6] i2c: tegra: clean up macros
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8c862349-186e-e7a3-f79c-ee6a6915d01f@gmail.com>
+Date:   Fri, 7 Jun 2019 15:03:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1559908507-31192-1-git-send-email-bbiswas@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190606142220.1392-20-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Thu, Jun 06, 2019 at 04:22:19PM +0200, Jacopo Mondi wrote:
-> Enable the GAMMA_LUT KMS property using the framework helpers to
-> register the proeprty and the associated gamma table size maximum size.
+07.06.2019 14:55, Bitan Biswas пишет:
+> Clean up macros by:
+> 1) removing unused macros
+> 2) replace constants by macro BIT()
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
 > ---
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/i2c/busses/i2c-tegra.c | 17 +++--------------
+>  1 file changed, 3 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> index e6d3df37c827..c920fb5dba65 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> @@ -1207,6 +1207,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
->  	    rcdu->cmms[swindex]) {
->  		rcrtc->cmm = rcdu->cmms[swindex];
->  		rgrp->cmms_mask |= BIT(hwindex % 2);
-> +
-> +		drm_mode_crtc_set_gamma_size(crtc, CMM_GAMMA_LUT_SIZE);
-> +		drm_crtc_enable_color_mgmt(crtc, 0, false, CMM_GAMMA_LUT_SIZE);
-
-This change looks good, but you also need to add support for legacy API.
-According to the function's documentation,
-
- * Drivers should use drm_atomic_helper_legacy_gamma_set() to implement the
- * legacy &drm_crtc_funcs.gamma_set callback.
-
->  	}
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 1dbba39..00692d8 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -54,20 +54,15 @@
+>  #define I2C_INT_STATUS				0x068
+>  #define I2C_INT_BUS_CLR_DONE			BIT(11)
+>  #define I2C_INT_PACKET_XFER_COMPLETE		BIT(7)
+> -#define I2C_INT_ALL_PACKETS_XFER_COMPLETE	BIT(6)
+> -#define I2C_INT_TX_FIFO_OVERFLOW		BIT(5)
+> -#define I2C_INT_RX_FIFO_UNDERFLOW		BIT(4)
+>  #define I2C_INT_NO_ACK				BIT(3)
+>  #define I2C_INT_ARBITRATION_LOST		BIT(2)
+>  #define I2C_INT_TX_FIFO_DATA_REQ		BIT(1)
+>  #define I2C_INT_RX_FIFO_DATA_REQ		BIT(0)
+>  #define I2C_CLK_DIVISOR				0x06c
+>  #define I2C_CLK_DIVISOR_STD_FAST_MODE_SHIFT	16
+> -#define I2C_CLK_MULTIPLIER_STD_FAST_MODE	8
 >  
->  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
+>  #define DVC_CTRL_REG1				0x000
+>  #define DVC_CTRL_REG1_INTR_EN			BIT(10)
+> -#define DVC_CTRL_REG2				0x004
+>  #define DVC_CTRL_REG3				0x008
+>  #define DVC_CTRL_REG3_SW_PROG			BIT(26)
+>  #define DVC_CTRL_REG3_I2C_DONE_INTR_EN		BIT(30)
+> @@ -75,24 +70,21 @@
+>  #define DVC_STATUS_I2C_DONE_INTR		BIT(30)
+>  
+>  #define I2C_ERR_NONE				0x00
+> -#define I2C_ERR_NO_ACK				0x01
+> -#define I2C_ERR_ARBITRATION_LOST		0x02
+> -#define I2C_ERR_UNKNOWN_INTERRUPT		0x04
+> +#define I2C_ERR_NO_ACK				BIT(0)
+> +#define I2C_ERR_ARBITRATION_LOST		BIT(1)
+> +#define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
+>  
+>  #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+>  #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+>  #define PACKET_HEADER0_CONT_ID_SHIFT		12
+>  #define PACKET_HEADER0_PROTOCOL_I2C		BIT(4)
+>  
+> -#define I2C_HEADER_HIGHSPEED_MODE		BIT(22)
+>  #define I2C_HEADER_CONT_ON_NAK			BIT(21)
+> -#define I2C_HEADER_SEND_START_BYTE		BIT(20)
+>  #define I2C_HEADER_READ				BIT(19)
+>  #define I2C_HEADER_10BIT_ADDR			BIT(18)
+>  #define I2C_HEADER_IE_ENABLE			BIT(17)
+>  #define I2C_HEADER_REPEAT_START			BIT(16)
+>  #define I2C_HEADER_CONTINUE_XFER		BIT(15)
+> -#define I2C_HEADER_MASTER_ADDR_SHIFT		12
+>  #define I2C_HEADER_SLAVE_ADDR_SHIFT		1
+>  
+>  #define I2C_BUS_CLEAR_CNFG			0x084
+> @@ -106,8 +98,6 @@
+>  
+>  #define I2C_CONFIG_LOAD				0x08C
+>  #define I2C_MSTR_CONFIG_LOAD			BIT(0)
+> -#define I2C_SLV_CONFIG_LOAD			BIT(1)
+> -#define I2C_TIMEOUT_CONFIG_LOAD			BIT(2)
+>  
+>  #define I2C_CLKEN_OVERRIDE			0x090
+>  #define I2C_MST_CORE_CLKEN_OVR			BIT(0)
+> @@ -133,7 +123,6 @@
+>  #define I2C_STANDARD_MODE			100000
+>  #define I2C_FAST_MODE				400000
+>  #define I2C_FAST_PLUS_MODE			1000000
+> -#define I2C_HS_MODE				3500000
+>  
+>  /* Packet header size in bytes */
+>  #define I2C_PACKET_HEADER_SIZE			12
 > 
 
--- 
-Regards,
+Looks good!
 
-Laurent Pinchart
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
