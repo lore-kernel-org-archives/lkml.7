@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1783C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADD5C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817732146E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581392147A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559922591;
-	bh=Dpndc8p/r3PbUm9FkMP47ORcNiP1aD71MDgt/ZF6wjw=;
+	s=default; t=1559922594;
+	bh=9E2EX28Bw3gXuclGEY/bIpxg/tuh2wZhNIhvZVgFgtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gCz3B/DboLW2fY4ftxIW7783qq5YTMayqzf4bdreQXud80qt4x7sAhiwC0u2KBVm4
-	 IGPYQUsd0TVgN0y+fG4E6ELuPuYVQRIA257pXVYG1horXruym+lw6Uao96GLgbW4ZY
-	 f1192QnOTGdnBHIW/MWKYfNZ2ZcRMH/MhyT+DXwU=
+	b=JI38O+grRJOldx1wLnxrsUwdavpbnHdhPetS/yJvVHBi7/ZM48vXswwipUNwiBr0N
+	 yR1qFa6a+1d67uImCG0KUK6n2hMHZGRu1RrxTfA7z/nzotlUC5V0uDUf/tGT6RVjSN
+	 Wmbdsu7g+OxyggbUHVK+JsTsw8jHveTD7at0Nuo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732040AbfFGPtu (ORCPT
+        id S1732057AbfFGPtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36006 "EHLO mail.kernel.org"
+        Fri, 7 Jun 2019 11:49:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729986AbfFGPtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:49:47 -0400
+        id S1732042AbfFGPtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:49:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AC0D20840;
-        Fri,  7 Jun 2019 15:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9BA8214AE;
+        Fri,  7 Jun 2019 15:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559922587;
-        bh=Dpndc8p/r3PbUm9FkMP47ORcNiP1aD71MDgt/ZF6wjw=;
+        s=default; t=1559922590;
+        bh=9E2EX28Bw3gXuclGEY/bIpxg/tuh2wZhNIhvZVgFgtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KffXUTvs+oq0u+HZ0DErokF15D+tjat2Ll/wa0oc/YwDtNLL2tB1MhezVnahdvVPW
-         DVsyX7F0eMaOgxveuw2/uBHRyztwY6JeJjHJLPnGiz3EgTnIGgM+Yp4gs4yq7wBAMm
-         dtamIGcj9JCqLZ1Ffi1dpDJWkJEaeWLBkjmXvsj8=
+        b=TBZxD8pPgz+hkvmjx4cxnQ289IHL7OXHvlHwDuSXahHFSs4aWratnNzAFZrskgXQZ
+         gpdK2gW+KZlXrufr9SK8bdJrsQbKhhUKr7BHu61VmWrdWakz+20fqy36asM6nA7nwH
+         cBswTYfky1CcDlPbVBJaA/xJW/Lyb4lNAXtFytrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>,
+        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.1 30/85] iio: adc: modify NPCM ADC read reference voltage
-Date:   Fri,  7 Jun 2019 17:39:15 +0200
-Message-Id: <20190607153852.991032877@linuxfoundation.org>
+Subject: [PATCH 5.1 31/85] iio: adc: ti-ads8688: fix timestamp is not updated in buffer
+Date:   Fri,  7 Jun 2019 17:39:16 +0200
+Message-Id: <20190607153853.114846749@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
 References: <20190607153849.101321647@linuxfoundation.org>
@@ -60,33 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomer Maimon <tmaimon77@gmail.com>
+From: Sean Nyekjaer <sean@geanix.com>
 
-commit 4e63ed6b90803eeb400c392e9ff493200d926b06 upstream.
+commit e6d12298310fa1dc11f1d747e05b168016057fdd upstream.
 
-Checking if regulator is valid before reading
-NPCM ADC regulator voltage to avoid system crash
-in a case the regulator is not valid.
+When using the hrtimer iio trigger timestamp isn't updated.
+If we use iio_get_time_ns it is updated correctly.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Fixes: 2a86487786b5c ("iio: adc: ti-ads8688: add trigger and buffer support")
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/npcm_adc.c |    2 +-
+ drivers/iio/adc/ti-ads8688.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/adc/npcm_adc.c
-+++ b/drivers/iio/adc/npcm_adc.c
-@@ -149,7 +149,7 @@ static int npcm_adc_read_raw(struct iio_
- 		}
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
--		if (info->vref) {
-+		if (!IS_ERR(info->vref)) {
- 			vref_uv = regulator_get_voltage(info->vref);
- 			*val = vref_uv / 1000;
- 		} else {
+--- a/drivers/iio/adc/ti-ads8688.c
++++ b/drivers/iio/adc/ti-ads8688.c
+@@ -397,7 +397,7 @@ static irqreturn_t ads8688_trigger_handl
+ 	}
+ 
+ 	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+-			pf->timestamp);
++			iio_get_time_ns(indio_dev));
+ 
+ 	iio_trigger_notify_done(indio_dev->trig);
+ 
 
 
