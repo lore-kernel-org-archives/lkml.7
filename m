@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C5FC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B94AC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF572089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AF52089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FDCrKwTk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vNS+Cswa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfFGGlb (ORCPT
+        id S1727478AbfFGGmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:41:31 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:60772 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfFGGlb (ORCPT
+        Fri, 7 Jun 2019 02:42:15 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:42417 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfFGGmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:41:31 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190607064129euoutp020eb5ee278f6a39f8db3066872f207ec0~l12h3gt0J1166211662euoutp02o
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 06:41:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190607064129euoutp020eb5ee278f6a39f8db3066872f207ec0~l12h3gt0J1166211662euoutp02o
+        Fri, 7 Jun 2019 02:42:14 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190607064212euoutp015dbcf277181bfb1f1bb18b21c83c1c57~l13KKVBsT1080110801euoutp01j
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2019 06:42:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190607064212euoutp015dbcf277181bfb1f1bb18b21c83c1c57~l13KKVBsT1080110801euoutp01j
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1559889689;
-        bh=Hlws9M7BqFCoD+GZJisbwaAGPzTVT29fKD3S29duRF0=;
+        s=mail20170921; t=1559889732;
+        bh=3qxmw66B41o0ihEUJxKIfGNz16QqnTiQIV4yVoLj8P4=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=FDCrKwTk9+cODhpdJvj0IqfnYz1BEXyHjSM7p5/zZVlSgJyCfFXJdLtmTftxNb5Io
-         pDJUxcZDjb7msFOl2hPAVo8BP8keTBKWrltbpoe834+UCDcsredbxhCbODEDCvLZOO
-         tCyaC4eFmCRhzEZwnYv0NysKN1v3D2Z0v0GEqy74=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        b=vNS+CswafpSV6iODjg7g7s0xdIcyzm4sp+nGwGHaJQRfGl1FMNs9eu+ZkIfWREaak
+         y4+9euNlLiPOdlzrSvb5vqkrH2c49j4/xJ0UGp4dX8FIb4Opcyn/T67QS5cPyN+FUL
+         TP7AgGUtjDs4naQprEMcJnc5SYIAYXdm5d03ndIs=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190607064128eucas1p299dc8c1ac78f8ec9b41f1bdd66a0df79~l12hM9b7G0356303563eucas1p2l;
-        Fri,  7 Jun 2019 06:41:28 +0000 (GMT)
+        20190607064212eucas1p298d26982546a2b1b38d8b81a4cc1e17a~l13JW2ozf3057230572eucas1p2Q;
+        Fri,  7 Jun 2019 06:42:12 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id B3.C7.04325.8170AFC5; Fri,  7
-        Jun 2019 07:41:28 +0100 (BST)
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 8A.6F.04377.3470AFC5; Fri,  7
+        Jun 2019 07:42:11 +0100 (BST)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190607064127eucas1p2d170e0a8df77d5385beadf5cd79a6869~l12gUzWI90152201522eucas1p2y;
-        Fri,  7 Jun 2019 06:41:27 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190607064211eucas1p174370d94ad4fc041efb6fd43c549b880~l13IkkNvt3212532125eucas1p1C;
+        Fri,  7 Jun 2019 06:42:11 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190607064127eusmtrp2a71e31dcb22996583f8be1ea81a1fcc5~l12gFGCnY0254702547eusmtrp2k;
-        Fri,  7 Jun 2019 06:41:27 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-bc-5cfa0718cafa
+        20190607064210eusmtrp2b19e77c660c443d0cd64838fe0e35dd1~l13IU8uix0307003070eusmtrp21;
+        Fri,  7 Jun 2019 06:42:10 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-ee-5cfa0743d466
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 57.AC.04146.7170AFC5; Fri,  7
-        Jun 2019 07:41:27 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 4B.BC.04146.2470AFC5; Fri,  7
+        Jun 2019 07:42:10 +0100 (BST)
 Received: from [106.120.51.74] (unknown [106.120.51.74]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190607064126eusmtip1cc7d169d7ca14470ccf7d036d20bd6a6~l12fUDf171602416024eusmtip1Q;
-        Fri,  7 Jun 2019 06:41:26 +0000 (GMT)
-Subject: Re: [PATCH v4 14/15] drm/bridge: tc358767: Drop unnecessary 8 byte
- buffer
+        20190607064210eusmtip16216a1cef3c6d602454481abeb3ef8f8~l13Hsd0Xw1500215002eusmtip1T;
+        Fri,  7 Jun 2019 06:42:10 +0000 (GMT)
+Subject: Re: [PATCH v4 15/15] drm/bridge: tc358767: Replace magic number in
+ tc_main_link_enable()
 To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         dri-devel@lists.freedesktop.org
 Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
@@ -70,60 +70,60 @@ Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
 From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <34b09b98-0770-dec0-94cf-33138c3fb9ec@samsung.com>
-Date:   Fri, 7 Jun 2019 08:41:18 +0200
+Message-ID: <b20c99e3-fe15-6456-8b70-c2843bf07773@samsung.com>
+Date:   Fri, 7 Jun 2019 08:42:02 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190607044550.13361-15-andrew.smirnov@gmail.com>
+In-Reply-To: <20190607044550.13361-16-andrew.smirnov@gmail.com>
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeyyVcRjH+7238zrr1OsgT0XNydaSa0rvVtHtj7d/zNRak8WR12Uc7Lwo
-        1ZbRXGqRxppTjQ11hIjQwbKOzalEbuFoOph0NZYUjeR4Wf77PM/3+/yey340LjeQW+jImHhe
-        HaOMVlBSoq517q0LSP4Eun8f3sGmZhxiU/TJJDvb20KwL5oMGNs7M0mxw/eNGJuZUyxhexru
-        UezQh5cEW1kwSB2WcsN5ixin0wxJuLsZ+SRnumHAuOwFd84wUI9x09XbuI68dsyPDpAeDOWj
-        IxN5tZt3sDRitOYeHvfb6qKuthglIwNzHdE0MHvhXWnAdSSl5YwWwc30IiQGPxHkmKZIMZhG
-        8Kmsb0mxWK7Qfn694nqIoMNYSYjBBIK+/i6J2WXFnIIRYwVmZmvGD36k6CizCWfaMEhveI+b
-        BYrZBQs1RsrMMsYbcsf1yy0IxhG0mc3LxTbMGTC1VpGixxJe5Y8RZrZgfKDwS8My48x2SK29
-        i4tsC4NjBZi5GTCDEhiZeioR5z4Ojd9KSZGt4KthNW8Hi7oCTOSrYNJew8XiDAS1VTpcFA5A
-        i6GLNJ8MX5q6ssFNTB+BX93lEvGSG2BgwlKcYQPcrruDi2kZZKTJRbcDmNprVx60hZLOGeoW
-        UmjWbKZZs41mzTaa/30LEfEI2fIJgiqcFzxj+AuuglIlJMSEu56PVVWjpe/V9tcw8ww9nw/R
-        I4ZGivUyTjIXKCeViUKSSo+AxhXWssTO2UC5LFSZdIlXxwapE6J5QY+20oTCVnZ53fBZOROu
-        jOejeD6OV6+qGG2xJRnJoyZM8/7eXlk+abfs8tXlp1WyYz7hg46LqeVOPUfV8/zuPN8rbecy
-        nZ9UhPWHtHbe2OMf3ayl6IrHZQvdo9lverqdHYiZ+vFNk9uLHpCUx8E0Ksxo31glbFSSlt42
-        o/Xl6ONJh6bQHK96+b7coNDNwSdcfLMKxsBz/06VvWuJghAilB5OuFpQ/gMcL9cDWgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFIsWRmVeSWpSXmKPExsVy+t/xu7ri7L9iDCY1aVg0d9haNB1qYLX4
-        ceUwi8XBPceZLK58fc9m8WDuTSaLzolL2C0u75rDZnH33gkWi/Xzb7E5cHk8mPqfyWPnrLvs
-        HrM7ZrJ63O8+zuTR/9fA4/iN7UwenzfJeZybepYpgCNKz6Yov7QkVSEjv7jEVina0MJIz9DS
-        Qs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+PR5jnMBd+FK3ZuXcLYwHhcoIuRk0NCwERi
-        xYtTjF2MXBxCAksZJaaeOs4EkRCX2D3/LTOELSzx51oXG4gtJPCaUeLoa7C4sECIxMOba8Hq
-        RQT8JLrmHWACGcQscJZJ4vfunWwQU48xSrzoXMsIUsUmoCnxd/NNsEm8AnYSU54dAouzCKhI
-        rOjcDzZJVCBC4sz7FSwQNYISJ2c+AbM5BewlFrzcBWYzC6hL/Jl3iRnClpdo3jobyhaXuPVk
-        PtMERqFZSNpnIWmZhaRlFpKWBYwsqxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQLjdduxn5t3
-        MF7aGHyIUYCDUYmH14HhZ4wQa2JZcWXuIUYJDmYlEd6yCz9ihHhTEiurUovy44tKc1KLDzGa
-        Aj03kVlKNDkfmErySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUw
-        GsdvKdi+MXBWpeUJleQdU5PyHlp0fXAN1mBew2ih61PF026tu3WN8J5HE+PFD1n2XmNM6zAO
-        i73mdPPQXyuFPj7/eK2++gXHitf49ltEfFhgaNvN+9HhxKmVk+defJq4LsN18o9zs4tePNyt
-        Jl56f+EUnjd9STKPmjaumv9lVuCFPb+5DgqkKbEUZyQaajEXFScCAGcw1F7tAgAA
-X-CMS-MailID: 20190607064127eucas1p2d170e0a8df77d5385beadf5cd79a6869
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOKsWRmVeSWpSXmKPExsWy7djP87rO7L9iDJ6/0rJo7rC1aDrUwGrx
+        48phFouDe44zWVz5+p7N4sHcm0wWnROXsFtc3jWHzeLuvRMsFuvn32Jz4PJ4MPU/k8fOWXfZ
+        PWZ3zGT1uN99nMmj/6+Bx/Eb25k8Pm+S8zg39SxTAEcUl01Kak5mWWqRvl0CV8aWyQEFc7kq
+        Xk/4xtzAeIaji5GTQ0LARGLqhOvsXYxcHEICKxglel/3QDlfGCU6/z+Fcj4zSszevJgJpuXd
+        89tQieWMEtN6T7BCOG8ZJRZePMQKUiUskCxx9P5mFhBbRCBA4lPTTjaQImaB00wS7btuM4Mk
+        2AQ0Jf5uvskGYvMK2Ems236cEcRmEVCRaFwwFywuKhAhcf/YBlaIGkGJkzOfgA3lFLCXOPi0
+        F6yGWUBeonnrbGYIW1zi1pP5TCDLJASusUssuveGFeJuF4l/9zYzQ9jCEq+Ob2GHsGUk/u+c
+        D/VbvcT9FS3MEM0djBJbN+yEarCWOHz8ItAgDqANmhLrd+lDhB0lLm+7zQYSlhDgk7jxVhDi
+        Bj6JSdumM0OEeSU62oQgqhUl7p/dCjVQXGLpha9sExiVZiH5bBaSb2Yh+WYWwt4FjCyrGMVT
+        S4tz01OLjfJSy/WKE3OLS/PS9ZLzczcxApPX6X/Hv+xg3PUn6RCjAAejEg+vA8PPGCHWxLLi
+        ytxDjBIczEoivGUXfsQI8aYkVlalFuXHF5XmpBYfYpTmYFES561meBAtJJCeWJKanZpakFoE
+        k2Xi4JRqYNz+55jWxNyqKvdHa6ZcEP6nf3fNbk9+tqNOwawn37G6GK8uu58ZHDDD543n0xLX
+        x/5l1Z9CJvkYXzHft/HT7/v/XyhN//hln1l7Tv+t97NNFFX0p9ZptNrmZf6btltd1rFgSVzm
+        KRYbP8m3C4q/VPzKm/ZXPilO9f9a1WNLV7w0nD1tDad0hawSS3FGoqEWc1FxIgAqGqOEWgMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsVy+t/xu7pO7L9iDP4dNLZo7rC1aDrUwGrx
+        48phFouDe44zWVz5+p7N4sHcm0wWnROXsFtc3jWHzeLuvRMsFuvn32Jz4PJ4MPU/k8fOWXfZ
+        PWZ3zGT1uN99nMmj/6+Bx/Eb25k8Pm+S8zg39SxTAEeUnk1RfmlJqkJGfnGJrVK0oYWRnqGl
+        hZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsaWyQEFc7kqXk/4xtzAeIaji5GTQ0LAROLd
+        89vsXYxcHEICSxklGk4dZ4ZIiEvsnv8WyhaW+HOtiw3EFhJ4zSgxbZEQiC0skCxx9P5mFhBb
+        RMBPomveASaQQcwCZ5kkfu/eCdVwjFHi1mEXEJtNQFPi7+abYHFeATuJdduPM4LYLAIqEo0L
+        5oLFRQUiJM68X8ECUSMocXLmEzCbU8Be4uDTXrAaZgF1iT/zLjFD2PISzVtnQ9niEreezGea
+        wCg0C0n7LCQts5C0zELSsoCRZRWjSGppcW56brGhXnFibnFpXrpecn7uJkZgrG479nPzDsZL
+        G4MPMQpwMCrx8Dow/IwRYk0sK67MPcQowcGsJMJbduFHjBBvSmJlVWpRfnxRaU5q8SFGU6Dn
+        JjJLiSbnA9NIXkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGRjb9
+        1p/HpnPv29vJd6P26Y/yl5en18WF550MEFEXDX3k+K6jwf5P7TJ7E5VNC6vkD9ovWJZgO/0N
+        Q31br7KGJYOXzCNfZveSitAzvMtv12yxPfP8yr5LrgUPLzhz2v7i/8pb+9c6efODdR/nX9IR
+        TFTZGcU/TzFmleNlecPg2XfkYzQOy1bXK7EUZyQaajEXFScCADQ8mRrrAgAA
+X-CMS-MailID: 20190607064211eucas1p174370d94ad4fc041efb6fd43c549b880
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190607044652epcas1p1b357013f14ae5bebe6300d35c0abe891
+X-RootMTR: 20190607044651epcas1p3cccde08d3b4f4a414f84ef757973e804
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190607044652epcas1p1b357013f14ae5bebe6300d35c0abe891
+X-CMS-RootMailID: 20190607044651epcas1p3cccde08d3b4f4a414f84ef757973e804
 References: <20190607044550.13361-1-andrew.smirnov@gmail.com>
-        <CGME20190607044652epcas1p1b357013f14ae5bebe6300d35c0abe891@epcas1p1.samsung.com>
-        <20190607044550.13361-15-andrew.smirnov@gmail.com>
+        <CGME20190607044651epcas1p3cccde08d3b4f4a414f84ef757973e804@epcas1p3.samsung.com>
+        <20190607044550.13361-16-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 07.06.2019 06:45, Andrey Smirnov wrote:
-> tc_get_display_props() never reads more than a byte via AUX, so
-> there's no need to reserve 8 for that purpose. No function change
-> intended.
+> We don't need 8 byte array, DP_LINK_STATUS_SIZE (6) should be
+> enough. This also gets rid of a magic number as a bonus.
 >
 > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
@@ -142,49 +142,21 @@ Andrzej
 > Cc: dri-devel@lists.freedesktop.org
 > Cc: linux-kernel@vger.kernel.org
 > ---
->  drivers/gpu/drm/bridge/tc358767.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+>  drivers/gpu/drm/bridge/tc358767.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
 > diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-> index e747f10021e3..4a245144aa83 100644
+> index 4a245144aa83..05c5fab011f8 100644
 > --- a/drivers/gpu/drm/bridge/tc358767.c
 > +++ b/drivers/gpu/drm/bridge/tc358767.c
-> @@ -661,8 +661,7 @@ static int tc_aux_link_setup(struct tc_data *tc)
->  static int tc_get_display_props(struct tc_data *tc)
->  {
+> @@ -874,7 +874,7 @@ static int tc_main_link_enable(struct tc_data *tc)
+>  	u32 dp_phy_ctrl;
+>  	u32 value;
 >  	int ret;
-> -	/* temp buffer */
 > -	u8 tmp[8];
-> +	u8 reg;
+> +	u8 tmp[DP_LINK_STATUS_SIZE];
 >  
->  	/* Read DP Rx Link Capability */
->  	ret = drm_dp_link_probe(&tc->aux, &tc->link.base);
-> @@ -678,21 +677,21 @@ static int tc_get_display_props(struct tc_data *tc)
->  		tc->link.base.num_lanes = 2;
->  	}
+>  	dev_dbg(tc->dev, "link enable\n");
 >  
-> -	ret = drm_dp_dpcd_readb(&tc->aux, DP_MAX_DOWNSPREAD, tmp);
-> +	ret = drm_dp_dpcd_readb(&tc->aux, DP_MAX_DOWNSPREAD, &reg);
->  	if (ret < 0)
->  		goto err_dpcd_read;
-> -	tc->link.spread = tmp[0] & DP_MAX_DOWNSPREAD_0_5;
-> +	tc->link.spread = reg & DP_MAX_DOWNSPREAD_0_5;
->  
-> -	ret = drm_dp_dpcd_readb(&tc->aux, DP_MAIN_LINK_CHANNEL_CODING, tmp);
-> +	ret = drm_dp_dpcd_readb(&tc->aux, DP_MAIN_LINK_CHANNEL_CODING, &reg);
->  	if (ret < 0)
->  		goto err_dpcd_read;
->  
->  	tc->link.scrambler_dis = false;
->  	/* read assr */
-> -	ret = drm_dp_dpcd_readb(&tc->aux, DP_EDP_CONFIGURATION_SET, tmp);
-> +	ret = drm_dp_dpcd_readb(&tc->aux, DP_EDP_CONFIGURATION_SET, &reg);
->  	if (ret < 0)
->  		goto err_dpcd_read;
-> -	tc->link.assr = tmp[0] & DP_ALTERNATE_SCRAMBLER_RESET_ENABLE;
-> +	tc->link.assr = reg & DP_ALTERNATE_SCRAMBLER_RESET_ENABLE;
->  
->  	dev_dbg(tc->dev, "DPCD rev: %d.%d, rate: %s, lanes: %d, framing: %s\n",
->  		tc->link.base.revision >> 4, tc->link.base.revision & 0x0f,
 
 
