@@ -2,301 +2,190 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C5CC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C67FC28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A03320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC07208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 05:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kP5e63c1"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="NdPqDdy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfFGFZO (ORCPT
+        id S1726575AbfFGF2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 01:25:14 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18534 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFGFZN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 01:25:13 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf9f5280001>; Thu, 06 Jun 2019 22:24:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 22:25:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 22:25:11 -0700
-Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 05:25:10 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL102.nvidia.com
- (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 05:25:10 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 7 Jun 2019 05:25:10 +0000
-Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cf9f5330004>; Thu, 06 Jun 2019 22:25:10 -0700
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>,
-        "Bitan Biswas" <bbiswas@nvidia.com>
-Subject: [PATCH V5] drivers: i2c: tegra: fix warning/check/error
-Date:   Thu, 6 Jun 2019 22:25:03 -0700
-Message-ID: <1559885103-9113-1-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Fri, 7 Jun 2019 01:28:51 -0400
+Received: from mail-eopbgr690056.outbound.protection.outlook.com ([40.107.69.56]:40966
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725497AbfFGF2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 01:28:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QkGkIH0nE3kg8WZvLfzXQkLzPw2GNHYdtLortfs08zY=;
+ b=NdPqDdy9cu8GjYwUBX15wv1wpxQscmaqCYUQKEOUS2ZLJpF6EzM6pnrf5gdkY/YTSKBT/n4IriQPHkFA9+DSZhZzt+iA7krcTaJCli8F9KZbB1oQMAL3oUC9Pu8UmUzO7p5Vh50YRybOkw1iyFL733DsYuZiZPGbl1q4iz2Qkaw=
+Received: from BL0PR05MB4772.namprd05.prod.outlook.com (20.177.145.81) by
+ BL0PR05MB6740.namprd05.prod.outlook.com (10.167.240.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Fri, 7 Jun 2019 05:28:44 +0000
+Received: from BL0PR05MB4772.namprd05.prod.outlook.com
+ ([fe80::ac1f:2cd2:fa9c:a886]) by BL0PR05MB4772.namprd05.prod.outlook.com
+ ([fe80::ac1f:2cd2:fa9c:a886%6]) with mapi id 15.20.1965.011; Fri, 7 Jun 2019
+ 05:28:44 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Andy Lutomirski <luto@amacapital.net>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
+ for flushing
+Thread-Topic: [RFC PATCH v2 11/12] x86/mm/tlb: Use async and inline messages
+ for flushing
+Thread-Index: AQHVF3tKnfrC/xKd0kyiVp6wMVDUEqaFvMuAgAAFIICAAAPtAIAABb2AgAnpMoA=
+Date:   Fri, 7 Jun 2019 05:28:44 +0000
+Message-ID: <B41673A7-6CA3-440D-87AA-59E07BE8B656@vmware.com>
+References: <20190531063645.4697-1-namit@vmware.com>
+ <20190531063645.4697-12-namit@vmware.com>
+ <CALCETrU0=BpGy5OQezQ7or33n-EFgBVDNe5g8prSUjL2SoRAwA@mail.gmail.com>
+ <5F153080-D7A7-4054-AB4A-AEDD5F82E0B9@vmware.com>
+ <48CECB5C-CA5B-4AD0-9DA5-6759E8FEDED7@amacapital.net>
+ <67BFA611-F69E-4AE4-A03F-2EF546DC291A@vmware.com>
+In-Reply-To: <67BFA611-F69E-4AE4-A03F-2EF546DC291A@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 04b14815-0a51-4876-b9d7-08d6eb09026f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR05MB6740;
+x-ms-traffictypediagnostic: BL0PR05MB6740:
+x-microsoft-antispam-prvs: <BL0PR05MB6740438F559EB7CA2D42DE30D0100@BL0PR05MB6740.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0061C35778
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(366004)(346002)(396003)(189003)(199004)(91956017)(66556008)(54906003)(6116002)(6436002)(6486002)(66476007)(6246003)(99286004)(66446008)(86362001)(316002)(76116006)(5660300002)(186003)(102836004)(4326008)(486006)(110136005)(36756003)(6512007)(8676002)(71200400001)(68736007)(66066001)(446003)(8936002)(14444005)(26005)(64756008)(73956011)(14454004)(305945005)(66946007)(53936002)(478600001)(83716004)(71190400001)(81166006)(53546011)(6506007)(2616005)(11346002)(33656002)(7736002)(82746002)(2906002)(25786009)(229853002)(76176011)(7416002)(256004)(3846002)(81156014)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR05MB6740;H:BL0PR05MB4772.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: L9T511YbHupd06IcD2NiXsdSeh+/IKMFwQRV/pM+HXWNeak6EuL83ssnLFjHL5QHf2BnTGjeDNoN0PjlLqM0l1RQA5rpBJOMfWmUNdY6pcBV5xslaLUE/wNN8BOmPFEjioqCjbi5EccAI62GTwfJq2PbEF7tD1RA8l9RyZtU9aQ0dweF5nOLnZxi1jjSXXWyKFOq2iPU7mjy6dn+CqriKU82zQ05x/jXYmqKlp4ADvwF0NNzHKVvyAFg+Xy0MgsdPgERrGf7ywetjexSVeUd9Il8EIEBrQTpsPav87zgpKdhJbDhUGgQ0KVRLO9oW33SRb8xTjrmefzRuEqcGXCgck/mEXW5ReUpcsuXpfWsQdDqxR840Koz0zFO3yxXxf6TqVjKGTvNuQa3eM+TfE2u9PHTEwEBgxOoHe3lqYfhIc4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1FBD7BBAD0C33A4489575752E35052F3@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559885096; bh=a2MvqGILYC5ZQNriBv/9DExtcDdPEDPALMU7yuU4DPw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=kP5e63c1S1RpgvaIrYSxhH6MHnaEMUiQQOgGRlb2HK46e08eIf0IEX6BIsPYnvsnz
-         +0hrI80Qa7DcHPzdiITHHe+DIvOyjx1eC6lJadyIq7UaJkIcnxp9iob42GUiRdbLk8
-         2AZ38hYQ6knDKUvyShtj1oVuB4P0spFz0M6M407GpuFwK0cTopJRhqZ35KQiD7yiyI
-         b80Q1qpnixYKEdagAgqTQIZBzYz+mNFdR4Sgpr00P66ny3e/fvH9hKPIjBPiA3pdOI
-         fXlZlLAM8PY7/al9YHBJYlzmxVsgtMLbpix/l9kEnSEv15kqxBQ5bCKmcDRqio4InI
-         fCSa+OiUaQo/A==
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04b14815-0a51-4876-b9d7-08d6eb09026f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2019 05:28:44.5904
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR05MB6740
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
-
-Ignore checkpatch WARNING for 80 character line limit at
-places where renaming fields compromises readability.
-
-Delay of approximately 1msec in flush i2c FIFO polling loop
-achieved by usleep_range call as msleep can take 20msecs.
-
-Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
-as needed. Replace BUG() with error handling code.
-Define I2C_ERR_UNEXPECTED_STATUS for error handling.
-
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
----
- drivers/i2c/busses/i2c-tegra.c | 61 ++++++++++++++++++++++--------------------
- 1 file changed, 32 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 1dbba39..161eb28 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -67,17 +67,18 @@
- 
- #define DVC_CTRL_REG1				0x000
- #define DVC_CTRL_REG1_INTR_EN			BIT(10)
--#define DVC_CTRL_REG2				0x004
--#define DVC_CTRL_REG3				0x008
-+#define DVC_CTRL_REG2				BIT(2)
-+#define DVC_CTRL_REG3				BIT(3)
- #define DVC_CTRL_REG3_SW_PROG			BIT(26)
- #define DVC_CTRL_REG3_I2C_DONE_INTR_EN		BIT(30)
- #define DVC_STATUS				0x00c
- #define DVC_STATUS_I2C_DONE_INTR		BIT(30)
- 
--#define I2C_ERR_NONE				0x00
--#define I2C_ERR_NO_ACK				0x01
--#define I2C_ERR_ARBITRATION_LOST		0x02
--#define I2C_ERR_UNKNOWN_INTERRUPT		0x04
-+#define I2C_ERR_NONE				0x0
-+#define I2C_ERR_NO_ACK				BIT(0)
-+#define I2C_ERR_ARBITRATION_LOST		BIT(1)
-+#define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
-+#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
- 
- #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
- #define PACKET_HEADER0_PACKET_ID_SHIFT		16
-@@ -280,6 +281,7 @@ struct tegra_i2c_dev {
- 	u32 bus_clk_rate;
- 	u16 clk_divisor_non_hs_mode;
- 	bool is_multimaster_mode;
-+	/* xfer_lock: lock to serialize transfer submission and processing */
- 	spinlock_t xfer_lock;
- 	struct dma_chan *tx_dma_chan;
- 	struct dma_chan *rx_dma_chan;
-@@ -306,7 +308,7 @@ static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
-  * to the I2C block inside the DVC block
-  */
- static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
--	unsigned long reg)
-+					unsigned long reg)
- {
- 	if (i2c_dev->is_dvc)
- 		reg += (reg >= I2C_TX_FIFO) ? 0x10 : 0x40;
-@@ -314,7 +316,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
- }
- 
- static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
--	unsigned long reg)
-+		       unsigned long reg)
- {
- 	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
- 
-@@ -329,13 +331,13 @@ static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
- }
- 
- static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
--	unsigned long reg, int len)
-+			unsigned long reg, int len)
- {
- 	writesl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
- }
- 
- static void i2c_readsl(struct tegra_i2c_dev *i2c_dev, void *data,
--	unsigned long reg, int len)
-+		       unsigned long reg, int len)
- {
- 	readsl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg), data, len);
- }
-@@ -486,7 +488,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
- 			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
- 			return -ETIMEDOUT;
- 		}
--		msleep(1);
-+		usleep_range(1000, 2000);
- 	}
- 	return 0;
- }
-@@ -525,7 +527,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * prevent overwriting past the end of buf
- 	 */
- 	if (rx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
- 		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
- 		val = cpu_to_le32(val);
- 		memcpy(buf, &val, buf_remaining);
-@@ -533,7 +534,6 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 		rx_fifo_avail--;
- 	}
- 
--	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
- 	i2c_dev->msg_buf_remaining = buf_remaining;
- 	i2c_dev->msg_buf = buf;
- 
-@@ -591,7 +591,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * boundary and fault.
- 	 */
- 	if (tx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
- 		memcpy(&val, buf, buf_remaining);
- 		val = le32_to_cpu(val);
- 
-@@ -680,10 +679,11 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
- 		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
- 		if (in_interrupt())
- 			err = readl_poll_timeout_atomic(addr, val, val == 0,
--					1000, I2C_CONFIG_LOAD_TIMEOUT);
-+							1000,
-+							I2C_CONFIG_LOAD_TIMEOUT);
- 		else
--			err = readl_poll_timeout(addr, val, val == 0,
--					1000, I2C_CONFIG_LOAD_TIMEOUT);
-+			err = readl_poll_timeout(addr, val, val == 0, 1000,
-+						 I2C_CONFIG_LOAD_TIMEOUT);
- 
- 		if (err) {
- 			dev_warn(i2c_dev->dev,
-@@ -856,10 +856,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 
- 	if (!i2c_dev->is_curr_dma_xfer) {
- 		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
--			if (i2c_dev->msg_buf_remaining)
-+			if (i2c_dev->msg_buf_remaining) {
- 				tegra_i2c_empty_rx_fifo(i2c_dev);
--			else
--				BUG();
-+			} else {
-+				dev_err(i2c_dev->dev, "unexpected rx data request\n");
-+				i2c_dev->msg_err |= I2C_ERR_UNEXPECTED_STATUS;
-+				goto err;
-+			}
- 		}
- 
- 		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-@@ -885,7 +888,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
- 		if (i2c_dev->is_curr_dma_xfer)
- 			i2c_dev->msg_buf_remaining = 0;
--		BUG_ON(i2c_dev->msg_buf_remaining);
-+		WARN_ON_ONCE(i2c_dev->msg_buf_remaining);
- 		complete(&i2c_dev->msg_complete);
- 	}
- 	goto done;
-@@ -1024,7 +1027,7 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
- }
- 
- static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
--	struct i2c_msg *msg, enum msg_end_type end_state)
-+			      struct i2c_msg *msg, enum msg_end_type end_state)
- {
- 	u32 packet_header;
- 	u32 int_mask;
-@@ -1161,9 +1164,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 		if (err)
- 			return err;
- 
--		time_left = wait_for_completion_timeout(
--						&i2c_dev->dma_complete,
--						msecs_to_jiffies(xfer_time));
-+		time_left = wait_for_completion_timeout(&i2c_dev->dma_complete,
-+							msecs_to_jiffies(xfer_time));
- 		if (time_left == 0) {
- 			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
- 			dmaengine_terminate_sync(i2c_dev->msg_read ?
-@@ -1225,7 +1227,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- }
- 
- static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
--	int num)
-+			  int num)
- {
- 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
- 	int i;
-@@ -1273,12 +1275,12 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
- 	int ret;
- 
- 	ret = of_property_read_u32(np, "clock-frequency",
--			&i2c_dev->bus_clk_rate);
-+				   &i2c_dev->bus_clk_rate);
- 	if (ret)
- 		i2c_dev->bus_clk_rate = 100000; /* default clock rate */
- 
- 	i2c_dev->is_multimaster_mode = of_property_read_bool(np,
--			"multi-master");
-+							     "multi-master");
- }
- 
- static const struct i2c_algorithm tegra_i2c_algo = {
-@@ -1622,7 +1624,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = devm_request_irq(&pdev->dev, i2c_dev->irq,
--			tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
-+			       tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to request irq %i\n", i2c_dev->irq);
- 		goto release_dma;
-@@ -1715,6 +1717,7 @@ static const struct dev_pm_ops tegra_i2c_pm = {
- 	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
- 			   NULL)
- };
-+
- #define TEGRA_I2C_PM	(&tegra_i2c_pm)
- #else
- #define TEGRA_I2C_PM	NULL
--- 
-2.7.4
-
+PiBPbiBNYXkgMzEsIDIwMTksIGF0IDM6MDcgUE0sIE5hZGF2IEFtaXQgPG5hbWl0QHZtd2FyZS5j
+b20+IHdyb3RlOg0KPiANCj4+IE9uIE1heSAzMSwgMjAxOSwgYXQgMjo0NyBQTSwgQW5keSBMdXRv
+bWlyc2tpIDxsdXRvQGFtYWNhcGl0YWwubmV0PiB3cm90ZToNCj4+IA0KPj4gDQo+PiBPbiBNYXkg
+MzEsIDIwMTksIGF0IDI6MzMgUE0sIE5hZGF2IEFtaXQgPG5hbWl0QHZtd2FyZS5jb20+IHdyb3Rl
+Og0KPj4gDQo+Pj4+IE9uIE1heSAzMSwgMjAxOSwgYXQgMjoxNCBQTSwgQW5keSBMdXRvbWlyc2tp
+IDxsdXRvQGtlcm5lbC5vcmc+IHdyb3RlOg0KPj4+PiANCj4+Pj4+IE9uIFRodSwgTWF5IDMwLCAy
+MDE5IGF0IDExOjM3IFBNIE5hZGF2IEFtaXQgPG5hbWl0QHZtd2FyZS5jb20+IHdyb3RlOg0KPj4+
+Pj4gV2hlbiB3ZSBmbHVzaCB1c2Vyc3BhY2UgbWFwcGluZ3MsIHdlIGNhbiBkZWZlciB0aGUgVExC
+IGZsdXNoZXMsIGFzIGxvbmcNCj4+Pj4+IHRoZSBmb2xsb3dpbmcgY29uZGl0aW9ucyBhcmUgbWV0
+Og0KPj4+Pj4gDQo+Pj4+PiAxLiBObyB0YWJsZXMgYXJlIGZyZWVkLCBzaW5jZSBvdGhlcndpc2Ug
+c3BlY3VsYXRpdmUgcGFnZSB3YWxrcyBtaWdodA0KPj4+Pj4gY2F1c2UgbWFjaGluZS1jaGVja3Mu
+DQo+Pj4+PiANCj4+Pj4+IDIuIE5vIG9uZSB3b3VsZCBhY2Nlc3MgdXNlcnNwYWNlIGJlZm9yZSBm
+bHVzaCB0YWtlcyBwbGFjZS4gU3BlY2lmaWNhbGx5LA0KPj4+Pj4gTk1JIGhhbmRsZXJzIGFuZCBr
+cHJvYmVzIHdvdWxkIGF2b2lkIGFjY2Vzc2luZyB1c2Vyc3BhY2UuDQo+Pj4+IA0KPj4+PiBJIHRo
+aW5rIEkgbmVlZCB0byBhc2sgdGhlIGJpZyBwaWN0dXJlIHF1ZXN0aW9uLiAgV2hlbiBzb21lb25l
+IGNhbGxzDQo+Pj4+IGZsdXNoX3RsYl9tbV9yYW5nZSgpIChvciB0aGUgb3RoZXIgZW50cnkgcG9p
+bnRzKSwgaWYgbm8gcGFnZSB0YWJsZXMNCj4+Pj4gd2VyZSBmcmVlZCwgdGhleSB3YW50IHRoZSBn
+dWFyYW50ZWUgdGhhdCBmdXR1cmUgYWNjZXNzZXMgKGluaXRpYXRlZA0KPj4+PiBvYnNlcnZhYmx5
+IGFmdGVyIHRoZSBmbHVzaCByZXR1cm5zKSB3aWxsIG5vdCB1c2UgcGFnaW5nIGVudHJpZXMgdGhh
+dA0KPj4+PiB3ZXJlIHJlcGxhY2VkIGJ5IHN0b3JlcyBvcmRlcmVkIGJlZm9yZSBmbHVzaF90bGJf
+bW1fcmFuZ2UoKS4gIFdlIGFsc28NCj4+Pj4gbmVlZCB0aGUgZ3VhcmFudGVlIHRoYXQgYW55IGVm
+ZmVjdHMgZnJvbSBhbnkgbWVtb3J5IGFjY2VzcyB1c2luZyB0aGUNCj4+Pj4gb2xkIHBhZ2luZyBl
+bnRyaWVzIHdpbGwgYmVjb21lIGdsb2JhbGx5IHZpc2libGUgYmVmb3JlDQo+Pj4+IGZsdXNoX3Rs
+Yl9tbV9yYW5nZSgpLg0KPj4+PiANCj4+Pj4gSSdtIHdvbmRlcmluZyBpZiByZWNlaXB0IG9mIGFu
+IElQSSBpcyBlbm91Z2ggdG8gZ3VhcmFudGVlIGFueSBvZiB0aGlzLg0KPj4+PiBJZiBDUFUgMSBz
+ZXRzIGEgZGlydHkgYml0IGFuZCBDUFUgMiB3cml0ZXMgdG8gdGhlIEFQSUMgdG8gc2VuZCBhbiBJ
+UEkNCj4+Pj4gdG8gQ1BVIDEsIGF0IHdoYXQgcG9pbnQgaXMgQ1BVIDIgZ3VhcmFudGVlZCB0byBi
+ZSBhYmxlIHRvIG9ic2VydmUgdGhlDQo+Pj4+IGRpcnR5IGJpdD8gIEFuIGludGVycnVwdCBlbnRy
+eSB0b2RheSBpcyBmdWxseSBzZXJpYWxpemluZyBieSB0aGUgdGltZQ0KPj4+PiBpdCBmaW5pc2hl
+cywgYnV0IGludGVycnVwdCBlbnRyaWVzIGFyZSBlcGljbHkgc2xvdywgYW5kIEkgZG9uJ3Qga25v
+dw0KPj4+PiBpZiB0aGUgQVBJQyB3YWl0cyBsb25nIGVub3VnaC4gIEhlY2ssIHdoYXQgaWYgSVJR
+cyBhcmUgb2ZmIG9uIHRoZQ0KPj4+PiByZW1vdGUgQ1BVPyAgVGhlcmUgYXJlIGEgaGFuZGZ1bCBv
+ZiBwbGFjZXMgd2hlcmUgd2UgdG91Y2ggdXNlciBtZW1vcnkNCj4+Pj4gd2l0aCBJUlFzIG9mZiwg
+YW5kIGl0J3MgKHNhZGx5KSBwb3NzaWJsZSBmb3IgdXNlciBjb2RlIHRvIHR1cm4gb2ZmDQo+Pj4+
+IElSUXMgd2l0aCBpb3BsKCkuDQo+Pj4+IA0KPj4+PiBJICp0aGluayogdGhhdCBJbnRlbCBoYXMg
+c3RhdGVkIHJlY2VudGx5IHRoYXQgU01UIHNpYmxpbmdzIGFyZQ0KPj4+PiBndWFyYW50ZWVkIHRv
+IHN0b3Agc3BlY3VsYXRpbmcgd2hlbiB5b3Ugd3JpdGUgdG8gdGhlIEFQSUMgSUNSIHRvIHBva2UN
+Cj4+Pj4gdGhlbSwgYnV0IFNNVCBpcyB2ZXJ5IHNwZWNpYWwuDQo+Pj4+IA0KPj4+PiBNeSBnZW5l
+cmFsIGNvbmNsdXNpb24gaXMgdGhhdCBJIHRoaW5rIHRoZSBjb2RlIG5lZWRzIHRvIGRvY3VtZW50
+IHdoYXQNCj4+Pj4gaXMgZ3VhcmFudGVlZCBhbmQgd2h5Lg0KPj4+IA0KPj4+IEkgdGhpbmsgSSBt
+aWdodCBoYXZlIG1hbmFnZWQgdG8gY29uZnVzZSB5b3Ugd2l0aCBhIGJ1ZyBJIG1hZGUgKGxhc3Qg
+bWludXRlDQo+Pj4gYnVnIHdoZW4gSSB3YXMgZG9pbmcgc29tZSBjbGVhbnVwKS4gVGhpcyBidWcg
+ZG9lcyBub3QgYWZmZWN0IHRoZSBwZXJmb3JtYW5jZQ0KPj4+IG11Y2gsIGJ1dCBpdCBtaWdodCBs
+ZWQgeW91IHRvIHRoaW5rIHRoYXQgSSB1c2UgdGhlIEFQSUMgc2VuZGluZyBhcw0KPj4+IHN5bmNo
+cm9uaXphdGlvbi4NCj4+PiANCj4+PiBUaGUgaWRlYSBpcyBub3QgZm9yIHVzIHRvIHJlbHkgb24g
+d3JpdGUgdG8gSUNSIGFzIHNvbWV0aGluZyBzZXJpYWxpemluZy4gVGhlDQo+Pj4gZmxvdyBzaG91
+bGQgYmUgYXMgZm9sbG93czoNCj4+PiANCj4+PiANCj4+PiAgQ1BVMCAgICAgICAgICAgICAgICAg
+ICAgQ1BVMQ0KPj4+IA0KPj4+IGZsdXNoX3RsYl9tbV9yYW5nZSgpDQo+Pj4gX19zbXBfY2FsbF9m
+dW5jdGlvbl9tYW55KCkNCj4+PiBbIHByZXBhcmUgY2FsbF9zaW5nbGVfZGF0YSAoY3NkKSBdDQo+
+Pj4gWyBsb2NrIGNzZCBdIA0KPj4+IFsgc2VuZCBJUEkgXQ0KPj4+ICAoKikNCj4+PiBbIHdhaXQg
+Zm9yIGNzZCB0byBiZSB1bmxvY2tlZCBdDQo+Pj4gICAgICAgICAgICAgICAgICBbIGludGVycnVw
+dCBdDQo+Pj4gICAgICAgICAgICAgICAgICBbIGNvcHkgY3NkIGluZm8gdG8gc3RhY2sgXQ0KPj4+
+ICAgICAgICAgICAgICAgICAgWyBjc2QgdW5sb2NrIF0NCj4+PiBbIGZpbmQgY3NkIGlzIHVubG9j
+a2VkIF0NCj4+PiBbIGNvbnRpbnVlICgqKikgXQ0KPj4+ICAgICAgICAgICAgICAgICAgWyBmbHVz
+aCBUTEIgXQ0KPj4+IA0KPj4+IA0KPj4+IEF0ICgqKikgdGhlIHBhZ2VzIG1pZ2h0IGJlIHJlY3lj
+bGVkLCB3cml0dGVuLWJhY2sgdG8gZGlzaywgZXRjLiBOb3RlIHRoYXQNCj4+PiBkdXJpbmcgKCop
+LCBDUFUwIG1pZ2h0IGRvIHNvbWUgbG9jYWwgVExCIGZsdXNoZXMsIG1ha2luZyBpdCB2ZXJ5IGxp
+a2VseSB0aGF0DQo+Pj4gQ1NEIHdpbGwgYmUgdW5sb2NrZWQgYnkgdGhlIHRpbWUgaXQgZ2V0cyB0
+aGVyZS4NCj4+PiANCj4+PiBBcyB5b3UgY2FuIHNlZSwgSSBkb27igJl0IHJlbHkgb24gYW55IHNw
+ZWNpYWwgbWljcm8tYXJjaGl0ZWN0dXJhbCBiZWhhdmlvci4NCj4+PiBUaGUgc3luY2hyb25pemF0
+aW9uIGlzIGRvbmUgcHVyZWx5IGluIHNvZnR3YXJlLg0KPj4+IA0KPj4+IERvZXMgaXQgbWFrZSBt
+b3JlIHNlbnNlIG5vdz8NCj4+IA0KPj4gWWVzLiAgSGF2ZSB5b3UgYmVuY2htYXJrZWQgdGhpcz8N
+Cj4gDQo+IFBhcnRpYWxseS4gTnVtYmVycyBhcmUgaW5kZWVkIHdvcnNlLiBIZXJlIGFyZSBwcmVs
+aW1pbmFyeSByZXN1bHRzLCBjb21wYXJpbmcNCj4gdG8gdjEgKGNvbmN1cnJlbnQpOg0KPiANCj4g
+CW5fdGhyZWFkcwliZWZvcmUJCWNvbmN1cnJlbnQJK2FzeW5jDQo+IAktLS0tLS0tLS0JLS0tLS0t
+CQktLS0tLS0tLS0tIAktLS0tLS0NCj4gCTEJCTY2MQkJNjYzCQk2NjMNCj4gCTIJCTE0MzYJCTEy
+MjUgKC0xNCUpCTExMTUgKC0yMiUpDQo+IAk0CQkxNTcxCQkxNDIxICgtMTAlKQkxMjg5ICgtMTgl
+KQ0KPiANCj4gTm90ZSB0aGF0IHRoZSBiZW5lZml0IG9mIOKAnGFzeW5jIiB3b3VsZCBiZSBncmVh
+dGVyIGlmIHRoZSBpbml0aWF0b3IgZG9lcyBub3QNCj4gZmx1c2ggdGhlIFRMQiBhdCBhbGwuIFRo
+aXMgbWlnaHQgaGFwcGVuIGluIHRoZSBjYXNlIG9mIGtzd2FwZCwgZm9yIGV4YW1wbGUuDQo+IExl
+dCBtZSB0cnkgc29tZSBtaWNyby1vcHRpbWl6YXRpb25zIGZpcnN0LCBydW4gbW9yZSBiZW5jaG1h
+cmtzIGFuZCBnZXQgYmFjaw0KPiB0byB5b3UuDQoNClNvIEkgcmFuIHNvbWUgbW9yZSBiZW5jaG1h
+cmtpbmcgKG15IGJlbmNobWFyayBpcyBub3QgdmVyeSBzdWl0YWJsZSksIGFuZCB0cmllZA0KbW9y
+ZSBzdHVmZiB0aGF0IGRpZCBub3QgaGVscCAoY2hlY2tpbmcgZm9yIG1vcmUgd29yayBiZWZvcmUg
+cmV0dXJuaW5nIGZyb20gdGhlDQpJUEkgaGFuZGxlciwgYW5kIGF2b2lkIHJlZHVuZGFudCBJUElz
+IGluIHN1Y2ggY2FzZSkuDQoNCkFueWhvdywgd2l0aCBhIGZpeGVkIHZlcnNpb24sIEkgcmFuIGEg
+bW9yZSBzdGFuZGFyZCBiZW5jaG1hcmsgb24gREFYOg0KDQokIG1rZnMuZXh0NCAvZGV2L3BtZW0w
+DQokIG1vdW50IC1vIGRheCAvZGV2L3BtZW0wIC9tbnQvbWVtDQokIGNkIC9tbnQvbWVtDQokIGJh
+c2ggLWMgJ2VjaG8gMCA+IC9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9lODIwX3BtZW0vbmRidXMwL3Jl
+Z2lvbjAvbmFtZXNwYWNlMC4wL2Jsb2NrL3BtZW0wL2RheC93cml0ZV9jYWNoZeKAmQ0KJCBzeXNi
+ZW5jaCBmaWxlaW8gLS1maWxlLXRvdGFsLXNpemU9M0cgLS1maWxlLXRlc3QtbW9kZT1ybmR3ciAJ
+XA0KCS0tZmlsZS1pby1tb2RlPW1tYXAgLS10aHJlYWRzPTQgLS1maWxlLWZzeW5jLW1vZGU9ZmRh
+dGFzeW5jIHByZXBhcmUNCiQgc3lzYmVuY2ggZmlsZWlvIC0tZmlsZS10b3RhbC1zaXplPTNHIC0t
+ZmlsZS10ZXN0LW1vZGU9cm5kd3IgCVwNCgktLWZpbGUtaW8tbW9kZT1tbWFwIC0tdGhyZWFkcz00
+IC0tZmlsZS1mc3luYy1tb2RlPWZkYXRhc3luYyBydW4NCg0KKCBhcyB5b3UgY2FuIHNlZSwgSSBk
+aXNhYmxlZCB0aGUgd3JpdGUtY2FjaGUsIHNpbmNlIG15IG1hY2hpbmUgZG9lcyBub3QgaGF2ZQ0K
+ICBjbHdiL2NsZmx1c2hvcHQgYW5kIGNsZmx1c2ggYXBwZWFycyB0byBiZWNvbWUgYSBib3R0bGVu
+ZWNrIG90aGVyd2lzZSApDQoNCg0KVGhlIHJlc3VsdHMgYXJlOg0KCQkJCWV2ZW50cyAoYXZnL3N0
+ZGRldikNCgkJCQktLS0tLS0tLS0tLS0tLS0tLS0tDQpiYXNlCQkJCTEyNjM2ODkuMDAwMC8xMTQ4
+MS4xMA0KY29uY3VycmVudAkJCTEzMTAxMjMuNTAwMC8xOTIwNS43OQkoKzMuNiUpDQpjb25jdXJy
+ZW50ICsgYXN5bmMJCTEzMjY3NTAuMjUwMC8yNDU2My42MQkoKzQuOSUpDQoNClNvIHdoaWNoIHZl
+cnNpb24gZG8geW91IHdhbnQgbWUgdG8gc3VibWl0PyBXaXRoIG9yIHdpdGhvdXQgdGhlIGFzeW5j
+IHBhcnQ/DQoNCg==
