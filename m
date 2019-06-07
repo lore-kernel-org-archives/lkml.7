@@ -2,88 +2,204 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5981CC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE0BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20564207E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QrGIZKbx"
+	by mail.kernel.org (Postfix) with ESMTP id AB80F207E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbfFGWIU (ORCPT
+        id S1731322AbfFGWId convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:08:20 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43411 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfFGWIU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:08:20 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so2991326ljv.10
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yHlZ/09HVQo+stV3OrPMedEmO1HgLZq5U7B9/c6/p7Y=;
-        b=QrGIZKbx5k7Xqdv8z/yDPKaoDJuxRaggORVS9azbjG280GDunTQtibk90YWn/nobhR
-         wiD+GkdtLQmOI3rndTluSkSSzvyxl0QYWwTNX/kjxbjMzi08Of0f5IrjSjj71JN/63Cz
-         N5J4b5LskZkGWp5+qJ4eV/dmhkOEssyIvvHvNFJmi8JVuZxuMELvRlejSE35OkQeVZtj
-         lMYPOdya2Q8etIbvyQX6M8Ab84uY9UKBtWdIYJ5LvaNmwpJn2svZpvCPpMPQmss/z6Oq
-         PKWfQhNWjleRXUuugMH14Gm6sK4aSig5EcoJLhtJ2bVhRzZIUrKCFWP3NnlAgDhybrif
-         5cDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yHlZ/09HVQo+stV3OrPMedEmO1HgLZq5U7B9/c6/p7Y=;
-        b=mY78ewnoQ0ZEgi2qN7H05sEw3btrkmycJO6qwmUM1Pj8YWbzrx3vfNKL4cIBJcegMD
-         5QzGW9R0mep14A8h3R34yM90EdY85wH90DPVjZ2JR9GPCZ7MWSQ9+n5yq6XL8F3XBJz0
-         GGa91NMCXFYu9mx/ZWlesSk0uUPn9+pv4VK8J+LkM1CL4sYgTjSfIun5sCHflGXzQKyB
-         7KaP7Uj2FlyG+rUmKhtqD/benFxz+G94SH2+55sZTQemtkj+BYbqMpe7S/BkyY7XZ+1o
-         WUbWFzS1+ivIjkoAbXF40jeVyxwq9ZZiNvYRzrcFMFCpJnpAYJGBv4gD4eEtH6oDqCD0
-         Z3XQ==
-X-Gm-Message-State: APjAAAWsp+ZXxOA7fV/2+QeI5RFnGHslUnW6f2m4wmJe4hKxoTXlX6j8
-        njrOaUE/G4dSShCrGkygn0/HxydpSm1d1B/qS8Dh0Q==
-X-Google-Smtp-Source: APXvYqxXuBhhgn7MmZAfsZykWUQKNY/KzC0S0yVRQlT2pFkpO2Tn+jLM+faONvbgsZcuBOlTxFOjmjWE8oPicI3r45M=
-X-Received: by 2002:a2e:8902:: with SMTP id d2mr29274449lji.94.1559945298255;
- Fri, 07 Jun 2019 15:08:18 -0700 (PDT)
+        Fri, 7 Jun 2019 18:08:33 -0400
+Received: from mga04.intel.com ([192.55.52.120]:20128 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727213AbfFGWId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 18:08:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 15:08:32 -0700
+X-ExtLoop1: 1
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by orsmga005.jf.intel.com with ESMTP; 07 Jun 2019 15:08:32 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.13]) by
+ ORSMSX103.amr.corp.intel.com ([169.254.5.232]) with mapi id 14.03.0415.000;
+ Fri, 7 Jun 2019 15:08:32 -0700
+From:   "Fujinaka, Todd" <todd.fujinaka@intel.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+CC:     "e1000-devel@lists.sourceforge.net" 
+        <e1000-devel@lists.sourceforge.net>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Subject: RE: [E1000-devel] [Intel-wired-lan] i40e X722 RSS problem with
+ NAT-Traversal IPsec packets
+Thread-Topic: [E1000-devel] [Intel-wired-lan] i40e X722 RSS problem with
+ NAT-Traversal IPsec packets
+Thread-Index: AQHVAGFrUp79tfxVUUm4svS7p3lcbqZXVdKAgAERcwCAAB83gIAAA7EAgAADSgCAAAeAgIAAEBkAgAAjdwCAATHTgIAAIwyAgAA9aYCAD3MygIAAI9MAgAFooQCAAy7FgIAAF0AAgAAA04CAAFKIAIABH72AgAALcoCAAFLpAIAF0r+AgAAazYCAABG2AIAAW3aAgAEAYwCAGSUSAIAAUhKAgAAVdAD//58hAA==
+Date:   Fri, 7 Jun 2019 22:08:31 +0000
+Message-ID: <9B4A1B1917080E46B64F07F2989DADD69AFBF090@ORSMSX115.amr.corp.intel.com>
+References: <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
+ <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
+ <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
+ <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca>
+ <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
+ <20190521151537.xga4aiq3gjtiif4j@csclub.uwaterloo.ca>
+ <CAKgT0UfpZ-ve3Hx26gDkb+YTDHvN3=MJ7NZd2NE7ewF5g=kHHw@mail.gmail.com>
+ <20190521175456.zlkiiov5hry2l4q2@csclub.uwaterloo.ca>
+ <CAKgT0UcR3q1maBmJz7xj_i+_oux_6FQxua9DOjXQSZzyq6FhkQ@mail.gmail.com>
+ <20190522143956.quskqh33ko2wuf47@csclub.uwaterloo.ca>
+ <20190607143906.wgi344jcc77qvh24@csclub.uwaterloo.ca>
+ <CAKgT0Ue1M8_30PVPmoJy_EGo2mjM26ecz32Myx-hpnuq_6wdjw@mail.gmail.com>
+ <alpine.NEB.2.21.9999.1906071343460.809@chris.i8u.org>
+In-Reply-To: <alpine.NEB.2.21.9999.1906071343460.809@chris.i8u.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWE0MWE5MTEtNjM2ZC00ZjQxLWEyM2QtMGQ0YzY5OWZkZTBlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSU5BYTNcL2VSSTVyNTQ2YmRaR0dWM1VIWGVpT3ZINUR5d3NibjJIUVhYR1ZQREZnMUtcL3NCbFdoK3l4MFhnWTVCIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <cover.1559656538.git.mchehab+samsung@kernel.org> <ee8f4f56658247a0ab0d9e2c16a9afafefe38da0.1559656538.git.mchehab+samsung@kernel.org>
-In-Reply-To: <ee8f4f56658247a0ab0d9e2c16a9afafefe38da0.1559656538.git.mchehab+samsung@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 00:08:10 +0200
-Message-ID: <CACRpkdayQdrtqO3aygY1uDG0LCX_9rVnSnxP5F_C-KMZURTAYA@mail.gmail.com>
-Subject: Re: [PATCH v2 12/22] docs: gpio: driver.rst: fix a bad tag
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 4:18 PM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
+Just a quick update with the response I got and I'll make sure this is in our internal bug database.
 
-> With ReST, [foo]_ means a reference to foo, causing this warning:
->
->     Documentation/driver-api/gpio/driver.rst:419: WARNING: Unknown target name: "devm".
->
-> Fix it by using a literal for the name.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Here's what I got back, and it looks like you guys have tried this already:
 
-Looks identical to the v1 I already applied, so keeping
-that one.
+Have they tried these steps to configure RSS:
 
-Yours,
-Linus Walleij
+RSS Hash Flow
+-------------
+
+Allows you to set the hash bytes per flow type and any combination of one or
+more options for Receive Side Scaling (RSS) hash byte configuration.
+
+#ethtool -N <dev> rx-flow-hash <type> <option>
+
+Where <type> is:
+  tcp4  signifying TCP over IPv4
+  udp4  signifying UDP over IPv4
+  tcp6  signifying TCP over IPv6
+  udp6  signifying UDP over IPv6
+And <option> is one or more of:
+  s Hash on the IP source address of the rx packet.
+  d Hash on the IP destination address of the rx packet.
+  f Hash on bytes 0 and 1 of the Layer 4 header of the rx packet.
+  n Hash on bytes 2 and 3 of the Layer 4 header of the rx packet.
+
+Also, looks like the driver needs to be updated to latest version:
+>>> 1.1767.0 i40e 0000:3d:00.0: The driver for the device detected a
+>>> newer version of the NVM image than expected. Please install the
+>>> most recent version of the network driver.
+
+Out of tree: https://sourceforge.net/projects/e1000/files/i40e%20stable/
+
+Todd Fujinaka
+Software Application Engineer
+Datacenter Engineering Group
+Intel Corporation
+todd.fujinaka@intel.com
+
+
+-----Original Message-----
+From: Hisashi T Fujinaka [mailto:htodd@twofifty.com] 
+Sent: Friday, June 7, 2019 1:50 PM
+To: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: e1000-devel@lists.sourceforge.net; Netdev <netdev@vger.kernel.org>; intel-wired-lan <intel-wired-lan@lists.osuosl.org>; LKML <linux-kernel@vger.kernel.org>; Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Subject: Re: [E1000-devel] [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
+
+On Fri, 7 Jun 2019, Alexander Duyck wrote:
+
+> On Fri, Jun 7, 2019 at 7:39 AM Lennart Sorensen 
+> <lsorense@csclub.uwaterloo.ca> wrote:
+>>
+>> On Wed, May 22, 2019 at 10:39:56AM -0400, Lennart Sorensen wrote:
+>>> OK I applied those two patches and get this:
+>>>
+>>> i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 
+>>> 2.1.7-k
+>>> i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+>>> i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 
+>>> 1.1767.0 i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+>>> i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87 i40e 0000:3d:00.0: 
+>>> PFQF_HREGION[7]: 0x00000000 i40e 0000:3d:00.0: PFQF_HREGION[6]: 
+>>> 0x00000000 i40e 0000:3d:00.0: PFQF_HREGION[5]: 0x00000000 i40e 
+>>> 0000:3d:00.0: PFQF_HREGION[4]: 0x00000000 i40e 0000:3d:00.0: 
+>>> PFQF_HREGION[3]: 0x00000000 i40e 0000:3d:00.0: PFQF_HREGION[2]: 
+>>> 0x00000000 i40e 0000:3d:00.0: PFQF_HREGION[1]: 0x00000000 i40e 
+>>> 0000:3d:00.0: PFQF_HREGION[0]: 0x00000000 i40e 0000:3d:00.0: 
+>>> flow_type: 63 input_mask:0x0000000000004000 i40e 0000:3d:00.0: 
+>>> flow_type: 46 input_mask:0x0007fff800000000 i40e 0000:3d:00.0: 
+>>> flow_type: 45 input_mask:0x0007fff800000000 i40e 0000:3d:00.0: 
+>>> flow_type: 44 input_mask:0x0007ffff80000000 i40e 0000:3d:00.0: 
+>>> flow_type: 43 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
+>>> flow_type: 42 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
+>>> flow_type: 41 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
+>>> flow_type: 40 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
+>>> flow_type: 39 input_mask:0x0007fffe00000000 i40e 0000:3d:00.0: 
+>>> flow_type: 36 input_mask:0x0006060000000000 i40e 0000:3d:00.0: 
+>>> flow_type: 35 input_mask:0x0006060000000000 i40e 0000:3d:00.0: 
+>>> flow_type: 34 input_mask:0x0006060780000000 i40e 0000:3d:00.0: 
+>>> flow_type: 33 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
+>>> flow_type: 32 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
+>>> flow_type: 31 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
+>>> flow_type: 30 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
+>>> flow_type: 29 input_mask:0x0006060600000000 i40e 0000:3d:00.0: 
+>>> flow_type: 27 input_mask:0x00000000002c0000 i40e 0000:3d:00.0: 
+>>> flow_type: 26 input_mask:0x00000000002c0000 i40e 0000:3d:00.0: flow 
+>>> type: 36 update input mask from:0x0006060000000000, 
+>>> to:0x0001801800000000 i40e 0000:3d:00.0: flow type: 35 update input 
+>>> mask from:0x0006060000000000, to:0x0001801800000000 i40e 
+>>> 0000:3d:00.0: flow type: 34 update input mask 
+>>> from:0x0006060780000000, to:0x0001801f80000000 i40e 0000:3d:00.0: 
+>>> flow type: 33 update input mask from:0x0006060600000000, 
+>>> to:0x0001801e00000000 i40e 0000:3d:00.0: flow type: 32 update input 
+>>> mask from:0x0006060600000000, to:0x0001801e00000000 i40e 
+>>> 0000:3d:00.0: flow type: 31 update input mask 
+>>> from:0x0006060600000000, to:0x0001801e00000000 i40e 0000:3d:00.0: 
+>>> flow type: 30 update input mask from:0x0006060600000000, 
+>>> to:0x0001801e00000000 i40e 0000:3d:00.0: flow type: 29 update input 
+>>> mask from:0x0006060600000000, to:0x0001801e00000000
+>>>
+>>> So seems the regions are all 0.
+>>>
+>>> All ipsec packets still hitting queue 0.
+>>
+>> So any news or more ideas to try or are we stuck hoping someone can 
+>> fix the firmware?
+>
+> I had reached out to some folks over in the networking division hoping 
+> that they can get a reproduction as I don't have the hardware that you 
+> are seeing the issue on so I have no way to reproduce it.
+>
+> Maybe someone from that group can reply and tell us where they are on that?
+>
+> Thanks.
+>
+> - Alex
+
+For some reason this isn't showing up in my work email. We had an internal conference this week and I think people are away. I'll see if I can chase some people down if they're still here and not on the way home.
+
+--
+Hisashi T Fujinaka - htodd@twofifty.com
+
+
+_______________________________________________
+E1000-devel mailing list
+E1000-devel@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/e1000-devel
+To learn more about Intel&#174; Ethernet, visit http://communities.intel.com/community/wired
