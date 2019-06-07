@@ -2,62 +2,86 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799BEC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B3CC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542832089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA51B2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbfFGPbM (ORCPT
+        id S1729950AbfFGPbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:31:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57960 "EHLO mx1.redhat.com"
+        Fri, 7 Jun 2019 11:31:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:42804 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfFGPbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:31:11 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C6460C057E37;
-        Fri,  7 Jun 2019 15:31:00 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE9345C70A;
-        Fri,  7 Jun 2019 15:30:56 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-In-Reply-To: <20190607151228.GA1872258@magnolia>
-References: <20190607151228.GA1872258@magnolia> <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk> <155991706083.15579.16359443779582362339.stgit@warthog.procyon.org.uk>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/13] uapi: General notification ring definitions [ver #4]
+        id S1729293AbfFGPbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:31:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 069B2499;
+        Fri,  7 Jun 2019 08:31:19 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 55FE43F718;
+        Fri,  7 Jun 2019 08:31:16 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 16:31:14 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/18] drivers: firmware: psci: Support CPU hotplug for
+ the hierarchical model
+Message-ID: <20190607153114.GI15577@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-16-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27688.1559921390.1@warthog.procyon.org.uk>
-From:   David Howells <dhowells@redhat.com>
-Date:   Fri, 07 Jun 2019 16:30:51 +0100
-Message-ID: <27772.1559921451@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 07 Jun 2019 15:31:11 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513192300.653-16-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I'm starting by reading the uapi changes and the sample program...
+On Mon, May 13, 2019 at 09:22:57PM +0200, Ulf Hansson wrote:
+> When the hierarchical CPU topology is used and when a CPU has been put
+> offline (hotplug), that same CPU prevents its PM domain and thus also
+> potential master PM domains, from being powered off. This is because genpd
+> observes the CPU's attached device as being active from a runtime PM point
+> of view.
+> 
+> To deal with this, let's decrease the runtime PM usage count by calling
+> pm_runtime_put_sync_suspend() of the attached struct device when putting
+> the CPU offline. Consequentially, we must then increase the runtime PM
+> usage count, while putting the CPU online again.
+> 
 
-If you look in:
+Why is this firmware/driver specific ? Why can't this be dealt in core
+pm-domain ? I am concerned that if any other architectures or firmware
+method decides to use this feature, this need to be duplicated there.
 
-  [PATCH 05/13] General notification queue with user mmap()'able ring buffer
+The way I see this is pure reference counting and is hardware/firmware/
+driver agnostic and can be made generic.
 
-you'll find the API document that goes in Documentation/
-
-David
+--
+Regards,
+Sudeep
