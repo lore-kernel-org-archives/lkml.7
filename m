@@ -3,127 +3,311 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F40AC28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D95C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0055C206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A152208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 03:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eIZjWpfv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dP04lq8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfFGDkT (ORCPT
+        id S1726538AbfFGD4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Jun 2019 23:40:19 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15308 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfFGDkS (ORCPT
+        Thu, 6 Jun 2019 23:56:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33901 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfFGD4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Jun 2019 23:40:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf9dc920000>; Thu, 06 Jun 2019 20:40:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 20:40:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 20:40:17 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Jun
- 2019 03:40:14 +0000
-Subject: Re: [PATCH V4] drivers: i2c: tegra: fix checkpatch defects
-To:     Peter Rosin <peda@axentia.se>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559806523-1352-1-git-send-email-bbiswas@nvidia.com>
- <8df7648d-c5bd-7179-6368-66dab9b7fa39@axentia.se>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <7f24640f-5031-1413-e96d-6a28e6a50869@nvidia.com>
-Date:   Thu, 6 Jun 2019 20:40:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 6 Jun 2019 23:56:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e16so671378wrn.1;
+        Thu, 06 Jun 2019 20:56:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rLoUwV9hdnwXBGWkChqk/K0NFJ0mreevqgCZuOFRNb4=;
+        b=dP04lq8A80jmsa78F+cg5A1X5taSZGEZwTK2cxKdXAb0COR5eSXyRoTs+IkVThOetP
+         gnYAnUdt2uZwHv3pVEHxPCDRrJd1nAUkI2Czl9vnSfencsIjZGt3HNHLSVBliYtoBIyY
+         yqMWNboW8EhFjAYpvfZO3RzlvnL3w3sRSvQJKXHWfDX2ZRIz2VQV6eTBgtBLeWgJb8gl
+         fC77QVWN3JaDT26mtrOGM2/7sz57qWPY+1RavUv+npkJp8+brxRfGr1kEY1eAuBkwAVG
+         TYLfA6eIP9JX29EAvNiF7WoMIZ+BxScGAtqvb85QcUnSKAmb5xXhmArT/Q9GcMt0sWvV
+         5Ssw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rLoUwV9hdnwXBGWkChqk/K0NFJ0mreevqgCZuOFRNb4=;
+        b=sJLs/MErS8maXjzpvG40u2527h7JoVQAi/DzRumaEKXLZL7XGk/dHblrIkH4KX7aKc
+         KW/3K203dFAeUVOwO5lgpUfRI8hqQ5V6bUKEq+0Mx6zcwXBCD2ATRasJm+T1MCCQar/3
+         ekkcdgEZeXujP6KbLplXOxTtVWJlQAWpoWVOiemaL6/rZDD2R2ocgwrpAKqLwcK1TwMq
+         5ReAiHX7hMlI592ZXpWUoikrB4k8ryfbeAugP/HOilxsUA/iSld5q8/TlhXyksW1gJ6B
+         TvzdtPLvPqlP9jkPOs6cUvcBL2HKcPqT6DDIwo0MiNU+a8GcvViTBYsDQ8lY5MRMSBIT
+         5N8A==
+X-Gm-Message-State: APjAAAVyb63VOMHV7iHJT38ae98fy/a0R1QbXFOsemINszEjC7HeiWdq
+        qfW6rgpjVtabwfBKgXIaVgxAiPmTO9gitp4JjC0=
+X-Google-Smtp-Source: APXvYqyBUvNAxqhdtOipPJf7cSYAGhJLMX2zhVGBUz/fXN2uiGQJUCWepNWiQaMhZAaY7xfJZALlA37XSvoTBDqp7js=
+X-Received: by 2002:a5d:6243:: with SMTP id m3mr1164628wrv.41.1559879776365;
+ Thu, 06 Jun 2019 20:56:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8df7648d-c5bd-7179-6368-66dab9b7fa39@axentia.se>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559878802; bh=nfSUhBUF0xlX62infTIeqrfDT/WeXXcT5pJ8IWqzS7E=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=eIZjWpfvKzFCwQBJeizXnXqq20T+jo+8OdUlQ/U8pnV5ormVQsb0am3YqW0y7wIwc
-         kxWPHMyJvk1z/h3Men8AqQ0X9V0BeJgeV1XqYg93Ud2y/AfbJqi43yhQh8Cf0b7XMh
-         1CZDD6wfk/8I5EctFaDLnz2c1qUmBPN38GcjR84OLNbz/xmGuzdTMkltoKHaP4PXI8
-         5OSw19q4NXiPZ3zqQqg3u9WZ464Y2Im3mAUFKqGgXVtPmHu+RFYps6sw8yIR2A1y05
-         dU7CfPAMO7aOCUpHWvi1sjAV4VaoECe3k+vr7FcCkkiznBpnFSejJ0TtFZCpEvuZVA
-         KhmWBvf1ETI0w==
+References: <20190606152812.13141-1-weijiang.yang@intel.com> <20190606152812.13141-2-weijiang.yang@intel.com>
+In-Reply-To: <20190606152812.13141-2-weijiang.yang@intel.com>
+From:   Jidong Xiao <jidong.xiao@gmail.com>
+Date:   Thu, 6 Jun 2019 21:57:00 -0600
+Message-ID: <CAG4AFWZG2xKmnt4etNfrefy7WcX2joaJhMOthQUao_qHfrvi5A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] Documentation: Introduce EPT based Subpage Protection
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     KVM <kvm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, mst@redhat.com,
+        rkrcmar@redhat.com, jmattson@google.com, yu.c.zhang@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Weijiang,
 
+Does this require some specific Intel processors or is it supported by
+older processors as well?
 
-On 6/6/19 1:45 PM, Peter Rosin wrote:
-> On 2019-06-06 09:35, Bitan Biswas wrote:
->> Fix checkpatch.pl warning(s)/error(s)/check(s) in i2c-tegra.c
->>
->> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
->> as needed. Replace BUG() with error handling code.
->> Define I2C_ERR_UNEXPECTED_STATUS for error handling.
->>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
->>   drivers/i2c/busses/i2c-tegra.c | 67 +++++++++++++++++++++++-------------------
->>   1 file changed, 37 insertions(+), 30 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
->> index 76b7926..55a5d87 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -78,6 +78,7 @@
->>   #define I2C_ERR_NO_ACK				0x01
->>   #define I2C_ERR_ARBITRATION_LOST		0x02
->>   #define I2C_ERR_UNKNOWN_INTERRUPT		0x04
->> +#define I2C_ERR_UNEXPECTED_STATUS               0x08
-> 
-> Use tabs like the the surrounding code. And perhaps convert all
-> these flags to use the BIT() macro?
-I shall correct the line and use tabs. I shall convert macros to BIT() 
-if possible.
+-Jidong
 
-> 
->>   
->>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->>   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
->> @@ -112,7 +113,7 @@
->>   #define I2C_CLKEN_OVERRIDE			0x090
->>   #define I2C_MST_CORE_CLKEN_OVR			BIT(0)
->>   
->> -#define I2C_CONFIG_LOAD_TIMEOUT			1000000
->> +#define I2C_CONFIG_LOAD_TMOUT			1000000
-> 
-> Similar to xfer_tm already mentioned by Dmitry; just keep it as
-> ..._TIMEOUT and ignore checkpatch on this issue. Or juggle the
-> code in some other way to pacify checkpatch. E.g. abbreviate
-> CONFIG instead? Or something. CONF is way easier to read than
-> TMOUT IMHO...
-OK. Just for consistency planning to ignore checkpatch warning and shall 
-keep current macro I2C_CONFIG_LOAD_TIMEOUT.
-
--Thanks,
-  Bitan
+On Thu, Jun 6, 2019 at 9:33 AM Yang Weijiang <weijiang.yang@intel.com> wrote:
+>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  Documentation/virtual/kvm/spp_kvm.txt | 216 ++++++++++++++++++++++++++
+>  1 file changed, 216 insertions(+)
+>  create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+>
+> diff --git a/Documentation/virtual/kvm/spp_kvm.txt b/Documentation/virtual/kvm/spp_kvm.txt
+> new file mode 100644
+> index 000000000000..4b5edcaf48b6
+> --- /dev/null
+> +++ b/Documentation/virtual/kvm/spp_kvm.txt
+> @@ -0,0 +1,216 @@
+> +EPT-Based Sub-Page Protection (SPP) for KVM
+> +=============================================
+> +
+> +1. Overview
+> +
+> +EPT-based Sub-Page Protection (SPP) capability to allow Virtual Machine
+> +Monitors to specify write-protection for guest physical memory at a
+> +sub-page (128 byte) granularity. When this capability is utilized, the
+> +CPU enforces write-access permissions for sub-page regions inside 4K pages
+> +as specified by the VMI tools.
+> +
+> +2. Operation of SPP
+> +
+> +Sub-Page Protection Table (SPPT) is introduced to manage sub-page
+> +write-access.
+> +
+> +SPPT is active when:
+> +a) moddule parameter spp=on is configured for kvm-intel.ko
+> +b) large paging is disabled on host
+> +c) "sub-page write protection" VM-execution control bit is set
+> +SPPT looks up the guest physical address to seek a 64-bit
+> +bitmap indicating sub-page write permission in SPPT leaf entry.
+> +
+> +When the "sub-page write protection" VM-execution control is 1, the SPPT
+> +is used to lookup write permission bits for the 128 byte sub-page regions
+> +contained in the 4KB guest physical page. EPT specifies the 4KB page
+> +write-protection privilege whereas SPPT defines the write permissions
+> +at 128-byte granularity within one 4KB page. Write accesses
+> +prevented due to sub-page permissions induces EPT violation VM exits.
+> +Similar to EPT, a logical processor uses SPPT to lookup sub-page level
+> +write permissions for guest-physical addresses only when those addresses
+> +are used to access memory.
+> +__________________________________________________________________________
+> +
+> +How SPP hardware works:
+> +__________________________________________________________________________
+> +
+> +Guest write access --> GPA --> Walk EPT --> EPT leaf entry -----|
+> +|---------------------------------------------------------------|
+> +|-> if VMexec_control.spp && ept_leaf_entry.spp_bit (bit 61)
+> +     |
+> +     |-> <false> --> EPT legacy behavior
+> +     |
+> +     |
+> +     |-> <true>  --> if ept_leaf_entry.writable
+> +                      |
+> +                      |-> <true>  --> Ignore SPP
+> +                      |
+> +                      |-> <false> --> GPA --> Walk SPP 4-level table--|
+> +                                                                      |
+> +|------------<----------get-the-SPPT-point-from-VMCS-filed-----<------|
+> +|
+> +Walk SPP L4E table
+> +|
+> +|---> if-entry-misconfiguration ------------>-------|-------<---------|
+> + |                                                  |                 |
+> +else                                                |                 |
+> + |                                                  |                 |
+> + |   |------------------SPP VMexit<-----------------|                 |
+> + |   |                                                                |
+> + |   |-> exit_qualification & sppt_misconfig --> sppt misconfig       |
+> + |   |                                                                |
+> + |   |-> exit_qualification & sppt_miss --> sppt miss                 |
+> + |---|                                                                |
+> +     |                                                                |
+> +walk SPPT L3E--|--> if-entry-misconfiguration------------>------------|
+> +               |                                                      |
+> +              else                                                    |
+> +               |                                                      |
+> +               |                                                      |
+> +        walk SPPT L2E --|--> if-entry-misconfiguration-------->-------|
+> +                        |                                             |
+> +                       else                                           |
+> +                        |                                             |
+> +                        |                                             |
+> +                 walk SPPT L1E --|-> if-entry-misconfiguration--->----|
+> +                                 |
+> +                               else
+> +                                 |
+> +                                 |-> if sub-page writable
+> +                                 |-> <true>  allow, write access
+> +                                 |-> <false> disallow, EPT violation
+> +______________________________________________________________________________
+> +
+> +3. Interfaces
+> +
+> +* Feature enabling
+> +
+> +Add "spp=on" to KVM module parameter to enable SPP feature, default is off.
+> +
+> +* Get/Set sub-page write access permission
+> +
+> +New KVM ioctl:
+> +
+> +KVM_SUBPAGES_GET_ACCESS:
+> +Get sub-pages write access bitmap corresponding to given rang of continuous gfn.
+> +
+> +KVM_SUBPAGES_SET_ACCESS
+> +Set sub-pages write access bitmap corresponding to given rang of continuous gfn.
+> +
+> +
+> +/* for KVM_SUBPAGES_GET_ACCESS and KVM_SUBPAGES_SET_ACCESS */
+> +struct kvm_subpage_info {
+> +    __u64 gfn;
+> +    __u64 npages; /* number of 4K pages */
+> +    __u64 *access_map; /* sub-page write-access bitmap array */
+> +};
+> +
+> +#define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, struct kvm_subpage_info)
+> +#define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, struct kvm_subpage_info)
+> +
+> +
+> +4. SPPT initialization
+> +
+> +* SPPT root page allocation
+> +
+> +  SPPT is referenced via a 64-bit control field called "sub-page
+> +  protection table pointer" (SPPTP, encoding 0x2030) which contains a
+> +  4K-align physical address.
+> +
+> +  SPPT is a 4-level paging structure similar as EPT. When KVM
+> +  loads mmu, it allocates a root page for SPPT L4 table as well.
+> +
+> +* EPT leaf entry SPP bit (bit 61)
+> +
+> +  Set 0 to SPP bit to close SPP.
+> +
+> +5. Set/Get Sub-Page access bitmap for a bunch of guest physical pages
+> +
+> +* To utilize SPP feature, system admin should set sub-page access via
+> +  SPP KVM ioctl `KVM_SUBPAGES_SET_ACCESS`, configuring EPT and SPPT in below flow:
+> +
+> +  (1) If the target 4KB pages to be protected are there, it locates EPT leaf entries
+> +      via the guest physical addresses, flags the bit 61 of the corresponding entries to
+> +      enable sub-page protection for the pages, then setup SPPT paging structure.
+> +  (2) otherwise, stores the [gfn,permission] mappings in KVM data structure. When
+> +      EPT page-fault is generated due to target protected page accessing, it settles
+> +      EPT entry configureation together with SPPT build-up.
+> +
+> +   The SPPT paging structure format is as below:
+> +
+> +   Format of the SPPT L4E, L3E, L2E:
+> +   | Bit    | Contents                                                                 |
+> +   | :----- | :------------------------------------------------------------------------|
+> +   | 0      | Valid entry when set; indicates whether the entry is present             |
+> +   | 11:1   | Reserved (0)                                                             |
+> +   | N-1:12 | Physical address of 4KB aligned SPPT LX-1 Table referenced by this entry |
+> +   | 51:N   | Reserved (0)                                                             |
+> +   | 63:52  | Reserved (0)                                                             |
+> +   Note: N is the physical address width supported by the processor. X is the page level
+> +
+> +   Format of the SPPT L1E:
+> +   | Bit   | Contents                                                          |
+> +   | :---- | :---------------------------------------------------------------- |
+> +   | 0+2i  | Write permission for i-th 128 byte sub-page region.               |
+> +   | 1+2i  | Reserved (0).                                                     |
+> +   Note: 0<=i<=31
+> +
+> +6. SPPT-induced vmexits
+> +
+> +* SPP VM exits
+> +
+> +Accesses using guest physical addresses may cause VM exits due to a SPPT
+> +misconfiguration or a SPPT missing.
+> +
+> +A SPPT misconfiguration vmexit occurs when, in the course of translating
+> +a guest physical address, the logical processor encounters a leaf EPT
+> +paging-structure entry mapping a 4KB page, with SPP enabled, during the
+> +SPPT lookup, a SPPT paging-structure entry contains an unsupported
+> +value.
+> +
+> +A SPPT missing vmexit occurs during the SPPT lookup there is no SPPT
+> +misconfiguration but any level of SPPT paging-structure entries are not
+> +present.
+> +
+> +NOTE. SPPT misconfigurations and SPPT miss can occur only due to an
+> +attempt to write memory with a guest physical address.
+> +
+> +* EPT violation vmexits due to SPPT
+> +
+> +EPT violations generated due to SPP sub-page
+> +permission are reported as EPT violation vmexits.
+> +
+> +7. SPPT-induced vmexits handling
+> +
+> +
+> +#define EXIT_REASON_SPP                 66
+> +
+> +static int (*const kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
+> +    ...
+> +    [EXIT_REASON_SPP]                     = handle_spp,
+> +    ...
+> +};
+> +
+> +
+> +New exit qualification for SPPT-induced vmexits.
+> +
+> +| Bit   | Contents                                                          |
+> +| :---- | :---------------------------------------------------------------- |
+> +| 10:0  | Reserved (0).                                                     |
+> +| 11    | SPPT VM exit type. Set for SPPT Miss, cleared for SPPT Misconfig. |
+> +| 12    | NMI unblocking due to IRET                                        |
+> +| 63:13 | Reserved (0)                                                      |
+> +
+> +In addition to the exit qualification, Guest Linear Address and Guest
+> +Physical Address fields will be reported.
+> +
+> +* SPPT miss and misconfiguration
+> +
+> +Allocate a page for the SPPT entry and set the entry correctly.
+> +
+> +* EPT violation vmexits due to SPPT
+> +
+> +While hardware traverses SPPT, If the sub-page region write
+> +permission bit is set, the write is allowed, otherwise it's prevented
+> +and an EPT violation is generated.
+> --
+> 2.17.2
+>
