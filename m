@@ -2,234 +2,128 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD5BC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB64DC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C32208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9446208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 17:43:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ULzubESK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uUV0Qg4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbfFGRne (ORCPT
+        id S1731680AbfFGRn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 13:43:34 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:35786 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728684AbfFGRnd (ORCPT
+        Fri, 7 Jun 2019 13:43:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50774 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbfFGRny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 13:43:33 -0400
-Received: by mail-it1-f195.google.com with SMTP id n189so4036096itd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 10:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L8Igv0c1kKwXXNn7veRB/74fSSY4c41NnqxruUQUijA=;
-        b=ULzubESKs6yWyTO1zfeKq3G6Nq9xzHsM2OnKkPgQEsyEZTlGMdRlATFbdFeu4Shw2I
-         UoTa4OmuP82t/QmuA215jTqrWDirqfr+3CZEruaA9pubDukMpsh0UktiDXbxqK46Uv4Z
-         ucHcId6UaJgMLbGn6b/lZAH1naIeByMpFAXueqW7QJma4l3auNckJrHlw02gg3kk0uOH
-         ckPMQYdQ8DxpQ/4Vk5gg+DaDFaqMREPnKb6re7paarLwDg2xpOvKJnflqnzGEn5LucM+
-         lL34QDBsfkQNwdMPzg93yeB6a701oUvFZNXsWMD9nutwq4CBHH8Bf5boK98J8MbtwBDf
-         25ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L8Igv0c1kKwXXNn7veRB/74fSSY4c41NnqxruUQUijA=;
-        b=PGT4plJLD+IXu0I9cGJW5kuMSQ1HmTE84Jzgvkx7e71LT0DGuV6MHDJ7RoO0DB8MH0
-         hz4zzmgq49BoYeb8LwLv8dvwpAdfFYmMXZsTGreUsaaOWbNJRub3w8JxnbkmClE1iWW6
-         A/OyQcpnEfJqo/ZNtjF4bQxs11alybQeVqkd/NxmboC5Ktpmyzbz1olE9nk+DJ1kzjWJ
-         4Dv9wmDXkj+CMSGzJ4Z2v8UcAO6jUQncTd93+ff3W9MS+zDpDmLfUBwbNdRgNqY6Ty3J
-         2BIDgp4A6evMabE0NgWcviJXVkKGyHnwwlvCwWX355vHLJQwY5mJFKSO7Ee9psw83cOa
-         xtSw==
-X-Gm-Message-State: APjAAAUVvodRQ6w+sCAF+OmffGSj4zrY3Bgr0B1DQaFhQxXsaSmaPgqr
-        MN7xV5yRKa1nq3L5y6oSIsKqDQ==
-X-Google-Smtp-Source: APXvYqz5GAioF1jaAZlXaE9bF6pA/rBJ+Whdl1/UGL1j0bmacQDXQiLgL6o+fLiBjQwUbVx4mCXHuQ==
-X-Received: by 2002:a02:bb83:: with SMTP id g3mr36416773jan.139.1559929412746;
-        Fri, 07 Jun 2019 10:43:32 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id z17sm879253iol.73.2019.06.07.10.43.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 10:43:32 -0700 (PDT)
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Alex Elder <elder@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Dan Williams <dcbw@redhat.com>, David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, cpratapa@codeaurora.org,
-        syadagir@codeaurora.org,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Networking <netdev@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-References: <20190531035348.7194-1-elder@linaro.org>
- <e75cd1c111233fdc05f47017046a6b0f0c97673a.camel@redhat.com>
- <065c95a8-7b17-495d-f225-36c46faccdd7@linaro.org>
- <CAK8P3a05CevRBV3ym+pnKmxv+A0_T+AtURW2L4doPAFzu3QcJw@mail.gmail.com>
- <a28c5e13-59bc-144d-4153-9d104cfa9188@linaro.org>
- <CAK8P3a2rkQd3t-yNdNGePW8E7rhObjAvUpW6Ga9AM6rJJ27BOw@mail.gmail.com>
- <5ebccdbe-479d-2b7d-693c-0c412060d687@linaro.org>
-Message-ID: <cd408ff3-2884-3fc7-6154-4675bc865e0d@linaro.org>
-Date:   Fri, 7 Jun 2019 12:43:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 13:43:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ib5xcjylzZJYs4tQEX10bx6Iy6PiZBk7Yfn6HEJa6+k=; b=uUV0Qg4RLvuFztCksJatP1vun
+        caXXdhBCXJ1/Zff5BaFrpqzvOtmY792iqKlflcEH7L4Ds+nzOZdE00i9/+A2QdpjUZaw8FTm5C0Di
+        6a0ESgkewptbth56+PriX5BaJhJVXnuImAz3+GhDF6apj0C5KkbXzhVOPvgP9z/JpZvioXldA2ZyH
+        zuy1FnNgL5zmKuiuFAWNNtxXbReWZY/rsPt+VJwglRFELnGzRDXjgtIXTDTsSXd0TqgtRtMjweOwZ
+        c+Gb5zmZMbrHo49WAIM2sc6JhZRZ7FubJesd/SG9HdwisS9G3VLMjnBNop6B3+O0rZ9//FQS4z8+R
+        sYPvGd5CA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZItt-0006lL-Ul; Fri, 07 Jun 2019 17:43:38 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6C02B20216A2F; Fri,  7 Jun 2019 19:43:36 +0200 (CEST)
+Date:   Fri, 7 Jun 2019 19:43:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+Message-ID: <20190607174336.GM3436@hirez.programming.kicks-ass.net>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+ <20190606200926.4029-4-yu-cheng.yu@intel.com>
+ <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+ <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <5ebccdbe-479d-2b7d-693c-0c412060d687@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/31/19 5:08 PM, Alex Elder wrote:
-> On 5/31/19 4:12 PM, Arnd Bergmann wrote:
->> On Fri, May 31, 2019 at 10:47 PM Alex Elder <elder@linaro.org> wrote:
->>> On 5/31/19 2:19 PM, Arnd Bergmann wrote:
->>>> On Fri, May 31, 2019 at 6:36 PM Alex Elder <elder@linaro.org> wrote:
->>>>> On 5/31/19 9:58 AM, Dan Williams wrote:
->>>>>> On Thu, 2019-05-30 at 22:53 -0500, Alex Elder wrote:
->>>>
->>>> Does this mean that IPA can only be used to back rmnet, and rmnet
->>>> can only be used on top of IPA, or can or both of them be combined
->>>> with another driver to talk to instead?
->>>
->>> No it does not mean that.
->>>
->>> As I understand it, one reason for the rmnet layer was to abstract
->>> the back end, which would allow using a modem, or using something
->>> else (a LAN?), without exposing certain details of the hardware.
->>> (Perhaps to support multiplexing, etc. without duplicating that
->>> logic in two "back-end" drivers?)
->>>
->>> To be perfectly honest, at first I thought having IPA use rmnet
->>> was a cargo cult thing like Dan suggested, because I didn't see
->>> the benefit.  I now see why one would use that pass-through layer
->>> to handle the QMAP features.
->>>
->>> But back to your question.  The other thing is that I see no
->>> reason the IPA couldn't present a "normal" (non QMAP) interface
->>> for a modem.  It's something I'd really like to be able to do,
->>> but I can't do it without having the modem firmware change its
->>> configuration for these endpoints.  My access to the people who
->>> implement the modem firmware has been very limited (something
->>> I hope to improve), and unless and until I can get corresponding
->>> changes on the modem side to implement connections that don't
->>> use QMAP, I can't implement such a thing.
->>
->> Why would that require firmware changes? What I was thinking
->> here is to turn the bits of the rmnet driver that actually do anything
->> interesting on the headers into a library module (or a header file
->> with inline functions) that can be called directly by the ipa driver,
->> keeping the protocol unchanged.
-
-OK, I follow up below, but now that I re-read this I think I
-misunderstood what you were saying.  I now think you were just
-talking about having the QMAP parsing functionality provided
-by rmnet be put into a library that the IPA driver (and others)
-could use, rather than having them be two separate but stacked
-drivers.
-
-That seems like a very reasonable idea, and I don't think rmnet
-does anything particularly special that would preclude it.
-But:
-- I have not reviewed the rmnet driver in any detail
-- It's possible this wouldn't work with other back ends
-- This would also need to be considered as part of any
-  effort to create a generic WWAN framework (though it
-  wouldn't pose any problem as far as I can tell)
-
-> You know, it's possible you're right about not needing
-> firmware changes.  But it has always been my impression
-> they would be needed.  Here's why.
-
-Now I'm just following up on the above statement.
-
-First, what I was saying initially is that I would like to
-be able to configure a simple network device that does not
-implement any of the QMAP (rmnet) protocol.  That would
-allow IPA to be used standalone, without any need for what
-the rmnet driver provides.  This would suffice for the
-current use, because the driver currently supports *only*
-a single fixed-configuration data connection to the modem,
-and has no need for the logical channels (or aggregation)
-that QMAP provides.
-
-I have not done that, because it would require both the AP
-side and modem side endpoints to change their configuration
-to *not* use QMAP.  I can configure the AP endpoint, but I
-have no control over how the modem configures its endpoint.
-
-Something about your question made me think I might have
-been misunderstanding that requirement though.  I.e., I
-thought it might be possible for the local (AP side)
-endpoint to be configured to not use QMAP, regardless of
-what the modem side does.
-
-I didn't inquire, but I reviewed some documents, and I now
-conclude that my previous understanding was correct.  I
-can't configure an AP endpoint to not use QMAP without also
-having the modem configure its corresponding endpoint to
-not use QMAP.  The AP and modem need to agree on how their
-respective "connected" endpoints are configured.
-
-					-Alex
-
-> It looks like this:
+On Fri, Jun 07, 2019 at 09:23:43AM -0700, Yu-cheng Yu wrote:
+> On Fri, 2019-06-07 at 10:08 +0200, Peter Zijlstra wrote:
+> > On Thu, Jun 06, 2019 at 01:09:15PM -0700, Yu-cheng Yu wrote:
+> > > Indirect Branch Tracking (IBT) provides an optional legacy code bitmap
+> > > that allows execution of legacy, non-IBT compatible library by an
+> > > IBT-enabled application.  When set, each bit in the bitmap indicates
+> > > one page of legacy code.
+> > > 
+> > > The bitmap is allocated and setup from the application.
+> > > +int cet_setup_ibt_bitmap(unsigned long bitmap, unsigned long size)
+> > > +{
+> > > +	u64 r;
+> > > +
+> > > +	if (!current->thread.cet.ibt_enabled)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (!PAGE_ALIGNED(bitmap) || (size > TASK_SIZE_MAX))
+> > > +		return -EINVAL;
+> > > +
+> > > +	current->thread.cet.ibt_bitmap_addr = bitmap;
+> > > +	current->thread.cet.ibt_bitmap_size = size;
+> > > +
+> > > +	/*
+> > > +	 * Turn on IBT legacy bitmap.
+> > > +	 */
+> > > +	modify_fpu_regs_begin();
+> > > +	rdmsrl(MSR_IA32_U_CET, r);
+> > > +	r |= (MSR_IA32_CET_LEG_IW_EN | bitmap);
+> > > +	wrmsrl(MSR_IA32_U_CET, r);
+> > > +	modify_fpu_regs_end();
+> > > +
+> > > +	return 0;
+> > > +}
+> > 
+> > So you just program a random user supplied address into the hardware.
+> > What happens if there's not actually anything at that address or the
+> > user munmap()s the data after doing this?
 > 
->            GSI Channel   GSI Channel
->                |             |         
->   ----------   v   -------   v   -------------
->   | AP (ep)|=======| IPA |=======|(ep) Modem |
->   ----------       -------       -------------
-> 
-> The AP and Modem each have IPA endpoints (ep), which use GSI channels,
-> to communicate with the IPA. Each endpoint has configuration options
-> (such as checksum offload).  I *thought* that the configurations of
-> the two endpoints need to be compatible (e.g., they need to agree on
-> whether they're aggregating).  But with your questioning I now think
-> you may be right, that only the local endpoint's configuration matters.
-> 
-> I will inquire further on this.  I *know* that the AP and modem
-> exchange some information about IPA configuration, but looking more
-> closely that looks like it's all about the configuration of shared
-> IPA resources, not endpoints.
-> 
-> That said, the broader design (including the user space code)
-> surely assumes rmnet, and I don't have any sense of what impact
-> changing that would make.  I am sure that changing it would not
-> be well received.
-> 
-> 					-Alex
-> 
->>>> Always passing data from one netdev to another both ways
->>>> sounds like it introduces both direct CPU overhead, and
->>>> problems with flow control when data gets buffered inbetween.
->>>
->>> My impression is the rmnet driver is a pretty thin layer,
->>> so the CPU overhead is probably not that great (though
->>> deaggregating a message is expensive).  I agree with you
->>> on the flow control.
->>
->> The CPU overhead I mean is not from executing code in the
->> rmnet driver, but from passing packets through the network
->> stack between the two drivers, i.e. adding each frame to
->> a queue and taking it back out. I'm not sure how this ends
->> up working in reality but from a first look it seems like
->> we might bounce in an out of the softirq handler inbetween.
->>
->>           Arnd
->>
-> 
+> This function checks the bitmap's alignment and size, and anything else is the
+> app's responsibility.  What else do you think the kernel should check?
 
+I've no idea what the kernel should do; since you failed to answer the
+question what happens when you point this to garbage.
+
+Does it then fault or what?
