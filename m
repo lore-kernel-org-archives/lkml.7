@@ -2,84 +2,102 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D9CC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4392DC468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4445420840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E5C20840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 15:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbfFGPAM (ORCPT
+        id S1729408AbfFGPAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 11:00:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40058 "EHLO mx1.redhat.com"
+        Fri, 7 Jun 2019 11:00:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59306 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728408AbfFGPAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 11:00:10 -0400
+        id S1729194AbfFGPAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:00:12 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4293330C31AE;
-        Fri,  7 Jun 2019 15:00:02 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E4653E2B7;
+        Fri,  7 Jun 2019 15:00:08 +0000 (UTC)
 Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 51E4F82F59;
-        Fri,  7 Jun 2019 14:59:57 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51372831B7;
+        Fri,  7 Jun 2019 15:00:07 +0000 (UTC)
 From:   Jarod Wilson <jarod@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Jarod Wilson <jarod@redhat.com>, Joe Perches <joe@perches.com>,
+Cc:     Jarod Wilson <jarod@redhat.com>,
         Jay Vosburgh <j.vosburgh@gmail.com>,
         Veaceslav Falico <vfalico@gmail.com>,
         Andy Gospodarek <andy@greyhouse.net>, netdev@vger.kernel.org
-Subject: [PATCH net-next 0/7] bonding: clean up and standarize logging printks
-Date:   Fri,  7 Jun 2019 10:59:25 -0400
-Message-Id: <20190607145933.37058-1-jarod@redhat.com>
+Subject: [PATCH net-next 2/7] bonding: fix error messages in bond_do_fail_over_mac
+Date:   Fri,  7 Jun 2019 10:59:27 -0400
+Message-Id: <20190607145933.37058-3-jarod@redhat.com>
+In-Reply-To: <20190607145933.37058-1-jarod@redhat.com>
+References: <20190607145933.37058-1-jarod@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 07 Jun 2019 15:00:10 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 07 Jun 2019 15:00:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set improves a few somewhat terse bonding debug messages, fixes some
-errors in others, and then standarizes the majority of them, using new
-slave_* printk macros that wrap around netdev_* to ensure both master
-and slave information is provided consistently, where relevant. This set
-proves very useful in debugging issues on hosts with multiple bonds.
+Passing the bond name again to debug output when referencing slave is wrong.
+We're trying to set the bond's MAC to that of the new_active slave, so adjust
+the error message slightly and pass in the slave's name, not the bond's.
+Then we're trying to set the MAC on the old active slave, but putting the
+new active slave's name in the output. While we're at it, clarify the
+error messages so you know which one actually triggered.
 
-I've run an array of LNST tests over this set, creating and destroying
-quite a few different bonds of the course of testing, fixed the little
-gotchas here and there, and everything looks stable and reasonable to me,
-but I can't guarantee I've tested every possible message and scenario to
-catch every possible "slave could be NULL" case.
-
-Jarod Wilson (7):
-  bonding: improve event debug usability
-  bonding: fix error messages in bond_do_fail_over_mac
-  bonding: add slave_foo printk macros
-  bonding/main: convert to using slave printk macros
-  bonding/802.3ad: convert to using slave printk macros
-  bonding/alb: convert to using slave printk macros
-  bonding/options: convert to using slave printk macros
-
- drivers/net/bonding/bond_3ad.c     | 222 +++++++++++----------
- drivers/net/bonding/bond_alb.c     |  30 +--
- drivers/net/bonding/bond_main.c    | 309 +++++++++++++----------------
- drivers/net/bonding/bond_options.c |  30 ++-
- include/net/bonding.h              |   9 +
- 5 files changed, 293 insertions(+), 307 deletions(-)
-
-Suggested-by: Joe Perches <joe@perches.com>
 CC: Jay Vosburgh <j.vosburgh@gmail.com>
 CC: Veaceslav Falico <vfalico@gmail.com>
 CC: Andy Gospodarek <andy@greyhouse.net>
 CC: netdev@vger.kernel.org
 Signed-off-by: Jarod Wilson <jarod@redhat.com>
+---
+ drivers/net/bonding/bond_main.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 32b6c1f9b82e..5823070f07a6 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -661,8 +661,8 @@ static void bond_do_fail_over_mac(struct bonding *bond,
+ 		if (new_active) {
+ 			rv = bond_set_dev_addr(bond->dev, new_active->dev);
+ 			if (rv)
+-				netdev_err(bond->dev, "Error %d setting MAC of slave %s\n",
+-					   -rv, bond->dev->name);
++				netdev_err(bond->dev, "Error %d setting bond MAC from slave %s\n",
++					   -rv, new_active->dev->name);
+ 		}
+ 		break;
+ 	case BOND_FOM_FOLLOW:
+@@ -692,7 +692,7 @@ static void bond_do_fail_over_mac(struct bonding *bond,
+ 		rv = dev_set_mac_address(new_active->dev,
+ 					 (struct sockaddr *)&ss, NULL);
+ 		if (rv) {
+-			netdev_err(bond->dev, "Error %d setting MAC of slave %s\n",
++			netdev_err(bond->dev, "Error %d setting MAC of new active slave %s\n",
+ 				   -rv, new_active->dev->name);
+ 			goto out;
+ 		}
+@@ -707,8 +707,8 @@ static void bond_do_fail_over_mac(struct bonding *bond,
+ 		rv = dev_set_mac_address(old_active->dev,
+ 					 (struct sockaddr *)&ss, NULL);
+ 		if (rv)
+-			netdev_err(bond->dev, "Error %d setting MAC of slave %s\n",
+-				   -rv, new_active->dev->name);
++			netdev_err(bond->dev, "Error %d setting MAC of old active slave %s\n",
++				   -rv, old_active->dev->name);
+ out:
+ 		break;
+ 	default:
 -- 
 2.20.1
 
