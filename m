@@ -2,122 +2,69 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3C1C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE38EC46476
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 152BD208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:54:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UuIzSHZ9"
+	by mail.kernel.org (Postfix) with ESMTP id D20F92146E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 07:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfFGHyl (ORCPT
+        id S1727537AbfFGHzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 03:54:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54990 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfFGHyl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 03:54:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xvljMUbhfLfotrIrCrjLlY8mPPXR4L/80hig3F5dpFs=; b=UuIzSHZ9YwR97SKzqkrVCQI+v
-        GffCOVEUdSut0lgJr1DyKcWI+cWHHzHrMXcEBJ2OpppuG/N80JVQSOEK+VzI712E7KCva3L3Oj+f0
-        wHJc1XpVbUaW20zGOy62EuE8N+ZKgZisPSwfMvDlnRyAKYVLc9t6OeD58tvZxg7MCJ/s95lkMdrbb
-        jWQGX9wKVnrA6sUspkFQIWtCU6de6Wab9dRrjqza83D+MCJoGEBn0S7xBdDsQTlGZuimzmU6t4rYQ
-        OJgCbv6CW3/40aaEa3b8cdd0nZXt4jIAWjlMKAyoxsqKGKU+7jceUr/GN7egWsIPxqBBh2iFtOch4
-        liJ2fFuFA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZ9hl-0004MJ-Nx; Fri, 07 Jun 2019 07:54:29 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 37DA4205663B2; Fri,  7 Jun 2019 09:54:28 +0200 (CEST)
-Date:   Fri, 7 Jun 2019 09:54:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v7 23/27] x86/cet/shstk: ELF header parsing of Shadow
- Stack
-Message-ID: <20190607075428.GQ3419@hirez.programming.kicks-ass.net>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
- <20190606200646.3951-24-yu-cheng.yu@intel.com>
+        Fri, 7 Jun 2019 03:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726840AbfFGHzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Jun 2019 03:55:36 -0400
+Received: from oasis.local.home (unknown [95.87.249.99])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA63208C0;
+        Fri,  7 Jun 2019 07:55:33 +0000 (UTC)
+Date:   Fri, 7 Jun 2019 03:55:28 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Matt Mullins <mmullins@fb.com>, hall@fb.com,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH bpf] bpf: fix nested bpf tracepoints with per-cpu data
+Message-ID: <20190607035528.43c0423d@oasis.local.home>
+In-Reply-To: <CAEf4BzYdRGfJgQ6-Hb8NkCgUqFRVs304KE0KMfAy9vbbTOMp5g@mail.gmail.com>
+References: <a6a31da39debb8bde6ca5085b0f4e43a96a88ea5.camel@fb.com>
+        <20190606185427.7558-1-mmullins@fb.com>
+        <CAEf4BzYdRGfJgQ6-Hb8NkCgUqFRVs304KE0KMfAy9vbbTOMp5g@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606200646.3951-24-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 01:06:42PM -0700, Yu-cheng Yu wrote:
+On Thu, 6 Jun 2019 19:59:18 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-> +#ifdef CONFIG_ARCH_USE_GNU_PROPERTY
-> +int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
-> +{
-> +	int r;
-> +	uint32_t property;
-
-Flip those two lines around.
-
-> +
-> +	r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
-> +			     &property);
-> +
-> +	memset(&current->thread.cet, 0, sizeof(struct cet_status));
-
-It seems to me that memset would be better placed before
-get_gnu_property().
-
-> +	if (r)
-> +		return r;
-> +
-> +	if (cpu_feature_enabled(X86_FEATURE_SHSTK)) {
-
-	if (r || !cpu_feature_enabled())
-		return r;
-
-> +		if (property & GNU_PROPERTY_X86_FEATURE_1_SHSTK)
-> +			r = cet_setup_shstk();
-> +		if (r < 0)
-> +			return r;
-> +	}
-> +	return r;
-
-and loose the indent.
-
-> +}
-> +#endif
-> -- 
-> 2.17.1
+> On Thu, Jun 6, 2019 at 1:17 PM Matt Mullins <mmullins@fb.com> wrote:
+> >
+> > BPF_PROG_TYPE_RAW_TRACEPOINTs can be executed nested on the same CPU, as
+> > they do not increment bpf_prog_active while executing.
+> >
+> > This enables three levels of nesting, to support
+> >   - a kprobe or raw tp or perf event,
+> >   - another one of the above that irq context happens to call, and
+> >   - another one in nmi context  
 > 
+> Can NMIs be nested?
+
+No, otherwise several things in the kernel will break.
+
+-- Steve
