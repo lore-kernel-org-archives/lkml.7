@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF7CC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEF4C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F74B20840
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E13220840
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 22:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hdMt7Tp8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wu5ODvnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbfFGWho (ORCPT
+        id S1731708AbfFGWht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 18:37:44 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45453 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729629AbfFGWhm (ORCPT
+        Fri, 7 Jun 2019 18:37:49 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38457 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731585AbfFGWhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 18:37:42 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bi6so938806plb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:37:41 -0700 (PDT)
+        Fri, 7 Jun 2019 18:37:47 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v11so1867908pgl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 15:37:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=npqZn7jrWknLiP6RpPMO0pPj6O8NQ9dRH7/VI2Vhthk=;
-        b=hdMt7Tp8R3E0DReUmZ60ezy4X6bTQmVNpN9Xob9TjfIVuVL+nrVX7wdG3Y2lEjkEoe
-         w7yjBbWqqH3/q7tBbdW4khMsRF5Fm+s4GofU3zrlvE3jW8r+me40NCIVGSVFt5KL9VVA
-         g2YydiHRvFDQXquQIEaNZ1shPB2elvhqoQdmI=
+        bh=z4uQcLhxDEep9Dd0+N4T4ar1lYZLNVNOCQMZpRaAcgQ=;
+        b=Wu5ODvnEgN+Dz3rZXFZGppPRarqh2wkcmSq/jdU0lxIYcSNaG6l9SM/cQ7rqNOQ+cx
+         zxBOamHsP0cMwIo+6syFyWFHtQZ64LbEArNImhJSma0pDWnZQVdsP77XNYh/mmK0Dm2q
+         qWYduKxF+F5spTIpgm3Rypp+nRk8xG2J2D5aM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=npqZn7jrWknLiP6RpPMO0pPj6O8NQ9dRH7/VI2Vhthk=;
-        b=J7XPw5a9dfUtgl5G+ZrHBF15+K4OmsIJmjE/KyR7gxN9K95QNpbN992YlM4Utzbodc
-         eFnyafio+JDag9Zv8fgrr2D0YAPop7DZElqWZyp6JQGkzpAEpOtPavZtn9ZrUYeHXTOY
-         cONqmv5b8CTLbEpDfpGLvL44MP6NaNXYeFs5Xajuv0OLG2LyXSMOGrgWN9S3jg1XwHHd
-         mgsZbVuNmwUb1I6GuXMoztEmnOTFtCWPbWjj+wqAFdJIgmZoqWzSkzq721ZOcz/4OpqI
-         7yodwtdWmXsuVgiCzkXLNfdhBRWGkFZv7uDpgncmw/2rDClh5POQXYZKOusRhC2nMapv
-         p76w==
-X-Gm-Message-State: APjAAAUbSlo88OXMSvNeE+/0slDDkBFUxPZgXYdyzxvb+XlnxpJeIzda
-        91HcD2FnHqFtgmazBIaWNNHu+A==
-X-Google-Smtp-Source: APXvYqxe0jRoHVjH0j4kVqEfBP2PUF3gAe9VxHlJqI7LH0UKRSF8v7zzb19mCum1XWxKY7vDj7csbg==
-X-Received: by 2002:a17:902:522:: with SMTP id 31mr55340726plf.296.1559947061581;
-        Fri, 07 Jun 2019 15:37:41 -0700 (PDT)
+        bh=z4uQcLhxDEep9Dd0+N4T4ar1lYZLNVNOCQMZpRaAcgQ=;
+        b=pVr9MNjTnDxh/sKZTf/psMJKGS0xY2eT4lsq+0G6/niDHqNjCiwWp++HM9JdRB7C0x
+         VLYbiHpETkhRHm5JwRfF3v1hfbneehQb6XAE7mV/DXe50m9VIjgB4zzML0BhfIPPJqfh
+         rTZ6OVyS9SQfpCYezMXtQgvwdkrOLD2KrlTuTXLLrHH5flLToXPSirkZIt5ds1/RGycA
+         DDlLGUkGMZIs6GyevLx+XkCyf2mjPy7HWVi8bpKfCPab7Gcv8nvHJwDdLC9rZKCzLz33
+         3RrB2lg3n8OudX5m2vVcXidLs8iuZnA1rMZWRc2cxWa/lNg/IyCGslkdZ2N/GWjFgwQJ
+         tl7w==
+X-Gm-Message-State: APjAAAX+x7+BeXHNoZwCsYUXpyjwYXTEdqgrVQYWl+eKS+fABjAIo5Kn
+        5JdnGZ0LJja5FkVRtMiTMTX5EA==
+X-Google-Smtp-Source: APXvYqxs31BYhnz3CuDYoW0F6K1ef/NQQc4dhUPxacP60w15cFP3tld8eeafi1pEevxCtCS+7gK93A==
+X-Received: by 2002:a17:90a:9504:: with SMTP id t4mr8420374pjo.100.1559947066689;
+        Fri, 07 Jun 2019 15:37:46 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id j23sm4185193pgb.63.2019.06.07.15.37.40
+        by smtp.gmail.com with ESMTPSA id j23sm4185193pgb.63.2019.06.07.15.37.45
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 07 Jun 2019 15:37:41 -0700 (PDT)
+        Fri, 07 Jun 2019 15:37:46 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Kalle Valo <kvalo@codeaurora.org>,
@@ -68,16 +68,15 @@ Cc:     brcm80211-dev-list.pdl@broadcom.com,
         Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
         netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
         Douglas Anderson <dianders@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
         Franky Lin <franky.lin@broadcom.com>,
         linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
         Hante Meuleman <hante.meuleman@broadcom.com>,
+        Ondrej Jirman <megous@megous.com>,
         YueHaibing <yuehaibing@huawei.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>
-Subject: [PATCH v3 1/5] Revert "brcmfmac: disable command decode in sdio_aos"
-Date:   Fri,  7 Jun 2019 15:37:12 -0700
-Message-Id: <20190607223716.119277-2-dianders@chromium.org>
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH v3 5/5] brcmfmac: sdio: Don't tune while the card is off
+Date:   Fri,  7 Jun 2019 15:37:16 -0700
+Message-Id: <20190607223716.119277-6-dianders@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 In-Reply-To: <20190607223716.119277-1-dianders@chromium.org>
 References: <20190607223716.119277-1-dianders@chromium.org>
@@ -88,56 +87,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 29f6589140a10ece8c1d73f58043ea5b3473ab3e.
+When Broadcom SDIO cards are idled they go to sleep and a whole
+separate subsystem takes over their SDIO communication.  This is the
+Always-On-Subsystem (AOS) and it can't handle tuning requests.
 
-After that patch landed I find that my kernel log on
-rk3288-veyron-minnie and rk3288-veyron-speedy is filled with:
-brcmfmac: brcmf_sdio_bus_sleep: error while changing bus sleep state -110
+Specifically, as tested on rk3288-veyron-minnie (which reports having
+BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
+when "on = 1" (aka we're transition from sleep to wake) by whacking:
+  bus->sdiodev->func1->card->host->need_retune = 1
+...then I can often see tuning fail.  In this case dw_mmc reports "All
+phases bad!").  Note that I don't get 100% failure, presumably because
+sometimes the card itself has already transitioned away from the AOS
+itself by the time we try to wake it up.  If I force retuning when "on
+= 0" (AKA force retuning right before sending the command to go to
+sleep) then retuning is always OK.
 
-This seems to happen every time the Broadcom WiFi transitions out of
-sleep mode.  Reverting the commit fixes the problem for me, so that's
-what this patch does.
+NOTE: we need _both_ this patch and the patch to avoid triggering
+tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
+sdio: Disable auto-tuning around commands expected to fail").  Though
+both patches handle issues with Broadcom's AOS, the problems are
+distinct:
+1. We want to defer (but not ignore) asynchronous (like
+   timer-requested) tuning requests till the card is awake.  However,
+   we want to ignore CRC errors during the transition, we don't want
+   to queue deferred tuning request.
+2. You could imagine that the AOS could implement retuning but we
+   could still get errors while transitioning in and out of the AOS.
+   Similarly you could imagine a seamless transition into and out of
+   the AOS (with no CRC errors) even if the AOS couldn't handle
+   tuning.
 
-Note that, in general, the justification in the original commit seemed
-a little weak.  It looked like someone was testing on a SD card
-controller that would sometimes die if there were CRC errors on the
-bus.  This used to happen back in early days of dw_mmc (the controller
-on my boards), but we fixed it.  Disabling a feature on all boards
-just because one SD card controller is broken seems bad.
+ALSO NOTE: presumably there is never a desperate need to retune in
+order to wake up the card, since doing so is impossible.  Luckily the
+only way the card can get into sleep state is if we had a good enough
+tuning to send it a sleep command, so presumably that "good enough"
+tuning is enough to wake us up, at least with a few retries.
 
-Fixes: 29f6589140a1 ("brcmfmac: disable command decode in sdio_aos")
-Cc: Wright Feng <wright.feng@cypress.com>
-Cc: Double Lo <double.lo@cypress.com>
-Cc: Madhan Mohan R <madhanmohan.r@cypress.com>
-Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
-As far as I know this patch can land anytime.
 
-Changes in v3: None
-Changes in v2:
-- A full revert, not just a partial one (Arend).  ...with explicit Cc.
+Changes in v3:
+- ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
 
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Changes in v2: None
+
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 4e15ea57d4f5..4a750838d8cd 100644
+index 4040aae1f9ed..98ffb4e90e15 100644
 --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
 +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -3364,11 +3364,7 @@ static int brcmf_sdio_download_firmware(struct brcmf_sdio *bus,
+@@ -670,6 +670,10 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
  
- static bool brcmf_sdio_aos_no_decode(struct brcmf_sdio *bus)
- {
--	if (bus->ci->chip == CY_CC_43012_CHIP_ID ||
--	    bus->ci->chip == CY_CC_4373_CHIP_ID ||
--	    bus->ci->chip == BRCM_CC_4339_CHIP_ID ||
--	    bus->ci->chip == BRCM_CC_4345_CHIP_ID ||
--	    bus->ci->chip == BRCM_CC_4354_CHIP_ID)
-+	if (bus->ci->chip == CY_CC_43012_CHIP_ID)
- 		return true;
- 	else
- 		return false;
+ 	mmc_expect_errors_begin(bus->sdiodev->func1->card->host);
+ 
++	/* Cannot re-tune if device is asleep; defer till we're awake */
++	if (on)
++		mmc_retune_hold_now(bus->sdiodev->func1->card->host);
++
+ 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
+ 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
+ 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
+@@ -730,6 +734,9 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+ 	if (try_cnt > MAX_KSO_ATTEMPTS)
+ 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+ 
++	if (on)
++		mmc_retune_release(bus->sdiodev->func1->card->host);
++
+ 	mmc_expect_errors_end(bus->sdiodev->func1->card->host);
+ 
+ 	return err;
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
