@@ -2,141 +2,126 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A66C468BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B278C468BD
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E26D2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2320020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 12:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="O3FzoHhX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vd9U2BVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbfFGMGu (ORCPT
+        id S1728738AbfFGMHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 08:06:50 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36708 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfFGMGu (ORCPT
+        Fri, 7 Jun 2019 08:07:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43007 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfFGMHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 08:06:50 -0400
-Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B1429B91;
-        Fri,  7 Jun 2019 14:06:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1559909207;
-        bh=7KMF50FCXnE1VfqOhGM4a6Brkr5UqWdiDJUCbvlknhs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O3FzoHhX4EmsWLZI9iJGKgDVJ5Q2trwoHYfFlvS+GYL3GBY/JhNHHoe86hBS0m+oD
-         iXNNThz9sBmtZMLunQuhWkz0BOtKYwCy5tVtJWCrGtTOwk5n0lLupVANLLyOJ/Kems
-         mh4Vq4jOYWxo/+F8eDKIu+JGHMwgPB1MFE7dbrSo=
-Date:   Fri, 7 Jun 2019 15:06:33 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 20/20] drm: rcar-du: kms: Update CMM in atomic commit tail
-Message-ID: <20190607120633.GI7593@pendragon.ideasonboard.com>
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-21-jacopo+renesas@jmondi.org>
+        Fri, 7 Jun 2019 08:07:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x17so1902036wrl.9;
+        Fri, 07 Jun 2019 05:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/OaEJfBR0xsC2fNRDUtUonZ/nH//Pb0hepbkfyw3/RI=;
+        b=Vd9U2BVxBdN4mlMul4jehfdsI+khyQ8bNYC+PbZUd+MLkJldq0QvPqlw67/TBgEj9a
+         YisCswUD8lyWjT+ne+NbBXnB0880+Q22bXGI2ydtUN9nduFOqOQ/jbTnnVUPzTmcwn7h
+         hCVLa+O8KOLJmFRB8X6lYdlYhQNDnwMLoE8hzkhT+SkuSzmxRDkQoAbJvOBvmx27pg/f
+         4WMav4+lrDRJnm/4dY9Sy1iLFnHWD+EwvWTMNrMXpyI0a6dWYI415XEBdVEeciUzBgfu
+         Y9nuI3HvDTAir5TfDv7sTbHd9bJlKcm3F9cWjGcw7DAPTEkhyJR8PANVX06uYpYwVOLM
+         j5LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/OaEJfBR0xsC2fNRDUtUonZ/nH//Pb0hepbkfyw3/RI=;
+        b=Sf0GXxoLInMTiiMEqTzgNteUa80VdkoXd+IQBRbp092v1uoP4lydQeYW1Ongzi2wpA
+         Wl/NXWwbA+Vl/nvTsDqH0Y9lqbtpLXVOMeQwpeLCFyZJdmkQuIslq8ezuMJQaKJ379zK
+         35MM7zlnvEeD0mlPvKcVDp6cqJxPr0VcS4gKhM0Y4N8GpIM7glr1qbroRVE39SgxAkw3
+         SnafJjZXljo6M2U6X+B0kvbmq7YR0NXYAZno4v8EnspPbSj2cfugNKbZ169/JBxg1GUX
+         tztRgjc6vE0VJ02oioSSQBmvT+Mn01JHJa8GII97RMdtXvo4kGsY90uGtoGcftwYKnm4
+         XYEw==
+X-Gm-Message-State: APjAAAWwyFVaoA3VrDksDwNl6xzGjppZQRj+9dW74pm7AcbHASTHsuvF
+        giKkFzvIxDZ7lhoYuhQ9DMA=
+X-Google-Smtp-Source: APXvYqzK/mt+UcZm1I3NP7PZiM+wVGTONiRjzP3kZpRLqca6N+PZrk2C6d/t/Ahk4y5O/JMEvU7JqA==
+X-Received: by 2002:adf:de8b:: with SMTP id w11mr9424156wrl.134.1559909248247;
+        Fri, 07 Jun 2019 05:07:28 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([108.61.173.19])
+        by smtp.gmail.com with ESMTPSA id o3sm1543243wrv.94.2019.06.07.05.07.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Jun 2019 05:07:27 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 20:07:17 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Stephen Boyd <sboyd@kernel.org>, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: fix a missing-free bug in clk_cpy_name()
+Message-ID: <20190607120717.GA3109@zhanggen-UX430UQ>
+References: <20190531011424.GA4374@zhanggen-UX430UQ>
+ <eb8e2d33-e8f7-93a5-c8bc-98731c0d63b6@suse.cz>
+ <20190605160043.GA4351@zhanggen-UX430UQ>
+ <20190606201646.B4CC4206BB@mail.kernel.org>
+ <20190607015258.GA2660@zhanggen-UX430UQ>
+ <e5b4639b-3077-59bb-6383-0c2bccdd9191@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606142220.1392-21-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e5b4639b-3077-59bb-6383-0c2bccdd9191@suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Thu, Jun 06, 2019 at 04:22:20PM +0200, Jacopo Mondi wrote:
-> Update CMM settings at in the atomic commit tail helper method.
+On Fri, Jun 07, 2019 at 11:10:37AM +0200, Jiri Slaby wrote:
+> On 07. 06. 19, 3:52, Gen Zhang wrote:
+> >>>>> @@ -3491,6 +3492,8 @@ static int clk_core_populate_parent_map(struct clk_core *core)
+> >>>>>                             kfree_const(parents[i].name);
+> >>>>>                             kfree_const(parents[i].fw_name);
+> >>>>>                     } while (--i >= 0);
+> >>>>> +                   kfree_const(parent->name);
+> >>>>> +                   kfree_const(parent->fw_name);
+> >>>>
+> >>>> Both of them were just freed in the loop above, no?
+> >>> for (i = 0, parent = parents; i < num_parents; i++, parent++)
+> >>> Is 'parent' the same as the one from the loop above?
+> >>
+> >> Yes. Did it change somehow?
+> > parent++?
 > 
-> The CMM is updated with new gamma values provided to the driver
-> in the GAMMA_LUT blob property.
+> parent++ is done after the loop body. Or what do you mean?
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 36 +++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
+> >>> Moreover, should 'parents[i].name' and 'parents[i].fw_name' be freed by
+> >>> kfree_const()?
+> >>>
+> >>
+> >> Yes? They're allocated with kstrdup_const() in clk_cpy_name(), or
+> >> they're NULL by virtue of the kcalloc and then kfree_const() does
+> >> nothing.
+> > I re-examined clk_cpy_name(). They are the second parameter of 
+> > clk_cpy_name(). The first parameter is allocated, not the second one.
+> > So 'parent->name' and 'parent->fw_name' should be freed, not 
+> > 'parents[i].name' or 'parents[i].fw_name'. Am I totally misunderstanding
+> > this clk_cpy_name()? :-(
 > 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> index 5a910a04e1d9..29a2020a46b5 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/wait.h>
->  
-> +#include "rcar_cmm.h"
->  #include "rcar_du_crtc.h"
->  #include "rcar_du_drv.h"
->  #include "rcar_du_encoder.h"
-> @@ -367,6 +368,38 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
->   * Atomic Check and Update
->   */
->  
-> +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
-> +					     struct drm_crtc_state *old_state)
-> +{
-> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> +	struct rcar_cmm_config cmm_config = {};
-> +
-> +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
-> +		return;
-> +
-> +	if (!crtc->state->gamma_lut) {
-> +		cmm_config.lut.enable = false;
-> +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> +
-> +		return;
-> +	}
-> +
-> +	cmm_config.lut.enable = true;
-> +	cmm_config.lut.table = (struct drm_color_lut *)
-> +			       crtc->state->gamma_lut->data;
-> +
-> +	/* Set LUT table size to 0 if entries should not be updated. */
-> +	if (!old_state->gamma_lut ||
-> +	    (old_state->gamma_lut->base.id !=
-> +	    crtc->state->gamma_lut->base.id))
-> +		cmm_config.lut.size = crtc->state->gamma_lut->length
-> +				    / sizeof(cmm_config.lut.table[0]);
+> The second parameter (the source) is parent_data[i].*, not parents[i].*
+> (the destination). parent->fw_name and parent->name are properly freed
+> in the do {} while loop as parents[i].name and parents[i].fw_name, given
+> i hasn't changed yet. I am not sure what you mean at all. Are you
+> uncertain about the C code flow?
+> 
+> thanks,
+> -- 
+> js
+> suse labs
+Thanks your patient explainaton. I think I need some time to figure out
+this part of code.
 
-Do you need to call rcar_cmm_setup() at all in this case ?
-
-> +	else
-> +		cmm_config.lut.size = 0;
-> +
-> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> +}
-> +
->  static int rcar_du_atomic_check(struct drm_device *dev,
->  				struct drm_atomic_state *state)
->  {
-> @@ -409,6 +442,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
->  			rcdu->dpad1_source = rcrtc->index;
->  	}
->  
-> +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
-> +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
-> +
->  	/* Apply the atomic update. */
->  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
->  	drm_atomic_helper_commit_planes(dev, old_state,
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks
+Gen
