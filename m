@@ -2,169 +2,156 @@ Return-Path: <SRS0=2dYc=UG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CD6C28CC3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0695C28CC3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C7B208C0
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A45208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Jun 2019 06:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBgZarhj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfFGG0w (ORCPT
+        id S1727273AbfFGG1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 02:26:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42762 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726292AbfFGG0w (ORCPT
+        Fri, 7 Jun 2019 02:27:50 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42374 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfFGG1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 02:26:52 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x576N85l073535
-        for <linux-kernel@vger.kernel.org>; Fri, 7 Jun 2019 02:26:51 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2syfayqhrr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 02:26:51 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Fri, 7 Jun 2019 07:26:49 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 7 Jun 2019 07:26:45 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x576QiSS58065094
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Jun 2019 06:26:44 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18689A4040;
-        Fri,  7 Jun 2019 06:26:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD75DA405E;
-        Fri,  7 Jun 2019 06:26:40 +0000 (GMT)
-Received: from [9.199.59.123] (unknown [9.199.59.123])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Jun 2019 06:26:40 +0000 (GMT)
-Subject: Re: [PATCH] Powerpc/Watchpoint: Restore nvgprs while returning from
- exception
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     mikey@neuling.org, benh@kernel.crashing.org, paulus@samba.org,
-        npiggin@gmail.com, christophe.leroy@c-s.fr,
-        mahesh@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20190606072951.32116-1-ravi.bangoria@linux.ibm.com>
- <87ftom0wrm.fsf@concordia.ellerman.id.au>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Fri, 7 Jun 2019 11:56:39 +0530
+        Fri, 7 Jun 2019 02:27:49 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y13so698394lfh.9;
+        Thu, 06 Jun 2019 23:27:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rQ9b6+/u+diNabiHcRE//MFPJUhb+OGFksp8HDzi/hU=;
+        b=fBgZarhjfXorlEMGFSQnX2nUvbQdTLuG9hbfjj00rUQdWHreO7GeDMonHkak3356zy
+         r11ZrF2piYb/v3hUy7iiv/Wh8V7YlJFFJUDpv8hzwrJv/ptm0rKFAtnc4mrEMVdytLuJ
+         LgoD+hd7n7gpiWO7fp5Yej+S9s14nKj2Y+pvAhE3m/7QFftSoKlR/M1wX8n/ARkGinBK
+         zAF1+UeD0w4/Xg2ItOhwIdMTyLN97TS6Qly6rfggDx01T4dZvkOFp1HchvJBVtL425Fh
+         cYovjG/p8pjJGzJitCWdXShIj7C+HYJt0HZY9J0dciRM0SYxuc7SSEdZlemRXF/a6LXd
+         nKbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rQ9b6+/u+diNabiHcRE//MFPJUhb+OGFksp8HDzi/hU=;
+        b=oBtTO6hmOnfJcA+u2jdhRtXYo1GzhNuDajRDw3effiP8Xs4CtS4OmPdQmWu7k7utuZ
+         pMN3qCYy/AEK/9y2ro8tDMP2tdXGRs3xSW6AdaBm3mj8qie+teD5gaxIfr6RdBtAj8ub
+         OvC7OPYZ0XEIvQkq9v0y7CdyBxsUmrkMO5zxfh3NScZagudzcw+kB+oXsBoIITCZ2nw+
+         GMT4YLd5jZApJTiYn7hou6R5J8bRXeiiaBKiZdY/rgXckONbedZ+UQhI1FZpEqbUwQ2Q
+         uqxKN/IMQtb+nXuoKIIrLR0h5+syqJHUUnvW15ewAzHDJ2PUFIR0APlT+qCBaMUrh+eF
+         ND8Q==
+X-Gm-Message-State: APjAAAXN78kCMZWAzx65fm/kibM8DDdPHxm7WkebVpqkaaPBn/L40MGk
+        yYiCPD43RuuC34bXN/yjSKqDnxvR
+X-Google-Smtp-Source: APXvYqxgAO53ZX14VWcFn/HznS/BNE1wjsgjAQRx60U637GDtOlOSMD0nwqNg6QtiaOekwCEfkjKLA==
+X-Received: by 2002:a19:c14f:: with SMTP id r76mr15665324lff.70.1559888867472;
+        Thu, 06 Jun 2019 23:27:47 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id k82sm212388ljb.84.2019.06.06.23.27.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 23:27:46 -0700 (PDT)
+Subject: Re: [PATCH V3] i2c: busses: tegra: Add suspend-resume support
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <21a2b722-cd1d-284f-2a4d-99bb12c98afd@gmail.com>
+Date:   Fri, 7 Jun 2019 09:27:45 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <87ftom0wrm.fsf@concordia.ellerman.id.au>
+In-Reply-To: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060706-0012-0000-0000-00000326210D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060706-0013-0000-0000-0000215F0B48
-Message-Id: <a2696037-539c-2f37-3b2f-7288a58fbfe7@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906070045
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/7/19 11:20 AM, Michael Ellerman wrote:
-> Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
+07.06.2019 8:37, Bitan Biswas пишет:
+> Post suspend I2C registers have power on reset values. Before any
+> transfer initialize I2C registers to prevent I2C transfer timeout
+> and implement suspend and resume callbacks needed. Fix below errors
+> post suspend:
 > 
->> Powerpc hw triggers watchpoint before executing the instruction.
->> To make trigger-after-execute behavior, kernel emulates the
->> instruction. If the instruction is 'load something into non-
->> volatile register', exception handler should restore emulated
->> register state while returning back, otherwise there will be
->> register state corruption. Ex, Adding a watchpoint on a list
->> can corrput the list:
->>
->>   # cat /proc/kallsyms | grep kthread_create_list
->>   c00000000121c8b8 d kthread_create_list
->>
->> Add watchpoint on kthread_create_list->next:
->>
->>   # perf record -e mem:0xc00000000121c8c0
->>
->> Run some workload such that new kthread gets invoked. Ex, I
->> just logged out from console:
->>
->>   list_add corruption. next->prev should be prev (c000000001214e00), \
->> 	but was c00000000121c8b8. (next=c00000000121c8b8).
->>   WARNING: CPU: 59 PID: 309 at lib/list_debug.c:25 __list_add_valid+0xb4/0xc0
->>   CPU: 59 PID: 309 Comm: kworker/59:0 Kdump: loaded Not tainted 5.1.0-rc7+ #69
->>   ...
->>   NIP __list_add_valid+0xb4/0xc0
->>   LR __list_add_valid+0xb0/0xc0
->>   Call Trace:
->>   __list_add_valid+0xb0/0xc0 (unreliable)
->>   __kthread_create_on_node+0xe0/0x260
->>   kthread_create_on_node+0x34/0x50
->>   create_worker+0xe8/0x260
->>   worker_thread+0x444/0x560
->>   kthread+0x160/0x1a0
->>   ret_from_kernel_thread+0x5c/0x70
+> 1) Tegra I2C transfer timeout during jetson tx2 resume:
 > 
-> This all depends on what code the compiler generates for the list
-> access.
+> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, parent: i2c-1
+> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
+> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
+> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
+> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns -110
+> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 after 127152 usecs
+> [   27.666194] PM: Device 1-0074 failed to resume: error -110
+> 
+> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
+> 
+> Remove i2c bus lock-unlock calls in resume callback as i2c_mark_adapter_*
+> (suspended-resumed) help ensure i2c core calls from client are not
+> executed before i2c-tegra resume.
+> 
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index ebaa78d..1dbba39 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -1687,7 +1687,31 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> +static int tegra_i2c_suspend(struct device *dev)
+> +{
+> +	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+> +
+> +	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_i2c_resume(struct device *dev)
+> +{
+> +	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+> +	int err;
+> +
+> +	err = tegra_i2c_init(i2c_dev, false);
+> +	if (err)
+> +		return err;
+> +
+> +	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct dev_pm_ops tegra_i2c_pm = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_i2c_suspend, tegra_i2c_resume)
+>  	SET_RUNTIME_PM_OPS(tegra_i2c_runtime_suspend, tegra_i2c_runtime_resume,
+>  			   NULL)
+>  };
+> 
 
-True. list corruption is just an example. But any load instruction that uses
-non-volatile register and hits a watchpoint, will result in register state
-corruption.
+Thanks!
 
-> Can you include a disassembly of the relevant code in your
-> kernel so we have an example of the bad case.
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 
-Register state from WARN_ON():
-
-  GPR00: c00000000059a3a0 c000007ff23afb50 c000000001344e00 0000000000000075
-  GPR04: 0000000000000000 0000000000000000 0000001852af8bc1 0000000000000000
-  GPR08: 0000000000000001 0000000000000007 0000000000000006 00000000000004aa
-  GPR12: 0000000000000000 c000007ffffeb080 c000000000137038 c000005ff62aaa00
-  GPR16: 0000000000000000 0000000000000000 c000007fffbe7600 c000007fffbe7370
-  GPR20: c000007fffbe7320 c000007fffbe7300 c000000001373a00 0000000000000000
-  GPR24: fffffffffffffef7 c00000000012e320 c000007ff23afcb0 c000000000cb8628
-  GPR28: c00000000121c8b8 c000000001214e00 c000007fef5b17e8 c000007fef5b17c0
-
-Snippet from __kthread_create_on_node:
-
-  c000000000136be8:       ed ff a2 3f     addis   r29,r2,-19
-  c000000000136bec:       c0 7a bd eb     ld      r29,31424(r29)
-          if (!__list_add_valid(new, prev, next))
-  c000000000136bf0:       78 f3 c3 7f     mr      r3,r30
-  c000000000136bf4:       78 e3 85 7f     mr      r5,r28
-  c000000000136bf8:       78 eb a4 7f     mr      r4,r29
-  c000000000136bfc:       fd 36 46 48     bl      c00000000059a2f8 <__list_add_valid+0x8>
-
-Watchpoint hit at 0xc000000000136bec. 
-
-  addis   r29,r2,-19
-   => r29 = 0xc000000001344e00 + (-19 << 16)
-   => r29 = 0xc000000001214e00
-
-  ld      r29,31424(r29)
-   => r29 = *(0xc000000001214e00 + 31424)
-   => r29 = *(0xc00000000121c8c0)
-
-0xc00000000121c8c0 is where we placed a watchpoint and thus this instruction was
-emulated by emulate_step. But because handle_dabr_fault did not restore emulated
-register state, r29 still contains stale value in above register state.
-
+-- 
+Dmitry
