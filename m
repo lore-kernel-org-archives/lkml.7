@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F33C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F623C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2CA621537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3DE21537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994863;
-	bh=a9I70xwLS7R3+Udl38mB14hZZ9HzBcjQc768eaqP9MI=;
+	s=default; t=1559994866;
+	bh=ugI5JX4HZr8+/Im1/glR6HassMJ2Y0b18i4KJ2cZyTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=btA59e98eA+TaKUg/Umz+0y5uyCNXEHKfb5p50Bg4vfnhs/yNqBzIwzGNLALZFvfE
-	 69P0IjcsZLf8y63Mygk9oSZkcufgkdLKnXVmq1CmbPkvqb4BRx9Z3g/c0xvFTgYfhn
-	 6mh9TJLTovl6Nr7K6ib8lhNUMZiEhRq0YiRNIcQ0=
+	b=HmwYPnwZU+61iERKh932laGSMjX+p0b6nH8jx54Pwnn2ImXZQqnNAEhJu20RDTO/j
+	 m0y72GBFuRxBjZzD68F8KP8rTWYXvcUxmYQqOsSS7XarSOoCosYfV7Mxi5voWbGwzL
+	 FUAW+fk8wga9ClwniBAJgSYk6rm+qCf9tmdwNj6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfFHLyR (ORCPT
+        id S1729303AbfFHLyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57700 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:54:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727593AbfFHLk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:28 -0400
+        id S1727621AbfFHLkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97D0D214D8;
-        Sat,  8 Jun 2019 11:40:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E2CB214AF;
+        Sat,  8 Jun 2019 11:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994028;
-        bh=a9I70xwLS7R3+Udl38mB14hZZ9HzBcjQc768eaqP9MI=;
+        s=default; t=1559994032;
+        bh=ugI5JX4HZr8+/Im1/glR6HassMJ2Y0b18i4KJ2cZyTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dt22n4zHfDLdYCPjujiGbfBkmdwesJmE9/V3+b1GGss9+58OSD7+RBROBjQDp6RN4
-         6Zch+zIOi2TrswcnA65HQNp5IhrtpS6F6U06KJ/Wy0BAMHgm5KELSy1tHzfl9sm6IS
-         Me9+dNKE0htePI9UjGqAjTvltaiY/OEl61Q4z56k=
+        b=jWAeCMSYQtxdI/vrj8OXYi8Kp5EBaaRwbMFMFjZY/V+ebjKJEh+hoZv1rymGaj2CN
+         fF4vP1bovp0uVv6vZfgju3JrWXKGmhRgKxkwNYM9qZhfH7YkkmDbfCD4bCs0zr5k11
+         7WzGlDXOaPSdWdjB1dfufUhbtjwgaZum5V2MMek4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Yabin Cui <yabinc@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 23/70] perf/ring-buffer: Always use {READ,WRITE}_ONCE() for rb->user_page data
-Date:   Sat,  8 Jun 2019 07:39:02 -0400
-Message-Id: <20190608113950.8033-23-sashal@kernel.org>
+Cc:     Biao Huang <biao.huang@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 26/70] net: stmmac: update rx tail pointer register to fix rx dma hang issue.
+Date:   Sat,  8 Jun 2019 07:39:05 -0400
+Message-Id: <20190608113950.8033-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -67,66 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Biao Huang <biao.huang@mediatek.com>
 
-[ Upstream commit 4d839dd9e4356bbacf3eb0ab13a549b83b008c21 ]
+[ Upstream commit 4523a5611526709ec9b4e2574f1bb7818212651e ]
 
-We must use {READ,WRITE}_ONCE() on rb->user_page data such that
-concurrent usage will see whole values. A few key sites were missing
-this.
+Currently we will not update the receive descriptor tail pointer in
+stmmac_rx_refill. Rx dma will think no available descriptors and stop
+once received packets exceed DMA_RX_SIZE, so that the rx only test will fail.
 
-Suggested-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: mark.rutland@arm.com
-Cc: namhyung@kernel.org
-Fixes: 7b732a750477 ("perf_counter: new output ABI - part 1")
-Link: http://lkml.kernel.org/r/20190517115418.394192145@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Update the receive tail pointer in stmmac_rx_refill to add more descriptors
+to the rx channel, so packets can be received continually
+
+Fixes: 54139cf3bb33 ("net: stmmac: adding multiple buffers for rx")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/ring_buffer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 4b5f8d932400..7a0c73e4b3eb 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -100,7 +100,7 @@ again:
- 	 * See perf_output_begin().
- 	 */
- 	smp_wmb(); /* B, matches C */
--	rb->user_page->data_head = head;
-+	WRITE_ONCE(rb->user_page->data_head, head);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 3c409862c52e..8cebc44108b2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3338,6 +3338,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+ 		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
+ 	}
+ 	rx_q->dirty_rx = entry;
++	stmmac_set_rx_tail_ptr(priv, priv->ioaddr, rx_q->rx_tail_addr, queue);
+ }
  
- 	/*
- 	 * We must publish the head before decrementing the nest count,
-@@ -496,7 +496,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
- 		perf_event_aux_event(handle->event, aux_head, size,
- 				     handle->aux_flags);
- 
--	rb->user_page->aux_head = rb->aux_head;
-+	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
- 	if (rb_need_aux_wakeup(rb))
- 		wakeup = true;
- 
-@@ -528,7 +528,7 @@ int perf_aux_output_skip(struct perf_output_handle *handle, unsigned long size)
- 
- 	rb->aux_head += size;
- 
--	rb->user_page->aux_head = rb->aux_head;
-+	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
- 	if (rb_need_aux_wakeup(rb)) {
- 		perf_output_wakeup(handle);
- 		handle->wakeup = rb->aux_wakeup + rb->aux_watermark;
+ /**
 -- 
 2.20.1
 
