@@ -2,187 +2,157 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B3EC468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 01:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5A9C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 02:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C141820868
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 01:02:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mB7+gv4H"
+	by mail.kernel.org (Postfix) with ESMTP id 497E9208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 02:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559959970;
+	bh=KsshRzfUjRf8NPLbJqIGbVGjeL9yE4+ynerqefj3pNE=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=IhnkkVe5KiACL7V9SnwnN4SYotNyYCmgsECC2Bw/tmk9yp6e0xJdgEHc94gM7YnE4
+	 TMJJV0VsI2RMZW+iNxbmcA4F8cJ5zu9po3G2twcG/nihaX+tMdEnUOJTFkQMOdUOLm
+	 d0weqccdzXA7Fhr1fhv9f1z2bnmOeKTK8LUwBGBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfFHBCx (ORCPT
+        id S1730345AbfFHCLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 21:02:53 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36210 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbfFHBCw (ORCPT
+        Fri, 7 Jun 2019 22:11:09 -0400
+Received: from mail-it1-f173.google.com ([209.85.166.173]:55556 "EHLO
+        mail-it1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbfFHCLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 21:02:52 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a3so2006488pgb.3;
-        Fri, 07 Jun 2019 18:02:52 -0700 (PDT)
+        Fri, 7 Jun 2019 22:11:08 -0400
+Received: by mail-it1-f173.google.com with SMTP id i21so5517924ita.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 19:11:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YgvRM0fa8wItnmd/7e3mHREuafKBIW7aDiObwQNf1zI=;
-        b=mB7+gv4HF9j+P7mQTHXqtorleukYleS3WanGBKgSAydJIIL+xk+mUK1J9XcOVVhTB9
-         8KGeMfXKt4FKbDa2tKIh/onCsCRZfgOfjzfX+vWed004sI347VTMiKO7NsICAckwi2Yl
-         EH2RaBYI4Zm8chxMetvg+HlAh9yyO7EDQSB3QZOfECg84AU/PVGJxjjcVOc3d7CWTz8u
-         rSKciVIaaSBx1cnagQ+2HKvJAngg+16e+lBygU+y2tRcUc3Ntg3FO1LTpwjuUSbEOrCP
-         dECtUZxQqLlOl5StA7UqS1Xr03msNSMWT9bfuqKp0wzc6zKUNV/ae774eEPby7oy0/RN
-         PVAA==
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=SvnI0124RQyG3mZdpITe2RKpNEsDCUsmCfQu//JUzcY=;
+        b=X09+drmRRIGFjuEz2GoZ5RiiSac8xIMyegzJZbLbA4yEx6SaI+WwsWCNvrkboqmVO5
+         /3OKP6FqiuR27MeClWl3Hnlp9d8sGh+bYsQvvFD8ZWBAGrq/SIq74L4BZc5rVua/GBE2
+         X2wo7BqzVQtAuLSgvtG91e0xPHf+yZs/xHARM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YgvRM0fa8wItnmd/7e3mHREuafKBIW7aDiObwQNf1zI=;
-        b=liZjpjPnoLeWpvVNQMKR1nQL0PlOmIvrmWh5Q70/sitoDjirVMPTbx2/H2AtuziCA8
-         LngXk5OD+dZiUBDDPqphijnE2iL6NWh4IdmkRcZMpHWWkkQTKyGNQvkCpz8IU5uoTaYh
-         mI+i/WBn1weo2ybzIWYx1sK+5CPVDfHG/YaixBe6CeRN0F0cS5qJrG1WPLF9k7XjZ6We
-         54I5y6bVDhwr7MvsObIFd/DwufNjtekkoGMXMVBeyIT2tJlRuP+yQqoQFdi9uTSPb6B+
-         zfFyLzJwhchVQjgGITDHmRlIM5fdJnklD1WzdqT0r+5zALbSxk+MfGm+jt/sEk4ic0Ph
-         M/Ow==
-X-Gm-Message-State: APjAAAVlr+Us4Xj9V0pq+1srfjdMo77BHiWbOpcS0s54QHPBYuXCj9cz
-        2RPEd/kigGgOTreVm5rg2v+HkLjP
-X-Google-Smtp-Source: APXvYqzX74zqceXQykHaNAit68dyghLJ5CBj4exNfV2VYZtCpkuxHoqHR5e2ls87m36J3U9R+jFM1A==
-X-Received: by 2002:a63:fb05:: with SMTP id o5mr5591847pgh.203.1559955771254;
-        Fri, 07 Jun 2019 18:02:51 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n1sm2884222pgv.15.2019.06.07.18.02.48
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=SvnI0124RQyG3mZdpITe2RKpNEsDCUsmCfQu//JUzcY=;
+        b=PR/e0n9sASE//SLjfkWGq4wrq5Ikr2+jXyyxEYl/fuSgXZl03RQJ5whnfGlHnTDOI/
+         YFRcWTNgCJBHbGis6VK18Pn0ibNafdWdxhdH1epfGj2ssN/cnhlbZhGhj6gQNAdUe1Ky
+         5hFyVusNcaB12yXRGqDlOecL3zJUQU7efgkU21YoANyJS8ZqZqWD/GB3cG3Oy8AW7bwO
+         kdLXG3xCr5r6BO6HygJvLCS26DcO9f23oZm87hQkkKpSuqc674NDc+DaMuhBshUZQi5x
+         N8Ma4NtSobNXbf3KCDvC2OMpkQX1zgA9p3wYa+SWqSWbZn4Ss+dN7bCEztb1dNBf9xbZ
+         3Kwg==
+X-Gm-Message-State: APjAAAXFayVQSK1BmYYpCZkhrO2VDdw6cPtglpU/0mfS9FiAZXoS99EK
+        ENqw/RYNF4lfJ3xwaXgbM1gj5g==
+X-Google-Smtp-Source: APXvYqyvNxcDeEsIA5sWyry2m2CfkiS2/C5q6ZoBbN4kth6uYuymFdU5J9mFZl1P9fa7C82Zrr2Cww==
+X-Received: by 2002:a24:d147:: with SMTP id w68mr6591208itg.176.1559959867659;
+        Fri, 07 Jun 2019 19:11:07 -0700 (PDT)
+Received: from [10.11.17.215] ([97.107.68.205])
+        by smtp.gmail.com with ESMTPSA id z202sm1979011itb.2.2019.06.07.19.11.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 18:02:50 -0700 (PDT)
-Subject: Re: [PATCH 2/2] hwmon: Add ads1000/ads1100 voltage ADCs driver
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-References: <20190514225810.12591-1-fancer.lancer@gmail.com>
- <20190514225810.12591-3-fancer.lancer@gmail.com>
- <20190530125510.GA26072@roeck-us.net> <20190603121117.0000512c@huawei.com>
- <20190605205556.GA397@roeck-us.net>
- <20190607230144.fnkzljhnnqks5oqx@mobilestation>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <02ff9666-d666-c539-aeb3-9e67fc358b17@roeck-us.net>
-Date:   Fri, 7 Jun 2019 18:02:48 -0700
+        Fri, 07 Jun 2019 19:11:06 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     skhan@linuxfoundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest second fixes update for Linux 5.2-rc4
+Message-ID: <f97f7947-db3b-07dd-157d-78ab9840a4dc@linuxfoundation.org>
+Date:   Fri, 7 Jun 2019 20:11:05 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190607230144.fnkzljhnnqks5oqx@mobilestation>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: multipart/mixed;
+ boundary="------------C8926D04930EEB99C63E8D8F"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 4:01 PM, Serge Semin wrote:
-> Hello folks
-> 
-> On Wed, Jun 05, 2019 at 01:55:56PM -0700, Guenter Roeck wrote:
->> On Mon, Jun 03, 2019 at 12:11:17PM +0100, Jonathan Cameron wrote:
->>> On Thu, 30 May 2019 05:55:10 -0700
->>> Guenter Roeck <linux@roeck-us.net> wrote:
->>>
->>>> Hi,
->>>>
->>>> On Wed, May 15, 2019 at 01:58:09AM +0300, Serge Semin wrote:
->>>>> These are simple Texas Instruments ADC working over i2c-interface with
->>>>> just one differential input and with configurable 12-16 bits resolution.
->>>>> Sample rate is fixed to 128 for ads1000 and can vary from 8 to 128 for
->>>>> ads1100. Vdd value reference value must be supplied so to properly
->>>>> translate the sampled code to the real voltage. All of these configs are
->>>>> implemented in the device drivers for hwmon subsystem. The next dts
->>>>> properties should be specified to comply the device platform setup:
->>>>>   - vdd-supply - voltage regulator connected to the Vdd pin of the device
->>>>>   - ti,gain - programmable gain amplifier
->>>>>   - ti,datarate - converter data rate
->>>>>   - ti,voltage-divider - possible resistors-base external divider
->>>>> See bindings documentation file for details.
->>>>>
->>>>> Even though these devices seem more like ads1015 series, they
->>>>> in fact pretty much different. First of all ads1000/ads1100 got less
->>>>> capabilities: just one port, no configurations of digital comparator, no
->>>>> input multi-channel multiplexer, smaller PGA and data-rate ranges.
->>>>> In addition they haven't got internal voltage reference, but instead
->>>>> are created to use Vdd pin voltage. Finally the output code value is
->>>>> provided in different format. As a result it was much easier for
->>>>> development and for future support to create a separate driver.
->>>>>    
->>>>
->>>> This chicp doesn't have any real hardware monitoring characteristics
->>>> (no limit registers). It seems to be better suited to be implemented
->>>> as iio driver. If it is used as hardware monitor, the iio-hwmon bridge
->>>> should work just fine.
->>>>
->>>> Jonathan, what do you think ?
->>> Sorry for slow response, was on vacation.
->>>
->>> Agreed, this looks like a standard multipurpose ADC so probably more suited
->>> to IIO. Whether you bother with a buffered /chardev interface or not given it
->>> is a fairly slow device is a separate question (can always be added later
->>> when someone wants it).
->>>
->>> Note the voltage-divider in the DT properties is something that should
->>> have a generic representation. In IIO we have drivers/iio/afe/iio-rescale.c
->>> for that, in this case using the voltage divider binding.
->>>
->>> gain and datarate are both characteristics that should be controlled from
->>> userspace rather than via a binding.
->>>
->>
->> In summary: Serge, please re-implement the driver as iio adc driver.
->>
-> 
-> Thanks for the comments. I see your point, but since you are asking of a pretty
-> much serious code redevelopment, I want to make sure it is fully justified.
-> 
-> I made my decision of creating the hwmon driver following the next logic.
-> Before I started this driver development, I searched the kernel for either a
-> ready-to-use code or for a similar device driver to add the ads1000 ADC support.
-> I found the ads1015 driver, which is created for TI ADC1015 ADCs. These devices
-> are similar to the ads1000 series, but are more complex. Due to the complexity
-> I decided to create a separate driver for ads1000s, and of course since the similar
-> device driver lived in hwmon, I chose it to be home of my new driver.
-> 
-> But now you are asking me to move it to IIO, while the driver of more complex
-> ads1015 device exists in the hwmon subsystem of the kernel. Moreover the ads1000
+This is a multi-part message in MIME format.
+--------------C8926D04930EEB99C63E8D8F
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-A driver for ADS1015 also exists in drivers/iio/adc/ti-ads1015.c, meaning there
-are already two drivers for that chip. Accepting the driver for ads1000 into
-hwmon would ultimately mean that we would end up with another duplicate driver,
-as soon as someone needs iio support for this chip. From hwmon perspective,
-that driver would have zero additional functionality.
+Hi Linus,
 
-Users would then have to choose between the hwmon ads1000 driver and the iio
-ads1000 driver plus iio->hwmon bridge. The kernel maintainers would have to
-maintain two drivers instead of one, for no good reason. We would therefore
-at that time remove hwmon driver from the kernel because it doesn't make sense
-to keep two drivers for the same chip if both drivers provide exactly the same
-functionality. This just doesn't make sense.
+Please pull the following second Kselftest fixes update for
+Linux 5.2 rc4.
 
-On top of that, the ads1000 has zero characteristics of a typical hardware
-monitoring chip. It doesn't have any limit or alarm status registers.
+This Kselftest second fixes update for Linux 5.2-rc4 consists of a
+single fix for vm test build failure regression when it is built by
+itself.
 
-> device is utilized on our board to monitor system itself (voltage on the input
-> DC-DC). Could you please tell me why the driver should really be in IIO instead
-> of hwmon and how do you select which subsystem one or another driver is supposed
-> to live in?
-> 
-If a chip has typical hardware monitoring characteristics such as slow but accurate
-conversion rates and limit/alarm registers, we are happy to accept it into the
-hardware monitoring subsystem. If the chip has no such characteristics,
-it should be implemented as iio driver.
+I found this while I was sanity checking the first fixes update for
+Linux 5.2. Would like to get this into rc4.
 
-Actually, we should remove the ads1015 driver from the hwmon subsystem.
-I'll start a separate thread to discuss that.
+diff is attached.
 
-Thanks,
-Guenter
+thanks,
+-- Shuah
+
+
+----------------------------------------------------------------
+The following changes since commit bc2cce3f2ebcae02aa4bb29e3436bf75ee674c32:
+
+   selftests: vm: install test_vmalloc.sh for run_vmtests (2019-05-30 
+08:32:57 -0600)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.2-rc4-2
+
+for you to fetch changes up to e2e88325f4bcaea51f454723971f7b5ee0e1aa80:
+
+   selftests: vm: Fix test build failure when built by itself 
+(2019-06-05 16:05:40 -0600)
+
+----------------------------------------------------------------
+linux-kselftest-5.2-rc4-2
+
+This Kselftest second fixes update for Linux 5.2-rc4 consists of a single
+fix for vm test build failure regression when it is built by itself.
+
+----------------------------------------------------------------
+Shuah Khan (1):
+       selftests: vm: Fix test build failure when built by itself
+
+  tools/testing/selftests/vm/Makefile | 4 ----
+  1 file changed, 4 deletions(-)
+----------------------------------------------------------------
+
+--------------C8926D04930EEB99C63E8D8F
+Content-Type: text/x-patch;
+ name="linux-kselftest-5.2-rc4-2.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.2-rc4-2.diff"
+
+diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+index 05306c58ff9f..9534dc2bc929 100644
+--- a/tools/testing/selftests/vm/Makefile
++++ b/tools/testing/selftests/vm/Makefile
+@@ -1,10 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for vm selftests
+ 
+-ifndef OUTPUT
+-  OUTPUT := $(shell pwd)
+-endif
+-
+ CFLAGS = -Wall -I ../../../../usr/include $(EXTRA_CFLAGS)
+ LDLIBS = -lrt
+ TEST_GEN_FILES = compaction_test
+
+--------------C8926D04930EEB99C63E8D8F--
