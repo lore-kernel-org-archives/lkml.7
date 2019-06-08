@@ -2,123 +2,100 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CDDC468BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216C1C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A3C214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559986464;
-	bh=LeCO59q2P5J4DlHEomN92uTLHRv/EscRIIjzXVpzR38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZWBWQev7ZlJ14IZVdgeX/yPEzhk++nyGgtsHoRGdFpkGSqyLGkAMzwgdjYHUVuqOG
-	 sV0OKL/zN+/Xb8CsTBcIamZyEDdTUG3gama9OKPxYLIrVsCIN+cjogD8xV4MwMQyG0
-	 DF+nXUfUOigI7yO1DjbLOF6duBapKc1v1ccE9jzM=
+	by mail.kernel.org (Postfix) with ESMTP id D88B0214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:39:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAMq7WgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfFHJeX (ORCPT
+        id S1726734AbfFHJjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 05:34:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfFHJeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 05:34:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C01D212F5;
-        Sat,  8 Jun 2019 09:34:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559986462;
-        bh=LeCO59q2P5J4DlHEomN92uTLHRv/EscRIIjzXVpzR38=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pCdfODFX0R+G5Ua85dvySVkTAoHr5rLJfVIeY2xpOPGEj/Yf3WrwauUpVdquBGRFv
-         Jm7lJqt38c+8CJIwblfVkNVCaN+2RdGGMDA1IIOA1+DXfQykbquAB77GwSqXO0IC+/
-         w8ftHpwVsirrUgZkubmRqhKnBOAWdlOZfSfn3pFI=
-Date:   Sat, 8 Jun 2019 11:34:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.1 00/85] 5.1.8-stable review
-Message-ID: <20190608093420.GA29720@kroah.com>
-References: <20190607153849.101321647@linuxfoundation.org>
- <CA+G9fYvu0nXEmayFX5CkH8wE+y+6Ya7QmtMCHP7b0sTMKw=brg@mail.gmail.com>
+        Sat, 8 Jun 2019 05:39:42 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42546 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfFHJjm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 05:39:42 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so2524794pff.9
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 02:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=zUjxWxq5BrI2FdDPrseDzMNtgvtMjERhQiQzZo7nm7E=;
+        b=TAMq7WgCUSTJYkkb+calodVXAtvnqOeZde9ehQHvFCXrubzN4fWZzQgbwa8bHq6C1M
+         AtlxxKBDISu2nzuZWa7xYljbMFCEcOW2kExJ03L/SfOpiQzq5Ai0mx5W/TmR98lz+mpe
+         88iVjnMKH+Xop89CHXoJOZv30UlNude7LIPzdm3mXq02qdVDII3LTCzxmihX2CGPZbSd
+         hO4mazSLbrevzHNGJvMUtuImLT+94ajD0mJ7QdK3WORuMX0Pdm/aEDRWyHofxctadCmM
+         5nwENFnPVVc+BtTwLLLMehuDKltXUs6zVZdOlqPgBnVVXlVYUnMy9mOZNmql49weDNe6
+         hhXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=zUjxWxq5BrI2FdDPrseDzMNtgvtMjERhQiQzZo7nm7E=;
+        b=apW2p0u5USjqilgtjnmSXIAz6MzmZ4dhRa38GJoOCmBsp9u0wiuu4iHuUgvJRHlXcx
+         QwdJQGW7RtatOBQ+7ZM+0I6TCxyxM1j97JNtNviu5rNupxrkewti5lUCZAeZh/FpAAU/
+         JxD1g88UJDYMqi3uytyGjrIwDRCFKpIzHgJoxt4etHj8iCrwpDdlZTKTtlixjdfr/QhS
+         UCp5KAzzCQ7JW66gZ/OTZ31S2AgoEhiuF9Tjmi4b0zXYT9tVyQueJSQ5t4iyShfZof4S
+         6cpcrjNu9y/wUTyvIP5bZU63ZlaR70Ll54aRUQz9gSEBeIq81MIjHOklJKvPS9WQ7WsV
+         K0wg==
+X-Gm-Message-State: APjAAAX8y3sJAoW1ZUVwDsTdXdtICrd6sLcTgoGzcg97UG1sUoBJ1xEt
+        jjwkWZ5peSlN2yaXdHPVnP0=
+X-Google-Smtp-Source: APXvYqwiTuXWweBI9kCIpvuh3BS9bBAfUi5CdTkOsKqi9kmZQJOXNb+PRo+WIyuorc2QmIo1ixGesA==
+X-Received: by 2002:a62:4c5:: with SMTP id 188mr63276002pfe.19.1559986781709;
+        Sat, 08 Jun 2019 02:39:41 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id 66sm4883523pfg.140.2019.06.08.02.39.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 08 Jun 2019 02:39:41 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 15:09:37 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: erofs: fix warning Comparison to bool
+Message-ID: <20190608093937.GA10461@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYvu0nXEmayFX5CkH8wE+y+6Ya7QmtMCHP7b0sTMKw=brg@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 01:24:41PM +0530, Naresh Kamboju wrote:
-> On Fri, 7 Jun 2019 at 21:18, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.1.8 release.
-> > There are 85 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sun 09 Jun 2019 03:37:09 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.8-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
-> 
-> NOTE:
-> selftest sources version updated to 5.1
-> Following test cases reported pass after upgrade
->   kselftest:
->     * bpf_test_libbpf.sh
->     * bpf_test_select_reuseport
->     * bpf_test_tcpbpf_user
->     * bpf_test_verifier
->     * seccomp_seccomp_bpf
->     * timers_set-timer-lat
-> 
-> Few kselftest test cases reported failure and we are investigating.
->     * bpf_test_netcnt
->     * net_ip_defrag.sh
->     * net_xfrm_policy.sh
->     * timestamping_txtimestamp.sh
->     * tpm2_test_smoke.sh
->     * tpm2_test_space.sh
->     * ...
-> 
-> LTP version upgrade to 20190517
-> New test case tgkill03 is an intermittent failure reported on qemu devices.
-> Following test cases reported failures and we are investigating
->     * ioctl_ns05
->     * ioctl_ns06
->     * aio02
->     * acct01
+fix below warnings reported by coccicheck
 
-Thanks for testing and letting me know.
+drivers/staging/erofs/unzip_vle.c:332:11-18: WARNING: Comparison to bool
 
-greg k-h
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/erofs/unzip_vle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+index 9ecaa87..f3d0d2c 100644
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -329,7 +329,7 @@ try_to_claim_workgroup(struct z_erofs_vle_workgroup *grp,
+ 		       z_erofs_vle_owned_workgrp_t *owned_head,
+ 		       bool *hosted)
+ {
+-	DBG_BUGON(*hosted == true);
++	DBG_BUGON(*hosted);
+ 
+ 	/* let's claim these following types of workgroup */
+ retry:
+-- 
+2.7.4
+
