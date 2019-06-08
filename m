@@ -2,111 +2,181 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DF5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB2EC468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7D92146E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BCA214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559993275;
+	bh=weH8EC/uoYWcA/LwWDgSVN249qFObxkBB3HcdMk5Vwk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tlRrdBOmFtoKzXU4PHOivlpZUaUOcoNUMlhnG+RplGnzRMsq8YlsYQUtCKULhhygy
+	 QNdKFXK9mtE10tVC7AxzIwh3yH6eVzHGy/RK/PVlfYJn/NeRgH3LwnRGEuhwejF3Wn
+	 unVbsa9X58lzaQxJlv/oKxdOeXl9m75NAPonlcR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfFHL13 (ORCPT
+        id S1727107AbfFHL1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:27:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38564 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfFHL13 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:27:29 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hZZVO-0001nb-92; Sat, 08 Jun 2019 11:27:26 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: davinci: fix memory leaks and check for allocation failure
-Date:   Sat,  8 Jun 2019 12:27:25 +0100
-Message-Id: <20190608112725.27658-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 8 Jun 2019 07:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbfFHL1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:27:54 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB8FE2146E;
+        Sat,  8 Jun 2019 11:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559993273;
+        bh=weH8EC/uoYWcA/LwWDgSVN249qFObxkBB3HcdMk5Vwk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n5Zu/SMNePdUE37qRqXEX+OO3LbKc1ijWx8/l+GiQew032hRHjtpg/PON2vO1UuSX
+         Ok1U7hnbOhLO79SGxRI2ulM9tkuaGGT5xeRJ4z1BQpA/MYM28MRQi1ga02fO8srLuI
+         9KBsvspRsEIDlSX51eMEsYfIaXPC6ALlFbbkF70I=
+Date:   Sat, 8 Jun 2019 12:27:46 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>
+Subject: Re: [PATCH v2 2/4] iio: adc: ad7606: Add software configuration
+Message-ID: <20190608122746.1e7d4536@archlinux>
+In-Reply-To: <20190527125650.2405-2-beniamin.bia@analog.com>
+References: <20190527125650.2405-1-beniamin.bia@analog.com>
+        <20190527125650.2405-2-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, 27 May 2019 15:56:48 +0300
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-There are three error return paths that don't kfree params causing a
-memory leak.  Fix this by adding an error return path that kfree's
-params before returning.  Also add a check to see params failed to
-be allocated.
+> Because this driver will support multiple configurations for software,
+> the software configuration was made generic.
+>=20
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> Acked-by: Jonathan Cameron <jic23@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to poke at it.
 
-Addresses-Coverity: ("Resource leak")
-Fixes: da43b6ccadcf ("[media] davinci: vpfe: dm365: add IPIPE support for media controller driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/media/davinci_vpfe/dm365_ipipe.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+Thanks,
 
-diff --git a/drivers/staging/media/davinci_vpfe/dm365_ipipe.c b/drivers/staging/media/davinci_vpfe/dm365_ipipe.c
-index 08c26f3c5282..52397ad0e3e2 100644
---- a/drivers/staging/media/davinci_vpfe/dm365_ipipe.c
-+++ b/drivers/staging/media/davinci_vpfe/dm365_ipipe.c
-@@ -1251,10 +1251,10 @@ static int ipipe_s_config(struct v4l2_subdev *sd, struct vpfe_ipipe_config *cfg)
- 	struct vpfe_ipipe_device *ipipe = v4l2_get_subdevdata(sd);
- 	unsigned int i;
- 	int rval = 0;
-+	struct ipipe_module_params *params;
- 
- 	for (i = 0; i < ARRAY_SIZE(ipipe_modules); i++) {
- 		const struct ipipe_module_if *module_if;
--		struct ipipe_module_params *params;
- 		void *from, *to;
- 		size_t size;
- 
-@@ -1265,25 +1265,30 @@ static int ipipe_s_config(struct v4l2_subdev *sd, struct vpfe_ipipe_config *cfg)
- 		from = *(void **)((void *)cfg + module_if->config_offset);
- 
- 		params = kmalloc(sizeof(*params), GFP_KERNEL);
-+		if (!params)
-+			return -ENOMEM;
- 		to = (void *)params + module_if->param_offset;
- 		size = module_if->param_size;
- 
- 		if (to && from && size) {
- 			if (copy_from_user(to, (void __user *)from, size)) {
- 				rval = -EFAULT;
--				break;
-+				goto error_free;
- 			}
- 			rval = module_if->set(ipipe, to);
- 			if (rval)
--				goto error;
-+				goto error_free;
- 		} else if (to && !from && size) {
- 			rval = module_if->set(ipipe, NULL);
- 			if (rval)
--				goto error;
-+				goto error_free;
- 		}
- 		kfree(params);
- 	}
--error:
-+	return rval;
-+
-+error_free:
-+	kfree(params);
- 	return rval;
- }
- 
--- 
-2.20.1
+Jonathan
+
+> ---
+> Changes in v2:
+> -nothing changed
+>=20
+>  drivers/iio/adc/ad7606.c | 40 +++++++++++++++++++++++++++++++++++++---
+>  drivers/iio/adc/ad7606.h |  2 ++
+>  2 files changed, 39 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index c66ff22f32d2..aba0fd123a51 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -140,7 +140,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  			   int *val2,
+>  			   long m)
+>  {
+> -	int ret;
+> +	int ret, ch =3D 0;
+>  	struct ad7606_state *st =3D iio_priv(indio_dev);
+> =20
+>  	switch (m) {
+> @@ -157,8 +157,10 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  		*val =3D (short)ret;
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+> +		if (st->sw_mode_en)
+> +			ch =3D chan->address;
+>  		*val =3D 0;
+> -		*val2 =3D st->scale_avail[st->range[0]];
+> +		*val2 =3D st->scale_avail[st->range[ch]];
+>  		return IIO_VAL_INT_PLUS_MICRO;
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		*val =3D st->oversampling;
+> @@ -233,7 +235,9 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_SCALE:
+>  		mutex_lock(&st->lock);
+>  		i =3D find_closest(val2, st->scale_avail, st->num_scales);
+> -		ret =3D st->write_scale(indio_dev, chan->address, i);
+> +		if (st->sw_mode_en)
+> +			ch =3D chan->address;
+> +		ret =3D st->write_scale(indio_dev, ch, i);
+>  		if (ret < 0) {
+>  			mutex_unlock(&st->lock);
+>  			return ret;
+> @@ -616,6 +620,36 @@ int ad7606_probe(struct device *dev, int irq, void _=
+_iomem *base_address,
+>  	st->write_scale =3D ad7606_write_scale_hw;
+>  	st->write_os =3D ad7606_write_os_hw;
+> =20
+> +	if (st->chip_info->sw_mode_config)
+> +		st->sw_mode_en =3D device_property_present(st->dev,
+> +							 "adi,sw-mode");
+> +
+> +	if (st->sw_mode_en) {
+> +		/* After reset, in software mode, =C2=B110 V is set by default */
+> +		memset32(st->range, 2, ARRAY_SIZE(st->range));
+> +		indio_dev->info =3D &ad7606_info_os_and_range;
+> +
+> +		/*
+> +		 * In software mode, the range gpio has no longer its function.
+> +		 * Instead, the scale can be configured individually for each
+> +		 * channel from the range registers.
+> +		 */
+> +		if (st->chip_info->write_scale_sw)
+> +			st->write_scale =3D st->chip_info->write_scale_sw;
+> +
+> +		/*
+> +		 * In software mode, the oversampling is no longer configured
+> +		 * with GPIO pins. Instead, the oversampling can be configured
+> +		 * in configuratiion register.
+> +		 */
+> +		if (st->chip_info->write_os_sw)
+> +			st->write_os =3D st->chip_info->write_os_sw;
+> +
+> +		ret =3D st->chip_info->sw_mode_config(indio_dev);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+>  	st->trig =3D devm_iio_trigger_alloc(dev, "%s-dev%d",
+>  					  indio_dev->name, indio_dev->id);
+>  	if (!st->trig)
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index 143c30163df9..d8a509c2c428 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -43,6 +43,7 @@ struct ad7606_chip_info {
+>   * @range		voltage range selection, selects which scale to apply
+>   * @oversampling	oversampling selection
+>   * @base_address	address from where to read data in parallel operation
+> + * @sw_mode_en		software mode enabled
+>   * @scale_avail		pointer to the array which stores the available scales
+>   * @num_scales		number of elements stored in the scale_avail array
+>   * @oversampling_avail	pointer to the array which stores the available
+> @@ -71,6 +72,7 @@ struct ad7606_state {
+>  	unsigned int			range[16];
+>  	unsigned int			oversampling;
+>  	void __iomem			*base_address;
+> +	bool				sw_mode_en;
+>  	const unsigned int		*scale_avail;
+>  	unsigned int			num_scales;
+>  	const unsigned int		*oversampling_avail;
 
