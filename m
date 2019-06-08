@@ -2,84 +2,90 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554E5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79294C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A62214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A8921537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfFHPcf (ORCPT
+        id S1727219AbfFHPcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 11:32:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49952 "EHLO
+        Sat, 8 Jun 2019 11:32:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42120 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727015AbfFHPcf (ORCPT
+        by vger.kernel.org with ESMTP id S1727015AbfFHPcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 11:32:35 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58FQlok087964
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 11:32:33 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t096uaaa7-1
+        Sat, 8 Jun 2019 11:32:36 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58FQnb1134572
+        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 11:32:35 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t05xwq0a2-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 11:32:33 -0400
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 11:32:35 -0400
 Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 8 Jun 2019 16:32:32 +0100
+        Sat, 8 Jun 2019 16:32:34 +0100
 Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Sat, 8 Jun 2019 16:32:30 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58FWTe836438362
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58FWT7739125490
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Jun 2019 15:32:30 GMT
+        Sat, 8 Jun 2019 15:32:29 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D5F6FB206B;
+        by IMSVA (Postfix) with ESMTP id CE3F2B2064;
         Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C100DB2068;
+        by IMSVA (Postfix) with ESMTP id BCA16B2066;
         Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.85.180.36])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 53E0816C2A6E; Sat,  8 Jun 2019 08:13:45 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 08:13:45 -0700
+        id E91A416C5D98; Sat,  8 Jun 2019 08:19:43 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 08:19:43 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.parri@amarulasolutions.com, peterz@infradead.org
-Subject: Re: [PATCH 1/2] btrfs: Implement DRW lock
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+Subject: Re: rcu_read_lock lost its compiler barrier
 Reply-To: paulmck@linux.ibm.com
-References: <20190606135219.1086-1-nborisov@suse.com>
- <20190606135219.1086-2-nborisov@suse.com>
- <20190607105251.GB28207@linux.ibm.com>
- <7a1c1f42-6e2f-57fc-5cdd-8c2bea23dffa@suse.com>
+References: <20190606081657.GA4249@andrea>
+ <Pine.LNX.4.44L0.1906061017200.1641-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7a1c1f42-6e2f-57fc-5cdd-8c2bea23dffa@suse.com>
+In-Reply-To: <Pine.LNX.4.44L0.1906061017200.1641-100000@iolanthe.rowland.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
-x-cbid: 19060815-2213-0000-0000-0000039BF64B
+x-cbid: 19060815-0052-0000-0000-000003CD34DB
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011234; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01215054; UDB=6.00638754; IPR=6.00996146;
- MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 15:32:32
+ PH=3.00000004; SC=3.00000286; SDB=6.01215054; UDB=6.00638754; IPR=6.00996145;
+ MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 15:32:34
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060815-2214-0000-0000-00005EC5EBD0
-Message-Id: <20190608151345.GC28207@linux.ibm.com>
+x-cbparentid: 19060815-0053-0000-0000-0000613D2590
+Message-Id: <20190608151943.GD28207@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1906080116
@@ -88,195 +94,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 02:59:34PM +0300, Nikolay Borisov wrote:
+On Thu, Jun 06, 2019 at 10:19:43AM -0400, Alan Stern wrote:
+> On Thu, 6 Jun 2019, Andrea Parri wrote:
 > 
+> > This seems a sensible change to me: looking forward to seeing a patch,
+> > on top of -rcu/dev, for further review and testing!
+> > 
+> > We could also add (to LKMM) the barrier() for rcu_read_{lock,unlock}()
+> > discussed in this thread (maybe once the RCU code and the informal doc
+> > will have settled in such direction).
 > 
-> On 7.06.19 г. 13:52 ч., Paul E. McKenney wrote:
-> > On Thu, Jun 06, 2019 at 04:52:18PM +0300, Nikolay Borisov wrote:
-> >> A (D)ouble (R)eader (W)riter lock is a locking primitive that allows
-> >> to have multiple readers or multiple writers but not multiple readers
-> >> and writers holding it concurrently. The code is factored out from
-> >> the existing open-coded locking scheme used to exclude pending
-> >> snapshots from nocow writers and vice-versa. Current implementation
-> >> actually favors Readers (that is snapshot creaters) to writers (nocow
-> >> writers of the filesystem).
-> >>
-> >> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-> > 
-> > A preliminary question...
-> > 
-> > What prevents the following sequence of events from happening?
-> > 
-> > o	btrfs_drw_write_lock() invokes btrfs_drw_try_write_lock(),
-> > 	which sees that lock->readers is zero and thus executes
-> > 	percpu_counter_inc(&lock->writers).
-> > 
-> > o	btrfs_drw_read_lock() increments lock->readers, does the
-> > 	smp_mb__after_atomic(), and then does the wait_event().
-> > 	Because btrfs_drw_try_write_lock() incremented its CPU's
-> > 	lock->writers, the sum is the value one, so it blocks.
-> > 
-> > o	btrfs_drw_try_write_lock() checks lock->readers, sees that
-> > 	it is now nonzero, and thus invokes btrfs_drw_read_unlock()
-> > 	(which decrements the current CPU's counter, so that a future
-> > 	sum would get zero), and returns false.
-> 
-> btrfs_drw_read_unlock is actually btrfs_drw_write_unlock, my bad, Filipe
-> already pointed that out and I've fixed it.
+> Yes.  Also for SRCU.  That point had not escaped me.
 
-Ah!  I must then ask what you are using to test this.  kernel/locktorture.c?
+And it does seem pretty settled.  There are quite a few examples where
+there are normal accesses at either end of the RCU read-side critical
+sections, for example, the one in the requirements diffs below.
 
-> The idea here is that if a reader came after we've incremented out
-> percpu counter then it would have blocked, the writer would see that and
-> invoke btrfs_drw_write_unlock which will decrement the percpu counter
-> and will wakeup the reader that is now blocked on pending_readers.
-
-OK, I will await your next version.
+For SRCU, srcu_read_lock() and srcu_read_unlock() have implied compiler
+barriers since 2006.  ;-)
 
 							Thanx, Paul
 
-> > o	btrfs_drw_write_lock() therefore does its wait_event().
-> > 	Because lock->readers is nonzero, it blocks.
-> > 
-> > o	Both tasks are now blocked.  In the absence of future calls
-> > 	to these functions (and perhaps even given such future calls),
-> > 	we have deadlock.
-> > 
-> > So what am I missing here?
-> > 
-> > 							Thanx, Paul
-> > 
-> >> ---
-> >>  fs/btrfs/Makefile   |  2 +-
-> >>  fs/btrfs/drw_lock.c | 71 +++++++++++++++++++++++++++++++++++++++++++++
-> >>  fs/btrfs/drw_lock.h | 23 +++++++++++++++
-> >>  3 files changed, 95 insertions(+), 1 deletion(-)
-> >>  create mode 100644 fs/btrfs/drw_lock.c
-> >>  create mode 100644 fs/btrfs/drw_lock.h
-> >>
-> >> diff --git a/fs/btrfs/Makefile b/fs/btrfs/Makefile
-> >> index ca693dd554e9..dc60127791e6 100644
-> >> --- a/fs/btrfs/Makefile
-> >> +++ b/fs/btrfs/Makefile
-> >> @@ -10,7 +10,7 @@ btrfs-y += super.o ctree.o extent-tree.o print-tree.o root-tree.o dir-item.o \
-> >>  	   export.o tree-log.o free-space-cache.o zlib.o lzo.o zstd.o \
-> >>  	   compression.o delayed-ref.o relocation.o delayed-inode.o scrub.o \
-> >>  	   reada.o backref.o ulist.o qgroup.o send.o dev-replace.o raid56.o \
-> >> -	   uuid-tree.o props.o free-space-tree.o tree-checker.o
-> >> +	   uuid-tree.o props.o free-space-tree.o tree-checker.o drw_lock.o
-> >>  
-> >>  btrfs-$(CONFIG_BTRFS_FS_POSIX_ACL) += acl.o
-> >>  btrfs-$(CONFIG_BTRFS_FS_CHECK_INTEGRITY) += check-integrity.o
-> >> diff --git a/fs/btrfs/drw_lock.c b/fs/btrfs/drw_lock.c
-> >> new file mode 100644
-> >> index 000000000000..9681bf7544be
-> >> --- /dev/null
-> >> +++ b/fs/btrfs/drw_lock.c
-> >> @@ -0,0 +1,71 @@
-> >> +#include "drw_lock.h"
-> >> +#include "ctree.h"
-> >> +
-> >> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock)
-> >> +{
-> >> +	atomic_set(&lock->readers, 0);
-> >> +	percpu_counter_init(&lock->writers, 0, GFP_KERNEL);
-> >> +	init_waitqueue_head(&lock->pending_readers);
-> >> +	init_waitqueue_head(&lock->pending_writers);
-> >> +}
-> >> +
-> >> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock)
-> >> +{
-> >> +	percpu_counter_destroy(&lock->writers);
-> >> +}
-> >> +
-> >> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock)
-> >> +{
-> >> +	if (atomic_read(&lock->readers))
-> >> +		return false;
-> >> +
-> >> +	percpu_counter_inc(&lock->writers);
-> >> +
-> >> +	/*
-> >> +	 * Ensure writers count is updated before we check for
-> >> +	 * pending readers
-> >> +	 */
-> >> +	smp_mb();
-> >> +	if (atomic_read(&lock->readers)) {
-> >> +		btrfs_drw_read_unlock(lock);
-> >> +		return false;
-> >> +	}
-> >> +
-> >> +	return true;
-> >> +}
-> >> +
-> >> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock)
-> >> +{
-> >> +	while(true) {
-> >> +		if (btrfs_drw_try_write_lock(lock))
-> >> +			return;
-> >> +		wait_event(lock->pending_writers, !atomic_read(&lock->readers));
-> >> +	}
-> >> +}
-> >> +
-> >> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock)
-> >> +{
-> >> +	percpu_counter_dec(&lock->writers);
-> >> +	cond_wake_up(&lock->pending_readers);
-> >> +}
-> >> +
-> >> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock)
-> >> +{
-> >> +	atomic_inc(&lock->readers);
-> >> +	smp_mb__after_atomic();
-> >> +
-> >> +	wait_event(lock->pending_readers,
-> >> +		   percpu_counter_sum(&lock->writers) == 0);
-> >> +}
-> >> +
-> >> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock)
-> >> +{
-> >> +	/*
-> >> +	 * Atomic RMW operations imply full barrier, so woken up writers
-> >> +	 * are guaranteed to see the decrement
-> >> +	 */
-> >> +	if (atomic_dec_and_test(&lock->readers))
-> >> +		wake_up(&lock->pending_writers);
-> >> +}
-> >> +
-> >> +
-> >> diff --git a/fs/btrfs/drw_lock.h b/fs/btrfs/drw_lock.h
-> >> new file mode 100644
-> >> index 000000000000..baff59561c06
-> >> --- /dev/null
-> >> +++ b/fs/btrfs/drw_lock.h
-> >> @@ -0,0 +1,23 @@
-> >> +#ifndef BTRFS_DRW_LOCK_H
-> >> +#define BTRFS_DRW_LOCK_H
-> >> +
-> >> +#include <linux/atomic.h>
-> >> +#include <linux/wait.h>
-> >> +#include <linux/percpu_counter.h>
-> >> +
-> >> +struct btrfs_drw_lock {
-> >> +	atomic_t readers;
-> >> +	struct percpu_counter writers;
-> >> +	wait_queue_head_t pending_writers;
-> >> +	wait_queue_head_t pending_readers;
-> >> +};
-> >> +
-> >> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock);
-> >> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock);
-> >> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock);
-> >> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock);
-> >> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock);
-> >> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock);
-> >> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock);
-> >> +
-> >> +#endif
-> >> -- 
-> >> 2.17.1
-> >>
-> > 
-> > 
-> 
+------------------------------------------------------------------------
+
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
+index 5a9238a2883c..080b39cc1dbb 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.html
++++ b/Documentation/RCU/Design/Requirements/Requirements.html
+@@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
+ <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
+ <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
+ <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
++<li>	<a href="#Accesses to User Mamory and RCU">
++Accesses to User Mamory and RCU</a>.
+ <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
+ <li>	<a href="#Scheduling-Clock Interrupts and RCU">
+ 	Scheduling-Clock Interrupts and RCU</a>.
+@@ -2521,6 +2523,75 @@ cannot be used.
+ The tracing folks both located the requirement and provided the
+ needed fix, so this surprise requirement was relatively painless.
+ 
++<h3><a name="Accesses to User Mamory and RCU">
++Accesses to User Mamory and RCU</a></h3>
++
++<p>
++The kernel needs to access user-space memory, for example, to access
++data referenced by system-call parameters.
++The <tt>get_user()</tt> macro does this job.
++
++<p>
++However, user-space memory might well be paged out, which means
++that <tt>get_user()</tt> might well page-fault and thus block while
++waiting for the resulting I/O to complete.
++It would be a very bad thing for the compiler to reorder
++a <tt>get_user()</tt> invocation into an RCU read-side critical
++section.
++For example, suppose that the source code looked like this:
++
++<blockquote>
++<pre>
++ 1 rcu_read_lock();
++ 2 p = rcu_dereference(gp);
++ 3 v = p-&gt;value;
++ 4 rcu_read_unlock();
++ 5 get_user(user_v, user_p);
++ 6 do_something_with(v, user_v);
++</pre>
++</blockquote>
++
++<p>
++The compiler must not be permitted to transform this source code into
++the following:
++
++<blockquote>
++<pre>
++ 1 rcu_read_lock();
++ 2 p = rcu_dereference(gp);
++ 3 get_user(user_v, user_p); // BUG: POSSIBLE PAGE FAULT!!!
++ 4 v = p-&gt;value;
++ 5 rcu_read_unlock();
++ 6 do_something_with(v, user_v);
++</pre>
++</blockquote>
++
++<p>
++If the compiler did make this transformation in a
++<tt>CONFIG_PREEMPT=n</tt> kernel build, and if <tt>get_user()</tt> did
++page fault, the result would be a quiescent state in the middle
++of an RCU read-side critical section.
++This misplaced quiescent state could result in line&nbsp;4 being
++a use-after-free access, which could be bad for your kernel's
++actuarial statistics.
++Similar examples can be constructed with the call to <tt>get_user()</tt>
++preceding the <tt>rcu_read_lock()</tt>.
++
++<p>
++Unfortunately, <tt>get_user()</tt> doesn't have any particular
++ordering properties, and in some architectures the underlying <tt>asm</tt>
++isn't even marked <tt>volatile</tt>.
++And even if it was marked <tt>volatile</tt>, the above access to
++<tt>p-&gt;value</tt> is not volatile, so the compiler would not have any
++reason to keep those two accesses in order.
++
++<p>
++Therefore, the Linux-kernel definitions of <tt>rcu_read_lock()</tt>
++and <tt>rcu_read_unlock()</tt> must act as compiler barriers,
++at least for outermost instances of <tt>rcu_read_lock()</tt> and
++<tt>rcu_read_unlock()</tt> within a nested set of RCU read-side critical
++sections.
++
+ <h3><a name="Energy Efficiency">Energy Efficiency</a></h3>
+ 
+ <p>
 
