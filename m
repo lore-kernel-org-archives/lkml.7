@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FACC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B16C468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DCC21537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA3F21537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994665;
-	bh=ZD4vIPkbitJKD4kbkIpR8aeWJF9KwLdkVoYrKAhWYqA=;
+	s=default; t=1559994670;
+	bh=HlRPGL34TlAn9v95aef3KCyfQS5shKTa1sZg8gTTbrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WdnDTNejVNl0dmtFL7hfALJHwyNA/z9EjQRWWHXH5QabovZvaGWgtApjfRZlImzRH
-	 ihG01qiBBDfzqedw62QVWL20X7IY1IohKHvFc9VXTWBVHa1LuEs55kTssfcIb/2o+7
-	 m/zVjHG/0iiEzo10P3oCcwSWOcdATZ7yKuv5qang=
+	b=gXwWeEgKO7gmTUSoz3LyVjOsGse5+VejPutVSoGfzXP0rpL/KCdIPFPTA6Uk9tNwe
+	 uaPdnZy5tZJ7+b84GfvuAQk3BV3NqnZVsn1gvnsVWlNsRIvDGMF3U7e8s0NVOmXQ//
+	 dHb1IhEtoO9qdA/gIXTs9bhA27CAPV7EGimy/U3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729561AbfFHLvD (ORCPT
+        id S1727914AbfFHLrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:47:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726999AbfFHLsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:48:15 -0400
+        id S1729434AbfFHLrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42E23214AF;
-        Sat,  8 Jun 2019 11:48:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C2C721537;
+        Sat,  8 Jun 2019 11:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994495;
-        bh=ZD4vIPkbitJKD4kbkIpR8aeWJF9KwLdkVoYrKAhWYqA=;
+        s=default; t=1559994471;
+        bh=HlRPGL34TlAn9v95aef3KCyfQS5shKTa1sZg8gTTbrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R5ySliPss9XZG0g4AeI5+8+wbMzzr//L/hENNmqu+AZrFxOhJDmRAQ8hpSj6va+3g
-         AyH8jT0WbGef/KpZhdQFhav67gYwIFuvdC3r0JiUdylbq5h9KeJtL4LGFeUDMliWPg
-         w1mIKvDbyrIX68E942hnGjU1dja7ycKnqCH5Co3s=
+        b=kInmS+Qd+smbYg7KrGK4e6iS/eHAD9jyil7V22kNynr7GIh4sPFZB9AsQeh3ioHT6
+         wdC9dAcMnGzMVetM9KLCU9JHCav6Fjtq4UY88+IdI+yCccAsQLRsxhgA01rtJAnTeb
+         Trsnk1axFgoHFwc7big4Tj8HX3fVLJvSr/U88Ul8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frank van der Linden <fllinden@amazon.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        jiaxun.yang@flygoat.com, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 04/20] x86/CPU/AMD: Don't force the CPB cap when running under a hypervisor
-Date:   Sat,  8 Jun 2019 07:47:40 -0400
-Message-Id: <20190608114756.9742-4-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 29/31] scsi: scsi_dh_alua: Fix possible null-ptr-deref
+Date:   Sat,  8 Jun 2019 07:46:40 -0400
+Message-Id: <20190608114646.9415-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608114756.9742-1-sashal@kernel.org>
-References: <20190608114756.9742-1-sashal@kernel.org>
+In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
+References: <20190608114646.9415-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,68 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank van der Linden <fllinden@amazon.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2ac44ab608705948564791ce1d15d43ba81a1e38 ]
+[ Upstream commit 12e750bc62044de096ab9a95201213fd912b9994 ]
 
-For F17h AMD CPUs, the CPB capability ('Core Performance Boost') is forcibly set,
-because some versions of that chip incorrectly report that they do not have it.
+If alloc_workqueue fails in alua_init, it should return -ENOMEM, otherwise
+it will trigger null-ptr-deref while unloading module which calls
+destroy_workqueue dereference
+wq->lock like this:
 
-However, a hypervisor may filter out the CPB capability, for good
-reasons. For example, KVM currently does not emulate setting the CPB
-bit in MSR_K7_HWCR, and unchecked MSR access errors will be thrown
-when trying to set it as a guest:
+BUG: KASAN: null-ptr-deref in __lock_acquire+0x6b4/0x1ee0
+Read of size 8 at addr 0000000000000080 by task syz-executor.0/7045
 
-	unchecked MSR access error: WRMSR to 0xc0010015 (tried to write 0x0000000001000011) at rIP: 0xffffffff890638f4 (native_write_msr+0x4/0x20)
+CPU: 0 PID: 7045 Comm: syz-executor.0 Tainted: G         C        5.1.0+ #28
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
+Call Trace:
+ dump_stack+0xa9/0x10e
+ __kasan_report+0x171/0x18d
+ ? __lock_acquire+0x6b4/0x1ee0
+ kasan_report+0xe/0x20
+ __lock_acquire+0x6b4/0x1ee0
+ lock_acquire+0xb4/0x1b0
+ __mutex_lock+0xd8/0xb90
+ drain_workqueue+0x25/0x290
+ destroy_workqueue+0x1f/0x3f0
+ __x64_sys_delete_module+0x244/0x330
+ do_syscall_64+0x72/0x2a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-	Call Trace:
-	boost_set_msr+0x50/0x80 [acpi_cpufreq]
-	cpuhp_invoke_callback+0x86/0x560
-	sort_range+0x20/0x20
-	cpuhp_thread_fun+0xb0/0x110
-	smpboot_thread_fn+0xef/0x160
-	kthread+0x113/0x130
-	kthread_create_worker_on_cpu+0x70/0x70
-	ret_from_fork+0x35/0x40
-
-To avoid this issue, don't forcibly set the CPB capability for a CPU
-when running under a hypervisor.
-
-Signed-off-by: Frank van der Linden <fllinden@amazon.com>
-Acked-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: jiaxun.yang@flygoat.com
-Fixes: 0237199186e7 ("x86/CPU/AMD: Set the CPB bit unconditionally on F17h")
-Link: http://lkml.kernel.org/r/20190522221745.GA15789@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
-[ Minor edits to the changelog. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 03197b61c5ec ("scsi_dh_alua: Use workqueue for RTPG")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/amd.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/scsi/device_handler/scsi_dh_alua.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index be6d0543e626..52a65f14db06 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -766,8 +766,11 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
- {
- 	set_cpu_cap(c, X86_FEATURE_ZEN);
+diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
+index 0962fd544401..09c6a16fab93 100644
+--- a/drivers/scsi/device_handler/scsi_dh_alua.c
++++ b/drivers/scsi/device_handler/scsi_dh_alua.c
+@@ -1151,10 +1151,8 @@ static int __init alua_init(void)
+ 	int r;
  
--	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
--	if (!cpu_has(c, X86_FEATURE_CPB))
-+	/*
-+	 * Fix erratum 1076: CPB feature bit not being set in CPUID.
-+	 * Always set it, except when running under a hypervisor.
-+	 */
-+	if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_CPB))
- 		set_cpu_cap(c, X86_FEATURE_CPB);
- }
+ 	kaluad_wq = alloc_workqueue("kaluad", WQ_MEM_RECLAIM, 0);
+-	if (!kaluad_wq) {
+-		/* Temporary failure, bypass */
+-		return SCSI_DH_DEV_TEMP_BUSY;
+-	}
++	if (!kaluad_wq)
++		return -ENOMEM;
  
+ 	r = scsi_register_device_handler(&alua_dh);
+ 	if (r != 0) {
 -- 
 2.20.1
 
