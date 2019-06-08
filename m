@@ -2,126 +2,263 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7A4C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5895DC468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA32214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28415214C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559993013;
+	bh=6CTSTufkvionRt3c5R+LNs00e91X4cgfxmxmgF+pKhI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2l9IRMkpHZa0VK09VI6zKTwgGXGp99XArpYD/cHCvlEazk96B0nVUMHtnGO7ORQHr
+	 76LpilpywarzXzSlD8nzDX18kFV8kJZqT0aw3KKq7X7gYRIwwmAxzXolJ7vu9f4LoY
+	 GXCiHtGJDKonpitmHwvf5jNyCLIsMCO6K08w8buU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfFHLWH (ORCPT
+        id S1727063AbfFHLXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:22:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:38996 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfFHLWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:22:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id y13so3701341iol.6
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 04:22:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=hVoG57mCN8NOasXfbKFhxicqTT/xW4k6vglaIu7Gsr8=;
-        b=haCRVVZQZGIi/C/C3NAS4F+aaJBaZV0R479w2/Hxw6GTbmLItIAKLKhe/8j4nswDcC
-         v0ON9RsqqlfQKsCgH602uvpxz47GVgdep1+a5UIEzVMrvUwwvWTQlaWnb6zbLIp3/yPK
-         KUUIRfuseJwB3QD4XAc6yq9H/6QUDGTDMWIdJLD040dTzfZXIx1Pwx10j+9do3VmP2ng
-         ialSgYZ5xfmkrsdAdakNoXnA0CVZ3FF2FlNgmVTof/Gwb1IO7Yy98sPqa6c9g+wnbZVa
-         MmRU25qzwMZKLvTKfcsw4ct5Vk6JMBZAdhdnLYoUqXa99pyORtHab5ESvC1xXggX/8U4
-         rneQ==
-X-Gm-Message-State: APjAAAW1kvoR6ts7DivttO+hiwOT4IPtR+3hMPAvnEliUP7usk2iLkxJ
-        tmPdz32ZLLNcsggqstjDbeBGllJbHI1MIVLv4jpQ9fSOXKs7
-X-Google-Smtp-Source: APXvYqxR+yDqE0sbsVS8kE/JcX0C63g/G7rVLFT6sEkllG3CgH0tCwhH0z0uaNRie7Uk/8nBz/cdYlmm5MngD6hxJdcYk5neIjx8
+        Sat, 8 Jun 2019 07:23:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbfFHLXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:23:32 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BDFD2146E;
+        Sat,  8 Jun 2019 11:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559993010;
+        bh=6CTSTufkvionRt3c5R+LNs00e91X4cgfxmxmgF+pKhI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rN5u7arwjYEf4bjASDpdIRBgM/kAhADDv5jVFhSQLcEGIG9DvV2lno3WxX5k63ljM
+         12tZayWm4d0vmN6N+7hMlJ2CpV0wlN9rPIljTPq6nZIKPDUt6T4yN+zd/cHTiflmKg
+         q/y8W1Uwo/SPP1g1J/kkciuxk8B/8FiRIxZuywls=
+Date:   Sat, 8 Jun 2019 12:23:25 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>
+Subject: Re: [PATCH v2 1/4] iio: adc: ad7606: Move oversampling and scale
+ options to chip info
+Message-ID: <20190608122325.6aeb7fdf@archlinux>
+In-Reply-To: <20190527125650.2405-1-beniamin.bia@analog.com>
+References: <20190527125650.2405-1-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Received: by 2002:a02:5489:: with SMTP id t131mr36685651jaa.70.1559992926211;
- Sat, 08 Jun 2019 04:22:06 -0700 (PDT)
-Date:   Sat, 08 Jun 2019 04:22:06 -0700
-In-Reply-To: <000000000000e92d1805711f5552@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000381684058ace28e5@google.com>
-Subject: Re: WARNING in bpf_jit_free
-From:   syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>
-To:     airlied@linux.ie, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@ffwll.ch, daniel@iogearbox.net, davem@davemloft.net,
-        dri-devel@lists.freedesktop.org, hawk@kernel.org,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        kafai@fb.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, maxime.ripard@bootlin.com,
-        netdev@vger.kernel.org, paul.kocialkowski@bootlin.com,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        wens@csie.org, xdp-newbies@vger.kernel.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Mon, 27 May 2019 15:56:47 +0300
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1201b971a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
-dashboard link: https://syzkaller.appspot.com/bug?extid=2ff1e7cb738fd3c41113
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a3bf51a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120d19f2a00000
+> The device dependent options which are going to be different for devices
+> which will be supported  in the future by this driver,
+> were moved in chip info for a more generic driver. This patch allows
+> supporting more devices by the driver. Also, it is an intermediate
+> step of adding support for ad7616 in software mode.
+> 
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> Acked-by: Jonathan Cameron <jic23@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-The bug was bisected to:
+Thanks,
 
-commit 0fff724a33917ac581b5825375d0b57affedee76
-Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Fri Jan 18 14:51:13 2019 +0000
+Jonathan
 
-     drm/sun4i: backend: Use explicit fourcc helpers for packed YUV422 check
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467550f200000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667550f200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1267550f200000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
-Fixes: 0fff724a3391 ("drm/sun4i: backend: Use explicit fourcc helpers for  
-packed YUV422 check")
-
-WARNING: CPU: 0 PID: 8951 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 8951 Comm: kworker/0:0 Not tainted 5.2.0-rc3+ #23
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x744 kernel/panic.c:219
-  __warn.cold+0x20/0x4d kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-RIP: 0010:bpf_jit_free+0x157/0x1b0
-Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00  
-00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 f9 b5 f4 ff <0f> 0b e9 f9 fe  
-ff ff e8 bd 53 2d 00 e9 d9 fe ff ff 48 89 7d e0 e8
-RSP: 0018:ffff88808886fcb0 EFLAGS: 00010293
-RAX: ffff88808cb6c480 RBX: ffff88809051d280 RCX: ffffffff817ae68d
-RDX: 0000000000000000 RSI: ffffffff817bf0f7 RDI: ffff88809051d2f0
-RBP: ffff88808886fcd0 R08: 1ffffffff14ccaa8 R09: fffffbfff14ccaa9
-R10: fffffbfff14ccaa8 R11: ffffffff8a665547 R12: ffffc90001925000
-R13: ffff88809051d2e8 R14: ffff8880a0e43900 R15: ffff8880ae834840
-  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1984
-  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+> ---
+> Changes in v2:
+> -nothing changed
+> 
+>  drivers/iio/adc/ad7606.c | 61 +++++++++++++++++++++++++++++-----------
+>  drivers/iio/adc/ad7606.h | 15 +++++++++-
+>  2 files changed, 58 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index 24c70c3cefb4..c66ff22f32d2 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -158,7 +158,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		*val = 0;
+> -		*val2 = st->scale_avail[st->range];
+> +		*val2 = st->scale_avail[st->range[0]];
+>  		return IIO_VAL_INT_PLUS_MICRO;
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		*val = st->oversampling;
+> @@ -194,6 +194,32 @@ static ssize_t in_voltage_scale_available_show(struct device *dev,
+>  
+>  static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
+>  
+> +static int ad7606_write_scale_hw(struct iio_dev *indio_dev, int ch, int val)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +
+> +	gpiod_set_value(st->gpio_range, val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad7606_write_os_hw(struct iio_dev *indio_dev, int val)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +	DECLARE_BITMAP(values, 3);
+> +
+> +	values[0] = val;
+> +
+> +	gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
+> +			      st->gpio_os->info, values);
+> +
+> +	/* AD7616 requires a reset to update value */
+> +	if (st->chip_info->os_req_reset)
+> +		ad7606_reset(st);
+> +
+> +	return 0;
+> +}
+> +
+>  static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *chan,
+>  			    int val,
+> @@ -201,15 +227,18 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  			    long mask)
+>  {
+>  	struct ad7606_state *st = iio_priv(indio_dev);
+> -	DECLARE_BITMAP(values, 3);
+> -	int i;
+> +	int i, ret, ch = 0;
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_SCALE:
+>  		mutex_lock(&st->lock);
+>  		i = find_closest(val2, st->scale_avail, st->num_scales);
+> -		gpiod_set_value(st->gpio_range, i);
+> -		st->range = i;
+> +		ret = st->write_scale(indio_dev, chan->address, i);
+> +		if (ret < 0) {
+> +			mutex_unlock(&st->lock);
+> +			return ret;
+> +		}
+> +		st->range[ch] = i;
+>  		mutex_unlock(&st->lock);
+>  
+>  		return 0;
+> @@ -218,17 +247,12 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>  			return -EINVAL;
+>  		i = find_closest(val, st->oversampling_avail,
+>  				 st->num_os_ratios);
+> -
+> -		values[0] = i;
+> -
+>  		mutex_lock(&st->lock);
+> -		gpiod_set_array_value(ARRAY_SIZE(values), st->gpio_os->desc,
+> -				      st->gpio_os->info, values);
+> -
+> -		/* AD7616 requires a reset to update value */
+> -		if (st->chip_info->os_req_reset)
+> -			ad7606_reset(st);
+> -
+> +		ret = st->write_os(indio_dev, i);
+> +		if (ret < 0) {
+> +			mutex_unlock(&st->lock);
+> +			return ret;
+> +		}
+>  		st->oversampling = st->oversampling_avail[i];
+>  		mutex_unlock(&st->lock);
+>  
+> @@ -536,7 +560,7 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>  	st->bops = bops;
+>  	st->base_address = base_address;
+>  	/* tied to logic low, analog input range is +/- 5V */
+> -	st->range = 0;
+> +	st->range[0] = 0;
+>  	st->oversampling = 1;
+>  	st->scale_avail = ad7606_scale_avail;
+>  	st->num_scales = ARRAY_SIZE(ad7606_scale_avail);
+> @@ -589,6 +613,9 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>  	if (ret)
+>  		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
+>  
+> +	st->write_scale = ad7606_write_scale_hw;
+> +	st->write_os = ad7606_write_os_hw;
+> +
+>  	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
+>  					  indio_dev->name, indio_dev->id);
+>  	if (!st->trig)
+> @@ -643,7 +670,7 @@ static int ad7606_resume(struct device *dev)
+>  	struct ad7606_state *st = iio_priv(indio_dev);
+>  
+>  	if (st->gpio_standby) {
+> -		gpiod_set_value(st->gpio_range, st->range);
+> +		gpiod_set_value(st->gpio_range, st->range[0]);
+>  		gpiod_set_value(st->gpio_standby, 1);
+>  		ad7606_reset(st);
+>  	}
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index f9ef52131e74..143c30163df9 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -16,6 +16,12 @@
+>   *			oversampling ratios.
+>   * @oversampling_num	number of elements stored in oversampling_avail array
+>   * @os_req_reset	some devices require a reset to update oversampling
+> + * @write_scale_sw	pointer to the function which writes the scale via spi
+> +			in software mode
+> + * @write_os_sw		pointer to the function which writes the os via spi
+> +			in software mode
+> + * @sw_mode_config:	pointer to a function which configured the device
+> + *			for software mode
+>   */
+>  struct ad7606_chip_info {
+>  	const struct iio_chan_spec	*channels;
+> @@ -23,6 +29,9 @@ struct ad7606_chip_info {
+>  	const unsigned int		*oversampling_avail;
+>  	unsigned int			oversampling_num;
+>  	bool				os_req_reset;
+> +	int (*write_scale_sw)(struct iio_dev *indio_dev, int ch, int val);
+> +	int (*write_os_sw)(struct iio_dev *indio_dev, int val);
+> +	int (*sw_mode_config)(struct iio_dev *indio_dev);
+>  };
+>  
+>  /**
+> @@ -39,6 +48,8 @@ struct ad7606_chip_info {
+>   * @oversampling_avail	pointer to the array which stores the available
+>   *			oversampling ratios.
+>   * @num_os_ratios	number of elements stored in oversampling_avail array
+> + * @write_scale		pointer to the function which writes the scale
+> + * @write_os		pointer to the function which writes the os
+>   * @lock		protect sensor state from concurrent accesses to GPIOs
+>   * @gpio_convst	GPIO descriptor for conversion start signal (CONVST)
+>   * @gpio_reset		GPIO descriptor for device hard-reset
+> @@ -57,13 +68,15 @@ struct ad7606_state {
+>  	const struct ad7606_chip_info	*chip_info;
+>  	struct regulator		*reg;
+>  	const struct ad7606_bus_ops	*bops;
+> -	unsigned int			range;
+> +	unsigned int			range[16];
+>  	unsigned int			oversampling;
+>  	void __iomem			*base_address;
+>  	const unsigned int		*scale_avail;
+>  	unsigned int			num_scales;
+>  	const unsigned int		*oversampling_avail;
+>  	unsigned int			num_os_ratios;
+> +	int (*write_scale)(struct iio_dev *indio_dev, int ch, int val);
+> +	int (*write_os)(struct iio_dev *indio_dev, int val);
+>  
+>  	struct mutex			lock; /* protect sensor state */
+>  	struct gpio_desc		*gpio_convst;
 
