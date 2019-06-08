@@ -2,195 +2,111 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E15C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEB4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 19:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71167214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B19221707
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 19:04:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eIjUllel"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfFHSvk (ORCPT
+        id S1727371AbfFHTEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 14:51:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727333AbfFHSvj (ORCPT
+        Sat, 8 Jun 2019 15:04:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42267 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbfFHTET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 14:51:39 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58IlBEG095600
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 14:51:38 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t0960pr44-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 14:51:38 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 8 Jun 2019 19:51:37 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 8 Jun 2019 19:51:32 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58IoGEV39387552
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Jun 2019 18:50:16 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1442B2064;
-        Sat,  8 Jun 2019 18:50:16 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF36FB205F;
-        Sat,  8 Jun 2019 18:50:16 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.156.65])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat,  8 Jun 2019 18:50:16 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 1FDEA16C21CA; Sat,  8 Jun 2019 11:50:19 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 11:50:19 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: Re: inet: frags: Turn fqdir->dead into an int for old Alphas
-Reply-To: paulmck@linux.ibm.com
-References: <20190603200301.GM28207@linux.ibm.com>
- <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
- <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
- <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
- <da5eedfe-92f9-6c50-b9e7-68886047dd25@gmail.com>
- <CAHk-=wgtY1hNQX9TM=4ono-UJ-hsoFA0OT36ixFWBG2eeO011w@mail.gmail.com>
- <20190608152707.GF28207@linux.ibm.com>
- <CAHk-=wj1G9nXMzAu=Ldbd4_bbzVtWgNORDKMD4bKTO6dRrMPmQ@mail.gmail.com>
- <CAHk-=wiRduKzoLpAwU7iFiOJ6DX7RE+PZ_wFi9Cvq=hDoaNsPA@mail.gmail.com>
+        Sat, 8 Jun 2019 15:04:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x17so5269341wrl.9;
+        Sat, 08 Jun 2019 12:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jXFcak2cBpexQk8XYN9VwrCjw1WZmHd35NHcnWvlUM=;
+        b=eIjUllelamnWeZcriXf4pecRr643goyySvVh2oJM0Dhb5G7lrmEbCequZfHbZbaCmN
+         g/qHrO6fzfqlK0ycFPOnUio+yrz8dc0qLpiCnfuXN7M6474V4gNYjCk3aJ+QH4uU++P5
+         FrZ92j96kXDKox9o6FBdjE3XYWlEJB/hELgeaW+vykoT3GVOA7Od8zmFN1LBaUoVyBuW
+         8+mBMqYndQxBlqJfVE8dgEcuXDIeqqMRcmPZc7WnYlQo/ch83e8I7DUQPQyigBLHu/WU
+         9Y2cAe1hPF3l0f5elho+4et2FsznVRtBCpcnT9Y9b/OLWllASSjSaJA7lwm7tQB7KyIq
+         VnAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9jXFcak2cBpexQk8XYN9VwrCjw1WZmHd35NHcnWvlUM=;
+        b=fS5Zp5vZxqCVMq+5bs8jY6YZFQYjNk3V4ByzUQozpWdv1NbcjTWUzmzg2+9KTO4vLF
+         BJs5C/AOcYThZ79Fsqb28HmTz0dlnoDSUUBFnlUDXKKf30Gqtc0fzVcRS5AUInH6JugO
+         5ZTTjPLGGBux5m/HBUXTKxZW1pgaJVbmnzjfFNSDqt31c6gdCQIPIyNpGMvW6lmQ5DoY
+         NRMk2hyouRAZyNjK6OIBWGD5vM0453J/6LozAFKi9NXQeiAMNQWTfkdJLbd7gAegy05L
+         WfJLHU0M3ene4aEipr3HAJOPx4vMXTdU6EhT9lTtceOgHhghK04UppN6I60yDu/dOb5K
+         WPRg==
+X-Gm-Message-State: APjAAAWRbtNLYJl+5LiNWHJ8z9eSVv52IYqtqnyENGTTwIi4enahexgg
+        FmnVvXLDhNFCYePUAqDGgOYNxRUL
+X-Google-Smtp-Source: APXvYqwG28JNmUgm1CsQro+958rHZ/hNNfAHUq1Xkkz1MmrE6sJADMNYtPLldhD5c8SSB7LZxxUWJA==
+X-Received: by 2002:a5d:43d0:: with SMTP id v16mr36679469wrr.252.1560020657104;
+        Sat, 08 Jun 2019 12:04:17 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133DDA400D12EFF43FED1E981.dip0.t-ipconnect.de. [2003:f1:33dd:a400:d12e:ff43:fed1:e981])
+        by smtp.googlemail.com with ESMTPSA id t6sm5655062wmb.29.2019.06.08.12.04.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 08 Jun 2019 12:04:16 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 0/3] meson-gpio-irqc: Add support for the Meson-G12A SoC
+Date:   Sat,  8 Jun 2019 21:04:08 +0200
+Message-Id: <20190608190411.14018-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiRduKzoLpAwU7iFiOJ6DX7RE+PZ_wFi9Cvq=hDoaNsPA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060818-2213-0000-0000-0000039BFEAB
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011235; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01215120; UDB=6.00638794; IPR=6.00996212;
- MB=3.00027237; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 18:51:35
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060818-2214-0000-0000-00005EC66162
-Message-Id: <20190608185019.GM28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=866 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906080143
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 10:50:51AM -0700, Linus Torvalds wrote:
-> On Sat, Jun 8, 2019 at 10:42 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > There are no atomic rmw sequences that have reasonable performance for
-> > the bitfield updates themselves.
-> 
-> Note that this is purely about the writing side. Reads of bitfield
-> values can be (and generally _should_ be) atomic, and hopefully C11
-> means that you wouldn't see intermediate values.
-> 
-> But I'm not convinced about that either: one natural way to update a
-> bitfield is to first do the masking, and then do the insertion of new
-> bits, so a bitfield assignment very easily exposes non-real values to
-> a concurrent read on another CPU.
+This series adds GPIO interrupt controller support for Meson-G12A SoCs.
+Although the total number of pins is the same as the Meson-AXG SoC, the
+GPIO banks and IRQ numbers are different. Add a new compatible string
+to avoid confusion when using it.
 
-Agreed on the "not convinced" part (though perhaps most implementations
-would handle concurrent reads and writes involving different fields of
-the same bitfield).  And the C standard does not guarantee this, because
-data races are defined in terms of memory locations.  So as far as the
-C standard is concerned, if there are two concurrent accesses to fields
-within a bitfield that are not separated by ":0", there is a data race
-and so the compiler can do whatever it wants.
+I am re-sending this update because v2 looked good in my opinion (Xingyu
+Chen did good work here) but it never made it into mainline.
 
-But do we really care about this case?
 
-> What I think C11 is supposed to protect is from compilers doing
-> horribly bad things, and accessing bitfields with bigger types than
-> the field itself, ie when you have
-> 
->    struct {
->        char c;
->        int field1:5;
->    };
-> 
-> then a write to "field1" had better not touch "char c" as part of the
-> rmw operation, because that would indeed introduce a data-race with a
-> completely independent field that might have completely independent
-> locking rules.
-> 
-> But
-> 
->    struct {
->         int c:8;
->         int field1:5;
->    };
-> 
-> would not sanely have the same guarantees, even if the layout in
-> memory might be identical. Once you have bitfields next to each other,
-> and use a base type that means they can be combined together, they
-> can't be sanely modified without locking.
->
-> (And I don't know if C11 took up the "base type of the bitfield"
-> thing. Maybe you still need to use the ":0" thing to force alignment,
-> and maybe the C standards people still haven't made the underlying
-> type be meaningful other than for sign handling).
+Changes since v1 at [1]:
+- share the device data with Meson-AXG
 
-The C standard draft (n2310) gives similar examples:
+Changes since v2 at [2]:
+- dropped "Change-Id" from patch #2
+- added .dts patch #3 - this should go through Kevin's linux-amlogic
+  tree. if required I can re-send it in a separate series
 
-	EXAMPLE A structure declared as
 
-		struct {
-			char a;
-			int b:5, c:11,:0, d:8;
-			struct { int ee:8; } e;
-		}
+[1] https://lore.kernel.org/lkml/20181203061324.36248-1-xingyu.chen@amlogic.com
+[2] https://lore.kernel.org/patchwork/cover/1021232/
 
-	contains four separate memory locations: The member a, and
-	bit-fields d and e.ee are each separate memory locations,
-	and can be modified concurrently without interfering with each
-	other. The bit-fields b and c together constitute the fourth
-	memory location. The bit-fields b and c cannot be concurrently
-	modified, but b and a, for example, can be.
 
-So yes, ":0" still forces alignment to the next storage unit.  And it
-can be used to allow concurrent accesses to fields within a bitfield,
-but only when those two fields are separated by ":0".
+Martin Blumenstingl (1):
+  arm64: dts: meson: g12a: add the GPIO interrupt controller
 
-On the underlying type, according to J.3.9 of the current C working draft,
-the following are implementation-specified behavior:
+Xingyu Chen (2):
+  dt-bindings: interrupt-controller: New binding for Meson-G12A SoC
+  irqchip/meson-gpio: Add support for Meson-G12A SoC
 
--	Whether a "plain" int bit-field is treated as a signed int
-	bit-field or as an unsigned int bit-field (6.7.2, 6.7.2.1).
+ .../interrupt-controller/amlogic,meson-gpio-intc.txt     | 1 +
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi              | 9 +++++++++
+ drivers/irqchip/irq-meson-gpio.c                         | 1 +
+ 3 files changed, 11 insertions(+)
 
--	Whether atomic types are permitted for bit-fields (6.7.2.1).
-
-This last is strange because you are not allowed to take the address of
-a bit field, and the various operations on atomic types take addresses.
-Search me!
-
-							Thanx, Paul
+-- 
+2.21.0
 
