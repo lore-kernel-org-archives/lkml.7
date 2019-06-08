@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60756C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AFAC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34FB4214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0C821537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994932;
-	bh=JiwfaLUvaigiDjDpiLv7jum12sUQVhzcqO8BoTfA/M4=;
+	s=default; t=1559994942;
+	bh=GN9fj8h0Z1VPlEI5dkPyZ16IY3nf3XZ6iJ2EyzKJuC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3rKqXe9EcOnF2c+xGBPxrKkyxV0HGjeth3f5UtUN18+ZkdK6cZyy4s68HhiBs5kW
-	 2TjggJ4ZObHtnQFPpODjiKck+HKGx9PdSOqgm6TQ84vVTGn4w+p16MMlO0X99ivUhr
-	 2EB2hFNg6XCThSsYnI3YrsqqPBNIH8wJDvJY4sA4=
+	b=ok8w60AwJxjA3pUKOwRDx6yQFB3edHxXVcdj2DIghcbpVUAxvE57qMnmxUgmxUD6J
+	 eoHKJMr0BFRk0/h1NvAimAOst3QQ228qIe26gGb7MsUEdT1uQtD7VzMkIbgt9J1j+K
+	 N3lgRV4GjjYC9Pro/asxNDRTyxsTbd3e+2k/Gaz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfFHLzb (ORCPT
+        id S1729154AbfFHLzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:55:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:55:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfFHLkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:00 -0400
+        id S1727191AbfFHLj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:39:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31583214D8;
-        Sat,  8 Jun 2019 11:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 559A6214DA;
+        Sat,  8 Jun 2019 11:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559993999;
-        bh=JiwfaLUvaigiDjDpiLv7jum12sUQVhzcqO8BoTfA/M4=;
+        s=default; t=1559993996;
+        bh=GN9fj8h0Z1VPlEI5dkPyZ16IY3nf3XZ6iJ2EyzKJuC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zyisYZ/5M0OUNPS9FGqekYFnSIopHzqCtRJB5Beomu/u0Dw7TND38jPWOULpbOPEG
-         DhW5YMR+qR3/bxytiZmxtChMr/9SOP1x4xHnBkvo7exBgBcX0M2klBWZ+XZXxPJYNk
-         enrM0WIppmFBmnEVwWA8DedJy2A6VLhTNBvqF2ss=
+        b=HO/4WG+8c5/caVRyGJtm5bYWKRzo+iwk/5JQ5xRfQhJifPYlLN+d6dQcAgSIvDmK2
+         HdluHhM1pSYiOiQnc5NhVX2RzIN/UfzSoMB0MhLzJ+8PCfn6/jghLzSFZtheGnE6RA
+         EE36Vs3zaw84C9j5Kh94WpoSqcXO/nV8hTYZDEx4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.1 07/70] staging: wilc1000: Fix some double unlock bugs in wilc_wlan_cleanup()
-Date:   Sat,  8 Jun 2019 07:38:46 -0400
-Message-Id: <20190608113950.8033-7-sashal@kernel.org>
+Cc:     Sean Nyekjaer <sean@geanix.com>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 04/70] iio: adc: ti-ads8688: fix timestamp is not updated in buffer
+Date:   Sat,  8 Jun 2019 07:38:43 -0400
+Message-Id: <20190608113950.8033-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -60,45 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sean Nyekjaer <sean@geanix.com>
 
-[ Upstream commit fea69916360468e364a4988db25a5afa835f3406 ]
+[ Upstream commit e6d12298310fa1dc11f1d747e05b168016057fdd ]
 
-If ->hif_read_reg() or ->hif_write_reg() fail then the code unlocks
-and keeps executing.  It should just return.
+When using the hrtimer iio trigger timestamp isn't updated.
+If we use iio_get_time_ns it is updated correctly.
 
-Fixes: c5c77ba18ea6 ("staging: wilc1000: Add SDIO/SPI 802.11 driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2a86487786b5c ("iio: adc: ti-ads8688: add trigger and buffer support")
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wilc1000/wilc_wlan.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/iio/adc/ti-ads8688.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-index c2389695fe20..70b1ab21f8a3 100644
---- a/drivers/staging/wilc1000/wilc_wlan.c
-+++ b/drivers/staging/wilc1000/wilc_wlan.c
-@@ -1076,13 +1076,17 @@ void wilc_wlan_cleanup(struct net_device *dev)
- 	acquire_bus(wilc, WILC_BUS_ACQUIRE_AND_WAKEUP);
+diff --git a/drivers/iio/adc/ti-ads8688.c b/drivers/iio/adc/ti-ads8688.c
+index 8b4568edd5cb..7f16c77b99fb 100644
+--- a/drivers/iio/adc/ti-ads8688.c
++++ b/drivers/iio/adc/ti-ads8688.c
+@@ -397,7 +397,7 @@ static irqreturn_t ads8688_trigger_handler(int irq, void *p)
+ 	}
  
- 	ret = wilc->hif_func->hif_read_reg(wilc, WILC_GP_REG_0, &reg);
--	if (!ret)
-+	if (!ret) {
- 		release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
-+		return;
-+	}
+ 	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+-			pf->timestamp);
++			iio_get_time_ns(indio_dev));
  
- 	ret = wilc->hif_func->hif_write_reg(wilc, WILC_GP_REG_0,
- 					(reg | ABORT_INT));
--	if (!ret)
-+	if (!ret) {
- 		release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
-+		return;
-+	}
+ 	iio_trigger_notify_done(indio_dev->trig);
  
- 	release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
- 	wilc->hif_func->hif_deinit(NULL);
 -- 
 2.20.1
 
