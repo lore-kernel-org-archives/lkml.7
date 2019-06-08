@@ -2,107 +2,172 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DCDC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A71C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05C0E208E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2508C2089E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EDHJtD4g"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oCrefRpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725797AbfFHFFG (ORCPT
+        id S1727156AbfFHFI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 01:05:06 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40220 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfFHFE5 (ORCPT
+        Sat, 8 Jun 2019 01:08:26 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46890 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbfFHFI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 01:04:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so1581040pla.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 22:04:57 -0700 (PDT)
+        Sat, 8 Jun 2019 01:08:26 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e5so1571724pls.13
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 22:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7JHMxvIq1jsW2qWML7iET1ggCLWTMelSL100NyRTudI=;
-        b=EDHJtD4g8m8NgywjVghSqy+PL2KBFW+vEhsLk+5399uhepYp6Kcj7W9M5c+hBaLixK
-         h0g9ZHCNugDtJttP0mUwBtaOU55XtJ/Ep7K+YYQNJGk8HzR2PcXO5ASWe0RuewbKN0PE
-         o2eE00inVhPttmqsymXxsGYTKBOuUjjPzRmp/sny5NEFNgUuSbufcRhMjtwTookZaOrn
-         fi5AoxdioRxYHyt8m5XdjZ4N99zqXxCnXhWWrQOK7WxKDLAWZNdd5nuOVDCDFn8LHVEs
-         GEQLMXROaepbpCAegsCIEv7p2BmrG3jKvhZjLPukkA9lamgDOYtf2C6vPYEJ3Tfd8i8n
-         ZJ2g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=Hx17RJnNZ9R6fmHYyRTfv/STbHwrf4Q4k1vwA34kpEQ=;
+        b=oCrefRpU+j6VdWLo6+l6rxhteKGGWnzJKromVbDM1qYC2DR4c0URzg78l0RJU2x6Xm
+         4Mr2wMGxAOwX7rKgx2RPYuM9r0VSYQRF+jMIDfZaWL9owJRd6x6hre0bMvi+d93nZ3io
+         kLfKgRX418AlrVFZFMalki674E1HQLsCzaYzo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=7JHMxvIq1jsW2qWML7iET1ggCLWTMelSL100NyRTudI=;
-        b=BqEl1r3N5r3MW3eXFRNdTsLtsvhQPWoTkRxsIeuPtJ1hemG3sd5hUYQxd/ID5UGUyB
-         z4SKPscVxmiAo8ofTwWvAvEkIrgGTlbfTwkasuh7Qd+8+c5JP04S3Sf82SgWnyCQV31d
-         A4opOGQBEQQ5qZz8RX4aEneeOLGYpY1CqqjjFpxKtIViFNHwI71TUqcZ7hsH+ujBtrx5
-         fLBhAK+oAY8WsDoMyLtfU9z1mzmzahs91uZBrBG5hOR283A7DCtpWnROz8oUzBKHdWqR
-         mqg7rf0/ujo2ghBSQyb9JTV2XfAYss3R5RoKY3I/MA8YB0SAzkSAkctA1wnCPG1Wj+oj
-         S2VQ==
-X-Gm-Message-State: APjAAAUlmGWqCR4TX5AfOsWwzmuLv1FAMrZ2zfQXis56SHlsgD6Kfi+b
-        xFQwRk3qIbRYKF9mLoKlDUDamg==
-X-Google-Smtp-Source: APXvYqyAHw1AV05o3p032VHhbyghs7+weXTqVDC+E/50Yqk2YdvccJr8yaM4fMNzlvhMVl17Ezvqqw==
-X-Received: by 2002:a17:902:b611:: with SMTP id b17mr6065542pls.261.1559970296912;
-        Fri, 07 Jun 2019 22:04:56 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b8sm4522482pff.20.2019.06.07.22.04.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Jun 2019 22:04:56 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: [PATCH v3 3/3] arm64: dts: qcom: sdm845-mtp: Specify UFS device-reset GPIO
-Date:   Fri,  7 Jun 2019 22:04:50 -0700
-Message-Id: <20190608050450.12056-4-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190608050450.12056-1-bjorn.andersson@linaro.org>
-References: <20190608050450.12056-1-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=Hx17RJnNZ9R6fmHYyRTfv/STbHwrf4Q4k1vwA34kpEQ=;
+        b=dK+kdKYv+3AOCveIIoodcSVbMX/bvnRZb8e/S/f3KQBBc7cWb26zdQHulLqUgsUNXh
+         JacdbF2amRCpEzbbr5BoHvdv8GL1fOMlfBuxGQiJ480DKvq4fiPUBPdnJMFuaX+Oh62P
+         fHch+RbLn6XStanNrtvCCzDzTt0yvUJv3w0jQa94yct4XMnwHTQ53H7aB+6kU4moXxcY
+         jhmxHfcZXdXsokNQxAXyKCFpCAg3fIz/5zJmnFo+LMMOoMuNgH+r58sSOCkxFWtpaUP1
+         KfazmMfjLimGDLQbk57Dy6eDGJqONltkEJmETi1qa9HiMAWMn9+Lh0fJ6LC8amTo1B0C
+         DP+Q==
+X-Gm-Message-State: APjAAAVdmlpc/q7WI/o1FDTzjTfvV52QQInGYr6qmW1zIlqNj7yZl0mK
+        zSUV4xk+B7ZXX2QHRE4hIxr/og==
+X-Google-Smtp-Source: APXvYqz6beZb+bZkfMw/VOLBFsKcxd6xlVtk7S04lGbjglBiB+KLdJ5hVm31tPut/qh/A78MDijYFA==
+X-Received: by 2002:a17:902:6b03:: with SMTP id o3mr59296701plk.85.1559970505308;
+        Fri, 07 Jun 2019 22:08:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m6sm3818549pjl.18.2019.06.07.22.08.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 22:08:24 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 22:08:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andreas Christoforou <andreaschristofo@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ipc/mqueue: Only perform resource calculation if user
+ valid
+Message-ID: <201906072207.ECB65450@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specify the UFS device-reset gpio, so that the controller will issue a
-reset of the UFS device.
+Andreas Christoforou reported:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
+9 * 2305843009213693951 cannot be represented in type 'long int'
+...
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x11b/0x1fe lib/dump_stack.c:113
+ ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
+ handle_overflow+0x193/0x218 lib/ubsan.c:190
+ mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
+ evict+0x472/0x8c0 fs/inode.c:558
+ iput_final fs/inode.c:1547 [inline]
+ iput+0x51d/0x8c0 fs/inode.c:1573
+ mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
+ mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
+ vfs_mkobj+0x39e/0x580 fs/namei.c:2892
+ prepare_open ipc/mqueue.c:731 [inline]
+ do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
+...
+
+Which could be triggered by:
+
+        struct mq_attr attr = {
+                .mq_flags = 0,
+                .mq_maxmsg = 9,
+                .mq_msgsize = 0x1fffffffffffffff,
+                .mq_curmsgs = 0,
+        };
+
+        if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
+                perror("mq_open");
+
+mqueue_get_inode() was correctly rejecting the giant mq_msgsize,
+and preparing to return -EINVAL. During the cleanup, it calls
+mqueue_evict_inode() which performed resource usage tracking math for
+updating "user", before checking if there was a valid "user" at all
+(which would indicate that the calculations would be sane). Instead,
+delay this check to after seeing a valid "user".
+
+The overflow was real, but the results went unused, so while the flaw
+is harmless, it's noisy for kernel fuzzers, so just fix it by moving
+the calculation under the non-NULL "user" where it actually gets used.
+
+Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
+v2: update commit log based on Al's feedback
+---
+ ipc/mqueue.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-Changes since v2:
-- None
-
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 80189807b4e5..441045847e9f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -467,6 +467,8 @@
- &ufs_mem_hc {
- 	status = "okay";
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index 216cad1ff0d0..65c351564ad0 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -438,7 +438,6 @@ static void mqueue_evict_inode(struct inode *inode)
+ {
+ 	struct mqueue_inode_info *info;
+ 	struct user_struct *user;
+-	unsigned long mq_bytes, mq_treesize;
+ 	struct ipc_namespace *ipc_ns;
+ 	struct msg_msg *msg, *nmsg;
+ 	LIST_HEAD(tmp_msg);
+@@ -461,16 +460,18 @@ static void mqueue_evict_inode(struct inode *inode)
+ 		free_msg(msg);
+ 	}
  
-+	device-reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
+-	/* Total amount of bytes accounted for the mqueue */
+-	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
+-		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+-		sizeof(struct posix_msg_tree_node);
+-
+-	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
+-				  info->attr.mq_msgsize);
+-
+ 	user = info->user;
+ 	if (user) {
++		unsigned long mq_bytes, mq_treesize;
 +
- 	vcc-supply = <&vreg_l20a_2p95>;
- 	vcc-max-microamp = <600000>;
- };
++		/* Total amount of bytes accounted for the mqueue */
++		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
++			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
++			sizeof(struct posix_msg_tree_node);
++
++		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
++					  info->attr.mq_msgsize);
++
+ 		spin_lock(&mq_lock);
+ 		user->mq_bytes -= mq_bytes;
+ 		/*
 -- 
-2.18.0
+2.17.1
 
+
+-- 
+Kees Cook
