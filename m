@@ -2,93 +2,82 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8CBC468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 06:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BE3C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 06:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2ECB214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 06:13:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DSklJHkf"
+	by mail.kernel.org (Postfix) with ESMTP id 872A62146E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 06:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbfFHGNn (ORCPT
+        id S1727283AbfFHGXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 02:13:43 -0400
-Received: from ozlabs.org ([203.11.71.1]:37041 "EHLO ozlabs.org"
+        Sat, 8 Jun 2019 02:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfFHGNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 02:13:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725790AbfFHGXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 02:23:47 -0400
+Received: from oasis.local.home (unknown [217.16.13.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45LTc35rDPz9s9y;
-        Sat,  8 Jun 2019 16:13:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1559974419;
-        bh=RIRADFEVOTd4e9VdslippAwgRDCTA3k+iVngq2+jJlM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DSklJHkfixXf+PCNc22dyimrQ1UCVCkrmZmE72jghvSEaWJkfjzwQs+bav2FVRHlt
-         kW3g8CJb/WnFIf3ahVmChZbIgVugWOefSdB1cNpd1WAY/8P6AKxQz50qB7fibpwcG8
-         TEldCKzrTs4u8exCf8NsA1WhmBkKyjuq3+NvN+YyhIFtZC4/s9h/QNBR67XOYfXCHQ
-         wwuZb3U1Mg2vBJTcA+msToHtwaVHcPzeKfcSVVv7N8Ss4j+B1HovXdp3/w6nPeE4pt
-         KvvksuNkSEefDPTlaMTnHy1GR0sCE2PzBsaA5kXGvfw/20V6aHncKDdJ1Di8wrJoof
-         /f+FnvgL4mevg==
-Date:   Sat, 8 Jun 2019 16:13:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the mali-dp tree
-Message-ID: <20190608161335.444f3d27@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id B5615208E3;
+        Sat,  8 Jun 2019 06:23:42 +0000 (UTC)
+Date:   Sat, 8 Jun 2019 02:23:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Frank Ch. Eigler" <fche@redhat.com>
+Subject: Re: [RFC][PATCH 00/14 v2] function_graph: Rewrite to allow multiple
+ users
+Message-ID: <20190608022333.60c42636@oasis.local.home>
+In-Reply-To: <20190530182920.d8ef9f3c09ba0ae1beaa605a@kernel.org>
+References: <20190520142001.270067280@goodmis.org>
+        <20190522231955.72899b0d606adb919e8716ff@kernel.org>
+        <20190522104027.1b2aabd8@gandalf.local.home>
+        <20190529154740.016517ff9225680f64961097@kernel.org>
+        <20190529052521.6623ae7b@oasis.local.home>
+        <20190530182920.d8ef9f3c09ba0ae1beaa605a@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/5d_WXFYOFq+j5p6Of2GVeNt"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5d_WXFYOFq+j5p6Of2GVeNt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 30 May 2019 18:29:20 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Hi Liviu,
+> > OK, so this series isn't enough to allow kretprobes to use it yet. OK,
+> > I plan on still keeping it because it does allow for placing function
+> > graph tracer into instances with their own filters.  
+> 
+> OK, that will be a "regs" extension.
+> > 
+> > I'll look into adding a REGS flag like we do with ftrace_ops.
+> > 
+> > Does the return need all regs? Or is just the return code good enough?  
+> 
+> Since it depends on arch, I think all regs we need. And for the entry
+> handler, we need all.
 
-Commits
+When I get back home, I'm going to push this series to linux-next. And
+then I'll start adding the REGS extension for the next Linux release
+after this series gets in.
 
-  74332e53e41d ("drm/komeda: Add image enhancement support")
-  108ddcf9238f ("drm/komeda: Add engine clock requirement check for the dow=
-nscaling")
-  e980ebbe5cee ("drm/komeda: Add writeback scaling support")
-  37bd61525f3a ("drm/komeda: Implement D71 scaler support")
-  50be77015da8 ("drm/komeda: Add the initial scaler support for CORE")
-  5bbab26c6a4a ("drm/komeda: Attach scaler to drm as private object")
-  0bb0d408280e ("drm/komeda: Potential error pointer dereference")
+Thanks for looking at it.
 
-are missing a Signed-off-by from their committer.
+-- Steve
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/5d_WXFYOFq+j5p6Of2GVeNt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlz7Ug8ACgkQAVBC80lX
-0Gy78QgAjTWOlAlUFccVT/23n78X10QuyV7PgZKIVtcYbAToTk0tgc1wxZ9n8IlF
-gQj0vLfS9jqZSZIcBnoZuPC6Pwfz+erXK4IS56ClWxcfd1ZTsc3w0CjRlbsrm1Qw
-Yt+N83PnpcQQgdRY/U63U5ai+QOl8ebah++fLrJp70AWmcRHBNcCSh0vuYGUx2Wh
-8ltim2blrjsXGQ29aTDH8Kzvwv5VpBG1jh+SoTHM2uJyBnYTX0yfxQw6GaEMbZ7u
-5A8aMUr/0QjadTNiCQrc99u7tqt9yTkjgQjB7HNtRF/xiYBmm9KEW3gQSXRZpuOH
-D4PTPWuE3LFDpz3vQDBMLuHRN2jIGg==
-=kbLK
------END PGP SIGNATURE-----
-
---Sig_/5d_WXFYOFq+j5p6Of2GVeNt--
