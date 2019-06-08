@@ -4,50 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FDEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A443C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC1A214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDF0214C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:23:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="OaOZ2r2m"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UdXmnH//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfFHKWV (ORCPT
+        id S1726894AbfFHKX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 06:22:21 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:52246 "EHLO
+        Sat, 8 Jun 2019 06:23:29 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:53350 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfFHKWU (ORCPT
+        with ESMTP id S1726692AbfFHKX2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 06:22:20 -0400
+        Sat, 8 Jun 2019 06:23:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559989339; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1559989406; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=pURQs9CY2mpuFiZSCMQU4qI61477m0CbkzHnmzitjaE=;
-        b=OaOZ2r2mFo+aasqU+cQsqrt2pBttc3uAgYgAz8aCjebx1PDMOnTsmA38uYlj/A3yutjhzs
-        U3x8aemgE01DwEVkXf5sc91C5iNKDH6xfROwKEFpwLBl/jlVK+juICQ/F6BODU7uJslKDs
-        czE0pGedx9PZmKlg3PbJt+SqTzmHHmw=
-Date:   Sat, 08 Jun 2019 12:22:14 +0200
+        bh=tdw8LUmBZWbwyaBxKvH4GHIrDdHlccVhMKjUUwHBxHI=;
+        b=UdXmnH//oB+A+1isESaZyhXYu0NH4gh4KgrUMjNuJ9fWmfgz1gHkiR95hu/hr6+WNu5dgv
+        OsmBfY/lYaT+ccL1u5JiD/E3aNiUG9R2ShNYXg38ExH4u5XNyWn4QCCDtbj4xbYJCGowYY
+        mTXF3x6/KhMXyPY/RuVnnexzwGEh3WE=
+Date:   Sat, 08 Jun 2019 12:23:21 +0200
 From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/2] mtd/rawnand: ingenic-ecc: Make probe function
- __init_or_module
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     od@zcrc.me, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1559989334.1815.5@crapouillou.net>
-In-Reply-To: <20190607160200.16052-1-paul@crapouillou.net>
-References: <20190607160200.16052-1-paul@crapouillou.net>
+Subject: Re: [PATCH] iio: ingenic-adc: Make probe function __init_or_module
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     Artur Rojek <contact@artur-rojek.eu>, od@zcrc.me,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1559989401.1815.6@crapouillou.net>
+In-Reply-To: <20190607160501.16369-1-paul@crapouillou.net>
+References: <20190607160501.16369-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
@@ -57,10 +53,10 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 I misunderstood what __init_or_module was for. Please ignore this=20
-patchset. Sorry for the noise.
+patch. Sorry for the noise.
 
 
-Le ven. 7 juin 2019 =E0 18:01, Paul Cercueil <paul@crapouillou.net> a=20
+Le ven. 7 juin 2019 =E0 18:05, Paul Cercueil <paul@crapouillou.net> a=20
 =E9crit :
 > This allows the probe function to be dropped after the kernel finished
 > its initialization, in the case where the driver was not compiled as a
@@ -68,61 +64,25 @@ Le ven. 7 juin 2019 =E0 18:01, Paul Cercueil <paul@crapouillou.net> a=20
 >=20
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  drivers/mtd/nand/raw/ingenic/ingenic_ecc.c | 2 +-
->  drivers/mtd/nand/raw/ingenic/ingenic_ecc.h | 3 ++-
->  drivers/mtd/nand/raw/ingenic/jz4780_bch.c  | 2 +-
->  3 files changed, 4 insertions(+), 3 deletions(-)
+>  drivers/iio/adc/ingenic-adc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c=20
-> b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> index d3e085c5685a..74eff8fb5d32 100644
-> --- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> +++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-> @@ -124,7 +124,7 @@ void ingenic_ecc_release(struct ingenic_ecc *ecc)
->  }
->  EXPORT_SYMBOL(ingenic_ecc_release);
->=20
-> -int ingenic_ecc_probe(struct platform_device *pdev)
-> +int __init_or_module ingenic_ecc_probe(struct platform_device *pdev)
->  {
->  	struct device *dev =3D &pdev->dev;
->  	struct ingenic_ecc *ecc;
-> diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.h=20
-> b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
-> index 2cda439b5e11..535eb8f29df6 100644
-> --- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
-> +++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
-> @@ -4,6 +4,7 @@
->=20
->  #include <linux/compiler_types.h>
->  #include <linux/err.h>
-> +#include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/types.h>
->  #include <uapi/asm-generic/errno-base.h>
-> @@ -78,6 +79,6 @@ struct ingenic_ecc {
->  	struct mutex lock;
+> diff --git a/drivers/iio/adc/ingenic-adc.c=20
+> b/drivers/iio/adc/ingenic-adc.c
+> index 92b1d5037ac9..027f710df843 100644
+> --- a/drivers/iio/adc/ingenic-adc.c
+> +++ b/drivers/iio/adc/ingenic-adc.c
+> @@ -279,7 +279,7 @@ static const struct iio_chan_spec=20
+> ingenic_channels[] =3D {
+>  	},
 >  };
 >=20
-> -int ingenic_ecc_probe(struct platform_device *pdev);
-> +int __init_or_module ingenic_ecc_probe(struct platform_device *pdev);
->=20
->  #endif /* __DRIVERS_MTD_NAND_INGENIC_ECC_INTERNAL_H__ */
-> diff --git a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c=20
-> b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-> index 079266a0d6cf..cc0656ac505d 100644
-> --- a/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-> +++ b/drivers/mtd/nand/raw/ingenic/jz4780_bch.c
-> @@ -229,7 +229,7 @@ static int jz4780_correct(struct ingenic_ecc *bch,
->  	return ret;
->  }
->=20
-> -static int jz4780_bch_probe(struct platform_device *pdev)
-> +static int __init_or_module jz4780_bch_probe(struct platform_device=20
+> -static int ingenic_adc_probe(struct platform_device *pdev)
+> +static int __init_or_module ingenic_adc_probe(struct platform_device=20
 > *pdev)
 >  {
->  	struct ingenic_ecc *bch;
->  	int ret;
+>  	struct device *dev =3D &pdev->dev;
+>  	struct iio_dev *iio_dev;
 > --
 > 2.21.0.593.g511ec345e18
 >=20
