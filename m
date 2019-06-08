@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705DCC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574CCC468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4399E214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2727B214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559993679;
-	bh=5o3WJ+PlDP4ACOl8NEp4Y7t3xVI0OyqdulVA5Cshjk4=;
+	s=default; t=1559993991;
+	bh=xfk2wRGEM4iv26ktKy2rXmXoYgltCUoUo9eEQWOVnKk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=k7MHHCPmWjY+90ENue3hfJ/bR3mf5qo7NfnrLnAPnalObJ04R3VFlgtxv/gBGpYom
-	 jvUYDAUWH1+LVL2kCSBMkieIN2ZLarfcN7SIxNrELY+PvMq5OeEENG2BNr5O830YSu
-	 Ymtl5cvDlXr9Cn1mQI0t5sAs1THIipJQKEzpLfdk=
+	b=odHOLUPzf/pXQ8sYN+aH21IesGHm8qdJQ7x5tNb/2JwlVr26OETyBD/lTA5UIJn4j
+	 HaiFs9H4ZTRhpcX02GhLJMZCeJoc+ca/Y11WzsViq/3gHHfGaW83cTEFdU7ZM8BOVh
+	 DOE04jd4cRUM8azACnZX5UvfLlzb3eTLZnt6hA/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfFHLei (ORCPT
+        id S1727096AbfFHLju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:34:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55226 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:39:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbfFHLeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:34:37 -0400
+        id S1726935AbfFHLju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:39:50 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5AC22146E;
-        Sat,  8 Jun 2019 11:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 338E9208C0;
+        Sat,  8 Jun 2019 11:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559993677;
-        bh=5o3WJ+PlDP4ACOl8NEp4Y7t3xVI0OyqdulVA5Cshjk4=;
+        s=default; t=1559993989;
+        bh=xfk2wRGEM4iv26ktKy2rXmXoYgltCUoUo9eEQWOVnKk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BqEPKE/NNqSsqN3rY2sMii1L6Z4fGDv4u6ybd1DlIY1fJK7gf95lAVRQMsxa6QUkD
-         yMBZaRY8SDsWxHnKVoEej6gnM/K2l2BKy9FzXgH89I0r/dlK6652P9keGLw4bgE4Xe
-         Tl0jef6D1lVt5u/9lXtVIpoh0qMVxQ5t4T8jgM9k=
-Date:   Sat, 8 Jun 2019 12:34:31 +0100
+        b=pQTRSkU4qclN1APUcAgyy15vvD+kWn8KddareEMCj0Tz3uURVBr/E1blj8GecqzcF
+         ytzNymxwMaQLjhnd2RWVB+RUQ5m3j8yLq1P8etg6TPFubbflq8erKCTA+7ywJTH9QU
+         rbo9ZcrQGZ5w6fQpqlMpk6s2aasGxd4ejYauI+qE=
+Date:   Sat, 8 Jun 2019 12:39:45 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>
-Subject: Re: [PATCH v2 4/4] iio: adc: ad7606: Add debug mode for ad7616
-Message-ID: <20190608123431.14f8dd07@archlinux>
-In-Reply-To: <20190527125650.2405-4-beniamin.bia@analog.com>
-References: <20190527125650.2405-1-beniamin.bia@analog.com>
-        <20190527125650.2405-4-beniamin.bia@analog.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/34] iio: light: bh1780: simplify getting the adapter
+ of a client
+Message-ID: <20190608123945.4bef51e0@archlinux>
+In-Reply-To: <20190608105619.593-4-wsa+renesas@sang-engineering.com>
+References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
+        <20190608105619.593-4-wsa+renesas@sang-engineering.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,67 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 May 2019 15:56:50 +0300
-Beniamin Bia <beniamin.bia@analog.com> wrote:
+On Sat,  8 Jun 2019 12:55:42 +0200
+Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
 
-> Support for register access was added for spi devices.
+> We have a dedicated pointer for that, so use it. Much easier to read and
+> less computation involved.
 > 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-Applied.
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
 Thanks,
 
 Jonathan
 
 > ---
-> Changes in v2:
-> -nothing changed
 > 
->  drivers/iio/adc/ad7606.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> Please apply to your subsystem tree.
 > 
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index 8e09ad4bb72e..0eccfc873802 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -134,6 +134,30 @@ static int ad7606_spi_write_mask(struct ad7606_state *st,
->  	return ad7606_spi_reg_write(st, addr, readval);
->  }
->  
-> +static int ad7606_reg_access(struct iio_dev *indio_dev,
-> +			     unsigned int reg,
-> +			     unsigned int writeval,
-> +			     unsigned int *readval)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	mutex_lock(&st->lock);
-> +	if (readval) {
-> +		ret = ad7606_spi_reg_read(st, reg);
-> +		if (ret < 0)
-> +			goto err_unlock;
-> +		*readval = ret;
-> +		ret = 0;
-> +	} else {
-> +		ret = ad7606_spi_reg_write(st, reg, writeval);
-> +	}
-> +err_unlock:
-> +	mutex_unlock(&st->lock);
-> +
-> +	return ret;
-> +}
-> +
->  static int ad7606_read_samples(struct ad7606_state *st)
+>  drivers/iio/light/bh1780.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/light/bh1780.c b/drivers/iio/light/bh1780.c
+> index 340d64d0ac59..a8361006dcd9 100644
+> --- a/drivers/iio/light/bh1780.c
+> +++ b/drivers/iio/light/bh1780.c
+> @@ -146,7 +146,7 @@ static int bh1780_probe(struct i2c_client *client,
 >  {
->  	unsigned int num = st->chip_info->num_channels;
-> @@ -645,6 +669,7 @@ static const struct iio_info ad7606_info_no_os_or_range = {
->  static const struct iio_info ad7606_info_os_and_range = {
->  	.read_raw = &ad7606_read_raw,
->  	.write_raw = &ad7606_write_raw,
-> +	.debugfs_reg_access = &ad7606_reg_access,
->  	.attrs = &ad7606_attribute_group_os_and_range,
->  	.validate_trigger = &ad7606_validate_trigger,
->  };
+>  	int ret;
+>  	struct bh1780_data *bh1780;
+> -	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+> +	struct i2c_adapter *adapter = client->adapter;
+>  	struct iio_dev *indio_dev;
+>  
+>  	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
 
