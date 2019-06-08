@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FADEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85060C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E84214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C754214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994267;
-	bh=0RdBvR7NS4NcK/RtuYqQMlazgPB8lT4PeYgDNtn3YGc=;
+	s=default; t=1559994277;
+	bh=CxrsVp3lY/RrFqzcWFqD5j0zqFx6EsqJH/ix8qLijOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0WKMZBXoWsHtYpE7QiEjsn/8bovk7SDfbLM381+yoy8oTI+zqqSdJFbpW7zWUmlH
-	 +VAhQFwgymWCiliMel9+tJnFj3AXLxVXoWKJmkfTMb0d0NzyPqeZw3qXVZM0zIj+jA
-	 3QUB2XTllGVd0jwxmCVGDmZEBYMwxihmJayHVD+g=
+	b=X6AoI3OyQCz5bZ5xjH1Iutc9y4Cxfx9OVVOTOoM1OSQCOpAy0lBo6qS7aBhD1xakk
+	 JUT/6x/KLJTGQRHjMqc1xxmH/O4AytrArShIAWJVfGkCJcusuR33rbAOLawi2Cyp4/
+	 eID6dv0I9ZsSKQwIKn/5mGoc1ih+OqjM7A68MfC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbfFHLo0 (ORCPT
+        id S1728459AbfFHLog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:44:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33426 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbfFHLoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:44:24 -0400
+        id S1728771AbfFHLnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72D9F214AF;
-        Sat,  8 Jun 2019 11:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 207EE21707;
+        Sat,  8 Jun 2019 11:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994263;
-        bh=0RdBvR7NS4NcK/RtuYqQMlazgPB8lT4PeYgDNtn3YGc=;
+        s=default; t=1559994210;
+        bh=CxrsVp3lY/RrFqzcWFqD5j0zqFx6EsqJH/ix8qLijOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mOetf323Rk/y6ZPCtcFUppCgUlt4/5cvxJVs94vMJkdVXdFkDzNkVSh6YlOw6fvJM
-         6sTD+uByeXaudajizlC+ZUjbpzO18Bfjy8hkDC+ZTjfpRrytiywD8DOcfYdpIIQr+D
-         S8BuXKl9tao/NRj8BDpadrpE/zOjQeuIX6ZjrEew=
+        b=lYPKY6uFh4EsKFM1EXjqTpa9i9JLv6rUl5p1DyokyY1KntJimB5NffFOugGtpUfLm
+         xUy1er5STT+Q8diBA0YrS+rqpQsC1iJUBWiYwXu54PISf4lgDhtfTgy5QCnNYVYFWM
+         BOlyTpKVrb/m/9+8vWk/9pYJUpBVxhwRowXi//WM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 32/49] perf record: Fix s390 missing module symbol and warning for non-root users
-Date:   Sat,  8 Jun 2019 07:42:13 -0400
-Message-Id: <20190608114232.8731-32-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>,
+        syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 22/49] loop: Don't change loop device under exclusive opener
+Date:   Sat,  8 Jun 2019 07:42:03 -0400
+Message-Id: <20190608114232.8731-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -61,102 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 6738028dd57df064b969d8392c943ef3b3ae705d ]
+[ Upstream commit 33ec3e53e7b1869d7851e59e126bdb0fe0bd1982 ]
 
-Command 'perf record' and 'perf report' on a system without kernel
-debuginfo packages uses /proc/kallsyms and /proc/modules to find
-addresses for kernel and module symbols. On x86 this works for root and
-non-root users.
+Loop module allows calling LOOP_SET_FD while there are other openers of
+the loop device. Even exclusive ones. This can lead to weird
+consequences such as kernel deadlocks like:
 
-On s390, when invoked as non-root user, many of the following warnings
-are shown and module symbols are missing:
+mount_bdev()				lo_ioctl()
+  udf_fill_super()
+    udf_load_vrs()
+      sb_set_blocksize() - sets desired block size B
+      udf_tread()
+        sb_bread()
+          __bread_gfp(bdev, block, B)
+					  loop_set_fd()
+					    set_blocksize()
+            - now __getblk_slow() indefinitely loops because B != bdev
+              block size
 
-    proc/{kallsyms,modules} inconsistency while looking for
-        "[sha1_s390]" module!
+Fix the problem by disallowing LOOP_SET_FD ioctl when there are
+exclusive openers of a loop device.
 
-Command 'perf record' creates a list of module start addresses by
-parsing the output of /proc/modules and creates a PERF_RECORD_MMAP
-record for the kernel and each module. The following function call
-sequence is executed:
+[Deliberately chosen not to CC stable as a user with priviledges to
+trigger this race has other means of taking the system down and this
+has a potential of breaking some weird userspace setup]
 
-  machine__create_kernel_maps
-    machine__create_module
-      modules__parse
-        machine__create_module --> for each line in /proc/modules
-          arch__fix_module_text_start
-
-Function arch__fix_module_text_start() is s390 specific. It opens
-file /sys/module/<name>/sections/.text to extract the module's .text
-section start address. On s390 the module loader prepends a header
-before the first section, whereas on x86 the module's text section
-address is identical the the module's load address.
-
-However module section files are root readable only. For non-root the
-read operation fails and machine__create_module() returns an error.
-Command perf record does not generate any PERF_RECORD_MMAP record
-for loaded modules. Later command perf report complains about missing
-module maps.
-
-To fix this function arch__fix_module_text_start() always returns
-success. For root users there is no change, for non-root users
-the module's load address is used as module's text start address
-(the prepended header then counts as part of the text section).
-
-This enable non-root users to use module symbols and avoid the
-warning when perf report is executed.
-
-Output before:
-
-  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
-  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
-
-Output after:
-
-  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
-  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
-  0 0x1b8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../autofs4.ko.xz
-  0 0x250 [0xa8]: PERF_RECORD_MMAP ... x /lib/modules/.../sha_common.ko.xz
-  0 0x2f8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../des_generic.ko.xz
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190522144601.50763-4-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-and-tested-by: syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/s390/util/machine.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/block/loop.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
-index 0b2054007314..a19690a17291 100644
---- a/tools/perf/arch/s390/util/machine.c
-+++ b/tools/perf/arch/s390/util/machine.c
-@@ -5,16 +5,19 @@
- #include "util.h"
- #include "machine.h"
- #include "api/fs/fs.h"
-+#include "debug.h"
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index f1e63eb7cbca..a443910f5d6f 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -920,9 +920,20 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+ 	if (!file)
+ 		goto out;
  
- int arch__fix_module_text_start(u64 *start, const char *name)
- {
-+	u64 m_start = *start;
- 	char path[PATH_MAX];
- 
- 	snprintf(path, PATH_MAX, "module/%.*s/sections/.text",
- 				(int)strlen(name) - 2, name + 1);
--
--	if (sysfs__read_ull(path, (unsigned long long *)start) < 0)
--		return -1;
-+	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
-+		pr_debug2("Using module %s start:%#lx\n", path, m_start);
-+		*start = m_start;
++	/*
++	 * If we don't hold exclusive handle for the device, upgrade to it
++	 * here to avoid changing device under exclusive owner.
++	 */
++	if (!(mode & FMODE_EXCL)) {
++		bdgrab(bdev);
++		error = blkdev_get(bdev, mode | FMODE_EXCL, loop_set_fd);
++		if (error)
++			goto out_putf;
 +	}
++
+ 	error = mutex_lock_killable(&loop_ctl_mutex);
+ 	if (error)
+-		goto out_putf;
++		goto out_bdev;
  
+ 	error = -EBUSY;
+ 	if (lo->lo_state != Lo_unbound)
+@@ -986,10 +997,15 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+ 	mutex_unlock(&loop_ctl_mutex);
+ 	if (partscan)
+ 		loop_reread_partitions(lo, bdev);
++	if (!(mode & FMODE_EXCL))
++		blkdev_put(bdev, mode | FMODE_EXCL);
  	return 0;
- }
+ 
+ out_unlock:
+ 	mutex_unlock(&loop_ctl_mutex);
++out_bdev:
++	if (!(mode & FMODE_EXCL))
++		blkdev_put(bdev, mode | FMODE_EXCL);
+ out_putf:
+ 	fput(file);
+ out:
 -- 
 2.20.1
 
