@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21266C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6084EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E57212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4080C212F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aC3QJv4y"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Y9O92Nwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfFHSHD (ORCPT
+        id S1727612AbfFHSHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 14:07:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39626 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727392AbfFHSGt (ORCPT
+        Sat, 8 Jun 2019 14:07:08 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53059 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbfFHSGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 14:06:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so4679559wma.4;
-        Sat, 08 Jun 2019 11:06:48 -0700 (PDT)
+        Sat, 8 Jun 2019 14:06:46 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s3so4934695wms.2;
+        Sat, 08 Jun 2019 11:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gus9EVUSXiif9myhzplFWmWxo5iVjcg4L/R7PzfQr/4=;
-        b=aC3QJv4yV2M2NgE+T6iUkKFAXQ4b82UbBPPWeG20gvtlZaDZHm3hTWpaeGbwCRPmnh
-         tCrc1f60ZSqkOlQ7wiEvVW5FMKplDfQM6TJRDMM7fMvvbIBfRyf+Vq/Z0jQLJubciKMt
-         kqTMk5ZpTVpEDBPQnRlznSLsUQ6wHGBe8LfcF6sWel+B/tfcmJlrXabelYHCkfjqpJmq
-         sPFobFtjwwPwPpbw7ss0q3uaMjBfUFuGxp9gN33lDkGl+oJ7QRB0S+51GZQl4clO46vF
-         EOtSTUEgT089LkWHdq5C0jFy1quBzOWByO2XO/EU0FcYpXn3kLcdyQlWRx8IiBIKs22z
-         CLCQ==
+        bh=2ePKIZM3a5wh4lPG0Ppb3tJa/t/8p/W8m/D9X1owsTQ=;
+        b=Y9O92NwlXSOI90yGc6Bd2VwrxCy+i9xulc3WGCWS5CXL4GS0LKERZF0PokmHXIIdfG
+         i2h2CvJGMU6NZpGh1zhBEt9UUAAmiuHgf6Io9ckto9M13xLIJbZLoHXI2d6hCq4fh31v
+         GygElivXyhYuClQ259oZce3CvWnpI75rkDcfYN+xfDnLBeejcKF6rd2nNBQUDHFfYZfN
+         13zqIvODOVRkMLtgwYRbKb4rnjWjDjIRCIL7z2J/KHljxBRAzUqnQGtiIrJIJDr5jyMg
+         HbqMBLz9SEZZqVUBA4WmxnS5CmhEM6GXBRsFot/ijZj+XG1wZKLpjTGpSARp9sf7ibhW
+         9v/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gus9EVUSXiif9myhzplFWmWxo5iVjcg4L/R7PzfQr/4=;
-        b=B44vVnbXPQH5KjFRJTk0T0cR+IEQyGK4tNL3h1yzEoSMEQ0SB/7ReJnlB0kp/89vVC
-         ivRgiX/IJix58RsBurp/+igiDGdPaCNqK5+p9EihaRMezI8O2m/MbvIHRQqRbnkT7hCC
-         qD2gVDFFKXHFU0keN+Q6dJp5M+sU9keA10+M518VAlQWfCGjTJjW3y2jO59GUOFXCuGR
-         XdYnL4n4EfZ+tPu7EpaWBD0aGpfck/dJc+hMvMbaEE/L0J0u+Ten1oHp+EGRqiXbJDAj
-         4uudUcHW6opsfDDfFJ/JeZFDj93kZ/yxlGekcNDkvYLXljGCIC4Tsnfk5gedX9WEBr94
-         /xwA==
-X-Gm-Message-State: APjAAAVCi1cITNQab+wTJfvzfq/h7+2FUwpIdELvo+F3uewqhU/wiVAH
-        R+AwBiXVKuV5lSoigz3O8kw=
-X-Google-Smtp-Source: APXvYqzRGcVvHTQ7ACECA1v/MRk4nF9YNeywKueh0QL3/1P6th9zfIq6Kc07vu6eLxFOilV6x/wiNw==
-X-Received: by 2002:a1c:a019:: with SMTP id j25mr7924649wme.95.1560017207452;
-        Sat, 08 Jun 2019 11:06:47 -0700 (PDT)
+        bh=2ePKIZM3a5wh4lPG0Ppb3tJa/t/8p/W8m/D9X1owsTQ=;
+        b=rx/PIAFgkPy/yQhpeErVc+t6tKTPwognaabenT/sITezlWO7MPhX3BiKE0YPFOTFEl
+         QgMkcs1aTyaIq56L6RmhbSoJL27XbRW3dpF/8EIGGdiwh+Ext85im0tyu3gJaHBt5tQ3
+         cxKZR2JypxiCSJ3NZOmIdSmW11AYfYyprMvF1nsdGz/hddBWUwrF/uti60OSnmDSpwr2
+         FuRCtnehxTkDvEZultfvCQKRGkYcb0h5aYPxSzlDfliZGPR7oogals+s0iIH4kiAGcUh
+         zeffc/qu8Zw10HESg8YoDLOdGxMwze4QcTUUMOHJkr4SC7gliVA/aiglgeYwzqBs4k0a
+         kYbA==
+X-Gm-Message-State: APjAAAXRa6I7i7XkMEYzBsragv7m5PmcbhC6GidXTe5wllaYdNwSsX6p
+        HUwdgGEo62kPC5xN3TpmKrM=
+X-Google-Smtp-Source: APXvYqxbv/NeCKxrR0YfqhHFUUkHcwGnY64PiWza/hkJzJEYbBvx+QBL4fvOmg2j8osIXtSlnNKi1Q==
+X-Received: by 2002:a7b:c444:: with SMTP id l4mr7641358wmi.15.1560017204346;
+        Sat, 08 Jun 2019 11:06:44 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400D12EFF43FED1E981.dip0.t-ipconnect.de. [2003:f1:33dd:a400:d12e:ff43:fed1:e981])
-        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.46
+        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.43
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 11:06:46 -0700 (PDT)
+        Sat, 08 Jun 2019 11:06:43 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com
@@ -64,81 +64,126 @@ Cc:     u.kleine-koenig@pengutronix.de,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 13/14] pwm: meson: add support PWM_POLARITY_INVERSED when disabling
-Date:   Sat,  8 Jun 2019 20:06:25 +0200
-Message-Id: <20190608180626.30589-14-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 10/14] pwm: meson: simplify the calculation of the pre-divider and count
+Date:   Sat,  8 Jun 2019 20:06:22 +0200
+Message-Id: <20190608180626.30589-11-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
 References: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-meson_pwm_apply() has to consider the PWM polarity when disabling the
-output.
-With enabled=false and polarity=PWM_POLARITY_NORMAL the output needs to
-be LOW. The driver already supports this.
-With enabled=false and polarity=PWM_POLARITY_INVERSED the output needs
-to be HIGH. Implement this in the driver by internally enabling the
-output with the same settings that we already use for "period == duty".
+Replace the loop to calculate the pre-divider and count with two
+separate div64_u64() calculations. This makes the code easier to read
+and improves the precision.
 
-This fixes a PWM API violation which expects that the driver honors the
-polarity also for enabled=false. Due to the IP block not supporting this
-natively we only get "an as close as possible" to 100% HIGH signal (in
-my test setup with input clock of 24MHz and measuring the output with a
-logic analyzer at 24MHz sampling rate I got a duty cycle of 99.998475%
-on a Khadas VIM).
+Three example cases:
+1) 32.768kHz LPO clock for the SDIO wifi chip on Khadas VIM
+   clock input: 500MHz (FCLK_DIV4)
+   period: 30518ns
+   duty cycle: 15259ns
+old algorithm: pre_div=0, cnt=15259
+new algorithm: pre_div=0, cnt=15259
+(no difference in calculated values)
 
+2) PWM LED on Khadas VIM
+   clock input: 24MHz (XTAL)
+   period: 7812500ns
+   duty cycle: 7812500ns
+old algorithm: pre_div=2, cnt=62004
+new algorithm: pre_div=2, cnt=62500
+Using a scope (24MHz sampling rate) shows the actual difference:
+- old: 7753000ns, off by -59500ns (0.7616%)
+- new: 7815000ns, off by +2500ns (0.032%)
+
+3) Theoretical case where pre_div is different
+   clock input: 24MHz (XTAL)
+   period: 2730624ns
+   duty cycle: 1365312ns
+old algorithm: pre_div=1, cnt=32768
+new algorithm: pre_div=0, cnt=65534
+Using a scope (24MHz sampling rate) shows the actual difference:
+- old: 2731000ns
+- new: 2731000ns
+(my scope is not precise enough to measure the difference if there's
+any)
+
+Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/pwm/pwm-meson.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-meson.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 900d362ec3c9..bb48ba85f756 100644
+index 27915d6475e3..9afa1e5aaebf 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
-@@ -245,6 +245,7 @@ static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
- static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			   struct pwm_state *state)
- {
-+	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
- 	struct meson_pwm *meson = to_meson_pwm(chip);
- 	int err = 0;
+@@ -12,6 +12,7 @@
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/math64.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+@@ -145,7 +146,6 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+ 	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+ 	unsigned int duty, period, pre_div, cnt, duty_cnt;
+ 	unsigned long fin_freq = -1;
+-	u64 fin_ps;
  
-@@ -252,7 +253,27 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	duty = state->duty_cycle;
+ 	period = state->period;
+@@ -164,24 +164,19 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+ 	}
+ 
+ 	dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
+-	fin_ps = (u64)NSEC_PER_SEC * 1000;
+-	do_div(fin_ps, fin_freq);
+-
+-	/* Calc pre_div with the period */
+-	for (pre_div = 0; pre_div <= MISC_CLK_DIV_MASK; pre_div++) {
+-		cnt = DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
+-					    fin_ps * (pre_div + 1));
+-		dev_dbg(meson->chip.dev, "fin_ps=%llu pre_div=%u cnt=%u\n",
+-			fin_ps, pre_div, cnt);
+-		if (cnt <= 0xffff)
+-			break;
+-	}
+ 
++	pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
+ 	if (pre_div > MISC_CLK_DIV_MASK) {
+ 		dev_err(meson->chip.dev, "unable to get period pre_div\n");
  		return -EINVAL;
+ 	}
  
- 	if (!state->enabled) {
--		meson_pwm_disable(meson, pwm);
-+		if (state->polarity == PWM_POLARITY_INVERSED) {
-+			/*
-+			 * This IP block revision doesn't have an "always high"
-+			 * setting which we can use for "inverted disabled".
-+			 * Instead we achieve this using the same settings
-+			 * that we use a pre_div of 0 (to get the shortest
-+			 * possible duration for one "count") and
-+			 * "period == duty_cycle". This results in a signal
-+			 * which is LOW for one "count", while being HIGH for
-+			 * the rest of the (so the signal is HIGH for slightly
-+			 * less than 100% of the period, but this is the best
-+			 * we can achieve).
-+			 */
-+			channel->pre_div = 0;
-+			channel->hi = ~0;
-+			channel->lo = 0;
++	cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
++	if (cnt > 0xffff) {
++		dev_err(meson->chip.dev, "unable to get period cnt\n");
++		return -EINVAL;
++	}
 +
-+			meson_pwm_enable(meson, pwm);
-+		} else {
-+			meson_pwm_disable(meson, pwm);
-+		}
+ 	dev_dbg(meson->chip.dev, "period=%u pre_div=%u cnt=%u\n", period,
+ 		pre_div, cnt);
+ 
+@@ -195,8 +190,8 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+ 		channel->lo = cnt;
  	} else {
- 		err = meson_pwm_calc(meson, pwm, state);
- 		if (err < 0)
+ 		/* Then check is we can have the duty with the same pre_div */
+-		duty_cnt = DIV_ROUND_CLOSEST_ULL((u64)duty * 1000,
+-						 fin_ps * (pre_div + 1));
++		duty_cnt = div64_u64(fin_freq * (u64)duty,
++				     NSEC_PER_SEC * (pre_div + 1));
+ 		if (duty_cnt > 0xffff) {
+ 			dev_err(meson->chip.dev, "unable to get duty cycle\n");
+ 			return -EINVAL;
 -- 
 2.21.0
 
