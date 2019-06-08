@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAD8C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77F7C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC73214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9BD214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994291;
-	bh=fDNyOUPjelSpPgLUi2TrZQecZSYzHvaqm4qqfpsOkfI=;
+	s=default; t=1559994299;
+	bh=VbJ6OMaWH+tZgovy7MZ8puKAfpEhNIIolczFkw42pxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KPYfnI4rs8jR2aIWuYNobj37DbCGDvBEwLrUgfRsH/3sadmC6/U5r0QtmTprlWmzr
-	 x6CTjQrek9vywnE6bC3o8Yr6lIjGN8DgqczUPwDkohoF69W+7MVn2LB26qTVt8Cewb
-	 YEHo2uGxey/7aebVD1AeluX1Kf59Y32C2MdWYCPU=
+	b=eW68NNxvJqb+RHC9VSxOMzSpo0lVM75BoUczcQgYhglnFkGknmuMaLNiyuVK2oCAK
+	 Ha/DQDMTJn9YU8h7m30lIrQOx7LX/n+PcNNQKvDG+d7LxeCWRn/RBgauZ1/N616a4a
+	 IGfCwmFZta/JmT6UOI9qvb9G+LVhvhLtJ5p62+q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbfFHLot (ORCPT
+        id S1728950AbfFHLo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:44:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbfFHLoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:44:37 -0400
+        id S1727817AbfFHLn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 685EA214AF;
-        Sat,  8 Jun 2019 11:44:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2ACE21530;
+        Sat,  8 Jun 2019 11:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994276;
-        bh=fDNyOUPjelSpPgLUi2TrZQecZSYzHvaqm4qqfpsOkfI=;
+        s=default; t=1559994208;
+        bh=VbJ6OMaWH+tZgovy7MZ8puKAfpEhNIIolczFkw42pxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1FQLym4OSZvOqf46bar6aKyi1+kS6OUrRPXOTxr6yqFFf5DtwOlbv2gUpI46VaNuP
-         mwmM1fvYuZl1ThiHMAFM0FsWDSSJv4nDXKytYP7FjNrNUxjXDQGjmPEGm5ye+kwD6V
-         4/RyiFFqTIeTS/kQ6WotTsKgRnPXB806RbjjklPQ=
+        b=E8YJvEjlYkiJEwzAt3PPFrAsD8XemneITRv8ude8MHWVzpLPliliOFCogqt1y3CdC
+         /GmDTZrfaDNN1DUsEogZLZ1vUkicFMqgreIz6nVW474vFsPyb+GgN//cDHJWPEs1RH
+         Q0LaGF2aILkntUnmPBgCrlduVq+W/Q9y40+IELqM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 33/49] ia64: fix build errors by exporting paddr_to_nid()
-Date:   Sat,  8 Jun 2019 07:42:14 -0400
-Message-Id: <20190608114232.8731-33-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 20/49] ACPI/PCI: PM: Add missing wakeup.flags.valid checks
+Date:   Sat,  8 Jun 2019 07:42:01 -0400
+Message-Id: <20190608114232.8731-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -62,58 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 9a626c4a6326da4433a0d4d4a8a7d1571caf1ed3 ]
+[ Upstream commit 9a51c6b1f9e0239a9435db036b212498a2a3b75c ]
 
-Fix build errors on ia64 when DISCONTIGMEM=y and NUMA=y by
-exporting paddr_to_nid().
+Both acpi_pci_need_resume() and acpi_dev_needs_resume() check if the
+current ACPI wakeup configuration of the device matches what is
+expected as far as system wakeup from sleep states is concerned, as
+reflected by the device_may_wakeup() return value for the device.
 
-Fixes these build errors:
+However, they only should do that if wakeup.flags.valid is set for
+the device's ACPI companion, because otherwise the wakeup.prepare_count
+value for it is meaningless.
 
-ERROR: "paddr_to_nid" [sound/core/snd-pcm.ko] undefined!
-ERROR: "paddr_to_nid" [net/sunrpc/sunrpc.ko] undefined!
-ERROR: "paddr_to_nid" [fs/cifs/cifs.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/video/fbdev/core/fb.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/usb/mon/usbmon.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/usb/core/usbcore.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/raid1.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-mod.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-crypt.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-bufio.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/ide/ide-core.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/ide/ide-cd_mod.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/gpu/drm/drm.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/char/agp/agpgart.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/nbd.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/loop.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/brd.ko] undefined!
-ERROR: "paddr_to_nid" [crypto/ccm.ko] undefined!
+Add the missing wakeup.flags.valid checks to these functions.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: linux-ia64@vger.kernel.org
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/mm/numa.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/device_pm.c | 4 ++--
+ drivers/pci/pci-acpi.c   | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/ia64/mm/numa.c b/arch/ia64/mm/numa.c
-index aa19b7ac8222..476c7b4be378 100644
---- a/arch/ia64/mm/numa.c
-+++ b/arch/ia64/mm/numa.c
-@@ -49,6 +49,7 @@ paddr_to_nid(unsigned long paddr)
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index a7c2673ffd36..1806260938e8 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -948,8 +948,8 @@ static bool acpi_dev_needs_resume(struct device *dev, struct acpi_device *adev)
+ 	u32 sys_target = acpi_target_system_state();
+ 	int ret, state;
  
- 	return (i < num_node_memblks) ? node_memblk[i].nid : (num_node_memblks ? -1 : 0);
- }
-+EXPORT_SYMBOL(paddr_to_nid);
+-	if (!pm_runtime_suspended(dev) || !adev ||
+-	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count)
++	if (!pm_runtime_suspended(dev) || !adev || (adev->wakeup.flags.valid &&
++	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count))
+ 		return true;
  
- #if defined(CONFIG_SPARSEMEM) && defined(CONFIG_NUMA)
- /*
+ 	if (sys_target == ACPI_STATE_S0)
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index f8436d1c4d45..f7218c1673ce 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -625,7 +625,8 @@ static bool acpi_pci_need_resume(struct pci_dev *dev)
+ 	if (!adev || !acpi_device_power_manageable(adev))
+ 		return false;
+ 
+-	if (device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
++	if (adev->wakeup.flags.valid &&
++	    device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
+ 		return true;
+ 
+ 	if (acpi_target_system_state() == ACPI_STATE_S0)
 -- 
 2.20.1
 
