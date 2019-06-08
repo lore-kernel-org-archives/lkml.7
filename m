@@ -2,86 +2,90 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79294C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4D7C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A8921537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3E021537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfFHPcl (ORCPT
+        id S1727273AbfFHPcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 11:32:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42120 "EHLO
+        Sat, 8 Jun 2019 11:32:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59268 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727015AbfFHPcg (ORCPT
+        by vger.kernel.org with ESMTP id S1727220AbfFHPct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 11:32:36 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58FQnb1134572
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 11:32:35 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t05xwq0a2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 11:32:35 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 8 Jun 2019 16:32:34 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 8 Jun 2019 16:32:30 +0100
+        Sat, 8 Jun 2019 11:32:49 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58FQkgC016440;
+        Sat, 8 Jun 2019 11:32:32 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t090rap3p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 08 Jun 2019 11:32:32 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x58FSses019803;
+        Sat, 8 Jun 2019 11:32:31 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t090rap3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 08 Jun 2019 11:32:31 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x58DVEBe013007;
+        Sat, 8 Jun 2019 13:39:47 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01dal.us.ibm.com with ESMTP id 2t04n5kgsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 08 Jun 2019 13:39:47 +0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58FWT7739125490
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58FWTG542598856
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Sat, 8 Jun 2019 15:32:29 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE3F2B2064;
+        by IMSVA (Postfix) with ESMTP id BC68BB2065;
         Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCA16B2066;
+        by IMSVA (Postfix) with ESMTP id 9F6A7B205F;
         Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.85.180.36])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E91A416C5D98; Sat,  8 Jun 2019 08:19:43 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 08:19:43 -0700
+        id 8DB3916C3421; Sat,  8 Jun 2019 08:27:07 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 08:27:07 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Boqun Feng <boqun.feng@gmail.com>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Netdev <netdev@vger.kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
         Luc Maranget <luc.maranget@inria.fr>,
         Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: Re: rcu_read_lock lost its compiler barrier
+Subject: Re: inet: frags: Turn fqdir->dead into an int for old Alphas
+Message-ID: <20190608152707.GF28207@linux.ibm.com>
 Reply-To: paulmck@linux.ibm.com
-References: <20190606081657.GA4249@andrea>
- <Pine.LNX.4.44L0.1906061017200.1641-100000@iolanthe.rowland.org>
+References: <20190603200301.GM28207@linux.ibm.com>
+ <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
+ <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
+ <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
+ <da5eedfe-92f9-6c50-b9e7-68886047dd25@gmail.com>
+ <CAHk-=wgtY1hNQX9TM=4ono-UJ-hsoFA0OT36ixFWBG2eeO011w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1906061017200.1641-100000@iolanthe.rowland.org>
+In-Reply-To: <CAHk-=wgtY1hNQX9TM=4ono-UJ-hsoFA0OT36ixFWBG2eeO011w@mail.gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
-x-cbid: 19060815-0052-0000-0000-000003CD34DB
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011234; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01215054; UDB=6.00638754; IPR=6.00996145;
- MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 15:32:34
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060815-0053-0000-0000-0000613D2590
-Message-Id: <20190608151943.GD28207@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -94,116 +98,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 10:19:43AM -0400, Alan Stern wrote:
-> On Thu, 6 Jun 2019, Andrea Parri wrote:
+On Fri, Jun 07, 2019 at 09:19:42AM -0700, Linus Torvalds wrote:
+> On Fri, Jun 7, 2019 at 8:26 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> >
+> > There is common knowledge among us programmers that bit fields
+> > (or bool) sharing a common 'word' need to be protected
+> > with a common lock.
+> >
+> > Converting all bit fields to plain int/long would be quite a waste of memory.
 > 
-> > This seems a sensible change to me: looking forward to seeing a patch,
-> > on top of -rcu/dev, for further review and testing!
-> > 
-> > We could also add (to LKMM) the barrier() for rcu_read_{lock,unlock}()
-> > discussed in this thread (maybe once the RCU code and the informal doc
-> > will have settled in such direction).
+> Yeah, and we really don't care about alpha. So 'char' should be safe.
 > 
-> Yes.  Also for SRCU.  That point had not escaped me.
+> No compiler actually turns a 'bool' in a struct into a bitfield,
+> afaik, because you're still supposed to be able to take the address of
+> a boolean.
+> 
+> But on the whole, I do not believe that we should ever use 'bool' in
+> structures anyway, because it's such a badly defined type. I think
+> it's 'char' in practice on just about all architectures, but there
+> really were traditional use cases where 'bool' was int.
+> 
+> But:
+> 
+>  - we shouldn't turn them into 'int' anyway - alpha is dead, and no
+> sane architecture will make the same mistake anyway. People learnt.
+> 
+>  - we might want to make sure 'bool' really is 'char' in practice, to
+> double-check that fthe compiler doesn't do anything stupid.
+> 
+>  - bitfields obviously do need locks. 'char' does not.
+> 
+> If there's somebody who really notices the alpha issue in PRACTICE, we
+> can then bother to fix it. But there is approximately one user, and
+> it's not a heavy-duty one.
 
-And it does seem pretty settled.  There are quite a few examples where
-there are normal accesses at either end of the RCU read-side critical
-sections, for example, the one in the requirements diffs below.
+C11 and later compilers are supposed to use read-modify-write atomic
+operations in this sort of situation anyway because they are not supposed
+to introduce data races.  So if this problem comes up, the fix should
+be in GCC rather than the Linux kernel, right?
 
-For SRCU, srcu_read_lock() and srcu_read_unlock() have implied compiler
-barriers since 2006.  ;-)
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
-index 5a9238a2883c..080b39cc1dbb 100644
---- a/Documentation/RCU/Design/Requirements/Requirements.html
-+++ b/Documentation/RCU/Design/Requirements/Requirements.html
-@@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
- <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
- <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
- <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
-+<li>	<a href="#Accesses to User Mamory and RCU">
-+Accesses to User Mamory and RCU</a>.
- <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
- <li>	<a href="#Scheduling-Clock Interrupts and RCU">
- 	Scheduling-Clock Interrupts and RCU</a>.
-@@ -2521,6 +2523,75 @@ cannot be used.
- The tracing folks both located the requirement and provided the
- needed fix, so this surprise requirement was relatively painless.
- 
-+<h3><a name="Accesses to User Mamory and RCU">
-+Accesses to User Mamory and RCU</a></h3>
-+
-+<p>
-+The kernel needs to access user-space memory, for example, to access
-+data referenced by system-call parameters.
-+The <tt>get_user()</tt> macro does this job.
-+
-+<p>
-+However, user-space memory might well be paged out, which means
-+that <tt>get_user()</tt> might well page-fault and thus block while
-+waiting for the resulting I/O to complete.
-+It would be a very bad thing for the compiler to reorder
-+a <tt>get_user()</tt> invocation into an RCU read-side critical
-+section.
-+For example, suppose that the source code looked like this:
-+
-+<blockquote>
-+<pre>
-+ 1 rcu_read_lock();
-+ 2 p = rcu_dereference(gp);
-+ 3 v = p-&gt;value;
-+ 4 rcu_read_unlock();
-+ 5 get_user(user_v, user_p);
-+ 6 do_something_with(v, user_v);
-+</pre>
-+</blockquote>
-+
-+<p>
-+The compiler must not be permitted to transform this source code into
-+the following:
-+
-+<blockquote>
-+<pre>
-+ 1 rcu_read_lock();
-+ 2 p = rcu_dereference(gp);
-+ 3 get_user(user_v, user_p); // BUG: POSSIBLE PAGE FAULT!!!
-+ 4 v = p-&gt;value;
-+ 5 rcu_read_unlock();
-+ 6 do_something_with(v, user_v);
-+</pre>
-+</blockquote>
-+
-+<p>
-+If the compiler did make this transformation in a
-+<tt>CONFIG_PREEMPT=n</tt> kernel build, and if <tt>get_user()</tt> did
-+page fault, the result would be a quiescent state in the middle
-+of an RCU read-side critical section.
-+This misplaced quiescent state could result in line&nbsp;4 being
-+a use-after-free access, which could be bad for your kernel's
-+actuarial statistics.
-+Similar examples can be constructed with the call to <tt>get_user()</tt>
-+preceding the <tt>rcu_read_lock()</tt>.
-+
-+<p>
-+Unfortunately, <tt>get_user()</tt> doesn't have any particular
-+ordering properties, and in some architectures the underlying <tt>asm</tt>
-+isn't even marked <tt>volatile</tt>.
-+And even if it was marked <tt>volatile</tt>, the above access to
-+<tt>p-&gt;value</tt> is not volatile, so the compiler would not have any
-+reason to keep those two accesses in order.
-+
-+<p>
-+Therefore, the Linux-kernel definitions of <tt>rcu_read_lock()</tt>
-+and <tt>rcu_read_unlock()</tt> must act as compiler barriers,
-+at least for outermost instances of <tt>rcu_read_lock()</tt> and
-+<tt>rcu_read_unlock()</tt> within a nested set of RCU read-side critical
-+sections.
-+
- <h3><a name="Energy Efficiency">Energy Efficiency</a></h3>
- 
- <p>
-
+								Thanx, Paul
