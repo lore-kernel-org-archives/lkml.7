@@ -4,50 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053F0C468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257FBC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9238214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3495214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994023;
-	bh=lwKR71ZRj7Zr9zES63ArSSUXvbi1ImHyvWXs/ZGcBfk=;
+	s=default; t=1559994030;
+	bh=m12dcVEicYlzBq6wBtDTZcWVSuAKv2SnKwEtTsutgmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktFLxWFxsOV8XT6by+TP2WL7/lIovrJLTgYiWLbo4JUlcPSlagiCFhPtWzazcimHJ
-	 QMf7l/m+WcK3EYTd7EiWcOJoR/TnRUJ/S3CCbfz58h7AhSe+jo3ILYGZOo5bAZBE37
-	 LUHMM13CdkWKhaxpkRer3vc8xRQljMYFNQJIh9Q4=
+	b=w7KwbZ5h3g8V607N04SAD7pXsIJbQU1i4I7/YSLINUXlB7YIPfE5DEMH3RsTiIB3Q
+	 m5T5wh797rhQko5ABjKJMOZijSfkc12JhRDcam/jSHOmq8x5vP/BjFzfyKSnQAucx7
+	 QOx3S2+h/MxHe0EdmMQxVi9Eqg++WhmRvEma8qH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfFHLkX (ORCPT
+        id S1727617AbfFHLk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:40:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57454 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:40:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbfFHLkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:17 -0400
+        id S1727558AbfFHLkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE74208C0;
-        Sat,  8 Jun 2019 11:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3AF521537;
+        Sat,  8 Jun 2019 11:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994017;
-        bh=lwKR71ZRj7Zr9zES63ArSSUXvbi1ImHyvWXs/ZGcBfk=;
+        s=default; t=1559994024;
+        bh=m12dcVEicYlzBq6wBtDTZcWVSuAKv2SnKwEtTsutgmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qdrrRT7e7Y7YIedv5Jop/Xfe7Z0ONTj2VeoybEazUr1qFJSkggcv1NbCJnkDFGQ9p
-         YfXtzkI5wZnPYm+UpqztDE06qEu8yX5oJgi7u57LYn9lah3foBZxRPpzSsAmJwHyzS
-         sPYiX5PohBh59MxIsig2vZur7r7rVWPVwcrX/2YI=
+        b=1qV2BSBGua8y9yXR/tusZJA8n347eY4uuJee4JNgP0xFARk2QLgWV/7XNuUmDO2NZ
+         Kl3Ppk3N1OSBflPr09A1mgZ5JKMe59f9G34WNd7PUyu/vHxoj1+PzZBx8I7YDWi1NR
+         hgLTht07XT5lOePbC35BARWWhYgOLh0MA//+Ga34=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 18/70] usb: xhci: Fix a potential null pointer dereference in xhci_debugfs_create_endpoint()
-Date:   Sat,  8 Jun 2019 07:38:57 -0400
-Message-Id: <20190608113950.8033-18-sashal@kernel.org>
+Cc:     Yabin Cui <yabinc@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, mark.rutland@arm.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 21/70] perf/ring_buffer: Fix exposing a temporarily decreased data_head
+Date:   Sat,  8 Jun 2019 07:39:00 -0400
+Message-Id: <20190608113950.8033-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -60,44 +68,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Yabin Cui <yabinc@google.com>
 
-[ Upstream commit 5bce256f0b528624a34fe907db385133bb7be33e ]
+[ Upstream commit 1b038c6e05ff70a1e66e3e571c2e6106bdb75f53 ]
 
-In xhci_debugfs_create_slot(), kzalloc() can fail and
-dev->debugfs_private will be NULL.
-In xhci_debugfs_create_endpoint(), dev->debugfs_private is used without
-any null-pointer check, and can cause a null pointer dereference.
+In perf_output_put_handle(), an IRQ/NMI can happen in below location and
+write records to the same ring buffer:
 
-To fix this bug, a null-pointer check is added in
-xhci_debugfs_create_endpoint().
+	...
+	local_dec_and_test(&rb->nest)
+	...                          <-- an IRQ/NMI can happen here
+	rb->user_page->data_head = head;
+	...
 
-This bug is found by a runtime fuzzing tool named FIZZER written by us.
+In this case, a value A is written to data_head in the IRQ, then a value
+B is written to data_head after the IRQ. And A > B. As a result,
+data_head is temporarily decreased from A to B. And a reader may see
+data_head < data_tail if it read the buffer frequently enough, which
+creates unexpected behaviors.
 
-[subjet line change change, add potential -Mathais]
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This can be fixed by moving dec(&rb->nest) to after updating data_head,
+which prevents the IRQ/NMI above from updating data_head.
+
+[ Split up by peterz. ]
+
+Signed-off-by: Yabin Cui <yabinc@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: mark.rutland@arm.com
+Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
+Link: http://lkml.kernel.org/r/20190517115418.224478157@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-debugfs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/events/ring_buffer.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-debugfs.c b/drivers/usb/host/xhci-debugfs.c
-index cadc01336bf8..7ba6afc7ef23 100644
---- a/drivers/usb/host/xhci-debugfs.c
-+++ b/drivers/usb/host/xhci-debugfs.c
-@@ -440,6 +440,9 @@ void xhci_debugfs_create_endpoint(struct xhci_hcd *xhci,
- 	struct xhci_ep_priv	*epriv;
- 	struct xhci_slot_priv	*spriv = dev->debugfs_private;
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 674b35383491..009467a60578 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -51,11 +51,18 @@ again:
+ 	head = local_read(&rb->head);
  
-+	if (!spriv)
-+		return;
+ 	/*
+-	 * IRQ/NMI can happen here, which means we can miss a head update.
++	 * IRQ/NMI can happen here and advance @rb->head, causing our
++	 * load above to be stale.
+ 	 */
+ 
+-	if (!local_dec_and_test(&rb->nest))
++	/*
++	 * If this isn't the outermost nesting, we don't have to update
++	 * @rb->user_page->data_head.
++	 */
++	if (local_read(&rb->nest) > 1) {
++		local_dec(&rb->nest);
+ 		goto out;
++	}
+ 
+ 	/*
+ 	 * Since the mmap() consumer (userspace) can run on a different CPU:
+@@ -87,9 +94,18 @@ again:
+ 	rb->user_page->data_head = head;
+ 
+ 	/*
+-	 * Now check if we missed an update -- rely on previous implied
+-	 * compiler barriers to force a re-read.
++	 * We must publish the head before decrementing the nest count,
++	 * otherwise an IRQ/NMI can publish a more recent head value and our
++	 * write will (temporarily) publish a stale value.
++	 */
++	barrier();
++	local_set(&rb->nest, 0);
 +
- 	if (spriv->eps[ep_index])
- 		return;
- 
++	/*
++	 * Ensure we decrement @rb->nest before we validate the @rb->head.
++	 * Otherwise we cannot be sure we caught the 'last' nested update.
+ 	 */
++	barrier();
+ 	if (unlikely(head != local_read(&rb->head))) {
+ 		local_inc(&rb->nest);
+ 		goto again;
 -- 
 2.20.1
 
