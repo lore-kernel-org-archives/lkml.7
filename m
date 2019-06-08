@@ -2,268 +2,60 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A328BC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5167C468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDF5214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB1F214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:20:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="QNtRXfUL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lhD74d33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfFHIPe (ORCPT
+        id S1726325AbfFHIUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 04:15:34 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46389 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfFHIPd (ORCPT
+        Sat, 8 Jun 2019 04:20:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39194 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbfFHIUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 04:15:33 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h10so6003374edi.13
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 01:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8JZgNM/YpcgfjFUOjsGsDvLYNhaHJtTRTNvPjlkn0v8=;
-        b=QNtRXfULBLwqItwKbiYMbjXozVxTSWgeJzFcCSXAAA47Ra+a3IHcjnVEHf50sHaeYZ
-         PXpqgYkko0XZpH2Qd2Bv1eN65OuOZmLyCu+mZZaeuVdUD354rGkirGa8UOeisa5Tadvt
-         0JyqW0hNHZ4T+WTaZE63OSZIEh40YhNpL8X8D2zEjuyKA0ZxiUIvRTaW9Bct49jujoFJ
-         HwcfrofswpYqBkxXga696DhxyR1ItRo1zD+snHnGji5nCiJcvkvKmjftWv2WYYGebLuh
-         U384O5RZPGU29JiTG/uLLZjL5Noptkd8ACuB4LLuMWaB1ZrGGrWiD2Nr0Ewo7+XPu5oe
-         qpUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8JZgNM/YpcgfjFUOjsGsDvLYNhaHJtTRTNvPjlkn0v8=;
-        b=QsBOrLp1GE9McSDKc1jYpz69JlQooCvCcQ4TEtBA66SHx+gPWoKqhI9wSLpfl1OtpI
-         KjMS4TeKGbm647NCv+sf30RYb3pdUIX4bMYcvwNC4ID3pkNswTQDmqX64mmIXNF2R4cH
-         JY6xW6WNbYI8hQpqZAvMWeru2ebzKlVid6MFOSefhEwOzBcmb0vySPF1XZgH8jsv+lbb
-         AXeGFLEzhzlYKF4KCNVeC1gx3nRV9pcUECp0JOohrd1fhiv3mj/OC3iwVNzB0P2Nu8pD
-         X9azgYxih6+zhzJranNzQ3w1kNbnUyND73lj93HNGP++6646PkP6r85X6SpZZ+3ePZfd
-         rOkQ==
-X-Gm-Message-State: APjAAAVKDxiiDlljVgnj1LykzQI6+YFWra2oEnekG/jfbCgxhQkdPwoR
-        SGuOrRf9wMebZIOT3vJkAU3SmA==
-X-Google-Smtp-Source: APXvYqwjgIGE5J2Agd5IxpjM4S3PHGqMY33O0GlnoZgldV6QFG1eSlHxSm1UHMbIp4z5anvrEOZktA==
-X-Received: by 2002:a05:6402:1612:: with SMTP id f18mr171061edv.231.1559981730457;
-        Sat, 08 Jun 2019 01:15:30 -0700 (PDT)
-Received: from brauner.io ([2a02:8109:9cc0:6dac:cd8f:f6e9:1b84:bbb1])
-        by smtp.gmail.com with ESMTPSA id e45sm1141764edb.12.2019.06.08.01.15.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 01:15:29 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 10:15:28 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org
-Cc:     jannh@google.com, "Serge E. Hallyn" <serge@hallyn.com>,
-        keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
-        arnd@arndb.de, dhowells@redhat.com,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@gmail.com>, linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] fork: add clone3
-Message-ID: <20190608081527.nxeo3xk2xt5hhpyx@brauner.io>
-References: <20190604160944.4058-1-christian@brauner.io>
- <20190606214645.GA31599@mail.hallyn.com>
+        Sat, 8 Jun 2019 04:20:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=lhD74d33hAIRd/bqO3rjETsgY
+        0BMMcWrJSnlHq+54BtF51or9hKyfmbGMXp9/b67HUhCx89BfV1gcotwQrkdli4NGnTnFD9B14vSFZ
+        RzbL4gE5gtXVy+v+HaqjtevSSry0KtvAB3hkW46XYStkWkdLTLMDawEfRCzShYrn3MbHKGrgGvLl0
+        pj7/CnSb6SBCwd/zI6PuNBaX2R97rm8gOXW70jEhKk/HcVek14nXKZ/giIZImdu2eAZqSsJFHuaC0
+        wZdrX/O+2EBUbWI2c6MopIlZrhap3MQOMe5LUH94/3/24BYZy9YiSpg6q2TVxvEr4K6YrIEGlB1G/
+        uwO5r7xeQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZWZz-000149-L7; Sat, 08 Jun 2019 08:19:59 +0000
+Date:   Sat, 8 Jun 2019 01:19:59 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, marco@decred.org,
+        me@carlosedp.com, joel@sing.id.au, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] RISC-V: Break load reservations during switch_to
+Message-ID: <20190608081959.GA26134@infradead.org>
+References: <20190607222222.15300-1-palmer@sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190606214645.GA31599@mail.hallyn.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190607222222.15300-1-palmer@sifive.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 04:46:45PM -0500, Serge Hallyn wrote:
-> On Tue, Jun 04, 2019 at 06:09:43PM +0200, Christian Brauner wrote:
-> > This adds the clone3 system call.
-> > 
-> > As mentioned several times already (cf. [7], [8]) here's the promised
-> > patchset for clone3().
-> > 
-> > We recently merged the CLONE_PIDFD patchset (cf. [1]). It took the last
-> > free flag from clone().
-> > 
-> > Independent of the CLONE_PIDFD patchset a time namespace has been discussed
-> > at Linux Plumber Conference last year and has been sent out and reviewed
-> > (cf. [5]). It is expected that it will go upstream in the not too distant
-> > future. However, it relies on the addition of the CLONE_NEWTIME flag to
-> > clone(). The only other good candidate - CLONE_DETACHED - is currently not
-> > recyclable as we have identified at least two large or widely used
-> > codebases that currently pass this flag (cf. [2], [3], and [4]). Given that
-> > CLONE_PIDFD grabbed the last clone() flag the time namespace is effectively
-> > blocked. clone3() has the advantage that it will unblock this patchset
-> > again. In general, clone3() is extensible and allows for the implementation
-> > of new features.
-> > 
-> > The idea is to keep clone3() very simple and close to the original clone(),
-> > specifically, to keep on supporting old clone()-based workloads.
-> > We know there have been various creative proposals how a new process
-> > creation syscall or even api is supposed to look like. Some people even
-> > going so far as to argue that the traditional fork()+exec() split should be
-> > abandoned in favor of an in-kernel version of spawn(). Independent of
-> > whether or not we personally think spawn() is a good idea this patchset has
-> > and does not want to have anything to do with this.
-> > One stance we take is that there's no real good alternative to
-> > clone()+exec() and we need and want to support this model going forward;
-> > independent of spawn().
-> > The following requirements guided clone3():
-> > - bump the number of available flags
-> > - move arguments that are currently passed as separate arguments
-> >   in clone() into a dedicated struct clone_args
-> >   - choose a struct layout that is easy to handle on 32 and on 64 bit
-> >   - choose a struct layout that is extensible
-> >   - give new flags that currently need to abuse another flag's dedicated
-> >     return argument in clone() their own dedicated return argument
-> >     (e.g. CLONE_PIDFD)
-> >   - use a separate kernel internal struct kernel_clone_args that is
-> >     properly typed according to current kernel conventions in fork.c and is
-> >     different from  the uapi struct clone_args
-> > - port _do_fork() to use kernel_clone_args so that all process creation
-> >   syscalls such as fork(), vfork(), clone(), and clone3() behave identical
-> >   (Arnd suggested, that we can probably also port do_fork() itself in a
-> >    separate patchset.)
-> > - ease of transition for userspace from clone() to clone3()
-> >   This very much means that we do *not* remove functionality that userspace
-> >   currently relies on as the latter is a good way of creating a syscall
-> >   that won't be adopted.
-> > - do not try to be clever or complex: keep clone3() as dumb as possible
-> > 
-> > In accordance with Linus suggestions (cf. [11]), clone3() has the following
-> > signature:
-> > 
-> > /* uapi */
-> > struct clone_args {
-> >         __aligned_u64 flags;
-> >         __aligned_u64 pidfd;
-> >         __aligned_u64 child_tid;
-> >         __aligned_u64 parent_tid;
-> >         __aligned_u64 exit_signal;
-> >         __aligned_u64 stack;
-> >         __aligned_u64 stack_size;
-> >         __aligned_u64 tls;
-> > };
-> > 
-> > /* kernel internal */
-> > struct kernel_clone_args {
-> >         u64 flags;
-> >         int __user *pidfd;
-> >         int __user *child_tid;
-> >         int __user *parent_tid;
-> >         int exit_signal;
-> >         unsigned long stack;
-> >         unsigned long stack_size;
-> >         unsigned long tls;
-> > };
-> > 
-> > long sys_clone3(struct clone_args __user *uargs, size_t size)
-> > 
-> > clone3() cleanly supports all of the supported flags from clone() and thus
-> > all legacy workloads.
-> > The advantage of sticking close to the old clone() is the low cost for
-> > userspace to switch to this new api. Quite a lot of userspace apis (e.g.
-> > pthreads) are based on the clone() syscall. With the new clone3() syscall
-> > supporting all of the old workloads and opening up the ability to add new
-> > features should make switching to it for userspace more appealing. In
-> > essence, glibc can just write a simple wrapper to switch from clone() to
-> > clone3().
-> > 
-> > There has been some interest in this patchset already. We have received a
-> > patch from the CRIU corner for clone3() that would set the PID/TID of a
-> > restored process without /proc/sys/kernel/ns_last_pid to eliminate a race.
-> > 
-> > /* User visible differences to legacy clone() */
-> > - CLONE_DETACHED will cause EINVAL with clone3()
-> > - CSIGNAL is deprecated
-> >   It is superseeded by a dedicated "exit_signal" argument in struct
-> >   clone_args freeing up space for additional flags.
-> >   This is based on a suggestion from Andrei and Linus (cf. [9] and [10])
-> > 
-> > /* References */
-> > [1]: b3e5838252665ee4cfa76b82bdf1198dca81e5be
-> > [2]: https://dxr.mozilla.org/mozilla-central/source/security/sandbox/linux/SandboxFilter.cpp#343
-> > [3]: https://git.musl-libc.org/cgit/musl/tree/src/thread/pthread_create.c#n233
-> > [4]: https://sources.debian.org/src/blcr/0.8.5-2.3/cr_module/cr_dump_self.c/?hl=740#L740
-> > [5]: https://lore.kernel.org/lkml/20190425161416.26600-1-dima@arista.com/
-> > [6]: https://lore.kernel.org/lkml/20190425161416.26600-2-dima@arista.com/
-> > [7]: https://lore.kernel.org/lkml/CAHrFyr5HxpGXA2YrKza-oB-GGwJCqwPfyhD-Y5wbktWZdt0sGQ@mail.gmail.com/
-> > [8]: https://lore.kernel.org/lkml/20190524102756.qjsjxukuq2f4t6bo@brauner.io/
-> > [9]: https://lore.kernel.org/lkml/20190529222414.GA6492@gmail.com/
-> > [10]: https://lore.kernel.org/lkml/CAHk-=whQP-Ykxi=zSYaV9iXsHsENa+2fdj-zYKwyeyed63Lsfw@mail.gmail.com/
-> > [11]: https://lore.kernel.org/lkml/CAHk-=wieuV4hGwznPsX-8E0G2FKhx3NjZ9X3dTKh5zKd+iqOBw@mail.gmail.com/
-> > 
-> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Christian Brauner <christian@brauner.io>
-> 
-> Acked-by: Serge Hallyn <serge@hallyn.com>
+Looks good,
 
-This also carries an Ack by Arnd and there don't seem to be technical
-issues anymore.
-So I'm going to move this over into my for-next branch targeting 5.3 to
-see some testing.
-
-Thanks!
-Christian
-
-> 
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Pavel Emelyanov <xemul@virtuozzo.com>
-> > Cc: Jann Horn <jannh@google.com>
-> > Cc: David Howells <dhowells@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Oleg Nesterov <oleg@redhat.com>
-> > Cc: Adrian Reber <adrian@lisas.de>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Andrei Vagin <avagin@gmail.com>
-> > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > Cc: Florian Weimer <fweimer@redhat.com>
-> > Cc: linux-api@vger.kernel.org
-> > ---
-> > v1:
-> > - Linus Torvalds <torvalds@linux-foundation.org>:
-> >   - redesign based on Linus proposal
-> >   - switch from arg-based to revision-based naming scheme: s/clone6/clone3/
-> > - Arnd Bergmann <arnd@arndb.de>:
-> >   - use a single copy_from_user() instead of multiple get_user() calls
-> >     since the latter have a constant overhead on some architectures
-> >   - a range of other tweaks and suggestions
-> > v2:
-> > - Linus Torvalds <torvalds@linux-foundation.org>,
-> >   Andrei Vagin <avagin@gmail.com>:
-> >   - replace CSIGNAL flag with dedicated exit_signal argument in struct
-> >     clone_args
-> > - Christian Brauner <christian@brauner.io>:
-> >   - improve naming for some struct clone_args members
-> > v3:
-> > - Arnd Bergmann <arnd@arndb.de>:
-> >   - replace memset with constructor for clarity and better object code
-> >   - call flag verification function clone3_flags_valid() on
-> >     kernel_clone_args instead of clone_args
-> >   - remove __ARCH_WANT_SYS_CLONE ifdefine around sys_clone3()
-> > - Christian Brauner <christian@brauner.io>:
-> >   - replace clone3_flags_valid() with clone3_args_valid() and call in
-> >     clone3() directly rather than in copy_clone_args_from_user()
-> >     This cleanly separates copying the args from userspace from the
-> >     verification whether those args are sane.
-> > - David Howells <dhowells@redhat.com>:
-> >   - align new struct member assignments with tabs
-> >   - replace CLONE_MAX by with a non-uapi exported CLONE_LEGACY_FLAGS and
-> >     define it as  0xffffffffULL for clarity
-> >   - make copy_clone_args_from_user() noinline
-> >   - avoid assigning to local variables from struct kernel_clone_args
-> >     members in cases where it makes sense
-> > ---
-> >  arch/x86/ia32/sys_ia32.c   |  12 ++-
-> >  include/linux/sched/task.h |  17 +++-
-> >  include/linux/syscalls.h   |   4 +
-> >  include/uapi/linux/sched.h |  16 +++
-> >  kernel/fork.c              | 201 ++++++++++++++++++++++++++++---------
-> >  5 files changed, 199 insertions(+), 51 deletions(-)
+Reviewed-by: Christoph Hellwig <hch@lst.de>
