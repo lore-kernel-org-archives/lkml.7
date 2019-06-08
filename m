@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9ECC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E31E2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79AD216C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8ADE2166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994128;
-	bh=N+eCfVqoOFIar25lZGLcFa2u00XptyLJiLlDMiiESbA=;
+	s=default; t=1559994132;
+	bh=lGQ6TM8Ks9aZEQTjN/7Q4LvqRoYdOdivuhha7Z3PTjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWqrRvSjargv+aaiLfKFABWM8SLC9W5QJHKpHDNevAS3CcgidGE9trI98Z2Fi9XQr
-	 YJqq/zt2z8mc/MfwVVA3Cb7nfGPvlx9UzKra38UvB4V1T3LuMRPFl+QOhja9ePVubY
-	 HM68JSSJRlwUQwOiu18B8lCs6KfyTmwirb//QUnE=
+	b=mKQiuyHc5agIWYtVpbeF/z34/ALLFWAKoJZrupN90n1V9Z8jD/KAWakn8KPRsHgwK
+	 l0XUykrjr0JSwG6wDCvCUHDt6ZyfEe/sumKXvkvpGH9DgTnQK65Ngsh3X1YgNGwbPA
+	 s9Na+4d9fv1WD9hZfDrpf3Ah7zt8cFtE3TZUf4pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfFHLmH (ORCPT
+        id S1728318AbfFHLmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:42:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfFHLmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:42:06 -0400
+        id S1727468AbfFHLmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:42:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C41F1214AF;
-        Sat,  8 Jun 2019 11:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1245214D8;
+        Sat,  8 Jun 2019 11:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994125;
-        bh=N+eCfVqoOFIar25lZGLcFa2u00XptyLJiLlDMiiESbA=;
+        s=default; t=1559994128;
+        bh=lGQ6TM8Ks9aZEQTjN/7Q4LvqRoYdOdivuhha7Z3PTjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtHUCYq01JwIlRFIM2lC2a46B5uj3mdA60p+rGjyQOQfGbq0NA7vk21yquE/poknf
-         /7/R0OYFqGubGJLP3hDOVeBGDgqic5vPVr3hRkLgOL92g53I041i3AFK/boX549eGu
-         sph8dpjOlwu4S07oMSaAY+pxu+x6Z3h5GF+ada6E=
+        b=tDW16SmpStS3+72FUpt5t4LmSKdVAwwzY1pmMWG7eRtQ+hYq6RqAgUgzQm9/wwtEj
+         tkFFrWIJwIxGEWr/BqRko2yV1aCT4BsqzbY5FZpwlUxaR7wORylhlx1wswTUqqh4yx
+         eVTv/u7ZQXYhMFknNJA3/xXAzMyy7Jy2AYlBlF7A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 58/70] arm64: use the correct function type for __arm64_sys_ni_syscall
-Date:   Sat,  8 Jun 2019 07:39:37 -0400
-Message-Id: <20190608113950.8033-58-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 59/70] net: sh_eth: fix mdio access in sh_eth_close() for R-Car Gen2 and RZ/A1 SoCs
+Date:   Sat,  8 Jun 2019 07:39:38 -0400
+Message-Id: <20190608113950.8033-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -59,83 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 1e29ab3186e33c77dbb2d7566172a205b59fa390 ]
+[ Upstream commit 315ca92dd863fecbffc0bb52ae0ac11e0398726a ]
 
-Calling sys_ni_syscall through a syscall_fn_t pointer trips indirect
-call Control-Flow Integrity checking due to a function type
-mismatch. Use SYSCALL_DEFINE0 for __arm64_sys_ni_syscall instead and
-remove the now unnecessary casts.
+The sh_eth_close() resets the MAC and then calls phy_stop()
+so that mdio read access result is incorrect without any error
+according to kernel trace like below:
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+ifconfig-216   [003] .n..   109.133124: mdio_access: ee700000.ethernet-ffffffff read  phy:0x01 reg:0x00 val:0xffff
+
+According to the hardware manual, the RMII mode should be set to 1
+before operation the Ethernet MAC. However, the previous code was not
+set to 1 after the driver issued the soft_reset in sh_eth_dev_exit()
+so that the mdio read access result seemed incorrect. To fix the issue,
+this patch adds a condition and set the RMII mode register in
+sh_eth_dev_exit() for R-Car Gen2 and RZ/A1 SoCs.
+
+Note that when I have tried to move the sh_eth_dev_exit() calling
+after phy_stop() on sh_eth_close(), but it gets worse (kernel panic
+happened and it seems that a register is accessed while the clock is
+off).
+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/sys.c   | 14 +++++++++-----
- arch/arm64/kernel/sys32.c |  7 ++-----
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/renesas/sh_eth.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
-index 6f91e8116514..d8b35cfe5e94 100644
---- a/arch/arm64/kernel/sys.c
-+++ b/arch/arm64/kernel/sys.c
-@@ -47,22 +47,26 @@ SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
- 	return ksys_personality(personality);
- }
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index e33af371b169..48967dd27bbf 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -1594,6 +1594,10 @@ static void sh_eth_dev_exit(struct net_device *ndev)
+ 	sh_eth_get_stats(ndev);
+ 	mdp->cd->soft_reset(ndev);
  
-+asmlinkage long sys_ni_syscall(void);
++	/* Set the RMII mode again if required */
++	if (mdp->cd->rmiimode)
++		sh_eth_write(ndev, 0x1, RMIIMODE);
 +
-+asmlinkage long __arm64_sys_ni_syscall(const struct pt_regs *__unused)
-+{
-+	return sys_ni_syscall();
-+}
-+
- /*
-  * Wrappers to pass the pt_regs argument.
-  */
- #define sys_personality		sys_arm64_personality
- 
--asmlinkage long sys_ni_syscall(const struct pt_regs *);
--#define __arm64_sys_ni_syscall	sys_ni_syscall
--
- #undef __SYSCALL
- #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
- #include <asm/unistd.h>
- 
- #undef __SYSCALL
--#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
-+#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
- 
- const syscall_fn_t sys_call_table[__NR_syscalls] = {
--	[0 ... __NR_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
-+	[0 ... __NR_syscalls - 1] = __arm64_sys_ni_syscall,
- #include <asm/unistd.h>
- };
-diff --git a/arch/arm64/kernel/sys32.c b/arch/arm64/kernel/sys32.c
-index 0f8bcb7de700..3c80a40c1c9d 100644
---- a/arch/arm64/kernel/sys32.c
-+++ b/arch/arm64/kernel/sys32.c
-@@ -133,17 +133,14 @@ COMPAT_SYSCALL_DEFINE6(aarch32_fallocate, int, fd, int, mode,
- 	return ksys_fallocate(fd, mode, arg_u64(offset), arg_u64(len));
+ 	/* Set MAC address again */
+ 	update_mac_address(ndev);
  }
- 
--asmlinkage long sys_ni_syscall(const struct pt_regs *);
--#define __arm64_sys_ni_syscall	sys_ni_syscall
--
- #undef __SYSCALL
- #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
- #include <asm/unistd32.h>
- 
- #undef __SYSCALL
--#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
-+#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
- 
- const syscall_fn_t compat_sys_call_table[__NR_compat_syscalls] = {
--	[0 ... __NR_compat_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
-+	[0 ... __NR_compat_syscalls - 1] = __arm64_sys_ni_syscall,
- #include <asm/unistd32.h>
- };
 -- 
 2.20.1
 
