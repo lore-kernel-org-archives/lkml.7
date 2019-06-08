@@ -2,146 +2,155 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87DFC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF86FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB9E212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9CA2146E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:51:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHjKKPz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfFHQmD (ORCPT
+        id S1727350AbfFHQvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 12:42:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39370 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727203AbfFHQmD (ORCPT
+        Sat, 8 Jun 2019 12:51:35 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45557 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727203AbfFHQvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 12:42:03 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58Gfg4W026299
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 12:42:01 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t096ubwat-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 12:42:01 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 8 Jun 2019 17:42:01 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 8 Jun 2019 17:41:57 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58Gfu0g37618132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Jun 2019 16:41:57 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE875B206B;
-        Sat,  8 Jun 2019 16:41:56 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF628B2068;
-        Sat,  8 Jun 2019 16:41:56 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.180.36])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat,  8 Jun 2019 16:41:56 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9610616C2E2C; Sat,  8 Jun 2019 09:41:58 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 09:41:58 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        mingo@kernel.org, jpoimboe@redhat.com, mojha@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH HACK RFC] cpu: Prevent late-arriving interrupts from
- disrupting offline
-Reply-To: paulmck@linux.ibm.com
-References: <20190602011253.GA6167@linux.ibm.com>
- <20190603083848.GB3436@hirez.programming.kicks-ass.net>
- <20190603114455.GA16119@lakrids.cambridge.arm.com>
- <ea4887fb-cc77-59d4-3ba7-a59f5237ca40@arm.com>
- <20190604074549.GP28207@linux.ibm.com>
- <6eb5d59f-37d0-0aab-1fc0-fcf48cc4164f@arm.com>
+        Sat, 8 Jun 2019 12:51:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so5084872wre.12
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 09:51:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gR4IOaCCUTGvBaZhfnsBw7K29W8etkz1Veuscov6zNA=;
+        b=UHjKKPz15vYhk+MgoG9uVx4fK1yxijnZCNRu6yIdLp9RluyynJHwDpOu21+vJzcAZN
+         cpVWmxxo96r1H/xTIKiSgtEpDH7cUWuWgEykWij/Kirkrk6PL5l8nKxOCu4rsdC4VItv
+         BLQ/9Qkoco8MZwsL78R+R/9TBT/cFYGNAt8pi9/XrvlIXgyjvLgNlYB0E+aDd0crD5dv
+         fPdNDqK0EGGBqI7mGmY46jsr1w238NJglg6JZuUrXhwSuFW/tblEcuIpvR4p1GI0YOFR
+         nRWclfFPiPJJD1DKoFNoxAM7tG3m95AuNk+cVYxJm3rBEDANJotjx0KEaAhPtW4Vm2y/
+         C2Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gR4IOaCCUTGvBaZhfnsBw7K29W8etkz1Veuscov6zNA=;
+        b=dR9Zclv7Y+Oggm/fMiIzmNwrRY1wkrFr8eNQNd7fS6jbuCpfH3OT0FkHGu1SUQntOh
+         cKqGOjS+4XKsY0SVXTqGkX85D60l/7UDzczdEfjuVG7/OLOSBDFprrLSyBsGloU81BTB
+         LCohf4yF2jxx3o4XleHvzcmlz1aIEYxyZEO1snpK2fpUNymARRNiDyV0qtWlttpX7nMA
+         0g3c+snr4VjtiYJULkKawcK+pw0ft1ANw6bPX2zYF1/0zm9Db+kgUo4GDV1Dt0IANzVp
+         J7Maiz0GjoVG1BIdLoAgXQhlyYhoEqb6JwPo+M2SaExiiZcO9RzWeH7aoCsr8NNeRjXA
+         s+0Q==
+X-Gm-Message-State: APjAAAViKKjzKVla6p91HBzwPMb04JYfWtyWtGgQ3e9KTV1myVv/HvsV
+        2FZpGREL8XHsyUZsp7bunM0iHSfbZtYhOVFaKv8=
+X-Google-Smtp-Source: APXvYqyW1YAlHxl5jkTyIcVuWsUg5I6pHPOlF0d5SX+3EM96SZi5nAuY5I1ng/URaIR2wG9ZaKlQHAS9xDFWTweJltc=
+X-Received: by 2002:adf:fbc2:: with SMTP id d2mr12050109wrs.334.1560012692846;
+ Sat, 08 Jun 2019 09:51:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6eb5d59f-37d0-0aab-1fc0-fcf48cc4164f@arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060816-0064-0000-0000-000003EB991C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011234; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01215077; UDB=6.00638768; IPR=6.00996168;
- MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 16:42:00
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060816-0065-0000-0000-00003DCEDB3C
-Message-Id: <20190608164158.GK28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906080126
+References: <20190423054131.GB31496@umbus.fritz.box> <20190425061958.GA7881@lst.de>
+ <20190426010517.GA7378@umbus.fritz.box> <20190426035643.GB7378@umbus.fritz.box>
+In-Reply-To: <20190426035643.GB7378@umbus.fritz.box>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Sun, 9 Jun 2019 00:51:20 +0800
+Message-ID: <CACVXFVP09V_mAbYm-QgfDmSiLCw5Td-EeDZ-c=B7t-TxV6DZwQ@mail.gmail.com>
+Subject: Re: powerpc hugepage leak caused by 576ed913 "block: use bio_add_page
+ in bio_iov_iter_get_pages"
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Michael Ellerman <michael@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, Nick Piggin <npiggin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 03:29:32PM +0200, Dietmar Eggemann wrote:
-> On 6/4/19 9:45 AM, Paul E. McKenney wrote:
-> >On Mon, Jun 03, 2019 at 03:39:18PM +0200, Dietmar Eggemann wrote:
-> >>On 6/3/19 1:44 PM, Mark Rutland wrote:
-> >>>On Mon, Jun 03, 2019 at 10:38:48AM +0200, Peter Zijlstra wrote:
-> >>>>On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
-> >>>>>Scheduling-clock interrupts can arrive late in the CPU-offline process,
-> 
-> [...]
-> 
-> >>>   05981277a4de1ad6 ("arm64: Use common outgoing-CPU-notification code")
-> >>>
-> >>>... but it looks like Paul's patch to do so [1] fell through the cracks;
-> >>>I'm not aware of any reason that shouldn't have been taken.
-> >>>[1] https://lore.kernel.org/lkml/1431467407-1223-8-git-send-email-paulmck@linux.vnet.ibm.com/
-> >>>
-> >>>Paul, do you want to resend that?
-> >>
-> >>Please do. We're carrying this patch out-of-tree for while now in
-> >>our EAS integration to get cpu hotplug tests passing on TC2 (arm).
+On Fri, Apr 26, 2019 at 12:41 PM David Gibson
+<david@gibson.dropbear.id.au> wrote:
+>
+> On Fri, Apr 26, 2019 at 11:05:17AM +1000, David Gibson wrote:
+> > On Thu, Apr 25, 2019 at 08:19:58AM +0200, Christoph Hellwig wrote:
+> > > Just curious:  What exact trees do you see this with?  This area
+> > > changed a lot with the multipage bvec support, and subsequent fixes.
 > >
-> >Huh.  It still applies.  But I have no means of testing it.
-> 
-> We can do the testing part on our TC2 platform, i.e. we're testing
-> it with each of our EAS mainline integration right now.
-> 
-> https://developer.arm.com/tools-and-software/open-source-software/linux-kernel/energy-aware-scheduling/eas-mainline-development
-> 
-> http://linux-arm.org/git?p=linux-power.git;a=commit;h=8cd16f1dc2cd896a0b1e2010b4992b33fdc11fe0
-> 
-> >And it looks like the reason I dropped it was that I didn't get any
-> >response from the maintainer.  I sent a message to this effect to
-> >linux-arm-kernel@lists.infradead.org and linux@arm.linux.org.uk on May
-> >21, 2015.
+> > So, I tried it with 576ed913 itself and with 576ed913^ to verify that
+> > it didn't happen there.  The problem also occurred with Linus' tree as
+> > of when I started bisecting, which appears to have been 444fe991.
+> > Actually, come to that, here's the whole bisect log in case it's
+> > helpful:
 > >
-> >So here it is again.  ;-)
+> > # git bisect log
+> > git bisect start
+> > # good: [bebc6082da0a9f5d47a1ea2edc099bf671058bd4] Linux 4.14
+> > git bisect good bebc6082da0a9f5d47a1ea2edc099bf671058bd4
+> > # bad: [444fe991353987c1c9bc5ab1f903d01f1b4ad415] Merge tag 'riscv-for-linus-5.1-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/palmer/riscv-linux
+> > git bisect bad 444fe991353987c1c9bc5ab1f903d01f1b4ad415
+> > # good: [399c4129eba6145924ab90363352b7bdcd554751] Merge tag 'pxa-for-4.19-dma_slave_map' of https://github.com/rjarzmik/linux
+> > git bisect good 399c4129eba6145924ab90363352b7bdcd554751
+> > # bad: [73b6f96cbc0162787bcbdac5f538167084c8d605] Merge branch 'drm-fixes-4.20' of git://people.freedesktop.org/~agd5f/linux into drm-fixes
+> > git bisect bad 73b6f96cbc0162787bcbdac5f538167084c8d605
+> > # good: [85a585918fb4122ad26b6febaec5c3c90bf2535c] Merge tag 'loadpin-security-next' of https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux into next-loadpin
+> > git bisect good 85a585918fb4122ad26b6febaec5c3c90bf2535c
+> > # bad: [3acbd2de6bc3af215c6ed7732dfc097d1e238503] Merge tag 'sound-4.20-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+> > git bisect bad 3acbd2de6bc3af215c6ed7732dfc097d1e238503
+> > # good: [8f18da47211554f1ef674fef627c05f23b75a8e0] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/klassert/ipsec-next
+> > git bisect good 8f18da47211554f1ef674fef627c05f23b75a8e0
+> > # bad: [0d1b82cd8ac2e8856ae9045c97782ac1c359929c] Merge branch 'ras-core-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> > git bisect bad 0d1b82cd8ac2e8856ae9045c97782ac1c359929c
+> > # bad: [1650ac53066577a5e83fe3e9d992c9311597ff8c] Merge tag 'mmc-v4.20' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+> > git bisect bad 1650ac53066577a5e83fe3e9d992c9311597ff8c
+> > # bad: [6ab9e09238fdfd742fe23b81e2d385a1cab49d9b] Merge tag 'for-4.20/block-20181021' of git://git.kernel.dk/linux-block
+> > git bisect bad 6ab9e09238fdfd742fe23b81e2d385a1cab49d9b
+> > # good: [528985117126f11beea339cf39120ee99da04cd2] Merge tag 'arm64-upstream' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
+> > git bisect good 528985117126f11beea339cf39120ee99da04cd2
+> > # bad: [2cf99bbd106f89fc72f778e8ad9d5538f1ef939b] lightnvm: pblk: add helpers for chunk addresses
+> > git bisect bad 2cf99bbd106f89fc72f778e8ad9d5538f1ef939b
+> > # bad: [33b14f67a4e1eabd219fd6543da8f15ed86b641c] nvme: register ns_id attributes as default sysfs groups
+> > git bisect bad 33b14f67a4e1eabd219fd6543da8f15ed86b641c
+> > # bad: [27ca1d4ed04ea29dc77b47190a3cc82697023e76] block: move req_gap_back_merge to blk.h
+> > git bisect bad 27ca1d4ed04ea29dc77b47190a3cc82697023e76
+> > # bad: [07b05bcc3213ac9f8c28c9d835b4bf3d5798cc60] blkcg: convert blkg_lookup_create to find closest blkg
+> > git bisect bad 07b05bcc3213ac9f8c28c9d835b4bf3d5798cc60
+> > # good: [cbeb869a3d1110450186b738199963c5e68c2a71] block, bfq: correctly charge and reset entity service in all cases
+> > git bisect good cbeb869a3d1110450186b738199963c5e68c2a71
+> > # bad: [576ed9135489c723fb39b97c4e2c73428d06dd78] block: use bio_add_page in bio_iov_iter_get_pages
+> > git bisect bad 576ed9135489c723fb39b97c4e2c73428d06dd78
+> > # good: [c8765de0adfcaaf4ffb2d951e07444f00ffa9453] blok, bfq: do not plug I/O if all queues are weight-raised
+> > git bisect good c8765de0adfcaaf4ffb2d951e07444f00ffa9453
+> > # first bad commit: [576ed9135489c723fb39b97c4e2c73428d06dd78] block: use bio_add_page in bio_iov_iter_get_pages
 > >
-> >I have queued this locally.  Left to myself, I add the two of you on its
-> >Cc: list and run it through my normal process.  But given the history,
-> >I would still want either an ack from the maintainer or, better, for
-> >the maintainer to take the patch.
+> > The problem also occurred with the RHEL8 downstream kernel tree.
+> > That's based on 4.18, but has 576ed913 backported.
 > >
-> >Or is there a better way for us to proceed on this?
-> 
-> You could send this patch also to
-> linux-arm-kernel@lists.infradead.org and cc rmk to get his opinion
-> on the patch.
+> > > So I'd be really curious if it can be reproduced with Jens' latest
+> > > block for-5.2 tree (which should be in latest linux-next).
+> >
+> > I'll see if I can try that when I next get access to the machine.
+>
+> Ok, I've now had a chance to test the next-20190423 tree.
+>
+> I can still reproduce the problem: in fact it is substantially worse,
+> and somewhat more consistent.
+>
+> Previously I usually lost 2-3 hugepages per run, though I'd
+> occasionally seen other values between 0 and 8.  With the next tree, I
+> lost 46 hugepages on most runs, though I also saw 45 and 48
+> occasionally.
 
-OK, please let me know how the testing goes.  My thought is to send the
-patch as you suggest with your Tested-by.
+Hi David,
 
-							Thanx, Paul
+The following two patches should fix the issue, please test it.
 
+https://lore.kernel.org/linux-block/20190608164853.10938-1-ming.lei@redhat.com/T/#t
+
+Thanks,
+Ming Lei
