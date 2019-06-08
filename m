@@ -2,111 +2,118 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCE2C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47F4C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF68B2145D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A62120868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbfFINfT (ORCPT
+        id S1728709AbfFINhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 09:35:19 -0400
-Received: from smtprelay0154.hostedemail.com ([216.40.44.154]:60483 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727382AbfFINfS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 09:35:18 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id D7DFB18029125;
-        Sun,  9 Jun 2019 13:35:16 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: pies35_2dd16e86e5d0d
-X-Filterd-Recvd-Size: 3394
-Received: from XPS-9350 (107-134-184-123.lightspeed.renonv.sbcglobal.net [107.134.184.123])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  9 Jun 2019 13:35:14 +0000 (UTC)
-Message-ID: <bd1ef99fc503fed492ad036f781963ca15a8596f.camel@perches.com>
-Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
-From:   Joe Perches <joe@perches.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Sun, 09 Jun 2019 06:35:07 -0700
-In-Reply-To: <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com>
-References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
-         <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
-         <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
-         <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
-         <20190604134213.GA26263@kroah.com>
-         <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
-         <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
-         <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
-         <20190605051040.GA22760@kroah.com>
-         <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
-         <20190605071413.779bd821@coco.lan>
-         <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
-         <CAK7LNARsSFT1ncyRgWi_tga_7KC6ZwZOETXQ2GrO9PfeJgLxyQ@mail.gmail.com>
-         <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
-         <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 9 Jun 2019 09:37:53 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25056 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727382AbfFINhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 09:37:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jun 2019 06:37:52 -0700
+X-ExtLoop1: 1
+Received: from yiliu-dev.bj.intel.com ([10.238.156.125])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Jun 2019 06:37:50 -0700
+From:   Liu Yi L <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, kwankhede@nvidia.com
+Cc:     kevin.tian@intel.com, baolu.lu@linux.intel.com, yi.l.liu@intel.com,
+        yi.y.sun@intel.com, joro@8bytes.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [PATCH v1 0/9] vfio_pci: wrap pci device as a mediated device
+Date:   Sat,  8 Jun 2019 21:21:02 +0800
+Message-Id: <1560000071-3543-1-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-06-09 at 22:08 +0900, Masahiro Yamada wrote:
-> On Sun, Jun 9, 2019 at 8:57 PM Joe Perches <joe@perches.com> wrote:
-> > On Sun, 2019-06-09 at 16:14 +0900, Masahiro Yamada wrote:
-> > > Hi Joe,
-> > > 
-> > > On Thu, Jun 6, 2019 at 2:06 AM Joe Perches <joe@perches.com> wrote:
-> > > > Perhaps a checkpatch change too:
-> > > > 
-> > > > The first block updates unsigned only bitfields
-> > > > The second tests uapi definitions and suggests "__<kernel_types"
-> > > 
-> > > Good.
-> > > 
-> > > In addition,
-> > > 
-> > > "warn if __u8, __u16, __u32, __u64 are used outside of uapi/"
-> > > 
-> > > Lots of kernel-space headers use __u{8,16,32,64} instead of u{8,16,32,64}
-> > > just because developers often miss to understand when to use
-> > > the underscore-prefixed types.
-> > 
-> > The problem there is that checkpatch can't know if the
-> > __<uapi_type> being used is for an actual uapi use or not.
-> > 
-> > coccinelle could be much better at that.
-> 
-> Why?
+This patchset aims to add a vfio-pci-like meta driver as a demo
+user of the vfio changes introduced in "vfio/mdev: IOMMU aware
+mediated device" patchset from Baolu Lu. Besides the test purpose,
+per Alex's comments, it could also be a good base driver for
+experimenting with device specific mdev migration.
 
+Specific interface tested in this proposal:
+ *) int mdev_set_iommu_device(struct device *dev,
+ 				struct device *iommu_device)
+    introduced in the patch as below:
+    "[PATCH v5 6/8] vfio/mdev: Add iommu related member in mdev_device"
 
-Perhaps it's (somewhat) bad form to have a __uapi type in a
-structure, include that structure in a driver for something
-like a copy_to/from_user, and map the __<uapi_type> to a non
-underscore prefixed <kernel_type>
+Patch Overview:
+ *) patch 1 ~ 7: code refactor for existing vfio-pci module
+                 move the common codes from vfio_pci.c to
+                 vfio_pci_common.c
+ *) patch 8: add protection to perm_bits alloc/free
+ *) patch 9: add vfio-mdev-pci sample driver
 
-For instance
+Links:
+ *) Link of "vfio/mdev: IOMMU aware mediated device"
+         https://lwn.net/Articles/780522/
+ *) Previous versions:
+         RFC v1: https://lkml.org/lkml/2019/3/4/529
+         RFC v2: https://lkml.org/lkml/2019/3/13/113
+         RFC v3: https://lkml.org/lkml/2019/4/24/495
+ *) may try it with the codes in below repo
+    current version is branch "v5.2-rc3-pci-mdev":
+         https://github.com/luxis1999/vfio-mdev-pci-sample-driver.git
 
-struct flat_binder_object in drivers/android/binder.c
+Please feel free give your comments.
 
-How is checkpatch supposed to know that __u32 flags is
-inappropriate?
+Thanks,
+Yi Liu
 
+Change log:
+  RFC v3 -> patch v1:
+  - split the patchset from 3 patches to 9 patches to better demonstrate
+    the changes step by step
+
+  v2->v3:
+  - use vfio-mdev-pci instead of vfio-pci-mdev
+  - place the new driver under drivers/vfio/pci while define
+    Kconfig in samples/Kconfig to clarify it is a sample driver
+
+  v1->v2:
+  - instead of adding kernel option to existing vfio-pci
+    module in v1, v2 follows Alex's suggestion to add a
+    separate vfio-pci-mdev module.
+  - new patchset subject: "vfio/pci: wrap pci device as a mediated device"
+
+Liu Yi L (9):
+  vfio_pci: move vfio_pci_is_vga/vfio_vga_disabled to header
+  vfio_pci: refine user config reference in vfio-pci module
+  vfio_pci: refine vfio_pci_driver reference in vfio_pci.c
+  vfio_pci: make common functions be extern
+  vfio_pci: duplicate vfio_pci.c
+  vfio_pci: shrink vfio_pci_common.c
+  vfio_pci: shrink vfio_pci.c
+  vfio/pci: protect cap/ecap_perm bits alloc/free with atomic op
+  smaples: add vfio-mdev-pci driver
+
+ drivers/vfio/pci/Makefile           |    9 +-
+ drivers/vfio/pci/vfio_mdev_pci.c    |  403 ++++++++++
+ drivers/vfio/pci/vfio_pci.c         | 1449 +---------------------------------
+ drivers/vfio/pci/vfio_pci_common.c  | 1458 +++++++++++++++++++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_config.c  |    9 +
+ drivers/vfio/pci/vfio_pci_private.h |   36 +
+ samples/Kconfig                     |   11 +
+ 7 files changed, 1933 insertions(+), 1442 deletions(-)
+ create mode 100644 drivers/vfio/pci/vfio_mdev_pci.c
+ create mode 100644 drivers/vfio/pci/vfio_pci_common.c
+
+-- 
+2.7.4
 
