@@ -2,141 +2,101 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D847AC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 17:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A72C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 17:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA246208E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 17:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560016272;
-	bh=MPFW72+Jt2ISDQtRqkkwrKu0zPzHgIUoED5s7r+7dFs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Yng3gIqV6dw4FyolVktabEY8+NVWFKJxODs7g5WzPGUoUvMXc2sGYdAqbIOC+py5n
-	 dGBFlKWEluXePK5Jn4XzONDZJlNpUZvhNy911eYPJAIRBiyiF1s1xSVCyGKnNaB+pa
-	 IWfuZpep7pvIu1so6CqhZJyraxnWAuXn2iAr7F+E=
+	by mail.kernel.org (Postfix) with ESMTP id 7AF4B212F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 17:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfFHRvL (ORCPT
+        id S1727316AbfFHR4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 13:51:11 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:37373 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfFHRvL (ORCPT
+        Sat, 8 Jun 2019 13:56:48 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35813 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbfFHR4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 13:51:11 -0400
-Received: by mail-lf1-f44.google.com with SMTP id m15so3911310lfh.4
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 10:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W+9QCBgZ9J2LCx+rEhbyPEc2X/CUYFq2IbJFH8fkL3M=;
-        b=OJ1oYvJZ6e6i4G7bdLCVhlcvwr0pHFtMP6ZQaim/xPyhSQUqj99YSqUAeVdG+dLmxk
-         mLPivGpd5euSbx5fKXvsmlx732m9r2LNS2ieZcz/rui4qyxz+94OKMK8wzJDt6Ofhiud
-         xnGO27CZ1iE+XuSlD7A1HP5aPnFLZs/BzWKsY=
+        Sat, 8 Jun 2019 13:56:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s27so2831679pgl.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 10:56:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W+9QCBgZ9J2LCx+rEhbyPEc2X/CUYFq2IbJFH8fkL3M=;
-        b=GR4zfyP869EAxcQSf75Whb32HTTyH02e3f/yYZWFUI1aaSrmh646yXT2D+9nqKqSJB
-         fgIr2yHOiixxr3/6h1863J6SYI0aW6/EHp7MOIBF/i3VoMCdA9ZKIFulqiHHpjNBSdTt
-         DTg6lkSULojXMOTRQBfThS6jKo4ZuH/zSXntUjXxyDBbaDT+HLOTgHOXS8IzJy0apton
-         lDqXhIwwlIOhM3tCjlnUC2f0sGhbWZAdj371YlWSQmELOzcAoAVT0SlxkXLOqwrP772r
-         /yTd6MlnwTlBnB3DKo0jwzGQ9WgqVZucTuPXlftLvk6UMbLvBWXGAfzSr8goYxf9qClE
-         kqFQ==
-X-Gm-Message-State: APjAAAWAB9M7Yi49i+jRm+TH90x8ZlZwjzfFqops6dE/n1NvdisQ+v2t
-        RQG3PCYOILG8qAZyWefIGtt/f2jqxCE=
-X-Google-Smtp-Source: APXvYqzWDHUr9wvQWbCQRtlBXZmUFSplmMjGNkkIZAxDoxDDva19gidyCIlfp15SNtshgStd9FxftQ==
-X-Received: by 2002:ac2:4202:: with SMTP id y2mr12214293lfh.178.1560016269292;
-        Sat, 08 Jun 2019 10:51:09 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id a3sm963706ljd.51.2019.06.08.10.51.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Jun 2019 10:51:07 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id o13so4438554lji.5
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 10:51:07 -0700 (PDT)
-X-Received: by 2002:a2e:6109:: with SMTP id v9mr31679230ljb.205.1560016266935;
- Sat, 08 Jun 2019 10:51:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190603200301.GM28207@linux.ibm.com> <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
- <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
- <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au> <da5eedfe-92f9-6c50-b9e7-68886047dd25@gmail.com>
- <CAHk-=wgtY1hNQX9TM=4ono-UJ-hsoFA0OT36ixFWBG2eeO011w@mail.gmail.com>
- <20190608152707.GF28207@linux.ibm.com> <CAHk-=wj1G9nXMzAu=Ldbd4_bbzVtWgNORDKMD4bKTO6dRrMPmQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wj1G9nXMzAu=Ldbd4_bbzVtWgNORDKMD4bKTO6dRrMPmQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 8 Jun 2019 10:50:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiRduKzoLpAwU7iFiOJ6DX7RE+PZ_wFi9Cvq=hDoaNsPA@mail.gmail.com>
-Message-ID: <CAHk-=wiRduKzoLpAwU7iFiOJ6DX7RE+PZ_wFi9Cvq=hDoaNsPA@mail.gmail.com>
-Subject: Re: inet: frags: Turn fqdir->dead into an int for old Alphas
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=iyAgZ7LPNrjAJ5HMh1hGYwXJ8qs3w42dLho45Ew1g/g=;
+        b=dvtwP36LwCjfbjGQecm0GXUYg3spkyKgemfDvpOA8+r2Hxmx789h/WGIKLebc2ezOX
+         cAj8rtljW9HPTtYATbx8y6DaeK8mrsAOIeEl4/oBORq/kgdW1l5g6sRgqYAylEnFIFb5
+         ngsFq/L4GY+ekPAbkhb/TKVykv3iErn67DNgoG5wom5Rp9Mj5PmFBh8cfp/wV2GtNWA9
+         eM/GMPaSOWHUKUKVi0fOeKDTgTKfruvYIj62rQXLiv+LhsUb7NX8CB2XN3A4DL65f85i
+         UOYF3Q+0cKBzQlihaSmgFtTsf9/EO9lww+rJNyTpWMBb/V/fWoQL73R+OAgwxDYIZsDI
+         xFQg==
+X-Gm-Message-State: APjAAAUB29UgDB/plcamjidz8X8s+PLpWyrssfFlY07plxM4jkD9TcsN
+        MotNrMCxhCSo1/InqcanHfjVOQ==
+X-Google-Smtp-Source: APXvYqxUP4Kmv8FJwbiZts6nQLQw4BBk0vluayMvRAl8Cod+/UWEDIOm2zQpFKVrMo0x1jmMHUb1PQ==
+X-Received: by 2002:a63:e10d:: with SMTP id z13mr8254805pgh.116.1560016606841;
+        Sat, 08 Jun 2019 10:56:46 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id s12sm5453255pjp.10.2019.06.08.10.56.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 08 Jun 2019 10:56:46 -0700 (PDT)
+Date:   Sat, 08 Jun 2019 10:56:46 -0700 (PDT)
+X-Google-Original-Date: Sat, 08 Jun 2019 10:42:17 PDT (-0700)
+Subject:     Re: [PATCH v3 1/5] arch: riscv: add support for building DTB files from DT source data
+In-Reply-To: <alpine.DEB.2.21.9999.1906062208280.28147@viisi.sifive.com>
+CC:     lollivier@baylibre.com, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, paul@pwsan.com,
+        aou@eecs.berkeley.edu
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Message-ID: <mhng-802d67ce-9f78-4ebc-9981-a27e5e4e40df@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 8, 2019 at 10:42 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Thu, 06 Jun 2019 22:12:05 PDT (-0700), Paul Walmsley wrote:
+> On Tue, 4 Jun 2019, Loys Ollivier wrote:
 >
-> There are no atomic rmw sequences that have reasonable performance for
-> the bitfield updates themselves.
+>> Always build it ?
+>> Any particular reason to drop ARCH_SIFIVE ?
+>
+> Palmer had some reservations about it, so I dropped it for now.  But then
+> as I was thinking about it, I remembered that I also had some reservations
+> about it, years ago: that everyone should use CONFIG_SOC_* for this,
+> rather than CONFIG_ARCH.  CONFIG_ARCH_* seems better reserved for
+> CPU architectures.
 
-Note that this is purely about the writing side. Reads of bitfield
-values can be (and generally _should_ be) atomic, and hopefully C11
-means that you wouldn't see intermediate values.
+Specifically my worry is that "ARCH_SIFIVE" makes it sound like we're adding
+SiFive-specific architecture features, and we've been trying really hard to
+make sure that the various bits of core software avoid boing vendor specific.
+We've had suggestions of adding vendor-specific instructions to the Linux port
+with those instructions being conditionally compiled under ARCH_$VENDOR, but
+I'd rejected that under the "no vendor-specific stuff" argument.  As such it
+doesn't seem fair to go add in an ARCH_SIFIVE for our vendor-specific stuff.
 
-But I'm not convinced about that either: one natural way to update a
-bitfield is to first do the masking, and then do the insertion of new
-bits, so a bitfield assignment very easily exposes non-real values to
-a concurrent read on another CPU.
+The SOC stuff will, of course, be vendor specific.  In this idealized world
+SiFive's SOC support has nothing to do with RISC-V, but of course all of
+SiFive's SOCs are RISC-V based so the separation is a bit of pedantry.  That
+said, in this case I think getting the name right does make it slightly easier
+to espouse this "one kernel can run on all RISC-V systems" philosophy.
+Balancing the SiFive and RISC-V stuff can be a bit tricky, which is why I am
+sometimes a bit pedantic about these sorts of things.
 
-What I think C11 is supposed to protect is from compilers doing
-horribly bad things, and accessing bitfields with bigger types than
-the field itself, ie when you have
+> If you agree, would you like to send a followup series, based on the DT
+> patches, to make the SiFive DT file builds depend on CONFIG_SOC_* instead?
 
-   struct {
-       char c;
-       int field1:5;
-   };
+I'd be happy with something like that.  We'd also talked about this selecting
+all the SiFive platform drivers.  It should, of course, be possible to select
+multiple SOC vendors in a single kernel -- we don't have any other real
+hardware right now, but maybe some sort of "CONFIG_SOC_RISCV_VIRT" would be a
+good proof of concept?
 
-then a write to "field1" had better not touch "char c" as part of the
-rmw operation, because that would indeed introduce a data-race with a
-completely independent field that might have completely independent
-locking rules.
-
-But
-
-   struct {
-        int c:8;
-        int field1:5;
-   };
-
-would not sanely have the same guarantees, even if the layout in
-memory might be identical. Once you have bitfields next to each other,
-and use a base type that means they can be combined together, they
-can't be sanely modified without locking.
-
-(And I don't know if C11 took up the "base type of the bitfield"
-thing. Maybe you still need to use the ":0" thing to force alignment,
-and maybe the C standards people still haven't made the underlying
-type be meaningful other than for sign handling).
-
-            Linus
+> Thanks for the comment,
+>
+> - Paul
