@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAF6C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B155C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CECE214DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC7C214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994161;
-	bh=GN9fj8h0Z1VPlEI5dkPyZ16IY3nf3XZ6iJ2EyzKJuC8=;
+	s=default; t=1559994167;
+	bh=1pGA8Uh3GTYdMt2ORf6vNZiwHN1guEEqKdgDKnDaTw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCtamEmLOjG+YPImJ0mrUkgUeEEmdQgjKc+294TNxp0Xbjc7eBuvZUuryUXoLlAN+
-	 1L1SwhO3ZLi4HWWPC5JfcIs+U6gnooEux8mH5jzuy2vw1GSNsT4A3qnuKJHIksbgER
-	 rSM9RNCZG+EKuA7zW3GiPk0l/3WC5WkHn0kYBI5I=
+	b=llTiEAXQvXydWMydCdbAaOr4dSOcuPLL07OmoRZShztFlAopYnp2dSf/MZDau8fV3
+	 EbFShLY/RQ1e4IaB62G57IrZyUgNbTB0xwih822GedcxGloyrNMfswRQrqb7ZtxMkx
+	 JiGpvUJozm6SkTZS4ugyvsMMmcxAaB2RZjksO3OI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfFHLmk (ORCPT
+        id S1728553AbfFHLmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59926 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:42:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbfFHLmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:42:38 -0400
+        id S1727935AbfFHLmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:42:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11262214C6;
-        Sat,  8 Jun 2019 11:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED603214C6;
+        Sat,  8 Jun 2019 11:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994157;
-        bh=GN9fj8h0Z1VPlEI5dkPyZ16IY3nf3XZ6iJ2EyzKJuC8=;
+        s=default; t=1559994162;
+        bh=1pGA8Uh3GTYdMt2ORf6vNZiwHN1guEEqKdgDKnDaTw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PCN6YQymNBO3NIiAVn5TOAq/ezmVn0bAfb6x13wv77csSEsdfczDhPuR9XztHiovb
-         ohku622jMgxSUfGZu8twtuBaFHyCyCmQyOsMKF9L9h4GuOUPEt8GMfrCbxcTy0Kq5/
-         3zBgrr/k8mIEYUc8Ps/gfqU63Y/Um/9DQ7DjaAp8=
+        b=I2gMsc6yAumnbTTSfNOAztKa6rRkoNvaoFGFsJQXerdQcN78RDraclOv35yXYUkQ5
+         kXmKiotXb4Un2y+sF+gpQOXmH9T0mJIhWjx4muxR0ePxJe2MDr98fjUEykrmKdVPza
+         tnW4j654/MKBeePz/Y9EVDVB9m/WaxA8QgmzvcmM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Nyekjaer <sean@geanix.com>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/49] iio: adc: ti-ads8688: fix timestamp is not updated in buffer
-Date:   Sat,  8 Jun 2019 07:41:43 -0400
-Message-Id: <20190608114232.8731-2-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/49] perf/x86/intel/ds: Fix EVENT vs. UEVENT PEBS constraints
+Date:   Sat,  8 Jun 2019 07:41:45 -0400
+Message-Id: <20190608114232.8731-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -59,35 +66,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Nyekjaer <sean@geanix.com>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit e6d12298310fa1dc11f1d747e05b168016057fdd ]
+[ Upstream commit 23e3983a466cd540ffdd2bbc6e0c51e31934f941 ]
 
-When using the hrtimer iio trigger timestamp isn't updated.
-If we use iio_get_time_ns it is updated correctly.
+This patch fixes an bug revealed by the following commit:
 
-Fixes: 2a86487786b5c ("iio: adc: ti-ads8688: add trigger and buffer support")
-Signed-off-by: Sean Nyekjaer <sean@geanix.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+  6b89d4c1ae85 ("perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking")
+
+That patch modified INTEL_FLAGS_EVENT_CONSTRAINT() to only look at the event code
+when matching a constraint. If code+umask were needed, then the
+INTEL_FLAGS_UEVENT_CONSTRAINT() macro was needed instead.
+This broke with some of the constraints for PEBS events.
+
+Several of them, including the one used for cycles:p, cycles:pp, cycles:ppp
+fell in that category and caused the event to be rejected in PEBS mode.
+In other words, on some platforms a cmdline such as:
+
+  $ perf top -e cycles:pp
+
+would fail with -EINVAL.
+
+This patch fixes this bug by properly using INTEL_FLAGS_UEVENT_CONSTRAINT()
+when needed in the PEBS constraint tables.
+
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Link: http://lkml.kernel.org/r/20190521005246.423-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ti-ads8688.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/ds.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/iio/adc/ti-ads8688.c b/drivers/iio/adc/ti-ads8688.c
-index 8b4568edd5cb..7f16c77b99fb 100644
---- a/drivers/iio/adc/ti-ads8688.c
-+++ b/drivers/iio/adc/ti-ads8688.c
-@@ -397,7 +397,7 @@ static irqreturn_t ads8688_trigger_handler(int irq, void *p)
- 	}
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index b7b01d762d32..e91814d1a27f 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -684,7 +684,7 @@ struct event_constraint intel_core2_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1fc7, 0x1), /* SIMD_INST_RETURED.ANY */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
+ 	EVENT_CONSTRAINT_END
+ };
  
- 	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
--			pf->timestamp);
-+			iio_get_time_ns(indio_dev));
+@@ -693,7 +693,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x00c5, 0x1), /* MISPREDICTED_BRANCH_RETIRED */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
+ 	/* Allow all events as PEBS with no flags */
+ 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
+ 	EVENT_CONSTRAINT_END
+@@ -701,7 +701,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
  
- 	iio_trigger_notify_done(indio_dev->trig);
+ struct event_constraint intel_slm_pebs_event_constraints[] = {
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x1),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x1),
+ 	/* Allow all events as PEBS with no flags */
+ 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
+ 	EVENT_CONSTRAINT_END
+@@ -726,7 +726,7 @@ struct event_constraint intel_nehalem_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	EVENT_CONSTRAINT_END
+ };
  
+@@ -743,7 +743,7 @@ struct event_constraint intel_westmere_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	EVENT_CONSTRAINT_END
+ };
+ 
+@@ -752,7 +752,7 @@ struct event_constraint intel_snb_pebs_event_constraints[] = {
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
+ 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+         INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
+         INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
+         INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+@@ -767,9 +767,9 @@ struct event_constraint intel_ivb_pebs_event_constraints[] = {
+         INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
+ 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+@@ -783,9 +783,9 @@ struct event_constraint intel_hsw_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
+@@ -806,9 +806,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
+@@ -829,9 +829,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
+ struct event_constraint intel_skl_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x2),	/* INST_RETIRED.PREC_DIST */
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	/* INST_RETIRED.TOTAL_CYCLES_PS (inv=1, cmask=16) (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	INTEL_PLD_CONSTRAINT(0x1cd, 0xf),		      /* MEM_TRANS_RETIRED.* */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_STORES */
 -- 
 2.20.1
 
