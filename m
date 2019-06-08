@@ -3,104 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63DAC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B1FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91583208E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C56C208E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CR4N8xJB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aA36vdZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfFHEy1 (ORCPT
+        id S1727898AbfFHFCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 00:54:27 -0400
-Received: from mail-yw1-f51.google.com ([209.85.161.51]:36454 "EHLO
-        mail-yw1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfFHEy1 (ORCPT
+        Sat, 8 Jun 2019 01:02:04 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:34136 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbfFHFCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 00:54:27 -0400
-Received: by mail-yw1-f51.google.com with SMTP id t126so1513919ywf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:54:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=gdOiKu4uunDevc55Ha6d1X7EDU7JD4k+0gj1JHmzE4M=;
-        b=CR4N8xJBvBhNiMx6hY+HITDJ2u/0ZgsO2bNXoNNUZNgWFfclGYQ7tQVu8+ZSEh6Qd/
-         uO/ETIoXrwaXUvQzIxfRfY4LcIy4BAQD786tn1rDZFBCWG7lp69GZ7EMcatVb8L/peZ0
-         QSzUZ2gVHPOqMVCWKc3LdUG6HOup4Nb0WHsFlJPkb94t8lqyaoKn4JjF/PSruZe84qYC
-         X6Y1PKjTHbrv32/n0Hmut+QbGMbHolTLvH//uyWuECCixsgnRl9TyqOyxRwIa6Xvqcxm
-         tmK7NSTICFFrumVT3r8ThfeqvakAI0ll++4C8/lZrt7TOjnNWSCoTi+UIvJKYgNaLKCL
-         oXDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=gdOiKu4uunDevc55Ha6d1X7EDU7JD4k+0gj1JHmzE4M=;
-        b=k8e8GD8LQ6pTRNnTif7PlasiRr7ooKuWR3rejcNUizNslGQ4C7OcwcvRZGqBoAAJWr
-         Iz/ucX9Xd/eGH+BU2pP5Lu/P4w6daqVSyanxVP6KFSdymPPYGreWKQ4qFyFAK8Y5ND6n
-         1uAPR+VgGcj1FVlWsE+qoFUV+hdREIXIsVIwmtsHOKcNZVTOQ5RmAChHgNo+z6ZqUHhU
-         qjb8ba9cdPrmmC0gw8UoP7HbW49NTxNFrJrZJCzQjqtKlercwKj/Y/XsXwDbUmLg2GuC
-         1aS/DHqKh73UI6B1isOdKAI0Io4qtnwZPZH+stoxfuCP7FxVl4QjoeKa9E2jGUMbKcYi
-         FYMw==
-X-Gm-Message-State: APjAAAWB19Jhzv4QKtUEhkys2o5pAaGMC14or2sTIcd7DGzBcnEP6O7a
-        VFh1pgRxeYzYNZ9Lg7Rg7nA4lgU5/gA+i828PFF5geU=
-X-Google-Smtp-Source: APXvYqyRqy6fDSNNAlvoL/+Qw+rS1FDHlns1GXs9lq6+o5bnzRkoeVQaI1UKuw/cvGFR/gEhi7v5FmsirfBbOm50lmI=
-X-Received: by 2002:a81:ed3:: with SMTP id 202mr29796733ywo.332.1559969665959;
- Fri, 07 Jun 2019 21:54:25 -0700 (PDT)
+        Sat, 8 Jun 2019 01:02:03 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x584xk27074161;
+        Sat, 8 Jun 2019 05:01:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=iekzr2MQdPk3SDaxbZ1003Sw3EsU+tQlu1SJLk3qzkE=;
+ b=aA36vdZUbKpVadR8J3OuJ5awvlQML0GkP2l5izNB6IAtGdz36BY2rV+apJAvO/Mr1nfW
+ 5vXVJKfxSrHdj7lgPKwPdxvV8tt8HLEw5JvVomshJmPhMyILYqAhQikogWdJ6zkz7g9z
+ ATAgdF8wH81scaymHxxQH1kt4Nal2TOI9jIl9/0sis4EUY1+cHdpid1gFnFIOR9a58x6
+ O+HtO31TJp+AyVKYgbuHo18k+njbnyLcltlmnz+HKU/dk1AvL5vdqHEeTy1oiS4pWtvG
+ L8mG25b9D5SgAh9cIRjSqXXa09AsZ7KQ1t1ULb65/kta9fMPPnKHohvZUXU7e/eb5ZoJ iQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2t02he8c39-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 Jun 2019 05:01:45 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x58518rL118548;
+        Sat, 8 Jun 2019 05:01:44 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2t024t2sj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 Jun 2019 05:01:44 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5851hDF029132;
+        Sat, 8 Jun 2019 05:01:43 GMT
+Received: from [192.168.0.110] (/70.36.60.91)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Jun 2019 22:01:42 -0700
+Subject: Re: [RFC PATCH 06/16] x86/xen: add shared_info support to xenhost_t
+To:     Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com, sstabellini@kernel.org,
+        joao.m.martins@oracle.com
+References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
+ <20190509172540.12398-7-ankur.a.arora@oracle.com>
+ <97d41abd-3717-1f78-4d5e-dfa74261e9c7@suse.com>
+From:   Ankur Arora <ankur.a.arora@oracle.com>
+Message-ID: <71126f1a-ad50-cf4e-2cc8-5a778a7ecbb4@oracle.com>
+Date:   Fri, 7 Jun 2019 22:01:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-From:   Turritopsis Dohrnii Teo En Ming <tdteoenming@gmail.com>
-Date:   Sat, 8 Jun 2019 12:54:14 +0800
-Message-ID: <CANnei0FyP-vrJ8wug1BHPb9RHmF7S=K2jCcRAJgC+caL927WSQ@mail.gmail.com>
-Subject: Targeted Individuals Get Fired from Employment/Jobs Frequently or All
- the Time
-To:     linux-kernel@vger.kernel.org
-Cc:     Turritopsis Dohrnii Teo En Ming <tdteoenming@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <97d41abd-3717-1f78-4d5e-dfa74261e9c7@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906080037
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906080037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject/Topic: Targeted Individuals Get Fired from Employment/Jobs
-Frequently or All the Time
+On 2019-06-07 8:08 a.m., Juergen Gross wrote:
+> On 09.05.19 19:25, Ankur Arora wrote:
+>> HYPERVISOR_shared_info is used for irq/evtchn communication between the
+>> guest and the host. Abstract out the setup/reset in xenhost_t such that
+>> nested configurations can use both xenhosts simultaneously.
+> 
+> I have mixed feelings about this patch. Most of the shared_info stuff we
+> don't need for the nested case. In the end only the event channels might
+> be interesting, but we obviously want them not for all vcpus of the L1
+> hypervisor, but for those of the current guest.
+Agreed about the mixed feelings part. shared_info does feel far too
+heavy to drag along just for the event-channel state.
+Infact, on thinking a bit more, a better abstraction for nested
+event-channels would have been as an extension to the primary
+xenhost's event-channel bits.
+(The nested upcalls also go via the primary xenhost in patch-8.)
 
-8th JUNE 2019 Saturday Singapore Time
+Ankur
 
-There are (perhaps) millions of Targeted Individuals in (perhaps)
-every country all over the world.
+> 
+> So I think just drop that patch for now. We can dig it out later in case > nesting wants it again.
+> 
+> 
+> Juergen
 
-According to accounts and experiences shared by many Targeted
-Individuals all over the world, it is INEVITABLE for Targeted
-Individuals to get fired from employment/jobs frequently or all the
-time. Getting fired from employment/jobs frequently or all the time is
-part and parcel of the targeting program. You should expect it.
-
-As at 8th June 2019 Saturday Singapore Time, Mr. Turritopsis Dohrnii
-Teo En Ming is 41 years old.
-
-Mr. Turritopsis Dohrnii Teo En Ming is a TARGETED INDIVIDUAL (TI) in Singapore.
-
------BEGIN EMAIL SIGNATURE-----
-
-The Gospel for all Targeted Individuals (TIs):
-
-[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
-U.S. Embassy Workers
-
-Link: https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
-
-********************************************************************************************
-
-Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
-Qualifications as at 14 Feb 2019
-
-[1] https://tdtemcerts.wordpress.com/
-
-[2] https://tdtemcerts.blogspot.sg/
-
-[3] https://www.scribd.com/user/270125049/Teo-En-Ming
-
------END EMAIL SIGNATURE-----
