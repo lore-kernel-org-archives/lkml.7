@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B2EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D344AC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81718216C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6C32216C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994724;
-	bh=JJG+oXo8L7xI8kAMR0LTR1wt7Hovmkk9f0cgYmJh/l8=;
+	s=default; t=1559994731;
+	bh=HO/aZsGPvxzUP/FabbJfcPAsKmdrz1tdOimGqy0FJWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eU+a6BgZHvMQwCIi6w5S6wEAfc/fTnHfs/6kdM/9A3nlEH4J6dWZ4htarNeCMgS5R
-	 HJ7KoZF3HvtJE2oFWaijhpNewyBv4z+pM6BKVeNjh+Xi2CqgvgK58Llo5RJfR+xU6+
-	 08yr7AQx4+kAGoPckY5xWm4D5s1lAS/AGHpgNqfg=
+	b=tl3/JzBukbTGlUm3XqhV7gKUZhJE4bj2gVg6YeNRE247dUAwEeaFNHuHj8Yx5fYcm
+	 jHr+pW9LIZf6WFAu2tBwytmB0aZLhIx9kRlw+1wbCxHkjvvMFONBz7WAD+GToyYWdH
+	 xCl9389epC/x7pVWZdhP9ujNgevldq3KPzpLEIAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbfFHLwE (ORCPT
+        id S1729869AbfFHLwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:52:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729221AbfFHLrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:47:24 -0400
+        id S1728564AbfFHLrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D12EF214DA;
-        Sat,  8 Jun 2019 11:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3759216F4;
+        Sat,  8 Jun 2019 11:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994443;
-        bh=JJG+oXo8L7xI8kAMR0LTR1wt7Hovmkk9f0cgYmJh/l8=;
+        s=default; t=1559994439;
+        bh=HO/aZsGPvxzUP/FabbJfcPAsKmdrz1tdOimGqy0FJWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFxoOxRRb+qjR0jt6TyvvBuT0xBHtzI7rH2Q6mNfYapwzKGLEmSVJqPOjWYkWajTP
-         Lc4BJ1sM8ww5iIp0dnTqmyGDNz9/6iYe9U/iQbl+P/zF9eEnb9tNXYEoUthW0VSUBD
-         Z79ZhnLN+SXBZpH10v5TCWWzkNJSTFixNHQHayOI=
+        b=yHOrfup7igrKMxWB3LwlSL5rrgcjHuaXu86C4k+EyDE9yG71tastESn4OpgIRcIbh
+         OPAyhCTJAbEQ1FH/Jt0qnKu4gKU/F/KhNGDG79Fv90qasdbOL3s7+qATTFreGmHagB
+         PwkVTxump3JilhQb7VsdA0Zu0rhDijllhssVpE78=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 14/31] net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
-Date:   Sat,  8 Jun 2019 07:46:25 -0400
-Message-Id: <20190608114646.9415-14-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Yabin Cui <yabinc@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
+        mark.rutland@arm.com, namhyung@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 12/31] perf/ring-buffer: Always use {READ,WRITE}_ONCE() for rb->user_page data
+Date:   Sat,  8 Jun 2019 07:46:23 -0400
+Message-Id: <20190608114646.9415-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
@@ -60,54 +67,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 3e66b7cc50ef921121babc91487e1fb98af1ba6e ]
+[ Upstream commit 4d839dd9e4356bbacf3eb0ab13a549b83b008c21 ]
 
-Building with Clang reports the redundant use of MODULE_DEVICE_TABLE():
+We must use {READ,WRITE}_ONCE() on rb->user_page data such that
+concurrent usage will see whole values. A few key sites were missing
+this.
 
-drivers/net/ethernet/dec/tulip/de4x5.c:2110:1: error: redefinition of '__mod_eisa__de4x5_eisa_ids_device_table'
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:90:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
-drivers/net/ethernet/dec/tulip/de4x5.c:2100:1: note: previous definition is here
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:85:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
-
-This drops the one further from the table definition to match the common
-use of MODULE_DEVICE_TABLE().
-
-Fixes: 07563c711fbc ("EISA bus MODALIAS attributes support")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Suggested-by: Yabin Cui <yabinc@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: acme@kernel.org
+Cc: mark.rutland@arm.com
+Cc: namhyung@kernel.org
+Fixes: 7b732a750477 ("perf_counter: new output ABI - part 1")
+Link: http://lkml.kernel.org/r/20190517115418.394192145@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/dec/tulip/de4x5.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/events/ring_buffer.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/dec/tulip/de4x5.c b/drivers/net/ethernet/dec/tulip/de4x5.c
-index 0affee9c8aa2..0b1e7a96ff49 100644
---- a/drivers/net/ethernet/dec/tulip/de4x5.c
-+++ b/drivers/net/ethernet/dec/tulip/de4x5.c
-@@ -2108,7 +2108,6 @@ static struct eisa_driver de4x5_eisa_driver = {
- 		.remove  = de4x5_eisa_remove,
-         }
- };
--MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
- #endif
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index aef2af80a927..f3a69a4f0d57 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -101,7 +101,7 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	 * See perf_output_begin().
+ 	 */
+ 	smp_wmb(); /* B, matches C */
+-	rb->user_page->data_head = head;
++	WRITE_ONCE(rb->user_page->data_head, head);
  
- #ifdef CONFIG_PCI
+ 	/*
+ 	 * We must publish the head before decrementing the nest count,
+@@ -489,7 +489,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
+ 		                     handle->aux_flags);
+ 	}
+ 
+-	rb->user_page->aux_head = rb->aux_head;
++	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
+ 	if (rb_need_aux_wakeup(rb))
+ 		wakeup = true;
+ 
+@@ -520,7 +520,7 @@ int perf_aux_output_skip(struct perf_output_handle *handle, unsigned long size)
+ 
+ 	rb->aux_head += size;
+ 
+-	rb->user_page->aux_head = rb->aux_head;
++	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
+ 	if (rb_need_aux_wakeup(rb)) {
+ 		perf_output_wakeup(handle);
+ 		handle->wakeup = rb->aux_wakeup + rb->aux_watermark;
 -- 
 2.20.1
 
