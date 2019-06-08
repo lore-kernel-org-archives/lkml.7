@@ -2,116 +2,57 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77F7C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE66C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD9BD214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994299;
-	bh=VbJ6OMaWH+tZgovy7MZ8puKAfpEhNIIolczFkw42pxg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eW68NNxvJqb+RHC9VSxOMzSpo0lVM75BoUczcQgYhglnFkGknmuMaLNiyuVK2oCAK
-	 Ha/DQDMTJn9YU8h7m30lIrQOx7LX/n+PcNNQKvDG+d7LxeCWRn/RBgauZ1/N616a4a
-	 IGfCwmFZta/JmT6UOI9qvb9G+LVhvhLtJ5p62+q8=
+	by mail.kernel.org (Postfix) with ESMTP id 51EE0214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbfFHLo7 (ORCPT
+        id S1728994AbfFHLpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:44:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbfFHLn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:45:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45662 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728145AbfFHLn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Jun 2019 07:43:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2ACE21530;
-        Sat,  8 Jun 2019 11:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994208;
-        bh=VbJ6OMaWH+tZgovy7MZ8puKAfpEhNIIolczFkw42pxg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8YJvEjlYkiJEwzAt3PPFrAsD8XemneITRv8ude8MHWVzpLPliliOFCogqt1y3CdC
-         /GmDTZrfaDNN1DUsEogZLZ1vUkicFMqgreIz6nVW474vFsPyb+GgN//cDHJWPEs1RH
-         Q0LaGF2aILkntUnmPBgCrlduVq+W/Q9y40+IELqM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/49] ACPI/PCI: PM: Add missing wakeup.flags.valid checks
-Date:   Sat,  8 Jun 2019 07:42:01 -0400
-Message-Id: <20190608114232.8731-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
-References: <20190608114232.8731-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2D19BAD81;
+        Sat,  8 Jun 2019 11:43:28 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        boris.ostrovsky@oracle.com
+Subject: [GIT PULL] xen: fix for 5.2-rc4
+Date:   Sat,  8 Jun 2019 13:43:26 +0200
+Message-Id: <20190608114326.4804-1-jgross@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Linus,
 
-[ Upstream commit 9a51c6b1f9e0239a9435db036b212498a2a3b75c ]
+Please git pull the following tag:
 
-Both acpi_pci_need_resume() and acpi_dev_needs_resume() check if the
-current ACPI wakeup configuration of the device matches what is
-expected as far as system wakeup from sleep states is concerned, as
-reflected by the device_may_wakeup() return value for the device.
+ git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.2b-rc4-tag
 
-However, they only should do that if wakeup.flags.valid is set for
-the device's ACPI companion, because otherwise the wakeup.prepare_count
-value for it is meaningless.
+xen: fix for 5.2-rc4
 
-Add the missing wakeup.flags.valid checks to these functions.
+It contains just one fix for the Xen block frontend driver avoiding
+allocations with order > 0.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/acpi/device_pm.c | 4 ++--
- drivers/pci/pci-acpi.c   | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Thanks.
 
-diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-index a7c2673ffd36..1806260938e8 100644
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -948,8 +948,8 @@ static bool acpi_dev_needs_resume(struct device *dev, struct acpi_device *adev)
- 	u32 sys_target = acpi_target_system_state();
- 	int ret, state;
- 
--	if (!pm_runtime_suspended(dev) || !adev ||
--	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count)
-+	if (!pm_runtime_suspended(dev) || !adev || (adev->wakeup.flags.valid &&
-+	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count))
- 		return true;
- 
- 	if (sys_target == ACPI_STATE_S0)
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index f8436d1c4d45..f7218c1673ce 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -625,7 +625,8 @@ static bool acpi_pci_need_resume(struct pci_dev *dev)
- 	if (!adev || !acpi_device_power_manageable(adev))
- 		return false;
- 
--	if (device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
-+	if (adev->wakeup.flags.valid &&
-+	    device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
- 		return true;
- 
- 	if (acpi_target_system_state() == ACPI_STATE_S0)
--- 
-2.20.1
+Juergen
 
+ drivers/block/xen-blkfront.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+Roger Pau Monne (1):
+      xen-blkfront: switch kcalloc to kvcalloc for large array allocation
