@@ -2,52 +2,55 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D72C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C850C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA0F2168B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BFE2168B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994700;
-	bh=vmqBJGY85IBEF1CHzrgyOb52c02Q6NCmsglDEvdyNt4=;
+	s=default; t=1559994710;
+	bh=UJQ60K64HQjg1XJUofAgkZVW/O9166+GQiB3g1872GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vsdQ6e4pVomur3FGtXWT7W+zVQ5Omi35A2EphsM2ADf9yrDxr5LOMlbXxJakAbAer
-	 MK9q25Ty9sWZ3QTh3EOE2u6LGDiAWD2LGXElhAiylfAQKIMkTJoTKU7yrdzekQ0kGW
-	 YLa6lTER0Fzk9h0nlLrzxMazdwsUJcXQ8DsB6Ezk=
+	b=wSN4Ke48aZayMtWa6IL0aGrYfQxSwbZBIs8Q27evyIxRpTXF97IdbHw8f8MuI757M
+	 QACUaj8u4ZSl6Sr3YPUchD5KWVpd4mVbx7me2n8KqHRVXUIpxnPuMxRqNYpMEjs+8r
+	 nQpbg39sr+jx+5vX/TqBVBnOiUFU3Z1E0lEcewlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfFHLvf (ORCPT
+        id S1729682AbfFHLvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36428 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:51:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729341AbfFHLrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:47:42 -0400
+        id S1729229AbfFHLre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AB4621537;
-        Sat,  8 Jun 2019 11:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82DB0214DA;
+        Sat,  8 Jun 2019 11:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994461;
-        bh=vmqBJGY85IBEF1CHzrgyOb52c02Q6NCmsglDEvdyNt4=;
+        s=default; t=1559994454;
+        bh=UJQ60K64HQjg1XJUofAgkZVW/O9166+GQiB3g1872GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OHszH+KTEPhl62Q3r8QgBmtweFWZ5VCAPwYSzwfZpH3DUTjk+6j0qDLz5GHMbmR6S
-         cSnKeYL0XGdN+E+ILvec6hLavAWVHrDe2vFy1RfVlELTLltqyuEwB+ifzDyQmfb2Jn
-         x3kXaFCrqb6/uXmz12DEPneEqzMjjsBAg8q9VVrc=
+        b=sUQ0/s8ESbLaxnNwC8CK20RhtV2g+ecrr1QFjaUkBQsEjzGrgJfmmpTwvXf5PVlBQ
+         rhYMOGhM9ov5z1OxvliKpve6S3DK6O15x/lW3CH/lkp2YRfs+xfnkjOGz1OzFHAk9Z
+         Bj+GtyEuSdkLjnEPSCvpeFl3RFeZ3ZgyqIS+52OY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 24/31] KVM: PPC: Book3S HV: Don't take kvm->lock around kvm_for_each_vcpu
-Date:   Sat,  8 Jun 2019 07:46:35 -0400
-Message-Id: <20190608114646.9415-24-sashal@kernel.org>
+Cc:     Shawn Landden <shawn@git.icu>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 20/31] perf data: Fix 'strncat may truncate' build failure with recent gcc
+Date:   Sat,  8 Jun 2019 07:46:31 -0400
+Message-Id: <20190608114646.9415-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
@@ -61,65 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Mackerras <paulus@ozlabs.org>
+From: Shawn Landden <shawn@git.icu>
 
-[ Upstream commit 5a3f49364c3ffa1107bd88f8292406e98c5d206c ]
+[ Upstream commit 97acec7df172cd1e450f81f5e293c0aa145a2797 ]
 
-Currently the HV KVM code takes the kvm->lock around calls to
-kvm_for_each_vcpu() and kvm_get_vcpu_by_id() (which can call
-kvm_for_each_vcpu() internally).  However, that leads to a lock
-order inversion problem, because these are called in contexts where
-the vcpu mutex is held, but the vcpu mutexes nest within kvm->lock
-according to Documentation/virtual/kvm/locking.txt.  Hence there
-is a possibility of deadlock.
+This strncat() is safe because the buffer was allocated with zalloc(),
+however gcc doesn't know that. Since the string always has 4 non-null
+bytes, just use memcpy() here.
 
-To fix this, we simply don't take the kvm->lock mutex around these
-calls.  This is safe because the implementations of kvm_for_each_vcpu()
-and kvm_get_vcpu_by_id() have been designed to be able to be called
-locklessly.
+    CC       /home/shawn/linux/tools/perf/util/data-convert-bt.o
+  In file included from /usr/include/string.h:494,
+                   from /home/shawn/linux/tools/lib/traceevent/event-parse.h:27,
+                   from util/data-convert-bt.c:22:
+  In function ‘strncat’,
+      inlined from ‘string_set_value’ at util/data-convert-bt.c:274:4:
+  /usr/include/powerpc64le-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin_strncat’ output may be truncated copying 4 bytes from a string of length 4 [-Werror=stringop-truncation]
+    136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Shawn Landden <shawn@git.icu>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+LPU-Reference: 20190518183238.10954-1-shawn@git.icu
+Link: https://lkml.kernel.org/n/tip-289f1jice17ta7tr3tstm9jm@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ tools/perf/util/data-convert-bt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 58746328b9bd..3b7488fce3db 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -392,12 +392,7 @@ static void kvmppc_dump_regs(struct kvm_vcpu *vcpu)
- 
- static struct kvm_vcpu *kvmppc_find_vcpu(struct kvm *kvm, int id)
- {
--	struct kvm_vcpu *ret;
--
--	mutex_lock(&kvm->lock);
--	ret = kvm_get_vcpu_by_id(kvm, id);
--	mutex_unlock(&kvm->lock);
--	return ret;
-+	return kvm_get_vcpu_by_id(kvm, id);
- }
- 
- static void init_vpa(struct kvm_vcpu *vcpu, struct lppaca *vpa)
-@@ -1258,7 +1253,6 @@ static void kvmppc_set_lpcr(struct kvm_vcpu *vcpu, u64 new_lpcr,
- 	struct kvmppc_vcore *vc = vcpu->arch.vcore;
- 	u64 mask;
- 
--	mutex_lock(&kvm->lock);
- 	spin_lock(&vc->lock);
- 	/*
- 	 * If ILE (interrupt little-endian) has changed, update the
-@@ -1298,7 +1292,6 @@ static void kvmppc_set_lpcr(struct kvm_vcpu *vcpu, u64 new_lpcr,
- 		mask &= 0xFFFFFFFF;
- 	vc->lpcr = (vc->lpcr & ~mask) | (new_lpcr & mask);
- 	spin_unlock(&vc->lock);
--	mutex_unlock(&kvm->lock);
- }
- 
- static int kvmppc_get_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 2346cecb8ea2..5131304ea3a8 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -271,7 +271,7 @@ static int string_set_value(struct bt_ctf_field *field, const char *string)
+ 				if (i > 0)
+ 					strncpy(buffer, string, i);
+ 			}
+-			strncat(buffer + p, numstr, 4);
++			memcpy(buffer + p, numstr, 4);
+ 			p += 3;
+ 		}
+ 	}
 -- 
 2.20.1
 
