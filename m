@@ -2,72 +2,113 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA6CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA03C468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE712168B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244D02168B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559994644;
+	bh=ROP1spatBqCkFyvKcEZrycGls/aiVO8NuBYtlutysBM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=a0zUvoP6deCtYnAC6FUDOC7nw4MSo/I+QhawhJMulHwNyz5y31IOnb7jQa1MDRFcs
+	 GCK9ENHMYWlawkAW9wla7H8RwC452gWEfyxaBEyY1eoy2TSZ4I7ICFVafi9o8tGtMC
+	 qVNbcZ0pIVa9lUcnTv46nLdWQg0lXMZpiRBpIaEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfFHLug (ORCPT
+        id S1729616AbfFHLsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:50:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38785 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727408AbfFHLue (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:50:34 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hZZrk-00030Y-3S; Sat, 08 Jun 2019 11:50:32 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Ioana Radulescu <ruxandra.radulescu@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH] staging: fsl-dpaa2/ethsw: fix memory leak of switchdev_work
-Date:   Sat,  8 Jun 2019 12:50:31 +0100
-Message-Id: <20190608115031.28126-1-colin.king@canonical.com>
+        Sat, 8 Jun 2019 07:48:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728642AbfFHLsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:48:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B3E82173E;
+        Sat,  8 Jun 2019 11:48:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559994500;
+        bh=ROP1spatBqCkFyvKcEZrycGls/aiVO8NuBYtlutysBM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xspOfLwnM5HSnIOFGJNuMUSlQhlpHGEG424+dZy9YJDP6Bopyc4C/R1TU318rwT+5
+         a/QzVjfVIcZoi5ecD6hIyJ4AnLlatzD7YBBRvc4iherd3yrbWn8PRhxjjO676seCkj
+         zm9hxOjUYnRDpsPnrvQROYC0pGdz/Tq5JSry4GCg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 07/20] gpio: fix gpio-adp5588 build errors
+Date:   Sat,  8 Jun 2019 07:47:43 -0400
+Message-Id: <20190608114756.9742-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190608114756.9742-1-sashal@kernel.org>
+References: <20190608114756.9742-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-In the default event case switchdev_work is being leaked because
-nothing is queued for work. Fix this by kfree'ing switchdev_work
-before returning NOTIFY_DONE.
+[ Upstream commit e9646f0f5bb62b7d43f0968f39d536cfe7123b53 ]
 
-Addresses-Coverity: ("Resource leak")
-Fixes: 44baaa43d7cc ("staging: fsl-dpaa2/ethsw: Add Freescale DPAA2 Ethernet Switch driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+The gpio-adp5588 driver uses interfaces that are provided by
+GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
+
+Fixes these build errors:
+
+../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
+../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
+            dev->gpio_chip.irq.domain, gpio));
+                          ^
+../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
+../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
+  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
+  ^
+../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
+  gpiochip_set_nested_irqchip(&dev->gpio_chip,
+  ^
+
+Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-gpio@vger.kernel.org
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 1 +
+ drivers/gpio/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index e3c3e427309a..f73edaf6ce87 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -1086,6 +1086,7 @@ static int port_switchdev_event(struct notifier_block *unused,
- 		dev_hold(dev);
- 		break;
- 	default:
-+		kfree(switchdev_work);
- 		return NOTIFY_DONE;
- 	}
- 
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 12d417a4d4a8..b992badb99dd 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -670,6 +670,7 @@ config GPIO_ADP5588
+ config GPIO_ADP5588_IRQ
+ 	bool "Interrupt controller support for ADP5588"
+ 	depends on GPIO_ADP5588=y
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to enable the adp5588 to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
 -- 
 2.20.1
 
