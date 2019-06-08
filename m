@@ -2,114 +2,128 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D64BC468BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 00:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEF0C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 00:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A84208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 00:01:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="nWtDsrfI"
+	by mail.kernel.org (Postfix) with ESMTP id D1392208E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 00:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbfFHABx (ORCPT
+        id S1731001AbfFHALo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 20:01:53 -0400
-Received: from mx.aristanetworks.com ([162.210.129.12]:34130 "EHLO
-        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730402AbfFHABx (ORCPT
+        Fri, 7 Jun 2019 20:11:44 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38024 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729685AbfFHALo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 20:01:53 -0400
-X-Greylist: delayed 434 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Jun 2019 20:01:52 EDT
-Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 9613941B0E6;
-        Fri,  7 Jun 2019 16:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1559951703;
-        bh=Dzi853M92v2Ur/j9OKyDN0xQRvNGtOcZnl2jafJyGXg=;
-        h=Date:To:Subject:From;
-        b=nWtDsrfIRM/wiwsrLsub34vRPFtw0gCM7EgmI8sJ3DzNoIPhxPkN9jfxq2nV/kNjI
-         +Q+kmJE+kG5EvzNaEfSusNpkwv+qb0HS1BKJ9iW70tZ/25o3fZG3RVPsbUg2sKHW0Y
-         u40S7yh34zzOMrrO70QFd1NH8k7ac806zA88jf4BCZLW3ep1MqHCGvXOsTuKpl/+ne
-         qsm/ptGOF3INDeQVRePJD+JC9TXHSYX2Vo+Clz6aTFIl+D+CsTBdFEwxPaT79iOa6u
-         +L5gYS6cNHBUvBuEEfbmMeOt6gPzBwvojqIKsaAQVbnEXiZ5uJ2krewlpHjQpoSylv
-         oc1+PU22VZRMg==
-Received: from us180.sjc.aristanetworks.com (us180.sjc.aristanetworks.com [172.25.230.4])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 9484341B0E5;
-        Fri,  7 Jun 2019 16:55:03 -0700 (PDT)
-Received: by us180.sjc.aristanetworks.com (Postfix, from userid 10189)
-        id CFF3F95C0244; Fri,  7 Jun 2019 16:54:37 -0700 (PDT)
-Date:   Fri, 07 Jun 2019 16:54:37 -0700
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        gregkh@linuxfoundation.org, fruggeri@arista.com, namit@vmware.com
-Subject: kprobe: kernel panic in 4.19.47
-User-Agent: Heirloom mailx 12.5 7/5/10
+        Fri, 7 Jun 2019 20:11:44 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 946BC43E794;
+        Sat,  8 Jun 2019 10:11:34 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hZOwO-0001iX-35; Sat, 08 Jun 2019 10:10:36 +1000
+Date:   Sat, 8 Jun 2019 10:10:36 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190608001036.GF14308@dread.disaster.area>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-Id: <20190607235437.CFF3F95C0244@us180.sjc.aristanetworks.com>
-From:   fruggeri@arista.com (Francesco Ruggeri)
+Content-Disposition: inline
+In-Reply-To: <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=q-LccRbQMXva6PWEi7oA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I see the following kernel panic in 4.19.47 as soon as I hit a kprobe.
-In this case it happened right after
+On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
+> On Fri, Jun 07, 2019 at 01:04:26PM +0200, Jan Kara wrote:
+> > On Thu 06-06-19 15:03:30, Ira Weiny wrote:
+> > > On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
+> > > > On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
+> > > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > 
+> > > > So I'd like to actually mandate that you *must* hold the file lease until
+> > > > you unpin all pages in the given range (not just that you have an option to
+> > > > hold a lease). And I believe the kernel should actually enforce this. That
+> > > > way we maintain a sane state that if someone uses a physical location of
+> > > > logical file offset on disk, he has a layout lease. Also once this is done,
+> > > > sysadmin has a reasonably easy way to discover run-away RDMA application
+> > > > and kill it if he wishes so.
+> > > 
+> > > Fair enough.
+> > > 
+> > > I was kind of heading that direction but had not thought this far forward.  I
+> > > was exploring how to have a lease remain on the file even after a "lease
+> > > break".  But that is incompatible with the current semantics of a "layout"
+> > > lease (as currently defined in the kernel).  [In the end I wanted to get an RFC
+> > > out to see what people think of this idea so I did not look at keeping the
+> > > lease.]
+> > > 
+> > > Also hitch is that currently a lease is forcefully broken after
+> > > <sysfs>/lease-break-time.  To do what you suggest I think we would need a new
+> > > lease type with the semantics you describe.
+> > 
+> > I'd do what Dave suggested - add flag to mark lease as unbreakable by
+> > truncate and teach file locking core to handle that. There actually is
+> > support for locks that are not broken after given timeout so there
+> > shouldn't be too many changes need.
+> >  
+> > > Previously I had thought this would be a good idea (for other reasons).  But
+> > > what does everyone think about using a "longterm lease" similar to [1] which
+> > > has the semantics you proppose?  In [1] I was not sure "longterm" was a good
+> > > name but with your proposal I think it makes more sense.
+> > 
+> > As I wrote elsewhere in this thread I think FL_LAYOUT name still makes
+> > sense and I'd add there FL_UNBREAKABLE to mark unusal behavior with
+> > truncate.
+> 
+> Ok I want to make sure I understand what you and Dave are suggesting.
+> 
+> Are you suggesting that we have something like this from user space?
+> 
+> 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
 
-# cd /sys/kernel/debug/tracing/
-# echo >trace
-# echo 'p rollback_registered_many' >kprobe_events 
-# echo 1 >events/kprobes/enable 
-# ip netns add dummy
-# ip netns del dummy
+Rather than "unbreakable", perhaps a clearer description of the
+policy it entails is "exclusive"?
 
-but I have also seen it with other functions, or when I used kernel modules
-to install kprobes.
-I bisected to 
+i.e. what we are talking about here is an exclusive lease that
+prevents other processes from changing the layout. i.e. the
+mechanism used to guarantee a lease is exclusive is that the layout
+becomes "unbreakable" at the filesystem level, but the policy we are
+actually presenting to uses is "exclusive access"...
 
-8715ce033e [ "x86/modules: Avoid breaking W^X while loading modules" ]
+Cheers,
 
-in 4.19.47 (upstream commit f2c65fb322 in v5.2-rc1).
-
-Thanks,
-Francesco
-
-[  151.067082] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-[  151.074631] BUG: unable to handle kernel paging request at ffffffffa000f000
-[  151.081661] PGD 200a067 P4D 200a067 PUD 200b063 PMD 1038324067 PTE 800000101cb73161
-[  151.089396] Oops: 0011 [#1] SMP
-[  151.092603] CPU: 12 PID: 1831 Comm: kworker/u64:1 Kdump: loaded Not tainted 4.19.47-12345018.AroraKernel419.fc18.x86_64 #1
-[  151.103696] Hardware name: Supermicro X9DRT/X9DRT, BIOS 3.0 06/28/2013
-[  151.110298] Workqueue: netns cleanup_net
-[  151.114297] RIP: 0010:0xffffffffa000f000
-[  151.118286] Code: Bad RIP value.
-[  151.121562] RSP: 0018:ffffc90007947d60 EFLAGS: 00010206
-[  151.126835] RAX: ffff88901cbf8070 RBX: ffffc90007947d88 RCX: ffff88901cbf8070
-[  151.134033] RDX: ffffc90007947d88 RSI: ffffc90007947d88 RDI: ffffc90007947d88
-[  151.141226] RBP: ffffc90007947d78 R08: 0000000000000001 R09: 0000000000020cc0
-[  151.148429] R10: ffffc900063ebe08 R11: 0000000000026cdc R12: ffffc90007947d88
-[  151.155630] R13: ffffc90007947e38 R14: ffff88901cbc8110 R15: ffffc90007947e10
-[  151.162817] FS:  0000000000000000(0000) GS:ffff88a03f900000(0000) knlGS:0000000000000000
-[  151.170964] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  151.176986] CR2: ffffffffa000efd6 CR3: 0000000002009006 CR4: 00000000000606e0
-[  151.184403] Call Trace:
-[  151.187150]  ? rollback_registered_many+0x5/0x3bc
-[  151.192123]  ? unregister_netdevice_many+0x1a/0x79
-[  151.197177]  default_device_exit_batch+0x137/0x15f
-[  151.202231]  ? __wake_up_sync+0x12/0x12
-[  151.206345]  ops_exit_list+0x29/0x53
-[  151.210181]  cleanup_net+0x189/0x240
-[  151.214030]  process_one_work+0x174/0x280
-[  151.218319]  ? rescuer_thread+0x277/0x277
-[  151.222610]  worker_thread+0x1b5/0x264
-[  151.226639]  ? rescuer_thread+0x277/0x277
-[  151.230922]  kthread+0xf5/0xfa
-[  151.234239]  ? kthread_cancel_delayed_work_sync+0x15/0x15
-[  151.239906]  ret_from_fork+0x1f/0x30
-[  151.243751] Modules linked in: ipt_MASQUERADE nf_conntrack_netlink iptable_filter xt_addrtype xt_conntrack br_netfilter bridge stp llc macvlan sg coretemp x86_pkg_temp_thermal ip6table_filter ip6_tables ghash_clmulni_intel pcbc bonding aesni_intel kvm_intel aes_x86_64 crypto_simd kvm igb cryptd irqbypass glue_helper iTCO_wdt ioatdma iTCO_vendor_support hwmon joydev i2c_i801 i2c_algo_bit ipmi_si i2c_core pcc_cpufreq lpc_ich mfd_core ipmi_msghandler fuse dca pcspkr xt_multiport iptable_nat nf_nat_ipv4 ip_tables nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 x_tables tun loop 8021q raid456 async_raid6_recov async_memcpy libcrc32c async_pq async_xor xor async_tx raid6_pq raid1 raid0 isci libsas ehci_pci crc32c_intel ehci_hcd scsi_transport_sas wmi autofs4
-[  151.312827] CR2: ffffffffa000f000
-
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
