@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30B8C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21D1C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F179214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969AC214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994310;
-	bh=sVSPEhC3zlekc/OLKlMq0TYhvASDHwGvD7nOh6vOqdE=;
+	s=default; t=1559994318;
+	bh=vj1gqrXMhgdJiOp320NoSZWXUh7AGhz5bqmQ5lyXcCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bG0RHP6yb5+CBLJlZPCnv6y2SD0e8P3M35FYl0aGYvLWmFeFwXcfCvV/XB+6othJi
-	 uYWowN0HwPPYchZQPKj0hNJwjIJJMypiTccgFzD8ftWsYC++P35e5bl8/G6jdDW8i9
-	 nPC4kUsGt+0ZhHWT/GZVQPjR88HcYfH6EqzeZSuo=
+	b=CIbNq73hdGEvECeKJ7Vc4QATRxt/8Ino4qCp2OsaBISp7zHlGL2NtaDi72vnPQRTK
+	 3UuuHcJqbXkHuwg2xWqGZ7UDUt4OjrI7dPmljDA/RTFp/l0eVwir/ePPPCTN504v72
+	 CMgzWuJk8Fl9lugvVkigXDff/K9L1jhw0dOh23y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbfFHLpJ (ORCPT
+        id S1729019AbfFHLpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbfFHLn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:27 -0400
+        id S1728725AbfFHLnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4378214D8;
-        Sat,  8 Jun 2019 11:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 971C1214C6;
+        Sat,  8 Jun 2019 11:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994207;
-        bh=sVSPEhC3zlekc/OLKlMq0TYhvASDHwGvD7nOh6vOqdE=;
+        s=default; t=1559994203;
+        bh=vj1gqrXMhgdJiOp320NoSZWXUh7AGhz5bqmQ5lyXcCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdXjJzobO4rQkds8ani1LfRfjak/BjZ2gBxPq6yl+HQasaGVWhpNmXLthQi7Sa4CC
-         oy/FWvucEWgI+TDSqsOED9JnWcs+0+/UGGgDvo2NMvJjgVgKFn2KTn7SOgqPeXQ3ZB
-         XG3HVMIkeh7+Y6CwuUc0/No0NSfdLPRIdtgKTxaI=
+        b=g2Dh1RUT8zklUr6XnngZSlTTdPVZSdLPwtziHlm6g8xBzHkAr7DQz+QExnfvi+l8v
+         VMHr7RK99pv61FupxoP6hqlZ2FYbPW13mfksBlIi/UJHtucQIwZAeADGgvU50e7V7Q
+         5KEUvgGybNW4xVJ1h2k68lzMbAWuFjy+N9lVefOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/49] net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
-Date:   Sat,  8 Jun 2019 07:42:00 -0400
-Message-Id: <20190608114232.8731-19-sashal@kernel.org>
+Cc:     Gen Zhang <blackgod016574@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Bradford <robert.bradford@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/49] efi/x86/Add missing error handling to old_memmap 1:1 mapping code
+Date:   Sat,  8 Jun 2019 07:41:58 -0400
+Message-Id: <20190608114232.8731-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -60,54 +65,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Gen Zhang <blackgod016574@gmail.com>
 
-[ Upstream commit 3e66b7cc50ef921121babc91487e1fb98af1ba6e ]
+[ Upstream commit 4e78921ba4dd0aca1cc89168f45039add4183f8e ]
 
-Building with Clang reports the redundant use of MODULE_DEVICE_TABLE():
+The old_memmap flow in efi_call_phys_prolog() performs numerous memory
+allocations, and either does not check for failure at all, or it does
+but fails to propagate it back to the caller, which may end up calling
+into the firmware with an incomplete 1:1 mapping.
 
-drivers/net/ethernet/dec/tulip/de4x5.c:2110:1: error: redefinition of '__mod_eisa__de4x5_eisa_ids_device_table'
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:90:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
-drivers/net/ethernet/dec/tulip/de4x5.c:2100:1: note: previous definition is here
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:85:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
+So let's fix this by returning NULL from efi_call_phys_prolog() on
+memory allocation failures only, and by handling this condition in the
+caller. Also, clean up any half baked sets of page tables that we may
+have created before returning with a NULL return value.
 
-This drops the one further from the table definition to match the common
-use of MODULE_DEVICE_TABLE().
+Note that any failure at this level will trigger a panic() two levels
+up, so none of this makes a huge difference, but it is a nice cleanup
+nonetheless.
 
-Fixes: 07563c711fbc ("EISA bus MODALIAS attributes support")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[ardb: update commit log, add efi_call_phys_epilog() call on error path]
+
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rob Bradford <robert.bradford@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190525112559.7917-2-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/dec/tulip/de4x5.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/platform/efi/efi.c    | 2 ++
+ arch/x86/platform/efi/efi_64.c | 9 ++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/dec/tulip/de4x5.c b/drivers/net/ethernet/dec/tulip/de4x5.c
-index 66535d1653f6..f16853c3c851 100644
---- a/drivers/net/ethernet/dec/tulip/de4x5.c
-+++ b/drivers/net/ethernet/dec/tulip/de4x5.c
-@@ -2107,7 +2107,6 @@ static struct eisa_driver de4x5_eisa_driver = {
- 		.remove  = de4x5_eisa_remove,
-         }
- };
--MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
- #endif
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 9061babfbc83..353019d4e6c9 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -86,6 +86,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
+ 	pgd_t *save_pgd;
  
- #ifdef CONFIG_PCI
+ 	save_pgd = efi_call_phys_prolog();
++	if (!save_pgd)
++		return EFI_ABORTED;
+ 
+ 	/* Disable interrupts around EFI calls: */
+ 	local_irq_save(flags);
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index ee5d08f25ce4..dfc809b31c7c 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -84,13 +84,15 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 
+ 	if (!efi_enabled(EFI_OLD_MEMMAP)) {
+ 		efi_switch_mm(&efi_mm);
+-		return NULL;
++		return efi_mm.pgd;
+ 	}
+ 
+ 	early_code_mapping_set_exec(1);
+ 
+ 	n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
+ 	save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
++	if (!save_pgd)
++		return NULL;
+ 
+ 	/*
+ 	 * Build 1:1 identity mapping for efi=old_map usage. Note that
+@@ -138,10 +140,11 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 		pgd_offset_k(pgd * PGDIR_SIZE)->pgd &= ~_PAGE_NX;
+ 	}
+ 
+-out:
+ 	__flush_tlb_all();
+-
+ 	return save_pgd;
++out:
++	efi_call_phys_epilog(save_pgd);
++	return NULL;
+ }
+ 
+ void __init efi_call_phys_epilog(pgd_t *save_pgd)
 -- 
 2.20.1
 
