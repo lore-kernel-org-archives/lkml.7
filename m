@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE8BC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD88C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551C6214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74A121530
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994418;
-	bh=Z7uhBh0Wb9NnA8EX92lFbl7JWfZGdTbu64NvuQKqewE=;
+	s=default; t=1559994420;
+	bh=ZGey+YzeXdJWiYBdpIjysHnXbZF0uJO5xtb/pOlBo+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZRK0wSodC7R7x/QvehP5Yg5GgfUKNWI0opEf7yk2UNUC9jbHtYsJkd4d3+XczNULy
-	 el6uJmhijEPRNiYCFBkirGZ7fjX/I61heBcKu5nY99Sy0cuJxCXY7K9ueHKnIZn8ke
-	 huKFuFm5E4tunvuny2Oz7bcbX0ocHDgkhFDM7ye8=
+	b=E8JvvlKNHLfY4tizDmthwMggQ1bV69rEhOGZVW7gFBuRvoSf1gJ7TM1CpY0qqUFmz
+	 HpeamT63UE3I/yijXSIeRfgTm2FIXaEOunzo9+eiktI/lauAvJjI62wiAZA6q9CzGG
+	 oFVoJP8tl4tGkPTV8mQpuV4fxz2JT7Cm7gEESkUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfFHLq4 (ORCPT
+        id S1728956AbfFHLqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:46:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfFHLqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:46:53 -0400
+        id S1728476AbfFHLqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:46:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79786216FD;
-        Sat,  8 Jun 2019 11:46:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A688D214D8;
+        Sat,  8 Jun 2019 11:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994412;
-        bh=Z7uhBh0Wb9NnA8EX92lFbl7JWfZGdTbu64NvuQKqewE=;
+        s=default; t=1559994409;
+        bh=ZGey+YzeXdJWiYBdpIjysHnXbZF0uJO5xtb/pOlBo+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gvHgKqAKvugwQGzs0tbUYsD+QX/Qs3pTZ0o++rbxjAoEPzxjVz6amucClnxUIS99v
-         FJD7IBh+dyjbtp74vxlOSGYxbcmbMlKU7mVvOO9RwRr0d0tXRKNaXLNZ3s82zAyz0N
-         2GtgD266QOW+HzeUU/v4KzWnkT+UlABaa009g/rQ=
+        b=H3W5hjR8J6EvzZRjofyBQAAf1GtqCVxWtdRskdN0rkQLXB8tsAYfb/SdIffh0UuY0
+         BpZ2+jV2LmzJcp+u5w5TtSjXeP9X0s90I0W+v2kzty/JaCjFX57BHxVni1TDnuLDc0
+         OQXn8FUTxhjWBj4t5+kdj4PgbKMk1fqHJoY7Cqm4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Julian Anastasov <ja@ssi.bg>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: [PATCH AUTOSEL 4.14 04/31] ipvs: Fix use-after-free in ip_vs_in
-Date:   Sat,  8 Jun 2019 07:46:15 -0400
-Message-Id: <20190608114646.9415-4-sashal@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 02/31] perf/x86/intel/ds: Fix EVENT vs. UEVENT PEBS constraints
+Date:   Sat,  8 Jun 2019 07:46:13 -0400
+Message-Id: <20190608114646.9415-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
@@ -63,133 +66,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Stephane Eranian <eranian@google.com>
 
-[ Upstream commit 719c7d563c17b150877cee03a4b812a424989dfa ]
+[ Upstream commit 23e3983a466cd540ffdd2bbc6e0c51e31934f941 ]
 
-BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
-Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
+This patch fixes an bug revealed by the following commit:
 
-CPU: 0 PID: 5603 Comm: sshd Not tainted 4.19.39+ #30
-Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-Call Trace:
- dump_stack+0x71/0xab
- print_address_description+0x6a/0x270
- kasan_report+0x179/0x2c0
- ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
- ip_vs_in+0xd8/0x170 [ip_vs]
- nf_hook_slow+0x5f/0xe0
- __ip_local_out+0x1d5/0x250
- ip_local_out+0x19/0x60
- __tcp_transmit_skb+0xba1/0x14f0
- tcp_write_xmit+0x41f/0x1ed0
- ? _copy_from_iter_full+0xca/0x340
- __tcp_push_pending_frames+0x52/0x140
- tcp_sendmsg_locked+0x787/0x1600
- ? tcp_sendpage+0x60/0x60
- ? inet_sk_set_state+0xb0/0xb0
- tcp_sendmsg+0x27/0x40
- sock_sendmsg+0x6d/0x80
- sock_write_iter+0x121/0x1c0
- ? sock_sendmsg+0x80/0x80
- __vfs_write+0x23e/0x370
- vfs_write+0xe7/0x230
- ksys_write+0xa1/0x120
- ? __ia32_sys_read+0x50/0x50
- ? __audit_syscall_exit+0x3ce/0x450
- do_syscall_64+0x73/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7ff6f6147c60
-Code: 73 01 c3 48 8b 0d 28 12 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 5d 73 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83
-RSP: 002b:00007ffd772ead18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007ff6f6147c60
-RDX: 0000000000000034 RSI: 000055df30a31270 RDI: 0000000000000003
-RBP: 000055df30a31270 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007ffd772ead70 R11: 0000000000000246 R12: 00007ffd772ead74
-R13: 00007ffd772eae20 R14: 00007ffd772eae24 R15: 000055df2f12ddc0
+  6b89d4c1ae85 ("perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking")
 
-Allocated by task 6052:
- kasan_kmalloc+0xa0/0xd0
- __kmalloc+0x10a/0x220
- ops_init+0x97/0x190
- register_pernet_operations+0x1ac/0x360
- register_pernet_subsys+0x24/0x40
- 0xffffffffc0ea016d
- do_one_initcall+0x8b/0x253
- do_init_module+0xe3/0x335
- load_module+0x2fc0/0x3890
- __do_sys_finit_module+0x192/0x1c0
- do_syscall_64+0x73/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+That patch modified INTEL_FLAGS_EVENT_CONSTRAINT() to only look at the event code
+when matching a constraint. If code+umask were needed, then the
+INTEL_FLAGS_UEVENT_CONSTRAINT() macro was needed instead.
+This broke with some of the constraints for PEBS events.
 
-Freed by task 6067:
- __kasan_slab_free+0x130/0x180
- kfree+0x90/0x1a0
- ops_free_list.part.7+0xa6/0xc0
- unregister_pernet_operations+0x18b/0x1f0
- unregister_pernet_subsys+0x1d/0x30
- ip_vs_cleanup+0x1d/0xd2f [ip_vs]
- __x64_sys_delete_module+0x20c/0x300
- do_syscall_64+0x73/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Several of them, including the one used for cycles:p, cycles:pp, cycles:ppp
+fell in that category and caused the event to be rejected in PEBS mode.
+In other words, on some platforms a cmdline such as:
 
-The buggy address belongs to the object at ffff8881e9b26600 which belongs to the cache kmalloc-4096 of size 4096
-The buggy address is located 2092 bytes inside of 4096-byte region [ffff8881e9b26600, ffff8881e9b27600)
-The buggy address belongs to the page:
-page:ffffea0007a6c800 count:1 mapcount:0 mapping:ffff888107c0e600 index:0x0 compound_mapcount: 0
-flags: 0x17ffffc0008100(slab|head)
-raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff888107c0e600
-raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+  $ perf top -e cycles:pp
 
-while unregistering ipvs module, ops_free_list calls
-__ip_vs_cleanup, then nf_unregister_net_hooks be called to
-do remove nf hook entries. It need a RCU period to finish,
-however net->ipvs is set to NULL immediately, which will
-trigger NULL pointer dereference when a packet is hooked
-and handled by ip_vs_in where net->ipvs is dereferenced.
+would fail with -EINVAL.
 
-Another scene is ops_free_list call ops_free to free the
-net_generic directly while __ip_vs_cleanup finished, then
-calling ip_vs_in will triggers use-after-free.
+This patch fixes this bug by properly using INTEL_FLAGS_UEVENT_CONSTRAINT()
+when needed in the PEBS constraint tables.
 
-This patch moves nf_unregister_net_hooks from __ip_vs_cleanup()
-to __ip_vs_dev_cleanup(),  where rcu_barrier() is called by
-unregister_pernet_device -> unregister_pernet_operations,
-that will do the needed grace period.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: efe41606184e ("ipvs: convert to use pernet nf_hook api")
-Suggested-by: Julian Anastasov <ja@ssi.bg>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Julian Anastasov <ja@ssi.bg>
-Signed-off-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Link: http://lkml.kernel.org/r/20190521005246.423-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/ds.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index d1c0378144f3..ee97ce176b9a 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -2268,7 +2268,6 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
- {
- 	struct netns_ipvs *ipvs = net_ipvs(net);
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 25386be0d757..3310f9f6c3e1 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -681,7 +681,7 @@ struct event_constraint intel_core2_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1fc7, 0x1), /* SIMD_INST_RETURED.ANY */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
+ 	EVENT_CONSTRAINT_END
+ };
  
--	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
- 	ip_vs_service_net_cleanup(ipvs);	/* ip_vs_flush() with locks */
- 	ip_vs_conn_net_cleanup(ipvs);
- 	ip_vs_app_net_cleanup(ipvs);
-@@ -2283,6 +2282,7 @@ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
- {
- 	struct netns_ipvs *ipvs = net_ipvs(net);
- 	EnterFunction(2);
-+	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
- 	ipvs->enable = 0;	/* Disable packet reception */
- 	smp_wmb();
- 	ip_vs_sync_net_cleanup(ipvs);
+@@ -690,7 +690,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x00c5, 0x1), /* MISPREDICTED_BRANCH_RETIRED */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
+ 	/* Allow all events as PEBS with no flags */
+ 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
+ 	EVENT_CONSTRAINT_END
+@@ -698,7 +698,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
+ 
+ struct event_constraint intel_slm_pebs_event_constraints[] = {
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x1),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x1),
+ 	/* Allow all events as PEBS with no flags */
+ 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
+ 	EVENT_CONSTRAINT_END
+@@ -729,7 +729,7 @@ struct event_constraint intel_nehalem_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	EVENT_CONSTRAINT_END
+ };
+ 
+@@ -746,7 +746,7 @@ struct event_constraint intel_westmere_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	EVENT_CONSTRAINT_END
+ };
+ 
+@@ -755,7 +755,7 @@ struct event_constraint intel_snb_pebs_event_constraints[] = {
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
+ 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+         INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
+         INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
+         INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+@@ -770,9 +770,9 @@ struct event_constraint intel_ivb_pebs_event_constraints[] = {
+         INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
+ 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+@@ -786,9 +786,9 @@ struct event_constraint intel_hsw_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
+@@ -809,9 +809,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
+@@ -832,9 +832,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
+ struct event_constraint intel_skl_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x2),	/* INST_RETIRED.PREC_DIST */
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	/* INST_RETIRED.TOTAL_CYCLES_PS (inv=1, cmask=16) (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	INTEL_PLD_CONSTRAINT(0x1cd, 0xf),		      /* MEM_TRANS_RETIRED.* */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_STORES */
 -- 
 2.20.1
 
