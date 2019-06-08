@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C7CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAD8C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441BA214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC73214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994283;
-	bh=ozvq00+mcjm4MBz0NsM15frO7BbyA541i7YllyOYuBw=;
+	s=default; t=1559994291;
+	bh=fDNyOUPjelSpPgLUi2TrZQecZSYzHvaqm4qqfpsOkfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FVWykhToXXl4dg0L4vYyWJmE2APg0q/whQjk9JKKrA1uNhlWlX8kZPuZnZyWOpm/A
-	 kwCjk2XYEWBS7U4a8A8SI5HcO2nwVkvOseDS05c3tFhCqLTPBHa+y7h/eEFzVG3uFt
-	 bJ6vjm8PjJ+iAoEMDWLjYcg/gu8ZouBSRnSKJk0s=
+	b=KPYfnI4rs8jR2aIWuYNobj37DbCGDvBEwLrUgfRsH/3sadmC6/U5r0QtmTprlWmzr
+	 x6CTjQrek9vywnE6bC3o8Yr6lIjGN8DgqczUPwDkohoF69W+7MVn2LB26qTVt8Cewb
+	 YEHo2uGxey/7aebVD1AeluX1Kf59Y32C2MdWYCPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbfFHLom (ORCPT
+        id S1728981AbfFHLot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbfFHLoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:44:39 -0400
+        id S1728578AbfFHLoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:44:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8A7D21530;
-        Sat,  8 Jun 2019 11:44:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 685EA214AF;
+        Sat,  8 Jun 2019 11:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994278;
-        bh=ozvq00+mcjm4MBz0NsM15frO7BbyA541i7YllyOYuBw=;
+        s=default; t=1559994276;
+        bh=fDNyOUPjelSpPgLUi2TrZQecZSYzHvaqm4qqfpsOkfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lluow+kSqwnWMvnvMuIppShWkVPTBNQD0c4PcqxG9NzGkifvAiZf+ofI4XW5rvFaA
-         Kr4cZfhRqh8f6+J/COwkXPdcSJsQD7AM9+vZ9Sqb46vyiyIpaDriu6Q5Lf7UzwbTyZ
-         FuUGTEyGMcgtwHFqF+1XRyUmCOeTKLvcQgXBYe2g=
+        b=1FQLym4OSZvOqf46bar6aKyi1+kS6OUrRPXOTxr6yqFFf5DtwOlbv2gUpI46VaNuP
+         mwmM1fvYuZl1ThiHMAFM0FsWDSSJv4nDXKytYP7FjNrNUxjXDQGjmPEGm5ye+kwD6V
+         4/RyiFFqTIeTS/kQ6WotTsKgRnPXB806RbjjklPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 34/49] xen/pvcalls: Remove set but not used variable
-Date:   Sat,  8 Jun 2019 07:42:15 -0400
-Message-Id: <20190608114232.8731-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 33/49] ia64: fix build errors by exporting paddr_to_nid()
+Date:   Sat,  8 Jun 2019 07:42:14 -0400
+Message-Id: <20190608114232.8731-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -60,63 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 41349672e3cbc2e8349831f21253509c3415aa2b ]
+[ Upstream commit 9a626c4a6326da4433a0d4d4a8a7d1571caf1ed3 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Fix build errors on ia64 when DISCONTIGMEM=y and NUMA=y by
+exporting paddr_to_nid().
 
-drivers/xen/pvcalls-front.c: In function pvcalls_front_sendmsg:
-drivers/xen/pvcalls-front.c:543:25: warning: variable bedata set but not used [-Wunused-but-set-variable]
-drivers/xen/pvcalls-front.c: In function pvcalls_front_recvmsg:
-drivers/xen/pvcalls-front.c:638:25: warning: variable bedata set but not used [-Wunused-but-set-variable]
+Fixes these build errors:
 
-They are never used since introduction.
+ERROR: "paddr_to_nid" [sound/core/snd-pcm.ko] undefined!
+ERROR: "paddr_to_nid" [net/sunrpc/sunrpc.ko] undefined!
+ERROR: "paddr_to_nid" [fs/cifs/cifs.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/video/fbdev/core/fb.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/usb/mon/usbmon.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/usb/core/usbcore.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/raid1.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-mod.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-crypt.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-bufio.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/ide/ide-core.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/ide/ide-cd_mod.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/gpu/drm/drm.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/char/agp/agpgart.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/nbd.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/loop.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/brd.ko] undefined!
+ERROR: "paddr_to_nid" [crypto/ccm.ko] undefined!
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: linux-ia64@vger.kernel.org
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/pvcalls-front.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/ia64/mm/numa.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/xen/pvcalls-front.c b/drivers/xen/pvcalls-front.c
-index 91da7e44d5d4..3a144eecb6a7 100644
---- a/drivers/xen/pvcalls-front.c
-+++ b/drivers/xen/pvcalls-front.c
-@@ -538,7 +538,6 @@ static int __write_ring(struct pvcalls_data_intf *intf,
- int pvcalls_front_sendmsg(struct socket *sock, struct msghdr *msg,
- 			  size_t len)
- {
--	struct pvcalls_bedata *bedata;
- 	struct sock_mapping *map;
- 	int sent, tot_sent = 0;
- 	int count = 0, flags;
-@@ -550,7 +549,6 @@ int pvcalls_front_sendmsg(struct socket *sock, struct msghdr *msg,
- 	map = pvcalls_enter_sock(sock);
- 	if (IS_ERR(map))
- 		return PTR_ERR(map);
--	bedata = dev_get_drvdata(&pvcalls_front_dev->dev);
+diff --git a/arch/ia64/mm/numa.c b/arch/ia64/mm/numa.c
+index aa19b7ac8222..476c7b4be378 100644
+--- a/arch/ia64/mm/numa.c
++++ b/arch/ia64/mm/numa.c
+@@ -49,6 +49,7 @@ paddr_to_nid(unsigned long paddr)
  
- 	mutex_lock(&map->active.out_mutex);
- 	if ((flags & MSG_DONTWAIT) && !pvcalls_front_write_todo(map)) {
-@@ -633,7 +631,6 @@ static int __read_ring(struct pvcalls_data_intf *intf,
- int pvcalls_front_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 		     int flags)
- {
--	struct pvcalls_bedata *bedata;
- 	int ret;
- 	struct sock_mapping *map;
+ 	return (i < num_node_memblks) ? node_memblk[i].nid : (num_node_memblks ? -1 : 0);
+ }
++EXPORT_SYMBOL(paddr_to_nid);
  
-@@ -643,7 +640,6 @@ int pvcalls_front_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 	map = pvcalls_enter_sock(sock);
- 	if (IS_ERR(map))
- 		return PTR_ERR(map);
--	bedata = dev_get_drvdata(&pvcalls_front_dev->dev);
- 
- 	mutex_lock(&map->active.in_mutex);
- 	if (len > XEN_FLEX_RING_SIZE(PVCALLS_RING_ORDER))
+ #if defined(CONFIG_SPARSEMEM) && defined(CONFIG_NUMA)
+ /*
 -- 
 2.20.1
 
