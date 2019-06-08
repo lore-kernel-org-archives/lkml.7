@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55942C468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E17C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C35D21537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746B4216C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994692;
-	bh=0RdBvR7NS4NcK/RtuYqQMlazgPB8lT4PeYgDNtn3YGc=;
+	s=default; t=1559994697;
+	bh=SeiYGK0Nx4Bm4T/JsZxr9gZrK8198XvhlkZWNXqBbEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RylKL8tI4FFQvm4NGKz236UsH6jKaI9LfMUXUEy6XsPFyRcna7jgTzxUTjq4GK8DV
-	 YqXHJM43No4eG1LxMYmv2ekEz6QpO62myCdM8x2hsTCwjvYg08gYzdwOpmnEfi+zZz
-	 fXKkK5Ng+oHgKgHZIuYO7gmEv0DE2DOceVVss0Kc=
+	b=NTDZi2mvX8k+ksAimCJ7xsi6I20tA4f/63mzXeF0NcBUleyCJJ1GQP9bCfnosOQBA
+	 bR2qWt2Bp3pKy7Wx9v1MwC9HPHzOL7ILWZFSsP69fJkIabcJ7iRBnFRblDAbrNf8Rp
+	 MBsz83+PUdSbNST4E+ng3xshikOc4ZDfsTIFjG38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbfFHLrn (ORCPT
+        id S1728480AbfFHLvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36334 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:51:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729317AbfFHLrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:47:37 -0400
+        id S1728739AbfFHLrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF40E21537;
-        Sat,  8 Jun 2019 11:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9330B216F4;
+        Sat,  8 Jun 2019 11:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994456;
-        bh=0RdBvR7NS4NcK/RtuYqQMlazgPB8lT4PeYgDNtn3YGc=;
+        s=default; t=1559994460;
+        bh=SeiYGK0Nx4Bm4T/JsZxr9gZrK8198XvhlkZWNXqBbEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uQDlMJDew0ZHBnbqvNcgcqpurteGMWqceEh1zBWilcJsIEzIJeSPEHOM5ahZoVKhw
-         bEJzv3kavtAcaAuQSC6f3jQG6t+XdWc2uxfyITdNIcg+N14nfj0Tlugz5Xq5r1hrCg
-         GALRsquF5Dt3d5LPp1M8aGvzviqC09X+q3NNtegw=
+        b=h0xy5zWfkE3LK5v/T4TmjZeFHQvohTd0R4KGdC9C78ZP05pG/L3c/8i6tdp7djwgf
+         hkSbJ2qI1dbRAk+cDb67j+Ik7yKOVDcX4He7ffZga007krkfvBAlEDByqf/x7pKLWq
+         W9a7yrSrSyrU5XT/+r97XkocBKJX93vX8R9cPDjs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 21/31] perf record: Fix s390 missing module symbol and warning for non-root users
-Date:   Sat,  8 Jun 2019 07:46:32 -0400
-Message-Id: <20190608114646.9415-21-sashal@kernel.org>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 23/31] KVM: PPC: Book3S: Use new mutex to synchronize access to rtas token list
+Date:   Sat,  8 Jun 2019 07:46:34 -0400
+Message-Id: <20190608114646.9415-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
@@ -61,102 +59,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Paul Mackerras <paulus@ozlabs.org>
 
-[ Upstream commit 6738028dd57df064b969d8392c943ef3b3ae705d ]
+[ Upstream commit 1659e27d2bc1ef47b6d031abe01b467f18cb72d9 ]
 
-Command 'perf record' and 'perf report' on a system without kernel
-debuginfo packages uses /proc/kallsyms and /proc/modules to find
-addresses for kernel and module symbols. On x86 this works for root and
-non-root users.
+Currently the Book 3S KVM code uses kvm->lock to synchronize access
+to the kvm->arch.rtas_tokens list.  Because this list is scanned
+inside kvmppc_rtas_hcall(), which is called with the vcpu mutex held,
+taking kvm->lock cause a lock inversion problem, which could lead to
+a deadlock.
 
-On s390, when invoked as non-root user, many of the following warnings
-are shown and module symbols are missing:
+To fix this, we add a new mutex, kvm->arch.rtas_token_lock, which nests
+inside the vcpu mutexes, and use that instead of kvm->lock when
+accessing the rtas token list.
 
-    proc/{kallsyms,modules} inconsistency while looking for
-        "[sha1_s390]" module!
+This removes the lockdep_assert_held() in kvmppc_rtas_tokens_free().
+At this point we don't hold the new mutex, but that is OK because
+kvmppc_rtas_tokens_free() is only called when the whole VM is being
+destroyed, and at that point nothing can be looking up a token in
+the list.
 
-Command 'perf record' creates a list of module start addresses by
-parsing the output of /proc/modules and creates a PERF_RECORD_MMAP
-record for the kernel and each module. The following function call
-sequence is executed:
-
-  machine__create_kernel_maps
-    machine__create_module
-      modules__parse
-        machine__create_module --> for each line in /proc/modules
-          arch__fix_module_text_start
-
-Function arch__fix_module_text_start() is s390 specific. It opens
-file /sys/module/<name>/sections/.text to extract the module's .text
-section start address. On s390 the module loader prepends a header
-before the first section, whereas on x86 the module's text section
-address is identical the the module's load address.
-
-However module section files are root readable only. For non-root the
-read operation fails and machine__create_module() returns an error.
-Command perf record does not generate any PERF_RECORD_MMAP record
-for loaded modules. Later command perf report complains about missing
-module maps.
-
-To fix this function arch__fix_module_text_start() always returns
-success. For root users there is no change, for non-root users
-the module's load address is used as module's text start address
-(the prepended header then counts as part of the text section).
-
-This enable non-root users to use module symbols and avoid the
-warning when perf report is executed.
-
-Output before:
-
-  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
-  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
-
-Output after:
-
-  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
-  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
-  0 0x1b8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../autofs4.ko.xz
-  0 0x250 [0xa8]: PERF_RECORD_MMAP ... x /lib/modules/.../sha_common.ko.xz
-  0 0x2f8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../des_generic.ko.xz
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190522144601.50763-4-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/s390/util/machine.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/kvm_host.h |  1 +
+ arch/powerpc/kvm/book3s.c           |  1 +
+ arch/powerpc/kvm/book3s_rtas.c      | 14 ++++++--------
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
-index 0b2054007314..a19690a17291 100644
---- a/tools/perf/arch/s390/util/machine.c
-+++ b/tools/perf/arch/s390/util/machine.c
-@@ -5,16 +5,19 @@
- #include "util.h"
- #include "machine.h"
- #include "api/fs/fs.h"
-+#include "debug.h"
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+index e3ba58f64c3d..5070b34b12fd 100644
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -296,6 +296,7 @@ struct kvm_arch {
+ #ifdef CONFIG_PPC_BOOK3S_64
+ 	struct list_head spapr_tce_tables;
+ 	struct list_head rtas_tokens;
++	struct mutex rtas_token_lock;
+ 	DECLARE_BITMAP(enabled_hcalls, MAX_HCALL_OPCODE/4 + 1);
+ #endif
+ #ifdef CONFIG_KVM_MPIC
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index 72d977e30952..d38280b01ef0 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -836,6 +836,7 @@ int kvmppc_core_init_vm(struct kvm *kvm)
+ #ifdef CONFIG_PPC64
+ 	INIT_LIST_HEAD_RCU(&kvm->arch.spapr_tce_tables);
+ 	INIT_LIST_HEAD(&kvm->arch.rtas_tokens);
++	mutex_init(&kvm->arch.rtas_token_lock);
+ #endif
  
- int arch__fix_module_text_start(u64 *start, const char *name)
+ 	return kvm->arch.kvm_ops->init_vm(kvm);
+diff --git a/arch/powerpc/kvm/book3s_rtas.c b/arch/powerpc/kvm/book3s_rtas.c
+index 2d3b2b1cc272..8f2355138f80 100644
+--- a/arch/powerpc/kvm/book3s_rtas.c
++++ b/arch/powerpc/kvm/book3s_rtas.c
+@@ -146,7 +146,7 @@ static int rtas_token_undefine(struct kvm *kvm, char *name)
  {
-+	u64 m_start = *start;
- 	char path[PATH_MAX];
+ 	struct rtas_token_definition *d, *tmp;
  
- 	snprintf(path, PATH_MAX, "module/%.*s/sections/.text",
- 				(int)strlen(name) - 2, name + 1);
--
--	if (sysfs__read_ull(path, (unsigned long long *)start) < 0)
--		return -1;
-+	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
-+		pr_debug2("Using module %s start:%#lx\n", path, m_start);
-+		*start = m_start;
-+	}
+-	lockdep_assert_held(&kvm->lock);
++	lockdep_assert_held(&kvm->arch.rtas_token_lock);
  
- 	return 0;
+ 	list_for_each_entry_safe(d, tmp, &kvm->arch.rtas_tokens, list) {
+ 		if (rtas_name_matches(d->handler->name, name)) {
+@@ -167,7 +167,7 @@ static int rtas_token_define(struct kvm *kvm, char *name, u64 token)
+ 	bool found;
+ 	int i;
+ 
+-	lockdep_assert_held(&kvm->lock);
++	lockdep_assert_held(&kvm->arch.rtas_token_lock);
+ 
+ 	list_for_each_entry(d, &kvm->arch.rtas_tokens, list) {
+ 		if (d->token == token)
+@@ -206,14 +206,14 @@ int kvm_vm_ioctl_rtas_define_token(struct kvm *kvm, void __user *argp)
+ 	if (copy_from_user(&args, argp, sizeof(args)))
+ 		return -EFAULT;
+ 
+-	mutex_lock(&kvm->lock);
++	mutex_lock(&kvm->arch.rtas_token_lock);
+ 
+ 	if (args.token)
+ 		rc = rtas_token_define(kvm, args.name, args.token);
+ 	else
+ 		rc = rtas_token_undefine(kvm, args.name);
+ 
+-	mutex_unlock(&kvm->lock);
++	mutex_unlock(&kvm->arch.rtas_token_lock);
+ 
+ 	return rc;
  }
+@@ -245,7 +245,7 @@ int kvmppc_rtas_hcall(struct kvm_vcpu *vcpu)
+ 	orig_rets = args.rets;
+ 	args.rets = &args.args[be32_to_cpu(args.nargs)];
+ 
+-	mutex_lock(&vcpu->kvm->lock);
++	mutex_lock(&vcpu->kvm->arch.rtas_token_lock);
+ 
+ 	rc = -ENOENT;
+ 	list_for_each_entry(d, &vcpu->kvm->arch.rtas_tokens, list) {
+@@ -256,7 +256,7 @@ int kvmppc_rtas_hcall(struct kvm_vcpu *vcpu)
+ 		}
+ 	}
+ 
+-	mutex_unlock(&vcpu->kvm->lock);
++	mutex_unlock(&vcpu->kvm->arch.rtas_token_lock);
+ 
+ 	if (rc == 0) {
+ 		args.rets = orig_rets;
+@@ -282,8 +282,6 @@ void kvmppc_rtas_tokens_free(struct kvm *kvm)
+ {
+ 	struct rtas_token_definition *d, *tmp;
+ 
+-	lockdep_assert_held(&kvm->lock);
+-
+ 	list_for_each_entry_safe(d, tmp, &kvm->arch.rtas_tokens, list) {
+ 		list_del(&d->list);
+ 		kfree(d);
 -- 
 2.20.1
 
