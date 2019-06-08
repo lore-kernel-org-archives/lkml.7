@@ -2,97 +2,144 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74012C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9D7C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408192089E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CAF72166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sHErhbm3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C5Gjab6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730880AbfFHD4i (ORCPT
+        id S1730925AbfFHD6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 23:56:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53050 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730445AbfFHD4i (ORCPT
+        Fri, 7 Jun 2019 23:58:08 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38365 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730490AbfFHD6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 23:56:38 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x583uauE087580;
-        Fri, 7 Jun 2019 22:56:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559966196;
-        bh=xApOPbaphWPzxJKeQBh1cTOQCKroY+KpTKbui6gP1u0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sHErhbm31wd1mMeI6q39S/hwgyi5oGATYBqAjIu1ZeM5jj3cFF9w1QZoxonsrao9D
-         rEf7HM3GYAp3iGdvEIVRt5GWgu5B64RSUcQwcEH1nuBEP52qiyqFAKsl8q3dIlN6ts
-         H+JM9j7tlKAScZAM6N0uxJBsQU1xCVD3JzeoE+yY=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x583uaUE061427
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 7 Jun 2019 22:56:36 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
- 2019 22:56:35 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 7 Jun 2019 22:56:35 -0500
-Received: from [172.22.216.123] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x583uW8K064766;
-        Fri, 7 Jun 2019 22:56:33 -0500
-Subject: Re: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
- support
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lee.jones@linaro.org>, <robh+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <t-kristo@ti.com>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
- <20190516043218.8222-4-j-keerthy@ti.com>
- <20190522153528.GG8582@sirena.org.uk>
- <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
- <20190528132755.GK2456@sirena.org.uk>
-From:   keerthy <j-keerthy@ti.com>
-Message-ID: <e68d9939-a56a-b3c5-7f6d-e5783e16a6de@ti.com>
-Date:   Sat, 8 Jun 2019 09:26:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Jun 2019 23:58:07 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v11so2142909pgl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 20:58:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=l14jgAawlsDS1VZ8WGmfB4MOY8oLSSKNbX7PpDlwP4w=;
+        b=C5Gjab6oABNd7uWOUXVxMun2EBOiIN1zQFBFmz4oVz6alLd7w4ZDoA104BjgrPqBY8
+         M11UcHeF2K3I4znphl64bBg5eiZ8uh03AO1nktwVISAdyYWU8VZro1t6U3J4ibUtkAgv
+         yam4Xd5rREh0IexVfq4tELDc0YZWvN5ZcS9CQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l14jgAawlsDS1VZ8WGmfB4MOY8oLSSKNbX7PpDlwP4w=;
+        b=tkAP/fy2LdN2cz7GRclhCsg0R+knMQwuGwvzpPfqXoYgXgrapluVRt7549UGJ9Zpsi
+         o29MJcXkKAY5HVKx9NlmdAebahqANHKysvfW9gtnQA4xRGflZvt1EmS3MASxWxRGCngM
+         prHZPDqNWNPzQ5IreF5v83Vt9ZU2csRqkPswLTQPqHW72EaS+2R4Ybt8NVeSCjgN9Rwd
+         J53eA5Q4K0lFOiFfHAQMdBVbE7V1ntdeN3a+XjRz0LVfutEURip9R9P3JesOhY/Exy2C
+         bx4ZPsJUGTOPEAARAzWKP+9IqDBr3HBRqVHXC2U2AVM9LAJYWZkqZM/6AqoY8tkK3Fah
+         7qdw==
+X-Gm-Message-State: APjAAAWNAZp2/OWrhRanxu6A+Dum7MAAvL2wkaJ4ywtcPQjtpvAB5MLN
+        6CZsyouioKi2NHLcVO9ftXycdQ==
+X-Google-Smtp-Source: APXvYqxfp4HEsqQlOvNH04bl9SHArYk4hyQYoSWfdJS+DhwTyJyuL+IfwdxORVSQ19uSVN9pTMHd5w==
+X-Received: by 2002:a63:1657:: with SMTP id 23mr5550367pgw.98.1559966287061;
+        Fri, 07 Jun 2019 20:58:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l2sm246111pgs.33.2019.06.07.20.58.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Jun 2019 20:58:06 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 20:58:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v16 15/16] vfio/type1, arm64: untag user pointers in
+ vaddr_get_pfn
+Message-ID: <201906072058.BB57EFA@keescook>
+References: <cover.1559580831.git.andreyknvl@google.com>
+ <c529e1eeea7700beff197c4456da6a882ce2efb7.1559580831.git.andreyknvl@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190528132755.GK2456@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c529e1eeea7700beff197c4456da6a882ce2efb7.1559580831.git.andreyknvl@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/28/2019 6:57 PM, Mark Brown wrote:
-> On Tue, May 28, 2019 at 03:23:41PM +0530, Keerthy wrote:
->> On 22/05/19 9:05 PM, Mark Brown wrote:
->>> On Thu, May 16, 2019 at 10:02:18AM +0530, Keerthy wrote:
+On Mon, Jun 03, 2019 at 06:55:17PM +0200, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
 > 
->>> Acked-by: Mark Brown <broonie@kernel.org>
+> vaddr_get_pfn() uses provided user pointers for vma lookups, which can
+> only by done with untagged pointers.
 > 
->> This patch will come via the mfd branch?
+> Untag user pointers in this function.
 > 
-> I'd expect so, IIRC it had a build dependency on the earlier patches in
-> the series so if that doesn't happen I'll need to merge the relevant MFD
-> commits.
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-Mark,
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-mfd patches are on linux-next already. Hope you can pull this one now 
-that dependencies are met.
+-Kees
 
-- Keerthy
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 3ddc375e7063..528e39a1c2dd 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -384,6 +384,8 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  
+>  	down_read(&mm->mmap_sem);
+>  
+> +	vaddr = untagged_addr(vaddr);
+> +
+>  	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+>  
+>  	if (vma && vma->vm_flags & VM_PFNMAP) {
+> -- 
+> 2.22.0.rc1.311.g5d7573a151-goog
+> 
+
+-- 
+Kees Cook
