@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D979C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E18DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69196204FD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C2C2166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:07:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SBHxrcDi"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Ai7/QxvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfFHSHX (ORCPT
+        id S1727782AbfFHSHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 14:07:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44540 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfFHSGl (ORCPT
+        Sat, 8 Jun 2019 14:07:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35919 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727333AbfFHSGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 14:06:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b17so5195462wrq.11;
-        Sat, 08 Jun 2019 11:06:41 -0700 (PDT)
+        Sat, 8 Jun 2019 14:06:38 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so5232788wrs.3;
+        Sat, 08 Jun 2019 11:06:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ULxtsw8dujAsYVt5zC7SDOdydkdqEp/VduAIrsjyFQE=;
-        b=SBHxrcDiscWsMPlgUe1eue3IB7jYsIcP8LOxKnBLi/mcoN0HQC0c4nr5sRBPn+qmQM
-         HQnASudTpyUH2PPAOdA5RAnqmEKhS69NmcTqDzT44DZrxcP533fDz4mFEKQtvzW5bk++
-         a+wuFcmv24SnXfkCFwObZfODttniBC8DNtWs9pxov4CzBcUZWO9YnFCUGQP1PvmHtV1y
-         3HE7Qo1bZXlX/hsv45hdM/CITvIsAzcYcM8C7/5OH0YtynfhfrEx2TAtQqhdVYw6IHVU
-         y62BsUxGetOMUdms3Xu7E8NxIpaBj90SC6YPtntZO9aOJujrK5dVYn+uFlkZAiw7RjR1
-         zIsA==
+        bh=OwMt4DN+k+wf0lkZogt5PADN1rzK1u4y6aP41xI0QnE=;
+        b=Ai7/QxvXeXJfCjaGIQtUgT0iNOxXJwKg0n0kBlr3qjXO5upyFeXiPfrcnxSDErQlqt
+         z3CcgSiDYliWk8qfwFQfdIGenTNvz7W3LmWvsgjivpjVimSrOT9/iTq29lttJxYWO3in
+         TpBorSmDyJ58Ey4jcxg/5EGToYDZRxFctSUgdmjxLPkNHZohT/Pi5zEuz7KJ07xmnqqq
+         FyPbfsiE7l0h+XwUplRemSXg57k3ZTNpsVu9wiurZXxg7FvIqpiYpJKePoCK5iZmPX2/
+         sVVunTRAz/+8AtGYFz60gaSG1xWcbhYBZL0/VbTP7KjG5E84GG3PsY1iXemJjHV76kef
+         hl6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ULxtsw8dujAsYVt5zC7SDOdydkdqEp/VduAIrsjyFQE=;
-        b=Kva1VPCW2qtq1nR8Sx0c92vuxNeAPDzd/l7bTqMVrb4hGsGwXsQ7W4sW6JNZvoypy3
-         DU9NH6pTLzThsu2dJP0sYoHPQaZ6CZI89ixkKlduaFvWtXQijB7NzlBIND/WgVxHfho8
-         5cJhUarylhPbF2EvfzEuN4lm84sbugkgTRtVaJHVMN2nan30j2kKcvHHyxYOUQ3h/GDM
-         xIR6tNvi8eWSu6KwOy483i/0xiJzqBXacHzYcq8Q/MF3VsYiaghzAEfCuXtFbiYYwPUe
-         ado1CtvEfN+5fqJRaGDUmZQe4/mkpwlHwVZud9Rbc8HUpunPcaJK7fMKznXBEzF6UpCP
-         zm2A==
-X-Gm-Message-State: APjAAAX0VIhh2hgtLIu34bF/VRe3TYx5HOv05zIpLT2H+Z7TvtJe9OLb
-        cys95trDT4/xcDoG9I43Jeg=
-X-Google-Smtp-Source: APXvYqwpgkhDaAIFoY4aTBBevnRJflkVdXiiIro0E7UPi1OhSmsgF91My8rGM24/7ZxDIpgiuELmag==
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr36157030wrp.149.1560017200358;
-        Sat, 08 Jun 2019 11:06:40 -0700 (PDT)
+        bh=OwMt4DN+k+wf0lkZogt5PADN1rzK1u4y6aP41xI0QnE=;
+        b=pXTM1AOBCUbN/Axf98rfgiop0I05LDyqcU4/JS2vDVMPSVaJrgEyTrNGSu2rITZF7Z
+         MKQ6r3XgjpHeq5bkrUMt3vK4Fem4aL75fVSSu7jH/obN+Xz1ekxWL0RCRPgUC9P/mUSO
+         AS902sFyej/NWCj2AsVj6VwrXxlH8pBtQvqUcQf1E/sKmkHMokqBE7ifEnGcOJ0En6oL
+         ow8wA2wolXU5/p791t1q5JwXLLAbhu1PtFQHVKx8WfItjIRPM8IujwW9DiClPEfBkEwE
+         FWElLxsd4XCtKYXwP93/f+HF8QbS4qjT+OpZJDhGnvYCRUDjwC/av20BmH/MSzYlJrzs
+         SKcw==
+X-Gm-Message-State: APjAAAUIjvAc+mS1rI673m59DSbcHHp4TnPNzySx48YapbKHClOfi7aM
+        0QKWO7tp5x4hpkCgEw3APi8=
+X-Google-Smtp-Source: APXvYqw7+qy9TgcaIMEP5Xeg6k3+WyCNQC4Ctm4DlNXGe2zSe+3cQwnCPGb4yd8IR61g60M4nm9H7Q==
+X-Received: by 2002:a5d:4cc3:: with SMTP id c3mr11748878wrt.259.1560017196918;
+        Sat, 08 Jun 2019 11:06:36 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400D12EFF43FED1E981.dip0.t-ipconnect.de. [2003:f1:33dd:a400:d12e:ff43:fed1:e981])
-        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.39
+        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.36
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 11:06:39 -0700 (PDT)
+        Sat, 08 Jun 2019 11:06:36 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com
@@ -64,9 +64,9 @@ Cc:     u.kleine-koenig@pengutronix.de,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 06/14] pwm: meson: pass struct pwm_device to meson_pwm_calc()
-Date:   Sat,  8 Jun 2019 20:06:18 +0200
-Message-Id: <20190608180626.30589-7-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 03/14] pwm: meson: use GENMASK and FIELD_PREP for the lo and hi values
+Date:   Sat,  8 Jun 2019 20:06:15 +0200
+Message-Id: <20190608180626.30589-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
 References: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
@@ -77,52 +77,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-meson_pwm_calc() is the last function that accepts a struct
-meson_pwm_channel. meson_pwm_enable(), meson_pwm_disable() and
-meson_pwm_apply() for example are all taking a struct pwm_device as
-parameter. When they need the struct meson_pwm_channel these functions
-simply call pwm_get_chip_data() internally.
+meson_pwm_calc() ensures that "lo" is always less than 16 bits wide
+(otherwise it would overflow into the "hi" part of the REG_PWM_{A,B}
+register).
+Use GENMASK and FIELD_PREP for the lo and hi values to make it easier to
+spot how wide these are internally. Additionally this is a preparation
+step for the .get_state() implementation where the GENMASK() for lo and
+hi becomes handy because it can be used with FIELD_GET() to extract the
+values from the register REG_PWM_{A,B} register.
 
-Make meson_pwm_calc() consistent with the other functions in the
-meson-pwm driver by passing struct pwm_device to it as well. The value
-of the "id" parameter is actually pwm->hwpwm, but the driver never read
-the "id" parameter, which is why there's no replacement for it in the
-new code.
-
-No functional changes.
+No functional changes intended.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/pwm/pwm-meson.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-meson.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 39ea119add7b..d6eb4d04d5c9 100644
+index 35b38c7201c3..c62a3ac924d0 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
-@@ -114,10 +114,10 @@ static void meson_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 		clk_disable_unprepare(channel->clk);
- }
+@@ -5,6 +5,8 @@
+  * Copyright (C) 2014 Amlogic, Inc.
+  */
  
--static int meson_pwm_calc(struct meson_pwm *meson,
--			  struct meson_pwm_channel *channel,
-+static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
- 			  struct pwm_state *state)
- {
-+	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
- 	unsigned int duty, period, pre_div, cnt, duty_cnt;
- 	unsigned long fin_freq = -1;
- 	u64 fin_ps;
-@@ -280,7 +280,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (state->period != channel->state.period ||
- 	    state->duty_cycle != channel->state.duty_cycle ||
- 	    state->polarity != channel->state.polarity) {
--		err = meson_pwm_calc(meson, channel, state);
-+		err = meson_pwm_calc(meson, pwm, state);
- 		if (err < 0)
- 			return err;
++#include <linux/bitfield.h>
++#include <linux/bits.h>
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/err.h>
+@@ -20,7 +22,8 @@
  
+ #define REG_PWM_A		0x0
+ #define REG_PWM_B		0x4
+-#define PWM_HIGH_SHIFT		16
++#define PWM_LOW_MASK		GENMASK(15, 0)
++#define PWM_HIGH_MASK		GENMASK(31, 16)
+ 
+ #define REG_MISC_AB		0x8
+ #define MISC_B_CLK_EN		BIT(23)
+@@ -217,7 +220,8 @@ static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
+ 	value |= clk_enable;
+ 	writel(value, meson->base + REG_MISC_AB);
+ 
+-	value = (channel->hi << PWM_HIGH_SHIFT) | channel->lo;
++	value = FIELD_PREP(PWM_HIGH_MASK, channel->hi) |
++		FIELD_PREP(PWM_LOW_MASK, channel->lo);
+ 	writel(value, meson->base + offset);
+ 
+ 	value = readl(meson->base + REG_MISC_AB);
 -- 
 2.21.0
 
