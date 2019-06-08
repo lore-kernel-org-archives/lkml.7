@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C49C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7E7C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93313214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E823C214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994379;
-	bh=9o30CDTGUyQ6F1IMu35gTWuAxwpRxBPb0ADbXdLDhuo=;
+	s=default; t=1559994383;
+	bh=P2ZZyDquJKKG+iVcM149i0KLgbNumf6U1VSjEENDeEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AlE/3PiKp2OGQNzQY9SYLPyPAThJylKSWOxHP3WzpEMG+KQO/dxCmcovlFmo0R9X0
-	 UrQqaR7Kam49ib2YHFsYfxuu7VKT6WTLpc2G5Oxou/jP/39ZizvEJncP43ONcuzAFF
-	 VYDtMET2uD3OD8P3ahj4VcTtk/Cx47g5vsLI35RA=
+	b=KRdOdEd7gie3JqrJmA9b0oZQi7yuTlsFtc5HSs7pRPeOyDc5iO9fqG/+HvTdALMzx
+	 WluC2D3Z0DY/UJN5K1wz5pllOOn6v1+N1kkRMjlYn9Kcf90nnxFbcRt9GL4Fnob4Al
+	 INyBAiunyBlCUGZ0B/aEigdPk0Xq0I6LEeuFF1MY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbfFHLmY (ORCPT
+        id S1728412AbfFHLmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:42:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59610 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:42:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbfFHLmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:42:18 -0400
+        id S1728333AbfFHLmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:42:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76834214AF;
-        Sat,  8 Jun 2019 11:42:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0D17214AF;
+        Sat,  8 Jun 2019 11:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994138;
-        bh=9o30CDTGUyQ6F1IMu35gTWuAxwpRxBPb0ADbXdLDhuo=;
+        s=default; t=1559994133;
+        bh=P2ZZyDquJKKG+iVcM149i0KLgbNumf6U1VSjEENDeEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kU6EQbS0TzeCoCn2lXQb7GYr4u0B9HuKPWMzlTmz5pQZD1uZ+rAdYyF6xGhAhbKGm
-         JhfcPx5xOVxFAQyaJE1V4fR7EBMf0Nw4K11aBy+npMFktFAR2UD+8PKLOhAdAO2LsH
-         M/cLWZvBu+7tWEYxUbeJB6+NNJSjr6QhCfKk1ePk=
+        b=JItZFb9Ct30G8mhcQ/eJWpsBjm+Ivt9zKZpi7hFVw1a4kr9JR6YuXo3h9xsuB5NNv
+         XP2UtAIFPKAUcbHHtMfpgQlnWXbnLfqQeFV+tH2LvltvRaq2TnjPRMhcbAwOGTwxJv
+         0X8FkfsRgECtPmK02X3lJt2bC1I+POrLqw+jl1uI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Varun Prakash <varun@chelsio.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 65/70] scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
-Date:   Sat,  8 Jun 2019 07:39:44 -0400
-Message-Id: <20190608113950.8033-65-sashal@kernel.org>
+Cc:     Max Uvarov <muvarov@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 63/70] net: phy: dp83867: increase SGMII autoneg timer duration
+Date:   Sat,  8 Jun 2019 07:39:42 -0400
+Message-Id: <20190608113950.8033-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -59,34 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Varun Prakash <varun@chelsio.com>
+From: Max Uvarov <muvarov@gmail.com>
 
-[ Upstream commit cc555759117e8349088e0c5d19f2f2a500bafdbd ]
+[ Upstream commit 1a97a477e666cbdededab93bd3754e508f0c09d7 ]
 
-ip_dev_find() can return NULL so add a check for NULL pointer.
+After reset SGMII Autoneg timer is set to 2us (bits 6 and 5 are 01).
+That is not enough to finalize autonegatiation on some devices.
+Increase this timer duration to maximum supported 16ms.
 
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Max Uvarov <muvarov@gmail.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/cxgbi/libcxgbi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/phy/dp83867.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
-index 006372b3fba2..a50734f3c486 100644
---- a/drivers/scsi/cxgbi/libcxgbi.c
-+++ b/drivers/scsi/cxgbi/libcxgbi.c
-@@ -641,6 +641,10 @@ cxgbi_check_route(struct sockaddr *dst_addr, int ifindex)
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index 29cae4de9a4f..ffaf67bdb140 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -26,6 +26,12 @@
  
- 	if (ndev->flags & IFF_LOOPBACK) {
- 		ndev = ip_dev_find(&init_net, daddr->sin_addr.s_addr);
-+		if (!ndev) {
-+			err = -ENETUNREACH;
-+			goto rel_neigh;
-+		}
- 		mtu = ndev->mtu;
- 		pr_info("rt dev %s, loopback -> %s, mtu %u.\n",
- 			n->dev->name, ndev->name, mtu);
+ /* Extended Registers */
+ #define DP83867_CFG4            0x0031
++#define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
++#define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
++#define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
++#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    (1 << 5)
++#define DP83867_CFG4_SGMII_ANEG_TIMER_16MS   (0 << 5)
++
+ #define DP83867_RGMIICTL	0x0032
+ #define DP83867_STRAP_STS1	0x006E
+ #define DP83867_RGMIIDCTL	0x0086
+@@ -292,6 +298,18 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 				     0);
+ 		if (ret)
+ 			return ret;
++
++		/* After reset SGMII Autoneg timer is set to 2us (bits 6 and 5
++		 * are 01). That is not enough to finalize autoneg on some
++		 * devices. Increase this timer duration to maximum 16ms.
++		 */
++		ret = phy_modify_mmd(phydev, DP83867_DEVADDR,
++				     DP83867_CFG4,
++				     DP83867_CFG4_SGMII_ANEG_MASK,
++				     DP83867_CFG4_SGMII_ANEG_TIMER_16MS);
++
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	/* Enable Interrupt output INT_OE in CFG3 register */
 -- 
 2.20.1
 
