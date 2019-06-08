@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D6DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B48C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63672214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F389214DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994053;
-	bh=pqEzLv81IrX0kqzgfw1hYmpQ73Vr7DSMGwdy294pxAU=;
+	s=default; t=1559994058;
+	bh=oRTnIMPHnocH1F7D3G7EC322cznTmIvB1n24vfGQ1UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s/ap0BOQ2f3e/FUWaX3WtIXuORdEatMTIlEZvKb58luD8WoaP+eS0JSHVCQ90rIDL
-	 aZQP7Q0c5rLL6DP1mH0uc7uvnn53v3MFNbs3nxqGHPjgyhwmrUdPIxAgApQ3w40hOd
-	 bUwhvyNbckylP0YTANbIisK133Xn4ShW5VUGpIfw=
+	b=cpt8NHxP7hrbSsM05iyCqMJsWbgmInCkC6Py5CeYKTUKnnfELhGsvAFJOCLYr70Ng
+	 /LG96RKYaYH6tuCtUJb7FFcADgH6vn3004BU6G9TUw5mRlH5iJMchXmlYdpJwCoN43
+	 p9aZjcPNd5B4O5AE1mpwO1TPPW6QzfiJqawKSEew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbfFHLkw (ORCPT
+        id S1727977AbfFHLk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:40:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58054 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727856AbfFHLkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:46 -0400
+        id S1727934AbfFHLkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DF2E208C0;
-        Sat,  8 Jun 2019 11:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CF74208C0;
+        Sat,  8 Jun 2019 11:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994046;
-        bh=pqEzLv81IrX0kqzgfw1hYmpQ73Vr7DSMGwdy294pxAU=;
+        s=default; t=1559994052;
+        bh=oRTnIMPHnocH1F7D3G7EC322cznTmIvB1n24vfGQ1UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pkXmtASyqET0+vZiJXrjN2BiSx2piRr1e9iF4VIcCTYNPWucUhat0J8oWncLe9EtD
-         RTI5+ObfVH43rKWJsm8icTF9iVLwejmOVfEXIzACECb4lzX+TgqOoVPmcVOiy+XNc0
-         Pqf+Dycmp9slr/TkPR5fFLIyP24JdllvP/emjMtg=
+        b=tLzwIcBYSM+KUEcaybZstUJBGZFgoMYyNhXeyf5AvEdJ7gAiu81Ga6d6kviOp3ShQ
+         016eNQpLpNO26IbRuGmQZk3wBPDHQvlbmaMlRwIY5OTgH9VGtUlL50/WcJxCi7aAB6
+         et7YEIqXTeJuPO0zdLSw4uQYAm6ySO6YCBLN36/Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 36/70] drm/etnaviv: lock MMU while dumping core
-Date:   Sat,  8 Jun 2019 07:39:15 -0400
-Message-Id: <20190608113950.8033-36-sashal@kernel.org>
+Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 39/70] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+Date:   Sat,  8 Jun 2019 07:39:18 -0400
+Message-Id: <20190608113950.8033-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -61,55 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
-[ Upstream commit 1396500d673bd027683a0609ff84dca7eb6ea2e7 ]
+[ Upstream commit a0692f0eef91354b62c2b4c94954536536be5425 ]
 
-The devcoredump needs to operate on a stable state of the MMU while
-it is writing the MMU state to the coredump. The missing lock
-allowed both the userspace submit, as well as the GPU job finish
-paths to mutate the MMU state while a coredump is under way.
+If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
+will not be freed. Pump index up so it will be freed.
 
-Fixes: a8c21a5451d8 (drm/etnaviv: add initial etnaviv DRM driver)
-Reported-by: David Jander <david@protonic.nl>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: David Jander <david@protonic.nl>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_dump.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/i2c/i2c-dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.c b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-index 33854c94cb85..515515ef24f9 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-@@ -125,6 +125,8 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 		return;
- 	etnaviv_dump_core = false;
- 
-+	mutex_lock(&gpu->mmu->lock);
-+
- 	mmu_size = etnaviv_iommu_dump_size(gpu->mmu);
- 
- 	/* We always dump registers, mmu, ring and end marker */
-@@ -167,6 +169,7 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 	iter.start = __vmalloc(file_size, GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY,
- 			       PAGE_KERNEL);
- 	if (!iter.start) {
-+		mutex_unlock(&gpu->mmu->lock);
- 		dev_warn(gpu->dev, "failed to allocate devcoredump file\n");
- 		return;
- 	}
-@@ -234,6 +237,8 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 					 obj->base.size);
- 	}
- 
-+	mutex_unlock(&gpu->mmu->lock);
-+
- 	etnaviv_core_dump_header(&iter, ETDUMP_BUF_END, iter.data);
- 
- 	dev_coredumpv(gpu->dev, iter.start, iter.data - iter.start, GFP_KERNEL);
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index 3f7b9af11137..776f36690448 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -283,6 +283,7 @@ static noinline int i2cdev_ioctl_rdwr(struct i2c_client *client,
+ 			    msgs[i].len < 1 || msgs[i].buf[0] < 1 ||
+ 			    msgs[i].len < msgs[i].buf[0] +
+ 					     I2C_SMBUS_BLOCK_MAX) {
++				i++;
+ 				res = -EINVAL;
+ 				break;
+ 			}
 -- 
 2.20.1
 
