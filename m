@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF9DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C13C468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6998C214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CFC214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994843;
-	bh=w5aQZhf7HlqizMDPAz0KOrvr2Obgz/W68H+SknGP92c=;
+	s=default; t=1559994849;
+	bh=fGkjKiQfawmic6BBanSd1Vtb2m0w+VoWvZ0ZFBjSH7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uNiMqZnGpmCyelJZYx1yuparjpStIAl7WRnDxM1RmaOsWvuTbZZiKb9HBtUuKhJS1
-	 ZMWFSEg5HAkhELjRryEGU/Rnzkkl7mD8j7BTHYrYDJrphk+mhU6PY8mtK5L4kz7r8z
-	 3zrCDcv4QGdN/0BoeJS/7McvaE3lga8M7Zmh4QCI=
+	b=yn85YU2HcF6A7vGci23f34rcRQwhcQ2qsqmOouKVoxAS1z4qNBOocyQek5FPESPwY
+	 nbC4nTYKmbEwt15HYNrLVmb3t4sb9VWngMrV2pRN1qvhBUnWMyW959dq7Pzel3Pd5C
+	 VDJMjVgzwxbBJrQ03ePi92RHCBBugNEbGLsuj7io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfFHLyC (ORCPT
+        id S1729184AbfFHLyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:54:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57886 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbfFHLkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:35 -0400
+        id S1727619AbfFHLke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E67214AF;
-        Sat,  8 Jun 2019 11:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CBA121726;
+        Sat,  8 Jun 2019 11:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994035;
-        bh=w5aQZhf7HlqizMDPAz0KOrvr2Obgz/W68H+SknGP92c=;
+        s=default; t=1559994034;
+        bh=fGkjKiQfawmic6BBanSd1Vtb2m0w+VoWvZ0ZFBjSH7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYPY3tvXWmJU1wxMqhsR/N9KlOam57+wsT9visuTn532JVPyI9Fl1SP1+DIbm3ooV
-         ig6izqBQAfSz9DIn4ssYfEh5X6TDnDAmdg8invI4JwWqefNAAud/bBSJI7wa0BaSgt
-         kSu15+ux1qBuznb07vknmDxgDwyqahwTWw2Xht9E=
+        b=jp5yBtlF6vZU4dcigaqP2fBka9lJjkcBY1lokX6GvVgKRbJid1sZlyXyTKG0ahht4
+         CYl6iiCeIiUXO6EwmYNuREgC/J5KrUguoLC8dFwWPpTlYpryL6sX202rATrS2E6dFY
+         h7k2/VW1aF+Z8SGMJhMtnsBxVEfAaLFK7/2iL+L0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 29/70] io_uring: Fix __io_uring_register() false success
-Date:   Sat,  8 Jun 2019 07:39:08 -0400
-Message-Id: <20190608113950.8033-29-sashal@kernel.org>
+Cc:     Biao Huang <biao.huang@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 28/70] net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio read/write fail
+Date:   Sat,  8 Jun 2019 07:39:07 -0400
+Message-Id: <20190608113950.8033-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -59,33 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Biao Huang <biao.huang@mediatek.com>
 
-[ Upstream commit a278682dad37fd2f8d2f30d8e84e376a856ab472 ]
+[ Upstream commit f4ca7a9260dfe700f2a16f0881825de625067515 ]
 
-If io_copy_iov() fails, it will break the loop and report success,
-albeit partially completed operation.
+1. the frequency of csr clock is 66.5MHz, so the csr_clk value should
+be 0 other than 5.
+2. the csr_clk can be got from device tree, so remove initialization here.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 9992f37e346b ("stmmac: dwmac-mediatek: add support for mt2712")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 30a5687a17b6..69ff94558758 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2505,7 +2505,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+index bf2562995fc8..126b66bb73a6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+@@ -346,8 +346,6 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
+ 		return PTR_ERR(plat_dat);
  
- 		ret = io_copy_iov(ctx, &iov, arg, i);
- 		if (ret)
--			break;
-+			goto err;
- 
- 		/*
- 		 * Don't impose further limits on the size and buffer
+ 	plat_dat->interface = priv_plat->phy_mode;
+-	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
+-	plat_dat->clk_csr = 5;
+ 	plat_dat->has_gmac4 = 1;
+ 	plat_dat->has_gmac = 0;
+ 	plat_dat->pmt = 0;
 -- 
 2.20.1
 
