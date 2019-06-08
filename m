@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ACDC468C8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64D7C468CA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8D520840
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6AC2146E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JL5TWljI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rCSnOT9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731141AbfFHEoY (ORCPT
+        id S1731183AbfFHEo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 00:44:24 -0400
-Received: from mail-ot1-f74.google.com ([209.85.210.74]:44835 "EHLO
-        mail-ot1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730925AbfFHEoL (ORCPT
+        Sat, 8 Jun 2019 00:44:29 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:41817 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730819AbfFHEoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 00:44:11 -0400
-Received: by mail-ot1-f74.google.com with SMTP id o98so1937920ota.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:44:11 -0700 (PDT)
+        Sat, 8 Jun 2019 00:44:08 -0400
+Received: by mail-qt1-f201.google.com with SMTP id e39so3692393qte.8
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:44:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=AmlnQxdhHxhgaUE+upN643FVBvwEIISLpUNhemfIGlM=;
-        b=JL5TWljI4VDEsVSrJSrPNzCX/VIAWb2fbHLcrGTXg2NQX5riYvqM7uVswYbzT/EEIy
-         djd3AV+RJB9gvVahixYEtpThuyB3VVlVmFDDq1q4B9h3ijMYAPCKfE0nk4RoHstinSwx
-         c/R9Pg82bRVid8j95hPh+O3ygphRRVx49n/4u3GIvaAN3C0B+dBOwvqdlm4rSCAstLr7
-         QkLCiAB4f29eEWdyvpz0T8IDux78ly13crISVGWjBxWAo/Kbu+0XLJFfmT1XIIdKtPZl
-         86fMZcAYwDzqag6dAnzFYm22f8WETD3fmEbtrfW4u453VQ+8v26rZpQt5DhyAP9cb9Gh
-         DfKw==
+        bh=l7frD8AwQb/664vV6b+eE1fM0p32UKK11iOjCpsV3ZE=;
+        b=rCSnOT9kVTQ4zHlkjz/xjtzstPLwTuZJEpaaMJS61bIu3uWnlOAh8wLABGTIsTwBFg
+         xm7pMtTt0ypdAcPWZrlIfxGY0FfWBGVRMBwf3jrEwOWI1/JN/wTnSTlN5i1cd56sRXsm
+         KAWvWRqDo9/WfmsLrTKeS95TdKlXcGsZ07leJWoYaQiQ/2BftBUQW1pxZhCPELKiQmuO
+         2Fm7TvoK3DNvdkM7JRvRZ9dDxlFbZ47rMp3+MReBwsfI/rWbwYCOlkcPWCOuvJCY6fxw
+         l+4DTin711JaMkrgqfd0/DsaXe1oWQsh5t0rFqsbtM52XkGYDnq8DSzsuiSHApUJK/KB
+         C1iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=AmlnQxdhHxhgaUE+upN643FVBvwEIISLpUNhemfIGlM=;
-        b=PhWSqhgQc9Ze/Ie6Qa5SFdWucYOdpMkuCN+bFhPY1Trt3MQVINrH2XbUzmdHXLomDR
-         3HlJlDysEWKoNU37mESfs0mrG+Jm3YEC1RDAEnwezyCwS7hiYYsAiHYeneGA6D4FB6+P
-         YcymOAzL9NwPsWiOJBgUyG3DZ3tD2HYWAtO3RFHt1TZfgP4uLOTiyPHSrWCI7LZhieE0
-         WwXlP+EAVMz86Vya21kQmyW+BXdB4svinFiawuHCK150d7E9WXW0h6eebydhW29rywTL
-         maGF75THB5R2kV1tet5JoVzHz2X8+xXmigcPUgnmER9oqRusScOFtNykr5JrU01ri+zU
-         vVmA==
-X-Gm-Message-State: APjAAAULLmZI4soJ1njEETXYJRy6NpQcVz5YVU8rzsn1AF14MfMI5Mf0
-        y2KvUM3RE7MPJ1CSKlaixDv2LXnyTIJQ59c=
-X-Google-Smtp-Source: APXvYqz9I03qq1fo0EbBYhFp6pczS0prAvgt/qQK+tiBjETZmeye60HIskMRhLyeg6qLcL8rLOIIuIvMoSD2BCs=
-X-Received: by 2002:aca:d88b:: with SMTP id p133mr6059786oig.3.1559969050745;
- Fri, 07 Jun 2019 21:44:10 -0700 (PDT)
-Date:   Fri,  7 Jun 2019 21:43:38 -0700
+        bh=l7frD8AwQb/664vV6b+eE1fM0p32UKK11iOjCpsV3ZE=;
+        b=HOSJK/J/CsKG3oj2rJoOeo6R5G0BiJguk1zg76jlT7NWQmsJz0sw/pAfs/fXekf7q4
+         Qdbsr4W5hTxF+s2sr6SkA/Ox+ScYpzoRKl9FVAu2G5bAqr3dFryjbXu4qWzgpjedHMvL
+         s14Bf4I9WihwIFRjIcHlevhnM3qomsBlVY5HJFX1pkV9kHjI9xOwTxVe4C4HifVQzIqs
+         Y0rvEWYdW5OricABmQUyOTf636Px2URtKOoBFOE9v3tL7opgWpP1MmoLWkBeQLKgfE+C
+         m0PkAxWBZiTqbkCd9erDsHTFSokeMWEFWBtMiu9mlHWMj4Y0XwftczquPkQj5oNflGWX
+         YnHA==
+X-Gm-Message-State: APjAAAU/MbTBHLnuyaGZSsiWgFs89p2pnWqeAVSC4ObUsNceyp1HzvMY
+        SvnKHc/7s20qhj19sPPfCnXmbYFBkGExOPg=
+X-Google-Smtp-Source: APXvYqwud8Aypv8gLILj91JHYUlSsreuVUJCq0h7diIstQL9qUtPn0pHHpuSFkdUqf0cnEy7NX6jcTlT8ggl5z8=
+X-Received: by 2002:ac8:7c7:: with SMTP id m7mr45776276qth.28.1559969047755;
+ Fri, 07 Jun 2019 21:44:07 -0700 (PDT)
+Date:   Fri,  7 Jun 2019 21:43:37 -0700
 In-Reply-To: <20190608044339.115026-1-saravanak@google.com>
-Message-Id: <20190608044339.115026-9-saravanak@google.com>
+Message-Id: <20190608044339.115026-8-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190608044339.115026-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v1 8/9] OPP: Allow copying OPPs tables between devices
+Subject: [PATCH v1 7/9] OPP: Add function to look up required OPP's for a
+ given OPP
 From:   Saravana Kannan <saravanak@google.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -81,61 +82,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some hardware devices might create multiple children devices to manage
-different components of the hardware. In these cases, it might be necessary
-for the original hardware device to copy specific OPP tables to a specific
-the new child device. Add dev_pm_opp_add_opp_table() to do that.
+Add a function that allows looking up required OPPs given a source OPP
+table, destination OPP table and the source OPP.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/opp/core.c     | 8 ++++++++
- include/linux/pm_opp.h | 7 +++++++
- 2 files changed, 15 insertions(+)
+ drivers/opp/core.c     | 50 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pm_opp.h | 11 ++++++++++
+ 2 files changed, 61 insertions(+)
 
 diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index d96d5746eb47..9d49aee2c3ef 100644
+index 89a2ece88480..d96d5746eb47 100644
 --- a/drivers/opp/core.c
 +++ b/drivers/opp/core.c
-@@ -943,6 +943,14 @@ struct opp_device *_add_opp_dev(const struct device *dev,
- 	return opp_dev;
+@@ -1881,6 +1881,56 @@ void dev_pm_opp_put_genpd_virt_dev(struct opp_table *opp_table,
+ 		dev_err(virt_dev, "Failed to find required device entry\n");
  }
  
-+int dev_pm_opp_add_opp_table(struct device *dev, struct opp_table *opp_table)
++/**
++ * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
++ * @src_table: OPP table which has dst_table as one of its required OPP table.
++ * @dst_table: Required OPP table of the src_table.
++ * @pstate: OPP of the src_table.
++ *
++ * This function returns the OPP (present in @dst_table) pointed out by the
++ * "required-opps" property of the OPP (present in @src_table).
++ *
++ * Return: destination table OPP on success, otherwise NULL on errors.
++ */
++struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
++					struct opp_table *dst_table,
++					struct dev_pm_opp *src_opp)
 +{
-+	if (!dev || !opp_table)
-+		return -EINVAL;
++	struct dev_pm_opp *opp, *dest_opp = NULL;
++	int i;
 +
-+	return _add_opp_dev(dev, opp_table) ? 0 : -ENOMEM;
++	if (!src_table || !dst_table || !src_opp)
++		return NULL;
++
++	for (i = 0; i < src_table->required_opp_count; i++) {
++		if (src_table->required_opp_tables[i]->np == dst_table->np)
++			break;
++	}
++
++	if (unlikely(i == src_table->required_opp_count)) {
++		pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
++		       __func__, src_table, dst_table);
++		return NULL;
++	}
++
++	mutex_lock(&src_table->lock);
++
++	list_for_each_entry(opp, &src_table->opp_list, node) {
++		if (opp == src_opp) {
++			dest_opp = opp->required_opps[i];
++			goto unlock;
++		}
++	}
++
++	pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__, src_table,
++	       dst_table);
++
++unlock:
++	mutex_unlock(&src_table->lock);
++
++	return dest_opp;
 +}
 +
- static struct opp_table *_allocate_opp_table(struct device *dev, int index)
- {
- 	struct opp_table *opp_table;
+ /**
+  * dev_pm_opp_xlate_performance_state() - Find required OPP's pstate for src_table.
+  * @src_table: OPP table which has dst_table as one of its required OPP table.
 diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index 13381dc3dd39..31acc617fda3 100644
+index 3f30ce55e8eb..13381dc3dd39 100644
 --- a/include/linux/pm_opp.h
 +++ b/include/linux/pm_opp.h
-@@ -81,6 +81,7 @@ struct dev_pm_set_opp_data {
- struct opp_table *dev_pm_opp_get_opp_table(struct device *dev);
- struct opp_table *dev_pm_opp_get_opp_table_indexed(struct device *dev, int index);
- void dev_pm_opp_put_opp_table(struct opp_table *opp_table);
-+int dev_pm_opp_add_opp_table(struct device *dev, struct opp_table *opp_table);
+@@ -137,6 +137,9 @@ void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
+ struct opp_table *dev_pm_opp_set_genpd_virt_dev(struct device *dev, struct device *virt_dev, int index);
+ void dev_pm_opp_put_genpd_virt_dev(struct opp_table *opp_table, struct device *virt_dev);
+ int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
++struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
++					struct opp_table *dst_table,
++					struct dev_pm_opp *src_opp);
+ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
+ int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
+ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+@@ -321,6 +324,14 @@ static inline int dev_pm_opp_xlate_performance_state(struct opp_table *src_table
+ 	return -ENOTSUPP;
+ }
  
- unsigned long dev_pm_opp_get_voltage(struct dev_pm_opp *opp);
- 
-@@ -158,6 +159,12 @@ static inline struct opp_table *dev_pm_opp_get_opp_table_indexed(struct device *
- 
- static inline void dev_pm_opp_put_opp_table(struct opp_table *opp_table) {}
- 
-+static int dev_pm_opp_add_opp_table(struct device *dev,
-+				    struct opp_table *opp_table)
++static inline struct dev_pm_opp *dev_pm_opp_xlate_opp(
++						struct opp_table *src_table,
++						struct opp_table *dst_table,
++						struct dev_pm_opp *src_opp)
 +{
-+	return -ENOTSUPP;
++	return NULL;
 +}
 +
- static inline unsigned long dev_pm_opp_get_voltage(struct dev_pm_opp *opp)
+ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
  {
- 	return 0;
+ 	return -ENOTSUPP;
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
