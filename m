@@ -2,106 +2,189 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82773C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 19:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320EEC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 19:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6C821537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 19:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D94214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 19:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RblqYiQ7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ECi1L8Ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfFHTEm (ORCPT
+        id S1727552AbfFHTGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 15:04:42 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:32829 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbfFHTEl (ORCPT
+        Sat, 8 Jun 2019 15:06:37 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36892 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727360AbfFHTGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 15:04:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so5328583wru.0;
-        Sat, 08 Jun 2019 12:04:40 -0700 (PDT)
+        Sat, 8 Jun 2019 15:06:37 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 131so4541141ljf.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 12:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A3Hudhze4ozjG5nDlaCCw5DZCvRef03puHwfaHxWkTk=;
-        b=RblqYiQ7DnCzvDoe2qNNYKDkb1xlqJtaFqAHNiNZFCeXdQSBQ7Sh80gGKiKAyqVsOw
-         laWoZOR8K2bYhiIutSWHlgvlq7YA3yoq+7alfoWxkGlEgLFpTci3fAxGT+/3XTSlQXdH
-         xkyCFGCl5UgPHe4tpdWecRlIMl6lL9kr8uaU+SSOhgvgPe3NfPRSu7gkfzZpKQm7OpXK
-         oQIvxsE2phcxJ35vzsuHN9kzpwud+RwMcckQFnVlKRjGFPbLobtwGYKijgQM7U3y4Lu+
-         59kFsk3v3PXgs9Zo7GKHEayORMs1NolT5pMnGvYLhfJZM3KcvgI7zg9ktldsJtckAr7T
-         KI4w==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6i3nMyC0pxX9g9ZOmluPAmte2RCJfloAGvvix4oF/q0=;
+        b=ECi1L8Ruwbfw1pB3XA1zxhqSZ1ueXjCteSPPzTn8v4cQYmmWwfSA8tz8CqbhzU9ll5
+         CnMQgteRm1jbU7/RyHZAYXk7nE6ys44jCc4FL5cuVH31CvHzW/II/I8CU/ByEMgmTIcN
+         I8irHaGR0GMAGF+y2LkHpObSTC3/V4rqSZigKRDk9qoCPsBEZ0LqIjurPXLI+kE+PfMw
+         fyXd5FTAxy0gPwxCfAzEFEHnMk8Pl+GHB/nL66yeo8Jl78HipwttuyOOvfwh6SxoP+56
+         /bn+7jjaUs5+mlrUakKNynUXfZJrtG7ExZMaN62NdH9wDES9udVYgz7/c69qvMI8rAvQ
+         aKoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A3Hudhze4ozjG5nDlaCCw5DZCvRef03puHwfaHxWkTk=;
-        b=NcNXMZAl0x0ZGWvt/3sHZs0fNF+EauH9Uqa9Yz6jkddUqUSWfxIn9mfmkvFIRgig3k
-         84GzM9Ha0+WJTmSmFV93ccX21nTltbwOOBmPFTkwGflnK/ZySnLsGNO9hrcAldLPnBR5
-         aXhRhTNzbr3gNEziylW6WdQfA5Hd6wWz8onWGFelUD7BsXfSNF3wWS1B3baKyJtJ8+z7
-         PCo+ZBfk8Uy4nhY5ThKS5m1uuRG97UKbd/npE+3nJlyQAN+u6j5VboiLKSkY2Ou3pYcv
-         /Lt1jn83r210/gY2uoAAOQVHp7bYNHtSFcIl88uIVcQYVc08Vv6tYrg0kkOtVDhmg2+w
-         dpzQ==
-X-Gm-Message-State: APjAAAWAM+6p6IK9xXV3KUdldcJ8HMCf80Pus3mVmXgFSwTTRsukGacs
-        Sh4xmzA1F8dAaKyRPhJkOfhz76F5
-X-Google-Smtp-Source: APXvYqzsI3eay4SJpxc6HMysG8GiIaym+9fSnDnGjwhZmJvwS04ahED3cgLuDiFP9FbRVWrqQv0TKA==
-X-Received: by 2002:adf:f951:: with SMTP id q17mr11373995wrr.173.1560020680217;
-        Sat, 08 Jun 2019 12:04:40 -0700 (PDT)
-Received: from kwango.local (ip-89-102-68-197.net.upcbroadband.cz. [89.102.68.197])
-        by smtp.gmail.com with ESMTPSA id l4sm4294060wmh.18.2019.06.08.12.04.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 12:04:39 -0700 (PDT)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fixes for 5.2-rc4
-Date:   Sat,  8 Jun 2019 21:04:38 +0200
-Message-Id: <20190608190438.7665-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6i3nMyC0pxX9g9ZOmluPAmte2RCJfloAGvvix4oF/q0=;
+        b=Y2ZPQ8SPqYkjnjv4D3Zj9ooTmB6MQwdL07E0WeVKvPG7aX0THuucwfJKYhak2HxYoO
+         nErd1vy8/rQiclPSn7H7AiU9htqDoc+JZ1P4qEDnLXK4ewrcNsC2oX9MCGqkT/mN35Pz
+         MKRBflLFAQrBW+rOdBJlwhJbMz4p1JIFSJvv6l4ZjugbhZIj4FFbOOKj5MgodoQoDWit
+         2afUOeRLulRUT1KhyEfMGSkO+z99xXgadKGIzqGFZd5ZXMZIvhAVRpmfs5fPAEdfbVbw
+         Xgb74B4ISC1CYcwTvk9nRJZXlcpMGN7Vex1KpyIk0qXpU1M5OpqpKO33SS+SzE8+YpTK
+         16pw==
+X-Gm-Message-State: APjAAAXGFrkQMGub51ceChxNWZ/32RYVc+HoD89cm1pBdY+SgKrZ7X9m
+        T2jaopPve1Q0zDspYQ2h8YwvZFYFkGr8x9wXA81QUQ==
+X-Google-Smtp-Source: APXvYqwcT4Jhjjegl2n8+3gFm7MurE3TwNr2KoJch9exVtX4nMBXmEo7aWCQagA0gTh0bKy2VDLiL6abw2BcWLLSrjk=
+X-Received: by 2002:a2e:2b11:: with SMTP id q17mr31572451lje.23.1560020794839;
+ Sat, 08 Jun 2019 12:06:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190607153848.271562617@linuxfoundation.org> <20190608093256.GD19832@kroah.com>
+In-Reply-To: <20190608093256.GD19832@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sun, 9 Jun 2019 00:36:23 +0530
+Message-ID: <CA+G9fYsB52VKE1+z8eJvz-x-Nyq2E7DtOoCw6vJPH_0F7UiXNg@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/69] 4.14.124-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, 8 Jun 2019 at 15:03, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Jun 07, 2019 at 05:38:41PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.14.124 release.
+> > There are 69 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sun 09 Jun 2019 03:37:08 PM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >       https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.124-rc1.gz
+> > or in the git tree and branch at:
+> >       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> > and the diffstat can be found below.
+>
+> -rc2 is out, to hopefully resolve the btrfs 32bit build failure:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.124-rc2.gz
 
-The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
+NOTE:
+selftest sources version updated to 5.1
+Following test cases reported pass after upgrade
+  kselftest:
+    * bpf_test_libbpf.sh
+    * net_ip_defrag.sh
+Few kselftest test cases reported failure and we are investigating.
 
-are available in the Git repository at:
+LTP version upgrade to 20190517
 
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.2-rc4
+Summary
+------------------------------------------------------------------------
 
-for you to fetch changes up to 7b2f936fc8282ab56d4d21247f2f9c21607c085c:
+kernel: 4.14.124-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 396e28a10fffc503c28b113c1e867b8e3684a98a
+git describe: v4.14.123-70-g396e28a10fff
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.123-70-g396e28a10fff
 
-  ceph: fix error handling in ceph_get_caps() (2019-06-05 20:34:39 +0200)
+No regressions (compared to build v4.14.123)
 
-----------------------------------------------------------------
-A change to call iput() asynchronously to avoid a possible deadlock
-when iput_final() needs to wait for in-flight I/O (e.g. readahead) and
-a fixup for a cleanup that went into -rc1.
+Fixes (compared to build v4.14.123)
+------------------------------------------------------------------------
+  kselftest:
+    * bpf_test_libbpf.sh
+    * net_ip_defrag.sh
 
-----------------------------------------------------------------
-Yan, Zheng (3):
-      ceph: single workqueue for inode related works
-      ceph: avoid iput_final() while holding mutex or in dispatch thread
-      ceph: fix error handling in ceph_get_caps()
+Ran 22140 total tests in the following environments and test suites.
 
- fs/ceph/caps.c       |  34 ++++++-----
- fs/ceph/file.c       |   2 +-
- fs/ceph/inode.c      | 155 +++++++++++++++++++++++++++------------------------
- fs/ceph/mds_client.c |  28 ++++++----
- fs/ceph/quota.c      |   9 ++-
- fs/ceph/snap.c       |  16 ++++--
- fs/ceph/super.c      |  28 +++-------
- fs/ceph/super.h      |  19 ++++---
- 8 files changed, 156 insertions(+), 135 deletions(-)
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* network-basic-tests
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
