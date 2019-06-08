@@ -2,192 +2,102 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B92FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90B5C468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D422146E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D7C212F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DjoWrOsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfFHIgH (ORCPT
+        id S1726595AbfFHIjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 04:36:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:53597 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfFHIgG (ORCPT
+        Sat, 8 Jun 2019 04:39:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41268 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbfFHIjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 04:36:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id h3so3445637iob.20
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 01:36:05 -0700 (PDT)
+        Sat, 8 Jun 2019 04:39:37 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so4319790wrm.8
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 01:39:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J6Xt9h1a4Wghl2N6CbS4VR7OOrvB5+AthvQVEUPg01E=;
+        b=DjoWrOsWVY/yC9JXffrTjpdqyGovJRi2Buug8N5SOGLhoS1LCUpAtYv9PesOQViJbC
+         hOFboN/QlHdA/zBDZ80nYSDB5L4vTRpz9My5cgMRUI1xbL8rlAnhlS9+wX/Xa/skpfc1
+         sRDDD28K/u7NL3Lgi5PURTUxf9DEDl0Ue7zA1A4uo8ltMNIVodqzxbCPKoos8hZ7sr/n
+         ZQMdlgNBVCx/hwuofBC3pv5Lt28pAjkUNVjrxxpHCX39a5ApT/I7pPF2mvmlqNV2LcR4
+         XZTxiN0oSjU10rLrPc4OXo7OBYSeEHsUET3Bhoa9EwAprRjWoEwejl+3bo41EqOBmxEz
+         RGpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=fkX3S/tPJEfO5/PQ4Wk37gR465AkH5W+vB2a+wWl59Y=;
-        b=MMuWB/VHn4hWHcmeWq0ft+41wUEmDJ7cy9kDJqeLY8Zbfh3sqS8W4o/23HP3Vi2Oa5
-         o5gXMIj0uMIjSMms4ZUklWwTU9EJ7FlAYGsudgKKY1S2ANLzJtOCx9gNHxqeI31pK8Om
-         e3FzQ9NRZfJxBhrzoLRElxDsUmUVzO83JVAzmuuq4b7Dxbqqh1TWoSDeJsI3Nd9EwrQD
-         AXeP5t/OSoCr4AP89Z7/6SzBBFQZMazyTmFb/iJ7jhasWgL+S55DeEStJX8fVUMFN6/s
-         QFqECFKndKZNt0eOYGDPUI0iQskEEuwe8TMhvO2DTafJJmu93OIKrTcCR+voU0SLFwc4
-         S86A==
-X-Gm-Message-State: APjAAAUfFM+1SWowDkcIGqGmHyoa5Dj+h1i2MmfsNJMMRuXgN3xy/if6
-        sjDTVfq3mNL7OkfAKgaHyKWOuIVxHCHDqHIerTuP3zJZSjJv
-X-Google-Smtp-Source: APXvYqxfMVxXk9WA9chqUCvvz96lOoRsKKqehXtwiABs8q4Gh1jv6ThJ6W6b3H3EnnYSaZDfWGLlyYRitrl38tk9NV1LLhaWCSem
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J6Xt9h1a4Wghl2N6CbS4VR7OOrvB5+AthvQVEUPg01E=;
+        b=lBM0cjM5hpBHNIYmCfGgbgBukXIr4PUaxCRhkYa4fjc248cvLFJI7KqHZKhG+V+EaH
+         ktttIKhHu3XvL57Y2/xAMKn1gosymv95DECZYG2QXTCrLpSKNgOTNgmlX1/pD5H2+6mt
+         DAHWhby6nclS1h54KvoIVzryoKTXSLZE9REkkytHO/r5bAiuqrBv0btzieNSSscDY55+
+         pfbVyr1T26Lp+S3EVZ73akZZ4koj6bmvNigfsH7dFe+4U+5097rDkALX2ugyKfAtK931
+         FZYNX+PBPMOnmXKYnonooF3A2WltnaEUiafGLP+Ijg6GhQlUCQrYyebeamSPZRDlv83G
+         fysA==
+X-Gm-Message-State: APjAAAWIwCHPYmVaciRghVAVDElkSg1yIWxbfOFOEkq4OA/lTbpDPZaz
+        /Rtn9dMKo49oMBP9VdeEvu/u+ziLbGXNfb4y
+X-Google-Smtp-Source: APXvYqy0hclAVRC3uhRV9+kiDoq5y/xu4oRXxLZnqP/wlFsxFYuIAZE/t6VVhRF/UOV3+UhOCrDfrA==
+X-Received: by 2002:adf:df91:: with SMTP id z17mr30066569wrl.336.1559983175080;
+        Sat, 08 Jun 2019 01:39:35 -0700 (PDT)
+Received: from [10.97.4.179] (aputeaux-682-1-82-78.w90-86.abo.wanadoo.fr. [90.86.61.78])
+        by smtp.gmail.com with ESMTPSA id z6sm4787119wrw.2.2019.06.08.01.39.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 08 Jun 2019 01:39:34 -0700 (PDT)
+Subject: Re: [PATCH] block: fix a crash in do_task_dead()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, hch@lst.de,
+        oleg@redhat.com, gkohli@codeaurora.org, mingo@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1559161526-618-1-git-send-email-cai@lca.pw>
+ <20190530080358.GG2623@hirez.programming.kicks-ass.net>
+ <82e88482-1b53-9423-baad-484312957e48@kernel.dk>
+ <20190603123705.GB3419@hirez.programming.kicks-ass.net>
+ <ddf9ee34-cd97-a62b-6e91-6b4511586339@kernel.dk>
+ <20190607133541.GJ3436@hirez.programming.kicks-ass.net>
+ <20190607142332.GF3463@hirez.programming.kicks-ass.net>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c0b19bdd-c68f-3f1f-2cd2-1732e8a508b6@kernel.dk>
+Date:   Sat, 8 Jun 2019 02:39:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:5a0c:: with SMTP id o12mr3678402iob.281.1559982965162;
- Sat, 08 Jun 2019 01:36:05 -0700 (PDT)
-Date:   Sat, 08 Jun 2019 01:36:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007e8b70058acbd60f@google.com>
-Subject: KASAN: use-after-free Read in nr_release
-From:   syzbot <syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190607142332.GF3463@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 6/7/19 8:23 AM, Peter Zijlstra wrote:
+> On Fri, Jun 07, 2019 at 03:35:41PM +0200, Peter Zijlstra wrote:
+>> On Wed, Jun 05, 2019 at 09:04:02AM -0600, Jens Axboe wrote:
+>>> How about the following plan - if folks are happy with this sched patch,
+>>> we can queue it up for 5.3. Once that is in, I'll kill the block change
+>>> that special cases the polled task wakeup. For 5.2, we go with Oleg's
+>>> patch for the swap case.
+>>
+>> OK, works for me. I'll go write a proper patch.
+> 
+> I now have the below; I'll queue that after the long weekend and let
+> 0-day chew on it for a while and then push it out to tip or something.
 
-syzbot found the following crash on:
+LGTM, thanks Peter!
 
-HEAD commit:    85cb9287 net: rds: fix memory leak in rds_ib_flush_mr_pool
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=133e162ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4f721a391cd46ea
-dashboard link: https://syzkaller.appspot.com/bug?extid=6eaef7158b19e3fec3a0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+-- 
+Jens Axboe
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6eaef7158b19e3fec3a0@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in atomic_read  
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in refcount_inc_not_zero_checked+0x81/0x200  
-lib/refcount.c:123
-Read of size 4 at addr ffff88807bd1a3c0 by task syz-executor.4/31693
-
-CPU: 1 PID: 31693 Comm: syz-executor.4 Not tainted 5.2.0-rc2+ #43
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
-  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x123/0x190 mm/kasan/generic.c:191
-  kasan_check_read+0x11/0x20 mm/kasan/common.c:94
-  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-  refcount_inc_not_zero_checked+0x81/0x200 lib/refcount.c:123
-  refcount_inc_checked+0x17/0x70 lib/refcount.c:156
-  sock_hold include/net/sock.h:654 [inline]
-  nr_release+0x62/0x3b0 net/netrom/af_netrom.c:523
-  __sock_release+0xce/0x2a0 net/socket.c:607
-  sock_close+0x1b/0x30 net/socket.c:1279
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:168
-  prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
-  do_syscall_64+0x58e/0x680 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x412f61
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffda8e7f4d0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000412f61
-RDX: 0000000000000000 RSI: ffffffff87168e98 RDI: 0000000000000004
-RBP: 0000000000000001 R08: ffffffff81009897 R09: 0000000017981f41
-R10: 00007ffda8e7f5b0 R11: 0000000000000293 R12: 000000000075c920
-R13: 000000000075c920 R14: 000000000018a8f4 R15: 000000000075c10c
-
-Allocated by task 31694:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
-  __do_kmalloc mm/slab.c:3660 [inline]
-  __kmalloc+0x15c/0x740 mm/slab.c:3669
-  kmalloc include/linux/slab.h:552 [inline]
-  sk_prot_alloc+0x19c/0x2e0 net/core/sock.c:1608
-  sk_alloc+0x39/0xf70 net/core/sock.c:1662
-  nr_create+0xb9/0x5e0 net/netrom/af_netrom.c:436
-  __sock_create+0x3d8/0x730 net/socket.c:1430
-  sock_create net/socket.c:1481 [inline]
-  __sys_socket+0x103/0x220 net/socket.c:1523
-  __do_sys_socket net/socket.c:1532 [inline]
-  __se_sys_socket net/socket.c:1530 [inline]
-  __x64_sys_socket+0x73/0xb0 net/socket.c:1530
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 31693:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3432 [inline]
-  kfree+0xcf/0x220 mm/slab.c:3755
-  sk_prot_free net/core/sock.c:1645 [inline]
-  __sk_destruct+0x4f7/0x6e0 net/core/sock.c:1731
-  sk_destruct+0x7b/0x90 net/core/sock.c:1739
-  __sk_free+0xce/0x300 net/core/sock.c:1750
-  sk_free+0x42/0x50 net/core/sock.c:1761
-  sock_put include/net/sock.h:1728 [inline]
-  nr_release+0x332/0x3b0 net/netrom/af_netrom.c:557
-  __sock_release+0xce/0x2a0 net/socket.c:607
-  sock_close+0x1b/0x30 net/socket.c:1279
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:168
-  prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
-  do_syscall_64+0x58e/0x680 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff88807bd1a340
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 128 bytes inside of
-  2048-byte region [ffff88807bd1a340, ffff88807bd1ab40)
-The buggy address belongs to the page:
-page:ffffea0001ef4680 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
-index:0xffff88807bd1b440 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0002a48788 ffffea00018fc508 ffff8880aa400c40
-raw: ffff88807bd1b440 ffff88807bd1a340 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88807bd1a280: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88807bd1a300: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-> ffff88807bd1a380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                            ^
-  ffff88807bd1a400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88807bd1a480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
