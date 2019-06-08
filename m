@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84169C468BC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCDCC468BE
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61051212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA9A21537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="WF5dn0oa"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SGwW5Qi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfFHSGk (ORCPT
+        id S1727424AbfFHSGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 14:06:40 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35920 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfFHSGh (ORCPT
+        Sat, 8 Jun 2019 14:06:43 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40945 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727248AbfFHSGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 14:06:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so5232770wrs.3;
-        Sat, 08 Jun 2019 11:06:36 -0700 (PDT)
+        Sat, 8 Jun 2019 14:06:39 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so4681404wmj.5;
+        Sat, 08 Jun 2019 11:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j4V8vgCJVg/njbmSFVRp0iLM1h1qXkuf92IBeudet/c=;
-        b=WF5dn0oasdN+mFWoBOpnUgH/KnarBw3oCbrB3A0idRFqoMs7KQ+opX0vq8msbM7wfy
-         SHDsJf2bKShpd021tazmsHMlLvhjsRoylhfo2ourzUpM4MIzrObBvgVSXrDYspTW+HsU
-         D7xPWdwBWsgaVhEmud3PS3ChBz2H2g34vm2hoc1DKnVO5qF5iI8GbMHYSH8ul0NkF+dd
-         O8kZidm6zeLYKpoz3Xa8Hfyn51G5NfEp2OVGPUrhU5Szyf9Hs6XrCP6iENHYx5OipotD
-         HQiscxjatLSMCjeeUFqu04wCnplCwjXI1sVYojj1ZjID7Ag0yt7a60XWO9zWmTcUTp1l
-         vxLg==
+        bh=rd/V19A4tSe1xba1SSV3IvSkkngIMc8S68pgolsK8gQ=;
+        b=SGwW5Qi1PzRumMlS2QqA1j7twYoUlovyZOMWknzDn6pTP82HtWJ/uWCOPFFY5efuii
+         mldnIc38SrCgMBVVcFztt9gliqC7yT8waUWd+5PUYUkxcNRESshBHykogWpLcK/7oQwf
+         tLufn2777HA1t+shj1qLcVYNZ8Y9TaxQ+RDm0nQXWyz8InSesskey0ficmQ8msPq/WJV
+         /Q8YiM41p5ThKp6nM3+Y4Hn5pXdvl1p7g7AsUQLtiDGuD9i88IWVkmliGoWkAiN6IV9q
+         V2ff8upHjPtccfR2sAsdb1ZXTm742aJ/8QvcVbP5OTjmIxeJAV8dwRz7mkCA8zB3zHYX
+         dhxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j4V8vgCJVg/njbmSFVRp0iLM1h1qXkuf92IBeudet/c=;
-        b=J+uCQVnWfeU8wWZS9zsJFMyQ4rnFXG6SZA/zsy6UlQDMIk7Z7rA32wnxM3Y5nPdLqv
-         joEv5G4MZIfLoNTIsgIEUn2zX49cIiNGJo1T9//EVQoLH8elchSM2ZEtbXKoKu90plK4
-         GALnENOTPkhNwV0n9gT8gIlPlEZUhEngOBC/9l/BEZdM3TlHtl/YY//nKHANlupkXEW4
-         sRlSUWTIoUeApN55bELPEr08FnCJIZzyUDYKLU/w58qKGqIQpLN1fYKEhMubEyU4TqSS
-         xYl0UKB06yt5I49+0a9R3oeOA+JiA4JYRsuW3rTK6ykY8gN8KLhMPgboC7stdApiKcWe
-         NsLg==
-X-Gm-Message-State: APjAAAW1zPMyPFO3T9iYas8aJo9ul+HLNerXkn6crNvTYam7uribTeQD
-        CXbsNUjmcwyCUwQaOFHaDU0=
-X-Google-Smtp-Source: APXvYqxpJU5Y5i3iuyLyZt4VfVAQkfSDbpbie+roqNN1I3umOMeAwrV3a0DVRSN0jgq7heZqmsG6Qw==
-X-Received: by 2002:adf:e40f:: with SMTP id g15mr36393638wrm.174.1560017195983;
-        Sat, 08 Jun 2019 11:06:35 -0700 (PDT)
+        bh=rd/V19A4tSe1xba1SSV3IvSkkngIMc8S68pgolsK8gQ=;
+        b=j/eKeCv9AIj+vnkE0mwkO/A/pxCRk5bTdQo/k3WlKPQpDaZyfr994iZrYu8iMrDHXZ
+         HZxZghYyGwQSUe+Jelum/s9L0iPUvAm6mSRVxlLgswNTgKpT6ZAMAjXkg6BO0q5EcZEy
+         sqVFPyKxLU+T5/AIX9WhVIe/9fUHSTOIBE5Gx+YK5NFTO7jBtFPMmrIc0lcg3xldvqXt
+         OGOBgDKRHz+cWlEUu1AQc08rjzdS+IYd6tBDkmw0JhH9fGxbJNETBz3IlKyeutw9S35c
+         ijm9Kj11qdF6FivwOxbSHhMAbeLibGCFsK7qtlqm+o/177w/AhId5bYFnvkR+YfpwNZL
+         fGTg==
+X-Gm-Message-State: APjAAAVVAc/QTUrlQ+kVYcq+o0a7Uo3xNUbkiwGoziSh17pY0cINvP10
+        z9QeFzJug+h/3lv3wrt0aXQ=
+X-Google-Smtp-Source: APXvYqzfJ3Inv2tkqe5fNSbVH0w39sIKZ3WEIMfS5tKr2+3pHXqvYD+oKzvYSwXsaNvRbuHQh1DYSw==
+X-Received: by 2002:a1c:39d6:: with SMTP id g205mr7273666wma.85.1560017197987;
+        Sat, 08 Jun 2019 11:06:37 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400D12EFF43FED1E981.dip0.t-ipconnect.de. [2003:f1:33dd:a400:d12e:ff43:fed1:e981])
-        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.34
+        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.36
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 11:06:35 -0700 (PDT)
+        Sat, 08 Jun 2019 11:06:37 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com
@@ -64,9 +64,9 @@ Cc:     u.kleine-koenig@pengutronix.de,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 02/14] pwm: meson: use devm_clk_get_optional() to get the input clock
-Date:   Sat,  8 Jun 2019 20:06:14 +0200
-Message-Id: <20190608180626.30589-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 04/14] pwm: meson: change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
+Date:   Sat,  8 Jun 2019 20:06:16 +0200
+Message-Id: <20190608180626.30589-5-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
 References: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
@@ -77,41 +77,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the code which fetches the input clock for a PWM channel by
-using devm_clk_get_optional().
-This comes with a small functional change: previously all errors except
-EPROBE_DEFER were ignored. Now all other errors are also treated as
-errors. If no input clock is present devm_clk_get_optional() will return
-NULL instead of an error which matches the behavior of the old code.
+MISC_CLK_SEL_WIDTH is only used in one place where it's converted into
+a bit-mask. Rename and change the macro to be a bit-mask so that
+conversion is not needed anymore. No functional changes intended.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/pwm/pwm-meson.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/pwm/pwm-meson.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 3fbbc4128ce8..35b38c7201c3 100644
+index c62a3ac924d0..84b28ba0f903 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
-@@ -474,14 +474,9 @@ static int meson_pwm_init_channels(struct meson_pwm *meson,
+@@ -33,7 +33,7 @@
+ #define MISC_A_CLK_DIV_SHIFT	8
+ #define MISC_B_CLK_SEL_SHIFT	6
+ #define MISC_A_CLK_SEL_SHIFT	4
+-#define MISC_CLK_SEL_WIDTH	2
++#define MISC_CLK_SEL_MASK	0x3
+ #define MISC_B_EN		BIT(1)
+ #define MISC_A_EN		BIT(0)
  
- 		snprintf(name, sizeof(name), "clkin%u", i);
+@@ -463,7 +463,7 @@ static int meson_pwm_init_channels(struct meson_pwm *meson,
  
--		channel->clk_parent = devm_clk_get(dev, name);
--		if (IS_ERR(channel->clk_parent)) {
--			err = PTR_ERR(channel->clk_parent);
--			if (err == -EPROBE_DEFER)
--				return err;
--
--			channel->clk_parent = NULL;
--		}
-+		channel->clk_parent = devm_clk_get_optional(dev, name);
-+		if (IS_ERR(channel->clk_parent))
-+			return PTR_ERR(channel->clk_parent);
- 	}
- 
- 	return 0;
+ 		channel->mux.reg = meson->base + REG_MISC_AB;
+ 		channel->mux.shift = mux_reg_shifts[i];
+-		channel->mux.mask = BIT(MISC_CLK_SEL_WIDTH) - 1;
++		channel->mux.mask = MISC_CLK_SEL_MASK;
+ 		channel->mux.flags = 0;
+ 		channel->mux.lock = &meson->lock;
+ 		channel->mux.table = NULL;
 -- 
 2.21.0
 
