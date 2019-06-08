@@ -4,58 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D15FC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBD2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABA5214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5381A214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994328;
-	bh=6o0D+x52MFuxGsCyxRfSi796nPgPYJJzKdaZrBjjOOs=;
+	s=default; t=1559994332;
+	bh=84FQkrjgk+F6fnawr5M97IZfzH5TzOl/DxXN2hZpQRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vVF8/f/TsqtCZ0Xe3P0I8smvrZGV64g4lVnI6klJq5w1LsHIUHQ0Dmw+QEsnRBVs2
-	 G0SO1jb/sYWAh2T3B0Uv/YdzxMs6qgs+lai46Z++otUYpzuG1RAVBnTkcUGnzCFkVM
-	 1GDnahJN80ttZKXX66VQK+qIFoGnPga+rHYJvAVY=
+	b=vcgA74rt+ChMrdTV1+P2Rtg01ul9unom8jFEXDadkup6TLZlAVkwqV5mJjJL6rM3V
+	 h1Uf3eE4Raw+GGjNT15chnHbL/jH+eOGPnZGk/LrZKA+4bQWyJT9hK1MioImfeEgJZ
+	 UBUwZlNpIlDuXdnnjcaJk3zah1566BWsp12bOb+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfFHLpX (ORCPT
+        id S1727622AbfFHLpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:45:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60704 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:45:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbfFHLnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:22 -0400
+        id S1728114AbfFHLp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:45:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AB352171F;
-        Sat,  8 Jun 2019 11:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D873214AF;
+        Sat,  8 Jun 2019 11:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994202;
-        bh=6o0D+x52MFuxGsCyxRfSi796nPgPYJJzKdaZrBjjOOs=;
+        s=default; t=1559994328;
+        bh=84FQkrjgk+F6fnawr5M97IZfzH5TzOl/DxXN2hZpQRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=niFWG4UKbLVTL4+LoDW9GZ2GBWgzFGEI5Y+vSXTGFkbCBlSQ4BC6l59sgvzzRi+EJ
-         wUdvs/S8ORL6cy00xYz8g6q9s+Sa+aFl/ufrU3FGb5dLllwqZ6/i9HCH3ADX1rMdtV
-         9fqnnssu7BnJb7bMnCMRKRD+e5Jrw7A6Alhtpo0g=
+        b=UpeMLbG1MjO2cJ2c95z0Y4ZsGG3gHEjkKfsOL+Q18hQvjtePV0TQLmLA5PaXS/czt
+         rDwmUAj5Myo2QEEUJv51VoAoaBGqhgIg3wrF1wHfs21GDkxOhisg7TGvfQ8KIzrKy+
+         pp/dZhjYBpSsmUN4UpscSrhTQ6q6XiMQQNbyOI+U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 16/49] gpio: fix gpio-adp5588 build errors
-Date:   Sat,  8 Jun 2019 07:41:57 -0400
-Message-Id: <20190608114232.8731-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 35/49] xenbus: Avoid deadlock during suspend due to open transactions
+Date:   Sat,  8 Jun 2019 07:42:16 -0400
+Message-Id: <20190608114232.8731-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,51 +60,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-[ Upstream commit e9646f0f5bb62b7d43f0968f39d536cfe7123b53 ]
+[ Upstream commit d10e0cc113c9e1b64b5c6e3db37b5c839794f3df ]
 
-The gpio-adp5588 driver uses interfaces that are provided by
-GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
+During a suspend/resume, the xenwatch thread waits for all outstanding
+xenstore requests and transactions to complete. This does not work
+correctly for transactions started by userspace because it waits for
+them to complete after freezing userspace threads which means the
+transactions have no way of completing, resulting in a deadlock. This is
+trivial to reproduce by running this script and then suspending the VM:
 
-Fixes these build errors:
+    import pyxs, time
+    c = pyxs.client.Client(xen_bus_path="/dev/xen/xenbus")
+    c.connect()
+    c.transaction()
+    time.sleep(3600)
 
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
-../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
-            dev->gpio_chip.irq.domain, gpio));
-                          ^
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
-../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
-  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
-  ^
-../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
-  gpiochip_set_nested_irqchip(&dev->gpio_chip,
-  ^
+Even if this deadlock were resolved, misbehaving userspace should not
+prevent a VM from being migrated. So, instead of waiting for these
+transactions to complete before suspending, store the current generation
+id for each transaction when it is started. The global generation id is
+incremented during resume. If the caller commits the transaction and the
+generation id does not match the current generation id, return EAGAIN so
+that they try again. If the transaction was instead discarded, return OK
+since no changes were made anyway.
 
-Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-gpio@vger.kernel.org
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+This only affects users of the xenbus file interface. In-kernel users of
+xenbus are assumed to be well-behaved and complete all transactions
+before freezing.
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/xen/xenbus/xenbus.h              |  3 +++
+ drivers/xen/xenbus/xenbus_dev_frontend.c | 18 ++++++++++++++++++
+ drivers/xen/xenbus/xenbus_xs.c           |  7 +++++--
+ 3 files changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 4f52c3a8ec99..ed51221621a5 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -784,6 +784,7 @@ config GPIO_ADP5588
- config GPIO_ADP5588_IRQ
- 	bool "Interrupt controller support for ADP5588"
- 	depends on GPIO_ADP5588=y
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to enable the adp5588 to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
+diff --git a/drivers/xen/xenbus/xenbus.h b/drivers/xen/xenbus/xenbus.h
+index 092981171df1..d75a2385b37c 100644
+--- a/drivers/xen/xenbus/xenbus.h
++++ b/drivers/xen/xenbus/xenbus.h
+@@ -83,6 +83,7 @@ struct xb_req_data {
+ 	int num_vecs;
+ 	int err;
+ 	enum xb_req_state state;
++	bool user_req;
+ 	void (*cb)(struct xb_req_data *);
+ 	void *par;
+ };
+@@ -133,4 +134,6 @@ void xenbus_ring_ops_init(void);
+ int xenbus_dev_request_and_reply(struct xsd_sockmsg *msg, void *par);
+ void xenbus_dev_queue_reply(struct xb_req_data *req);
+ 
++extern unsigned int xb_dev_generation_id;
++
+ #endif
+diff --git a/drivers/xen/xenbus/xenbus_dev_frontend.c b/drivers/xen/xenbus/xenbus_dev_frontend.c
+index 0782ff3c2273..39c63152a358 100644
+--- a/drivers/xen/xenbus/xenbus_dev_frontend.c
++++ b/drivers/xen/xenbus/xenbus_dev_frontend.c
+@@ -62,6 +62,8 @@
+ 
+ #include "xenbus.h"
+ 
++unsigned int xb_dev_generation_id;
++
+ /*
+  * An element of a list of outstanding transactions, for which we're
+  * still waiting a reply.
+@@ -69,6 +71,7 @@
+ struct xenbus_transaction_holder {
+ 	struct list_head list;
+ 	struct xenbus_transaction handle;
++	unsigned int generation_id;
+ };
+ 
+ /*
+@@ -441,6 +444,7 @@ static int xenbus_write_transaction(unsigned msg_type,
+ 			rc = -ENOMEM;
+ 			goto out;
+ 		}
++		trans->generation_id = xb_dev_generation_id;
+ 		list_add(&trans->list, &u->transactions);
+ 	} else if (msg->hdr.tx_id != 0 &&
+ 		   !xenbus_get_transaction(u, msg->hdr.tx_id))
+@@ -449,6 +453,20 @@ static int xenbus_write_transaction(unsigned msg_type,
+ 		 !(msg->hdr.len == 2 &&
+ 		   (!strcmp(msg->body, "T") || !strcmp(msg->body, "F"))))
+ 		return xenbus_command_reply(u, XS_ERROR, "EINVAL");
++	else if (msg_type == XS_TRANSACTION_END) {
++		trans = xenbus_get_transaction(u, msg->hdr.tx_id);
++		if (trans && trans->generation_id != xb_dev_generation_id) {
++			list_del(&trans->list);
++			kfree(trans);
++			if (!strcmp(msg->body, "T"))
++				return xenbus_command_reply(u, XS_ERROR,
++							    "EAGAIN");
++			else
++				return xenbus_command_reply(u,
++							    XS_TRANSACTION_END,
++							    "OK");
++		}
++	}
+ 
+ 	rc = xenbus_dev_request_and_reply(&msg->hdr, u);
+ 	if (rc && trans) {
+diff --git a/drivers/xen/xenbus/xenbus_xs.c b/drivers/xen/xenbus/xenbus_xs.c
+index 49a3874ae6bb..ddc18da61834 100644
+--- a/drivers/xen/xenbus/xenbus_xs.c
++++ b/drivers/xen/xenbus/xenbus_xs.c
+@@ -105,6 +105,7 @@ static void xs_suspend_enter(void)
+ 
+ static void xs_suspend_exit(void)
+ {
++	xb_dev_generation_id++;
+ 	spin_lock(&xs_state_lock);
+ 	xs_suspend_active--;
+ 	spin_unlock(&xs_state_lock);
+@@ -125,7 +126,7 @@ static uint32_t xs_request_enter(struct xb_req_data *req)
+ 		spin_lock(&xs_state_lock);
+ 	}
+ 
+-	if (req->type == XS_TRANSACTION_START)
++	if (req->type == XS_TRANSACTION_START && !req->user_req)
+ 		xs_state_users++;
+ 	xs_state_users++;
+ 	rq_id = xs_request_id++;
+@@ -140,7 +141,7 @@ void xs_request_exit(struct xb_req_data *req)
+ 	spin_lock(&xs_state_lock);
+ 	xs_state_users--;
+ 	if ((req->type == XS_TRANSACTION_START && req->msg.type == XS_ERROR) ||
+-	    (req->type == XS_TRANSACTION_END &&
++	    (req->type == XS_TRANSACTION_END && !req->user_req &&
+ 	     !WARN_ON_ONCE(req->msg.type == XS_ERROR &&
+ 			   !strcmp(req->body, "ENOENT"))))
+ 		xs_state_users--;
+@@ -286,6 +287,7 @@ int xenbus_dev_request_and_reply(struct xsd_sockmsg *msg, void *par)
+ 	req->num_vecs = 1;
+ 	req->cb = xenbus_dev_queue_reply;
+ 	req->par = par;
++	req->user_req = true;
+ 
+ 	xs_send(req, msg);
+ 
+@@ -313,6 +315,7 @@ static void *xs_talkv(struct xenbus_transaction t,
+ 	req->vec = iovec;
+ 	req->num_vecs = num_vecs;
+ 	req->cb = xs_wake_up;
++	req->user_req = false;
+ 
+ 	msg.req_id = 0;
+ 	msg.tx_id = t.id;
 -- 
 2.20.1
 
