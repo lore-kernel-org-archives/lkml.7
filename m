@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C020EC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C49C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E96214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93313214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994372;
-	bh=o+G1kTnpQBVpPmVxZ/vKRLrP5Vyd2+cAirqJA/FEwlw=;
+	s=default; t=1559994379;
+	bh=9o30CDTGUyQ6F1IMu35gTWuAxwpRxBPb0ADbXdLDhuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g5fu6ExB18m6vKrmKHN2rzbqP2AZDlYJHsskrwxbj0KpFFt+4uztGUqDE8J3MUrzt
-	 h7J5hI8hRUIQF8ZRXzuQ935CxHNzELnokN2vPvMF7H4xI/sA7/0WVVEvZjPAq2eZTt
-	 3pRpefUgiB7H69zRLQf+Sj69KfG+NRV7USXAhLAI=
+	b=AlE/3PiKp2OGQNzQY9SYLPyPAThJylKSWOxHP3WzpEMG+KQO/dxCmcovlFmo0R9X0
+	 UrQqaR7Kam49ib2YHFsYfxuu7VKT6WTLpc2G5Oxou/jP/39ZizvEJncP43ONcuzAFF
+	 VYDtMET2uD3OD8P3ahj4VcTtk/Cx47g5vsLI35RA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfFHLqL (ORCPT
+        id S1728427AbfFHLmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:46:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59718 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:42:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbfFHLm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:42:26 -0400
+        id S1728381AbfFHLmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:42:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F62521537;
-        Sat,  8 Jun 2019 11:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76834214AF;
+        Sat,  8 Jun 2019 11:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994146;
-        bh=o+G1kTnpQBVpPmVxZ/vKRLrP5Vyd2+cAirqJA/FEwlw=;
+        s=default; t=1559994138;
+        bh=9o30CDTGUyQ6F1IMu35gTWuAxwpRxBPb0ADbXdLDhuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yKX5VgNMfOXLQlNPWWj/bN9CiRWaYzalxbj+BBOnejeFHb2XygINRzubgzHwRQH2r
-         sdEwtqVhh8lFMJeAREQAO9QXYyzgml5rx7bGE4IoQ6u0zQMXXUsQnQudnG0Xnazeb6
-         0S2WYOYtioZEvgr3v9mlU8ZIbw+smIaFZ0PzX9Qg=
+        b=kU6EQbS0TzeCoCn2lXQb7GYr4u0B9HuKPWMzlTmz5pQZD1uZ+rAdYyF6xGhAhbKGm
+         JhfcPx5xOVxFAQyaJE1V4fR7EBMf0Nw4K11aBy+npMFktFAR2UD+8PKLOhAdAO2LsH
+         M/cLWZvBu+7tWEYxUbeJB6+NNJSjr6QhCfKk1ePk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amit Cohen <amitc@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 69/70] mlxsw: spectrum: Prevent force of 56G
-Date:   Sat,  8 Jun 2019 07:39:48 -0400
-Message-Id: <20190608113950.8033-69-sashal@kernel.org>
+Cc:     Varun Prakash <varun@chelsio.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 65/70] scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
+Date:   Sat,  8 Jun 2019 07:39:44 -0400
+Message-Id: <20190608113950.8033-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -60,41 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Cohen <amitc@mellanox.com>
+From: Varun Prakash <varun@chelsio.com>
 
-[ Upstream commit 275e928f19117d22f6d26dee94548baf4041b773 ]
+[ Upstream commit cc555759117e8349088e0c5d19f2f2a500bafdbd ]
 
-Force of 56G is not supported by hardware in Ethernet devices. This
-configuration fails with a bad parameter error from firmware.
+ip_dev_find() can return NULL so add a check for NULL pointer.
 
-Add check of this case. Instead of trying to set 56G with autoneg off,
-return a meaningful error.
-
-Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
-Signed-off-by: Amit Cohen <amitc@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++++
+ drivers/scsi/cxgbi/libcxgbi.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 6b8aa3761899..f4acb38569e1 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -3110,6 +3110,10 @@ mlxsw_sp_port_set_link_ksettings(struct net_device *dev,
- 	ops->reg_ptys_eth_unpack(mlxsw_sp, ptys_pl, &eth_proto_cap, NULL, NULL);
+diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
+index 006372b3fba2..a50734f3c486 100644
+--- a/drivers/scsi/cxgbi/libcxgbi.c
++++ b/drivers/scsi/cxgbi/libcxgbi.c
+@@ -641,6 +641,10 @@ cxgbi_check_route(struct sockaddr *dst_addr, int ifindex)
  
- 	autoneg = cmd->base.autoneg == AUTONEG_ENABLE;
-+	if (!autoneg && cmd->base.speed == SPEED_56000) {
-+		netdev_err(dev, "56G not supported with autoneg off\n");
-+		return -EINVAL;
-+	}
- 	eth_proto_new = autoneg ?
- 		ops->to_ptys_advert_link(mlxsw_sp, cmd) :
- 		ops->to_ptys_speed(mlxsw_sp, cmd->base.speed);
+ 	if (ndev->flags & IFF_LOOPBACK) {
+ 		ndev = ip_dev_find(&init_net, daddr->sin_addr.s_addr);
++		if (!ndev) {
++			err = -ENETUNREACH;
++			goto rel_neigh;
++		}
+ 		mtu = ndev->mtu;
+ 		pr_info("rt dev %s, loopback -> %s, mtu %u.\n",
+ 			n->dev->name, ndev->name, mtu);
 -- 
 2.20.1
 
