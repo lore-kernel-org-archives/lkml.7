@@ -2,60 +2,56 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C850C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B57AC468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BFE2168B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DFB2171F
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994710;
-	bh=UJQ60K64HQjg1XJUofAgkZVW/O9166+GQiB3g1872GY=;
+	s=default; t=1559994714;
+	bh=MaGGx6LGuENlbrd9elqbccGtSmUluGQg5szD+oz0nro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wSN4Ke48aZayMtWa6IL0aGrYfQxSwbZBIs8Q27evyIxRpTXF97IdbHw8f8MuI757M
-	 QACUaj8u4ZSl6Sr3YPUchD5KWVpd4mVbx7me2n8KqHRVXUIpxnPuMxRqNYpMEjs+8r
-	 nQpbg39sr+jx+5vX/TqBVBnOiUFU3Z1E0lEcewlc=
+	b=ZaIIKTTwic4x6V/JehSsB4xLZWP2TqIdI/6Vc0AyCXG4n1cYS+4vxtIgyChQvgnSq
+	 OU07Rflo4SvS1ObTLWVAP/1FHFYfzLQk0MYNTmOB3DOEMyJjwy9Q1v3y7wlwcdO87e
+	 5a6YMKJOMKnyfARdtIFz/5FUj4smK33ixCan/4bE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbfFHLvt (ORCPT
+        id S1728072AbfFHLrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:51:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36276 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:47:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbfFHLre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:47:34 -0400
+        id S1729229AbfFHLr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82DB0214DA;
-        Sat,  8 Jun 2019 11:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6AF82171F;
+        Sat,  8 Jun 2019 11:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994454;
-        bh=UJQ60K64HQjg1XJUofAgkZVW/O9166+GQiB3g1872GY=;
+        s=default; t=1559994447;
+        bh=MaGGx6LGuENlbrd9elqbccGtSmUluGQg5szD+oz0nro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUQ0/s8ESbLaxnNwC8CK20RhtV2g+ecrr1QFjaUkBQsEjzGrgJfmmpTwvXf5PVlBQ
-         rhYMOGhM9ov5z1OxvliKpve6S3DK6O15x/lW3CH/lkp2YRfs+xfnkjOGz1OzFHAk9Z
-         Bj+GtyEuSdkLjnEPSCvpeFl3RFeZ3ZgyqIS+52OY=
+        b=DjmMQgOAHV/pQkxa6KgFZlFc1k/50/PxYy4oLBWAp1bstTLauWqyZpjTxJ6kcgLzS
+         46KBnhyq/v2RmnH8Vjg7+/Qx0DjyKzsBdA0Q2juAYBeRguEJykylduRnJbWap2PAMd
+         ZmQz2hS4DcKHt21Hxozvq/vFDeMD3q2SQou820uA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shawn Landden <shawn@git.icu>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 20/31] perf data: Fix 'strncat may truncate' build failure with recent gcc
-Date:   Sat,  8 Jun 2019 07:46:31 -0400
-Message-Id: <20190608114646.9415-20-sashal@kernel.org>
+Cc:     Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 16/31] net: aquantia: fix LRO with FCS error
+Date:   Sat,  8 Jun 2019 07:46:27 -0400
+Message-Id: <20190608114646.9415-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,48 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shawn Landden <shawn@git.icu>
+From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 
-[ Upstream commit 97acec7df172cd1e450f81f5e293c0aa145a2797 ]
+[ Upstream commit eaeb3b7494ba9159323814a8ce8af06a9277d99b ]
 
-This strncat() is safe because the buffer was allocated with zalloc(),
-however gcc doesn't know that. Since the string always has 4 non-null
-bytes, just use memcpy() here.
+Driver stops producing skbs on ring if a packet with FCS error
+was coalesced into LRO session. Ring gets hang forever.
 
-    CC       /home/shawn/linux/tools/perf/util/data-convert-bt.o
-  In file included from /usr/include/string.h:494,
-                   from /home/shawn/linux/tools/lib/traceevent/event-parse.h:27,
-                   from util/data-convert-bt.c:22:
-  In function ‘strncat’,
-      inlined from ‘string_set_value’ at util/data-convert-bt.c:274:4:
-  /usr/include/powerpc64le-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin_strncat’ output may be truncated copying 4 bytes from a string of length 4 [-Werror=stringop-truncation]
-    136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Thats a logical error in driver processing descriptors:
+When rx_stat indicates MAC Error, next pointer and eop flags
+are not filled. This confuses driver so it waits for descriptor 0
+to be filled by HW.
 
-Signed-off-by: Shawn Landden <shawn@git.icu>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-LPU-Reference: 20190518183238.10954-1-shawn@git.icu
-Link: https://lkml.kernel.org/n/tip-289f1jice17ta7tr3tstm9jm@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Solution is fill next pointer and eop flag even for packets with FCS error.
+
+Fixes: bab6de8fd180b ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions.")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/data-convert-bt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../aquantia/atlantic/hw_atl/hw_atl_b0.c      | 61 ++++++++++---------
+ 1 file changed, 32 insertions(+), 29 deletions(-)
 
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 2346cecb8ea2..5131304ea3a8 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -271,7 +271,7 @@ static int string_set_value(struct bt_ctf_field *field, const char *string)
- 				if (i > 0)
- 					strncpy(buffer, string, i);
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+index f4b3554b0b67..236325f48ec9 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -683,38 +683,41 @@ static int hw_atl_b0_hw_ring_rx_receive(struct aq_hw_s *self,
+ 		if (is_err || rxd_wb->type & 0x1000U) {
+ 			/* status error or DMA error */
+ 			buff->is_error = 1U;
+-		} else {
+-			if (self->aq_nic_cfg->is_rss) {
+-				/* last 4 byte */
+-				u16 rss_type = rxd_wb->type & 0xFU;
+-
+-				if (rss_type && rss_type < 0x8U) {
+-					buff->is_hash_l4 = (rss_type == 0x4 ||
+-					rss_type == 0x5);
+-					buff->rss_hash = rxd_wb->rss_hash;
+-				}
++		}
++		if (self->aq_nic_cfg->is_rss) {
++			/* last 4 byte */
++			u16 rss_type = rxd_wb->type & 0xFU;
++
++			if (rss_type && rss_type < 0x8U) {
++				buff->is_hash_l4 = (rss_type == 0x4 ||
++				rss_type == 0x5);
++				buff->rss_hash = rxd_wb->rss_hash;
  			}
--			strncat(buffer + p, numstr, 4);
-+			memcpy(buffer + p, numstr, 4);
- 			p += 3;
++		}
+ 
+-			if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
+-				buff->len = rxd_wb->pkt_len %
+-					AQ_CFG_RX_FRAME_MAX;
+-				buff->len = buff->len ?
+-					buff->len : AQ_CFG_RX_FRAME_MAX;
+-				buff->next = 0U;
+-				buff->is_eop = 1U;
++		if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
++			buff->len = rxd_wb->pkt_len %
++				AQ_CFG_RX_FRAME_MAX;
++			buff->len = buff->len ?
++				buff->len : AQ_CFG_RX_FRAME_MAX;
++			buff->next = 0U;
++			buff->is_eop = 1U;
++		} else {
++			buff->len =
++				rxd_wb->pkt_len > AQ_CFG_RX_FRAME_MAX ?
++				AQ_CFG_RX_FRAME_MAX : rxd_wb->pkt_len;
++
++			if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
++				rxd_wb->status) {
++				/* LRO */
++				buff->next = rxd_wb->next_desc_ptr;
++				++ring->stats.rx.lro_packets;
+ 			} else {
+-				if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
+-					rxd_wb->status) {
+-					/* LRO */
+-					buff->next = rxd_wb->next_desc_ptr;
+-					++ring->stats.rx.lro_packets;
+-				} else {
+-					/* jumbo */
+-					buff->next =
+-						aq_ring_next_dx(ring,
+-								ring->hw_head);
+-					++ring->stats.rx.jumbo_packets;
+-				}
++				/* jumbo */
++				buff->next =
++					aq_ring_next_dx(ring,
++							ring->hw_head);
++				++ring->stats.rx.jumbo_packets;
+ 			}
  		}
  	}
 -- 
