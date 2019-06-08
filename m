@@ -4,62 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60040C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF13DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357AF21726
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5469214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994443;
-	bh=9onDXCx7ty5BjqyOoIUCVWNhwzIrusuoyRJeQMMHbt4=;
+	s=default; t=1559994446;
+	bh=nPehQ8OxGDN4dmddhdCXL8y/Qfjv9HY8eTDsw7GZqz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0TgFCa65QvFwAUvWaLKN2JlDsFZlhNR3k3TECg43+Q8Nv+SnbaXyp3008RsaLb+bw
-	 vJvpu1NqblzD/nZ5QO4oDIU1zaGBqWmftgpgGn9IadX7tE8tOAJhNf+FvMiKd4R6SY
-	 hBHI0hh2BXvfYcxTQca/VkGIAtEiXdgdc9G+rIt4=
+	b=WVieYHTWMUVjDNWEL2rfcCg/m/FwtO40R8D6cGcqyU3Mx4MtnRkJoCcHfxRFF3jVh
+	 hsYYwzW8P51jNAArHKLcX8Ic8djPS0PzLh5aV34meDaFf9K+taRnzxksPEjcVdqL6l
+	 EqUPaStS4Skhyb413nMqZGE7y6CSk9Rm18kTJBiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfFHLrW (ORCPT
+        id S1729239AbfFHLrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35900 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbfFHLrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:47:16 -0400
+        id S1729208AbfFHLrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2F4021530;
-        Sat,  8 Jun 2019 11:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1FD72171F;
+        Sat,  8 Jun 2019 11:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994435;
-        bh=9onDXCx7ty5BjqyOoIUCVWNhwzIrusuoyRJeQMMHbt4=;
+        s=default; t=1559994440;
+        bh=nPehQ8OxGDN4dmddhdCXL8y/Qfjv9HY8eTDsw7GZqz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YdlJHwcZZPQrLrxDY+CJ8vPl4J6CLcKIouqtdrisLV/alegocBhpfQtl2cxtTeo3x
-         gDe3VpiIeoFZCJERYvqIs+yBcR8tyTpdhZYU2X1AlrXgRTWsrZ8IoHdImQB9jR4upU
-         lT1lFV+NbqMiDvtTB2rR3GtojdomNhjnBeMFWSuc=
+        b=io2bBXwPSLCbrC+Ebyjb6oF9wv0iijWbntUM53IzWji3KCmDMjhGvU0fGV7cobyTq
+         ZfzE5y7PHc7W1llii8yw+VEKpEIaFi56Bam+x/lcv57ydGHd7HGrZObgI49cF0DWhQ
+         fvpucz9xCavK0PmO/uEMaXmMYqEFk3arIS978lPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yabin Cui <yabinc@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, mark.rutland@arm.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 10/31] perf/ring_buffer: Fix exposing a temporarily decreased data_head
-Date:   Sat,  8 Jun 2019 07:46:21 -0400
-Message-Id: <20190608114646.9415-10-sashal@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/31] gpio: fix gpio-adp5588 build errors
+Date:   Sat,  8 Jun 2019 07:46:24 -0400
+Message-Id: <20190608114646.9415-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -68,97 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yabin Cui <yabinc@google.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 1b038c6e05ff70a1e66e3e571c2e6106bdb75f53 ]
+[ Upstream commit e9646f0f5bb62b7d43f0968f39d536cfe7123b53 ]
 
-In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-write records to the same ring buffer:
+The gpio-adp5588 driver uses interfaces that are provided by
+GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
 
-	...
-	local_dec_and_test(&rb->nest)
-	...                          <-- an IRQ/NMI can happen here
-	rb->user_page->data_head = head;
-	...
+Fixes these build errors:
 
-In this case, a value A is written to data_head in the IRQ, then a value
-B is written to data_head after the IRQ. And A > B. As a result,
-data_head is temporarily decreased from A to B. And a reader may see
-data_head < data_tail if it read the buffer frequently enough, which
-creates unexpected behaviors.
+../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
+../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
+            dev->gpio_chip.irq.domain, gpio));
+                          ^
+../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
+../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
+  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
+  ^
+../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
+  gpiochip_set_nested_irqchip(&dev->gpio_chip,
+  ^
 
-This can be fixed by moving dec(&rb->nest) to after updating data_head,
-which prevents the IRQ/NMI above from updating data_head.
-
-[ Split up by peterz. ]
-
-Signed-off-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: mark.rutland@arm.com
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.224478157@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-gpio@vger.kernel.org
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/ring_buffer.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 489dc6b60053..fde853270c09 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -52,11 +52,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	head = local_read(&rb->head);
- 
- 	/*
--	 * IRQ/NMI can happen here, which means we can miss a head update.
-+	 * IRQ/NMI can happen here and advance @rb->head, causing our
-+	 * load above to be stale.
- 	 */
- 
--	if (!local_dec_and_test(&rb->nest))
-+	/*
-+	 * If this isn't the outermost nesting, we don't have to update
-+	 * @rb->user_page->data_head.
-+	 */
-+	if (local_read(&rb->nest) > 1) {
-+		local_dec(&rb->nest);
- 		goto out;
-+	}
- 
- 	/*
- 	 * Since the mmap() consumer (userspace) can run on a different CPU:
-@@ -88,9 +95,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	rb->user_page->data_head = head;
- 
- 	/*
--	 * Now check if we missed an update -- rely on previous implied
--	 * compiler barriers to force a re-read.
-+	 * We must publish the head before decrementing the nest count,
-+	 * otherwise an IRQ/NMI can publish a more recent head value and our
-+	 * write will (temporarily) publish a stale value.
-+	 */
-+	barrier();
-+	local_set(&rb->nest, 0);
-+
-+	/*
-+	 * Ensure we decrement @rb->nest before we validate the @rb->head.
-+	 * Otherwise we cannot be sure we caught the 'last' nested update.
- 	 */
-+	barrier();
- 	if (unlikely(head != local_read(&rb->head))) {
- 		local_inc(&rb->nest);
- 		goto again;
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 3f80f167ed56..2357d2f73c1a 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -712,6 +712,7 @@ config GPIO_ADP5588
+ config GPIO_ADP5588_IRQ
+ 	bool "Interrupt controller support for ADP5588"
+ 	depends on GPIO_ADP5588=y
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to enable the adp5588 to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
 -- 
 2.20.1
 
