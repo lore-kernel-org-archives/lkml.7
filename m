@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85060C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546B0C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C754214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2821F214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994277;
-	bh=CxrsVp3lY/RrFqzcWFqD5j0zqFx6EsqJH/ix8qLijOo=;
+	s=default; t=1559994280;
+	bh=ZLLShTtUBrOnW/b5fc8VWjR98PKOGJuRSeWTS8qGz3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X6AoI3OyQCz5bZ5xjH1Iutc9y4Cxfx9OVVOTOoM1OSQCOpAy0lBo6qS7aBhD1xakk
-	 JUT/6x/KLJTGQRHjMqc1xxmH/O4AytrArShIAWJVfGkCJcusuR33rbAOLawi2Cyp4/
-	 eID6dv0I9ZsSKQwIKn/5mGoc1ih+OqjM7A68MfC4=
+	b=kCaCsRhnzGb6fsqgZs5tfDI5SQhBM4zUBwiNf8cmXuC9avEsx4H0JCctlGS2nxMrA
+	 ssHlYUcikSmU/2S5QldHdreyxYxo69CyeuACQmZSr/7Mz9/UYBoXHKd8wAY3GJ7F3+
+	 cR5IHG+OE04QJDV8T1lij3xMRiKHB6jIigkItL80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfFHLog (ORCPT
+        id S1728951AbfFHLoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:44:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60872 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbfFHLnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:31 -0400
+        id S1728764AbfFHLna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 207EE21707;
-        Sat,  8 Jun 2019 11:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ABF1216C4;
+        Sat,  8 Jun 2019 11:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994210;
-        bh=CxrsVp3lY/RrFqzcWFqD5j0zqFx6EsqJH/ix8qLijOo=;
+        s=default; t=1559994209;
+        bh=ZLLShTtUBrOnW/b5fc8VWjR98PKOGJuRSeWTS8qGz3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lYPKY6uFh4EsKFM1EXjqTpa9i9JLv6rUl5p1DyokyY1KntJimB5NffFOugGtpUfLm
-         xUy1er5STT+Q8diBA0YrS+rqpQsC1iJUBWiYwXu54PISf4lgDhtfTgy5QCnNYVYFWM
-         BOlyTpKVrb/m/9+8vWk/9pYJUpBVxhwRowXi//WM=
+        b=G3XijrGrmOSsLvMksGbJ7O0D6bRA7/lAhfmRWECrFeq2sN1akY4b9He6YvconEtZI
+         1p7D+3znX2MhSqYJb8yiVQhKtf2SdQW/JUKWGnBvq37kumvLLTW3KtzXGKe1BNEaFE
+         NBvLCs67iW5Q1oCLrkl8wP4oqr2iELaPa2b+RmN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>,
-        syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/49] loop: Don't change loop device under exclusive opener
-Date:   Sat,  8 Jun 2019 07:42:03 -0400
-Message-Id: <20190608114232.8731-22-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/49] PCI: PM: Avoid possible suspend-to-idle issue
+Date:   Sat,  8 Jun 2019 07:42:02 -0400
+Message-Id: <20190608114232.8731-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -60,83 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 33ec3e53e7b1869d7851e59e126bdb0fe0bd1982 ]
+[ Upstream commit d491f2b75237ef37d8867830ab7fad8d9659e853 ]
 
-Loop module allows calling LOOP_SET_FD while there are other openers of
-the loop device. Even exclusive ones. This can lead to weird
-consequences such as kernel deadlocks like:
+If a PCI driver leaves the device handled by it in D0 and calls
+pci_save_state() on the device in its ->suspend() or ->suspend_late()
+callback, it can expect the device to stay in D0 over the whole
+s2idle cycle.  However, that may not be the case if there is a
+spurious wakeup while the system is suspended, because in that case
+pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
+which calls pci_restore_state(), via pci_pm_default_resume_early(),
+so state_saved is cleared and the second iteration of
+pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
+may change the power state of the device.
 
-mount_bdev()				lo_ioctl()
-  udf_fill_super()
-    udf_load_vrs()
-      sb_set_blocksize() - sets desired block size B
-      udf_tread()
-        sb_bread()
-          __bread_gfp(bdev, block, B)
-					  loop_set_fd()
-					    set_blocksize()
-            - now __getblk_slow() indefinitely loops because B != bdev
-              block size
+To avoid that, add a new internal flag, skip_bus_pm, that will be set
+by pci_pm_suspend_noirq() when it runs for the first time during the
+given system suspend-resume cycle if the state of the device has
+been saved already and the device is still in D0.  Setting that flag
+will cause the next iterations of pci_pm_suspend_noirq() to set
+state_saved for pci_pm_resume_noirq(), so that it always restores the
+device state from the originally saved data, and avoid calling
+pci_prepare_to_sleep() for the device.
 
-Fix the problem by disallowing LOOP_SET_FD ioctl when there are
-exclusive openers of a loop device.
-
-[Deliberately chosen not to CC stable as a user with priviledges to
-trigger this race has other means of taking the system down and this
-has a potential of breaking some weird userspace setup]
-
-Reported-and-tested-by: syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/pci/pci-driver.c | 17 ++++++++++++++++-
+ include/linux/pci.h      |  1 +
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index f1e63eb7cbca..a443910f5d6f 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -920,9 +920,20 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	if (!file)
- 		goto out;
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 33f3f475e5c6..7430f993567f 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -734,6 +734,8 @@ static int pci_pm_suspend(struct device *dev)
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
  
-+	/*
-+	 * If we don't hold exclusive handle for the device, upgrade to it
-+	 * here to avoid changing device under exclusive owner.
-+	 */
-+	if (!(mode & FMODE_EXCL)) {
-+		bdgrab(bdev);
-+		error = blkdev_get(bdev, mode | FMODE_EXCL, loop_set_fd);
-+		if (error)
-+			goto out_putf;
-+	}
++	pci_dev->skip_bus_pm = false;
 +
- 	error = mutex_lock_killable(&loop_ctl_mutex);
- 	if (error)
--		goto out_putf;
-+		goto out_bdev;
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_suspend(dev, PMSG_SUSPEND);
  
- 	error = -EBUSY;
- 	if (lo->lo_state != Lo_unbound)
-@@ -986,10 +997,15 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	mutex_unlock(&loop_ctl_mutex);
- 	if (partscan)
- 		loop_reread_partitions(lo, bdev);
-+	if (!(mode & FMODE_EXCL))
-+		blkdev_put(bdev, mode | FMODE_EXCL);
- 	return 0;
+@@ -827,7 +829,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
+ 		}
+ 	}
  
- out_unlock:
- 	mutex_unlock(&loop_ctl_mutex);
-+out_bdev:
-+	if (!(mode & FMODE_EXCL))
-+		blkdev_put(bdev, mode | FMODE_EXCL);
- out_putf:
- 	fput(file);
- out:
+-	if (!pci_dev->state_saved) {
++	if (pci_dev->skip_bus_pm) {
++		/*
++		 * The function is running for the second time in a row without
++		 * going through full resume, which is possible only during
++		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
++		 * device was originally left in D0, so its power state should
++		 * not be changed here and the device register values saved
++		 * originally should be restored on resume again.
++		 */
++		pci_dev->state_saved = true;
++	} else if (pci_dev->state_saved) {
++		if (pci_dev->current_state == PCI_D0)
++			pci_dev->skip_bus_pm = true;
++	} else {
+ 		pci_save_state(pci_dev);
+ 		if (pci_power_manageable(pci_dev))
+ 			pci_prepare_to_sleep(pci_dev);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index b1f297f4b7b0..94853094b6ef 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -342,6 +342,7 @@ struct pci_dev {
+ 						   D3cold, not set for devices
+ 						   powered on/off by the
+ 						   corresponding bridge */
++	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
+ 	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
+ 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
+ 						      controlled exclusively by
 -- 
 2.20.1
 
