@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D01C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1248C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D50921537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A8421537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994615;
-	bh=6nSoVdxcGXpco0Q0SwBJ3dOJ1Jce3o6ARdyHKjRdObQ=;
+	s=default; t=1559994621;
+	bh=dhwP8qvdPSOegyjJvCYeGqkGps6VBTWkXdgwzWggstk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBC+foBVwnC0es3NtSU5IZ/ZtX9CveLTBxMPa3Jv9xmezya+dxykkaUp2iOXCbQeS
-	 bxybVc8mVNCAX+iXTemqNL0V52dSXiGcFe/GNN4ISd3JFCK5eOC6GZ50dPUFF4cbjb
-	 QFpXEPnGM1ijAogou9klLiuw7aojvgGi7lFCZeow=
+	b=wSJcgqC6YVyiIEBkhS2HmwCUF16exnn2f5erNKMomjLoGTlYOtf59VrW3Xzm6eW/X
+	 YnTVseWhhgZMT+LCBApoEHh7Qq5zMzqVzcEuELftlkBww8tHEG9iSld2BK1DCOhTIF
+	 c63K4w6msKkW/Sra8Iihxn/nWBV7oP6sbonQZijk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfFHLuO (ORCPT
+        id S1729724AbfFHLsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:50:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37462 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729774AbfFHLsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:48:41 -0400
+        id S1729663AbfFHLse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:48:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55AC62168B;
-        Sat,  8 Jun 2019 11:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FDAE216C4;
+        Sat,  8 Jun 2019 11:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994521;
-        bh=6nSoVdxcGXpco0Q0SwBJ3dOJ1Jce3o6ARdyHKjRdObQ=;
+        s=default; t=1559994513;
+        bh=dhwP8qvdPSOegyjJvCYeGqkGps6VBTWkXdgwzWggstk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l7vNh/fT4FxZEnArq5Ibq3lD3QsDnxSFeVLUZ66MFE59vF+G3O13U85qiO3q1gqSe
-         T5xVAKbjZPDixPuerrFjvlZ/Tb0jJxX3xJmZy/XbMeMQjEwGFPqcq1arGjfuIcF5tU
-         LGwrlTUXUiCmBBe4uIl3qnyAPTNxfGfWagB+8LzA=
+        b=DBSuZoRn4VNtSYzz9lc+RwLPt4YGk2inJf2BnmFzr1wM4oHC12wCzAnKNU5YZPiQJ
+         Qt6I3nUjDHSeR3JUvejm6PbpftgJ+Fn5STa6tzv2OYrmQU+/QwsBQga5Ef2PvlNERR
+         wx5rfSO/2OmlVMVKTgcZMCIssGVUDfcYlqn+zzRk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lianbo Jiang <lijiang@redhat.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 18/20] scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask
-Date:   Sat,  8 Jun 2019 07:47:54 -0400
-Message-Id: <20190608114756.9742-18-sashal@kernel.org>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 14/20] KVM: PPC: Book3S: Use new mutex to synchronize access to rtas token list
+Date:   Sat,  8 Jun 2019 07:47:50 -0400
+Message-Id: <20190608114756.9742-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114756.9742-1-sashal@kernel.org>
 References: <20190608114756.9742-1-sashal@kernel.org>
@@ -61,56 +59,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lianbo Jiang <lijiang@redhat.com>
+From: Paul Mackerras <paulus@ozlabs.org>
 
-[ Upstream commit 1d94f06e7f5df4064ef336b7b710f50143b64a53 ]
+[ Upstream commit 1659e27d2bc1ef47b6d031abe01b467f18cb72d9 ]
 
-When SME is enabled, the smartpqi driver won't work on the HP DL385 G10
-machine, which causes the failure of kernel boot because it fails to
-allocate pqi error buffer. Please refer to the kernel log:
-....
-[    9.431749] usbcore: registered new interface driver uas
-[    9.441524] Microsemi PQI Driver (v1.1.4-130)
-[    9.442956] i40e 0000:04:00.0: fw 6.70.48768 api 1.7 nvm 10.2.5
-[    9.447237] smartpqi 0000:23:00.0: Microsemi Smart Family Controller found
-         Starting dracut initqueue hook...
-[  OK  ] Started Show Plymouth Boot Scre[    9.471654] Broadcom NetXtreme-C/E driver bnxt_en v1.9.1
-en.
-[  OK  ] Started Forward Password Requests to Plymouth Directory Watch.
-[[0;[    9.487108] smartpqi 0000:23:00.0: failed to allocate PQI error buffer
-....
-[  139.050544] dracut-initqueue[949]: Warning: dracut-initqueue timeout - starting timeout scripts
-[  139.589779] dracut-initqueue[949]: Warning: dracut-initqueue timeout - starting timeout scripts
+Currently the Book 3S KVM code uses kvm->lock to synchronize access
+to the kvm->arch.rtas_tokens list.  Because this list is scanned
+inside kvmppc_rtas_hcall(), which is called with the vcpu mutex held,
+taking kvm->lock cause a lock inversion problem, which could lead to
+a deadlock.
 
-Basically, the fact that the coherent DMA mask value wasn't set caused the
-driver to fall back to SWIOTLB when SME is active.
+To fix this, we add a new mutex, kvm->arch.rtas_token_lock, which nests
+inside the vcpu mutexes, and use that instead of kvm->lock when
+accessing the rtas token list.
 
-For correct operation, lets call the dma_set_mask_and_coherent() to
-properly set the mask for both streaming and coherent, in order to inform
-the kernel about the devices DMA addressing capabilities.
+This removes the lockdep_assert_held() in kvmppc_rtas_tokens_free().
+At this point we don't hold the new mutex, but that is OK because
+kvmppc_rtas_tokens_free() is only called when the whole VM is being
+destroyed, and at that point nothing can be looking up a token in
+the list.
 
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-Acked-by: Don Brace <don.brace@microsemi.com>
-Tested-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/smartpqi/smartpqi_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/kvm_host.h |  1 +
+ arch/powerpc/kvm/book3s.c           |  1 +
+ arch/powerpc/kvm/book3s_rtas.c      | 14 ++++++--------
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index 06a062455404..b12f7f952b70 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -5478,7 +5478,7 @@ static int pqi_pci_init(struct pqi_ctrl_info *ctrl_info)
- 	else
- 		mask = DMA_BIT_MASK(32);
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+index 5e12e19940e2..defa553fe823 100644
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -271,6 +271,7 @@ struct kvm_arch {
+ #ifdef CONFIG_PPC_BOOK3S_64
+ 	struct list_head spapr_tce_tables;
+ 	struct list_head rtas_tokens;
++	struct mutex rtas_token_lock;
+ 	DECLARE_BITMAP(enabled_hcalls, MAX_HCALL_OPCODE/4 + 1);
+ #endif
+ #ifdef CONFIG_KVM_MPIC
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index b6952dd23152..73c3c127d858 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -811,6 +811,7 @@ int kvmppc_core_init_vm(struct kvm *kvm)
+ #ifdef CONFIG_PPC64
+ 	INIT_LIST_HEAD_RCU(&kvm->arch.spapr_tce_tables);
+ 	INIT_LIST_HEAD(&kvm->arch.rtas_tokens);
++	mutex_init(&kvm->arch.rtas_token_lock);
+ #endif
  
--	rc = dma_set_mask(&ctrl_info->pci_dev->dev, mask);
-+	rc = dma_set_mask_and_coherent(&ctrl_info->pci_dev->dev, mask);
- 	if (rc) {
- 		dev_err(&ctrl_info->pci_dev->dev, "failed to set DMA mask\n");
- 		goto disable_device;
+ 	return kvm->arch.kvm_ops->init_vm(kvm);
+diff --git a/arch/powerpc/kvm/book3s_rtas.c b/arch/powerpc/kvm/book3s_rtas.c
+index ef27fbd5d9c5..b1b2273d1f6d 100644
+--- a/arch/powerpc/kvm/book3s_rtas.c
++++ b/arch/powerpc/kvm/book3s_rtas.c
+@@ -133,7 +133,7 @@ static int rtas_token_undefine(struct kvm *kvm, char *name)
+ {
+ 	struct rtas_token_definition *d, *tmp;
+ 
+-	lockdep_assert_held(&kvm->lock);
++	lockdep_assert_held(&kvm->arch.rtas_token_lock);
+ 
+ 	list_for_each_entry_safe(d, tmp, &kvm->arch.rtas_tokens, list) {
+ 		if (rtas_name_matches(d->handler->name, name)) {
+@@ -154,7 +154,7 @@ static int rtas_token_define(struct kvm *kvm, char *name, u64 token)
+ 	bool found;
+ 	int i;
+ 
+-	lockdep_assert_held(&kvm->lock);
++	lockdep_assert_held(&kvm->arch.rtas_token_lock);
+ 
+ 	list_for_each_entry(d, &kvm->arch.rtas_tokens, list) {
+ 		if (d->token == token)
+@@ -193,14 +193,14 @@ int kvm_vm_ioctl_rtas_define_token(struct kvm *kvm, void __user *argp)
+ 	if (copy_from_user(&args, argp, sizeof(args)))
+ 		return -EFAULT;
+ 
+-	mutex_lock(&kvm->lock);
++	mutex_lock(&kvm->arch.rtas_token_lock);
+ 
+ 	if (args.token)
+ 		rc = rtas_token_define(kvm, args.name, args.token);
+ 	else
+ 		rc = rtas_token_undefine(kvm, args.name);
+ 
+-	mutex_unlock(&kvm->lock);
++	mutex_unlock(&kvm->arch.rtas_token_lock);
+ 
+ 	return rc;
+ }
+@@ -232,7 +232,7 @@ int kvmppc_rtas_hcall(struct kvm_vcpu *vcpu)
+ 	orig_rets = args.rets;
+ 	args.rets = &args.args[be32_to_cpu(args.nargs)];
+ 
+-	mutex_lock(&vcpu->kvm->lock);
++	mutex_lock(&vcpu->kvm->arch.rtas_token_lock);
+ 
+ 	rc = -ENOENT;
+ 	list_for_each_entry(d, &vcpu->kvm->arch.rtas_tokens, list) {
+@@ -243,7 +243,7 @@ int kvmppc_rtas_hcall(struct kvm_vcpu *vcpu)
+ 		}
+ 	}
+ 
+-	mutex_unlock(&vcpu->kvm->lock);
++	mutex_unlock(&vcpu->kvm->arch.rtas_token_lock);
+ 
+ 	if (rc == 0) {
+ 		args.rets = orig_rets;
+@@ -269,8 +269,6 @@ void kvmppc_rtas_tokens_free(struct kvm *kvm)
+ {
+ 	struct rtas_token_definition *d, *tmp;
+ 
+-	lockdep_assert_held(&kvm->lock);
+-
+ 	list_for_each_entry_safe(d, tmp, &kvm->arch.rtas_tokens, list) {
+ 		list_del(&d->list);
+ 		kfree(d);
 -- 
 2.20.1
 
