@@ -2,142 +2,119 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912E0C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256F0C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5E221479
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35EC20833
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H67pCnfy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zbm4x2IQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbfFHDtI (ORCPT
+        id S1731561AbfFHDvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 23:49:08 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44253 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730056AbfFHDtH (ORCPT
+        Fri, 7 Jun 2019 23:51:07 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43649 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731570AbfFHDvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 23:49:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so2211010pfe.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 20:49:07 -0700 (PDT)
+        Fri, 7 Jun 2019 23:51:06 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so2127594pgv.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 20:50:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5iFtOAxSpyEwrNGKsnJSAuPHnmB6sZsxY7o3VcURDbs=;
-        b=H67pCnfy+inYwtx7CHiN5h4f1U/pgcnleLkOrUnW4+QdjbqfAr9cQdSkm3W08ImQFl
-         MKpSL+Xxt/SE/t0ZUnbh42ewav3Rgd/mWolnnSDbYBR+Ld/cLmR9BtGJ7sEbWVa+oHPR
-         1hTMHtgCUOMHLDYeeHgvIO8Lm0UyCIchcEask=
+         :content-disposition:in-reply-to:user-agent;
+        bh=IzVl5hZC8i4hei2lB4B7NGvZFOFsdZTFEiwkTZdNcbI=;
+        b=zbm4x2IQkkYxrWv2IeE0ppaapAoezEstTyL/waMvEJf48eUcGb66KQkuRDgP0rCjmg
+         7l5drrzOpjDnXq2S6r1kqEeRKF3JED1OfwZDuCi8Uxejc1mRxsPvSadhDPfJWkeL2C9i
+         iywuh9w4eNWS3i0i2GHUU1xWuGF1bHV4Xwicm/fq8jsKbfb55r5Hbe6vCtojoae7sN6Q
+         KSDdoYBO5GgiuaN/Fec0DXMB4wHwxoRGSLQrIfZj605T9U04WO+oeuyuS+SNIplKFvge
+         SKmROS12EnVu8egM+TlTg5JOtdYsdQRNZnqFIp4Ox1r4xHyLbC+VEwECjNDTXmwfOj5q
+         BfyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5iFtOAxSpyEwrNGKsnJSAuPHnmB6sZsxY7o3VcURDbs=;
-        b=Y0q4QeFgWg/1Ca2QcLZFUqQrxPV+RKCi8RcFIYVFT6ygEo6OtLeQl0SFmv93qkrgwU
-         pi0Til8FDShrrxZ/LEAY2/O/h8+bSXblugRxcDO1mP6EL/UMTT819v2iS+vn+AM6qK7x
-         HIxQTxOweSWOo9TpmmPDQHMVfqnyyVyUpJywZQaTMaRGtqPEH//TWG644ehQySMsCs8A
-         6V7oVBssEeUZxSIs2VKp4Y7Od4Kc63ihdihgMflNMtrzh37NU2gIK4+5q2CB4yvEufUs
-         SK9YGB8YUvkh6Iii15fmalLNMcN2pIJPAK2dk7UXX3+aLln+DFnlPd6Hc37WoU0Srkaq
-         PhEg==
-X-Gm-Message-State: APjAAAW/bUqRi9U3B3lPTW6XQxQecQx3dZNcPlV6JgCHmyj+26ul1Oyl
-        +oMoABrAP4IpwLwBSfEq1SYDog==
-X-Google-Smtp-Source: APXvYqyjpXWbpUp/M/TNwB1KLrsvdqCimHBytjvPEw0jUB6ar1HA2nI5YlI2gocy+KHTqRtIofNEIA==
-X-Received: by 2002:a63:5247:: with SMTP id s7mr5637363pgl.29.1559965746908;
-        Fri, 07 Jun 2019 20:49:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y12sm3218417pgi.10.2019.06.07.20.49.05
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IzVl5hZC8i4hei2lB4B7NGvZFOFsdZTFEiwkTZdNcbI=;
+        b=q+xDed/Bqer2bm/+cCIzalutuihCrgyHhn6uzOsu79TJudX9eaTqkrBFomBZcFiNeh
+         3XkmvpP81Y77pRqnf9vKF3xLy9ziVSivT+wbzGKevcAt9iuP357vGd2jAKFg/D8shZtb
+         QYswFFEGNjKW5G07u2hI6yxiztId40sxitpHiPX/PaTCTcmkOZiF6MgpBnphVKLEytIW
+         fsxEU6rREmVLLtyYf59sYUG0wcnt63Ukk4dns9B1sMYXrTKPgXVAq+iQ4znRI7qcx7/W
+         U2zJ0dxlL4/sNBWVmskgu53LcoBzjWkMot1vpi0ScLmqAE6owafUfuHdAGL5sAuVXMAW
+         T5EA==
+X-Gm-Message-State: APjAAAU8jaPMElLKjQk1q1E1GRCTMdVgy0b38MFDfLGCAp6sKPXVt7Qb
+        ZITarosIIVqltFymWYl/5topiw==
+X-Google-Smtp-Source: APXvYqzv3Wi+b5fl0fYtshM8YZCs9iIWMwg5/dCaLo03hUwNyJHjJ6/OEMKN/nVc0NV5ckcKb0L1pw==
+X-Received: by 2002:a62:1b0c:: with SMTP id b12mr60478869pfb.230.1559965845025;
+        Fri, 07 Jun 2019 20:50:45 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m19sm7622094pff.153.2019.06.07.20.50.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 20:49:06 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 20:49:05 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v16 04/16] mm: untag user pointers in do_pages_move
-Message-ID: <201906072049.C71D545@keescook>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <e410843d00a4ecd7e525a7a949e605ffc6c394c4.1559580831.git.andreyknvl@google.com>
+        Fri, 07 Jun 2019 20:50:44 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 20:50:42 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, amit.kucheria@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: msm8996: fix PSCI entry-latency-us
+Message-ID: <20190608035042.GI24059@builder>
+References: <20190604122931.22235-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e410843d00a4ecd7e525a7a949e605ffc6c394c4.1559580831.git.andreyknvl@google.com>
+In-Reply-To: <20190604122931.22235-1-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 06:55:06PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
-> 
-> do_pages_move() is used in the implementation of the move_pages syscall.
-> 
-> Untag user pointers in this function.
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+On Tue 04 Jun 05:29 PDT 2019, Niklas Cassel wrote:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> The current entry-latency-us is too short.
+> The proper way to convert between the device tree properties
+> from the vendor tree to the upstream PSCI device tree properties is:
+> 
+> entry-latency-us = qcom,time-overhead - qcom,latency-us
+> 
+> which gives
+> 
+> entry-latency-us = 210 - 80 = 130
+> 
+> Fixes: f6aee7af59b6 ("arm64: dts: qcom: msm8996: Add PSCI cpuidle low power states")
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 
--Kees
+Thanks Niklas
+
+Applied,
+Bjorn
 
 > ---
->  mm/migrate.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index f2ecc2855a12..3930bb6fa656 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1617,6 +1617,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->  		if (get_user(node, nodes + i))
->  			goto out_flush;
->  		addr = (unsigned long)p;
-> +		addr = untagged_addr(addr);
->  
->  		err = -ENODEV;
->  		if (node < 0 || node >= MAX_NUMNODES)
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index b7cf2a17dcb5..e8c03b5c8990 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -174,7 +174,7 @@
+>  				compatible = "arm,idle-state";
+>  				idle-state-name = "standalone-power-collapse";
+>  				arm,psci-suspend-param = <0x00000004>;
+> -				entry-latency-us = <40>;
+> +				entry-latency-us = <130>;
+>  				exit-latency-us = <80>;
+>  				min-residency-us = <300>;
+>  			};
 > -- 
-> 2.22.0.rc1.311.g5d7573a151-goog
+> 2.21.0
 > 
-
--- 
-Kees Cook
