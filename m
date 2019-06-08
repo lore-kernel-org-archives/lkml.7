@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162A8C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6B9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F29214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A720C214C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994233;
-	bh=V43q5vePLLILHyVdGJ8qzvNX5TaFaqGO9M2fhuBgr2I=;
+	s=default; t=1559994235;
+	bh=sP0qLwiA1DHhTCbZonhR0vtEr78HRuXSuI/65FYYT1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JFtYtNhOJTfexkZAwdNW2ZcFUOjgJYp5UWSuGBMtqwHAaHsjICDWTwzcFC6IJ91GJ
-	 wmkAFE5e9zZI1QP9HOkthO3NIkvK/IQfdh/WJL55HHaVIcCbBa4vxk05y4kQ8siVdq
-	 TYqQTd78auUD1HSDaAKQelozOtVIw1Lo+on7fAro=
+	b=xYz0T4efDU7ua2cBTEfHqzzTZ7bjaba8mzZlZqvFASGZC0IY/BU9CjFgxyhJk4oq1
+	 P3TnaFzDoZV00BkKY45YcpvWRJ/dGv58nPNUD6kpKCATnYmYcjY3UymamEpbVGwVsd
+	 ec943gEDHO0WyaLcyl6i9yF8O58UP5/B9vdyRetU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfFHLnw (ORCPT
+        id S1727913AbfFHLns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:43:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32950 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728885AbfFHLnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:47 -0400
+        id S1727724AbfFHLnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB07F21537;
-        Sat,  8 Jun 2019 11:43:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED530214D8;
+        Sat,  8 Jun 2019 11:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994227;
-        bh=V43q5vePLLILHyVdGJ8qzvNX5TaFaqGO9M2fhuBgr2I=;
+        s=default; t=1559994220;
+        bh=sP0qLwiA1DHhTCbZonhR0vtEr78HRuXSuI/65FYYT1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pq0RhgIds5nLpi6bG82sgqktE5yOqru+1SuOX1huoYAV3X2+0l9tFXSRHqtbYOHyN
-         fReY+amTexlCwRt9rFOCThk/ADRDK/UgH5seh+H1Kzy2/EC+a8iOnqfRDmweROWgkZ
-         DyzyiL7r/DAyMplqGk0BeEnQc/IY8cbh9xahu38Q=
+        b=tPJgUK+MOl+3b2TW6Alkk4T/CLjmAN9SZQ8awzGhJDRuOBjGjrOj/0GBGq+JUcatg
+         v0broGRw13caA5ZSmu02xdOZoQkXI1p2V2CkoJU5F6RNlk/hEo4wyt0GEBte92jsNT
+         mDgVvJLnAaQGg5DHNWJzBxZZqm9T2lQOK42CKJO0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 28/49] ALSA: hda - Force polling mode on CNL for fixing codec communication
-Date:   Sat,  8 Jun 2019 07:42:09 -0400
-Message-Id: <20190608114232.8731-28-sashal@kernel.org>
+Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 26/49] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+Date:   Sat,  8 Jun 2019 07:42:07 -0400
+Message-Id: <20190608114232.8731-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -58,44 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
-[ Upstream commit fa763f1b2858752e6150ffff46886a1b7faffc82 ]
+[ Upstream commit a0692f0eef91354b62c2b4c94954536536be5425 ]
 
-We observed the same issue as reported by commit a8d7bde23e7130686b7662
-("ALSA: hda - Force polling mode on CFL for fixing codec communication")
-We don't have a better solution. So apply the same workaround to CNL.
+If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
+will not be freed. Pump index up so it will be freed.
 
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/i2c/i2c-dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 9bc8a7cb40ea..e895e2dd8764 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -378,6 +378,7 @@ enum {
- 
- #define IS_BXT(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x5a98)
- #define IS_CFL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0xa348)
-+#define IS_CNL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x9dc8)
- 
- static char *driver_short_names[] = {
- 	[AZX_DRIVER_ICH] = "HDA Intel",
-@@ -1795,8 +1796,8 @@ static int azx_create(struct snd_card *card, struct pci_dev *pci,
- 	else
- 		chip->bdl_pos_adj = bdl_pos_adj[dev];
- 
--	/* Workaround for a communication error on CFL (bko#199007) */
--	if (IS_CFL(pci))
-+	/* Workaround for a communication error on CFL (bko#199007) and CNL */
-+	if (IS_CFL(pci) || IS_CNL(pci))
- 		chip->polling_mode = 1;
- 
- 	err = azx_bus_init(chip, model[dev], &pci_hda_io_ops);
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index ccd76c71af09..cb07651f4b46 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -283,6 +283,7 @@ static noinline int i2cdev_ioctl_rdwr(struct i2c_client *client,
+ 			    msgs[i].len < 1 || msgs[i].buf[0] < 1 ||
+ 			    msgs[i].len < msgs[i].buf[0] +
+ 					     I2C_SMBUS_BLOCK_MAX) {
++				i++;
+ 				res = -EINVAL;
+ 				break;
+ 			}
 -- 
 2.20.1
 
