@@ -2,159 +2,124 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11134C468BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD26B214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559985153;
-	bh=+dfOuCygM4XWeeIt+7I1WNiQHNRsX6McvspPEEKD0tQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=vw3CHpuVhhV6j6PGt8FK/2628qPCb0NX4cp3tP/ACSlXsP0/cUXA4FlMlUpsGrOUb
-	 0JeYs2K0ks1mQpqayO6LH8i6PZgmf7jUdC+nEMxwzeXggxk6d26DviBNffTQepT/vg
-	 kMz81O11yOY8kJmErmZZmBmntTItNGw3VqQGkz3U=
+	by mail.kernel.org (Postfix) with ESMTP id B979A214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:12:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="oxaM1Xis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfFHJMd (ORCPT
+        id S1726789AbfFHJM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 05:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbfFHJMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 05:12:33 -0400
-Received: from localhost (unknown [106.200.229.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA954206E0;
-        Sat,  8 Jun 2019 09:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559985152;
-        bh=+dfOuCygM4XWeeIt+7I1WNiQHNRsX6McvspPEEKD0tQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gTK1m1t1hpgJfSOsHJhw9jxnTsQ6inJpQIWW5Ku+Mb6K6H6pIAG2H0W+aLdYnxdcp
-         qhxpQPnbUoLm+oNPy1RwFDUwbuky2fqmnoW2gDftPfYtKxfu4nDGi7/P14wrehzva3
-         Pk5mfG/So68FyZfFj1KN6NB1NgYoyGioIQNRMCLA=
-Date:   Sat, 8 Jun 2019 14:39:08 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine fixes for v5.2-rc4
-Message-ID: <20190608090908.GE9160@vkoul-mobl.Dlink>
+        Sat, 8 Jun 2019 05:12:59 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:54554 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbfFHJM6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 05:12:58 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id AA5982E0DB6;
+        Sat,  8 Jun 2019 12:12:54 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id QsaXMhCqJa-CrO0pb2o;
+        Sat, 08 Jun 2019 12:12:54 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1559985174; bh=MMiLmgNqJUSrJfw+GaF3nM145kVYKZXwjH0MmNsHYnE=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=oxaM1Xist0o3ZYctT6hPBHwXsMEwEtne7sZuaC2AhLCTbKfHH2g2Vbq6WrpOmAm7q
+         0w53IkIB0dMeXpVT6fAKGZU/M49zsaITjV/keuzdLGZZgiRLeNcsdtu5bCbV24uqxu
+         BV5xWjfRv1MbhWMmcdLqXGb03nlr3mUAjBYwcG2U=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-iva.dhcp.yndx.net (dynamic-iva.dhcp.yndx.net [2a02:6b8:0:827::1:20])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id hX5gvk80Kz-CrYqk4qr;
+        Sat, 08 Jun 2019 12:12:53 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] drivers/ata: print trim features at device initialization
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+References: <155989287898.1506.14253954112551051148.stgit@buzz>
+ <yq1wohxib7t.fsf@oracle.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <eebfb1cc-f6d0-580e-1d56-2af0f481a92f@yandex-team.ru>
+Date:   Sat, 8 Jun 2019 12:12:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <yq1wohxib7t.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07.06.2019 19:58, Martin K. Petersen wrote:
+> 
+> Konstantin,
+> 
+>> +			if (dev->horkage & ATA_HORKAGE_NOTRIM)
+>> +				trim_status = "backlisted";
+> 
+> blacklisted
 
---v9Ux+11Zm5mwPlX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oops. My bad.
 
-Hi Linus,
+> 
+>> +			else
+>> +				trim_status = "supported";
+>> +
+>> +			if (!ata_fpdma_dsm_supported(dev))
+>> +				trim_queued = "no";
+>> +			else if (dev->horkage & ATA_HORKAGE_NO_NCQ_TRIM)
+>> +				trim_queued = "backlisted";
+> 
+> ditto
+> 
+>> +			else
+>> +				trim_queued = "yes";
+> 
+> Why is trim_status "supported" and trim_queued/trim_zero "yes"?
 
-Please pull to receive dmaengine fixes. These fixes are on drivers.
+Hmm. This seems properties of trim, not independent features.
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> 
+>> +
+>> +			if (!ata_id_has_zero_after_trim(id))
+>> +				trim_zero = "no";
+>> +			else if (dev->horkage & ATA_HORKAGE_ZERO_AFTER_TRIM)
+>> +				trim_zero = "yes";
+>> +			else
+>> +				trim_zero = "maybe";
+>> +
+>> +			ata_dev_info(dev, "trim: %s, queued: %s, zero_after_trim: %s\n",
+>> +				     trim_status, trim_queued, trim_zero);
+>> +		}
+>> +
+> 
+> Otherwise no particular objections. We were trying to limit noise during
+> boot which is why this information originally went to sysfs instead of
+> being printed during probe.
+> 
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+On 08.06.2019 11:25, Christoph Hellwig wrote:> On Fri, Jun 07, 2019 at 10:34:39AM +0300, Konstantin Khlebnikov wrote:
+ >
+ > Do we really need to spam dmesg with even more ATA crap?  What about
+ > a sysfs file that can be read on demand instead?
+ >
 
-are available in the Git repository at:
+Makes sense.
 
-  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.2-=
-rc4
+Trim state is exposed for ata_device: /sys/class/ata_device/devX.Y/trim
+but there is no link from scsi device to ata device so they hard to match.
 
-for you to fetch changes up to 9bb9fe0cfbe0aa72fed906ade0590e1702815e5d:
-
-  dmaengine: sprd: Add interrupt support for 2-stage transfer (2019-05-21 1=
-9:23:54 +0530)
-
-----------------------------------------------------------------
-dmaengine fixes for v5.2-rc4
-
-The fixes for this round are in drivers:
- - jz4780 transfer fix for acking descriptors early
- - fsl-qdma: clean registers on error
- - dw-axi-dmac: null pointer dereference fix
- - mediatek-cqdma: fix sleeping in atomic context
- - tegra210-adma: fix bunch os issues like crashing in driver
-   probe, channel FIFO configuration etc.
- - sprd: Fixes for possible crash on descriptor status, block
-   length overflow. For 2-stage transfer fix incorrect start,
-   configuration and interrupt handling.
-
-----------------------------------------------------------------
-Baolin Wang (3):
-      dmaengine: sprd: Fix the possible crash when getting descriptor status
-      dmaengine: sprd: Add validation of current descriptor in irq handler
-      dmaengine: sprd: Add interrupt support for 2-stage transfer
-
-Colin Ian King (1):
-      dmaengine: dw-axi-dmac: fix null dereference when pointer first is nu=
-ll
-
-Dan Carpenter (1):
-      dmaengine: mediatek-cqdma: sleeping in atomic context
-
-Eric Long (3):
-      dmaengine: sprd: Fix the incorrect start for 2-stage destination chan=
-nels
-      dmaengine: sprd: Fix block length overflow
-      dmaengine: sprd: Fix the right place to configure 2-stage transfer
-
-Jon Hunter (3):
-      dmaengine: tegra210-adma: Fix crash during probe
-      dmaengine: tegra210-adma: Fix channel FIFO configuration
-      dmaengine: tegra210-adma: Fix spelling
-
-Paul Cercueil (1):
-      dmaengine: jz4780: Fix transfers being ACKed too soon
-
-Peng Ma (1):
-      dmaengine: fsl-qdma: Add improvement
-
- drivers/dma/dma-jz4780.c                       | 32 ++++++++++-----
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c |  3 +-
- drivers/dma/fsl-qdma.c                         |  4 +-
- drivers/dma/mediatek/mtk-cqdma.c               |  4 +-
- drivers/dma/sprd-dma.c                         | 49 +++++++++++++++++-----
- drivers/dma/tegra210-adma.c                    | 57 ++++++++++++++++------=
-----
- 6 files changed, 100 insertions(+), 49 deletions(-)
-
-Thanks
---=20
-~Vinod
-
---v9Ux+11Zm5mwPlX6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJc+3s0AAoJEHwUBw8lI4NHSiAQAIV8eF0ELY3XJTbXfd4vttgU
-QzWJRogJgIN82F29IvWz2EjfrI9t6rHo9Jq7qiSlLUDFfNrFw3XXIS5bcswgIFX2
-MuOatTXtYl8eROLlg8SD1DL+uRJWzAtuRIFezESSclmnryViDgazQUQr559G8XqQ
-zzcyjs5vbnpE5+zpltUK856bcRg72oj6fb7nZyZYXa1FlzzJDOagjwsZsGJVWwfU
-o6mnlM224t8gZnvhx5Ih7seBDi6Q9DMCKrbr6xs6Jxe+/coIXdDuDC/KZkoUrqYf
-OvV+GPiZ4D+k/hhYveYwW/e5DfFmNCWUy3PIGojk4urGHt1ShmFzelepkKvbgs1A
-2yrEMwj3xKtB5y3Ic5ykXXfGsIoPActfswOyYcFrTWsClFSVkd8dd+M9Vp5SOnQI
-Mc6KXy3RByKL8XifXHusOQeA3qSsODhwcChuP9ZRjyaK5zs5cU/7ExrwftRvZRZU
-azpsZ+Or+Obc64l2sokPFs0fJpb5XvmJ/Ea7thmR/TWqwkRV1JFaUR6fh27c3cEW
-tvkG8RQ+XXPmeZHHRYHLfZnU5wlFHEuDu8raeXLCf9+n/MAbt5SW5+mQEQB3waUi
-A3ZT9hxtPFjzonXfLeoTsNgTYUgTjXeF4pakltJQcvNzhAhoUwOc9MJ2cyEmkq9j
-6NsT1Wnm9phCfte/tDWo
-=6WFh
------END PGP SIGNATURE-----
-
---v9Ux+11Zm5mwPlX6--
+I'll think about it.
