@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C13C468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0C5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31CFC214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E725E214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994849;
-	bh=fGkjKiQfawmic6BBanSd1Vtb2m0w+VoWvZ0ZFBjSH7w=;
+	s=default; t=1559994855;
+	bh=T9EQLESZEqnofQb5sqhGtTE8EjOGTkxMRhN4PNcztCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yn85YU2HcF6A7vGci23f34rcRQwhcQ2qsqmOouKVoxAS1z4qNBOocyQek5FPESPwY
-	 nbC4nTYKmbEwt15HYNrLVmb3t4sb9VWngMrV2pRN1qvhBUnWMyW959dq7Pzel3Pd5C
-	 VDJMjVgzwxbBJrQ03ePi92RHCBBugNEbGLsuj7io=
+	b=dd6Iu6DPgDTx/woCFxojxsIOsn1KpHmpq8dbWzE71oKoFTm7UpgjzzpuulmVvmtML
+	 nG4trW5BYO2G4FnwUCeDz0ONxZpdeIjc0eBtxeXMbx6FuwBLnduB9sUX9sC8dcvC8N
+	 +JcdNqQUIXRELq5iv86wRxOw3KnfIo7XmIWXC1VI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfFHLyI (ORCPT
+        id S1727591AbfFHLk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57852 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727619AbfFHLke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:34 -0400
+        id S1727538AbfFHLkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CBA121726;
-        Sat,  8 Jun 2019 11:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E053214AF;
+        Sat,  8 Jun 2019 11:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994034;
-        bh=fGkjKiQfawmic6BBanSd1Vtb2m0w+VoWvZ0ZFBjSH7w=;
+        s=default; t=1559994022;
+        bh=T9EQLESZEqnofQb5sqhGtTE8EjOGTkxMRhN4PNcztCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jp5yBtlF6vZU4dcigaqP2fBka9lJjkcBY1lokX6GvVgKRbJid1sZlyXyTKG0ahht4
-         CYl6iiCeIiUXO6EwmYNuREgC/J5KrUguoLC8dFwWPpTlYpryL6sX202rATrS2E6dFY
-         h7k2/VW1aF+Z8SGMJhMtnsBxVEfAaLFK7/2iL+L0=
+        b=kTlZ4Swj1Ulxs+8BD3gEl+DHBrtWaUj+fjhcgkTZlXapycWmKiAJhIYB/e6MOxD/j
+         qmvAczqKvmytJvH643nf88S5uSupjhjc6oVKQl2zhJJtodU0FcbMrlPUV2jyZlMbIY
+         cIDJixiRGARxpVjIx2rFjwe1FVwcLIahE2F+mVp0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Biao Huang <biao.huang@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 28/70] net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio read/write fail
-Date:   Sat,  8 Jun 2019 07:39:07 -0400
-Message-Id: <20190608113950.8033-28-sashal@kernel.org>
+Cc:     Frank van der Linden <fllinden@amazon.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        jiaxun.yang@flygoat.com, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 20/70] x86/CPU/AMD: Don't force the CPB cap when running under a hypervisor
+Date:   Sat,  8 Jun 2019 07:38:59 -0400
+Message-Id: <20190608113950.8033-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -59,35 +64,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
+From: Frank van der Linden <fllinden@amazon.com>
 
-[ Upstream commit f4ca7a9260dfe700f2a16f0881825de625067515 ]
+[ Upstream commit 2ac44ab608705948564791ce1d15d43ba81a1e38 ]
 
-1. the frequency of csr clock is 66.5MHz, so the csr_clk value should
-be 0 other than 5.
-2. the csr_clk can be got from device tree, so remove initialization here.
+For F17h AMD CPUs, the CPB capability ('Core Performance Boost') is forcibly set,
+because some versions of that chip incorrectly report that they do not have it.
 
-Fixes: 9992f37e346b ("stmmac: dwmac-mediatek: add support for mt2712")
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+However, a hypervisor may filter out the CPB capability, for good
+reasons. For example, KVM currently does not emulate setting the CPB
+bit in MSR_K7_HWCR, and unchecked MSR access errors will be thrown
+when trying to set it as a guest:
+
+	unchecked MSR access error: WRMSR to 0xc0010015 (tried to write 0x0000000001000011) at rIP: 0xffffffff890638f4 (native_write_msr+0x4/0x20)
+
+	Call Trace:
+	boost_set_msr+0x50/0x80 [acpi_cpufreq]
+	cpuhp_invoke_callback+0x86/0x560
+	sort_range+0x20/0x20
+	cpuhp_thread_fun+0xb0/0x110
+	smpboot_thread_fn+0xef/0x160
+	kthread+0x113/0x130
+	kthread_create_worker_on_cpu+0x70/0x70
+	ret_from_fork+0x35/0x40
+
+To avoid this issue, don't forcibly set the CPB capability for a CPU
+when running under a hypervisor.
+
+Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: jiaxun.yang@flygoat.com
+Fixes: 0237199186e7 ("x86/CPU/AMD: Set the CPB bit unconditionally on F17h")
+Link: http://lkml.kernel.org/r/20190522221745.GA15789@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+[ Minor edits to the changelog. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/x86/kernel/cpu/amd.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-index bf2562995fc8..126b66bb73a6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-@@ -346,8 +346,6 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
- 		return PTR_ERR(plat_dat);
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 01004bfb1a1b..524709dcf749 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -820,8 +820,11 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
+ {
+ 	set_cpu_cap(c, X86_FEATURE_ZEN);
  
- 	plat_dat->interface = priv_plat->phy_mode;
--	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
--	plat_dat->clk_csr = 5;
- 	plat_dat->has_gmac4 = 1;
- 	plat_dat->has_gmac = 0;
- 	plat_dat->pmt = 0;
+-	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
+-	if (!cpu_has(c, X86_FEATURE_CPB))
++	/*
++	 * Fix erratum 1076: CPB feature bit not being set in CPUID.
++	 * Always set it, except when running under a hypervisor.
++	 */
++	if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_CPB))
+ 		set_cpu_cap(c, X86_FEATURE_CPB);
+ }
+ 
 -- 
 2.20.1
 
