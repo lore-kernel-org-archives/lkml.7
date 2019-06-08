@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992AAC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B110C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697CC208E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217A4208E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:32:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c7n9thBG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m6KBNxDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbfFHDcd (ORCPT
+        id S1730547AbfFHDc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 23:32:33 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39453 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729973AbfFHDcd (ORCPT
+        Fri, 7 Jun 2019 23:32:57 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39991 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730380AbfFHDc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 23:32:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 196so2124366pgc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 20:32:32 -0700 (PDT)
+        Fri, 7 Jun 2019 23:32:56 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so1524537pla.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 20:32:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=w8yMs0A1kswOPadFYz1C2fi/C0+bcAjRjGc687sOHgM=;
-        b=c7n9thBGRp2TEdtjghoVzImcNhyBb/VGwjyjCm3JbuSUilHIelfibtChp8GIaE13ag
-         JNOGB+hr6YlznweL7qHBqLNQTVTGDtYKkRf2j18Y9qAdXrCG+GWCHjakZ6eG8owGdoxP
-         Nn0DnoxyIjpF/fzEmh2Sq+lKuLx2brgS3c4ic3En3Eok0EDpahGBcI8woeuCmztpX+hT
-         1ynX7bvjVqIZXzxE5zt7kbq8TDS/HkU1IthcxKu99GeKRkqM7xbhzN3ypBD4GyqgshNP
-         hJR/Nc4drgs04AE64vN1B+FBz35vmQErDRSlXL+J5SMxFXd2xo/i0qA+X2/h6PjhUuOh
-         /tlg==
+        bh=OC4ha/gavEmQ9A1g/pl9ZGbgw4r/3XC6pB7BtZ0jhE0=;
+        b=m6KBNxDE2SKGyhMty2QeqhwjxXrI8BuN494ubr8ejix2tRtzacu7vJAR9Hs5i2q5F8
+         5mjBF6z9SHYnxu+ReKYZyAQW2MDGYXCVdFAwVfYP4Vpc2/OJxR2lLEu4zl+yc6t3r7u7
+         R7Gql7Y81TjdALjHPpYhruVZauxUVGFFLKTh+Pf0y9JtDWux7EITRf5FZ76ii8YKY+bc
+         rFINbch2+tJrIKuq6FUllUvcrZLYZrGKhqKv94s0ErCZUtCtUSzVAn3aqdvQt+RjrfTP
+         JHRlX4E9kdnYolMBVwq/phhgqpnmvu7sTuVSX6d8RwzRbBvvHkRxzFyid/W4ur35QzDK
+         RAyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w8yMs0A1kswOPadFYz1C2fi/C0+bcAjRjGc687sOHgM=;
-        b=q5b7DZXfPGXtdJXQ+eJ771hghkh9hy1Q02HYvNcDBYkY0DzOtXFi7/33Pyntz4bX5n
-         WR9Nc2MFipXGQFtL3OU7518DdQliSB9+AYbIfX9CgLnHooCyGPbJ1uaJ8XwASLzpTKZc
-         Mg57V68oTcch7+dorp3sVLmNbXkTIxpSJiGm9xN6RpvzNJBaBa8dVYZ1OA6S/0ELUNqm
-         geRu4FWzO2hfyd4a1BEFFrE1u5wCEt3AKn/ZOu27bQUNPqycnSSLUgUMo0toTrBiFi1c
-         /bUfIGMp9c3OeSZCBZ0AaWrw3O7tv9Ai6xhG09TlIr/OiG0CUHmcTJA+pBIpv15SdKRi
-         G2bw==
-X-Gm-Message-State: APjAAAVXycbSibUdjokwWl5tkuAab7D715s5PJYyfijFUCW6St0+0O5w
-        QAdoa2icKfxKXMOiH+zTunGC3o3rvz4=
-X-Google-Smtp-Source: APXvYqzrB7QuXo0561fGi5AbE7OYmt8MLxD5Fo8pdCLTO0o6oJi2WGdEIJ2vz0ye4zuI2JWRQJG4IA==
-X-Received: by 2002:a65:5003:: with SMTP id f3mr5749817pgo.336.1559964752104;
-        Fri, 07 Jun 2019 20:32:32 -0700 (PDT)
+        bh=OC4ha/gavEmQ9A1g/pl9ZGbgw4r/3XC6pB7BtZ0jhE0=;
+        b=i/Rg2yvrpW8xhNY63M3SBTzHR32IJCntVVUxaQJMka0a39K0qE1vz7EIx5fbz1LiG4
+         67CeuiEzN11GXfUeBvsZbklyh2MhIBjZF39VeJPf3FPwDMczRTjHwYxiKp2N6m6JVzR/
+         Zt3AgVmDDACHtWFbW6M6pFTWobXYTgkE9AwLofD1sBVsDJKwCNDUaNzFe1c4uVrWzAPQ
+         GFMBBDelRzIqtJYl3J4+cIXjNoojq3poUl6MhkFL1FlAsJHTyrfbqL7HAYKjNYXwR5sj
+         YFbtdW959OK7R+Vt0NGeyShy56SnEDyJMuZETXHNBVeCwmnfUOav7s9yUbhjmOsFsYqF
+         misA==
+X-Gm-Message-State: APjAAAVBRycNKvfReuPHP1d/B5jSVHkIa7Gz1fiJZTBb/c9WQiy6mOkd
+        sFkTG59EcYNJ0RqkzXtX4fvEFA==
+X-Google-Smtp-Source: APXvYqyvURItZPpNCAxXxcxVo3Fg5EhKFWFD5HtYD68smQYpsMoXzfLjZs+9l9buosxYpioclI20Ww==
+X-Received: by 2002:a17:902:6b03:: with SMTP id o3mr59043693plk.85.1559964776069;
+        Fri, 07 Jun 2019 20:32:56 -0700 (PDT)
 Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p65sm7027057pfb.146.2019.06.07.20.32.30
+        by smtp.gmail.com with ESMTPSA id m6sm3546820pjl.18.2019.06.07.20.32.55
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 20:32:31 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 20:32:29 -0700
+        Fri, 07 Jun 2019 20:32:55 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 20:32:53 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Sricharan R <sricharan@codeaurora.org>
 Cc:     robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org,
@@ -64,108 +64,54 @@ Cc:     robh+dt@kernel.org, sboyd@codeaurora.org, linus.walleij@linaro.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/6] clk: qcom: Add ipq6018 Global Clock Controller
- support
-Message-ID: <20190608033229.GE24059@builder>
+Subject: Re: [PATCH 6/6] arm64: defconfig: Enable qcom ipq6018 clock and
+ pinctrl
+Message-ID: <20190608033253.GF24059@builder>
 References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org>
- <1559754961-26783-5-git-send-email-sricharan@codeaurora.org>
+ <1559754961-26783-7-git-send-email-sricharan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559754961-26783-5-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1559754961-26783-7-git-send-email-sricharan@codeaurora.org>
 User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05 Jun 10:15 PDT 2019, Sricharan R wrote:
+On Wed 05 Jun 10:16 PDT 2019, Sricharan R wrote:
 
-> This patch adds support for the global clock controller found on
-> the ipq6018 based devices.
+> These configs are required for booting kernel in qcom
+> ipq6018 boards.
 > 
 > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: anusha <anusharao@codeaurora.org>
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 
-Please fix your s-o-b chain, as described in my reply to 1/8..
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 > ---
->  drivers/clk/qcom/Kconfig       |    9 +
->  drivers/clk/qcom/Makefile      |    1 +
->  drivers/clk/qcom/gcc-ipq6018.c | 5267 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 5277 insertions(+)
->  create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
+>  arch/arm64/configs/defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index e1ff83c..e5fb091 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -120,6 +120,15 @@ config IPQ_GCC_8074
->  	  i2c, USB, SD/eMMC, etc. Select this for the root clock
->  	  of ipq8074.
->  
-> +config IPQ_GCC_6018
-
-Please maintain sort order.
-
-> +	tristate "IPQ6018 Global Clock Controller"
-> +	depends on COMMON_CLK_QCOM
-> +	help
-> +	  Support for global clock controller on ipq6018 devices.
-> +	  Say Y if you want to use peripheral devices such as UART, SPI,
-> +	  i2c, USB, SD/eMMC, etc. Select this for the root clock
-> +	  of ipq6018.
-> +
->  config MSM_GCC_8660
->  	tristate "MSM8660 Global Clock Controller"
->  	help
-> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-> index f0768fb..025137d 100644
-> --- a/drivers/clk/qcom/Makefile
-> +++ b/drivers/clk/qcom/Makefile
-> @@ -22,6 +22,7 @@ obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
->  obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
->  obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
->  obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
-> +obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
-
-Ditto.
-
->  obj-$(CONFIG_IPQ_LCC_806X) += lcc-ipq806x.o
->  obj-$(CONFIG_MDM_GCC_9615) += gcc-mdm9615.o
->  obj-$(CONFIG_MDM_LCC_9615) += lcc-mdm9615.o
-> diff --git a/drivers/clk/qcom/gcc-ipq6018.c b/drivers/clk/qcom/gcc-ipq6018.c
-[..]
-> +static int gcc_ipq6018_probe(struct platform_device *pdev)
-> +{
-> +	return qcom_cc_probe(pdev, &gcc_ipq6018_desc);
-> +}
-> +
-> +static int gcc_ipq6018_remove(struct platform_device *pdev)
-> +{
-> +	return 0;
-
-Just omit .remove from the gcc_ipq6018_driver instead of providing a
-dummy function.
-
-> +}
-> +
-> +static struct platform_driver gcc_ipq6018_driver = {
-> +	.probe = gcc_ipq6018_probe,
-> +	.remove = gcc_ipq6018_remove,
-> +	.driver = {
-> +		.name   = "qcom,gcc-ipq6018",
-> +		.owner  = THIS_MODULE,
-
-Don't specify .owner in platform drivers.
-
-[..]
-> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. GCC IPQ6018 Driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:gcc-ipq6018");
-
-This modalias won't be used.
-
-Regards,
-Bjorn
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 4d58351..abf64ee 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -373,6 +373,7 @@ CONFIG_PINCTRL_MAX77620=y
+>  CONFIG_PINCTRL_IMX8MQ=y
+>  CONFIG_PINCTRL_IMX8QXP=y
+>  CONFIG_PINCTRL_IPQ8074=y
+> +CONFIG_PINCTRL_IPQ6018=y
+>  CONFIG_PINCTRL_MSM8916=y
+>  CONFIG_PINCTRL_MSM8994=y
+>  CONFIG_PINCTRL_MSM8996=y
+> @@ -646,6 +647,7 @@ CONFIG_COMMON_CLK_QCOM=y
+>  CONFIG_QCOM_CLK_SMD_RPM=y
+>  CONFIG_QCOM_CLK_RPMH=y
+>  CONFIG_IPQ_GCC_8074=y
+> +CONFIG_IPQ_GCC_6018=y
+>  CONFIG_MSM_GCC_8916=y
+>  CONFIG_MSM_GCC_8994=y
+>  CONFIG_MSM_MMCC_8996=y
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
