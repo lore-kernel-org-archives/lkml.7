@@ -2,43 +2,41 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9CBC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 21:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BABC468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 21:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680C52168B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 21:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94302166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 21:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfFHV1M (ORCPT
+        id S1727663AbfFHVbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 17:27:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 17:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727456AbfFHV1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 17:27:12 -0400
+        id S1727456AbfFHVbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 17:31:16 -0400
 Received: from oasis.local.home (unknown [12.156.218.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC1EB208E3;
-        Sat,  8 Jun 2019 21:27:10 +0000 (UTC)
-Date:   Sat, 8 Jun 2019 17:27:08 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D22A208E3;
+        Sat,  8 Jun 2019 21:31:15 +0000 (UTC)
+Date:   Sat, 8 Jun 2019 17:31:13 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Theodore Tso <tytso@mit.edu>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2 2/2] KVM: LAPIC: remove the trailing newline used in
- the fmt parameter of TP_printk
-Message-ID: <20190608172708.172594be@oasis.local.home>
-In-Reply-To: <53e1591ef288135f1dd803c15e971c96d06f54ba.camel@perches.com>
-References: <1559284814-20378-1-git-send-email-wanpengli@tencent.com>
-        <1559284814-20378-2-git-send-email-wanpengli@tencent.com>
-        <53e1591ef288135f1dd803c15e971c96d06f54ba.camel@perches.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andreas Ziegler <andreas.ziegler@fau.de>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH AUTOSEL 5.1 058/186] tracing: probeevent: Fix to make
+ the type of $comm string
+Message-ID: <20190608173113.5fc866bf@oasis.local.home>
+In-Reply-To: <20190601131653.24205-58-sashal@kernel.org>
+References: <20190601131653.24205-1-sashal@kernel.org>
+        <20190601131653.24205-58-sashal@kernel.org>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -48,53 +46,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 May 2019 11:57:04 -0700
-Joe Perches <joe@perches.com> wrote:
+On Sat,  1 Jun 2019 09:14:34 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-> On Fri, 2019-05-31 at 14:40 +0800, Wanpeng Li wrote:
-> > The trailing newlines will lead to extra newlines in the trace file  
-> []
-> > diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h  
-> []
-> > @@ -1365,7 +1365,7 @@ TRACE_EVENT(kvm_hv_timer_state,
-> >  			__entry->vcpu_id = vcpu_id;
-> >  			__entry->hv_timer_in_use = hv_timer_in_use;
-> >  			),
-> > -		TP_printk("vcpu_id %x hv_timer %x\n",
-> > +		TP_printk("vcpu_id %x hv_timer %x",
-> >  			__entry->vcpu_id,
-> >  			__entry->hv_timer_in_use)
-> >  );  
+> From: Masami Hiramatsu <mhiramat@kernel.org>
 > 
-> Not about the kvm subsystem, but generically there are
-> many of these that could be removed.
+> [ Upstream commit 3dd1f7f24f8ceec00bbbc364c2ac3c893f0fdc4c ]
 > 
-> $ git grep -w TP_printk | grep '\\n' | wc -l
-> 45
+> Fix to make the type of $comm "string".  If we set the other type to $comm
+> argument, it shows meaningless value or wrong data. Currently probe events
+> allow us to set string array type (e.g. ":string[2]"), or other digit types
+> like x8 on $comm. But since clearly $comm is just a string data, it should
+> not be fetched by other types including array.
 > 
-> Also, aren't all TP_printk formats supposed to be single line?
+> Link: http://lkml.kernel.org/r/155723736241.9149.14582064184468574539.stgit@devnote2
+> 
+> Cc: Andreas Ziegler <andreas.ziegler@fau.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
 
-Yeah they should be, otherwise it makes the trace look funny. We do
-have some legitimate ones (stack traces for example), but really,
-unless there's a good reason, it shouldn't have them.
-
-> 
-> If not, these are odd as well.
-> 
-> $ git grep -w TP_printk | grep '\\n[^"]'
-> include/trace/events/9p.h:	    TP_printk("clnt %lu %s(tag = %d)\n%.3x: %16ph\n%.3x: %16ph\n",
-> net/tipc/trace.h:	TP_printk("%s\n%s", __get_str(header), __get_str(buf))
-> net/tipc/trace.h:	TP_printk("%s\n%s", __get_str(header), __get_str(buf))
-> net/tipc/trace.h:	TP_printk("<%u> %s\n%s%s", __entry->portid, __get_str(header),
-> net/tipc/trace.h:	TP_printk("<%s> %s\n%s", __entry->name, __get_str(header),
-> net/tipc/trace.h:	TP_printk("<%x> %s\n%s", __entry->addr, __get_str(header),
-> 
-> Perhaps the documentation files around these formats
-> 	Documentation/trace/events.rst
-> 	Documentation/trace/tracepoints.rst
-> could be improved as well.
-> 
-
-Sure, like most documentation ;-)
+I thought the "AUTOSEL" patches are to find patches that are not marked
+for stable and pull them in. It would be good to differentiate those in
+the subject. As I'm more inclined to audit automatically pulled in ones,
+because those are more likely to be incorrectly backported.
 
 -- Steve
+
+
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  kernel/trace/trace_probe.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 8f8411e7835fd..e41d389b7f491 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -420,13 +420,14 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+>  				return -E2BIG;
+>  		}
+>  	}
+> -	/*
+> -	 * The default type of $comm should be "string", and it can't be
+> -	 * dereferenced.
+> -	 */
+> -	if (!t && strcmp(arg, "$comm") == 0)
+> +
+> +	/* Since $comm can not be dereferred, we can find $comm by strcmp */
+> +	if (strcmp(arg, "$comm") == 0) {
+> +		/* The type of $comm must be "string", and not an array. */
+> +		if (parg->count || (t && strcmp(t, "string")))
+> +			return -EINVAL;
+>  		parg->type = find_fetch_type("string");
+> -	else
+> +	} else
+>  		parg->type = find_fetch_type(t);
+>  	if (!parg->type) {
+>  		pr_info("Unsupported type: %s\n", t);
+
