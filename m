@@ -4,124 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B4DC468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442BCC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E89214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193DE2146E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rDiolTE6"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="URdomBe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfFHJGF (ORCPT
+        id S1726635AbfFHJKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 05:06:05 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:46438 "EHLO mail.skyhub.de"
+        Sat, 8 Jun 2019 05:10:33 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47078 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbfFHJGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 05:06:04 -0400
+        id S1726478AbfFHJKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 05:10:32 -0400
 Received: from zn.tnic (p200300EC2F288A00DCF654BEDE068B01.dip0.t-ipconnect.de [IPv6:2003:ec:2f28:8a00:dcf6:54be:de06:8b01])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 095CF1EC0235;
-        Sat,  8 Jun 2019 11:06:03 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8D7BF1EC0235;
+        Sat,  8 Jun 2019 11:10:31 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1559984763;
+        t=1559985031;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=znhinQl17PEsTheLSRwexWszGv20Z4hEeaGt0gI6Nko=;
-        b=rDiolTE6ydti3CyGiAtroz5OJOVaWOubsBimpUVEegmDId1qWwoJ7x+iP551w4VLHzKBTd
-        dg2oefQPYs6UbnPnx7TV/Vc0PwiHgZtr+eKPnxLqA+dswznVYCOu6beQjP7s07I3zHcVn6
-        GSxxdYgVnWYG5OXTBzYlMbIff5gVbak=
-Date:   Sat, 8 Jun 2019 11:05:56 +0200
+        bh=agc6qWSU+tH8yyKDxQhV32Xjr+GidM+gMCD2W3Xjjy8=;
+        b=URdomBe1ERBxGlufupOX27J5DZgEIDbAr5wx8/GGH5LLLEeYN0IUm/2o+y/aoQahA3dTGu
+        LL1uAfkVOn2reWaQBnK5dSv7jmz4oo6GkwDbWygu4IFFJCbydP7VCN6LXFLkSJT9caO7yh
+        lJgNkzoukgNEvmehXJRPQsCqHxaAGw0=
+Date:   Sat, 8 Jun 2019 11:10:30 +0200
 From:   Borislav Petkov <bp@alien8.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190608090556.GA32464@zn.tnic>
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <DB09EE2A-7397-4063-B925-66658D0105A5@alien8.de>
- <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
- <20190531051400.GA2275@cz.tnic>
- <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
- <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     lijiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, x86@kernel.org,
+        hpa@zytor.com, dyoung@redhat.com, Thomas.Lendacky@amd.com
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
+ e820 table
+Message-ID: <20190608091030.GB32464@zn.tnic>
+References: <20190423013007.17838-1-lijiang@redhat.com>
+ <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
+ <20190607174211.GN20269@zn.tnic>
+ <20190608035451.GB26148@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+In-Reply-To: <20190608035451.GB26148@MiWiFi-R3L-srv>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 10:16:11AM +1000, Benjamin Herrenschmidt wrote:
-> Those IP blocks don't need any SW coordination at runtime. The drivers
-> don't share data nor communicate with each other. There is absolultely
-> no reason to go down that path.
+On Sat, Jun 08, 2019 at 11:54:51AM +0800, Baoquan He wrote:
+> Is it a UEFI box?
 
-Let me set one thing straight: the EDAC "subsystem" if you will - or
-that pile of code which does error counting and reporting - has its
-limitations in supporting one EDAC driver per platform. And whenever we
-have two drivers loadable on a platform, we have to do dirty hacks like
+Yes.
 
-  301375e76432 ("EDAC: Add owner check to the x86 platform drivers")
+> If it's uefi machine, it should relate to below issue. Because kexec
+> always fails to randomly choose a new position for kernel.
 
-What that means is, that if you need to call EDAC logging routines or
-whatnot from two different drivers, there's no locking, no nothing. So
-it might work or it might set your cat on fire.
+The kernel succeeds in selecting a position for the kernel - the kexec
+kernel doesn't load when a panic happens. Rather, the box panics and
+nothing more.
 
-IOW, having multiple separate "drivers" or representations of RAS
-functionality using EDAC facilities is something that hasn't been
-done. Well, almost. highbank_mc_edac.c and highbank_l2_edac.c is one
-example but they make sure they don't step on each other's toes by using
-different EDAC pieces - a device vs a memory controller abstraction.
+> The current kexec code fills boot_params->efi_info->efi_loader_signature,
+> but doesn't contruct efi_memmap table. The kexec/kdump kernel will always
+> fail to find available slot for KASLR in process_efi_entries.
 
-And now the moment all of a sudden you decide you want for those
-separate "drivers" to synchronize on something, you need to do something
-hacky like the amd_register_ecc_decoder() thing, for example, because we
-need to call into the EDAC memory controller driver to decode a DRAM ECC
-error properly, while the rest of the error types get decoded somewhere
-else...
+Kernel has
 
-Then there comes the issue with code reuse - wouldn't it be great if a
-memory controller driver can be shared between platform drivers instead of
-copying it in both?
+# CONFIG_RANDOMIZE_BASE is not set
 
-We already do that - see fsl_ddr_edac.c which gets shared between PPC
-*and* ARM. drivers/edac/skx_common.c is another example for Intel chips.
-
-Now, if you have a platform with 10 IP blocks which each have RAS
-functionality, are you saying you'll do 10 different pieces called
-
-<platform_name>_<ip_block#>_edac.c
-
-?
-
-And if <next_platform> has an old IP block with the old RAS
-functionality, you load <platform_name>_<ip_block>_edac.c on the new
-platform too?
+so no KASLR.
 
 -- 
 Regards/Gruss,
