@@ -2,51 +2,52 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A34C468BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBBDC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564EA214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED77C21530
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559993998;
-	bh=h7t8/ltbAT0wpu7V6QMF+P+XSXpzPaEQisAxUGleCvI=;
+	s=default; t=1559994003;
+	bh=H1tVuLnPNysLon5VS2w3HimbFqbOZX0S9uOUa3IMepU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJl4bP8uFhEu79bBXKtgkyd3ccQN1Odu+fLOauLwSMewoM0/UxJBwqa296fftUCXp
-	 W7oq/bNuVMkSk4K6IY5+ZRHdYrQ5jdekya33EsOzYs5nnyvF7gIpAS0Ytn/Am9Sc/j
-	 s73/wxzrTLH9TDpoKPBKsvCsg8LhLxI31/zGUPnU=
+	b=t9XtCjdDfjbzOh4Ny8tXwCaumN/M7Fq+r2tiG5Kw2cRZrMwtpin1NUbcfm2h5A6gf
+	 K9OV77xJxqJkHA/H0yr0QeNpp238hUbIShxPSO3EWc774Chdr+UD8YjprLPSNuFW5q
+	 DqHAOvJuN1WfHP2QGHvMciOI4YYfrMBqkaKYyev8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfFHLj5 (ORCPT
+        id S1727242AbfFHLkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56856 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:40:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727100AbfFHLjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:39:55 -0400
+        id S1727100AbfFHLj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:39:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0457214C6;
-        Sat,  8 Jun 2019 11:39:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83E1921530;
+        Sat,  8 Jun 2019 11:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559993993;
-        bh=h7t8/ltbAT0wpu7V6QMF+P+XSXpzPaEQisAxUGleCvI=;
+        s=default; t=1559993997;
+        bh=H1tVuLnPNysLon5VS2w3HimbFqbOZX0S9uOUa3IMepU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPFZMmWuWaOqGUMsSweABEhZeCQ7uz4md+R0RSbc+M5az7SSfl1a398G/ZCozojIK
-         s8DUtjehtVmA5qQnOieft6snCkhhA180ngltseuvugmHBFTgRUSm2PIZy7YkUKI3Gv
-         vBkZ/PdyC5KQIzJyJJvRhr8WDnwqM4LkZteCecEQ=
+        b=qLhNstgdT98NSzjmUABTpFsbF22DIGYAmp+sDKeT7EJfnC1SNuOma297ceQSVLooh
+         RYd99kCc4abY2Zxk1OaM/fhO1vwRyQaFAwdf0HOUBIou5CtJmL0/6dQONrP+rYskgW
+         IAvD9pmmWQ/tq8ur5KEJDlOpUFC0xUkCsJk+hQIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Moskovchenko <stevemo@skydio.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 02/70] iio: imu: mpu6050: Fix FIFO layout for ICM20602
-Date:   Sat,  8 Jun 2019 07:38:41 -0400
-Message-Id: <20190608113950.8033-2-sashal@kernel.org>
+Cc:     Chengguang Xu <cgxu519@gmail.com>, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.1 05/70] staging: erofs: set sb->s_root to NULL when failing from __getname()
+Date:   Sat,  8 Jun 2019 07:38:44 -0400
+Message-Id: <20190608113950.8033-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -59,180 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Moskovchenko <stevemo@skydio.com>
+From: Chengguang Xu <cgxu519@gmail.com>
 
-[ Upstream commit 1615fe41a1959a2ee2814ba62736b2bb54e9802a ]
+[ Upstream commit f2dcb8841e6b155da098edae09125859ef7e853d ]
 
-The MPU6050 driver has recently gained support for the
-ICM20602 IMU, which is very similar to MPU6xxx. However,
-the ICM20602's FIFO data specifically includes temperature
-readings, which were not present on MPU6xxx parts. As a
-result, the driver will under-read the ICM20602's FIFO
-register, causing the same (partial) sample to be returned
-for all reads, until the FIFO overflows.
+Set sb->s_root to NULL when failing from __getname(),
+so that we can avoid double dput and unnecessary operations
+in generic_shutdown_super().
 
-Fix this by adding a table of scan elements specifically
-for the ICM20602, which takes the extra temperature data
-into consideration.
-
-While we're at it, fix the temperature offset and scaling
-on ICM20602, since it uses different scale/offset constants
-than the rest of the MPU6xxx devices.
-
-Signed-off-by: Steve Moskovchenko <stevemo@skydio.com>
-Fixes: 22904bdff978 ("iio: imu: mpu6050: Add support for the ICM 20602 IMU")
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Chengguang Xu <cgxu519@gmail.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 46 ++++++++++++++++++++--
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  | 20 +++++++++-
- drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c |  3 ++
- 3 files changed, 64 insertions(+), 5 deletions(-)
+ drivers/staging/erofs/super.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 650de0fefb7b..385f14a4d5a7 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -471,7 +471,10 @@ inv_mpu6050_read_raw(struct iio_dev *indio_dev,
- 			return IIO_VAL_INT_PLUS_MICRO;
- 		case IIO_TEMP:
- 			*val = 0;
--			*val2 = INV_MPU6050_TEMP_SCALE;
-+			if (st->chip_type == INV_ICM20602)
-+				*val2 = INV_ICM20602_TEMP_SCALE;
-+			else
-+				*val2 = INV_MPU6050_TEMP_SCALE;
- 
- 			return IIO_VAL_INT_PLUS_MICRO;
- 		default:
-@@ -480,7 +483,10 @@ inv_mpu6050_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_OFFSET:
- 		switch (chan->type) {
- 		case IIO_TEMP:
--			*val = INV_MPU6050_TEMP_OFFSET;
-+			if (st->chip_type == INV_ICM20602)
-+				*val = INV_ICM20602_TEMP_OFFSET;
-+			else
-+				*val = INV_MPU6050_TEMP_OFFSET;
- 
- 			return IIO_VAL_INT;
- 		default:
-@@ -845,6 +851,32 @@ static const struct iio_chan_spec inv_mpu_channels[] = {
- 	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_MPU6050_SCAN_ACCL_Z),
- };
- 
-+static const struct iio_chan_spec inv_icm20602_channels[] = {
-+	IIO_CHAN_SOFT_TIMESTAMP(INV_ICM20602_SCAN_TIMESTAMP),
-+	{
-+		.type = IIO_TEMP,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
-+				| BIT(IIO_CHAN_INFO_OFFSET)
-+				| BIT(IIO_CHAN_INFO_SCALE),
-+		.scan_index = INV_ICM20602_SCAN_TEMP,
-+		.scan_type = {
-+				.sign = 's',
-+				.realbits = 16,
-+				.storagebits = 16,
-+				.shift = 0,
-+				.endianness = IIO_BE,
-+			     },
-+	},
-+
-+	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_X, INV_ICM20602_SCAN_GYRO_X),
-+	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_Y, INV_ICM20602_SCAN_GYRO_Y),
-+	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_Z, INV_ICM20602_SCAN_GYRO_Z),
-+
-+	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Y, INV_ICM20602_SCAN_ACCL_Y),
-+	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_X, INV_ICM20602_SCAN_ACCL_X),
-+	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_ICM20602_SCAN_ACCL_Z),
-+};
-+
- /*
-  * The user can choose any frequency between INV_MPU6050_MIN_FIFO_RATE and
-  * INV_MPU6050_MAX_FIFO_RATE, but only these frequencies are matched by the
-@@ -1100,8 +1132,14 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 		indio_dev->name = name;
- 	else
- 		indio_dev->name = dev_name(dev);
--	indio_dev->channels = inv_mpu_channels;
--	indio_dev->num_channels = ARRAY_SIZE(inv_mpu_channels);
-+
-+	if (chip_type == INV_ICM20602) {
-+		indio_dev->channels = inv_icm20602_channels;
-+		indio_dev->num_channels = ARRAY_SIZE(inv_icm20602_channels);
-+	} else {
-+		indio_dev->channels = inv_mpu_channels;
-+		indio_dev->num_channels = ARRAY_SIZE(inv_mpu_channels);
-+	}
- 
- 	indio_dev->info = &mpu_info;
- 	indio_dev->modes = INDIO_BUFFER_TRIGGERED;
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index 325afd9f5f61..3d5fe4474378 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -208,6 +208,9 @@ struct inv_mpu6050_state {
- #define INV_MPU6050_BYTES_PER_3AXIS_SENSOR   6
- #define INV_MPU6050_FIFO_COUNT_BYTE          2
- 
-+/* ICM20602 FIFO samples include temperature readings */
-+#define INV_ICM20602_BYTES_PER_TEMP_SENSOR   2
-+
- /* mpu6500 registers */
- #define INV_MPU6500_REG_ACCEL_CONFIG_2      0x1D
- #define INV_MPU6500_REG_ACCEL_OFFSET        0x77
-@@ -229,6 +232,9 @@ struct inv_mpu6050_state {
- #define INV_MPU6050_GYRO_CONFIG_FSR_SHIFT    3
- #define INV_MPU6050_ACCL_CONFIG_FSR_SHIFT    3
- 
-+#define INV_ICM20602_TEMP_OFFSET	     8170
-+#define INV_ICM20602_TEMP_SCALE		     3060
-+
- /* 6 + 6 round up and plus 8 */
- #define INV_MPU6050_OUTPUT_DATA_SIZE         24
- 
-@@ -270,7 +276,7 @@ struct inv_mpu6050_state {
- #define INV_ICM20608_WHOAMI_VALUE		0xAF
- #define INV_ICM20602_WHOAMI_VALUE		0x12
- 
--/* scan element definition */
-+/* scan element definition for generic MPU6xxx devices */
- enum inv_mpu6050_scan {
- 	INV_MPU6050_SCAN_ACCL_X,
- 	INV_MPU6050_SCAN_ACCL_Y,
-@@ -281,6 +287,18 @@ enum inv_mpu6050_scan {
- 	INV_MPU6050_SCAN_TIMESTAMP,
- };
- 
-+/* scan element definition for ICM20602, which includes temperature */
-+enum inv_icm20602_scan {
-+	INV_ICM20602_SCAN_ACCL_X,
-+	INV_ICM20602_SCAN_ACCL_Y,
-+	INV_ICM20602_SCAN_ACCL_Z,
-+	INV_ICM20602_SCAN_TEMP,
-+	INV_ICM20602_SCAN_GYRO_X,
-+	INV_ICM20602_SCAN_GYRO_Y,
-+	INV_ICM20602_SCAN_GYRO_Z,
-+	INV_ICM20602_SCAN_TIMESTAMP,
-+};
-+
- enum inv_mpu6050_filter_e {
- 	INV_MPU6050_FILTER_256HZ_NOLPF2 = 0,
- 	INV_MPU6050_FILTER_188HZ,
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-index 548e042f7b5b..57bd11bde56b 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-@@ -207,6 +207,9 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
- 	if (st->chip_config.gyro_fifo_enable)
- 		bytes_per_datum += INV_MPU6050_BYTES_PER_3AXIS_SENSOR;
- 
-+	if (st->chip_type == INV_ICM20602)
-+		bytes_per_datum += INV_ICM20602_BYTES_PER_TEMP_SENSOR;
-+
- 	/*
- 	 * read fifo_count register to know how many bytes are inside the FIFO
- 	 * right now
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index 15c784fba879..c8981662a49b 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -459,6 +459,7 @@ static int erofs_read_super(struct super_block *sb,
+ 	 */
+ err_devname:
+ 	dput(sb->s_root);
++	sb->s_root = NULL;
+ err_iget:
+ #ifdef EROFS_FS_HAS_MANAGED_CACHE
+ 	iput(sbi->managed_cache);
 -- 
 2.20.1
 
