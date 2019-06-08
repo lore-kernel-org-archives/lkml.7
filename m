@@ -2,76 +2,118 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CC8C468BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 13:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C13C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 13:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEE2216C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 13:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560001144;
-	bh=VAbEjP4WvjehZzX0A1LbZwVIoeCrRPvHqpl8Is6h9fM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lYniZZwVDyhga50LEQhwluPMIzPkx2gKcBhNituCIXLweWP7x0hnGFv5m+DNPeYM5
-	 vHxxtWacOlOlRza5G7zWTa7L8MXN9rq2ZXqR+2wrCBIqbE/W5wTvTewQEUcxvZCrU0
-	 bHFgQvhaJteDTggOwfY4h/0/6UwbglOTj/MiLG5k=
+	by mail.kernel.org (Postfix) with ESMTP id 438BC214C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 13:39:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q7bt4G1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfFHNjD (ORCPT
+        id S1727183AbfFHNjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 09:39:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbfFHNjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 09:39:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B004214C6;
-        Sat,  8 Jun 2019 13:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560001142;
-        bh=VAbEjP4WvjehZzX0A1LbZwVIoeCrRPvHqpl8Is6h9fM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FvoQGsdIUib7FKs/gk6CMxV1OUmgyRHAFdMpb0G0pk7RZgps1z90Tt/EpqAWcL7Cn
-         D6NMgRSihHqxom/bT/3lPQcuRC+hCixSlNJDtiyMuNH6+WTekIPKD6h2+dIOZiKhBR
-         d2jER0jZ6byaAQgRIWuyMBvSnhzoiBXmhZD4+qU8=
-Date:   Sat, 8 Jun 2019 15:39:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Thomas Winischhofer <thomas@winischhofer.net>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2] USB: sisusbvga: Remove unneeded variable
-Message-ID: <20190608133900.GA11489@kroah.com>
-References: <20190607015658.GA4113@hari-Inspiron-1545>
+        Sat, 8 Jun 2019 09:39:17 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45867 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbfFHNjR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 09:39:17 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u10so3609782lfm.12
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 06:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JaGfI81Q6JWentYKTaA21VCz1itFIbwix5ValIQhLRo=;
+        b=Q7bt4G1t1KViB/8r4h/mB6s5nvWvP6n39uTn3jjJwd1YD9HwleTCbDepVlDxE9B86X
+         s4mA+AZYxExH9Bpo5MAj3MA0uk/6D1PyQdyZ/oa/Es1txynnCK14ZeuXdc/fKIze3dau
+         RzEjWeK+3jaFFwkcJh8HJ3fd/dVq7wpz8FCXzzcHshq6IZ4Tang+OhGCKb7DTboZzpw4
+         DnZs1atzNNFGGJDrL12OO0fVuYdVWLB4zfqAOq7hghafntvVPIE0/5S/5AksrXmAqy5j
+         98oEh/x99VIumnSByE/qis2Xk0wCIJXDh3x+gDZ2EnGIP0raof2bM4Wmp1Q2pLHnaIiZ
+         aJyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JaGfI81Q6JWentYKTaA21VCz1itFIbwix5ValIQhLRo=;
+        b=eEBReQrK0KjzwpQYQqFRgahzCFXH3jT/vGbRY1uEfet33Gj9yCtS84GCKyk/8TrrXz
+         JHxhg/r0S4gHJBKMRw/K7kB00v5NVjcTwHTDdEw0vHK9XqhmvplEQuFaCpXEL+0DdZz5
+         Af4ST775YA3pPafIstbwSaEsSCz+W88kbILl6kQ7mMqbj0Z70J1ogonKeRHZGqxdUZrv
+         FhBcjrnter23E26Yv4DvzFAf8WThzejycAldXUkB5136A1k5xOz69JRXnXvCs8307XVa
+         HnsCowu6WE1lF8i2c0mlmVyGjXWTvROXu85QYkTii4NDKGnhoPltQgH4Q1PTtM6cV+i0
+         KVXA==
+X-Gm-Message-State: APjAAAVtnhFwqovFa2ZYGTiVfR+rXWEQJHjhf5MoLF9FHYQ8N4lV3y5j
+        XxrMvtFit0Rw49dZoWo9NSb7wbRzA8hQN+H8qeH6og==
+X-Google-Smtp-Source: APXvYqx9DRqAoMXbndPx1CEggSgZL21g/MbLBj7GYirci7ZrLdGpXGWI6SxNqAVUlDZjQ3Lg3/H/RoVBLot41av1Y2A=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr28947388lfh.92.1560001155176;
+ Sat, 08 Jun 2019 06:39:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607015658.GA4113@hari-Inspiron-1545>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190604163311.19059-1-paul@crapouillou.net> <CACRpkdbKg22OyViYhXS=Vyps=2zQ_dmm23Xr8+dBp+uwwjheuQ@mail.gmail.com>
+ <1559988846.1815.1@crapouillou.net>
+In-Reply-To: <1559988846.1815.1@crapouillou.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 8 Jun 2019 15:39:07 +0200
+Message-ID: <CACRpkdbKWC7ULFjN1c5axg5FBeeWWXCsbbQi2ks4+5tg07Br-g@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: lb60: Fix pin mappings
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, od@zcrc.me,
+        linux-mips@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 07:26:58AM +0530, Hariprasad Kelam wrote:
-> fix below warning reported by coccicheck
-> 
-> drivers/usb/misc/sisusbvga/sisusb.c:1753:5-8: Unneeded variable: "ret".
-> Return "0" on line 1877
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> -----
-> changes in v2: Change return type of sisusb_set_default_mode from int to void
->                as it never fails.
+On Sat, Jun 8, 2019 at 12:14 PM Paul Cercueil <paul@crapouillou.net> wrote:
+> Le sam. 8 juin 2019 =C3=A0 0:10, Linus Walleij <linus.walleij@linaro.org>=
+ a
+> =C3=A9crit :
+> > On Tue, Jun 4, 2019 at 6:34 PM Paul Cercueil <paul@crapouillou.net>
+> > wrote:
+> >
+> >>  The pin mappings introduced in commit 636f8ba67fb6
+> >>  ("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several
+> >> drivers")
+> >>  are completely wrong. The pinctrl driver name is incorrect, and the
+> >>  function and group fields are swapped.
+> >>
+> >>  Fixes: 636f8ba67fb6 ("MIPS: JZ4740: Qi LB60: Add pinctrl
+> >> configuration for several drivers")
+> >>  Cc: <stable@vger.kernel.org>
+> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Such things happen. Are you planning to phase all the board files over
+> > to use devicetree eventually?
+>
+> Yes, that's definitely what's planned; right now the blockers are
+> patchsets [1] and [2]. [1] is ignored by everybody because there's no
+> maintainer for drivers/memory/. [2] is a year-long effort that still
+> doesn't show me the light at the end of the tunnel.
+>
+> [1] https://lkml.org/lkml/2019/6/4/743
+> [2] https://lkml.org/lkml/2019/5/21/679
 
-Please put this information in the changelog as it explains why you are
-making this change.  As it is now, the changelog does not reflect what
-is really happening here.
+What? That's unacceptable, the last resort is usually to send the
+patches to Andrew Morton (whether fair or not) when nothing gets
+applied.
 
-thanks,
+In this case I would however encourage the MIPS maintainer to
+simply queue this stuff in the MIPS tree as blocking his arch work
+if not merged, Ralf would you consider just queueing this?
+I do not think the other Linus would mind.
 
-greg k-h
+Yours,
+Linus Walleij
