@@ -2,166 +2,159 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA0EC468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11134C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CC72146E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAh51xEA"
+	by mail.kernel.org (Postfix) with ESMTP id DD26B214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559985153;
+	bh=+dfOuCygM4XWeeIt+7I1WNiQHNRsX6McvspPEEKD0tQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=vw3CHpuVhhV6j6PGt8FK/2628qPCb0NX4cp3tP/ACSlXsP0/cUXA4FlMlUpsGrOUb
+	 0JeYs2K0ks1mQpqayO6LH8i6PZgmf7jUdC+nEMxwzeXggxk6d26DviBNffTQepT/vg
+	 kMz81O11yOY8kJmErmZZmBmntTItNGw3VqQGkz3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfFHJLn (ORCPT
+        id S1726750AbfFHJMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 05:11:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40867 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfFHJLm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 05:11:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p11so4383930wre.7;
-        Sat, 08 Jun 2019 02:11:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wRhHOWXbYPTgd9o6E+fWzXVTSQiB2lqpeHlQbHdnv6Y=;
-        b=NAh51xEAoqQZeJs899fcX2BxvuroPDabyTqyEP1cbLvkNk78j7SsajGCd2FUFEn9pE
-         GM3mkiTpIKjG2T3ZT+3E62uOmuDX4EZqkCu6mD23vkTREk6ySK38jrG5WTgdHMPDJ33R
-         B6kbcHA4yuEukkpSnPTqVS96bpiIsdQRCS2qdC0z9bqK5W21iptut7P+nRBKVsUokcD7
-         E9oP67WbWFxHtXK7tPN16/D6C2FZR0LLBvPMHLI3mxmLlDBUMOto8bVP6KhGhqTwEsha
-         N5xaek5vhguSPRmbj9JYGqDkyGj703l/H9TlNYaSOgagrw36dhx/MQ2YSYauSs71m3oJ
-         HCVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wRhHOWXbYPTgd9o6E+fWzXVTSQiB2lqpeHlQbHdnv6Y=;
-        b=ZcuRJtrym/CzyIyxhlWFzKbIKudz+On/DU8e1uWwHETPk68E58FJMeQg+P5LpBm/yA
-         HGnOudrJ6sNykLRlf0bUL4lTlb8/ej1eELTLGNRPVFxXojg4z4uiPyJe9crCV5qIhsYK
-         xgVOhQIH/+p5IT7gieuax3m1oc5Da7SzruRJ+DstE57OKl6cYlt2ubzsZDOowP7N0QXu
-         enk/zGR7NVijzmHgtbaqMJIRHfOvKBtJTX/77q1YdXlq8d0iODTG5s9/Tv+lutY/Yd4v
-         6BoeUx82tkvDfQPCqglBwm4IIEXH+TQ8VVG9pkwcrv7j1UDiN41I9RAZuoauHBS6+GiJ
-         GY0w==
-X-Gm-Message-State: APjAAAVxW9JpFUtlBiI5+R8vyBD+yySQkasqz6SBcST16cUht9BBRreA
-        mRtHdgsKFiGW07AcOznN9fQ=
-X-Google-Smtp-Source: APXvYqwM1/RGMYyTxmx2V0hdEZCN4VHYev4BVLwmFNnhFHp6W7idPt4B24+6it6AeMq4rfpflgd8Tg==
-X-Received: by 2002:adf:bac5:: with SMTP id w5mr24577718wrg.124.1559985099809;
-        Sat, 08 Jun 2019 02:11:39 -0700 (PDT)
-Received: from [192.168.8.100] (37-48-58-25.nat.epc.tmcz.cz. [37.48.58.25])
-        by smtp.gmail.com with ESMTPSA id p3sm5258127wrd.47.2019.06.08.02.11.38
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Jun 2019 02:11:39 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 1/1] Add dm verity root hash pkcs7 sig validation
-To:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        jmorris@namei.org, scottsh@microsoft.com, ebiggers@google.com,
-        Mikulas Patocka <mpatocka@redhat.com>
-References: <20190607223140.16979-1-jaskarankhurana@linux.microsoft.com>
- <20190607223140.16979-2-jaskarankhurana@linux.microsoft.com>
-From:   Milan Broz <gmazyland@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <54170d18-31c7-463d-10b5-9af8b666df0f@gmail.com>
-Date:   Sat, 8 Jun 2019 11:11:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sat, 8 Jun 2019 05:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726478AbfFHJMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 05:12:33 -0400
+Received: from localhost (unknown [106.200.229.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA954206E0;
+        Sat,  8 Jun 2019 09:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559985152;
+        bh=+dfOuCygM4XWeeIt+7I1WNiQHNRsX6McvspPEEKD0tQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gTK1m1t1hpgJfSOsHJhw9jxnTsQ6inJpQIWW5Ku+Mb6K6H6pIAG2H0W+aLdYnxdcp
+         qhxpQPnbUoLm+oNPy1RwFDUwbuky2fqmnoW2gDftPfYtKxfu4nDGi7/P14wrehzva3
+         Pk5mfG/So68FyZfFj1KN6NB1NgYoyGioIQNRMCLA=
+Date:   Sat, 8 Jun 2019 14:39:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.2-rc4
+Message-ID: <20190608090908.GE9160@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-In-Reply-To: <20190607223140.16979-2-jaskarankhurana@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06/2019 00:31, Jaskaran Khurana wrote:
-> The verification is to support cases where the roothash is not secured by
-> Trusted Boot, UEFI Secureboot or similar technologies.
-> One of the use cases for this is for dm-verity volumes mounted after boot,
-> the root hash provided during the creation of the dm-verity volume has to
-> be secure and thus in-kernel validation implemented here will be used
-> before we trust the root hash and allow the block device to be created.
-> 
-> The signature being provided for verification must verify the root hash and
-> must be trusted by the builtin keyring for verification to succeed.
-> 
-> The hash is added as a key of type "user" and the description is passed to
-> the kernel so it can look it up and use it for verification.
-> 
-> Adds DM_VERITY_VERIFY_ROOTHASH_SIG: roothash verification
-> against the roothash signature file *if* specified, if signature file is
-> specified verification must succeed prior to creation of device mapper
-> block device.
-> 
-> Adds DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE: roothash signature *must* be
-> specified for all dm verity volumes and verification must succeed prior
-> to creation of device mapper block device.
 
-AFAIK there are tools that use dm-verity internally (some container
-functions in systemd can recognize and check dm-verity partitions) and with
-this option we will just kill possibility to use it without signature.
+--v9Ux+11Zm5mwPlX6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Anyway, this is up to Mike and Mikulas, I guess generic distros will not
-set this option.
+Hi Linus,
 
-Some minor details below:
+Please pull to receive dmaengine fixes. These fixes are on drivers.
 
-> diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-> index be7a6eb92abc..8a8c142bcfe1 100644
-> --- a/drivers/md/Makefile
-> +++ b/drivers/md/Makefile
-> @@ -61,7 +61,7 @@ obj-$(CONFIG_DM_LOG_USERSPACE)	+= dm-log-userspace.o
->  obj-$(CONFIG_DM_ZERO)		+= dm-zero.o
->  obj-$(CONFIG_DM_RAID)	+= dm-raid.o
->  obj-$(CONFIG_DM_THIN_PROVISIONING)	+= dm-thin-pool.o
-> -obj-$(CONFIG_DM_VERITY)		+= dm-verity.o
-> +obj-$(CONFIG_DM_VERITY)		+= dm-verity.o dm-verity-verify-sig.o
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Why is this different from existing FEC extension? 
-FEC uses ifdefs in header to blind functions if config is not set.
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-ifeq ($(CONFIG_DM_VERITY_FEC),y)
-dm-verity-objs                  += dm-verity-fec.o
-endif
+are available in the Git repository at:
 
-...
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.2-=
+rc4
 
-> diff --git a/drivers/md/dm-verity-verify-sig.c b/drivers/md/dm-verity-verify-sig.c
-> new file mode 100644
-> index 000000000000..1a889be76ede
-> --- /dev/null
-> +++ b/drivers/md/dm-verity-verify-sig.c
+for you to fetch changes up to 9bb9fe0cfbe0aa72fed906ade0590e1702815e5d:
 
-...
+  dmaengine: sprd: Add interrupt support for 2-stage transfer (2019-05-21 1=
+9:23:54 +0530)
 
-> +	key = request_key(&key_type_user,
-> +			key_desc, NULL);
-> +	if (IS_ERR(key))
-> +		return PTR_ERR(key);
+----------------------------------------------------------------
+dmaengine fixes for v5.2-rc4
 
-You will need dependence on keyring here (kernel can be configured without it),
-try to compile it without CONFIG_KEYS selected.
+The fixes for this round are in drivers:
+ - jz4780 transfer fix for acking descriptors early
+ - fsl-qdma: clean registers on error
+ - dw-axi-dmac: null pointer dereference fix
+ - mediatek-cqdma: fix sleeping in atomic context
+ - tegra210-adma: fix bunch os issues like crashing in driver
+   probe, channel FIFO configuration etc.
+ - sprd: Fixes for possible crash on descriptor status, block
+   length overflow. For 2-stage transfer fix incorrect start,
+   configuration and interrupt handling.
 
-I think it is ok that  DM_VERITY_VERIFY_ROOTHASH_SIG can directly require CONFIG_KEYS.
-(Add depends on CONFIG_KEYS in KConfig)
+----------------------------------------------------------------
+Baolin Wang (3):
+      dmaengine: sprd: Fix the possible crash when getting descriptor status
+      dmaengine: sprd: Add validation of current descriptor in irq handler
+      dmaengine: sprd: Add interrupt support for 2-stage transfer
 
-Also please increase minor version of dm-verity target when adding functions, something like
+Colin Ian King (1):
+      dmaengine: dw-axi-dmac: fix null dereference when pointer first is nu=
+ll
 
-@@ -1175,7 +1175,7 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 
- static struct target_type verity_target = {
-        .name           = "verity",
--       .version        = {1, 4, 0},
-+       .version        = {1, 5, 0},
+Dan Carpenter (1):
+      dmaengine: mediatek-cqdma: sleeping in atomic context
 
-Thanks,
-Milan
+Eric Long (3):
+      dmaengine: sprd: Fix the incorrect start for 2-stage destination chan=
+nels
+      dmaengine: sprd: Fix block length overflow
+      dmaengine: sprd: Fix the right place to configure 2-stage transfer
+
+Jon Hunter (3):
+      dmaengine: tegra210-adma: Fix crash during probe
+      dmaengine: tegra210-adma: Fix channel FIFO configuration
+      dmaengine: tegra210-adma: Fix spelling
+
+Paul Cercueil (1):
+      dmaengine: jz4780: Fix transfers being ACKed too soon
+
+Peng Ma (1):
+      dmaengine: fsl-qdma: Add improvement
+
+ drivers/dma/dma-jz4780.c                       | 32 ++++++++++-----
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c |  3 +-
+ drivers/dma/fsl-qdma.c                         |  4 +-
+ drivers/dma/mediatek/mtk-cqdma.c               |  4 +-
+ drivers/dma/sprd-dma.c                         | 49 +++++++++++++++++-----
+ drivers/dma/tegra210-adma.c                    | 57 ++++++++++++++++------=
+----
+ 6 files changed, 100 insertions(+), 49 deletions(-)
+
+Thanks
+--=20
+~Vinod
+
+--v9Ux+11Zm5mwPlX6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJc+3s0AAoJEHwUBw8lI4NHSiAQAIV8eF0ELY3XJTbXfd4vttgU
+QzWJRogJgIN82F29IvWz2EjfrI9t6rHo9Jq7qiSlLUDFfNrFw3XXIS5bcswgIFX2
+MuOatTXtYl8eROLlg8SD1DL+uRJWzAtuRIFezESSclmnryViDgazQUQr559G8XqQ
+zzcyjs5vbnpE5+zpltUK856bcRg72oj6fb7nZyZYXa1FlzzJDOagjwsZsGJVWwfU
+o6mnlM224t8gZnvhx5Ih7seBDi6Q9DMCKrbr6xs6Jxe+/coIXdDuDC/KZkoUrqYf
+OvV+GPiZ4D+k/hhYveYwW/e5DfFmNCWUy3PIGojk4urGHt1ShmFzelepkKvbgs1A
+2yrEMwj3xKtB5y3Ic5ykXXfGsIoPActfswOyYcFrTWsClFSVkd8dd+M9Vp5SOnQI
+Mc6KXy3RByKL8XifXHusOQeA3qSsODhwcChuP9ZRjyaK5zs5cU/7ExrwftRvZRZU
+azpsZ+Or+Obc64l2sokPFs0fJpb5XvmJ/Ea7thmR/TWqwkRV1JFaUR6fh27c3cEW
+tvkG8RQ+XXPmeZHHRYHLfZnU5wlFHEuDu8raeXLCf9+n/MAbt5SW5+mQEQB3waUi
+A3ZT9hxtPFjzonXfLeoTsNgTYUgTjXeF4pakltJQcvNzhAhoUwOc9MJ2cyEmkq9j
+6NsT1Wnm9phCfte/tDWo
+=6WFh
+-----END PGP SIGNATURE-----
+
+--v9Ux+11Zm5mwPlX6--
