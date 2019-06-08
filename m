@@ -2,108 +2,114 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FA4C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AE2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0D2214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBC3214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:00:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5Y7/RC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfFHIyO (ORCPT
+        id S1726688AbfFHJA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 04:54:14 -0400
-Received: from sauhun.de ([88.99.104.3]:50966 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbfFHIyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 04:54:13 -0400
-Received: from localhost (p5486CBCC.dip0.t-ipconnect.de [84.134.203.204])
-        by pokefinder.org (Postfix) with ESMTPSA id 31C082C3637;
-        Sat,  8 Jun 2019 10:54:11 +0200 (CEST)
-Date:   Sat, 8 Jun 2019 10:54:10 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.2
-Message-ID: <20190608085406.GA1746@kunai>
+        Sat, 8 Jun 2019 05:00:56 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45841 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFHJAz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 05:00:55 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bi6so1324016plb.12;
+        Sat, 08 Jun 2019 02:00:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=WNvqLoTkh0fWgkbS/w4CTYn2SASEM94dbBgdk4HmiaM=;
+        b=J5Y7/RC7yDTLqB33iZOJHnhB+0UVex4VEmrvVxXMv7+x2Jup+1V7oJameXcXPZDndB
+         zttzlKdq4FauXoGSiOSxKWkLm4AmBKxFhhIPiJbzI2tYMMogoIML1ozW8MfPaY4EDo0/
+         XXnuVbQxs9tBIs6F6hHcOXF2ZXStCIodJCRa7PWVTJ4nKMdJrMaQecwUYu++AabPNBBz
+         Z9Drj4lCJvYbP/R+EQwpbS678Qml6gsWNS/2KRESzdcBCbKOcD1J3CG9vA86i90LrGIG
+         D0SU3mUBJkDgHLnLCrMbwfcbBBpKxvKIyy3ZlzgnROphrk1Hq2RnVrKSlAHrcWtAV+ey
+         hhBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WNvqLoTkh0fWgkbS/w4CTYn2SASEM94dbBgdk4HmiaM=;
+        b=lGnoS3k/Ek3gpSApLwXLgnPmn77qOxgdZEp9H2F78+nT5bON1dOBc7PUHY/f+u/InL
+         C4ho0V7g11J9AFakv7wA4TMTd5AhT4vngy413qa++k2uR3yen9Qr30ky0HqQPW3KvvMr
+         HalbtBsbQHN1FGeIWpNGygni3c3GgtOEjR1m1iVW9OC4Mo62zqsayOMJwbkRUTcPvcYP
+         5lmdsfBa4lLXFPnsgPWFwBQiqErNd384foFC4ObJ3lAFMAKZNjV+JBmwRvGZMCfwHAGf
+         hT6iOyTzbNx1yOM19FMLH4pdVhga0mXQxshPFaGf1jzQYExdsSxbVLC4P9wYgPHpTwSg
+         PVjw==
+X-Gm-Message-State: APjAAAXQkv9wD/febValXCzCSuzFE3OmTklHZCA71gj2MuyBKKoxXw4Y
+        yBhqqwXVmaUQ0pTY9cqLtbx2jj7Q
+X-Google-Smtp-Source: APXvYqxnWdJ6aEaoRjcVGYEHm/4u2R3C5YViMzkvDQ6XPeeULLoxbr70Hgp3g3YlQvJgMOSewZJcmg==
+X-Received: by 2002:a17:902:b717:: with SMTP id d23mr43537398pls.53.1559984455089;
+        Sat, 08 Jun 2019 02:00:55 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id p15sm5554623pgj.61.2019.06.08.02.00.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 08 Jun 2019 02:00:54 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 14:30:50 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] af_key: make use of BUG_ON macro
+Message-ID: <20190608090050.GA8339@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+fix below warnings reported by coccicheck
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+net/key/af_key.c:932:2-5: WARNING: Use BUG_ON instead of if condition
+followed by BUG.
+net/key/af_key.c:948:2-5: WARNING: Use BUG_ON instead of if condition
+followed by BUG.
 
-Linus,
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ net/key/af_key.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-I2C has a driver bugfix and a MAINTAINERS fix.
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index fe5fc4b..b67ed3a 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -928,8 +928,7 @@ static struct sk_buff *__pfkey_xfrm_state2msg(const struct xfrm_state *x,
+ 		pfkey_sockaddr_fill(&x->props.saddr, 0,
+ 				    (struct sockaddr *) (addr + 1),
+ 				    x->props.family);
+-	if (!addr->sadb_address_prefixlen)
+-		BUG();
++	BUG_ON(!addr->sadb_address_prefixlen);
+ 
+ 	/* dst address */
+ 	addr = skb_put(skb, sizeof(struct sadb_address) + sockaddr_size);
+@@ -944,8 +943,7 @@ static struct sk_buff *__pfkey_xfrm_state2msg(const struct xfrm_state *x,
+ 		pfkey_sockaddr_fill(&x->id.daddr, 0,
+ 				    (struct sockaddr *) (addr + 1),
+ 				    x->props.family);
+-	if (!addr->sadb_address_prefixlen)
+-		BUG();
++	BUG_ON(!addr->sadb_address_prefixlen);
+ 
+ 	if (!xfrm_addr_equal(&x->sel.saddr, &x->props.saddr,
+ 			     x->props.family)) {
+-- 
+2.7.4
 
-Please pull.
-
-Thanks,
-
-   Wolfram
-
-
-The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
-
-  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to 8f77293cca1f5116edc98d7a0e36c6da3917fc08:
-
-  MAINTAINERS: Karthikeyan Ramasubramanian is MIA (2019-06-08 00:32:50 +0200)
-
-----------------------------------------------------------------
-Robert Hancock (1):
-      i2c: xiic: Add max_read_len quirk
-
-Wolfram Sang (1):
-      MAINTAINERS: Karthikeyan Ramasubramanian is MIA
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Michal Simek (1):
-      (Rev.) i2c: xiic: Add max_read_len quirk
-
- MAINTAINERS                   | 1 -
- drivers/i2c/busses/i2c-xiic.c | 5 +++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlz7d6kACgkQFA3kzBSg
-KbbNzBAAkTwbbglUamLuV1jUGB9KzuTIyXY7XkQpYo02ksw8X2b66Ipdfc59KVfW
-LJxm8efPLOVx+rlvZ/eB4J1vu7OQqHHvihV8G6GTM/9GAmSusnkITNLpGJ645Gc4
-s9hy0Wbq2rrLMVNCJnxsr3njediP/y766RfzHQhxS7b9UtwQu05mr9cyrE+XQCs2
-MdJNDEZeN+J6lbhjj3ErSBKiKenlrz6FAggKazP3fhD/5Yhv1Uh6InigL/b6XuEc
-MbAbiNuwy7OPeMLZPi7AzP67yTRAd6NR7wI9Twx1llyqfcYakm+dFER4HHNEqdi3
-j/SSPIfZeNJakz/CYr0xoKBPUwsHmdAe/vNmCDgsF6n5K3v9CXmPv52ycjmby1zy
-Qq0WQWq12ELCoUZozxJPqjNDaAuXvyII57hJu6UciIE0shWqHUsClPvveZCR88kX
-r+XHNiE+xSab1OfIIHNAqxKq4jvBcPyo40jQK1oWVrJWoJM4KUdspNWnAKnPHLoI
-YgbbeOx+w8OlT2WNw8rywOvMmpqSSQS/qiIjdXe7PuKw9zBa42KQRwwxPKgNjccZ
-ubI/nVv0Y+aSd+HOnoypkHCO8ZTdGEkt/MQ2leF02DWMfcNX/AUYJyMmd87lv7aA
-jH06Eg/6+x9vAV87zPgrOqJOfkTO9Ygqa6Z+I0K9LNIBdVsTk4E=
-=8khH
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
