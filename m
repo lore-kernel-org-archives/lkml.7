@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93A5C468C7
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE548C468C9
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4B620840
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A39F20840
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u4I58YoP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sGxRHU9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731014AbfFHEoO (ORCPT
+        id S1731099AbfFHEoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 00:44:14 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:54341 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730697AbfFHEoF (ORCPT
+        Sat, 8 Jun 2019 00:44:17 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:43535 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731028AbfFHEoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 00:44:05 -0400
-Received: by mail-qt1-f201.google.com with SMTP id r57so3664680qtj.21
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:44:05 -0700 (PDT)
+        Sat, 8 Jun 2019 00:44:15 -0400
+Received: by mail-pf1-f202.google.com with SMTP id j7so2874864pfn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:44:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=qdT885hM1gH99LBPR29/QhPlOeEng+ZQVjJx3w/T2/A=;
-        b=u4I58YoPay1wIV0iUGWNilJCvSvIVXTL1/ci8b1Wjy1sm8vMfzaHLznZpwJzX//Rph
-         ttgkgbKpAFClv5uX/X/41cZzhnEUO/g/rlcKS9fYx+PTRXpRCP8TNbRaD1DvJrF/j/y3
-         tgmBde4zGp31x0CDivMs+UIvYHGUxOiEig9Fi7FlulgpoytiqiyJIEiVtvIe64im3Had
-         Yx//ZCG2LVsaWnL+r4lFVQhbV8d1aLk8a+YaEyJEDHDBJVQnw5HRHSuyjKHtMPDm0p3z
-         tVCiE/66D13o+CzXql9II+Xk/wQo1n2rezQTAgA1+3Up520E+RgpsscP7xPh9p4Gh7y8
-         WXYA==
+        bh=X/0NqtCGqUmOq4nLYX8jL0qKKJXqxo5c/Ras/XYEZ30=;
+        b=sGxRHU9J6/WBdSx6fV4lvlmqJRkCIBhCKnkxlP2A6WFEW+TPmoxuIwxU/QxhjV/fg7
+         /FoAmfZkNcSjdPpmL5ehNppf/RPEpMu0zP+H3qTyZTFQLtYGYa8y9/Ylk1PwUiPttEco
+         lwGacdhFHJIokJjrbPKkwNQJjMWfzhYycY8tHrP85QZrBvaiHmFyrLLJd7TvDUI3JXd1
+         ho5vXJdBfwyx9tMUZix67KP4mtoXuru6aeevvUzt5m7m5/GVT0sxGkzfu5NLHE1/J9e+
+         FG6nbS1fhDfHQpgtpwYdj/fRGdojh9ogJBjijzfbAxOa5i6kF0OKgg9sJdm+F9Qm+oLk
+         stOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=qdT885hM1gH99LBPR29/QhPlOeEng+ZQVjJx3w/T2/A=;
-        b=DyL99K8uMoyF7vMRRCf2YnZLTe8sgGR+PVv5kculPE/23lNMzQUwBUcrvQNBn4u2Hi
-         pBgK5E4Yzb8Em/1+SkhHdwMn1hXEE1P30aafEKKCQNWcEcx09/+dU562sy2WbycyXNAS
-         rGZR8yT4j20xrLhwv5keiYlhX/zqCQxWLcb50XdMB+JmYmi0rDkd9WvT1+WW5BGjrt6N
-         kj84UZQKb2ECY/0E1SlGMSnrHD9rvdnYRtGumvYQLP+jr7LO2HCx/cp+7pw+eH9fkM1k
-         igqhhglLWYRvqKzXNbLufJwBqWkYpwtWaCDVLcu9i70guTtt2v41ij1A1uJBemTaBssp
-         eMVg==
-X-Gm-Message-State: APjAAAULOpj5aEHyonnI9rh4panLR/M9zhkHQH+DI5xbC1S/ywzk4qv1
-        lop1MqDx4RaQLT5w4umKymJ3uw0nmlC9Ruw=
-X-Google-Smtp-Source: APXvYqwj1cOP4RzT//I83dw4bKyy7KpftJsqRPBOzjTNZla/XLUxIXycPdwubPfAFYw0aw/lx47k+naEi+2zJ1o=
-X-Received: by 2002:a37:bd42:: with SMTP id n63mr47852920qkf.262.1559969044588;
- Fri, 07 Jun 2019 21:44:04 -0700 (PDT)
-Date:   Fri,  7 Jun 2019 21:43:36 -0700
+        bh=X/0NqtCGqUmOq4nLYX8jL0qKKJXqxo5c/Ras/XYEZ30=;
+        b=UeM9DDEU9GtVdGWtWbufFvbBnooUW3+dJ8BX7639TxKWesRRiv4ulmPVmiclsleYr8
+         U1RvLL/y/iamndZ8E7Kw51GD8wwZG4zARfwI8TB+bu/FaNYAA8679apv9CP2VAdPAv9h
+         En7zfZVdJxHFUXMTqOQ1kYmpZkWQ2uyeEesAsX3Av93Z1Ve2SZjCOvl1Pb6VBzMEnM4J
+         xqqZ6ak3v2n3VZacqivlZe6OiO2o21noRFJI3+b2x9noFQRsw231beOzpOqnSqgv9NX/
+         43KyWKRTqq57yZwFXKvaI/UDOV89KFy+hK73TZl1kMmR6I7yyyBpi2f+6k7SoC9br7pk
+         1TqQ==
+X-Gm-Message-State: APjAAAXu45rAsTs5nGYAHiokzmQzdhB17UwxGsAgXOHq0vRYM2eb8S5G
+        +dTjIrQQJbIxOEBeY1a33Oz5Q65DQHJP7HA=
+X-Google-Smtp-Source: APXvYqw+aLvw6BhTGdaOngx8+WAxudDKeQuk6uRkUc6lti20wsGbVu9yrVV0Sa5OuwKBTg9T03aHut5pp6KUHxY=
+X-Received: by 2002:a65:6104:: with SMTP id z4mr5999890pgu.319.1559969054138;
+ Fri, 07 Jun 2019 21:44:14 -0700 (PDT)
+Date:   Fri,  7 Jun 2019 21:43:39 -0700
 In-Reply-To: <20190608044339.115026-1-saravanak@google.com>
-Message-Id: <20190608044339.115026-7-saravanak@google.com>
+Message-Id: <20190608044339.115026-10-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190608044339.115026-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v1 6/9] interconnect: Add OPP table support for interconnects
+Subject: [PATCH v1 9/9] interconnect: Add devfreq support
 From:   Saravana Kannan <saravanak@google.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -81,108 +81,220 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Interconnect paths can have different performance points. Now that OPP
-framework supports bandwidth OPP tables, add OPP table support for
-interconnects.
-
-Devices can use the interconnect-opp-table DT property to specify OPP
-tables for interconnect paths. And the driver can obtain the OPP table for
-an interconnect path by calling icc_get_opp_table().
+Add a icc_create_devfreq() and icc_remove_devfreq() to create and remove
+devfreq devices for interconnect paths. A driver can create/remove devfreq
+devices for the interconnects needed for its device by calling these APIs.
+This would allow various devfreq governors to work with interconnect paths
+and the device driver itself doesn't have to actively manage the bandwidth
+votes for the interconnects.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
- include/linux/interconnect.h |  7 +++++++
- 2 files changed, 33 insertions(+), 1 deletion(-)
+ drivers/interconnect/Makefile      |   2 +-
+ drivers/interconnect/icc-devfreq.c | 145 +++++++++++++++++++++++++++++
+ include/linux/interconnect.h       |  11 +++
+ 3 files changed, 157 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/interconnect/icc-devfreq.c
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 871eb4bc4efc..881bac80bc1e 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -47,6 +47,7 @@ struct icc_req {
-  */
- struct icc_path {
- 	size_t num_nodes;
-+	struct opp_table *opp_table;
- 	struct icc_req reqs[];
- };
+diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+index 28f2ab0824d5..ddfb65b7fa55 100644
+--- a/drivers/interconnect/Makefile
++++ b/drivers/interconnect/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
  
-@@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- {
- 	struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
- 	struct icc_node *src_node, *dst_node;
--	struct device_node *np = NULL;
-+	struct device_node *np = NULL, *opp_node;
- 	struct of_phandle_args src_args, dst_args;
- 	int idx = 0;
- 	int ret;
-@@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- 		dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
- 	mutex_unlock(&icc_lock);
+-icc-core-objs				:= core.o
++icc-core-objs				:= core.o icc-devfreq.o
  
-+	opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
-+	if (opp_node) {
-+		path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
-+		of_node_put(opp_node);
+ obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+ obj-$(CONFIG_INTERCONNECT_QCOM)		+= qcom/
+diff --git a/drivers/interconnect/icc-devfreq.c b/drivers/interconnect/icc-devfreq.c
+new file mode 100644
+index 000000000000..f88b267d281e
+--- /dev/null
++++ b/drivers/interconnect/icc-devfreq.c
+@@ -0,0 +1,145 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * A devfreq device driver for interconnect paths
++ *
++ * Copyright (C) 2019 Google, Inc
++ */
++
++#include <linux/devfreq.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_opp.h>
++#include <linux/slab.h>
++#include <linux/interconnect.h>
++#include <linux/limits.h>
++
++struct icc_devfreq {
++	struct device icc_dev;
++	struct icc_path *path;
++	struct devfreq_dev_profile dp;
++	struct devfreq *df;
++	unsigned long peak_bw;
++	unsigned long avg_bw;
++};
++
++static int icc_target(struct device *dev, unsigned long *freq,
++				u32 flags)
++{
++	struct icc_devfreq *d = dev_get_drvdata(dev);
++	struct dev_pm_opp *opp;
++	unsigned long peak_bw, avg_bw;
++
++	opp = devfreq_recommended_opp(dev, &peak_bw, flags);
++	if (IS_ERR(opp)) {
++		dev_err(dev, "Failed to find opp for %lu KHz\n", *freq);
++		return PTR_ERR(opp);
++	}
++	peak_bw = dev_pm_opp_get_bw(opp, &avg_bw);
++	dev_pm_opp_put(opp);
++
++	if (!icc_set_bw(d->path, avg_bw, peak_bw)) {
++		*freq = peak_bw;
++		d->peak_bw = peak_bw;
++		d->avg_bw = avg_bw;
 +	}
 +
-+
- 	return path;
- }
- EXPORT_SYMBOL_GPL(of_icc_get);
- 
-+/**
-+ * icc_get_opp_table() - Get the OPP table that corresponds to a path
-+ * @path: reference to the path returned by icc_get()
-+ *
-+ * This function will return the OPP table that corresponds to a path handle.
-+ * If the interconnect API is disabled, NULL is returned and the consumer
-+ * drivers will still build. Drivers are free to handle this specifically, but
-+ * they don't have to.
-+ *
-+ * Return: opp_table pointer on success. NULL is returned when the API is
-+ * disabled or the OPP table is missing.
-+ */
-+struct opp_table *icc_get_opp_table(struct icc_path *path)
-+{
-+	return path->opp_table;
++	return 0;
 +}
 +
- /**
-  * icc_set_bw() - set bandwidth constraints on an interconnect path
-  * @path: reference to the path returned by icc_get()
++static int icc_get_dev_status(struct device *dev,
++					struct devfreq_dev_status *stat)
++{
++	struct icc_devfreq *d = dev_get_drvdata(dev);
++
++	stat->current_frequency = d->peak_bw;
++	return 0;
++}
++
++#define icc_dev_to_data(DEV)	container_of((DEV), struct icc_devfreq, icc_dev)
++static void icc_dev_release(struct device *dev)
++{
++	struct icc_devfreq *d = icc_dev_to_data(dev);
++
++	kfree(d);
++}
++
++struct icc_devfreq *icc_create_devfreq(struct device *dev, char *name)
++{
++	struct icc_devfreq *d;
++	struct icc_path *path;
++	struct opp_table *opp_table;
++	struct dev_pm_opp *opp;
++	unsigned long peak_bw = U32_MAX, avg_bw = U32_MAX;
++	int err;
++
++	if (!name)
++		return ERR_PTR(-EINVAL);
++
++	path = of_icc_get(dev, name);
++	if (IS_ERR(path))
++		return (void *) path;
++
++	opp_table = icc_get_opp_table(path);
++	if (!opp_table) {
++		err = -EINVAL;
++		goto out_path;
++	}
++
++	d = kzalloc(sizeof(*d), GFP_KERNEL);
++	if (!d) {
++		err = -ENOMEM;
++		goto out_path;
++	}
++	d->path = path;
++
++	d->icc_dev.parent = dev;
++	d->icc_dev.release = icc_dev_release;
++	dev_set_name(&d->icc_dev, "%s-icc-%s", dev_name(dev), name);
++	err = device_register(&d->icc_dev);
++	if (err) {
++		put_device(&d->icc_dev);
++		goto out_path;
++	}
++
++	dev_pm_opp_add_opp_table(&d->icc_dev, opp_table);
++	opp = dev_pm_opp_find_peak_bw_floor(dev, &peak_bw);
++	peak_bw = dev_pm_opp_get_bw(opp, &avg_bw);
++	dev_pm_opp_put(opp);
++
++	if (!icc_set_bw(d->path, avg_bw, peak_bw)) {
++		d->peak_bw = peak_bw;
++		d->avg_bw = avg_bw;
++	}
++
++	d->dp.initial_freq = peak_bw;
++	d->dp.polling_ms = 0;
++	d->dp.target = icc_target;
++	d->dp.get_dev_status = icc_get_dev_status;
++	d->df = devm_devfreq_add_device(&d->icc_dev,
++					&d->dp,
++					"performance",
++					NULL);
++	if (IS_ERR(d->df)) {
++		err = PTR_ERR(d->df);
++		goto out_dev;
++	}
++
++	return d;
++out_dev:
++	put_device(&d->icc_dev);
++out_path:
++	icc_put(path);
++	return ERR_PTR(err);
++}
++EXPORT_SYMBOL_GPL(icc_create_devfreq);
++
++void icc_remove_devfreq(struct icc_devfreq *d)
++{
++	icc_put(d->path);
++	put_device(&d->icc_dev);
++}
++EXPORT_SYMBOL_GPL(icc_remove_devfreq);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("interconnect devfreq device driver");
++MODULE_AUTHOR("Saravana Kannan <saravanak@google.com>");
 diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-index dc25864755ba..0c0bc55f0e89 100644
+index 0c0bc55f0e89..cb166cbcdf88 100644
 --- a/include/linux/interconnect.h
 +++ b/include/linux/interconnect.h
-@@ -9,6 +9,7 @@
+@@ -23,6 +23,7 @@
  
- #include <linux/mutex.h>
- #include <linux/types.h>
-+#include <linux/pm_opp.h>
+ struct icc_path;
+ struct device;
++struct icc_devfreq;
  
- /* macros for converting to icc units */
- #define Bps_to_icc(x)	((x) / 1000)
-@@ -28,6 +29,7 @@ struct device;
- struct icc_path *icc_get(struct device *dev, const int src_id,
- 			 const int dst_id);
- struct icc_path *of_icc_get(struct device *dev, const char *name);
-+struct opp_table *icc_get_opp_table(struct icc_path *path);
+ #if IS_ENABLED(CONFIG_INTERCONNECT)
+ 
+@@ -32,6 +33,8 @@ struct icc_path *of_icc_get(struct device *dev, const char *name);
+ struct opp_table *icc_get_opp_table(struct icc_path *path);
  void icc_put(struct icc_path *path);
  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
++struct icc_devfreq *icc_create_devfreq(struct device *dev, char *name);
++void icc_remove_devfreq(struct icc_devfreq *d);
  
-@@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
- {
+ #else
+ 
+@@ -61,6 +64,14 @@ static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+ 	return 0;
  }
  
-+static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
++static inline struct icc_devfreq *icc_create_devfreq(struct device *dev,
++						     char *name)
 +{
 +	return NULL;
 +}
 +
- static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
- {
- 	return 0;
++void icc_remove_devfreq(struct icc_devfreq *d) {}
++
+ #endif /* CONFIG_INTERCONNECT */
+ 
+ #endif /* __LINUX_INTERCONNECT_H */
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
