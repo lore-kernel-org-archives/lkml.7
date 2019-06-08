@@ -2,74 +2,96 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AD4C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79136C468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901D5214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58354214C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:50:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DdRoSibu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfCgopj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfFHSqH (ORCPT
+        id S1727391AbfFHSuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 14:46:07 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38494 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfFHSqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 14:46:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=GckkiKT1Tl9fO6LvWpZfG2l3m5Hm25MNES0Pnb+Idks=; b=DdRoSibu4fyUvRDIwcM1OuqNS6
-        a+LPuikSotDadwYYh1beBeOxznXDU31WfjpX0nEKpU6drEp0+qib6XZSAXNS4i8dljW4COw56+iz/
-        K8g3qUsxj3cJFzfyxit8GMIi9x9GV4hXo5ZhJP6wL0F6zkhea7dhdcOFs5rVceRC3fPQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hZgLp-0005wZ-Ev; Sat, 08 Jun 2019 20:46:01 +0200
-Date:   Sat, 8 Jun 2019 20:46:01 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [RFC net-next 2/2] net: stmmac: Convert to phylink
-Message-ID: <20190608184601.GA22700@lunn.ch>
-References: <cover.1559741195.git.joabreu@synopsys.com>
- <2528141fcc644205dc1c0a0f2640da1a0e7d5935.1559741195.git.joabreu@synopsys.com>
- <34db7462-4f5a-155a-d230-e4c90cee1ce3@gmail.com>
+        Sat, 8 Jun 2019 14:50:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43508 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbfFHSuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 14:50:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i189so2972510pfg.10;
+        Sat, 08 Jun 2019 11:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n1nTu8hWTwf9Vys06vQlXsu9bN0X8oY6YzR1lyX9LYs=;
+        b=sfCgopj98DAEgR750e8izwO00TpHdnCQ4n9+nJOn4ij4OPxINbICfz3Ddb6arRzmls
+         mQ3TazDaZ7XkZVS7eZIujvZSVyf6iEIKSOBN4zdNPNvdQHtEQ87p9zEdimHlyiqm5nFx
+         hXbwaIza332ljNfNi8NZyTVObaPODxT8tMykYje58Lu0GEPCrvwAisPZjhnKwvuNhwTp
+         pe7mORlXlUwo3NHhjFsL7s21UDvixW+TAOkNEk+fB2fyQKPEQlJlUiU0hhFT/IPkW+y7
+         914VjF39igyjC7DIUKwoLW+ri5DugYQQmkLSBUNDqBhC7UWMO4/S7LLm1I1CJSJYIvi/
+         AFBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n1nTu8hWTwf9Vys06vQlXsu9bN0X8oY6YzR1lyX9LYs=;
+        b=cWEW95lKahkRG/z419GDLECweRt+mNhG+YrgFtK9OQQSMcyjohSBvSmmpBixGfmT1c
+         UoJzX6GtaMlD2oC/mCIqucoiG/BQ+bfdmPSacbXMsfzwPK0S0Sxp17xhNOEcFY3b3SQa
+         wHUEp0eC5aKA/P/uWs+ThJCZmcczBssNPiYD6GnUJKIwikOdpp1oD/JmbsDbhywtr3ai
+         abzq4M5hBkEcLEXR19J5Lu0E2dQr/A9zJ09kxTY1X8lw5rgnuiKIE6UTVTVAJLqFU9+j
+         MmKZzARbOCh2Tvm58JvtkQsAzy2FHA1SZSiUH5cHRpg2/qaWc6nOc9nQGXApEfJtbAt5
+         Dj6g==
+X-Gm-Message-State: APjAAAWaWkVmaWXY6uJVaUdEIQWJJXAfrf2mNXPdEaNIDfp7BljOVjDT
+        EQq2S+qZYiugqEiNGzKVD0FZTZaQ
+X-Google-Smtp-Source: APXvYqxwAllbWTuON2mxkwShElyPdFqtr5Fm5+Rp8ind677guCe3jSkCMVda3hIvK75zC5MB1THIdw==
+X-Received: by 2002:a63:4d05:: with SMTP id a5mr7915237pgb.19.1560019799363;
+        Sat, 08 Jun 2019 11:49:59 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j20sm6294033pff.183.2019.06.08.11.49.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 08 Jun 2019 11:49:58 -0700 (PDT)
+Subject: Re: [PATCH 4.19 00/73] 4.19.49-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190607153848.669070800@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <87b959b5-29c4-a4d4-575b-e2517082a1be@roeck-us.net>
+Date:   Sat, 8 Jun 2019 11:49:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34db7462-4f5a-155a-d230-e4c90cee1ce3@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190607153848.669070800@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I am not exactly sure removing this is strictly equivalent here, but the
-> diff makes it hard to review.
+On 6/7/19 8:38 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.49 release.
+> There are 73 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun 09 Jun 2019 03:37:11 PM UTC.
+> Anything received after that time might be too late.
+> 
 
-Yes, diff is doing a poor job here. I already asked Jose if a better
-diff could be produced by passing extra options.
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 349 pass: 349 fail:
 
-> - add support for PHYLINK (parts of this patch) but without plugging it
-> into the probe/connect path just yet
-
-I don't think this is going to make the diff any better.
-
-I might actually just apply the patches and look at the resulting
-files.
-
-  Andrew
+Guenter
