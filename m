@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B364CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C020EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EACE214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E96214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994363;
-	bh=cq1t1h63ROIahrQxeXUUYboG1bSJEqtwDjbiu2safbI=;
+	s=default; t=1559994372;
+	bh=o+G1kTnpQBVpPmVxZ/vKRLrP5Vyd2+cAirqJA/FEwlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zgp7326QVvy31zzhr4xwogHFhy36ukCASlWy8XYSzlnNWhy3m20xkRm9Pq8qXnXD9
-	 +9DEhyfm1aToVZM/OBUO+p+w6HaajdN2oNy9Hk8N4Uj6CgmLeF8wK3hFMSntwI5YzK
-	 z0ACFqE3FMRjoQS/LzJcfcuYuCocKj6mDe7QT5eA=
+	b=g5fu6ExB18m6vKrmKHN2rzbqP2AZDlYJHsskrwxbj0KpFFt+4uztGUqDE8J3MUrzt
+	 h7J5hI8hRUIQF8ZRXzuQ935CxHNzELnokN2vPvMF7H4xI/sA7/0WVVEvZjPAq2eZTt
+	 3pRpefUgiB7H69zRLQf+Sj69KfG+NRV7USXAhLAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbfFHLqC (ORCPT
+        id S1729089AbfFHLqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60394 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbfFHLnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:08 -0400
+        id S1728451AbfFHLm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:42:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A943214D8;
-        Sat,  8 Jun 2019 11:43:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F62521537;
+        Sat,  8 Jun 2019 11:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994188;
-        bh=cq1t1h63ROIahrQxeXUUYboG1bSJEqtwDjbiu2safbI=;
+        s=default; t=1559994146;
+        bh=o+G1kTnpQBVpPmVxZ/vKRLrP5Vyd2+cAirqJA/FEwlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JzB9KyWK0ziO+0tLWduqZSKOFTB0sL0gTgqCRRbtJdlIUWoJO+WuhgrRicJqT+gEC
-         rbQimCg6bTv0eLlxWBpsXYo3icT3juoUot76QB9yLS8gAF3OCRlcXU7tq3VV6NqBpq
-         FPd4XhI8ple9iU1tZqW82WxiDGIdRYiLdEG0947Q=
+        b=yKX5VgNMfOXLQlNPWWj/bN9CiRWaYzalxbj+BBOnejeFHb2XygINRzubgzHwRQH2r
+         sdEwtqVhh8lFMJeAREQAO9QXYyzgml5rx7bGE4IoQ6u0zQMXXUsQnQudnG0Xnazeb6
+         0S2WYOYtioZEvgr3v9mlU8ZIbw+smIaFZ0PzX9Qg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Pavaman Subramaniyam <pavsubra@in.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 09/49] powerpc/powernv: Return for invalid IMC domain
-Date:   Sat,  8 Jun 2019 07:41:50 -0400
-Message-Id: <20190608114232.8731-9-sashal@kernel.org>
+Cc:     Amit Cohen <amitc@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 69/70] mlxsw: spectrum: Prevent force of 56G
+Date:   Sat,  8 Jun 2019 07:39:48 -0400
+Message-Id: <20190608113950.8033-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
-References: <20190608114232.8731-1-sashal@kernel.org>
+In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
+References: <20190608113950.8033-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,50 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+From: Amit Cohen <amitc@mellanox.com>
 
-[ Upstream commit b59bd3527fe3c1939340df558d7f9d568fc9f882 ]
+[ Upstream commit 275e928f19117d22f6d26dee94548baf4041b773 ]
 
-Currently init_imc_pmu() can fail either because we try to register an
-IMC unit with an invalid domain (i.e an IMC node not supported by the
-kernel) or something went wrong while registering a valid IMC unit. In
-both the cases kernel provides a 'Register failed' error message.
+Force of 56G is not supported by hardware in Ethernet devices. This
+configuration fails with a bad parameter error from firmware.
 
-For example when trace-imc node is not supported by the kernel, but
-skiboot advertises a trace-imc node we print:
+Add check of this case. Instead of trying to set 56G with autoneg off,
+return a meaningful error.
 
-  IMC Unknown Device type
-  IMC PMU (null) Register failed
-
-To avoid confusion just print the unknown device type message, before
-attempting PMU registration, so the second message isn't printed.
-
-Fixes: 8f95faaac56c ("powerpc/powernv: Detect and create IMC device")
-Reported-by: Pavaman Subramaniyam <pavsubra@in.ibm.com>
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-[mpe: Reword change log a bit]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
+Signed-off-by: Amit Cohen <amitc@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/opal-imc.c | 4 ++++
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
-index 3d27f02695e4..828f6656f8f7 100644
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -161,6 +161,10 @@ static int imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
- 	struct imc_pmu *pmu_ptr;
- 	u32 offset;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index 6b8aa3761899..f4acb38569e1 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -3110,6 +3110,10 @@ mlxsw_sp_port_set_link_ksettings(struct net_device *dev,
+ 	ops->reg_ptys_eth_unpack(mlxsw_sp, ptys_pl, &eth_proto_cap, NULL, NULL);
  
-+	/* Return for unknown domain */
-+	if (domain < 0)
+ 	autoneg = cmd->base.autoneg == AUTONEG_ENABLE;
++	if (!autoneg && cmd->base.speed == SPEED_56000) {
++		netdev_err(dev, "56G not supported with autoneg off\n");
 +		return -EINVAL;
-+
- 	/* memory for pmu */
- 	pmu_ptr = kzalloc(sizeof(*pmu_ptr), GFP_KERNEL);
- 	if (!pmu_ptr)
++	}
+ 	eth_proto_new = autoneg ?
+ 		ops->to_ptys_advert_link(mlxsw_sp, cmd) :
+ 		ops->to_ptys_speed(mlxsw_sp, cmd->base.speed);
 -- 
 2.20.1
 
