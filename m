@@ -2,228 +2,87 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554F9C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7A9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1E1206BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:52:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nmY+u3lk"
+	by mail.kernel.org (Postfix) with ESMTP id 5EB2320833
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560009267;
+	bh=ElnzDAEFn4MUM1anVmb+KmIFjKIN8D1mTWC/VbPHVFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t3rM++rMAVnSmF9YVQH5u8ujyM9A6T2/vxCFISwRvjGQ+pEyL7b69Osq6MuK6vNFb
+	 6etvwUV+WBYS4oWZpWihPwSCmGBR7B9uLgvvx4THbMp8KwtDy651McErnAwifik+eS
+	 4jNE/7/kux08c93TtgKk5Ac5D8BkEmJ51LCQoq3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfFHPwv (ORCPT
+        id S1727215AbfFHPy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 11:52:51 -0400
-Received: from mail.efficios.com ([167.114.142.138]:34554 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfFHPwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 11:52:51 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id C034F1D3995;
-        Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id RDGBH0FwZAY9; Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 4028F1D3990;
-        Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4028F1D3990
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1560009166;
-        bh=1zYPEOa390T+4ygk6CtXUOuek0d/tel39qFmVv01juo=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=nmY+u3lkKGhd4/aQFS9wb3Y9ZomWqTVuBO+UzEIHuF3VVQ9HR2N5MffthLUcypuV+
-         O4SVrRQd/kc70mezBkUXbFa9I3mSAb5PLmTO1H7GsFmohcsfB3XBPzgVCHK9VJp4Vy
-         4iOSurbuqnJOn0IH8VkH0nKd+bUdguycBTHWmt6zllSHXlnJPj/BBk5LBhCdwwGkqn
-         KDBiczy+fKgFc585bxrqFDOSZADWJYtIA+fxGZbcCFo4xXIBh2Qn2kRMasmv6L0PuC
-         IUDil25QL5GgHV2GKmiZffrGBIdbNvQWadJtePVf6Em4CFXxniKH03lOBVXtlcWU/R
-         eNk74JO39IXtA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id v03xN4kWi2lL; Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 1D44F1D3986;
-        Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
-Date:   Sat, 8 Jun 2019 11:52:45 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@arm.linux.org.uk>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>, shuah <shuah@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Message-ID: <716499178.40175.1560009165920.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1975020343.35751.1559844149532.JavaMail.zimbra@efficios.com>
-References: <20190429152803.7719-9-mathieu.desnoyers@efficios.com> <20190503193858.9676-1-mathieu.desnoyers@efficios.com> <1975020343.35751.1559844149532.JavaMail.zimbra@efficios.com>
-Subject: Re: [PATCH v2 for 5.2 08/12] rseq/selftests: arm: use udf
- instruction for RSEQ_SIG
+        Sat, 8 Jun 2019 11:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbfFHPyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 11:54:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E41206BB;
+        Sat,  8 Jun 2019 15:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560009265;
+        bh=ElnzDAEFn4MUM1anVmb+KmIFjKIN8D1mTWC/VbPHVFo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z/n4xxM3Rp3gegB8+XRT6415lAH/dbd0qIuvF0xWtOHUF0VDPnRNFWiXa8CvjDD+w
+         U/dqwFhotQa1I5kp9UQQAjnJKRxpixstjfClZqSdKbgyJHJtzbCtxAMmeJI2cGuA49
+         BDzVuTEMxN1PmdXcV8jNybt33nF9dQPS1DtCy6CU=
+Date:   Sat, 8 Jun 2019 17:54:22 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     xabi1500@gmail.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rts5208: fixed brace coding style issue
+Message-ID: <20190608155422.GB7974@kroah.com>
+References: <20190608135335.6383-1-xabi1500@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/selftests: arm: use udf instruction for RSEQ_SIG
-Thread-Index: YcGezvm7ivFdjjSZdlA+YYoxUnlhzUxULrHf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608135335.6383-1-xabi1500@gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 6, 2019, at 8:02 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-
-> ----- On May 3, 2019, at 3:38 PM, Mathieu Desnoyers
-> mathieu.desnoyers@efficios.com wrote:
+On Sat, Jun 08, 2019 at 03:53:35PM +0200, xabi1500@gmail.com wrote:
+> From: Xabier Etxezarreta <xabi1500@gmail.com>
 > 
->> Use udf as the guard instruction for the restartable sequence abort
->> handler.
->> 
->> Previously, the chosen signature was not a valid instruction, based
->> on the assumption that it could always sit in a literal pool. However,
->> there are compilation environments in which literal pools are not
->> available, for instance execute-only code. Therefore, we need to
->> choose a signature value that is also a valid instruction.
->> 
->> Handle compiling with -mbig-endian on ARMv6+, which generates binaries
->> with mixed code vs data endianness (little endian code, big endian
->> data).
->> 
->> Else mismatch between code endianness for the generated signatures and
->> data endianness for the RSEQ_SIG parameter passed to the rseq
->> registration will trigger application segmentation faults when the
->> kernel try to abort rseq critical sections.
->> 
->> Prior to ARMv6, -mbig-endian generates big-endian code and data, so
->> endianness should not be reversed in that case.
+> Fixed a coding style issue checked with checkpatch.pl
 > 
-> And of course it cannot be that easy. This breaks when building in
-> thumb mode (-mthumb). Output from librseq arm32 build [1] (code similar
-> to what is found in the rseq selftests):
+> Signed-off-by: Xabier Etxezarreta <xabi1500@gmail.com>
+> ---
+>  drivers/staging/rts5208/rtsx.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
->  CC       rseq.lo
-> /tmp/ccu6Jw1b.s: Assembler messages:
-> /tmp/ccu6Jw1b.s:297: Error: cannot determine Thumb instruction size. Use
-> .inst.n/.inst.w instead
-> /tmp/ccu6Jw1b.s:490: Error: cannot determine Thumb instruction size. Use
-> .inst.n/.inst.w instead
-> Makefile:460: recipe for target 'rseq.lo' failed
-> 
-> This appears to be caused by a missing .arm directive in RSEQ_SIG_DATA.
-> Fixing with:
-> 
-> -               asm volatile ("b 2f\n\t"                                \
-> +               asm volatile (".arm\n\t"                                \
-> +                             "b 2f\n\t"                                \
-> 
-> gets the build to go further, but breaks at:
-> 
->  CC       basic_percpu_ops_test.o
-> /tmp/ccpHOMHZ.s: Assembler messages:
-> /tmp/ccpHOMHZ.s:148: Error: misaligned branch destination
-> /tmp/ccpHOMHZ.s:956: Error: misaligned branch destination
-> Makefile:378: recipe for target 'basic_percpu_ops_test.o' failed
-> 
-> I suspect it's caused by the change from:
-> 
-> -               ".word " __rseq_str(RSEQ_SIG) "\n\t"                    \
-> 
-> to
-> 
-> +               ".arm\n\t"                                              \
-> +               ".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"               \
-> 
-> which changes the mode from thumb to arm for the rest of the
-> inline asm within __RSEQ_ASM_DEFINE_ABORT. Better yet, there appears
-> to be no way to save the arm/thumb state and restore it afterwards.
-> 
-> I'm really starting to wonder if we should go our of our way to try
-> to get this signature to be a valid instruction on arm32. Perhaps
-> we should consider going back to use ".word" on arm32 so it ensures
-> it uses data endianness (which matches the parameter received by the
-> sys_rseq system call), let objdump and friends print it as a literal
-> pool (which it is), and just choose an instruction which has little
-> chances to appear for the cases we care about between ARM32 BE, LE
-> and THUMB. Perhaps a 32-bit palindrome ? Bonus points if this is a
-> trap instruction in common configurations for odd-cases-debugging
-> purposes.
+> diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
+> index fa597953e9a0..d16e92b09a1f 100644
+> --- a/drivers/staging/rts5208/rtsx.c
+> +++ b/drivers/staging/rts5208/rtsx.c
+> @@ -419,10 +419,7 @@ static int rtsx_control_thread(void *__dev)
+>  				chip->srb->device->id,
+>  				(u8)chip->srb->device->lun);
+>  			chip->srb->result = DID_BAD_TARGET << 16;
+> -		}
+> -
+> -		/* we've got a command, let's do it! */
+> -		else {
+> +		} else { /* we've got a command, let's do it! */
+>  			scsi_show_command(chip);
 
-So I'm not particularly proud of the result, but I found a rather
-ugly way to figure out if we are currently in thumb mode within an
-inline asm, and restore that mode: test the length of a nop
-instruction with a ".if" asm statement.
+Comment should go on a new line.
 
-Do we want to go for this kind of approach, or should we revert
-back to a ".word" and accept that the rseq signature before the
-abort handler will be seen as data rather than an instruction
-on arm32 ?
+thanks,
 
-Is there a better way to do this ?
-
-Thanks,
-
-Mathieu
-
-diff --git a/include/rseq/rseq-arm.h b/include/rseq/rseq-arm.h
-index 1ce9231..b6c36dd 100644
---- a/include/rseq/rseq-arm.h
-+++ b/include/rseq/rseq-arm.h
-@@ -43,7 +43,14 @@
-        ({                                                              \
-                int sig;                                                \
-                asm volatile ("b 2f\n\t"                                \
-+                             "3:\n\t"                                  \
-+                             "nop\n\t"                                 \
-+                             "4:\n\t"                                  \
-+                             ".arm\n\t"                                \
-                              "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
-+                             ".if ((4b - 3b) == 2)\n\t"                \
-+                             ".thumb\n\t"                              \
-+                             ".endif\n\t"                              \
-                              "2:\n\t"                                  \
-                              "ldr %[sig], 1b\n\t"                      \
-                              : [sig] "=r" (sig));                      \
-@@ -125,8 +132,14 @@ do {                                                                       \
-                __rseq_str(table_label) ":\n\t"                         \
-                ".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
-                ".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
-+               "333:\n\t"                                              \
-+               "nop\n\t"                                               \
-+               "444:\n\t"                                              \
-                ".arm\n\t"                                              \
-                ".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"               \
-+               ".if ((444b - 333b) == 2)\n\t"                          \
-+               ".thumb\n\t"                                            \
-+               ".endif\n\t"                                            \
-                __rseq_str(label) ":\n\t"                               \
-                teardown                                                \
-                "b %l[" __rseq_str(abort_label) "]\n\t"
-
-
-
-
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+greg k-h
