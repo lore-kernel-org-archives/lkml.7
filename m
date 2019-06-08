@@ -2,144 +2,248 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BEFC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807C7C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A95920840
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:30:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WekMWgr9"
+	by mail.kernel.org (Postfix) with ESMTP id 47C6920840
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfFHQaT (ORCPT
+        id S1727329AbfFHQbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 12:30:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38288 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727160AbfFHQaT (ORCPT
+        Sat, 8 Jun 2019 12:31:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46308 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727203AbfFHQbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 12:30:19 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d18so5075008wrs.5
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 09:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=quef0F8aYAG9qAFtSauA9W3OmlRfJN6ds/RIeMlxias=;
-        b=WekMWgr9afHZFY7MNYUSdPYDetpcsmnQ/USAhexWt9lVitfqi2Oj7eXCd6Vc0Ty4rp
-         idtj+AKzJXxQPoEvmnzoLBre3I1jvPEJeFRajvxi/kTXTWu7C5zF5ENh+iMMys8WvDQV
-         QeFTGKDiX0SgyPRI0d9263ErcyxL+jsWu+ZLHRUTWyIfzfLIWb6ugjSAEN9ihJPC3VCq
-         ZW41zVrdqid2wQL3Cp7Nxw487FFFKtzh+M6+Kc8kMIpNmKWdheaNcf9ejv91mAPbbMcy
-         n5Iuba1/SpmvhD4wZuXBDAUnzPTVVCTdN+IztemmS/sxgIP0CdecgzW/GXMUE7QtZ/BX
-         i6oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=quef0F8aYAG9qAFtSauA9W3OmlRfJN6ds/RIeMlxias=;
-        b=grHAM8sAZ17AmTnbxZ3Ct/I5ygyOqsipPoTEnj2fti4wpWv2tFmPAIAsUd5/FDmKKy
-         4+uWql+yyg4QnNUe3028AdfaqA7i7s2ODpV9tof5QluUxhxEkuxdEZHKuT5HNeYM+17X
-         ScX+JWcs/hgpeEP8yGy54odGNjfBNcef+vE1zqMDFtNqceJI+IVaAEU7C1JgrOsSBS8D
-         jUGM2kmUDQNmJ462rnpRvxdEl3dw3rlSTrnHnesLhWFmOpfWVdlxfR4t0Wy5L2zPC3sG
-         ub6SXyhMyhI0PxMTRyGXuV9n5nSyIlX5UnMx64UKQHdESfZMqYslU3rgg32k1iukBx1Z
-         iazg==
-X-Gm-Message-State: APjAAAVdisSVKnKLUZgjKSSdazPhceQMxR2kd/H8DGhAth4eFMJR54aq
-        sWZS29MvqiPLj+sGFI8t8Kc=
-X-Google-Smtp-Source: APXvYqxA3sPyG2TK25gLTun1RL8viTUP+3fjceQKvqxvgoLT6QHN8nJiDC6hIXBc96AmRgFA0/hdOg==
-X-Received: by 2002:adf:8183:: with SMTP id 3mr24236839wra.181.1560011417538;
-        Sat, 08 Jun 2019 09:30:17 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([108.61.173.19])
-        by smtp.gmail.com with ESMTPSA id t63sm9558269wmt.6.2019.06.08.09.30.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Jun 2019 09:30:16 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 00:30:07 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     jslaby@suse.com, nico@fluxnic.net, kilobyte@angband.pl,
-        textshell@uchuujin.de, mpatocka@redhat.com, daniel.vetter@ffwll.ch,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] vt: Fix a missing-check bug in con_init()
-Message-ID: <20190608163007.GA2492@zhanggen-UX430UQ>
-References: <20190528004529.GA12388@zhanggen-UX430UQ>
- <20190608160138.GA3840@zhanggen-UX430UQ>
- <20190608162219.GB11699@kroah.com>
+        Sat, 8 Jun 2019 12:31:25 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58GQi77106467
+        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 12:31:24 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t093p43xs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 12:31:23 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sat, 8 Jun 2019 17:31:22 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 8 Jun 2019 17:31:18 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58GVHWs37224912
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 8 Jun 2019 16:31:17 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67075B2064;
+        Sat,  8 Jun 2019 16:31:17 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 534D3B205F;
+        Sat,  8 Jun 2019 16:31:17 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.180.36])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat,  8 Jun 2019 16:31:17 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 12F5F16C21CA; Sat,  8 Jun 2019 09:31:19 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 09:31:19 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+Subject: Re: rcu_read_lock lost its compiler barrier
+Reply-To: paulmck@linux.ibm.com
+References: <20190608151943.GD28207@linux.ibm.com>
+ <Pine.LNX.4.44L0.1906081153140.11124-100000@netrider.rowland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190608162219.GB11699@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <Pine.LNX.4.44L0.1906081153140.11124-100000@netrider.rowland.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060816-0060-0000-0000-0000034DF921
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011234; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01215073; UDB=6.00638766; IPR=6.00996165;
+ MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 16:31:21
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060816-0061-0000-0000-000049B0F7F7
+Message-Id: <20190608163119.GI28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906080124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 06:22:19PM +0200, Greg KH wrote:
-> On Sun, Jun 09, 2019 at 12:01:38AM +0800, Gen Zhang wrote:
-> > On Tue, May 28, 2019 at 08:45:29AM +0800, Gen Zhang wrote:
-> > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
-> > > vc->vc_screenbuf is allocated by kzalloc(). And they are used in the 
-> > > following codes. However, kzalloc() returns NULL when fails, and null 
-> > > pointer dereference may happen. And it will cause the kernel to crash. 
-> > > Therefore, we should check the return value and handle the error.
+On Sat, Jun 08, 2019 at 11:56:04AM -0400, Alan Stern wrote:
+> On Sat, 8 Jun 2019, Paul E. McKenney wrote:
+> 
+> > On Thu, Jun 06, 2019 at 10:19:43AM -0400, Alan Stern wrote:
+> > > On Thu, 6 Jun 2019, Andrea Parri wrote:
 > > > 
-> > > Further, since the allcoation is in a loop, we should free all the 
-> > > allocated memory in a loop.
+> > > > This seems a sensible change to me: looking forward to seeing a patch,
+> > > > on top of -rcu/dev, for further review and testing!
+> > > > 
+> > > > We could also add (to LKMM) the barrier() for rcu_read_{lock,unlock}()
+> > > > discussed in this thread (maybe once the RCU code and the informal doc
+> > > > will have settled in such direction).
 > > > 
-> > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > > Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
-> > > ---
-> > > diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> > > index fdd12f8..d50f68f 100644
-> > > --- a/drivers/tty/vt/vt.c
-> > > +++ b/drivers/tty/vt/vt.c
-> > > @@ -3350,10 +3350,14 @@ static int __init con_init(void)
-> > >  
-> > >  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
-> > >  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> > > +		if (!vc)
-> > > +			goto fail1;
-> > >  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
-> > >  		tty_port_init(&vc->port);
-> > >  		visual_init(vc, currcons, 1);
-> > >  		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-> > > +		if (!vc->vc_screenbuf)
-> > > +			goto fail2;
-> > >  		vc_init(vc, vc->vc_rows, vc->vc_cols,
-> > >  			currcons || !vc->vc_sw->con_save_screen);
-> > >  	}
-> > > @@ -3375,6 +3379,16 @@ static int __init con_init(void)
-> > >  	register_console(&vt_console_driver);
-> > >  #endif
-> > >  	return 0;
-> > > +fail1:
-> > > +	while (currcons > 0) {
-> > > +		currcons--;
-> > > +		kfree(vc_cons[currcons].d->vc_screenbuf);
-> > > +fail2:
-> > > +		kfree(vc_cons[currcons].d);
-> > > +		vc_cons[currcons].d = NULL;
-> > > +	}
+> > > Yes.  Also for SRCU.  That point had not escaped me.
+> > 
+> > And it does seem pretty settled.  There are quite a few examples where
+> > there are normal accesses at either end of the RCU read-side critical
+> > sections, for example, the one in the requirements diffs below.
+> > 
+> > For SRCU, srcu_read_lock() and srcu_read_unlock() have implied compiler
+> > barriers since 2006.  ;-)
+> > 
+> > 							Thanx, Paul
+> > 
+> > ------------------------------------------------------------------------
+> > 
+> > diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
+> > index 5a9238a2883c..080b39cc1dbb 100644
+> > --- a/Documentation/RCU/Design/Requirements/Requirements.html
+> > +++ b/Documentation/RCU/Design/Requirements/Requirements.html
+> > @@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
+> >  <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
+> >  <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
+> >  <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
+> > +<li>	<a href="#Accesses to User Mamory and RCU">
+> ------------------------------------^
+> > +Accesses to User Mamory and RCU</a>.
+> ---------------------^
+> >  <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
+> >  <li>	<a href="#Scheduling-Clock Interrupts and RCU">
+> >  	Scheduling-Clock Interrupts and RCU</a>.
+> > @@ -2521,6 +2523,75 @@ cannot be used.
+> >  The tracing folks both located the requirement and provided the
+> >  needed fix, so this surprise requirement was relatively painless.
+> >  
+> > +<h3><a name="Accesses to User Mamory and RCU">
+> ----------------------------------^
+> > +Accesses to User Mamory and RCU</a></h3>
+> ---------------------^
 > 
-> Wait, will that even work?  You can jump into the middle of a while
-> loop?
-I felt like the same when I saw reviewer's advice to write in this way.
-But I tested, and it did work.
-> 
-> Ugh, that's beyond ugly.  And please provide "real" names for the
-> labels, "fail1" and "fail2" do not tell anything here.
+> Are these issues especially notable for female programmers?  :-)
 
-Sure, I can revise that if needed.
+*Red face*  Some days it just doesn't pay to get up in the morning...
 
-Thanks
-Gen
-> 
-> Also, have you actually be able to trigger this?
-> 
-> thanks,
-> 
-> greg k-h
+Well, those issues certainly seem a bit inconsiderate to non-mammalian
+programmers.  :-/
+
+How about the updated version shown below?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
+index 5a9238a2883c..f04c467e55c5 100644
+--- a/Documentation/RCU/Design/Requirements/Requirements.html
++++ b/Documentation/RCU/Design/Requirements/Requirements.html
+@@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
+ <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
+ <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
+ <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
++<li>	<a href="#Accesses to User Memory and RCU">
++Accesses to User Memory and RCU</a>.
+ <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
+ <li>	<a href="#Scheduling-Clock Interrupts and RCU">
+ 	Scheduling-Clock Interrupts and RCU</a>.
+@@ -2521,6 +2523,75 @@ cannot be used.
+ The tracing folks both located the requirement and provided the
+ needed fix, so this surprise requirement was relatively painless.
+ 
++<h3><a name="Accesses to User Memory and RCU">
++Accesses to User Memory and RCU</a></h3>
++
++<p>
++The kernel needs to access user-space memory, for example, to access
++data referenced by system-call parameters.
++The <tt>get_user()</tt> macro does this job.
++
++<p>
++However, user-space memory might well be paged out, which means
++that <tt>get_user()</tt> might well page-fault and thus block while
++waiting for the resulting I/O to complete.
++It would be a very bad thing for the compiler to reorder
++a <tt>get_user()</tt> invocation into an RCU read-side critical
++section.
++For example, suppose that the source code looked like this:
++
++<blockquote>
++<pre>
++ 1 rcu_read_lock();
++ 2 p = rcu_dereference(gp);
++ 3 v = p-&gt;value;
++ 4 rcu_read_unlock();
++ 5 get_user(user_v, user_p);
++ 6 do_something_with(v, user_v);
++</pre>
++</blockquote>
++
++<p>
++The compiler must not be permitted to transform this source code into
++the following:
++
++<blockquote>
++<pre>
++ 1 rcu_read_lock();
++ 2 p = rcu_dereference(gp);
++ 3 get_user(user_v, user_p); // BUG: POSSIBLE PAGE FAULT!!!
++ 4 v = p-&gt;value;
++ 5 rcu_read_unlock();
++ 6 do_something_with(v, user_v);
++</pre>
++</blockquote>
++
++<p>
++If the compiler did make this transformation in a
++<tt>CONFIG_PREEMPT=n</tt> kernel build, and if <tt>get_user()</tt> did
++page fault, the result would be a quiescent state in the middle
++of an RCU read-side critical section.
++This misplaced quiescent state could result in line&nbsp;4 being
++a use-after-free access, which could be bad for your kernel's
++actuarial statistics.
++Similar examples can be constructed with the call to <tt>get_user()</tt>
++preceding the <tt>rcu_read_lock()</tt>.
++
++<p>
++Unfortunately, <tt>get_user()</tt> doesn't have any particular
++ordering properties, and in some architectures the underlying <tt>asm</tt>
++isn't even marked <tt>volatile</tt>.
++And even if it was marked <tt>volatile</tt>, the above access to
++<tt>p-&gt;value</tt> is not volatile, so the compiler would not have any
++reason to keep those two accesses in order.
++
++<p>
++Therefore, the Linux-kernel definitions of <tt>rcu_read_lock()</tt>
++and <tt>rcu_read_unlock()</tt> must act as compiler barriers,
++at least for outermost instances of <tt>rcu_read_lock()</tt> and
++<tt>rcu_read_unlock()</tt> within a nested set of RCU read-side critical
++sections.
++
+ <h3><a name="Energy Efficiency">Energy Efficiency</a></h3>
+ 
+ <p>
+
