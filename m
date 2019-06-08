@@ -6,54 +6,53 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C2BC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDE5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B253208E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0486A212F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560034338;
-	bh=Pb4a399ucftTpDo6qRynJAFaW8nxXbV16dTjIDsmmFM=;
+	s=default; t=1560034385;
+	bh=Gz6g0yeY0RG4LkDvFBuz5QqQPaWoRLrR4xGwFT2W134=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pl3btISr5uhpvr/d8/YQGyJduqDMINZPjzqfjsgQe9nEv5ijOvUABpNco3tEakVZ4
-	 H1T8HWtGRYWvA+oIXkAFS+kzExq/w+YWCNiKe+oADeveN4hA+EBYQSt+/4tLEQvqLw
-	 f/8pTCWErtlUXNNU+W5LpoMcPEMIWWvDxwvP1nGs=
+	b=QdHYgAWK10K7VSU7lpkHxRnQRxkTMHi8KLLirHRAoTqnUG8QUKs9vQNH76pbWz93e
+	 KFXlN2O6XZvxcCRH/TiDiJdPdltirkFZwOPwOyoOFnEk8KCHtp1wG56bcsIx6Lld/c
+	 tTiYzjFy6yuQhufDqiU67ia7e4uEowExJ2OoUe/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfFHWwR (ORCPT
+        id S1728029AbfFHWxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 18:52:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33154 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 18:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfFHWwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 18:52:17 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        id S1727981AbfFHWw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 18:52:56 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 189352168B
-        for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2019 22:52:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE69A212F5
+        for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2019 22:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560034336;
-        bh=Pb4a399ucftTpDo6qRynJAFaW8nxXbV16dTjIDsmmFM=;
+        s=default; t=1560034375;
+        bh=Gz6g0yeY0RG4LkDvFBuz5QqQPaWoRLrR4xGwFT2W134=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pdgoeXaLjiEfOp2G++DJMZFPdLAZyPL8dmqY+dDlziJHcN8t9F+Gjg64QOqUpmwfy
-         z3tFad1TjwkL32RkiazMsQhoeKnjq7GS0E3oBmlE7KqbfeUjr7+/M06hTWh7LDiPt5
-         OHk0LwrdvIvhZ7PQbAinxIC9Q8wE1MX4kyQbPIGQ=
-Received: by mail-wm1-f47.google.com with SMTP id h19so6491083wme.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 15:52:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAW7metLclkoepgNou24SMcv1IDWYryMJylvJMruoHxe7jKZR9yN
-        xorIf4cyjY0O6uNnJSkJk3Hex/qhOFu4L2x8K/5Ipg==
-X-Google-Smtp-Source: APXvYqwBLHa5WaBkibsvSjXohyHyo4HTGYYdPkBujphL3J9T7+raX+H+/d1CP2rwL2hADFXUjNHUAFpxUyCscYezmoE=
-X-Received: by 2002:a1c:a942:: with SMTP id s63mr8242341wme.76.1560034334733;
- Sat, 08 Jun 2019 15:52:14 -0700 (PDT)
+        b=udq1sM/xAIYKlkgcF+5cFTrRws4MQApRJUyDzMeNBqe7HmavppG+Z/bKoEDvFL4Ma
+         pBfzlwuiqQP7hD+7TT+5bePc3HOsvQzmvrDI/QXw0r16PHmHMoXlZAyNnXzEqBSAmS
+         kd7sb5dLGRc96l0t7Y9F8yN8X66rACHYO/9GDOWI=
+Received: by mail-wr1-f54.google.com with SMTP id v14so5546664wrr.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 15:52:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAXXD/TBlPi2uego8DBuC2ZQbYBQbUUOPfCZu+T7DI0wqNCMoxc3
+        iOzUpsw3rIDYYh5gkdWIpZX0kyMKwh7oUYthdUrwxw==
+X-Google-Smtp-Source: APXvYqxYxweXIdj0iLu8Jc7KBY3I15SNXOKWVmiy3sinwstilddxLWYvFZBIUT+OQZ4qV3IljypcovYABphZI4XlefA=
+X-Received: by 2002:a5d:6207:: with SMTP id y7mr19841894wru.265.1560034374329;
+ Sat, 08 Jun 2019 15:52:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com> <1559944837-149589-4-git-send-email-fenghua.yu@intel.com>
-In-Reply-To: <1559944837-149589-4-git-send-email-fenghua.yu@intel.com>
+References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com> <1559944837-149589-3-git-send-email-fenghua.yu@intel.com>
+In-Reply-To: <1559944837-149589-3-git-send-email-fenghua.yu@intel.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 8 Jun 2019 15:52:03 -0700
-X-Gmail-Original-Message-ID: <CALCETrWi+uM5Rch6vaXOwHsHas928CDY5VJoBYaudD+3VFTrNw@mail.gmail.com>
-Message-ID: <CALCETrWi+uM5Rch6vaXOwHsHas928CDY5VJoBYaudD+3VFTrNw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] x86/umwait: Add sysfs interface to control umwait
- C0.2 state
+Date:   Sat, 8 Jun 2019 15:52:42 -0700
+X-Gmail-Original-Message-ID: <CALCETrWtmrwqjThkMKU9YpTDK4o95V4HBb2_yQF2tvx5JZ9Ukw@mail.gmail.com>
+Message-ID: <CALCETrWtmrwqjThkMKU9YpTDK4o95V4HBb2_yQF2tvx5JZ9Ukw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] x86/umwait: Initialize umwait control values
 To:     Fenghua Yu <fenghua.yu@intel.com>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -71,19 +70,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jun 7, 2019 at 3:10 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
 >
-> C0.2 state in umwait and tpause instructions can be enabled or disabled
-> on a processor through IA32_UMWAIT_CONTROL MSR register.
+> umwait or tpause allows processor to enter a light-weight
+> power/performance optimized state (C0.1 state) or an improved
+> power/performance optimized state (C0.2 state) for a period
+> specified by the instruction or until the system time limit or until
+> a store to the monitored address range in umwait.
 >
+> IA32_UMWAIT_CONTROL MSR register allows kernel to enable/disable C0.2
+> on the processor and set maximum time the processor can reside in
+> C0.1 or C0.2.
+>
+> By default C0.2 is enabled so the user wait instructions can enter the
+> C0.2 state to save more power with slower wakeup time.
 
-> +static u32 get_umwait_control_c02(void)
-> +{
-> +       return umwait_control_cached & MSR_IA32_UMWAIT_CONTROL_C02;
-> +}
-> +
-> +static u32 get_umwait_control_max_time(void)
-> +{
-> +       return umwait_control_cached & MSR_IA32_UMWAIT_CONTROL_MAX_TIME;
-> +}
-> +
+Sounds good, but:
 
-I'm not convinced that these helpers make the code any more readable.
+> +#define MSR_IA32_UMWAIT_CONTROL_C02            BIT(0)
+
+> +static u32 umwait_control_cached = 100000;
+
+The code seems to disagree.
