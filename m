@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5A9C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577F4C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA2D212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C2A214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfFHK4z (ORCPT
+        id S1727177AbfFHK45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 06:56:55 -0400
+        Sat, 8 Jun 2019 06:56:57 -0400
 Received: from sauhun.de ([88.99.104.3]:51870 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbfFHK4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 06:56:47 -0400
+        id S1727080AbfFHK4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 06:56:52 -0400
 Received: from localhost (p5486CBCC.dip0.t-ipconnect.de [84.134.203.204])
-        by pokefinder.org (Postfix) with ESMTPSA id 3D39A3E4771;
-        Sat,  8 Jun 2019 12:56:46 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id 049023E4771;
+        Sat,  8 Jun 2019 12:56:50 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/34] media: i2c: ov2640: simplify getting the adapter of a client
-Date:   Sat,  8 Jun 2019 12:55:49 +0200
-Message-Id: <20190608105619.593-11-wsa+renesas@sang-engineering.com>
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 19/34] power: supply: max14656_charger_detector: simplify getting the adapter of a client
+Date:   Sat,  8 Jun 2019 12:55:58 +0200
+Message-Id: <20190608105619.593-20-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
 References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
@@ -48,22 +48,22 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Please apply to your subsystem tree.
 
- drivers/media/i2c/ov2640.c | 2 +-
+ drivers/power/supply/max14656_charger_detector.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
-index 83031cfc7914..30e7e6b2b293 100644
---- a/drivers/media/i2c/ov2640.c
-+++ b/drivers/media/i2c/ov2640.c
-@@ -1197,7 +1197,7 @@ static int ov2640_probe(struct i2c_client *client,
- 			const struct i2c_device_id *did)
+diff --git a/drivers/power/supply/max14656_charger_detector.c b/drivers/power/supply/max14656_charger_detector.c
+index 9e6472834e37..f27b780d2c02 100644
+--- a/drivers/power/supply/max14656_charger_detector.c
++++ b/drivers/power/supply/max14656_charger_detector.c
+@@ -251,7 +251,7 @@ static void stop_irq_work(void *data)
+ static int max14656_probe(struct i2c_client *client,
+ 			  const struct i2c_device_id *id)
  {
- 	struct ov2640_priv	*priv;
--	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
-+	struct i2c_adapter	*adapter = client->adapter;
- 	int			ret;
- 
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
+-	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
++	struct i2c_adapter *adapter = client->adapter;
+ 	struct device *dev = &client->dev;
+ 	struct power_supply_config psy_cfg = {};
+ 	struct max14656_chip *chip;
 -- 
 2.19.1
 
