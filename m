@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BC8C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB5AC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E9A21530
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7511D214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994220;
-	bh=U43gp4ER5JVDxFLFOVHwt1cW9WDip0sBv7jyk0GXFHA=;
+	s=default; t=1559994223;
+	bh=VGQ3nTj9VgA/BJ8LC7D+7GRpevYOXm3z1Gff8jlbOEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q911etk3EAM0NW1TwRBNDMgUhow7v64UDoCoDIubAlOcFaPM3GyKIU9qnpPhyzBot
-	 TqjAbbxVmsZqlgvqE7dfUHSSipu7mp+nNPmwRPr5LDEN5XNHPsJheaOkaKOLEUxyaJ
-	 OAKcp4vUD8uRn8tjKrJaJh1UuOc537smH10bIcMs=
+	b=dYVMw91HeYSpUEF19jK9MmDrpsn4ViXbC0pV+SK18WgHAA/cvXUzEeRqS0AzFm/at
+	 FUbSnBNOFFXiIlWbMcWv6m2FWHMNfqP1vihiJsVE0cc+I7+RjpU8CXfs2Kp4gnIQXS
+	 zsPR364Z+SheEBVgImREFCMZqMvQtwtMuYTf0iFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfFHLnj (ORCPT
+        id S1728864AbfFHLnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60920 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728784AbfFHLnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:32 -0400
+        id S1728801AbfFHLnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36AB8214C6;
-        Sat,  8 Jun 2019 11:43:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D40542168B;
+        Sat,  8 Jun 2019 11:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994211;
-        bh=U43gp4ER5JVDxFLFOVHwt1cW9WDip0sBv7jyk0GXFHA=;
+        s=default; t=1559994214;
+        bh=VGQ3nTj9VgA/BJ8LC7D+7GRpevYOXm3z1Gff8jlbOEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xfbbcTZ+4yW8Nu2DT260Aweck9rGJoK1IA0oWNLZ+S7XZbmJA58NGbjz+DFIKLiAz
-         nj6dxtKxXffGLX6RBNriig+yGrVoW2WYQpbdJKiiSVkoeLJ7aaXx3NRmBbIXm4AmKU
-         afSUdBQpP33Nns2ue4ZT/Z4IHCMf23bxiJ1eEYX8=
+        b=zHMFqCTX+zgKUb2rVdSMzKCnXWcbnL599pXTcni/iy9vYIDU3I0klDdbf56+qxZJf
+         70wNshqjJ/KwXVVgiz2Mg56U5NpFlji508c8L3Vm4dUE9AXqI6QXR2CSYXLhx0Ocvv
+         eH/bv/0PtM2Nr7nxAyA9JIeDjMwDYTtS3P1OZblg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 23/49] drm/etnaviv: lock MMU while dumping core
-Date:   Sat,  8 Jun 2019 07:42:04 -0400
-Message-Id: <20190608114232.8731-23-sashal@kernel.org>
+Cc:     Igor Russkikh <Igor.Russkikh@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 24/49] net: aquantia: tx clean budget logic error
+Date:   Sat,  8 Jun 2019 07:42:05 -0400
+Message-Id: <20190608114232.8731-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -61,55 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Igor Russkikh <Igor.Russkikh@aquantia.com>
 
-[ Upstream commit 1396500d673bd027683a0609ff84dca7eb6ea2e7 ]
+[ Upstream commit 31bafc49a7736989e4c2d9f7280002c66536e590 ]
 
-The devcoredump needs to operate on a stable state of the MMU while
-it is writing the MMU state to the coredump. The missing lock
-allowed both the userspace submit, as well as the GPU job finish
-paths to mutate the MMU state while a coredump is under way.
+In case no other traffic happening on the ring, full tx cleanup
+may not be completed. That may cause socket buffer to overflow
+and tx traffic to stuck until next activity on the ring happens.
 
-Fixes: a8c21a5451d8 (drm/etnaviv: add initial etnaviv DRM driver)
-Reported-by: David Jander <david@protonic.nl>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: David Jander <david@protonic.nl>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+This is due to logic error in budget variable decrementor.
+Variable is compared with zero, and then post decremented,
+causing it to become MAX_INT. Solution is remove decrementor
+from the `for` statement and rewrite it in a clear way.
+
+Fixes: b647d3980948e ("net: aquantia: Add tx clean budget and valid budget handling logic")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_dump.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.c b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-index 9146e30e24a6..468dff2f7904 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-@@ -124,6 +124,8 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 		return;
- 	etnaviv_dump_core = false;
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
+index 6f3312350cac..b3c7994d73eb 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
+@@ -139,10 +139,10 @@ void aq_ring_queue_stop(struct aq_ring_s *ring)
+ bool aq_ring_tx_clean(struct aq_ring_s *self)
+ {
+ 	struct device *dev = aq_nic_get_dev(self->aq_nic);
+-	unsigned int budget = AQ_CFG_TX_CLEAN_BUDGET;
++	unsigned int budget;
  
-+	mutex_lock(&gpu->mmu->lock);
-+
- 	mmu_size = etnaviv_iommu_dump_size(gpu->mmu);
+-	for (; self->sw_head != self->hw_head && budget--;
+-		self->sw_head = aq_ring_next_dx(self, self->sw_head)) {
++	for (budget = AQ_CFG_TX_CLEAN_BUDGET;
++	     budget && self->sw_head != self->hw_head; budget--) {
+ 		struct aq_ring_buff_s *buff = &self->buff_ring[self->sw_head];
  
- 	/* We always dump registers, mmu, ring and end marker */
-@@ -166,6 +168,7 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 	iter.start = __vmalloc(file_size, GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY,
- 			       PAGE_KERNEL);
- 	if (!iter.start) {
-+		mutex_unlock(&gpu->mmu->lock);
- 		dev_warn(gpu->dev, "failed to allocate devcoredump file\n");
- 		return;
+ 		if (likely(buff->is_mapped)) {
+@@ -167,6 +167,7 @@ bool aq_ring_tx_clean(struct aq_ring_s *self)
+ 
+ 		buff->pa = 0U;
+ 		buff->eop_index = 0xffffU;
++		self->sw_head = aq_ring_next_dx(self, self->sw_head);
  	}
-@@ -233,6 +236,8 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 					 obj->base.size);
- 	}
  
-+	mutex_unlock(&gpu->mmu->lock);
-+
- 	etnaviv_core_dump_header(&iter, ETDUMP_BUF_END, iter.data);
- 
- 	dev_coredumpv(gpu->dev, iter.start, iter.data - iter.start, GFP_KERNEL);
+ 	return !!budget;
 -- 
 2.20.1
 
