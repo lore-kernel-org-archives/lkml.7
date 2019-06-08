@@ -5,80 +5,80 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECC2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BEFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E1920840
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A95920840
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJrmg7BY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WekMWgr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfFHQ2G (ORCPT
+        id S1727294AbfFHQaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 12:28:06 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45975 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727160AbfFHQ2G (ORCPT
+        Sat, 8 Jun 2019 12:30:19 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38288 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727160AbfFHQaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 12:28:06 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so5049135wre.12
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 09:28:04 -0700 (PDT)
+        Sat, 8 Jun 2019 12:30:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d18so5075008wrs.5
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 09:30:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WGZIJkWOD5HNBtJMxrjc9eWYDX3fZshEF6L9X8SRgBQ=;
-        b=QJrmg7BYuSrMDmsaSjJaJ786HcQ1WBCcJtuTN6pDfVvAT12BXgznpY/gpKTatudvbr
-         V7+66/Jt8/T4DRoOKCBhqrhSC5ful5WWnqYbwAprZCrU7Qbj/b0DwMoiirVvOlDVcHy7
-         1EBF4Q/Gi0bMzmMKp+s1REtTca+UgE5/9oX6X1sdAj6se8mRzCjdx2kfg5qAeKWNl74l
-         PXOd5eI/Q3a3xvyL5Rrx2O7VoefPx/9MpyRx04fi4lDz61ibutot/vKkaHrvWEHsUE86
-         J6CnZY63UrxGm/rw9/nOfZrk+aAJ2I4tskosbWM8gD4eUNU8FvFdbkm1112eOcxbMi0+
-         zJQQ==
+        bh=quef0F8aYAG9qAFtSauA9W3OmlRfJN6ds/RIeMlxias=;
+        b=WekMWgr9afHZFY7MNYUSdPYDetpcsmnQ/USAhexWt9lVitfqi2Oj7eXCd6Vc0Ty4rp
+         idtj+AKzJXxQPoEvmnzoLBre3I1jvPEJeFRajvxi/kTXTWu7C5zF5ENh+iMMys8WvDQV
+         QeFTGKDiX0SgyPRI0d9263ErcyxL+jsWu+ZLHRUTWyIfzfLIWb6ugjSAEN9ihJPC3VCq
+         ZW41zVrdqid2wQL3Cp7Nxw487FFFKtzh+M6+Kc8kMIpNmKWdheaNcf9ejv91mAPbbMcy
+         n5Iuba1/SpmvhD4wZuXBDAUnzPTVVCTdN+IztemmS/sxgIP0CdecgzW/GXMUE7QtZ/BX
+         i6oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WGZIJkWOD5HNBtJMxrjc9eWYDX3fZshEF6L9X8SRgBQ=;
-        b=n+66/6ONTHlSI6if15BZQBN56dkgrgn+SfKWbHnoftgmQyrhvwu7H5jQILZAOV5klO
-         1jmJ2gk58+mn++v8PdkbdD++RzZ2ktAoDbRXDUcHfA48id5x+ZO142EBW4NL2YvLlPaI
-         UNb90LXRuutByOxqy4Unx/ZrFSo0kDudw3+AB4AXlm1gxJeFZuZY+NposSrvMgHOsW2N
-         SCOFWZwpXXyn0RTIxf80SPJ9f7ai7ZYbAqURK6ZBlTaMhc2a39M5Tf6l/V8WpWrtzbrr
-         nm2TDlG36AU1DT+KCYQLRBnsVPNjhVMDb+F7pPUDyv4yAcl6dEMrceJ3NKvzjUqrqu++
-         3GcA==
-X-Gm-Message-State: APjAAAWx9QsdXS44Ur53vqvwwELhOvs8MmBzPxRmbw+slX5uAz+Z61dp
-        wvmGTkZkTTnyFAgwoZtPuiQ=
-X-Google-Smtp-Source: APXvYqybB7/G0Ce4i90cr2B4jqQtyBOR/K1lJo1g+j06IFq+yPMqNvzHMtfi88o/oDvDLsNVwTh8DQ==
-X-Received: by 2002:adf:ec12:: with SMTP id x18mr6105952wrn.145.1560011284365;
-        Sat, 08 Jun 2019 09:28:04 -0700 (PDT)
+        bh=quef0F8aYAG9qAFtSauA9W3OmlRfJN6ds/RIeMlxias=;
+        b=grHAM8sAZ17AmTnbxZ3Ct/I5ygyOqsipPoTEnj2fti4wpWv2tFmPAIAsUd5/FDmKKy
+         4+uWql+yyg4QnNUe3028AdfaqA7i7s2ODpV9tof5QluUxhxEkuxdEZHKuT5HNeYM+17X
+         ScX+JWcs/hgpeEP8yGy54odGNjfBNcef+vE1zqMDFtNqceJI+IVaAEU7C1JgrOsSBS8D
+         jUGM2kmUDQNmJ462rnpRvxdEl3dw3rlSTrnHnesLhWFmOpfWVdlxfR4t0Wy5L2zPC3sG
+         ub6SXyhMyhI0PxMTRyGXuV9n5nSyIlX5UnMx64UKQHdESfZMqYslU3rgg32k1iukBx1Z
+         iazg==
+X-Gm-Message-State: APjAAAVdisSVKnKLUZgjKSSdazPhceQMxR2kd/H8DGhAth4eFMJR54aq
+        sWZS29MvqiPLj+sGFI8t8Kc=
+X-Google-Smtp-Source: APXvYqxA3sPyG2TK25gLTun1RL8viTUP+3fjceQKvqxvgoLT6QHN8nJiDC6hIXBc96AmRgFA0/hdOg==
+X-Received: by 2002:adf:8183:: with SMTP id 3mr24236839wra.181.1560011417538;
+        Sat, 08 Jun 2019 09:30:17 -0700 (PDT)
 Received: from zhanggen-UX430UQ ([108.61.173.19])
-        by smtp.gmail.com with ESMTPSA id k2sm5060032wrx.84.2019.06.08.09.28.00
+        by smtp.gmail.com with ESMTPSA id t63sm9558269wmt.6.2019.06.08.09.30.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Jun 2019 09:28:03 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 00:27:54 +0800
+        Sat, 08 Jun 2019 09:30:16 -0700 (PDT)
+Date:   Sun, 9 Jun 2019 00:30:07 +0800
 From:   Gen Zhang <blackgod016574@gmail.com>
 To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     jslaby@suse.com, nico@fluxnic.net, kilobyte@angband.pl,
         textshell@uchuujin.de, mpatocka@redhat.com, daniel.vetter@ffwll.ch,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3] vt: Fix a missing-check bug in con_init()
-Message-ID: <20190608162754.GA2387@zhanggen-UX430UQ>
+Message-ID: <20190608163007.GA2492@zhanggen-UX430UQ>
 References: <20190528004529.GA12388@zhanggen-UX430UQ>
  <20190608160138.GA3840@zhanggen-UX430UQ>
- <20190608162127.GA11699@kroah.com>
+ <20190608162219.GB11699@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190608162127.GA11699@kroah.com>
+In-Reply-To: <20190608162219.GB11699@kroah.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 06:21:27PM +0200, Greg KH wrote:
+On Sat, Jun 08, 2019 at 06:22:19PM +0200, Greg KH wrote:
 > On Sun, Jun 09, 2019 at 12:01:38AM +0800, Gen Zhang wrote:
 > > On Tue, May 28, 2019 at 08:45:29AM +0800, Gen Zhang wrote:
 > > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
@@ -124,22 +124,22 @@ On Sat, Jun 08, 2019 at 06:21:27PM +0200, Greg KH wrote:
 > > > +		kfree(vc_cons[currcons].d);
 > > > +		vc_cons[currcons].d = NULL;
 > > > +	}
-> > > +	console_unlock();
-> > > +	return -ENOMEM;
-> > >  }
-> > >  console_initcall(con_init);
-> > >  
-> > > ---
-> > Can anyone look into this patch? It's already reviewed by Nicolas Pitre
-> > <nico@fluxnic.net>.
 > 
-> It's in my queue.  But note, given the previous history of your patches,
-> it's really low on my piority list at the moment :(
+> Wait, will that even work?  You can jump into the middle of a while
+> loop?
+I felt like the same when I saw reviewer's advice to write in this way.
+But I tested, and it did work.
 > 
-> greg k-h
-What? All the patches were revised iteratively according to the 
-maintainers' or reviewers' advice. I don't think you should look down
-the patches from me. It seems not fair enough. :(
+> Ugh, that's beyond ugly.  And please provide "real" names for the
+> labels, "fail1" and "fail2" do not tell anything here.
+
+Sure, I can revise that if needed.
 
 Thanks
 Gen
+> 
+> Also, have you actually be able to trigger this?
+> 
+> thanks,
+> 
+> greg k-h
