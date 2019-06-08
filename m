@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261CEC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE4BC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D4A214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFC8216C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994401;
-	bh=kk/oRqzBHc+xkKfIE/IIEd6ifzx7wC2Ea6BxEhbHvmQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LEq5tHFsR0FhBTILwqT+KqkadPjrL4ZAZbtKZdhqFuHVJFkpGnshJ8ZeDcnfEH41q
-	 2YH/GdILBWR2aiIdQGW2irT+Pao8f8NJZxxeQJ8Q5RQCwaR7cn8IeHLaDBaGbc5cRj
-	 tUSaRTU33UDv1TmiUvnF0Zpwd+NGz+oVPjW0vS+A=
+	s=default; t=1559994411;
+	bh=SODLOIdn9sI8wnlrPYxT8P0mdlJbHUjtV6JnXpCdjGU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=lhdXffV8nTXq7OyyInujsdgC46vkEHCiF6dF83mZZ/91htIi91Tyd6UjcTmQhLBJh
+	 4ZREz+c2PFc/GFt8orf6ak7UEnYOZdwfLWc3ahUS0+IcTB0GmwirVXGQasOGuYkLGp
+	 HhE7HQ15JL7sP8ITgvdHLsyWpx4sF1Jwi62+cbKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbfFHLqk (ORCPT
+        id S1728690AbfFHLqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:46:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59490 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727607AbfFHLmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:42:12 -0400
+        id S1727607AbfFHLqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:46:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A9C3214D8;
-        Sat,  8 Jun 2019 11:42:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87F24214AF;
+        Sat,  8 Jun 2019 11:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994132;
-        bh=kk/oRqzBHc+xkKfIE/IIEd6ifzx7wC2Ea6BxEhbHvmQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kDK+1RbHY1AHvpAhta/n1ye0WRcsiC7BW6+pAZf1hKw1kjYMnPLHbHQ+L6xdLR+bJ
-         /kWrMdqzQhUJeYCyMdeDsDcC8to/mT2TPErMrkXMQXngqEoxZKxontGXmtdZv/ur7p
-         UOdMwOuSFoI3Nj+jj9H3IifT/FsgIgbhcoHiF4IE=
+        s=default; t=1559994408;
+        bh=SODLOIdn9sI8wnlrPYxT8P0mdlJbHUjtV6JnXpCdjGU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zJsJ4KfVeDuxRb+iCEQjwV2KK3hv/J9VOGhE2uQtN3nd6W8FSRGfVJSn4OBjuawgs
+         QzY0AC+h7ufZBBuMoDBPZSwP9ADqdxjNLvZtX6HcHjYnVTiRla0cYIKt9/+2DOTQhu
+         ZIfcaZWU2YZu1T8rlgOZVJe3/VlkuO5OanOsHvmI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Uvarov <muvarov@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 62/70] net: phy: dp83867: fix speed 10 in sgmii mode
-Date:   Sat,  8 Jun 2019 07:39:41 -0400
-Message-Id: <20190608113950.8033-62-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 01/31] Staging: vc04_services: Fix a couple error codes
+Date:   Sat,  8 Jun 2019 07:46:12 -0400
+Message-Id: <20190608114646.9415-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
-References: <20190608113950.8033-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,58 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Uvarov <muvarov@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 333061b924539c0de081339643f45514f5f1c1e6 ]
+[ Upstream commit ca4e4efbefbbdde0a7bb3023ea08d491f4daf9b9 ]
 
-For supporting 10Mps speed in SGMII mode DP83867_10M_SGMII_RATE_ADAPT bit
-of DP83867_10M_SGMII_CFG register has to be cleared by software.
-That does not affect speeds 100 and 1000 so can be done on init.
+These are accidentally returning positive EINVAL instead of negative
+-EINVAL.  Some of the callers treat positive values as success.
 
-Signed-off-by: Max Uvarov <muvarov@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7b3ad5abf027 ("staging: Import the BCM2835 MMAL-based V4L2 camera driver.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/staging/vc04_services/bcm2835-camera/controls.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 8448d01819ef..29cae4de9a4f 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -30,6 +30,8 @@
- #define DP83867_STRAP_STS1	0x006E
- #define DP83867_RGMIIDCTL	0x0086
- #define DP83867_IO_MUX_CFG	0x0170
-+#define DP83867_10M_SGMII_CFG   0x016F
-+#define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+index 77a5d6f4e1eb..8a242f609d3b 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+@@ -579,7 +579,7 @@ static int ctrl_set_image_effect(struct bm2835_mmal_dev *dev,
+ 				dev->colourfx.enable ? "true" : "false",
+ 				dev->colourfx.u, dev->colourfx.v,
+ 				ret, (ret == 0 ? 0 : -EINVAL));
+-	return (ret == 0 ? 0 : EINVAL);
++	return (ret == 0 ? 0 : -EINVAL);
+ }
  
- #define DP83867_SW_RESET	BIT(15)
- #define DP83867_SW_RESTART	BIT(14)
-@@ -277,6 +279,21 @@ static int dp83867_config_init(struct phy_device *phydev)
- 				       DP83867_IO_MUX_CFG_IO_IMPEDANCE_CTRL);
- 	}
+ static int ctrl_set_colfx(struct bm2835_mmal_dev *dev,
+@@ -603,7 +603,7 @@ static int ctrl_set_colfx(struct bm2835_mmal_dev *dev,
+ 		 "%s: After: mmal_ctrl:%p ctrl id:0x%x ctrl val:%d ret %d(%d)\n",
+ 			__func__, mmal_ctrl, ctrl->id, ctrl->val, ret,
+ 			(ret == 0 ? 0 : -EINVAL));
+-	return (ret == 0 ? 0 : EINVAL);
++	return (ret == 0 ? 0 : -EINVAL);
+ }
  
-+	if (phydev->interface == PHY_INTERFACE_MODE_SGMII) {
-+		/* For support SPEED_10 in SGMII mode
-+		 * DP83867_10M_SGMII_RATE_ADAPT bit
-+		 * has to be cleared by software. That
-+		 * does not affect SPEED_100 and
-+		 * SPEED_1000.
-+		 */
-+		ret = phy_modify_mmd(phydev, DP83867_DEVADDR,
-+				     DP83867_10M_SGMII_CFG,
-+				     DP83867_10M_SGMII_RATE_ADAPT_MASK,
-+				     0);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/* Enable Interrupt output INT_OE in CFG3 register */
- 	if (phy_interrupt_is_valid(phydev)) {
- 		val = phy_read(phydev, DP83867_CFG3);
+ static int ctrl_set_bitrate(struct bm2835_mmal_dev *dev,
 -- 
 2.20.1
 
