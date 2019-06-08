@@ -2,213 +2,109 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F048C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 07:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE11BC468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22464212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 07:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8570821473
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 08:10:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="riyB48st"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="pCcz/EmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfFHHyz (ORCPT
+        id S1727932AbfFHIKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 03:54:55 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44099 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfFHHyy (ORCPT
+        Sat, 8 Jun 2019 04:10:49 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33695 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727244AbfFHIKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 03:54:54 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r15so3238715lfm.11
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 00:54:53 -0700 (PDT)
+        Sat, 8 Jun 2019 04:10:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so5523743wme.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 01:10:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=G7zE5DHgudNt5dsF6CsBxWN91KsOd/Kmfm8hMmncNRg=;
-        b=riyB48steJX3fiicN0tXXs2mmIgCpBl0i1kmP1E2/eU7SUd6wdXVieh92yyOu9CX8o
-         dih1K2WA/a9JZU5/R891YA/xbXc5qu7f6PRAFY5GxcT3YcBMyPnWcD5f74n2O5ujQUDM
-         J3+uCsjD8g6KHhscQrcR53Qv8Y4NcbNyMk9Ff40ZXILfXeADiPFlkjZeUZPhqlUMRdwg
-         CHiYJptY6VdECmvlvCGsQdVVZZaxAcNtAjVi2qVm37jvErn29ptXrnor9ykCyDzwyeAv
-         aCTe3jPd7AhUIf8mw3Iujnfed83VsXf4s25xSRO+UORoYdatwRpT7OHQZzeQ0odkFffu
-         1OFQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A/98s+ZxLWi2AxlogIx4Ijtu1jW2DrfDadsqadJKMuo=;
+        b=pCcz/EmJC6hgluYq5PvYf+aGmHKDD1vCR1Mi8XWSw3otEtjhq3rifcApmd4NBMij2u
+         4D/9i3hBYMZtDWxnNb/MRtGSwBaNiUODq5uH7spiDBk+aEdHwroZ7t/JVmnwBHw/mZPF
+         HpV4REQHX2jRfSIU7PK34BCZL3Ftv9jurqOR/QisIAK4GkHhmecp9epktkhQj6IBRzqw
+         UifbYQdqC1H/rLMt+5f4T66G9gCzdE+oZZ7tO+JAQH4DkJEvozPUxWoe0XpBQqPhCK3q
+         87fnqNTeQ68yHyg6gKX1/O24jSKM16QaXQAWgLHh7coxgbFXkJIErPwfcQ3TpxqXhI8p
+         uxVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=G7zE5DHgudNt5dsF6CsBxWN91KsOd/Kmfm8hMmncNRg=;
-        b=B76MwGfJKOLxqz/Hn382qFTfJXsTXZArvK3dxDcF97A9jO7QCwaNB+ML7AKJENvp5A
-         j8M7pCOO9IO65Z9/pndxL+2b3Kft5UB+QIgETSOdrzY0xi3o3mDsO7Iw6mmTcW55a59L
-         I0DpyaAgixzp73GdIrBBnE2KdBHI463uzCdHh9gJiYpJgDMffesGP1yMyOZ/UUhINlmu
-         D+mz7ye5ys5thZpwGoaDIPnph1XAYfK435WDpkQA9hevn8jPcHFr7guk4SVIF6h3drg/
-         AFlreZCJMN9udETyRpitedmT0HDDcbTq643GsTdeVaQZAZVLed4I+z7fCywz3V1qxPxg
-         FHbA==
-X-Gm-Message-State: APjAAAUOPpZfCaUsJL42CFNO9uiw69JWMn0e4Lyg6icuZUWdJTQ+prLx
-        6KwX37Emi8M8lWpVJKpTYTOZpdz+C6r2PwT7qlDjTA==
-X-Google-Smtp-Source: APXvYqxva82rvwJJmktaaj7ZhGgKjh2/vkmeE3Rxu3UcDCTnTNG055ZaW/ATHhX4WOpgmQPubEiXFJOBY0rm6ogMa3k=
-X-Received: by 2002:ac2:4ace:: with SMTP id m14mr21063196lfp.99.1559980492829;
- Sat, 08 Jun 2019 00:54:52 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A/98s+ZxLWi2AxlogIx4Ijtu1jW2DrfDadsqadJKMuo=;
+        b=eoiMFHfrA+WtgN43hgIOYgvV7dc8WUmx01pLAqncnGQKun0LJc8jl/tLUlwUC2hykV
+         kTSNlj6XgbGvZ+UCQa+I1vQ5aYOCZ338zBpI5U4hwpamisF9Lg+aB0s/ESV42IeoNZpz
+         3/KGu8865PzM2Otm0VVaGOU1JQzyRP9qMKbJ/4ylTnlFfrpBGglGBOcLujuL6ExBYykX
+         my4NKDDswEvAmtZLZUF493NUm1i9/dTMEkDDQx5xSpeLnmbOoSfDwWhouBrNAx1eTQ+q
+         28qen6dr3A8uxB3Trh9GIT28qRYBdghVQQj0uTKWhiCYaGV21NCzQoUeNCoolRsbm5rM
+         nINg==
+X-Gm-Message-State: APjAAAU9bETDgtLyOJ4gdgNJ0V7sNXjiskzpowyTmwn+eXeni3o08WFX
+        r8/FBRh18va1wqZtnxKH0EQV9SBvwkP21FnN
+X-Google-Smtp-Source: APXvYqxzdnROeTHjScvyEAbURnezUITWgF87dJmRZvr0Lb6G4TViG5IoiBIGZmRJaGL6s4d+RprNoA==
+X-Received: by 2002:a1c:e715:: with SMTP id e21mr6683506wmh.16.1559981445791;
+        Sat, 08 Jun 2019 01:10:45 -0700 (PDT)
+Received: from [10.97.4.179] (aputeaux-682-1-82-78.w90-86.abo.wanadoo.fr. [90.86.61.78])
+        by smtp.gmail.com with ESMTPSA id e17sm3849742wrt.95.2019.06.08.01.10.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 08 Jun 2019 01:10:44 -0700 (PDT)
+Subject: Re: properly communicate queue limits to the DMA layer
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+References: <20190605190836.32354-1-hch@lst.de>
+ <591cfa1e-fecb-7d00-c855-3b9eb8eb8a2a@kernel.dk>
+ <20190605192405.GA18243@lst.de>
+ <f07d0abf-b3eb-f530-37b9-e66454740b3f@kernel.dk> <yq1o939i9qh.fsf@oracle.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <379c82a1-f61d-7463-791e-57f1cdeaa9db@kernel.dk>
+Date:   Sat, 8 Jun 2019 02:10:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190607153849.101321647@linuxfoundation.org>
-In-Reply-To: <20190607153849.101321647@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 8 Jun 2019 13:24:41 +0530
-Message-ID: <CA+G9fYvu0nXEmayFX5CkH8wE+y+6Ya7QmtMCHP7b0sTMKw=brg@mail.gmail.com>
-Subject: Re: [PATCH 5.1 00/85] 5.1.8-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <yq1o939i9qh.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Jun 2019 at 21:18, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.1.8 release.
-> There are 85 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun 09 Jun 2019 03:37:09 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.1.8-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On 6/7/19 11:30 AM, Martin K. Petersen wrote:
+> 
+> Jens,
+> 
+>>> The SCSI bits will need a bit more review, and possibly tweaking
+>>> fo megaraid and mpt3sas.  But they are really independent of the
+>>> other patches, so maybe skip them for now and leave them for Martin
+>>> to deal with.
+>>
+>> I dropped the SCSI bits.
+> 
+> I'll monitor and merge them.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Great, thanks Martin.
 
-NOTE:
-selftest sources version updated to 5.1
-Following test cases reported pass after upgrade
-  kselftest:
-    * bpf_test_libbpf.sh
-    * bpf_test_select_reuseport
-    * bpf_test_tcpbpf_user
-    * bpf_test_verifier
-    * seccomp_seccomp_bpf
-    * timers_set-timer-lat
+-- 
+Jens Axboe
 
-Few kselftest test cases reported failure and we are investigating.
-    * bpf_test_netcnt
-    * net_ip_defrag.sh
-    * net_xfrm_policy.sh
-    * timestamping_txtimestamp.sh
-    * tpm2_test_smoke.sh
-    * tpm2_test_space.sh
-    * ...
-
-LTP version upgrade to 20190517
-New test case tgkill03 is an intermittent failure reported on qemu devices.
-Following test cases reported failures and we are investigating
-    * ioctl_ns05
-    * ioctl_ns06
-    * aio02
-    * acct01
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.1.8-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.1.y
-git commit: cef30fd8e063aacee3601ac8df2c4d1c5980b759
-git describe: v5.1.7-86-gcef30fd8e063
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/bui=
-ld/v5.1.7-86-gcef30fd8e063
-
-No regressions (compared to build v5.1.7)
-
-
-Fixes (compared to build v5.1.7)
-------------------------------------------------------------------------
-  kselftest:
-    * bpf_test_libbpf.sh
-    * bpf_test_select_reuseport
-    * bpf_test_tcpbpf_user
-    * bpf_test_verifier
-    * seccomp_seccomp_bpf
-    * timers_set-timer-lat
-
-Ran 16135 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* kvm-unit-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
