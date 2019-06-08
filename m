@@ -2,154 +2,94 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257BBC468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 13:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64C0C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 13:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C4B2168B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 13:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560001605;
-	bh=AqXNccIG2e5sGKnKMI+lneT6PylUp0yKkW8DCVu/wYc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=q7SWT3VzE9E9YhEmLsjSMLruGLN7aPjIfJVaXFnqo7uviVlFOH8nYpTn94swNqAui
-	 iG9jGmN1N9X9ouGjaiomUtQiApWW4AiMRCRzPF+eaFbyxpB7BYrbOhoCSUCYy6HdUs
-	 tdIM/iH6L0AKpSLNI/METdlGE699o9x3Jmda4QGs=
+	by mail.kernel.org (Postfix) with ESMTP id 7DB9D214C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 13:47:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jik12TfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfFHNqo (ORCPT
+        id S1727174AbfFHNry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 09:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfFHNqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 09:46:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEA58214C6;
-        Sat,  8 Jun 2019 13:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560001603;
-        bh=AqXNccIG2e5sGKnKMI+lneT6PylUp0yKkW8DCVu/wYc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tIp2G7+6knROEdDhm318XgsOCUXuvkDbr+NYn307Bnkdq5VwC+DN+FVlrZ4sKENeF
-         p1KfWllMoMxFws/4FANUMPDb8jnnDePPZA1LGJhET9sTn9wkEhaiQaLNSKq2l8Fk6S
-         cUqb86C1k6ysUjf9ct/WUfzmBckHBFP9MOXD4PxI=
-Date:   Sat, 8 Jun 2019 14:46:36 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Stefan Popa <stefan.popa@analog.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <Michael.Hennerich@analog.com>, <gregkh@linuxfoundation.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: iio: frequency: Add docs for
- ADF4371 PLL
-Message-ID: <20190608144636.13b31f52@archlinux>
-In-Reply-To: <1559660301-12298-1-git-send-email-stefan.popa@analog.com>
-References: <1559660301-12298-1-git-send-email-stefan.popa@analog.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 8 Jun 2019 09:47:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45184 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFHNry (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 09:47:54 -0400
+Received: by mail-pf1-f196.google.com with SMTP id s11so2734602pfm.12
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 06:47:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3IWvfaaFNGT8InqNZfLakELSo2uZGE/lq61PgOtWuqA=;
+        b=jik12TfGQsA03SvtFh12eDLYdq4hPzA/zHinCwJ/6BS1eweB3ckVQb3BAnuelT/yUV
+         FpSBb6FNpT8Uc+1U6+yoYk9JPGLSWw2EZanS0yBhqZJ7g2+dHBHvxinAsOviUyRAUBf4
+         BDo3elDwVg97RxEHHSAQStZOSVwqQTIDdX/3XnBGNoGiZY5dKpgd0pNq8Jf9rXbEvD9F
+         g5dsA0AhNEWPDSlHChOAcurk7ErVmmlP2KHXym/Ebjx4PJt1V8Qriq86vm0Ib+O94em5
+         GjMGQXLBXQGpfptoS6J/C86g1HwEaXa9vtYjPh5pFzY2t0ZyK9c2A4fldRpJkGdZ64hY
+         5X0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3IWvfaaFNGT8InqNZfLakELSo2uZGE/lq61PgOtWuqA=;
+        b=NvphJ8F4VxthypPSQLUvmjWAqfbETIGVWgtnkqj6mFZkGgIAss9vi2Kao9L6qc6mMA
+         T/Rm1qp9FGt0BUS7zfyVQbKYa2qSSOdQ1PIJxMJtodyxTZm8oYhFFmm7uiqhbqgP6r6C
+         FWV03dOslNJCWpstAwGAc8ViRxjiO6UR31141oK+uC01/mOCAQoUI+uH6CDvFpd+vD85
+         48QrB2u671fGq8C+ANQRpH6duMxOQWaxMYoZYDJR6oI1Gov0nvNVQJjinfznsiDAlheV
+         I8r7eDNhRaQkZ1WmOsWcM1zG5uEQY5MTyhH6cYteBpsqQF+pzd1zb3qpFp/MAdFTHhU7
+         ISsg==
+X-Gm-Message-State: APjAAAUmQ6PIt/Q7kHDR8AN9GQgglMKHmH9sqWlZg7/GWLSRXU+5RfZb
+        tWEru6dyI8TTXlkXnwFCyUI=
+X-Google-Smtp-Source: APXvYqxbPnMVTaDU8ckvWZuirNQsy8vxQztNRUwJS0Fc0PfgQsDLfHNcDcOGhSNloa+4qIU2X/NRfQ==
+X-Received: by 2002:a63:4c:: with SMTP id 73mr5477620pga.134.1560001673375;
+        Sat, 08 Jun 2019 06:47:53 -0700 (PDT)
+Received: from soonoo-tp.localdomain ([175.125.62.120])
+        by smtp.gmail.com with ESMTPSA id m19sm12944138pff.153.2019.06.08.06.47.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 08 Jun 2019 06:47:52 -0700 (PDT)
+From:   Soonwoo Hong <qpseh2m7@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, Soonwoo Hong <qpseh2m7@gmail.com>
+Subject: [PATCH] blk-mq: fix coding style
+Date:   Sat,  8 Jun 2019 22:47:28 +0900
+Message-Id: <20190608134728.4655-1-qpseh2m7@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Jun 2019 17:58:21 +0300
-Stefan Popa <stefan.popa@analog.com> wrote:
+Add a space before colon in ternary operator
 
-> Document support for Analog Devices ADF4371 SPI Wideband Synthesizer.
-> 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Singed-off-by: Soonwoo Hong <qpseh2m7@gmail.com>
+---
+ block/blk-mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
-> Changes in v2:
-> 	- Nothing changed.
-> Changes in v3:
-> 	- Nothing changed.
-> Changes in v4:
-> 	- Nothing changed.
-> Changes in v5:
-> 	- Nothing changed.
-> Changes in v6:
-> 	- Nothing changed.
-> 
->  .../devicetree/bindings/iio/frequency/adf4371.yaml | 54 ++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> new file mode 100644
-> index 0000000..d7adf074
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/frequency/adf4371.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADF4371 Wideband Synthesizer
-> +
-> +maintainers:
-> +  - Popa Stefan <stefan.popa@analog.com>
-> +
-> +description: |
-> +  Analog Devices ADF4371 SPI Wideband Synthesizer
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/adf4371.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adf4371
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description:
-> +      Definition of the external clock (see clock/clock-bindings.txt)
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description:
-> +      Must be "clkin"
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    spi0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        frequency@0 {
-> +                compatible = "adi,adf4371";
-> +                reg = <0>;
-> +                spi-max-frequency = <1000000>;
-> +                clocks = <&adf4371_clkin>;
-> +                clock-names = "clkin";
-> +        };
-> +    };
-> +...
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index ce0f5f4ede70..374b13e89bb1 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1377,7 +1377,7 @@ static void __blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx)
+ 		cpu_online(hctx->next_cpu)) {
+ 		printk(KERN_WARNING "run queue from wrong CPU %d, hctx %s\n",
+ 			raw_smp_processor_id(),
+-			cpumask_empty(hctx->cpumask) ? "inactive": "active");
++			cpumask_empty(hctx->cpumask) ? "inactive" : "active");
+ 		dump_stack();
+ 	}
+ 
+-- 
+2.21.0
 
