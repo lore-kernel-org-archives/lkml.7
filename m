@@ -4,34 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6863EC468BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B23DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490C2214DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C1C208E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfFHK4p (ORCPT
+        id S1727770AbfFHK75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 06:56:45 -0400
-Received: from sauhun.de ([88.99.104.3]:51790 "EHLO pokefinder.org"
+        Sat, 8 Jun 2019 06:59:57 -0400
+Received: from sauhun.de ([88.99.104.3]:51862 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbfFHK4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 06:56:43 -0400
+        id S1726876AbfFHK4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 06:56:45 -0400
 Received: from localhost (p5486CBCC.dip0.t-ipconnect.de [84.134.203.204])
-        by pokefinder.org (Postfix) with ESMTPSA id 610B93E609A;
-        Sat,  8 Jun 2019 12:56:41 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id 8AA313E4771;
+        Sat,  8 Jun 2019 12:56:43 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/34] clk: clk-cdce706: simplify getting the adapter of a client
-Date:   Sat,  8 Jun 2019 12:55:40 +0200
-Message-Id: <20190608105619.593-2-wsa+renesas@sang-engineering.com>
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 05/34] leds: leds-tca6507: simplify getting the adapter of a client
+Date:   Sat,  8 Jun 2019 12:55:44 +0200
+Message-Id: <20190608105619.593-6-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
 References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
@@ -50,22 +49,22 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Please apply to your subsystem tree.
 
- drivers/clk/clk-cdce706.c | 2 +-
+ drivers/leds/leds-tca6507.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-cdce706.c b/drivers/clk/clk-cdce706.c
-index f21d9092564f..476d29c013e5 100644
---- a/drivers/clk/clk-cdce706.c
-+++ b/drivers/clk/clk-cdce706.c
-@@ -633,7 +633,7 @@ of_clk_cdce_get(struct of_phandle_args *clkspec, void *data)
- static int cdce706_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
--	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-+	struct i2c_adapter *adapter = client->adapter;
- 	struct cdce706_dev_data *cdce;
- 	int ret;
+diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
+index c59035e157d1..58be20cae183 100644
+--- a/drivers/leds/leds-tca6507.c
++++ b/drivers/leds/leds-tca6507.c
+@@ -758,7 +758,7 @@ static int tca6507_probe(struct i2c_client *client,
+ 	int err;
+ 	int i = 0;
  
+-	adapter = to_i2c_adapter(client->dev.parent);
++	adapter = client->adapter;
+ 	pdata = dev_get_platdata(&client->dev);
+ 
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_I2C))
 -- 
 2.19.1
 
