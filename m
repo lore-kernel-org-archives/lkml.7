@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8894CC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2C2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56065214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824DB2166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994136;
-	bh=dXIw594PFIhA3xlq96cbq226LcjPNYMNiR92xQ62fRg=;
+	s=default; t=1559994145;
+	bh=K1MApQ/oZF1VzMLMdr0fGQ8ZObjTCfSeKPtjXmgD38I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fC9OCGGNuEEGWtAduo8Ds7/OsgfzOYJjUECua02zR+XtH52WNNXFJueoob+heihwV
-	 yddjjipcGQcrtE/wr9nvIRrf6gGNZxS3aV9k4NHg5ckc4rs9ZMKg3yBEaD3Dbd8/wZ
-	 Rdf+qOofWrjJlAaiYTdL37FzMamv8Vr4OMotF7Yk=
+	b=JJXycmeBx9sj4UqmogvfHl9OCIxJ5l3ca8rg674zQ3LKqf/VR2jEe+yUKOxniuRgv
+	 O+VRjQiT1Z6gKZDEGrFl9gCV30HeUcLjKZLfDTl20dO4O8C93++du7JJh3zC4qi9ag
+	 Tuezb1ZjEb4dnRi0dbyd5glbmHU3O42BRk6FCmlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfFHLmO (ORCPT
+        id S1728449AbfFHLmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:42:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59472 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:42:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbfFHLmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:42:11 -0400
+        id S1728414AbfFHLmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:42:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65173216C4;
-        Sat,  8 Jun 2019 11:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38BA9214DA;
+        Sat,  8 Jun 2019 11:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994131;
-        bh=dXIw594PFIhA3xlq96cbq226LcjPNYMNiR92xQ62fRg=;
+        s=default; t=1559994142;
+        bh=K1MApQ/oZF1VzMLMdr0fGQ8ZObjTCfSeKPtjXmgD38I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CECzzfPEeh0+eVQzY7+5CietiYQt9+mf0dPs/Svg3cH4+TTWFYvMpmYepPt0BdUZA
-         g1e1n5oDT8lnhoKfhbnd39+MQH8vu2YdaL2LfzebH0BjRiSNfE6tl1jnh29O03vLwL
-         7r+W7B5quFt75eBCQ51oQLwQSqgZC+tT9axNqK0M=
+        b=WxENHbCWG+aCkjOSv5BN7/jnrPxsUpAoUavGxab1sDtfQoGEpAz4ucaQTkkrE+OIo
+         Q96x7W+1WudyG4cDMtEgt3QXVYvuZe+JBjdqroPh8gItnOzFZCHgcAE9pn63BinrY7
+         cJr5odhfgArHbYDDETs0b7bqsJgEKQ88llGBxeJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 61/70] net: phylink: ensure consistent phy interface mode
-Date:   Sat,  8 Jun 2019 07:39:40 -0400
-Message-Id: <20190608113950.8033-61-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 67/70] scsi: scsi_dh_alua: Fix possible null-ptr-deref
+Date:   Sat,  8 Jun 2019 07:39:46 -0400
+Message-Id: <20190608113950.8033-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -59,54 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit c678726305b9425454be7c8a7624290b602602fc ]
+[ Upstream commit 12e750bc62044de096ab9a95201213fd912b9994 ]
 
-Ensure that we supply the same phy interface mode to mac_link_down() as
-we did for the corresponding mac_link_up() call.  This ensures that MAC
-drivers that use the phy interface mode in these methods can depend on
-mac_link_down() always corresponding to a mac_link_up() call for the
-same interface mode.
+If alloc_workqueue fails in alua_init, it should return -ENOMEM, otherwise
+it will trigger null-ptr-deref while unloading module which calls
+destroy_workqueue dereference
+wq->lock like this:
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+BUG: KASAN: null-ptr-deref in __lock_acquire+0x6b4/0x1ee0
+Read of size 8 at addr 0000000000000080 by task syz-executor.0/7045
+
+CPU: 0 PID: 7045 Comm: syz-executor.0 Tainted: G         C        5.1.0+ #28
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
+Call Trace:
+ dump_stack+0xa9/0x10e
+ __kasan_report+0x171/0x18d
+ ? __lock_acquire+0x6b4/0x1ee0
+ kasan_report+0xe/0x20
+ __lock_acquire+0x6b4/0x1ee0
+ lock_acquire+0xb4/0x1b0
+ __mutex_lock+0xd8/0xb90
+ drain_workqueue+0x25/0x290
+ destroy_workqueue+0x1f/0x3f0
+ __x64_sys_delete_module+0x244/0x330
+ do_syscall_64+0x72/0x2a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 03197b61c5ec ("scsi_dh_alua: Use workqueue for RTPG")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phylink.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/scsi/device_handler/scsi_dh_alua.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 89750c7dfd6f..efa31fcda505 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -51,6 +51,10 @@ struct phylink {
+diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
+index d7ac498ba35a..2a9dcb8973b7 100644
+--- a/drivers/scsi/device_handler/scsi_dh_alua.c
++++ b/drivers/scsi/device_handler/scsi_dh_alua.c
+@@ -1174,10 +1174,8 @@ static int __init alua_init(void)
+ 	int r;
  
- 	/* The link configuration settings */
- 	struct phylink_link_state link_config;
-+
-+	/* The current settings */
-+	phy_interface_t cur_interface;
-+
- 	struct gpio_desc *link_gpio;
- 	struct timer_list link_poll;
- 	void (*get_fixed_state)(struct net_device *dev,
-@@ -453,12 +457,12 @@ static void phylink_resolve(struct work_struct *w)
- 		if (!link_state.link) {
- 			netif_carrier_off(ndev);
- 			pl->ops->mac_link_down(ndev, pl->link_an_mode,
--					       pl->phy_state.interface);
-+					       pl->cur_interface);
- 			netdev_info(ndev, "Link is Down\n");
- 		} else {
-+			pl->cur_interface = link_state.interface;
- 			pl->ops->mac_link_up(ndev, pl->link_an_mode,
--					     pl->phy_state.interface,
--					     pl->phydev);
-+					     pl->cur_interface, pl->phydev);
+ 	kaluad_wq = alloc_workqueue("kaluad", WQ_MEM_RECLAIM, 0);
+-	if (!kaluad_wq) {
+-		/* Temporary failure, bypass */
+-		return SCSI_DH_DEV_TEMP_BUSY;
+-	}
++	if (!kaluad_wq)
++		return -ENOMEM;
  
- 			netif_carrier_on(ndev);
- 
+ 	r = scsi_register_device_handler(&alua_dh);
+ 	if (r != 0) {
 -- 
 2.20.1
 
