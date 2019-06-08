@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38160C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F6CC468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02208214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9C0214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994826;
-	bh=Av4HY/0Q8NsA0c/favFMI7/QIDxKXvn8c7LgQSJ9lWk=;
+	s=default; t=1559994830;
+	bh=uQ4XZcvhcYF7ErpL8NqDn7A//9BnoY8UspE4kMWvs74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aakpwjVJenjgx8lJ37liyAiMPByhy1L4rVIwKrfymr7Gm8jApogz1QDiFRIeWuZPv
-	 qKJyMkPOktmGZU7nJHSyQoWBP0Fm1wJIKSNXWHd8uQ5jGWGHPYbYVU4JrAT9SVfwN7
-	 QzP/mF7R84Cm5KMCzTtHl5bIZ1NeBMmwuKTJdjcg=
+	b=dnDjqGApoA/5//jx0umuS0fq3jAw0ki2wG2/FClfn054MJY1CKUN39X8Z6VCeRipD
+	 +sjqntOky4FYDscLsufcZz5S3vRQKKgb0U8Ps9lKyHpzMdo2M8ZMUtq7MfcQuIE+78
+	 ZV76EZULDsU3LweQspJSOiSyZWbfJULkqwRnn7DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfFHLkm (ORCPT
+        id S1727752AbfFHLkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:40:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727676AbfFHLkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:37 -0400
+        id S1727688AbfFHLki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E1E208C0;
-        Sat,  8 Jun 2019 11:40:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3FE4214C6;
+        Sat,  8 Jun 2019 11:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994036;
-        bh=Av4HY/0Q8NsA0c/favFMI7/QIDxKXvn8c7LgQSJ9lWk=;
+        s=default; t=1559994037;
+        bh=uQ4XZcvhcYF7ErpL8NqDn7A//9BnoY8UspE4kMWvs74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=udkZPYId9FlQ0E1Zgz6va6KCyX25WUyY/kKYKY8JCk3iWSbvsGB+kWI9eNS2NtACY
-         wd7yijoP2diQzOzrkHjikT1IuqI1yBXEMlapYFxcH/klxwJvrxdsP4M1MDR4sQJRLu
-         Z7RJOBVziMSLc5Q16HmOQ9nt4gXf1JWUfLfIPis8=
+        b=1TBKswamPsRf+PDwKOQ+nMab5jZRvmVUUun3LBMbPFSBI5955gWyGi15/oery5s0C
+         +XIC8jb4U4wvxFKo/OC2tKvrxDmz3ayaLT+IsWDqOMuolHXF6tDUtuiY23Gp1A1qBb
+         m+99DJ6Oxb9quqVP8xilvkmr5bVmZmiF0WLTVWdQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ioana Radulescu <ruxandra.radulescu@nxp.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 30/70] dpaa2-eth: Fix potential spectre issue
-Date:   Sat,  8 Jun 2019 07:39:09 -0400
-Message-Id: <20190608113950.8033-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 31/70] dpaa2-eth: Use PTR_ERR_OR_ZERO where appropriate
+Date:   Sat,  8 Jun 2019 07:39:10 -0400
+Message-Id: <20190608113950.8033-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -61,42 +61,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ioana Radulescu <ruxandra.radulescu@nxp.com>
 
-[ Upstream commit 5a20a093d965560f632b2ec325f8876918f78165 ]
+[ Upstream commit bd8460fa4de46e9d6177af4fe33bf0763a7af4b7 ]
 
-Smatch reports a potential spectre vulnerability in the dpaa2-eth
-driver, where the value of rxnfc->fs.location (which is provided
-from user-space) is used as index in an array.
-
-Add a call to array_index_nospec() to sanitize the access.
+Use PTR_ERR_OR_ZERO instead of PTR_ERR in cases where
+zero is a valid input. Reported by smatch.
 
 Signed-off-by: Ioana Radulescu <ruxandra.radulescu@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
-index 591dfcf76adb..0610fc0bebc2 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
-@@ -4,6 +4,7 @@
-  */
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 57cbaa38d247..df371c81a706 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -1966,7 +1966,7 @@ alloc_channel(struct dpaa2_eth_priv *priv)
  
- #include <linux/net_tstamp.h>
-+#include <linux/nospec.h>
+ 	channel->dpcon = setup_dpcon(priv);
+ 	if (IS_ERR_OR_NULL(channel->dpcon)) {
+-		err = PTR_ERR(channel->dpcon);
++		err = PTR_ERR_OR_ZERO(channel->dpcon);
+ 		goto err_setup;
+ 	}
  
- #include "dpni.h"	/* DPNI_LINK_OPT_* */
- #include "dpaa2-eth.h"
-@@ -589,6 +590,8 @@ static int dpaa2_eth_get_rxnfc(struct net_device *net_dev,
- 	case ETHTOOL_GRXCLSRULE:
- 		if (rxnfc->fs.location >= max_rules)
- 			return -EINVAL;
-+		rxnfc->fs.location = array_index_nospec(rxnfc->fs.location,
-+							max_rules);
- 		if (!priv->cls_rules[rxnfc->fs.location].in_use)
- 			return -EINVAL;
- 		rxnfc->fs = priv->cls_rules[rxnfc->fs.location].fs;
+@@ -2022,7 +2022,7 @@ static int setup_dpio(struct dpaa2_eth_priv *priv)
+ 		/* Try to allocate a channel */
+ 		channel = alloc_channel(priv);
+ 		if (IS_ERR_OR_NULL(channel)) {
+-			err = PTR_ERR(channel);
++			err = PTR_ERR_OR_ZERO(channel);
+ 			if (err != -EPROBE_DEFER)
+ 				dev_info(dev,
+ 					 "No affine channel for cpu %d and above\n", i);
 -- 
 2.20.1
 
