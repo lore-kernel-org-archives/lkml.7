@@ -2,350 +2,146 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EA0C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87DFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA93D212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB9E212F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfFHQjf (ORCPT
+        id S1727358AbfFHQmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 12:39:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59558 "EHLO
+        Sat, 8 Jun 2019 12:42:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39370 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727203AbfFHQjf (ORCPT
+        by vger.kernel.org with ESMTP id S1727203AbfFHQmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 12:39:35 -0400
+        Sat, 8 Jun 2019 12:42:03 -0400
 Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58GbXLw019267
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 12:39:33 -0400
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58Gfg4W026299
+        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 12:42:01 -0400
 Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t096ubukj-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t096ubwat-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 12:39:32 -0400
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 12:42:01 -0400
 Received: from localhost
         by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 8 Jun 2019 17:39:32 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        Sat, 8 Jun 2019 17:42:01 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
         by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 8 Jun 2019 17:39:28 +0100
+        Sat, 8 Jun 2019 17:41:57 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58GdRVp37486972
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58Gfu0g37618132
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Jun 2019 16:39:27 GMT
+        Sat, 8 Jun 2019 16:41:57 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD3C7B2064;
-        Sat,  8 Jun 2019 16:39:27 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DE875B206B;
+        Sat,  8 Jun 2019 16:41:56 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B3F2AB205F;
-        Sat,  8 Jun 2019 16:39:27 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id CF628B2068;
+        Sat,  8 Jun 2019 16:41:56 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.85.180.36])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat,  8 Jun 2019 16:39:27 +0000 (GMT)
+        Sat,  8 Jun 2019 16:41:56 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 76B7F16C2E2C; Sat,  8 Jun 2019 09:39:29 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 09:39:29 -0700
+        id 9610616C2E2C; Sat,  8 Jun 2019 09:41:58 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 09:41:58 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.parri@amarulasolutions.com, peterz@infradead.org
-Subject: Re: [PATCH 1/2] btrfs: Implement DRW lock
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        mingo@kernel.org, jpoimboe@redhat.com, mojha@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH HACK RFC] cpu: Prevent late-arriving interrupts from
+ disrupting offline
 Reply-To: paulmck@linux.ibm.com
-References: <20190606135219.1086-1-nborisov@suse.com>
- <20190606135219.1086-2-nborisov@suse.com>
- <20190607105251.GB28207@linux.ibm.com>
- <7a1c1f42-6e2f-57fc-5cdd-8c2bea23dffa@suse.com>
- <20190608151345.GC28207@linux.ibm.com>
- <4e3d5950-027d-c581-2bff-26602ca63521@suse.com>
- <20190608160620.GH28207@linux.ibm.com>
- <c15d367e-3423-20cf-5778-3ce65df6fba9@suse.com>
+References: <20190602011253.GA6167@linux.ibm.com>
+ <20190603083848.GB3436@hirez.programming.kicks-ass.net>
+ <20190603114455.GA16119@lakrids.cambridge.arm.com>
+ <ea4887fb-cc77-59d4-3ba7-a59f5237ca40@arm.com>
+ <20190604074549.GP28207@linux.ibm.com>
+ <6eb5d59f-37d0-0aab-1fc0-fcf48cc4164f@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c15d367e-3423-20cf-5778-3ce65df6fba9@suse.com>
+In-Reply-To: <6eb5d59f-37d0-0aab-1fc0-fcf48cc4164f@arm.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
-x-cbid: 19060816-0064-0000-0000-000003EB9904
+x-cbid: 19060816-0064-0000-0000-000003EB991C
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011234; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01215076; UDB=6.00638768; IPR=6.00996168;
- MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 16:39:31
+ PH=3.00000004; SC=3.00000286; SDB=6.01215077; UDB=6.00638768; IPR=6.00996168;
+ MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 16:42:00
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060816-0065-0000-0000-00003DCED9C7
-Message-Id: <20190608163929.GJ28207@linux.ibm.com>
+x-cbparentid: 19060816-0065-0000-0000-00003DCEDB3C
+Message-Id: <20190608164158.GK28207@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906080125
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906080126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 07:21:53PM +0300, Nikolay Borisov wrote:
-> On 8.06.19 г. 19:06 ч., Paul E. McKenney wrote:
-> > On Sat, Jun 08, 2019 at 06:44:17PM +0300, Nikolay Borisov wrote:
-> >> On 8.06.19 г. 18:13 ч., Paul E. McKenney wrote:
-> >>> On Fri, Jun 07, 2019 at 02:59:34PM +0300, Nikolay Borisov wrote:
-> >>>> On 7.06.19 г. 13:52 ч., Paul E. McKenney wrote:
-> >>>>> On Thu, Jun 06, 2019 at 04:52:18PM +0300, Nikolay Borisov wrote:
-> >>>>>> A (D)ouble (R)eader (W)riter lock is a locking primitive that allows
-> >>>>>> to have multiple readers or multiple writers but not multiple readers
-> >>>>>> and writers holding it concurrently. The code is factored out from
-> >>>>>> the existing open-coded locking scheme used to exclude pending
-> >>>>>> snapshots from nocow writers and vice-versa. Current implementation
-> >>>>>> actually favors Readers (that is snapshot creaters) to writers (nocow
-> >>>>>> writers of the filesystem).
-> >>>>>>
-> >>>>>> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-> >>>>>
-> >>>>> A preliminary question...
-> >>>>>
-> >>>>> What prevents the following sequence of events from happening?
-> >>>>>
-> >>>>> o	btrfs_drw_write_lock() invokes btrfs_drw_try_write_lock(),
-> >>>>> 	which sees that lock->readers is zero and thus executes
-> >>>>> 	percpu_counter_inc(&lock->writers).
-> >>>>>
-> >>>>> o	btrfs_drw_read_lock() increments lock->readers, does the
-> >>>>> 	smp_mb__after_atomic(), and then does the wait_event().
-> >>>>> 	Because btrfs_drw_try_write_lock() incremented its CPU's
-> >>>>> 	lock->writers, the sum is the value one, so it blocks.
-> >>>>>
-> >>>>> o	btrfs_drw_try_write_lock() checks lock->readers, sees that
-> >>>>> 	it is now nonzero, and thus invokes btrfs_drw_read_unlock()
-> >>>>> 	(which decrements the current CPU's counter, so that a future
-> >>>>> 	sum would get zero), and returns false.
-> >>>>
-> >>>> btrfs_drw_read_unlock is actually btrfs_drw_write_unlock, my bad, Filipe
-> >>>> already pointed that out and I've fixed it.
+On Tue, Jun 04, 2019 at 03:29:32PM +0200, Dietmar Eggemann wrote:
+> On 6/4/19 9:45 AM, Paul E. McKenney wrote:
+> >On Mon, Jun 03, 2019 at 03:39:18PM +0200, Dietmar Eggemann wrote:
+> >>On 6/3/19 1:44 PM, Mark Rutland wrote:
+> >>>On Mon, Jun 03, 2019 at 10:38:48AM +0200, Peter Zijlstra wrote:
+> >>>>On Sat, Jun 01, 2019 at 06:12:53PM -0700, Paul E. McKenney wrote:
+> >>>>>Scheduling-clock interrupts can arrive late in the CPU-offline process,
+> 
+> [...]
+> 
+> >>>   05981277a4de1ad6 ("arm64: Use common outgoing-CPU-notification code")
 > >>>
-> >>> Ah!  I must then ask what you are using to test this.  kernel/locktorture.c?
-> > 
-> > Right...  Make that kernel/locking/locktorture.c
-> > 
-> >> At the moment - nothing. I rely on the fact that the original code I
-> >> extracted that from is bug-free (ha-ha). So perhahps hooking up
-> >> locktorture seems like a good suggestion. From a quick look I guess I
-> >> could mostly model that lock against the rwsem. The question is how do I
-> >> model the trylock semantics as well as the "double" part?
-> > 
-> > Implementing a correct synchronization primitive is like committing the
-> > perfect crime.  There are at least 50 things that can go wrong, and if
-> > you are a highly experienced genius, you -might- be able to anticipate
-> > and handle 25 of them.  (With apologies to any Kathleen Turner fans who
-> > might still be alive.)  Please note that this still applies to code
-> > ported from somewhere else because different environments likely have
-> > different assumptions and properties.
+> >>>... but it looks like Paul's patch to do so [1] fell through the cracks;
+> >>>I'm not aware of any reason that shouldn't have been taken.
+> >>>[1] https://lore.kernel.org/lkml/1431467407-1223-8-git-send-email-paulmck@linux.vnet.ibm.com/
+> >>>
+> >>>Paul, do you want to resend that?
+> >>
+> >>Please do. We're carrying this patch out-of-tree for while now in
+> >>our EAS integration to get cpu hotplug tests passing on TC2 (arm).
+> >
+> >Huh.  It still applies.  But I have no means of testing it.
 > 
-> I agree, I'm far from thinking that the locking scheme is actually bug
-> free (hence the 'ha-ha') I'm not that arrogant (yet).
-
-;-) ;-) ;-)
-
-> > Therefore, heavy-duty stress testing is not optional.  In fact, formal
-> > verification is becoming non-optional as well -- please see Catalin
-> > Marinas's work on verifying the Linux kernel's queued spinlock for
-> > an example.
+> We can do the testing part on our TC2 platform, i.e. we're testing
+> it with each of our EAS mainline integration right now.
 > 
-> I assume you are referring to "Formal Methods for kernel hackers"? If
-> so, TLA+ has been on my radar ever since
-> https://lamport.azurewebsites.net/tla/formal-methods-amazon.pdf .
-
-Yes, and good to hear.  There are other options, including Promela/spin,
-cbmc, and so on.
-
-> However I've yet to invest the time to be able to properly model a real
-> protocol (be it locking or otherwise) in it. Perhahps I could use the
-> DRW lock as a learning opportunity, we'll see.
-
-The learning would likely be reusable, and might pay for itself in
-terms of bugs found more quickly and with less effort.  Mileage can
-vary, as always, of course.
-
-> > You are right, current locktorture would get upset about having concurrent
-> > writers.  To teach locktorture about this, I suggest adding a flag to
-> > the lock_torture_ops structure named something like concurrent_write,
-> > but hopefully shorter.  Then this flag can be used to disable the "only
-> > one writer" check in lock_torture_writer().
-> > 
-> > Seem reasonable?
+> https://developer.arm.com/tools-and-software/open-source-software/linux-kernel/energy-aware-scheduling/eas-mainline-development
 > 
-> Good idea, I'll see to extending lock-torture but this will happen in a
-> week or so because I'm about to go on a holiday.
+> http://linux-arm.org/git?p=linux-power.git;a=commit;h=8cd16f1dc2cd896a0b1e2010b4992b33fdc11fe0
+> 
+> >And it looks like the reason I dropped it was that I didn't get any
+> >response from the maintainer.  I sent a message to this effect to
+> >linux-arm-kernel@lists.infradead.org and linux@arm.linux.org.uk on May
+> >21, 2015.
+> >
+> >So here it is again.  ;-)
+> >
+> >I have queued this locally.  Left to myself, I add the two of you on its
+> >Cc: list and run it through my normal process.  But given the history,
+> >I would still want either an ack from the maintainer or, better, for
+> >the maintainer to take the patch.
+> >
+> >Or is there a better way for us to proceed on this?
+> 
+> You could send this patch also to
+> linux-arm-kernel@lists.infradead.org and cc rmk to get his opinion
+> on the patch.
 
-Have a great holiday, and looking forward to seeing your next version
-and locktorture modifications.
+OK, please let me know how the testing goes.  My thought is to send the
+patch as you suggest with your Tested-by.
 
 							Thanx, Paul
-
-> >>>> The idea here is that if a reader came after we've incremented out
-> >>>> percpu counter then it would have blocked, the writer would see that and
-> >>>> invoke btrfs_drw_write_unlock which will decrement the percpu counter
-> >>>> and will wakeup the reader that is now blocked on pending_readers.
-> >>>
-> >>> OK, I will await your next version.
-> >>>
-> >>> 							Thanx, Paul
-> >>>
-> >>>>> o	btrfs_drw_write_lock() therefore does its wait_event().
-> >>>>> 	Because lock->readers is nonzero, it blocks.
-> >>>>>
-> >>>>> o	Both tasks are now blocked.  In the absence of future calls
-> >>>>> 	to these functions (and perhaps even given such future calls),
-> >>>>> 	we have deadlock.
-> >>>>>
-> >>>>> So what am I missing here?
-> >>>>>
-> >>>>> 							Thanx, Paul
-> >>>>>
-> >>>>>> ---
-> >>>>>>  fs/btrfs/Makefile   |  2 +-
-> >>>>>>  fs/btrfs/drw_lock.c | 71 +++++++++++++++++++++++++++++++++++++++++++++
-> >>>>>>  fs/btrfs/drw_lock.h | 23 +++++++++++++++
-> >>>>>>  3 files changed, 95 insertions(+), 1 deletion(-)
-> >>>>>>  create mode 100644 fs/btrfs/drw_lock.c
-> >>>>>>  create mode 100644 fs/btrfs/drw_lock.h
-> >>>>>>
-> >>>>>> diff --git a/fs/btrfs/Makefile b/fs/btrfs/Makefile
-> >>>>>> index ca693dd554e9..dc60127791e6 100644
-> >>>>>> --- a/fs/btrfs/Makefile
-> >>>>>> +++ b/fs/btrfs/Makefile
-> >>>>>> @@ -10,7 +10,7 @@ btrfs-y += super.o ctree.o extent-tree.o print-tree.o root-tree.o dir-item.o \
-> >>>>>>  	   export.o tree-log.o free-space-cache.o zlib.o lzo.o zstd.o \
-> >>>>>>  	   compression.o delayed-ref.o relocation.o delayed-inode.o scrub.o \
-> >>>>>>  	   reada.o backref.o ulist.o qgroup.o send.o dev-replace.o raid56.o \
-> >>>>>> -	   uuid-tree.o props.o free-space-tree.o tree-checker.o
-> >>>>>> +	   uuid-tree.o props.o free-space-tree.o tree-checker.o drw_lock.o
-> >>>>>>  
-> >>>>>>  btrfs-$(CONFIG_BTRFS_FS_POSIX_ACL) += acl.o
-> >>>>>>  btrfs-$(CONFIG_BTRFS_FS_CHECK_INTEGRITY) += check-integrity.o
-> >>>>>> diff --git a/fs/btrfs/drw_lock.c b/fs/btrfs/drw_lock.c
-> >>>>>> new file mode 100644
-> >>>>>> index 000000000000..9681bf7544be
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/fs/btrfs/drw_lock.c
-> >>>>>> @@ -0,0 +1,71 @@
-> >>>>>> +#include "drw_lock.h"
-> >>>>>> +#include "ctree.h"
-> >>>>>> +
-> >>>>>> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock)
-> >>>>>> +{
-> >>>>>> +	atomic_set(&lock->readers, 0);
-> >>>>>> +	percpu_counter_init(&lock->writers, 0, GFP_KERNEL);
-> >>>>>> +	init_waitqueue_head(&lock->pending_readers);
-> >>>>>> +	init_waitqueue_head(&lock->pending_writers);
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock)
-> >>>>>> +{
-> >>>>>> +	percpu_counter_destroy(&lock->writers);
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock)
-> >>>>>> +{
-> >>>>>> +	if (atomic_read(&lock->readers))
-> >>>>>> +		return false;
-> >>>>>> +
-> >>>>>> +	percpu_counter_inc(&lock->writers);
-> >>>>>> +
-> >>>>>> +	/*
-> >>>>>> +	 * Ensure writers count is updated before we check for
-> >>>>>> +	 * pending readers
-> >>>>>> +	 */
-> >>>>>> +	smp_mb();
-> >>>>>> +	if (atomic_read(&lock->readers)) {
-> >>>>>> +		btrfs_drw_read_unlock(lock);
-> >>>>>> +		return false;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	return true;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock)
-> >>>>>> +{
-> >>>>>> +	while(true) {
-> >>>>>> +		if (btrfs_drw_try_write_lock(lock))
-> >>>>>> +			return;
-> >>>>>> +		wait_event(lock->pending_writers, !atomic_read(&lock->readers));
-> >>>>>> +	}
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock)
-> >>>>>> +{
-> >>>>>> +	percpu_counter_dec(&lock->writers);
-> >>>>>> +	cond_wake_up(&lock->pending_readers);
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock)
-> >>>>>> +{
-> >>>>>> +	atomic_inc(&lock->readers);
-> >>>>>> +	smp_mb__after_atomic();
-> >>>>>> +
-> >>>>>> +	wait_event(lock->pending_readers,
-> >>>>>> +		   percpu_counter_sum(&lock->writers) == 0);
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock)
-> >>>>>> +{
-> >>>>>> +	/*
-> >>>>>> +	 * Atomic RMW operations imply full barrier, so woken up writers
-> >>>>>> +	 * are guaranteed to see the decrement
-> >>>>>> +	 */
-> >>>>>> +	if (atomic_dec_and_test(&lock->readers))
-> >>>>>> +		wake_up(&lock->pending_writers);
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +
-> >>>>>> diff --git a/fs/btrfs/drw_lock.h b/fs/btrfs/drw_lock.h
-> >>>>>> new file mode 100644
-> >>>>>> index 000000000000..baff59561c06
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/fs/btrfs/drw_lock.h
-> >>>>>> @@ -0,0 +1,23 @@
-> >>>>>> +#ifndef BTRFS_DRW_LOCK_H
-> >>>>>> +#define BTRFS_DRW_LOCK_H
-> >>>>>> +
-> >>>>>> +#include <linux/atomic.h>
-> >>>>>> +#include <linux/wait.h>
-> >>>>>> +#include <linux/percpu_counter.h>
-> >>>>>> +
-> >>>>>> +struct btrfs_drw_lock {
-> >>>>>> +	atomic_t readers;
-> >>>>>> +	struct percpu_counter writers;
-> >>>>>> +	wait_queue_head_t pending_writers;
-> >>>>>> +	wait_queue_head_t pending_readers;
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock);
-> >>>>>> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock);
-> >>>>>> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock);
-> >>>>>> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock);
-> >>>>>> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock);
-> >>>>>> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock);
-> >>>>>> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock);
-> >>>>>> +
-> >>>>>> +#endif
-> >>>>>> -- 
-> >>>>>> 2.17.1
-> >>>>>>
-> >>>>>
-> >>>>>
-> >>>>
-> >>>
-> >>>
-> >>
-> > 
-> > 
-> 
 
