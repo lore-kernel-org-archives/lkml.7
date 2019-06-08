@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A711C468C2
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93A5C468C7
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A502146E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4B620840
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dMmIR9zP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u4I58YoP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbfFHEoM (ORCPT
+        id S1731014AbfFHEoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 00:44:12 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:44895 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730467AbfFHEoC (ORCPT
+        Sat, 8 Jun 2019 00:44:14 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:54341 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730697AbfFHEoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 00:44:02 -0400
-Received: by mail-vk1-f201.google.com with SMTP id b85so1570600vka.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:44:02 -0700 (PDT)
+        Sat, 8 Jun 2019 00:44:05 -0400
+Received: by mail-qt1-f201.google.com with SMTP id r57so3664680qtj.21
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=nYfthp2AfyfO7B9ZHl8Ammgshm5FNB69pWC4uzGdWTs=;
-        b=dMmIR9zPNKZhyMj3vydkxUzXcQ5Wm+QYdCizczZFkIvzDmfPxqciSkaELIvEK5Uxih
-         os7R+Bfrvx8ppB4h9Lehrkkyr2hNrBpZKz6KUgLW7eikgchAjWmW4brCbz0GESrD4gUr
-         KOAldARNoWDFkH7M/X3DYcnyEkQPOyyDbzaEWpozSS9vPYGmeMVbHWJLv8MS6mZ9vYZT
-         8xkMnreKVikDXYWgfZ17GA+fWtZb03Hvs75yvGestNhmk5AGCRmflDoCC7BqhIYAtYS8
-         dwkJlIxMDIjq8xH6AY1NCud6bFT+S6W56c3l8qUPrOnJpQKyKa/GjyD+LZjJ5UP8C01A
-         wuIw==
+        bh=qdT885hM1gH99LBPR29/QhPlOeEng+ZQVjJx3w/T2/A=;
+        b=u4I58YoPay1wIV0iUGWNilJCvSvIVXTL1/ci8b1Wjy1sm8vMfzaHLznZpwJzX//Rph
+         ttgkgbKpAFClv5uX/X/41cZzhnEUO/g/rlcKS9fYx+PTRXpRCP8TNbRaD1DvJrF/j/y3
+         tgmBde4zGp31x0CDivMs+UIvYHGUxOiEig9Fi7FlulgpoytiqiyJIEiVtvIe64im3Had
+         Yx//ZCG2LVsaWnL+r4lFVQhbV8d1aLk8a+YaEyJEDHDBJVQnw5HRHSuyjKHtMPDm0p3z
+         tVCiE/66D13o+CzXql9II+Xk/wQo1n2rezQTAgA1+3Up520E+RgpsscP7xPh9p4Gh7y8
+         WXYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=nYfthp2AfyfO7B9ZHl8Ammgshm5FNB69pWC4uzGdWTs=;
-        b=hpQKEHTqyzsFoj8pB4m1860xJracE8bx9rIw0wyAUQXarIfg4FR1w83dqoV4ixsEIT
-         QHdn11CxpcMVHH2/oSp9h4BxyPf8+0KmHCBlIeiLU3kTNXxNBJ1dx5Fu2lJREhYoYwSQ
-         5fAKClafnRkPVh+ONtZc/fe3kSDXvYNteCtEYckkNWs1OlbnEvoDuCE5ng4lMrMY8tec
-         J1anvXZM/ZmHCLfGVU3BYnuWqe0w6+Qut+s0Z2GJMtGfjthWX+cVtnGWzoTLp5sci5bU
-         6OxvhTEXg5wqbu/vBgTf2qKAi3yAx9NFdyHBiZsIxRRUGJ27E3BG2N0OQn6Bm+Iw7sER
-         EyBg==
-X-Gm-Message-State: APjAAAXg9DxaJUXLRcZFkIOCWR9hhciJpm4ipmN1Rw9dA3rVGnH8JFzb
-        Mw+O/jEWGKyRfVoVG+8R2s/IkQjSVHoDaIU=
-X-Google-Smtp-Source: APXvYqwiuDqsREIBPM5HcBRZmU9ocdAtwS9Xwtx0WfII9zeKP5yslJnw2HWFvQ3SRyhjeXZMrdRFC3gLD1HglW4=
-X-Received: by 2002:ab0:30a3:: with SMTP id b3mr571866uam.3.1559969041487;
- Fri, 07 Jun 2019 21:44:01 -0700 (PDT)
-Date:   Fri,  7 Jun 2019 21:43:35 -0700
+        bh=qdT885hM1gH99LBPR29/QhPlOeEng+ZQVjJx3w/T2/A=;
+        b=DyL99K8uMoyF7vMRRCf2YnZLTe8sgGR+PVv5kculPE/23lNMzQUwBUcrvQNBn4u2Hi
+         pBgK5E4Yzb8Em/1+SkhHdwMn1hXEE1P30aafEKKCQNWcEcx09/+dU562sy2WbycyXNAS
+         rGZR8yT4j20xrLhwv5keiYlhX/zqCQxWLcb50XdMB+JmYmi0rDkd9WvT1+WW5BGjrt6N
+         kj84UZQKb2ECY/0E1SlGMSnrHD9rvdnYRtGumvYQLP+jr7LO2HCx/cp+7pw+eH9fkM1k
+         igqhhglLWYRvqKzXNbLufJwBqWkYpwtWaCDVLcu9i70guTtt2v41ij1A1uJBemTaBssp
+         eMVg==
+X-Gm-Message-State: APjAAAULOpj5aEHyonnI9rh4panLR/M9zhkHQH+DI5xbC1S/ywzk4qv1
+        lop1MqDx4RaQLT5w4umKymJ3uw0nmlC9Ruw=
+X-Google-Smtp-Source: APXvYqwj1cOP4RzT//I83dw4bKyy7KpftJsqRPBOzjTNZla/XLUxIXycPdwubPfAFYw0aw/lx47k+naEi+2zJ1o=
+X-Received: by 2002:a37:bd42:: with SMTP id n63mr47852920qkf.262.1559969044588;
+ Fri, 07 Jun 2019 21:44:04 -0700 (PDT)
+Date:   Fri,  7 Jun 2019 21:43:36 -0700
 In-Reply-To: <20190608044339.115026-1-saravanak@google.com>
-Message-Id: <20190608044339.115026-6-saravanak@google.com>
+Message-Id: <20190608044339.115026-7-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190608044339.115026-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v1 5/9] dt-bindings: interconnect: Add interconnect-opp-table property
+Subject: [PATCH v1 6/9] interconnect: Add OPP table support for interconnects
 From:   Saravana Kannan <saravanak@google.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -81,37 +81,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for listing bandwidth OPP tables for each interconnect path
-listed using the interconnects property.
+Interconnect paths can have different performance points. Now that OPP
+framework supports bandwidth OPP tables, add OPP table support for
+interconnects.
+
+Devices can use the interconnect-opp-table DT property to specify OPP
+tables for interconnect paths. And the driver can obtain the OPP table for
+an interconnect path by calling icc_get_opp_table().
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- .../devicetree/bindings/interconnect/interconnect.txt     | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
+ include/linux/interconnect.h |  7 +++++++
+ 2 files changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-index 6f5d23a605b7..fc5b75b76a2c 100644
---- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-+++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-@@ -55,10 +55,18 @@ interconnect-names : List of interconnect path name strings sorted in the same
- 			 * dma-mem: Path from the device to the main memory of
- 			            the system
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 871eb4bc4efc..881bac80bc1e 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -47,6 +47,7 @@ struct icc_req {
+  */
+ struct icc_path {
+ 	size_t num_nodes;
++	struct opp_table *opp_table;
+ 	struct icc_req reqs[];
+ };
  
-+interconnect-opp-table: List of phandles to OPP tables (bandwidth OPP tables)
-+			that specify the OPPs for the interconnect paths listed
-+			in the interconnects property. This property can only
-+			point to OPP tables that belong to the device and are
-+			listed in the device's operating-points-v2 property.
+@@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
+ {
+ 	struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
+ 	struct icc_node *src_node, *dst_node;
+-	struct device_node *np = NULL;
++	struct device_node *np = NULL, *opp_node;
+ 	struct of_phandle_args src_args, dst_args;
+ 	int idx = 0;
+ 	int ret;
+@@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
+ 		dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
+ 	mutex_unlock(&icc_lock);
+ 
++	opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
++	if (opp_node) {
++		path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
++		of_node_put(opp_node);
++	}
 +
- Example:
++
+ 	return path;
+ }
+ EXPORT_SYMBOL_GPL(of_icc_get);
  
- 	sdhci@7864000 {
-+		operating-points-v2 = <&sdhc_opp_table>, <&sdhc_mem_opp_table>;
- 		...
- 		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
- 		interconnect-names = "sdhc-mem";
-+		interconnect-opp-table = <&sdhc_mem_opp_table>;
- 	};
++/**
++ * icc_get_opp_table() - Get the OPP table that corresponds to a path
++ * @path: reference to the path returned by icc_get()
++ *
++ * This function will return the OPP table that corresponds to a path handle.
++ * If the interconnect API is disabled, NULL is returned and the consumer
++ * drivers will still build. Drivers are free to handle this specifically, but
++ * they don't have to.
++ *
++ * Return: opp_table pointer on success. NULL is returned when the API is
++ * disabled or the OPP table is missing.
++ */
++struct opp_table *icc_get_opp_table(struct icc_path *path)
++{
++	return path->opp_table;
++}
++
+ /**
+  * icc_set_bw() - set bandwidth constraints on an interconnect path
+  * @path: reference to the path returned by icc_get()
+diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+index dc25864755ba..0c0bc55f0e89 100644
+--- a/include/linux/interconnect.h
++++ b/include/linux/interconnect.h
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/mutex.h>
+ #include <linux/types.h>
++#include <linux/pm_opp.h>
+ 
+ /* macros for converting to icc units */
+ #define Bps_to_icc(x)	((x) / 1000)
+@@ -28,6 +29,7 @@ struct device;
+ struct icc_path *icc_get(struct device *dev, const int src_id,
+ 			 const int dst_id);
+ struct icc_path *of_icc_get(struct device *dev, const char *name);
++struct opp_table *icc_get_opp_table(struct icc_path *path);
+ void icc_put(struct icc_path *path);
+ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+ 
+@@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
+ {
+ }
+ 
++static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
++{
++	return NULL;
++}
++
+ static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+ {
+ 	return 0;
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
