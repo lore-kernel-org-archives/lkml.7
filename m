@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5A4C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46B2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A09621537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942D221537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994887;
-	bh=9OHKxlOu0OcMXy6Rvg73TkXgsUQWNl1t0sYS7fFm8y0=;
+	s=default; t=1559994890;
+	bh=nL92TG70cXsYXBQ99uvL+djO8fntoJgurhs0EDAxih4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dO2kaoodx54lyIrRsoAYAi498U0rJqR3A+diDBRM1A9EvqDjmwvNGwZgbEN+e4bba
-	 UQ1E2w9lZMO49vPUFBeHd4sg/uYrCvcQMd/jVCaE3eKbbBm/IRli8b9/WKt7j4g4py
-	 tdIPdUari882Qb4eEBKkTHbFSzMZVB5IwgmFT1NA=
+	b=mTMOWeR1uefcfCqNy+584utVu1NeFZoIg26+T5jU0exIcZFSZDuENDgHWCOpmWabH
+	 +3pcQvqasDokOXJ3smRVBz76mD+uh+QwWlJd+V1iJrvcu0gy0GgFdQ4bf9UXegiGfl
+	 8C6QnBsltuZOqAphQhCH2OMOtfaG+IjLk2Nt/vVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfFHLkT (ORCPT
+        id S1727458AbfFHLkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:40:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbfFHLkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:12 -0400
+        id S1727345AbfFHLkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29082214DA;
-        Sat,  8 Jun 2019 11:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F854208C0;
+        Sat,  8 Jun 2019 11:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994012;
-        bh=9OHKxlOu0OcMXy6Rvg73TkXgsUQWNl1t0sYS7fFm8y0=;
+        s=default; t=1559994010;
+        bh=nL92TG70cXsYXBQ99uvL+djO8fntoJgurhs0EDAxih4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F3SxtI+eR6H01Hc7lVWk0CEbe/CGUlK37Qry0W0RhmW5Cf3kxZL+Z/xs0cSo/UIy6
-         kCzrEGUDaWHAyOlBbfLdO5JiEKRGLAAVCntuM+wq9DO/SjqMcplsu7x25Z1H/jIJcX
-         ITulAjMMDL0Gaw4w4kNRDApNNaGFSSsP788yTZS4=
+        b=l9oVGC47S1/PgjPEhpxu4avRDaqh5lgCyxCWEmZZJz3UEBMvYZB7POeOuxB3YKUY+
+         emFHJWKG86iIeaijvHsylWXII/crP1jJ73x1gFjFOQQFmoZ1xdPi3FmvuVGpCjeCQV
+         oCC9nCFk4zJJWi6DKjb6u/rTw9gYOCtpHj2SWQQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Marc Haber <mh+netdev@zugschlus.de>,
+Cc:     Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Florian Westphal <fw@strlen.de>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 15/70] netfilter: nat: fix udp checksum corruption
-Date:   Sat,  8 Jun 2019 07:38:54 -0400
-Message-Id: <20190608113950.8033-15-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 14/70] selftests: netfilter: missing error check when setting up veth interface
+Date:   Sat,  8 Jun 2019 07:38:53 -0400
+Message-Id: <20190608113950.8033-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -62,36 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
 
-[ Upstream commit 6bac76db1da3cb162c425d58ae421486f8e43955 ]
+[ Upstream commit 82ce6eb1dd13fd12e449b2ee2c2ec051e6f52c43 ]
 
-Due to copy&paste error nf_nat_mangle_udp_packet passes IPPROTO_TCP,
-resulting in incorrect udp checksum when payload had to be mangled.
+A test for the basic NAT functionality uses ip command which needs veth
+device. There is a condition where the kernel support for veth is not
+compiled into the kernel and the test script breaks. This patch contains
+code for reasonable error display and correct code exit.
 
-Fixes: dac3fe72596f9 ("netfilter: nat: remove csum_recalc hook")
-Reported-by: Marc Haber <mh+netdev@zugschlus.de>
-Tested-by: Marc Haber <mh+netdev@zugschlus.de>
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Acked-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_nat_helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/netfilter/nft_nat.sh | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_nat_helper.c b/net/netfilter/nf_nat_helper.c
-index ccc06f7539d7..53aeb12b70fb 100644
---- a/net/netfilter/nf_nat_helper.c
-+++ b/net/netfilter/nf_nat_helper.c
-@@ -170,7 +170,7 @@ nf_nat_mangle_udp_packet(struct sk_buff *skb,
- 	if (!udph->check && skb->ip_summed != CHECKSUM_PARTIAL)
- 		return true;
+diff --git a/tools/testing/selftests/netfilter/nft_nat.sh b/tools/testing/selftests/netfilter/nft_nat.sh
+index 3194007cf8d1..a59c5fd4e987 100755
+--- a/tools/testing/selftests/netfilter/nft_nat.sh
++++ b/tools/testing/selftests/netfilter/nft_nat.sh
+@@ -23,7 +23,11 @@ ip netns add ns0
+ ip netns add ns1
+ ip netns add ns2
  
--	nf_nat_csum_recalc(skb, nf_ct_l3num(ct), IPPROTO_TCP,
-+	nf_nat_csum_recalc(skb, nf_ct_l3num(ct), IPPROTO_UDP,
- 			   udph, &udph->check, datalen, oldlen);
+-ip link add veth0 netns ns0 type veth peer name eth0 netns ns1
++ip link add veth0 netns ns0 type veth peer name eth0 netns ns1 > /dev/null 2>&1
++if [ $? -ne 0 ];then
++    echo "SKIP: No virtual ethernet pair device support in kernel"
++    exit $ksft_skip
++fi
+ ip link add veth1 netns ns0 type veth peer name eth0 netns ns2
  
- 	return true;
+ ip -net ns0 link set lo up
 -- 
 2.20.1
 
