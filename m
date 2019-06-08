@@ -2,197 +2,222 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42835C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB52C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED8E212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108BB2146E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 05:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G9b4fDqN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D/h/ZJrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfFHFdu (ORCPT
+        id S1729815AbfFHFq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 01:33:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39102 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfFHFdt (ORCPT
+        Sat, 8 Jun 2019 01:46:27 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35482 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfFHFq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 01:33:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x585UAcs070273;
-        Sat, 8 Jun 2019 05:33:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=eiAzEcwEsrXend+6SD1rxPdREd1UzGq+EuVlOEUZbFs=;
- b=G9b4fDqNvqgEhKP1VCgHDVOPH2TZn7tBWB5wVy2yQ5F5CJT/Z59JldhXNlUBRV6GjpwV
- +4MHJzRK6M2ugKuwx/pnl7jzw9U1iY9rhuHVcmSmYbeMQixGUAHYY93p9gD3HZjRdYYU
- IZB7dUn2NE5K1L+6SfhoCvgm7bMfdMQ2JZI4rG2amTLoonCQOMNXURQmvAFq6wZOC6SV
- BSV8X75dsHL5YRLu+Lo30VJ2uB8k8/g8NmaIdoJlGk93D25/909FlbMFvWSVNrwIazR9
- PkEiuPgrtooWILslFWb0I2uJjp1LaUSV5/kfp0K6lSdpYKYDWNBWaMt29q93hB9UOAKX eQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t04et87pp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 08 Jun 2019 05:33:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x585WdSB069308;
-        Sat, 8 Jun 2019 05:33:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2t04bkhpur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 08 Jun 2019 05:33:12 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x585XBVI018659;
-        Sat, 8 Jun 2019 05:33:11 GMT
-Received: from [192.168.0.110] (/70.36.60.91)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Jun 2019 22:33:11 -0700
-Subject: Re: [RFC PATCH 00/16] xenhost support
-To:     Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org,
-        joao.m.martins@oracle.com
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <5649cfd1-24df-2196-2888-b00fc3ace7ad@suse.com>
-From:   Ankur Arora <ankur.a.arora@oracle.com>
-Message-ID: <a5620ab0-7dc5-f75a-cc1e-9142b21570a8@oracle.com>
-Date:   Fri, 7 Jun 2019 22:33:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 8 Jun 2019 01:46:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s27so2243685pgl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 22:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GlixWvcFYVT2osuXuqp6jTW4HjMG+s+4U9TFHSTGDvM=;
+        b=D/h/ZJrVYwHg/tF2albH+nWZGTIGP8mgb5vZqEEbfXXFUfX33AxVnze8ASnaJQLV4X
+         laIgnr0wy/LMQTmXv09dRJl6EpPA3cstVq2diFihAoqQr6xqsV6qzWRUpuCTMUQ7rpHY
+         K/GGdjJcnRZXh/UrZ79eaCOSiPOFMXAilypyz123UORgpvVHaxO8H9sXqc9dz0g+kd4L
+         x9BLMbNBWSP8C9PwC3vyCb9o8PZ1C0jdr4MNNdoHIxDHSfqnWXxK7kqrjBWJdKeo7Jc/
+         LrfM5dIRm5RN/UlR8/PUBnOR5OkE4S2bmTwMQzc577wzJYfjcOh6QgINA/q2zhtWJMvw
+         kwsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GlixWvcFYVT2osuXuqp6jTW4HjMG+s+4U9TFHSTGDvM=;
+        b=F7haL9lkYKgertS8IogfagTw+3w2GWIkBuFYzeKyvl/cqCDPLGjY5PJfCKQPEBvudR
+         v/2tsX6omRntt9OgunHfp2e9NsNbkPkqtLiGSrabOFqH8la19mGtpEigbqetg+j/A0zO
+         GVLDdpGWVICo6TdVkO2du1jrS7TptpN/zBHUa7P1tzNZdsgpuKKtiECtvDnbGBm638n/
+         /TJKmorBuHHKXyeLeJM+EyihOYUD7BnYjIyH1RlSF+Ui1R4+q6BRbonY/har+zA5/Gha
+         YqojlzT2pjVXROZTaWKh0t9EI+RG2CvGoiQ4qeIbNQWBMlIAwzsnqTsL9AISQgPsMhq6
+         ZTGA==
+X-Gm-Message-State: APjAAAWRCyDcfheHyFRhKr7nvvOJQwqRBJKOk/oZ5Rhfh6jheKT/E8wh
+        4aV+/YoDP2x9NqnS6q/Vv4w6VA==
+X-Google-Smtp-Source: APXvYqx46cEKrkm060Svem6vg7rJOO6SGeAlDGseD6x8321eEySq/IrkVQWtC7EaA4ZGrVcaKjF6vQ==
+X-Received: by 2002:a63:1a5e:: with SMTP id a30mr5985274pgm.433.1559972785979;
+        Fri, 07 Jun 2019 22:46:25 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f3sm526309pjo.31.2019.06.07.22.46.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 07 Jun 2019 22:46:25 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 22:47:11 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
+        evgreen@chromium.org, sibis@codeaurora.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/9] Introduce Bandwidth OPPs & interconnect devfreq
+ driver
+Message-ID: <20190608054711.GZ22737@tuxbook-pro>
+References: <20190608044339.115026-1-saravanak@google.com>
 MIME-Version: 1.0
-In-Reply-To: <5649cfd1-24df-2196-2888-b00fc3ace7ad@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906080042
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9281 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906080042
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608044339.115026-1-saravanak@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-07 7:51 a.m., Juergen Gross wrote:
-> On 09.05.19 19:25, Ankur Arora wrote:
->> Hi all,
->>
->> This is an RFC for xenhost support, outlined here by Juergen here:
->> https://lkml.org/lkml/2019/4/8/67.
-> 
-> First: thanks for all the effort you've put into this series!
-> 
->> The high level idea is to provide an abstraction of the Xen
->> communication interface, as a xenhost_t.
->>
->> xenhost_t expose ops for communication between the guest and Xen
->> (hypercall, cpuid, shared_info/vcpu_info, evtchn, grant-table and on top
->> of those, xenbus, ballooning), and these can differ based on the kind
->> of underlying Xen: regular, local, and nested.
-> 
-> I'm not sure we need to abstract away hypercalls and cpuid. I believe in
-> case of nested Xen all contacts to the L0 hypervisor should be done via
-> the L1 hypervisor. So we might need to issue some kind of passthrough
-Yes, that does make sense. This also allows the L1 hypervisor to
-control which hypercalls can be nested.
-As for cpuid, what about nested feature discovery such as in
-gnttab_need_v2()?
-(Though for this particular case, the hypercall should be fine.)
+On Fri 07 Jun 21:43 PDT 2019, Saravana Kannan wrote:
 
-> hypercall when e.g. granting a page to L0 dom0, but this should be
-> handled via the grant abstraction (events should be similar).
+> I replied[1] to this patch series[2] and described how I think interconnect
+> bandwidth voting should be captured in DT and how it should work.
 > 
-> So IMO we should drop patches 2-5.
-For 3-5, I'd like to prune them to provide a limited hypercall
-registration ability -- this is meant to be used for the
-xenhost_r0/xenhost_local case.
+> So sending out a patch series implementing that. This patch series does the
+> following:
+> - Adds Bandwidth OPP table support (this adds device freq to bandwidth
+>   mapping for free)
+> - Adds a devfreq library for interconnect paths
+> 
 
-Ankur
+Please provide a driver that uses this devfreq library, without it this
+its impossible to gauge the usefulness of your approach.
 
+> Interconnects and interconnect paths quantify they performance levels in
+> terms of bandwidth. So similar to how we have frequency based OPP tables
+> in DT and in the OPP framework, this patch series adds bandwidth OPP
+> table support in the OPP framework and in DT.
 > 
->> (Since this abstraction is largely about guest -- xenhost communication,
->> no ops are needed for timer, clock, sched, memory (MMU, P2M), VCPU mgmt.
->> etc.)
->>
->> Xenhost use-cases:
->>
->> Regular-Xen: the standard Xen interface presented to a guest,
->> specifically for comunication between Lx-guest and Lx-Xen.
->>
->> Local-Xen: a Xen like interface which runs in the same address space as
->> the guest (dom0). This, can act as the default xenhost.
->>
->> The major ways it differs from a regular Xen interface is in presenting
->> a different hypercall interface (call instead of a syscall/vmcall), and
->> in an inability to do grant-mappings: since local-Xen exists in the same
->> address space as Xen, there's no way for it to cheaply change the
->> physical page that a GFN maps to (assuming no P2M tables.)
->>
->> Nested-Xen: this channel is to Xen, one level removed: from L1-guest to
->> L0-Xen. The use case is that we want L0-dom0-backends to talk to
->> L1-dom0-frontend drivers which can then present PV devices which can
->> in-turn be used by the L1-dom0-backend drivers as raw underlying devices.
->> The interfaces themselves, broadly remain similar.
->>
->> Note: L0-Xen, L1-Xen represent Xen running at that nesting level
->> and L0-guest, L1-guest represent guests that are children of Xen
->> at that nesting level. Lx, represents any level.
->>
->> Patches 1-7,
->>    "x86/xen: add xenhost_t interface"
->>    "x86/xen: cpuid support in xenhost_t"
->>    "x86/xen: make hypercall_page generic"
->>    "x86/xen: hypercall support for xenhost_t"
->>    "x86/xen: add feature support in xenhost_t"
->>    "x86/xen: add shared_info support to xenhost_t"
->>    "x86/xen: make vcpu_info part of xenhost_t"
->> abstract out interfaces that setup 
->> hypercalls/cpuid/shared_info/vcpu_info etc.
->>
->> Patch 8, "x86/xen: irq/upcall handling with multiple xenhosts"
->> sets up the upcall and pv_irq ops based on vcpu_info.
->>
->> Patch 9, "xen/evtchn: support evtchn in xenhost_t" adds xenhost based
->> evtchn support for evtchn_2l.
->>
->> Patches 10 and 16, "xen/balloon: support ballooning in xenhost_t" and
->> "xen/grant-table: host_addr fixup in mapping on xenhost_r0"
->> implement support from GNTTABOP_map_grant_ref for xenhosts of type
->> xenhost_r0 (xenhost local.)
->>
->> Patch 12, "xen/xenbus: support xenbus frontend/backend with xenhost_t"
->> makes xenbus so that both its frontend and backend can be bootstrapped
->> separately via separate xenhosts.
->>
->> Remaining patches, 11, 13, 14, 15:
->>    "xen/grant-table: make grant-table xenhost aware"
->>    "drivers/xen: gnttab, evtchn, xenbus API changes"
->>    "xen/blk: gnttab, evtchn, xenbus API changes"
->>    "xen/net: gnttab, evtchn, xenbus API changes"
->> are mostly mechanical changes for APIs that now take xenhost_t *
->> as parameter.
->>
->> The code itself is RFC quality, and is mostly meant to get feedback 
->> before
->> proceeding further. Also note that the FIFO logic and some Xen drivers
->> (input, pciback, scsi etc) are mostly unchanged, so will not build.
->>
->>
->> Please take a look.
+> To simplify voting for interconnects, this patch series adds helper
+> functions to create devfreq devices out of interconnect paths. This
+> allows drivers to add a single line of code to add interconnect voting
+> capability.
 > 
+> To add devfreq device for the "gpu-mem" interconnect path:
+> icc_create_devfreq(dev, "gpu-mem");
 > 
-> Juergen
+> With the future addition of a "passive_bandwidth" devfreq governor,
+> device frequency to interconnect bandwidth mapping would come for free.
+> 
+> If the feedback on this patch series is positive, I'll then add the
+> devfreq passive_bandwidth governor (or something similar) to v2 of this
+> patch series.
+> 
+> So with the DT bindings added in this patch series, the DT for a GPU
+> that does bandwidth voting from GPU to Cache and GPU to DDR would look
+> something like this:
+> 
+> gpu_cache_opp_table: gpu_cache_opp_table {
+> 	compatible = "operating-points-v2";
+> 
+> 	gpu_cache_3000: opp-3000 {
+> 		opp-peak-KBps = <3000>;
+> 		opp-avg-KBps = <1000>;
+> 	};
+> 	gpu_cache_6000: opp-6000 {
+> 		opp-peak-KBps = <6000>;
+> 		opp-avg-KBps = <2000>;
+> 	};
+> 	gpu_cache_9000: opp-9000 {
+> 		opp-peak-KBps = <9000>;
+> 		opp-avg-KBps = <9000>;
+> 	};
+> };
+> 
+> gpu_ddr_opp_table: gpu_ddr_opp_table {
+> 	compatible = "operating-points-v2";
+> 
+> 	gpu_ddr_1525: opp-1525 {
+> 		opp-peak-KBps = <1525>;
+> 		opp-avg-KBps = <452>;
+> 	};
+> 	gpu_ddr_3051: opp-3051 {
+> 		opp-peak-KBps = <3051>;
+> 		opp-avg-KBps = <915>;
+> 	};
+> 	gpu_ddr_7500: opp-7500 {
+> 		opp-peak-KBps = <7500>;
+> 		opp-avg-KBps = <3000>;
+> 	};
+> };
+> 
+> gpu_opp_table: gpu_opp_table {
+> 	compatible = "operating-points-v2";
+> 	opp-shared;
+> 
+> 	opp-200000000 {
+> 		opp-hz = /bits/ 64 <200000000>;
+> 		required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
 
+I still don't see the benefit of the indirection, over just spelling out
+the bandwidth values here.
+
+Regards,
+Bjorn
+
+> 	};
+> 	opp-400000000 {
+> 		opp-hz = /bits/ 64 <400000000>;
+> 		required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
+> 	};
+> };
+> 
+> gpu@7864000 {
+> 	...
+> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+> 	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
+> 			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
+> 	interconnect-names = "gpu-cache", "gpu-mem";
+> 	interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
+> };
+> 
+> Cheers,
+> Saravana
+> 
+> [1] - https://lore.kernel.org/lkml/20190601021228.210574-1-saravanak@google.com/
+> [2] - https://lore.kernel.org/lkml/20190423132823.7915-1-georgi.djakov@linaro.org/ 
+> 
+> Saravana Kannan (9):
+>   dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
+>   OPP: Add support for bandwidth OPP tables
+>   OPP: Add helper function for bandwidth OPP tables
+>   OPP: Add API to find an OPP table from its DT node
+>   dt-bindings: interconnect: Add interconnect-opp-table property
+>   interconnect: Add OPP table support for interconnects
+>   OPP: Add function to look up required OPP's for a given OPP
+>   OPP: Allow copying OPPs tables between devices
+>   interconnect: Add devfreq support
+> 
+>  .../bindings/interconnect/interconnect.txt    |   8 +
+>  Documentation/devicetree/bindings/opp/opp.txt |  15 +-
+>  drivers/interconnect/Makefile                 |   2 +-
+>  drivers/interconnect/core.c                   |  27 +++-
+>  drivers/interconnect/icc-devfreq.c            | 144 ++++++++++++++++++
+>  drivers/opp/core.c                            | 109 +++++++++++++
+>  drivers/opp/of.c                              |  75 +++++++--
+>  drivers/opp/opp.h                             |   4 +-
+>  include/linux/interconnect.h                  |  17 +++
+>  include/linux/pm_opp.h                        |  41 +++++
+>  10 files changed, 426 insertions(+), 16 deletions(-)
+>  create mode 100644 drivers/interconnect/icc-devfreq.c
+> 
+> -- 
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
+> 
