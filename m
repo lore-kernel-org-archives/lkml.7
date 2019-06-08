@@ -2,126 +2,143 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914D6C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 14:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5188C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 14:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63ACB214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 14:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9D021726
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 14:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a8zCjMPg"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="c7Pg+1Vu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfFHOWM (ORCPT
+        id S1727162AbfFHOyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 10:22:12 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46466 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFHOWM (ORCPT
+        Sat, 8 Jun 2019 10:54:01 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38673 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbfFHOyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 10:22:12 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z15so989230lfh.13
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 07:22:11 -0700 (PDT)
+        Sat, 8 Jun 2019 10:54:00 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d17so4549097oth.5
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 07:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aIUAKPG6L/Uk7RNnahoThkSWUC4nrgmZui5o+1IQtNk=;
-        b=a8zCjMPgP8flEe8AX4DYltakrbTeXlf4HJdUBQFer/b0IPJPCfVav33LROaOIvkRBh
-         d/ezKZe+qMrAcg+2zaULmB+dIX8setyM8Dw/amQKtBtuGvpqfUZdtCABo4QaT5ZFUGGd
-         fksqElAG9w2gwbE6Q6S46627rrHHqLiRDCA8eScKkVkurpN9O6Dge+avOCJxW9CwIBjE
-         vWmpOGwdimteMBWpy3R6+1wtE1HyS9jIIsl6y+9pjv6itruHNG55mTSg6Qzlisw2u1sl
-         d/rKG06wFYR5828vG892iuyGTPq8CV75uQK3Cx8ndRZlvQhTZTCv/wvDzZyIGlw+oOwZ
-         bmxg==
+        bh=Dk+u3XgaNOqXLaO68gyf05VnI7PTjpPeX2V5LZFBkJU=;
+        b=c7Pg+1Vu+CFzwWjTCMqA/7ILEjKHUJlK9K7TIBu56QFBG34LHWLdVkM7tbREx2Ey9p
+         TjCdQdfntrBDULEZ7N1HSxQg0s3DwVikz29ifn2VjQqccdLcAJ1KkySuifbxWyME5a7W
+         x4fOaxhygkWdkKYvJVh0JgypnwprJM5FHpdLFWTbR4b8W25GIpRqLlOkF/ugyfihZC+8
+         c7LrVjq4p2Hw1E72Dp2p511CMIYJdbrwSfhhEtnq2nr9rqDPBQg5MRZOyX6pvij6xYTr
+         nGmNhnS25l7cTno9P3Fo7izT+xPDuhI3LIcqoKUC7iNIdx3UljQ5OPalTto1Tp8OepSr
+         0zOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aIUAKPG6L/Uk7RNnahoThkSWUC4nrgmZui5o+1IQtNk=;
-        b=uoUlheQCNyVt/SvYraFkmNuXPt3wjFL9CQPmP9DCMUkmq6/E3CbOmoRBsxWMOityLb
-         N5XBTgzB4h1eSN1S0TxEf/dissfjJaB3Z04vGNbKn0y2nDozgDgicj1su+/WxIwom+87
-         ZvYobjnleHtSZltPtx9NBuynBcvYfkqMzrsSq2MsDHvprDibTKpl3BBG8CA+Q3BlWfiP
-         R8TzxREb/ngKQ6DDRsDiCCP5BVBl/GPe0IiiIDnz+zhrd4plqcpI/rZhVD+SEqfVCT8S
-         rtm42vQPgTNolO6lYQ14joUlHVBKFx89vL5HKRZuu+2jkyXouLqTIi/AYrpR6n2+FeVy
-         fHNA==
-X-Gm-Message-State: APjAAAVTUx2vn0EGPdosgJVWCDPU148GQc5ArztrWdNJPbWt/jFBBadA
-        hf8wYHY2sepQQv0Hxou5l5rhrNlsj2YLScPKotxL6w==
-X-Google-Smtp-Source: APXvYqx2MoGtkoQjUm5Wa5IOCM/k/orM6EKwAwZG7AXIo8rcqREn8WTPkR2Fc2Pbt++tRSEdz7xZS6GOynFOOaZSLRQ=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr28511822lfn.165.1560003730786;
- Sat, 08 Jun 2019 07:22:10 -0700 (PDT)
+        bh=Dk+u3XgaNOqXLaO68gyf05VnI7PTjpPeX2V5LZFBkJU=;
+        b=m9cBFzpJQ4ytpohbtz1aZsspnjj6HRz8/XfdebXLXYZGnPtVebUcF1RjtvLL+WqYwN
+         gw+Rg2MZM1mA39FvEcumvagclKwYH77rhL7ssva9D9XUr0hiUzkKtUZosvkVH60ZZ3DQ
+         qodlKVdpbo5iHdW1VByXRDEqgkDBder58ppqcSugqQTC01/4HFgPmaGC8hk4SLzCTdHH
+         ygM0lrWkbBpFA7j8r+gUidTR8XLG6aNQKB8nbddh8+HG9fVEvrBzO7UguAfRsPNuwHh4
+         ucQOkIUsNVP2iZ+Ln+08tfGCnBtkwXsbl4V+hMKKIMpZe0qyP9Ip1P5lc2Xk1KL5dfND
+         4Ptg==
+X-Gm-Message-State: APjAAAUnVbWUHE5acX4H/OHWtQ0g56mphWbG2vu1moEVU+DBR+na55HJ
+        GnyLp2HZupqgT4+3QhS6VQSeJnt04pQQNt6KrPAWwg==
+X-Google-Smtp-Source: APXvYqypLm2j/J6SB8ZKAlfeHzcCYKwyThpmhhnmxpvXXR1jOg6wN0waBPRAcYcxiyvBbMj8vJDm0b8GB8DJsrFdTLI=
+X-Received: by 2002:a9d:470d:: with SMTP id a13mr8130580otf.126.1560005639908;
+ Sat, 08 Jun 2019 07:53:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190607082901.6491-1-lee.jones@linaro.org> <20190607082901.6491-3-lee.jones@linaro.org>
- <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
-In-Reply-To: <CAKv+Gu-1QhX-9aNhFJauc9NVe6ceQQueE8Kd14031XJ-2yaupA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 8 Jun 2019 16:22:03 +0200
-Message-ID: <CACRpkdZmBe6ucmekLUNkypDKx=eAXqtwdYNpZzwByzuWb-sjDA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
+References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
+ <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
+ <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com>
+ <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com>
+ <CAKv+Gu_ZYpey0dWYebFgCaziyJ-_x+KbCmOegWqFjwC0U-5QaA@mail.gmail.com>
+ <CAPcyv4jO5WhRJ-=Nz70Jc0mCHYBJ6NsHjJNk6AerwQXH43oemw@mail.gmail.com>
+ <CAPcyv4gzhr57xa2MbR1Jk8EDFw-WLdcw3mJnEX9PeAFwVEZbDA@mail.gmail.com> <CAKv+Gu_OcsWi5DqxOk-j6ovc0CMAZV37Od7zA5Bs4Ng5ATQxAA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_OcsWi5DqxOk-j6ovc0CMAZV37Od7zA5Bs4Ng5ATQxAA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 8 Jun 2019 07:53:49 -0700
+Message-ID: <CAPcyv4i_ZaKKT2dHQTuHCWT9HhqCOm4kpy2YdK952GubwqbJDQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
+ for dax
 To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Jeffrey Hugo <jlhugo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+        linux-nvdimm <linux-nvdimm@lists.01.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 1:10 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> On Fri, 7 Jun 2019 at 10:29, Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > When booting MSM based platforms with Device Tree or some ACPI
-> > implementations, it is possible to provide a list of reserved pins
-> > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> > However some ACPI tables are not populated with this information,
-> > thus it has to come from a knowledgable device driver instead.
-> >
-> > Here we provide the MSM common driver with additional support to
-> > parse this informtion and correctly populate the widely used
-> > 'valid_mask'.
-> >
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On Sat, Jun 8, 2019 at 12:20 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
 >
-> I'm not sure if this is the correct approach. Presumably, on ACPI
-> systems, all the pinctl stuff is already set up by the firmware, and
-> so we shouldn't touch *any* pins unless they have been requested
-> explicitly. Is there any way we can support this in the current
-> framework?
+> On Fri, 7 Jun 2019 at 19:34, Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Fri, Jun 7, 2019 at 8:23 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > On Fri, Jun 7, 2019 at 5:29 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> > [..]
+> > > > > #ifdef CONFIG_EFI_APPLICATION_RESERVED
+> > > > > static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+> > > > > {
+> > > > >         return md->type == EFI_CONVENTIONAL_MEMORY
+> > > > >                 && (md->attribute & EFI_MEMORY_SP);
+> > > > > }
+> > > > > #else
+> > > > > static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
+> > > > > {
+> > > > >         return false;
+> > > > > }
+> > > > > #endif
+> > > >
+> > > > I think this policy decision should not live inside the EFI subsystem.
+> > > > EFI just gives you the memory map, and mangling that information
+> > > > depending on whether you think a certain memory attribute should be
+> > > > ignored is the job of the MM subsystem.
+> > >
+> > > The problem is that we don't have an mm subsystem at the time a
+> > > decision needs to be made. The reservation policy needs to be deployed
+> > > before even memblock has been initialized in order to keep kernel
+> > > allocations out of the reservation. I agree with the sentiment I just
+> > > don't see how to practically achieve an optional "System RAM" vs
+> > > "Application Reserved" routing decision without an early (before
+> > > e820__memblock_setup()) conditional branch.
+> >
+> > I can at least move it out of include/linux/efi.h and move it to
+> > arch/x86/include/asm/efi.h since it is an x86 specific policy decision
+> > / implementation for now.
+>
+> No, that doesn't make sense to me. If it must live in the EFI
+> subsystem, I'd prefer it to be in the core code, not in x86 specific
+> code, since there is nothing x86 specific about it.
 
-I don't suppose anything but the GPIO portions of the pinctrl
-driver is ever used under ACPI. I guess in an ideal ACPI world
-noone (like userspace) would ever use a GPIO because ACPI
-would have all GPIOs assigned a particular purpose, so accessing
-any of them would lead to a crash.
+Ok, but it's still not clear to me where you would accept an early
+detection of EFI_CONVENTIONAL_MEMORY + EFI_MEMORY_SP and route it away
+from the "System RAM" default. Please just recommend a place to land a
+conditional branch that translates between the base EFI type +
+attribute and E820_RAM and E820_APPLICATION_RESERVED.
 
-But in practice it seems a lot of GPIOs are available and used
-for example by userspace hacks, so just blacklisting the ones
-that cannot be accessed by the GPIO subsystem seems like
-a viable compromise.
+> Perhaps a efi=xxx command line option would be in order to influence
+> the builtin default, but it can be a followup patch independent of
+> this series.
 
-Then we have the ACPI paradigm of pin control being controlled
-by ACPI: this is also great in theory, but it seems like the ACPI
-firmware has in cases forgot or omitted to implement some of
-it and people need to access it anyways. The people writing the
-default firmware cannot think out or test all usecases, so some
-will be left open-ended to non-firmware authoring users. This is why
-drivers/pinctrl/intel/* exists despite being for exclusively
-ACPI platforms. Being able to control pins also from the kernel
-has become a viable compromise.
-
-Yours,
-Linus Walleij
+Sure, but I expect the default polarity of the branch is a compile
+time option with an efi= override.
