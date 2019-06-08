@@ -2,248 +2,115 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807C7C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60362C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C6920840
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7FA20840
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 16:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="nYhFEYoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfFHQbZ (ORCPT
+        id S1727331AbfFHQdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 12:31:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727203AbfFHQbZ (ORCPT
+        Sat, 8 Jun 2019 12:33:39 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53733 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727203AbfFHQdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 12:31:25 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58GQi77106467
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 12:31:24 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t093p43xs-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 12:31:23 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Sat, 8 Jun 2019 17:31:22 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 8 Jun 2019 17:31:18 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58GVHWs37224912
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Jun 2019 16:31:17 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67075B2064;
-        Sat,  8 Jun 2019 16:31:17 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 534D3B205F;
-        Sat,  8 Jun 2019 16:31:17 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.180.36])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat,  8 Jun 2019 16:31:17 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 12F5F16C21CA; Sat,  8 Jun 2019 09:31:19 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 09:31:19 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: Re: rcu_read_lock lost its compiler barrier
-Reply-To: paulmck@linux.ibm.com
-References: <20190608151943.GD28207@linux.ibm.com>
- <Pine.LNX.4.44L0.1906081153140.11124-100000@netrider.rowland.org>
+        Sat, 8 Jun 2019 12:33:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id x15so4821056wmj.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 09:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Nn9sDzgPkR0HabZ31EILcxUmldc30Ih3BqI8IrawHLY=;
+        b=nYhFEYoR1lu0BkTY7WHbXXvOZsZhLVA3CoRdDg4f5sDVL1R4bSCV0Cpmoj9BvcRD8o
+         JEjXX6qpEZnl4eZBuLrt1BV4E+nvFxt7x/5FVoI9o1AECCBxb9Y2CGpKtWrbwTyrj6P6
+         WtLBuXjL2y2TV4i47PrIRZD33itrVhxCj1rw8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nn9sDzgPkR0HabZ31EILcxUmldc30Ih3BqI8IrawHLY=;
+        b=Q5LnZqMZ6ibTASEXrYWTlXi3dvYhTxSvZFgVlX1ddwwauY2XxmUEImuuoiDuVbi6Ev
+         z++HrcAD7CfLSVQgc97Cwh3wwznIbDmsBSfcJ41xmnu8pbdeAQ9FGAS91rL2rQ3TZEls
+         6y5EG2UOobWndEyRYXuPqsG5a7ZO9TaXtIlO2KJNgUuT8xJGnez5Y9WJYJPf/OyxM4pl
+         qGfZNrWLRu1nvXxS8kZKM2MJDUexTCce1biBmhQsaipvpkxNOAVsP15rthasYBIgN/k6
+         +UXo7pbg9QClzlhsHYm2GN3iH3kl3vCne/z7K+UP6cs0A4Kma2hi+yuE6o7LvUATZwh9
+         wV9A==
+X-Gm-Message-State: APjAAAUqSmpFY74O3ppvNMQeKPWxUhEDFyUei1mMGDjjKmWrS1p+HHcb
+        nznztW1Byld341l7VwFWl8neRA==
+X-Google-Smtp-Source: APXvYqwQh0ycELc4L2qCosigqNjSAGvgffgKCVuDNsK1MWHM5TfYBKDPRrE0rmxdcYVJOCaNfXfBVA==
+X-Received: by 2002:a1c:5f85:: with SMTP id t127mr7494161wmb.104.1560011616260;
+        Sat, 08 Jun 2019 09:33:36 -0700 (PDT)
+Received: from andrea (ip-86-49-3-71.net.upcbroadband.cz. [86.49.3.71])
+        by smtp.gmail.com with ESMTPSA id q14sm3930265wrw.60.2019.06.08.09.33.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 08 Jun 2019 09:33:35 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 18:33:26 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Nikolay Borisov <nborisov@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, paulmck@linux.ibm.com
+Subject: Re: [PATCH 1/2] btrfs: Implement DRW lock
+Message-ID: <20190608163326.GA6573@andrea>
+References: <20190606135219.1086-1-nborisov@suse.com>
+ <20190606135219.1086-2-nborisov@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1906081153140.11124-100000@netrider.rowland.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19060816-0060-0000-0000-0000034DF921
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011234; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01215073; UDB=6.00638766; IPR=6.00996165;
- MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 16:31:21
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060816-0061-0000-0000-000049B0F7F7
-Message-Id: <20190608163119.GI28207@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906080124
+In-Reply-To: <20190606135219.1086-2-nborisov@suse.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 11:56:04AM -0400, Alan Stern wrote:
-> On Sat, 8 Jun 2019, Paul E. McKenney wrote:
+On Thu, Jun 06, 2019 at 04:52:18PM +0300, Nikolay Borisov wrote:
+> A (D)ouble (R)eader (W)riter lock is a locking primitive that allows
+> to have multiple readers or multiple writers but not multiple readers
+> and writers holding it concurrently. The code is factored out from
+> the existing open-coded locking scheme used to exclude pending
+> snapshots from nocow writers and vice-versa. Current implementation
+> actually favors Readers (that is snapshot creaters) to writers (nocow
+> writers of the filesystem).
 > 
-> > On Thu, Jun 06, 2019 at 10:19:43AM -0400, Alan Stern wrote:
-> > > On Thu, 6 Jun 2019, Andrea Parri wrote:
-> > > 
-> > > > This seems a sensible change to me: looking forward to seeing a patch,
-> > > > on top of -rcu/dev, for further review and testing!
-> > > > 
-> > > > We could also add (to LKMM) the barrier() for rcu_read_{lock,unlock}()
-> > > > discussed in this thread (maybe once the RCU code and the informal doc
-> > > > will have settled in such direction).
-> > > 
-> > > Yes.  Also for SRCU.  That point had not escaped me.
-> > 
-> > And it does seem pretty settled.  There are quite a few examples where
-> > there are normal accesses at either end of the RCU read-side critical
-> > sections, for example, the one in the requirements diffs below.
-> > 
-> > For SRCU, srcu_read_lock() and srcu_read_unlock() have implied compiler
-> > barriers since 2006.  ;-)
-> > 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
-> > index 5a9238a2883c..080b39cc1dbb 100644
-> > --- a/Documentation/RCU/Design/Requirements/Requirements.html
-> > +++ b/Documentation/RCU/Design/Requirements/Requirements.html
-> > @@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
-> >  <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
-> >  <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
-> >  <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
-> > +<li>	<a href="#Accesses to User Mamory and RCU">
-> ------------------------------------^
-> > +Accesses to User Mamory and RCU</a>.
-> ---------------------^
-> >  <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
-> >  <li>	<a href="#Scheduling-Clock Interrupts and RCU">
-> >  	Scheduling-Clock Interrupts and RCU</a>.
-> > @@ -2521,6 +2523,75 @@ cannot be used.
-> >  The tracing folks both located the requirement and provided the
-> >  needed fix, so this surprise requirement was relatively painless.
-> >  
-> > +<h3><a name="Accesses to User Mamory and RCU">
-> ----------------------------------^
-> > +Accesses to User Mamory and RCU</a></h3>
-> ---------------------^
-> 
-> Are these issues especially notable for female programmers?  :-)
+> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
 
-*Red face*  Some days it just doesn't pay to get up in the morning...
+Interesting!  Thank you for sending this over, Nikolay.
 
-Well, those issues certainly seem a bit inconsiderate to non-mammalian
-programmers.  :-/
+I only have a couple of nits (below) to add:
 
-How about the updated version shown below?
+[...]
 
-							Thanx, Paul
+> +
+> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock)
+> +{
+> +	/*
+> +	 * Atomic RMW operations imply full barrier, so woken up writers
+> +	 * are guaranteed to see the decrement
+> +	 */
 
-------------------------------------------------------------------------
+Not every atomic RMW operations imply a full barrier (as exemplified,
+e.g., by the atomic_inc() in btrfs_drw_read_lock()); maybe simply
 
-diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
-index 5a9238a2883c..f04c467e55c5 100644
---- a/Documentation/RCU/Design/Requirements/Requirements.html
-+++ b/Documentation/RCU/Design/Requirements/Requirements.html
-@@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
- <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
- <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
- <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
-+<li>	<a href="#Accesses to User Memory and RCU">
-+Accesses to User Memory and RCU</a>.
- <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
- <li>	<a href="#Scheduling-Clock Interrupts and RCU">
- 	Scheduling-Clock Interrupts and RCU</a>.
-@@ -2521,6 +2523,75 @@ cannot be used.
- The tracing folks both located the requirement and provided the
- needed fix, so this surprise requirement was relatively painless.
- 
-+<h3><a name="Accesses to User Memory and RCU">
-+Accesses to User Memory and RCU</a></h3>
-+
-+<p>
-+The kernel needs to access user-space memory, for example, to access
-+data referenced by system-call parameters.
-+The <tt>get_user()</tt> macro does this job.
-+
-+<p>
-+However, user-space memory might well be paged out, which means
-+that <tt>get_user()</tt> might well page-fault and thus block while
-+waiting for the resulting I/O to complete.
-+It would be a very bad thing for the compiler to reorder
-+a <tt>get_user()</tt> invocation into an RCU read-side critical
-+section.
-+For example, suppose that the source code looked like this:
-+
-+<blockquote>
-+<pre>
-+ 1 rcu_read_lock();
-+ 2 p = rcu_dereference(gp);
-+ 3 v = p-&gt;value;
-+ 4 rcu_read_unlock();
-+ 5 get_user(user_v, user_p);
-+ 6 do_something_with(v, user_v);
-+</pre>
-+</blockquote>
-+
-+<p>
-+The compiler must not be permitted to transform this source code into
-+the following:
-+
-+<blockquote>
-+<pre>
-+ 1 rcu_read_lock();
-+ 2 p = rcu_dereference(gp);
-+ 3 get_user(user_v, user_p); // BUG: POSSIBLE PAGE FAULT!!!
-+ 4 v = p-&gt;value;
-+ 5 rcu_read_unlock();
-+ 6 do_something_with(v, user_v);
-+</pre>
-+</blockquote>
-+
-+<p>
-+If the compiler did make this transformation in a
-+<tt>CONFIG_PREEMPT=n</tt> kernel build, and if <tt>get_user()</tt> did
-+page fault, the result would be a quiescent state in the middle
-+of an RCU read-side critical section.
-+This misplaced quiescent state could result in line&nbsp;4 being
-+a use-after-free access, which could be bad for your kernel's
-+actuarial statistics.
-+Similar examples can be constructed with the call to <tt>get_user()</tt>
-+preceding the <tt>rcu_read_lock()</tt>.
-+
-+<p>
-+Unfortunately, <tt>get_user()</tt> doesn't have any particular
-+ordering properties, and in some architectures the underlying <tt>asm</tt>
-+isn't even marked <tt>volatile</tt>.
-+And even if it was marked <tt>volatile</tt>, the above access to
-+<tt>p-&gt;value</tt> is not volatile, so the compiler would not have any
-+reason to keep those two accesses in order.
-+
-+<p>
-+Therefore, the Linux-kernel definitions of <tt>rcu_read_lock()</tt>
-+and <tt>rcu_read_unlock()</tt> must act as compiler barriers,
-+at least for outermost instances of <tt>rcu_read_lock()</tt> and
-+<tt>rcu_read_unlock()</tt> within a nested set of RCU read-side critical
-+sections.
-+
- <h3><a name="Energy Efficiency">Energy Efficiency</a></h3>
- 
- <p>
+  s/Atomic RMW operations imply/atomic_dec_and_test() implies/
 
+FYI, checkpatch.pl issues a few warnings on this patch (you may want
+to address some of them in the next version).
+
+Thanks,
+  Andrea
+
+
+> +	if (atomic_dec_and_test(&lock->readers))
+> +		wake_up(&lock->pending_writers);
+> +}
+> +
+> +
