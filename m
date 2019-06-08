@@ -2,79 +2,102 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A16C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6496EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9955C206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560009328;
-	bh=nh6TdIhR5A7AsbyvajbHEcCEd+tJlehSFbCYV0YCs+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TiXLUuFgoGh44/LtiKD4TUaFeAHWStUw+o5Pr7ytyxiKF9GD8oBn5b6auoGbYwzH6
-	 5JRdQuqRzwE889Pops0jjNPKSiauPkbjOG5KXbJj2m9ONDO7mZBayiGCb4/xWKBcIl
-	 HmkXiUuS0FgLXq7EOIhHGXFpLVMoRxIcq0THbsTo=
+	by mail.kernel.org (Postfix) with ESMTP id 41A5320833
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfFHPz1 (ORCPT
+        id S1727307AbfFHP4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 11:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbfFHPz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 11:55:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85252206BB;
-        Sat,  8 Jun 2019 15:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560009327;
-        bh=nh6TdIhR5A7AsbyvajbHEcCEd+tJlehSFbCYV0YCs+I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JvBVATR4R46czxUuX+2jZf3IGqL7gYwHqRfRGcZ6CB0xvN85wYVxvNoaEbeOZQKVx
-         k7pSDFqDP5C8GFlToBYGSpE3UbPs+/Ic9klzQHxZ0KLLnwxjRr8k3ByO+DFNI5R9fD
-         98NJ3GFNYdfqowQUufPz3wHCJNhhaPkT4KswRtF0=
-Date:   Sat, 8 Jun 2019 17:55:24 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Soonwoo Hong <qpseh2m7@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blk-mq: fix coding style
-Message-ID: <20190608155524.GD7974@kroah.com>
-References: <20190608134728.4655-1-qpseh2m7@gmail.com>
- <20190608155446.GC7974@kroah.com>
+        Sat, 8 Jun 2019 11:56:06 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:37605 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727035AbfFHP4F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 11:56:05 -0400
+Received: (qmail 11733 invoked by uid 500); 8 Jun 2019 11:56:04 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 8 Jun 2019 11:56:04 -0400
+Date:   Sat, 8 Jun 2019 11:56:04 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+Subject: Re: rcu_read_lock lost its compiler barrier
+In-Reply-To: <20190608151943.GD28207@linux.ibm.com>
+Message-ID: <Pine.LNX.4.44L0.1906081153140.11124-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190608155446.GC7974@kroah.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 05:54:46PM +0200, Greg KH wrote:
-> On Sat, Jun 08, 2019 at 10:47:28PM +0900, Soonwoo Hong wrote:
-> > Add a space before colon in ternary operator
+On Sat, 8 Jun 2019, Paul E. McKenney wrote:
+
+> On Thu, Jun 06, 2019 at 10:19:43AM -0400, Alan Stern wrote:
+> > On Thu, 6 Jun 2019, Andrea Parri wrote:
 > > 
-> > Singed-off-by: Soonwoo Hong <qpseh2m7@gmail.com>
-> > ---
-> >  block/blk-mq.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > This seems a sensible change to me: looking forward to seeing a patch,
+> > > on top of -rcu/dev, for further review and testing!
+> > > 
+> > > We could also add (to LKMM) the barrier() for rcu_read_{lock,unlock}()
+> > > discussed in this thread (maybe once the RCU code and the informal doc
+> > > will have settled in such direction).
+> > 
+> > Yes.  Also for SRCU.  That point had not escaped me.
 > 
-> $ ./scripts/get_maintainer.pl --file block/blk-mq.c
-> Jens Axboe <axboe@kernel.dk> (maintainer:BLOCK LAYER)
-> linux-block@vger.kernel.org (open list:BLOCK LAYER)
-> linux-kernel@vger.kernel.org (open list)
+> And it does seem pretty settled.  There are quite a few examples where
+> there are normal accesses at either end of the RCU read-side critical
+> sections, for example, the one in the requirements diffs below.
 > 
+> For SRCU, srcu_read_lock() and srcu_read_unlock() have implied compiler
+> barriers since 2006.  ;-)
+> 
+> 							Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+> diff --git a/Documentation/RCU/Design/Requirements/Requirements.html b/Documentation/RCU/Design/Requirements/Requirements.html
+> index 5a9238a2883c..080b39cc1dbb 100644
+> --- a/Documentation/RCU/Design/Requirements/Requirements.html
+> +++ b/Documentation/RCU/Design/Requirements/Requirements.html
+> @@ -2129,6 +2129,8 @@ Some of the relevant points of interest are as follows:
+>  <li>	<a href="#Hotplug CPU">Hotplug CPU</a>.
+>  <li>	<a href="#Scheduler and RCU">Scheduler and RCU</a>.
+>  <li>	<a href="#Tracing and RCU">Tracing and RCU</a>.
+> +<li>	<a href="#Accesses to User Mamory and RCU">
+------------------------------------^
+> +Accesses to User Mamory and RCU</a>.
+---------------------^
+>  <li>	<a href="#Energy Efficiency">Energy Efficiency</a>.
+>  <li>	<a href="#Scheduling-Clock Interrupts and RCU">
+>  	Scheduling-Clock Interrupts and RCU</a>.
+> @@ -2521,6 +2523,75 @@ cannot be used.
+>  The tracing folks both located the requirement and provided the
+>  needed fix, so this surprise requirement was relatively painless.
+>  
+> +<h3><a name="Accesses to User Mamory and RCU">
+----------------------------------^
+> +Accesses to User Mamory and RCU</a></h3>
+---------------------^
 
-Also, doing coding style cleanups outside of drivers/staging/ is a tough
-thing to do, please don't make it harder on yourself...
+Are these issues especially notable for female programmers?  :-)
 
-good luck!
+Alan
 
-greg k-h
