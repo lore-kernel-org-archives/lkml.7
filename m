@@ -2,109 +2,68 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60AFC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54115C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7B221855
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzvISmEO"
+	by mail.kernel.org (Postfix) with ESMTP id 3022A21873
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfFHWTj (ORCPT
+        id S1727676AbfFHWVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 18:19:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41545 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbfFHWTi (ORCPT
+        Sat, 8 Jun 2019 18:21:09 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60912 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727215AbfFHWVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 18:19:38 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 107so5095027otj.8;
-        Sat, 08 Jun 2019 15:19:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DP0Ajt421DWmwrwPNPAX2Snzk01exwZi53pmjm8wyCc=;
-        b=tzvISmEOqHqBLXuy40FjHOzFqJ26diODbTZR6+DZIDlO4cEPiRGFRwVsaPPccWWb22
-         Dt+krxD8IbMjPpv3jL/u3t8j+Dcz2FJgHolsWR3RfVDBaeJ4Dd+khyn4YnBPbiV3JdQe
-         F5L9RodSkDYunEDFhRlGXD/9A3AfKLbtfGu7JuHE96q+hfY9t155d6Bs8r9iCgbgRvpW
-         mHQyL60NAtW+cecdreCwYb87VHDMKZtOjEUUSPH92V7yhWG3c74nzSUzNVq2mhU8Di0S
-         N71xiKfzyWnDhAcOhvIKqi5vVooZcBQgjgOooEIDBGJMLqkXUE3u0PhUyqzVfgVflP+J
-         +tXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DP0Ajt421DWmwrwPNPAX2Snzk01exwZi53pmjm8wyCc=;
-        b=hrxJUC5vLmUe/UcnenBWfIEWvgOmsq1vuKUidw/P/mSI4X3ucjnzaH4BT43mTAImYF
-         QzNkzvQGPx9ErxbfOXCp2JPW7xgXHKLduCHdFxdKCJ5JtztA8JW5Qlz/kliHYLkx9b5M
-         5A48Bo+TNjdSRGHIkv5Yl28BQYWbu6GT2n6MtMMhkvw4DYVg4qI1lDuAIkIXSOSZGvRQ
-         ktPz2foCK6IISSjNEZmuHjXaZ5fCrDGEAfXhO3ZYAUOjrC7F32zO2cF4tf5s7F6ze1n5
-         xh4x0RJWr5eC6JsYb1Y28Qk0S7YQ3aIyyokLpTHnAYGv26YvcT7AO70+KPSUJzKY8Ulo
-         2kgw==
-X-Gm-Message-State: APjAAAVFLvuZtnIh/lJPFidvZxGxt0uOxrBvR0+/+CT+BpUf0rnP2nDN
-        cJ4BrUTTmVzJTeHtfl3x3iI=
-X-Google-Smtp-Source: APXvYqylrHE1LwideVdmvtrEqXgf6WG98D9rmgXo7hve9bgy8IQFtIcM/FU4/1dkGLypNJ6zscThgQ==
-X-Received: by 2002:a05:6830:1558:: with SMTP id l24mr18682545otp.352.1560030746626;
-        Sat, 08 Jun 2019 14:52:26 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id c204sm2472908oih.19.2019.06.08.14.52.25
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Jun 2019 14:52:25 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
- <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
- <20190607172902.GA8183@lst.de>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
-Date:   Sat, 8 Jun 2019 16:52:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190607172902.GA8183@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Sat, 8 Jun 2019 18:21:08 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C8D45151CE516;
+        Sat,  8 Jun 2019 15:21:07 -0700 (PDT)
+Date:   Sat, 08 Jun 2019 15:21:02 -0700 (PDT)
+Message-Id: <20190608.152102.1183911048932398037.davem@davemloft.net>
+To:     olteanv@gmail.com
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        richardcochran@gmail.com, john.stultz@linaro.org,
+        tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v4 net-next 00/17] PTP support for the SJA1105 DSA
+ driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190608120443.21889-1-olteanv@gmail.com>
+References: <20190608120443.21889-1-olteanv@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 08 Jun 2019 15:21:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/19 12:29 PM, Christoph Hellwig wrote:
-> I don't think we should work around this in the driver, we need to fix
-> it in the core.  I'm curious why my previous patch didn't work.  Can
-> you throw in a few printks what failed?  I.e. did dma_direct_supported
-> return false?  Did the actual allocation fail?
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Sat,  8 Jun 2019 15:04:26 +0300
 
-Routine dma_direct_supported() returns true.
+> This patchset adds the following:
+> 
+>  - A timecounter/cyclecounter based PHC for the free-running
+>    timestamping clock of this switch.
+> 
+>  - A state machine implemented in the DSA tagger for SJA1105, which
+>    keeps track of metadata follow-up Ethernet frames (the switch's way
+>    of transmitting RX timestamps).
+> 
+> Clock manipulations on the actual hardware PTP clock will have to be
+> implemented anyway, for the TTEthernet block and the time-based ingress
+> policer.
 
-The failure is in routine dma_set_mask() in the following if test:
+Series applied, let's see how the build goes this time :-)
 
-         if (!dev->dma_mask || !dma_supported(dev, mask))
-                 return -EIO;
-
-For b43legacy, dev->dma_mask is 0xc265684800000000.
-     dma_supported(dev, mask) is 0xc08b000000000000, mask is 0x3fffffff, and the 
-routine returns -EIO.
-
-For b43,       dev->dma_mask is 0xc265684800000001,
-     dma_supported(dev, mask) is 0xc08b000000000000, mask is 0x77777777, and the 
-routine returns 0.
-
-Thus far I have not found what sets the low-order bit of dev->dma_mask. 
-Suggestions are welcome.
-
-These tests have all been with your patch that sets ARCH_ZONE_DMA_BITS to 30.
-
-Larry
+Thanks.
