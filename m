@@ -2,294 +2,228 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE276C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554F9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D4320840
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1E1206BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:52:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nmY+u3lk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfFHPoW (ORCPT
+        id S1727202AbfFHPwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 11:44:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40878 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727035AbfFHPoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 11:44:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7C2C8AEC7;
-        Sat,  8 Jun 2019 15:44:19 +0000 (UTC)
-Subject: Re: [PATCH 1/2] btrfs: Implement DRW lock
-To:     paulmck@linux.ibm.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.parri@amarulasolutions.com, peterz@infradead.org
-References: <20190606135219.1086-1-nborisov@suse.com>
- <20190606135219.1086-2-nborisov@suse.com>
- <20190607105251.GB28207@linux.ibm.com>
- <7a1c1f42-6e2f-57fc-5cdd-8c2bea23dffa@suse.com>
- <20190608151345.GC28207@linux.ibm.com>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4e3d5950-027d-c581-2bff-26602ca63521@suse.com>
-Date:   Sat, 8 Jun 2019 18:44:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sat, 8 Jun 2019 11:52:51 -0400
+Received: from mail.efficios.com ([167.114.142.138]:34554 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbfFHPwv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 11:52:51 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id C034F1D3995;
+        Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id RDGBH0FwZAY9; Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 4028F1D3990;
+        Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4028F1D3990
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560009166;
+        bh=1zYPEOa390T+4ygk6CtXUOuek0d/tel39qFmVv01juo=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=nmY+u3lkKGhd4/aQFS9wb3Y9ZomWqTVuBO+UzEIHuF3VVQ9HR2N5MffthLUcypuV+
+         O4SVrRQd/kc70mezBkUXbFa9I3mSAb5PLmTO1H7GsFmohcsfB3XBPzgVCHK9VJp4Vy
+         4iOSurbuqnJOn0IH8VkH0nKd+bUdguycBTHWmt6zllSHXlnJPj/BBk5LBhCdwwGkqn
+         KDBiczy+fKgFc585bxrqFDOSZADWJYtIA+fxGZbcCFo4xXIBh2Qn2kRMasmv6L0PuC
+         IUDil25QL5GgHV2GKmiZffrGBIdbNvQWadJtePVf6Em4CFXxniKH03lOBVXtlcWU/R
+         eNk74JO39IXtA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id v03xN4kWi2lL; Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 1D44F1D3986;
+        Sat,  8 Jun 2019 11:52:46 -0400 (EDT)
+Date:   Sat, 8 Jun 2019 11:52:45 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@arm.linux.org.uk>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>, shuah <shuah@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Message-ID: <716499178.40175.1560009165920.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1975020343.35751.1559844149532.JavaMail.zimbra@efficios.com>
+References: <20190429152803.7719-9-mathieu.desnoyers@efficios.com> <20190503193858.9676-1-mathieu.desnoyers@efficios.com> <1975020343.35751.1559844149532.JavaMail.zimbra@efficios.com>
+Subject: Re: [PATCH v2 for 5.2 08/12] rseq/selftests: arm: use udf
+ instruction for RSEQ_SIG
 MIME-Version: 1.0
-In-Reply-To: <20190608151345.GC28207@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/selftests: arm: use udf instruction for RSEQ_SIG
+Thread-Index: YcGezvm7ivFdjjSZdlA+YYoxUnlhzUxULrHf
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+----- On Jun 6, 2019, at 8:02 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+
+> ----- On May 3, 2019, at 3:38 PM, Mathieu Desnoyers
+> mathieu.desnoyers@efficios.com wrote:
+> 
+>> Use udf as the guard instruction for the restartable sequence abort
+>> handler.
+>> 
+>> Previously, the chosen signature was not a valid instruction, based
+>> on the assumption that it could always sit in a literal pool. However,
+>> there are compilation environments in which literal pools are not
+>> available, for instance execute-only code. Therefore, we need to
+>> choose a signature value that is also a valid instruction.
+>> 
+>> Handle compiling with -mbig-endian on ARMv6+, which generates binaries
+>> with mixed code vs data endianness (little endian code, big endian
+>> data).
+>> 
+>> Else mismatch between code endianness for the generated signatures and
+>> data endianness for the RSEQ_SIG parameter passed to the rseq
+>> registration will trigger application segmentation faults when the
+>> kernel try to abort rseq critical sections.
+>> 
+>> Prior to ARMv6, -mbig-endian generates big-endian code and data, so
+>> endianness should not be reversed in that case.
+> 
+> And of course it cannot be that easy. This breaks when building in
+> thumb mode (-mthumb). Output from librseq arm32 build [1] (code similar
+> to what is found in the rseq selftests):
+> 
+>  CC       rseq.lo
+> /tmp/ccu6Jw1b.s: Assembler messages:
+> /tmp/ccu6Jw1b.s:297: Error: cannot determine Thumb instruction size. Use
+> .inst.n/.inst.w instead
+> /tmp/ccu6Jw1b.s:490: Error: cannot determine Thumb instruction size. Use
+> .inst.n/.inst.w instead
+> Makefile:460: recipe for target 'rseq.lo' failed
+> 
+> This appears to be caused by a missing .arm directive in RSEQ_SIG_DATA.
+> Fixing with:
+> 
+> -               asm volatile ("b 2f\n\t"                                \
+> +               asm volatile (".arm\n\t"                                \
+> +                             "b 2f\n\t"                                \
+> 
+> gets the build to go further, but breaks at:
+> 
+>  CC       basic_percpu_ops_test.o
+> /tmp/ccpHOMHZ.s: Assembler messages:
+> /tmp/ccpHOMHZ.s:148: Error: misaligned branch destination
+> /tmp/ccpHOMHZ.s:956: Error: misaligned branch destination
+> Makefile:378: recipe for target 'basic_percpu_ops_test.o' failed
+> 
+> I suspect it's caused by the change from:
+> 
+> -               ".word " __rseq_str(RSEQ_SIG) "\n\t"                    \
+> 
+> to
+> 
+> +               ".arm\n\t"                                              \
+> +               ".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"               \
+> 
+> which changes the mode from thumb to arm for the rest of the
+> inline asm within __RSEQ_ASM_DEFINE_ABORT. Better yet, there appears
+> to be no way to save the arm/thumb state and restore it afterwards.
+> 
+> I'm really starting to wonder if we should go our of our way to try
+> to get this signature to be a valid instruction on arm32. Perhaps
+> we should consider going back to use ".word" on arm32 so it ensures
+> it uses data endianness (which matches the parameter received by the
+> sys_rseq system call), let objdump and friends print it as a literal
+> pool (which it is), and just choose an instruction which has little
+> chances to appear for the cases we care about between ARM32 BE, LE
+> and THUMB. Perhaps a 32-bit palindrome ? Bonus points if this is a
+> trap instruction in common configurations for odd-cases-debugging
+> purposes.
+
+So I'm not particularly proud of the result, but I found a rather
+ugly way to figure out if we are currently in thumb mode within an
+inline asm, and restore that mode: test the length of a nop
+instruction with a ".if" asm statement.
+
+Do we want to go for this kind of approach, or should we revert
+back to a ".word" and accept that the rseq signature before the
+abort handler will be seen as data rather than an instruction
+on arm32 ?
+
+Is there a better way to do this ?
+
+Thanks,
+
+Mathieu
+
+diff --git a/include/rseq/rseq-arm.h b/include/rseq/rseq-arm.h
+index 1ce9231..b6c36dd 100644
+--- a/include/rseq/rseq-arm.h
++++ b/include/rseq/rseq-arm.h
+@@ -43,7 +43,14 @@
+        ({                                                              \
+                int sig;                                                \
+                asm volatile ("b 2f\n\t"                                \
++                             "3:\n\t"                                  \
++                             "nop\n\t"                                 \
++                             "4:\n\t"                                  \
++                             ".arm\n\t"                                \
+                              "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
++                             ".if ((4b - 3b) == 2)\n\t"                \
++                             ".thumb\n\t"                              \
++                             ".endif\n\t"                              \
+                              "2:\n\t"                                  \
+                              "ldr %[sig], 1b\n\t"                      \
+                              : [sig] "=r" (sig));                      \
+@@ -125,8 +132,14 @@ do {                                                                       \
+                __rseq_str(table_label) ":\n\t"                         \
+                ".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
+                ".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
++               "333:\n\t"                                              \
++               "nop\n\t"                                               \
++               "444:\n\t"                                              \
+                ".arm\n\t"                                              \
+                ".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"               \
++               ".if ((444b - 333b) == 2)\n\t"                          \
++               ".thumb\n\t"                                            \
++               ".endif\n\t"                                            \
+                __rseq_str(label) ":\n\t"                               \
+                teardown                                                \
+                "b %l[" __rseq_str(abort_label) "]\n\t"
 
 
-On 8.06.19 г. 18:13 ч., Paul E. McKenney wrote:
-> On Fri, Jun 07, 2019 at 02:59:34PM +0300, Nikolay Borisov wrote:
->>
->>
->> On 7.06.19 г. 13:52 ч., Paul E. McKenney wrote:
->>> On Thu, Jun 06, 2019 at 04:52:18PM +0300, Nikolay Borisov wrote:
->>>> A (D)ouble (R)eader (W)riter lock is a locking primitive that allows
->>>> to have multiple readers or multiple writers but not multiple readers
->>>> and writers holding it concurrently. The code is factored out from
->>>> the existing open-coded locking scheme used to exclude pending
->>>> snapshots from nocow writers and vice-versa. Current implementation
->>>> actually favors Readers (that is snapshot creaters) to writers (nocow
->>>> writers of the filesystem).
->>>>
->>>> Signed-off-by: Nikolay Borisov <nborisov@suse.com>
->>>
->>> A preliminary question...
->>>
->>> What prevents the following sequence of events from happening?
->>>
->>> o	btrfs_drw_write_lock() invokes btrfs_drw_try_write_lock(),
->>> 	which sees that lock->readers is zero and thus executes
->>> 	percpu_counter_inc(&lock->writers).
->>>
->>> o	btrfs_drw_read_lock() increments lock->readers, does the
->>> 	smp_mb__after_atomic(), and then does the wait_event().
->>> 	Because btrfs_drw_try_write_lock() incremented its CPU's
->>> 	lock->writers, the sum is the value one, so it blocks.
->>>
->>> o	btrfs_drw_try_write_lock() checks lock->readers, sees that
->>> 	it is now nonzero, and thus invokes btrfs_drw_read_unlock()
->>> 	(which decrements the current CPU's counter, so that a future
->>> 	sum would get zero), and returns false.
->>
->> btrfs_drw_read_unlock is actually btrfs_drw_write_unlock, my bad, Filipe
->> already pointed that out and I've fixed it.
-> 
-> Ah!  I must then ask what you are using to test this.  kernel/locktorture.c?
 
-At the moment - nothing. I rely on the fact that the original code I
-extracted that from is bug-free (ha-ha). So perhahps hooking up
-locktorture seems like a good suggestion. From a quick look I guess I
-could mostly model that lock against the rwsem. The question is how do I
-model the trylock semantics as well as the "double" part?
 
-> 
->> The idea here is that if a reader came after we've incremented out
->> percpu counter then it would have blocked, the writer would see that and
->> invoke btrfs_drw_write_unlock which will decrement the percpu counter
->> and will wakeup the reader that is now blocked on pending_readers.
-> 
-> OK, I will await your next version.
-> 
-> 							Thanx, Paul
-> 
->>> o	btrfs_drw_write_lock() therefore does its wait_event().
->>> 	Because lock->readers is nonzero, it blocks.
->>>
->>> o	Both tasks are now blocked.  In the absence of future calls
->>> 	to these functions (and perhaps even given such future calls),
->>> 	we have deadlock.
->>>
->>> So what am I missing here?
->>>
->>> 							Thanx, Paul
->>>
->>>> ---
->>>>  fs/btrfs/Makefile   |  2 +-
->>>>  fs/btrfs/drw_lock.c | 71 +++++++++++++++++++++++++++++++++++++++++++++
->>>>  fs/btrfs/drw_lock.h | 23 +++++++++++++++
->>>>  3 files changed, 95 insertions(+), 1 deletion(-)
->>>>  create mode 100644 fs/btrfs/drw_lock.c
->>>>  create mode 100644 fs/btrfs/drw_lock.h
->>>>
->>>> diff --git a/fs/btrfs/Makefile b/fs/btrfs/Makefile
->>>> index ca693dd554e9..dc60127791e6 100644
->>>> --- a/fs/btrfs/Makefile
->>>> +++ b/fs/btrfs/Makefile
->>>> @@ -10,7 +10,7 @@ btrfs-y += super.o ctree.o extent-tree.o print-tree.o root-tree.o dir-item.o \
->>>>  	   export.o tree-log.o free-space-cache.o zlib.o lzo.o zstd.o \
->>>>  	   compression.o delayed-ref.o relocation.o delayed-inode.o scrub.o \
->>>>  	   reada.o backref.o ulist.o qgroup.o send.o dev-replace.o raid56.o \
->>>> -	   uuid-tree.o props.o free-space-tree.o tree-checker.o
->>>> +	   uuid-tree.o props.o free-space-tree.o tree-checker.o drw_lock.o
->>>>  
->>>>  btrfs-$(CONFIG_BTRFS_FS_POSIX_ACL) += acl.o
->>>>  btrfs-$(CONFIG_BTRFS_FS_CHECK_INTEGRITY) += check-integrity.o
->>>> diff --git a/fs/btrfs/drw_lock.c b/fs/btrfs/drw_lock.c
->>>> new file mode 100644
->>>> index 000000000000..9681bf7544be
->>>> --- /dev/null
->>>> +++ b/fs/btrfs/drw_lock.c
->>>> @@ -0,0 +1,71 @@
->>>> +#include "drw_lock.h"
->>>> +#include "ctree.h"
->>>> +
->>>> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock)
->>>> +{
->>>> +	atomic_set(&lock->readers, 0);
->>>> +	percpu_counter_init(&lock->writers, 0, GFP_KERNEL);
->>>> +	init_waitqueue_head(&lock->pending_readers);
->>>> +	init_waitqueue_head(&lock->pending_writers);
->>>> +}
->>>> +
->>>> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock)
->>>> +{
->>>> +	percpu_counter_destroy(&lock->writers);
->>>> +}
->>>> +
->>>> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock)
->>>> +{
->>>> +	if (atomic_read(&lock->readers))
->>>> +		return false;
->>>> +
->>>> +	percpu_counter_inc(&lock->writers);
->>>> +
->>>> +	/*
->>>> +	 * Ensure writers count is updated before we check for
->>>> +	 * pending readers
->>>> +	 */
->>>> +	smp_mb();
->>>> +	if (atomic_read(&lock->readers)) {
->>>> +		btrfs_drw_read_unlock(lock);
->>>> +		return false;
->>>> +	}
->>>> +
->>>> +	return true;
->>>> +}
->>>> +
->>>> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock)
->>>> +{
->>>> +	while(true) {
->>>> +		if (btrfs_drw_try_write_lock(lock))
->>>> +			return;
->>>> +		wait_event(lock->pending_writers, !atomic_read(&lock->readers));
->>>> +	}
->>>> +}
->>>> +
->>>> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock)
->>>> +{
->>>> +	percpu_counter_dec(&lock->writers);
->>>> +	cond_wake_up(&lock->pending_readers);
->>>> +}
->>>> +
->>>> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock)
->>>> +{
->>>> +	atomic_inc(&lock->readers);
->>>> +	smp_mb__after_atomic();
->>>> +
->>>> +	wait_event(lock->pending_readers,
->>>> +		   percpu_counter_sum(&lock->writers) == 0);
->>>> +}
->>>> +
->>>> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock)
->>>> +{
->>>> +	/*
->>>> +	 * Atomic RMW operations imply full barrier, so woken up writers
->>>> +	 * are guaranteed to see the decrement
->>>> +	 */
->>>> +	if (atomic_dec_and_test(&lock->readers))
->>>> +		wake_up(&lock->pending_writers);
->>>> +}
->>>> +
->>>> +
->>>> diff --git a/fs/btrfs/drw_lock.h b/fs/btrfs/drw_lock.h
->>>> new file mode 100644
->>>> index 000000000000..baff59561c06
->>>> --- /dev/null
->>>> +++ b/fs/btrfs/drw_lock.h
->>>> @@ -0,0 +1,23 @@
->>>> +#ifndef BTRFS_DRW_LOCK_H
->>>> +#define BTRFS_DRW_LOCK_H
->>>> +
->>>> +#include <linux/atomic.h>
->>>> +#include <linux/wait.h>
->>>> +#include <linux/percpu_counter.h>
->>>> +
->>>> +struct btrfs_drw_lock {
->>>> +	atomic_t readers;
->>>> +	struct percpu_counter writers;
->>>> +	wait_queue_head_t pending_writers;
->>>> +	wait_queue_head_t pending_readers;
->>>> +};
->>>> +
->>>> +void btrfs_drw_lock_init(struct btrfs_drw_lock *lock);
->>>> +void btrfs_drw_lock_destroy(struct btrfs_drw_lock *lock);
->>>> +void btrfs_drw_write_lock(struct btrfs_drw_lock *lock);
->>>> +bool btrfs_drw_try_write_lock(struct btrfs_drw_lock *lock);
->>>> +void btrfs_drw_write_unlock(struct btrfs_drw_lock *lock);
->>>> +void btrfs_drw_read_lock(struct btrfs_drw_lock *lock);
->>>> +void btrfs_drw_read_unlock(struct btrfs_drw_lock *lock);
->>>> +
->>>> +#endif
->>>> -- 
->>>> 2.17.1
->>>>
->>>
->>>
->>
-> 
-> 
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
