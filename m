@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4055DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E0FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162D1214DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1926214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994346;
-	bh=2OsoB8m9Gzt3yzqnapTW350BeoFyLj5MY7DLQ9WyQl8=;
+	s=default; t=1559994356;
+	bh=w1oDmUXsyUE2+w9jLGc9efd1x7B0IjhnhaNthXFd59M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eva1gOjV7cgqJC8CLCywlioY3avFQw/QT+yErSrz2DyEh2Up6cjMCbW5QcbxhXap1
-	 Aah6sNUT6krLcI8P14J+JUpxpTQeZBAEyJFRH5whu8SNj/pAgiFzxwNbzl/HnENWvl
-	 RCKkQNu7SRKGC9RtObclIMD8RPApnwNZg0cY/wCQ=
+	b=uWV4PsWG8BkcqxWcoJr4+2+hAgfKWEM3eeALmoJo8iHTld+QHwYNz7Myd5tSUKukW
+	 uCgpa/9aBFUn5g2hgjMqy+ELNdRt6rM5QCRTBTRHT0nI1EjJ4IvnTh19TgR03CdboW
+	 lTO6TjckFhdIsAo2NStrw+lZkbC/CzUqbVOu4+mE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfFHLpo (ORCPT
+        id S1729080AbfFHLpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:45:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:45:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbfFHLpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:45:40 -0400
+        id S1728659AbfFHLnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8543214D8;
-        Sat,  8 Jun 2019 11:45:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEF63214D8;
+        Sat,  8 Jun 2019 11:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994340;
-        bh=2OsoB8m9Gzt3yzqnapTW350BeoFyLj5MY7DLQ9WyQl8=;
+        s=default; t=1559994192;
+        bh=w1oDmUXsyUE2+w9jLGc9efd1x7B0IjhnhaNthXFd59M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kXkR8Fmik1AaLCrxZHSEH91eNfQP5QYJrhmYs49Kj1rXl7qJfy/axOfrfGjT03Hry
-         /30Vx4lX/OW3ipADyrJfL85I8XgRnTMGOfPdy6LGvOA2KNTmTqRbS5xPTrgjre6iUa
-         ALf+fSUFqty1DCChMuc4yRFrye0ZypAfS2G/8Jyo=
+        b=vT4ECaSVJn7/awGfDCFO21M+pFz3Gi1Jk0ku6UcQuGcpGSQf6/+x62yCK3CdrjXbs
+         Ad5Z5lR7+dM9+MLS3RaEdXf129Py6ngGCfZQmC8/381yR/Ca59bq6AipN0THFDdfk6
+         2GG9Z+4JF3BaKOeW/ROzDN2n5PJWuCx7NL2Z00mo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 38/49] arm64: fix syscall_fn_t type
-Date:   Sat,  8 Jun 2019 07:42:19 -0400
-Message-Id: <20190608114232.8731-38-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 11/49] mISDN: make sure device name is NUL terminated
+Date:   Sat,  8 Jun 2019 07:41:52 -0400
+Message-Id: <20190608114232.8731-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -60,35 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8ef8f368ce72b5e17f7c1f1ef15c38dcfd0fef64 ]
+[ Upstream commit ccfb62f27beb295103e9392462b20a6ed807d0ea ]
 
-Syscall wrappers in <asm/syscall_wrapper.h> use const struct pt_regs *
-as the argument type. Use const in syscall_fn_t as well to fix indirect
-call type mismatches with Control-Flow Integrity checking.
+The user can change the device_name with the IMSETDEVNAME ioctl, but we
+need to ensure that the user's name is NUL terminated.  Otherwise it
+could result in a buffer overflow when we copy the name back to the user
+with IMGETDEVINFO ioctl.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+I also changed two strcpy() calls which handle the name to strscpy().
+Hopefully, there aren't any other ways to create a too long name, but
+it's nice to do this as a kernel hardening measure.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/syscall.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/isdn/mISDN/socket.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
-index ad8be16a39c9..58102652bf9e 100644
---- a/arch/arm64/include/asm/syscall.h
-+++ b/arch/arm64/include/asm/syscall.h
-@@ -20,7 +20,7 @@
- #include <linux/compat.h>
- #include <linux/err.h>
- 
--typedef long (*syscall_fn_t)(struct pt_regs *regs);
-+typedef long (*syscall_fn_t)(const struct pt_regs *regs);
- 
- extern const syscall_fn_t sys_call_table[];
- 
+diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
+index b2abc44fa5cb..a73337b74f41 100644
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -394,7 +394,7 @@ data_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			memcpy(di.channelmap, dev->channelmap,
+ 			       sizeof(di.channelmap));
+ 			di.nrbchan = dev->nrbchan;
+-			strcpy(di.name, dev_name(&dev->dev));
++			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
+ 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
+ 				err = -EFAULT;
+ 		} else
+@@ -677,7 +677,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			memcpy(di.channelmap, dev->channelmap,
+ 			       sizeof(di.channelmap));
+ 			di.nrbchan = dev->nrbchan;
+-			strcpy(di.name, dev_name(&dev->dev));
++			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
+ 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
+ 				err = -EFAULT;
+ 		} else
+@@ -691,6 +691,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		dn.name[sizeof(dn.name) - 1] = '\0';
+ 		dev = get_mdevice(dn.id);
+ 		if (dev)
+ 			err = device_rename(&dev->dev, dn.name);
 -- 
 2.20.1
 
