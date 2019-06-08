@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D51C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03289C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3810F216C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C348421707
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994518;
-	bh=fDNyOUPjelSpPgLUi2TrZQecZSYzHvaqm4qqfpsOkfI=;
+	s=default; t=1559994525;
+	bh=IXbct3bspONpxewjZzg7hXQB9AgWCFTmqbOriZCheX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dtb0d4EwXnBXl/S7PdiIPPjoI6koaEqGcdEWm3tu1GVie7dSJqOAzWpqLB7PBWEb8
-	 ZpDlSlmQkHqqoYerP7KZ1yFCJHyoA/5b1nxyYtbLwgsREmXKa6AZ/rPRGM/2ynj/Ay
-	 Ot8xDZlXTd8zDH9CXLK0GeoqibEIjG+yQRAT7mkI=
+	b=ZJgHZkGN4kGMCKlnEwH5cWZz3di1mISTtLIf761ol9XlScAJzWBqw7B4JIxPeS80y
+	 wwAbvfmRxs1FsqNU2ezDoHcDOJuIN6ENHaPsapdutxotyDHjS1nf7yzhgJzYy11JiH
+	 vyttCdDIvSmafHh3Zz8FNDdMfQ79vhDIIFDeJ1Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfFHLsh (ORCPT
+        id S1729802AbfFHLso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:48:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37302 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:48:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbfFHLsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:48:33 -0400
+        id S1728605AbfFHLsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:48:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0604216F4;
-        Sat,  8 Jun 2019 11:48:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FA0F216C4;
+        Sat,  8 Jun 2019 11:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994512;
-        bh=fDNyOUPjelSpPgLUi2TrZQecZSYzHvaqm4qqfpsOkfI=;
+        s=default; t=1559994520;
+        bh=IXbct3bspONpxewjZzg7hXQB9AgWCFTmqbOriZCheX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tlw/6zmSLGMsj7F5+AkI3bYKB2UrBmHn/eEjtyUn7qRHDOKi1H+ncLpGNokeIBbhP
-         7m2wfzfG5myjRbPp8ghEJalCCTTZBBWrVb42Kf4WXF38Dvb8ih3HXD97E0M/9yB5nc
-         Ck13OU8CdyhP0uyhr776cPbvcboysHm3V5JxL3rA=
+        b=hskZwvPROLHZm61AFBaXEwZzHqpK5Dr++/BImLkbWkp/w2ByplitTGB327/r/t0Ir
+         /7m3qlAK463WbqtPVHAj4wnW/+h1arUR0YVlMhPtbFWFllLpfFNdYPwhZnokLikUEl
+         7gADSZtEinDM7fIzK8NnTUH3R1mNEI+WUBitVexY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 13/20] ia64: fix build errors by exporting paddr_to_nid()
-Date:   Sat,  8 Jun 2019 07:47:49 -0400
-Message-Id: <20190608114756.9742-13-sashal@kernel.org>
+Cc:     Varun Prakash <varun@chelsio.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 17/20] scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
+Date:   Sat,  8 Jun 2019 07:47:53 -0400
+Message-Id: <20190608114756.9742-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114756.9742-1-sashal@kernel.org>
 References: <20190608114756.9742-1-sashal@kernel.org>
@@ -62,58 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Varun Prakash <varun@chelsio.com>
 
-[ Upstream commit 9a626c4a6326da4433a0d4d4a8a7d1571caf1ed3 ]
+[ Upstream commit cc555759117e8349088e0c5d19f2f2a500bafdbd ]
 
-Fix build errors on ia64 when DISCONTIGMEM=y and NUMA=y by
-exporting paddr_to_nid().
+ip_dev_find() can return NULL so add a check for NULL pointer.
 
-Fixes these build errors:
-
-ERROR: "paddr_to_nid" [sound/core/snd-pcm.ko] undefined!
-ERROR: "paddr_to_nid" [net/sunrpc/sunrpc.ko] undefined!
-ERROR: "paddr_to_nid" [fs/cifs/cifs.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/video/fbdev/core/fb.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/usb/mon/usbmon.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/usb/core/usbcore.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/raid1.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-mod.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-crypt.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-bufio.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/ide/ide-core.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/ide/ide-cd_mod.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/gpu/drm/drm.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/char/agp/agpgart.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/nbd.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/loop.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/brd.ko] undefined!
-ERROR: "paddr_to_nid" [crypto/ccm.ko] undefined!
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: linux-ia64@vger.kernel.org
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/mm/numa.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/cxgbi/libcxgbi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/ia64/mm/numa.c b/arch/ia64/mm/numa.c
-index aa19b7ac8222..476c7b4be378 100644
---- a/arch/ia64/mm/numa.c
-+++ b/arch/ia64/mm/numa.c
-@@ -49,6 +49,7 @@ paddr_to_nid(unsigned long paddr)
+diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
+index 2ffe029ff2b6..e974106f2bb5 100644
+--- a/drivers/scsi/cxgbi/libcxgbi.c
++++ b/drivers/scsi/cxgbi/libcxgbi.c
+@@ -637,6 +637,10 @@ static struct cxgbi_sock *cxgbi_check_route(struct sockaddr *dst_addr)
  
- 	return (i < num_node_memblks) ? node_memblk[i].nid : (num_node_memblks ? -1 : 0);
- }
-+EXPORT_SYMBOL(paddr_to_nid);
- 
- #if defined(CONFIG_SPARSEMEM) && defined(CONFIG_NUMA)
- /*
+ 	if (ndev->flags & IFF_LOOPBACK) {
+ 		ndev = ip_dev_find(&init_net, daddr->sin_addr.s_addr);
++		if (!ndev) {
++			err = -ENETUNREACH;
++			goto rel_neigh;
++		}
+ 		mtu = ndev->mtu;
+ 		pr_info("rt dev %s, loopback -> %s, mtu %u.\n",
+ 			n->dev->name, ndev->name, mtu);
 -- 
 2.20.1
 
