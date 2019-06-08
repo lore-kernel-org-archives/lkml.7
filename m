@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76EBC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 12:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D423C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 12:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC3821537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 12:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1663F21537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 12:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ku9mQd2H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gw7B8FoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfFHMGf (ORCPT
+        id S1728725AbfFHMGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 08:06:35 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38211 "EHLO
+        Sat, 8 Jun 2019 08:06:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36672 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfFHMFw (ORCPT
+        with ESMTP id S1727682AbfFHMFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 08:05:52 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so1748487wmj.3;
-        Sat, 08 Jun 2019 05:05:51 -0700 (PDT)
+        Sat, 8 Jun 2019 08:05:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u8so4209433wmm.1;
+        Sat, 08 Jun 2019 05:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1qLTiM+yKca/eE2Qhv9w2ob4ufqQOChs5VTIl33BbI0=;
-        b=Ku9mQd2H8nPKdJLvNeG8wfwhQnVBYbspsDnsLpGLVa1v80IiU0jLtd3zk9JRNRiILq
-         xt4R78Meyv5Tw4/XoplH0gSzTUy86n4mjTFgyqAH2PO4prySeelC7et+G3i0Sj2nJX0I
-         TLgDFxVGCGtJ6u3S2yLyjxCBqfASMV8povQygFt8Rcp4+wZrTK7cWV2S9lmQvwUB30yO
-         QHkl0ad0mmiuEtNltrazINr+N4j5jhm8nUGEs9RWuzxSthYjlzg88PLI84eXSTwGOZcU
-         Px1X8S8Dms9CVMoJIAmC4zqBYufQJm9I7kkbevbucnJ8u3nPLgB3Hcp+4EqSqS+Pc6AO
-         3CJA==
+        bh=0+l+Wr1sIHp9MJA2YAWp1xAg1OgIafMRyHKoAvbZSB0=;
+        b=Gw7B8FoNmk/DSuf4VNOaSmC1lPHreOgkWEcamLCEzKbXclEK3TitoG+gmGMGSDQYDL
+         OLf8NL4B2ft+fFtf1aBG6fC6uRj7IsW9rDMNMsiRnOh7Q0eA54qHXF37iV2csk/jgtON
+         FH4znRl9ijqYGRoAQLRmOuNNT4tZPighuuVKTgGCr+Q8KoDjVH+GjjlKW1B2r2tdCebB
+         vc1eyyuXF33fWYBBZymum80ETisr/ovCX3cr9gWH5TiEr9X7EIdGKvgXLPQOPgMf9yTY
+         pM5kRKyCVihgBliKLWjj16PVQ2/wF89m608r8HfYaW0Frq2Ug3ZCsNtg+Tc1ZXRFzdnn
+         CAKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=1qLTiM+yKca/eE2Qhv9w2ob4ufqQOChs5VTIl33BbI0=;
-        b=IhzD4LcQU1PBjYxX5evO3L2c/OZiBz0AgIEVPD/kzQnRYoW+zU+WBEUQL/qJNS+cz0
-         63cOpV3r7OCjN45+BJ+JXDM6L/JJczcSA0Lei5UbpwqAGySxcsSfrXtMQHP/WUXj1yA7
-         a5/pp6gUK3DOdLOkTPIYnvWXL5iQ1qGpyVrNIHUfxIEJpoLx9XsvaLFmt6sopJtW3y7+
-         LAlWq8i8aVzE7Nq1L9V4C8X2ty7CnBiVyPNmg8+KNnBNQ9vPb8WD114RHtw/i2a6HihF
-         1TFVro3p88V3A0g0sOLmYdHdUmhY0JuERve05FFakJMbNZX1/Yu+pW+YV7zCzJrLcp+x
-         UPdw==
-X-Gm-Message-State: APjAAAXwP45+ATtU2MFJ7x/KK7AiiSeySa2jVxb8bj5Gmgf2uYhpx6Ys
-        Lxedv9m4ZcK7/hrXm7Ng8UBEh7VLYPg=
-X-Google-Smtp-Source: APXvYqxuAEAGHnc9ESqevSv3avLS1vbMtJ8uhsVgkk9iLxtQxWk4GRtDeH1V6VWuOtmojgC+jcEWpg==
-X-Received: by 2002:a7b:c057:: with SMTP id u23mr7097429wmc.29.1559995550543;
-        Sat, 08 Jun 2019 05:05:50 -0700 (PDT)
+        bh=0+l+Wr1sIHp9MJA2YAWp1xAg1OgIafMRyHKoAvbZSB0=;
+        b=ST1IzhSWDcDM/oV/7ggbKc0aw3/eurpisrrBflDIo6ROBwqCX3a44S7ws2lG3M9Ixb
+         Oxn4kNjOFef6xi4Oo/e9QjIQlc1VmS6uZZ6IGYzQaI11nDIy0ZJj4Y/26kWNp97e/dK7
+         CEeNnzEI0q+EYdnbetZTwp34zLMdWzXTcGH7t5i1C8uNVCHZuOSe0r4c9PObQp9rypGw
+         Sz7vEfpGUB3H/QIxynIelgkLxYSK2wUo3jTzGAEF9NjrkcGLkIoKZp/k+NslUHSnDy9H
+         eOpKoQ33yYN16zqpU9VlGlPrrLsyYWpnj4Y2qD0xlpJAP8ajWaFzUFtggiyJ23K0QJEq
+         3Bgg==
+X-Gm-Message-State: APjAAAW1QP7OXKehkK9jqqSqvYgnSwWbG2itTBY3ci4Hq+jaz6vUumd/
+        99NGFib/fgcTJWODidEXCfI=
+X-Google-Smtp-Source: APXvYqwSbUJtijyn6QJPbjfH9qQP70q8kFzxPk/myR27gUKcNzHAZHg4h+QzFQaxMViBvEbZAvfNDQ==
+X-Received: by 2002:a1c:3dc1:: with SMTP id k184mr7232197wma.88.1559995547402;
+        Sat, 08 Jun 2019 05:05:47 -0700 (PDT)
 Received: from localhost.localdomain ([188.26.252.192])
-        by smtp.gmail.com with ESMTPSA id j16sm5440030wre.94.2019.06.08.05.05.49
+        by smtp.gmail.com with ESMTPSA id j16sm5440030wre.94.2019.06.08.05.05.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Jun 2019 05:05:50 -0700 (PDT)
+        Sat, 08 Jun 2019 05:05:46 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net, richardcochran@gmail.com,
         john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v4 net-next 14/17] net: dsa: sja1105: Add a global sja1105_tagger_data structure
-Date:   Sat,  8 Jun 2019 15:04:40 +0300
-Message-Id: <20190608120443.21889-15-olteanv@gmail.com>
+Subject: [PATCH v4 net-next 11/17] net: dsa: sja1105: Add support for the AVB Parameters Table
+Date:   Sat,  8 Jun 2019 15:04:37 +0300
+Message-Id: <20190608120443.21889-12-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190608120443.21889-1-olteanv@gmail.com>
 References: <20190608120443.21889-1-olteanv@gmail.com>
@@ -73,18 +73,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will be used to keep state for RX timestamping. It is global
-because the switch serializes timestampable and meta frames when
-trapping them towards the CPU port (lower port indices have higher
-priority) and therefore having one state machine per port would create
-unnecessary complications.
+This table is used to program the switch to emit "meta" follow-up
+Ethernet frames (which contain partial RX timestamps) after each
+link-local frame that was trapped to the CPU port through MAC filtering.
+This includes PTP frames.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
 Changes in v4:
 
-Removed the redundant sja1105_is_link_local check from
-sja1105_port_rxtstamp.
+None.
 
 Changes in v3:
 
@@ -94,79 +92,258 @@ Changes in v2:
 
 None.
 
- drivers/net/dsa/sja1105/sja1105.h      |  1 +
- drivers/net/dsa/sja1105/sja1105_main.c |  5 +++++
- include/linux/dsa/sja1105.h            | 15 +++++++++++++++
- 3 files changed, 21 insertions(+)
+ .../net/dsa/sja1105/sja1105_dynamic_config.c  |  2 +
+ drivers/net/dsa/sja1105/sja1105_main.c        | 36 +++++++++++
+ .../net/dsa/sja1105/sja1105_static_config.c   | 59 +++++++++++++++++++
+ .../net/dsa/sja1105/sja1105_static_config.h   | 10 ++++
+ 4 files changed, 107 insertions(+)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-index 5a4f83a3417b..0fc6fe9ada87 100644
---- a/drivers/net/dsa/sja1105/sja1105.h
-+++ b/drivers/net/dsa/sja1105/sja1105.h
-@@ -103,6 +103,7 @@ struct sja1105_private {
- 	 * the switch doesn't confuse them with one another.
- 	 */
- 	struct mutex mgmt_lock;
-+	struct sja1105_tagger_data tagger_data;
- };
- 
- #include "sja1105_dynamic_config.h"
+diff --git a/drivers/net/dsa/sja1105/sja1105_dynamic_config.c b/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
+index 352bb6e89297..56c83b9d52e4 100644
+--- a/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
++++ b/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
+@@ -378,6 +378,7 @@ struct sja1105_dynamic_table_ops sja1105et_dyn_ops[BLK_IDX_MAX_DYN] = {
+ 		.addr = 0x38,
+ 	},
+ 	[BLK_IDX_L2_FORWARDING_PARAMS] = {0},
++	[BLK_IDX_AVB_PARAMS] = {0},
+ 	[BLK_IDX_GENERAL_PARAMS] = {
+ 		.entry_packing = sja1105et_general_params_entry_packing,
+ 		.cmd_packing = sja1105et_general_params_cmd_packing,
+@@ -441,6 +442,7 @@ struct sja1105_dynamic_table_ops sja1105pqrs_dyn_ops[BLK_IDX_MAX_DYN] = {
+ 		.addr = 0x38,
+ 	},
+ 	[BLK_IDX_L2_FORWARDING_PARAMS] = {0},
++	[BLK_IDX_AVB_PARAMS] = {0},
+ 	[BLK_IDX_GENERAL_PARAMS] = {
+ 		.entry_packing = sja1105et_general_params_entry_packing,
+ 		.cmd_packing = sja1105et_general_params_cmd_packing,
 diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index d129997174bb..3c11142f1c67 100644
+index 121ceccd8107..d129997174bb 100644
 --- a/drivers/net/dsa/sja1105/sja1105_main.c
 +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1828,6 +1828,7 @@ static int sja1105_check_device_id(struct sja1105_private *priv)
+@@ -508,6 +508,39 @@ static int sja1105_init_l2_policing(struct sja1105_private *priv)
+ 	return 0;
+ }
  
- static int sja1105_probe(struct spi_device *spi)
- {
-+	struct sja1105_tagger_data *tagger_data;
- 	struct device *dev = &spi->dev;
- 	struct sja1105_private *priv;
- 	struct dsa_switch *ds;
-@@ -1882,12 +1883,16 @@ static int sja1105_probe(struct spi_device *spi)
- 	ds->priv = priv;
- 	priv->ds = ds;
- 
-+	tagger_data = &priv->tagger_data;
-+	skb_queue_head_init(&tagger_data->skb_rxtstamp_queue);
++static int sja1105_init_avb_params(struct sja1105_private *priv,
++				   bool on)
++{
++	struct sja1105_avb_params_entry *avb;
++	struct sja1105_table *table;
 +
- 	/* Connections between dsa_port and sja1105_port */
- 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
- 		struct sja1105_port *sp = &priv->ports[i];
++	table = &priv->static_config.tables[BLK_IDX_AVB_PARAMS];
++
++	/* Discard previous AVB Parameters Table */
++	if (table->entry_count) {
++		kfree(table->entries);
++		table->entry_count = 0;
++	}
++
++	/* Configure the reception of meta frames only if requested */
++	if (!on)
++		return 0;
++
++	table->entries = kcalloc(SJA1105_MAX_AVB_PARAMS_COUNT,
++				 table->ops->unpacked_entry_size, GFP_KERNEL);
++	if (!table->entries)
++		return -ENOMEM;
++
++	table->entry_count = SJA1105_MAX_AVB_PARAMS_COUNT;
++
++	avb = table->entries;
++
++	avb->destmeta = SJA1105_META_DMAC;
++	avb->srcmeta  = SJA1105_META_SMAC;
++
++	return 0;
++}
++
+ static int sja1105_static_config_load(struct sja1105_private *priv,
+ 				      struct sja1105_dt_port *ports)
+ {
+@@ -546,6 +579,9 @@ static int sja1105_static_config_load(struct sja1105_private *priv,
+ 	if (rc < 0)
+ 		return rc;
+ 	rc = sja1105_init_general_params(priv);
++	if (rc < 0)
++		return rc;
++	rc = sja1105_init_avb_params(priv, false);
+ 	if (rc < 0)
+ 		return rc;
  
- 		ds->ports[i].priv = sp;
- 		sp->dp = &ds->ports[i];
-+		sp->data = tagger_data;
- 	}
- 	mutex_init(&priv->mgmt_lock);
+diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.c b/drivers/net/dsa/sja1105/sja1105_static_config.c
+index e2f86b332b09..58f273eaf1ea 100644
+--- a/drivers/net/dsa/sja1105/sja1105_static_config.c
++++ b/drivers/net/dsa/sja1105/sja1105_static_config.c
+@@ -94,6 +94,28 @@ u32 sja1105_crc32(const void *buf, size_t len)
+ 	return ~crc;
+ }
  
-diff --git a/include/linux/dsa/sja1105.h b/include/linux/dsa/sja1105.h
-index cc4a909d1007..2c4fce4eaf0d 100644
---- a/include/linux/dsa/sja1105.h
-+++ b/include/linux/dsa/sja1105.h
-@@ -31,7 +31,22 @@
- #define SJA1105_META_SMAC			0x222222222222ull
- #define SJA1105_META_DMAC			0x0180C200000Eull
++static size_t sja1105et_avb_params_entry_packing(void *buf, void *entry_ptr,
++						 enum packing_op op)
++{
++	const size_t size = SJA1105ET_SIZE_AVB_PARAMS_ENTRY;
++	struct sja1105_avb_params_entry *entry = entry_ptr;
++
++	sja1105_packing(buf, &entry->destmeta, 95, 48, size, op);
++	sja1105_packing(buf, &entry->srcmeta,  47,  0, size, op);
++	return size;
++}
++
++static size_t sja1105pqrs_avb_params_entry_packing(void *buf, void *entry_ptr,
++						   enum packing_op op)
++{
++	const size_t size = SJA1105PQRS_SIZE_AVB_PARAMS_ENTRY;
++	struct sja1105_avb_params_entry *entry = entry_ptr;
++
++	sja1105_packing(buf, &entry->destmeta,   125,  78, size, op);
++	sja1105_packing(buf, &entry->srcmeta,     77,  30, size, op);
++	return size;
++}
++
+ static size_t sja1105et_general_params_entry_packing(void *buf, void *entry_ptr,
+ 						     enum packing_op op)
+ {
+@@ -426,6 +448,7 @@ static u64 blk_id_map[BLK_IDX_MAX] = {
+ 	[BLK_IDX_MAC_CONFIG] = BLKID_MAC_CONFIG,
+ 	[BLK_IDX_L2_LOOKUP_PARAMS] = BLKID_L2_LOOKUP_PARAMS,
+ 	[BLK_IDX_L2_FORWARDING_PARAMS] = BLKID_L2_FORWARDING_PARAMS,
++	[BLK_IDX_AVB_PARAMS] = BLKID_AVB_PARAMS,
+ 	[BLK_IDX_GENERAL_PARAMS] = BLKID_GENERAL_PARAMS,
+ 	[BLK_IDX_XMII_PARAMS] = BLKID_XMII_PARAMS,
+ };
+@@ -627,6 +650,12 @@ struct sja1105_table_ops sja1105e_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105_SIZE_L2_FORWARDING_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_AVB_PARAMS] = {
++		.packing = sja1105et_avb_params_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_avb_params_entry),
++		.packed_entry_size = SJA1105ET_SIZE_AVB_PARAMS_ENTRY,
++		.max_entry_count = SJA1105_MAX_AVB_PARAMS_COUNT,
++	},
+ 	[BLK_IDX_GENERAL_PARAMS] = {
+ 		.packing = sja1105et_general_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_general_params_entry),
+@@ -685,6 +714,12 @@ struct sja1105_table_ops sja1105t_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105_SIZE_L2_FORWARDING_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_AVB_PARAMS] = {
++		.packing = sja1105et_avb_params_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_avb_params_entry),
++		.packed_entry_size = SJA1105ET_SIZE_AVB_PARAMS_ENTRY,
++		.max_entry_count = SJA1105_MAX_AVB_PARAMS_COUNT,
++	},
+ 	[BLK_IDX_GENERAL_PARAMS] = {
+ 		.packing = sja1105et_general_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_general_params_entry),
+@@ -743,6 +778,12 @@ struct sja1105_table_ops sja1105p_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105_SIZE_L2_FORWARDING_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_AVB_PARAMS] = {
++		.packing = sja1105pqrs_avb_params_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_avb_params_entry),
++		.packed_entry_size = SJA1105PQRS_SIZE_AVB_PARAMS_ENTRY,
++		.max_entry_count = SJA1105_MAX_AVB_PARAMS_COUNT,
++	},
+ 	[BLK_IDX_GENERAL_PARAMS] = {
+ 		.packing = sja1105pqrs_general_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_general_params_entry),
+@@ -801,6 +842,12 @@ struct sja1105_table_ops sja1105q_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105_SIZE_L2_FORWARDING_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_AVB_PARAMS] = {
++		.packing = sja1105pqrs_avb_params_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_avb_params_entry),
++		.packed_entry_size = SJA1105PQRS_SIZE_AVB_PARAMS_ENTRY,
++		.max_entry_count = SJA1105_MAX_AVB_PARAMS_COUNT,
++	},
+ 	[BLK_IDX_GENERAL_PARAMS] = {
+ 		.packing = sja1105pqrs_general_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_general_params_entry),
+@@ -859,6 +906,12 @@ struct sja1105_table_ops sja1105r_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105_SIZE_L2_FORWARDING_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_AVB_PARAMS] = {
++		.packing = sja1105pqrs_avb_params_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_avb_params_entry),
++		.packed_entry_size = SJA1105PQRS_SIZE_AVB_PARAMS_ENTRY,
++		.max_entry_count = SJA1105_MAX_AVB_PARAMS_COUNT,
++	},
+ 	[BLK_IDX_GENERAL_PARAMS] = {
+ 		.packing = sja1105pqrs_general_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_general_params_entry),
+@@ -917,6 +970,12 @@ struct sja1105_table_ops sja1105s_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105_SIZE_L2_FORWARDING_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_AVB_PARAMS] = {
++		.packing = sja1105pqrs_avb_params_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_avb_params_entry),
++		.packed_entry_size = SJA1105PQRS_SIZE_AVB_PARAMS_ENTRY,
++		.max_entry_count = SJA1105_MAX_AVB_PARAMS_COUNT,
++	},
+ 	[BLK_IDX_GENERAL_PARAMS] = {
+ 		.packing = sja1105pqrs_general_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_general_params_entry),
+diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.h b/drivers/net/dsa/sja1105/sja1105_static_config.h
+index d513b1c91b98..a9586d0b4b3b 100644
+--- a/drivers/net/dsa/sja1105/sja1105_static_config.h
++++ b/drivers/net/dsa/sja1105/sja1105_static_config.h
+@@ -20,10 +20,12 @@
+ #define SJA1105ET_SIZE_MAC_CONFIG_ENTRY			28
+ #define SJA1105ET_SIZE_L2_LOOKUP_PARAMS_ENTRY		4
+ #define SJA1105ET_SIZE_GENERAL_PARAMS_ENTRY		40
++#define SJA1105ET_SIZE_AVB_PARAMS_ENTRY			12
+ #define SJA1105PQRS_SIZE_L2_LOOKUP_ENTRY		20
+ #define SJA1105PQRS_SIZE_MAC_CONFIG_ENTRY		32
+ #define SJA1105PQRS_SIZE_L2_LOOKUP_PARAMS_ENTRY		16
+ #define SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY		44
++#define SJA1105PQRS_SIZE_AVB_PARAMS_ENTRY		16
  
-+/* Global tagger data: each struct sja1105_port has a reference to
-+ * the structure defined in struct sja1105_private.
-+ */
-+struct sja1105_tagger_data {
-+	struct sk_buff_head skb_rxtstamp_queue;
-+	struct work_struct rxtstamp_work;
-+	struct sk_buff *stampable_skb;
-+	/* Protects concurrent access to the meta state machine
-+	 * from taggers running on multiple ports on SMP systems
-+	 */
-+	spinlock_t meta_lock;
-+	bool hwts_rx_en;
+ /* UM10944.pdf Page 11, Table 2. Configuration Blocks */
+ enum {
+@@ -34,6 +36,7 @@ enum {
+ 	BLKID_MAC_CONFIG				= 0x09,
+ 	BLKID_L2_LOOKUP_PARAMS				= 0x0D,
+ 	BLKID_L2_FORWARDING_PARAMS			= 0x0E,
++	BLKID_AVB_PARAMS				= 0x10,
+ 	BLKID_GENERAL_PARAMS				= 0x11,
+ 	BLKID_XMII_PARAMS				= 0x4E,
+ };
+@@ -46,6 +49,7 @@ enum sja1105_blk_idx {
+ 	BLK_IDX_MAC_CONFIG,
+ 	BLK_IDX_L2_LOOKUP_PARAMS,
+ 	BLK_IDX_L2_FORWARDING_PARAMS,
++	BLK_IDX_AVB_PARAMS,
+ 	BLK_IDX_GENERAL_PARAMS,
+ 	BLK_IDX_XMII_PARAMS,
+ 	BLK_IDX_MAX,
+@@ -64,6 +68,7 @@ enum sja1105_blk_idx {
+ #define SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT		1
+ #define SJA1105_MAX_GENERAL_PARAMS_COUNT		1
+ #define SJA1105_MAX_XMII_PARAMS_COUNT			1
++#define SJA1105_MAX_AVB_PARAMS_COUNT			1
+ 
+ #define SJA1105_MAX_FRAME_MEMORY			929
+ 
+@@ -179,6 +184,11 @@ struct sja1105_l2_policing_entry {
+ 	u64 partition;
+ };
+ 
++struct sja1105_avb_params_entry {
++	u64 destmeta;
++	u64 srcmeta;
 +};
 +
- struct sja1105_port {
-+	struct sja1105_tagger_data *data;
- 	struct dsa_port *dp;
- 	bool hwts_tx_en;
- 	int mgmt_slot;
+ struct sja1105_mac_config_entry {
+ 	u64 top[8];
+ 	u64 base[8];
 -- 
 2.17.1
 
