@@ -2,69 +2,114 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55321C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E94AC468BE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2922E214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560025225;
-	bh=KqDMxCT33A9zxNGxdVdLD8Dtx5IK/QOuXPGvZz6/TSg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=nhj19EeoVNDCsqHhrjkAbFe6Cllztt/B+eouTD5B2yOwikUUvXF1sB/aseQZZ7HBx
-	 jKvNzm1082sRe29yqr9rRZhYrA2tCiKsZAT+DvbxC6nlREFJvrwZKCIXZXjr3Dg3ZD
-	 XZUQcGKG11fMRWgxZTgbAZ+R4wB7BFH1iN0siWqM=
+	by mail.kernel.org (Postfix) with ESMTP id ED727216C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="eZktlGB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfFHUUU (ORCPT
+        id S1727612AbfFHUZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 16:20:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727597AbfFHUUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 16:20:16 -0400
-Subject: Re: [GIT PULL] s390 updates for 5.2-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560025215;
-        bh=KqDMxCT33A9zxNGxdVdLD8Dtx5IK/QOuXPGvZz6/TSg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=pbD2Pwwry1bVyKGZb/Q/qY0dxhWsZ4QGBPavmrbuTU2+G65O0qnE9Qgf0njPuam5o
-         +/ogKROO416p+32+H7fKnUl6Lxd662IH2k5JICR/i3NuBIbWE52wEt9afOZm45ifq/
-         xOW1RoQf+JvUs6UUrzfm5J5mHKEMu2YPJJnYB7F8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190608112151.GA8766@osiris>
-References: <20190608112151.GA8766@osiris>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190608112151.GA8766@osiris>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.2-4
-X-PR-Tracked-Commit-Id: 0ab0d7ac2090eae30f1c0b01ae981bb7a368f598
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3d4645bf7a76886c70a482a1c6742bac98553f47
-Message-Id: <156002521594.8142.8606005701533653185.pr-tracker-bot@kernel.org>
-Date:   Sat, 08 Jun 2019 20:20:15 +0000
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        Sat, 8 Jun 2019 16:25:51 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:36838 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727441AbfFHUZv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 16:25:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1560025547; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sVuie0i+O6QumI4fxz1lwMyw0K1NW33v7RQ/G9+QcOY=;
+        b=eZktlGB4bEv2OsIKeJ8zCnEi9ZX0dUuDWdsU6HAu7vXNIN/yMSrLw43iWQkKf4dW2D6k4f
+        JO6kyD/XvzPfy1J8yYqHxmjHQye5ZVxoPsR+FBxjR7b4QyFXIrXmSEYpXasc05N0gUSza8
+        CbZfceKLYnDPyAct/edV4qqoMlEiuNU=
+Date:   Sat, 08 Jun 2019 22:25:41 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] MIPS: lb60: Fix pin mappings
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, od@zcrc.me,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+Message-Id: <1560025541.1815.11@crapouillou.net>
+In-Reply-To: <CACRpkdbKWC7ULFjN1c5axg5FBeeWWXCsbbQi2ks4+5tg07Br-g@mail.gmail.com>
+References: <20190604163311.19059-1-paul@crapouillou.net>
+        <CACRpkdbKg22OyViYhXS=Vyps=2zQ_dmm23Xr8+dBp+uwwjheuQ@mail.gmail.com>
+        <1559988846.1815.1@crapouillou.net>
+        <CACRpkdbKWC7ULFjN1c5axg5FBeeWWXCsbbQi2ks4+5tg07Br-g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 8 Jun 2019 13:21:51 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.2-4
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3d4645bf7a76886c70a482a1c6742bac98553f47
+Le sam. 8 juin 2019 =E0 15:39, Linus Walleij <linus.walleij@linaro.org>=20
+a =E9crit :
+> On Sat, Jun 8, 2019 at 12:14 PM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>  Le sam. 8 juin 2019 =E0 0:10, Linus Walleij=20
+>> <linus.walleij@linaro.org> a
+>>  =E9crit :
+>>  > On Tue, Jun 4, 2019 at 6:34 PM Paul Cercueil=20
+>> <paul@crapouillou.net>
+>>  > wrote:
+>>  >
+>>  >>  The pin mappings introduced in commit 636f8ba67fb6
+>>  >>  ("MIPS: JZ4740: Qi LB60: Add pinctrl configuration for several
+>>  >> drivers")
+>>  >>  are completely wrong. The pinctrl driver name is incorrect, and=20
+>> the
+>>  >>  function and group fields are swapped.
+>>  >>
+>>  >>  Fixes: 636f8ba67fb6 ("MIPS: JZ4740: Qi LB60: Add pinctrl
+>>  >> configuration for several drivers")
+>>  >>  Cc: <stable@vger.kernel.org>
+>>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  >
+>>  > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>  >
+>>  > Such things happen. Are you planning to phase all the board files=20
+>> over
+>>  > to use devicetree eventually?
+>>=20
+>>  Yes, that's definitely what's planned; right now the blockers are
+>>  patchsets [1] and [2]. [1] is ignored by everybody because there's=20
+>> no
+>>  maintainer for drivers/memory/. [2] is a year-long effort that still
+>>  doesn't show me the light at the end of the tunnel.
+>>=20
+>>  [1] https://lkml.org/lkml/2019/6/4/743
+>>  [2] https://lkml.org/lkml/2019/5/21/679
+>=20
+> What? That's unacceptable, the last resort is usually to send the
+> patches to Andrew Morton (whether fair or not) when nothing gets
+> applied.
+>=20
+> In this case I would however encourage the MIPS maintainer to
+> simply queue this stuff in the MIPS tree as blocking his arch work
+> if not merged, Ralf would you consider just queueing this?
+> I do not think the other Linus would mind.
 
-Thank you!
+It's not that critical - it's not blocking until [2] gets merged too.
+But yes, it's been sitting idle for a while.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+> Yours,
+> Linus Walleij
+
+=
+
