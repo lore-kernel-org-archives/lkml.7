@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2143C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C2BC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C6D214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B253208E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 22:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560034247;
-	bh=RLFBR9HbCoZXjl+6UXtsjw558AVzz+Q3/8n2Pf7zvAM=;
+	s=default; t=1560034338;
+	bh=Pb4a399ucftTpDo6qRynJAFaW8nxXbV16dTjIDsmmFM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oGw12zjRbBsVjcinMViQvWOO/K7Xw4INRPxRxXco9j0M0Pj+zYGsA6vIg5WVm9Cor
-	 tejWOSJ93NLwUKi67vAno4KfNOyNFoWW7Jghr6fOywCRp4ei1VkbwmIj21Lpfe7spn
-	 ZhiVjyfRi+MLe+cjTYVEqjEbDPiK172hy1+UKUkw=
+	b=pl3btISr5uhpvr/d8/YQGyJduqDMINZPjzqfjsgQe9nEv5ijOvUABpNco3tEakVZ4
+	 H1T8HWtGRYWvA+oIXkAFS+kzExq/w+YWCNiKe+oADeveN4hA+EBYQSt+/4tLEQvqLw
+	 f/8pTCWErtlUXNNU+W5LpoMcPEMIWWvDxwvP1nGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfFHWuq (ORCPT
+        id S1727782AbfFHWwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 18:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60202 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 18:52:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfFHWuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 18:50:46 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        id S1727486AbfFHWwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 18:52:17 -0400
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C41216C4
-        for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2019 22:50:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 189352168B
+        for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2019 22:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560034245;
-        bh=RLFBR9HbCoZXjl+6UXtsjw558AVzz+Q3/8n2Pf7zvAM=;
+        s=default; t=1560034336;
+        bh=Pb4a399ucftTpDo6qRynJAFaW8nxXbV16dTjIDsmmFM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RFbAfSy8JStAzzVb2aoLeOgdbhW5Z09kxVhBPjGPRzmofb5FNLr7h8p8s9PS5fBds
-         ppHhFjkghm8nI0OMDnY4Cud1LJWeobfNER+NG2zSvgDP6mqJI4Er2RjUZuCo3tQ9QV
-         LvcnuP3isSBanZaCEk1JQ25hskdzYkfC72kj0I6g=
-Received: by mail-wm1-f44.google.com with SMTP id a15so5217691wmj.5
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 15:50:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAW6Wh1moBLkjJBxd2evdBKakF4J297xiy/DmcDnGF6cmCOA5AzM
-        XPM5IjmfO0akVm46ZqAIlWb5Fxdt9H2IOGncrUqyqA==
-X-Google-Smtp-Source: APXvYqzwziP2FAcnedw68eenCmS+EpvWc42Cxg4jdGgVlmT6cSQ1yBkm+anSWo67AXmMWkEI08Sfs3t63Cb1mp8tDRQ=
-X-Received: by 2002:a1c:9a53:: with SMTP id c80mr7754960wme.173.1560034243802;
- Sat, 08 Jun 2019 15:50:43 -0700 (PDT)
+        b=pdgoeXaLjiEfOp2G++DJMZFPdLAZyPL8dmqY+dDlziJHcN8t9F+Gjg64QOqUpmwfy
+         z3tFad1TjwkL32RkiazMsQhoeKnjq7GS0E3oBmlE7KqbfeUjr7+/M06hTWh7LDiPt5
+         OHk0LwrdvIvhZ7PQbAinxIC9Q8wE1MX4kyQbPIGQ=
+Received: by mail-wm1-f47.google.com with SMTP id h19so6491083wme.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 15:52:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAW7metLclkoepgNou24SMcv1IDWYryMJylvJMruoHxe7jKZR9yN
+        xorIf4cyjY0O6uNnJSkJk3Hex/qhOFu4L2x8K/5Ipg==
+X-Google-Smtp-Source: APXvYqwBLHa5WaBkibsvSjXohyHyo4HTGYYdPkBujphL3J9T7+raX+H+/d1CP2rwL2hADFXUjNHUAFpxUyCscYezmoE=
+X-Received: by 2002:a1c:a942:: with SMTP id s63mr8242341wme.76.1560034334733;
+ Sat, 08 Jun 2019 15:52:14 -0700 (PDT)
 MIME-Version: 1.0
 References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com> <1559944837-149589-4-git-send-email-fenghua.yu@intel.com>
 In-Reply-To: <1559944837-149589-4-git-send-email-fenghua.yu@intel.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 8 Jun 2019 15:50:32 -0700
-X-Gmail-Original-Message-ID: <CALCETrXEqqc3cKyJ5guRV3T6LP9dpSExk3a7dvR4PF8TDgD_OA@mail.gmail.com>
-Message-ID: <CALCETrXEqqc3cKyJ5guRV3T6LP9dpSExk3a7dvR4PF8TDgD_OA@mail.gmail.com>
+Date:   Sat, 8 Jun 2019 15:52:03 -0700
+X-Gmail-Original-Message-ID: <CALCETrWi+uM5Rch6vaXOwHsHas928CDY5VJoBYaudD+3VFTrNw@mail.gmail.com>
+Message-ID: <CALCETrWi+uM5Rch6vaXOwHsHas928CDY5VJoBYaudD+3VFTrNw@mail.gmail.com>
 Subject: Re: [PATCH v4 3/5] x86/umwait: Add sysfs interface to control umwait
  C0.2 state
 To:     Fenghua Yu <fenghua.yu@intel.com>
@@ -74,26 +74,16 @@ On Fri, Jun 7, 2019 at 3:10 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
 > C0.2 state in umwait and tpause instructions can be enabled or disabled
 > on a processor through IA32_UMWAIT_CONTROL MSR register.
 >
-> By default, C0.2 is enabled and the user wait instructions result in
-> lower power consumption with slower wakeup time.
->
-> But in real time systems which require faster wakeup time although power
-> savings could be smaller, the administrator needs to disable C0.2 and all
-> C0.2 requests from user applications revert to C0.1.
->
-> A sysfs interface "/sys/devices/system/cpu/umwait_control/enable_c02" is
-> created to allow the administrator to control C0.2 state during run time.
 
-This looks better than the previous version.  I think the locking is
-still rather confused.  You have a mutex that you hold while changing
-the value, which is entirely reasonable.  But, of the code paths that
-write the MSR, only one takes the mutex.
+> +static u32 get_umwait_control_c02(void)
+> +{
+> +       return umwait_control_cached & MSR_IA32_UMWAIT_CONTROL_C02;
+> +}
+> +
+> +static u32 get_umwait_control_max_time(void)
+> +{
+> +       return umwait_control_cached & MSR_IA32_UMWAIT_CONTROL_MAX_TIME;
+> +}
+> +
 
-I think you should consider making a function that just does:
-
-wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
-
-and using it in all the places that update the MSR.  The only thing
-that should need the lock is the sysfs code to avoid accidentally
-corrupting the value, but that code should also use WRITE_ONCE to do
-its update.
+I'm not convinced that these helpers make the code any more readable.
