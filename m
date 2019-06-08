@@ -3,66 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C8EC468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0B2C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 21:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30117206E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D52214C6
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 21:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfFHUwa (ORCPT
+        id S1727565AbfFHVCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 16:52:30 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38279 "EHLO
+        Sat, 8 Jun 2019 17:02:40 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38457 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfFHUw3 (ORCPT
+        with ESMTP id S1727372AbfFHVCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 16:52:29 -0400
+        Sat, 8 Jun 2019 17:02:40 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id BFAAC801E8; Sat,  8 Jun 2019 22:52:15 +0200 (CEST)
-Date:   Sat, 8 Jun 2019 22:52:18 +0200
+        id 7551880257; Sat,  8 Jun 2019 23:02:27 +0200 (CEST)
+Date:   Sat, 8 Jun 2019 23:02:26 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-Message-ID: <20190608205218.GA2359@xo-6d-61-c0.localdomain>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
- <20190606200926.4029-4-yu-cheng.yu@intel.com>
- <20190607080832.GT3419@hirez.programming.kicks-ass.net>
- <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
- <20190607174336.GM3436@hirez.programming.kicks-ass.net>
- <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Doug Anderson <dianders@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Brian Norris <briannorris@google.com>,
+        Guenter Roeck <groeck@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Message-ID: <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+In-Reply-To: <20190607220947.GR40515@google.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -71,32 +56,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> > I've no idea what the kernel should do; since you failed to answer the
-> > question what happens when you point this to garbage.
-> > 
-> > Does it then fault or what?
+> > +	 * Note that this method is based on empirical testing on different
+> > +	 * devices with PWM of 8 and 16 bits of resolution.
+> > +	 */
+> > +	n = period;
+> > +	while (n) {
+> > +		counter += n % 2;
+> > +		n >>= 1;
+> > +	}
 > 
-> Yeah, I think you'll fault with a rather mysterious CR2 value since
-> you'll go look at the instruction that faulted and not see any
-> references to the CR2 value.
+> I don't quite follow the heuristics above. Are you sure the number of
+> PWM bits can be infered from the period? What if the period value (in
+> ns) doesn't directly correspond to a register value? And even if it
+> did, counting the number of set bits (the above loops is a
+> re-implementation of ffs()) doesn't really result in the dividers
+> mentioned in the comment. E.g. a period of 32768 ns (0x8000) results
+> in a divider of 1, i.e. 32768 brighness levels.
 > 
-> I think this new MSR probably needs to get included in oops output when
-> CET is enabled.
+> On veyron minnie the period is 1000000 ns, which results in 142858
+> levels (1000000 / 7)!
 > 
-> Why don't we require that a VMA be in place for the entire bitmap?
-> Don't we need a "get" prctl function too in case something like a JIT is
-> running and needs to find the location of this bitmap to set bits itself?
+> Not sure if there is a clean solution using heuristics, a DT property
+> specifying the number of levels could be an alternative. This could
+> also be useful to limit the number of (mostly) redundant levels, even
+> the intended max of 4096 seems pretty high.
 > 
-> Or, do we just go whole-hog and have the kernel manage the bitmap
-> itself. Our interface here could be:
-> 
-> 	prctl(PR_MARK_CODE_AS_LEGACY, start, size);
-> 
-> and then have the kernel allocate and set the bitmap for those code
-> locations.
+> Another (not directly related) observation is that on minnie the
+> actual brightness at a nominal 50% is close to 0 (duty cycle ~3%). I
+> haven't tested with other devices, but I wonder if it would make
+> sense to have an option to drop the bottom N% of levels, since the
+> near 0 brightness in the lower 50% probably isn't very useful in most
+> use cases, but maybe it looks different on other devices.
 
-For the record, that sounds like a better interface than userspace knowing
-about the bitmap formats...
+Eye percieves logarithm(duty cycle), mostly, and I find very low brightness
+levels quite useful when trying to use machine in dark room.
+
+But yes, specifying if brightness is linear or exponential would be quite
+useful.
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
