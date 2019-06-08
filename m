@@ -2,101 +2,161 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A72C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 17:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759FCC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF4B212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 17:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497BB212F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 18:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NMBwiOLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfFHR4s (ORCPT
+        id S1727323AbfFHSGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 13:56:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35813 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfFHR4s (ORCPT
+        Sat, 8 Jun 2019 14:06:36 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40670 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbfFHSGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 13:56:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s27so2831679pgl.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 10:56:47 -0700 (PDT)
+        Sat, 8 Jun 2019 14:06:36 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so5211164wre.7;
+        Sat, 08 Jun 2019 11:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CuUE0MVJ4EiDj/R4+UJN1pSKA+Jns9ufEuzEwI3ecfc=;
+        b=NMBwiOLIzdn0IuBMvEJo7m9mr0pup/SZfwc+LTYFylMBWek4k8fb/5oanI2zRZVyVG
+         ++6Ci7cqfziSdlIXVJ1lmsoWd7srcHkQSeidh17/m0biXfhKzc0ZzkzLNvLvKwbGAlt0
+         pp+Q0rCjF9NGdNpsTMu8Aq3JW9wW20otUvjOozfWEbLVFHJ93N5iBe+iJvc0XSvqXsua
+         cmJUDYo90rhfxOM1kisxWWpywnzVeJfanShGdBuJP5tweH+Wr5xj9Vbholo7DgBQosov
+         oF/iANPXLGa0UGR2SSArlAedGXOI6Z6dZanjTU5xEgCttjydEeHf7NneO3yZRRNetn/z
+         ERBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=iyAgZ7LPNrjAJ5HMh1hGYwXJ8qs3w42dLho45Ew1g/g=;
-        b=dvtwP36LwCjfbjGQecm0GXUYg3spkyKgemfDvpOA8+r2Hxmx789h/WGIKLebc2ezOX
-         cAj8rtljW9HPTtYATbx8y6DaeK8mrsAOIeEl4/oBORq/kgdW1l5g6sRgqYAylEnFIFb5
-         ngsFq/L4GY+ekPAbkhb/TKVykv3iErn67DNgoG5wom5Rp9Mj5PmFBh8cfp/wV2GtNWA9
-         eM/GMPaSOWHUKUKVi0fOeKDTgTKfruvYIj62rQXLiv+LhsUb7NX8CB2XN3A4DL65f85i
-         UOYF3Q+0cKBzQlihaSmgFtTsf9/EO9lww+rJNyTpWMBb/V/fWoQL73R+OAgwxDYIZsDI
-         xFQg==
-X-Gm-Message-State: APjAAAUB29UgDB/plcamjidz8X8s+PLpWyrssfFlY07plxM4jkD9TcsN
-        MotNrMCxhCSo1/InqcanHfjVOQ==
-X-Google-Smtp-Source: APXvYqxUP4Kmv8FJwbiZts6nQLQw4BBk0vluayMvRAl8Cod+/UWEDIOm2zQpFKVrMo0x1jmMHUb1PQ==
-X-Received: by 2002:a63:e10d:: with SMTP id z13mr8254805pgh.116.1560016606841;
-        Sat, 08 Jun 2019 10:56:46 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id s12sm5453255pjp.10.2019.06.08.10.56.46
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CuUE0MVJ4EiDj/R4+UJN1pSKA+Jns9ufEuzEwI3ecfc=;
+        b=i8p+PruyRP0T4c5fObsD9ZzPprZ94W/DAc9deBNJJugEZ5GwAXngUmhVP/ECq19mlj
+         VZgyfaLKU9owrldnEzpA8YIpIMgQvXQwhMM9PtQ3sKdnqbg0Kl8o5eGDZmOIRHAprowo
+         uBVmvNvnUh3XP5IzAamX+D6JNHsluwt+d0JBj33kqwgps71zM8O6wzvC2wva6v5bT7hQ
+         Mp64X90ju6uv6fpYN8U1xUBQQcVUeTFOj/9DfT20SV58lk3EINekHd4E8197o8my+1EL
+         6kh/Gx+5X/Obmy5cnjoXyd/0yiRJQUJ3WgiSwV7bL2xUMFX3YJgufoVUVXn35dSig5FW
+         lChA==
+X-Gm-Message-State: APjAAAXm9bJ7TphI72PCaPUtWzlvaJeS970C1XxgCwuAp/2KNckn3buF
+        SFQTX8FqsCefcuynpxZvF+g=
+X-Google-Smtp-Source: APXvYqy3O37+yFg/dRFn1re7VJBCjQhw131ukejmKTFgVlkkAI9DNI/H+HB3d7RDWFCQTx4maYTgYg==
+X-Received: by 2002:adf:ed41:: with SMTP id u1mr22980982wro.162.1560017193772;
+        Sat, 08 Jun 2019 11:06:33 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133DDA400D12EFF43FED1E981.dip0.t-ipconnect.de. [2003:f1:33dd:a400:d12e:ff43:fed1:e981])
+        by smtp.googlemail.com with ESMTPSA id c7sm5143345wrp.57.2019.06.08.11.06.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 08 Jun 2019 10:56:46 -0700 (PDT)
-Date:   Sat, 08 Jun 2019 10:56:46 -0700 (PDT)
-X-Google-Original-Date: Sat, 08 Jun 2019 10:42:17 PDT (-0700)
-Subject:     Re: [PATCH v3 1/5] arch: riscv: add support for building DTB files from DT source data
-In-Reply-To: <alpine.DEB.2.21.9999.1906062208280.28147@viisi.sifive.com>
-CC:     lollivier@baylibre.com, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, paul@pwsan.com,
-        aou@eecs.berkeley.edu
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Message-ID: <mhng-802d67ce-9f78-4ebc-9981-a27e5e4e40df@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sat, 08 Jun 2019 11:06:32 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com
+Cc:     u.kleine-koenig@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 00/14] pwm-meson: cleanups and improvements
+Date:   Sat,  8 Jun 2019 20:06:12 +0200
+Message-Id: <20190608180626.30589-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 06 Jun 2019 22:12:05 PDT (-0700), Paul Walmsley wrote:
-> On Tue, 4 Jun 2019, Loys Ollivier wrote:
->
->> Always build it ?
->> Any particular reason to drop ARCH_SIFIVE ?
->
-> Palmer had some reservations about it, so I dropped it for now.  But then
-> as I was thinking about it, I remembered that I also had some reservations
-> about it, years ago: that everyone should use CONFIG_SOC_* for this,
-> rather than CONFIG_ARCH.  CONFIG_ARCH_* seems better reserved for
-> CPU architectures.
+This series consists of various cleanups and improvements for the
+pwm-meson driver.
 
-Specifically my worry is that "ARCH_SIFIVE" makes it sound like we're adding
-SiFive-specific architecture features, and we've been trying really hard to
-make sure that the various bits of core software avoid boing vendor specific.
-We've had suggestions of adding vendor-specific instructions to the Linux port
-with those instructions being conditionally compiled under ARCH_$VENDOR, but
-I'd rejected that under the "no vendor-specific stuff" argument.  As such it
-doesn't seem fair to go add in an ARCH_SIFIVE for our vendor-specific stuff.
+Patches 1 to 6 are small code cleanups with the goal of making the code
+easier to read.
 
-The SOC stuff will, of course, be vendor specific.  In this idealized world
-SiFive's SOC support has nothing to do with RISC-V, but of course all of
-SiFive's SOCs are RISC-V based so the separation is a bit of pedantry.  That
-said, in this case I think getting the name right does make it slightly easier
-to espouse this "one kernel can run on all RISC-V systems" philosophy.
-Balancing the SiFive and RISC-V stuff can be a bit tricky, which is why I am
-sometimes a bit pedantic about these sorts of things.
+Patches 7 to 9 are reworking the way the per-channel settings are
+accessed. This is a first preparation step for adding full support to
+meson_pwm_get_state() in the pwm-meson driver. Patch 7 makes struct
+meson_pwm_channel accessible from struct meson_pwm because
+meson_pwm_get_state() cannot use pwm_get_chip_data(). Patch 8 removes
+redundant switch/case statements and ensures that we don't have to
+add another redundant one for the upcoming full meson_pwm_get_state()
+implementation. Patch 9 gets rid of meson_pwm_add_channels() and moves
+the pwm_set_chip_data() call to meson_pwm_request() (like all other PWM
+drivers do - except two).
 
-> If you agree, would you like to send a followup series, based on the DT
-> patches, to make the SiFive DT file builds depend on CONFIG_SOC_* instead?
+Patch 10 is based on a suggestion by Uwe to simplify the calculation of
+the values which the PWM IP requires. The nice benefit of this is that
+we have an easier calculation which we can do "in reverse" for the
+meson_pwm_get_state() (which calculates nanoseconds from the hardware
+values).
 
-I'd be happy with something like that.  We'd also talked about this selecting
-all the SiFive platform drivers.  It should, of course, be possible to select
-multiple SOC vendors in a single kernel -- we don't have any other real
-hardware right now, but maybe some sort of "CONFIG_SOC_RISCV_VIRT" would be a
-good proof of concept?
+Patch 11 implements reading the period and duty cycle in the
+meson_pwm_get_state() callback.
 
-> Thanks for the comment,
->
-> - Paul
+Patch 12 removes some internal caching which we don't need anymore now
+meson_pwm_get_state() is fully implemented. The PWM core now takes care
+of not calling pwm_ops.apply() if "nothing has changed".
+
+Patch 13 adds support for PWM_POLARITY_INVERSED when disabling the
+output as suggested by Uwe.
+
+Patch 14 completes this series by adding some documentation to the
+driver. Thanks to Neil for summarizing how the hardware works
+internally.
+
+Due to the changed PWM calculation in patch 10 I have verified that
+we don't break any existing boards. The patch itself contains two
+examples which show that the new calculation improves precision. I
+made screenshots of the measurements in pulseview [0] for the second
+case ("PWM LED on Khadas VIM"):
+- old algorithm: [1]
+- old algorithm: [2]
+
+Dependencies:
+This series applies on top of Neil's patch "pwm: pwm-meson: update with
+SPDX Licence identifier" [3]
+
+Changes since v1 at [4]:
+- fixed MESON_NUM_PWM vs MESON_NUM_PWMS typo in patch #7
+- add another example to patch #10 where the pre_div has changed with
+  the new calculation. the generated PWM signal is still the same as
+  measuring shows
+- added Neil's Reviewed-by's and Uwe's Acked-by (thank you!)
+
+
+[0] https://sigrok.org/wiki/PulseView
+[1] https://abload.de/img/old-algormjs9.png
+[2] https://abload.de/img/new-algo4ckjo.png
+[3] https://patchwork.kernel.org/patch/10951319/
+[4] https://patchwork.kernel.org/cover/10961073/
+
+
+Martin Blumenstingl (14):
+  pwm: meson: unify the parameter list of meson_pwm_{enable,disable}
+  pwm: meson: use devm_clk_get_optional() to get the input clock
+  pwm: meson: use GENMASK and FIELD_PREP for the lo and hi values
+  pwm: meson: change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
+  pwm: meson: don't duplicate the polarity internally
+  pwm: meson: pass struct pwm_device to meson_pwm_calc()
+  pwm: meson: add the meson_pwm_channel data to struct meson_pwm
+  pwm: meson: add the per-channel register offsets and bits in a struct
+  pwm: meson: move pwm_set_chip_data() to meson_pwm_request()
+  pwm: meson: simplify the calculation of the pre-divider and count
+  pwm: meson: read the full hardware state in meson_pwm_get_state()
+  pwm: meson: don't cache struct pwm_state internally
+  pwm: meson: add support PWM_POLARITY_INVERSED when disabling
+  pwm: meson: add documentation to the driver
+
+ drivers/pwm/pwm-meson.c | 323 +++++++++++++++++++++-------------------
+ 1 file changed, 169 insertions(+), 154 deletions(-)
+
+-- 
+2.21.0
+
