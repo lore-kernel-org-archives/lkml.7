@@ -2,258 +2,65 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6287C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951FBC468BD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729DB214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:34:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eX3FjAk3"
+	by mail.kernel.org (Postfix) with ESMTP id 7DBF02166E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 20:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfFHUeo (ORCPT
+        id S1727622AbfFHUjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 16:34:44 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39316 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbfFHUeo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 16:34:44 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r21so4992361otq.6
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 13:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D8/qDqfPkVGZUn8vdM5itujzQRqrS5X8YxVMRBtMjDY=;
-        b=eX3FjAk36rb3Ha7yiF+YMIa1zh8yBYZ3DylR0QrzhMU+S0bGi8URBjLCPVObVvLKCy
-         /oSCxlcPb7V0Vj09P89IOzP9WmtQfFpu22+7mnvJQDOUlxBauU+hxjCwNcwS8js8rOm+
-         Ju9ir/7dKcCSHhU76fmZgj3qVbP65PKZJI7WsbPUhDwyqa/EWWC+KiABHEFiFB9/NMXN
-         5wT/nrodXriwuV3jGaH8IOiIf2lN3czNuCMPw7OY4+bL7qqAl4scNv+2Kj92jm8hKac5
-         jHNSpVxr0jCwtOozqpZpTrYpYO7b2Co45n9mXTH8FCOmWfXt4c/KfHQgoaCpK0JLrWFd
-         wWBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D8/qDqfPkVGZUn8vdM5itujzQRqrS5X8YxVMRBtMjDY=;
-        b=I+dOG0ch0QqKXpTkz/z5wye0qqppH/UhzZCRXGWHmWpyl4xlUkql7QI1/r4gYmGwA3
-         5fEl759EV3EvCmUMITYbWcrpUMxw8nf65I88NsjzxK6COYplei7yrzMrompSqIqx/IoO
-         NZvnHBQjEyg09Veeu9SHSD0JCF03OF1dXfrypl2tMoDVWvWx3FHv7RgOl6ofviCgkmMU
-         cQDIvsQYQsHI3hBWgP72GvTMFwyBNDz/18+1fd4tpBDuuIzlDgyKptzlpTABKqTIsd89
-         /cR32p+40zFlxf1rZ5Q+4vbWPPbfe5Q6KoKdSlXtjpdZs2fl9vSqN8mjeu7xz0NZDn2U
-         krxQ==
-X-Gm-Message-State: APjAAAU/NoCVxgxa6NObcf3AIrNsyi+OvPmOvC9PcEcsKiEmegDndyJs
-        EAVhCzFR3wCW5vvrFJzCPPCJclO/HMOm2BKIZcnxRQ==
-X-Google-Smtp-Source: APXvYqwfvsinhAExHpbPdnWS2JDnivi1ixM3+e9hSCMMvM+doHSF+wc257eXlo/Fd99/V1/B62RHeloUa6/N4C9RJ1M=
-X-Received: by 2002:a05:6830:12d6:: with SMTP id a22mr23714748otq.236.1560026083112;
- Sat, 08 Jun 2019 13:34:43 -0700 (PDT)
+        Sat, 8 Jun 2019 16:39:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727324AbfFHUjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 16:39:36 -0400
+Received: from oasis.local.home (unknown [12.156.218.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2992208E3;
+        Sat,  8 Jun 2019 20:39:34 +0000 (UTC)
+Date:   Sat, 8 Jun 2019 16:39:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Matt Mullins <mmullins@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>, Andrew Hall <hall@fb.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH bpf] bpf: preallocate a perf_sample_data per event fd
+Message-ID: <20190608163933.50033e9f@oasis.local.home>
+In-Reply-To: <C9035893-C2C6-4051-BF19-9AC931D475ED@fb.com>
+References: <20190530225549.23014-1-mmullins@fb.com>
+        <E5BC8108-4E9A-416C-B12C-945091E31B0A@fb.com>
+        <e0adcdedab52521111c2aa157eca276ae838fdb8.camel@fb.com>
+        <C9035893-C2C6-4051-BF19-9AC931D475ED@fb.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190608044339.115026-1-saravanak@google.com> <20190608054711.GZ22737@tuxbook-pro>
-In-Reply-To: <20190608054711.GZ22737@tuxbook-pro>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Sat, 8 Jun 2019 13:34:07 -0700
-Message-ID: <CAGETcx_4hh0t+Wi4KLh3h6Me8U_6agYbwBZ_Ts8oASiU21Tiig@mail.gmail.com>
-Subject: Re: [PATCH v1 0/9] Introduce Bandwidth OPPs & interconnect devfreq driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        amit.kucheria@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, evgreen@chromium.org,
-        sibis@codeaurora.org,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 7, 2019 at 10:46 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Fri 07 Jun 21:43 PDT 2019, Saravana Kannan wrote:
->
-> > I replied[1] to this patch series[2] and described how I think interconnect
-> > bandwidth voting should be captured in DT and how it should work.
-> >
-> > So sending out a patch series implementing that. This patch series does the
-> > following:
-> > - Adds Bandwidth OPP table support (this adds device freq to bandwidth
-> >   mapping for free)
-> > - Adds a devfreq library for interconnect paths
-> >
->
-> Please provide a driver that uses this devfreq library, without it this
-> its impossible to gauge the usefulness of your approach.
+On Fri, 31 May 2019 05:26:30 +0000
+Song Liu <songliubraving@fb.com> wrote:
 
-Do you have a device/driver from SDM845 that I could add interconnect
-support to other than CPUs? Because the CPU driver doesn't even have
-an OPP table (because it gets that from hardware) and I don't want to
-deal with that right now. Can you also give me the "interconnect"
-values for those so that I can have something valid that you can try
-out?
+> We can also do something like
+> 
+>    ee = kzalloc(sizeof(struct bpf_event_entry) + sizeof(struct perf_sample_data));
+>    ee->sd = (void *)ee + sizeof(struct bpf_event_entry);
 
-> > Interconnects and interconnect paths quantify they performance levels in
-> > terms of bandwidth. So similar to how we have frequency based OPP tables
-> > in DT and in the OPP framework, this patch series adds bandwidth OPP
-> > table support in the OPP framework and in DT.
-> >
-> > To simplify voting for interconnects, this patch series adds helper
-> > functions to create devfreq devices out of interconnect paths. This
-> > allows drivers to add a single line of code to add interconnect voting
-> > capability.
-> >
-> > To add devfreq device for the "gpu-mem" interconnect path:
-> > icc_create_devfreq(dev, "gpu-mem");
-> >
-> > With the future addition of a "passive_bandwidth" devfreq governor,
-> > device frequency to interconnect bandwidth mapping would come for free.
-> >
-> > If the feedback on this patch series is positive, I'll then add the
-> > devfreq passive_bandwidth governor (or something similar) to v2 of this
-> > patch series.
-> >
-> > So with the DT bindings added in this patch series, the DT for a GPU
-> > that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> > something like this:
-> >
-> > gpu_cache_opp_table: gpu_cache_opp_table {
-> >       compatible = "operating-points-v2";
-> >
-> >       gpu_cache_3000: opp-3000 {
-> >               opp-peak-KBps = <3000>;
-> >               opp-avg-KBps = <1000>;
-> >       };
-> >       gpu_cache_6000: opp-6000 {
-> >               opp-peak-KBps = <6000>;
-> >               opp-avg-KBps = <2000>;
-> >       };
-> >       gpu_cache_9000: opp-9000 {
-> >               opp-peak-KBps = <9000>;
-> >               opp-avg-KBps = <9000>;
-> >       };
-> > };
-> >
-> > gpu_ddr_opp_table: gpu_ddr_opp_table {
-> >       compatible = "operating-points-v2";
-> >
-> >       gpu_ddr_1525: opp-1525 {
-> >               opp-peak-KBps = <1525>;
-> >               opp-avg-KBps = <452>;
-> >       };
-> >       gpu_ddr_3051: opp-3051 {
-> >               opp-peak-KBps = <3051>;
-> >               opp-avg-KBps = <915>;
-> >       };
-> >       gpu_ddr_7500: opp-7500 {
-> >               opp-peak-KBps = <7500>;
-> >               opp-avg-KBps = <3000>;
-> >       };
-> > };
-> >
-> > gpu_opp_table: gpu_opp_table {
-> >       compatible = "operating-points-v2";
-> >       opp-shared;
-> >
-> >       opp-200000000 {
-> >               opp-hz = /bits/ 64 <200000000>;
-> >               required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
->
-> I still don't see the benefit of the indirection, over just spelling out
-> the bandwidth values here.
+Or perhaps:
 
-All the things I mentioned in the other email? This explicitly
-enumerates the actual BW OPPs in the interconnect paths as opposed to
-getting a partial list of "performance points" obtained from the
-mapping. Put another way, it's like how you don't try to enumerate the
-voltages supported by a regualtor by looking at the mappings in the
-OPP of a device using the regulator. You instead capture the regulator
-properties separately and the consumer asks what it wants and then
-that's bound within the scope of what the regulator can support.
+	ee->sd = (struct perf_sample_data *)(ee + 1);
 
-Also, if more properties are added in the future to interconnects
-(priority, active vs sleep or tagging, etc) the BW OPP tables is well
-suited to capture them than adding them to the GPU/CPU/device's
-mapping to what it wants from the interconnect.
-
-This method also removes the ambiguity of which bandwidth mapping
-belongs to which interconnect path (the question Rajendra was asking
-in the other thread) and the peak vs avg bandwidth.
-
-Also with the interconnect paths actually enumerating the OPPs, you
-don't have to have a useless mapping just so that you bandwidth
-counter based scheme can get a list of the available OPPs.
-
-Also, it is not unusual for the device OPP count vs the interconnect
-path OPP count to be different. So, if their counts aren't the same,
-the method used in the other thread can't capture the OPP lists
-fully/properly.
-
--Saravana
-
->
-> Regards,
-> Bjorn
->
-> >       };
-> >       opp-400000000 {
-> >               opp-hz = /bits/ 64 <400000000>;
-> >               required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
-> >       };
-> > };
-> >
-> > gpu@7864000 {
-> >       ...
-> >       operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
-> >       interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
-> >                       <&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
-> >       interconnect-names = "gpu-cache", "gpu-mem";
-> >       interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
-> > };
-> >
-> > Cheers,
-> > Saravana
-> >
-> > [1] - https://lore.kernel.org/lkml/20190601021228.210574-1-saravanak@google.com/
-> > [2] - https://lore.kernel.org/lkml/20190423132823.7915-1-georgi.djakov@linaro.org/
-> >
-> > Saravana Kannan (9):
-> >   dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
-> >   OPP: Add support for bandwidth OPP tables
-> >   OPP: Add helper function for bandwidth OPP tables
-> >   OPP: Add API to find an OPP table from its DT node
-> >   dt-bindings: interconnect: Add interconnect-opp-table property
-> >   interconnect: Add OPP table support for interconnects
-> >   OPP: Add function to look up required OPP's for a given OPP
-> >   OPP: Allow copying OPPs tables between devices
-> >   interconnect: Add devfreq support
-> >
-> >  .../bindings/interconnect/interconnect.txt    |   8 +
-> >  Documentation/devicetree/bindings/opp/opp.txt |  15 +-
-> >  drivers/interconnect/Makefile                 |   2 +-
-> >  drivers/interconnect/core.c                   |  27 +++-
-> >  drivers/interconnect/icc-devfreq.c            | 144 ++++++++++++++++++
-> >  drivers/opp/core.c                            | 109 +++++++++++++
-> >  drivers/opp/of.c                              |  75 +++++++--
-> >  drivers/opp/opp.h                             |   4 +-
-> >  include/linux/interconnect.h                  |  17 +++
-> >  include/linux/pm_opp.h                        |  41 +++++
-> >  10 files changed, 426 insertions(+), 16 deletions(-)
-> >  create mode 100644 drivers/interconnect/icc-devfreq.c
-> >
-> > --
-> > 2.22.0.rc2.383.gf4fbbf30c2-goog
-> >
+-- Steve
