@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA74C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F7EC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9BE214DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD43214DA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994101;
-	bh=GwuOu9Wad7QfE3781L/fhBg8S+ksQM9htQI31ptw/qc=;
+	s=default; t=1559994103;
+	bh=nvpqlCYyqw5KWyJSXPZb9sF0a9m5ho9uaVWVWhtfsWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ucw9aVrfJdZ6mrjWVXNYbWqWjkQNzEWurZtMEBQda4iDWBOxIh0fhw3pvoeYPYZuq
-	 6v+jPPmRDBLTZcRevj/utUGz2lRTL1tWA8KvW6J2Mhux/V2UoEsUbIZ5KV31iF5PWJ
-	 8t/oYxabIO3kdtghFOScWVRlrC5vkN/htnUZrhYc=
+	b=BY+4ftTn8eunldedioe5uy3NZtjxoTMGS+6jkdAx3GveRnqj6uqyN1FfpjYl4+MCX
+	 /kkl5Kp8yun0SWfzOM6VGEpaM3yaihb16I1yJTwWf652y2Dzb98s78B9yLcHbqVuL7
+	 vzs5wBJ+9dWtxype4gWCXXzTkcFaYgf5OuWROL4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfFHLlk (ORCPT
+        id S1728231AbfFHLlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58700 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:41:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbfFHLlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:41:20 -0400
+        id S1728082AbfFHLlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:41:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E6A214D8;
-        Sat,  8 Jun 2019 11:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0982214C6;
+        Sat,  8 Jun 2019 11:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994080;
-        bh=GwuOu9Wad7QfE3781L/fhBg8S+ksQM9htQI31ptw/qc=;
+        s=default; t=1559994071;
+        bh=nvpqlCYyqw5KWyJSXPZb9sF0a9m5ho9uaVWVWhtfsWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UG3A1G8fT+vWB7cacLMbcYHVUTTSJXkGCRIaIfBIk7bc/0BA95BmYX0faFauRBIeH
-         AIjoF71btkFBDVsyi4uv7Wp2/TNB7UmgUvpEtK8388gFv+oW1vU3MR9csBq0yO+2ca
-         77Z/uR3zRG9Pt/p1Cw6ajuvjFuth7wQ3EwYgYxJw=
+        b=jOC/zUnNH9b8k6dv0WGd+/ZkXtHLyF1x/dOuhYj6qMuL8chXn+pJrOZmD2PmrYRir
+         /EKUNECV6YOoiB3yJpOd1i9L9Zeg3ELqCchM8vB3eDpxJoe6v0OTcE2uiqhxiciC7u
+         TayA4MyboCiF3u9z7pmr7NZC8wWtSLpII0Od8snA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gen Zhang <blackgod016574@gmail.com>,
-        Paulo Alcantara <palcantara@suse.de>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 51/70] dfs_cache: fix a wrong use of kfree in flush_cache_ent()
-Date:   Sat,  8 Jun 2019 07:39:30 -0400
-Message-Id: <20190608113950.8033-51-sashal@kernel.org>
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 48/70] dpaa_eth: use only online CPU portals
+Date:   Sat,  8 Jun 2019 07:39:27 -0400
+Message-Id: <20190608113950.8033-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -60,43 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gen Zhang <blackgod016574@gmail.com>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-[ Upstream commit 50fbc13dc12666f3604dc2555a47fc8c4e29162b ]
+[ Upstream commit 7aae703f8096d21e34ce5f34f16715587bc30902 ]
 
-In flush_cache_ent(), 'ce->ce_path' is allocated by kstrdup_const().
-It should be freed by kfree_const(), rather than kfree().
+Make sure only the portals for the online CPUs are used.
+Without this change, there are issues when someone boots with
+maxcpus=n, with n < actual number of cores available as frames
+either received or corresponding to the transmit confirmation
+path would be offered for dequeue to the offline CPU portals,
+getting lost.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Reviewed-by: Paulo Alcantara <palcantara@suse.de>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/dfs_cache.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c     | 9 ++++-----
+ drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c | 4 ++--
+ 2 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/fs/cifs/dfs_cache.c b/fs/cifs/dfs_cache.c
-index 09b7d0d4f6e4..007cfa39be5f 100644
---- a/fs/cifs/dfs_cache.c
-+++ b/fs/cifs/dfs_cache.c
-@@ -131,7 +131,7 @@ static inline void flush_cache_ent(struct dfs_cache_entry *ce)
- 		return;
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index d3f2408dc9e8..f38c3fa7d705 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -780,7 +780,7 @@ static void dpaa_eth_add_channel(u16 channel)
+ 	struct qman_portal *portal;
+ 	int cpu;
  
- 	hlist_del_init_rcu(&ce->ce_hlist);
--	kfree(ce->ce_path);
-+	kfree_const(ce->ce_path);
- 	free_tgts(ce);
- 	dfs_cache_count--;
- 	call_rcu(&ce->ce_rcu, free_cache_entry);
-@@ -421,7 +421,7 @@ alloc_cache_entry(const char *path, const struct dfs_info3_param *refs,
- 
- 	rc = copy_ref_data(refs, numrefs, ce, NULL);
- 	if (rc) {
--		kfree(ce->ce_path);
-+		kfree_const(ce->ce_path);
- 		kmem_cache_free(dfs_cache_slab, ce);
- 		ce = ERR_PTR(rc);
+-	for_each_cpu(cpu, cpus) {
++	for_each_cpu_and(cpu, cpus, cpu_online_mask) {
+ 		portal = qman_get_affine_portal(cpu);
+ 		qman_p_static_dequeue_add(portal, pool);
  	}
+@@ -896,7 +896,7 @@ static void dpaa_fq_setup(struct dpaa_priv *priv,
+ 	u16 channels[NR_CPUS];
+ 	struct dpaa_fq *fq;
+ 
+-	for_each_cpu(cpu, affine_cpus)
++	for_each_cpu_and(cpu, affine_cpus, cpu_online_mask)
+ 		channels[num_portals++] = qman_affine_channel(cpu);
+ 
+ 	if (num_portals == 0)
+@@ -2174,7 +2174,6 @@ static int dpaa_eth_poll(struct napi_struct *napi, int budget)
+ 	if (cleaned < budget) {
+ 		napi_complete_done(napi, cleaned);
+ 		qman_p_irqsource_add(np->p, QM_PIRQ_DQRI);
+-
+ 	} else if (np->down) {
+ 		qman_p_irqsource_add(np->p, QM_PIRQ_DQRI);
+ 	}
+@@ -2448,7 +2447,7 @@ static void dpaa_eth_napi_enable(struct dpaa_priv *priv)
+ 	struct dpaa_percpu_priv *percpu_priv;
+ 	int i;
+ 
+-	for_each_possible_cpu(i) {
++	for_each_online_cpu(i) {
+ 		percpu_priv = per_cpu_ptr(priv->percpu_priv, i);
+ 
+ 		percpu_priv->np.down = 0;
+@@ -2461,7 +2460,7 @@ static void dpaa_eth_napi_disable(struct dpaa_priv *priv)
+ 	struct dpaa_percpu_priv *percpu_priv;
+ 	int i;
+ 
+-	for_each_possible_cpu(i) {
++	for_each_online_cpu(i) {
+ 		percpu_priv = per_cpu_ptr(priv->percpu_priv, i);
+ 
+ 		percpu_priv->np.down = 1;
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+index bdee441bc3b7..7ce2e99b594d 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+@@ -569,7 +569,7 @@ static int dpaa_set_coalesce(struct net_device *dev,
+ 	qman_dqrr_get_ithresh(portal, &prev_thresh);
+ 
+ 	/* set new values */
+-	for_each_cpu(cpu, cpus) {
++	for_each_cpu_and(cpu, cpus, cpu_online_mask) {
+ 		portal = qman_get_affine_portal(cpu);
+ 		res = qman_portal_set_iperiod(portal, period);
+ 		if (res)
+@@ -586,7 +586,7 @@ static int dpaa_set_coalesce(struct net_device *dev,
+ 
+ revert_values:
+ 	/* restore previous values */
+-	for_each_cpu(cpu, cpus) {
++	for_each_cpu_and(cpu, cpus, cpu_online_mask) {
+ 		if (!needs_revert[cpu])
+ 			continue;
+ 		portal = qman_get_affine_portal(cpu);
 -- 
 2.20.1
 
