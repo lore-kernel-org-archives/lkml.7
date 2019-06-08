@@ -2,234 +2,311 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA93C468BE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC578C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA51214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94174214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:18:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559992739;
+	bh=HN0WFC0hmo9elGNi83hFSQjpI/VdKNPn0HhBOSjD0T0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CfvvTznnw2rlHwFKg3QoFqGGkkNv2tqdVCOnl2WSU14B4T6WBuBolQfd7Ksdsia1J
+	 OZcefQs8A3IMUeFx67vYUka3NGsQ0p5sA4ctItquOchavkrNt3WJktpNwX9Y41gGVp
+	 jkBYArp0Fl4ZFBSeQjYoQUIy6+2qIwzGLuZfeoYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbfFHLJD (ORCPT
+        id S1726944AbfFHLS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:09:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45042 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726828AbfFHLJD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:09:03 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58B6iGb002292
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 07:09:02 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t09j53qnn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 07:09:00 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Sat, 8 Jun 2019 12:08:57 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 8 Jun 2019 12:08:55 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58B8saq60686376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Jun 2019 11:08:54 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B36E742041;
-        Sat,  8 Jun 2019 11:08:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 662DC4203F;
-        Sat,  8 Jun 2019 11:08:54 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat,  8 Jun 2019 11:08:54 +0000 (GMT)
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH/RFC 2/3] s390: improve wait logic of stop_machine
-Date:   Sat,  8 Jun 2019 13:08:52 +0200
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190608110853.35961-1-heiko.carstens@de.ibm.com>
-References: <20190608110853.35961-1-heiko.carstens@de.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19060811-0020-0000-0000-000003484E26
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060811-0021-0000-0000-0000219B6AD7
-Message-Id: <20190608110853.35961-3-heiko.carstens@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906080086
+        Sat, 8 Jun 2019 07:18:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726872AbfFHLS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:18:58 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70EFA214AE;
+        Sat,  8 Jun 2019 11:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559992737;
+        bh=HN0WFC0hmo9elGNi83hFSQjpI/VdKNPn0HhBOSjD0T0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bROtBkhVP8qeN8x8QusNxhD2lwM1o8jfRU6LSEpbrTqa02WvlntqHVJgI9LQ8nBR1
+         RuCHdqMLdlTpgbFoIUslkeqgNOUFBOIpRS/GIdy93nXCkh1d3GY1svLCNLr+GxP3Ba
+         s8LusERe0EEcgzjdvBPCUCtGA01Tsep9goq/+jes=
+Date:   Sat, 8 Jun 2019 12:18:51 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "renatogeh@gmail.com" <renatogeh@gmail.com>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml
+ binding
+Message-ID: <20190608121851.7ad02e33@archlinux>
+In-Reply-To: <20190606165214.00006f09@huawei.com>
+References: <cover.1558746978.git.renatogeh@gmail.com>
+        <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
+        <20190526173911.57ae3d11@archlinux>
+        <20190605203554.podktlonhp527iqq@renatolg>
+        <d70b1ffcc903495cd5eac04e17fd1600e67b9c53.camel@analog.com>
+        <20190606165214.00006f09@huawei.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+On Thu, 6 Jun 2019 16:52:14 +0100
+Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
 
-The stop_machine loop to advance the state machine and to wait for all
-affected CPUs to check-in calls cpu_relax_yield in a tight loop until
-the last missing CPUs acknowledged the state transition.
+> On Thu, 6 Jun 2019 11:13:52 +0000
+> "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+> 
+> > On Wed, 2019-06-05 at 17:35 -0300, Renato Lui Geh wrote:  
+> > > [External]
+> > > 
+> > > 
+> > > On 05/26, Jonathan Cameron wrote:    
+> > > > On Fri, 24 May 2019 22:26:30 -0300
+> > > > Renato Lui Geh <renatogeh@gmail.com> wrote:
+> > > >     
+> > > > > This patch adds a YAML binding for the Analog Devices AD7780/1 and
+> > > > > AD7170/1 analog-to-digital converters.
+> > > > > 
+> > > > > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>    
+> > > > Looks good to me, but I'm still finding my feet with these so will
+> > > > leave it for a few days for others to have time to comment.
+> > > > 
+> > > > Michael, looking for a quick reply from you to say if you are happy
+> > > > being explicitly listed as maintainer for this one, or if you'd
+> > > > rather land it on someone else.  Same applies for patch 2.
+> > > > 
+> > > > Renato, if I seem to have forgotten this in a week or so, feel
+> > > > free to give me a poke. I've been known to loose patches entirely!    
+> > > 
+> > > Hi Jonathan,
+> > > 
+> > > Just here to give you a poke. :)
+> > > 
+> > > By the way, in these cases, which would be easier for you? To send you
+> > > an email like I'm doing right now on last week's thread; or to resend
+> > > the entire patch(set)?
+> > >     
+> > 
+> > I think in this case, maybe let's wait a bit longer.
+> > Jonathan has not been active recently.
+> > 
+> > I think a [RESEND] would be a good idea when he gets back/active and misses your patchset.
+> >   
+> Sorry, was away last weekend and haven't caught up since.
+> 
+> I should be fine to pick this up this weekend.
+> 
+> A ping like this is fine rather than a resend.
 
-On a virtual system where not all logical CPUs are backed by real CPUs
-all the time it can take a while for all CPUs to check-in. With the
-current definition of cpu_relax_yield a diagnose 0x44 is done which
-tells the hypervisor to schedule *some* other CPU. That can be any
-CPU and not necessarily one of the CPUs that need to run in order to
-advance the state machine. This can lead to a pretty bad diagnose 0x44
-storm until the last missing CPU finally checked-in.
+I've applied this the togreg branch of iio.git and pushed out as testing.
 
-Replace the undirected cpu_relax_yield based on diagnose 0x44 with a
-directed yield. Each CPU in the wait loop will pick up the next CPU
-in the cpumask of stop_machine. The diagnose 0x9c is used to tell the
-hypervisor to run this next CPU instead of the current one. If there
-is only a limited number of real CPUs backing the virtual CPUs we
-end up with the real CPUs passed around in a round-robin fashion.
+Note I'm not planning a pull request for a week or so, so welcome
+any additional comments anyone has when they are able to make them.
 
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
----
- arch/s390/include/asm/processor.h |  3 ++-
- arch/s390/kernel/processor.c      | 19 ++++++++++++++-----
- arch/s390/kernel/smp.c            |  2 +-
- include/linux/sched.h             |  2 +-
- kernel/stop_machine.c             | 14 +++++++++-----
- 5 files changed, 27 insertions(+), 13 deletions(-)
+Thanks,
 
-diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
-index b0fcbc37b637..445ce9ee4404 100644
---- a/arch/s390/include/asm/processor.h
-+++ b/arch/s390/include/asm/processor.h
-@@ -36,6 +36,7 @@
- 
- #ifndef __ASSEMBLY__
- 
-+#include <linux/cpumask.h>
- #include <linux/linkage.h>
- #include <linux/irqflags.h>
- #include <asm/cpu.h>
-@@ -225,7 +226,7 @@ static __no_kasan_or_inline unsigned short stap(void)
-  * Give up the time slice of the virtual PU.
-  */
- #define cpu_relax_yield cpu_relax_yield
--void cpu_relax_yield(void);
-+void cpu_relax_yield(const struct cpumask *cpumask);
- 
- #define cpu_relax() barrier()
- 
-diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
-index 5de13307b703..2c781e2b0078 100644
---- a/arch/s390/kernel/processor.c
-+++ b/arch/s390/kernel/processor.c
-@@ -31,6 +31,7 @@ struct cpu_info {
- };
- 
- static DEFINE_PER_CPU(struct cpu_info, cpu_info);
-+static DEFINE_PER_CPU(int, cpu_relax_retry);
- 
- static bool machine_has_cpu_mhz;
- 
-@@ -58,13 +59,21 @@ void s390_update_cpu_mhz(void)
- 		on_each_cpu(update_cpu_mhz, NULL, 0);
- }
- 
--void notrace cpu_relax_yield(void)
-+void notrace cpu_relax_yield(const struct cpumask *cpumask)
- {
--	if (!smp_cpu_mtid && MACHINE_HAS_DIAG44) {
--		diag_stat_inc(DIAG_STAT_X044);
--		asm volatile("diag 0,0,0x44");
-+	int cpu;
-+
-+	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
-+		__this_cpu_write(cpu_relax_retry, 0);
-+		cpu = cpumask_next(smp_processor_id(), cpumask);
-+		if (cpu >= nr_cpu_ids) {
-+			cpu = cpumask_first(cpumask);
-+			if (cpu == smp_processor_id())
-+				return;
-+		}
-+		if (arch_vcpu_is_preempted(cpu))
-+			smp_yield_cpu(cpu);
- 	}
--	barrier();
- }
- EXPORT_SYMBOL(cpu_relax_yield);
- 
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 35fafa2b91a8..a8eef7b7770a 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -418,7 +418,7 @@ void smp_yield_cpu(int cpu)
- 		diag_stat_inc_norecursion(DIAG_STAT_X09C);
- 		asm volatile("diag %0,0,0x9c"
- 			     : : "d" (pcpu_devices[cpu].address));
--	} else if (MACHINE_HAS_DIAG44) {
-+	} else if (MACHINE_HAS_DIAG44 && !smp_cpu_mtid) {
- 		diag_stat_inc_norecursion(DIAG_STAT_X044);
- 		asm volatile("diag 0,0,0x44");
- 	}
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 11837410690f..1f9f3160da7e 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1519,7 +1519,7 @@ static inline int set_cpus_allowed_ptr(struct task_struct *p, const struct cpuma
- #endif
- 
- #ifndef cpu_relax_yield
--#define cpu_relax_yield() cpu_relax()
-+#define cpu_relax_yield(cpumask) cpu_relax()
- #endif
- 
- extern int yield_to(struct task_struct *p, bool preempt);
-diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-index 2b5a6754646f..b8b0c5ff8da9 100644
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -183,6 +183,7 @@ static int multi_cpu_stop(void *data)
- 	struct multi_stop_data *msdata = data;
- 	enum multi_stop_state curstate = MULTI_STOP_NONE;
- 	int cpu = smp_processor_id(), err = 0;
-+	const struct cpumask *cpumask;
- 	unsigned long flags;
- 	bool is_active;
- 
-@@ -192,15 +193,18 @@ static int multi_cpu_stop(void *data)
- 	 */
- 	local_save_flags(flags);
- 
--	if (!msdata->active_cpus)
--		is_active = cpu == cpumask_first(cpu_online_mask);
--	else
--		is_active = cpumask_test_cpu(cpu, msdata->active_cpus);
-+	if (!msdata->active_cpus) {
-+		cpumask = cpu_online_mask;
-+		is_active = cpu == cpumask_first(cpumask);
-+	} else {
-+		cpumask = msdata->active_cpus;
-+		is_active = cpumask_test_cpu(cpu, cpumask);
-+	}
- 
- 	/* Simple state machine */
- 	do {
- 		/* Chill out and ensure we re-read multi_stop_state. */
--		cpu_relax_yield();
-+		cpu_relax_yield(cpumask);
- 		if (msdata->state != curstate) {
- 			curstate = msdata->state;
- 			switch (curstate) {
--- 
-2.17.1
+Jonathan
+
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > Thanks
+> > Alex
+> >   
+> > > Thanks,
+> > > Renato    
+> > > > Thanks,
+> > > > 
+> > > > Jonathan    
+> > > > > ---
+> > > > > Changes in v2:
+> > > > >  - vref-supply to avdd-supply
+> > > > >  - remove avdd-supply from required list
+> > > > >  - include adc block in an spi block
+> > > > > 
+> > > > >  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
+> > > > >  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
+> > > > >  2 files changed, 87 insertions(+), 48 deletions(-)
+> > > > >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > > > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > > > > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > > > > deleted file mode 100644
+> > > > > index 440e52555349..000000000000
+> > > > > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
+> > > > > +++ /dev/null
+> > > > > @@ -1,48 +0,0 @@
+> > > > > -* Analog Devices AD7170/AD7171/AD7780/AD7781
+> > > > > -
+> > > > > -Data sheets:
+> > > > > -
+> > > > > -- AD7170:
+> > > > > -    * https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+> > > > > -- AD7171:
+> > > > > -    * https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+> > > > > -- AD7780:
+> > > > > -    * https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+> > > > > -- AD7781:
+> > > > > -    * https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+> > > > > -
+> > > > > -Required properties:
+> > > > > -
+> > > > > -- compatible: should be one of
+> > > > > -    * "adi,ad7170"
+> > > > > -    * "adi,ad7171"
+> > > > > -    * "adi,ad7780"
+> > > > > -    * "adi,ad7781"
+> > > > > -- reg: spi chip select number for the device
+> > > > > -- vref-supply: the regulator supply for the ADC reference voltage
+> > > > > -
+> > > > > -Optional properties:
+> > > > > -
+> > > > > -- powerdown-gpios:  must be the device tree identifier of the PDRST pin. If
+> > > > > -                specified, it will be asserted during driver probe. As the
+> > > > > -                line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> > > > > -- adi,gain-gpios:   must be the device tree identifier of the GAIN pin. Only for
+> > > > > -                the ad778x chips. If specified, it will be asserted during
+> > > > > -                driver probe. As the line is active low, it should be marked
+> > > > > -                GPIO_ACTIVE_LOW.
+> > > > > -- adi,filter-gpios: must be the device tree identifier of the FILTER pin. Only
+> > > > > -                for the ad778x chips. If specified, it will be asserted
+> > > > > -                during driver probe. As the line is active low, it should be
+> > > > > -                marked GPIO_ACTIVE_LOW.
+> > > > > -
+> > > > > -Example:
+> > > > > -
+> > > > > -adc@0 {
+> > > > > -    compatible =  "adi,ad7780";
+> > > > > -    reg =         <0>;
+> > > > > -    vref-supply = <&vdd_supply>
+> > > > > -
+> > > > > -    powerdown-gpios  = <&gpio 12 GPIO_ACTIVE_HIGH>;
+> > > > > -    adi,gain-gpios   = <&gpio  5 GPIO_ACTIVE_LOW>;
+> > > > > -    adi,filter-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+> > > > > -};
+> > > > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > > > > b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > > > > new file mode 100644
+> > > > > index 000000000000..d1109416963c
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> > > > > @@ -0,0 +1,87 @@
+> > > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7780.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: Analog Devices AD7170/AD7171/AD7780/AD7781 analog to digital converters
+> > > > > +
+> > > > > +maintainers:
+> > > > > +  - Michael Hennerich <michael.hennerich@analog.com>
+> > > > > +
+> > > > > +description: |
+> > > > > +  The ad7780 is a sigma-delta analog to digital converter. This driver provides
+> > > > > +  reading voltage values and status bits from both the ad778x and ad717x series.
+> > > > > +  Its interface also allows writing on the FILTER and GAIN GPIO pins on the
+> > > > > +  ad778x.
+> > > > > +
+> > > > > +  Specifications on the converters can be found at:
+> > > > > +    AD7170:
+> > > > > +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7170.pdf
+> > > > > +    AD7171:
+> > > > > +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7171.pdf
+> > > > > +    AD7780:
+> > > > > +      https://www.analog.com/media/en/technical-documentation/data-sheets/ad7780.pdf
+> > > > > +    AD7781:
+> > > > > +      https://www.analog.com/media/en/technical-documentation/data-sheets/AD7781.pdf
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    enum:
+> > > > > +      - adi,ad7170
+> > > > > +      - adi,ad7171
+> > > > > +      - adi,ad7780
+> > > > > +      - adi,ad7781
+> > > > > +
+> > > > > +  reg:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  avdd-supply:
+> > > > > +    description:
+> > > > > +      The regulator supply for the ADC reference voltage.
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  powerdown-gpios:
+> > > > > +    description:
+> > > > > +      Must be the device tree identifier of the PDRST pin. If
+> > > > > +      specified, it will be asserted during driver probe. As the
+> > > > > +      line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  adi,gain-gpios:
+> > > > > +    description:
+> > > > > +      Must be the device tree identifier of the GAIN pin. Only for
+> > > > > +      the ad778x chips. If specified, it will be asserted during
+> > > > > +      driver probe. As the line is active low, it should be marked
+> > > > > +      GPIO_ACTIVE_LOW.
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  adi,filter-gpios:
+> > > > > +    description:
+> > > > > +      Must be the device tree identifier of the FILTER pin. Only
+> > > > > +      for the ad778x chips. If specified, it will be asserted
+> > > > > +      during driver probe. As the line is active low, it should be
+> > > > > +      marked GPIO_ACTIVE_LOW.
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +required:
+> > > > > +  - compatible
+> > > > > +  - reg
+> > > > > +
+> > > > > +examples:
+> > > > > +  - |
+> > > > > +    #include <dt-bindings/gpio/gpio.h>
+> > > > > +    spi0 {
+> > > > > +        #address-cells = <1>;
+> > > > > +        #size-cells = <0>;
+> > > > > +
+> > > > > +        adc@0 {
+> > > > > +            compatible = "adi,ad7780";
+> > > > > +            reg = <0>;
+> > > > > +
+> > > > > +            avdd-supply      = <&vdd_supply>;
+> > > > > +            powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> > > > > +            adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
+> > > > > +            adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
+> > > > > +        };
+> > > > > +    };    
+> 
+> 
 
