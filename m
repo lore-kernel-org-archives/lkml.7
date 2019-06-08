@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98C1C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2CCC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED23208C0
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A40621479
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HXvVg9co"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fLmt71ol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725835AbfFHEC1 (ORCPT
+        id S1726434AbfFHEDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 00:02:27 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44786 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfFHEC1 (ORCPT
+        Sat, 8 Jun 2019 00:03:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42908 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfFHEDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 00:02:27 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c5so1534222pll.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:02:26 -0700 (PDT)
+        Sat, 8 Jun 2019 00:03:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so2227407pff.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:03:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ld9qqur+4qvQ29YBRyUFm2eutAmUIhRNEhUVQshxtq0=;
-        b=HXvVg9coUo1xEEGS0DwgDUYkxEz6DS1r+bnepiqG47VSO6k+SKaBqi5wnLJUzhKT0Q
-         F77v/3inF5WO9KdoxanRYXG9UTvU9WuNvhZbHSnOvkwygp4/KRjUvBwoWTTXrnkExWcy
-         ADu9rIK/0BZ8VaknNJsilZ7GGCNNLhX/1899U=
+        bh=2OBpahu1EQjx5jm6yrfBCMrimRWI/S6HKVQllmyKwms=;
+        b=fLmt71olPLiQkxDGGLQPrvCgYkZj1mqoJ4PBg/f8Tk54bfcewYSZXr//1iYtcLODaG
+         AZveCJmWVDOJ368vf6zoV+293mE/hykWvD1eLbEkiRUKR99tKynL4WvEtWLecnVqE/K5
+         NXI3dW3eaM1dHfIA1jf7g8U4v53Yd/wL4GPXA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ld9qqur+4qvQ29YBRyUFm2eutAmUIhRNEhUVQshxtq0=;
-        b=A9Xr/lGpUyT8Dxz7q2VA1laI3ccHdtJpp6QlXJ4CAA7QjQ44roJypVYKabkuVtxVZ9
-         dpuQhf+sZSuEDKjZg2P9B1/CSY6Z9pa87FtyYXO5tDu4Rrho/kS774n88ApAsN4xgGhD
-         0idf+kCTrNO4GkUEoTrykfW+rfoL5NbsMDOf1ytvScgYGcCsUNWcYBFbjmtbtxuZ7W+9
-         59CA8tZyeJmL0GXEjZo2lMRtz7TqRyP2cs6PY2PyTHReQAG0YibbR26yj50JS+vU74OO
-         wCWnzYnIcycm/+hLTR6Z73ZIsbDXUBxJQbQqpnR1B82PSCDxSolWQ0FzioADPf8TouK9
-         R10A==
-X-Gm-Message-State: APjAAAUKJCSIEY/5ikfnDB1FfwImsHAg4DnhC1+z+u5hPe0uKSIRMgfQ
-        qNoOwbq8z9rI/j2Dw9shUyyS9w==
-X-Google-Smtp-Source: APXvYqyWIU7z0h83s595E4gtAHnTw/dwV2AWdUHb9XfpIujI04l63mQHZIFAtQw1iHXTD7aat4vguA==
-X-Received: by 2002:a17:902:8ec3:: with SMTP id x3mr57418900plo.340.1559966546670;
-        Fri, 07 Jun 2019 21:02:26 -0700 (PDT)
+        bh=2OBpahu1EQjx5jm6yrfBCMrimRWI/S6HKVQllmyKwms=;
+        b=E76aCy8msU33PiHOETzwpd768LHXX5r/R1NiCguoSBULTE6e8gQkudAa6nHpHXa/Gl
+         +tcduLcfU80cfvJRXiPIYdcKdaZ5BseX0MM2dFph0dmoXF5qD9ZKwkOXd7AuXfOozLTg
+         ZQmFx9glo5HvJMkwqd4KJXFLeJX6ylPW1WJFnxEo3y4o9Twp1x7CvLdvlhCAGIp4norJ
+         1PYMsViKFXRBpn5U1QD+G4c5A22L7dugzeMcd7UazchDwTMuwZ2+2Bf5L1mlFfKnzigA
+         AI1BK7X8Yej0CU8FEefMXHrwj+uSSNMxdSC4ol67m3FcE7DvYkDbPlmkmCBEilTv2YlG
+         S4Qg==
+X-Gm-Message-State: APjAAAWw4CmbfZmPBjolX/bTZ0PVKJv7BeSEF5xioiIYILBNciNIFjso
+        qouBPtuzfX47KTECe6dcejUA7A==
+X-Google-Smtp-Source: APXvYqyWrZDig2mXPzxoViG3lFlq1Wog/XberFCBwcpmN8vyxrNB4Pcdt7BQoh0EWedzEWISCi/OFA==
+X-Received: by 2002:a63:5a4b:: with SMTP id k11mr5562393pgm.143.1559966625274;
+        Fri, 07 Jun 2019 21:03:45 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b16sm3567551pfd.12.2019.06.07.21.02.25
+        by smtp.gmail.com with ESMTPSA id m1sm3115007pjv.22.2019.06.07.21.03.43
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 21:02:25 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 21:02:25 -0700
+        Fri, 07 Jun 2019 21:03:44 -0700 (PDT)
+Date:   Fri, 7 Jun 2019 21:03:43 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Andrey Konovalov <andreyknvl@google.com>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
@@ -90,65 +90,120 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         Robin Murphy <robin.murphy@arm.com>,
         Kevin Brodsky <kevin.brodsky@arm.com>,
         Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v16 08/16] fs, arm64: untag user pointers in
- copy_mount_options
-Message-ID: <201906072101.58C919E@keescook>
+Subject: Re: [PATCH v16 09/16] fs, arm64: untag user pointers in
+ fs/userfaultfd.c
+Message-ID: <201906072102.B58E6A609C@keescook>
 References: <cover.1559580831.git.andreyknvl@google.com>
- <51f44a12c4e81c9edea8dcd268f820f5d1fad87c.1559580831.git.andreyknvl@google.com>
+ <7d6fef00d7daf647b5069101da8cf5a202da75b0.1559580831.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <51f44a12c4e81c9edea8dcd268f820f5d1fad87c.1559580831.git.andreyknvl@google.com>
+In-Reply-To: <7d6fef00d7daf647b5069101da8cf5a202da75b0.1559580831.git.andreyknvl@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 06:55:10PM +0200, Andrey Konovalov wrote:
+On Mon, Jun 03, 2019 at 06:55:11PM +0200, Andrey Konovalov wrote:
 > This patch is a part of a series that extends arm64 kernel ABI to allow to
 > pass tagged user pointers (with the top byte set to something else other
 > than 0x00) as syscall arguments.
 > 
-> In copy_mount_options a user address is being subtracted from TASK_SIZE.
-> If the address is lower than TASK_SIZE, the size is calculated to not
-> allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
-> However if the address is tagged, then the size will be calculated
-> incorrectly.
+> userfaultfd code use provided user pointers for vma lookups, which can
+> only by done with untagged pointers.
 > 
-> Untag the address before subtracting.
+> Untag user pointers in validate_range().
 > 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-One thing I just noticed in the commit titles... "arm64" is in the
-prefix, but these are arch-indep areas. Should the ", arm64" be left
-out?
-
-I would expect, instead:
-
-	fs/namespace: untag user pointers in copy_mount_options
+"userfaultfd: untag user pointers"
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
 > ---
->  fs/namespace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/userfaultfd.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
 > 
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index b26778bdc236..2e85712a19ed 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -2993,7 +2993,7 @@ void *copy_mount_options(const void __user * data)
->  	 * the remainder of the page.
->  	 */
->  	/* copy_from_user cannot cross TASK_SIZE ! */
-> -	size = TASK_SIZE - (unsigned long)data;
-> +	size = TASK_SIZE - (unsigned long)untagged_addr(data);
->  	if (size > PAGE_SIZE)
->  		size = PAGE_SIZE;
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index 3b30301c90ec..24d68c3b5ee2 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -1263,21 +1263,23 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
+>  }
 >  
+>  static __always_inline int validate_range(struct mm_struct *mm,
+> -					  __u64 start, __u64 len)
+> +					  __u64 *start, __u64 len)
+>  {
+>  	__u64 task_size = mm->task_size;
+>  
+> -	if (start & ~PAGE_MASK)
+> +	*start = untagged_addr(*start);
+> +
+> +	if (*start & ~PAGE_MASK)
+>  		return -EINVAL;
+>  	if (len & ~PAGE_MASK)
+>  		return -EINVAL;
+>  	if (!len)
+>  		return -EINVAL;
+> -	if (start < mmap_min_addr)
+> +	if (*start < mmap_min_addr)
+>  		return -EINVAL;
+> -	if (start >= task_size)
+> +	if (*start >= task_size)
+>  		return -EINVAL;
+> -	if (len > task_size - start)
+> +	if (len > task_size - *start)
+>  		return -EINVAL;
+>  	return 0;
+>  }
+> @@ -1327,7 +1329,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+>  		goto out;
+>  	}
+>  
+> -	ret = validate_range(mm, uffdio_register.range.start,
+> +	ret = validate_range(mm, &uffdio_register.range.start,
+>  			     uffdio_register.range.len);
+>  	if (ret)
+>  		goto out;
+> @@ -1516,7 +1518,7 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+>  	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
+>  		goto out;
+>  
+> -	ret = validate_range(mm, uffdio_unregister.start,
+> +	ret = validate_range(mm, &uffdio_unregister.start,
+>  			     uffdio_unregister.len);
+>  	if (ret)
+>  		goto out;
+> @@ -1667,7 +1669,7 @@ static int userfaultfd_wake(struct userfaultfd_ctx *ctx,
+>  	if (copy_from_user(&uffdio_wake, buf, sizeof(uffdio_wake)))
+>  		goto out;
+>  
+> -	ret = validate_range(ctx->mm, uffdio_wake.start, uffdio_wake.len);
+> +	ret = validate_range(ctx->mm, &uffdio_wake.start, uffdio_wake.len);
+>  	if (ret)
+>  		goto out;
+>  
+> @@ -1707,7 +1709,7 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
+>  			   sizeof(uffdio_copy)-sizeof(__s64)))
+>  		goto out;
+>  
+> -	ret = validate_range(ctx->mm, uffdio_copy.dst, uffdio_copy.len);
+> +	ret = validate_range(ctx->mm, &uffdio_copy.dst, uffdio_copy.len);
+>  	if (ret)
+>  		goto out;
+>  	/*
+> @@ -1763,7 +1765,7 @@ static int userfaultfd_zeropage(struct userfaultfd_ctx *ctx,
+>  			   sizeof(uffdio_zeropage)-sizeof(__s64)))
+>  		goto out;
+>  
+> -	ret = validate_range(ctx->mm, uffdio_zeropage.range.start,
+> +	ret = validate_range(ctx->mm, &uffdio_zeropage.range.start,
+>  			     uffdio_zeropage.range.len);
+>  	if (ret)
+>  		goto out;
 > -- 
 > 2.22.0.rc1.311.g5d7573a151-goog
 > 
