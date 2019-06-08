@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12DCC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723F9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769BE21721
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401BC214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994211;
-	bh=m4yOKLbptCupTjozbO5n8omUvzOEkIGmopHvdHuVfYg=;
+	s=default; t=1559994215;
+	bh=QqwbVvg7oCYi/X4AobtxoBfM99XkLtwtSgDkCsX3Yik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxwJI7kYt0wYjg0enAQWHn7GiW5le30AuSFXZHuh38bmP5VxrRXVQyFpz6S/QiJrs
-	 4hVbJsmMXBSDK1OTAq4aK+fFeKWtVunfMmrqH3DOil7zjE0Aty/pyFzFsHIZk4gNVE
-	 WkTzBCqdDzfugb3GxxNo6lXCGVb/VbrGf+Utd4So=
+	b=ZDhb2bEzKsHGBPtehoqA7w68Vd4AVOdmlf7suul+V3O/jaCGw0uB9Qorvs5OHHFn3
+	 TOoh0Be0WrmJGvC5rT4hpNGYdhlNYu4gFjeSPafdtX4XbGBEPvXksuy6cvmAMFqplb
+	 fF2dpIyhLUMhUKG+uGUd/keAKo6JTmrDlVGPFTjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfFHLna (ORCPT
+        id S1728793AbfFHLnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:43:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60602 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728694AbfFHLnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:43:19 -0400
+        id S1728733AbfFHLnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E89214DA;
-        Sat,  8 Jun 2019 11:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2202821530;
+        Sat,  8 Jun 2019 11:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994199;
-        bh=m4yOKLbptCupTjozbO5n8omUvzOEkIGmopHvdHuVfYg=;
+        s=default; t=1559994204;
+        bh=QqwbVvg7oCYi/X4AobtxoBfM99XkLtwtSgDkCsX3Yik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QDyau8/eOjxjW+wY6TpxY89e1M4Bvb8rvW9OUHJPXckm95kLiolmqNuoZnMt0l8ri
-         6HKnIdwV5tIzqxB3uSxKaVF5xYu8uCtBW/4sNzlWkJQ5fNGGsGdRvLU92a7sFZTNo0
-         ZSTMJB2Uz1c4SHM8flL+S3tlCgfgsryp+RGIKYa4=
+        b=T/exYECLGPm+jn7vvA8ut7LpscLKz1JnTqXlx77w4x2KsgjoSxongkvV2EB1Y/R2s
+         NRu2/FSNV6L+7yHFUi0YDF802S3GeeEun5JiIFnbbyzmR9zp44UH+2aIziKxxa9oV+
+         VqQucRwTZjElhs58tA6dYyZwxV1ybI3FIUtt53Hk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Yabin Cui <yabinc@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 14/49] perf/ring_buffer: Add ordering to rb->nest increment
-Date:   Sat,  8 Jun 2019 07:41:55 -0400
-Message-Id: <20190608114232.8731-14-sashal@kernel.org>
+Cc:     Biao Huang <biao.huang@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 18/49] net: stmmac: update rx tail pointer register to fix rx dma hang issue.
+Date:   Sat,  8 Jun 2019 07:41:59 -0400
+Message-Id: <20190608114232.8731-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 References: <20190608114232.8731-1-sashal@kernel.org>
@@ -67,60 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Biao Huang <biao.huang@mediatek.com>
 
-[ Upstream commit 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e ]
+[ Upstream commit 4523a5611526709ec9b4e2574f1bb7818212651e ]
 
-Similar to how decrementing rb->next too early can cause data_head to
-(temporarily) be observed to go backward, so too can this happen when
-we increment too late.
+Currently we will not update the receive descriptor tail pointer in
+stmmac_rx_refill. Rx dma will think no available descriptors and stop
+once received packets exceed DMA_RX_SIZE, so that the rx only test will fail.
 
-This barrier() ensures the rb->head load happens after the increment,
-both the one in the 'goto again' path, as the one from
-perf_output_get_handle() -- albeit very unlikely to matter for the
-latter.
+Update the receive tail pointer in stmmac_rx_refill to add more descriptors
+to the rx channel, so packets can be received continually
 
-Suggested-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: mark.rutland@arm.com
-Cc: namhyung@kernel.org
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 54139cf3bb33 ("net: stmmac: adding multiple buffers for rx")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/ring_buffer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 31edf1f39cca..d32b9375ec0e 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -49,6 +49,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	unsigned long head;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 50c00822b2d8..45e64d71a93f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3319,6 +3319,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+ 		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
+ 	}
+ 	rx_q->dirty_rx = entry;
++	stmmac_set_rx_tail_ptr(priv, priv->ioaddr, rx_q->rx_tail_addr, queue);
+ }
  
- again:
-+	/*
-+	 * In order to avoid publishing a head value that goes backwards,
-+	 * we must ensure the load of @rb->head happens after we've
-+	 * incremented @rb->nest.
-+	 *
-+	 * Otherwise we can observe a @rb->head value before one published
-+	 * by an IRQ/NMI happening between the load and the increment.
-+	 */
-+	barrier();
- 	head = local_read(&rb->head);
- 
- 	/*
+ /**
 -- 
 2.20.1
 
