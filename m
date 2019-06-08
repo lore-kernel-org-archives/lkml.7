@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B16C468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D341C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA3F21537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072DD21537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994670;
-	bh=HlRPGL34TlAn9v95aef3KCyfQS5shKTa1sZg8gTTbrc=;
+	s=default; t=1559994676;
+	bh=5cld8TR+CqEuY4G57qF6GQnhX7oPMu991SvoavXScEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gXwWeEgKO7gmTUSoz3LyVjOsGse5+VejPutVSoGfzXP0rpL/KCdIPFPTA6Uk9tNwe
-	 uaPdnZy5tZJ7+b84GfvuAQk3BV3NqnZVsn1gvnsVWlNsRIvDGMF3U7e8s0NVOmXQ//
-	 dHb1IhEtoO9qdA/gIXTs9bhA27CAPV7EGimy/U3k=
+	b=riNjdMDusYuziJ9Ir1SucKX6RCfXFxvWu30GSUpZpfdvZX2muExVN1O7DS6cW0iKe
+	 yPLShyf+aoBGwvnzZA0FDe112wTkwGaVjihR/3NzbdoJTVSJ1EP/2WiZBgd/le7b0w
+	 KnSwTGZYwGWPtjGc/hSMR4BWs/3UGNiP9xX9uQuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfFHLrz (ORCPT
+        id S1729611AbfFHLvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:47:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36620 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbfFHLrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:47:52 -0400
+        id S1729413AbfFHLrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C2C721537;
-        Sat,  8 Jun 2019 11:47:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3F63216C4;
+        Sat,  8 Jun 2019 11:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994471;
-        bh=HlRPGL34TlAn9v95aef3KCyfQS5shKTa1sZg8gTTbrc=;
+        s=default; t=1559994468;
+        bh=5cld8TR+CqEuY4G57qF6GQnhX7oPMu991SvoavXScEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kInmS+Qd+smbYg7KrGK4e6iS/eHAD9jyil7V22kNynr7GIh4sPFZB9AsQeh3ioHT6
-         wdC9dAcMnGzMVetM9KLCU9JHCav6Fjtq4UY88+IdI+yCccAsQLRsxhgA01rtJAnTeb
-         Trsnk1axFgoHFwc7big4Tj8HX3fVLJvSr/U88Ul8=
+        b=PPk0NNCTqaNRs6hHjQ8yKy7+zfWr1LgHMwy1DXFp3879esnFtNpNsMEPsQ/yoqQGD
+         5DohpjwHN5llmWc0/VixKmBnY9DRFonLvyoXDx1qtfvtRdNLc4EvCHH+7lKDupvrYr
+         pCMqRZ3g6IjvuFb+kfa3u64RZ+N3cD0q/VAFWatE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
+Cc:     Lianbo Jiang <lijiang@redhat.com>,
+        Don Brace <don.brace@microsemi.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/31] scsi: scsi_dh_alua: Fix possible null-ptr-deref
-Date:   Sat,  8 Jun 2019 07:46:40 -0400
-Message-Id: <20190608114646.9415-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 28/31] scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask
+Date:   Sat,  8 Jun 2019 07:46:39 -0400
+Message-Id: <20190608114646.9415-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
@@ -60,61 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Lianbo Jiang <lijiang@redhat.com>
 
-[ Upstream commit 12e750bc62044de096ab9a95201213fd912b9994 ]
+[ Upstream commit 1d94f06e7f5df4064ef336b7b710f50143b64a53 ]
 
-If alloc_workqueue fails in alua_init, it should return -ENOMEM, otherwise
-it will trigger null-ptr-deref while unloading module which calls
-destroy_workqueue dereference
-wq->lock like this:
+When SME is enabled, the smartpqi driver won't work on the HP DL385 G10
+machine, which causes the failure of kernel boot because it fails to
+allocate pqi error buffer. Please refer to the kernel log:
+....
+[    9.431749] usbcore: registered new interface driver uas
+[    9.441524] Microsemi PQI Driver (v1.1.4-130)
+[    9.442956] i40e 0000:04:00.0: fw 6.70.48768 api 1.7 nvm 10.2.5
+[    9.447237] smartpqi 0000:23:00.0: Microsemi Smart Family Controller found
+         Starting dracut initqueue hook...
+[  OK  ] Started Show Plymouth Boot Scre[    9.471654] Broadcom NetXtreme-C/E driver bnxt_en v1.9.1
+en.
+[  OK  ] Started Forward Password Requests to Plymouth Directory Watch.
+[[0;[    9.487108] smartpqi 0000:23:00.0: failed to allocate PQI error buffer
+....
+[  139.050544] dracut-initqueue[949]: Warning: dracut-initqueue timeout - starting timeout scripts
+[  139.589779] dracut-initqueue[949]: Warning: dracut-initqueue timeout - starting timeout scripts
 
-BUG: KASAN: null-ptr-deref in __lock_acquire+0x6b4/0x1ee0
-Read of size 8 at addr 0000000000000080 by task syz-executor.0/7045
+Basically, the fact that the coherent DMA mask value wasn't set caused the
+driver to fall back to SWIOTLB when SME is active.
 
-CPU: 0 PID: 7045 Comm: syz-executor.0 Tainted: G         C        5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
-Call Trace:
- dump_stack+0xa9/0x10e
- __kasan_report+0x171/0x18d
- ? __lock_acquire+0x6b4/0x1ee0
- kasan_report+0xe/0x20
- __lock_acquire+0x6b4/0x1ee0
- lock_acquire+0xb4/0x1b0
- __mutex_lock+0xd8/0xb90
- drain_workqueue+0x25/0x290
- destroy_workqueue+0x1f/0x3f0
- __x64_sys_delete_module+0x244/0x330
- do_syscall_64+0x72/0x2a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+For correct operation, lets call the dma_set_mask_and_coherent() to
+properly set the mask for both streaming and coherent, in order to inform
+the kernel about the devices DMA addressing capabilities.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 03197b61c5ec ("scsi_dh_alua: Use workqueue for RTPG")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Acked-by: Don Brace <don.brace@microsemi.com>
+Tested-by: Don Brace <don.brace@microsemi.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/device_handler/scsi_dh_alua.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/scsi/smartpqi/smartpqi_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/device_handler/scsi_dh_alua.c b/drivers/scsi/device_handler/scsi_dh_alua.c
-index 0962fd544401..09c6a16fab93 100644
---- a/drivers/scsi/device_handler/scsi_dh_alua.c
-+++ b/drivers/scsi/device_handler/scsi_dh_alua.c
-@@ -1151,10 +1151,8 @@ static int __init alua_init(void)
- 	int r;
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index 5ec2898d21cd..d34351c6b9af 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -6392,7 +6392,7 @@ static int pqi_pci_init(struct pqi_ctrl_info *ctrl_info)
+ 	else
+ 		mask = DMA_BIT_MASK(32);
  
- 	kaluad_wq = alloc_workqueue("kaluad", WQ_MEM_RECLAIM, 0);
--	if (!kaluad_wq) {
--		/* Temporary failure, bypass */
--		return SCSI_DH_DEV_TEMP_BUSY;
--	}
-+	if (!kaluad_wq)
-+		return -ENOMEM;
- 
- 	r = scsi_register_device_handler(&alua_dh);
- 	if (r != 0) {
+-	rc = dma_set_mask(&ctrl_info->pci_dev->dev, mask);
++	rc = dma_set_mask_and_coherent(&ctrl_info->pci_dev->dev, mask);
+ 	if (rc) {
+ 		dev_err(&ctrl_info->pci_dev->dev, "failed to set DMA mask\n");
+ 		goto disable_device;
 -- 
 2.20.1
 
