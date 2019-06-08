@@ -2,152 +2,126 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B178C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7A4C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC86214C6
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA32214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfFHLWA (ORCPT
+        id S1727136AbfFHLWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:22:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60872 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726828AbfFHLWA (ORCPT
+        Sat, 8 Jun 2019 07:22:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:38996 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfFHLWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:22:00 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58BLj2I010209
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 07:21:58 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t090r4v66-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 07:21:58 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Sat, 8 Jun 2019 12:21:57 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 8 Jun 2019 12:21:54 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58BLllv28377402
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Jun 2019 11:21:47 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4870252050;
-        Sat,  8 Jun 2019 11:21:53 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 12F055204E;
-        Sat,  8 Jun 2019 11:21:53 +0000 (GMT)
-Date:   Sat, 8 Jun 2019 13:21:51 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] s390 updates for 5.2-rc4
+        Sat, 8 Jun 2019 07:22:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id y13so3701341iol.6
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 04:22:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=hVoG57mCN8NOasXfbKFhxicqTT/xW4k6vglaIu7Gsr8=;
+        b=haCRVVZQZGIi/C/C3NAS4F+aaJBaZV0R479w2/Hxw6GTbmLItIAKLKhe/8j4nswDcC
+         v0ON9RsqqlfQKsCgH602uvpxz47GVgdep1+a5UIEzVMrvUwwvWTQlaWnb6zbLIp3/yPK
+         KUUIRfuseJwB3QD4XAc6yq9H/6QUDGTDMWIdJLD040dTzfZXIx1Pwx10j+9do3VmP2ng
+         ialSgYZ5xfmkrsdAdakNoXnA0CVZ3FF2FlNgmVTof/Gwb1IO7Yy98sPqa6c9g+wnbZVa
+         MmRU25qzwMZKLvTKfcsw4ct5Vk6JMBZAdhdnLYoUqXa99pyORtHab5ESvC1xXggX/8U4
+         rneQ==
+X-Gm-Message-State: APjAAAW1kvoR6ts7DivttO+hiwOT4IPtR+3hMPAvnEliUP7usk2iLkxJ
+        tmPdz32ZLLNcsggqstjDbeBGllJbHI1MIVLv4jpQ9fSOXKs7
+X-Google-Smtp-Source: APXvYqxR+yDqE0sbsVS8kE/JcX0C63g/G7rVLFT6sEkllG3CgH0tCwhH0z0uaNRie7Uk/8nBz/cdYlmm5MngD6hxJdcYk5neIjx8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19060811-4275-0000-0000-00000340825E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060811-4276-0000-0000-000038508C42
-Message-Id: <20190608112151.GA8766@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=971 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906080088
+X-Received: by 2002:a02:5489:: with SMTP id t131mr36685651jaa.70.1559992926211;
+ Sat, 08 Jun 2019 04:22:06 -0700 (PDT)
+Date:   Sat, 08 Jun 2019 04:22:06 -0700
+In-Reply-To: <000000000000e92d1805711f5552@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000381684058ace28e5@google.com>
+Subject: Re: WARNING in bpf_jit_free
+From:   syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>
+To:     airlied@linux.ie, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@ffwll.ch, daniel@iogearbox.net, davem@davemloft.net,
+        dri-devel@lists.freedesktop.org, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        kafai@fb.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, maxime.ripard@bootlin.com,
+        netdev@vger.kernel.org, paul.kocialkowski@bootlin.com,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        wens@csie.org, xdp-newbies@vger.kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+syzbot has found a reproducer for the following crash on:
 
-please pull two bug fixes for s390.
+HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1201b971a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
+dashboard link: https://syzkaller.appspot.com/bug?extid=2ff1e7cb738fd3c41113
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a3bf51a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120d19f2a00000
 
-Thanks,
-Heiko
+The bug was bisected to:
 
-The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+commit 0fff724a33917ac581b5825375d0b57affedee76
+Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Fri Jan 18 14:51:13 2019 +0000
 
-  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
+     drm/sun4i: backend: Use explicit fourcc helpers for packed YUV422 check
 
-are available in the git repository at:
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467550f200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667550f200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1267550f200000
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.2-4
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
+Fixes: 0fff724a3391 ("drm/sun4i: backend: Use explicit fourcc helpers for  
+packed YUV422 check")
 
-for you to fetch changes up to 0ab0d7ac2090eae30f1c0b01ae981bb7a368f598:
-
-  s390/unwind: correct stack switching during unwind (2019-06-07 15:20:44 +0200)
-
-----------------------------------------------------------------
-s390 updates for 5.2-rc4
-
- - fix stack unwinder: the stack unwinder rework has on off-by-one bug
-   which prevents following stack backchains over more than one
-   context (e.g. irq -> process).
-
- - fix address space detection in exception handler: if user space
-   switches to access register mode, which is not supported anymore,
-   the exception handler may resolve to the wrong address space.
-
-----------------------------------------------------------------
-Gerald Schaefer (1):
-      s390/mm: fix address space detection in exception handling
-
-Vasily Gorbik (1):
-      s390/unwind: correct stack switching during unwind
-
- arch/s390/include/asm/stacktrace.h | 2 +-
- arch/s390/mm/fault.c               | 5 ++++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/include/asm/stacktrace.h b/arch/s390/include/asm/stacktrace.h
-index 49634bf..0ae4bbf7 100644
---- a/arch/s390/include/asm/stacktrace.h
-+++ b/arch/s390/include/asm/stacktrace.h
-@@ -30,7 +30,7 @@ static inline bool on_stack(struct stack_info *info,
- 		return false;
- 	if (addr + len < addr)
- 		return false;
--	return addr >= info->begin && addr + len < info->end;
-+	return addr >= info->begin && addr + len <= info->end;
- }
- 
- static inline unsigned long get_stack_pointer(struct task_struct *task,
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index 91ce03f..df75d57 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -83,7 +83,6 @@ static inline int notify_page_fault(struct pt_regs *regs)
- 
- /*
-  * Find out which address space caused the exception.
-- * Access register mode is impossible, ignore space == 3.
-  */
- static enum fault_type get_fault_type(struct pt_regs *regs)
- {
-@@ -108,6 +107,10 @@ static enum fault_type get_fault_type(struct pt_regs *regs)
- 		}
- 		return VDSO_FAULT;
- 	}
-+	if (trans_exc_code == 1) {
-+		/* access register mode, not used in the kernel */
-+		return USER_FAULT;
-+	}
- 	/* home space exception -> access via kernel ASCE */
- 	return KERNEL_FAULT;
- }
+WARNING: CPU: 0 PID: 8951 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8951 Comm: kworker/0:0 Not tainted 5.2.0-rc3+ #23
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events bpf_prog_free_deferred
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x744 kernel/panic.c:219
+  __warn.cold+0x20/0x4d kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:bpf_jit_free+0x157/0x1b0
+Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00  
+00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 f9 b5 f4 ff <0f> 0b e9 f9 fe  
+ff ff e8 bd 53 2d 00 e9 d9 fe ff ff 48 89 7d e0 e8
+RSP: 0018:ffff88808886fcb0 EFLAGS: 00010293
+RAX: ffff88808cb6c480 RBX: ffff88809051d280 RCX: ffffffff817ae68d
+RDX: 0000000000000000 RSI: ffffffff817bf0f7 RDI: ffff88809051d2f0
+RBP: ffff88808886fcd0 R08: 1ffffffff14ccaa8 R09: fffffbfff14ccaa9
+R10: fffffbfff14ccaa8 R11: ffffffff8a665547 R12: ffffc90001925000
+R13: ffff88809051d2e8 R14: ffff8880a0e43900 R15: ffff8880ae834840
+  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1984
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
