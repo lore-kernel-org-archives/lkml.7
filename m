@@ -2,139 +2,171 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4D7C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E880C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3E021537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62C0620684
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfFHPcu (ORCPT
+        id S1727181AbfFHPhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 11:32:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59268 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727220AbfFHPct (ORCPT
+        Sat, 8 Jun 2019 11:37:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33100 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727015AbfFHPhu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 11:32:49 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58FQkgC016440;
-        Sat, 8 Jun 2019 11:32:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t090rap3p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 08 Jun 2019 11:32:32 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x58FSses019803;
-        Sat, 8 Jun 2019 11:32:31 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t090rap3f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 08 Jun 2019 11:32:31 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x58DVEBe013007;
-        Sat, 8 Jun 2019 13:39:47 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01dal.us.ibm.com with ESMTP id 2t04n5kgsm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 08 Jun 2019 13:39:47 +0000
+        Sat, 8 Jun 2019 11:37:50 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x58FavHA093232
+        for <linux-kernel@vger.kernel.org>; Sat, 8 Jun 2019 11:37:50 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t093p2s86-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 11:37:49 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sat, 8 Jun 2019 16:37:48 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 8 Jun 2019 16:37:42 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58FWTG542598856
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x58FbfJT24904052
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Jun 2019 15:32:29 GMT
+        Sat, 8 Jun 2019 15:37:41 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC68BB2065;
-        Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id BB464B2064;
+        Sat,  8 Jun 2019 15:37:41 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F6A7B205F;
-        Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A7084B205F;
+        Sat,  8 Jun 2019 15:37:41 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.85.180.36])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat,  8 Jun 2019 15:32:29 +0000 (GMT)
+        Sat,  8 Jun 2019 15:37:41 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 8DB3916C3421; Sat,  8 Jun 2019 08:27:07 -0700 (PDT)
-Date:   Sat, 8 Jun 2019 08:27:07 -0700
+        id 5A13C16C3421; Sat,  8 Jun 2019 08:37:43 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 08:37:43 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Alan Stern <stern@rowland.harvard.edu>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Fengguang Wu <fengguang.wu@intel.com>, LKP <lkp@01.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
         Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
         Luc Maranget <luc.maranget@inria.fr>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: Re: inet: frags: Turn fqdir->dead into an int for old Alphas
-Message-ID: <20190608152707.GF28207@linux.ibm.com>
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-arch@vger.kernel.org, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v3 20/20] docs: pci: fix broken links due to conversion
+ from pci.txt to pci.rst
 Reply-To: paulmck@linux.ibm.com
-References: <20190603200301.GM28207@linux.ibm.com>
- <Pine.LNX.4.44L0.1906041026570.1731-100000@iolanthe.rowland.org>
- <CAHk-=wgGnCw==uY8radrB+Tg_CEmzOtwzyjfMkuh7JmqFh+jzQ@mail.gmail.com>
- <20190607140949.tzwyprrhmqdx33iu@gondor.apana.org.au>
- <da5eedfe-92f9-6c50-b9e7-68886047dd25@gmail.com>
- <CAHk-=wgtY1hNQX9TM=4ono-UJ-hsoFA0OT36ixFWBG2eeO011w@mail.gmail.com>
+References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+ <780cb6c2dfe860873394675df6580765ea5a2680.1559933665.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgtY1hNQX9TM=4ono-UJ-hsoFA0OT36ixFWBG2eeO011w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <780cb6c2dfe860873394675df6580765ea5a2680.1559933665.git.mchehab+samsung@kernel.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
+x-cbid: 19060815-2213-0000-0000-0000039BF67E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011234; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01215056; UDB=6.00638755; IPR=6.00996147;
+ MB=3.00027235; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-08 15:37:47
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060815-2214-0000-0000-00005EC5EE96
+Message-Id: <20190608153743.GG28207@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-08_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906080116
+ mlxlogscore=869 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906080117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 09:19:42AM -0700, Linus Torvalds wrote:
-> On Fri, Jun 7, 2019 at 8:26 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> >
-> > There is common knowledge among us programmers that bit fields
-> > (or bool) sharing a common 'word' need to be protected
-> > with a common lock.
-> >
-> > Converting all bit fields to plain int/long would be quite a waste of memory.
+On Fri, Jun 07, 2019 at 03:54:36PM -0300, Mauro Carvalho Chehab wrote:
+> Some documentation files were still pointing to the old place.
 > 
-> Yeah, and we really don't care about alpha. So 'char' should be safe.
-> 
-> No compiler actually turns a 'bool' in a struct into a bitfield,
-> afaik, because you're still supposed to be able to take the address of
-> a boolean.
-> 
-> But on the whole, I do not believe that we should ever use 'bool' in
-> structures anyway, because it's such a badly defined type. I think
-> it's 'char' in practice on just about all architectures, but there
-> really were traditional use cases where 'bool' was int.
-> 
-> But:
-> 
->  - we shouldn't turn them into 'int' anyway - alpha is dead, and no
-> sane architecture will make the same mistake anyway. People learnt.
-> 
->  - we might want to make sure 'bool' really is 'char' in practice, to
-> double-check that fthe compiler doesn't do anything stupid.
-> 
->  - bitfields obviously do need locks. 'char' does not.
-> 
-> If there's somebody who really notices the alpha issue in PRACTICE, we
-> can then bother to fix it. But there is approximately one user, and
-> it's not a heavy-duty one.
+> Fixes: 229b4e0728e0 ("Documentation: PCI: convert pci.txt to reST")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-C11 and later compilers are supposed to use read-modify-write atomic
-operations in this sort of situation anyway because they are not supposed
-to introduce data races.  So if this problem comes up, the fix should
-be in GCC rather than the Linux kernel, right?
+Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
 
-								Thanx, Paul
+> ---
+>  Documentation/memory-barriers.txt                    | 2 +-
+>  Documentation/translations/ko_KR/memory-barriers.txt | 2 +-
+>  drivers/scsi/hpsa.c                                  | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+> index f70ebcdfe592..f4170aae1d75 100644
+> --- a/Documentation/memory-barriers.txt
+> +++ b/Documentation/memory-barriers.txt
+> @@ -548,7 +548,7 @@ There are certain things that the Linux kernel memory barriers do not guarantee:
+>  
+>  	[*] For information on bus mastering DMA and coherency please read:
+>  
+> -	    Documentation/PCI/pci.txt
+> +	    Documentation/PCI/pci.rst
+>  	    Documentation/DMA-API-HOWTO.txt
+>  	    Documentation/DMA-API.txt
+>  
+> diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
+> index db0b9d8619f1..07725b1df002 100644
+> --- a/Documentation/translations/ko_KR/memory-barriers.txt
+> +++ b/Documentation/translations/ko_KR/memory-barriers.txt
+> @@ -569,7 +569,7 @@ ACQUIRE 는 해당 오퍼레이션의 로드 부분에만 적용되고 RELEASE 
+>  
+>  	[*] 버스 마스터링 DMA 와 일관성에 대해서는 다음을 참고하시기 바랍니다:
+>  
+> -	    Documentation/PCI/pci.txt
+> +	    Documentation/PCI/pci.rst
+>  	    Documentation/DMA-API-HOWTO.txt
+>  	    Documentation/DMA-API.txt
+>  
+> diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+> index 1bef1da273c2..53df6f7dd3f9 100644
+> --- a/drivers/scsi/hpsa.c
+> +++ b/drivers/scsi/hpsa.c
+> @@ -7760,7 +7760,7 @@ static void hpsa_free_pci_init(struct ctlr_info *h)
+>  	hpsa_disable_interrupt_mode(h);		/* pci_init 2 */
+>  	/*
+>  	 * call pci_disable_device before pci_release_regions per
+> -	 * Documentation/PCI/pci.txt
+> +	 * Documentation/PCI/pci.rst
+>  	 */
+>  	pci_disable_device(h->pdev);		/* pci_init 1 */
+>  	pci_release_regions(h->pdev);		/* pci_init 2 */
+> @@ -7843,7 +7843,7 @@ static int hpsa_pci_init(struct ctlr_info *h)
+>  clean1:
+>  	/*
+>  	 * call pci_disable_device before pci_release_regions per
+> -	 * Documentation/PCI/pci.txt
+> +	 * Documentation/PCI/pci.rst
+>  	 */
+>  	pci_disable_device(h->pdev);
+>  	pci_release_regions(h->pdev);
+> -- 
+> 2.21.0
+> 
+
