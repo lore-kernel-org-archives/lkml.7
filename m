@@ -2,169 +2,124 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90316C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 06:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D4FC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 07:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF90208E3
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 06:40:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="n3W3yoUc"
+	by mail.kernel.org (Postfix) with ESMTP id D2D26212F5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 07:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfFHGkM (ORCPT
+        id S1726796AbfFHHC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 02:40:12 -0400
-Received: from mail-eopbgr730099.outbound.protection.outlook.com ([40.107.73.99]:37376
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725536AbfFHGkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 02:40:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hxV+SQTiYk3EouLhpDKxE+AJY9zKUaU/nSKcLo/uTDk=;
- b=n3W3yoUc6QLehIY3I7ItpenYXCRJRWLTnVqJK4k0yRcPYF4gVfps86UGwbwnIR8nWERD8XDCcmwXZiry4KtJ+UfwvQoTA9748eEzMAWWzTwwwe+hTdcx5/yTX+NiIIOWs3DG/4voRxl6FNSljtsB+3B+YbRdEuyLY27sB6rxOuw=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1166.namprd22.prod.outlook.com (10.174.168.38) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Sat, 8 Jun 2019 06:40:09 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40%2]) with mapi id 15.20.1965.017; Sat, 8 Jun 2019
- 06:40:09 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: [GIT PULL] MIPS fixes
-Thread-Topic: [GIT PULL] MIPS fixes
-Thread-Index: AQHVHcUDrNs9ljjF6kSOJCVpUINl0g==
-Date:   Sat, 8 Jun 2019 06:40:08 +0000
-Message-ID: <20190608064006.zofqsbrtfftsutjr@pburton-laptop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BY5PR04CA0023.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::33) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2601:646:8a00:9810:9d6:9cca:ff8c:efe0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d59a95a8-9f35-4d4a-760e-08d6ebdc2628
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(49563074)(7193020);SRVR:MWHPR2201MB1166;
-x-ms-traffictypediagnostic: MWHPR2201MB1166:
-x-microsoft-antispam-prvs: <MWHPR2201MB116627FB903E7FB734BCC175C1110@MWHPR2201MB1166.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0062BDD52C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(39840400004)(346002)(136003)(396003)(366004)(376002)(199004)(189003)(66446008)(71200400001)(9686003)(6486002)(68736007)(478600001)(186003)(6436002)(14444005)(256004)(54906003)(66946007)(14454004)(71190400001)(73956011)(58126008)(6512007)(64756008)(66556008)(66476007)(66616009)(99936001)(6916009)(99286004)(1076003)(386003)(6506007)(52116002)(33716001)(316002)(53936002)(44832011)(486006)(2906002)(4326008)(7736002)(476003)(25786009)(42882007)(8936002)(6116002)(3716004)(8676002)(81166006)(305945005)(46003)(5660300002)(81156014)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1166;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: p9XohFoXuK/LNwtguRrOQNBkQ+tl4C2TsHeLnf2AP9Iast66nLoMX4ZA8wTQ4x3sAQAHS9Y7PoYPIQY3NGbT+NnSvotdU1F33+W2aAYLXJacINE0PFrEDI3qomlxqDH6mp9ymMGQ/85j1qbXuUcV+oLrQszxIC4oqG7kvOonVT8xe5FEgHqSPiySXMHizMlhYq4m7Ox09ms/iYp4aX9/g1fBVy+RBKk+gHPS0amQSdYJivNJeVTXcKFaCeG7kzIDnJvwAZuuYZQ8F5ORUx+x/K7Ro8TX3GNxdoT2hXcO5REib3ftxuG5s48AfS2rDhuGOKarm8kpPMv17iR/yiqMWgbkcghJUhvoozRjmzO6DMoDiJkGLE3LZZgM2bZnrtw9nFR7vR248i7X7WEZx5z8Gp+9ewMTcMFs1k4n7vOA3DQ=
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6nu6jqnqddo3gyxj"
+        Sat, 8 Jun 2019 03:02:57 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:11289 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726042AbfFHHC4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 03:02:56 -0400
+X-UUID: de7b22cbbe734bdc890c08b46d4caf10-20190608
+X-UUID: de7b22cbbe734bdc890c08b46d4caf10-20190608
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 231119346; Sat, 08 Jun 2019 15:02:36 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 8 Jun
+ 2019 15:02:34 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Sat, 8 Jun 2019 15:02:33 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [1/2] dt-bindngs: display: panel: Add BOE tv101wum-nl6 panel bindings
+Date:   Sat, 8 Jun 2019 15:02:29 +0800
+Message-ID: <20190608070230.55381-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d59a95a8-9f35-4d4a-760e-08d6ebdc2628
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2019 06:40:09.0096
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1166
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---6nu6jqnqddo3gyxj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add documentation for boe tv101wum-n16 panel.
 
-Hi Linus,
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+---
+ .../display/panel/boe,tv101wum-nl6.txt        | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
 
-Here's a batch of MIPS fixes for 5.2, nothing particularly scary; please
-pull.
+diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+new file mode 100644
+index 000000000000..2a84735d742d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+@@ -0,0 +1,34 @@
++Boe Corporation 10.1" WUXGA TFT LCD panel
++
++Required properties:
++- compatible: should be "boe,tv101wum"
++- reg: the virtual channel number of a DSI peripheral
++- enable-gpios: a GPIO spec for the enable pin
++- pp1800-supply: core voltage supply
++- avdd-supply: 
++- avee-supply: 
++- backlight: phandle of the backlight device attached to the panel
++
++The device node can contain one 'port' child node with one child
++'endpoint' node, according to the bindings defined in
++media/video-interfaces.txt. This node should describe panel's video bus.
++
++Example:
++&dsi {
++	...
++	panel@0 {
++		compatible = "boe,tv101wum-nl6";
++		reg = <0>;
++		enable-gpios = <&pio 45 0>;
++		avdd-supply = <&ppvarn_lcd>;
++		avee-supply = <&ppvarp_lcd>;
++		pp1800-supply = <&pp1800_lcd>;
++		backlight = <&backlight_lcd0>;
++		status = "okay";
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&dsi_out>;
++			};
++		};
++	};
++};
+\ No newline at end of file
+-- 
+2.21.0
 
-Thanks,
-    Paul
-
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.2_1
-
-for you to fetch changes up to f532beeeff0c0a3586cc15538bc52d249eb19e7c:
-
-  MIPS: uprobes: remove set but not used variable 'epc' (2019-05-29 13:20:30 -0700)
-
-----------------------------------------------------------------
-A batch of MIPS fixes:
-
-- Declare ginvt() __always_inline due to its use of an argument as an
-  inline asm immediate.
-
-- A VDSO build fix following Kbuild changes made this cycle.
-
-- A fix for boot failures on txx9 systems following memory
-  initialization changes made this cycle.
-
-- Bounds check virt_addr_valid() to prevent it spuriously indicating
-  that bogus addresses are valid, in turn fixing hardened usercopy
-  failures that have been present since v4.12.
-
-- Build uImage.gz for pistachio systems by default, since this is the
-  image we need in order to actually boot on a board.
-
-- Remove an unused variable in our uprobes code.
-
-----------------------------------------------------------------
-Geert Uytterhoeven (1):
-      MIPS: TXx9: Fix boot crash in free_initmem()
-
-Masahiro Yamada (2):
-      MIPS: mark ginvt() as __always_inline
-      MIPS: remove a space after -I to cope with header search paths for VDSO
-
-Paul Burton (3):
-      MIPS: Bounds check virt_addr_valid
-      MIPS: Make virt_addr_valid() return bool
-      MIPS: pistachio: Build uImage.gz by default
-
-YueHaibing (1):
-      MIPS: uprobes: remove set but not used variable 'epc'
-
- arch/mips/include/asm/ginvt.h  | 2 +-
- arch/mips/include/asm/page.h   | 2 +-
- arch/mips/kernel/uprobes.c     | 3 ---
- arch/mips/mm/mmap.c            | 7 ++++++-
- arch/mips/pistachio/Platform   | 1 +
- arch/mips/pnx833x/Platform     | 2 +-
- arch/mips/txx9/generic/setup.c | 6 ------
- 7 files changed, 10 insertions(+), 13 deletions(-)
-
---6nu6jqnqddo3gyxj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXPtYRgAKCRA+p5+stXUA
-3T/8APoChIaknnoRdHZCwCUJGyg0HVZBwIxtB3JB3Rf3lJOCTgEAoOzlPgpeude/
-/JN5XW6PQr6+kaRrd6e1HHM55Q3EYQo=
-=BZKz
------END PGP SIGNATURE-----
-
---6nu6jqnqddo3gyxj--
