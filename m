@@ -2,95 +2,158 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471B2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582E3C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C61921537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994949;
-	bh=9erjZsPr+3muEteXmFDk9IJ6Bob2nrx1jhDybrkdOHM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVN8DDufFBwJDrSmsmu1rUINnBbMgpqmVeGjobmT+zkYYbCnvmw+7DVtX6JLbMlqi
-	 pG2oFCBZySW2cuyEdGIN71qraHlr1kqZrqkuFCE07hU/Zi12wwtFjaOc3EmfwiWGEd
-	 /p3YuCxSyEcyPo52EK3PRohvzDyOPGegYAJx8bVE=
+	by mail.kernel.org (Postfix) with ESMTP id 322B221537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbfFHLzr (ORCPT
+        id S1727391AbfFHL47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:55:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726935AbfFHLjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:39:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DFAD214D8;
-        Sat,  8 Jun 2019 11:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559993994;
-        bh=9erjZsPr+3muEteXmFDk9IJ6Bob2nrx1jhDybrkdOHM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VfJdk7KAPpdHzlYfDzBPqQBil255e1norBsIZZ+votOh4Ih1rrUsGOhtFV7yyRDWd
-         hAsK/U9J2ZEotk8Yd6vmhcI5vtxTfGnCWaVDeWjNh1RQC0q7KZ1VTbR8MjSdQRcMKl
-         0Agcwx0NkBIfg2Rs1qoG4lid/QkwqAuEh8Q9kK+Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ruslan Babayev <ruslan@babayev.com>, xe-linux-external@cisco.com,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 03/70] iio: dac: ds4422/ds4424 fix chip verification
-Date:   Sat,  8 Jun 2019 07:38:42 -0400
-Message-Id: <20190608113950.8033-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
-References: <20190608113950.8033-1-sashal@kernel.org>
+        Sat, 8 Jun 2019 07:56:59 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:46474 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfFHL46 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:56:58 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hZZxx-0000Rs-8Y; Sat, 08 Jun 2019 05:56:57 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hZZxw-0007PS-AT; Sat, 08 Jun 2019 05:56:57 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andreas Christoforou <andreaschristofo@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+References: <201906072207.ECB65450@keescook>
+Date:   Sat, 08 Jun 2019 06:56:44 -0500
+In-Reply-To: <201906072207.ECB65450@keescook> (Kees Cook's message of "Fri, 7
+        Jun 2019 22:08:23 -0700")
+Message-ID: <87h8909toj.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1hZZxw-0007PS-AT;;;mid=<87h8909toj.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+Nxc2fpk7+N40M/y0EybiNfcrJHqyX2vU=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2] ipc/mqueue: Only perform resource calculation if user valid
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ruslan Babayev <ruslan@babayev.com>
+Kees Cook <keescook@chromium.org> writes:
 
-[ Upstream commit 60f2208699ec08ff9fdf1f97639a661a92a18f1c ]
+> Andreas Christoforou reported:
+>
+> UBSAN: Undefined behaviour in ipc/mqueue.c:414:49 signed integer overflow:
+> 9 * 2305843009213693951 cannot be represented in type 'long int'
+> ...
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x11b/0x1fe lib/dump_stack.c:113
+>  ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
+>  handle_overflow+0x193/0x218 lib/ubsan.c:190
+>  mqueue_evict_inode+0x8e7/0xa10 ipc/mqueue.c:414
+>  evict+0x472/0x8c0 fs/inode.c:558
+>  iput_final fs/inode.c:1547 [inline]
+>  iput+0x51d/0x8c0 fs/inode.c:1573
+>  mqueue_get_inode+0x8eb/0x1070 ipc/mqueue.c:320
+>  mqueue_create_attr+0x198/0x440 ipc/mqueue.c:459
+>  vfs_mkobj+0x39e/0x580 fs/namei.c:2892
+>  prepare_open ipc/mqueue.c:731 [inline]
+>  do_mq_open+0x6da/0x8e0 ipc/mqueue.c:771
+> ...
+>
+> Which could be triggered by:
+>
+>         struct mq_attr attr = {
+>                 .mq_flags = 0,
+>                 .mq_maxmsg = 9,
+>                 .mq_msgsize = 0x1fffffffffffffff,
+>                 .mq_curmsgs = 0,
+>         };
+>
+>         if (mq_open("/testing", 0x40, 3, &attr) == (mqd_t) -1)
+>                 perror("mq_open");
+>
+> mqueue_get_inode() was correctly rejecting the giant mq_msgsize,
+> and preparing to return -EINVAL. During the cleanup, it calls
+> mqueue_evict_inode() which performed resource usage tracking math for
+> updating "user", before checking if there was a valid "user" at all
+> (which would indicate that the calculations would be sane). Instead,
+> delay this check to after seeing a valid "user".
+>
+> The overflow was real, but the results went unused, so while the flaw
+> is harmless, it's noisy for kernel fuzzers, so just fix it by moving
+> the calculation under the non-NULL "user" where it actually gets used.
 
-The ds4424_get_value function takes channel number as it's 3rd
-argument and translates it internally into I2C address using
-DS4424_DAC_ADDR macro. The caller ds4424_verify_chip was passing an
-already translated I2C address as its last argument.
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-Cc: xe-linux-external@cisco.com
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iio/dac/ds4424.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iio/dac/ds4424.c b/drivers/iio/dac/ds4424.c
-index 883a47562055..714a97f91319 100644
---- a/drivers/iio/dac/ds4424.c
-+++ b/drivers/iio/dac/ds4424.c
-@@ -166,7 +166,7 @@ static int ds4424_verify_chip(struct iio_dev *indio_dev)
- {
- 	int ret, val;
- 
--	ret = ds4424_get_value(indio_dev, &val, DS4424_DAC_ADDR(0));
-+	ret = ds4424_get_value(indio_dev, &val, 0);
- 	if (ret < 0)
- 		dev_err(&indio_dev->dev,
- 				"%s failed. ret: %d\n", __func__, ret);
--- 
-2.20.1
-
+>
+> Reported-by: Andreas Christoforou <andreaschristofo@gmail.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v2: update commit log based on Al's feedback
+> ---
+>  ipc/mqueue.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+>
+> diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+> index 216cad1ff0d0..65c351564ad0 100644
+> --- a/ipc/mqueue.c
+> +++ b/ipc/mqueue.c
+> @@ -438,7 +438,6 @@ static void mqueue_evict_inode(struct inode *inode)
+>  {
+>  	struct mqueue_inode_info *info;
+>  	struct user_struct *user;
+> -	unsigned long mq_bytes, mq_treesize;
+>  	struct ipc_namespace *ipc_ns;
+>  	struct msg_msg *msg, *nmsg;
+>  	LIST_HEAD(tmp_msg);
+> @@ -461,16 +460,18 @@ static void mqueue_evict_inode(struct inode *inode)
+>  		free_msg(msg);
+>  	}
+>  
+> -	/* Total amount of bytes accounted for the mqueue */
+> -	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
+> -		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+> -		sizeof(struct posix_msg_tree_node);
+> -
+> -	mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
+> -				  info->attr.mq_msgsize);
+> -
+>  	user = info->user;
+>  	if (user) {
+> +		unsigned long mq_bytes, mq_treesize;
+> +
+> +		/* Total amount of bytes accounted for the mqueue */
+> +		mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
+> +			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+> +			sizeof(struct posix_msg_tree_node);
+> +
+> +		mq_bytes = mq_treesize + (info->attr.mq_maxmsg *
+> +					  info->attr.mq_msgsize);
+> +
+>  		spin_lock(&mq_lock);
+>  		user->mq_bytes -= mq_bytes;
+>  		/*
+> -- 
+> 2.17.1
