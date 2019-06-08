@@ -2,94 +2,130 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6426C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45B5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A5421707
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZDPaD+uG"
+	by mail.kernel.org (Postfix) with ESMTP id AAE5E216FD
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:43:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1559994204;
+	bh=IAPHIq4ehYFHnH/Bp/L79kijziW97T6Yf4romK7Qzxc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZuYkzYnQdCqJkBsJdi56Hhf5k8huesaegRcmES8NMDhFZ3pzZk+EoVpKHJvqb3TNE
+	 /auMY/Pc8NylcvCiq/HGTj7T6lCRM5VWqtJ9MseVtVphXLnY64e53oVip3yZck4jLW
+	 25N6CoaJBr+PIQ9zU7FBslffznDG+2g2yVv4Zasc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbfFHLnT (ORCPT
+        id S1728186AbfFHLnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:43:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:37848 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728670AbfFHLnP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728672AbfFHLnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Jun 2019 07:43:15 -0400
-Received: from pendragon.ideasonboard.com (unknown [IPv6:2a02:a03f:44f0:8500:ca05:8177:199c:fed4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BA9335D;
-        Sat,  8 Jun 2019 13:43:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1559994193;
-        bh=fx0n19qeDMTimK0VJDa0BLED3Bsk5ypjzYYcWtyI8qM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZDPaD+uGBOpeDGvPUnyFI/5vah3s3AzGNxyTy1RxJCRRphTDxgBJJM1VZqVDcP1cl
-         EZGYUzEMYUy/3PWydkLoruilef7KKBLifnP6pwg364yGk+Z7xxJJYiwa4KTR+KEyLn
-         4r+q6zI8+SEipYfGasvIMBKiQ3P4khCzwqZaDIDA=
-Date:   Sat, 8 Jun 2019 14:42:59 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/34] media: i2c: mt9p031: simplify getting the adapter
- of a client
-Message-ID: <20190608114259.GB4786@pendragon.ideasonboard.com>
-References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
- <20190608105619.593-10-wsa+renesas@sang-engineering.com>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B53E214C6;
+        Sat,  8 Jun 2019 11:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559994195;
+        bh=IAPHIq4ehYFHnH/Bp/L79kijziW97T6Yf4romK7Qzxc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UaOdHYtedrKms1a+nUKqk/nW48pcdFf3vVdXkXByzDVz2e4E9Tw7h/By4WzQL+l8f
+         flhQsKPVGCLuSEsLdluJkNfcWrgHL+7ezv8VTCmICvaSLEgZp/ZpaQcyGT9OkyoWzv
+         sMwybPgLHmkG8eb5JtIXxBdkYijnmKZiCgvlx8mg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Frank van der Linden <fllinden@amazon.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        jiaxun.yang@flygoat.com, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 12/49] x86/CPU/AMD: Don't force the CPB cap when running under a hypervisor
+Date:   Sat,  8 Jun 2019 07:41:53 -0400
+Message-Id: <20190608114232.8731-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
+References: <20190608114232.8731-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190608105619.593-10-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+From: Frank van der Linden <fllinden@amazon.com>
 
-Thank you for the patch.
+[ Upstream commit 2ac44ab608705948564791ce1d15d43ba81a1e38 ]
 
-On Sat, Jun 08, 2019 at 12:55:48PM +0200, Wolfram Sang wrote:
-> We have a dedicated pointer for that, so use it. Much easier to read and
-> less computation involved.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+For F17h AMD CPUs, the CPB capability ('Core Performance Boost') is forcibly set,
+because some versions of that chip incorrectly report that they do not have it.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+However, a hypervisor may filter out the CPB capability, for good
+reasons. For example, KVM currently does not emulate setting the CPB
+bit in MSR_K7_HWCR, and unchecked MSR access errors will be thrown
+when trying to set it as a guest:
 
-and taken in my tree.
+	unchecked MSR access error: WRMSR to 0xc0010015 (tried to write 0x0000000001000011) at rIP: 0xffffffff890638f4 (native_write_msr+0x4/0x20)
 
-> ---
-> 
-> Please apply to your subsystem tree.
-> 
->  drivers/media/i2c/mt9p031.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
-> index 715be3632b01..5d824dd33edd 100644
-> --- a/drivers/media/i2c/mt9p031.c
-> +++ b/drivers/media/i2c/mt9p031.c
-> @@ -1034,7 +1034,7 @@ static int mt9p031_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *did)
->  {
->  	struct mt9p031_platform_data *pdata = mt9p031_get_pdata(client);
-> -	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-> +	struct i2c_adapter *adapter = client->adapter;
->  	struct mt9p031 *mt9p031;
->  	unsigned int i;
->  	int ret;
+	Call Trace:
+	boost_set_msr+0x50/0x80 [acpi_cpufreq]
+	cpuhp_invoke_callback+0x86/0x560
+	sort_range+0x20/0x20
+	cpuhp_thread_fun+0xb0/0x110
+	smpboot_thread_fn+0xef/0x160
+	kthread+0x113/0x130
+	kthread_create_worker_on_cpu+0x70/0x70
+	ret_from_fork+0x35/0x40
 
+To avoid this issue, don't forcibly set the CPB capability for a CPU
+when running under a hypervisor.
+
+Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: jiaxun.yang@flygoat.com
+Fixes: 0237199186e7 ("x86/CPU/AMD: Set the CPB bit unconditionally on F17h")
+Link: http://lkml.kernel.org/r/20190522221745.GA15789@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+[ Minor edits to the changelog. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/cpu/amd.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 6a25278e0092..da1f5e78363e 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -819,8 +819,11 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
+ {
+ 	set_cpu_cap(c, X86_FEATURE_ZEN);
+ 
+-	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
+-	if (!cpu_has(c, X86_FEATURE_CPB))
++	/*
++	 * Fix erratum 1076: CPB feature bit not being set in CPUID.
++	 * Always set it, except when running under a hypervisor.
++	 */
++	if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_CPB))
+ 		set_cpu_cap(c, X86_FEATURE_CPB);
+ }
+ 
 -- 
-Regards,
+2.20.1
 
-Laurent Pinchart
