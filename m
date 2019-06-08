@@ -2,52 +2,50 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F10C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D192CC468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C53C921707
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB95021537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994544;
-	bh=jER2l5vOxwExQUyhYylg8bbbLIIIXkHuDFLFAkQS8XU=;
+	s=default; t=1559994548;
+	bh=moJsJBMoYx4k8ivgkBq1tYWon+Oh5xmtgch09zQ/F4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xskrW5o0uEyfyc3hpsPd3WroLT9qXtOi7rxwcFPGa93Mjs4F1XX3FNVlQH+wIIMiF
-	 Dj18cEV1ce8pofLZLMJINNLX1lvnQOFGiUfwQcPddp2jBg5pvU4mcoAYZAzhyTtHkn
-	 iS1cNFmCjwBBqV5H3Xpekf4GmfaVqLQ5w3XdpkWs=
+	b=et/+p+poeh1d9omIDaBpgqDa6ojqyNIEXe+rdVyiHUZZSlDwx0fNgwx+YRjRZljZj
+	 o9SC/ESn47eV3QOZx1TcFgt+y3D6s/LoFswJnYEHv8KiO2zenWxNB20kAxkUWDZXJ9
+	 W+oDO7nyW8f0t8T7Zck+YFtk74jPiAm4I2F5QNUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbfFHLtE (ORCPT
+        id S1730033AbfFHLtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:49:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37820 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729918AbfFHLs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:48:59 -0400
+        id S1729981AbfFHLtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:49:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD6621707;
-        Sat,  8 Jun 2019 11:48:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EB2F21721;
+        Sat,  8 Jun 2019 11:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994539;
-        bh=jER2l5vOxwExQUyhYylg8bbbLIIIXkHuDFLFAkQS8XU=;
+        s=default; t=1559994541;
+        bh=moJsJBMoYx4k8ivgkBq1tYWon+Oh5xmtgch09zQ/F4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s4gi+m60eBa2Dsvq+74L+/xVNIEA8Apwok4WmGrAB6dUf8wCOM2vJrxBNya5D2RM4
-         ARFz6IwX340zdNbbSFkkVmtozt0/W7CXqT95RtAgXDiAVkAPg9P9vyXIF+Xydb0Fzm
-         Uta11Ej9SZCHcxaATiWOUfAmUQZqyQhCLtJ4JBp8=
+        b=LFszsnTHDNCKzxCsQyzC76VOKJ2ZjTMPHzee7VeDR22YaJyKmv0SZQ/3Ku51Bqj25
+         KnwD1pfniEPpjaQ+4m/yiSA0S3EjIjIZ4Z0cZyy6uLTq9hEzEUU2RbDCNaLQ1La0/a
+         se3byWP/PYYPOJOgctKQ/HvM1A5+TRmkN5YOt80g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 06/13] net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
-Date:   Sat,  8 Jun 2019 07:48:38 -0400
-Message-Id: <20190608114847.9973-6-sashal@kernel.org>
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 08/13] configfs: Fix use-after-free when accessing sd->s_dentry
+Date:   Sat,  8 Jun 2019 07:48:40 -0400
+Message-Id: <20190608114847.9973-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114847.9973-1-sashal@kernel.org>
 References: <20190608114847.9973-1-sashal@kernel.org>
@@ -60,54 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit 3e66b7cc50ef921121babc91487e1fb98af1ba6e ]
+[ Upstream commit f6122ed2a4f9c9c1c073ddf6308d1b2ac10e0781 ]
 
-Building with Clang reports the redundant use of MODULE_DEVICE_TABLE():
+In the vfs_statx() context, during path lookup, the dentry gets
+added to sd->s_dentry via configfs_attach_attr(). In the end,
+vfs_statx() kills the dentry by calling path_put(), which invokes
+configfs_d_iput(). Ideally, this dentry must be removed from
+sd->s_dentry but it doesn't if the sd->s_count >= 3. As a result,
+sd->s_dentry is holding reference to a stale dentry pointer whose
+memory is already freed up. This results in use-after-free issue,
+when this stale sd->s_dentry is accessed later in
+configfs_readdir() path.
 
-drivers/net/ethernet/dec/tulip/de4x5.c:2110:1: error: redefinition of '__mod_eisa__de4x5_eisa_ids_device_table'
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:90:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
-drivers/net/ethernet/dec/tulip/de4x5.c:2100:1: note: previous definition is here
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:85:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
+This issue can be easily reproduced, by running the LTP test case -
+sh fs_racer_file_list.sh /config
+(https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/racer/fs_racer_file_list.sh)
 
-This drops the one further from the table definition to match the common
-use of MODULE_DEVICE_TABLE().
-
-Fixes: 07563c711fbc ("EISA bus MODALIAS attributes support")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 76ae281f6307 ('configfs: fix race between dentry put and lookup')
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/dec/tulip/de4x5.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/configfs/dir.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/dec/tulip/de4x5.c b/drivers/net/ethernet/dec/tulip/de4x5.c
-index 3acde3b9b767..7799cf33cc6e 100644
---- a/drivers/net/ethernet/dec/tulip/de4x5.c
-+++ b/drivers/net/ethernet/dec/tulip/de4x5.c
-@@ -2106,7 +2106,6 @@ static struct eisa_driver de4x5_eisa_driver = {
- 		.remove  = de4x5_eisa_remove,
-         }
- };
--MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
- #endif
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index a7a1b218f308..8e709b641b55 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -58,15 +58,13 @@ static void configfs_d_iput(struct dentry * dentry,
+ 	if (sd) {
+ 		/* Coordinate with configfs_readdir */
+ 		spin_lock(&configfs_dirent_lock);
+-		/* Coordinate with configfs_attach_attr where will increase
+-		 * sd->s_count and update sd->s_dentry to new allocated one.
+-		 * Only set sd->dentry to null when this dentry is the only
+-		 * sd owner.
+-		 * If not do so, configfs_d_iput may run just after
+-		 * configfs_attach_attr and set sd->s_dentry to null
+-		 * even it's still in use.
++		/*
++		 * Set sd->s_dentry to null only when this dentry is the one
++		 * that is going to be killed.  Otherwise configfs_d_iput may
++		 * run just after configfs_attach_attr and set sd->s_dentry to
++		 * NULL even it's still in use.
+ 		 */
+-		if (atomic_read(&sd->s_count) <= 2)
++		if (sd->s_dentry == dentry)
+ 			sd->s_dentry = NULL;
  
- #ifdef CONFIG_PCI
+ 		spin_unlock(&configfs_dirent_lock);
 -- 
 2.20.1
 
