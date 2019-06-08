@@ -2,268 +2,97 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50439C468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74012C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A59F212F5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408192089E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 03:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dA3axcy3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sHErhbm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbfFHD41 (ORCPT
+        id S1730880AbfFHD4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Jun 2019 23:56:27 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41860 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730445AbfFHD40 (ORCPT
+        Fri, 7 Jun 2019 23:56:38 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53050 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730445AbfFHD4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Jun 2019 23:56:26 -0400
-Received: by mail-pl1-f194.google.com with SMTP id s24so1534189plr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 20:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Sg8hZnfRQyshVayh9AfBUaCUwYP0fG+PoifVRoQ1/2U=;
-        b=dA3axcy3OSjQBllR3jO2rSL28yV4HEUJp/aPnDeszFXA+QJykqsQIUJ72CJFJfYEfw
-         wdg907Km6KiqXC2789/OeRpcFlLBSZiEqKz1cQEJwy/XIHhLz8qR/HqqVrGp+0QeTjJc
-         WftaB+rnktSZBXZ74MuozosAkMHfiOKMwo6jY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Sg8hZnfRQyshVayh9AfBUaCUwYP0fG+PoifVRoQ1/2U=;
-        b=ZmuuptTUcIuwa10u4oqZyu5QqSic6AMM4tetbnip6MXdb04JjO8uKEnNpkIaHjX05o
-         SVUNfalhlc8Gq/cX+4McIwsdPW1usfKd5QEnxND7HA8819j4dY4iVkfKL3uKVlsdCdUK
-         kqsvNz56nQkXokx0R0XktHFPAbTgHnBqNdGKJYlmnKn8G/fWdAGeJ+OSF3XR2os0+0nz
-         CBVc7RAQda/GvC5hrneBcrMqGexorkn5SHvuQwN6VtavjBah31p834YO9Wcjja9sDLjq
-         WHs6d8Y4g6LF+QSEp3fcXMVwtMszycPzgL39RsOXCFrzRJH9XeYoHTP9iRp+yLtjef2a
-         n4zQ==
-X-Gm-Message-State: APjAAAUkZhf5DQwRQhttSsgc7DROYhz1NspoPh3djKMFHwIQmp3nGHeh
-        euOp7waup9jCS15n8WUX26DoBQ==
-X-Google-Smtp-Source: APXvYqxOa+LbIfSKzO98kP7ZimZglTjC5TFvL11aIkaQBz55ZFGw6dQUA6lPd2PVhnyZkGPHF3XY8g==
-X-Received: by 2002:a17:902:6948:: with SMTP id k8mr59073078plt.81.1559966186036;
-        Fri, 07 Jun 2019 20:56:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c6sm6781898pfm.163.2019.06.07.20.56.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 20:56:25 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 20:56:24 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v16 16/16] selftests, arm64: add a selftest for passing
- tagged pointers to kernel
-Message-ID: <201906072055.7DFED7B@keescook>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <9e1b5998a28f82b16076fc85ab4f88af5381cf74.1559580831.git.andreyknvl@google.com>
+        Fri, 7 Jun 2019 23:56:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x583uauE087580;
+        Fri, 7 Jun 2019 22:56:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1559966196;
+        bh=xApOPbaphWPzxJKeQBh1cTOQCKroY+KpTKbui6gP1u0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=sHErhbm31wd1mMeI6q39S/hwgyi5oGATYBqAjIu1ZeM5jj3cFF9w1QZoxonsrao9D
+         rEf7HM3GYAp3iGdvEIVRt5GWgu5B64RSUcQwcEH1nuBEP52qiyqFAKsl8q3dIlN6ts
+         H+JM9j7tlKAScZAM6N0uxJBsQU1xCVD3JzeoE+yY=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x583uaUE061427
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Jun 2019 22:56:36 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 7 Jun
+ 2019 22:56:35 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 7 Jun 2019 22:56:35 -0500
+Received: from [172.22.216.123] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x583uW8K064766;
+        Fri, 7 Jun 2019 22:56:33 -0500
+Subject: Re: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
+ support
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <t-kristo@ti.com>
+References: <20190516043218.8222-1-j-keerthy@ti.com>
+ <20190516043218.8222-4-j-keerthy@ti.com>
+ <20190522153528.GG8582@sirena.org.uk>
+ <1712197d-7d43-38a8-efde-11b99537eae9@ti.com>
+ <20190528132755.GK2456@sirena.org.uk>
+From:   keerthy <j-keerthy@ti.com>
+Message-ID: <e68d9939-a56a-b3c5-7f6d-e5783e16a6de@ti.com>
+Date:   Sat, 8 Jun 2019 09:26:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e1b5998a28f82b16076fc85ab4f88af5381cf74.1559580831.git.andreyknvl@google.com>
+In-Reply-To: <20190528132755.GK2456@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 06:55:18PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
+
+
+On 5/28/2019 6:57 PM, Mark Brown wrote:
+> On Tue, May 28, 2019 at 03:23:41PM +0530, Keerthy wrote:
+>> On 22/05/19 9:05 PM, Mark Brown wrote:
+>>> On Thu, May 16, 2019 at 10:02:18AM +0530, Keerthy wrote:
 > 
-> This patch adds a simple test, that calls the uname syscall with a
-> tagged user pointer as an argument. Without the kernel accepting tagged
-> user pointers the test fails with EFAULT.
+>>> Acked-by: Mark Brown <broonie@kernel.org>
 > 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-
-I'm adding Shuah to CC in case she has some suggestions about the new
-selftest.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  tools/testing/selftests/arm64/.gitignore      |  1 +
->  tools/testing/selftests/arm64/Makefile        | 22 ++++++++++
->  .../testing/selftests/arm64/run_tags_test.sh  | 12 ++++++
->  tools/testing/selftests/arm64/tags_lib.c      | 42 +++++++++++++++++++
->  tools/testing/selftests/arm64/tags_test.c     | 18 ++++++++
->  5 files changed, 95 insertions(+)
->  create mode 100644 tools/testing/selftests/arm64/.gitignore
->  create mode 100644 tools/testing/selftests/arm64/Makefile
->  create mode 100755 tools/testing/selftests/arm64/run_tags_test.sh
->  create mode 100644 tools/testing/selftests/arm64/tags_lib.c
->  create mode 100644 tools/testing/selftests/arm64/tags_test.c
+>> This patch will come via the mfd branch?
 > 
-> diff --git a/tools/testing/selftests/arm64/.gitignore b/tools/testing/selftests/arm64/.gitignore
-> new file mode 100644
-> index 000000000000..e8fae8d61ed6
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/.gitignore
-> @@ -0,0 +1 @@
-> +tags_test
-> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selftests/arm64/Makefile
-> new file mode 100644
-> index 000000000000..9dee18727923
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/Makefile
-> @@ -0,0 +1,22 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +include ../lib.mk
-> +
-> +# ARCH can be overridden by the user for cross compiling
-> +ARCH ?= $(shell uname -m 2>/dev/null || echo not)
-> +
-> +ifneq (,$(filter $(ARCH),aarch64 arm64))
-> +
-> +TEST_CUSTOM_PROGS := $(OUTPUT)/tags_test
-> +
-> +$(OUTPUT)/tags_test: tags_test.c $(OUTPUT)/tags_lib.so
-> +	$(CC) -o $@ $(CFLAGS) $(LDFLAGS) $<
-> +
-> +$(OUTPUT)/tags_lib.so: tags_lib.c
-> +	$(CC) -o $@ -shared $(CFLAGS) $(LDFLAGS) $^
-> +
-> +TEST_PROGS := run_tags_test.sh
-> +
-> +all: $(TEST_CUSTOM_PROGS)
-> +
-> +endif
-> diff --git a/tools/testing/selftests/arm64/run_tags_test.sh b/tools/testing/selftests/arm64/run_tags_test.sh
-> new file mode 100755
-> index 000000000000..2bbe0cd4220b
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/run_tags_test.sh
-> @@ -0,0 +1,12 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +echo "--------------------"
-> +echo "running tags test"
-> +echo "--------------------"
-> +LD_PRELOAD=./tags_lib.so ./tags_test
-> +if [ $? -ne 0 ]; then
-> +	echo "[FAIL]"
-> +else
-> +	echo "[PASS]"
-> +fi
-> diff --git a/tools/testing/selftests/arm64/tags_lib.c b/tools/testing/selftests/arm64/tags_lib.c
-> new file mode 100644
-> index 000000000000..8a674509216e
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/tags_lib.c
-> @@ -0,0 +1,42 @@
-> +#include <stdlib.h>
-> +
-> +#define TAG_SHIFT	(56)
-> +#define TAG_MASK	(0xffUL << TAG_SHIFT)
-> +
-> +void *__libc_malloc(size_t size);
-> +void __libc_free(void *ptr);
-> +void *__libc_realloc(void *ptr, size_t size);
-> +void *__libc_calloc(size_t nmemb, size_t size);
-> +
-> +static void *tag_ptr(void *ptr)
-> +{
-> +	unsigned long tag = rand() & 0xff;
-> +	if (!ptr)
-> +		return ptr;
-> +	return (void *)((unsigned long)ptr | (tag << TAG_SHIFT));
-> +}
-> +
-> +static void *untag_ptr(void *ptr)
-> +{
-> +	return (void *)((unsigned long)ptr & ~TAG_MASK);
-> +}
-> +
-> +void *malloc(size_t size)
-> +{
-> +	return tag_ptr(__libc_malloc(size));
-> +}
-> +
-> +void free(void *ptr)
-> +{
-> +	__libc_free(untag_ptr(ptr));
-> +}
-> +
-> +void *realloc(void *ptr, size_t size)
-> +{
-> +	return tag_ptr(__libc_realloc(untag_ptr(ptr), size));
-> +}
-> +
-> +void *calloc(size_t nmemb, size_t size)
-> +{
-> +	return tag_ptr(__libc_calloc(nmemb, size));
-> +}
-> diff --git a/tools/testing/selftests/arm64/tags_test.c b/tools/testing/selftests/arm64/tags_test.c
-> new file mode 100644
-> index 000000000000..263b302874ed
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/tags_test.c
-> @@ -0,0 +1,18 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <unistd.h>
-> +#include <stdint.h>
-> +#include <sys/utsname.h>
-> +
-> +int main(void)
-> +{
-> +	struct utsname *ptr;
-> +	int err;
-> +
-> +	ptr = (struct utsname *)malloc(sizeof(*ptr));
-> +	err = uname(ptr);
-> +	free(ptr);
-> +	return err;
-> +}
-> -- 
-> 2.22.0.rc1.311.g5d7573a151-goog
-> 
+> I'd expect so, IIRC it had a build dependency on the earlier patches in
+> the series so if that doesn't happen I'll need to merge the relevant MFD
+> commits.
 
--- 
-Kees Cook
+Mark,
+
+mfd patches are on linux-next already. Hope you can pull this one now 
+that dependencies are met.
+
+- Keerthy
+> 
