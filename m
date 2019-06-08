@@ -2,57 +2,39 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77372C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A19C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 491C1214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559992831;
-	bh=FXMideIF/i7BlqdYMx4NE3DjZcbXMBRlAq1d9sy/jAU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s0WVC8zFARLgSQccvQI7rCZxqxYyo+SntH3gHk9Hp+x7g9kvWySZ3WxIVO6DQQq8K
-	 eK+y99z2eBmqoU2i2u7M+X7Y8YG0RT1EOEQfcF+N5Y0b8F7Fg6SadYBblcAOy/cGBo
-	 BmaorDmhrOaXu3XnyKOcM/3Blhb0YWtSYm37Voys=
+	by mail.kernel.org (Postfix) with ESMTP id B8FF9214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfFHLUa (ORCPT
+        id S1727029AbfFHLVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbfFHLU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:20:29 -0400
+        Sat, 8 Jun 2019 07:21:52 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:59128 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfFHLVv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:21:51 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C7D9214AE;
-        Sat,  8 Jun 2019 11:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559992828;
-        bh=FXMideIF/i7BlqdYMx4NE3DjZcbXMBRlAq1d9sy/jAU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=H23J+hIpmBfyH9PXu0JdQJ0s5ae391wL0DDdQOJhfBk4Ya2ea5X0rrRM0uFiyw+6q
-         TeKnTL1EVfjuiD/hIMS2J/I4+2j0zpXavDRvlXy4pB5v1T2hp6IFGgnyuPsHIk8lhc
-         mL8npCdgsImvm2PQyz/7L4elNJPuRIsQ7TN6TBB0=
-Date:   Sat, 8 Jun 2019 12:20:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Renato Lui Geh <renatogeh@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] MAINTAINERS: add entry for ad7780 adc driver
-Message-ID: <20190608122000.46440386@archlinux>
-In-Reply-To: <7ccb64ba4da8f24981009187e975d71372d62fbf.1558746978.git.renatogeh@gmail.com>
-References: <cover.1558746978.git.renatogeh@gmail.com>
-        <7ccb64ba4da8f24981009187e975d71372d62fbf.1558746978.git.renatogeh@gmail.com>
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 96F479E9182;
+        Sat,  8 Jun 2019 12:21:49 +0100 (BST)
+Date:   Sat, 8 Jun 2019 12:21:47 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-iio@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: adc: meson_saradc: update with SPDX Licence
+ identifier
+Message-ID: <20190608122147.7affaaaf@archlinux>
+In-Reply-To: <CAFBinCDETXBGm=_TCJUU4dpkvevbVfh5mAeYD6-O94sRHJnFbQ@mail.gmail.com>
+References: <20190527134314.4340-1-narmstrong@baylibre.com>
+        <CAFBinCDETXBGm=_TCJUU4dpkvevbVfh5mAeYD6-O94sRHJnFbQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,41 +44,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 22:26:55 -0300
-Renato Lui Geh <renatogeh@gmail.com> wrote:
+On Mon, 27 May 2019 20:03:18 +0200
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-> This patch adds a MAINTAINERS entry for the AD7780 ADC driver.
-> 
-> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-to be completely ignored by the autobuilders.
+> On Mon, May 27, 2019 at 3:43 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >
+> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>  
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+Applied.
 
 Thanks,
 
 Jonathan
-
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 54c8e14fae98..d12685c5b09a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -880,6 +880,15 @@ S:	Supported
->  F:	drivers/iio/adc/ad7768-1.c
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
->  
-> +ANALOG DEVICES INC AD7780 DRIVER
-> +M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> +M:	Renato Lui Geh <renatogeh@gmail.com>
-> +L:	linux-iio@vger.kernel.org
-> +W:	http://ez.analog.com/community/linux-device-drivers
-> +S:	Supported
-> +F:	drivers/iio/adc/ad7780.c
-> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> +
->  ANALOG DEVICES INC AD9389B DRIVER
->  M:	Hans Verkuil <hans.verkuil@cisco.com>
->  L:	linux-media@vger.kernel.org
-
