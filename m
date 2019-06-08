@@ -2,93 +2,134 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F45C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45DFC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4207214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994108;
-	bh=/w28zriEqwe1WglR1jS3OgJX6iXfDf02/uFj40uayrI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TRmpIKDi9Y/6zgXh/EulVcTVL4cs/jpsTg28+AL7YwX2q1sB4oG/a+meghHFYt6A4
-	 TUjzo3IMtCLJFTlAsuAUMGWl+gLhfrbzfKVWmHDgobzgrTLx49cqPu5P+mE+Y/FacR
-	 A2X2CcHdtlU2GTpFTW2lUkrrqVUMhBspCHaenpjQ=
+	by mail.kernel.org (Postfix) with ESMTP id B6A4F214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfFHLls (ORCPT
+        id S1727505AbfFHLlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:41:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59074 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:41:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34753 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfFHLlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:41:45 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56110214D8;
-        Sat,  8 Jun 2019 11:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994105;
-        bh=/w28zriEqwe1WglR1jS3OgJX6iXfDf02/uFj40uayrI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kh8jVQMgw9PHeHeV3GZZ9DYmLmLY8f3fcyn9KKk9bnJJnpCyRFeK7zFsC6f+NN3HC
-         SQ5kYfIw8TtGatkyBjhCSuDIpaCWXMwlrStcSHnY23CGR/tLuXQuTgbk+vD/wSwbrf
-         Ld3M7pIseGMW/PkqJssXcMztu4FYMTymCrgj+WWk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 56/70] arm64: fix syscall_fn_t type
-Date:   Sat,  8 Jun 2019 07:39:35 -0400
-Message-Id: <20190608113950.8033-56-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
-References: <20190608113950.8033-1-sashal@kernel.org>
+        id S1727438AbfFHLlv (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:41:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2019 04:41:50 -0700
+X-ExtLoop1: 1
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.214.84]) ([10.254.214.84])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jun 2019 04:41:48 -0700
+Subject: Re: [PATCH v2 4/7] perf diff: Use hists to manage basic blocks per
+ symbol
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
+ <1559572577-25436-5-git-send-email-yao.jin@linux.intel.com>
+ <20190605114417.GB5868@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <4bbc5085-c8b0-5e36-419c-6ee754186027@linux.intel.com>
+Date:   Sat, 8 Jun 2019 19:41:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190605114417.GB5868@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit 8ef8f368ce72b5e17f7c1f1ef15c38dcfd0fef64 ]
 
-Syscall wrappers in <asm/syscall_wrapper.h> use const struct pt_regs *
-as the argument type. Use const in syscall_fn_t as well to fix indirect
-call type mismatches with Control-Flow Integrity checking.
+On 6/5/2019 7:44 PM, Jiri Olsa wrote:
+> On Mon, Jun 03, 2019 at 10:36:14PM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+>> index 43623fa..d1641da 100644
+>> --- a/tools/perf/util/sort.h
+>> +++ b/tools/perf/util/sort.h
+>> @@ -79,6 +79,9 @@ struct hist_entry_diff {
+>>   
+>>   		/* HISTC_WEIGHTED_DIFF */
+>>   		s64	wdiff;
+>> +
+>> +		/* PERF_HPP_DIFF__CYCLES */
+>> +		s64	cycles;
+>>   	};
+>>   };
+>>   
+>> @@ -143,6 +146,9 @@ struct hist_entry {
+>>   	struct branch_info	*branch_info;
+>>   	long			time;
+>>   	struct hists		*hists;
+>> +	void			*block_hists;
+>> +	int			block_idx;
+>> +	int			block_num;
+>>   	struct mem_info		*mem_info;
+>>   	struct block_info	*block_info;
+> 
+> could you please not add the new block* stuff in here,
+> and instead use the "c2c model" and use yourr own struct
+> on top of hist_entry? we are trying to librarize this
+> stuff and keep only necessary things in here..
+> 
+> you're already using hist_entry_ops, so should be easy
+> 
+> something like:
+> 
+> 	struct block_hist_entry {
+> 		void			*block_hists;
+> 		int			block_idx;
+> 		int			block_num;
+> 		struct block_info	*block_info;
+> 
+> 		struct hist_entry	he;
+> 	};
+> 
+> 
+> 
+> jirka
+> 
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/include/asm/syscall.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Jiri,
 
-diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
-index a179df3674a1..6206ab9bfcfc 100644
---- a/arch/arm64/include/asm/syscall.h
-+++ b/arch/arm64/include/asm/syscall.h
-@@ -20,7 +20,7 @@
- #include <linux/compat.h>
- #include <linux/err.h>
- 
--typedef long (*syscall_fn_t)(struct pt_regs *regs);
-+typedef long (*syscall_fn_t)(const struct pt_regs *regs);
- 
- extern const syscall_fn_t sys_call_table[];
- 
--- 
-2.20.1
+After more considerations, maybe I can't move these stuffs from 
+hist_entry to block_hist_entry.
+
+Actually we use 2 kinds of hist_entry in this patch series. On kind of 
+hist_entry is for symbol/function. The other kind of hist_entry is for 
+basic block.
+
+@@ -143,6 +146,9 @@ struct hist_entry {
+   	struct branch_info	*branch_info;
+   	long			time;
+   	struct hists		*hists;
++	void			*block_hists;
++	int			block_idx;
++	int			block_num;
+   	struct mem_info		*mem_info;
+   	struct block_info	*block_info;
+
+The above hist_entry is actually for symbol/function. This patch series 
+collects all basic blocks in a symbol/function, so it needs a hists in 
+struct hist_entry (block_hists) to point to the hists of basic blocks.
+
+Correct me if I'm wrong.
+
+Thanks
+Jin Yao
 
