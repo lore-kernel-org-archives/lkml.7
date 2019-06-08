@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABE2C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81E5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27BBD216C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E91216C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994430;
-	bh=nSqYJfl3Uq/zPFW2AfQZzQeuHfLrwlL8BNpdW0P80Ew=;
+	s=default; t=1559994432;
+	bh=pn3uXfupcXHKnHLZP5by70hUfubirNwEj62JCf/QL5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P9ajC7lJfm4GTBG+1FTCaCszlosvnXzdho/N7H2WFs1YeWRmbxt87K/xo7GwylRaI
-	 HFn4WNsi7PzdXlzs0MdxQB8LEH3lEX7V25OFAhAim+b7AN1tMHdMe0SEWtWSw4Tg/S
-	 lntKGnIkzZt0ONFAhyqkq3RUAleAnoulvGNb/DMU=
+	b=tBYpmpUxWE+0iLWkKIaioqVD/UyfVBjlNHz9aCiKtir6aN6SuNwkItkCUy8NZ5w+P
+	 ZO1d3n57KKvdymTO1vpXDJ5VEGMdimQ7hKeVGPSggeCNRWC75fJa6LFblfjn6eYiA/
+	 /1w8CGv7cRq4EGuZk7WwUJ4w/WcPTYwinl4bB1fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbfFHLrJ (ORCPT
+        id S1729142AbfFHLrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35530 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727607AbfFHLqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:46:51 -0400
+        id S1729102AbfFHLrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BBB62168B;
-        Sat,  8 Jun 2019 11:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 451A0214DA;
+        Sat,  8 Jun 2019 11:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994411;
-        bh=nSqYJfl3Uq/zPFW2AfQZzQeuHfLrwlL8BNpdW0P80Ew=;
+        s=default; t=1559994428;
+        bh=pn3uXfupcXHKnHLZP5by70hUfubirNwEj62JCf/QL5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwLWCjx0RKNZ3qrRtUfeUlwYKCV6uu1qoVPYur2oUD28+L6n1fCcRphksA7PZqyvX
-         jMkD/dVj6vbSuZoR8xupq00KaJ67ywqr3aApzzvoY9BRlkpqYeQK+u9wuened9A1Al
-         ASRdPN2ompHcoq/yQ856dYbh2zeD63oee67v1yVQ=
+        b=RN37rsbO2EOlfIKl65i6moNjtdczYVHVpq6aMIyyK/YKZs6llnySvypYrE9zb3wr4
+         AcTIrU2YYtZ2UtQSElG70U8LkIrnG6UmWupWet0z8MSTGBzd5EyHytxk+2qSF1ELSM
+         8CA76lAMsnv+hyh4e8fEgMgIAzLTyQJ7qLy6C1Oc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jagdish Motwani <jagdish.motwani@sophos.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/31] netfilter: nf_queue: fix reinject verdict handling
-Date:   Sat,  8 Jun 2019 07:46:14 -0400
-Message-Id: <20190608114646.9415-3-sashal@kernel.org>
+Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Pavaman Subramaniyam <pavsubra@in.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 07/31] powerpc/powernv: Return for invalid IMC domain
+Date:   Sat,  8 Jun 2019 07:46:18 -0400
+Message-Id: <20190608114646.9415-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
@@ -61,37 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagdish Motwani <jagdish.motwani@sophos.com>
+From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
 
-[ Upstream commit 946c0d8e6ed43dae6527e878d0077c1e11015db0 ]
+[ Upstream commit b59bd3527fe3c1939340df558d7f9d568fc9f882 ]
 
-This patch fixes netfilter hook traversal when there are more than 1 hooks
-returning NF_QUEUE verdict. When the first queue reinjects the packet,
-'nf_reinject' starts traversing hooks with a proper hook_index. However,
-if it again receives a NF_QUEUE verdict (by some other netfilter hook), it
-queues the packet with a wrong hook_index. So, when the second queue
-reinjects the packet, it re-executes hooks in between.
+Currently init_imc_pmu() can fail either because we try to register an
+IMC unit with an invalid domain (i.e an IMC node not supported by the
+kernel) or something went wrong while registering a valid IMC unit. In
+both the cases kernel provides a 'Register failed' error message.
 
-Fixes: 960632ece694 ("netfilter: convert hook list to an array")
-Signed-off-by: Jagdish Motwani <jagdish.motwani@sophos.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+For example when trace-imc node is not supported by the kernel, but
+skiboot advertises a trace-imc node we print:
+
+  IMC Unknown Device type
+  IMC PMU (null) Register failed
+
+To avoid confusion just print the unknown device type message, before
+attempting PMU registration, so the second message isn't printed.
+
+Fixes: 8f95faaac56c ("powerpc/powernv: Detect and create IMC device")
+Reported-by: Pavaman Subramaniyam <pavsubra@in.ibm.com>
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+[mpe: Reword change log a bit]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_queue.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/platforms/powernv/opal-imc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
-index f7e21953b1de..8260b1e73bbd 100644
---- a/net/netfilter/nf_queue.c
-+++ b/net/netfilter/nf_queue.c
-@@ -193,6 +193,7 @@ static unsigned int nf_iterate(struct sk_buff *skb,
- repeat:
- 		verdict = nf_hook_entry_hookfn(hook, skb, state);
- 		if (verdict != NF_ACCEPT) {
-+			*index = i;
- 			if (verdict != NF_REPEAT)
- 				return verdict;
- 			goto repeat;
+diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
+index 6914b289c86b..7b93191dc2e3 100644
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -87,6 +87,10 @@ static int imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
+ 	struct imc_pmu *pmu_ptr;
+ 	u32 offset;
+ 
++	/* Return for unknown domain */
++	if (domain < 0)
++		return -EINVAL;
++
+ 	/* memory for pmu */
+ 	pmu_ptr = kzalloc(sizeof(struct imc_pmu), GFP_KERNEL);
+ 	if (!pmu_ptr)
 -- 
 2.20.1
 
