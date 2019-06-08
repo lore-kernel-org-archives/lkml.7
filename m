@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0C5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EEBC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E725E214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA3F214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994855;
-	bh=T9EQLESZEqnofQb5sqhGtTE8EjOGTkxMRhN4PNcztCw=;
+	s=default; t=1559994859;
+	bh=AU78Glg8yGgI2HjvXfqR0mHx9gGz2oJZlxUmfeLBagU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dd6Iu6DPgDTx/woCFxojxsIOsn1KpHmpq8dbWzE71oKoFTm7UpgjzzpuulmVvmtML
-	 nG4trW5BYO2G4FnwUCeDz0ONxZpdeIjc0eBtxeXMbx6FuwBLnduB9sUX9sC8dcvC8N
-	 +JcdNqQUIXRELq5iv86wRxOw3KnfIo7XmIWXC1VI=
+	b=ZlUZXHhC05sxangMNkQ1BYUHNbMZRE16tk6oIZ70o1C716YKeHvWMyldJARDJDBHR
+	 A9I5+SWz8iMZCSmfpK79ajAmYSVLceAZ+EWgZKwAzvOf7U1/KUyf0Kq/S/1Lrkz34s
+	 YGqrd2Tv6M2LtukQr0BGyej+BT9m7NRkGlNvnBWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfFHLk2 (ORCPT
+        id S1729448AbfFHLyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:40:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57544 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:54:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727538AbfFHLkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:23 -0400
+        id S1727620AbfFHLkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E053214AF;
-        Sat,  8 Jun 2019 11:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3D1421670;
+        Sat,  8 Jun 2019 11:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994022;
-        bh=T9EQLESZEqnofQb5sqhGtTE8EjOGTkxMRhN4PNcztCw=;
+        s=default; t=1559994030;
+        bh=AU78Glg8yGgI2HjvXfqR0mHx9gGz2oJZlxUmfeLBagU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTlZ4Swj1Ulxs+8BD3gEl+DHBrtWaUj+fjhcgkTZlXapycWmKiAJhIYB/e6MOxD/j
-         qmvAczqKvmytJvH643nf88S5uSupjhjc6oVKQl2zhJJtodU0FcbMrlPUV2jyZlMbIY
-         cIDJixiRGARxpVjIx2rFjwe1FVwcLIahE2F+mVp0=
+        b=Dp1+O9iGWfaarH1eTaXNdMbF9ahUpLSkf3gWjLMhIKFp/xBHkoEdlPQp80rSvzKJb
+         tLZvvPA8izILBElufyBjznNanhkhpYnqMaQdj5mZGXs8J1wkC8KjYTFRNZfwUuoo6X
+         VmYN/HMjLr2bxBtl6hebZXHRabkTjz4/7TDKWp54=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frank van der Linden <fllinden@amazon.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
+Cc:     Gen Zhang <blackgod016574@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        jiaxun.yang@flygoat.com, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 20/70] x86/CPU/AMD: Don't force the CPB cap when running under a hypervisor
-Date:   Sat,  8 Jun 2019 07:38:59 -0400
-Message-Id: <20190608113950.8033-20-sashal@kernel.org>
+        Rob Bradford <robert.bradford@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 25/70] efi/x86/Add missing error handling to old_memmap 1:1 mapping code
+Date:   Sat,  8 Jun 2019 07:39:04 -0400
+Message-Id: <20190608113950.8033-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -64,68 +65,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank van der Linden <fllinden@amazon.com>
+From: Gen Zhang <blackgod016574@gmail.com>
 
-[ Upstream commit 2ac44ab608705948564791ce1d15d43ba81a1e38 ]
+[ Upstream commit 4e78921ba4dd0aca1cc89168f45039add4183f8e ]
 
-For F17h AMD CPUs, the CPB capability ('Core Performance Boost') is forcibly set,
-because some versions of that chip incorrectly report that they do not have it.
+The old_memmap flow in efi_call_phys_prolog() performs numerous memory
+allocations, and either does not check for failure at all, or it does
+but fails to propagate it back to the caller, which may end up calling
+into the firmware with an incomplete 1:1 mapping.
 
-However, a hypervisor may filter out the CPB capability, for good
-reasons. For example, KVM currently does not emulate setting the CPB
-bit in MSR_K7_HWCR, and unchecked MSR access errors will be thrown
-when trying to set it as a guest:
+So let's fix this by returning NULL from efi_call_phys_prolog() on
+memory allocation failures only, and by handling this condition in the
+caller. Also, clean up any half baked sets of page tables that we may
+have created before returning with a NULL return value.
 
-	unchecked MSR access error: WRMSR to 0xc0010015 (tried to write 0x0000000001000011) at rIP: 0xffffffff890638f4 (native_write_msr+0x4/0x20)
+Note that any failure at this level will trigger a panic() two levels
+up, so none of this makes a huge difference, but it is a nice cleanup
+nonetheless.
 
-	Call Trace:
-	boost_set_msr+0x50/0x80 [acpi_cpufreq]
-	cpuhp_invoke_callback+0x86/0x560
-	sort_range+0x20/0x20
-	cpuhp_thread_fun+0xb0/0x110
-	smpboot_thread_fn+0xef/0x160
-	kthread+0x113/0x130
-	kthread_create_worker_on_cpu+0x70/0x70
-	ret_from_fork+0x35/0x40
+[ardb: update commit log, add efi_call_phys_epilog() call on error path]
 
-To avoid this issue, don't forcibly set the CPB capability for a CPU
-when running under a hypervisor.
-
-Signed-off-by: Frank van der Linden <fllinden@amazon.com>
-Acked-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rob Bradford <robert.bradford@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: jiaxun.yang@flygoat.com
-Fixes: 0237199186e7 ("x86/CPU/AMD: Set the CPB bit unconditionally on F17h")
-Link: http://lkml.kernel.org/r/20190522221745.GA15789@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
-[ Minor edits to the changelog. ]
+Cc: linux-efi@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190525112559.7917-2-ard.biesheuvel@linaro.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/amd.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/platform/efi/efi.c    | 2 ++
+ arch/x86/platform/efi/efi_64.c | 9 ++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 01004bfb1a1b..524709dcf749 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -820,8 +820,11 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
- {
- 	set_cpu_cap(c, X86_FEATURE_ZEN);
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index e1cb01a22fa8..a7189a3b4d70 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -85,6 +85,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
+ 	pgd_t *save_pgd;
  
--	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
--	if (!cpu_has(c, X86_FEATURE_CPB))
-+	/*
-+	 * Fix erratum 1076: CPB feature bit not being set in CPUID.
-+	 * Always set it, except when running under a hypervisor.
-+	 */
-+	if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_CPB))
- 		set_cpu_cap(c, X86_FEATURE_CPB);
+ 	save_pgd = efi_call_phys_prolog();
++	if (!save_pgd)
++		return EFI_ABORTED;
+ 
+ 	/* Disable interrupts around EFI calls: */
+ 	local_irq_save(flags);
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index cf0347f61b21..08ce8177c3af 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -84,13 +84,15 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 
+ 	if (!efi_enabled(EFI_OLD_MEMMAP)) {
+ 		efi_switch_mm(&efi_mm);
+-		return NULL;
++		return efi_mm.pgd;
+ 	}
+ 
+ 	early_code_mapping_set_exec(1);
+ 
+ 	n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
+ 	save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
++	if (!save_pgd)
++		return NULL;
+ 
+ 	/*
+ 	 * Build 1:1 identity mapping for efi=old_map usage. Note that
+@@ -138,10 +140,11 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 		pgd_offset_k(pgd * PGDIR_SIZE)->pgd &= ~_PAGE_NX;
+ 	}
+ 
+-out:
+ 	__flush_tlb_all();
+-
+ 	return save_pgd;
++out:
++	efi_call_phys_epilog(save_pgd);
++	return NULL;
  }
  
+ void __init efi_call_phys_epilog(pgd_t *save_pgd)
 -- 
 2.20.1
 
