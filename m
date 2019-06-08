@@ -2,121 +2,63 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89EBC468BD
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD1DC468C1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87CF21473
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TxsNOhcU"
+	by mail.kernel.org (Postfix) with ESMTP id BF920208E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfFHEKt (ORCPT
+        id S1727156AbfFHEWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 00:10:49 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38814 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfFHEKs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 00:10:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a186so2246211pfa.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=crP/L6ZX28vkkYT7tQbRmMKy/ZkhEnI0JhfxmVeFjC0=;
-        b=TxsNOhcUk2dUhjgJIcbkyLXBtKqvJpHTaNc+xRSs9moW2ndwxj0wvHpb7UdzZ8GIHB
-         kLyvVG7zidxP9IwSJaymt3F8UL/RjVnz25slMDWhjSipyy7NK5DrrZByM4hqIzNMUSwe
-         ps+y0MD8eWL3A3X5z+GVpgopfFtTJLERmnFQgsMBKRMuDXgI16xf4cX5zcQqBZ0JbZdv
-         UFvzSVX0RPSdSceNL453+7PL2y9nE2pm1Vr6heypDuiZ0SQFVNO8xElhZJO5HQFMq4N8
-         EQ3h/DKqO7j8gM2LNhNJd3H3U9/qGXBzsfz16WMsfUUgYOqNRTcZIB6THFxBwhxXZGjN
-         8Dsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=crP/L6ZX28vkkYT7tQbRmMKy/ZkhEnI0JhfxmVeFjC0=;
-        b=DfRDztyDOXAI/6uEucoh+MTRJAZE+AwQFq+G+IEaxOmHkDKgTQiwrxJaA9KU2ciuHK
-         YCriiYNL/60+eF9pTaCVUA94vOO4CNtG5w81gEqYPvtu1VjIF9HCZd9d+95PmxekvOXA
-         Rl37yds35aMJGpTKYxzUQ34J6AKHJayozWy3NnXhy72DKHNI1aYdQEeqECN7XabUtE0m
-         TknOO3GE5zX4j1N2uhvHYyRehsUSW0ApJzOfWtmVbfVg/0FrKHbHkTwueHDP3PVKz0C4
-         SyY2r/lqofu7M4/pODCtebtsShh7NHgUfzX3zAOHWGP1msjEs1LPzj+tcvxufSB+vXvU
-         Lkuw==
-X-Gm-Message-State: APjAAAUR0l7cIlKD1iq9dFkLlT4Jwx4FJFuO8bLJ1eW455PKLQB3RFMj
-        aLSAgRZsxxtzEUqVvI8SCuv0wA==
-X-Google-Smtp-Source: APXvYqyqDR2r/6Uj2YzgTATzPBXHYoPMxcYRP/mHWDNK1dDw68dJRtVmbbW/lRrBdRydM7vET5JDPA==
-X-Received: by 2002:a63:ee0a:: with SMTP id e10mr5868676pgi.28.1559967047717;
-        Fri, 07 Jun 2019 21:10:47 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b35sm3516670pjc.15.2019.06.07.21.10.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Jun 2019 21:10:46 -0700 (PDT)
-Date:   Fri, 7 Jun 2019 21:10:44 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        jlhugo@gmail.com, linux-i2c@vger.kernel.org,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/8] pinctrl: msm: Add ability for drivers to supply a
- reserved GPIO list
-Message-ID: <20190608041044.GK24059@builder>
-References: <20190605114302.22509-1-lee.jones@linaro.org>
- <20190605114302.22509-3-lee.jones@linaro.org>
- <CACRpkdaEe3uKAsSuhbToevXH1cMsuMUvwaopLPuD+JkDTnuEnQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaEe3uKAsSuhbToevXH1cMsuMUvwaopLPuD+JkDTnuEnQ@mail.gmail.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+        Sat, 8 Jun 2019 00:22:07 -0400
+Received: from gate.crashing.org ([63.228.1.57]:51244 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbfFHEWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 00:22:06 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x584LPir014050;
+        Fri, 7 Jun 2019 23:21:26 -0500
+Message-ID: <7697a9d10777b28ae79fdffdde6d0985555f6310.camel@kernel.crashing.org>
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Sat, 08 Jun 2019 14:21:23 +1000
+In-Reply-To: <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+         <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 07 Jun 16:02 PDT 2019, Linus Walleij wrote:
 
-> On Wed, Jun 5, 2019 at 1:43 PM Lee Jones <lee.jones@linaro.org> wrote:
-> 
-> > When booting MSM based platforms with Device Tree or some ACPI
-> > implementations, it is possible to provide a list of reserved pins
-> > via the 'gpio-reserved-ranges' and 'gpios' properties respectively.
-> > However some ACPI tables are not populated with this information,
-> > thus it has to come from a knowledgable device driver instead.
-> >
-> > Here we provide the MSM common driver with additional support to
-> > parse this informtion and correctly populate the widely used
-> > 'valid_mask'.
-> >
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> 
-> Exactly how we should use of the API, so if Björn can supply an
-> ACK to patches 3 and 4 I'm happy to apply them.
-> 
-> Björn?
-> 
+> Please try the attached patch. I'm not really pleased with it and I will 
+> continue to determine why the fallback to a 30-bit mask fails, but at least this 
+> one works for me.
 
-I'm waiting for a version that does not specify the reserved_gpios for
-struct msm_pinctrl_soc_data sdm845_pinctrl {}, as this would override
-the ability of getting these from DT.
+Your patch only makes sense if the device is indeed capable of
+addressing 31-bits.
 
-I haven't seen such revision yet, will review it once I find it.
+So either the driver is buggy and asks for a too small mask in which
+case your patch is ok, or it's not and you're just going to cause all
+sort of interesting random problems including possible memory
+corruption.
 
-Regards,
-Bjorn
+Cheers,
+Ben.
+
+
