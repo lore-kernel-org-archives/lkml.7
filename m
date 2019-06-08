@@ -4,57 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C419C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8900FC468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B2D214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559E12168B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994737;
-	bh=ugUySFmSmxgk0l+L3c6rCvDBw8Ve0Z51DyJfgMwjbVo=;
+	s=default; t=1559994753;
+	bh=DqdJoUiOexOk1nezwmUags9JJP3MTaMWMU/KBAzLsXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TjpVBzckOQGD94kvIxRfALUeACJTiiZ+GpLPq6m+ZOfKWs5PbU/RI65tbw0JMH4hG
-	 vnCJbmZyfGRj7Qtdawgh87TQcWEXG0SC9K2UVWbUgGYbdJ+ZqIXqO8Eun4X94RYRqx
-	 5HErBXM4mHTNRAekaw8yH7v8Dhu60iRk9k/3wGog=
+	b=hxcggmu64f5hTKWYN79WPYmqNsQ7bIFqVeO8JkJ67FDeqhaSL8fFabuiYGaiLimLA
+	 tfuC7Ki2BCLzr1aoYsONFTopgPtfw7LNZelJJXWXbwkx1JNCp+RP0VEt25I0mZnWrB
+	 ec+RbQAJg+dXXoO+Bl5Pm2qi4xCBBx32gf7PO3P8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbfFHLwQ (ORCPT
+        id S1729755AbfFHLwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:52:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35964 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728913AbfFHLrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:47:18 -0400
+        id S1728436AbfFHLrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:47:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCADA21537;
-        Sat,  8 Jun 2019 11:47:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D84E821530;
+        Sat,  8 Jun 2019 11:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994437;
-        bh=ugUySFmSmxgk0l+L3c6rCvDBw8Ve0Z51DyJfgMwjbVo=;
+        s=default; t=1559994425;
+        bh=DqdJoUiOexOk1nezwmUags9JJP3MTaMWMU/KBAzLsXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V72MzVUcJt+MLUHcO4R3pOwtXy3igbGsQ/ewe7yiV5G2vnBkH+YjEX53bDoqcR12G
-         DSKCFE/NoVLWGFVZ3MfDOSE1TywHZaklT8jQ1vFP9dW7hqhE96dYp2LLgn11EWFL7Y
-         ZIQ/muxVhJw+BOeKGa4nzgzyGKUqiwgUOoAP+ccA=
+        b=hsJMVijlqzaWle/QLLBJXdLewvF7sT/Tscix21FkzvZPrgCwGuw4Pe5ZDbkJJNJTo
+         DOwpeZk09VSeCoZ55tC41FZ2meVZd/E8oCnoxbq2J600AAiOuoyy54m1bEGXMqhWLc
+         BJeWrCKfNnbAIBTzw7stLneCUyVHPNVGoDm5JtQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Yabin Cui <yabinc@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 11/31] perf/ring_buffer: Add ordering to rb->nest increment
-Date:   Sat,  8 Jun 2019 07:46:22 -0400
-Message-Id: <20190608114646.9415-11-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/31] clk: ti: clkctrl: Fix clkdm_clk handling
+Date:   Sat,  8 Jun 2019 07:46:17 -0400
+Message-Id: <20190608114646.9415-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608114646.9415-1-sashal@kernel.org>
 References: <20190608114646.9415-1-sashal@kernel.org>
@@ -67,60 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e ]
+[ Upstream commit 1cc54078d104f5b4d7e9f8d55362efa5a8daffdb ]
 
-Similar to how decrementing rb->next too early can cause data_head to
-(temporarily) be observed to go backward, so too can this happen when
-we increment too late.
+We need to always call clkdm_clk_enable() and clkdm_clk_disable() even
+the clkctrl clock(s) enabled for the domain do not have any gate register
+bits. Otherwise clockdomains may never get enabled except when devices get
+probed with the legacy "ti,hwmods" devicetree property.
 
-This barrier() ensures the rb->head load happens after the increment,
-both the one in the 'goto again' path, as the one from
-perf_output_get_handle() -- albeit very unlikely to matter for the
-latter.
-
-Suggested-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: mark.rutland@arm.com
-Cc: namhyung@kernel.org
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/ring_buffer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/clk/ti/clkctrl.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index fde853270c09..aef2af80a927 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -49,6 +49,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	unsigned long head;
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 53e71d0503ec..82e4d5cccf84 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -124,9 +124,6 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
+ 	int ret;
+ 	union omap4_timeout timeout = { 0 };
  
- again:
-+	/*
-+	 * In order to avoid publishing a head value that goes backwards,
-+	 * we must ensure the load of @rb->head happens after we've
-+	 * incremented @rb->nest.
-+	 *
-+	 * Otherwise we can observe a @rb->head value before one published
-+	 * by an IRQ/NMI happening between the load and the increment.
-+	 */
-+	barrier();
- 	head = local_read(&rb->head);
+-	if (!clk->enable_bit)
+-		return 0;
+-
+ 	if (clk->clkdm) {
+ 		ret = ti_clk_ll_ops->clkdm_clk_enable(clk->clkdm, hw->clk);
+ 		if (ret) {
+@@ -138,6 +135,9 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
+ 		}
+ 	}
  
- 	/*
++	if (!clk->enable_bit)
++		return 0;
++
+ 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
+ 
+ 	val &= ~OMAP4_MODULEMODE_MASK;
+@@ -166,7 +166,7 @@ static void _omap4_clkctrl_clk_disable(struct clk_hw *hw)
+ 	union omap4_timeout timeout = { 0 };
+ 
+ 	if (!clk->enable_bit)
+-		return;
++		goto exit;
+ 
+ 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
+ 
 -- 
 2.20.1
 
