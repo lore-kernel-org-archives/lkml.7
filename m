@@ -7,57 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F51C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD205C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F0421537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852952168B
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994592;
-	bh=lyPlmUHsTYIiHVukSQE4sHeWTqLizIZvQ5RmaiAcKNc=;
+	s=default; t=1559994606;
+	bh=3QfMeYH1RITNUgDFV5fp/0BXgtbC4vkeWaZuv/cNtxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1IpvawF26S7URAUC/DIXJfGkyVBBrUzYqzKMuIciYCbbh2fIGMgTE0ZIrqMYhMpF4
-	 1MDtKb+wCGzL5hjgXMbG0yzATRmK/O0+fmsIPc8j8nXAlxHb6YhXxQvWmZh20DPUCL
-	 e6jZamWfMa5HazkU1SXYJnoFmYn/aUo2opRtEx9k=
+	b=f95uRQ6y8fyyA1unRGVY38aZP406ZfQsmnWHjUc31/uOsPlNLICxufQ7BH3UVwUcz
+	 qMfMmO6+rJkBQijtDbuftxZfp4es726Oc+3/sm8jMqf6HHtLx4/aq49MDtool7VPJG
+	 HZ39ckwL+7yV0tTkhZ4YjH37WGAIelTx9eL0/1Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfFHLtv (ORCPT
+        id S1728678AbfFHLuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:49:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbfFHLsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:48:55 -0400
+        id S1728349AbfFHLsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:48:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DABAD216C4;
-        Sat,  8 Jun 2019 11:48:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4ED216FD;
+        Sat,  8 Jun 2019 11:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994535;
-        bh=lyPlmUHsTYIiHVukSQE4sHeWTqLizIZvQ5RmaiAcKNc=;
+        s=default; t=1559994525;
+        bh=3QfMeYH1RITNUgDFV5fp/0BXgtbC4vkeWaZuv/cNtxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sStUZSYjMWuYW6aD8zmooZbFvY974juQ9HcVuHF4gqx1I2NJcZV6V6weND5nRL2fN
-         81hto19eYuiFQM3RDlxeD4Xzl4wn1sR5tEZ2ebvprP7ZE+HzMQmuoWG+sEXdyX3qH0
-         jOn0jtS7SmvrMkZ9hbFFvNZ69hlHmSSsRgpjre6Q=
+        b=n5rcbt/R1spVw9szr+UGLuT/o/pCOOMFcBnzGN4wingqV28F+qwb+Lb1N0ckmVVY9
+         mmMGiRdJ93t9SA+kgBebUh9rW95NqhUeT70bYIIKg+sqefZ3For+CdrUeSpe5laVa9
+         lxCLcI6HHIA3aGEG3o4fwjcjnmVHY162a4j0B+GU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Yabin Cui <yabinc@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 04/13] perf/ring_buffer: Add ordering to rb->nest increment
-Date:   Sat,  8 Jun 2019 07:48:36 -0400
-Message-Id: <20190608114847.9973-4-sashal@kernel.org>
+Cc:     Amit Cohen <amitc@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 20/20] mlxsw: spectrum: Prevent force of 56G
+Date:   Sat,  8 Jun 2019 07:47:56 -0400
+Message-Id: <20190608114756.9742-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190608114847.9973-1-sashal@kernel.org>
-References: <20190608114847.9973-1-sashal@kernel.org>
+In-Reply-To: <20190608114756.9742-1-sashal@kernel.org>
+References: <20190608114756.9742-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -67,60 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Amit Cohen <amitc@mellanox.com>
 
-[ Upstream commit 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e ]
+[ Upstream commit 275e928f19117d22f6d26dee94548baf4041b773 ]
 
-Similar to how decrementing rb->next too early can cause data_head to
-(temporarily) be observed to go backward, so too can this happen when
-we increment too late.
+Force of 56G is not supported by hardware in Ethernet devices. This
+configuration fails with a bad parameter error from firmware.
 
-This barrier() ensures the rb->head load happens after the increment,
-both the one in the 'goto again' path, as the one from
-perf_output_get_handle() -- albeit very unlikely to matter for the
-latter.
+Add check of this case. Instead of trying to set 56G with autoneg off,
+return a meaningful error.
 
-Suggested-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: mark.rutland@arm.com
-Cc: namhyung@kernel.org
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
+Signed-off-by: Amit Cohen <amitc@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/ring_buffer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 70e31c48ae9b..410f83cad06c 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -49,6 +49,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	unsigned long head;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index e3ed70a24029..585a40cc6470 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -2044,6 +2044,10 @@ mlxsw_sp_port_set_link_ksettings(struct net_device *dev,
+ 	mlxsw_reg_ptys_unpack(ptys_pl, &eth_proto_cap, NULL, NULL);
  
- again:
-+	/*
-+	 * In order to avoid publishing a head value that goes backwards,
-+	 * we must ensure the load of @rb->head happens after we've
-+	 * incremented @rb->nest.
-+	 *
-+	 * Otherwise we can observe a @rb->head value before one published
-+	 * by an IRQ/NMI happening between the load and the increment.
-+	 */
-+	barrier();
- 	head = local_read(&rb->head);
- 
- 	/*
+ 	autoneg = cmd->base.autoneg == AUTONEG_ENABLE;
++	if (!autoneg && cmd->base.speed == SPEED_56000) {
++		netdev_err(dev, "56G not supported with autoneg off\n");
++		return -EINVAL;
++	}
+ 	eth_proto_new = autoneg ?
+ 		mlxsw_sp_to_ptys_advert_link(cmd) :
+ 		mlxsw_sp_to_ptys_speed(cmd->base.speed);
 -- 
 2.20.1
 
