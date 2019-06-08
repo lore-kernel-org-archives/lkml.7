@@ -2,143 +2,125 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76479C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDE5C468BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470E0214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E11214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 09:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SqzFiLK7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="F9nlhr+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfFHJtp (ORCPT
+        id S1726788AbfFHJ5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 05:49:45 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54697 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfFHJto (ORCPT
+        Sat, 8 Jun 2019 05:57:08 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:56056 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfFHJ5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 05:49:44 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x589nGY12915658
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 8 Jun 2019 02:49:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x589nGY12915658
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1559987357;
-        bh=xud/tY9QU6ISxDLO94RhQ0+L8m6TRftpBj+aXoE8ZlA=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=SqzFiLK7+eZYQkM0zs8MoLsNh7GMhvTLfJQfBI/1cubIYlmpkEu3Z9QRSdwHG50RI
-         N7d7WS5Fy2bOgLBLxUQJYQVNGkjiViHoxjMj9ZHV0Sh+mTV2r39WMqNjjd5ydqzJIu
-         X+QV/WMypPdd3WToFeSX+iGR0o9RtBPEHoRPGho643+nWg7DQJ66PEiLPrl+oMSMWm
-         KFOqYtN+dyC8frYYb3XOJQJbw6OzaLePpJO/OaYQM1D72fnoIInPeFVZydr62pxJJ9
-         C3q1ShPH9WlcumoFNBPdtaN+XLQ3HLYoPYbETLewZb4WcXH4dkVquU+GG204jfag+l
-         kPuzgR35FdkBA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x589nEsi2915653;
-        Sat, 8 Jun 2019 02:49:14 -0700
-Date:   Sat, 8 Jun 2019 02:49:14 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-aab8445c4e1cceeb3f739352041ec1c2586bc923@git.kernel.org>
-Cc:     mingo@kernel.org, bigeasy@linutronix.de, riel@surriel.com,
-        tglx@linutronix.de, dave.hansen@intel.com, rkrcmar@redhat.com,
-        Jason@zx2c4.com, ebiggers@kernel.org, luto@kernel.org,
-        hughd@google.com, kvm@vger.kernel.org, mingo@redhat.com,
-        bp@suse.de, x86@kernel.org, hpa@zytor.com, jannh@google.com,
-        pbonzini@redhat.com, linux-kernel@vger.kernel.org
-Reply-To: x86@kernel.org, hpa@zytor.com, bp@suse.de, hughd@google.com,
-          mingo@redhat.com, kvm@vger.kernel.org, pbonzini@redhat.com,
-          jannh@google.com, linux-kernel@vger.kernel.org,
-          bigeasy@linutronix.de, mingo@kernel.org, tglx@linutronix.de,
-          riel@surriel.com, dave.hansen@intel.com, ebiggers@kernel.org,
-          rkrcmar@redhat.com, Jason@zx2c4.com, luto@kernel.org
-In-Reply-To: <20190607142915.y52mfmgk5lvhll7n@linutronix.de>
-References: <20190607142915.y52mfmgk5lvhll7n@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/fpu: Update kernel's FPU state before using
- for the fsave header
-Git-Commit-ID: aab8445c4e1cceeb3f739352041ec1c2586bc923
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 8 Jun 2019 05:57:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1559987825; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IO8k7jeyiIdr3zv59ZQZDouOp0tCLQ64fYlPZZrzNHk=;
+        b=F9nlhr+6wcW0Fes6Ur6203SFkh1wfrkvV8qyMSJKHiLQqEcuW42aTRGPWzbGBSGsg0syUE
+        0m2v6v1na/QecA0u+dTw3kVXudnmg5+N9GAxdyg9r3GrtWolr0fy6zjPbUUF2rgTJJjct5
+        +zDacUXICPjtmChxFR9030qOGwQHhJc=
+Date:   Sat, 08 Jun 2019 11:57:01 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 4/4] watchdog: jz4740: Make probe function
+ __init_or_module
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>, od@zcrc.me,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <1559987821.1815.0@crapouillou.net>
+In-Reply-To: <0dc0fd0a-54fc-5d70-af78-1874b5ece418@c-s.fr>
+References: <20190607162429.17915-1-paul@crapouillou.net>
+        <20190607162429.17915-5-paul@crapouillou.net>
+        <0dc0fd0a-54fc-5d70-af78-1874b5ece418@c-s.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  aab8445c4e1cceeb3f739352041ec1c2586bc923
-Gitweb:     https://git.kernel.org/tip/aab8445c4e1cceeb3f739352041ec1c2586bc923
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Fri, 7 Jun 2019 16:29:16 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Sat, 8 Jun 2019 11:45:15 +0200
+Hi Christophe,
 
-x86/fpu: Update kernel's FPU state before using for the fsave header
+Le sam. 8 juin 2019 =E0 9:51, Christophe Leroy <christophe.leroy@c-s.fr>=20
+a =E9crit :
+> Hi Paul,
+>=20
+> Le 07/06/2019 =E0 18:24, Paul Cercueil a =E9crit :
+>> This allows the probe function to be dropped after the kernel=20
+>> finished
+>> its initialization, in the case where the driver was not compiled as=20
+>> a
+>> module.
+>=20
+> I'm not sure that's what  __init_or_module flag does.
+>=20
+> As far as I understand, this flag makes the function being dropped=20
+> only when the kernel is built without modules support, ie without=20
+> CONFIG_MODULES. See=20
+> https://elixir.bootlin.com/linux/latest/source/include/linux/module.h#L14=
+5
 
-In commit
+So it doesn't depend on the driver being built-in or compiled as a=20
+module?
 
-  39388e80f9b0c ("x86/fpu: Don't save fxregs for ia32 frames in copy_fpstate_to_sigframe()")
+> In addition, I'm not sure you can simply define a probe function as=20
+> __init. What if someone tries to unbind and rebind the device through=20
+> sysfs for instance ?
 
-I removed the statement
+Ouch. I feel stupid now.
 
-|       if (ia32_fxstate)
-|               copy_fxregs_to_kernel(fpu);
+> It seems there is a special function called __platform_driver_probe()=20
+> for registering devices when the probe function is to be in __init,=20
+> see=20
+> https://elixir.bootlin.com/linux/latest/source/drivers/base/platform.c#L6=
+84
 
-and argued that it was wrongly merged because the content was already
-saved in kernel's state.
+Yes, but only usable by drivers that won't defer probe, and it removes=20
+the bind/unbind attributes from sysfs,
+so it shouldn't be used for non-critical drivers, I think.
 
-This was wrong: It is required to write it back because it is only
-saved on the user-stack and save_fsave_header() reads it from task's
-FPU-state. I missed that part…
+> Christophe
+>=20
+>>=20
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>=20
+>> Notes:
+>>      v2: New patch
+>>=20
+>>   drivers/watchdog/jz4740_wdt.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/watchdog/jz4740_wdt.c=20
+>> b/drivers/watchdog/jz4740_wdt.c
+>> index 7519d80c5d05..2061788c1939 100644
+>> --- a/drivers/watchdog/jz4740_wdt.c
+>> +++ b/drivers/watchdog/jz4740_wdt.c
+>> @@ -157,7 +157,7 @@ static const struct of_device_id=20
+>> jz4740_wdt_of_matches[] =3D {
+>>   MODULE_DEVICE_TABLE(of, jz4740_wdt_of_matches);
+>>   #endif
+>>   =7F-static int jz4740_wdt_probe(struct platform_device *pdev)
+>> +static int __init_or_module jz4740_wdt_probe(struct platform_device=20
+>> *pdev)
+>>   {
+>>   	struct device *dev =3D &pdev->dev;
+>>   	struct jz4740_wdt_drvdata *drvdata;
+>>=20
 
-Save x87 FPU state unless thread's FPU registers are already up to date.
+=
 
-Fixes: 39388e80f9b0c ("x86/fpu: Don't save fxregs for ia32 frames in copy_fpstate_to_sigframe()")
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Eric Biggers <ebiggers@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: kvm ML <kvm@vger.kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190607142915.y52mfmgk5lvhll7n@linutronix.de
----
- arch/x86/kernel/fpu/signal.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 060d6188b453..0071b794ed19 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -62,6 +62,11 @@ static inline int save_fsave_header(struct task_struct *tsk, void __user *buf)
- 		struct user_i387_ia32_struct env;
- 		struct _fpstate_32 __user *fp = buf;
- 
-+		fpregs_lock();
-+		if (!test_thread_flag(TIF_NEED_FPU_LOAD))
-+			copy_fxregs_to_kernel(&tsk->thread.fpu);
-+		fpregs_unlock();
-+
- 		convert_from_fxsr(&env, tsk);
- 
- 		if (__copy_to_user(buf, &env, sizeof(env)) ||
