@@ -2,182 +2,201 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6ECDC468C1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458C9C468C0
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96907205ED
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF4F20840
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 04:43:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TX6ck3Th"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727424AbfFHEWf (ORCPT
+        id S1727426AbfFHEnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 00:22:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37806 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725308AbfFHEWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 00:22:35 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A743C53F4D0FF13F8075;
-        Sat,  8 Jun 2019 12:22:23 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 8 Jun 2019
- 12:22:22 +0800
-Subject: Re: [PATCH v11 0/3] remain and optimize memblock_next_valid_pfn on
- arm and arm64
-To:     Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@arm.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Linux-MM <linux-mm@kvack.org>, Jia He <hejianet@gmail.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Petr Tesarik <ptesarik@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        "AKASHI Takahiro" <takahiro.akashi@linaro.org>,
-        Gioh Kim <gi-oh.kim@profitbricks.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Daniel Vacek <neelx@redhat.com>, Mel Gorman <mgorman@suse.de>,
-        "Vladimir Murzin" <vladimir.murzin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Philip Derrin" <philip@cog.systems>,
-        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
-        "Jia He" <jia.he@hxt-semitech.com>,
-        Kemi Wang <kemi.wang@intel.com>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <1534907237-2982-1-git-send-email-jia.he@hxt-semitech.com>
- <CAKv+Gu9u8RcrzSHdgXiqHS9HK1aSrjbPxVUSCP0DT4erAhx0pw@mail.gmail.com>
- <20180907144447.GD12788@arm.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <84b8e874-2a52-274c-4806-968470e66a08@huawei.com>
-Date:   Sat, 8 Jun 2019 12:22:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
-MIME-Version: 1.0
-In-Reply-To: <20180907144447.GD12788@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+        Sat, 8 Jun 2019 00:43:47 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:44080 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfFHEnr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 00:43:47 -0400
+Received: by mail-pg1-f201.google.com with SMTP id a21so2734495pgh.11
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2019 21:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=eH9fapKAJwolfX12q6qFY4CZH/Ll8SfSGTB5TLEBq1E=;
+        b=TX6ck3Thsys8vR8ZnG1NNJCOVjJ6bQCRPH90VpAfp3KSB9AM3aULyOkDl1EaWkOqTc
+         QnZEbSTY6tAGFzAFAYSfTN6CG8R3HvYBoZIp4Q3E2rWu76kB5PcUymL/8IiqmL7a5hNH
+         TABCU/hgYQ8tE5NznIF4720eqTUGU/V/JVWCa5Xkw0+BJ8TcnkcV0GmJtz927Nvw49bj
+         CCGvogxwcWjs+fmmXurVko5beuFSo3oCafhssGZ0GIWS3isVoOpHSYmhs9xaalC7BlI/
+         ZmiFk7dQ8OQoV1MXMWSPc9Z8n0Jw+tLV0peVQgqX67FUCxfkwSinP5mqGuTq6psfvF2G
+         /swg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=eH9fapKAJwolfX12q6qFY4CZH/Ll8SfSGTB5TLEBq1E=;
+        b=be7PVrX0W4nrtAafzzKKWf8gRS++MeOJpt4PPkHzb3uUwtEUP3wKZl4+Ppwm/wUuqB
+         OXv8gVrdpmS1fMXHUBEYierSbYL2M3s2Qca5RV2q3Vwph2ZYWBxJ7zmq3Ua3/Pcjl2ic
+         B1UUKtij2JnK81fw5HyLQmzzcrvYkDV6DE6FjV+S9gc7ou1zDJxepQrZLJSEq7BGR4Nk
+         zdw/k8aUdTzmUu/ZSu1WzYu1+6cwe88U3nVDogyhInmRvEsKV3DYXYtYyoPh3NIlkUEI
+         o7CKBgcr7iHKSvbIOTrWDqMofqlKguYB1s1D9TTE5b4it74iTwUG0ykbgccxCvv0DQ1B
+         YzEg==
+X-Gm-Message-State: APjAAAW49cUOTG/dsqJ+hX/FCNpTDuLFNDMOdYW4IVwX+wAxj6m6NMxF
+        504fv3QvPPX5X6mJwGaP+St3eSF/76rAR2g=
+X-Google-Smtp-Source: APXvYqzyuMJ13rtRIBQUEAtXcZjmhvphMToX8lIX0cyimVKucuf4Er3USxwQ5OENVm49MxHrQ6wgw16jkUJt7cE=
+X-Received: by 2002:a63:2224:: with SMTP id i36mr6114353pgi.70.1559969025896;
+ Fri, 07 Jun 2019 21:43:45 -0700 (PDT)
+Date:   Fri,  7 Jun 2019 21:43:30 -0700
+Message-Id: <20190608044339.115026-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+Subject: [PATCH v1 0/9] Introduce Bandwidth OPPs & interconnect devfreq driver
+From:   Saravana Kannan <saravanak@google.com>
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        vincent.guittot@linaro.org, bjorn.andersson@linaro.org,
+        amit.kucheria@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, evgreen@chromium.org,
+        sibis@codeaurora.org, kernel-team@android.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ard, Will,
+I replied[1] to this patch series[2] and described how I think interconnect
+bandwidth voting should be captured in DT and how it should work.
 
-This week we were trying to debug an issue of time consuming in mem_init(),
-and leading to this similar solution form Jia He, so I would like to bring this
-thread back, please see my detail test result below.
+So sending out a patch series implementing that. This patch series does the
+following:
+- Adds Bandwidth OPP table support (this adds device freq to bandwidth
+  mapping for free)
+- Adds a devfreq library for interconnect paths
 
-On 2018/9/7 22:44, Will Deacon wrote:
-> On Thu, Sep 06, 2018 at 01:24:22PM +0200, Ard Biesheuvel wrote:
->> On 22 August 2018 at 05:07, Jia He <hejianet@gmail.com> wrote:
->>> Commit b92df1de5d28 ("mm: page_alloc: skip over regions of invalid pfns
->>> where possible") optimized the loop in memmap_init_zone(). But it causes
->>> possible panic bug. So Daniel Vacek reverted it later.
->>>
->>> But as suggested by Daniel Vacek, it is fine to using memblock to skip
->>> gaps and finding next valid frame with CONFIG_HAVE_ARCH_PFN_VALID.
->>>
->>> More from what Daniel said:
->>> "On arm and arm64, memblock is used by default. But generic version of
->>> pfn_valid() is based on mem sections and memblock_next_valid_pfn() does
->>> not always return the next valid one but skips more resulting in some
->>> valid frames to be skipped (as if they were invalid). And that's why
->>> kernel was eventually crashing on some !arm machines."
->>>
->>> About the performance consideration:
->>> As said by James in b92df1de5,
->>> "I have tested this patch on a virtual model of a Samurai CPU with a
->>> sparse memory map.  The kernel boot time drops from 109 to 62 seconds."
->>> Thus it would be better if we remain memblock_next_valid_pfn on arm/arm64.
->>>
->>> Besides we can remain memblock_next_valid_pfn, there is still some room
->>> for improvement. After this set, I can see the time overhead of memmap_init
->>> is reduced from 27956us to 13537us in my armv8a server(QDF2400 with 96G
->>> memory, pagesize 64k). I believe arm server will benefit more if memory is
->>> larger than TBs
->>>
->>
->> OK so we can summarize the benefits of this series as follows:
->> - boot time on a virtual model of a Samurai CPU drops from 109 to 62 seconds
->> - boot time on a QDF2400 arm64 server with 96 GB of RAM drops by ~15
->> *milliseconds*
->>
->> Google was not very helpful in figuring out what a Samurai CPU is and
->> why we should care about the boot time of Linux running on a virtual
->> model of it, and the 15 ms speedup is not that compelling either.
+Interconnects and interconnect paths quantify they performance levels in
+terms of bandwidth. So similar to how we have frequency based OPP tables
+in DT and in the OPP framework, this patch series adds bandwidth OPP
+table support in the OPP framework and in DT.
 
-Testing this patch set on top of Kunpeng 920 based ARM64 server, with
-384G memory in total, we got the time consuming below
+To simplify voting for interconnects, this patch series adds helper
+functions to create devfreq devices out of interconnect paths. This
+allows drivers to add a single line of code to add interconnect voting
+capability.
 
-             without this patch set      with this patch set
-mem_init()        13310ms                      1415ms
+To add devfreq device for the "gpu-mem" interconnect path:
+icc_create_devfreq(dev, "gpu-mem");
 
-So we got about 8x speedup on this machine, which is very impressive.
+With the future addition of a "passive_bandwidth" devfreq governor,
+device frequency to interconnect bandwidth mapping would come for free.
 
-The time consuming is related the memory DIMM size and where to locate those
-memory DIMMs in the slots. In above case, we are using 16G memory DIMM.
-We also tested 1T memory with 64G size for each memory DIMM on another ARM64
-machine, the time consuming reduced from 20s to 2s (I think it's related to
-firmware implementations).
+If the feedback on this patch series is positive, I'll then add the
+devfreq passive_bandwidth governor (or something similar) to v2 of this
+patch series.
 
->>
->> Apologies to Jia that it took 11 revisions to reach this conclusion,
->> but in /my/ opinion, tweaking the fragile memblock/pfn handling code
->> for this reason is totally unjustified, and we're better off
->> disregarding these patches.
+So with the DT bindings added in this patch series, the DT for a GPU
+that does bandwidth voting from GPU to Cache and GPU to DDR would look
+something like this:
 
-Indeed this patch set has a bug, For exampe, if we have 3 regions which
-is [a, b] [c, d] [e, f] if address of pfn is bigger than the end address of
-last region, we will increase early_region_idx to count of region, which is
-out of bound of the regions. Fixed by patch below,
+gpu_cache_opp_table: gpu_cache_opp_table {
+	compatible = "operating-points-v2";
 
- mm/memblock.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+	gpu_cache_3000: opp-3000 {
+		opp-peak-KBps = <3000>;
+		opp-avg-KBps = <1000>;
+	};
+	gpu_cache_6000: opp-6000 {
+		opp-peak-KBps = <6000>;
+		opp-avg-KBps = <2000>;
+	};
+	gpu_cache_9000: opp-9000 {
+		opp-peak-KBps = <9000>;
+		opp-avg-KBps = <9000>;
+	};
+};
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 8279295..8283bf0 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1252,13 +1252,17 @@ unsigned long __init_memblock memblock_next_valid_pfn(unsigned long pfn)
- 		if (pfn >= start_pfn && pfn < end_pfn)
- 			return pfn;
+gpu_ddr_opp_table: gpu_ddr_opp_table {
+	compatible = "operating-points-v2";
 
--		early_region_idx++;
-+		/* try slow path */
-+		if (++early_region_idx == type->cnt)
-+			goto slow_path;
-+
- 		next_start_pfn = PFN_DOWN(regions[early_region_idx].base);
+	gpu_ddr_1525: opp-1525 {
+		opp-peak-KBps = <1525>;
+		opp-avg-KBps = <452>;
+	};
+	gpu_ddr_3051: opp-3051 {
+		opp-peak-KBps = <3051>;
+		opp-avg-KBps = <915>;
+	};
+	gpu_ddr_7500: opp-7500 {
+		opp-peak-KBps = <7500>;
+		opp-avg-KBps = <3000>;
+	};
+};
 
- 		if (pfn >= end_pfn && pfn <= next_start_pfn)
- 			return next_start_pfn;
- 	}
+gpu_opp_table: gpu_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
 
-+slow_path:
- 	/* slow path, do the binary searching */
- 	do {
- 		mid = (right + left) / 2;
+	opp-200000000 {
+		opp-hz = /bits/ 64 <200000000>;
+		required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
+	};
+	opp-400000000 {
+		opp-hz = /bits/ 64 <400000000>;
+		required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
+	};
+};
 
-As the really impressive speedup on our ARM64 server system, could you reconsider
-this patch set for merge? if you want more data I'm willing to clarify and give
-more test.
+gpu@7864000 {
+	...
+	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
+			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
+	interconnect-names = "gpu-cache", "gpu-mem";
+	interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
+};
 
-Thanks
-Hanjun
+Cheers,
+Saravana
+
+[1] - https://lore.kernel.org/lkml/20190601021228.210574-1-saravanak@google.com/
+[2] - https://lore.kernel.org/lkml/20190423132823.7915-1-georgi.djakov@linaro.org/ 
+
+Saravana Kannan (9):
+  dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
+  OPP: Add support for bandwidth OPP tables
+  OPP: Add helper function for bandwidth OPP tables
+  OPP: Add API to find an OPP table from its DT node
+  dt-bindings: interconnect: Add interconnect-opp-table property
+  interconnect: Add OPP table support for interconnects
+  OPP: Add function to look up required OPP's for a given OPP
+  OPP: Allow copying OPPs tables between devices
+  interconnect: Add devfreq support
+
+ .../bindings/interconnect/interconnect.txt    |   8 +
+ Documentation/devicetree/bindings/opp/opp.txt |  15 +-
+ drivers/interconnect/Makefile                 |   2 +-
+ drivers/interconnect/core.c                   |  27 +++-
+ drivers/interconnect/icc-devfreq.c            | 144 ++++++++++++++++++
+ drivers/opp/core.c                            | 109 +++++++++++++
+ drivers/opp/of.c                              |  75 +++++++--
+ drivers/opp/opp.h                             |   4 +-
+ include/linux/interconnect.h                  |  17 +++
+ include/linux/pm_opp.h                        |  41 +++++
+ 10 files changed, 426 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/interconnect/icc-devfreq.c
+
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
 
