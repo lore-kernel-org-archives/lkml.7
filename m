@@ -2,90 +2,94 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4535BC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E4DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E58E214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:24:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="AJxQgB9I"
+	by mail.kernel.org (Postfix) with ESMTP id 9B50A214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfFHKYb (ORCPT
+        id S1726862AbfFHK1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 06:24:31 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:54298 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfFHKYa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 06:24:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1559989469; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=w3rZE9BJ6KZXA1Xlh+CLSTAVP0jC40SGcntIVXjMdFk=;
-        b=AJxQgB9IAOiUj/O82HTtRcWBdoRbygdau3nQ5iw2VWjXJuuJLRrdhkDnBhoPhDDzdLIwqH
-        Bb3YiboMj0cKoFJSVNMYt5UwOfRd488v/C97bxWrwzAAugSpV4peJfdrszgzjDWHlmAFlQ
-        TqYDI5Rhxx6wO2RdCk4dHVHtnECuELc=
-Date:   Sat, 08 Jun 2019 12:24:25 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/3] ASoC: jz4740-i2s: Make probe function
- __init_or_module
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     od@zcrc.me, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1559989465.1815.8@crapouillou.net>
-In-Reply-To: <20190607161500.17379-1-paul@crapouillou.net>
-References: <20190607161500.17379-1-paul@crapouillou.net>
+        Sat, 8 Jun 2019 06:27:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44706 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726692AbfFHK1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 06:27:06 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9D6C8368E6;
+        Sat,  8 Jun 2019 10:27:05 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 39E4360589;
+        Sat,  8 Jun 2019 10:27:01 +0000 (UTC)
+Date:   Sat, 8 Jun 2019 18:26:59 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     lijiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, x86@kernel.org,
+        hpa@zytor.com, dyoung@redhat.com, Thomas.Lendacky@amd.com
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
+ e820 table
+Message-ID: <20190608102659.GA9130@MiWiFi-R3L-srv>
+References: <20190423013007.17838-1-lijiang@redhat.com>
+ <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
+ <20190607174211.GN20269@zn.tnic>
+ <20190608035451.GB26148@MiWiFi-R3L-srv>
+ <20190608091030.GB32464@zn.tnic>
+ <20190608100139.GC26148@MiWiFi-R3L-srv>
+ <20190608100623.GA9138@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608100623.GA9138@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sat, 08 Jun 2019 10:27:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I misunderstood what __init_or_module was for. Please ignore this=20
-patchset. Sorry for the noise.
+On 06/08/19 at 12:06pm, Borislav Petkov wrote:
+> On Sat, Jun 08, 2019 at 06:01:39PM +0800, Baoquan He wrote:
+> > OK, it may be different with the case we met, if panic happened when
+> > load a kdump kernel.
+> > 
+> > We can load with 'kexec -l' or 'kexec -p', but can't boot after triggering
+> > crash or execute 'kexec -e' to do kexec jumping.
+> 
+> No, I load a kdump kernel properly with this command:
+> 
+>  kexec -s -p /boot/vmlinuz-5.2.0-rc3+ --initrd=/boot/initrd.img-5.2.0-rc3+ --command-line="maxcpus=1 root=/dev/sda5 ro debug ignore_loglevel
+> log_buf_len=16M no_console_suspend net.ifnames=0 systemd.log_target=null mem_encrypt=on kvm_amd.sev=1 nr_cpus=1 irqpoll reset_devices vga=normal
+> LANG=en_US.UTF-8 earlyprintk=serial cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug
+> transparent_hugepage=never disable_cpu_apicid=0"
+> 
+> And that succeeds judging from
+> 
+> $ grep . /sys/kernel/kexec_*
+> 
+> Then I trigger a panic with
+> 
+> echo c > /proc/sysrq-trigger
+> 
+> and this is where it hangs and doesn't load the kdump kernel.
 
+OK, I see. Then it should be the issue we have met and talked about with
+Tom.
+https://lkml.kernel.org/r/20190604134952.GC26891@MiWiFi-R3L-srv
 
-Le ven. 7 juin 2019 =E0 18:14, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> This allows the probe function to be dropped after the kernel finished
-> its initialization, in the case where the driver was not compiled as a
-> module.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  sound/soc/jz4740/jz4740-i2s.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/sound/soc/jz4740/jz4740-i2s.c=20
-> b/sound/soc/jz4740/jz4740-i2s.c
-> index 13408de34055..1f596770b01a 100644
-> --- a/sound/soc/jz4740/jz4740-i2s.c
-> +++ b/sound/soc/jz4740/jz4740-i2s.c
-> @@ -492,7 +492,7 @@ static const struct of_device_id=20
-> jz4740_of_matches[] =3D {
->  MODULE_DEVICE_TABLE(of, jz4740_of_matches);
->  #endif
->=20
-> -static int jz4740_i2s_dev_probe(struct platform_device *pdev)
-> +static int __init_or_module jz4740_i2s_dev_probe(struct=20
-> platform_device *pdev)
->  {
->  	struct jz4740_i2s *i2s;
->  	struct resource *mem;
-> --
-> 2.21.0.593.g511ec345e18
->=20
-
-=
+You can apply Tom's patch as below. I tested it, it can make kexec
+kernel succeed to boot, but failed for kdump kernel booting. The kdump
+kernel can boot till the end of kernel initialization, then hang with a
+call trace. I have pasted the log in the above thread. Haven't got the
+reason.
+http://lkml.kernel.org/r/508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com
 
