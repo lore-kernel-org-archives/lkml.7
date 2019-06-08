@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8494C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF9DC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9188E21537
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6998C214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994837;
-	bh=S5X6XyIUnDln+sm7NVvGx1v6MmkkskLGjw2yjhRDXJI=;
+	s=default; t=1559994843;
+	bh=w5aQZhf7HlqizMDPAz0KOrvr2Obgz/W68H+SknGP92c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VSGAwZ6b+nAWEzFg3ERBiAjOCxLdkTaY3pnpP+0tuyHuDCOHP3JTv1SXeMAecztZU
-	 Yui7fs5bDl+b2aB9wzBG1pvQ3nZLnKMkpSieMVApwAHoGOJyNAaupo91v52uySTifs
-	 k3riLwxhbnArXOT2fRMc372N4k29ibLKBRmrFHg8=
+	b=uNiMqZnGpmCyelJZYx1yuparjpStIAl7WRnDxM1RmaOsWvuTbZZiKb9HBtUuKhJS1
+	 ZMWFSEg5HAkhELjRryEGU/Rnzkkl7mD8j7BTHYrYDJrphk+mhU6PY8mtK5L4kz7r8z
+	 3zrCDcv4QGdN/0BoeJS/7McvaE3lga8M7Zmh4QCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfFHLki (ORCPT
+        id S1728534AbfFHLyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:40:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57824 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727644AbfFHLkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:33 -0400
+        id S1727665AbfFHLkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CCF7214DA;
-        Sat,  8 Jun 2019 11:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3E67214AF;
+        Sat,  8 Jun 2019 11:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994033;
-        bh=S5X6XyIUnDln+sm7NVvGx1v6MmkkskLGjw2yjhRDXJI=;
+        s=default; t=1559994035;
+        bh=w5aQZhf7HlqizMDPAz0KOrvr2Obgz/W68H+SknGP92c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cFXg08PSBQe+KAbD018YK5a7xAqkQGq16BxZyIeAw3vvTLffz2Ep0h0AyxHs3lp9U
-         rZkXGo89LlGR78UwxRgvxya74p3EGqLXXSlvnXIF78g/hOOemWFOmWYIvpYMWAtOVT
-         6NIpQNOtphot6T7TRVRt43vEmIBijPp5eESljjGw=
+        b=uYPY3tvXWmJU1wxMqhsR/N9KlOam57+wsT9visuTn532JVPyI9Fl1SP1+DIbm3ooV
+         ig6izqBQAfSz9DIn4ssYfEh5X6TDnDAmdg8invI4JwWqefNAAud/bBSJI7wa0BaSgt
+         kSu15+ux1qBuznb07vknmDxgDwyqahwTWw2Xht9E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Biao Huang <biao.huang@mediatek.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 27/70] net: stmmac: fix csr_clk can't be zero issue
-Date:   Sat,  8 Jun 2019 07:39:06 -0400
-Message-Id: <20190608113950.8033-27-sashal@kernel.org>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 29/70] io_uring: Fix __io_uring_register() false success
+Date:   Sat,  8 Jun 2019 07:39:08 -0400
+Message-Id: <20190608113950.8033-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -60,59 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit 5e7f7fc538d894b2d9aa41876b8dcf35f5fe11e6 ]
+[ Upstream commit a278682dad37fd2f8d2f30d8e84e376a856ab472 ]
 
-The specific clk_csr value can be zero, and
-stmmac_clk is necessary for MDC clock which can be set dynamically.
-So, change the condition from plat->clk_csr to plat->stmmac_clk to
-fix clk_csr can't be zero issue.
+If io_copy_iov() fails, it will break the loop and report success,
+albeit partially completed operation.
 
-Fixes: cd7201f477b9 ("stmmac: MDC clock dynamically based on the csr clock input")
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 6 +++---
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 5 ++++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 8cebc44108b2..635d88d82610 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4380,10 +4380,10 @@ int stmmac_dvr_probe(struct device *device,
- 	 * set the MDC clock dynamically according to the csr actual
- 	 * clock input.
- 	 */
--	if (!priv->plat->clk_csr)
--		stmmac_clk_csr_set(priv);
--	else
-+	if (priv->plat->clk_csr >= 0)
- 		priv->clk_csr = priv->plat->clk_csr;
-+	else
-+		stmmac_clk_csr_set(priv);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 30a5687a17b6..69ff94558758 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2505,7 +2505,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
  
- 	stmmac_check_pcs_mode(priv);
+ 		ret = io_copy_iov(ctx, &iov, arg, i);
+ 		if (ret)
+-			break;
++			goto err;
  
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 3031f2bf15d6..f45bfbef97d0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -408,7 +408,10 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 	/* Default to phy auto-detection */
- 	plat->phy_addr = -1;
- 
--	/* Get clk_csr from device tree */
-+	/* Default to get clk_csr from stmmac_clk_crs_set(),
-+	 * or get clk_csr from device tree.
-+	 */
-+	plat->clk_csr = -1;
- 	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
- 
- 	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
+ 		/*
+ 		 * Don't impose further limits on the size and buffer
 -- 
 2.20.1
 
