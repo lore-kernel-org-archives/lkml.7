@@ -2,143 +2,146 @@ Return-Path: <SRS0=LGpO=UH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5188C468BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 14:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA25C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9D021726
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 14:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="c7Pg+1Vu"
+	by mail.kernel.org (Postfix) with ESMTP id 073BC21537
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 15:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfFHOyB (ORCPT
+        id S1727191AbfFHPDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 10:54:01 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38673 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfFHOyA (ORCPT
+        Sat, 8 Jun 2019 11:03:07 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:56546 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfFHPDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 10:54:00 -0400
-Received: by mail-ot1-f68.google.com with SMTP id d17so4549097oth.5
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 07:54:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dk+u3XgaNOqXLaO68gyf05VnI7PTjpPeX2V5LZFBkJU=;
-        b=c7Pg+1Vu+CFzwWjTCMqA/7ILEjKHUJlK9K7TIBu56QFBG34LHWLdVkM7tbREx2Ey9p
-         TjCdQdfntrBDULEZ7N1HSxQg0s3DwVikz29ifn2VjQqccdLcAJ1KkySuifbxWyME5a7W
-         x4fOaxhygkWdkKYvJVh0JgypnwprJM5FHpdLFWTbR4b8W25GIpRqLlOkF/ugyfihZC+8
-         c7LrVjq4p2Hw1E72Dp2p511CMIYJdbrwSfhhEtnq2nr9rqDPBQg5MRZOyX6pvij6xYTr
-         nGmNhnS25l7cTno9P3Fo7izT+xPDuhI3LIcqoKUC7iNIdx3UljQ5OPalTto1Tp8OepSr
-         0zOw==
+        Sat, 8 Jun 2019 11:03:06 -0400
+Received: by mail-it1-f199.google.com with SMTP id l124so4675650itg.6
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 08:03:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dk+u3XgaNOqXLaO68gyf05VnI7PTjpPeX2V5LZFBkJU=;
-        b=m9cBFzpJQ4ytpohbtz1aZsspnjj6HRz8/XfdebXLXYZGnPtVebUcF1RjtvLL+WqYwN
-         gw+Rg2MZM1mA39FvEcumvagclKwYH77rhL7ssva9D9XUr0hiUzkKtUZosvkVH60ZZ3DQ
-         qodlKVdpbo5iHdW1VByXRDEqgkDBder58ppqcSugqQTC01/4HFgPmaGC8hk4SLzCTdHH
-         ygM0lrWkbBpFA7j8r+gUidTR8XLG6aNQKB8nbddh8+HG9fVEvrBzO7UguAfRsPNuwHh4
-         ucQOkIUsNVP2iZ+Ln+08tfGCnBtkwXsbl4V+hMKKIMpZe0qyP9Ip1P5lc2Xk1KL5dfND
-         4Ptg==
-X-Gm-Message-State: APjAAAUnVbWUHE5acX4H/OHWtQ0g56mphWbG2vu1moEVU+DBR+na55HJ
-        GnyLp2HZupqgT4+3QhS6VQSeJnt04pQQNt6KrPAWwg==
-X-Google-Smtp-Source: APXvYqypLm2j/J6SB8ZKAlfeHzcCYKwyThpmhhnmxpvXXR1jOg6wN0waBPRAcYcxiyvBbMj8vJDm0b8GB8DJsrFdTLI=
-X-Received: by 2002:a9d:470d:: with SMTP id a13mr8130580otf.126.1560005639908;
- Sat, 08 Jun 2019 07:53:59 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0KdeUb+UfEQdipefR6pVhLY33O2S8gQ7FzwbqhitJwQ=;
+        b=U7OtdAMs4UwYWfOkjlOrUJjqCVhH2sUPbJ/ujgE5mZ3wyyAo6p7yfYOHidykce6ZfC
+         YVOdfWGJZaYeUd6klfwBWTeZ95TKdQ3vsv/1Ss8EmZyPM4l8blG8ksADNgcbO7NC7yYW
+         VgqO4Yjm2DMQDfKbyy7OyF/a8TT2nYHygT2lfrlxJ6MSSCEDWxfBISP6+C2NbmTc/CcV
+         YmuBLRDnEcjBCAPkhE0ScckPria/p8p+/rV+jlzY7TzEz5C7D/DHru51L8JCa3FPfKsD
+         WbdHeRS9s2qvVxfDwFviGRFky2xp2onm4iWtfMJhhdaFDFiZJ5D+c0G4TizlNtMYvwXC
+         Az0A==
+X-Gm-Message-State: APjAAAVVACV5FWQ/cChyVhjS+urcic/ClBOEDT6Uw/ajmeK5KBizu8q3
+        cGN3utIeKkYrlAsOMgAHkJKWBRpMYS4YfHUTS/CTyycNRsQJ
+X-Google-Smtp-Source: APXvYqx/lCrlsM+jEGz1fCXhrjloO9MrUuiJBEEOaMD6ZjtX2UMhafC4D3ftHHGq6JELJYlkQ5H4wlsegxliTPGnmEFmQ3IQWuAD
 MIME-Version: 1.0
-References: <155925716254.3775979.16716824941364738117.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155925718351.3775979.13546720620952434175.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKv+Gu-J3-66V7UhH3=AjN4sX7iydHNF7Fd+SMbezaVNrZQmGQ@mail.gmail.com>
- <CAPcyv4g-GNe2vSYTn0a6ivQYxJdS5khE4AJbcxysoGPsTZwswg@mail.gmail.com>
- <CAKv+Gu83QB6x8=LCaAcR0S65WELC-Y+Voxw6LzaVh4FSV3bxYA@mail.gmail.com>
- <CAPcyv4hXBJBMrqoUr4qG5A3CUVgWzWK6bfBX29JnLCKDC7CiGA@mail.gmail.com>
- <CAKv+Gu_ZYpey0dWYebFgCaziyJ-_x+KbCmOegWqFjwC0U-5QaA@mail.gmail.com>
- <CAPcyv4jO5WhRJ-=Nz70Jc0mCHYBJ6NsHjJNk6AerwQXH43oemw@mail.gmail.com>
- <CAPcyv4gzhr57xa2MbR1Jk8EDFw-WLdcw3mJnEX9PeAFwVEZbDA@mail.gmail.com> <CAKv+Gu_OcsWi5DqxOk-j6ovc0CMAZV37Od7zA5Bs4Ng5ATQxAA@mail.gmail.com>
-In-Reply-To: <CAKv+Gu_OcsWi5DqxOk-j6ovc0CMAZV37Od7zA5Bs4Ng5ATQxAA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 8 Jun 2019 07:53:49 -0700
-Message-ID: <CAPcyv4i_ZaKKT2dHQTuHCWT9HhqCOm4kpy2YdK952GubwqbJDQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] x86, efi: Reserve UEFI 2.8 Specific Purpose Memory
- for dax
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:c95a:: with SMTP id u26mr22232424jao.15.1560006185906;
+ Sat, 08 Jun 2019 08:03:05 -0700 (PDT)
+Date:   Sat, 08 Jun 2019 08:03:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008f00f7058ad13ec8@google.com>
+Subject: KMSAN: uninit-value in bcmp
+From:   syzbot <syzbot+d8b02c920ae8f3e0be75@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, idosch@mellanox.com,
+        ivan.khoronzhuk@linaro.org, jiri@mellanox.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        petrm@mellanox.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 8, 2019 at 12:20 AM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> On Fri, 7 Jun 2019 at 19:34, Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Fri, Jun 7, 2019 at 8:23 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Fri, Jun 7, 2019 at 5:29 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> > [..]
-> > > > > #ifdef CONFIG_EFI_APPLICATION_RESERVED
-> > > > > static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
-> > > > > {
-> > > > >         return md->type == EFI_CONVENTIONAL_MEMORY
-> > > > >                 && (md->attribute & EFI_MEMORY_SP);
-> > > > > }
-> > > > > #else
-> > > > > static inline bool is_efi_application_reserved(efi_memory_desc_t *md)
-> > > > > {
-> > > > >         return false;
-> > > > > }
-> > > > > #endif
-> > > >
-> > > > I think this policy decision should not live inside the EFI subsystem.
-> > > > EFI just gives you the memory map, and mangling that information
-> > > > depending on whether you think a certain memory attribute should be
-> > > > ignored is the job of the MM subsystem.
-> > >
-> > > The problem is that we don't have an mm subsystem at the time a
-> > > decision needs to be made. The reservation policy needs to be deployed
-> > > before even memblock has been initialized in order to keep kernel
-> > > allocations out of the reservation. I agree with the sentiment I just
-> > > don't see how to practically achieve an optional "System RAM" vs
-> > > "Application Reserved" routing decision without an early (before
-> > > e820__memblock_setup()) conditional branch.
-> >
-> > I can at least move it out of include/linux/efi.h and move it to
-> > arch/x86/include/asm/efi.h since it is an x86 specific policy decision
-> > / implementation for now.
->
-> No, that doesn't make sense to me. If it must live in the EFI
-> subsystem, I'd prefer it to be in the core code, not in x86 specific
-> code, since there is nothing x86 specific about it.
+Hello,
 
-Ok, but it's still not clear to me where you would accept an early
-detection of EFI_CONVENTIONAL_MEMORY + EFI_MEMORY_SP and route it away
-from the "System RAM" default. Please just recommend a place to land a
-conditional branch that translates between the base EFI type +
-attribute and E820_RAM and E820_APPLICATION_RESERVED.
+syzbot found the following crash on:
 
-> Perhaps a efi=xxx command line option would be in order to influence
-> the builtin default, but it can be a followup patch independent of
-> this series.
+HEAD commit:    d062d017 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=119daa0ca00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=67ebf8b3cce62ce7
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8b02c920ae8f3e0be75
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14973970a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1349a4e2a00000
 
-Sure, but I expect the default polarity of the branch is a compile
-time option with an efi= override.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d8b02c920ae8f3e0be75@syzkaller.appspotmail.com
+
+IPVS: ftp: loaded support on port[0] = 21
+==================================================================
+BUG: KMSAN: uninit-value in memcmp lib/string.c:865 [inline]
+BUG: KMSAN: uninit-value in bcmp+0x117/0x180 lib/string.c:887
+CPU: 1 PID: 10480 Comm: syz-executor472 Not tainted 5.1.0-rc7+ #5
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:619
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  memcmp lib/string.c:865 [inline]
+  bcmp+0x117/0x180 lib/string.c:887
+  __hw_addr_del_ex net/core/dev_addr_lists.c:123 [inline]
+  __dev_mc_del+0x16c/0x690 net/core/dev_addr_lists.c:810
+  dev_mc_del+0x6d/0x80 net/core/dev_addr_lists.c:828
+  ip_mc_filter_del net/ipv4/igmp.c:1142 [inline]
+  __igmp_group_dropped+0x260/0x1320 net/ipv4/igmp.c:1276
+  igmp_group_dropped net/ipv4/igmp.c:1306 [inline]
+  ip_mc_down+0x1e7/0x3b0 net/ipv4/igmp.c:1714
+  inetdev_event+0x22d/0x1df0 net/ipv4/devinet.c:1534
+  notifier_call_chain kernel/notifier.c:93 [inline]
+  __raw_notifier_call_chain kernel/notifier.c:394 [inline]
+  raw_notifier_call_chain+0x13d/0x240 kernel/notifier.c:401
+  call_netdevice_notifiers_info net/core/dev.c:1753 [inline]
+  call_netdevice_notifiers_extack net/core/dev.c:1765 [inline]
+  call_netdevice_notifiers net/core/dev.c:1779 [inline]
+  dev_close_many+0x60d/0x9e0 net/core/dev.c:1522
+  rollback_registered_many+0x94a/0x2210 net/core/dev.c:8177
+  rollback_registered net/core/dev.c:8242 [inline]
+  unregister_netdevice_queue+0x593/0xab0 net/core/dev.c:9289
+  unregister_netdevice include/linux/netdevice.h:2658 [inline]
+  __tun_detach+0x21be/0x2b10 drivers/net/tun.c:727
+  tun_detach drivers/net/tun.c:744 [inline]
+  tun_chr_close+0xda/0x1c0 drivers/net/tun.c:3443
+  __fput+0x4d1/0xbc0 fs/file_table.c:278
+  ____fput+0x37/0x40 fs/file_table.c:309
+  task_work_run+0x22e/0x2a0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop arch/x86/entry/common.c:166 [inline]
+  prepare_exit_to_usermode+0x31d/0x420 arch/x86/entry/common.c:197
+  syscall_return_slowpath+0x90/0x5c0 arch/x86/entry/common.c:268
+  do_syscall_64+0xe2/0xf0 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x400f00
+Code: 01 f0 ff ff 0f 83 20 0c 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+44 00 00 83 3d cd 17 2d 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 f4 0b 00 00 c3 48 83 ec 08 e8 5a 01 00 00
+RSP: 002b:00007fff995e0ec8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000400f00
+RDX: 0000000020000c40 RSI: 0000000000008914 RDI: 0000000000000004
+RBP: 00000000004a2470 R08: 0000000000000100 R09: 0000000000000100
+R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000401f80
+R13: 0000000000402010 R14: 0000000000000000 R15: 0000000000000000
+
+Local variable description: ----buf.i@__igmp_group_dropped
+Variable was created at:
+  ip_mc_filter_del net/ipv4/igmp.c:1139 [inline]
+  __igmp_group_dropped+0x170/0x1320 net/ipv4/igmp.c:1276
+  igmp_group_dropped net/ipv4/igmp.c:1306 [inline]
+  ip_mc_down+0x1e7/0x3b0 net/ipv4/igmp.c:1714
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
