@@ -7,30 +7,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE191C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4B9C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05DF214DA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B025208E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 10:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfFHK70 (ORCPT
+        id S1727722AbfFHK7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 06:59:26 -0400
-Received: from sauhun.de ([88.99.104.3]:51874 "EHLO pokefinder.org"
+        Sat, 8 Jun 2019 06:59:37 -0400
+Received: from sauhun.de ([88.99.104.3]:51862 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbfFHK4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 06:56:48 -0400
+        id S1726959AbfFHK4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 06:56:47 -0400
 Received: from localhost (p5486CBCC.dip0.t-ipconnect.de [84.134.203.204])
-        by pokefinder.org (Postfix) with ESMTPSA id BE5C93E4770;
-        Sat,  8 Jun 2019 12:56:46 +0200 (CEST)
+        by pokefinder.org (Postfix) with ESMTPSA id AFB173E4791;
+        Sat,  8 Jun 2019 12:56:45 +0200 (CEST)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/34] media: i2c: tw9910: simplify getting the adapter of a client
-Date:   Sat,  8 Jun 2019 12:55:50 +0200
-Message-Id: <20190608105619.593-12-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 09/34] media: i2c: mt9p031: simplify getting the adapter of a client
+Date:   Sat,  8 Jun 2019 12:55:48 +0200
+Message-Id: <20190608105619.593-10-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
 References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
@@ -49,23 +50,22 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Please apply to your subsystem tree.
 
- drivers/media/i2c/tw9910.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/i2c/mt9p031.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/tw9910.c b/drivers/media/i2c/tw9910.c
-index 4d7cd736b930..a25a350b0ddc 100644
---- a/drivers/media/i2c/tw9910.c
-+++ b/drivers/media/i2c/tw9910.c
-@@ -934,8 +934,7 @@ static int tw9910_probe(struct i2c_client *client,
+diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
+index 715be3632b01..5d824dd33edd 100644
+--- a/drivers/media/i2c/mt9p031.c
++++ b/drivers/media/i2c/mt9p031.c
+@@ -1034,7 +1034,7 @@ static int mt9p031_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *did)
  {
- 	struct tw9910_priv		*priv;
- 	struct tw9910_video_info	*info;
--	struct i2c_adapter		*adapter =
--		to_i2c_adapter(client->dev.parent);
-+	struct i2c_adapter		*adapter = client->adapter;
+ 	struct mt9p031_platform_data *pdata = mt9p031_get_pdata(client);
+-	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
++	struct i2c_adapter *adapter = client->adapter;
+ 	struct mt9p031 *mt9p031;
+ 	unsigned int i;
  	int ret;
- 
- 	if (!client->dev.platform_data) {
 -- 
 2.19.1
 
