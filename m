@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60787C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C627C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308DB214AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CE3214AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Jun 2019 11:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1559994902;
-	bh=8r8ka3Dy5ssf2HI4AWlbCTlh4KKtCZC2Pzs6vACDIiE=;
+	s=default; t=1559994919;
+	bh=zl7Ovl2vXyPeeiglnfmjIQ+DNu7saEV6ldDyvkE6qq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tS1O+Qg7/xtxCVni/8TNxpuW2Av+VFbrlAeXXoISb/TalFxzNaDmAF7sk2U807Ksl
-	 nVlNczKqblshv/5S3SGNfHJ9+HaHRXzoPt5XPttPyO56grY4ywIdtwi9ZhNRUPIAVV
-	 BdwUegWdDifa7J8Eh3OLJmE4wLgaVq0dNulvmjmU=
+	b=VbYM8w3lEvpk4JldPCfUrj6fQ99SVVCHl4pTMcyzNt6hll0Cp1n3X2L3KAO20Hqbk
+	 PgPuUQVS3ZEbrIKlBwprv/GpAqPN7MEmBZ95ERQK3v9xThD0L16fh1bkt19ZXHc4qH
+	 Aj98lwtYWnMjqjDNiKgdUwm7Vqn/q8EKAZQxxJ4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbfFHLzA (ORCPT
+        id S1727986AbfFHLzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 07:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57362 "EHLO mail.kernel.org"
+        Sat, 8 Jun 2019 07:55:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfFHLkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 07:40:13 -0400
+        id S1727280AbfFHLkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 07:40:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 742A8214D8;
-        Sat,  8 Jun 2019 11:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9538F21530;
+        Sat,  8 Jun 2019 11:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559994013;
-        bh=8r8ka3Dy5ssf2HI4AWlbCTlh4KKtCZC2Pzs6vACDIiE=;
+        s=default; t=1559994006;
+        bh=zl7Ovl2vXyPeeiglnfmjIQ+DNu7saEV6ldDyvkE6qq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fh88KPAef2L/SR18dG27yn98hmwSamt2in2XQPK+yyvnJMb2A8DVPI3FOqsYe6Dfs
-         bCZWS+NRHGJuBD6CsSIJZe2bGoAarwV3B6Y1Y/ByL9PWFNaGyR9x1UnXkFb46TiD43
-         WgMHpRWenzH280Sv3p2Whj3GM8CuwlhXWXgcMH+0=
+        b=CifLuzILb8vtg+iBq0SM/iZgJk0VtyHuQ80J0Zl9l3ZSWg1A0EoCChPzqkdnZvUGt
+         ovZDSBtef5xh74sGB2em9KzQoa2ykG2osMvYFvbYrb6QE2J5PPRwQrdE+VJkUuFjtB
+         3BT+RIxcJlDeOd1PQrBE1bppZlGzEKdWWT3E4wjc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 16/70] clk: ti: clkctrl: Fix clkdm_clk handling
-Date:   Sat,  8 Jun 2019 07:38:55 -0400
-Message-Id: <20190608113950.8033-16-sashal@kernel.org>
+Cc:     Phil Sutter <phil@nwl.cc>, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 12/70] netfilter: nft_fib: Fix existence check support
+Date:   Sat,  8 Jun 2019 07:38:51 -0400
+Message-Id: <20190608113950.8033-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 References: <20190608113950.8033-1-sashal@kernel.org>
@@ -59,56 +60,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Phil Sutter <phil@nwl.cc>
 
-[ Upstream commit 1cc54078d104f5b4d7e9f8d55362efa5a8daffdb ]
+[ Upstream commit e633508a95289489d28faacb68b32c3e7e68ef6f ]
 
-We need to always call clkdm_clk_enable() and clkdm_clk_disable() even
-the clkctrl clock(s) enabled for the domain do not have any gate register
-bits. Otherwise clockdomains may never get enabled except when devices get
-probed with the legacy "ti,hwmods" devicetree property.
+NFTA_FIB_F_PRESENT flag was not always honored since eval functions did
+not call nft_fib_store_result in all cases.
 
-Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Given that in all callsites there is a struct net_device pointer
+available which holds the interface data to be stored in destination
+register, simplify nft_fib_store_result() to just accept that pointer
+instead of the nft_pktinfo pointer and interface index. This also
+allows to drop the index to interface lookup previously needed to get
+the name associated with given index.
+
+Fixes: 055c4b34b94f6 ("netfilter: nft_fib: Support existence check")
+Signed-off-by: Phil Sutter <phil@nwl.cc>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clkctrl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/net/netfilter/nft_fib.h   |  2 +-
+ net/ipv4/netfilter/nft_fib_ipv4.c | 23 +++--------------------
+ net/ipv6/netfilter/nft_fib_ipv6.c | 16 ++--------------
+ net/netfilter/nft_fib.c           |  6 +++---
+ 4 files changed, 9 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
-index 639f515e08f0..3325ee43bcc1 100644
---- a/drivers/clk/ti/clkctrl.c
-+++ b/drivers/clk/ti/clkctrl.c
-@@ -137,9 +137,6 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
- 	int ret;
- 	union omap4_timeout timeout = { 0 };
+diff --git a/include/net/netfilter/nft_fib.h b/include/net/netfilter/nft_fib.h
+index a88f92737308..e4c4d8eaca8c 100644
+--- a/include/net/netfilter/nft_fib.h
++++ b/include/net/netfilter/nft_fib.h
+@@ -34,5 +34,5 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 		   const struct nft_pktinfo *pkt);
  
--	if (!clk->enable_bit)
--		return 0;
+ void nft_fib_store_result(void *reg, const struct nft_fib *priv,
+-			  const struct nft_pktinfo *pkt, int index);
++			  const struct net_device *dev);
+ #endif
+diff --git a/net/ipv4/netfilter/nft_fib_ipv4.c b/net/ipv4/netfilter/nft_fib_ipv4.c
+index 94eb25bc8d7e..c8888e52591f 100644
+--- a/net/ipv4/netfilter/nft_fib_ipv4.c
++++ b/net/ipv4/netfilter/nft_fib_ipv4.c
+@@ -58,11 +58,6 @@ void nft_fib4_eval_type(const struct nft_expr *expr, struct nft_regs *regs,
+ }
+ EXPORT_SYMBOL_GPL(nft_fib4_eval_type);
+ 
+-static int get_ifindex(const struct net_device *dev)
+-{
+-	return dev ? dev->ifindex : 0;
+-}
 -
- 	if (clk->clkdm) {
- 		ret = ti_clk_ll_ops->clkdm_clk_enable(clk->clkdm, hw->clk);
- 		if (ret) {
-@@ -151,6 +148,9 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
- 		}
+ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 		   const struct nft_pktinfo *pkt)
+ {
+@@ -94,8 +89,7 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 
+ 	if (nft_hook(pkt) == NF_INET_PRE_ROUTING &&
+ 	    nft_fib_is_loopback(pkt->skb, nft_in(pkt))) {
+-		nft_fib_store_result(dest, priv, pkt,
+-				     nft_in(pkt)->ifindex);
++		nft_fib_store_result(dest, priv, nft_in(pkt));
+ 		return;
  	}
  
-+	if (!clk->enable_bit)
-+		return 0;
-+
- 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
+@@ -108,8 +102,7 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 	if (ipv4_is_zeronet(iph->saddr)) {
+ 		if (ipv4_is_lbcast(iph->daddr) ||
+ 		    ipv4_is_local_multicast(iph->daddr)) {
+-			nft_fib_store_result(dest, priv, pkt,
+-					     get_ifindex(pkt->skb->dev));
++			nft_fib_store_result(dest, priv, pkt->skb->dev);
+ 			return;
+ 		}
+ 	}
+@@ -150,17 +143,7 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 		found = oif;
+ 	}
  
- 	val &= ~OMAP4_MODULEMODE_MASK;
-@@ -179,7 +179,7 @@ static void _omap4_clkctrl_clk_disable(struct clk_hw *hw)
- 	union omap4_timeout timeout = { 0 };
+-	switch (priv->result) {
+-	case NFT_FIB_RESULT_OIF:
+-		*dest = found->ifindex;
+-		break;
+-	case NFT_FIB_RESULT_OIFNAME:
+-		strncpy((char *)dest, found->name, IFNAMSIZ);
+-		break;
+-	default:
+-		WARN_ON_ONCE(1);
+-		break;
+-	}
++	nft_fib_store_result(dest, priv, found);
+ }
+ EXPORT_SYMBOL_GPL(nft_fib4_eval);
  
- 	if (!clk->enable_bit)
--		return;
-+		goto exit;
+diff --git a/net/ipv6/netfilter/nft_fib_ipv6.c b/net/ipv6/netfilter/nft_fib_ipv6.c
+index 73cdc0bc63f7..ec068b0cffca 100644
+--- a/net/ipv6/netfilter/nft_fib_ipv6.c
++++ b/net/ipv6/netfilter/nft_fib_ipv6.c
+@@ -169,8 +169,7 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
  
- 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
+ 	if (nft_hook(pkt) == NF_INET_PRE_ROUTING &&
+ 	    nft_fib_is_loopback(pkt->skb, nft_in(pkt))) {
+-		nft_fib_store_result(dest, priv, pkt,
+-				     nft_in(pkt)->ifindex);
++		nft_fib_store_result(dest, priv, nft_in(pkt));
+ 		return;
+ 	}
  
+@@ -187,18 +186,7 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 	if (oif && oif != rt->rt6i_idev->dev)
+ 		goto put_rt_err;
+ 
+-	switch (priv->result) {
+-	case NFT_FIB_RESULT_OIF:
+-		*dest = rt->rt6i_idev->dev->ifindex;
+-		break;
+-	case NFT_FIB_RESULT_OIFNAME:
+-		strncpy((char *)dest, rt->rt6i_idev->dev->name, IFNAMSIZ);
+-		break;
+-	default:
+-		WARN_ON_ONCE(1);
+-		break;
+-	}
+-
++	nft_fib_store_result(dest, priv, rt->rt6i_idev->dev);
+  put_rt_err:
+ 	ip6_rt_put(rt);
+ }
+diff --git a/net/netfilter/nft_fib.c b/net/netfilter/nft_fib.c
+index 21df8cccea65..77f00a99dfab 100644
+--- a/net/netfilter/nft_fib.c
++++ b/net/netfilter/nft_fib.c
+@@ -135,17 +135,17 @@ int nft_fib_dump(struct sk_buff *skb, const struct nft_expr *expr)
+ EXPORT_SYMBOL_GPL(nft_fib_dump);
+ 
+ void nft_fib_store_result(void *reg, const struct nft_fib *priv,
+-			  const struct nft_pktinfo *pkt, int index)
++			  const struct net_device *dev)
+ {
+-	struct net_device *dev;
+ 	u32 *dreg = reg;
++	int index;
+ 
+ 	switch (priv->result) {
+ 	case NFT_FIB_RESULT_OIF:
++		index = dev ? dev->ifindex : 0;
+ 		*dreg = (priv->flags & NFTA_FIB_F_PRESENT) ? !!index : index;
+ 		break;
+ 	case NFT_FIB_RESULT_OIFNAME:
+-		dev = dev_get_by_index_rcu(nft_net(pkt), index);
+ 		if (priv->flags & NFTA_FIB_F_PRESENT)
+ 			*dreg = !!dev;
+ 		else
 -- 
 2.20.1
 
