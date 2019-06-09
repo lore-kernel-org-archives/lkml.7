@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EC9C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B7BC468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23401205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63B72067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100413;
-	bh=T85Jjxk0NgM73sAqGZhoIIV7gjVXYl/ORklZiPJt03s=;
+	s=default; t=1560100424;
+	bh=4U4izcSaOKzl/o61twDWLKRT4NOa+abMyqiXhluokoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oU4wp04DVrqXUzcORew8dviDfaiFBM/0djq4Zxi5zKjwFfjDZzf1r0kJaWw7T0Qyp
-	 ouD+tNode2U8lWn07LC2VA0osNwng+X/Lh55MNiHVCKGNZn5zBUz46WoHIdBgaDXZ1
-	 Qkf+amKxsFukEz+ebbsino7//00BF7DS0fkyg048=
+	b=QTvFnBtpJaMSVgc14WbRd8zlb8yQFYA9uXj2rbzC5FPiKSnbegDU9D06eO6IWx5gn
+	 omafiCTkehJo9580viuIAtA2TRE7PuWuua9pza+zvO5LyHHjSkJAMTwKQmFrLJLT80
+	 qE96iN97sAJ+3dkDQFxxLs/q0d+rUKKzcj5z3bBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388764AbfFIRNc (ORCPT
+        id S1733257AbfFIQ5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33320 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:57:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732708AbfFIQ6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:58:11 -0400
+        id S1732638AbfFIQ5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:57:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD666206C3;
-        Sun,  9 Jun 2019 16:58:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDE472084A;
+        Sun,  9 Jun 2019 16:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099491;
-        bh=T85Jjxk0NgM73sAqGZhoIIV7gjVXYl/ORklZiPJt03s=;
+        s=default; t=1560099467;
+        bh=4U4izcSaOKzl/o61twDWLKRT4NOa+abMyqiXhluokoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zph1zHpp/frQT2cH3yqKbwbYd42G31Ftp00Kcg4gfWSH9z8iizYLknp/rvJOKK4We
-         vt4nTK6JevtacVc+AG3iQTt42OFKWf8uwR1b8EjPSNHP7cQ+Z5tCBfX6uzhEleN3Jg
-         jwZ0dzz3yl6bX1+5e90WMFTtOfRjNXuPEwObo+sc=
+        b=bkdbZlwxPLlQKIcXQzL7r1J4RAlBw0rPUOPTqkkWeMMZxdtaU2BothWlLbS7BNy8V
+         i6IrwCWwC4Nl3dlAjiMFCgXnnUHqzhiSpVhlidr4Tbue9uCoQPGO7MRfiP89Y7Zawe
+         Uc5mUCp0el885jbTiU4ujzSZPEPyUL7FsnU7dhOk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.4 060/241] fbdev: sm712fb: use 1024x768 by default on non-MIPS, fix garbled display
-Date:   Sun,  9 Jun 2019 18:40:02 +0200
-Message-Id: <20190609164149.514243192@linuxfoundation.org>
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.4 043/241] NFS4: Fix v4.0 client state corruption when mount
+Date:   Sun,  9 Jun 2019 18:39:45 +0200
+Message-Id: <20190609164149.018303773@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,124 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-commit 4ed7d2ccb7684510ec5f7a8f7ef534bc6a3d55b2 upstream.
+commit f02f3755dbd14fb935d24b14650fff9ba92243b8 upstream.
 
-Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
-target platform of this driver, but nearly all old x86 laptops have
-1024x768. Lighting 768 panels using 600's timings would partially
-garble the display. Since it's not possible to distinguish them reliably,
-we change the default to 768, but keep 600 as-is on MIPS.
+stat command with soft mount never return after server is stopped.
 
-Further, earlier laptops, such as IBM Thinkpad 240X, has a 800x600 LCD
-panel, this driver would probably garbled those display. As we don't
-have one for testing, the original behavior of the driver is kept as-is,
-but the problem has been documented is the comments.
+When alloc a new client, the state of the client will be set to
+NFS4CLNT_LEASE_EXPIRED.
 
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: <stable@vger.kernel.org>  # v4.4+
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+When the server is stopped, the state manager will work, and accord
+the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
+will drain the slot table and lead other task to wait queue, until
+the client recovered. Then the stat command is hung.
+
+When discover server trunking, the client will renew the lease,
+but check the client state, it lead the client state corruption.
+
+So, we need to call state manager to recover it when detect server
+ip trunking.
+
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712.h   |    7 +++--
- drivers/video/fbdev/sm712fb.c |   53 +++++++++++++++++++++++++++++++-----------
- 2 files changed, 44 insertions(+), 16 deletions(-)
+ fs/nfs/nfs4state.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/video/fbdev/sm712.h
-+++ b/drivers/video/fbdev/sm712.h
-@@ -15,9 +15,10 @@
- 
- #define FB_ACCEL_SMI_LYNX 88
- 
--#define SCREEN_X_RES      1024
--#define SCREEN_Y_RES      600
--#define SCREEN_BPP        16
-+#define SCREEN_X_RES          1024
-+#define SCREEN_Y_RES_PC       768
-+#define SCREEN_Y_RES_NETBOOK  600
-+#define SCREEN_BPP            16
- 
- #define dac_reg	(0x3c8)
- #define dac_val	(0x3c9)
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1462,6 +1462,43 @@ static u_long sm7xx_vram_probe(struct sm
- 	return 0;  /* unknown hardware */
- }
- 
-+static void sm7xx_resolution_probe(struct smtcfb_info *sfb)
-+{
-+	/* get mode parameter from smtc_scr_info */
-+	if (smtc_scr_info.lfb_width != 0) {
-+		sfb->fb->var.xres = smtc_scr_info.lfb_width;
-+		sfb->fb->var.yres = smtc_scr_info.lfb_height;
-+		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
-+		goto final;
-+	}
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -140,6 +140,10 @@ int nfs40_discover_server_trunking(struc
+ 		/* Sustain the lease, even if it's empty.  If the clientid4
+ 		 * goes stale it's of no use for trunking discovery. */
+ 		nfs4_schedule_state_renewal(*result);
 +
-+	/*
-+	 * No parameter, default resolution is 1024x768-16.
-+	 *
-+	 * FIXME: earlier laptops, such as IBM Thinkpad 240X, has a 800x600
-+	 * panel, also see the comments about Thinkpad 240X above.
-+	 */
-+	sfb->fb->var.xres = SCREEN_X_RES;
-+	sfb->fb->var.yres = SCREEN_Y_RES_PC;
-+	sfb->fb->var.bits_per_pixel = SCREEN_BPP;
-+
-+#ifdef CONFIG_MIPS
-+	/*
-+	 * Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
-+	 * target platform of this driver, but nearly all old x86 laptops have
-+	 * 1024x768. Lighting 768 panels using 600's timings would partially
-+	 * garble the display, so we don't want that. But it's not possible to
-+	 * distinguish them reliably.
-+	 *
-+	 * So we change the default to 768, but keep 600 as-is on MIPS.
-+	 */
-+	sfb->fb->var.yres = SCREEN_Y_RES_NETBOOK;
-+#endif
-+
-+final:
-+	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
-+}
-+
- static int smtcfb_pci_probe(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
- {
-@@ -1507,19 +1544,6 @@ static int smtcfb_pci_probe(struct pci_d
- 
- 	sm7xx_init_hw();
- 
--	/* get mode parameter from smtc_scr_info */
--	if (smtc_scr_info.lfb_width != 0) {
--		sfb->fb->var.xres = smtc_scr_info.lfb_width;
--		sfb->fb->var.yres = smtc_scr_info.lfb_height;
--		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
--	} else {
--		/* default resolution 1024x600 16bit mode */
--		sfb->fb->var.xres = SCREEN_X_RES;
--		sfb->fb->var.yres = SCREEN_Y_RES;
--		sfb->fb->var.bits_per_pixel = SCREEN_BPP;
--	}
--
--	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
- 	/* Map address and memory detection */
- 	mmio_base = pci_resource_start(pdev, 0);
- 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
-@@ -1581,6 +1605,9 @@ static int smtcfb_pci_probe(struct pci_d
- 		goto failed_fb;
++		/* If the client state need to recover, do it. */
++		if (clp->cl_state)
++			nfs4_schedule_state_manager(clp);
  	}
- 
-+	/* probe and decide resolution */
-+	sm7xx_resolution_probe(sfb);
-+
- 	/* can support 32 bpp */
- 	if (15 == sfb->fb->var.bits_per_pixel)
- 		sfb->fb->var.bits_per_pixel = 16;
+ out:
+ 	return status;
 
 
