@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDE3C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE246C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0710F206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0626206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100000;
-	bh=w+h5GKQMo3H7si1GUsR87sk0q6Jr/sBcvFk0KrjBvjg=;
+	s=default; t=1560100003;
+	bh=XgetBVUHZB7IorlSzlXg19e6QMGcHjs8QXLzyfF8Hg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNvNJJGkO5ZqZuJNwFRbjXm5oaTUZH9WdiHA7H4pCAFl0o2VUegr7aaJrd/fPnOYn
-	 aUP8H37JeU97X/Tcjj94DgR5zgZ4QfwzyQrtxjlIYtcgScWjYuyZAYk3lz8/pnOFHm
-	 IPejOQAjziwSzcakvrQadd8jy0YyMZDubc+NSiwM=
+	b=hjbQxsGZ99uQeIB2xcfn8kqyDMsjE4VPVFTa8XXPXAxl6hgGkwqjWt4yGTcEZ69FD
+	 y25mFzzCHA4PCTwpssar5s0a/T8qmO6ycW2YZOKdey7w+UUBwf9X338r+Lc+gXaCHZ
+	 gbiW44Oo9qx4iAHrYMoIW9RzoE0CEhd9JFm1Mrwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389062AbfFIRGj (ORCPT
+        id S2389063AbfFIRGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:06:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46410 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389048AbfFIRGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:06:35 -0400
+        id S2389048AbfFIRGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:06:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2584720833;
-        Sun,  9 Jun 2019 17:06:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D90A3204EC;
+        Sun,  9 Jun 2019 17:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099994;
-        bh=w+h5GKQMo3H7si1GUsR87sk0q6Jr/sBcvFk0KrjBvjg=;
+        s=default; t=1560100000;
+        bh=XgetBVUHZB7IorlSzlXg19e6QMGcHjs8QXLzyfF8Hg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bbx2T42MhnjcZObO6SXBDvxd5NncEBSwc7Qp5kulVdO2g0YlI4mHEDicX0wlnS5E2
-         9mypmGqHd4KencOIfhqTzqQ5ZK6yrvz0dhyyXYrNR8MQVqs1ONIewIu+tnKSa5REMR
-         FMOAn/nn8w239ygg4tHC3kO/m5e5QDBmDWrf6Uek=
+        b=mCoTG0RsqdY46YWe4X/jbchv52UH0aNeXdSnJ7zyWJ8Cq3b1JCx4Qp8Uy0eGB+1gl
+         XqJurXKWNTSQxe0kgMzeH0G8FWqpzKR0nt3Lmt4xiFr7m0yU7FnzdjGp8ZCZODlyhY
+         tBnCYIlLrrZSBP8S6hwb/tjVhOHE7WHMqYpLOFoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.4 241/241] fuse: Add FOPEN_STREAM to use stream_open()
-Date:   Sun,  9 Jun 2019 18:43:03 +0200
-Message-Id: <20190609164155.776979806@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 230/241] neighbor: Call __ipv4_neigh_lookup_noref in neigh_xmit
+Date:   Sun,  9 Jun 2019 18:42:52 +0200
+Message-Id: <20190609164155.367695468@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,86 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Smelkov <kirr@nexedi.com>
+From: David Ahern <dsahern@gmail.com>
 
-commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
+[ Upstream commit 4b2a2bfeb3f056461a90bd621e8bd7d03fa47f60 ]
 
-Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
-POSIX") files opened even via nonseekable_open gate read and write via lock
-and do not allow them to be run simultaneously. This can create read vs
-write deadlock if a filesystem is trying to implement a socket-like file
-which is intended to be simultaneously used for both read and write from
-filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
-stream-like files so that read and write can run simultaneously without
-deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
-on writes to /proc/xen/xenbus") for a similar deadlock example on
-/proc/xen/xenbus.
+Commit cd9ff4de0107 changed the key for IFF_POINTOPOINT devices to
+INADDR_ANY but neigh_xmit which is used for MPLS encapsulations was not
+updated to use the altered key. The result is that every packet Tx does
+a lookup on the gateway address which does not find an entry, a new one
+is created only to find the existing one in the table right before the
+insert since arp_constructor was updated to reset the primary key. This
+is seen in the allocs and destroys counters:
+    ip -s -4 ntable show | head -10 | grep alloc
 
-To avoid such deadlock it was tempting to adjust fuse_finish_open to use
-stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
-but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
-and in particular GVFS which actually uses offset in its read and write
-handlers
+which increase for each packet showing the unnecessary overhread.
 
-	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+Fix by having neigh_xmit use __ipv4_neigh_lookup_noref for NEIGH_ARP_TABLE.
 
-so if we would do such a change it will break a real user.
-
-Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
-opened handler is having stream-like semantics; does not use file position
-and thus the kernel is free to issue simultaneous read and write request on
-opened file handle.
-
-This patch together with stream_open() should be added to stable kernels
-starting from v3.14+. This will allow to patch OSSPD and other FUSE
-filesystems that provide stream-like files to return FOPEN_STREAM |
-FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
-kernel versions. This should work because fuse_finish_open ignores unknown
-open flags returned from a filesystem and so passing FOPEN_STREAM to a
-kernel that is not aware of this flag cannot hurt. In turn the kernel that
-is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
-is sufficient to implement streams without read vs write deadlock.
-
-Cc: stable@vger.kernel.org # v3.14+
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: cd9ff4de0107 ("ipv4: Make neigh lookup keys for loopback/point-to-point devices be INADDR_ANY")
+Reported-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Tested-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/fuse/file.c            |    4 +++-
- include/uapi/linux/fuse.h |    2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ net/core/neighbour.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -178,7 +178,9 @@ void fuse_finish_open(struct inode *inod
- 		file->f_op = &fuse_direct_io_file_operations;
- 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
- 		invalidate_inode_pages2(inode->i_mapping);
--	if (ff->open_flags & FOPEN_NONSEEKABLE)
-+	if (ff->open_flags & FOPEN_STREAM)
-+		stream_open(inode, file);
-+	else if (ff->open_flags & FOPEN_NONSEEKABLE)
- 		nonseekable_open(inode, file);
- 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
- 		struct fuse_inode *fi = get_fuse_inode(inode);
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -205,10 +205,12 @@ struct fuse_file_lock {
-  * FOPEN_DIRECT_IO: bypass page cache for this open file
-  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
-  * FOPEN_NONSEEKABLE: the file is not seekable
-+ * FOPEN_STREAM: the file is stream-like (no file position at all)
-  */
- #define FOPEN_DIRECT_IO		(1 << 0)
- #define FOPEN_KEEP_CACHE	(1 << 1)
- #define FOPEN_NONSEEKABLE	(1 << 2)
-+#define FOPEN_STREAM		(1 << 4)
- 
- /**
-  * INIT request/reply flags
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -30,6 +30,7 @@
+ #include <linux/times.h>
+ #include <net/net_namespace.h>
+ #include <net/neighbour.h>
++#include <net/arp.h>
+ #include <net/dst.h>
+ #include <net/sock.h>
+ #include <net/netevent.h>
+@@ -2490,7 +2491,13 @@ int neigh_xmit(int index, struct net_dev
+ 		if (!tbl)
+ 			goto out;
+ 		rcu_read_lock_bh();
+-		neigh = __neigh_lookup_noref(tbl, addr, dev);
++		if (index == NEIGH_ARP_TABLE) {
++			u32 key = *((u32 *)addr);
++
++			neigh = __ipv4_neigh_lookup_noref(dev, key);
++		} else {
++			neigh = __neigh_lookup_noref(tbl, addr, dev);
++		}
+ 		if (!neigh)
+ 			neigh = __neigh_create(tbl, addr, dev, false);
+ 		err = PTR_ERR(neigh);
 
 
