@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96C3C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A33FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94DF204EC
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2421C206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099978;
-	bh=y4+aDopGjka30hHWzYoyHj/uq25HZ4xrzBfOKXhakAQ=;
+	s=default; t=1560099982;
+	bh=TIsEDxrhkUxhC/Sdt/4XQ3cv0SUJDfY3nwLEDp++RRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCRVhctnUu7FivjPgfLszwF0jp3rjeyEf4m7MRMre7Qmx49TQTi5D2nPj15w8jK+G
-	 q1Q2ds/BcYd4V/4gPXA9OwiWtV2lyMJlccWJ5GMFAI2XYnfti/8z2fypI1T7KZnrls
-	 dqY2EJ/MGke9jAI6R7JLEGj6laIa9Kt5nXME7Cdo=
+	b=AsJ8N3YCBjtTAWuOzv/4V8pnQPnzhmaa71nvBJZeigjNxKK44INwksbWp2OPhNj0c
+	 AuiKKTB3FRA8XMkajL5IJPuKKE4rJSM+mc5PXSB8bPHxLEeWZDBpBlWn1thzDyfPZa
+	 nmWX6o6OFP9XHs1qlQ3YgC0Bfj8gDVpOlQx5wqKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388985AbfFIRGR (ORCPT
+        id S2388998AbfFIRGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45820 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:06:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388970AbfFIRGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:06:13 -0400
+        id S2388970AbfFIRGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:06:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB97D207E0;
-        Sun,  9 Jun 2019 17:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C8D8206C3;
+        Sun,  9 Jun 2019 17:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099972;
-        bh=y4+aDopGjka30hHWzYoyHj/uq25HZ4xrzBfOKXhakAQ=;
+        s=default; t=1560099977;
+        bh=TIsEDxrhkUxhC/Sdt/4XQ3cv0SUJDfY3nwLEDp++RRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MBCJvS/J5emPOxfVhMMbHz3F9JmoZ6nGZ7GLIz0dHQf16Pn9pjONrLPLROX/VPgv1
-         FKKPwrQZE6H7IsIYfhNpDyBxRPhsnR5c2wB24DIrx+L8vg8Kqm5LZmFDiRAJ7rbAd4
-         17ftCrWRFTp7qNzOApcPwQe+J7gm9fGoHTR74UvU=
+        b=w1QobHlNmzYPAQf0k80cFeZnbgzpLcyn07oeHZp608YD4J+Hyr9FKxBRhFuI/GDHj
+         Xi9Vm58Vtk9AZ8ZPNpyO8rwW3gK/Yk/SYbGkvcivayiRYVfgFpJVb7xz7fHC/kKosT
+         v9IFTle7/SLOWOQsx6a+ktdl4Roapc7r3mQnldSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
-        James Clarke <jrtc27@jrtc27.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jan=20Kl=C3=B6tzke?= <Jan.Kloetzke@preh.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 192/241] sparc64: Fix regression in non-hypervisor TLB flush xcall
-Date:   Sun,  9 Jun 2019 18:42:14 +0200
-Message-Id: <20190609164153.484722250@linuxfoundation.org>
+Subject: [PATCH 4.4 184/241] usbnet: fix kernel crash after disconnect
+Date:   Sun,  9 Jun 2019 18:42:06 +0200
+Message-Id: <20190609164153.189672197@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,47 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Clarke <jrtc27@jrtc27.com>
+From: Kloetzke Jan <Jan.Kloetzke@preh.de>
 
-commit d3c976c14ad8af421134c428b0a89ff8dd3bd8f8 upstream.
+[ Upstream commit ad70411a978d1e6e97b1e341a7bde9a79af0c93d ]
 
-Previously, %g2 would end up with the value PAGE_SIZE, but after the
-commit mentioned below it ends up with the value 1 due to being reused
-for a different purpose. We need it to be PAGE_SIZE as we use it to step
-through pages in our demap loop, otherwise we set different flags in the
-low 12 bits of the address written to, thereby doing things other than a
-nucleus page flush.
+When disconnecting cdc_ncm the kernel sporadically crashes shortly
+after the disconnect:
 
-Fixes: a74ad5e660a9 ("sparc64: Handle extremely large kernel TLB range flushes more gracefully.")
-Reported-by: Meelis Roos <mroos@linux.ee>
-Tested-by: Meelis Roos <mroos@linux.ee>
-Signed-off-by: James Clarke <jrtc27@jrtc27.com>
+  [   57.868812] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+  ...
+  [   58.006653] PC is at 0x0
+  [   58.009202] LR is at call_timer_fn+0xec/0x1b4
+  [   58.013567] pc : [<0000000000000000>] lr : [<ffffff80080f5130>] pstate: 00000145
+  [   58.020976] sp : ffffff8008003da0
+  [   58.024295] x29: ffffff8008003da0 x28: 0000000000000001
+  [   58.029618] x27: 000000000000000a x26: 0000000000000100
+  [   58.034941] x25: 0000000000000000 x24: ffffff8008003e68
+  [   58.040263] x23: 0000000000000000 x22: 0000000000000000
+  [   58.045587] x21: 0000000000000000 x20: ffffffc68fac1808
+  [   58.050910] x19: 0000000000000100 x18: 0000000000000000
+  [   58.056232] x17: 0000007f885aff8c x16: 0000007f883a9f10
+  [   58.061556] x15: 0000000000000001 x14: 000000000000006e
+  [   58.066878] x13: 0000000000000000 x12: 00000000000000ba
+  [   58.072201] x11: ffffffc69ff1db30 x10: 0000000000000020
+  [   58.077524] x9 : 8000100008001000 x8 : 0000000000000001
+  [   58.082847] x7 : 0000000000000800 x6 : ffffff8008003e70
+  [   58.088169] x5 : ffffffc69ff17a28 x4 : 00000000ffff138b
+  [   58.093492] x3 : 0000000000000000 x2 : 0000000000000000
+  [   58.098814] x1 : 0000000000000000 x0 : 0000000000000000
+  ...
+  [   58.205800] [<          (null)>]           (null)
+  [   58.210521] [<ffffff80080f5298>] expire_timers+0xa0/0x14c
+  [   58.215937] [<ffffff80080f542c>] run_timer_softirq+0xe8/0x128
+  [   58.221702] [<ffffff8008081120>] __do_softirq+0x298/0x348
+  [   58.227118] [<ffffff80080a6304>] irq_exit+0x74/0xbc
+  [   58.232009] [<ffffff80080e17dc>] __handle_domain_irq+0x78/0xac
+  [   58.237857] [<ffffff8008080cf4>] gic_handle_irq+0x80/0xac
+  ...
+
+The crash happens roughly 125..130ms after the disconnect. This
+correlates with the 'delay' timer that is started on certain USB tx/rx
+errors in the URB completion handler.
+
+The problem is a race of usbnet_stop() with usbnet_start_xmit(). In
+usbnet_stop() we call usbnet_terminate_urbs() to cancel all URBs in
+flight. This only makes sense if no new URBs are submitted
+concurrently, though. But the usbnet_start_xmit() can run at the same
+time on another CPU which almost unconditionally submits an URB. The
+error callback of the new URB will then schedule the timer after it was
+already stopped.
+
+The fix adds a check if the tx queue is stopped after the tx list lock
+has been taken. This should reliably prevent the submission of new URBs
+while usbnet_terminate_urbs() does its job. The same thing is done on
+the rx side even though it might be safe due to other flags that are
+checked there.
+
+Signed-off-by: Jan Klötzke <Jan.Kloetzke@preh.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/sparc/mm/ultra.S |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/usb/usbnet.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/sparc/mm/ultra.S
-+++ b/arch/sparc/mm/ultra.S
-@@ -586,7 +586,7 @@ xcall_flush_tlb_kernel_range:	/* 44 insn
- 	sub		%g7, %g1, %g3
- 	srlx		%g3, 18, %g2
- 	brnz,pn		%g2, 2f
--	 add		%g2, 1, %g2
-+	 sethi		%hi(PAGE_SIZE), %g2
- 	sub		%g3, %g2, %g3
- 	or		%g1, 0x20, %g1		! Nucleus
- 1:	stxa		%g0, [%g1 + %g3] ASI_DMMU_DEMAP
-@@ -750,7 +750,7 @@ __cheetah_xcall_flush_tlb_kernel_range:
- 	sub		%g7, %g1, %g3
- 	srlx		%g3, 18, %g2
- 	brnz,pn		%g2, 2f
--	 add		%g2, 1, %g2
-+	 sethi		%hi(PAGE_SIZE), %g2
- 	sub		%g3, %g2, %g3
- 	or		%g1, 0x20, %g1		! Nucleus
- 1:	stxa		%g0, [%g1 + %g3] ASI_DMMU_DEMAP
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -499,6 +499,7 @@ static int rx_submit (struct usbnet *dev
+ 
+ 	if (netif_running (dev->net) &&
+ 	    netif_device_present (dev->net) &&
++	    test_bit(EVENT_DEV_OPEN, &dev->flags) &&
+ 	    !test_bit (EVENT_RX_HALT, &dev->flags) &&
+ 	    !test_bit (EVENT_DEV_ASLEEP, &dev->flags)) {
+ 		switch (retval = usb_submit_urb (urb, GFP_ATOMIC)) {
+@@ -1385,6 +1386,11 @@ netdev_tx_t usbnet_start_xmit (struct sk
+ 		spin_unlock_irqrestore(&dev->txq.lock, flags);
+ 		goto drop;
+ 	}
++	if (netif_queue_stopped(net)) {
++		usb_autopm_put_interface_async(dev->intf);
++		spin_unlock_irqrestore(&dev->txq.lock, flags);
++		goto drop;
++	}
+ 
+ #ifdef CONFIG_PM
+ 	/* if this triggers the device is still a sleep */
 
 
