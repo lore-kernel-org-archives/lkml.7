@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADFAC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81847C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40B3205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43CAD206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099087;
-	bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
+	s=default; t=1560099102;
+	bh=JO0QbtSHoY1Um2a6MXI0+F0H3TgAbnA9vxq3qMoPyDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5wrYSPjhDg89vvQfEwqOfh5y+qi3f7CJdiF1FTHKlQ8DF7RzgdyuO0RcAUdYPzdn
-	 gDh09WRaKfz3LfrtWvYo7FrnUbwNu3RNDqpUCz2hifLSRfUBiejRe3scCipZbwJZkx
-	 xPSMA239B1t+D3hWwnhEuL0vsSHPjvI5uG01pn48=
+	b=WX2wiVrYuYwHuyuK8fn0N7PS8M3BMlBXbpEclVzS5+36jG6E0jN+sWz9kZbqZ79It
+	 Gm1au8GZeh/6pT4197WeGJnNeM6CDwWDdZ6RNNmLXl6VeXQiQwrRuoGwQ79yV2uT5p
+	 UaWZj8pwlxZ+I6N+pS4D8Ned7siyS3/CyuNrUY94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731940AbfFIQv1 (ORCPT
+        id S1732000AbfFIQvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:51:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51644 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbfFIQvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:51:24 -0400
+        id S1731976AbfFIQvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 170D42070B;
-        Sun,  9 Jun 2019 16:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAE60206C3;
+        Sun,  9 Jun 2019 16:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099083;
-        bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
+        s=default; t=1560099097;
+        bh=JO0QbtSHoY1Um2a6MXI0+F0H3TgAbnA9vxq3qMoPyDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOMz/sFk3z1bS9koZ9U2xuxboNBDvCdj5WxvkpEKvAfBHLXwKGUOmfxx3J64fU41Y
-         Kz4KoRS4xfX9XUrGInOfo1iGaI4dL3h3X+wZp1myOblpQ+F0GpuBWS+i3tWAK4PvaO
-         eaH6VS07PScMTz0Uf61gFFrnKw+eDTgmwXe02K1o=
+        b=Ikp7sq8+LbfV/R68qp2WjNhLrEZtYEvKniVh5Z+eoSC5t2rNbAni7PeaicuPTqQNU
+         0lNtzIP7r0PCYe8v/JWU1H60NP7WZCOPCBwmRF1oZRTSk8QBEkb85WzVCWQ9oqNYlY
+         hzmnJSFDnCvSRIWC2Mw0T/DjL0DKZWQJPF5mz3NE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Julien Cristau <jcristau@debian.org>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        YunQiang Su <ysu@wavecomp.com>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.14 21/35] MIPS: Bounds check virt_addr_valid
-Date:   Sun,  9 Jun 2019 18:42:27 +0200
-Message-Id: <20190609164126.752755650@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Manning <mmanning@vyatta.att-mail.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 01/83] ipv6: Consider sk_bound_dev_if when binding a raw socket to an address
+Date:   Sun,  9 Jun 2019 18:41:31 +0200
+Message-Id: <20190609164127.900014234@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
-References: <20190609164125.377368385@linuxfoundation.org>
+In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
+References: <20190609164127.843327870@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,71 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Mike Manning <mmanning@vyatta.att-mail.com>
 
-commit 074a1e1167afd82c26f6d03a9a8b997d564bb241 upstream.
+[ Upstream commit 72f7cfab6f93a8ea825fab8ccfb016d064269f7f ]
 
-The virt_addr_valid() function is meant to return true iff
-virt_to_page() will return a valid struct page reference. This is true
-iff the address provided is found within the unmapped address range
-between PAGE_OFFSET & MAP_BASE, but we don't currently check for that
-condition. Instead we simply mask the address to obtain what will be a
-physical address if the virtual address is indeed in the desired range,
-shift it to form a PFN & then call pfn_valid(). This can incorrectly
-return true if called with a virtual address which, after masking,
-happens to form a physical address corresponding to a valid PFN.
+IPv6 does not consider if the socket is bound to a device when binding
+to an address. The result is that a socket can be bound to eth0 and
+then bound to the address of eth1. If the device is a VRF, the result
+is that a socket can only be bound to an address in the default VRF.
 
-For example we may vmalloc an address in the kernel mapped region
-starting a MAP_BASE & obtain the virtual address:
+Resolve by considering the device if sk_bound_dev_if is set.
 
-  addr = 0xc000000000002000
-
-When masked by virt_to_phys(), which uses __pa() & in turn CPHYSADDR(),
-we obtain the following (bogus) physical address:
-
-  addr = 0x2000
-
-In a common system with PHYS_OFFSET=0 this will correspond to a valid
-struct page which should really be accessed by virtual address
-PAGE_OFFSET+0x2000, causing virt_addr_valid() to incorrectly return 1
-indicating that the original address corresponds to a struct page.
-
-This is equivalent to the ARM64 change made in commit ca219452c6b8
-("arm64: Correctly bounds check virt_addr_valid").
-
-This fixes fallout when hardened usercopy is enabled caused by the
-related commit 517e1fbeb65f ("mm/usercopy: Drop extra
-is_vmalloc_or_module() check") which removed a check for the vmalloc
-range that was present from the introduction of the hardened usercopy
-feature.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Reported-by: Julien Cristau <jcristau@debian.org>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Tested-by: YunQiang Su <ysu@wavecomp.com>
-URL: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=929366
-Cc: stable@vger.kernel.org # v4.12+
-Cc: linux-mips@vger.kernel.org
-Cc: Yunqiang Su <ysu@wavecomp.com>
+Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Tested-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/mips/mm/mmap.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ net/ipv6/raw.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -203,6 +203,11 @@ unsigned long arch_randomize_brk(struct
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -283,7 +283,9 @@ static int rawv6_bind(struct sock *sk, s
+ 			/* Binding to link-local address requires an interface */
+ 			if (!sk->sk_bound_dev_if)
+ 				goto out_unlock;
++		}
  
- int __virt_addr_valid(const volatile void *kaddr)
- {
-+	unsigned long vaddr = (unsigned long)vaddr;
-+
-+	if ((vaddr < PAGE_OFFSET) || (vaddr >= MAP_BASE))
-+		return 0;
-+
- 	return pfn_valid(PFN_DOWN(virt_to_phys(kaddr)));
- }
- EXPORT_SYMBOL_GPL(__virt_addr_valid);
++		if (sk->sk_bound_dev_if) {
+ 			err = -ENODEV;
+ 			dev = dev_get_by_index_rcu(sock_net(sk),
+ 						   sk->sk_bound_dev_if);
 
 
