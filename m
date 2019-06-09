@@ -6,43 +6,43 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F90C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D03C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F4154216C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C08C216C4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047536;
+	s=default; t=1560047622;
 	bh=GxTw+zLXvtne5ntMVdwq8lo7+0eVtbGiQNxoFeW29D8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AmwcXDfFFlnzzI6TeiYDTErCZtgWjaEZaCjg2YlYQ9e50oQXeUAUkSO0HCCeU7e9W
-	 r43/ZmLu0RdNM/yRlhX43ZERPO8dFoql0t1xS4mi6ewof60YXQOGRwGMFT4NlM6nmT
-	 oiOlsmGpWAI9tfwmNax1psmveUlmNVRVS9oa3law=
+	b=WmkPH40X3D3VstOd6z9cw8ITk0IlEVzPY6px6THvrKjPG7Xr1Cl0jajNiaHB2VY3f
+	 1gkd3rMHp9Bd6GRA+k4sXjzIYpGPbgNPlueCdpMLlw7X/kj2zyzVdkq4mlo//g4c8s
+	 4BG1hVxeq/DfCs9+5Qnf4n75jTGuSVi6YDrSanrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfFICcP (ORCPT
+        id S1727907AbfFICdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:32:15 -0400
-Received: from casper.infradead.org ([85.118.1.10]:37306 "EHLO
+        Sat, 8 Jun 2019 22:33:41 -0400
+Received: from casper.infradead.org ([85.118.1.10]:37438 "EHLO
         casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727588AbfFICcO (ORCPT
+        with ESMTP id S1727485AbfFICdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:32:14 -0400
+        Sat, 8 Jun 2019 22:33:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
         MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3Fp1yuwwbOTbYdEqsZgF9iklbrQHl3f9VYC9FtEc6kI=; b=WRk7/mkYGbgyZYhA0REobo8duv
-        +moA9YGNkW+nLOarrRCDN6zXsMmx4X2dupkkg19cbSeGJa87v8bD36cZknrrZ2LoWTArh6UqSFUU+
-        a/u0Z7DBO9kfHLLQQV3G8M+7FkTBydEVsMhEUQN3nqWYEUNbKM1Gseck3Pu9dTfKMwWcCp0gJtrrb
-        tYCyeH0c4WnxydOzO9GryUA3cjR1XQLbZ2VIiaUCch2gMp6XCcoKnXYgk0ows4lu4j78XrUMcRlC9
-        PS7uZKoN50ACGgMLC2/dvGd5wLph1tTMXwcg2RJOZyR6a5HqsQGqZ5URIPK53RTykGMo9q9+FwZWH
-        m2+1796Q==;
+        bh=3Fp1yuwwbOTbYdEqsZgF9iklbrQHl3f9VYC9FtEc6kI=; b=QklMMOA9CGj+eXx0W9MvmFE0by
+        0aQedeNfBMWna6CYprMFaEI2qA4kPeOnRyOEvn2aWyVBRVrFxHsJhJT4y8j8WRET4/OuncElTGcKY
+        1kXcQ0a8VlI2NwrvtTMO2cQ3q7h1Jn66qeukXioB6/N9vSPhV0EgdPWi9n/gC+9fmyNydhA9BXiNo
+        9yKbfd0o7rTBHQVpNnQx4TQOlFVXinBGdjSGKt7RUOGCGI+/dbrJnHDzL0AkB20um1bet10+OzDMq
+        dP0ath70zmmP8wrAoVRXdoywUNkrUudR2U+ifiamGNlWhAtXUpuSrxNwDl+xdQy39vJRKkx3vlkf3
+        aQ09AIQw==;
 Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=coco.lan)
         by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZnch-0004qg-L3; Sun, 09 Jun 2019 02:32:07 +0000
-Date:   Sat, 8 Jun 2019 23:31:49 -0300
+        id 1hZneK-0004xW-3Q; Sun, 09 Jun 2019 02:33:36 +0000
+Date:   Sat, 8 Jun 2019 23:33:31 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -61,12 +61,13 @@ References: <cover.1559656538.git.mchehab+samsung@kernel.org>
         <20190608134407.580f8bb5@lwn.net>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20190609023331.Vp__r4GlwyfPM6PARVJlWhPzd4ONqMysrQOG4UaQ4Ho@z>
 
 Em Sat, 8 Jun 2019 13:44:07 -0600
 Jonathan Corbet <corbet@lwn.net> escreveu:
