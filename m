@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E785C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6213AC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46889205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF81205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100564;
-	bh=mV8qG6VrvM3FTzlOwCZ2PTV/GzEmJZLwhAuQ7MD2cE8=;
+	s=default; t=1560100566;
+	bh=IPche2w6uVzmKXxIKJD2vc7ZE/sQ83wLFNs7hisWOL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ruth7c+I0sfw6Ztzro7rrqAk/ZNj27Uzb8qhCN5cjHotTspHqyWbsxIwR5/JkV+1K
-	 Y92MCEDcU/4vHp4dpsN1oCOTdaUMQ63QWqEX7R4IXV/NyLi0YYbZG7cQAd4ATOcmzg
-	 PHJy7a4VrS9AoloB775cfF1Dhc7v2wUu5/MbbBIo=
+	b=p+8LEPhUz+8XlNOrJLCNfstpKkaf9dZdiA0MOmxG17sZcBtF471Mkdw0CBNXsCnxg
+	 RmQ0LTLxLam1U1TzaKjybvHamEhr2Uf0EabgE4/Zgiy3RiTGM9dw96BvcK5NR8LUm2
+	 O9RKF780olxGTrcdFZTnVp5N1Tkeo2OdQ73u+quw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732475AbfFIQxq (ORCPT
+        id S1732464AbfFIQxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55050 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:53:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732454AbfFIQxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:43 -0400
+        id S1732448AbfFIQxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4A4A206BB;
-        Sun,  9 Jun 2019 16:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 141F5204EC;
+        Sun,  9 Jun 2019 16:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099222;
-        bh=mV8qG6VrvM3FTzlOwCZ2PTV/GzEmJZLwhAuQ7MD2cE8=;
+        s=default; t=1560099219;
+        bh=IPche2w6uVzmKXxIKJD2vc7ZE/sQ83wLFNs7hisWOL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hchw8NyR6gjUlagWTKdi5gIJoOkRpSs9TwR0ufst6kilf6dnDZkyPxlJBYN0NwHiy
-         rJMxV0XBKYjx9LdLRtHEqLPsSG49QnWv5AHjOzvuId3tQ+aSQ2No+COrIjM2YOcd4X
-         Y/pZtPySxaRo6+OZK7rwsvsmhc2VE0AqbzLneWrA=
+        b=x5TgBfaP+ufuF7EP4saAvtg0kovDwrS5Llflq0toFRS93Iu6IiGpgtzVu64DU8hQK
+         ovV7VIetTnlWfMiGyqTa3x+ksj4/2vgyiJKV5kXludvAjCDSp3hUZj1BinHWkWAEQ/
+         C7zoeStyqBQFbw2Y87DdYv14Xv1wUtmSqzaUun20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 52/83] binder: Replace "%p" with "%pK" for stable
-Date:   Sun,  9 Jun 2019 18:42:22 +0200
-Message-Id: <20190609164132.381317323@linuxfoundation.org>
+Subject: [PATCH 4.9 51/83] brcmfmac: add subtype check for event handling in data path
+Date:   Sun,  9 Jun 2019 18:42:21 +0200
+Message-Id: <20190609164132.295328705@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,146 +64,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben.hutchings@codethink.co.uk>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-This was done as part of upstream commits fdfb4a99b6ab "8inder:
-separate binder allocator structure from binder proc", 19c987241ca1
-"binder: separate out binder_alloc functions", and 7a4408c6bd3e
-"binder: make sure accesses to proc/thread are safe".  However, those
-commits made lots of other changes that are not suitable for stable.
+commit a4176ec356c73a46c07c181c6d04039fafa34a9f upstream.
 
+For USB there is no separate channel being used to pass events
+from firmware to the host driver and as such are passed over the
+data path. In order to detect mock event messages an additional
+check is needed on event subtype. This check is added conditionally
+using unlikely() keyword.
+
+Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
+Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
+Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/android/binder.c |   28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c   |    5 ++--
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h   |   16 ++++++++++----
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c |    2 -
+ 3 files changed, 16 insertions(+), 7 deletions(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -488,7 +488,7 @@ static void binder_insert_free_buffer(st
- 	new_buffer_size = binder_buffer_size(proc, new_buffer);
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c
+@@ -339,7 +339,8 @@ void brcmf_rx_frame(struct device *dev,
+ 	} else {
+ 		/* Process special event packets */
+ 		if (handle_event)
+-			brcmf_fweh_process_skb(ifp->drvr, skb);
++			brcmf_fweh_process_skb(ifp->drvr, skb,
++					       BCMILCP_SUBTYPE_VENDOR_LONG);
  
- 	binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--		     "%d: add free buffer, size %zd, at %p\n",
-+		     "%d: add free buffer, size %zd, at %pK\n",
- 		      proc->pid, new_buffer_size, new_buffer);
- 
- 	while (*p) {
-@@ -566,7 +566,7 @@ static int binder_update_page_range(stru
- 	struct mm_struct *mm;
- 
- 	binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--		     "%d: %s pages %p-%p\n", proc->pid,
-+		     "%d: %s pages %pK-%pK\n", proc->pid,
- 		     allocate ? "allocate" : "free", start, end);
- 
- 	if (end <= start)
-@@ -606,7 +606,7 @@ static int binder_update_page_range(stru
- 		BUG_ON(*page);
- 		*page = alloc_page(GFP_KERNEL | __GFP_HIGHMEM | __GFP_ZERO);
- 		if (*page == NULL) {
--			pr_err("%d: binder_alloc_buf failed for page at %p\n",
-+			pr_err("%d: binder_alloc_buf failed for page at %pK\n",
- 				proc->pid, page_addr);
- 			goto err_alloc_page_failed;
- 		}
-@@ -615,7 +615,7 @@ static int binder_update_page_range(stru
- 		flush_cache_vmap((unsigned long)page_addr,
- 				(unsigned long)page_addr + PAGE_SIZE);
- 		if (ret != 1) {
--			pr_err("%d: binder_alloc_buf failed to map page at %p in kernel\n",
-+			pr_err("%d: binder_alloc_buf failed to map page at %pK in kernel\n",
- 			       proc->pid, page_addr);
- 			goto err_map_kernel_failed;
- 		}
-@@ -719,7 +719,7 @@ static struct binder_buffer *binder_allo
+ 		brcmf_netif_rx(ifp, skb);
  	}
+@@ -356,7 +357,7 @@ void brcmf_rx_event(struct device *dev,
+ 	if (brcmf_rx_hdrpull(drvr, skb, &ifp))
+ 		return;
  
- 	binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--		     "%d: binder_alloc_buf size %zd got buffer %p size %zd\n",
-+		     "%d: binder_alloc_buf size %zd got buffer %pK size %zd\n",
- 		      proc->pid, size, buffer, buffer_size);
- 
- 	has_page_addr =
-@@ -749,7 +749,7 @@ static struct binder_buffer *binder_allo
- 		binder_insert_free_buffer(proc, new_buffer);
- 	}
- 	binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--		     "%d: binder_alloc_buf size %zd got %p\n",
-+		     "%d: binder_alloc_buf size %zd got %pK\n",
- 		      proc->pid, size, buffer);
- 	buffer->data_size = data_size;
- 	buffer->offsets_size = offsets_size;
-@@ -789,7 +789,7 @@ static void binder_delete_free_buffer(st
- 		if (buffer_end_page(prev) == buffer_end_page(buffer))
- 			free_page_end = 0;
- 		binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--			     "%d: merge free, buffer %p share page with %p\n",
-+			     "%d: merge free, buffer %pK share page with %pK\n",
- 			      proc->pid, buffer, prev);
- 	}
- 
-@@ -802,14 +802,14 @@ static void binder_delete_free_buffer(st
- 			    buffer_start_page(buffer))
- 				free_page_start = 0;
- 			binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--				     "%d: merge free, buffer %p share page with %p\n",
-+				     "%d: merge free, buffer %pK share page with %pK\n",
- 				      proc->pid, buffer, prev);
- 		}
- 	}
- 	list_del(&buffer->entry);
- 	if (free_page_start || free_page_end) {
- 		binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--			     "%d: merge free, buffer %p do not share page%s%s with %p or %p\n",
-+			     "%d: merge free, buffer %pK do not share page%s%s with %pK or %pK\n",
- 			     proc->pid, buffer, free_page_start ? "" : " end",
- 			     free_page_end ? "" : " start", prev, next);
- 		binder_update_page_range(proc, 0, free_page_start ?
-@@ -830,7 +830,7 @@ static void binder_free_buf(struct binde
- 		ALIGN(buffer->offsets_size, sizeof(void *));
- 
- 	binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--		     "%d: binder_free_buf %p size %zd buffer_size %zd\n",
-+		     "%d: binder_free_buf %pK size %zd buffer_size %zd\n",
- 		      proc->pid, buffer, size, buffer_size);
- 
- 	BUG_ON(buffer->free);
-@@ -2930,7 +2930,7 @@ static int binder_mmap(struct file *filp
- #ifdef CONFIG_CPU_CACHE_VIPT
- 	if (cache_is_vipt_aliasing()) {
- 		while (CACHE_COLOUR((vma->vm_start ^ (uint32_t)proc->buffer))) {
--			pr_info("binder_mmap: %d %lx-%lx maps %p bad alignment\n", proc->pid, vma->vm_start, vma->vm_end, proc->buffer);
-+			pr_info("binder_mmap: %d %lx-%lx maps %pK bad alignment\n", proc->pid, vma->vm_start, vma->vm_end, proc->buffer);
- 			vma->vm_start += PAGE_SIZE;
- 		}
- 	}
-@@ -3191,7 +3191,7 @@ static void binder_deferred_release(stru
- 
- 			page_addr = proc->buffer + i * PAGE_SIZE;
- 			binder_debug(BINDER_DEBUG_BUFFER_ALLOC,
--				     "%s: %d: page %d at %p not freed\n",
-+				     "%s: %d: page %d at %pK not freed\n",
- 				     __func__, proc->pid, i, page_addr);
- 			unmap_kernel_range((unsigned long)page_addr, PAGE_SIZE);
- 			__free_page(proc->pages[i]);
-@@ -3294,7 +3294,7 @@ static void print_binder_transaction(str
- static void print_binder_buffer(struct seq_file *m, const char *prefix,
- 				struct binder_buffer *buffer)
- {
--	seq_printf(m, "%s %d: %p size %zd:%zd %s\n",
-+	seq_printf(m, "%s %d: %pK size %zd:%zd %s\n",
- 		   prefix, buffer->debug_id, buffer->data,
- 		   buffer->data_size, buffer->offsets_size,
- 		   buffer->transaction ? "active" : "delivered");
-@@ -3397,7 +3397,7 @@ static void print_binder_node(struct seq
- 
- static void print_binder_ref(struct seq_file *m, struct binder_ref *ref)
- {
--	seq_printf(m, "  ref %d: desc %d %snode %d s %d w %d d %p\n",
-+	seq_printf(m, "  ref %d: desc %d %snode %d s %d w %d d %pK\n",
- 		   ref->debug_id, ref->desc, ref->node->proc ? "" : "dead ",
- 		   ref->node->debug_id, ref->strong, ref->weak, ref->death);
+-	brcmf_fweh_process_skb(ifp->drvr, skb);
++	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+ 	brcmu_pkt_buf_free_skb(skb);
  }
+ 
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h
+@@ -181,7 +181,7 @@ enum brcmf_fweh_event_code {
+  */
+ #define BRCM_OUI				"\x00\x10\x18"
+ #define BCMILCP_BCM_SUBTYPE_EVENT		1
+-
++#define BCMILCP_SUBTYPE_VENDOR_LONG		32769
+ 
+ /**
+  * struct brcm_ethhdr - broadcom specific ether header.
+@@ -302,10 +302,10 @@ void brcmf_fweh_process_event(struct brc
+ void brcmf_fweh_p2pdev_setup(struct brcmf_if *ifp, bool ongoing);
+ 
+ static inline void brcmf_fweh_process_skb(struct brcmf_pub *drvr,
+-					  struct sk_buff *skb)
++					  struct sk_buff *skb, u16 stype)
+ {
+ 	struct brcmf_event *event_packet;
+-	u16 usr_stype;
++	u16 subtype, usr_stype;
+ 
+ 	/* only process events when protocol matches */
+ 	if (skb->protocol != cpu_to_be16(ETH_P_LINK_CTL))
+@@ -314,8 +314,16 @@ static inline void brcmf_fweh_process_sk
+ 	if ((skb->len + ETH_HLEN) < sizeof(*event_packet))
+ 		return;
+ 
+-	/* check for BRCM oui match */
+ 	event_packet = (struct brcmf_event *)skb_mac_header(skb);
++
++	/* check subtype if needed */
++	if (unlikely(stype)) {
++		subtype = get_unaligned_be16(&event_packet->hdr.subtype);
++		if (subtype != stype)
++			return;
++	}
++
++	/* check for BRCM oui match */
+ 	if (memcmp(BRCM_OUI, &event_packet->hdr.oui[0],
+ 		   sizeof(event_packet->hdr.oui)))
+ 		return;
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
+@@ -1114,7 +1114,7 @@ static void brcmf_msgbuf_process_event(s
+ 
+ 	skb->protocol = eth_type_trans(skb, ifp->ndev);
+ 
+-	brcmf_fweh_process_skb(ifp->drvr, skb);
++	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+ 
+ exit:
+ 	brcmu_pkt_buf_free_skb(skb);
 
 
