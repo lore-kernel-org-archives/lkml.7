@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDB6C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFDCC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DB9206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9861120684
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100023;
-	bh=kwW5+pOo3pPjSz9BOXtdOb8u8nq7tl+VmP88bEPje4k=;
+	s=default; t=1560100028;
+	bh=dbiKq53ZEdnYqOxVXfRDsv9rp54xWHJH215bvi/pXPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o6TSyfNSk3zjTOccFSxgKOSBff2KmAFuppP2jVD9yD8WoyLQP0WEw6D/y+/iTDSNG
-	 YLVN00nkDumLrxrTp+gay4fSe53GKB8lhaR1a5sW+JCWZw6nlEeK3m+QuZoDB9s1Ys
-	 IRfsuUmgRZyr/Dkjr4lvPS5d2bo5LJwGtHWd3C+E=
+	b=GOzeeaKuX32cLhBd185zaxnc4xc0jPCy5h7nuCvfcTgVAmW0wxIH/n+fE8Q7DUoK8
+	 M+UGM2bTmtqr9XiSxquXlcYucsEJdAN/MB1OkK01NCz0zaebIRYsnIpdIFLVL6aKXZ
+	 YTfn4F2t/oYZxnBMNmM3gD8kNiJtb3HB61ZiUKfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389128AbfFIRHC (ORCPT
+        id S2389140AbfFIRHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:07:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:07:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388593AbfFIRHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:07:00 -0400
+        id S1729199AbfFIRHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:07:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C41A1204EC;
-        Sun,  9 Jun 2019 17:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B740206C3;
+        Sun,  9 Jun 2019 17:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560100020;
-        bh=kwW5+pOo3pPjSz9BOXtdOb8u8nq7tl+VmP88bEPje4k=;
+        s=default; t=1560100025;
+        bh=dbiKq53ZEdnYqOxVXfRDsv9rp54xWHJH215bvi/pXPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqMqn3LkXPEhFlak4hl1gXV5PeGKLY/m7y9/h6KxdFIMuh9uNbPx/hxZJIuJC5foQ
-         sSyhmjz+mATftxSWG/y50AUQTzZW8lH4VNl25Ik7buQj2sBw7RUv90XMGvZfCwmbkl
-         drFJsMHvyDXq/4E3asd7AAB14U5gwonm1OCH7gWI=
+        b=wdtfLzkrzi82LyaasF9B/U0eOR9lBW1N0w+2TOI1dSJGUg2m51a/9rWwxavyvxUzc
+         +8mVlrVvh4M4JJD8b/Mi73IbedWJwlpFZRmReYeNXMVTuYzu1Awg8pEfbDhXxFz8qk
+         O3Low7DRvTbPuBIQQKkzgZRgDIthaahdjEX6UuRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Felipe F. Tonello" <eu@felipetonello.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 227/241] usb: gadget: fix request length error for isoc transfer
-Date:   Sun,  9 Jun 2019 18:42:49 +0200
-Message-Id: <20190609164155.265088934@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 61/83] media: uvcvideo: Fix uvc_alloc_entity() allocation alignment
+Date:   Sun,  9 Jun 2019 18:42:31 +0200
+Message-Id: <20190609164133.056739483@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
-References: <20190609164147.729157653@linuxfoundation.org>
+In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
+References: <20190609164127.843327870@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,41 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Nadav Amit <namit@vmware.com>
 
-commit 982555fc26f9d8bcdbd5f9db0378fe0682eb4188 upstream.
+commit 89dd34caf73e28018c58cd193751e41b1f8bdc56 upstream.
 
-For isoc endpoint descriptor, the wMaxPacketSize is not real max packet
-size (see Table 9-13. Standard Endpoint Descriptor, USB 2.0 specifcation),
-it may contain the number of packet, so the real max packet should be
-ep->desc->wMaxPacketSize && 0x7ff.
+The use of ALIGN() in uvc_alloc_entity() is incorrect, since the size of
+(entity->pads) is not a power of two. As a stop-gap, until a better
+solution is adapted, use roundup() instead.
 
-Cc: Felipe F. Tonello <eu@felipetonello.com>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-Fixes: 16b114a6d797 ("usb: gadget: fix usb_ep_align_maybe
-  endianness and new usb_ep_aligna")
+Found by a static assertion. Compile-tested only.
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Fixes: 4ffc2d89f38a ("uvcvideo: Register subdevices for each entity")
+
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/usb/gadget.h |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/uvc/uvc_driver.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -671,7 +671,9 @@ static inline struct usb_gadget *dev_to_
-  */
- static inline size_t usb_ep_align(struct usb_ep *ep, size_t len)
- {
--	return round_up(len, (size_t)le16_to_cpu(ep->desc->wMaxPacketSize));
-+	int max_packet_size = (size_t)usb_endpoint_maxp(ep->desc) & 0x7ff;
-+
-+	return round_up(len, max_packet_size);
- }
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -868,7 +868,7 @@ static struct uvc_entity *uvc_alloc_enti
+ 	unsigned int size;
+ 	unsigned int i;
  
- /**
+-	extra_size = ALIGN(extra_size, sizeof(*entity->pads));
++	extra_size = roundup(extra_size, sizeof(*entity->pads));
+ 	num_inputs = (type & UVC_TERM_OUTPUT) ? num_pads : num_pads - 1;
+ 	size = sizeof(*entity) + extra_size + sizeof(*entity->pads) * num_pads
+ 	     + num_inputs;
 
 
