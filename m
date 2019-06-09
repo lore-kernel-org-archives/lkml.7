@@ -4,137 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7FAC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 09:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BC3C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 09:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F9920868
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 09:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C6B20868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 09:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfFIJJ3 (ORCPT
+        id S1728007AbfFIJQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 05:09:29 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27831 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726686AbfFIJJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 05:09:29 -0400
-X-UUID: a0186053efee4110bba9dd38feabe007-20190609
-X-UUID: a0186053efee4110bba9dd38feabe007-20190609
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1120937258; Sun, 09 Jun 2019 17:09:14 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 9 Jun 2019 17:09:12 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 9 Jun 2019 17:09:12 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Chih-Min Chen <chih-min.Chen@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH] mt76: mt7615: add support for per-chain signal strength reporting
-Date:   Sun, 9 Jun 2019 17:09:09 +0800
-Message-ID: <3912a2863e858f3623ced61737836e42c7b19149.1560071167.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Sun, 9 Jun 2019 05:16:30 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18117 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726686AbfFIJQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 05:16:30 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 714EED491E95A3D71315;
+        Sun,  9 Jun 2019 17:16:18 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.188.190) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Sun, 9 Jun 2019 17:16:08 +0800
+From:   ChenGang <cg.chen@huawei.com>
+To:     <akpm@linux-foundation.org>, <mhocko@suse.com>, <vbabka@suse.cz>,
+        <osalvador@suse.de>, <pavel.tatashin@microsoft.com>
+CC:     <mgorman@techsingularity.net>, <rppt@linux.ibm.com>,
+        <richard.weiyang@gmail.com>, <alexander.h.duyck@linux.intel.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        ChenGang <cg.chen@huawei.com>
+Subject: [PATCH] mm: align up min_free_kbytes to multipy of 4
+Date:   Sun, 9 Jun 2019 17:10:28 +0800
+Message-ID: <1560071428-24267-1-git-send-email-cg.chen@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: DB8247693516C4362ADACC260C0932459B29918DD6EF956B1C4C564524ED25A62000:8
-X-MTK:  N
+X-Originating-IP: [10.67.188.190]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fill in RX status->chain_signal to avoid empty value.
+Usually the value of min_free_kbytes is multiply of 4,
+and in this case ,the right shift is ok.
+But if it's not, the right-shifting operation will lose the low 2 bits,
+and this cause kernel don't reserve enough memory.
+So it's necessary to align the value of min_free_kbytes to multiply of 4.
+For example, if min_free_kbytes is 64, then should keep 16 pages,
+but if min_free_kbytes is 65 or 66, then should keep 17 pages.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: ChenGang <cg.chen@huawei.com>
 ---
- .../net/wireless/mediatek/mt76/mt7615/mac.c   | 30 ++++++++++++++++++-
- .../net/wireless/mediatek/mt76/mt7615/mac.h   |  5 ++++
- 2 files changed, 34 insertions(+), 1 deletion(-)
+ mm/page_alloc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-index b60d42b5923d..9ee83ea11b8c
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-@@ -13,6 +13,11 @@
- #include "../dma.h"
- #include "mac.h"
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d66bc8a..1baeeba 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7611,7 +7611,8 @@ static void setup_per_zone_lowmem_reserve(void)
  
-+static inline s8 to_rssi(u32 field, u32 rxv)
-+{
-+	return (FIELD_GET(field, rxv) - 220) / 2;
-+}
-+
- static struct mt76_wcid *mt7615_rx_get_wcid(struct mt7615_dev *dev,
- 					    u8 idx, bool unicast)
+ static void __setup_per_zone_wmarks(void)
  {
-@@ -120,6 +125,7 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
- 	if (rxd0 & MT_RXD0_NORMAL_GROUP_3) {
- 		u32 rxdg0 = le32_to_cpu(rxd[0]);
- 		u32 rxdg1 = le32_to_cpu(rxd[1]);
-+		u32 rxdg3 = le32_to_cpu(rxd[3]);
- 		u8 stbc = FIELD_GET(MT_RXV1_HT_STBC, rxdg0);
- 		bool cck = false;
- 
-@@ -169,7 +175,29 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
- 
- 		status->enc_flags |= RX_ENC_FLAG_STBC_MASK * stbc;
- 
--		/* TODO: RSSI */
-+		status->chains = dev->mt76.antenna_mask;
-+		status->chain_signal[0] = to_rssi(MT_RXV4_RCPI0, rxdg3);
-+		status->signal = status->chain_signal[0];
-+
-+		switch (status->chains) {
-+		case 0x3:
-+			status->chain_signal[1] = to_rssi(MT_RXV4_RCPI1, rxdg3);
-+			status->signal = max(status->signal,
-+					     status->chain_signal[1]);
-+			break;
-+		case 0x7:
-+			status->chain_signal[2] = to_rssi(MT_RXV4_RCPI2, rxdg3);
-+			status->signal = max(status->signal,
-+					     status->chain_signal[2]);
-+			break;
-+		case 0xf:
-+			status->chain_signal[3] = to_rssi(MT_RXV4_RCPI3, rxdg3);
-+			status->signal = max(status->signal,
-+					     status->chain_signal[3]);
-+			break;
-+		default:
-+			break;
-+		}
- 		rxd += 6;
- 		if ((u8 *)rxd - skb->data >= skb->len)
- 			return -EINVAL;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-index 18ad4b8a3807..b00ce8db58e9
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-@@ -98,6 +98,11 @@ enum rx_pkt_type {
- #define MT_RXV2_GROUP_ID		GENMASK(26, 21)
- #define MT_RXV2_LENGTH			GENMASK(20, 0)
- 
-+#define MT_RXV4_RCPI3			GENMASK(31, 24)
-+#define MT_RXV4_RCPI2			GENMASK(23, 16)
-+#define MT_RXV4_RCPI1			GENMASK(15, 8)
-+#define MT_RXV4_RCPI0			GENMASK(7, 0)
-+
- enum tx_header_format {
- 	MT_HDR_FORMAT_802_3,
- 	MT_HDR_FORMAT_CMD,
+-	unsigned long pages_min = min_free_kbytes >> (PAGE_SHIFT - 10);
++	unsigned long pages_min =
++		(PAGE_ALIGN(min_free_kbytes * 1024) / 1024) >> (PAGE_SHIFT - 10);
+ 	unsigned long lowmem_pages = 0;
+ 	struct zone *zone;
+ 	unsigned long flags;
 -- 
-2.18.0
+1.8.5.6
 
