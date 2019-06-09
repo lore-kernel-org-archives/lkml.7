@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6037BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A803EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBCE20843
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8028120868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099858;
-	bh=sdK1Xn6v9YbWQEGAiClWqejKazMG/VXN5F69IhQH0JM=;
+	s=default; t=1560099860;
+	bh=DjLObwZZ+RDNqaf2WeRU/ZKKUnJDXzMdktihC5/aKoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14Lj16MjKr5oIMxDc+6z4hmADTR1C9fi7RRrSvH9Q0H4+I593MExQ+dV0btyfFTPH
-	 5OEFltCJGt23+RrDyBQVQMuH/nzxHSWJyTRY4RhleauJOv/CFzNSpBNb+DVlB3y1mK
-	 ThRvjUDvw9CaZ8MKk11cDmVogjT7zpar3E4GwmgA=
+	b=CeifcTGSKeVTXsqeOuanY47naaIjOVzXV5/43xLNgx+MyFP5msBR80DOkEX9Al3ZW
+	 mgTbe1Mox5KNmTYylbxPsv2p02RUEzfQMePhPnarRPhPnZtKcSG0ZuRqvT7tt43lcw
+	 8/xxhEvWhAorXrmOFCrJEIr9bjVdVj5Ao//xnMnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388592AbfFIRER (ORCPT
+        id S2388602AbfFIREU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:04:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42922 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:04:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388577AbfFIREO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:04:14 -0400
+        id S2388589AbfFIREQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:04:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CD47206DF;
-        Sun,  9 Jun 2019 17:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B997207E0;
+        Sun,  9 Jun 2019 17:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099853;
-        bh=sdK1Xn6v9YbWQEGAiClWqejKazMG/VXN5F69IhQH0JM=;
+        s=default; t=1560099856;
+        bh=DjLObwZZ+RDNqaf2WeRU/ZKKUnJDXzMdktihC5/aKoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NpRdEmAtvJi7DtcT5WUN6b0uiyCYC0Orgc3k88UOhF9gSxqSyj14sl5uZOiAC3rLK
-         DXIOdRHQoUZ61dLeiGxf9JALTwlCsuPl8xHLChxL8mFo2KyNbNcFW5fAHVNguvA/ng
-         0S7n1J/9sQ/dW1L4OwBt9cP+x7d7BNY8CNzA1NKY=
+        b=h37r+TkiYMawl6PKjiupByiCjiiQ6np3ekzckYYj+jm6N1qMRJnojULiA5PjDCaJw
+         OaalKus6N41t0iv7+UV3pbRyT38FrUx/qETw0OKoNQpRSfoUoVqooEIOCzwrbR3Q12
+         aCJ10y6YQeg9rPGVZKMFiXKVbpb9Nr02+SskL9Jc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org,
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 145/241] cpufreq/pasemi: fix possible object reference leak
-Date:   Sun,  9 Jun 2019 18:41:27 +0200
-Message-Id: <20190609164151.967723685@linuxfoundation.org>
+Subject: [PATCH 4.4 136/241] hwmon: (f71805f) Use request_muxed_region for Super-IO accesses
+Date:   Sun,  9 Jun 2019 18:41:18 +0200
+Message-Id: <20190609164151.719533312@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -62,40 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9acc26b75f652f697e02a9febe2ab0da648a571 ]
+[ Upstream commit 73e6ff71a7ea924fb7121d576a2d41e3be3fc6b5 ]
 
-The call to of_get_cpu_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-Detected by coccinelle with the following warnings:
-./drivers/cpufreq/pasemi-cpufreq.c:212:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 147, but without a corresponding object release within this function.
-./drivers/cpufreq/pasemi-cpufreq.c:220:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 147, but without a corresponding object release within this function.
+Unable to handle kernel paging request at virtual address ffffffbffee0002e
+pgd = ffffffc1d68d4000
+[ffffffbffee0002e] *pgd=0000000000000000, *pud=0000000000000000
+Internal error: Oops: 94000046 [#1] PREEMPT SMP
+Modules linked in: f71805f(+) hwmon
+CPU: 3 PID: 1659 Comm: insmod Not tainted 4.5.0+ #88
+Hardware name: linux,dummy-virt (DT)
+task: ffffffc1f6665400 ti: ffffffc1d6418000 task.ti: ffffffc1d6418000
+PC is at f71805f_find+0x6c/0x358 [f71805f]
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
+
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple
+drivers is synchronized.
+
+Fixes: e53004e20a58e ("hwmon: New f71805f driver")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/pasemi-cpufreq.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hwmon/f71805f.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-index 35dd4d7ffee08..58c933f483004 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -146,6 +146,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+diff --git a/drivers/hwmon/f71805f.c b/drivers/hwmon/f71805f.c
+index facd05cda26da..e8c0898864277 100644
+--- a/drivers/hwmon/f71805f.c
++++ b/drivers/hwmon/f71805f.c
+@@ -96,17 +96,23 @@ superio_select(int base, int ld)
+ 	outb(ld, base + 1);
+ }
  
- 	cpu = of_get_cpu_node(policy->cpu, NULL);
+-static inline void
++static inline int
+ superio_enter(int base)
+ {
++	if (!request_muxed_region(base, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, base);
+ 	outb(0x87, base);
++
++	return 0;
+ }
  
-+	of_node_put(cpu);
- 	if (!cpu)
- 		goto out;
+ static inline void
+ superio_exit(int base)
+ {
+ 	outb(0xaa, base);
++	release_region(base, 2);
+ }
  
+ /*
+@@ -1561,7 +1567,7 @@ static int __init f71805f_device_add(unsigned short address,
+ static int __init f71805f_find(int sioaddr, unsigned short *address,
+ 			       struct f71805f_sio_data *sio_data)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	u16 devid;
+ 
+ 	static const char * const names[] = {
+@@ -1569,8 +1575,11 @@ static int __init f71805f_find(int sioaddr, unsigned short *address,
+ 		"F71872F/FG or F71806F/FG",
+ 	};
+ 
+-	superio_enter(sioaddr);
++	err = superio_enter(sioaddr);
++	if (err)
++		return err;
+ 
++	err = -ENODEV;
+ 	devid = superio_inw(sioaddr, SIO_REG_MANID);
+ 	if (devid != SIO_FINTEK_ID)
+ 		goto exit;
 -- 
 2.20.1
 
