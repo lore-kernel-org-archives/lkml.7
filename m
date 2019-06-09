@@ -7,54 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81847C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F5BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CAD206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19688206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099102;
-	bh=JO0QbtSHoY1Um2a6MXI0+F0H3TgAbnA9vxq3qMoPyDk=;
+	s=default; t=1560099106;
+	bh=texK9FUv8q7wPo068mvK+ku/cUBgXjXAArtYKVHTGrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WX2wiVrYuYwHuyuK8fn0N7PS8M3BMlBXbpEclVzS5+36jG6E0jN+sWz9kZbqZ79It
-	 Gm1au8GZeh/6pT4197WeGJnNeM6CDwWDdZ6RNNmLXl6VeXQiQwrRuoGwQ79yV2uT5p
-	 UaWZj8pwlxZ+I6N+pS4D8Ned7siyS3/CyuNrUY94=
+	b=lbqrmaywnuxacIBE/hLPqzFORCGlH0y9G+REGoojITQefnXeJMElX5+U9lvXqgTN+
+	 qXh8cZYFbzjSOjj6fbMJ87b4kXg26i90uq3IjcrbhKQMm4Ny2+Zxu92r5Kjy0RHN6D
+	 jrQ1/1sUWp5EfLpTeksQ7SKgzXCOvF/e4CyBsvA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732000AbfFIQvl (ORCPT
+        id S1732025AbfFIQvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52040 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731976AbfFIQvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:51:38 -0400
+        id S1732007AbfFIQvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAE60206C3;
-        Sun,  9 Jun 2019 16:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3185206C3;
+        Sun,  9 Jun 2019 16:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099097;
-        bh=JO0QbtSHoY1Um2a6MXI0+F0H3TgAbnA9vxq3qMoPyDk=;
+        s=default; t=1560099103;
+        bh=texK9FUv8q7wPo068mvK+ku/cUBgXjXAArtYKVHTGrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ikp7sq8+LbfV/R68qp2WjNhLrEZtYEvKniVh5Z+eoSC5t2rNbAni7PeaicuPTqQNU
-         0lNtzIP7r0PCYe8v/JWU1H60NP7WZCOPCBwmRF1oZRTSk8QBEkb85WzVCWQ9oqNYlY
-         hzmnJSFDnCvSRIWC2Mw0T/DjL0DKZWQJPF5mz3NE=
+        b=N3yqDgEIKWY3WjV2bqGnK33pTgfwxfN3dfyrroQRpLDpJsO3RqhfMapU5PVIC9f3m
+         UU7QpejWLMjc4pCSBMGihbPnyjryv2O5gNh+VRSEYO+z7+9zFKlrhNgJrgpOBrKxhX
+         l0vn5wIO23c1YlS77sDPHLj+9hckZMe2cyW7/Bq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mike Manning <mmanning@vyatta.att-mail.com>,
-        David Ahern <dsahern@gmail.com>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 01/83] ipv6: Consider sk_bound_dev_if when binding a raw socket to an address
-Date:   Sun,  9 Jun 2019 18:41:31 +0200
-Message-Id: <20190609164127.900014234@linuxfoundation.org>
+Subject: [PATCH 4.9 11/83] net: dsa: mv88e6xxx: fix handling of upper half of STATS_TYPE_PORT
+Date:   Sun,  9 Jun 2019 18:41:41 +0200
+Message-Id: <20190609164128.510928735@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,37 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Manning <mmanning@vyatta.att-mail.com>
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 
-[ Upstream commit 72f7cfab6f93a8ea825fab8ccfb016d064269f7f ]
+[ Upstream commit 84b3fd1fc9592d431e23b077e692fa4e3fd0f086 ]
 
-IPv6 does not consider if the socket is bound to a device when binding
-to an address. The result is that a socket can be bound to eth0 and
-then bound to the address of eth1. If the device is a VRF, the result
-is that a socket can only be bound to an address in the default VRF.
+Currently, the upper half of a 4-byte STATS_TYPE_PORT statistic ends
+up in bits 47:32 of the return value, instead of bits 31:16 as they
+should.
 
-Resolve by considering the device if sk_bound_dev_if is set.
-
-Signed-off-by: Mike Manning <mmanning@vyatta.att-mail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Tested-by: David Ahern <dsahern@gmail.com>
+Fixes: 6e46e2d821bb ("net: dsa: mv88e6xxx: Fix u64 statistics")
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/raw.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/dsa/mv88e6xxx/chip.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -283,7 +283,9 @@ static int rawv6_bind(struct sock *sk, s
- 			/* Binding to link-local address requires an interface */
- 			if (!sk->sk_bound_dev_if)
- 				goto out_unlock;
-+		}
- 
-+		if (sk->sk_bound_dev_if) {
- 			err = -ENODEV;
- 			dev = dev_get_by_index_rcu(sock_net(sk),
- 						   sk->sk_bound_dev_if);
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -789,7 +789,7 @@ static uint64_t _mv88e6xxx_get_ethtool_s
+ 			err = mv88e6xxx_port_read(chip, port, s->reg + 1, &reg);
+ 			if (err)
+ 				return UINT64_MAX;
+-			high = reg;
++			low |= ((u32)reg) << 16;
+ 		}
+ 		break;
+ 	case BANK0:
 
 
