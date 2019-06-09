@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0AC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3B2C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B701B20843
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CAC2081C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099210;
-	bh=2c8aXEmfdOficMgeHQ9sugJX/+g4av4j23I9qZXa3nI=;
+	s=default; t=1560099214;
+	bh=Qnqvb0bwuWUZl0on7p+Ii6HsgQVKN92+YuGzCQm/g3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXdUiE9IH0ZIZel/MeOKwwhm3E5qGnXXiq+ZsL00C7mxiZ2FuHMfoe24HWQ3KK+Nr
-	 1HrbxLYFKI3ZDPsURR2EnLSIBbs85zGu+G0LssnbWSVJmIhX+2aHdCAamu+GUHW8c6
-	 ZWvYt1p0kQTAxX4dx5IEWSFZ5yZj/Au5Sjlgjyo8=
+	b=emB+r7jacH3SaxL5Bv9S47SgCmQfPSbf/C4JnUQLRtlJ1r++SunKSRDNTIOWi7Gqw
+	 qykNgvwFLGxCTowwKyrjiODgYrVI8tJOAsGadvEUSD73Om18iZmEwocVHm0rq7WEYB
+	 7g0hsaStGpJlCJktMVWNuT5x08UaGhCZTnSVGz4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732420AbfFIQxa (ORCPT
+        id S1732429AbfFIQxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54620 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:53:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732369AbfFIQxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:23 -0400
+        id S1732421AbfFIQxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5805A2081C;
-        Sun,  9 Jun 2019 16:53:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7313C206DF;
+        Sun,  9 Jun 2019 16:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099202;
-        bh=2c8aXEmfdOficMgeHQ9sugJX/+g4av4j23I9qZXa3nI=;
+        s=default; t=1560099210;
+        bh=Qnqvb0bwuWUZl0on7p+Ii6HsgQVKN92+YuGzCQm/g3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u0/PZNPS7HcD1S9nZloMAE+zeydboLWciUV92hJaYTurEIMZ6u384AQZr+oMBOBLu
-         Zd1HFDX0pvuf2AuhB5ERC0zGUeGjMhxUdlERds4hidPJGVLFQ3Ck0CKeph3qc52NWz
-         A4epikxZMjqzVCurbrxptD4mEyUerdDTIOI5Rm2o=
+        b=tMNA3X3rgn3o+MYEKQvLS6hIVrWGCBrEFCcKfOu9r7R1xT3AlnVcaF3imgD19ILcx
+         jLPATeWvI9AvEbchTrwjyf6q0e7qbID7+Sfp3nfQIi/dRta3fHKtwvpwFwRqMCyQZd
+         ZHKfAK5/TjeAusPQxjPArsOOqjWYLu22J+eTo218=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.9 46/83] CIFS: cifs_read_allocate_pages: dont iterate through whole page array on ENOMEM
-Date:   Sun,  9 Jun 2019 18:42:16 +0200
-Message-Id: <20190609164131.857689875@linuxfoundation.org>
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 49/83] brcmfmac: add length checks in scheduled scan result handler
+Date:   Sun,  9 Jun 2019 18:42:19 +0200
+Message-Id: <20190609164132.115944698@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -61,37 +64,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+From: Arend Van Spriel <arend.vanspriel@broadcom.com>
 
-commit 31fad7d41e73731f05b8053d17078638cf850fa6 upstream.
+commit 4835f37e3bafc138f8bfa3cbed2920dd56fed283 upstream.
 
- In cifs_read_allocate_pages, in case of ENOMEM, we go through
-whole rdata->pages array but we have failed the allocation before
-nr_pages, therefore we may end up calling put_page with NULL
-pointer, causing oops
+Assure the event data buffer is long enough to hold the array
+of netinfo items and that SSID length does not exceed the maximum
+of 32 characters as per 802.11 spec.
 
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
+Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
+Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 4.9:
+ - Move the assignment to "data" along with the assignment to "netinfo_start"
+   that depends on it
+ - Adjust context, indentation]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/cifs/file.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c |   14 +++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -2892,7 +2892,9 @@ cifs_read_allocate_pages(struct cifs_rea
- 	}
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -3220,6 +3220,7 @@ brcmf_notify_sched_scan_results(struct b
+ 	struct brcmf_pno_scanresults_le *pfn_result;
+ 	u32 result_count;
+ 	u32 status;
++	u32 datalen;
  
- 	if (rc) {
--		for (i = 0; i < nr_pages; i++) {
-+		unsigned int nr_page_failed = i;
+ 	brcmf_dbg(SCAN, "Enter\n");
+ 
+@@ -3245,6 +3246,14 @@ brcmf_notify_sched_scan_results(struct b
+ 	if (result_count > 0) {
+ 		int i;
+ 
++		data += sizeof(struct brcmf_pno_scanresults_le);
++		netinfo_start = (struct brcmf_pno_net_info_le *)data;
++		datalen = e->datalen - ((void *)netinfo_start - (void *)pfn_result);
++		if (datalen < result_count * sizeof(*netinfo)) {
++			brcmf_err("insufficient event data\n");
++			goto out_err;
++		}
 +
-+		for (i = 0; i < nr_page_failed; i++) {
- 			put_page(rdata->pages[i]);
- 			rdata->pages[i] = NULL;
+ 		request = kzalloc(sizeof(*request), GFP_KERNEL);
+ 		ssid = kcalloc(result_count, sizeof(*ssid), GFP_KERNEL);
+ 		channel = kcalloc(result_count, sizeof(*channel), GFP_KERNEL);
+@@ -3254,9 +3263,6 @@ brcmf_notify_sched_scan_results(struct b
  		}
+ 
+ 		request->wiphy = wiphy;
+-		data += sizeof(struct brcmf_pno_scanresults_le);
+-		netinfo_start = (struct brcmf_pno_net_info_le *)data;
+-
+ 		for (i = 0; i < result_count; i++) {
+ 			netinfo = &netinfo_start[i];
+ 			if (!netinfo) {
+@@ -3266,6 +3272,8 @@ brcmf_notify_sched_scan_results(struct b
+ 				goto out_err;
+ 			}
+ 
++			if (netinfo->SSID_len > IEEE80211_MAX_SSID_LEN)
++				netinfo->SSID_len = IEEE80211_MAX_SSID_LEN;
+ 			brcmf_dbg(SCAN, "SSID:%s Channel:%d\n",
+ 				  netinfo->SSID, netinfo->channel);
+ 			memcpy(ssid[i].ssid, netinfo->SSID, netinfo->SSID_len);
 
 
