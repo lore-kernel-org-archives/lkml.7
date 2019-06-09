@@ -2,111 +2,99 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EEDC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E76C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31D62083D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956AD2083D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560078435;
+	bh=BoVXawOIy+yoXWu7Sh5tusd2+DJEUCMI4+wVXPSiYoU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R8w9XX8khIoBW4+HaGyhsq2MUIZ0j24QUPp42MPCD71/QzRayXZEm4g2z3OsSglGA
+	 g/RipEW4dNgQ8IfzlGXz3xrtOgz/ntP6Qe3pk/mqRLTTGWpNjz7brD8jkqA19T51iu
+	 bVfe4/z63O/PBuH8Amy5fJwLgclahA3owAq4xzoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfFILFX (ORCPT
+        id S1728388AbfFILHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 07:05:23 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54485 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfFILFX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 07:05:23 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 362B4802CC; Sun,  9 Jun 2019 13:05:10 +0200 (CEST)
-Date:   Sun, 9 Jun 2019 13:05:20 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/34] leds: leds-pca955x: simplify getting the adapter
- of a client
-Message-ID: <20190609110519.GA2375@amd>
-References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
- <20190608105619.593-5-wsa+renesas@sang-engineering.com>
- <e5a91999-a156-77b2-702b-8931140f0f8d@gmail.com>
+        Sun, 9 Jun 2019 07:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728095AbfFILHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 07:07:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67FD92083D;
+        Sun,  9 Jun 2019 11:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560078433;
+        bh=BoVXawOIy+yoXWu7Sh5tusd2+DJEUCMI4+wVXPSiYoU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zmr0Iy4glMkx23TrS5wmlVRG9KaBxeJ2RSz3E+odSlQ2p1xlxRSBszUfvTM8Yp/ak
+         QELHA1+QuS3NnMyptffrQ2fNyJGdbB2RSdJMiRZUrp3RWfyuXmASwXHgWL7CUVXz79
+         jcI+q/tAdNlReep8A/Lste96R2UEOWD9EUVg7a38=
+Date:   Sun, 9 Jun 2019 13:07:11 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Geordan Neukum <gneukum1@gmail.com>
+Cc:     Hao Xu <haoxu.linuxkernel@gmail.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] staging: kpc2000: kpc2000_i2c: void* -> void *
+Message-ID: <20190609110711.GA5666@kroah.com>
+References: <1559978867-3693-1-git-send-email-haoxu.linuxkernel@gmail.com>
+ <20190608134505.GA963@arch-01.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e5a91999-a156-77b2-702b-8931140f0f8d@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190608134505.GA963@arch-01.home>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jun 08, 2019 at 01:45:05PM +0000, Geordan Neukum wrote:
+> On Sat, Jun 08, 2019 at 03:27:46PM +0800, Hao Xu wrote:
+> > modify void* to void * for #define inb_p(a) readq((void*)a)
+> > and #define outb_p(d,a) writeq(d,(void*)a)
+> > 
+> > Signed-off-by: Hao Xu <haoxu.linuxkernel@gmail.com>
+> > ---
+> >  drivers/staging/kpc2000/kpc2000_i2c.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
+> > index a434dd0..de3a0c8 100644
+> > --- a/drivers/staging/kpc2000/kpc2000_i2c.c
+> > +++ b/drivers/staging/kpc2000/kpc2000_i2c.c
+> > @@ -124,9 +124,9 @@ struct i2c_device {
+> >  
+> >  // FIXME!
+> >  #undef inb_p
+> > -#define inb_p(a) readq((void*)a)
+> > +#define inb_p(a) readq((void *)a)
+> >  #undef outb_p
+> > -#define outb_p(d,a) writeq(d,(void*)a)
+> > +#define outb_p(d,a) writeq(d,(void *)a)
+> 
+> Alternatively to fixing up the style here, did you consider just
+> removing these two macros altogether and calling [read|write]q
+> directly throughout the kpc_i2c driver (per the '//FIXME' comment)?
+> 
+> Unless, I'm misunderstanding something, these macros are shadowing the
+> functions [in|out]b_p, which already exist in io.h. [in|out]b_p are for
+> 8-bit i/o transactions and [read|write]q are for 64-bit transactions, so
+> shadowing the original [in|out]b_p with something that actually does
+> 64-bit transactions is probably potentially misleading here.
 
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, these should be fixed up "properly".  But I'll take the coding
+style cleanups for now.
 
-On Sun 2019-06-09 13:03:40, Jacek Anaszewski wrote:
-> Hi Wolfram,
->=20
-> Thank you for the patches.
->=20
-> On 6/8/19 12:55 PM, Wolfram Sang wrote:
-> >We have a dedicated pointer for that, so use it. Much easier to read and
-> >less computation involved.
-> >
-> >Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> >---
-> >
-> >Please apply to your subsystem tree.
-> >
-> >  drivers/leds/leds-pca955x.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> >diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
-> >index a9f5dad55956..460626d81c6a 100644
-> >--- a/drivers/leds/leds-pca955x.c
-> >+++ b/drivers/leds/leds-pca955x.c
-> >@@ -432,7 +432,7 @@ static int pca955x_probe(struct i2c_client *client,
-> >  	int ngpios =3D 0;
-> >  	chip =3D &pca955x_chipdefs[id->driver_data];
-> >-	adapter =3D to_i2c_adapter(client->dev.parent);
-> >+	adapter =3D client->adapter;
-> >  	pdata =3D dev_get_platdata(&client->dev);
-> >  	if (!pdata) {
-> >  		pdata =3D	pca955x_get_pdata(client, chip);
-> >
->=20
-> For both 4/34 and 5/34:
->=20
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+thanks,
 
-4 and 5:
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
-But I wonder if it should go through the leds tree?
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---AqsLC8rIMeq19msA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlz85+8ACgkQMOfwapXb+vK6YQCfbTAciJbPFiikZaSzNawQ4CTP
-iXgAn15Z789Y3jOmbvgrZWlNJ11pvPAE
-=V47/
------END PGP SIGNATURE-----
-
---AqsLC8rIMeq19msA--
+greg k-h
