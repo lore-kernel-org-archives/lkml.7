@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49BBC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586A0C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C37206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C84206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099955;
-	bh=pTgCCLvUilwsvMaZM1gPMD/TqLSr8BzBWLhRt3UynTQ=;
+	s=default; t=1560099961;
+	bh=UhR57b0Sk6ZFFatY+t//jXdwc7jZomBGaukFlmikNHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ovou34Um7N7zlrvMuZz+0eC8P7YLENeEk1o5E07SAlUJMUmhic40pKGkr0P9z9u2+
-	 aJd9eAZdGc3HwUkPic4L4RJoL7tPe7QJCuw15bwVgcIe85usN3qfqwr603nBNzUGsg
-	 2gOGcC+FY8omEJgNXZP1sSlss3K/rD48h1i+9zzU=
+	b=Av8qXWtcpDyQCIg+CbfWKriTmS+4IlKxeKP/ZUuNmTZmpKYNpgyYYB6+hSVIe3QcZ
+	 TFMKndUqwKDRpjVks4FT3Iqhx0aG2kJmhSDS1AwOm7VxColpUx9kJgvPRvS16IqDT6
+	 2H2SnGq+TNTDJCxoRBbNY/dqNNxQ8U3T9HDXr7vA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388918AbfFIRFy (ORCPT
+        id S2388941AbfFIRGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:05:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45210 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:06:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388881AbfFIRFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:05:50 -0400
+        id S2388910AbfFIRFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 115DB206DF;
-        Sun,  9 Jun 2019 17:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17DAF204EC;
+        Sun,  9 Jun 2019 17:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099949;
-        bh=pTgCCLvUilwsvMaZM1gPMD/TqLSr8BzBWLhRt3UynTQ=;
+        s=default; t=1560099952;
+        bh=UhR57b0Sk6ZFFatY+t//jXdwc7jZomBGaukFlmikNHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpEV1/MHh8u1qKn9bbEtm+5jm8w6VgPnfAu6Ag4eN9EJ69CxMwjhIMfnZRPlAJUa4
-         073OM2rJ4LzRSiRNrFRxyf7YaHeRB9poazoQ6WCEn8eu+0t3X4Ih6oSDuqlm29Gjxl
-         jisZTq+0zapz88JQ0+NgR869FP/dnDxDRNoafDlA=
+        b=PNxWcrLhnJn3HWzwY+elDR9CNyhD5o8mQRzHQzI0gyEjA9Nf+k4xcCLn8gKcMpYrY
+         sraCGVlFBqwpmlYPkfiiyMp1gpdaRO80JVDOaZXTx+jfNRkbtOHojKq38yDwnULa30
+         kd45y5BtPf4qI5w5TF/5hKLmHFIg0rcVZFo4D9UI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 223/241] brcmfmac: add subtype check for event handling in data path
-Date:   Sun,  9 Jun 2019 18:42:45 +0200
-Message-Id: <20190609164155.129121944@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.4 188/241] crypto: vmx - ghash: do nosimd fallback manually
+Date:   Sun,  9 Jun 2019 18:42:10 +0200
+Message-Id: <20190609164153.331841320@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -64,103 +62,319 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
+From: Daniel Axtens <dja@axtens.net>
 
-commit a4176ec356c73a46c07c181c6d04039fafa34a9f upstream.
+commit 357d065a44cdd77ed5ff35155a989f2a763e96ef upstream.
 
-For USB there is no separate channel being used to pass events
-from firmware to the host driver and as such are passed over the
-data path. In order to detect mock event messages an additional
-check is needed on event subtype. This check is added conditionally
-using unlikely() keyword.
+VMX ghash was using a fallback that did not support interleaving simd
+and nosimd operations, leading to failures in the extended test suite.
 
-Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
-Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
-Reviewed-by: Franky Lin <franky.lin@broadcom.com>
-Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 4.4: adjust filenames]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+If I understood correctly, Eric's suggestion was to use the same
+data format that the generic code uses, allowing us to call into it
+with the same contexts. I wasn't able to get that to work - I think
+there's a very different key structure and data layout being used.
+
+So instead steal the arm64 approach and perform the fallback
+operations directly if required.
+
+Fixes: cc333cd68dfa ("crypto: vmx - Adding GHASH routines for VMX module")
+Cc: stable@vger.kernel.org # v4.1+
+Reported-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wireless/brcm80211/brcmfmac/core.c   |    5 +++--
- drivers/net/wireless/brcm80211/brcmfmac/fweh.h   |   16 ++++++++++++----
- drivers/net/wireless/brcm80211/brcmfmac/msgbuf.c |    2 +-
- 3 files changed, 16 insertions(+), 7 deletions(-)
 
---- a/drivers/net/wireless/brcm80211/brcmfmac/core.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/core.c
-@@ -548,7 +548,8 @@ void brcmf_rx_frame(struct device *dev,
- 	} else {
- 		/* Process special event packets */
- 		if (handle_event)
--			brcmf_fweh_process_skb(ifp->drvr, skb);
-+			brcmf_fweh_process_skb(ifp->drvr, skb,
-+					       BCMILCP_SUBTYPE_VENDOR_LONG);
+---
+ drivers/crypto/vmx/ghash.c |  218 ++++++++++++++++++---------------------------
+ 1 file changed, 89 insertions(+), 129 deletions(-)
+
+--- a/drivers/crypto/vmx/ghash.c
++++ b/drivers/crypto/vmx/ghash.c
+@@ -1,22 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
+ /**
+  * GHASH routines supporting VMX instructions on the Power 8
+  *
+- * Copyright (C) 2015 International Business Machines Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 only.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ * Copyright (C) 2015, 2019 International Business Machines Inc.
+  *
+  * Author: Marcelo Henrique Cerri <mhcerri@br.ibm.com>
++ *
++ * Extended by Daniel Axtens <dja@axtens.net> to replace the fallback
++ * mechanism. The new approach is based on arm64 code, which is:
++ *   Copyright (C) 2014 - 2018 Linaro Ltd. <ard.biesheuvel@linaro.org>
+  */
  
- 		brcmf_netif_rx(ifp, skb);
- 	}
-@@ -575,7 +576,7 @@ void brcmf_rx_event(struct device *dev,
+ #include <linux/types.h>
+@@ -39,71 +31,25 @@ void gcm_ghash_p8(u64 Xi[2], const u128
+ 		  const u8 *in, size_t len);
  
- 	skb->protocol = eth_type_trans(skb, ifp->ndev);
+ struct p8_ghash_ctx {
++	/* key used by vector asm */
+ 	u128 htable[16];
+-	struct crypto_shash *fallback;
++	/* key used by software fallback */
++	be128 key;
+ };
  
--	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
- 	brcmu_pkt_buf_free_skb(skb);
+ struct p8_ghash_desc_ctx {
+ 	u64 shash[2];
+ 	u8 buffer[GHASH_DIGEST_SIZE];
+ 	int bytes;
+-	struct shash_desc fallback_desc;
+ };
+ 
+-static int p8_ghash_init_tfm(struct crypto_tfm *tfm)
+-{
+-	const char *alg = "ghash-generic";
+-	struct crypto_shash *fallback;
+-	struct crypto_shash *shash_tfm = __crypto_shash_cast(tfm);
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(tfm);
+-
+-	fallback = crypto_alloc_shash(alg, 0, CRYPTO_ALG_NEED_FALLBACK);
+-	if (IS_ERR(fallback)) {
+-		printk(KERN_ERR
+-		       "Failed to allocate transformation for '%s': %ld\n",
+-		       alg, PTR_ERR(fallback));
+-		return PTR_ERR(fallback);
+-	}
+-
+-	crypto_shash_set_flags(fallback,
+-			       crypto_shash_get_flags((struct crypto_shash
+-						       *) tfm));
+-
+-	/* Check if the descsize defined in the algorithm is still enough. */
+-	if (shash_tfm->descsize < sizeof(struct p8_ghash_desc_ctx)
+-	    + crypto_shash_descsize(fallback)) {
+-		printk(KERN_ERR
+-		       "Desc size of the fallback implementation (%s) does not match the expected value: %lu vs %u\n",
+-		       alg,
+-		       shash_tfm->descsize - sizeof(struct p8_ghash_desc_ctx),
+-		       crypto_shash_descsize(fallback));
+-		return -EINVAL;
+-	}
+-	ctx->fallback = fallback;
+-
+-	return 0;
+-}
+-
+-static void p8_ghash_exit_tfm(struct crypto_tfm *tfm)
+-{
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(tfm);
+-
+-	if (ctx->fallback) {
+-		crypto_free_shash(ctx->fallback);
+-		ctx->fallback = NULL;
+-	}
+-}
+-
+ static int p8_ghash_init(struct shash_desc *desc)
+ {
+-	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+ 
+ 	dctx->bytes = 0;
+ 	memset(dctx->shash, 0, GHASH_DIGEST_SIZE);
+-	dctx->fallback_desc.tfm = ctx->fallback;
+-	dctx->fallback_desc.flags = desc->flags;
+-	return crypto_shash_init(&dctx->fallback_desc);
++	return 0;
  }
  
---- a/drivers/net/wireless/brcm80211/brcmfmac/fweh.h
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/fweh.h
-@@ -181,7 +181,7 @@ enum brcmf_fweh_event_code {
-  */
- #define BRCM_OUI				"\x00\x10\x18"
- #define BCMILCP_BCM_SUBTYPE_EVENT		1
--
-+#define BCMILCP_SUBTYPE_VENDOR_LONG		32769
- 
- /**
-  * struct brcm_ethhdr - broadcom specific ether header.
-@@ -302,10 +302,10 @@ void brcmf_fweh_process_event(struct brc
- void brcmf_fweh_p2pdev_setup(struct brcmf_if *ifp, bool ongoing);
- 
- static inline void brcmf_fweh_process_skb(struct brcmf_pub *drvr,
--					  struct sk_buff *skb)
-+					  struct sk_buff *skb, u16 stype)
- {
- 	struct brcmf_event *event_packet;
--	u16 usr_stype;
-+	u16 subtype, usr_stype;
- 
- 	/* only process events when protocol matches */
- 	if (skb->protocol != cpu_to_be16(ETH_P_LINK_CTL))
-@@ -314,8 +314,16 @@ static inline void brcmf_fweh_process_sk
- 	if ((skb->len + ETH_HLEN) < sizeof(*event_packet))
- 		return;
- 
--	/* check for BRCM oui match */
- 	event_packet = (struct brcmf_event *)skb_mac_header(skb);
+ static int p8_ghash_setkey(struct crypto_shash *tfm, const u8 *key,
+@@ -122,7 +68,53 @@ static int p8_ghash_setkey(struct crypto
+ 	gcm_init_p8(ctx->htable, (const u64 *) key);
+ 	pagefault_enable();
+ 	preempt_enable();
+-	return crypto_shash_setkey(ctx->fallback, key, keylen);
 +
-+	/* check subtype if needed */
-+	if (unlikely(stype)) {
-+		subtype = get_unaligned_be16(&event_packet->hdr.subtype);
-+		if (subtype != stype)
-+			return;
++	memcpy(&ctx->key, key, GHASH_BLOCK_SIZE);
++
++	return 0;
++}
++
++static inline void __ghash_block(struct p8_ghash_ctx *ctx,
++				 struct p8_ghash_desc_ctx *dctx)
++{
++	if (!IN_INTERRUPT) {
++		preempt_disable();
++		pagefault_disable();
++		enable_kernel_altivec();
++		enable_kernel_vsx();
++		enable_kernel_fp();
++		gcm_ghash_p8(dctx->shash, ctx->htable,
++				dctx->buffer, GHASH_DIGEST_SIZE);
++		pagefault_enable();
++		preempt_enable();
++	} else {
++		crypto_xor((u8 *)dctx->shash, dctx->buffer, GHASH_BLOCK_SIZE);
++		gf128mul_lle((be128 *)dctx->shash, &ctx->key);
 +	}
++}
 +
-+	/* check for BRCM oui match */
- 	if (memcmp(BRCM_OUI, &event_packet->hdr.oui[0],
- 		   sizeof(event_packet->hdr.oui)))
- 		return;
---- a/drivers/net/wireless/brcm80211/brcmfmac/msgbuf.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/msgbuf.c
-@@ -1112,7 +1112,7 @@ static void brcmf_msgbuf_process_event(s
++static inline void __ghash_blocks(struct p8_ghash_ctx *ctx,
++				  struct p8_ghash_desc_ctx *dctx,
++				  const u8 *src, unsigned int srclen)
++{
++	if (!IN_INTERRUPT) {
++		preempt_disable();
++		pagefault_disable();
++		enable_kernel_altivec();
++		enable_kernel_vsx();
++		enable_kernel_fp();
++		gcm_ghash_p8(dctx->shash, ctx->htable,
++				src, srclen);
++		pagefault_enable();
++		preempt_enable();
++	} else {
++		while (srclen >= GHASH_BLOCK_SIZE) {
++			crypto_xor((u8 *)dctx->shash, src, GHASH_BLOCK_SIZE);
++			gf128mul_lle((be128 *)dctx->shash, &ctx->key);
++			srclen -= GHASH_BLOCK_SIZE;
++			src += GHASH_BLOCK_SIZE;
++		}
++	}
+ }
  
- 	skb->protocol = eth_type_trans(skb, ifp->ndev);
+ static int p8_ghash_update(struct shash_desc *desc,
+@@ -132,51 +124,33 @@ static int p8_ghash_update(struct shash_
+ 	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
  
--	brcmf_fweh_process_skb(ifp->drvr, skb);
-+	brcmf_fweh_process_skb(ifp->drvr, skb, 0);
+-	if (IN_INTERRUPT) {
+-		return crypto_shash_update(&dctx->fallback_desc, src,
+-					   srclen);
+-	} else {
+-		if (dctx->bytes) {
+-			if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
+-				memcpy(dctx->buffer + dctx->bytes, src,
+-				       srclen);
+-				dctx->bytes += srclen;
+-				return 0;
+-			}
++	if (dctx->bytes) {
++		if (dctx->bytes + srclen < GHASH_DIGEST_SIZE) {
+ 			memcpy(dctx->buffer + dctx->bytes, src,
+-			       GHASH_DIGEST_SIZE - dctx->bytes);
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_altivec();
+-			enable_kernel_vsx();
+-			enable_kernel_fp();
+-			gcm_ghash_p8(dctx->shash, ctx->htable,
+-				     dctx->buffer, GHASH_DIGEST_SIZE);
+-			pagefault_enable();
+-			preempt_enable();
+-			src += GHASH_DIGEST_SIZE - dctx->bytes;
+-			srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
+-			dctx->bytes = 0;
++				srclen);
++			dctx->bytes += srclen;
++			return 0;
+ 		}
+-		len = srclen & ~(GHASH_DIGEST_SIZE - 1);
+-		if (len) {
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_altivec();
+-			enable_kernel_vsx();
+-			enable_kernel_fp();
+-			gcm_ghash_p8(dctx->shash, ctx->htable, src, len);
+-			pagefault_enable();
+-			preempt_enable();
+-			src += len;
+-			srclen -= len;
+-		}
+-		if (srclen) {
+-			memcpy(dctx->buffer, src, srclen);
+-			dctx->bytes = srclen;
+-		}
+-		return 0;
++		memcpy(dctx->buffer + dctx->bytes, src,
++			GHASH_DIGEST_SIZE - dctx->bytes);
++
++		__ghash_block(ctx, dctx);
++
++		src += GHASH_DIGEST_SIZE - dctx->bytes;
++		srclen -= GHASH_DIGEST_SIZE - dctx->bytes;
++		dctx->bytes = 0;
++	}
++	len = srclen & ~(GHASH_DIGEST_SIZE - 1);
++	if (len) {
++		__ghash_blocks(ctx, dctx, src, len);
++		src += len;
++		srclen -= len;
+ 	}
++	if (srclen) {
++		memcpy(dctx->buffer, src, srclen);
++		dctx->bytes = srclen;
++	}
++	return 0;
+ }
  
- exit:
- 	brcmu_pkt_buf_free_skb(skb);
+ static int p8_ghash_final(struct shash_desc *desc, u8 *out)
+@@ -185,26 +159,14 @@ static int p8_ghash_final(struct shash_d
+ 	struct p8_ghash_ctx *ctx = crypto_tfm_ctx(crypto_shash_tfm(desc->tfm));
+ 	struct p8_ghash_desc_ctx *dctx = shash_desc_ctx(desc);
+ 
+-	if (IN_INTERRUPT) {
+-		return crypto_shash_final(&dctx->fallback_desc, out);
+-	} else {
+-		if (dctx->bytes) {
+-			for (i = dctx->bytes; i < GHASH_DIGEST_SIZE; i++)
+-				dctx->buffer[i] = 0;
+-			preempt_disable();
+-			pagefault_disable();
+-			enable_kernel_altivec();
+-			enable_kernel_vsx();
+-			enable_kernel_fp();
+-			gcm_ghash_p8(dctx->shash, ctx->htable,
+-				     dctx->buffer, GHASH_DIGEST_SIZE);
+-			pagefault_enable();
+-			preempt_enable();
+-			dctx->bytes = 0;
+-		}
+-		memcpy(out, dctx->shash, GHASH_DIGEST_SIZE);
+-		return 0;
++	if (dctx->bytes) {
++		for (i = dctx->bytes; i < GHASH_DIGEST_SIZE; i++)
++			dctx->buffer[i] = 0;
++		__ghash_block(ctx, dctx);
++		dctx->bytes = 0;
+ 	}
++	memcpy(out, dctx->shash, GHASH_DIGEST_SIZE);
++	return 0;
+ }
+ 
+ struct shash_alg p8_ghash_alg = {
+@@ -219,11 +181,9 @@ struct shash_alg p8_ghash_alg = {
+ 		 .cra_name = "ghash",
+ 		 .cra_driver_name = "p8_ghash",
+ 		 .cra_priority = 1000,
+-		 .cra_flags = CRYPTO_ALG_TYPE_SHASH | CRYPTO_ALG_NEED_FALLBACK,
++		 .cra_flags = CRYPTO_ALG_TYPE_SHASH,
+ 		 .cra_blocksize = GHASH_BLOCK_SIZE,
+ 		 .cra_ctxsize = sizeof(struct p8_ghash_ctx),
+ 		 .cra_module = THIS_MODULE,
+-		 .cra_init = p8_ghash_init_tfm,
+-		 .cra_exit = p8_ghash_exit_tfm,
+ 	},
+ };
 
 
