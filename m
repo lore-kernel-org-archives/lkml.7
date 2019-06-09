@@ -2,144 +2,116 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94846C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7816BC468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE56206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCD3206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:10:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g+6Vbl0i"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="p5NiaGiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbfFIWHA (ORCPT
+        id S1729692AbfFIWKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 18:07:00 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:45363 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbfFIWHA (ORCPT
+        Sun, 9 Jun 2019 18:10:03 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53571 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfFIWKD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 18:07:00 -0400
-Received: by mail-lj1-f172.google.com with SMTP id m23so6137930lje.12
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 15:06:59 -0700 (PDT)
+        Sun, 9 Jun 2019 18:10:03 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x15so6694676wmj.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 15:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=50GXZwDHzCmpvzbBJ8yBES+uMhcVk2V2rV15ilN2B0c=;
-        b=g+6Vbl0iiwSmN9H6YowhpGLJ73aounTBDzKhwymCbPXUe3YFtgu1z4wNCKLkILsZs/
-         FKkBcFH//l4EcaLCokbemf+udf2+h3MZo4BZFRGYU0k7TFa+hJCq1VGJB8Umrkcd98kp
-         lkU4Vk37IHqN9wT2FoTtsaWc4lSpIcqfaJWjxgoAuWi5z29YyrlYWbhjuKr84CHN2XUL
-         C2Bgw1IznFw2WLjGRQbyFjkn0b3MoPs5N/0e4hn/Gacris0AR8lDHFeUzYiZwq4bXQfE
-         jk4STLcb4kxRKe1TPxcO+kpC+f7ibP9nIBlvBlZvmdNUtRzohvJfxSy8G4TpJbomtPW1
-         PR3w==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=2SWyFvEavyrqCv7g0qg3nkQ1nJujvkYSoQyWpe8waIw=;
+        b=p5NiaGiNdXu7fNEnbzJcsx/hI7yPrtMTqAPo/7q8yjSuqspmC6SZXpXzrb7Ff7kjN/
+         P9QtRYdcSsoDfa64Xb6zjvoiL2LcWcU2fYVGPe/lkdaHYMK0/834U2Dd0z+/XcPA4c2E
+         Yb0r/SAzYBTm/vTAtkdHiXTsXZxuQgSluJ3q1kaYyaG7YLG4zTWsgESXtmNp5cecmWIG
+         WjkZPBgGdwWPiI5/wwneHLEbrD2WlgRkicLS55AZh0DfI68VnBWUXyetDbm7c/JgTV5k
+         nikwFT6AsqfTFjU5gavLHm4acFc9eBu1C5CJfoUVzi2RmoQQpyi4V3iSQd1Bblq+Dujg
+         BqFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=50GXZwDHzCmpvzbBJ8yBES+uMhcVk2V2rV15ilN2B0c=;
-        b=stExb5rvWz91XnrnoX9Ej6SAe0xzleSxFnl6eZ9kbNQxtDPesCf1pg8Z7+hKyjgqIa
-         YTIiZngky+wdjQ361jHxX5M+xtyUWb92KtKZZHCsFi8wUM+bXDeU42X0KvDz+mLeiwqM
-         wLhRs5RudWxFFFy+/XYvzwHFD+l1QyNRc3gMybYlnFF8BtXVU8/numgSvTK2vXrI5ri6
-         rHCGFz9EftjVmv7juIsxWmLx+XG15ppfHaOIwSYW7avQXQBL+ExMmaG2FnNnCxVTkFoa
-         +e6ZKUF2oFAY9xaXwgQe+OB5+NwUo4J9IiqQcJb3MgcWXg5i5MVi4ad+g6MHfUy3oUSe
-         GIpg==
-X-Gm-Message-State: APjAAAXjYCxtUvHIFlcD6TfHHaNEGa7b0UymZLNkU8foaAXMSLzXqPNj
-        y1GhMGT9sB7G5C1cQ4LSDW/DNk7E1rnCcbqzUtTLGQ==
-X-Google-Smtp-Source: APXvYqyA9vzJYqRBM9b+TZM/4DaVcMYzTW8e9CaOv9ikhog+XAeu8+oeZTxmSSNapo5H1D99QLI3ZR7brOWlp3Po/C4=
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr25061179lje.46.1560118018248;
- Sun, 09 Jun 2019 15:06:58 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=2SWyFvEavyrqCv7g0qg3nkQ1nJujvkYSoQyWpe8waIw=;
+        b=tBstl06xjrXfDoT4cf26dDlScb/MTu9OBwuyzqIEew24J23RK5foTM76uMqIc5fujK
+         k5FdlJU8Tb60c5UWK9VUurZjtR47wZVK7+hyS5KHo9E+bKfELTMj36gxxeoreZBkmxen
+         6SVJK3/VfDiO7ErxK/733QO40zhNnjAAXumXXXQk9fVT2s9G8CfSyfObwrwwWg1qOk47
+         mRry2ep7Ohc0qQPHAJea85g+94e77HSjUM3yBhHFbz1r+/9EUShdm09deqyDLAl9Ya53
+         PxIy+rLF0vEEsuXz7nqK6DJX6/M+huAadByH3VNJSA9Gywc1EuqFTe95r4ZicaWddW5V
+         zahA==
+X-Gm-Message-State: APjAAAUejURUJ01RgXk7uhyiAYhLDUZQKlZJTRcJAQ6JhPUwAIMTcGv5
+        v+HWV5NVr/35ZF62yzmZXoOhcg==
+X-Google-Smtp-Source: APXvYqzfPrnPPLX/mv7/WIGIEWVS3WMTOL99Xq2g0PTcKkOud2YRsXiHDnatm+NIEmLAzXuMaSACsQ==
+X-Received: by 2002:a1c:e906:: with SMTP id q6mr10980343wmc.47.1560118200838;
+        Sun, 09 Jun 2019 15:10:00 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a19sm7064532wmm.46.2019.06.09.15.10.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Jun 2019 15:10:00 -0700 (PDT)
+Message-ID: <5cfd83b8.1c69fb81.447c3.881b@mx.google.com>
+Date:   Sun, 09 Jun 2019 15:10:00 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609180621.7607-6-martin.blumenstingl@googlemail.com>
- <CACRpkdYzeiLB7Yuixv6NsnLJoa_FnGKRHHQm=t4gMH34NdFSYA@mail.gmail.com> <CAFBinCBgoLb+Hfdo-sZ_0H6ct=UJm7j6wD_C6udbA6BTRvFOWQ@mail.gmail.com>
-In-Reply-To: <CAFBinCBgoLb+Hfdo-sZ_0H6ct=UJm7j6wD_C6udbA6BTRvFOWQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 10 Jun 2019 00:06:51 +0200
-Message-ID: <CACRpkdYur+dwC1LqasQR-cvTWcpV12vr+8Wi5o9kXVWe-0teZw@mail.gmail.com>
-Subject: Re: [RFC next v1 5/5] arm64: dts: meson: g12a: x96-max: fix the
- Ethernet PHY reset line
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Giuseppe CAVALLARO <peppe.cavallaro@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.9.180-84-g4fcf72df7bc7
+X-Kernelci-Branch: linux-4.9.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
+References: <20190609164127.843327870@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/83] 4.9.181-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 11:36 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+stable-rc/linux-4.9.y boot: 107 boots: 1 failed, 106 passed (v4.9.180-84-g4=
+fcf72df7bc7)
 
-> > If "snps,reset-active-low" was set it results in the sequence 1, 0, 1
-> > if it is not set it results in the sequence 0, 1, 0.
->
-> I'm changing this logic with earlier patches of this series.
-> can you please look at these as well because GPIO_OPEN_SOURCE doesn't
-> work with the old version of stmmac_mdio_reset() that you are showing.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.180-84-g4fcf72df7bc7/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.180-84-g4fcf72df7bc7/
 
-OK but the logic is the same, just that the polarity handling is moved
-into gpiolib.
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.180-84-g4fcf72df7bc7
+Git Commit: 4fcf72df7bc71264d86e616874a0a0cd382f1b12
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 53 unique boards, 23 SoC families, 15 builds out of 197
 
-> > The high (reset) is asserted by switching the pin into high-z open drain
-> > mode, which happens by switching the line into input mode in some
-> > cases.
-> >
-> > I think the real reason it works now is that reset is actually active high.
->
-> let me write down what I definitely know so far
->
-> the RTL8211F PHY wants the reset line to be LOW for a few milliseconds
-> to put it into reset mode.
-> driving the reset line HIGH again takes it out of reset.
->
-> Odroid-N2's schematics [0] (page 30) shows that there's a pull-up for
-> the PHYRSTB pin, which is also connected to the NRST signal which is
-> GPIOZ_15
+Boot Regressions Detected:
 
-Looks correct, R143 is indeed a pull up indicating that the line is
-open drain, active low.
+arm:
 
-> > It makes a lot of sense, since if it resets the device when set as input
-> > (open drain) it holds all devices on that line in reset, which is likely
-> > what you want as most GPIOs come up as inputs (open drain).
-> > A pull-up resistor will ascertain that the devices are in reset.
->
-> my understanding is that the pull-up resistor holds it out of reset
-> driving GPIOZ_15's (open drain) output LOW pulls the signal to ground
-> and asserts the reset
+    omap2plus_defconfig:
+        gcc-8:
+          omap3-beagle-xm:
+              lab-baylibre: new failure (last pass: v4.9.180-62-gd9b5fd7ab1=
+7b)
 
-Yep that seems correct.
+Boot Failure Detected:
 
-Oh I guess it is this:
+arm:
+    omap2plus_defconfig:
+        gcc-8:
+            omap3-beagle-xm: 1 failed lab
 
-        amlogic,tx-delay-ns = <2>;
--       snps,reset-gpio = <&gpio GPIOZ_14 0>;
-+       snps,reset-gpio = <&gpio GPIOZ_15 GPIO_OPEN_SOURCE>;
-        snps,reset-delays-us = <0 10000 1000000>;
--       snps,reset-active-low;
-
-Can you try:
-snps,reset-gpio = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-?
-
-Open source is nominally (and rarely) used for lines that are active high.
-For lines that are active low, we want to use open drain combined
-with active low.
-
-Yours,
-Linus Walleij
+---
+For more info write to <info@kernelci.org>
