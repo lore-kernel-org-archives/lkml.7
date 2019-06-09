@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EB7C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F22C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABB5206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B18D206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099967;
-	bh=K3HweLCpeokOm366BXIvoHi/dJtHz0DI3sdBKIKEuDw=;
+	s=default; t=1560099971;
+	bh=RIZxM074gjLVkKvqGhcrySREjdYpGz6+CiM9kD9xK/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RaH3L9GkDVXpE6KVTzbwA9TGsoh3Z23N9jkvF+37Se52qBoc2ttpiKhNLaKgK4ae2
-	 1EfYMK4QxJBnQS6ng7dIPoS5HND5bVsQYmOSjf+mgl6stge5tp9RUzGaS/eAI3rDPz
-	 SWeZIuXuWa5nebdWJL2K9bN5vKnjAtXqzpsXfouk=
+	b=Tt8ql66L46kwLZXHMHOiuHgMm7QuxZJOWgXRvuKAqEvEjCCE+AXr/Hv7Tkus/yD8O
+	 TMbWn8sHZjgXEnaVsdd4jO254U7ObppVLqa7N9vie1/PmX+ri+xyL1Qv5MaIFCpgcM
+	 /HV4AQfXMTDADGCCydY1lCKT/0he3rOjGCwv3XkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388960AbfFIRGG (ORCPT
+        id S2388570AbfFIRGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45586 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:06:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388514AbfFIRGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:06:04 -0400
+        id S2388514AbfFIRGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:06:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E4E20840;
-        Sun,  9 Jun 2019 17:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D24206C3;
+        Sun,  9 Jun 2019 17:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099963;
-        bh=K3HweLCpeokOm366BXIvoHi/dJtHz0DI3sdBKIKEuDw=;
+        s=default; t=1560099966;
+        bh=RIZxM074gjLVkKvqGhcrySREjdYpGz6+CiM9kD9xK/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YPZM+iSVsevG/wMg1gM394R7IWbCkTv/xnzawpcFUqdtRyl1sF9WZ3NOdnYW3cFhV
-         50hnTnWbzijYnvAg5bOLyNhzuebcKoI/yTlLDiWdj4471aAJld06v9x0/cjzuVDir9
-         6hKzRBujROfldJjbGuwxQI5cAXRCYes/OtvqaRK8=
+        b=SdOxJ5j7ThIFIMsIh7ilumoPBreFjA0UOcknpEnZPIoilrQCTrTEOwrVU1wMtxMuz
+         lZNCJ0GeZxibwDr9Azb2UVJoO9OTuz/jUaKBCiXFFgwqdaD6hDgenHo+jt/9FqjBcn
+         UgbJ+ohh0rVLmcKDDX7RBlF8rmvuWfMJItBVGC34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 189/241] xen/pciback: Dont disable PCI_COMMAND on PCI device reset.
-Date:   Sun,  9 Jun 2019 18:42:11 +0200
-Message-Id: <20190609164153.368548323@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 190/241] Revert "tipc: fix modprobe tipc failed after switch order of device registration"
+Date:   Sun,  9 Jun 2019 18:42:12 +0200
+Message-Id: <20190609164153.404723678@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -62,56 +58,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+From: David S. Miller <davem@davemloft.net>
 
-commit 7681f31ec9cdacab4fd10570be924f2cef6669ba upstream.
+commit 5593530e56943182ebb6d81eca8a3be6db6dbba4 upstream.
 
-There is no need for this at all. Worst it means that if
-the guest tries to write to BARs it could lead (on certain
-platforms) to PCI SERR errors.
+This reverts commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e.
 
-Please note that with af6fc858a35b90e89ea7a7ee58e66628c55c776b
-"xen-pciback: limit guest control of command register"
-a guest is still allowed to enable those control bits (safely), but
-is not allowed to disable them and that therefore a well behaved
-frontend which enables things before using them will still
-function correctly.
+More revisions coming up.
 
-This is done via an write to the configuration register 0x4 which
-triggers on the backend side:
-command_write
-  \- pci_enable_device
-     \- pci_enable_device_flags
-        \- do_pci_enable_device
-           \- pcibios_enable_device
-              \-pci_enable_resourcess
-                [which enables the PCI_COMMAND_MEMORY|PCI_COMMAND_IO]
-
-However guests (and drivers) which don't do this could cause
-problems, including the security issues which XSA-120 sought
-to address.
-
-Reported-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Reviewed-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/xen-pciback/pciback_ops.c |    2 --
- 1 file changed, 2 deletions(-)
+ net/tipc/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/xen/xen-pciback/pciback_ops.c
-+++ b/drivers/xen/xen-pciback/pciback_ops.c
-@@ -126,8 +126,6 @@ void xen_pcibk_reset_device(struct pci_d
- 		if (pci_is_enabled(dev))
- 			pci_disable_device(dev);
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -61,10 +61,6 @@ static int __net_init tipc_init_net(stru
+ 	INIT_LIST_HEAD(&tn->node_list);
+ 	spin_lock_init(&tn->node_list_lock);
  
--		pci_write_config_word(dev, PCI_COMMAND, 0);
+-	err = tipc_socket_init();
+-	if (err)
+-		goto out_socket;
 -
- 		dev->is_busmaster = 0;
- 	} else {
- 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 	err = tipc_sk_rht_init(net);
+ 	if (err)
+ 		goto out_sk_rht;
+@@ -91,8 +87,6 @@ out_subscr:
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+ out_sk_rht:
+-	tipc_socket_stop();
+-out_socket:
+ 	return err;
+ }
+ 
+@@ -103,7 +97,6 @@ static void __net_exit tipc_exit_net(str
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+ 	tipc_sk_rht_destroy(net);
+-	tipc_socket_stop();
+ }
+ 
+ static struct pernet_operations tipc_net_ops = {
+@@ -141,6 +134,10 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_pernet;
+ 
++	err = tipc_socket_init();
++	if (err)
++		goto out_socket;
++
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -148,6 +145,8 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
++	tipc_socket_stop();
++out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+@@ -163,6 +162,7 @@ out_netlink:
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
++	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
 
 
