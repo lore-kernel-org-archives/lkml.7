@@ -2,139 +2,133 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5651DC28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 03:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE536C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 03:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17CEB214AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 03:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QD+i09DK"
+	by mail.kernel.org (Postfix) with ESMTP id 836412146E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 03:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfFIDH6 (ORCPT
+        id S1727791AbfFIDpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 23:07:58 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43268 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727522AbfFIDH5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 23:07:57 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cl9so2279676plb.10;
-        Sat, 08 Jun 2019 20:07:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=9itGLtdOmBJM/1ryZSxTG0b15PTePJMrWSbb4zQK9g0=;
-        b=QD+i09DKNxSMKJPjE1LYcW5lxW3wv1QXKW9pysyjlVemnMuZQBJIgRTybCYhwtlUhO
-         XftQHGF+Ket4n68pLOGo7DeL0fVazfzV62O+GSa5GhemdsXQeW/xRY+SYNAuiaOQB9TF
-         W1a9GGNcZDpcsiDpoVhMprv3cO9fPh1ovwrs3WK0lP8IqwP3JVmCESOzXDPrRWG+PE2A
-         HmX6YvSqDW7H2FjE31URUDX1OCszGx68ycFi8WIqqW9T2JcKa+YRVkQ+aNZisEuFIC2Z
-         SPh1NbO57o2ueDBuqKVjgE5zs9VInZ0t/CY6U9ArKEP0t+x/p2qY15k2r/3u6L9c2enQ
-         IDnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=9itGLtdOmBJM/1ryZSxTG0b15PTePJMrWSbb4zQK9g0=;
-        b=ZWNxNKnJvKlckHxuz6d4Egcjpm+I9Yvz/RLhdIVgyrTisWOqOwnOu5y6OrnK8bdC8I
-         3kaJrEB7pJ0vmiczMkfbIEswC3c/6iGgxQZf8QH3c8TBv/iC08IrGsFR1iYgvNXp4Hcn
-         dHd0Tz5fIfC+Iq14NMP64pN1xI0bj2ACvt0OSGXhgUp+6abeu693qITR1pCcSc/UydvZ
-         2yzfDSsJboUc6WvVn1jM4+YHiKgkRnFcNfXqnuq2o+2moMNkbviSvsusYmIyYCGtrHM9
-         8UkfWFGCsem2g6leG2poofMBpcXlJJsCnhc8RcQu5U+K56hKnwJh+en3+oyByTGkyQrg
-         aDyA==
-X-Gm-Message-State: APjAAAXC3/2ffzeHLbMnvy1Px2TvT4U8ixDfWovuw1K5tgkio1DQ6+Up
-        pKYimkHo2kSy5APw1l3ZXx/T9/+q
-X-Google-Smtp-Source: APXvYqyIWMT75YQVshaRDgY/L673h2d967CpqFM0Cc1x7TmTf/fagw1CLfC9lh1r8DisZDajDPRjPQ==
-X-Received: by 2002:a17:902:d701:: with SMTP id w1mr57917621ply.12.1560049677010;
-        Sat, 08 Jun 2019 20:07:57 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id x127sm6358865pfb.107.2019.06.08.20.07.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Jun 2019 20:07:56 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 08:37:52 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Thomas Winischhofer <thomas@winischhofer.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Patch v3] USB: sisusbvga: Remove unneeded variable
-Message-ID: <20190609030751.GA5482@hari-Inspiron-1545>
+        Sat, 8 Jun 2019 23:45:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42590 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727552AbfFIDpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 23:45:18 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B24508830A;
+        Sun,  9 Jun 2019 03:45:17 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-49.pek2.redhat.com [10.72.12.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A5CC67C8C;
+        Sun,  9 Jun 2019 03:45:14 +0000 (UTC)
+Subject: Re: The current SME implementation fails kexec/kdump kernel booting.
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Baoquan He <bhe@redhat.com>
+Cc:     "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190604134952.GC26891@MiWiFi-R3L-srv>
+ <508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com>
+ <20190605005600.GF26891@MiWiFi-R3L-srv>
+ <0d9fba9d-7bbe-a7c7-dfe4-696da0dfecc4@amd.com>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <2fe0e56c-9286-b71d-3d6d-c2a6fbcfba89@redhat.com>
+Date:   Sun, 9 Jun 2019 11:45:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <0d9fba9d-7bbe-a7c7-dfe4-696da0dfecc4@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Sun, 09 Jun 2019 03:45:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded variable ret in function sisusb_set_default_mode.
+在 2019年06月06日 00:04, Lendacky, Thomas 写道:
+> On 6/4/19 7:56 PM, Baoquan He wrote:
+>> On 06/04/19 at 03:56pm, Lendacky, Thomas wrote:
+>>> On 6/4/19 8:49 AM, Baoquan He wrote:
+>>>> Hi Tom,
+>>>>
+>>>> Lianbo reported kdump kernel can't boot well with 'nokaslr' added, and
+>>>> have to enable KASLR in kdump kernel to make it boot successfully. This
+>>>> blocked his work on enabling sme for kexec/kdump. And on some machines
+>>>> SME kernel can't boot in 1st kernel.
+>>>>
+>>>> I checked code of SME implementation, and found out the root cause. The
+>>>> above failures are caused by SME code, sme_encrypt_kernel(). In
+>>>> sme_encrypt_kernel(), you get a 2M of encryption work area as intermediate
+>>>> buffer to encrypt kernel in-place. And the work area is just after _end of
+>>>> kernel.
+>>>
+>>> I remember worrying about something like this back when I was testing the
+>>> kexec support. I had come up with a patch to address it, but never got the
+>>> time to test and submit it.  I've included it here if you'd like to test
+>>> it (I haven't done run this patch in quite some time). If it works, we can
+>>> think about submitting it.
+>>
+>> Thanks for your quick response and making this patch, Tom.
+>>
+>> Tested on a speedway machine, it entered into kernel, but failed in
+>> below stage. Tested two times, always happened.
+> 
+> Is this the initial kernel boot or the kexec kernel boot?
+> 
+> It looks like this is related to the initrd/initramfs decryption. Not
+> sure what could be happening there. I just tried the patch on my Naples
+> system and a 5.2.0-rc3 kernel and have been able to repeatedly kexec boot
+> a number of times so far.
+> 
 
-Change return type of sisusb_set_default_mode from int to void
-as it never fails.
+I used the hacked kexec-tools(by Baoquan) to test it, the kexec-d kernel and
+kdump kernel worked well. But Tom's patch only worked for the kexec-d kernel,
+and the kdump kernel did not work(kdump kernel could not successfully boot).
+What's the difference between them?
 
-Issue identified by coccicheck
+Thanks
+Lianbo
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
------
-changes in v2: Change return type of sisusb_set_default_mode from int to
-void as it never fails
-
-changes in v3: Update changelog
-----
----
- drivers/usb/misc/sisusbvga/sisusb.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/misc/sisusbvga/sisusb.c b/drivers/usb/misc/sisusbvga/sisusb.c
-index ea06f1f..2ab9600 100644
---- a/drivers/usb/misc/sisusbvga/sisusb.c
-+++ b/drivers/usb/misc/sisusbvga/sisusb.c
-@@ -1747,10 +1747,10 @@ static int sisusb_setup_screen(struct sisusb_usb_data *sisusb,
- 	return ret;
- }
- 
--static int sisusb_set_default_mode(struct sisusb_usb_data *sisusb,
-+static void sisusb_set_default_mode(struct sisusb_usb_data *sisusb,
- 		int touchengines)
- {
--	int ret = 0, i, j, modex, bpp, du;
-+	int i, j, modex, bpp, du;
- 	u8 sr31, cr63, tmp8;
- 	static const char attrdata[] = {
- 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-@@ -1873,8 +1873,6 @@ static int sisusb_set_default_mode(struct sisusb_usb_data *sisusb,
- 	}
- 
- 	SETIREG(SISCR, 0x34, 0x44);	/* we just set std mode #44 */
--
--	return ret;
- }
- 
- static int sisusb_init_gfxcore(struct sisusb_usb_data *sisusb)
-@@ -2019,7 +2017,7 @@ static int sisusb_init_gfxcore(struct sisusb_usb_data *sisusb)
- 
- 		ret |= SETIREG(SISCR, 0x83, 0x00);
- 
--		ret |= sisusb_set_default_mode(sisusb, 0);
-+		sisusb_set_default_mode(sisusb, 0);
- 
- 		ret |= SETIREGAND(SISSR, 0x21, 0xdf);
- 		ret |= SETIREGOR(SISSR, 0x01, 0x20);
-@@ -2246,7 +2244,7 @@ static int sisusb_init_gfxdevice(struct sisusb_usb_data *sisusb, int initscreen)
- 		if (sisusb_init_gfxcore(sisusb) == 0) {
- 			sisusb->gfxinit = 1;
- 			sisusb_get_ramconfig(sisusb);
--			ret |= sisusb_set_default_mode(sisusb, 1);
-+			sisusb_set_default_mode(sisusb, 1);
- 			ret |= sisusb_setup_screen(sisusb, 1, initscreen);
- 		}
- 	}
--- 
-2.7.4
-
+> Thanks,
+> Tom
+> 
+>>
+>>
+>> [    4.978521] Freeing unused decrypted memory: 2040K
+>> [    4.983800] Freeing unused kernel image memory: 2344K
+>> [    4.988943] Write protecting the kernel read-only data: 18432k
+>> [    4.995306] Freeing unused kernel image memory: 2012K
+>> [    5.000488] Freeing unused kernel image memory: 256K
+>> [    5.005540] Run /init as init process
+>> [    5.009443] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00007f00
+>> [    5.017230] CPU: 0 PID: 1 Comm: init Not tainted 5.2.0-rc2+ #38
+>> [    5.023251] Hardware name: AMD Corporation Speedway/Speedway, BIOS RSW1004B 10/18/2017
+>> [    5.031299] Call Trace:
+>> [    5.033793]  dump_stack+0x46/0x60
+>> [    5.037169]  panic+0xfb/0x2cb
+>> [    5.040191]  do_exit.cold.21+0x59/0x81
+>> [    5.044004]  do_group_exit+0x3a/0xa0
+>> [    5.047640]  __x64_sys_exit_group+0x14/0x20
+>> [    5.051899]  do_syscall_64+0x55/0x1c0
+>> [    5.055627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>> [    5.060764] RIP: 0033:0x7fa1b1fc9e2e
+>> [    5.064404] Code: Bad RIP value.
+>> [    5.067687] RSP: 002b:00007fffc5abb778 EFLAGS: 00000202 ORIG_RAX: 00000000000000e7
+>> [    5.075296] RAX: ffffffffffffffda RBX: 00007fa1b1fd2528 RCX: 00007fa1b1fc9e2e
+>> [    5.082625] RDX: 000000000000007f RSI: 000000000000003c RDI: 000000000000007f
+>> [    5.089879] RBP: 00007fa1b21d8d00 R08: 00000000000000e7 R09: 00007fffc5abb688
+>> [    5.097134] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+>> [    5.104386] R13: 0000000000000001 R14: 00007fa1b21d8d40 R15: 00007fa1b21d8d30
+>> [    5.111645] Kernel Offset: disabled
+>> [    5.423002] Rebooting in 10 seconds..
+>> [   15.429641] ACPI MEMORY or I/O RESET_REG.
+>>
