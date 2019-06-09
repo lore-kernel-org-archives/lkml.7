@@ -2,69 +2,63 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0936DC468BF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98FCC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A0E214AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743F1214AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047318;
-	bh=00/fu46zjLChL9ElQQ7TCGZozmIUhrcjvTgOnCLy8SY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YBY3x7CDZBBucjXdlJrFOWgK6Il59CaDRsIz5GzKmxXj1xzvVqshhDZ6C+QzCbzl4
-	 JV1rnE6526n02jRIdbPbnDrYDVcAl7mBvAPD7do6PA4z8Q7egP0ETNoxw7wocC/mF2
-	 rUFGCjLkCM00xtA4AEjFItgrzIV7jMm4ChQMuRX4=
+	s=default; t=1560047329;
+	bh=U2WuevDGjlUWLUBEhU7WkNtoAHyeQKuTSkqOK9GRtis=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oktUdjyVnJGrb/Py87BAGDigqghpeSu7IfemEbiplUpks362pDwrykXaw1ElNNcL2
+	 4ucC0OhVOkw+fOo65fl5D9fdOILSSkOVplW6klz3PIjSPMgZ6VmHfY1WJhTWtAsczR
+	 RnjXh8W+OSPu37ZtwOVmNrPHt7kGy0R/6HyrWnus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfFIC1g (ORCPT
+        id S1728551AbfFIC2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:27:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55632 "EHLO
+        Sat, 8 Jun 2019 22:28:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55722 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbfFIC1c (ORCPT
+        with ESMTP id S1728075AbfFIC1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:27:32 -0400
+        Sat, 8 Jun 2019 22:27:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=V2sdNJm6eazxqDbysnbOMl3lGWajyec71slvc9Q6kHo=; b=OtXiJg/3+Poxd89pNC5p/PRyh
-        FW7LXJCpmk3p5Htyo2yA2xU8XKw/ZA1EliO65I8fcRximzU8yH6LYf/lNeEJMGAll4toMuNXyLO6S
-        en9avCLrI+rN8F1pDj1WwUipzq9VonhohGQXaW/wZw1rKH53t5M047xWZXVrc6k3DTUb5/GMVGdi2
-        n8cM/vqSd9YKA9lTdBgjuVKIN0uZ/niwERUuZkIMM1x7rCbP7KBXGsm8qWY9daZeZLplPERUe8ib/
-        l0aZmAhEh4Zbtt7BYEQUYO8LwQwTpU3NiaQAV0DSPKEo0kiZxebO2rw0VBcSxVQ+IWDRi+dSddwT0
-        OHxPQzbxQ==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=472E4wCJY+O4Vs53iYNzHqMA7FuJoJEnkCrk8HYRLYs=; b=Uth4EJsMnM8japMQ5O8sU1dV/o
+        VZfuJWr3RwdEZBXbWAzfBmhy1Rgsjj0JUoeHxSGRpfvhCFsMeeysIG4hn2SUzI8bzuVX8l9L91VG/
+        /n9/Ry8ImnbTrgEDgVyFZfKgwiXveIPfcmAe9Bk6vqYozJjJ/Qb7A5gHxg/3r4+M8mPICO7SMjISQ
+        GEeZQzIEo8xYZ63rqdobKpy1AHs4VqtCtCo9w27zJaYssPLmiclD7pDRyyqS9306Av1sMW/avzNAE
+        1mKqzU7aOiERs1oZKfx51w3q/q/mYoEmCScCG70IUTMKW4DoF5XQLrA2Ql0po9jCHrMQZ1WS8iFIZ
+        nzAyHCCA==;
 Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZnYO-0001mp-2e; Sun, 09 Jun 2019 02:27:28 +0000
+        id 1hZnYS-0001n7-JJ; Sun, 09 Jun 2019 02:27:33 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZnYK-0000I7-Ob; Sat, 08 Jun 2019 23:27:24 -0300
+        id 1hZnYL-0000KL-Jx; Sat, 08 Jun 2019 23:27:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH v3 00/33] Convert files to ReST - part 1
-Date:   Sat,  8 Jun 2019 23:26:50 -0300
-Message-Id: <cover.1560045490.git.mchehab+samsung@kernel.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org
+Subject: [PATCH v3 28/33] docs: target: convert docs to ReST and rename to *.rst
+Date:   Sat,  8 Jun 2019 23:27:18 -0300
+Message-Id: <61d4104016deec401bff29561efb749cb64bb82d.1560045490.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1560045490.git.mchehab+samsung@kernel.org>
+References: <cover.1560045490.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,740 +66,757 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the first part of a series I wrote sometime ago where I manually
-convert lots of files to be properly parsed by Sphinx as ReST files.
+Convert the TCM docs to ReST format and add them to the
+bookset.
 
-As it touches on lot of stuff, this series is based on today's docs-next
-+ linux-next, at tag next-20190607.
+This has a mix of userspace-faced and Kernelspace faced
+docs. Still, it sounds a better candidate to be added at
+the kernel API set of docs.
 
-I have right now about 85 patches with this undergoing work. That's
-because I opted to do ~1 patch per converted directory.
+The conversion is actually:
+  - add blank lines and identation in order to identify paragraphs;
+  - fix tables markups;
+  - add some lists markups;
+  - mark literal blocks;
+  - adjust title markups.
 
-That sounds too much to be send on a single round. So, I'm opting to split
-it on 3 parts. Those patches should probably be good to be merged
-either by subsystem maintainers or via the docs tree.
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
-I opted to mark new files not included yet to the main index.rst (directly or
-indirectly ) with the :orphan: tag, in order to avoid adding warnings to the
-build system. This should be removed after we find a "home" for all
-the converted files within the new document tree arrangement.
-
-Both this series and  the next parts are on my devel git tree,
-at:
-
-	https://git.linuxtv.org/mchehab/experimental.git/log/?h=convert_rst_renames_v4
-
-The final output in html (after all patches I currently have, including 
-the upcoming series) can be seen at:
-
-	https://www.infradead.org/~mchehab/rst_conversion/
-
-Mauro Carvalho Chehab (33):
-  docs: aoe: convert docs to ReST and rename to *.rst
-  docs: arm64: convert docs to ReST and rename to .rst
-  docs: cdrom-standard.tex: convert from LaTeX to ReST
-  docs: cdrom: convert docs to ReST and rename to *.rst
-  docs: cgroup-v1: convert docs to ReST and rename to *.rst
-  docs: cgroup-v1/blkio-controller.rst: add a note about CFQ scheduler
-  docs: cpu-freq: convert docs to ReST and rename to *.rst
-  docs: convert docs to ReST and rename to *.rst
-  docs: fault-injection: convert docs to ReST and rename to *.rst
-  docs: fb: convert docs to ReST and rename to *.rst
-  docs: fpga: convert docs to ReST and rename to *.rst
-  docs: ide: convert docs to ReST and rename to *.rst
-  docs: infiniband: convert docs to ReST and rename to *.rst
-  docs: kbuild: convert docs to ReST and rename to *.rst
-  docs: kdump: convert docs to ReST and rename to *.rst
-  docs: locking: convert docs to ReST and rename to *.rst
-  docs: mic: convert docs to ReST and rename to *.rst
-  docs: netlabel: convert docs to ReST and rename to *.rst
-  docs: pcmcia: convert docs to ReST and rename to *.rst
-  docs: convert docs to ReST and rename to *.rst
-  docs: powerpc: convert docs to ReST and rename to *.rst
-  docs: pps.txt: convert to ReST and rename to pps.rst
-  docs: ptp.txt: convert to ReST and move to driver-api
-  docs: riscv: convert docs to ReST and rename to *.rst
-  docs: Debugging390.txt: convert table to ascii artwork
-  docs: s390: convert docs to ReST and rename to *.rst
-  s390: include/asm/debug.h add kerneldoc markups
-  docs: target: convert docs to ReST and rename to *.rst
-  docs: timers: convert docs to ReST and rename to *.rst
-  docs: watchdog: convert docs to ReST and rename to *.rst
-  docs: xilinx: convert eemi.txt to eemi.rst
-  docs: scheduler: convert docs to ReST and rename to *.rst
-  docs: EDID/HOWTO.txt: convert it and rename to howto.rst
-
- .../ABI/testing/sysfs-class-powercap          |    2 +-
- Documentation/ABI/testing/sysfs-kernel-uids   |    2 +-
- Documentation/EDID/{HOWTO.txt => howto.rst}   |   31 +-
- Documentation/PCI/pci-error-recovery.rst      |   23 +-
- Documentation/admin-guide/README.rst          |    2 +-
- Documentation/admin-guide/bug-hunting.rst     |    2 +-
- Documentation/admin-guide/hw-vuln/l1tf.rst    |    2 +-
- .../admin-guide/kernel-parameters.txt         |   28 +-
- .../admin-guide/mm/numa_memory_policy.rst     |    2 +-
- Documentation/aoe/{aoe.txt => aoe.rst}        |   63 +-
- Documentation/aoe/examples.rst                |   23 +
- Documentation/aoe/index.rst                   |   19 +
- Documentation/aoe/{todo.txt => todo.rst}      |    3 +
- Documentation/aoe/udev.txt                    |    2 +-
- ...object_usage.txt => acpi_object_usage.rst} |  288 +-
- .../arm64/{arm-acpi.txt => arm-acpi.rst}      |  155 +-
- .../arm64/{booting.txt => booting.rst}        |   91 +-
- ...egisters.txt => cpu-feature-registers.rst} |  204 +-
- .../arm64/{elf_hwcaps.txt => elf_hwcaps.rst}  |   56 +-
- .../{hugetlbpage.txt => hugetlbpage.rst}      |    7 +-
- Documentation/arm64/index.rst                 |   28 +
- ...structions.txt => legacy_instructions.rst} |   43 +-
- .../arm64/{memory.txt => memory.rst}          |   91 +-
- ...ication.txt => pointer-authentication.rst} |    2 +
- ...{silicon-errata.txt => silicon-errata.rst} |   65 +-
- Documentation/arm64/{sve.txt => sve.rst}      |   12 +-
- ...agged-pointers.txt => tagged-pointers.rst} |    6 +-
- Documentation/block/bfq-iosched.txt           |    2 +-
- Documentation/cdrom/Makefile                  |   21 -
- ...{cdrom-standard.tex => cdrom-standard.rst} | 1491 +++++-----
- Documentation/cdrom/{ide-cd => ide-cd.rst}    |  196 +-
- Documentation/cdrom/index.rst                 |   19 +
- ...{packet-writing.txt => packet-writing.rst} |   27 +-
- ...io-controller.txt => blkio-controller.rst} |  103 +-
- .../cgroup-v1/{cgroups.txt => cgroups.rst}    |  184 +-
- .../cgroup-v1/{cpuacct.txt => cpuacct.rst}    |   15 +-
- .../cgroup-v1/{cpusets.txt => cpusets.rst}    |  205 +-
- .../cgroup-v1/{devices.txt => devices.rst}    |   40 +-
- ...er-subsystem.txt => freezer-subsystem.rst} |   14 +-
- .../cgroup-v1/{hugetlb.txt => hugetlb.rst}    |   39 +-
- Documentation/cgroup-v1/index.rst             |   30 +
- .../{memcg_test.txt => memcg_test.rst}        |  263 +-
- .../cgroup-v1/{memory.txt => memory.rst}      |  449 +--
- .../cgroup-v1/{net_cls.txt => net_cls.rst}    |   37 +-
- .../cgroup-v1/{net_prio.txt => net_prio.rst}  |   24 +-
- .../cgroup-v1/{pids.txt => pids.rst}          |   78 +-
- .../cgroup-v1/{rdma.txt => rdma.rst}          |   66 +-
- .../{amd-powernow.txt => amd-powernow.rst}    |   11 +-
- Documentation/cpu-freq/{core.txt => core.rst} |   68 +-
- .../{cpu-drivers.txt => cpu-drivers.rst}      |  217 +-
- ...pufreq-nforce2.txt => cpufreq-nforce2.rst} |   12 +-
- .../{cpufreq-stats.txt => cpufreq-stats.rst}  |  141 +-
- .../cpu-freq/{index.txt => index.rst}         |   44 +-
- .../{pcc-cpufreq.txt => pcc-cpufreq.rst}      |  102 +-
- ...{cache-policies.txt => cache-policies.rst} |   24 +-
- .../device-mapper/{cache.txt => cache.rst}    |  206 +-
- .../device-mapper/{delay.txt => delay.rst}    |   29 +-
- .../{dm-crypt.txt => dm-crypt.rst}            |   57 +-
- .../{dm-flakey.txt => dm-flakey.rst}          |   45 +-
- .../{dm-init.txt => dm-init.rst}              |   75 +-
- .../{dm-integrity.txt => dm-integrity.rst}    |   62 +-
- .../device-mapper/{dm-io.txt => dm-io.rst}    |   14 +-
- .../device-mapper/{dm-log.txt => dm-log.rst}  |    5 +-
- ...m-queue-length.txt => dm-queue-length.rst} |   25 +-
- .../{dm-raid.txt => dm-raid.rst}              |  225 +-
- ...m-service-time.txt => dm-service-time.rst} |   68 +-
- .../{dm-uevent.txt => dm-uevent.rst}          |  143 +-
- .../{dm-zoned.txt => dm-zoned.rst}            |   10 +-
- .../device-mapper/{era.txt => era.rst}        |   36 +-
- Documentation/device-mapper/index.rst         |   44 +
- .../device-mapper/{kcopyd.txt => kcopyd.rst}  |   10 +-
- .../device-mapper/{linear.txt => linear.rst}  |  100 +-
- .../{log-writes.txt => log-writes.rst}        |   91 +-
- ...ersistent-data.txt => persistent-data.rst} |    4 +
- .../{snapshot.txt => snapshot.rst}            |  116 +-
- .../{statistics.txt => statistics.rst}        |   62 +-
- .../{striped.txt => striped.rst}              |   68 +-
- .../device-mapper/{switch.txt => switch.rst}  |   47 +-
- ...provisioning.txt => thin-provisioning.rst} |   68 +-
- .../{unstriped.txt => unstriped.rst}          |  111 +-
- .../device-mapper/{verity.txt => verity.rst}  |   20 +-
- .../{writecache.txt => writecache.rst}        |   13 +-
- .../device-mapper/{zero.txt => zero.rst}      |   14 +-
- Documentation/driver-api/pm/devices.rst       |    6 +-
- .../{pps/pps.txt => driver-api/pps.rst}       |   67 +-
- .../{ptp/ptp.txt => driver-api/ptp.rst}       |   26 +-
- Documentation/driver-api/s390-drivers.rst     |    4 +-
- .../driver-api/usb/power-management.rst       |    2 +-
- ...ault-injection.txt => fault-injection.rst} |  265 +-
- Documentation/fault-injection/index.rst       |   20 +
- ...r-inject.txt => notifier-error-inject.rst} |   18 +-
- ...injection.txt => nvme-fault-injection.rst} |  174 +-
- ...rovoke-crashes.txt => provoke-crashes.rst} |   40 +-
- Documentation/fb/{api.txt => api.rst}         |   29 +-
- Documentation/fb/{arkfb.txt => arkfb.rst}     |    8 +-
- .../fb/{aty128fb.txt => aty128fb.rst}         |   35 +-
- .../fb/{cirrusfb.txt => cirrusfb.rst}         |   47 +-
- .../fb/{cmap_xfbdev.txt => cmap_xfbdev.rst}   |   57 +-
- .../fb/{deferred_io.txt => deferred_io.rst}   |   28 +-
- Documentation/fb/{efifb.txt => efifb.rst}     |   18 +-
- .../fb/{ep93xx-fb.txt => ep93xx-fb.rst}       |   27 +-
- Documentation/fb/{fbcon.txt => fbcon.rst}     |  177 +-
- .../fb/{framebuffer.txt => framebuffer.rst}   |   79 +-
- Documentation/fb/{gxfb.txt => gxfb.rst}       |   24 +-
- Documentation/fb/index.rst                    |   50 +
- .../fb/{intel810.txt => intel810.rst}         |   79 +-
- Documentation/fb/{intelfb.txt => intelfb.rst} |   62 +-
- .../fb/{internals.txt => internals.rst}       |   24 +-
- Documentation/fb/{lxfb.txt => lxfb.rst}       |   25 +-
- .../fb/{matroxfb.txt => matroxfb.rst}         |  528 ++--
- .../fb/{metronomefb.txt => metronomefb.rst}   |    8 +-
- Documentation/fb/{modedb.txt => modedb.rst}   |   44 +-
- Documentation/fb/{pvr2fb.txt => pvr2fb.rst}   |   55 +-
- Documentation/fb/{pxafb.txt => pxafb.rst}     |   81 +-
- Documentation/fb/{s3fb.txt => s3fb.rst}       |    8 +-
- .../fb/{sa1100fb.txt => sa1100fb.rst}         |   23 +-
- .../fb/{sh7760fb.txt => sh7760fb.rst}         |  153 +-
- Documentation/fb/{sisfb.txt => sisfb.rst}     |   40 +-
- Documentation/fb/{sm501.txt => sm501.rst}     |    7 +-
- Documentation/fb/{sm712fb.txt => sm712fb.rst} |   18 +-
- Documentation/fb/{sstfb.txt => sstfb.rst}     |  231 +-
- Documentation/fb/{tgafb.txt => tgafb.rst}     |   30 +-
- .../fb/{tridentfb.txt => tridentfb.rst}       |   36 +-
- Documentation/fb/{udlfb.txt => udlfb.rst}     |   55 +-
- Documentation/fb/{uvesafb.txt => uvesafb.rst} |  128 +-
- Documentation/fb/{vesafb.txt => vesafb.rst}   |  121 +-
- Documentation/fb/{viafb.txt => viafb.rst}     |  393 +--
- .../fb/{vt8623fb.txt => vt8623fb.rst}         |   10 +-
- Documentation/filesystems/tmpfs.txt           |    2 +-
- .../filesystems/ubifs-authentication.md       |    4 +-
- Documentation/fpga/{dfl.txt => dfl.rst}       |   58 +-
- Documentation/fpga/index.rst                  |   17 +
- Documentation/ide/changelogs.rst              |   17 +
- .../ide/{ide-tape.txt => ide-tape.rst}        |   23 +-
- Documentation/ide/{ide.txt => ide.rst}        |  147 +-
- Documentation/ide/index.rst                   |   21 +
- ...arm-plug-howto.txt => warm-plug-howto.rst} |   10 +-
- .../{core_locking.txt => core_locking.rst}    |   64 +-
- Documentation/infiniband/index.rst            |   23 +
- .../infiniband/{ipoib.txt => ipoib.rst}       |   24 +-
- .../infiniband/{opa_vnic.txt => opa_vnic.rst} |  108 +-
- .../infiniband/{sysfs.txt => sysfs.rst}       |    4 +-
- .../{tag_matching.txt => tag_matching.rst}    |    5 +
- .../infiniband/{user_mad.txt => user_mad.rst} |   33 +-
- .../{user_verbs.txt => user_verbs.rst}        |   12 +-
- ...eaders_install.txt => headers_install.rst} |    5 +-
- Documentation/kbuild/index.rst                |   27 +
- Documentation/kbuild/issues.rst               |   11 +
- .../kbuild/{kbuild.txt => kbuild.rst}         |  119 +-
- ...nfig-language.txt => kconfig-language.rst} |  232 +-
- ...anguage.txt => kconfig-macro-language.rst} |   37 +-
- .../kbuild/{kconfig.txt => kconfig.rst}       |  136 +-
- .../kbuild/{makefiles.txt => makefiles.rst}   |  530 ++--
- .../kbuild/{modules.txt => modules.rst}       |  168 +-
- Documentation/kdump/index.rst                 |   21 +
- Documentation/kdump/{kdump.txt => kdump.rst}  |  131 +-
- .../kdump/{vmcoreinfo.txt => vmcoreinfo.rst}  |   59 +-
- Documentation/kernel-hacking/hacking.rst      |    4 +-
- Documentation/kernel-hacking/locking.rst      |    2 +-
- Documentation/kernel-per-CPU-kthreads.txt     |    2 +-
- Documentation/locking/index.rst               |   24 +
- ...{lockdep-design.txt => lockdep-design.rst} |   51 +-
- .../locking/{lockstat.txt => lockstat.rst}    |  221 +-
- .../{locktorture.txt => locktorture.rst}      |  105 +-
- .../{mutex-design.txt => mutex-design.rst}    |   26 +-
- ...t-mutex-design.txt => rt-mutex-design.rst} |  139 +-
- .../locking/{rt-mutex.txt => rt-mutex.rst}    |   30 +-
- .../locking/{spinlocks.txt => spinlocks.rst}  |   32 +-
- ...w-mutex-design.txt => ww-mutex-design.rst} |   82 +-
- Documentation/mic/index.rst                   |   18 +
- .../{mic_overview.txt => mic_overview.rst}    |    6 +-
- .../{scif_overview.txt => scif_overview.rst}  |   58 +-
- .../{cipso_ipv4.txt => cipso_ipv4.rst}        |   19 +-
- Documentation/netlabel/draft_ietf.rst         |    5 +
- Documentation/netlabel/index.rst              |   21 +
- .../{introduction.txt => introduction.rst}    |   16 +-
- .../{lsm_interface.txt => lsm_interface.rst}  |   16 +-
- Documentation/networking/timestamping.txt     |    2 +-
- .../{devicetable.txt => devicetable.rst}      |    4 +
- ...{driver-changes.txt => driver-changes.rst} |   35 +-
- .../pcmcia/{driver.txt => driver.rst}         |   18 +-
- Documentation/pcmcia/index.rst                |   20 +
- .../pcmcia/{locking.txt => locking.rst}       |   39 +-
- Documentation/pi-futex.txt                    |    2 +-
- .../power/{apm-acpi.txt => apm-acpi.rst}      |   10 +-
- ...m-debugging.txt => basic-pm-debugging.rst} |   79 +-
- ...harger-manager.txt => charger-manager.rst} |  101 +-
- ...rivers-testing.txt => drivers-testing.rst} |   15 +-
- .../{energy-model.txt => energy-model.rst}    |  101 +-
- ...ing-of-tasks.txt => freezing-of-tasks.rst} |   91 +-
- Documentation/power/index.rst                 |   46 +
- .../power/{interface.txt => interface.rst}    |   24 +-
- Documentation/power/{opp.txt => opp.rst}      |  175 +-
- Documentation/power/{pci.txt => pci.rst}      |   87 +-
- ...qos_interface.txt => pm_qos_interface.rst} |  127 +-
- ...upply_class.txt => power_supply_class.rst} |  269 +-
- .../powercap/{powercap.txt => powercap.rst}   |  297 +-
- .../regulator/{consumer.txt => consumer.rst}  |  141 +-
- .../regulator/{design.txt => design.rst}      |    9 +-
- .../regulator/{machine.txt => machine.rst}    |   47 +-
- .../regulator/{overview.txt => overview.rst}  |   57 +-
- .../{regulator.txt => regulator.rst}          |   18 +-
- .../power/{runtime_pm.txt => runtime_pm.rst}  |  234 +-
- Documentation/power/{s2ram.txt => s2ram.rst}  |   20 +-
- ...hotplug.txt => suspend-and-cpuhotplug.rst} |   42 +-
- ...errupts.txt => suspend-and-interrupts.rst} |    2 +
- ...ap-files.txt => swsusp-and-swap-files.rst} |   17 +-
- ...{swsusp-dmcrypt.txt => swsusp-dmcrypt.rst} |  120 +-
- .../power/{swsusp.txt => swsusp.rst}          |  639 ++--
- .../power/{tricks.txt => tricks.rst}          |    6 +-
- ...serland-swsusp.txt => userland-swsusp.rst} |   55 +-
- Documentation/power/{video.txt => video.rst}  |  156 +-
- .../{bootwrapper.txt => bootwrapper.rst}      |   28 +-
- .../{cpu_families.txt => cpu_families.rst}    |   23 +-
- .../{cpu_features.txt => cpu_features.rst}    |    6 +-
- Documentation/powerpc/{cxl.txt => cxl.rst}    |   46 +-
- .../powerpc/{cxlflash.txt => cxlflash.rst}    |   10 +-
- .../{DAWR-POWER9.txt => dawr-power9.rst}      |   15 +-
- Documentation/powerpc/{dscr.txt => dscr.rst}  |   18 +-
- ...ecovery.txt => eeh-pci-error-recovery.rst} |  108 +-
- ...ed-dump.txt => firmware-assisted-dump.rst} |  119 +-
- Documentation/powerpc/{hvcs.txt => hvcs.rst}  |  108 +-
- Documentation/powerpc/index.rst               |   34 +
- Documentation/powerpc/isa-versions.rst        |   15 +-
- .../powerpc/{mpc52xx.txt => mpc52xx.rst}      |   12 +-
- ...nv.txt => pci_iov_resource_on_powernv.rst} |   15 +-
- .../powerpc/{pmu-ebb.txt => pmu-ebb.rst}      |    1 +
- .../powerpc/{ptrace.txt => ptrace.rst}        |  169 +-
- .../{qe_firmware.txt => qe_firmware.rst}      |   37 +-
- .../{syscall64-abi.txt => syscall64-abi.rst}  |   29 +-
- ...al_memory.txt => transactional_memory.rst} |   45 +-
- Documentation/process/4.Coding.rst            |    2 +-
- Documentation/process/coding-style.rst        |    2 +-
- Documentation/process/submit-checklist.rst    |    2 +-
- Documentation/process/submitting-drivers.rst  |    2 +-
- Documentation/riscv/index.rst                 |   17 +
- Documentation/riscv/{pmu.txt => pmu.rst}      |   98 +-
- Documentation/s390/{3270.txt => 3270.rst}     |   85 +-
- Documentation/s390/{cds.txt => cds.rst}       |  354 ++-
- .../s390/{CommonIO => common_io.rst}          |   49 +-
- Documentation/s390/{DASD => dasd.rst}         |   33 +-
- .../{Debugging390.txt => debugging390.rst}    | 2599 ++++++++++-------
- .../{driver-model.txt => driver-model.rst}    |  179 +-
- Documentation/s390/index.rst                  |   30 +
- .../s390/{monreader.txt => monreader.rst}     |   85 +-
- Documentation/s390/{qeth.txt => qeth.rst}     |   36 +-
- .../s390/{s390dbf.txt => s390dbf.rst}         |  616 +---
- Documentation/s390/text_files.rst             |   11 +
- .../s390/{vfio-ap.txt => vfio-ap.rst}         |  487 +--
- .../s390/{vfio-ccw.txt => vfio-ccw.rst}       |   90 +-
- .../s390/{zfcpdump.txt => zfcpdump.rst}       |    2 +
- .../{completion.txt => completion.rst}        |   38 +-
- Documentation/scheduler/index.rst             |   29 +
- .../{sched-arch.txt => sched-arch.rst}        |   18 +-
- .../{sched-bwc.txt => sched-bwc.rst}          |   30 +-
- ...{sched-deadline.txt => sched-deadline.rst} |  297 +-
- ...ed-design-CFS.txt => sched-design-CFS.rst} |   17 +-
- .../{sched-domains.txt => sched-domains.rst}  |    8 +-
- .../{sched-energy.txt => sched-energy.rst}    |   53 +-
- ...-nice-design.txt => sched-nice-design.rst} |    6 +-
- ...{sched-rt-group.txt => sched-rt-group.rst} |   30 +-
- .../{sched-stats.txt => sched-stats.rst}      |   35 +-
- Documentation/scheduler/text_files.rst        |    5 +
- Documentation/target/index.rst                |   19 +
- Documentation/target/scripts.rst              |   11 +
- ...cm_mod_builder.txt => tcm_mod_builder.rst} |  200 +-
- .../{tcmu-design.txt => tcmu-design.rst}      |  268 +-
- .../timers/{highres.txt => highres.rst}       |   13 +-
- Documentation/timers/{hpet.txt => hpet.rst}   |    4 +-
- .../timers/{hrtimers.txt => hrtimers.rst}     |    6 +-
- Documentation/timers/index.rst                |   22 +
- Documentation/timers/{NO_HZ.txt => no_hz.rst} |   40 +-
- .../{timekeeping.txt => timekeeping.rst}      |    3 +-
- .../{timers-howto.txt => timers-howto.rst}    |   15 +-
- Documentation/trace/coresight-cpu-debug.txt   |    2 +-
- .../it_IT/kernel-hacking/hacking.rst          |    4 +-
- .../it_IT/kernel-hacking/locking.rst          |    2 +-
- .../translations/it_IT/process/4.Coding.rst   |    2 +-
- .../it_IT/process/coding-style.rst            |    2 +-
- .../it_IT/process/submit-checklist.rst        |    2 +-
- .../translations/zh_CN/arm64/booting.txt      |    4 +-
- .../zh_CN/arm64/legacy_instructions.txt       |    4 +-
- .../translations/zh_CN/arm64/memory.txt       |    4 +-
- .../zh_CN/arm64/silicon-errata.txt            |    4 +-
- .../zh_CN/arm64/tagged-pointers.txt           |    4 +-
- .../translations/zh_CN/oops-tracing.txt       |    2 +-
- .../translations/zh_CN/process/4.Coding.rst   |    2 +-
- .../zh_CN/process/coding-style.rst            |    2 +-
- .../zh_CN/process/submit-checklist.rst        |    2 +-
- .../zh_CN/process/submitting-drivers.rst      |    2 +-
- Documentation/virtual/kvm/api.txt             |    2 +-
- Documentation/vm/numa.rst                     |    6 +-
- Documentation/vm/page_migration.rst           |    2 +-
- Documentation/vm/unevictable-lru.rst          |    2 +-
- ....txt => convert_drivers_to_kernel_api.rst} |  109 +-
- .../watchdog/{hpwdt.txt => hpwdt.rst}         |   27 +-
- Documentation/watchdog/index.rst              |   25 +
- .../watchdog/{mlx-wdt.txt => mlx-wdt.rst}     |   24 +-
- .../{pcwd-watchdog.txt => pcwd-watchdog.rst}  |   13 +-
- .../{watchdog-api.txt => watchdog-api.rst}    |   76 +-
- ...kernel-api.txt => watchdog-kernel-api.rst} |   91 +-
- ...parameters.txt => watchdog-parameters.rst} |  672 +++--
- .../{watchdog-pm.txt => watchdog-pm.rst}      |    3 +
- Documentation/watchdog/{wdt.txt => wdt.rst}   |   31 +-
- .../x86/x86_64/fake-numa-for-cpusets.rst      |    4 +-
- Documentation/xilinx/{eemi.txt => eemi.rst}   |    8 +-
- Documentation/xilinx/index.rst                |   17 +
- Kconfig                                       |    2 +-
- MAINTAINERS                                   |   38 +-
- arch/arc/plat-eznps/Kconfig                   |    2 +-
- arch/arm/Kconfig                              |    2 +-
- arch/arm64/Kconfig                            |    2 +-
- arch/arm64/include/asm/efi.h                  |    2 +-
- arch/arm64/include/asm/image.h                |    2 +-
- arch/arm64/include/uapi/asm/sigcontext.h      |    2 +-
- arch/arm64/kernel/kexec_image.c               |    2 +-
- arch/c6x/Kconfig                              |    2 +-
- arch/m68k/q40/README                          |    2 +-
- arch/microblaze/Kconfig.debug                 |    2 +-
- arch/microblaze/Kconfig.platform              |    2 +-
- arch/nds32/Kconfig                            |    2 +-
- arch/openrisc/Kconfig                         |    2 +-
- arch/powerpc/kernel/exceptions-64s.S          |    2 +-
- arch/powerpc/sysdev/Kconfig                   |    2 +-
- arch/riscv/Kconfig                            |    2 +-
- arch/s390/Kconfig                             |    4 +-
- arch/s390/include/asm/debug.h                 |  235 +-
- arch/sh/Kconfig                               |    2 +-
- arch/x86/Kconfig                              |    6 +-
- block/Kconfig                                 |    2 +-
- drivers/auxdisplay/Kconfig                    |    2 +-
- drivers/block/Kconfig                         |    2 +-
- drivers/cdrom/cdrom.c                         |    2 +-
- drivers/cpufreq/Kconfig.x86                   |    2 +-
- drivers/firmware/Kconfig                      |    2 +-
- drivers/gpu/drm/Kconfig                       |    2 +-
- drivers/gpu/drm/drm_modeset_lock.c            |    2 +-
- drivers/gpu/drm/i915/i915_drv.h               |    2 +-
- drivers/ide/Kconfig                           |   20 +-
- drivers/ide/ide-cd.c                          |    2 +-
- drivers/infiniband/core/user_mad.c            |    2 +-
- drivers/infiniband/ulp/ipoib/Kconfig          |    2 +-
- drivers/md/Kconfig                            |    2 +-
- drivers/md/dm-init.c                          |    2 +-
- drivers/md/dm-raid.c                          |    2 +-
- drivers/media/usb/dvb-usb-v2/anysee.c         |    2 +-
- drivers/misc/lkdtm/core.c                     |    2 +-
- drivers/mtd/devices/Kconfig                   |    2 +-
- drivers/net/ethernet/smsc/Kconfig             |    6 +-
- drivers/net/wireless/intel/iwlegacy/Kconfig   |    4 +-
- drivers/net/wireless/intel/iwlwifi/Kconfig    |    2 +-
- drivers/opp/Kconfig                           |    2 +-
- drivers/parport/Kconfig                       |    2 +-
- drivers/pcmcia/ds.c                           |    2 +-
- drivers/power/supply/power_supply_core.c      |    2 +-
- drivers/regulator/core.c                      |    2 +-
- drivers/s390/char/zcore.c                     |    2 +-
- drivers/scsi/Kconfig                          |    4 +-
- drivers/soc/fsl/qe/qe.c                       |    2 +-
- drivers/staging/sm750fb/Kconfig               |    2 +-
- drivers/tty/Kconfig                           |    2 +-
- drivers/tty/hvc/hvcs.c                        |    2 +-
- drivers/usb/misc/Kconfig                      |    4 +-
- drivers/video/fbdev/Kconfig                   |   38 +-
- drivers/video/fbdev/matrox/matroxfb_base.c    |    2 +-
- drivers/video/fbdev/pxafb.c                   |    2 +-
- drivers/video/fbdev/sh7760fb.c                |    2 +-
- drivers/watchdog/Kconfig                      |    6 +-
- drivers/watchdog/smsc37b787_wdt.c             |    2 +-
- include/linux/cgroup-defs.h                   |    2 +-
- include/linux/fault-inject.h                  |    2 +-
- include/linux/interrupt.h                     |    2 +-
- include/linux/iopoll.h                        |    4 +-
- include/linux/lockdep.h                       |    2 +-
- include/linux/mutex.h                         |    2 +-
- include/linux/pci.h                           |    2 +-
- include/linux/pm.h                            |    2 +-
- include/linux/regmap.h                        |    4 +-
- include/linux/rwsem.h                         |    2 +-
- include/pcmcia/ds.h                           |    2 +-
- include/pcmcia/ss.h                           |    2 +-
- include/soc/fsl/qe/qe.h                       |    2 +-
- include/uapi/linux/bpf.h                      |    2 +-
- init/Kconfig                                  |    8 +-
- kernel/cgroup/cpuset.c                        |    2 +-
- kernel/locking/mutex.c                        |    2 +-
- kernel/locking/rtmutex.c                      |    2 +-
- kernel/power/Kconfig                          |    6 +-
- kernel/sched/deadline.c                       |    2 +-
- lib/Kconfig.debug                             |    6 +-
- net/bridge/netfilter/Kconfig                  |    2 +-
- net/ipv4/netfilter/Kconfig                    |    2 +-
- net/ipv6/netfilter/Kconfig                    |    2 +-
- net/netfilter/Kconfig                         |   16 +-
- net/tipc/Kconfig                              |    2 +-
- net/wireless/Kconfig                          |    2 +-
- scripts/Kbuild.include                        |    4 +-
- scripts/Makefile.host                         |    2 +-
- scripts/checkpatch.pl                         |    8 +-
- scripts/documentation-file-ref-check          |    2 +-
- scripts/kconfig/symbol.c                      |    2 +-
- .../tests/err_recursive_dep/expected_stderr   |   14 +-
- security/device_cgroup.c                      |    2 +-
- sound/oss/dmasound/Kconfig                    |    6 +-
- sound/soc/sof/ops.h                           |    2 +-
- tools/include/uapi/linux/bpf.h                |    2 +-
- tools/testing/fault-injection/failcmd.sh      |    2 +-
- 407 files changed, 14319 insertions(+), 10552 deletions(-)
- rename Documentation/EDID/{HOWTO.txt => howto.rst} (83%)
- rename Documentation/aoe/{aoe.txt => aoe.rst} (79%)
- create mode 100644 Documentation/aoe/examples.rst
- create mode 100644 Documentation/aoe/index.rst
- rename Documentation/aoe/{todo.txt => todo.rst} (98%)
- rename Documentation/arm64/{acpi_object_usage.txt => acpi_object_usage.rst} (84%)
- rename Documentation/arm64/{arm-acpi.txt => arm-acpi.rst} (86%)
- rename Documentation/arm64/{booting.txt => booting.rst} (86%)
- rename Documentation/arm64/{cpu-feature-registers.txt => cpu-feature-registers.rst} (65%)
- rename Documentation/arm64/{elf_hwcaps.txt => elf_hwcaps.rst} (92%)
- rename Documentation/arm64/{hugetlbpage.txt => hugetlbpage.rst} (86%)
- create mode 100644 Documentation/arm64/index.rst
- rename Documentation/arm64/{legacy_instructions.txt => legacy_instructions.rst} (73%)
- rename Documentation/arm64/{memory.txt => memory.rst} (36%)
- rename Documentation/arm64/{pointer-authentication.txt => pointer-authentication.rst} (99%)
- rename Documentation/arm64/{silicon-errata.txt => silicon-errata.rst} (55%)
- rename Documentation/arm64/{sve.txt => sve.rst} (98%)
- rename Documentation/arm64/{tagged-pointers.txt => tagged-pointers.rst} (94%)
- delete mode 100644 Documentation/cdrom/Makefile
- rename Documentation/cdrom/{cdrom-standard.tex => cdrom-standard.rst} (26%)
- rename Documentation/cdrom/{ide-cd => ide-cd.rst} (82%)
- create mode 100644 Documentation/cdrom/index.rst
- rename Documentation/cdrom/{packet-writing.txt => packet-writing.rst} (91%)
- rename Documentation/cgroup-v1/{blkio-controller.txt => blkio-controller.rst} (89%)
- rename Documentation/cgroup-v1/{cgroups.txt => cgroups.rst} (88%)
- rename Documentation/cgroup-v1/{cpuacct.txt => cpuacct.rst} (90%)
- rename Documentation/cgroup-v1/{cpusets.txt => cpusets.rst} (90%)
- rename Documentation/cgroup-v1/{devices.txt => devices.rst} (88%)
- rename Documentation/cgroup-v1/{freezer-subsystem.txt => freezer-subsystem.rst} (95%)
- rename Documentation/cgroup-v1/{hugetlb.txt => hugetlb.rst} (70%)
- create mode 100644 Documentation/cgroup-v1/index.rst
- rename Documentation/cgroup-v1/{memcg_test.txt => memcg_test.rst} (62%)
- rename Documentation/cgroup-v1/{memory.txt => memory.rst} (71%)
- rename Documentation/cgroup-v1/{net_cls.txt => net_cls.rst} (50%)
- rename Documentation/cgroup-v1/{net_prio.txt => net_prio.rst} (71%)
- rename Documentation/cgroup-v1/{pids.txt => pids.rst} (62%)
- rename Documentation/cgroup-v1/{rdma.txt => rdma.rst} (79%)
- rename Documentation/cpu-freq/{amd-powernow.txt => amd-powernow.rst} (91%)
- rename Documentation/cpu-freq/{core.txt => core.rst} (66%)
- rename Documentation/cpu-freq/{cpu-drivers.txt => cpu-drivers.rst} (57%)
- rename Documentation/cpu-freq/{cpufreq-nforce2.txt => cpufreq-nforce2.rst} (65%)
- rename Documentation/cpu-freq/{cpufreq-stats.txt => cpufreq-stats.rst} (31%)
- rename Documentation/cpu-freq/{index.txt => index.rst} (37%)
- rename Documentation/cpu-freq/{pcc-cpufreq.txt => pcc-cpufreq.rst} (80%)
- rename Documentation/device-mapper/{cache-policies.txt => cache-policies.rst} (94%)
- rename Documentation/device-mapper/{cache.txt => cache.rst} (61%)
- rename Documentation/device-mapper/{delay.txt => delay.rst} (53%)
- rename Documentation/device-mapper/{dm-crypt.txt => dm-crypt.rst} (87%)
- rename Documentation/device-mapper/{dm-flakey.txt => dm-flakey.rst} (60%)
- rename Documentation/device-mapper/{dm-init.txt => dm-init.rst} (69%)
- rename Documentation/device-mapper/{dm-integrity.txt => dm-integrity.rst} (90%)
- rename Documentation/device-mapper/{dm-io.txt => dm-io.rst} (92%)
- rename Documentation/device-mapper/{dm-log.txt => dm-log.rst} (90%)
- rename Documentation/device-mapper/{dm-queue-length.txt => dm-queue-length.rst} (76%)
- rename Documentation/device-mapper/{dm-raid.txt => dm-raid.rst} (71%)
- rename Documentation/device-mapper/{dm-service-time.txt => dm-service-time.rst} (60%)
- rename Documentation/device-mapper/{dm-uevent.txt => dm-uevent.rst} (31%)
- rename Documentation/device-mapper/{dm-zoned.txt => dm-zoned.rst} (97%)
- rename Documentation/device-mapper/{era.txt => era.rst} (70%)
- create mode 100644 Documentation/device-mapper/index.rst
- rename Documentation/device-mapper/{kcopyd.txt => kcopyd.rst} (93%)
- rename Documentation/device-mapper/{linear.txt => linear.rst} (18%)
- rename Documentation/device-mapper/{log-writes.txt => log-writes.rst} (61%)
- rename Documentation/device-mapper/{persistent-data.txt => persistent-data.rst} (98%)
- rename Documentation/device-mapper/{snapshot.txt => snapshot.rst} (62%)
- rename Documentation/device-mapper/{statistics.txt => statistics.rst} (87%)
- rename Documentation/device-mapper/{striped.txt => striped.rst} (32%)
- rename Documentation/device-mapper/{switch.txt => switch.rst} (84%)
- rename Documentation/device-mapper/{thin-provisioning.txt => thin-provisioning.rst} (92%)
- rename Documentation/device-mapper/{unstriped.txt => unstriped.rst} (60%)
- rename Documentation/device-mapper/{verity.txt => verity.rst} (98%)
- rename Documentation/device-mapper/{writecache.txt => writecache.rst} (96%)
- rename Documentation/device-mapper/{zero.txt => zero.rst} (83%)
- rename Documentation/{pps/pps.txt => driver-api/pps.rst} (89%)
- rename Documentation/{ptp/ptp.txt => driver-api/ptp.rst} (88%)
- rename Documentation/fault-injection/{fault-injection.txt => fault-injection.rst} (68%)
- create mode 100644 Documentation/fault-injection/index.rst
- rename Documentation/fault-injection/{notifier-error-inject.txt => notifier-error-inject.rst} (83%)
- rename Documentation/fault-injection/{nvme-fault-injection.txt => nvme-fault-injection.rst} (19%)
- rename Documentation/fault-injection/{provoke-crashes.txt => provoke-crashes.rst} (45%)
- rename Documentation/fb/{api.txt => api.rst} (97%)
- rename Documentation/fb/{arkfb.txt => arkfb.rst} (92%)
- rename Documentation/fb/{aty128fb.txt => aty128fb.rst} (61%)
- rename Documentation/fb/{cirrusfb.txt => cirrusfb.rst} (75%)
- rename Documentation/fb/{cmap_xfbdev.txt => cmap_xfbdev.rst} (50%)
- rename Documentation/fb/{deferred_io.txt => deferred_io.rst} (86%)
- rename Documentation/fb/{efifb.txt => efifb.rst} (75%)
- rename Documentation/fb/{ep93xx-fb.txt => ep93xx-fb.rst} (85%)
- rename Documentation/fb/{fbcon.txt => fbcon.rst} (69%)
- rename Documentation/fb/{framebuffer.txt => framebuffer.rst} (92%)
- rename Documentation/fb/{gxfb.txt => gxfb.rst} (60%)
- create mode 100644 Documentation/fb/index.rst
- rename Documentation/fb/{intel810.txt => intel810.rst} (83%)
- rename Documentation/fb/{intelfb.txt => intelfb.rst} (73%)
- rename Documentation/fb/{internals.txt => internals.rst} (82%)
- rename Documentation/fb/{lxfb.txt => lxfb.rst} (60%)
- rename Documentation/fb/{matroxfb.txt => matroxfb.rst} (32%)
- rename Documentation/fb/{metronomefb.txt => metronomefb.rst} (98%)
- rename Documentation/fb/{modedb.txt => modedb.rst} (87%)
- rename Documentation/fb/{pvr2fb.txt => pvr2fb.rst} (36%)
- rename Documentation/fb/{pxafb.txt => pxafb.rst} (78%)
- rename Documentation/fb/{s3fb.txt => s3fb.rst} (94%)
- rename Documentation/fb/{sa1100fb.txt => sa1100fb.rst} (64%)
- rename Documentation/fb/{sh7760fb.txt => sh7760fb.rst} (39%)
- rename Documentation/fb/{sisfb.txt => sisfb.rst} (85%)
- rename Documentation/fb/{sm501.txt => sm501.rst} (65%)
- rename Documentation/fb/{sm712fb.txt => sm712fb.rst} (59%)
- rename Documentation/fb/{sstfb.txt => sstfb.rst} (28%)
- rename Documentation/fb/{tgafb.txt => tgafb.rst} (71%)
- rename Documentation/fb/{tridentfb.txt => tridentfb.rst} (70%)
- rename Documentation/fb/{udlfb.txt => udlfb.rst} (77%)
- rename Documentation/fb/{uvesafb.txt => uvesafb.rst} (52%)
- rename Documentation/fb/{vesafb.txt => vesafb.rst} (57%)
- rename Documentation/fb/{viafb.txt => viafb.rst} (18%)
- rename Documentation/fb/{vt8623fb.txt => vt8623fb.rst} (85%)
- rename Documentation/fpga/{dfl.txt => dfl.rst} (89%)
- create mode 100644 Documentation/fpga/index.rst
- create mode 100644 Documentation/ide/changelogs.rst
- rename Documentation/ide/{ide-tape.txt => ide-tape.rst} (83%)
- rename Documentation/ide/{ide.txt => ide.rst} (72%)
- create mode 100644 Documentation/ide/index.rst
- rename Documentation/ide/{warm-plug-howto.txt => warm-plug-howto.rst} (61%)
- rename Documentation/infiniband/{core_locking.txt => core_locking.rst} (78%)
- create mode 100644 Documentation/infiniband/index.rst
- rename Documentation/infiniband/{ipoib.txt => ipoib.rst} (90%)
- rename Documentation/infiniband/{opa_vnic.txt => opa_vnic.rst} (63%)
- rename Documentation/infiniband/{sysfs.txt => sysfs.rst} (69%)
- rename Documentation/infiniband/{tag_matching.txt => tag_matching.rst} (98%)
- rename Documentation/infiniband/{user_mad.txt => user_mad.rst} (90%)
- rename Documentation/infiniband/{user_verbs.txt => user_verbs.rst} (93%)
- rename Documentation/kbuild/{headers_install.txt => headers_install.rst} (96%)
- create mode 100644 Documentation/kbuild/index.rst
- create mode 100644 Documentation/kbuild/issues.rst
- rename Documentation/kbuild/{kbuild.txt => kbuild.rst} (72%)
- rename Documentation/kbuild/{kconfig-language.txt => kconfig-language.rst} (85%)
- rename Documentation/kbuild/{kconfig-macro-language.txt => kconfig-macro-language.rst} (94%)
- rename Documentation/kbuild/{kconfig.txt => kconfig.rst} (80%)
- rename Documentation/kbuild/{makefiles.txt => makefiles.rst} (83%)
- rename Documentation/kbuild/{modules.txt => modules.rst} (84%)
- create mode 100644 Documentation/kdump/index.rst
- rename Documentation/kdump/{kdump.txt => kdump.rst} (91%)
- rename Documentation/kdump/{vmcoreinfo.txt => vmcoreinfo.rst} (95%)
- create mode 100644 Documentation/locking/index.rst
- rename Documentation/locking/{lockdep-design.txt => lockdep-design.rst} (93%)
- rename Documentation/locking/{lockstat.txt => lockstat.rst} (41%)
- rename Documentation/locking/{locktorture.txt => locktorture.rst} (57%)
- rename Documentation/locking/{mutex-design.txt => mutex-design.rst} (94%)
- rename Documentation/locking/{rt-mutex-design.txt => rt-mutex-design.rst} (91%)
- rename Documentation/locking/{rt-mutex.txt => rt-mutex.rst} (71%)
- rename Documentation/locking/{spinlocks.txt => spinlocks.rst} (89%)
- rename Documentation/locking/{ww-mutex-design.txt => ww-mutex-design.rst} (93%)
- create mode 100644 Documentation/mic/index.rst
- rename Documentation/mic/{mic_overview.txt => mic_overview.rst} (96%)
- rename Documentation/mic/{scif_overview.txt => scif_overview.rst} (76%)
- rename Documentation/netlabel/{cipso_ipv4.txt => cipso_ipv4.rst} (87%)
- create mode 100644 Documentation/netlabel/draft_ietf.rst
- create mode 100644 Documentation/netlabel/index.rst
- rename Documentation/netlabel/{introduction.txt => introduction.rst} (91%)
- rename Documentation/netlabel/{lsm_interface.txt => lsm_interface.rst} (88%)
- rename Documentation/pcmcia/{devicetable.txt => devicetable.rst} (97%)
- rename Documentation/pcmcia/{driver-changes.txt => driver-changes.rst} (90%)
- rename Documentation/pcmcia/{driver.txt => driver.rst} (66%)
- create mode 100644 Documentation/pcmcia/index.rst
- rename Documentation/pcmcia/{locking.txt => locking.rst} (81%)
- rename Documentation/power/{apm-acpi.txt => apm-acpi.rst} (87%)
- rename Documentation/power/{basic-pm-debugging.txt => basic-pm-debugging.rst} (87%)
- rename Documentation/power/{charger-manager.txt => charger-manager.rst} (78%)
- rename Documentation/power/{drivers-testing.txt => drivers-testing.rst} (86%)
- rename Documentation/power/{energy-model.txt => energy-model.rst} (74%)
- rename Documentation/power/{freezing-of-tasks.txt => freezing-of-tasks.rst} (75%)
- create mode 100644 Documentation/power/index.rst
- rename Documentation/power/{interface.txt => interface.rst} (84%)
- rename Documentation/power/{opp.txt => opp.rst} (78%)
- rename Documentation/power/{pci.txt => pci.rst} (97%)
- rename Documentation/power/{pm_qos_interface.txt => pm_qos_interface.rst} (62%)
- rename Documentation/power/{power_supply_class.txt => power_supply_class.rst} (46%)
- rename Documentation/power/powercap/{powercap.txt => powercap.rst} (40%)
- rename Documentation/power/regulator/{consumer.txt => consumer.rst} (61%)
- rename Documentation/power/regulator/{design.txt => design.rst} (86%)
- rename Documentation/power/regulator/{machine.txt => machine.rst} (75%)
- rename Documentation/power/regulator/{overview.txt => overview.rst} (79%)
- rename Documentation/power/regulator/{regulator.txt => regulator.rst} (49%)
- rename Documentation/power/{runtime_pm.txt => runtime_pm.rst} (89%)
- rename Documentation/power/{s2ram.txt => s2ram.rst} (92%)
- rename Documentation/power/{suspend-and-cpuhotplug.txt => suspend-and-cpuhotplug.rst} (90%)
- rename Documentation/power/{suspend-and-interrupts.txt => suspend-and-interrupts.rst} (98%)
- rename Documentation/power/{swsusp-and-swap-files.txt => swsusp-and-swap-files.rst} (83%)
- rename Documentation/power/{swsusp-dmcrypt.txt => swsusp-dmcrypt.rst} (67%)
- rename Documentation/power/{swsusp.txt => swsusp.rst} (20%)
- rename Documentation/power/{tricks.txt => tricks.rst} (93%)
- rename Documentation/power/{userland-swsusp.txt => userland-swsusp.rst} (85%)
- rename Documentation/power/{video.txt => video.rst} (56%)
- rename Documentation/powerpc/{bootwrapper.txt => bootwrapper.rst} (93%)
- rename Documentation/powerpc/{cpu_families.txt => cpu_families.rst} (95%)
- rename Documentation/powerpc/{cpu_features.txt => cpu_features.rst} (97%)
- rename Documentation/powerpc/{cxl.txt => cxl.rst} (95%)
- rename Documentation/powerpc/{cxlflash.txt => cxlflash.rst} (98%)
- rename Documentation/powerpc/{DAWR-POWER9.txt => dawr-power9.rst} (95%)
- rename Documentation/powerpc/{dscr.txt => dscr.rst} (91%)
- rename Documentation/powerpc/{eeh-pci-error-recovery.txt => eeh-pci-error-recovery.rst} (82%)
- rename Documentation/powerpc/{firmware-assisted-dump.txt => firmware-assisted-dump.rst} (80%)
- rename Documentation/powerpc/{hvcs.txt => hvcs.rst} (91%)
- create mode 100644 Documentation/powerpc/index.rst
- rename Documentation/powerpc/{mpc52xx.txt => mpc52xx.rst} (91%)
- rename Documentation/powerpc/{pci_iov_resource_on_powernv.txt => pci_iov_resource_on_powernv.rst} (97%)
- rename Documentation/powerpc/{pmu-ebb.txt => pmu-ebb.rst} (99%)
- rename Documentation/powerpc/{ptrace.txt => ptrace.rst} (48%)
- rename Documentation/powerpc/{qe_firmware.txt => qe_firmware.rst} (95%)
- rename Documentation/powerpc/{syscall64-abi.txt => syscall64-abi.rst} (82%)
- rename Documentation/powerpc/{transactional_memory.txt => transactional_memory.rst} (93%)
- create mode 100644 Documentation/riscv/index.rst
- rename Documentation/riscv/{pmu.txt => pmu.rst} (77%)
- rename Documentation/s390/{3270.txt => 3270.rst} (90%)
- rename Documentation/s390/{cds.txt => cds.rst} (64%)
- rename Documentation/s390/{CommonIO => common_io.rst} (87%)
- rename Documentation/s390/{DASD => dasd.rst} (92%)
- rename Documentation/s390/{Debugging390.txt => debugging390.rst} (43%)
- rename Documentation/s390/{driver-model.txt => driver-model.rst} (73%)
- create mode 100644 Documentation/s390/index.rst
- rename Documentation/s390/{monreader.txt => monreader.rst} (81%)
- rename Documentation/s390/{qeth.txt => qeth.rst} (62%)
- rename Documentation/s390/{s390dbf.txt => s390dbf.rst} (18%)
- create mode 100644 Documentation/s390/text_files.rst
- rename Documentation/s390/{vfio-ap.txt => vfio-ap.rst} (72%)
- rename Documentation/s390/{vfio-ccw.txt => vfio-ccw.rst} (89%)
- rename Documentation/s390/{zfcpdump.txt => zfcpdump.rst} (97%)
- rename Documentation/scheduler/{completion.txt => completion.rst} (94%)
- create mode 100644 Documentation/scheduler/index.rst
- rename Documentation/scheduler/{sched-arch.txt => sched-arch.rst} (81%)
- rename Documentation/scheduler/{sched-bwc.txt => sched-bwc.rst} (90%)
- rename Documentation/scheduler/{sched-deadline.txt => sched-deadline.rst} (88%)
- rename Documentation/scheduler/{sched-design-CFS.txt => sched-design-CFS.rst} (97%)
- rename Documentation/scheduler/{sched-domains.txt => sched-domains.rst} (97%)
- rename Documentation/scheduler/{sched-energy.txt => sched-energy.rst} (96%)
- rename Documentation/scheduler/{sched-nice-design.txt => sched-nice-design.rst} (98%)
- rename Documentation/scheduler/{sched-rt-group.txt => sched-rt-group.rst} (95%)
- rename Documentation/scheduler/{sched-stats.txt => sched-stats.rst} (91%)
- create mode 100644 Documentation/scheduler/text_files.rst
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/target/index.rst                |  19 ++
+ Documentation/target/scripts.rst              |  11 +
+ ...cm_mod_builder.txt => tcm_mod_builder.rst} | 200 ++++++-------
+ .../{tcmu-design.txt => tcmu-design.rst}      | 268 ++++++++++--------
+ scripts/documentation-file-ref-check          |   2 +-
+ 5 files changed, 279 insertions(+), 221 deletions(-)
  create mode 100644 Documentation/target/index.rst
  create mode 100644 Documentation/target/scripts.rst
  rename Documentation/target/{tcm_mod_builder.txt => tcm_mod_builder.rst} (22%)
  rename Documentation/target/{tcmu-design.txt => tcmu-design.rst} (69%)
- rename Documentation/timers/{highres.txt => highres.rst} (98%)
- rename Documentation/timers/{hpet.txt => hpet.rst} (91%)
- rename Documentation/timers/{hrtimers.txt => hrtimers.rst} (98%)
- create mode 100644 Documentation/timers/index.rst
- rename Documentation/timers/{NO_HZ.txt => no_hz.rst} (93%)
- rename Documentation/timers/{timekeeping.txt => timekeeping.rst} (98%)
- rename Documentation/timers/{timers-howto.txt => timers-howto.rst} (93%)
- rename Documentation/watchdog/{convert_drivers_to_kernel_api.txt => convert_drivers_to_kernel_api.rst} (75%)
- rename Documentation/watchdog/{hpwdt.txt => hpwdt.rst} (78%)
- create mode 100644 Documentation/watchdog/index.rst
- rename Documentation/watchdog/{mlx-wdt.txt => mlx-wdt.rst} (78%)
- rename Documentation/watchdog/{pcwd-watchdog.txt => pcwd-watchdog.rst} (89%)
- rename Documentation/watchdog/{watchdog-api.txt => watchdog-api.rst} (80%)
- rename Documentation/watchdog/{watchdog-kernel-api.txt => watchdog-kernel-api.rst} (90%)
- rename Documentation/watchdog/{watchdog-parameters.txt => watchdog-parameters.rst} (42%)
- rename Documentation/watchdog/{watchdog-pm.txt => watchdog-pm.rst} (92%)
- rename Documentation/watchdog/{wdt.txt => wdt.rst} (68%)
- rename Documentation/xilinx/{eemi.txt => eemi.rst} (92%)
- create mode 100644 Documentation/xilinx/index.rst
 
+diff --git a/Documentation/target/index.rst b/Documentation/target/index.rst
+new file mode 100644
+index 000000000000..b68f48982392
+--- /dev/null
++++ b/Documentation/target/index.rst
+@@ -0,0 +1,19 @@
++:orphan:
++
++==================
++TCM Virtual Device
++==================
++
++.. toctree::
++    :maxdepth: 1
++
++    tcmu-design
++    tcm_mod_builder
++    scripts
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/target/scripts.rst b/Documentation/target/scripts.rst
+new file mode 100644
+index 000000000000..172d42b522e4
+--- /dev/null
++++ b/Documentation/target/scripts.rst
+@@ -0,0 +1,11 @@
++TCM mod builder script
++----------------------
++
++.. literalinclude:: tcm_mod_builder.py
++    :language: perl
++
++Target export device script
++---------------------------
++
++.. literalinclude:: target-export-device
++    :language: shell
+diff --git a/Documentation/target/tcm_mod_builder.txt b/Documentation/target/tcm_mod_builder.rst
+similarity index 22%
+rename from Documentation/target/tcm_mod_builder.txt
+rename to Documentation/target/tcm_mod_builder.rst
+index ae22f7005540..9bfc9822e2bd 100644
+--- a/Documentation/target/tcm_mod_builder.txt
++++ b/Documentation/target/tcm_mod_builder.rst
+@@ -1,145 +1,149 @@
+->>>>>>>>>> The TCM v4 fabric module script generator <<<<<<<<<<
++=========================================
++The TCM v4 fabric module script generator
++=========================================
+ 
+ Greetings all,
+ 
+ This document is intended to be a mini-HOWTO for using the tcm_mod_builder.py
+ script to generate a brand new functional TCM v4 fabric .ko module of your very own,
+ that once built can be immediately be loaded to start access the new TCM/ConfigFS
+-fabric skeleton, by simply using:
++fabric skeleton, by simply using::
+ 
+ 	modprobe $TCM_NEW_MOD
+ 	mkdir -p /sys/kernel/config/target/$TCM_NEW_MOD
+ 
+ This script will create a new drivers/target/$TCM_NEW_MOD/, and will do the following
+ 
+-	*) Generate new API callers for drivers/target/target_core_fabric_configs.c logic
++	1) Generate new API callers for drivers/target/target_core_fabric_configs.c logic
+ 	   ->make_tpg(), ->drop_tpg(), ->make_wwn(), ->drop_wwn().  These are created
+ 	   into $TCM_NEW_MOD/$TCM_NEW_MOD_configfs.c
+-	*) Generate basic infrastructure for loading/unloading LKMs and TCM/ConfigFS fabric module
++	2) Generate basic infrastructure for loading/unloading LKMs and TCM/ConfigFS fabric module
+ 	   using a skeleton struct target_core_fabric_ops API template.
+-	*) Based on user defined T10 Proto_Ident for the new fabric module being built,
++	3) Based on user defined T10 Proto_Ident for the new fabric module being built,
+ 	   the TransportID / Initiator and Target WWPN related handlers for
+ 	   SPC-3 persistent reservation are automatically generated in $TCM_NEW_MOD/$TCM_NEW_MOD_fabric.c
+ 	   using drivers/target/target_core_fabric_lib.c logic.
+-	*) NOP API calls for all other Data I/O path and fabric dependent attribute logic
++	4) NOP API calls for all other Data I/O path and fabric dependent attribute logic
+ 	   in $TCM_NEW_MOD/$TCM_NEW_MOD_fabric.c
+ 
+ tcm_mod_builder.py depends upon the mandatory '-p $PROTO_IDENT' and '-m
+-$FABRIC_MOD_name' parameters, and actually running the script looks like:
++$FABRIC_MOD_name' parameters, and actually running the script looks like::
+ 
+-target:/mnt/sdb/lio-core-2.6.git/Documentation/target# python tcm_mod_builder.py -p iSCSI -m tcm_nab5000
+-tcm_dir: /mnt/sdb/lio-core-2.6.git/Documentation/target/../../
+-Set fabric_mod_name: tcm_nab5000
+-Set fabric_mod_dir:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000
+-Using proto_ident: iSCSI
+-Creating fabric_mod_dir:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_base.h
+-Using tcm_mod_scan_fabric_ops:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../include/target/target_core_fabric_ops.h
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_fabric.c
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_fabric.h
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_configfs.c
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/Kbuild
+-Writing file:
+-/mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/Kconfig
+-Would you like to add tcm_nab5000to drivers/target/Kbuild..? [yes,no]: yes
+-Would you like to add tcm_nab5000to drivers/target/Kconfig..? [yes,no]: yes
++  target:/mnt/sdb/lio-core-2.6.git/Documentation/target# python tcm_mod_builder.py -p iSCSI -m tcm_nab5000
++  tcm_dir: /mnt/sdb/lio-core-2.6.git/Documentation/target/../../
++  Set fabric_mod_name: tcm_nab5000
++  Set fabric_mod_dir:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000
++  Using proto_ident: iSCSI
++  Creating fabric_mod_dir:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_base.h
++  Using tcm_mod_scan_fabric_ops:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../include/target/target_core_fabric_ops.h
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_fabric.c
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_fabric.h
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/tcm_nab5000_configfs.c
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/Kbuild
++  Writing file:
++  /mnt/sdb/lio-core-2.6.git/Documentation/target/../../drivers/target/tcm_nab5000/Kconfig
++  Would you like to add tcm_nab5000to drivers/target/Kbuild..? [yes,no]: yes
++  Would you like to add tcm_nab5000to drivers/target/Kconfig..? [yes,no]: yes
+ 
+ At the end of tcm_mod_builder.py. the script will ask to add the following
+-line to drivers/target/Kbuild:
++line to drivers/target/Kbuild::
+ 
+ 	obj-$(CONFIG_TCM_NAB5000)       += tcm_nab5000/
+ 
+-and the same for drivers/target/Kconfig:
++and the same for drivers/target/Kconfig::
+ 
+ 	source "drivers/target/tcm_nab5000/Kconfig"
+ 
+-*) Run 'make menuconfig' and select the new CONFIG_TCM_NAB5000 item:
++#) Run 'make menuconfig' and select the new CONFIG_TCM_NAB5000 item::
+ 
+ 	<M>   TCM_NAB5000 fabric module
+ 
+-*) Build using 'make modules', once completed you will have:
++#) Build using 'make modules', once completed you will have::
+ 
+-target:/mnt/sdb/lio-core-2.6.git# ls -la drivers/target/tcm_nab5000/
+-total 1348
+-drwxr-xr-x 2 root root   4096 2010-10-05 03:23 .
+-drwxr-xr-x 9 root root   4096 2010-10-05 03:22 ..
+--rw-r--r-- 1 root root    282 2010-10-05 03:22 Kbuild
+--rw-r--r-- 1 root root    171 2010-10-05 03:22 Kconfig
+--rw-r--r-- 1 root root     49 2010-10-05 03:23 modules.order
+--rw-r--r-- 1 root root    738 2010-10-05 03:22 tcm_nab5000_base.h
+--rw-r--r-- 1 root root   9096 2010-10-05 03:22 tcm_nab5000_configfs.c
+--rw-r--r-- 1 root root 191200 2010-10-05 03:23 tcm_nab5000_configfs.o
+--rw-r--r-- 1 root root  40504 2010-10-05 03:23 .tcm_nab5000_configfs.o.cmd
+--rw-r--r-- 1 root root   5414 2010-10-05 03:22 tcm_nab5000_fabric.c
+--rw-r--r-- 1 root root   2016 2010-10-05 03:22 tcm_nab5000_fabric.h
+--rw-r--r-- 1 root root 190932 2010-10-05 03:23 tcm_nab5000_fabric.o
+--rw-r--r-- 1 root root  40713 2010-10-05 03:23 .tcm_nab5000_fabric.o.cmd
+--rw-r--r-- 1 root root 401861 2010-10-05 03:23 tcm_nab5000.ko
+--rw-r--r-- 1 root root    265 2010-10-05 03:23 .tcm_nab5000.ko.cmd
+--rw-r--r-- 1 root root    459 2010-10-05 03:23 tcm_nab5000.mod.c
+--rw-r--r-- 1 root root  23896 2010-10-05 03:23 tcm_nab5000.mod.o
+--rw-r--r-- 1 root root  22655 2010-10-05 03:23 .tcm_nab5000.mod.o.cmd
+--rw-r--r-- 1 root root 379022 2010-10-05 03:23 tcm_nab5000.o
+--rw-r--r-- 1 root root    211 2010-10-05 03:23 .tcm_nab5000.o.cmd
++    target:/mnt/sdb/lio-core-2.6.git# ls -la drivers/target/tcm_nab5000/
++    total 1348
++    drwxr-xr-x 2 root root   4096 2010-10-05 03:23 .
++    drwxr-xr-x 9 root root   4096 2010-10-05 03:22 ..
++    -rw-r--r-- 1 root root    282 2010-10-05 03:22 Kbuild
++    -rw-r--r-- 1 root root    171 2010-10-05 03:22 Kconfig
++    -rw-r--r-- 1 root root     49 2010-10-05 03:23 modules.order
++    -rw-r--r-- 1 root root    738 2010-10-05 03:22 tcm_nab5000_base.h
++    -rw-r--r-- 1 root root   9096 2010-10-05 03:22 tcm_nab5000_configfs.c
++    -rw-r--r-- 1 root root 191200 2010-10-05 03:23 tcm_nab5000_configfs.o
++    -rw-r--r-- 1 root root  40504 2010-10-05 03:23 .tcm_nab5000_configfs.o.cmd
++    -rw-r--r-- 1 root root   5414 2010-10-05 03:22 tcm_nab5000_fabric.c
++    -rw-r--r-- 1 root root   2016 2010-10-05 03:22 tcm_nab5000_fabric.h
++    -rw-r--r-- 1 root root 190932 2010-10-05 03:23 tcm_nab5000_fabric.o
++    -rw-r--r-- 1 root root  40713 2010-10-05 03:23 .tcm_nab5000_fabric.o.cmd
++    -rw-r--r-- 1 root root 401861 2010-10-05 03:23 tcm_nab5000.ko
++    -rw-r--r-- 1 root root    265 2010-10-05 03:23 .tcm_nab5000.ko.cmd
++    -rw-r--r-- 1 root root    459 2010-10-05 03:23 tcm_nab5000.mod.c
++    -rw-r--r-- 1 root root  23896 2010-10-05 03:23 tcm_nab5000.mod.o
++    -rw-r--r-- 1 root root  22655 2010-10-05 03:23 .tcm_nab5000.mod.o.cmd
++    -rw-r--r-- 1 root root 379022 2010-10-05 03:23 tcm_nab5000.o
++    -rw-r--r-- 1 root root    211 2010-10-05 03:23 .tcm_nab5000.o.cmd
+ 
+-*) Load the new module, create a lun_0 configfs group, and add new TCM Core
+-   IBLOCK backstore symlink to port:
++#) Load the new module, create a lun_0 configfs group, and add new TCM Core
++   IBLOCK backstore symlink to port::
+ 
+-target:/mnt/sdb/lio-core-2.6.git# insmod drivers/target/tcm_nab5000.ko
+-target:/mnt/sdb/lio-core-2.6.git# mkdir -p /sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0
+-target:/mnt/sdb/lio-core-2.6.git# cd /sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0/
+-target:/sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0# ln -s /sys/kernel/config/target/core/iblock_0/lvm_test0 nab5000_port
++    target:/mnt/sdb/lio-core-2.6.git# insmod drivers/target/tcm_nab5000.ko
++    target:/mnt/sdb/lio-core-2.6.git# mkdir -p /sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0
++    target:/mnt/sdb/lio-core-2.6.git# cd /sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0/
++    target:/sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0# ln -s /sys/kernel/config/target/core/iblock_0/lvm_test0 nab5000_port
+ 
+-target:/sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0# cd -
+-target:/mnt/sdb/lio-core-2.6.git# tree /sys/kernel/config/target/nab5000/
+-/sys/kernel/config/target/nab5000/
+-|-- discovery_auth
+-|-- iqn.foo
+-|   `-- tpgt_1
+-|       |-- acls
+-|       |-- attrib
+-|       |-- lun
+-|       |   `-- lun_0
+-|       |       |-- alua_tg_pt_gp
+-|       |       |-- alua_tg_pt_offline
+-|       |       |-- alua_tg_pt_status
+-|       |       |-- alua_tg_pt_write_md
+-|	|	`-- nab5000_port -> ../../../../../../target/core/iblock_0/lvm_test0
+-|       |-- np
+-|       `-- param
+-`-- version
++    target:/sys/kernel/config/target/nab5000/iqn.foo/tpgt_1/lun/lun_0# cd -
++    target:/mnt/sdb/lio-core-2.6.git# tree /sys/kernel/config/target/nab5000/
++    /sys/kernel/config/target/nab5000/
++    |-- discovery_auth
++    |-- iqn.foo
++    |   `-- tpgt_1
++    |       |-- acls
++    |       |-- attrib
++    |       |-- lun
++    |       |   `-- lun_0
++    |       |       |-- alua_tg_pt_gp
++    |       |       |-- alua_tg_pt_offline
++    |       |       |-- alua_tg_pt_status
++    |       |       |-- alua_tg_pt_write_md
++    |	|	`-- nab5000_port -> ../../../../../../target/core/iblock_0/lvm_test0
++    |       |-- np
++    |       `-- param
++    `-- version
+ 
+-target:/mnt/sdb/lio-core-2.6.git# lsmod
+-Module                  Size  Used by
+-tcm_nab5000             3935  4
+-iscsi_target_mod      193211  0
+-target_core_stgt        8090  0
+-target_core_pscsi      11122  1
+-target_core_file        9172  2
+-target_core_iblock      9280  1
+-target_core_mod       228575  31
+-tcm_nab5000,iscsi_target_mod,target_core_stgt,target_core_pscsi,target_core_file,target_core_iblock
+-libfc                  73681  0
+-scsi_debug             56265  0
+-scsi_tgt                8666  1 target_core_stgt
+-configfs               20644  2 target_core_mod
++    target:/mnt/sdb/lio-core-2.6.git# lsmod
++    Module                  Size  Used by
++    tcm_nab5000             3935  4
++    iscsi_target_mod      193211  0
++    target_core_stgt        8090  0
++    target_core_pscsi      11122  1
++    target_core_file        9172  2
++    target_core_iblock      9280  1
++    target_core_mod       228575  31
++    tcm_nab5000,iscsi_target_mod,target_core_stgt,target_core_pscsi,target_core_file,target_core_iblock
++    libfc                  73681  0
++    scsi_debug             56265  0
++    scsi_tgt                8666  1 target_core_stgt
++    configfs               20644  2 target_core_mod
+ 
+ ----------------------------------------------------------------------
+ 
+-Future TODO items:
++Future TODO items
++=================
+ 
+-	*) Add more T10 proto_idents
+-	*) Make tcm_mod_dump_fabric_ops() smarter and generate function pointer
++	1) Add more T10 proto_idents
++	2) Make tcm_mod_dump_fabric_ops() smarter and generate function pointer
+ 	   defs directly from include/target/target_core_fabric_ops.h:struct target_core_fabric_ops
+ 	   structure members.
+ 
+ October 5th, 2010
++
+ Nicholas A. Bellinger <nab@linux-iscsi.org>
+diff --git a/Documentation/target/tcmu-design.txt b/Documentation/target/tcmu-design.rst
+similarity index 69%
+rename from Documentation/target/tcmu-design.txt
+rename to Documentation/target/tcmu-design.rst
+index 4cebc1ebf99a..a7b426707bf6 100644
+--- a/Documentation/target/tcmu-design.txt
++++ b/Documentation/target/tcmu-design.rst
+@@ -1,25 +1,30 @@
+-Contents:
++====================
++TCM Userspace Design
++====================
++
++
++.. Contents:
+ 
+-1) TCM Userspace Design
+-  a) Background
+-  b) Benefits
+-  c) Design constraints
+-  d) Implementation overview
+-     i. Mailbox
+-     ii. Command ring
+-     iii. Data Area
+-  e) Device discovery
+-  f) Device events
+-  g) Other contingencies
+-2) Writing a user pass-through handler
+-  a) Discovering and configuring TCMU uio devices
+-  b) Waiting for events on the device(s)
+-  c) Managing the command ring
+-3) A final note
++   1) TCM Userspace Design
++     a) Background
++     b) Benefits
++     c) Design constraints
++     d) Implementation overview
++        i. Mailbox
++        ii. Command ring
++        iii. Data Area
++     e) Device discovery
++     f) Device events
++     g) Other contingencies
++   2) Writing a user pass-through handler
++     a) Discovering and configuring TCMU uio devices
++     b) Waiting for events on the device(s)
++     c) Managing the command ring
++   3) A final note
+ 
+ 
+ TCM Userspace Design
+---------------------
++====================
+ 
+ TCM is another name for LIO, an in-kernel iSCSI target (server).
+ Existing TCM targets run in the kernel.  TCMU (TCM in Userspace)
+@@ -32,7 +37,8 @@ modules for file, block device, RAM or using another SCSI device as
+ storage.  These are called "backstores" or "storage engines".  These
+ built-in modules are implemented entirely as kernel code.
+ 
+-Background:
++Background
++----------
+ 
+ In addition to modularizing the transport protocol used for carrying
+ SCSI commands ("fabrics"), the Linux kernel target, LIO, also modularizes
+@@ -60,7 +66,8 @@ kernel, another approach is to create a userspace pass-through
+ backstore for LIO, "TCMU".
+ 
+ 
+-Benefits:
++Benefits
++--------
+ 
+ In addition to allowing relatively easy support for RBD and GLFS, TCMU
+ will also allow easier development of new backstores. TCMU combines
+@@ -72,21 +79,25 @@ The disadvantage is there are more distinct components to configure, and
+ potentially to malfunction. This is unavoidable, but hopefully not
+ fatal if we're careful to keep things as simple as possible.
+ 
+-Design constraints:
++Design constraints
++------------------
+ 
+ - Good performance: high throughput, low latency
+ - Cleanly handle if userspace:
++
+    1) never attaches
+    2) hangs
+    3) dies
+    4) misbehaves
++
+ - Allow future flexibility in user & kernel implementations
+ - Be reasonably memory-efficient
+ - Simple to configure & run
+ - Simple to write a userspace backend
+ 
+ 
+-Implementation overview:
++Implementation overview
++-----------------------
+ 
+ The core of the TCMU interface is a memory region that is shared
+ between kernel and userspace. Within this region is: a control area
+@@ -108,7 +119,8 @@ the region mapped at a different virtual address.
+ 
+ See target_core_user.h for the struct definitions.
+ 
+-The Mailbox:
++The Mailbox
++-----------
+ 
+ The mailbox is always at the start of the shared memory region, and
+ contains a version, details about the starting offset and size of the
+@@ -117,19 +129,27 @@ userspace (respectively) to put commands on the ring, and indicate
+ when the commands are completed.
+ 
+ version - 1 (userspace should abort if otherwise)
++
+ flags:
+-- TCMU_MAILBOX_FLAG_CAP_OOOC: indicates out-of-order completion is
+-  supported.  See "The Command Ring" for details.
+-cmdr_off - The offset of the start of the command ring from the start
+-of the memory region, to account for the mailbox size.
+-cmdr_size - The size of the command ring. This does *not* need to be a
+-power of two.
+-cmd_head - Modified by the kernel to indicate when a command has been
+-placed on the ring.
+-cmd_tail - Modified by userspace to indicate when it has completed
+-processing of a command.
++    - TCMU_MAILBOX_FLAG_CAP_OOOC:
++	indicates out-of-order completion is supported.
++	See "The Command Ring" for details.
+ 
+-The Command Ring:
++cmdr_off
++	The offset of the start of the command ring from the start
++	of the memory region, to account for the mailbox size.
++cmdr_size
++	The size of the command ring. This does *not* need to be a
++	power of two.
++cmd_head
++	Modified by the kernel to indicate when a command has been
++	placed on the ring.
++cmd_tail
++	Modified by userspace to indicate when it has completed
++	processing of a command.
++
++The Command Ring
++----------------
+ 
+ Commands are placed on the ring by the kernel incrementing
+ mailbox.cmd_head by the size of the command, modulo cmdr_size, and
+@@ -180,29 +200,31 @@ opcode it does not handle, it must set UNKNOWN_OP bit (bit 0) in
+ hdr.uflags, update cmd_tail, and proceed with processing additional
+ commands, if any.
+ 
+-The Data Area:
++The Data Area
++-------------
+ 
+ This is shared-memory space after the command ring. The organization
+ of this area is not defined in the TCMU interface, and userspace
+ should access only the parts referenced by pending iovs.
+ 
+ 
+-Device Discovery:
++Device Discovery
++----------------
+ 
+ Other devices may be using UIO besides TCMU. Unrelated user processes
+ may also be handling different sets of TCMU devices. TCMU userspace
+ processes must find their devices by scanning sysfs
+ class/uio/uio*/name. For TCMU devices, these names will be of the
+-format:
++format::
+ 
+-tcm-user/<hba_num>/<device_name>/<subtype>/<path>
++	tcm-user/<hba_num>/<device_name>/<subtype>/<path>
+ 
+ where "tcm-user" is common for all TCMU-backed UIO devices. <hba_num>
+ and <device_name> allow userspace to find the device's path in the
+ kernel target's configfs tree. Assuming the usual mount point, it is
+-found at:
++found at::
+ 
+-/sys/kernel/config/target/core/user_<hba_num>/<device_name>
++	/sys/kernel/config/target/core/user_<hba_num>/<device_name>
+ 
+ This location contains attributes such as "hw_block_size", that
+ userspace needs to know for correct operation.
+@@ -214,15 +236,16 @@ configure the device, if needed. The name cannot contain ':', due to
+ LIO limitations.
+ 
+ For all devices so discovered, the user handler opens /dev/uioX and
+-calls mmap():
++calls mmap()::
+ 
+-mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)
++	mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0)
+ 
+ where size must be equal to the value read from
+ /sys/class/uio/uioX/maps/map0/size.
+ 
+ 
+-Device Events:
++Device Events
++-------------
+ 
+ If a new device is added or removed, a notification will be broadcast
+ over netlink, using a generic netlink family name of "TCM-USER" and a
+@@ -233,7 +256,8 @@ the LIO device, so that after determining the device is supported
+ (based on subtype) it can take the appropriate action.
+ 
+ 
+-Other contingencies:
++Other contingencies
++-------------------
+ 
+ Userspace handler process never attaches:
+ 
+@@ -258,7 +282,7 @@ Userspace handler process is malicious:
+ 
+ 
+ Writing a user pass-through handler (with example code)
+--------------------------------------------------------
++=======================================================
+ 
+ A user process handing a TCMU device must support the following:
+ 
+@@ -277,103 +301,103 @@ TCMU is designed so that multiple unrelated processes can manage TCMU
+ devices separately. All handlers should make sure to only open their
+ devices, based opon a known subtype string.
+ 
+-a) Discovering and configuring TCMU UIO devices:
++a) Discovering and configuring TCMU UIO devices::
+ 
+-(error checking omitted for brevity)
++      /* error checking omitted for brevity */
+ 
+-int fd, dev_fd;
+-char buf[256];
+-unsigned long long map_len;
+-void *map;
++      int fd, dev_fd;
++      char buf[256];
++      unsigned long long map_len;
++      void *map;
+ 
+-fd = open("/sys/class/uio/uio0/name", O_RDONLY);
+-ret = read(fd, buf, sizeof(buf));
+-close(fd);
+-buf[ret-1] = '\0'; /* null-terminate and chop off the \n */
++      fd = open("/sys/class/uio/uio0/name", O_RDONLY);
++      ret = read(fd, buf, sizeof(buf));
++      close(fd);
++      buf[ret-1] = '\0'; /* null-terminate and chop off the \n */
+ 
+-/* we only want uio devices whose name is a format we expect */
+-if (strncmp(buf, "tcm-user", 8))
++      /* we only want uio devices whose name is a format we expect */
++      if (strncmp(buf, "tcm-user", 8))
+ 	exit(-1);
+ 
+-/* Further checking for subtype also needed here */
++      /* Further checking for subtype also needed here */
+ 
+-fd = open(/sys/class/uio/%s/maps/map0/size, O_RDONLY);
+-ret = read(fd, buf, sizeof(buf));
+-close(fd);
+-str_buf[ret-1] = '\0'; /* null-terminate and chop off the \n */
++      fd = open(/sys/class/uio/%s/maps/map0/size, O_RDONLY);
++      ret = read(fd, buf, sizeof(buf));
++      close(fd);
++      str_buf[ret-1] = '\0'; /* null-terminate and chop off the \n */
+ 
+-map_len = strtoull(buf, NULL, 0);
++      map_len = strtoull(buf, NULL, 0);
+ 
+-dev_fd = open("/dev/uio0", O_RDWR);
+-map = mmap(NULL, map_len, PROT_READ|PROT_WRITE, MAP_SHARED, dev_fd, 0);
++      dev_fd = open("/dev/uio0", O_RDWR);
++      map = mmap(NULL, map_len, PROT_READ|PROT_WRITE, MAP_SHARED, dev_fd, 0);
+ 
+ 
+-b) Waiting for events on the device(s)
++      b) Waiting for events on the device(s)
+ 
+-while (1) {
+-  char buf[4];
++      while (1) {
++        char buf[4];
+ 
+-  int ret = read(dev_fd, buf, 4); /* will block */
++        int ret = read(dev_fd, buf, 4); /* will block */
+ 
+-  handle_device_events(dev_fd, map);
+-}
+-
+-
+-c) Managing the command ring
+-
+-#include <linux/target_core_user.h>
+-
+-int handle_device_events(int fd, void *map)
+-{
+-  struct tcmu_mailbox *mb = map;
+-  struct tcmu_cmd_entry *ent = (void *) mb + mb->cmdr_off + mb->cmd_tail;
+-  int did_some_work = 0;
+-
+-  /* Process events from cmd ring until we catch up with cmd_head */
+-  while (ent != (void *)mb + mb->cmdr_off + mb->cmd_head) {
+-
+-    if (tcmu_hdr_get_op(ent->hdr.len_op) == TCMU_OP_CMD) {
+-      uint8_t *cdb = (void *)mb + ent->req.cdb_off;
+-      bool success = true;
++        handle_device_events(dev_fd, map);
++      }
+ 
+-      /* Handle command here. */
+-      printf("SCSI opcode: 0x%x\n", cdb[0]);
+ 
+-      /* Set response fields */
+-      if (success)
+-        ent->rsp.scsi_status = SCSI_NO_SENSE;
+-      else {
+-        /* Also fill in rsp->sense_buffer here */
+-        ent->rsp.scsi_status = SCSI_CHECK_CONDITION;
++c) Managing the command ring::
++
++      #include <linux/target_core_user.h>
++
++      int handle_device_events(int fd, void *map)
++      {
++        struct tcmu_mailbox *mb = map;
++        struct tcmu_cmd_entry *ent = (void *) mb + mb->cmdr_off + mb->cmd_tail;
++        int did_some_work = 0;
++
++        /* Process events from cmd ring until we catch up with cmd_head */
++        while (ent != (void *)mb + mb->cmdr_off + mb->cmd_head) {
++
++          if (tcmu_hdr_get_op(ent->hdr.len_op) == TCMU_OP_CMD) {
++            uint8_t *cdb = (void *)mb + ent->req.cdb_off;
++            bool success = true;
++
++            /* Handle command here. */
++            printf("SCSI opcode: 0x%x\n", cdb[0]);
++
++            /* Set response fields */
++            if (success)
++              ent->rsp.scsi_status = SCSI_NO_SENSE;
++            else {
++              /* Also fill in rsp->sense_buffer here */
++              ent->rsp.scsi_status = SCSI_CHECK_CONDITION;
++            }
++          }
++          else if (tcmu_hdr_get_op(ent->hdr.len_op) != TCMU_OP_PAD) {
++            /* Tell the kernel we didn't handle unknown opcodes */
++            ent->hdr.uflags |= TCMU_UFLAG_UNKNOWN_OP;
++          }
++          else {
++            /* Do nothing for PAD entries except update cmd_tail */
++          }
++
++          /* update cmd_tail */
++          mb->cmd_tail = (mb->cmd_tail + tcmu_hdr_get_len(&ent->hdr)) % mb->cmdr_size;
++          ent = (void *) mb + mb->cmdr_off + mb->cmd_tail;
++          did_some_work = 1;
++        }
++
++        /* Notify the kernel that work has been finished */
++        if (did_some_work) {
++          uint32_t buf = 0;
++
++          write(fd, &buf, 4);
++        }
++
++        return 0;
+       }
+-    }
+-    else if (tcmu_hdr_get_op(ent->hdr.len_op) != TCMU_OP_PAD) {
+-      /* Tell the kernel we didn't handle unknown opcodes */
+-      ent->hdr.uflags |= TCMU_UFLAG_UNKNOWN_OP;
+-    }
+-    else {
+-      /* Do nothing for PAD entries except update cmd_tail */
+-    }
+-
+-    /* update cmd_tail */
+-    mb->cmd_tail = (mb->cmd_tail + tcmu_hdr_get_len(&ent->hdr)) % mb->cmdr_size;
+-    ent = (void *) mb + mb->cmdr_off + mb->cmd_tail;
+-    did_some_work = 1;
+-  }
+-
+-  /* Notify the kernel that work has been finished */
+-  if (did_some_work) {
+-    uint32_t buf = 0;
+-
+-    write(fd, &buf, 4);
+-  }
+-
+-  return 0;
+-}
+ 
+ 
+ A final note
+-------------
++============
+ 
+ Please be careful to return codes as defined by the SCSI
+ specifications. These are different than some values defined in the
+diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
+index 440227bb55a9..a4139a576726 100755
+--- a/scripts/documentation-file-ref-check
++++ b/scripts/documentation-file-ref-check
+@@ -124,7 +124,7 @@ while (<IN>) {
+ 		# Remove sched-pelt false-positive
+ 		next if ($fulref =~ m,^Documentation/scheduler/sched-pelt$,);
+ 
+-		# Discard some build examples from Documentation/target/tcm_mod_builder.txt
++		# Discard some build examples from Documentation/target/tcm_mod_builder.rst
+ 		next if ($fulref =~ m,mnt/sdb/lio-core-2.6.git/Documentation/target,);
+ 
+ 		# Check if exists, evaluating wildcards
 -- 
 2.21.0
-
 
