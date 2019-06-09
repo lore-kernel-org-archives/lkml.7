@@ -2,56 +2,57 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC6C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B94BC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE4820833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8FE208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099635;
-	bh=G80n0F+Jub0Dma2VG5Z03qSubqqOxsxpa/eWRIWiUCU=;
+	s=default; t=1560099641;
+	bh=orFbGQNmIg/UlgOMEjrkVkWSq42RPN7hoa0UHDkDI8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FA8JlwFbrEbwheLtYM4EGXcgjZa0VRJs+VrC4fJCMh8r30s+OFbzukuXvvsRUmF96
-	 Dlg/VEB98qM2AYDayn9PGxRi6YD7jtK3Tl8WD1JgzcEt1JpoVFG+2Xl9T71A/2ozbT
-	 lTgMXIfd+QdmG/c6vk2a39PFl3x5+24ga4WsOQI4=
+	b=Ih81CTHp4krpQLDuDS4Lho/5pBa65V57tHUxikCIIA4liJPuPRMAadZ6Uznra0/bg
+	 sgGwZzsV9NB5mtW9LCPHD9GWQHz0s3zTdO0Oj0Aw2WHqR050yY6VAOeeWsG0FyqMeS
+	 kEwitssF7m64CigSFDziHjp5dFQSjiwNtPX8Xn7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387883AbfFIRAe (ORCPT
+        id S2387903AbfFIRAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37052 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387863AbfFIRAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:00:32 -0400
+        id S2387885AbfFIRAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:00:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD201206C3;
-        Sun,  9 Jun 2019 17:00:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5857520833;
+        Sun,  9 Jun 2019 17:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099631;
-        bh=G80n0F+Jub0Dma2VG5Z03qSubqqOxsxpa/eWRIWiUCU=;
+        s=default; t=1560099636;
+        bh=orFbGQNmIg/UlgOMEjrkVkWSq42RPN7hoa0UHDkDI8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YB5G3BQPps30ni1tZqi3PRCzlLkuOjsVa9J8a3D7PQHwN/af7RvKtI4H5J+/qph/m
-         6R/16KLlEGLExGoud5kE9mhVEGxZx6eprm0sMvRRPvTDPauobWZHV5Ksoojhbw92/y
-         sv7CeFUg9uLMmi69Xe1BkKYNjC55+lA85SDIsncQ=
+        b=uZIrZ1JCPXqj6/RcZG7TlQuh6SChwP/imS+5fw/CwstuW3IGgPrL7wimLwNgg3LPk
+         x180w3Pn159leTf0Rw4eHJ86+XQ6oLt47M1QQrM4EQkYgLSaKoTl3XmZa29Ywp+jwB
+         qjDEnFKCHmpsOs8saoi0UgKTmWkmB/Rbt0p3jAAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 092/241] tools include: Adopt linux/bits.h
-Date:   Sun,  9 Jun 2019 18:40:34 +0200
-Message-Id: <20190609164150.446129635@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: [PATCH 4.4 111/241] x86/build: Move _etext to actual end of .text
+Date:   Sun,  9 Jun 2019 18:40:53 +0200
+Message-Id: <20190609164150.998565143@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -64,89 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+[ Upstream commit 392bef709659abea614abfe53cf228e7a59876a4 ]
 
-commit ba4aa02b417f08a0bee5e7b8ed70cac788a7c854 upstream.
+When building x86 with Clang LTO and CFI, CFI jump regions are
+automatically added to the end of the .text section late in linking. As a
+result, the _etext position was being labelled before the appended jump
+regions, causing confusion about where the boundaries of the executable
+region actually are in the running kernel, and broke at least the fault
+injection code. This moves the _etext mark to outside (and immediately
+after) the .text area, as it already the case on other architectures
+(e.g. arm64, arm).
 
-So that we reduce the difference of tools/include/linux/bitops.h to the
-original kernel file, include/linux/bitops.h, trying to remove the need
-to define BITS_PER_LONG, to avoid clashes with asm/bitsperlong.h.
-
-And the things removed from tools/include/linux/bitops.h are really in
-linux/bits.h, so that we can have a copy and then
-tools/perf/check_headers.sh will tell us when new stuff gets added to
-linux/bits.h so that we can check if it is useful and if any adjustment
-needs to be done to the tools/{include,arch}/ copies.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-y1sqyydvfzo0bjjoj4zsl562@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-[bwh: Backported to 4.4 as dependency of "x86/msr-index: Cleanup bit defines":
- - Drop change in check-headers.sh
- - Adjust context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20190423183827.GA4012@beast
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/linux/bitops.h |    7 ++-----
- tools/include/linux/bits.h   |   26 ++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+), 5 deletions(-)
- create mode 100644 tools/include/linux/bits.h
+ arch/x86/kernel/vmlinux.lds.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/tools/include/linux/bitops.h
-+++ b/tools/include/linux/bitops.h
-@@ -3,17 +3,14 @@
- 
- #include <asm/types.h>
- #include <linux/kernel.h>
--#include <linux/compiler.h>
--
- #ifndef __WORDSIZE
- #define __WORDSIZE (__SIZEOF_LONG__ * 8)
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 17e1e60b6b400..68dd72248919b 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -110,11 +110,11 @@ SECTIONS
+ 		*(.text.__x86.indirect_thunk)
+ 		__indirect_thunk_end = .;
  #endif
+-
+-		/* End of text section */
+-		_etext = .;
+ 	} :text = 0x9090
  
- #define BITS_PER_LONG __WORDSIZE
-+#include <linux/bits.h>
-+#include <linux/compiler.h>
++	/* End of text section */
++	_etext = .;
++
+ 	NOTES :text :note
  
--#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
--#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
--#define BITS_PER_BYTE		8
- #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
- #define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u64))
- #define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
---- /dev/null
-+++ b/tools/include/linux/bits.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_BITS_H
-+#define __LINUX_BITS_H
-+#include <asm/bitsperlong.h>
-+
-+#define BIT(nr)			(1UL << (nr))
-+#define BIT_ULL(nr)		(1ULL << (nr))
-+#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
-+#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
-+#define BIT_ULL_MASK(nr)	(1ULL << ((nr) % BITS_PER_LONG_LONG))
-+#define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
-+#define BITS_PER_BYTE		8
-+
-+/*
-+ * Create a contiguous bitmask starting at bit position @l and ending at
-+ * position @h. For example
-+ * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-+ */
-+#define GENMASK(h, l) \
-+	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-+
-+#define GENMASK_ULL(h, l) \
-+	(((~0ULL) - (1ULL << (l)) + 1) & \
-+	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
-+
-+#endif	/* __LINUX_BITS_H */
+ 	EXCEPTION_TABLE(16) :text = 0x9090
+-- 
+2.20.1
+
 
 
