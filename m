@@ -2,173 +2,69 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595D6C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6B5C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA2320652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:14:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nh5GGNE9"
+	by mail.kernel.org (Postfix) with ESMTP id 27139206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 18:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbfFISOn (ORCPT
+        id S1730240AbfFISkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 14:14:43 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:34240 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729668AbfFISOm (ORCPT
+        Sun, 9 Jun 2019 14:40:22 -0400
+Received: from freki.datenkhaos.de ([81.7.17.101]:58388 "EHLO
+        freki.datenkhaos.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729415AbfFISkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 14:14:42 -0400
-Received: by mail-it1-f196.google.com with SMTP id c3so5517633itc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 11:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QrmQgtot4PqjL1wSqJXodQ8ktBGYcHqGra4eQTyGZms=;
-        b=nh5GGNE9CurE7rgpy3Nl9hGwop7f2Ae1DmdxJrS+vTvyLlLzxwV2vu6FpBrshO1AlQ
-         B8MMMyYnTK+zdb+YytKX/FNRPgp3GkqrDj7KY0j2ifpJMeK+sxJ+UvLofcKMCysWrKh5
-         gERxQUjZgW/Yngk7i1UPiREMntaTUT97hBCmn+I1riD1yXsXcr63TGtPpTXpCxdxzA23
-         bilS+RoyIWu0YpdLiUqxqDtTLmkYH77PKVuUigpWP4WImdhXxbK9boLNkGrJA45FL9dS
-         SbuR+N+vHZFQHASBN6Kl6ZSQYqfFx8sxsdMIIHtoYwrN7EhMdb9/2W8hEZN6kmh91C4w
-         zyeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QrmQgtot4PqjL1wSqJXodQ8ktBGYcHqGra4eQTyGZms=;
-        b=B0IomTZfpP/EjRL1DyOSN86o08onworwm8QBtYWEn2j4BgG1OHOW1BgwJdZVTR+5KN
-         /vzKWNk3epqGocO+UZj39J5cKST/jbq0I6RnzE4yx8qK1V9nuMkD3W9ULieSbCT5F4jp
-         LbTfJKdO2wxroYxVJfB4RiGVVFAApYlr5IgHqncpJNjOOkgJmVVNpkSQk/CBTudj+tlX
-         QxgYl6HJL9CuEyfEf9yVzIQKpj5mZMUHKnsx9xYDYZiLbCPlTzF9T+hxVH71zAJLWSf5
-         CgoGA+EVD9SflZa0Zw4RxBKIlLLbis0BGIgNxEjoc3CZVN0BE++J9o3Kf9k11073mzcG
-         B3Pg==
-X-Gm-Message-State: APjAAAVNGFT4IImlPvMxEYHSdHmy+FAa4iaAaKwTk5+vMth3ozH/wNqF
-        3bVFFDvLP/GSj8dkF16slnK5emRiPPhBmn4VxE6AyQ==
-X-Google-Smtp-Source: APXvYqyFGP0qOizcA9JeXKig2+nJD1y8SyNKskyZ+G1ya+nOEgNb+KQ+pVayfS4flXjeA98DrQnt9ingi8qkn41chyg=
-X-Received: by 2002:a02:ce37:: with SMTP id v23mr42380530jar.2.1560104081538;
- Sun, 09 Jun 2019 11:14:41 -0700 (PDT)
+        Sun, 9 Jun 2019 14:40:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by freki.datenkhaos.de (Postfix) with ESMTP id 0BA6413D02E3;
+        Sun,  9 Jun 2019 20:40:20 +0200 (CEST)
+Received: from freki.datenkhaos.de ([127.0.0.1])
+        by localhost (freki.datenkhaos.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PVHEsyn7Y6u4; Sun,  9 Jun 2019 20:40:18 +0200 (CEST)
+Received: from probook (x4db417da.dyn.telefonica.de [77.180.23.218])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by freki.datenkhaos.de (Postfix) with ESMTPSA;
+        Sun,  9 Jun 2019 20:40:18 +0200 (CEST)
+Date:   Sun, 9 Jun 2019 20:40:13 +0200
+From:   Johannes Hirte <johannes.hirte@datenkhaos.de>
+To:     Klaus Kusche <klaus.kusche@computerix.info>
+Cc:     keescook@chromium.org, bp@suse.de, samitolvanen@google.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/build: Move _etext to actual end of .text
+Message-ID: <20190609184013.GA11237@probook>
+References: <502d5b36-e0d0-ffcc-5dd4-35db9d033561@computerix.info>
 MIME-Version: 1.0
-References: <20190608114232.8731-1-sashal@kernel.org> <20190608114232.8731-17-sashal@kernel.org>
-In-Reply-To: <20190608114232.8731-17-sashal@kernel.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sun, 9 Jun 2019 20:14:29 +0200
-Message-ID: <CAKv+Gu9ZJ42=NJWDX4+DgkMWaSEakNw-yYiUtsUE48D-V6=7-w@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 17/49] efi/x86/Add missing error handling to
- old_memmap 1:1 mapping code
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Gen Zhang <blackgod016574@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Bradford <robert.bradford@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <502d5b36-e0d0-ffcc-5dd4-35db9d033561@computerix.info>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Jun 2019 at 13:43, Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Gen Zhang <blackgod016574@gmail.com>
->
-> [ Upstream commit 4e78921ba4dd0aca1cc89168f45039add4183f8e ]
->
-> The old_memmap flow in efi_call_phys_prolog() performs numerous memory
-> allocations, and either does not check for failure at all, or it does
-> but fails to propagate it back to the caller, which may end up calling
-> into the firmware with an incomplete 1:1 mapping.
->
-> So let's fix this by returning NULL from efi_call_phys_prolog() on
-> memory allocation failures only, and by handling this condition in the
-> caller. Also, clean up any half baked sets of page tables that we may
-> have created before returning with a NULL return value.
->
-> Note that any failure at this level will trigger a panic() two levels
-> up, so none of this makes a huge difference, but it is a nice cleanup
-> nonetheless.
->
-> [ardb: update commit log, add efi_call_phys_epilog() call on error path]
->
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rob Bradford <robert.bradford@intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-efi@vger.kernel.org
-> Link: http://lkml.kernel.org/r/20190525112559.7917-2-ard.biesheuvel@linaro.org
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On 2019 Jun 09, Klaus Kusche wrote:
+> 
+> Hello,
+> 
+> Same problem for linux 5.1.7: 
+> Kernel building fails with the same relocation error.
+> 
+> 5.1.5 does not have the problem, builds fine for me.
+> 
+> Is there anything I can do to investigate the problem?
+> 
 
-This was already discussed in the thread that proposed this patch for
-stable: please don't queue this right now, the patches are more likely
-to harm than hurt, and they certainly don't fix a security
-vulnerability, as has been claimed.
+Please try linux 5.1.8. The problematic patch was reverted there.
 
+-- 
+Regards,
+  Johannes
 
-> ---
->  arch/x86/platform/efi/efi.c    | 2 ++
->  arch/x86/platform/efi/efi_64.c | 9 ++++++---
->  2 files changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index 9061babfbc83..353019d4e6c9 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -86,6 +86,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
->         pgd_t *save_pgd;
->
->         save_pgd = efi_call_phys_prolog();
-> +       if (!save_pgd)
-> +               return EFI_ABORTED;
->
->         /* Disable interrupts around EFI calls: */
->         local_irq_save(flags);
-> diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-> index ee5d08f25ce4..dfc809b31c7c 100644
-> --- a/arch/x86/platform/efi/efi_64.c
-> +++ b/arch/x86/platform/efi/efi_64.c
-> @@ -84,13 +84,15 @@ pgd_t * __init efi_call_phys_prolog(void)
->
->         if (!efi_enabled(EFI_OLD_MEMMAP)) {
->                 efi_switch_mm(&efi_mm);
-> -               return NULL;
-> +               return efi_mm.pgd;
->         }
->
->         early_code_mapping_set_exec(1);
->
->         n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
->         save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
-> +       if (!save_pgd)
-> +               return NULL;
->
->         /*
->          * Build 1:1 identity mapping for efi=old_map usage. Note that
-> @@ -138,10 +140,11 @@ pgd_t * __init efi_call_phys_prolog(void)
->                 pgd_offset_k(pgd * PGDIR_SIZE)->pgd &= ~_PAGE_NX;
->         }
->
-> -out:
->         __flush_tlb_all();
-> -
->         return save_pgd;
-> +out:
-> +       efi_call_phys_epilog(save_pgd);
-> +       return NULL;
->  }
->
->  void __init efi_call_phys_epilog(pgd_t *save_pgd)
-> --
-> 2.20.1
->
