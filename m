@@ -2,95 +2,156 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBB2C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5394C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5AA1206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560107627;
-	bh=JmotrYdFAxye6PwZuAv9hObxAW5kAZw7LHEmNKMpOwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JwrGCvlsA+wbVoE2MChtobyoU7MuBoH4jfU3CyYbFQjCpljFNaee0sC6LJ9+mTBNy
-	 y96Io2AiNsr3ZiydXcwdj/rEVzrsmKq8OrID/XR/t86DMGh710n1W+wgenpgt48+r+
-	 nBllAz7XGV9rfondM2ITbo0GOd8HHT/BiJiHn7+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 82325206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eG2qOZ3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbfFITNq (ORCPT
+        id S1729616AbfFIT2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 15:13:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbfFITNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 15:13:45 -0400
-Received: from localhost (unknown [107.242.116.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D1E20673;
-        Sun,  9 Jun 2019 19:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560107624;
-        bh=JmotrYdFAxye6PwZuAv9hObxAW5kAZw7LHEmNKMpOwQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OyDhyEcqPyhvQ61dxNhvuSuOlF0Xi6XmpNgV75oiGcgLcI0dasuPztIm2pBkpMWSk
-         IwJDRIDZD5HTHP12/+LX4tDMJ6AtOcqka9RchPuqEOUTX5/bZcrUzq2rN9PhIqGiaK
-         p79jkAcdmiPYO9NN8mXWHPDhMJllyS4qS68f1IZ4=
-Date:   Sun, 9 Jun 2019 15:13:37 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andreas Ziegler <andreas.ziegler@fau.de>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH AUTOSEL 5.1 058/186] tracing: probeevent: Fix to make the
- type of $comm string
-Message-ID: <20190609191337.GA1552@sasha-vm>
-References: <20190601131653.24205-1-sashal@kernel.org>
- <20190601131653.24205-58-sashal@kernel.org>
- <20190608173113.5fc866bf@oasis.local.home>
+        Sun, 9 Jun 2019 15:28:55 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33326 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbfFIT2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 15:28:54 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h10so108743ljg.0;
+        Sun, 09 Jun 2019 12:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sj3CdrTusp0vzzIcEyR2aoS6rw9ut0BwVaeKBvqb17A=;
+        b=eG2qOZ3bDVdovkwRoeqds9WtLI2BHXbqVWSZqzSCrHD3uF0KAPoYOK5lytzixgXpSO
+         YuyFsl3cBLLIz0LcssVbPo7tEBXdVECwWGzL59jHGy9lL3tvNaFfPfGA2yo6EzFqqCoH
+         WpFp5F4vXJIEkL9Up7CtrMLA9s8Nvxnw9XGxGWJZpZJM4XTVRz8IiTRf5BQ7Ml357BBR
+         UZ4BFPcG1PKli47Xvv3MrJ32DCqxcZzkI1ljNU2AkOI80zjpYLgQVFgdaUmgOgOobyzz
+         YZjwNBZJJccKVdWfioIbSe/N/7cLD285uIFm30age7ScYAdCgtWH+/efmup6q8WumuS9
+         i3Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sj3CdrTusp0vzzIcEyR2aoS6rw9ut0BwVaeKBvqb17A=;
+        b=XJL7CB/rKowt29Fl9QR5lQ14TW2BjmzZHab/jGZfWQObkRo8gDPJGsd4+KF4QraPGu
+         y68/Z4UBVOye0+n9Oc3I7jxFUv6NkuhpbxIJhdrPtzARk/xEYv+l6u379zB0it7eVFVt
+         vkudcrhn+pVCUkeHnSuMThrqH+OlZ/WGlYKdyKWnu7hLkTiqVhxSLgmgkfqjGo+ybBEY
+         H8XwMGbhldLQyyXX81A36K58iKAD/5Z5ekNjBqKGPOy4ZFFt6l+bsEfi/PkIuPWW07Cq
+         ipw+lXWcbBPu8ivywMTMVOIQILlPRzsUlV9AXXpoQaw/LU7DhIbsD0evvk3e+k9rLIMO
+         g0Mw==
+X-Gm-Message-State: APjAAAUuhoIXopHhVssc5w/Ae0OgiXVpC0avJsMHJOt/g2EFeogN65AH
+        /8tQbGs01biIw4qqbts3KM0=
+X-Google-Smtp-Source: APXvYqz3Cg5V5SkpFd+z/lnRMxzrdW9To7z8gQ47rDlWuznbL8DgEeDr8sVdcl079tCDKt7w2tAgQA==
+X-Received: by 2002:a2e:9158:: with SMTP id q24mr8120577ljg.119.1560108532837;
+        Sun, 09 Jun 2019 12:28:52 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id e26sm1531685ljl.33.2019.06.09.12.28.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Jun 2019 12:28:52 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/3] clocksource/drivers/tegra: Remove duplicated use of per_cpu_ptr
+Date:   Sun,  9 Jun 2019 22:27:28 +0300
+Message-Id: <20190609192730.29459-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190609192730.29459-1-digetx@gmail.com>
+References: <20190609192730.29459-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190608173113.5fc866bf@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 05:31:13PM -0400, Steven Rostedt wrote:
->On Sat,  1 Jun 2019 09:14:34 -0400
->Sasha Levin <sashal@kernel.org> wrote:
->
->> From: Masami Hiramatsu <mhiramat@kernel.org>
->>
->> [ Upstream commit 3dd1f7f24f8ceec00bbbc364c2ac3c893f0fdc4c ]
->>
->> Fix to make the type of $comm "string".  If we set the other type to $comm
->> argument, it shows meaningless value or wrong data. Currently probe events
->> allow us to set string array type (e.g. ":string[2]"), or other digit types
->> like x8 on $comm. But since clearly $comm is just a string data, it should
->> not be fetched by other types including array.
->>
->> Link: http://lkml.kernel.org/r/155723736241.9149.14582064184468574539.stgit@devnote2
->>
->> Cc: Andreas Ziegler <andreas.ziegler@fau.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: stable@vger.kernel.org
->> Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
->
->I thought the "AUTOSEL" patches are to find patches that are not marked
->for stable and pull them in. It would be good to differentiate those in
->the subject. As I'm more inclined to audit automatically pulled in ones,
->because those are more likely to be incorrectly backported.
+It was left unnoticed by accident, which means that the code could be
+cleaned up a tad more.
 
-That's indeed the case. I had some experimental changes for this merge
-window and apparently some stable tagged patches ended up sneaking in.
-Sorry about that!.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/clocksource/timer-tegra.c | 40 +++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 15 deletions(-)
 
---
-Thanks,
-Sasha
+diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
+index 9406855781ff..6da169de47f9 100644
+--- a/drivers/clocksource/timer-tegra.c
++++ b/drivers/clocksource/timer-tegra.c
+@@ -216,6 +216,19 @@ static inline unsigned int tegra_irq_idx_for_cpu(int cpu, bool tegra20)
+ 	return TIMER10_IRQ_IDX + cpu;
+ }
+ 
++static inline unsigned long tegra_rate_for_timer(struct timer_of *to,
++						 bool tegra20)
++{
++	/*
++	 * TIMER1-9 are fixed to 1MHz, TIMER10-13 are running off the
++	 * parent clock.
++	 */
++	if (tegra20)
++		return 1000000;
++
++	return to->of_clk.rate;
++}
++
+ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
+ 				   int rating)
+ {
+@@ -268,30 +281,27 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		struct timer_of *cpu_to = per_cpu_ptr(&tegra_to, cpu);
++		unsigned long flags = IRQF_TIMER | IRQF_NOBALANCING;
++		unsigned long rate = tegra_rate_for_timer(&tegra_to, tegra20);
+ 		unsigned int base = tegra_base_for_cpu(cpu, tegra20);
+ 		unsigned int idx = tegra_irq_idx_for_cpu(cpu, tegra20);
++		unsigned int irq = irq_of_parse_and_map(np, idx);
+ 
+-		/*
+-		 * TIMER1-9 are fixed to 1MHz, TIMER10-13 are running off the
+-		 * parent clock.
+-		 */
+-		if (tegra20)
+-			cpu_to->of_clk.rate = 1000000;
+-
+-		cpu_to = per_cpu_ptr(&tegra_to, cpu);
+-		cpu_to->of_base.base = timer_reg_base + base;
+-		cpu_to->clkevt.rating = rating;
+-		cpu_to->clkevt.cpumask = cpumask_of(cpu);
+-		cpu_to->clkevt.irq = irq_of_parse_and_map(np, idx);
+-		if (!cpu_to->clkevt.irq) {
++		if (!irq) {
+ 			pr_err("failed to map irq for cpu%d\n", cpu);
+ 			ret = -EINVAL;
+ 			goto out_irq;
+ 		}
+ 
++		cpu_to->clkevt.irq = irq;
++		cpu_to->clkevt.rating = rating;
++		cpu_to->clkevt.cpumask = cpumask_of(cpu);
++		cpu_to->of_base.base = timer_reg_base + base;
++		cpu_to->of_clk.rate = rate;
++
+ 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
+-		ret = request_irq(cpu_to->clkevt.irq, tegra_timer_isr,
+-				  IRQF_TIMER | IRQF_NOBALANCING,
++
++		ret = request_irq(cpu_to->clkevt.irq, tegra_timer_isr, flags,
+ 				  cpu_to->clkevt.name, &cpu_to->clkevt);
+ 		if (ret) {
+ 			pr_err("failed to set up irq for cpu%d: %d\n",
+-- 
+2.21.0
+
