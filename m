@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304B7C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F37C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073AE206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E44206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099579;
-	bh=zgiv+qFIzyKL+BVY8zd+kxmbe99pwOeqQq748lSnyHU=;
+	s=default; t=1560099582;
+	bh=uUxkPqFQilc1zz9Bg/0e7rKTxIztRsjn991NqXP2H+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wn0c8fHalB7B2XBhZmKKvEl+E2D25ocJy7fo8HNWTskVsZVFTUbADD23O6ezxHfD1
-	 VbfBJB7pkN3DSnummuoM+eszy2nx67tkcsR9vMBJIOc7WXVhhZaGdQIPqn/Jufg9+y
-	 l3YB4nzvjKaOJRDi7hUThXK6t3MJXK6yCRa0Bk9o=
+	b=Db45KTkVVfWueDz/cX6RQbBc1VcBVhn4n0Dzj0fUt0j7DvYkkKTF5pdrlFWdEPJQi
+	 7h/0rchoJQ17Vo6RJhM4aHJh2TQ7ShDI8oWoEpc+m8qzye3EOApSSE+U32qhn4ldzY
+	 xi/4ybnKutf30+GkvEIOHEt1McQMf+zEZjgbDWhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733039AbfFIQ7h (ORCPT
+        id S2387707AbfFIQ7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:59:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35432 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387682AbfFIQ7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:59:32 -0400
+        id S1733212AbfFIQ7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:59:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C6C8206C3;
-        Sun,  9 Jun 2019 16:59:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4808207E0;
+        Sun,  9 Jun 2019 16:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099571;
-        bh=zgiv+qFIzyKL+BVY8zd+kxmbe99pwOeqQq748lSnyHU=;
+        s=default; t=1560099577;
+        bh=uUxkPqFQilc1zz9Bg/0e7rKTxIztRsjn991NqXP2H+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVFGPokmA9RIUoCz4RuNj8N0yrEKy89LiXEJ0737nUjbJh9sE5/sgIGmxL11t+za5
-         HNUFn7cmUXiDChK+d94qBvjGztRIVsWrgSB/+dLCkpd2Us6qghp0u5yAvt461fseo1
-         hrpxMmqM2htLQfWIShW7pa5phVR7X0WjS3J3SYXA=
+        b=QMedhCNnKSB/qYuZpNtUmb0ZFUX/CFAGA1e3l23b0hmr/aWrX3VxOljJy2AY/o72L
+         w1eig5zU0phdaFUVDRQGSqdSk5ltyzIhjrqN4qCrCatl2XF2h/dqW0H5is5uKkd8vs
+         kXkK3sbOO+9TCWUj2dEQy6a3WfXXYaUupZN+NN4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.4 086/241] fbdev: fix WARNING in __alloc_pages_nodemask bug
-Date:   Sun,  9 Jun 2019 18:40:28 +0200
-Message-Id: <20190609164150.256638981@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
+        Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.4 088/241] media: vivid: use vfree() instead of kfree() for dev->bitmap_cap
+Date:   Sun,  9 Jun 2019 18:40:30 +0200
+Message-Id: <20190609164150.313262931@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,51 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+From: Alexander Potapenko <glider@google.com>
 
-commit 8c40292be9169a9cbe19aadd1a6fc60cbd1af82f upstream.
+commit dad7e270ba712ba1c99cd2d91018af6044447a06 upstream.
 
-Syzkaller hit 'WARNING in __alloc_pages_nodemask' bug.
+syzkaller reported crashes on kfree() called from
+vivid_vid_cap_s_selection(). This looks like a simple typo, as
+dev->bitmap_cap is allocated with vzalloc() throughout the file.
 
-WARNING: CPU: 1 PID: 1473 at mm/page_alloc.c:4377
-__alloc_pages_nodemask+0x4da/0x2130
-Kernel panic - not syncing: panic_on_warn set ...
+Fixes: ef834f7836ec0 ("[media] vivid: add the video capture and output
+parts")
 
-Call Trace:
- alloc_pages_current+0xb1/0x1e0
- kmalloc_order+0x1f/0x60
- kmalloc_order_trace+0x1d/0x120
- fb_alloc_cmap_gfp+0x85/0x2b0
- fb_set_user_cmap+0xff/0x370
- do_fb_ioctl+0x949/0xa20
- fb_ioctl+0xdd/0x120
- do_vfs_ioctl+0x186/0x1070
- ksys_ioctl+0x89/0xa0
- __x64_sys_ioctl+0x74/0xb0
- do_syscall_64+0xc8/0x550
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-This is a warning about order >= MAX_ORDER and the order is from
-userspace ioctl. Add flag __NOWARN to silence this warning.
-
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Reported-by: Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/core/fbcmap.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/vivid/vivid-vid-cap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/video/fbdev/core/fbcmap.c
-+++ b/drivers/video/fbdev/core/fbcmap.c
-@@ -94,6 +94,8 @@ int fb_alloc_cmap_gfp(struct fb_cmap *cm
- 	int size = len * sizeof(u16);
- 	int ret = -ENOMEM;
- 
-+	flags |= __GFP_NOWARN;
-+
- 	if (cmap->len != len) {
- 		fb_dealloc_cmap(cmap);
- 		if (!len)
+--- a/drivers/media/platform/vivid/vivid-vid-cap.c
++++ b/drivers/media/platform/vivid/vivid-vid-cap.c
+@@ -993,7 +993,7 @@ int vivid_vid_cap_s_selection(struct fil
+ 		rect_map_inside(&s->r, &dev->fmt_cap_rect);
+ 		if (dev->bitmap_cap && (compose->width != s->r.width ||
+ 					compose->height != s->r.height)) {
+-			kfree(dev->bitmap_cap);
++			vfree(dev->bitmap_cap);
+ 			dev->bitmap_cap = NULL;
+ 		}
+ 		*compose = s->r;
 
 
