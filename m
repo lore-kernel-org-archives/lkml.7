@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFDCC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED90C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9861120684
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4A620684
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100028;
-	bh=dbiKq53ZEdnYqOxVXfRDsv9rp54xWHJH215bvi/pXPY=;
+	s=default; t=1560100034;
+	bh=lelvo0io8nkp8qWK8JdAYNl7dl/qXAIZPC9tzGmuaNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GOzeeaKuX32cLhBd185zaxnc4xc0jPCy5h7nuCvfcTgVAmW0wxIH/n+fE8Q7DUoK8
-	 M+UGM2bTmtqr9XiSxquXlcYucsEJdAN/MB1OkK01NCz0zaebIRYsnIpdIFLVL6aKXZ
-	 YTfn4F2t/oYZxnBMNmM3gD8kNiJtb3HB61ZiUKfg=
+	b=aI2/EEGXdcp68C+/vnOnfOO2vl4bEyXSSQlJaiwd+tph+9ObWrlNUc1hZ12ISnOLr
+	 tWYTsOu3FMmAT9gYm7cuFLgl7Ry4xliWZoaw36ssm4fIGzuukzhJtzgMxlRZO0fswI
+	 pbB6HIZwJ5DGn4iExT2gx/tsI3abMHgZHENh/1/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389140AbfFIRHH (ORCPT
+        id S2389148AbfFIRHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:07:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbfFIRHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:07:05 -0400
+        id S2387771AbfFIRGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:06:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B740206C3;
-        Sun,  9 Jun 2019 17:07:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D9C204EC;
+        Sun,  9 Jun 2019 17:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560100025;
-        bh=dbiKq53ZEdnYqOxVXfRDsv9rp54xWHJH215bvi/pXPY=;
+        s=default; t=1560100014;
+        bh=lelvo0io8nkp8qWK8JdAYNl7dl/qXAIZPC9tzGmuaNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wdtfLzkrzi82LyaasF9B/U0eOR9lBW1N0w+2TOI1dSJGUg2m51a/9rWwxavyvxUzc
-         +8mVlrVvh4M4JJD8b/Mi73IbedWJwlpFZRmReYeNXMVTuYzu1Awg8pEfbDhXxFz8qk
-         O3Low7DRvTbPuBIQQKkzgZRgDIthaahdjEX6UuRs=
+        b=JfXgpSu9cGylMQgvqLV2Hhz7TR99egM18L2wONkL84LNdGQao49QvrDLWEk0qrCLh
+         ey6HIG1WG0ajZ4MUtm/cHvsRrx+l0aFcBULNh8PsO7p4NHWA4iLMbMSA9onwr65ick
+         e2QbbEwh2Mckj2CzSEDG+QerHpG+ZeOBYhKFQe3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 61/83] media: uvcvideo: Fix uvc_alloc_entity() allocation alignment
-Date:   Sun,  9 Jun 2019 18:42:31 +0200
-Message-Id: <20190609164133.056739483@linuxfoundation.org>
+        stable@vger.kernel.org, John David Anglin <dave.anglin@bell.net>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.4 235/241] parisc: Use implicit space register selection for loading the coherence index of I/O pdirs
+Date:   Sun,  9 Jun 2019 18:42:57 +0200
+Message-Id: <20190609164155.546256729@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
-References: <20190609164127.843327870@linuxfoundation.org>
+In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
+References: <20190609164147.729157653@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,39 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nadav Amit <namit@vmware.com>
+From: John David Anglin <dave.anglin@bell.net>
 
-commit 89dd34caf73e28018c58cd193751e41b1f8bdc56 upstream.
+commit 63923d2c3800919774f5c651d503d1dd2adaddd5 upstream.
 
-The use of ALIGN() in uvc_alloc_entity() is incorrect, since the size of
-(entity->pads) is not a power of two. As a stop-gap, until a better
-solution is adapted, use roundup() instead.
+We only support I/O to kernel space. Using %sr1 to load the coherence
+index may be racy unless interrupts are disabled. This patch changes the
+code used to load the coherence index to use implicit space register
+selection. This saves one instruction and eliminates the race.
 
-Found by a static assertion. Compile-tested only.
+Tested on rp3440, c8000 and c3750.
 
-Fixes: 4ffc2d89f38a ("uvcvideo: Register subdevices for each entity")
-
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: John David Anglin <dave.anglin@bell.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_driver.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/parisc/ccio-dma.c  |    4 +---
+ drivers/parisc/sba_iommu.c |    3 +--
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -868,7 +868,7 @@ static struct uvc_entity *uvc_alloc_enti
- 	unsigned int size;
- 	unsigned int i;
+--- a/drivers/parisc/ccio-dma.c
++++ b/drivers/parisc/ccio-dma.c
+@@ -563,8 +563,6 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
+ 	/* We currently only support kernel addresses */
+ 	BUG_ON(sid != KERNEL_SPACE);
  
--	extra_size = ALIGN(extra_size, sizeof(*entity->pads));
-+	extra_size = roundup(extra_size, sizeof(*entity->pads));
- 	num_inputs = (type & UVC_TERM_OUTPUT) ? num_pads : num_pads - 1;
- 	size = sizeof(*entity) + extra_size + sizeof(*entity->pads) * num_pads
- 	     + num_inputs;
+-	mtsp(sid,1);
+-
+ 	/*
+ 	** WORD 1 - low order word
+ 	** "hints" parm includes the VALID bit!
+@@ -595,7 +593,7 @@ ccio_io_pdir_entry(u64 *pdir_ptr, space_
+ 	** Grab virtual index [0:11]
+ 	** Deposit virt_idx bits into I/O PDIR word
+ 	*/
+-	asm volatile ("lci %%r0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
++	asm volatile ("lci %%r0(%1), %0" : "=r" (ci) : "r" (vba));
+ 	asm volatile ("extru %1,19,12,%0" : "+r" (ci) : "r" (ci));
+ 	asm volatile ("depw  %1,15,12,%0" : "+r" (pa) : "r" (ci));
+ 
+--- a/drivers/parisc/sba_iommu.c
++++ b/drivers/parisc/sba_iommu.c
+@@ -573,8 +573,7 @@ sba_io_pdir_entry(u64 *pdir_ptr, space_t
+ 	pa = virt_to_phys(vba);
+ 	pa &= IOVP_MASK;
+ 
+-	mtsp(sid,1);
+-	asm("lci 0(%%sr1, %1), %0" : "=r" (ci) : "r" (vba));
++	asm("lci 0(%1), %0" : "=r" (ci) : "r" (vba));
+ 	pa |= (ci >> PAGE_SHIFT) & 0xff;  /* move CI (8 bits) into lowest byte */
+ 
+ 	pa |= SBA_PDIR_VALID_BIT;	/* set "valid" bit */
 
 
