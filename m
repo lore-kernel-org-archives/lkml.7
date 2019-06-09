@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBF6C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB8DC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F1F20833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA05F20833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098813;
-	bh=bwyXJV/i6Cz9wgQVlQ1/RRjYKJRmf1/4zAy7S3ziSJc=;
+	s=default; t=1560098815;
+	bh=LAkGr4EgD4E2m/XRLemu6Xn8VLu+aT9IPjGDC9kYBMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUSNwTfgVPbJAtHIRIlqXXpBk9Vb8S23GZopX8ps0KW4zIRXeajVnZ6SaYwp8zx5c
-	 QMjBHvqCEGwnsSD73NFWZW+4d4pdG4dGcKbtCQHjJQL9tFQNMCjknEhLlmwt/JQ2Vq
-	 b2ZZmlITn3pSGwOOmrkhvxYj2jkEF9AAeXQYzHaM=
+	b=hMzB8LI68JtVYBSoP4Kp8qaNnVLFqsUcN4gmKtd65Y1Ersuj+V9DtgOxaBi3yWrZF
+	 VekK+IGFWZnhrcFJE16fXodSSFtiHrJ3uBw7VoCTkuzjYV115/qTQTG6zboYgXzGZz
+	 hpjlqB1shuu8ZAkhVGxJN8xz0Y/PfOa+Q1lix2DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbfFIQqw (ORCPT
+        id S1730666AbfFIQqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:46:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45198 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:46:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730623AbfFIQqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:46:48 -0400
+        id S1729372AbfFIQqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:46:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BD2920833;
-        Sun,  9 Jun 2019 16:46:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9FD2081C;
+        Sun,  9 Jun 2019 16:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098807;
-        bh=bwyXJV/i6Cz9wgQVlQ1/RRjYKJRmf1/4zAy7S3ziSJc=;
+        s=default; t=1560098810;
+        bh=LAkGr4EgD4E2m/XRLemu6Xn8VLu+aT9IPjGDC9kYBMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CeAGYSl+4Ca2nzIgf623k4xNwmBmU8SCjV1B2u7TMj59x97IPxqP7WYFv/7SPEVsS
-         fqBZW90S/fBU0gWly5M7zZy3LUO4X39L5uqV2d2g5zeZ2y6RHgMJPZ07WjvzIgECjo
-         0/pXEq0ELfgRHPfBDCW+w2/Z8qFbR0NvcF8IxlFA=
+        b=18tXHqAN5d0iGbnbsc1SHJZJBzZ6Bqg6PG+VWN9qA501cqUtG/5+0MmRgvG/j1qx7
+         zl6WvGPs1dhmy5BdbYIWpIkFYzbMwBaHoFkIQBmTAulXCrq8lpbHEq5aL7TFjlFV1d
+         BNVhFckm2SyhFibbB6JuwExL5FNK6DOWM5pyWaLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: [PATCH 5.1 67/70] drm: dont block fb changes for async plane updates
-Date:   Sun,  9 Jun 2019 18:42:18 +0200
-Message-Id: <20190609164133.034738995@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Tina Zhang <tina.zhang@intel.com>
+Subject: [PATCH 5.1 68/70] drm/i915/gvt: Initialize intel_gvt_gtt_entry in stack
+Date:   Sun,  9 Jun 2019 18:42:19 +0200
+Message-Id: <20190609164133.097697965@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -61,132 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Tina Zhang <tina.zhang@intel.com>
 
-commit 89a4aac0ab0e6f5eea10d7bf4869dd15c3de2cd4 upstream.
+commit 387a4c2b55291b37e245c840813bd8a8bd06ed49 upstream.
 
-In the case of a normal sync update, the preparation of framebuffers (be
-it calling drm_atomic_helper_prepare_planes() or doing setups with
-drm_framebuffer_get()) are performed in the new_state and the respective
-cleanups are performed in the old_state.
+Stack struct intel_gvt_gtt_entry value needs to be initialized before
+being used, as the fields may contain garbage values.
 
-In the case of async updates, the preparation is also done in the
-new_state but the cleanups are done in the new_state (because updates
-are performed in place, i.e. in the current state).
+W/o this patch, set_ggtt_entry prints:
+-------------------------------------
+274.046840: set_ggtt_entry: vgpu1:set ggtt entry 0x9bed8000ffffe900
+274.046846: set_ggtt_entry: vgpu1:set ggtt entry 0xe55df001
+274.046852: set_ggtt_entry: vgpu1:set ggtt entry 0x9bed8000ffffe900
 
-The current code blocks async udpates when the fb is changed, turning
-async updates into sync updates, slowing down cursor updates and
-introducing regressions in igt tests with errors of type:
+0x9bed8000 is the stack grabage.
 
-"CRITICAL: completed 97 cursor updated in a period of 30 flips, we
-expect to complete approximately 15360 updates, with the threshold set
-at 7680"
+W/ this patch, set_ggtt_entry prints:
+------------------------------------
+274.046840: set_ggtt_entry: vgpu1:set ggtt entry 0xffffe900
+274.046846: set_ggtt_entry: vgpu1:set ggtt entry 0xe55df001
+274.046852: set_ggtt_entry: vgpu1:set ggtt entry 0xffffe900
 
-Fb changes in async updates were prevented to avoid the following scenario:
+v2:
+- Initialize during declaration. (Zhenyu)
 
-- Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
-Where we have a single call to prepare fb2 but double cleanup call to fb2.
-
-To solve the above problems, instead of blocking async fb changes, we
-place the old framebuffer in the new_state object, so when the code
-performs cleanups in the new_state it will cleanup the old_fb and we
-will have the following scenario instead:
-
-- Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
-- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
-- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
-
-Where calls to prepare/cleanup are balanced.
-
-Cc: <stable@vger.kernel.org> # v4.14+
-Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
-Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190603165610.24614-6-helen.koike@collabora.com
+Fixes: 7598e8700e9a ("drm/i915/gvt: Missed to cancel dma map for ggtt entries")
+Cc: stable@vger.kernel.org # v4.20+
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_atomic_helper.c      |   22 ++++++++++++----------
- include/drm/drm_modeset_helper_vtables.h |    8 ++++++++
- 2 files changed, 20 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/i915/gvt/gtt.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1607,15 +1607,6 @@ int drm_atomic_helper_async_check(struct
- 	    old_plane_state->crtc != new_plane_state->crtc)
- 		return -EINVAL;
+--- a/drivers/gpu/drm/i915/gvt/gtt.c
++++ b/drivers/gpu/drm/i915/gvt/gtt.c
+@@ -2178,7 +2178,8 @@ static int emulate_ggtt_mmio_write(struc
+ 	struct intel_gvt_gtt_pte_ops *ops = gvt->gtt.pte_ops;
+ 	unsigned long g_gtt_index = off >> info->gtt_entry_size_shift;
+ 	unsigned long gma, gfn;
+-	struct intel_gvt_gtt_entry e, m;
++	struct intel_gvt_gtt_entry e = {.val64 = 0, .type = GTT_TYPE_GGTT_PTE};
++	struct intel_gvt_gtt_entry m = {.val64 = 0, .type = GTT_TYPE_GGTT_PTE};
+ 	dma_addr_t dma_addr;
+ 	int ret;
+ 	struct intel_gvt_partial_pte *partial_pte, *pos, *n;
+@@ -2245,7 +2246,8 @@ static int emulate_ggtt_mmio_write(struc
  
--	/*
--	 * FIXME: Since prepare_fb and cleanup_fb are always called on
--	 * the new_plane_state for async updates we need to block framebuffer
--	 * changes. This prevents use of a fb that's been cleaned up and
--	 * double cleanups from occuring.
--	 */
--	if (old_plane_state->fb != new_plane_state->fb)
--		return -EINVAL;
--
- 	funcs = plane->helper_private;
- 	if (!funcs->atomic_async_update)
- 		return -EINVAL;
-@@ -1646,6 +1637,8 @@ EXPORT_SYMBOL(drm_atomic_helper_async_ch
-  * drm_atomic_async_check() succeeds. Async commits are not supposed to swap
-  * the states like normal sync commits, but just do in-place changes on the
-  * current state.
-+ *
-+ * TODO: Implement full swap instead of doing in-place changes.
-  */
- void drm_atomic_helper_async_commit(struct drm_device *dev,
- 				    struct drm_atomic_state *state)
-@@ -1656,6 +1649,9 @@ void drm_atomic_helper_async_commit(stru
- 	int i;
+ 	if (!partial_update && (ops->test_present(&e))) {
+ 		gfn = ops->get_pfn(&e);
+-		m = e;
++		m.val64 = e.val64;
++		m.type = e.type;
  
- 	for_each_new_plane_in_state(state, plane, plane_state, i) {
-+		struct drm_framebuffer *new_fb = plane_state->fb;
-+		struct drm_framebuffer *old_fb = plane->state->fb;
-+
- 		funcs = plane->helper_private;
- 		funcs->atomic_async_update(plane, plane_state);
- 
-@@ -1664,11 +1660,17 @@ void drm_atomic_helper_async_commit(stru
- 		 * plane->state in-place, make sure at least common
- 		 * properties have been properly updated.
- 		 */
--		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
-+		WARN_ON_ONCE(plane->state->fb != new_fb);
- 		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
- 		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
- 		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
- 		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
-+
-+		/*
-+		 * Make sure the FBs have been swapped so that cleanups in the
-+		 * new_state performs a cleanup in the old FB.
-+		 */
-+		WARN_ON_ONCE(plane_state->fb != old_fb);
- 	}
- }
- EXPORT_SYMBOL(drm_atomic_helper_async_commit);
---- a/include/drm/drm_modeset_helper_vtables.h
-+++ b/include/drm/drm_modeset_helper_vtables.h
-@@ -1178,6 +1178,14 @@ struct drm_plane_helper_funcs {
- 	 * current one with the new plane configurations in the new
- 	 * plane_state.
- 	 *
-+	 * Drivers should also swap the framebuffers between current plane
-+	 * state (&drm_plane.state) and new_state.
-+	 * This is required since cleanup for async commits is performed on
-+	 * the new state, rather than old state like for traditional commits.
-+	 * Since we want to give up the reference on the current (old) fb
-+	 * instead of our brand new one, swap them in the driver during the
-+	 * async commit.
-+	 *
- 	 * FIXME:
- 	 *  - It only works for single plane updates
- 	 *  - Async Pageflips are not supported yet
+ 		/* one PTE update may be issued in multiple writes and the
+ 		 * first write may not construct a valid gfn
 
 
