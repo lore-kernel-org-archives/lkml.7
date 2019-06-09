@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90941C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C69C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1142081C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30462204EC
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099251;
-	bh=D0PW0N1prNDaAqH8AodtPwEokDA9gqUJBSfCTMVS6Fc=;
+	s=default; t=1560099255;
+	bh=wM8+B39AJFJBYFNNMwIZM79LNZKa3Xj6rCHc923s3GE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0TpaRpK9bJOJExP1zE8C6/kZ+dL4kkw6SaNu3E1R8eBitjf1Zsw7lKHr7n+2IIuXw
-	 msAeV9Hj3SBd0gbjWJRZnp9dtY6gPsvuya9X15Vam6RJvweDVHvCBupQNidc4QaGOz
-	 Bew2g1rH/yK0d/gx0/qqdJCKVJ/D+o32aH05/Wgw=
+	b=J/+55HuLE5hfB8P2AHG7b/C3QX5tF12aOy3WWZPu/hoM8kWGf9Z8gZPEvCWxoMHu0
+	 A1zQyJLOG0CeZ6+4tS30yHjJQw9XdofX56UBMXJLhDtqauB5w9SiyeOoZVQXrNl5x0
+	 yghUo221n/P2IjYcPNT/OXHBW5nIxDsLtoep4ud0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732118AbfFIQyK (ORCPT
+        id S1732559AbfFIQyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:54:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55622 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732529AbfFIQyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:54:05 -0400
+        id S1732529AbfFIQyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:54:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38ADA206BB;
-        Sun,  9 Jun 2019 16:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 004CD205ED;
+        Sun,  9 Jun 2019 16:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099244;
-        bh=D0PW0N1prNDaAqH8AodtPwEokDA9gqUJBSfCTMVS6Fc=;
+        s=default; t=1560099250;
+        bh=wM8+B39AJFJBYFNNMwIZM79LNZKa3Xj6rCHc923s3GE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qnOfNRpFslIGo4eQHRX7UhwYzk8q6CWTrtHa4eUqWqtCv+/pIVNBNBCVzK2SaDm8N
-         SprnW5otXd0bl/nvhA5ajggmjfS3QhFTP6E3YjadSi21lEz6tyLQ84kYHQZoMKeQWY
-         Yb0VjYjKI/ghBWyC9zZHf8fMmo3D11wLl3uejbvQ=
+        b=rUUTt4GD5Vn8LGdsFl06GQgZUHqNajPoC6lh3PexGGFK6IvjUwfwwRdCs8bIkzkW3
+         KfPx4oKaMBh4DvIWUZgjc8kkt1zRTF/tK4LbNnCn+1IK+4TVx7/upKlI5Z1CVI13CT
+         5bbyGxfHDomCdjwk418e9+yU3d9mp72FntmZoXDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, oliver Neukum <oneukum@suse.com>,
-        syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 27/83] USB: sisusbvga: fix oops in error path of sisusb_probe
-Date:   Sun,  9 Jun 2019 18:41:57 +0200
-Message-Id: <20190609164129.891408469@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+35f04d136fc975a70da4@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 29/83] USB: rio500: refuse more than one device at a time
+Date:   Sun,  9 Jun 2019 18:41:59 +0200
+Message-Id: <20190609164130.117291274@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -61,53 +61,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 9a5729f68d3a82786aea110b1bfe610be318f80a upstream.
+commit 3864d33943b4a76c6e64616280e98d2410b1190f upstream.
 
-The pointer used to log a failure of usb_register_dev() must
-be set before the error is logged.
+This driver is using a global variable. It cannot handle more than
+one device at a time. The issue has been existing since the dawn
+of the driver.
 
-v2: fix that minor is not available before registration
-
-Signed-off-by: oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+a0cbdbd6d169020c8959@syzkaller.appspotmail.com
-Fixes: 7b5cd5fefbe02 ("USB: SisUSB2VGA: Convert printk to dev_* macros")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+35f04d136fc975a70da4@syzkaller.appspotmail.com
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/sisusbvga/sisusb.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/usb/misc/rio500.c |   24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/misc/sisusbvga/sisusb.c
-+++ b/drivers/usb/misc/sisusbvga/sisusb.c
-@@ -3041,6 +3041,13 @@ static int sisusb_probe(struct usb_inter
+--- a/drivers/usb/misc/rio500.c
++++ b/drivers/usb/misc/rio500.c
+@@ -464,15 +464,23 @@ static int probe_rio(struct usb_interfac
+ {
+ 	struct usb_device *dev = interface_to_usbdev(intf);
+ 	struct rio_usb_data *rio = &rio_instance;
+-	int retval;
++	int retval = 0;
  
- 	mutex_init(&(sisusb->lock));
+-	dev_info(&intf->dev, "USB Rio found at address %d\n", dev->devnum);
++	mutex_lock(&rio500_mutex);
++	if (rio->present) {
++		dev_info(&intf->dev, "Second USB Rio at address %d refused\n", dev->devnum);
++		retval = -EBUSY;
++		goto bail_out;
++	} else {
++		dev_info(&intf->dev, "USB Rio found at address %d\n", dev->devnum);
++	}
  
-+	sisusb->sisusb_dev = dev;
-+	sisusb->vrambase   = SISUSB_PCI_MEMBASE;
-+	sisusb->mmiobase   = SISUSB_PCI_MMIOBASE;
-+	sisusb->mmiosize   = SISUSB_PCI_MMIOSIZE;
-+	sisusb->ioportbase = SISUSB_PCI_IOPORTBASE;
-+	/* Everything else is zero */
-+
- 	/* Register device */
- 	retval = usb_register_dev(intf, &usb_sisusb_class);
+ 	retval = usb_register_dev(intf, &usb_rio_class);
  	if (retval) {
-@@ -3051,13 +3058,7 @@ static int sisusb_probe(struct usb_inter
- 		goto error_1;
+ 		dev_err(&dev->dev,
+ 			"Not able to get a minor for this device.\n");
+-		return -ENOMEM;
++		retval = -ENOMEM;
++		goto bail_out;
  	}
  
--	sisusb->sisusb_dev = dev;
--	sisusb->minor      = intf->minor;
--	sisusb->vrambase   = SISUSB_PCI_MEMBASE;
--	sisusb->mmiobase   = SISUSB_PCI_MMIOBASE;
--	sisusb->mmiosize   = SISUSB_PCI_MMIOSIZE;
--	sisusb->ioportbase = SISUSB_PCI_IOPORTBASE;
--	/* Everything else is zero */
-+	sisusb->minor = intf->minor;
+ 	rio->rio_dev = dev;
+@@ -481,7 +489,8 @@ static int probe_rio(struct usb_interfac
+ 		dev_err(&dev->dev,
+ 			"probe_rio: Not enough memory for the output buffer\n");
+ 		usb_deregister_dev(intf, &usb_rio_class);
+-		return -ENOMEM;
++		retval = -ENOMEM;
++		goto bail_out;
+ 	}
+ 	dev_dbg(&intf->dev, "obuf address:%p\n", rio->obuf);
  
- 	/* Allocate buffers */
- 	sisusb->ibufsize = SISUSB_IBUF_SIZE;
+@@ -490,7 +499,8 @@ static int probe_rio(struct usb_interfac
+ 			"probe_rio: Not enough memory for the input buffer\n");
+ 		usb_deregister_dev(intf, &usb_rio_class);
+ 		kfree(rio->obuf);
+-		return -ENOMEM;
++		retval = -ENOMEM;
++		goto bail_out;
+ 	}
+ 	dev_dbg(&intf->dev, "ibuf address:%p\n", rio->ibuf);
+ 
+@@ -498,8 +508,10 @@ static int probe_rio(struct usb_interfac
+ 
+ 	usb_set_intfdata (intf, rio);
+ 	rio->present = 1;
++bail_out:
++	mutex_unlock(&rio500_mutex);
+ 
+-	return 0;
++	return retval;
+ }
+ 
+ static void disconnect_rio(struct usb_interface *intf)
 
 
