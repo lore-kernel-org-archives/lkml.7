@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D43C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBF4C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2162084A
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF422083D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098747;
-	bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
+	s=default; t=1560098751;
+	bh=3QIcKu0AVrUSUlmPC59YAtlLMAzQkttuqt2FFBAOSwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fIjbIaTeeOP2CCd+x8pVJacx6uPsHgeCtoIDULQrOARNVJG5eF1SgduahHWr6EGxQ
-	 N0Hb3klbnv3BnsP3NvL0VodmQUhosQywLZt/KEq+npBfSJ6AGPDwdDWo3jwljG/QwL
-	 CD3S18aFa/qV5RP/0oHdMW2NEo89NpFhFYknHp5U=
+	b=fxsX1U3B+UwklTktjl0cSayNgKvLVwqfV9YXgl0H326KrqgC1uMl8nV3q5pilOcbg
+	 ouaPuDWb3Nh8pXn+kVPEm8o85GkmqjKyhAzA9Nd9aTNdG+5pY1UvuOeUXOqIgb04Nq
+	 V+sLPfqttEAyki2+q0RV9zL7zZbV11qky3hfF8o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbfFIQpq (ORCPT
+        id S1730109AbfFIQpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:45:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43606 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730033AbfFIQpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:43 -0400
+        id S1730033AbfFIQps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C1702083D;
-        Sun,  9 Jun 2019 16:45:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFE7C20833;
+        Sun,  9 Jun 2019 16:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098742;
-        bh=TJCm5AsGVKgzsrO8Flov/50oIA64VW2TAdaGPxGaYm0=;
+        s=default; t=1560098747;
+        bh=3QIcKu0AVrUSUlmPC59YAtlLMAzQkttuqt2FFBAOSwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2qylCrXwmupjvbIXv2h7FRWKdojG2pxBXbplrrY59vl5EJ9xaR2Mr7ZCTTbGyW4XK
-         akd6CQGsduTJWmOZEi5we47qxOtuBU8GR93eU+nyImCu3sttwRsHeR2HM/XebWfeQ7
-         ytphZodQ11JKYoiG3C44sypeCY3dKLNmlQrJVgpo=
+        b=zEBEtNTn1N6NIvsz9kBY84ySVtzWqMRe3vTPwDoJD+Fu18SH32hyza7KGI/fMmprx
+         7HvgKJVDFDNsHMn5dbYjRRK/0tScv2YeBDOz/a3H1neeS6IIYjgJADDhawp3cTh5gR
+         2GgW6HNTs80ui+g5YnVoWBRR5XdR78hfBODXDkks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Julien Cristau <jcristau@debian.org>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        YunQiang Su <ysu@wavecomp.com>, linux-mips@vger.kernel.org
-Subject: [PATCH 5.1 45/70] MIPS: Bounds check virt_addr_valid
-Date:   Sun,  9 Jun 2019 18:41:56 +0200
-Message-Id: <20190609164131.137151634@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.1 47/70] genwqe: Prevent an integer overflow in the ioctl
+Date:   Sun,  9 Jun 2019 18:41:58 +0200
+Message-Id: <20190609164131.329221760@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -61,71 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 074a1e1167afd82c26f6d03a9a8b997d564bb241 upstream.
+commit 110080cea0d0e4dfdb0b536e7f8a5633ead6a781 upstream.
 
-The virt_addr_valid() function is meant to return true iff
-virt_to_page() will return a valid struct page reference. This is true
-iff the address provided is found within the unmapped address range
-between PAGE_OFFSET & MAP_BASE, but we don't currently check for that
-condition. Instead we simply mask the address to obtain what will be a
-physical address if the virtual address is indeed in the desired range,
-shift it to form a PFN & then call pfn_valid(). This can incorrectly
-return true if called with a virtual address which, after masking,
-happens to form a physical address corresponding to a valid PFN.
+There are a couple potential integer overflows here.
 
-For example we may vmalloc an address in the kernel mapped region
-starting a MAP_BASE & obtain the virtual address:
+	round_up(m->size + (m->addr & ~PAGE_MASK), PAGE_SIZE);
 
-  addr = 0xc000000000002000
+The first thing is that the "m->size + (...)" addition could overflow,
+and the second is that round_up() overflows to zero if the result is
+within PAGE_SIZE of the type max.
 
-When masked by virt_to_phys(), which uses __pa() & in turn CPHYSADDR(),
-we obtain the following (bogus) physical address:
+In this code, the "m->size" variable is an u64 but we're saving the
+result in "map_size" which is an unsigned long and genwqe_user_vmap()
+takes an unsigned long as well.  So I have used ULONG_MAX as the upper
+bound.  From a practical perspective unsigned long is fine/better than
+trying to change all the types to u64.
 
-  addr = 0x2000
-
-In a common system with PHYS_OFFSET=0 this will correspond to a valid
-struct page which should really be accessed by virtual address
-PAGE_OFFSET+0x2000, causing virt_addr_valid() to incorrectly return 1
-indicating that the original address corresponds to a struct page.
-
-This is equivalent to the ARM64 change made in commit ca219452c6b8
-("arm64: Correctly bounds check virt_addr_valid").
-
-This fixes fallout when hardened usercopy is enabled caused by the
-related commit 517e1fbeb65f ("mm/usercopy: Drop extra
-is_vmalloc_or_module() check") which removed a check for the vmalloc
-range that was present from the introduction of the hardened usercopy
-feature.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Reported-by: Julien Cristau <jcristau@debian.org>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Tested-by: YunQiang Su <ysu@wavecomp.com>
-URL: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=929366
-Cc: stable@vger.kernel.org # v4.12+
-Cc: linux-mips@vger.kernel.org
-Cc: Yunqiang Su <ysu@wavecomp.com>
+Fixes: eaf4722d4645 ("GenWQE Character device and DDCB queue")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/mm/mmap.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/misc/genwqe/card_dev.c   |    2 ++
+ drivers/misc/genwqe/card_utils.c |    4 ++++
+ 2 files changed, 6 insertions(+)
 
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -203,6 +203,11 @@ unsigned long arch_randomize_brk(struct
+--- a/drivers/misc/genwqe/card_dev.c
++++ b/drivers/misc/genwqe/card_dev.c
+@@ -780,6 +780,8 @@ static int genwqe_pin_mem(struct genwqe_
  
- int __virt_addr_valid(const volatile void *kaddr)
- {
-+	unsigned long vaddr = (unsigned long)vaddr;
-+
-+	if ((vaddr < PAGE_OFFSET) || (vaddr >= MAP_BASE))
-+		return 0;
-+
- 	return pfn_valid(PFN_DOWN(virt_to_phys(kaddr)));
- }
- EXPORT_SYMBOL_GPL(__virt_addr_valid);
+ 	if ((m->addr == 0x0) || (m->size == 0))
+ 		return -EINVAL;
++	if (m->size > ULONG_MAX - PAGE_SIZE - (m->addr & ~PAGE_MASK))
++		return -EINVAL;
+ 
+ 	map_addr = (m->addr & PAGE_MASK);
+ 	map_size = round_up(m->size + (m->addr & ~PAGE_MASK), PAGE_SIZE);
+--- a/drivers/misc/genwqe/card_utils.c
++++ b/drivers/misc/genwqe/card_utils.c
+@@ -586,6 +586,10 @@ int genwqe_user_vmap(struct genwqe_dev *
+ 	/* determine space needed for page_list. */
+ 	data = (unsigned long)uaddr;
+ 	offs = offset_in_page(data);
++	if (size > ULONG_MAX - PAGE_SIZE - offs) {
++		m->size = 0;	/* mark unused and not added */
++		return -EINVAL;
++	}
+ 	m->nr_pages = DIV_ROUND_UP(offs + size, PAGE_SIZE);
+ 
+ 	m->page_list = kcalloc(m->nr_pages,
 
 
