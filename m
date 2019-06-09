@@ -6,61 +6,63 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2DDC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94846C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5B92080C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE56206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 22:07:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cl0rVA3z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g+6Vbl0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbfFIVwV (ORCPT
+        id S1729765AbfFIWHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 17:52:21 -0400
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:34189 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbfFIVwV (ORCPT
+        Sun, 9 Jun 2019 18:07:00 -0400
+Received: from mail-lj1-f172.google.com ([209.85.208.172]:45363 "EHLO
+        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729386AbfFIWHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 17:52:21 -0400
-Received: by mail-lj1-f182.google.com with SMTP id p17so1240221ljg.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 14:52:19 -0700 (PDT)
+        Sun, 9 Jun 2019 18:07:00 -0400
+Received: by mail-lj1-f172.google.com with SMTP id m23so6137930lje.12
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 15:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3u47NK04VLWnks2ECFn41iwvdVn3zhAxLH2OdU56Dmw=;
-        b=Cl0rVA3z38e6L8+wW94OpWj72TSurDFbVXa3pn24DZWJJzrOrvC+fdcaUtFQndqIgP
-         txxwbLiEo1JBtH/op3umTaxckv2djd/WaR5I5qa+EGNTpKe0HtK0Tq8lpu4RgQ+aidH1
-         RQN+njo2AS3nHqvbBnl0jOecogbHfZyq2ZQoBr6Un7SjO9AiaCcnPinHmJPgJB5ysgy5
-         i4n1mXa2crZfqK3FvymkbMZneKJ/uEnHKZlQ/hZb3BaKT89F9FiUvIiAc0qIjTvgsyHc
-         GdMMVySRP+4084kUDTBoax7mRi1FuV0caKswGmr9183KWlYwKXnOIZg9Gxdz/EPAQTx5
-         IU6A==
+        bh=50GXZwDHzCmpvzbBJ8yBES+uMhcVk2V2rV15ilN2B0c=;
+        b=g+6Vbl0iiwSmN9H6YowhpGLJ73aounTBDzKhwymCbPXUe3YFtgu1z4wNCKLkILsZs/
+         FKkBcFH//l4EcaLCokbemf+udf2+h3MZo4BZFRGYU0k7TFa+hJCq1VGJB8Umrkcd98kp
+         lkU4Vk37IHqN9wT2FoTtsaWc4lSpIcqfaJWjxgoAuWi5z29YyrlYWbhjuKr84CHN2XUL
+         C2Bgw1IznFw2WLjGRQbyFjkn0b3MoPs5N/0e4hn/Gacris0AR8lDHFeUzYiZwq4bXQfE
+         jk4STLcb4kxRKe1TPxcO+kpC+f7ibP9nIBlvBlZvmdNUtRzohvJfxSy8G4TpJbomtPW1
+         PR3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3u47NK04VLWnks2ECFn41iwvdVn3zhAxLH2OdU56Dmw=;
-        b=pj+cIWDeoumZ59zlTVa+5KlAkSyBC+EppwqCIWKpQ1UZClcG6c9267/sbiNuSU/iLS
-         rZ72EM6AYvZQ58zp6lAHt7Kx7Erz/GKiaVNCp9hweEZuAy3KPneXtW7WIqTqCRb1EcsP
-         1UXE6L8wjFPxHm4prmyeycu3tkZ05UTP/HDn8OIg+kSDX4FLzMz4G0Cc6VTpEB3TbDFS
-         sPydDmPocdqdqzE7UMlwau/trvNLIeNw816mG6uGc2svs7Be1q+pmfC8BNDD4TR0Kumn
-         tBs8aSVWcC7/His/h8iT8xURqjHMkvQ2HLBJoGS36dACYKMBr4HYSKrFzG8s9qtZFegE
-         4u6Q==
-X-Gm-Message-State: APjAAAU9dGSfUe11XlbYaBS/Modd5Ct2mXTkAJeY7o7KkaJF3p5Tt1Ee
-        ImgVWZExmOsCoDt30AtsDh+CcBW33BjUSPpIgckeVCye
-X-Google-Smtp-Source: APXvYqxxvAPH8DO2c0X0YBL0L2eBq2A1RkbOzyw6mq+phUKB0rDXYXygI1YbFcBf/zVxAnxBKN7lStrxUTnG75YtXlc=
-X-Received: by 2002:a2e:9753:: with SMTP id f19mr10655574ljj.113.1560117139172;
- Sun, 09 Jun 2019 14:52:19 -0700 (PDT)
+        bh=50GXZwDHzCmpvzbBJ8yBES+uMhcVk2V2rV15ilN2B0c=;
+        b=stExb5rvWz91XnrnoX9Ej6SAe0xzleSxFnl6eZ9kbNQxtDPesCf1pg8Z7+hKyjgqIa
+         YTIiZngky+wdjQ361jHxX5M+xtyUWb92KtKZZHCsFi8wUM+bXDeU42X0KvDz+mLeiwqM
+         wLhRs5RudWxFFFy+/XYvzwHFD+l1QyNRc3gMybYlnFF8BtXVU8/numgSvTK2vXrI5ri6
+         rHCGFz9EftjVmv7juIsxWmLx+XG15ppfHaOIwSYW7avQXQBL+ExMmaG2FnNnCxVTkFoa
+         +e6ZKUF2oFAY9xaXwgQe+OB5+NwUo4J9IiqQcJb3MgcWXg5i5MVi4ad+g6MHfUy3oUSe
+         GIpg==
+X-Gm-Message-State: APjAAAXjYCxtUvHIFlcD6TfHHaNEGa7b0UymZLNkU8foaAXMSLzXqPNj
+        y1GhMGT9sB7G5C1cQ4LSDW/DNk7E1rnCcbqzUtTLGQ==
+X-Google-Smtp-Source: APXvYqyA9vzJYqRBM9b+TZM/4DaVcMYzTW8e9CaOv9ikhog+XAeu8+oeZTxmSSNapo5H1D99QLI3ZR7brOWlp3Po/C4=
+X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr25061179lje.46.1560118018248;
+ Sun, 09 Jun 2019 15:06:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com> <20190609204510.GB8247@lunn.ch>
-In-Reply-To: <20190609204510.GB8247@lunn.ch>
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+ <20190609180621.7607-6-martin.blumenstingl@googlemail.com>
+ <CACRpkdYzeiLB7Yuixv6NsnLJoa_FnGKRHHQm=t4gMH34NdFSYA@mail.gmail.com> <CAFBinCBgoLb+Hfdo-sZ_0H6ct=UJm7j6wD_C6udbA6BTRvFOWQ@mail.gmail.com>
+In-Reply-To: <CAFBinCBgoLb+Hfdo-sZ_0H6ct=UJm7j6wD_C6udbA6BTRvFOWQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 9 Jun 2019 23:52:12 +0200
-Message-ID: <CACRpkdbOnxZJZ=Lvv0mbnrCg8kPWyeRsBbOa2cUiwjcPnR=4RA@mail.gmail.com>
-Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset GPIO
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        netdev <netdev@vger.kernel.org>,
+Date:   Mon, 10 Jun 2019 00:06:51 +0200
+Message-ID: <CACRpkdYur+dwC1LqasQR-cvTWcpV12vr+8Wi5o9kXVWe-0teZw@mail.gmail.com>
+Subject: Re: [RFC next v1 5/5] arm64: dts: meson: g12a: x96-max: fix the
+ Ethernet PHY reset line
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     netdev <netdev@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -69,25 +71,75 @@ Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Jose Abreu <joabreu@synopsys.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 10:45 PM Andrew Lunn <andrew@lunn.ch> wrote:
+On Sun, Jun 9, 2019 at 11:36 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 
-> Linus can probably create a stable branch with the GPIO changes, which
-> David can pull into net-next, and then apply the stmmac changes on
-> top.
+> > If "snps,reset-active-low" was set it results in the sequence 1, 0, 1
+> > if it is not set it results in the sequence 0, 1, 0.
+>
+> I'm changing this logic with earlier patches of this series.
+> can you please look at these as well because GPIO_OPEN_SOURCE doesn't
+> work with the old version of stmmac_mdio_reset() that you are showing.
 
-Sure thing, just tell me what to queue and I'll create an immutable
-branch for this that David can pull.
+OK but the logic is the same, just that the polarity handling is moved
+into gpiolib.
+
+> > The high (reset) is asserted by switching the pin into high-z open drain
+> > mode, which happens by switching the line into input mode in some
+> > cases.
+> >
+> > I think the real reason it works now is that reset is actually active high.
+>
+> let me write down what I definitely know so far
+>
+> the RTL8211F PHY wants the reset line to be LOW for a few milliseconds
+> to put it into reset mode.
+> driving the reset line HIGH again takes it out of reset.
+>
+> Odroid-N2's schematics [0] (page 30) shows that there's a pull-up for
+> the PHYRSTB pin, which is also connected to the NRST signal which is
+> GPIOZ_15
+
+Looks correct, R143 is indeed a pull up indicating that the line is
+open drain, active low.
+
+> > It makes a lot of sense, since if it resets the device when set as input
+> > (open drain) it holds all devices on that line in reset, which is likely
+> > what you want as most GPIOs come up as inputs (open drain).
+> > A pull-up resistor will ascertain that the devices are in reset.
+>
+> my understanding is that the pull-up resistor holds it out of reset
+> driving GPIOZ_15's (open drain) output LOW pulls the signal to ground
+> and asserts the reset
+
+Yep that seems correct.
+
+Oh I guess it is this:
+
+        amlogic,tx-delay-ns = <2>;
+-       snps,reset-gpio = <&gpio GPIOZ_14 0>;
++       snps,reset-gpio = <&gpio GPIOZ_15 GPIO_OPEN_SOURCE>;
+        snps,reset-delays-us = <0 10000 1000000>;
+-       snps,reset-active-low;
+
+Can you try:
+snps,reset-gpio = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+?
+
+Open source is nominally (and rarely) used for lines that are active high.
+For lines that are active low, we want to use open drain combined
+with active low.
 
 Yours,
 Linus Walleij
