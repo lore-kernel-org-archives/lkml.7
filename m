@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDD4C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989C0C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E50D214AF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E23420868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbfFINmX (ORCPT
+        id S1729348AbfFINmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 09:42:23 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32103 "EHLO mga11.intel.com"
+        Sun, 9 Jun 2019 09:42:36 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32101 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728920AbfFINlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728864AbfFINlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 9 Jun 2019 09:41:18 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jun 2019 06:41:18 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jun 2019 06:41:17 -0700
 X-ExtLoop1: 1
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 09 Jun 2019 06:41:18 -0700
+  by orsmga003.jf.intel.com with ESMTP; 09 Jun 2019 06:41:17 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
@@ -41,9 +41,9 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         "Lu Baolu" <baolu.lu@linux.intel.com>,
         Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 10/22] iommu: Fix compile error without IOMMU_API
-Date:   Sun,  9 Jun 2019 06:44:10 -0700
-Message-Id: <1560087862-57608-11-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v4 07/22] iommu: Use device fault trace event
+Date:   Sun,  9 Jun 2019 06:44:07 -0700
+Message-Id: <1560087862-57608-8-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -52,34 +52,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct page_response_msg needs to be defined outside CONFIG_IOMMU_API.
+For performance and debugging purposes, these trace events help
+analyzing device faults that interact with IOMMU subsystem.
+E.g.
+IOMMU:0000:00:0a.0 type=2 reason=0 addr=0x00000000007ff000 pasid=1
+group=1 last=0 prot=1
 
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+[JPB: removed invalidate event, that will be added later]
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 ---
- include/linux/iommu.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/iommu/iommu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 7a37336..8d766a8 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -189,8 +189,6 @@ struct iommu_sva_ops {
- 	iommu_mm_exit_handler_t mm_exit;
- };
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 64e87d5..166adb8 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1032,6 +1032,7 @@ int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
+ 	}
  
--#ifdef CONFIG_IOMMU_API
--
- /**
-  * enum page_response_code - Return status of fault handlers, telling the IOMMU
-  * driver how to proceed with the fault.
-@@ -227,6 +225,7 @@ struct page_response_msg {
- 	u64 iommu_data;
- };
- 
-+#ifdef CONFIG_IOMMU_API
- /**
-  * struct iommu_ops - iommu ops and capabilities
-  * @capable: check capability
+ 	ret = fparam->handler(evt, fparam->data);
++	trace_dev_fault(dev, &evt->fault);
+ done_unlock:
+ 	mutex_unlock(&param->lock);
+ 	return ret;
+@@ -1604,6 +1605,7 @@ int iommu_page_response(struct device *dev,
+ 		if (evt->fault.prm.pasid == msg->pasid &&
+ 		    evt->fault.prm.grpid == msg->grpid) {
+ 			msg->iommu_data = evt->iommu_private;
++			trace_dev_page_response(dev, msg);
+ 			ret = domain->ops->page_response(dev, msg);
+ 			list_del(&evt->list);
+ 			kfree(evt);
 -- 
 2.7.4
 
