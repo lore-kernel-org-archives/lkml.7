@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9579AC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6054C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4792067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6F62067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100659;
-	bh=GLP0+RZM/cxX0XznA1xTTCFuzjQJbaxieRi83J0s7pk=;
+	s=default; t=1560100663;
+	bh=XbF+Fbw0YUo7hx0ywMUR4QLETQp349Wrkcg+6+6D23A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BjE+TnVvnhX93ALuU31BlQye160BQFRcBt1kfzHOdrMYHf48Z3Ovl9Fk5IA6L6tLV
-	 hxjMQl8UNXIDaInT0Ki8NJO0EbTx35hwWyxEbveDu1FSE8qhQESLx5Vj9ajpNviWfx
-	 8PdzZdIvsuwiVpp+cBLbSQE3clE1gjb8l+WNJY9M=
+	b=CsNNdwfnmoHefoymrQuiK2H2/elkDdfD38KpnaKS4NR3TPM0Q1Besa8WYoJ7ZiV25
+	 Gsv9DVtJJXzYibwzW4RMWSWhRyFUtgR7nh6sotwJv1U1RjfxZPexcNUdvCatxIZBEX
+	 0IWMiNcb0H2sYbTN0W26JW0EnqaLsz6nfmGOYHqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731988AbfFIQvk (ORCPT
+        id S1731516AbfFIQvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:51:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51986 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731967AbfFIQvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:51:35 -0400
+        id S1731955AbfFIQvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5254120840;
-        Sun,  9 Jun 2019 16:51:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 545842070B;
+        Sun,  9 Jun 2019 16:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099094;
-        bh=GLP0+RZM/cxX0XznA1xTTCFuzjQJbaxieRi83J0s7pk=;
+        s=default; t=1560099091;
+        bh=XbF+Fbw0YUo7hx0ywMUR4QLETQp349Wrkcg+6+6D23A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gf1l9MH6D4HOItikrQV9jRMuRDQRGTlPzkZ5pFiyJi68IqMfO8eZp8ZPghsiXe9WH
-         fkBIGeyt/PhvAJjjG/r9lUWdc5JVZkLTOMPVJmf74l64RJVG/vdkinWga0wheznNAj
-         kYHKlbKQRvMPFtZtRCVgvSu66Gtg0zDrQyxTJ0Ck=
+        b=TLgotTfFn1r9O9a71eImyg1Cxw79OAIdCAh524AfqUz2jyvNXVfFwP1XE3F7pjfX/
+         hvs/ke/2VgnVMu+Iis4ZNhhgePNtDvc5OjPOHJfnm2yddeV6mneKruIzy2DFUANyNt
+         TCj8TJRpNwHca/tgIRTi6RquNNtUfQwsJsGbdBnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.14 15/35] fuse: fallocate: fix return with locked inode
-Date:   Sun,  9 Jun 2019 18:42:21 +0200
-Message-Id: <20190609164126.383573160@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 4.14 24/35] genwqe: Prevent an integer overflow in the ioctl
+Date:   Sun,  9 Jun 2019 18:42:30 +0200
+Message-Id: <20190609164126.953325734@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -61,36 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 35d6fcbb7c3e296a52136347346a698a35af3fda upstream.
+commit 110080cea0d0e4dfdb0b536e7f8a5633ead6a781 upstream.
 
-Do the proper cleanup in case the size check fails.
+There are a couple potential integer overflows here.
 
-Tested with xfstests:generic/228
+	round_up(m->size + (m->addr & ~PAGE_MASK), PAGE_SIZE);
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 0cbade024ba5 ("fuse: honor RLIMIT_FSIZE in fuse_file_fallocate")
-Cc: Liu Bo <bo.liu@linux.alibaba.com>
-Cc: <stable@vger.kernel.org> # v3.5
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+The first thing is that the "m->size + (...)" addition could overflow,
+and the second is that round_up() overflows to zero if the result is
+within PAGE_SIZE of the type max.
+
+In this code, the "m->size" variable is an u64 but we're saving the
+result in "map_size" which is an unsigned long and genwqe_user_vmap()
+takes an unsigned long as well.  So I have used ULONG_MAX as the upper
+bound.  From a practical perspective unsigned long is fine/better than
+trying to change all the types to u64.
+
+Fixes: eaf4722d4645 ("GenWQE Character device and DDCB queue")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/genwqe/card_dev.c   |    2 ++
+ drivers/misc/genwqe/card_utils.c |    4 ++++
+ 2 files changed, 6 insertions(+)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -2978,7 +2978,7 @@ static long fuse_file_fallocate(struct f
- 	    offset + length > i_size_read(inode)) {
- 		err = inode_newsize_ok(inode, offset + length);
- 		if (err)
--			return err;
-+			goto out;
- 	}
+--- a/drivers/misc/genwqe/card_dev.c
++++ b/drivers/misc/genwqe/card_dev.c
+@@ -782,6 +782,8 @@ static int genwqe_pin_mem(struct genwqe_
  
- 	if (!(mode & FALLOC_FL_KEEP_SIZE))
+ 	if ((m->addr == 0x0) || (m->size == 0))
+ 		return -EINVAL;
++	if (m->size > ULONG_MAX - PAGE_SIZE - (m->addr & ~PAGE_MASK))
++		return -EINVAL;
+ 
+ 	map_addr = (m->addr & PAGE_MASK);
+ 	map_size = round_up(m->size + (m->addr & ~PAGE_MASK), PAGE_SIZE);
+--- a/drivers/misc/genwqe/card_utils.c
++++ b/drivers/misc/genwqe/card_utils.c
+@@ -582,6 +582,10 @@ int genwqe_user_vmap(struct genwqe_dev *
+ 	/* determine space needed for page_list. */
+ 	data = (unsigned long)uaddr;
+ 	offs = offset_in_page(data);
++	if (size > ULONG_MAX - PAGE_SIZE - offs) {
++		m->size = 0;	/* mark unused and not added */
++		return -EINVAL;
++	}
+ 	m->nr_pages = DIV_ROUND_UP(offs + size, PAGE_SIZE);
+ 
+ 	m->page_list = kcalloc(m->nr_pages,
 
 
