@@ -2,95 +2,68 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D03C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99FBC28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C08C216C4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047622;
-	bh=GxTw+zLXvtne5ntMVdwq8lo7+0eVtbGiQNxoFeW29D8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WmkPH40X3D3VstOd6z9cw8ITk0IlEVzPY6px6THvrKjPG7Xr1Cl0jajNiaHB2VY3f
-	 1gkd3rMHp9Bd6GRA+k4sXjzIYpGPbgNPlueCdpMLlw7X/kj2zyzVdkq4mlo//g4c8s
-	 4BG1hVxeq/DfCs9+5Qnf4n75jTGuSVi6YDrSanrA=
+	by mail.kernel.org (Postfix) with ESMTP id 7C7D0214C6
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfFICdl (ORCPT
+        id S1727679AbfFICpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:33:41 -0400
-Received: from casper.infradead.org ([85.118.1.10]:37438 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbfFICdl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:33:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3Fp1yuwwbOTbYdEqsZgF9iklbrQHl3f9VYC9FtEc6kI=; b=QklMMOA9CGj+eXx0W9MvmFE0by
-        0aQedeNfBMWna6CYprMFaEI2qA4kPeOnRyOEvn2aWyVBRVrFxHsJhJT4y8j8WRET4/OuncElTGcKY
-        1kXcQ0a8VlI2NwrvtTMO2cQ3q7h1Jn66qeukXioB6/N9vSPhV0EgdPWi9n/gC+9fmyNydhA9BXiNo
-        9yKbfd0o7rTBHQVpNnQx4TQOlFVXinBGdjSGKt7RUOGCGI+/dbrJnHDzL0AkB20um1bet10+OzDMq
-        dP0ath70zmmP8wrAoVRXdoywUNkrUudR2U+ifiamGNlWhAtXUpuSrxNwDl+xdQy39vJRKkx3vlkf3
-        aQ09AIQw==;
-Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZneK-0004xW-3Q; Sun, 09 Jun 2019 02:33:36 +0000
-Date:   Sat, 8 Jun 2019 23:33:31 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 00/22] Some documentation fixes
-Message-ID: <20190608233149.6a35bee9@coco.lan>
-In-Reply-To: <20190608134407.580f8bb5@lwn.net>
-References: <cover.1559656538.git.mchehab+samsung@kernel.org>
-        <20190607115521.6bf39030@lwn.net>
-        <20190607154430.4879976d@coco.lan>
-        <20190608134407.580f8bb5@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+        Sat, 8 Jun 2019 22:45:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21699 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727389AbfFICpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 22:45:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2019 19:45:29 -0700
+X-ExtLoop1: 1
+Received: from allen-box.sh.intel.com ([10.239.159.136])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Jun 2019 19:45:27 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        sai.praneeth.prakhya@intel.com, cai@lca.pw,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 0/6] iommu/vt-d: Fixes and cleanups for linux-next
+Date:   Sun,  9 Jun 2019 10:37:57 +0800
+Message-Id: <20190609023803.23832-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20190609023331.Vp__r4GlwyfPM6PARVJlWhPzd4ONqMysrQOG4UaQ4Ho@z>
 
-Em Sat, 8 Jun 2019 13:44:07 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+Hi Joerg,
 
-> On Fri, 7 Jun 2019 15:44:30 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> 
-> > After doing that, there are 17 patches yet to be applied. Two new
-> > patches are now needed too, due to vfs.txt -> vfs.rst and
-> > pci.txt -> pci.rst renames.  
-> 
-> OK, I've applied the set, minus those that had been picked up elsewhere.
+This series includes several fixes and cleanups after delegating
+DMA domain to generic iommu. Please review and consider them for
+linux-next.
 
-Thank you!
+Best regards,
+Baolu
 
-I'm sending the conversion patches based after your tree + linux-next.
+Lu Baolu (5):
+  iommu/vt-d: Don't return error when device gets right domain
+  iommu/vt-d: Set domain type for a private domain
+  iommu/vt-d: Don't enable iommu's which have been ignored
+  iommu/vt-d: Fix suspicious RCU usage in probe_acpi_namespace_devices()
+  iommu/vt-d: Consolidate domain_init() to avoid duplication
 
-I opted to split it on a few series, as I have already 85 patches
-here (and still several new "orphan" index files that I need to work
-in order to find them a place).
+Sai Praneeth Prakhya (1):
+  iommu/vt-d: Cleanup after delegating DMA domain to generic iommu
 
-Sending right now the first 33 patches.
+ drivers/iommu/intel-iommu.c | 210 +++++++++---------------------------
+ 1 file changed, 53 insertions(+), 157 deletions(-)
 
+-- 
+2.17.1
 
-Thanks,
-Mauro
