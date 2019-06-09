@@ -2,167 +2,130 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FB9C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5B4C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1836206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06856206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="YUw1qnx0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="BwotiYmo";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="xOELlbUk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729561AbfFIVgh (ORCPT
+        id S1729733AbfFIVhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 17:36:37 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42205 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfFIVgh (ORCPT
+        Sun, 9 Jun 2019 17:37:24 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:39678 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729386AbfFIVhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 17:36:37 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so6548119otn.9;
-        Sun, 09 Jun 2019 14:36:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZiIIarVNYc+IPXqi3ZtMcJmmvmMmviVgkK+GA+EHbhA=;
-        b=YUw1qnx0j9Q6GWh+yYTbdK8KRLJ8DYZRAv2/6rqS18LKK2PYUFJNNBBxVO310T59MS
-         Q0i8zJFB3HY8cV5PD1VOHDjD/z+NFcnqah+3Q/zqm73sHRlLC1ASFZw0cX0VlhoshrKv
-         2NdoPU57kcsbbb6cyiu31yotsMdoiKtyqUlk+oz0TSs2h3o9jxAedd8Wjh+6kd3N5Wg+
-         GNrG2ug/7KcCS8BCPGMHaK19XFYSvObeanbptGVJ6SWzWds4XUFordT+2Nw3RJbmbgoy
-         ZUyWpNRCOWJjFXG7qRElzCAT2CD5fnSwCiKEdSjLcMg4+7makbLxk9rKUHqbu6H2Bfo7
-         kFtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZiIIarVNYc+IPXqi3ZtMcJmmvmMmviVgkK+GA+EHbhA=;
-        b=XANydYOnPS/0H1zAZxTZNUHWdF4K9N5qghPAvKO02MqrCjkC8q+0irnL1WrnnJl03G
-         7ONskN5HHWdcE/yE8FEq22t+V5TCXZDwn2GJDktT2aE00nruBlcD17MLTbUe42dLyXeG
-         lxtFMWRNTw8Ao5IFvC5ukVGXnTMR5YGaCQfCwPAXB0YaY0mDSEnQlPjd8qQ02N8DK4w7
-         j2YYQrz0/aQTyC84YAmUPIhusQYrRRrD058zloBHfRdNnYlbEx7dK9ASmXwSTvdYxLJW
-         qyQBEkVZCuPJpQEKvIi3p7ZTYbvEKx+WJvMWOvz11DM2IR9mcj/74X7FRoLwwvp8o7+q
-         e23g==
-X-Gm-Message-State: APjAAAWhEbtCDyiRCMo6cphMK7rKgvzg9y/Fpt7Nbz6orihmlUjuvmD6
-        MxsM8ILIEqpDU6d3D2VMGqh5g1SaIm9sfdYKBug=
-X-Google-Smtp-Source: APXvYqyj9+ZRfTdLuN0mjg8NPOB46WOVRAt5cAu/Bhj4I4pqwq7IzgkWyjvVj6FI5s4pm42EnCqsEyqY25k+7COMUw8=
-X-Received: by 2002:a9d:6405:: with SMTP id h5mr16586195otl.42.1560116195631;
- Sun, 09 Jun 2019 14:36:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
- <20190609180621.7607-6-martin.blumenstingl@googlemail.com> <CACRpkdYzeiLB7Yuixv6NsnLJoa_FnGKRHHQm=t4gMH34NdFSYA@mail.gmail.com>
-In-Reply-To: <CACRpkdYzeiLB7Yuixv6NsnLJoa_FnGKRHHQm=t4gMH34NdFSYA@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 9 Jun 2019 23:36:24 +0200
-Message-ID: <CAFBinCBgoLb+Hfdo-sZ_0H6ct=UJm7j6wD_C6udbA6BTRvFOWQ@mail.gmail.com>
-Subject: Re: [RFC next v1 5/5] arm64: dts: meson: g12a: x96-max: fix the
- Ethernet PHY reset line
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     netdev <netdev@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Giuseppe CAVALLARO <peppe.cavallaro@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
+        Sun, 9 Jun 2019 17:37:24 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 59D678EE193;
+        Sun,  9 Jun 2019 14:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1560116243;
+        bh=ozpHEnXCNqm+O0nKKUhf/rpuVu8D7tgMnNXcmehmhRQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=BwotiYmo3ZXIn+8pV2kbvh0lSxMUo8YZuBZERNAxt4OrnvIy+B/WhJcYFvCCXYBy/
+         2L1IPOrqzGxIZkyVxthetp/V7RgBVarSu8OS6uAWXNANetx4aoKuRBkcMhaFLZY/7/
+         hnZosHs2N4r8Wl5FlRmAE4H59gq8kHpzVzEUJHKo=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0y5EiMEx1Mhj; Sun,  9 Jun 2019 14:37:23 -0700 (PDT)
+Received: from jarvis.lan (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 8AC488EE0DF;
+        Sun,  9 Jun 2019 14:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1560116242;
+        bh=ozpHEnXCNqm+O0nKKUhf/rpuVu8D7tgMnNXcmehmhRQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=xOELlbUk+ziamqt2gJcTsmCofSTPR42xVXKqldCcpYHZ6yA5Zc5iX8tMjlMQfUSAu
+         joPjQwmAv5aBOeYKP8vDur2+4KlAl+NPYbzxcHSzI7Z3Wj5ClX0y43CkPYaNg0LVVu
+         /MuhV1ZAM5w4vWTSbQBA6Og4NB4IpRrrx8P8RGkk=
+Message-ID: <1560116241.3324.19.camel@HansenPartnership.com>
+Subject: Re: [PATCH] drivers/ata: print trim features at device
+ initialization
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Date:   Sun, 09 Jun 2019 14:37:21 -0700
+In-Reply-To: <048ed77f-8faa-fb67-c6bc-10d953f52f89@yandex-team.ru>
+References: <155989287898.1506.14253954112551051148.stgit@buzz>
+         <yq1wohxib7t.fsf@oracle.com>
+         <eebfb1cc-f6d0-580e-1d56-2af0f481a92f@yandex-team.ru>
+         <048ed77f-8faa-fb67-c6bc-10d953f52f89@yandex-team.ru>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, 2019-06-08 at 17:13 +0300, Konstantin Khlebnikov wrote:
+> > On 08.06.2019 11:25, Christoph Hellwig wrote:> On Fri, Jun 07, 2019
+> > at 10:34:39AM +0300, Konstantin Khlebnikov wrote:
+> >  >
+> >  > Do we really need to spam dmesg with even more ATA crap?  What
+> > about
+> >  > a sysfs file that can be read on demand instead?
+> >  >
+> > 
+> > Makes sense.
+> > 
+> > Trim state is exposed for ata_device:
+> > /sys/class/ata_device/devX.Y/trim
+> > but there is no link from scsi device to ata device so they hard to
+> > match.
+> > 
+> > I'll think about it.
+> 
+> Nope. There is no obvious way to link scsi device with ata_device.
+> ata_device is built on top of "transport_class" and
+> "attribute_container".
+> This some extremely over engineered sysfs framework used only in
+> ata/scsi. I don't want to touch this.
 
-On Sun, Jun 9, 2019 at 11:17 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Sun, Jun 9, 2019 at 8:06 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->
-> > The PHY reset line and interrupt line are swapped on the X96 Max
-> > compared to the Odroid-N2 schematics. This means:
-> > - GPIOZ_14 is the interrupt line (on the Odroid-N2 it's the reset line)
-> > - GPIOZ_15 is the reset line (on the Odroid-N2 it's the interrupt line)
-> >
-> > Also the GPIOZ_14 and GPIOZ_15 pins are special. The datasheet describes
-> > that they are "3.3V input tolerant open drain (OD) output pins". This
-> > means the GPIO controller can drive the output LOW to reset the PHY. To
-> > release the reset it can only switch the pin to input mode. The output
-> > cannot be driven HIGH for these pins.
-> > This requires configuring the reset line as GPIO_OPEN_SOURCE because
-> > otherwise the PHY will be stuck in "reset" state (because driving the
-> > pin HIGH seeems to result in the same signal as driving it LOW).
->
-> This far it seems all right.
-...except the "seeems" typo which I just noticed.
-thank you for sanity-checking this so far!
+You don't need to know any of that.  The problem is actually when the
+ata transport classes were first created, the devices weren't properly
+parented.  What should have happened, like every other transport class,
+is that the devices should have descended down to the scsi device as
+the leaf in an integrated fashion.  Instead, what we seem to have is
+three completely separate trees.
 
-> > Switch to GPIOZ_15 for the reset GPIO with the correct flags and drop
-> > the "snps,reset-active-low" property as this is now encoded in the
-> > GPIO_OPEN_SOURCE flag.
->
-> Open source doesn't imply active low.
->
-> We have this in stmmac_mdio_reset():
->
->                 gpio_direction_output(data->reset_gpio,
->                                       data->active_low ? 1 : 0);
->                 if (data->delays[0])
->                         msleep(DIV_ROUND_UP(data->delays[0], 1000));
->
->                 gpio_set_value(data->reset_gpio, data->active_low ? 0 : 1);
->                 if (data->delays[1])
->                         msleep(DIV_ROUND_UP(data->delays[1], 1000));
->
->                 gpio_set_value(data->reset_gpio, data->active_low ? 1 : 0);
->                 if (data->delays[2])
->                         msleep(DIV_ROUND_UP(data->delays[2], 1000));
->
-> If "snps,reset-active-low" was set it results in the sequence 1, 0, 1
-> if it is not set it results in the sequence 0, 1, 0.
-I'm changing this logic with earlier patches of this series.
-can you please look at these as well because GPIO_OPEN_SOURCE doesn't
-work with the old version of stmmac_mdio_reset() that you are showing.
+So if you look at a SAS device, you see from the pci device:
 
-> The high (reset) is asserted by switching the pin into high-z open drain
-> mode, which happens by switching the line into input mode in some
-> cases.
->
-> I think the real reason it works now is that reset is actually active high.
-let me write down what I definitely know so far
+host2/port-2:0/end_device-2:0/target2:0:0/2:0:0:0/block/sdb/sdb1
 
-the RTL8211F PHY wants the reset line to be LOW for a few milliseconds
-to put it into reset mode.
-driving the reset line HIGH again takes it out of reset.
+But if you look at a SATA device, you see three separate paths:
 
-Odroid-N2's schematics [0] (page 30) shows that there's a pull-up for
-the PHYRSTB pin, which is also connected to the NRST signal which is
-GPIOZ_15
+ata3/host3/target3\:0\:0/3\:0\:0\:0/block/sda/sda1
+ata3/link3/dev3.0/ata_device/dev3.0
+ata3/ata_port/ata3
 
-> It makes a lot of sense, since if it resets the device when set as input
-> (open drain) it holds all devices on that line in reset, which is likely
-> what you want as most GPIOs come up as inputs (open drain).
-> A pull-up resistor will ascertain that the devices are in reset.
-my understanding is that the pull-up resistor holds it out of reset
-driving GPIOZ_15's (open drain) output LOW pulls the signal to ground
-and asserts the reset
+Instead of an integrated tree
 
-> Other than the commit message:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-thank you for looking into this!
+Unfortunately, this whole thing is unfixable now.  If I integrate the
+tree properly, the separate port and link directories will get subsumed
+and we won't be able to recover them with judicious linking so scripts
+relying on them will break.  The best we can probably do is add
+additional links with what we have.
+
+To follow the way we usually do it, there should be a link from the ata
+device to the scsi target, but that wouldn't help you find the "trim"
+files, so it sounds like you want a link from the scsi device to the ata device, which would?
+
+James
 
 
-Martin
-
-
-[0] https://dn.odroid.com/S922X/ODROID-N2/Schematic/odroid-n2_rev0.4_20190307.pdf
