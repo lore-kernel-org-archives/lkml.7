@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33C2C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692D7C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C17120833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4357620833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099702;
-	bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+	s=default; t=1560099706;
+	bh=Ss3/1aNf6BV0NDPMl7bx6++BVlpIDWzqubpvj80s7W0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MubaVykgubmNOPqdMvtC3tp+A3VVv7J6Yj3IPem/buKVV9RJNNqsJvpaekELhcZJI
-	 kk4nHdXksd0K5yWE7VMcCUX+SPYFp8x+O34yPuPyUvCJaVwfMrL27WdaKvilJ6MusO
-	 VZ2EYSnAxU9IsdKKbT2E1QwLNb1yr3KuF++etxfw=
+	b=rVOdRmp+3rP6d30CxKauKpY4QHFBWDzdBiOGF0QknFLAKpjBNMn5Xs3JFaQ4nFXmn
+	 2jVwhuxhNfCpfhM1EJaKMYCXEJNuPSKvgPdBZQ6WVFtXxSsTHZadNxi6apkpW+O51v
+	 +/LIjzCIekOCxDwxba4PWoOIP4v0/6dGp1o7C2UQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388118AbfFIRBm (ORCPT
+        id S2388127AbfFIRBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39064 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388107AbfFIRBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:01:39 -0400
+        id S2388107AbfFIRBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98FDC206C3;
-        Sun,  9 Jun 2019 17:01:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 564D2206DF;
+        Sun,  9 Jun 2019 17:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099699;
-        bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
+        s=default; t=1560099701;
+        bh=Ss3/1aNf6BV0NDPMl7bx6++BVlpIDWzqubpvj80s7W0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fhPAWUKFycyNT68Ni+Kg96nNTzru87PVT4R0b4EZq4lYX15xlFpTHRZ4XXWdvzZ1D
-         5Y9FQ4GF/mFM+FPOSMidSasxk3BJPyC6JUtYed4FGnNJR4DPlnfhN4MeEnV0dZE7OF
-         EmIyZmYAHIkCB+f8BWI1ogxzos8uXYPagVL9F38E=
+        b=kKpqk4r6DXF6dhqOic2eBrHOmhTrI+lAtN8fTcW5PIad/2oF3hIg/9AEjJKkZL1gD
+         wEpZCmrGGCL9i9ac9zCdPLzzr3+gDYDOEVR6Ti+Y9dl2J3oCmw84A73WUHWr+DL62S
+         gHFRilLnWzmTmXrZs6QAbOu06g2fX8GCvGJdioIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 132/241] hwmon: (vt1211) Use request_muxed_region for Super-IO accesses
-Date:   Sun,  9 Jun 2019 18:41:14 +0200
-Message-Id: <20190609164151.608346696@linuxfoundation.org>
+Subject: [PATCH 4.4 133/241] hwmon: (smsc47m1) Use request_muxed_region for Super-IO accesses
+Date:   Sun,  9 Jun 2019 18:41:15 +0200
+Message-Id: <20190609164151.635341098@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,7 +61,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 14b97ba5c20056102b3dd22696bf17b057e60976 ]
+[ Upstream commit d6410408ad2a798c4cc685252c1baa713be0ad69 ]
 
 Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
@@ -70,57 +72,80 @@ Use request_muxed_region() to ensure that IO access on the requested
 address space is supported, and to ensure that access by multiple drivers
 is synchronized.
 
-Fixes: 2219cd81a6cd ("hwmon/vt1211: Add probing of alternate config index port")
+Fixes: 8d5d45fb1468 ("I2C: Move hwmon drivers (2/3)")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reported-by: John Garry <john.garry@huawei.com>
+Cc: John Garry <john.garry@huawei.com>
+Acked-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/vt1211.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/hwmon/smsc47m1.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/hwmon/vt1211.c b/drivers/hwmon/vt1211.c
-index 3a6bfa51cb94f..95d5e8ec8b7fc 100644
---- a/drivers/hwmon/vt1211.c
-+++ b/drivers/hwmon/vt1211.c
-@@ -226,15 +226,21 @@ static inline void superio_select(int sio_cip, int ldn)
- 	outb(ldn, sio_cip + 1);
- }
+diff --git a/drivers/hwmon/smsc47m1.c b/drivers/hwmon/smsc47m1.c
+index 5d323186d2c10..d24df0c50bea4 100644
+--- a/drivers/hwmon/smsc47m1.c
++++ b/drivers/hwmon/smsc47m1.c
+@@ -73,16 +73,21 @@ superio_inb(int reg)
+ /* logical device for fans is 0x0A */
+ #define superio_select() superio_outb(0x07, 0x0A)
  
--static inline void superio_enter(int sio_cip)
-+static inline int superio_enter(int sio_cip)
+-static inline void
++static inline int
+ superio_enter(void)
  {
-+	if (!request_muxed_region(sio_cip, 2, DRVNAME))
++	if (!request_muxed_region(REG, 2, DRVNAME))
 +		return -EBUSY;
 +
- 	outb(0x87, sio_cip);
- 	outb(0x87, sio_cip);
-+
+ 	outb(0x55, REG);
 +	return 0;
  }
  
- static inline void superio_exit(int sio_cip)
+ static inline void
+ superio_exit(void)
  {
- 	outb(0xaa, sio_cip);
-+	release_region(sio_cip, 2);
+ 	outb(0xAA, REG);
++	release_region(REG, 2);
  }
  
- /* ---------------------------------------------------------------------
-@@ -1282,11 +1288,14 @@ static int __init vt1211_device_add(unsigned short address)
- 
- static int __init vt1211_find(int sio_cip, unsigned short *address)
+ #define SUPERIO_REG_ACT		0x30
+@@ -531,8 +536,12 @@ static int __init smsc47m1_find(struct smsc47m1_sio_data *sio_data)
  {
--	int err = -ENODEV;
+ 	u8 val;
+ 	unsigned short addr;
 +	int err;
- 	int devid;
- 
--	superio_enter(sio_cip);
-+	err = superio_enter(sio_cip);
++
++	err = superio_enter();
 +	if (err)
 +		return err;
  
-+	err = -ENODEV;
- 	devid = force_id ? force_id : superio_inb(sio_cip, SIO_VT1211_DEVID);
- 	if (devid != SIO_VT1211_ID)
- 		goto EXIT;
+-	superio_enter();
+ 	val = force_id ? force_id : superio_inb(SUPERIO_REG_DEVID);
+ 
+ 	/*
+@@ -608,13 +617,14 @@ static int __init smsc47m1_find(struct smsc47m1_sio_data *sio_data)
+ static void smsc47m1_restore(const struct smsc47m1_sio_data *sio_data)
+ {
+ 	if ((sio_data->activate & 0x01) == 0) {
+-		superio_enter();
+-		superio_select();
+-
+-		pr_info("Disabling device\n");
+-		superio_outb(SUPERIO_REG_ACT, sio_data->activate);
+-
+-		superio_exit();
++		if (!superio_enter()) {
++			superio_select();
++			pr_info("Disabling device\n");
++			superio_outb(SUPERIO_REG_ACT, sio_data->activate);
++			superio_exit();
++		} else {
++			pr_warn("Failed to disable device\n");
++		}
+ 	}
+ }
+ 
 -- 
 2.20.1
 
