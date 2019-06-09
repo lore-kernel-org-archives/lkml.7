@@ -8,68 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDC5C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECF1C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F60B20673
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB2120673
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r95z8gnV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Boq5tNp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbfFITK0 (ORCPT
+        id S1731248AbfFITKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 15:10:26 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36003 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbfFITIf (ORCPT
+        Sun, 9 Jun 2019 15:10:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40599 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729120AbfFITIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 15:08:35 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n4so7000979wrs.3;
-        Sun, 09 Jun 2019 12:08:33 -0700 (PDT)
+        Sun, 9 Jun 2019 15:08:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so6975184wre.7;
+        Sun, 09 Jun 2019 12:08:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5j1XQ8rfqrXErkgucOeAqpFjUsZLBc2+5LXQsnyyy3w=;
-        b=r95z8gnVUwNeLz80ImqfjlZHdLHvaTeFDs8UGybHxFWKMJ16AXby3Egw8X/pS/w500
-         7SvcwzdrOg5xvzXQo1sp9OhdLVklwWGL9wGl+PJ3Iu6+bmG/6D04c0ktP3I6a9mRSUl2
-         P9EBm+NRKTsODLkYS9+V8Q2RAyD6M4vyy/dWbvlfV0Nvt2zI4MuYSg6fAAaPIkuZjm6E
-         d6xyTkCu3CA3GB/kLvGlncXKWVhiP410rSS4kivu1KpWeKaS3m3ea11imgOLi3zVi+aH
-         8sm8v3OjEcwXVQgt1wWFT1mP4yJVwfSb+7mJieYkhj/9qJpyAgcHZA23gjG5boj0z7WH
-         CWaA==
+        bh=xeS3pFHNvjix++EL35ueInrHkQ3W+h8kfOXAxNqPy0U=;
+        b=Boq5tNp1VK6nzwBemQDjHD6h3zk1NRrd4IWZcxezRhueNn9Usiv0IAuKkNhPCUDmCp
+         t3cUYxUJYs5hNO0RN9nPbNh2FbruaNxEdgviB5AHGzIL/3+b9csYdiETqPqBChyogyFt
+         G4jjFOGosov2EIC/suxPIiv6XxTv84Bxc7aY9rYtB/kwIuHqbRdiwvJaIue3CdXMiN6d
+         P/D38pI0sJtVOEEpcjRCfDMKaeQzRU4WkVVniK3I5x1WZO175nsb8wjWIlIwvVaqBzis
+         XDH5JQnepPJvqaJlL4x0vqS+gpEs4UpBeX0ncSjYWqfDIjnsKekITP4K3bcdluGkXu44
+         0YlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=5j1XQ8rfqrXErkgucOeAqpFjUsZLBc2+5LXQsnyyy3w=;
-        b=kR242CMki6L97I8g8dc6gvAVDS4flx6FF/rcav5ajh+DPtGBcMA96azvdI3Q0wigr3
-         x4LPMaVs3g4l8kZS8g/paJKKyCdya0L1mUjf9CJ1Bp9udX0gVfY1uBSp01wfCYoqb8RV
-         5NIOt6o19Wgh8UwHKzw0v2q3NC282D4K3nW64FO0IPDQlA5P2P+k16zN049pTqMH4Ael
-         HglBh3Nd97msHioGA2tx8XivaUbJNZ08KxmbdGpifVHhQOhBw+wr2Y4xvW+f+/Kh//Jz
-         gYbjwRjlGZmX0sz7vwkjf56Qx67VSp2L9QcTBeG9o9MSdZlQD9rZR3wCBUbl58y+l4Qi
-         Ft0Q==
-X-Gm-Message-State: APjAAAV+105f4QXAb6bI/q7koaZ4+eMPHiTh+BcSJcDZhfabbZ01oL/C
-        8RU4DFmXmCdfpS+W/0Jt+UZqqe1z
-X-Google-Smtp-Source: APXvYqyaJRS5EQ1ZgUkX31eUsiq+U2ZFUokjrRqsx7ONqzORiVQA0FYlqF9DckOUzb/e+mN9JSsWzw==
-X-Received: by 2002:adf:fb8a:: with SMTP id a10mr5796189wrr.235.1560107313033;
-        Sun, 09 Jun 2019 12:08:33 -0700 (PDT)
+        bh=xeS3pFHNvjix++EL35ueInrHkQ3W+h8kfOXAxNqPy0U=;
+        b=hDv0X+EM44ta7kpCtFBwJMuSVGu1gty15UvGb6PpSmAUvE4pXWXCOit2T6mcxaYXuM
+         gZxs22wnAJ/zNxcP3EQGeBYmb6OBhZT7jWWLYJOKrhsYEv1Reiuo39r3MrokbgNlYWi6
+         5Nv0PAvfuBxE2xpHAkt1sEcbJxKs0F2rHtAq40sCGoZYKZ/FNYz6VDhqNXHrNudVqsxw
+         CVHhK5VuWRK5+g7V+JWydTCpUM0tnZzG7SiCgCpAHKrDzRZJgETVDlJ2weyqSYNv42Su
+         LsrO/pSFPrCuIbJA5qzeruRTLwOEeo+Wd1tpE6t6C+tbyQO7mfNjgsjQi7lqY11POYK4
+         UQAw==
+X-Gm-Message-State: APjAAAVFZv1F79AKl60F5cGMJhNYUPIwvI3CEOwEa4ns+e6QrFCE7USj
+        lyc5zQu07N3KdLw10iv4TGdk3oDk
+X-Google-Smtp-Source: APXvYqxcnB9NsPDxbDcYqfQxgPXplAjIqdm0SseYHYdS9iq11R32iUbHq+HDWL/uufOljOzl29P3Ew==
+X-Received: by 2002:adf:eb09:: with SMTP id s9mr40928863wrn.127.1560107319200;
+        Sun, 09 Jun 2019 12:08:39 -0700 (PDT)
 Received: from myhost.home (ckm12.neoplus.adsl.tpnet.pl. [83.31.88.12])
-        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.08.31
+        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.08.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 12:08:32 -0700 (PDT)
+        Sun, 09 Jun 2019 12:08:38 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
         dmurphy@ti.com, jacek.anaszewski@gmail.com,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Simon Shields <simon@lineageos.org>
-Subject: [PATCH v5 04/26] dt-bindings: leds: Add properties for LED name construction
-Date:   Sun,  9 Jun 2019 21:07:41 +0200
-Message-Id: <20190609190803.14815-5-jacek.anaszewski@gmail.com>
+        Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v5 07/26] leds: sc27xx-blt: Use generic support for composing LED names
+Date:   Sun,  9 Jun 2019 21:07:44 +0200
+Message-Id: <20190609190803.14815-8-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
 References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
@@ -78,130 +73,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce dedicated properties for conveying information about
-LED function and color. Mark old "label" property as deprecated.
-
-Additionally function-enumerator property is being provided
-for the cases when neither function nor color can be used
-for LED differentiation.
+Switch to using generic LED support for composing LED class
+device name.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Cc: Baolin Wang <baolin.wang@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Cc: Daniel Mack <daniel@zonque.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Simon Shields <simon@lineageos.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- Documentation/devicetree/bindings/leds/common.txt | 62 ++++++++++++++++++++---
- 1 file changed, 54 insertions(+), 8 deletions(-)
+ drivers/leds/leds-sc27xx-bltc.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 70876ac11367..9fa6f9795d50 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -10,14 +10,30 @@ can influence the way of the LED device initialization, the LED components
- have to be tightly coupled with the LED device binding. They are represented
- by child nodes of the parent LED device binding.
+diff --git a/drivers/leds/leds-sc27xx-bltc.c b/drivers/leds/leds-sc27xx-bltc.c
+index fecf27fb1cdc..0ede87420bfc 100644
+--- a/drivers/leds/leds-sc27xx-bltc.c
++++ b/drivers/leds/leds-sc27xx-bltc.c
+@@ -6,7 +6,6 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+-#include <uapi/linux/uleds.h>
  
-+
- Optional properties for child nodes:
- - led-sources : List of device current outputs the LED is connected to. The
- 		outputs are identified by the numbers that must be defined
- 		in the LED device binding documentation.
-+
-+- function: LED functon. Use one of the LED_FUNCTION_* prefixed definitions
-+	    from the header include/dt-bindings/leds/common.h.
-+	    If there is no matching LED_FUNCTION available, add a new one.
-+
-+- color : Color of the LED. Use one of the LED_COLOR_ID_* prefixed definitions
-+	  from the header include/dt-bindings/leds/common.h.
-+	  If there is no matching LED_COLOR_ID available, add a new one.
-+
-+- function-enumerator: Integer to be used when more than one instance
-+                       of the same function is needed, differing only with
-+		       an ordinal number.
-+
- - label : The label for this LED. If omitted, the label is taken from the node
- 	  name (excluding the unit address). It has to uniquely identify
- 	  a device, i.e. no other LED class device can be assigned the same
--	  label.
-+	  label. This property is deprecated - use 'function' and 'color'
-+	  properties instead. function-enumerator has no effect when this
-+	  property is present.
+ /* PMIC global control register definition */
+ #define SC27XX_MODULE_EN0	0xc08
+@@ -46,7 +45,7 @@
+ #define SC27XX_DELTA_T_MAX	(SC27XX_LEDS_STEP * 255)
  
- - default-state : The initial state of the LED. Valid values are "on", "off",
-   and "keep". If the LED is already on or off and the default-state property is
-@@ -99,29 +115,59 @@ Required properties for trigger source:
+ struct sc27xx_led {
+-	char name[LED_MAX_NAME_SIZE];
++	struct fwnode_handle *fwnode;
+ 	struct led_classdev ldev;
+ 	struct sc27xx_led_priv *priv;
+ 	u8 line;
+@@ -249,19 +248,24 @@ static int sc27xx_led_register(struct device *dev, struct sc27xx_led_priv *priv)
  
- * Examples
+ 	for (i = 0; i < SC27XX_LEDS_MAX; i++) {
+ 		struct sc27xx_led *led = &priv->leds[i];
++		struct led_init_data init_data = {};
  
--gpio-leds {
-+#include <dt-bindings/leds/common.h>
+ 		if (!led->active)
+ 			continue;
+ 
+ 		led->line = i;
+ 		led->priv = priv;
+-		led->ldev.name = led->name;
+ 		led->ldev.brightness_set_blocking = sc27xx_led_set;
+ 		led->ldev.pattern_set = sc27xx_led_pattern_set;
+ 		led->ldev.pattern_clear = sc27xx_led_pattern_clear;
+ 		led->ldev.default_trigger = "pattern";
+ 
+-		err = devm_led_classdev_register(dev, &led->ldev);
++		init_data.fwnode = led->fwnode;
++		init_data.devicename = "sc27xx";
++		init_data.default_label = ":";
 +
-+led-controller@0 {
- 	compatible = "gpio-leds";
++		err = devm_led_classdev_register_ext(dev, &led->ldev,
++						     &init_data);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -274,7 +278,6 @@ static int sc27xx_led_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node, *child;
+ 	struct sc27xx_led_priv *priv;
+-	const char *str;
+ 	u32 base, count, reg;
+ 	int err;
  
--	system-status {
--		label = "Status";
-+	led0 {
-+		function = LED_FUNCTION_STATUS;
- 		linux,default-trigger = "heartbeat";
- 		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
- 	};
+@@ -316,15 +319,8 @@ static int sc27xx_led_probe(struct platform_device *pdev)
+ 			return -EINVAL;
+ 		}
  
--	usb {
-+	led1 {
-+		function = LED_FUNCTION_USB;
- 		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
- 		trigger-sources = <&ohci_port1>, <&ehci_port1>;
- 	};
- };
++		priv->leds[reg].fwnode = of_fwnode_handle(child);
+ 		priv->leds[reg].active = true;
+-
+-		err = of_property_read_string(child, "label", &str);
+-		if (err)
+-			snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
+-				 "sc27xx::");
+-		else
+-			snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
+-				 "sc27xx:%s", str);
+ 	}
  
--max77693-led {
-+led-controller@0 {
- 	compatible = "maxim,max77693-led";
- 
--	camera-flash {
--		label = "Flash";
-+	led {
-+		function = LED_FUNCTION_FLASH;
-+		color = <LED_COLOR_ID_WHITE>;
- 		led-sources = <0>, <1>;
- 		led-max-microamp = <50000>;
- 		flash-max-microamp = <320000>;
- 		flash-max-timeout-us = <500000>;
- 	};
- };
-+
-+led-controller@30 {
-+        compatible = "panasonic,an30259a";
-+        reg = <0x30>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led@1 {
-+		reg = <1>;
-+		linux,default-trigger = "heartbeat";
-+		function = LED_FUNCTION_INDICATOR;
-+		function-enumerator = <1>;
-+        };
-+
-+        led@2 {
-+		reg = <2>;
-+		function = LED_FUNCTION_INDICATOR;
-+		function-enumerator = <2>;
-+        };
-+
-+        led@3 {
-+		reg = <3>;
-+		function = LED_FUNCTION_INDICATOR;
-+		function-enumerator = <3>;
-+        };
-+};
+ 	err = sc27xx_led_register(dev, priv);
 -- 
 2.11.0
 
