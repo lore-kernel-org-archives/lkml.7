@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D90EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615B3C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAE1206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B130206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099150;
-	bh=0CV3ykOXup43iLMZFuI/xSseBucsOMh+EuMa+csKPtA=;
+	s=default; t=1560099152;
+	bh=WO/xY2whLhZsYeG3CtK+RlKKS6z8EIAXONDnC5MVslk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUdWHq8OrRLNxiqKXsFvorwJ3D7t0hQvvvOTiYkP/LUZh56wCWl9asf3TMKztjIWF
-	 3XOgF3mAryRExB0XUuASw1axVjyQeig6LiYEbv+R/StbE0kiv+MQs039PHa9NH8X09
-	 nvPXQD1qvINKnK3av+eQmRzwj7N78jFN0QlNy4zE=
+	b=YVkVErPbXEhredcFEqh2l89Lenroiv9n+CQ9ruxprl21kQmS2iF1gq9HiObofgAmA
+	 fb/LBrA5ePYtssvYRmbPpW81RXi5zWdd7KNOh5aEKnHEWVGT7lpBBVuwLDtKEXMRw6
+	 d3XL3W49475O90aIUysnZfUY7APfbLyGri/t+rZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732228AbfFIQw3 (ORCPT
+        id S1732218AbfFIQw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:52:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731394AbfFIQw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 9 Jun 2019 12:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732188AbfFIQwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:52:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07B62205ED;
-        Sun,  9 Jun 2019 16:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 642B8204EC;
+        Sun,  9 Jun 2019 16:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099146;
-        bh=0CV3ykOXup43iLMZFuI/xSseBucsOMh+EuMa+csKPtA=;
+        s=default; t=1560099143;
+        bh=WO/xY2whLhZsYeG3CtK+RlKKS6z8EIAXONDnC5MVslk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a24cj2KtUqX77zB/LpBQWrIZCHTDsiNnhzE9nnZIKeud3kC14EMhiRT+jJ6sNnVTr
-         xPnZ6HfvDVTZTSYAHEZ4MEGoukdH2IQlJ+kiQl4VaKCTMebSIfm9BuTRn63Tc8R1oG
-         tRO37ExoneLrEpdt6p6LCgC+Cl8oKDj/FMN/oWSg=
+        b=PBfoRpIuumpP4kOQsUGfpw5jON1uVTPdPaqUsCScLs3SPHP/fzoW+9qxshAVn9woy
+         mU6pZm1VwYxT69l7bXSBiP7hRIEaYEnfPFsrY8UF7V/q6TEDX0AGhmz6KB9tW+W217
+         i78dUjPmI4JeV3FjhV7a4SyILQem7R+wRdGm2Otk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Hemnani <rhemnani@fb.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 08/83] bnxt_en: Fix aggregation buffer leak under OOM condition.
-Date:   Sun,  9 Jun 2019 18:41:38 +0200
-Message-Id: <20190609164128.290853125@linuxfoundation.org>
+Subject: [PATCH 4.9 07/83] tipc: Avoid copying bytes beyond the supplied data
+Date:   Sun,  9 Jun 2019 18:41:37 +0200
+Message-Id: <20190609164128.247977077@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -60,37 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit 296d5b54163964b7ae536b8b57dfbd21d4e868e1 ]
+TLV_SET is called with a data pointer and a len parameter that tells us
+how many bytes are pointed to by data. When invoking memcpy() we need
+to careful to only copy len bytes.
 
-For every RX packet, the driver replenishes all buffers used for that
-packet and puts them back into the RX ring and RX aggregation ring.
-In one code path where the RX packet has one RX buffer and one or more
-aggregation buffers, we missed recycling the aggregation buffer(s) if
-we are unable to allocate a new SKB buffer.  This leads to the
-aggregation ring slowly running out of buffers over time.  Fix it
-by properly recycling the aggregation buffers.
+Previously we would copy TLV_LENGTH(len) bytes which would copy an extra
+4 bytes past the end of the data pointer which newer GCC versions
+complain about.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Reported-by: Rakesh Hemnani <rhemnani@fb.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+ In file included from test.c:17:
+ In function 'TLV_SET',
+     inlined from 'test' at test.c:186:5:
+ /usr/include/linux/tipc_config.h:317:3:
+ warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]
+ of object 'bearer_name' with type 'char[32]' [-Warray-bounds]
+     memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ test.c: In function 'test':
+ test.c::161:10: note:
+ 'bearer_name' declared here
+     char bearer_name[TIPC_MAX_BEARER_NAME];
+          ^~~~~~~~~~~
+
+We still want to ensure any padding bytes at the end are initialised, do
+this with a explicit memset() rather than copy bytes past the end of
+data. Apply the same logic to TCM_SET.
+
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 ++
- 1 file changed, 2 insertions(+)
+ include/uapi/linux/tipc_config.h |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -1425,6 +1425,8 @@ static int bnxt_rx_pkt(struct bnxt *bp,
- 		skb = bnxt_copy_skb(bnapi, data, len, dma_addr);
- 		bnxt_reuse_rx_data(rxr, cons, data);
- 		if (!skb) {
-+			if (agg_bufs)
-+				bnxt_reuse_rx_agg_bufs(bnapi, cp_cons, agg_bufs);
- 			rc = -ENOMEM;
- 			goto next_rx;
- 		}
+--- a/include/uapi/linux/tipc_config.h
++++ b/include/uapi/linux/tipc_config.h
+@@ -301,8 +301,10 @@ static inline int TLV_SET(void *tlv, __u
+ 	tlv_ptr = (struct tlv_desc *)tlv;
+ 	tlv_ptr->tlv_type = htons(type);
+ 	tlv_ptr->tlv_len  = htons(tlv_len);
+-	if (len && data)
+-		memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
++	if (len && data) {
++		memcpy(TLV_DATA(tlv_ptr), data, len);
++		memset(TLV_DATA(tlv_ptr) + len, 0, TLV_SPACE(len) - tlv_len);
++	}
+ 	return TLV_SPACE(len);
+ }
+ 
+@@ -399,8 +401,10 @@ static inline int TCM_SET(void *msg, __u
+ 	tcm_hdr->tcm_len   = htonl(msg_len);
+ 	tcm_hdr->tcm_type  = htons(cmd);
+ 	tcm_hdr->tcm_flags = htons(flags);
+-	if (data_len && data)
++	if (data_len && data) {
+ 		memcpy(TCM_DATA(msg), data, data_len);
++		memset(TCM_DATA(msg) + data_len, 0, TCM_SPACE(data_len) - msg_len);
++	}
+ 	return TCM_SPACE(data_len);
+ }
+ 
 
 
