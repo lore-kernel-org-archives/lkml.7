@@ -2,227 +2,167 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC662C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FB9C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F45206BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1836206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 21:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="p1Ynb0oR"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="YUw1qnx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbfFIVfD (ORCPT
+        id S1729561AbfFIVgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 17:35:03 -0400
-Received: from mail-eopbgr80134.outbound.protection.outlook.com ([40.107.8.134]:59380
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726583AbfFIVfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 17:35:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mndvfMpi24ZKRYTMRzHmQyXhzatwsbI1HQRe6YKrCI0=;
- b=p1Ynb0oR/CdTvIMTCrPRD53nr8wqkToFOs6hQwrJbNcNPEQkOeXN/zxZwoW6cistw6mrffU6j0i3HVBX2fYhTKLb+T12WvpNuW3BhM6566YIhYOx2uXxk49srBUamUbkxpZMLFjfy/8Z+1SPlJCPxfptQYA3r5gX6p8YWnDcPGc=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3515.eurprd02.prod.outlook.com (52.134.72.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Sun, 9 Jun 2019 21:34:54 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1965.017; Sun, 9 Jun 2019
- 21:34:54 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Peter Korsgaard <peter.korsgaard@barco.com>
-CC:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs
- request code
-Thread-Topic: [PATCH v2 2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs
- request code
-Thread-Index: AQHU+72dy7EDmo3k6EmkNrf+93yZ3aaUHtoA
-Date:   Sun, 9 Jun 2019 21:34:54 +0000
-Message-ID: <783250dd-87c0-b3cc-0e90-7978605a9b07@axentia.se>
-References: <20190425232028.9333-1-fancer.lancer@gmail.com>
- <20190425232028.9333-3-fancer.lancer@gmail.com>
-In-Reply-To: <20190425232028.9333-3-fancer.lancer@gmail.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0102CA0023.eurprd01.prod.exchangelabs.com
- (2603:10a6:7:14::36) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 152c472e-42ab-42df-9c92-08d6ed224f7e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3515;
-x-ms-traffictypediagnostic: DB3PR0202MB3515:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <DB3PR0202MB35151C6E9B03C606A603AC26BC120@DB3PR0202MB3515.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 006339698F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(376002)(39830400003)(396003)(199004)(189003)(54534003)(6436002)(229853002)(3846002)(186003)(6306002)(6512007)(64126003)(6486002)(14454004)(6506007)(53546011)(386003)(36756003)(31686004)(316002)(305945005)(5660300002)(508600001)(2616005)(65826007)(966005)(486006)(476003)(26005)(68736007)(8676002)(8936002)(7736002)(446003)(81166006)(11346002)(81156014)(4326008)(256004)(25786009)(14444005)(6116002)(31696002)(53936002)(86362001)(71200400001)(2906002)(71190400001)(102836004)(6246003)(99286004)(52116002)(76176011)(74482002)(54906003)(66556008)(58126008)(66446008)(73956011)(64756008)(66476007)(66946007)(110136005)(66066001)(65956001)(65806001);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3515;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DP5A12DwZeHIsja+VWwN8OGBZvwhncJfej0+9bR41JIIXHaoxjqKsUBPOLNUjGJwleZRcb+5Ulfm1eGkDSXiOel+M8of4g7uzE7eoBLHAnQyxLTawfMs2WVsQxkrZ1MepsntG/3UGC6LJjgCfC+wrXsHJ43UaT4G1WQAhNt9qxyVutLf1S/AYaGA12VtkrT40Tukpk8C2kguqnLK3agy7yMqVbIxY2/P5FAbVFXT7jnGH4FjxN4buhAL5iUWtZ0Xzl5GceakMgkN8eh+EU0LJXWDNMoqZmC+a6nwG57eQ2Okznlqt+lL+jnZFa5iUwJZqEk4o/FdHfjqF6u7bkVBiRG1xNM2Alo0eJ/2qusw93yqTPRCjEVDB+BTHIf0oEXRgKUjmPD0L6LJDDxvzmSSSjmijI2ToQKq0HjbDuBeVJI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9F847E48D62AF34EA4FB49694F649380@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sun, 9 Jun 2019 17:36:37 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42205 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfFIVgh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 17:36:37 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l15so6548119otn.9;
+        Sun, 09 Jun 2019 14:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZiIIarVNYc+IPXqi3ZtMcJmmvmMmviVgkK+GA+EHbhA=;
+        b=YUw1qnx0j9Q6GWh+yYTbdK8KRLJ8DYZRAv2/6rqS18LKK2PYUFJNNBBxVO310T59MS
+         Q0i8zJFB3HY8cV5PD1VOHDjD/z+NFcnqah+3Q/zqm73sHRlLC1ASFZw0cX0VlhoshrKv
+         2NdoPU57kcsbbb6cyiu31yotsMdoiKtyqUlk+oz0TSs2h3o9jxAedd8Wjh+6kd3N5Wg+
+         GNrG2ug/7KcCS8BCPGMHaK19XFYSvObeanbptGVJ6SWzWds4XUFordT+2Nw3RJbmbgoy
+         ZUyWpNRCOWJjFXG7qRElzCAT2CD5fnSwCiKEdSjLcMg4+7makbLxk9rKUHqbu6H2Bfo7
+         kFtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZiIIarVNYc+IPXqi3ZtMcJmmvmMmviVgkK+GA+EHbhA=;
+        b=XANydYOnPS/0H1zAZxTZNUHWdF4K9N5qghPAvKO02MqrCjkC8q+0irnL1WrnnJl03G
+         7ONskN5HHWdcE/yE8FEq22t+V5TCXZDwn2GJDktT2aE00nruBlcD17MLTbUe42dLyXeG
+         lxtFMWRNTw8Ao5IFvC5ukVGXnTMR5YGaCQfCwPAXB0YaY0mDSEnQlPjd8qQ02N8DK4w7
+         j2YYQrz0/aQTyC84YAmUPIhusQYrRRrD058zloBHfRdNnYlbEx7dK9ASmXwSTvdYxLJW
+         qyQBEkVZCuPJpQEKvIi3p7ZTYbvEKx+WJvMWOvz11DM2IR9mcj/74X7FRoLwwvp8o7+q
+         e23g==
+X-Gm-Message-State: APjAAAWhEbtCDyiRCMo6cphMK7rKgvzg9y/Fpt7Nbz6orihmlUjuvmD6
+        MxsM8ILIEqpDU6d3D2VMGqh5g1SaIm9sfdYKBug=
+X-Google-Smtp-Source: APXvYqyj9+ZRfTdLuN0mjg8NPOB46WOVRAt5cAu/Bhj4I4pqwq7IzgkWyjvVj6FI5s4pm42EnCqsEyqY25k+7COMUw8=
+X-Received: by 2002:a9d:6405:: with SMTP id h5mr16586195otl.42.1560116195631;
+ Sun, 09 Jun 2019 14:36:35 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 152c472e-42ab-42df-9c92-08d6ed224f7e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2019 21:34:54.0411
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3515
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+ <20190609180621.7607-6-martin.blumenstingl@googlemail.com> <CACRpkdYzeiLB7Yuixv6NsnLJoa_FnGKRHHQm=t4gMH34NdFSYA@mail.gmail.com>
+In-Reply-To: <CACRpkdYzeiLB7Yuixv6NsnLJoa_FnGKRHHQm=t4gMH34NdFSYA@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sun, 9 Jun 2019 23:36:24 +0200
+Message-ID: <CAFBinCBgoLb+Hfdo-sZ_0H6ct=UJm7j6wD_C6udbA6BTRvFOWQ@mail.gmail.com>
+Subject: Re: [RFC next v1 5/5] arm64: dts: meson: g12a: x96-max: fix the
+ Ethernet PHY reset line
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Giuseppe CAVALLARO <peppe.cavallaro@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNC0yNiAwMToyMCwgU2VyZ2UgU2VtaW4gd3JvdGU6DQo+IFRoZSBHUElPcyByZXF1
-ZXN0IGxvb3AgY2FuIGJlIHNhZmVseSBtb3ZlZCB0byBhIHNlcGFyYXRlIGZ1bmN0aW9uLg0KPiBG
-aXJzdCBvZiBhbGwgaXQgc2hhbGwgaW1wcm92ZSB0aGUgY29kZSByZWFkYWJpbGl0eS4gU2Vjb25k
-bHkgdGhlDQo+IGluaXRpYWxpemF0aW9uIGxvb3AgYXQgdGhpcyBwb2ludCBpcyB1c2VkIGZvciBi
-b3RoIG9mLSBhbmQNCj4gcGxhdGZvcm1fZGF0YS1iYXNlZCBpbml0aWFsaXphdGlvbiBwYXRocywg
-YnV0IGl0IHdpbGwgYmUgY2hhbmdlZCBpbg0KPiB0aGUgbmV4dCBwYXRjaCwgc28gYnkgaXNvbGF0
-aW5nIHRoZSBjb2RlIHdlJ2xsIHNpbXBsaWZ5IHRoZSBmdXR1cmUNCj4gd29yay4NCg0KVGhpcyBw
-YXRjaCBpcyBqdXN0IHByZXBhcmF0b3J5IGZvciBwYXRjaCAzLzMsIGFzIEkgc2VlIGl0LiBBbmQg
-c2luY2UNCkknbSBub3QgcmVhbGx5IGZvbmQgb2YgdGhlIGVuZCByZXN1bHQgYWZ0ZXIgcGF0Y2gg
-My8zLCBJJ20gZ29pbmcgdG8NCnN1bSB1cCBteSBpc3N1ZXMgaGVyZSwgaW5zdGVhZCBvZiB0cnlp
-bmcgZG8gaXQgcGllY2VtZWFsIGluIHRoZSB0d28NCnBhdGNoZXMuDQoNCkxpbnVzIGFuZCBKZWFu
-LCBmb3IgeW91ciBjb252ZW5pZW5jZSwgbGluayB0byB0aGlzIHBhdGNoIHNlcmllcyBbMV0uDQoN
-CldoaWxlIEkgYWdyZWUgd2l0aCB0aGUgZ29hbCAodG8gdXNlIHRoZSBtb3JlIGZsZXhpYmxlIGdw
-aW9kIGZ1bmN0aW9ucw0KdG8gZ2V0IGF0IHRoZSBncGlvIGRlc2NyaXB0b3JzKSwgdGhlIGNvc3Qg
-aXMgdG9vIGhpZ2ggd2hlbiB0aGUgaW5pdA0KY29kZSBmb3IgcGxhdGZvcm0gYW5kIE9GIGlzIGJh
-c2ljYWxseSBjb21wbGV0ZWx5IHNlcGFyYXRlZC4gSSBtdWNoDQpwcmVmZXIgdGhlIGFwcHJvYWNo
-IHRha2VuIGJ5IExpbnVzIFsyXSwgd2hpY2ggaW5zdGVhZCBjb252ZXJ0cyB0aGUNCnBsYXRmb3Jt
-IGludGVyZmFjZSBhbmQgaXRzIHNpbmdsZSB1c2VyIHRvIHVzZSBncGlvIGRlc2NyaXB0b3JzIGlu
-c3RlYWQNCm9mIHRoZSBsZWdhY3kgZ3BpbyBpbnRlcmZhY2UuIFRoZSBpMmMtbXV4LWdwaW8gY29k
-ZSB0aGVuIGhhcyB0aGUNCnBvdGVudGlhbCB0byB0YWtlIGEgdW5pZmllZCBhcHByb2FjaCB0byB0
-aGUgZ2l2ZW4gZ3BpbyBkZXNjcmlwdG9ycywNCndoZXJldmVyIHRoZXkgYXJlIG9yaWdpbmF0aW5n
-IGZyb20sIHdoaWNoIGlzIG11Y2ggbmljZXIgdGhhbiB0aGUNCmNvZGUtZm9yayBpbiB0aGlzIHNl
-cmllcy4NCg0KSSBhbHNvIHRoaW5rIGl0IGlzIHByZXR0eSBwb2ludGxlc3MgdG8gZmlyc3Qgc3Bs
-aXQgdGhlIGNvZGUgaW50bw0KcGxhdGZvcm0gYW5kIE9GIHBhdGhzLCBqdXN0IHNvIHRoYXQgdGhl
-IG5leHQgcGF0Y2ggKGZyb20gTGludXMpIGNhbg0KdW5pZnkgdGhlIHR3byBwYXRocyBhZ2Fpbi4g
-SSdkIGxpa2UgdG8gc2tpcCB0aGUgaW50ZXJtZWRpYXRlIHN0ZXAuDQoNClNvLCBJJ20gaG9waW5n
-IGZvciB0aGUgZm9sbG93aW5nIHRvIGhhcHBlbi4NCjEuIFNlcmdleSBzZW5kcyBhIHJldmlzZWQg
-cGF0Y2ggZm9yIHBhdGNoIDEvMy4NCjIuIEkgcHV0IHRoZSBwYXRjaCBvbiB0aGUgZm9yLW5leHQg
-YnJhbmNoLg0KMy4gTGludXMgcmViYXNlcyBoaXMgcGF0Y2ggb24gdG9wIG9mIHRoYXQgKHdoaWxl
-IHRoaW5raW5nIGFib3V0DQogICB0aGUgcXVlc3Rpb25zIHJhaXNlZCBieSBTZXJnZXkpLg0KNC4g
-U2VyZ2V5IHRlc3RzIHRoZSByZXN1bHQsIEkgYW5kIEplYW4gcmV2aWV3IGl0LCB0aGVuIHBvc3Np
-Ymx5DQogICBnbyBiYWNrIHRvIDMuDQo1LiBJIHB1dCB0aGUgcGF0Y2ggb24gdGhlIGZvci1uZXh0
-IGJyYW5jaC4NCg0KSXMgdGhhdCBvaz8gT3IgaXMgc29tZW9uZSBpbnNpc3RpbmcgdGhhdCB3ZSB0
-YWtlIGEgZGV0b3VyPw0KDQpDaGVlcnMsDQpQZXRlcg0KDQpbMV0gaHR0cHM6Ly9wYXRjaHdvcmsu
-b3psYWJzLm9yZy9jb3Zlci8xMDkxMTE5LyAoYW5kIHNob3cgcmVsYXRlZCkNClsyXSBodHRwczov
-L3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzExMDk1MjEvDQoNCj4gU2lnbmVkLW9mZi1ieTog
-U2VyZ2UgU2VtaW4gPGZhbmNlci5sYW5jZXJAZ21haWwuY29tPg0KPiANCj4gLS0tDQo+IENoYW5n
-ZWxvZyB2Mg0KPiAtIENyZWF0ZSBhIGRlZGljYXRlZCBpbml0aWFsX3N0YXRlIGZpZWxkIGluIHRo
-ZSAiZ3Bpb211eCIgc3RydWN0dXJlIHRvDQo+ICAga2VlcCBhbiBpbml0aWFsIGNoYW5uZWwgc2Vs
-ZWN0b3Igc3RhdGUuDQo+IC0tLQ0KPiAgZHJpdmVycy9pMmMvbXV4ZXMvaTJjLW11eC1ncGlvLmMg
-fCAxMTMgKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDY4IGluc2VydGlvbnMoKyksIDQ1IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvaTJjL211eGVzL2kyYy1tdXgtZ3Bpby5jIGIvZHJpdmVycy9pMmMvbXV4ZXMvaTJjLW11
-eC1ncGlvLmMNCj4gaW5kZXggNTQxNThiODI1YWNkLi5lMTBmNzI3MDZiOTkgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvaTJjL211eGVzL2kyYy1tdXgtZ3Bpby5jDQo+ICsrKyBiL2RyaXZlcnMvaTJj
-L211eGVzL2kyYy1tdXgtZ3Bpby5jDQo+IEBAIC0yMCw3ICsyMCw4IEBADQo+ICANCj4gIHN0cnVj
-dCBncGlvbXV4IHsNCj4gIAlzdHJ1Y3QgaTJjX211eF9ncGlvX3BsYXRmb3JtX2RhdGEgZGF0YTsN
-Cj4gLQl1bnNpZ25lZCBncGlvX2Jhc2U7DQo+ICsJdW5zaWduZWQgaW50IGdwaW9fYmFzZTsNCj4g
-Kwl1bnNpZ25lZCBpbnQgaW5pdGlhbF9zdGF0ZTsNCj4gIAlzdHJ1Y3QgZ3Bpb19kZXNjICoqZ3Bp
-b3M7DQo+ICB9Ow0KPiAgDQo+IEBAIC0xNjIsMTMgKzE2Myw2OCBAQCBzdGF0aWMgaW50IGkyY19t
-dXhfZ3Bpb19wcm9iZV9wbGF0KHN0cnVjdCBncGlvbXV4ICptdXgsDQo+ICAJcmV0dXJuIDA7DQo+
-ICB9DQo+ICANCj4gK3N0YXRpYyBpbnQgaTJjX211eF9ncGlvX3JlcXVlc3RfcGxhdChzdHJ1Y3Qg
-Z3Bpb211eCAqbXV4LA0KPiArCQkJCQlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAr
-ew0KPiArCXN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eGMgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShw
-ZGV2KTsNCj4gKwlzdHJ1Y3QgZ3Bpb19kZXNjICpncGlvX2Rlc2M7DQo+ICsJc3RydWN0IGkyY19h
-ZGFwdGVyICpyb290Ow0KPiArCXN0cnVjdCBkZXZpY2UgKmdwaW9fZGV2Ow0KPiArCWludCBpLCBy
-ZXQ7DQo+ICsNCj4gKwlyb290ID0gaTJjX3Jvb3RfYWRhcHRlcigmbXV4Yy0+cGFyZW50LT5kZXYp
-Ow0KPiArDQo+ICsJZm9yIChpID0gMDsgaSA8IG11eC0+ZGF0YS5uX2dwaW9zOyBpKyspIHsNCj4g
-KwkJcmV0ID0gZ3Bpb19yZXF1ZXN0KG11eC0+Z3Bpb19iYXNlICsgbXV4LT5kYXRhLmdwaW9zW2ld
-LA0KPiArCQkJCSAgICJpMmMtbXV4LWdwaW8iKTsNCj4gKwkJaWYgKHJldCkgew0KPiArCQkJZGV2
-X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIHJlcXVlc3QgR1BJTyAlZFxuIiwNCj4gKwkJCQlt
-dXgtPmRhdGEuZ3Bpb3NbaV0pOw0KPiArCQkJZ290byBlcnJfcmVxdWVzdF9ncGlvOw0KPiArCQl9
-DQo+ICsNCj4gKwkJcmV0ID0gZ3Bpb19kaXJlY3Rpb25fb3V0cHV0KG11eC0+Z3Bpb19iYXNlICsg
-bXV4LT5kYXRhLmdwaW9zW2ldLA0KPiArCQkJCQkgICAgbXV4LT5pbml0aWFsX3N0YXRlICYgKDEg
-PDwgaSkpOw0KPiArCQlpZiAocmV0KSB7DQo+ICsJCQlkZXZfZXJyKCZwZGV2LT5kZXYsDQo+ICsJ
-CQkJIkZhaWxlZCB0byBzZXQgZGlyZWN0aW9uIG9mIEdQSU8gJWQgdG8gb3V0cHV0XG4iLA0KPiAr
-CQkJCW11eC0+ZGF0YS5ncGlvc1tpXSk7DQo+ICsJCQlpKys7CS8qIGdwaW9fcmVxdWVzdCBhYm92
-ZSBzdWNjZWVkZWQsIHNvIG11c3QgZnJlZSAqLw0KPiArCQkJZ290byBlcnJfcmVxdWVzdF9ncGlv
-Ow0KPiArCQl9DQo+ICsNCj4gKwkJZ3Bpb19kZXNjID0gZ3Bpb190b19kZXNjKG11eC0+Z3Bpb19i
-YXNlICsgbXV4LT5kYXRhLmdwaW9zW2ldKTsNCj4gKwkJbXV4LT5ncGlvc1tpXSA9IGdwaW9fZGVz
-YzsNCj4gKw0KPiArCQlpZiAoIW11eGMtPm11eF9sb2NrZWQpDQo+ICsJCQljb250aW51ZTsNCj4g
-Kw0KPiArCQlncGlvX2RldiA9ICZncGlvX2Rlc2MtPmdkZXYtPmRldjsNCj4gKwkJbXV4Yy0+bXV4
-X2xvY2tlZCA9IGkyY19yb290X2FkYXB0ZXIoZ3Bpb19kZXYpID09IHJvb3Q7DQo+ICsJfQ0KPiAr
-DQo+ICsJcmV0dXJuIDA7DQo+ICsNCj4gK2Vycl9yZXF1ZXN0X2dwaW86DQo+ICsJZm9yICg7IGkg
-PiAwOyBpLS0pDQo+ICsJCWdwaW9fZnJlZShtdXgtPmdwaW9fYmFzZSArIG11eC0+ZGF0YS5ncGlv
-c1tpIC0gMV0pOw0KPiArDQo+ICsJcmV0dXJuIHJldDsNCj4gK30NCj4gKw0KPiArc3RhdGljIHZv
-aWQgaTJjX211eF9ncGlvX2ZyZWUoc3RydWN0IGdwaW9tdXggKm11eCkNCj4gK3sNCj4gKwlpbnQg
-aTsNCj4gKw0KPiArCWZvciAoaSA9IDA7IGkgPCBtdXgtPmRhdGEubl9ncGlvczsgaSsrKQ0KPiAr
-CQlncGlvZF9mcmVlKG11eC0+Z3Bpb3NbaV0pOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgaW50IGky
-Y19tdXhfZ3Bpb19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgew0KPiAg
-CXN0cnVjdCBpMmNfbXV4X2NvcmUgKm11eGM7DQo+ICAJc3RydWN0IGdwaW9tdXggKm11eDsNCj4g
-IAlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKnBhcmVudDsNCj4gLQlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKnJv
-b3Q7DQo+IC0JdW5zaWduZWQgaW5pdGlhbF9zdGF0ZTsNCj4gIAlpbnQgaSwgcmV0Ow0KPiAgDQo+
-ICAJbXV4ID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqbXV4KSwgR0ZQX0tFUk5F
-TCk7DQo+IEBAIC0xOTgsNDggKzI1NCwxOCBAQCBzdGF0aWMgaW50IGkyY19tdXhfZ3Bpb19wcm9i
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgDQo+ICAJcGxhdGZvcm1fc2V0X2Ry
-dmRhdGEocGRldiwgbXV4Yyk7DQo+ICANCj4gLQlyb290ID0gaTJjX3Jvb3RfYWRhcHRlcigmcGFy
-ZW50LT5kZXYpOw0KPiAtDQo+ICAJbXV4Yy0+bXV4X2xvY2tlZCA9IHRydWU7DQo+ICANCj4gIAlp
-ZiAobXV4LT5kYXRhLmlkbGUgIT0gSTJDX01VWF9HUElPX05PX0lETEUpIHsNCj4gLQkJaW5pdGlh
-bF9zdGF0ZSA9IG11eC0+ZGF0YS5pZGxlOw0KPiArCQltdXgtPmluaXRpYWxfc3RhdGUgPSBtdXgt
-PmRhdGEuaWRsZTsNCj4gIAkJbXV4Yy0+ZGVzZWxlY3QgPSBpMmNfbXV4X2dwaW9fZGVzZWxlY3Q7
-DQo+ICAJfSBlbHNlIHsNCj4gLQkJaW5pdGlhbF9zdGF0ZSA9IG11eC0+ZGF0YS52YWx1ZXNbMF07
-DQo+ICsJCW11eC0+aW5pdGlhbF9zdGF0ZSA9IG11eC0+ZGF0YS52YWx1ZXNbMF07DQo+ICAJfQ0K
-PiAgDQo+IC0JZm9yIChpID0gMDsgaSA8IG11eC0+ZGF0YS5uX2dwaW9zOyBpKyspIHsNCj4gLQkJ
-c3RydWN0IGRldmljZSAqZ3Bpb19kZXY7DQo+IC0JCXN0cnVjdCBncGlvX2Rlc2MgKmdwaW9fZGVz
-YzsNCj4gLQ0KPiAtCQlyZXQgPSBncGlvX3JlcXVlc3QobXV4LT5ncGlvX2Jhc2UgKyBtdXgtPmRh
-dGEuZ3Bpb3NbaV0sDQo+IC0JCQkJICAgImkyYy1tdXgtZ3BpbyIpOw0KPiAtCQlpZiAocmV0KSB7
-DQo+IC0JCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJGYWlsZWQgdG8gcmVxdWVzdCBHUElPICVkXG4i
-LA0KPiAtCQkJCW11eC0+ZGF0YS5ncGlvc1tpXSk7DQo+IC0JCQlnb3RvIGVycl9yZXF1ZXN0X2dw
-aW87DQo+IC0JCX0NCj4gLQ0KPiAtCQlyZXQgPSBncGlvX2RpcmVjdGlvbl9vdXRwdXQobXV4LT5n
-cGlvX2Jhc2UgKyBtdXgtPmRhdGEuZ3Bpb3NbaV0sDQo+IC0JCQkJCSAgICBpbml0aWFsX3N0YXRl
-ICYgKDEgPDwgaSkpOw0KPiAtCQlpZiAocmV0KSB7DQo+IC0JCQlkZXZfZXJyKCZwZGV2LT5kZXYs
-DQo+IC0JCQkJIkZhaWxlZCB0byBzZXQgZGlyZWN0aW9uIG9mIEdQSU8gJWQgdG8gb3V0cHV0XG4i
-LA0KPiAtCQkJCW11eC0+ZGF0YS5ncGlvc1tpXSk7DQo+IC0JCQlpKys7CS8qIGdwaW9fcmVxdWVz
-dCBhYm92ZSBzdWNjZWVkZWQsIHNvIG11c3QgZnJlZSAqLw0KPiAtCQkJZ290byBlcnJfcmVxdWVz
-dF9ncGlvOw0KPiAtCQl9DQo+IC0NCj4gLQkJZ3Bpb19kZXNjID0gZ3Bpb190b19kZXNjKG11eC0+
-Z3Bpb19iYXNlICsgbXV4LT5kYXRhLmdwaW9zW2ldKTsNCj4gLQkJbXV4LT5ncGlvc1tpXSA9IGdw
-aW9fZGVzYzsNCj4gLQ0KPiAtCQlpZiAoIW11eGMtPm11eF9sb2NrZWQpDQo+IC0JCQljb250aW51
-ZTsNCj4gLQ0KPiAtCQlncGlvX2RldiA9ICZncGlvX2Rlc2MtPmdkZXYtPmRldjsNCj4gLQkJbXV4
-Yy0+bXV4X2xvY2tlZCA9IGkyY19yb290X2FkYXB0ZXIoZ3Bpb19kZXYpID09IHJvb3Q7DQo+IC0J
-fQ0KPiArCXJldCA9IGkyY19tdXhfZ3Bpb19yZXF1ZXN0X3BsYXQobXV4LCBwZGV2KTsNCj4gKwlp
-ZiAocmV0KQ0KPiArCQlnb3RvIGFsbG9jX2ZhaWxlZDsNCj4gIA0KPiAgCWlmIChtdXhjLT5tdXhf
-bG9ja2VkKQ0KPiAgCQlkZXZfaW5mbygmcGRldi0+ZGV2LCAibXV4LWxvY2tlZCBpMmMgbXV4XG4i
-KTsNCj4gQEAgLTI2MCwxMCArMjg2LDkgQEAgc3RhdGljIGludCBpMmNfbXV4X2dwaW9fcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIA0KPiAgYWRkX2FkYXB0ZXJfZmFpbGVk
-Og0KPiAgCWkyY19tdXhfZGVsX2FkYXB0ZXJzKG11eGMpOw0KPiAtCWkgPSBtdXgtPmRhdGEubl9n
-cGlvczsNCj4gLWVycl9yZXF1ZXN0X2dwaW86DQo+IC0JZm9yICg7IGkgPiAwOyBpLS0pDQo+IC0J
-CWdwaW9fZnJlZShtdXgtPmdwaW9fYmFzZSArIG11eC0+ZGF0YS5ncGlvc1tpIC0gMV0pOw0KPiAr
-DQo+ICsJaTJjX211eF9ncGlvX2ZyZWUobXV4KTsNCj4gKw0KPiAgYWxsb2NfZmFpbGVkOg0KPiAg
-CWkyY19wdXRfYWRhcHRlcihwYXJlbnQpOw0KPiAgDQo+IEBAIC0yNzQsMTIgKzI5OSwxMCBAQCBz
-dGF0aWMgaW50IGkyY19tdXhfZ3Bpb19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikNCj4gIHsNCj4gIAlzdHJ1Y3QgaTJjX211eF9jb3JlICptdXhjID0gcGxhdGZvcm1fZ2V0X2Ry
-dmRhdGEocGRldik7DQo+ICAJc3RydWN0IGdwaW9tdXggKm11eCA9IGkyY19tdXhfcHJpdihtdXhj
-KTsNCj4gLQlpbnQgaTsNCj4gIA0KPiAgCWkyY19tdXhfZGVsX2FkYXB0ZXJzKG11eGMpOw0KPiAg
-DQo+IC0JZm9yIChpID0gMDsgaSA8IG11eC0+ZGF0YS5uX2dwaW9zOyBpKyspDQo+IC0JCWdwaW9f
-ZnJlZShtdXgtPmdwaW9fYmFzZSArIG11eC0+ZGF0YS5ncGlvc1tpXSk7DQo+ICsJaTJjX211eF9n
-cGlvX2ZyZWUobXV4KTsNCj4gIA0KPiAgCWkyY19wdXRfYWRhcHRlcihtdXhjLT5wYXJlbnQpOw0K
-PiAgDQo+IA0KDQo=
+Hi Linus,
+
+On Sun, Jun 9, 2019 at 11:17 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Sun, Jun 9, 2019 at 8:06 PM Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+>
+> > The PHY reset line and interrupt line are swapped on the X96 Max
+> > compared to the Odroid-N2 schematics. This means:
+> > - GPIOZ_14 is the interrupt line (on the Odroid-N2 it's the reset line)
+> > - GPIOZ_15 is the reset line (on the Odroid-N2 it's the interrupt line)
+> >
+> > Also the GPIOZ_14 and GPIOZ_15 pins are special. The datasheet describes
+> > that they are "3.3V input tolerant open drain (OD) output pins". This
+> > means the GPIO controller can drive the output LOW to reset the PHY. To
+> > release the reset it can only switch the pin to input mode. The output
+> > cannot be driven HIGH for these pins.
+> > This requires configuring the reset line as GPIO_OPEN_SOURCE because
+> > otherwise the PHY will be stuck in "reset" state (because driving the
+> > pin HIGH seeems to result in the same signal as driving it LOW).
+>
+> This far it seems all right.
+...except the "seeems" typo which I just noticed.
+thank you for sanity-checking this so far!
+
+> > Switch to GPIOZ_15 for the reset GPIO with the correct flags and drop
+> > the "snps,reset-active-low" property as this is now encoded in the
+> > GPIO_OPEN_SOURCE flag.
+>
+> Open source doesn't imply active low.
+>
+> We have this in stmmac_mdio_reset():
+>
+>                 gpio_direction_output(data->reset_gpio,
+>                                       data->active_low ? 1 : 0);
+>                 if (data->delays[0])
+>                         msleep(DIV_ROUND_UP(data->delays[0], 1000));
+>
+>                 gpio_set_value(data->reset_gpio, data->active_low ? 0 : 1);
+>                 if (data->delays[1])
+>                         msleep(DIV_ROUND_UP(data->delays[1], 1000));
+>
+>                 gpio_set_value(data->reset_gpio, data->active_low ? 1 : 0);
+>                 if (data->delays[2])
+>                         msleep(DIV_ROUND_UP(data->delays[2], 1000));
+>
+> If "snps,reset-active-low" was set it results in the sequence 1, 0, 1
+> if it is not set it results in the sequence 0, 1, 0.
+I'm changing this logic with earlier patches of this series.
+can you please look at these as well because GPIO_OPEN_SOURCE doesn't
+work with the old version of stmmac_mdio_reset() that you are showing.
+
+> The high (reset) is asserted by switching the pin into high-z open drain
+> mode, which happens by switching the line into input mode in some
+> cases.
+>
+> I think the real reason it works now is that reset is actually active high.
+let me write down what I definitely know so far
+
+the RTL8211F PHY wants the reset line to be LOW for a few milliseconds
+to put it into reset mode.
+driving the reset line HIGH again takes it out of reset.
+
+Odroid-N2's schematics [0] (page 30) shows that there's a pull-up for
+the PHYRSTB pin, which is also connected to the NRST signal which is
+GPIOZ_15
+
+> It makes a lot of sense, since if it resets the device when set as input
+> (open drain) it holds all devices on that line in reset, which is likely
+> what you want as most GPIOs come up as inputs (open drain).
+> A pull-up resistor will ascertain that the devices are in reset.
+my understanding is that the pull-up resistor holds it out of reset
+driving GPIOZ_15's (open drain) output LOW pulls the signal to ground
+and asserts the reset
+
+> Other than the commit message:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+thank you for looking into this!
+
+
+Martin
+
+
+[0] https://dn.odroid.com/S922X/ODROID-N2/Schematic/odroid-n2_rev0.4_20190307.pdf
