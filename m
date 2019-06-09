@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A1CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A39C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C20320652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC7D205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100312;
-	bh=duSya/bkEwqJlQythabgzwaWhymQ25wZMYJyC2ZRY/4=;
+	s=default; t=1560100327;
+	bh=l14EGSnDbb64xKDaYsy1iHuRBQwmsC1vjxJQ15nK/t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KX6WYtGXg0Yi2q3hDE82nt77hFLD42GnxowMsDuxyXRZI0tG02SU5kZ57nheo94J3
-	 6qc0a3PjFcnPoSAu36VzvmOAVJuDf76Wig7jF9sRXOFzLpzKSnRATlePLdcaG2lRyp
-	 ZdByqKrxSyeWZLV1Ihj1kV7q12/FXxQ1LuMkyEwc=
+	b=OdGCpwa7a705YnWefoHFBb3LXayqb0PbX+eflJN0Z0kE2TF8Yo01EVOdG6sQA3vAa
+	 tQQsBV/VV7abpqZ4i0rEUtGfTR36TFl/qohjmTloXd1mMKB4OP2UaVzwShrWVEDRuZ
+	 Alxt7Num77WDu6xMOgM0VKk5UGOsgksXMKattWFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387893AbfFIRAi (ORCPT
+        id S2388446AbfFIRMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37146 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:12:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387877AbfFIRAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:00:34 -0400
+        id S2387824AbfFIRAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:00:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71DFD206DF;
-        Sun,  9 Jun 2019 17:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87C1C204EC;
+        Sun,  9 Jun 2019 17:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099634;
-        bh=duSya/bkEwqJlQythabgzwaWhymQ25wZMYJyC2ZRY/4=;
+        s=default; t=1560099620;
+        bh=l14EGSnDbb64xKDaYsy1iHuRBQwmsC1vjxJQ15nK/t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9wNg0Ci4PEqOm3/iAaTOS05x75AYfw1Gwow85+YYr5oRwDkxUyncCPT0ZarBHan4
-         hx6C2leT/CRvbfwWojnUCDiTCN3yUM8DR6xQUtzkJqpu8ko4I0xe4/8vMMK35/R6m4
-         e83fSKsRH7007cN7tRLlVuPB6nmActwJjkIQ0Ses=
+        b=oUin5fvQLpl5Pl4dL98IjwUvv1gbhPDDgfJkSojg9NKtbpRWjopnP495EzsATdVVm
+         LkPfYThHObKvUoi3PXH/GWlFCWDAnxcUhinDaZXiR69JrC03B74irL4Xqxh3Z0l3Dm
+         PxS7hVjMXgqXmuDESrVcFbvviTkdxdFD4jmP/n/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 110/241] bcache: avoid clang -Wunintialized warning
-Date:   Sun,  9 Jun 2019 18:40:52 +0200
-Message-Id: <20190609164150.969859075@linuxfoundation.org>
+Subject: [PATCH 4.4 106/241] net: cw1200: fix a NULL pointer dereference
+Date:   Sun,  9 Jun 2019 18:40:48 +0200
+Message-Id: <20190609164150.853212330@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,73 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
+[ Upstream commit 0ed2a005347400500a39ea7c7318f1fea57fb3ca ]
 
-clang has identified a code path in which it thinks a
-variable may be unused:
+In case create_singlethread_workqueue fails, the fix free the
+hardware and returns NULL to avoid NULL pointer dereference.
 
-drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-                        fifo_pop(&ca->free_inc, bucket);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
- #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
-                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
-        if (_r) {                                                       \
-            ^~
-drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
-                        allocator_wait(ca, bch_allocator_push(ca, bucket));
-                                                                  ^~~~~~
-drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
-                if (cond)                                               \
-                    ^~~~
-drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
-                        fifo_pop(&ca->free_inc, bucket);
-                        ^
-drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
- #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
-                                ^
-drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
-        if (_r) {                                                       \
-        ^
-drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
-                        long bucket;
-                                   ^
-
-This cannot happen in practice because we only enter the loop
-if there is at least one element in the list.
-
-Slightly rearranging the code makes this clearer to both the
-reader and the compiler, which avoids the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/alloc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/cw1200/main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 16c3390e5d9f3..d82ae445c9ee3 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -324,10 +324,11 @@ static int bch_allocator_thread(void *arg)
- 		 * possibly issue discards to them, then we add the bucket to
- 		 * the free list:
- 		 */
--		while (!fifo_empty(&ca->free_inc)) {
-+		while (1) {
- 			long bucket;
- 
--			fifo_pop(&ca->free_inc, bucket);
-+			if (!fifo_pop(&ca->free_inc, bucket))
-+				break;
- 
- 			if (ca->discard) {
- 				mutex_unlock(&ca->set->bucket_lock);
+diff --git a/drivers/net/wireless/cw1200/main.c b/drivers/net/wireless/cw1200/main.c
+index 0e51e27d2e3f1..317daa968e037 100644
+--- a/drivers/net/wireless/cw1200/main.c
++++ b/drivers/net/wireless/cw1200/main.c
+@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
+ 	mutex_init(&priv->wsm_cmd_mux);
+ 	mutex_init(&priv->conf_mutex);
+ 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
++	if (!priv->workqueue) {
++		ieee80211_free_hw(hw);
++		return NULL;
++	}
++
+ 	sema_init(&priv->scan.lock, 1);
+ 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
+ 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
 -- 
 2.20.1
 
