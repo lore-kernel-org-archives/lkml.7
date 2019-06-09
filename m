@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C729C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FFAC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36678205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0025205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100586;
-	bh=hNB1wprvtxnjsYwue8uW3eaTDIfm1Io0/AFQvzzbeUM=;
+	s=default; t=1560100595;
+	bh=mbF+KuK+ApjVYtSxZYdGvM0Yw3p8xtLnmmhXydfoIWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2VMV5dDk+nV5QlwpfV9dZQG5HofqYBVlYryt+W0YghsaVZRX9G4EK2NAJEfi9uzZ6
-	 freYlVldtWcicjbK5pRqYQ+fUzO0SzMB+Rs6SnGTgri9diFMOwxVdG1brctzTjNN/u
-	 4x0YzZtwikp+bZx1j3AxlAAjBI5bOXBt5rWixYgo=
+	b=P6P5Z8fGlNSlcEjop6iUReexzKA0dQ8hzVMTVYYLb+95Dlz/9SCJrarg6841P01Co
+	 pNxuf4DicdEWknNpNCdtqWUPImkv/h70vuU5GEIDuIkkaf8npx8/iQDZebSNGEjLLR
+	 03ya3lbbsSBQ4khoeUwy7vIegnd8Sold21KiJS8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733015AbfFIRQZ (ORCPT
+        id S2387446AbfFIRQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:16:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54704 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732390AbfFIQxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:25 -0400
+        id S1732361AbfFIQxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F16D0206C3;
-        Sun,  9 Jun 2019 16:53:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0698204EC;
+        Sun,  9 Jun 2019 16:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099205;
-        bh=hNB1wprvtxnjsYwue8uW3eaTDIfm1Io0/AFQvzzbeUM=;
+        s=default; t=1560099191;
+        bh=mbF+KuK+ApjVYtSxZYdGvM0Yw3p8xtLnmmhXydfoIWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iDOneP5vaHXyS3nHNfjW/NzCN9iI1ii62vdZeCENB1PP81DiMRyi1oTrneix3MtTY
-         oPza9dhaxXd5XcCr3TGSRLQv/lVUXn83SjMH/q7uMJgkQ4HQBe6xX9b1AZ4RNDRXru
-         R4gtAizs7zeWbZyErWAa8FaubmrWZdZgjUqvFvyg=
+        b=KqnzJp6XK4qz9gn7YlRpq79ngN5jDEYEnXznj/D2evcC/hL8SNN+O2q+senddS9p9
+         E3Vz4kTO89pYssNZZjAeDuZDtoVzEbkSIrqrHUqaOoLjoTbIlUJS27W9+YVolJfkHD
+         Ty8MW2cvloe6dQ8GmZc/JUvLtxZ4YkV8Dfubxxoc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 4.9 47/83] gcc-plugins: Fix build failures under Darwin host
-Date:   Sun,  9 Jun 2019 18:42:17 +0200
-Message-Id: <20190609164131.941678976@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 42/83] memcg: make it work on sparse non-0-node systems
+Date:   Sun,  9 Jun 2019 18:42:12 +0200
+Message-Id: <20190609164131.478973899@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,52 +65,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 7210e060155b9cf557fb13128353c3e494fa5ed3 upstream.
+commit 3e8589963773a5c23e2f1fe4bcad0e9a90b7f471 upstream.
 
-The gcc-common.h file did not take into account certain macros that
-might have already been defined in the build environment. This updates
-the header to avoid redefining the macros, as seen on a Darwin host
-using gcc 4.9.2:
+We have a single node system with node 0 disabled:
+  Scanning NUMA topology in Northbridge 24
+  Number of physical nodes 2
+  Skipping disabled node 0
+  Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
+  NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
 
- HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o - due to: scripts/gcc-plugins/gcc-common.h
-In file included from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:0:
-scripts/gcc-plugins/gcc-common.h:153:0: warning: "__unused" redefined
-^
-In file included from /usr/include/stdio.h:64:0,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/system.h:40,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/gcc-plugin.h:28,
-                from /Users/hns/Documents/Projects/QuantumSTEP/System/Library/Frameworks/System.framework/Versions-jessie/x86_64-apple-darwin15.0.0/gcc/arm-linux-gnueabi/bin/../lib/gcc/arm-linux-gnueabi/4.9.2/plugin/include/plugin.h:23,
-                from scripts/gcc-plugins/gcc-common.h:9,
-                from scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:
-/usr/include/sys/cdefs.h:161:0: note: this is the location of the previous definition
-^
+This causes crashes in memcg when system boots:
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+  #PF error: [normal kernel read fault]
+...
+  RIP: 0010:list_lru_add+0x94/0x170
+...
+  Call Trace:
+   d_lru_add+0x44/0x50
+   dput.part.34+0xfc/0x110
+   __fput+0x108/0x230
+   task_work_run+0x9f/0xc0
+   exit_to_usermode_loop+0xf5/0x100
 
-Reported-and-tested-by: "H. Nikolaus Schaller" <hns@goldelico.com>
-Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+It is reproducible as far as 4.12.  I did not try older kernels.  You have
+to have a new enough systemd, e.g.  241 (the reason is unknown -- was not
+investigated).  Cannot be reproduced with systemd 234.
+
+The system crashes because the size of lru array is never updated in
+memcg_update_all_list_lrus and the reads are past the zero-sized array,
+causing dereferences of random memory.
+
+The root cause are list_lru_memcg_aware checks in the list_lru code.  The
+test in list_lru_memcg_aware is broken: it assumes node 0 is always
+present, but it is not true on some systems as can be seen above.
+
+So fix this by avoiding checks on node 0.  Remember the memcg-awareness by
+a bool flag in struct list_lru.
+
+Link: http://lkml.kernel.org/r/20190522091940.3615-1-jslaby@suse.cz
+Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/gcc-plugins/gcc-common.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/list_lru.h |    1 +
+ mm/list_lru.c            |    8 +++-----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -135,8 +135,12 @@ extern void print_gimple_expr(FILE *, gi
- extern void dump_gimple_stmt(pretty_printer *, gimple, int, int);
+--- a/include/linux/list_lru.h
++++ b/include/linux/list_lru.h
+@@ -51,6 +51,7 @@ struct list_lru {
+ 	struct list_lru_node	*node;
+ #if defined(CONFIG_MEMCG) && !defined(CONFIG_SLOB)
+ 	struct list_head	list;
++	bool			memcg_aware;
  #endif
+ };
  
-+#ifndef __unused
- #define __unused __attribute__((__unused__))
-+#endif
-+#ifndef __visible
- #define __visible __attribute__((visibility("default")))
-+#endif
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -42,11 +42,7 @@ static void list_lru_unregister(struct l
+ #if defined(CONFIG_MEMCG) && !defined(CONFIG_SLOB)
+ static inline bool list_lru_memcg_aware(struct list_lru *lru)
+ {
+-	/*
+-	 * This needs node 0 to be always present, even
+-	 * in the systems supporting sparse numa ids.
+-	 */
+-	return !!lru->node[0].memcg_lrus;
++	return lru->memcg_aware;
+ }
  
- #define DECL_NAME_POINTER(node) IDENTIFIER_POINTER(DECL_NAME(node))
- #define DECL_NAME_LENGTH(node) IDENTIFIER_LENGTH(DECL_NAME(node))
+ static inline struct list_lru_one *
+@@ -389,6 +385,8 @@ static int memcg_init_list_lru(struct li
+ {
+ 	int i;
+ 
++	lru->memcg_aware = memcg_aware;
++
+ 	if (!memcg_aware)
+ 		return 0;
+ 
 
 
