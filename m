@@ -2,489 +2,91 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858BAC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7610C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43770212F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CC520673
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfFILvO (ORCPT
+        id S1728473AbfFILzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 07:51:14 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:59958 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728161AbfFILvO (ORCPT
+        Sun, 9 Jun 2019 07:55:18 -0400
+Received: from smtprelay0014.hostedemail.com ([216.40.44.14]:45579 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728356AbfFILzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 07:51:14 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 1658F20030;
-        Sun,  9 Jun 2019 13:51:07 +0200 (CEST)
-Date:   Sun, 9 Jun 2019 13:51:05 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa.cheng@mediatek.com,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [2/2] drm/panel: support for AUO kd101n80-45na wuxga dsi video
- mode panel
-Message-ID: <20190609115105.GA31079@ravnborg.org>
-References: <20190608112342.64416-1-jitao.shi@mediatek.com>
- <20190608112342.64416-2-jitao.shi@mediatek.com>
+        Sun, 9 Jun 2019 07:55:18 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 367EE181D3419;
+        Sun,  9 Jun 2019 11:55:16 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: tail02_2dc14101a324c
+X-Filterd-Recvd-Size: 2654
+Received: from XPS-9350 (107-134-184-123.lightspeed.renonv.sbcglobal.net [107.134.184.123])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Sun,  9 Jun 2019 11:55:14 +0000 (UTC)
+Message-ID: <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
+Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
+From:   Joe Perches <joe@perches.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Sun, 09 Jun 2019 04:55:09 -0700
+In-Reply-To: <CAK7LNARsSFT1ncyRgWi_tga_7KC6ZwZOETXQ2GrO9PfeJgLxyQ@mail.gmail.com>
+References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+         <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
+         <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
+         <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+         <20190604134213.GA26263@kroah.com>
+         <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+         <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
+         <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
+         <20190605051040.GA22760@kroah.com>
+         <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
+         <20190605071413.779bd821@coco.lan>
+         <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
+         <CAK7LNARsSFT1ncyRgWi_tga_7KC6ZwZOETXQ2GrO9PfeJgLxyQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190608112342.64416-2-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
-        a=e5mUnYsNAAAA:8 a=3arX_EwEDu8COwomX1QA:9 a=CjuIK1q_8ugA:10
-        a=6heAxKwa5pAsJatQ0mat:22 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
-
-Thanks for another panel driver.
-
-The comments for the panel-boe-tv101wum-nl6 diver to extent
-applies to this driver too.
-Please address these and I will do a proper review of the next version.
-
-I notice that error handlign is a little bit less in this driver.
-consier what approch to use and see if you can align between these
-drivers, and if in doubt use panel-simple as your role model.
-
-	Sam
-
-On Sat, Jun 08, 2019 at 07:23:42PM +0800, Jitao Shi wrote:
-> Add driver for AUO kd101n80-45na panel.
-> This panel supports the resolution 1200x1920, dsi video mode
-> and 4 lanes.
+On Sun, 2019-06-09 at 16:14 +0900, Masahiro Yamada wrote:
+> Hi Joe,
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/panel/Kconfig                 |  10 +
->  drivers/gpu/drm/panel/Makefile                |   1 +
->  .../gpu/drm/panel/panel-auo-kd101n80-45na.c   | 352 ++++++++++++++++++
->  3 files changed, 363 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-auo-kd101n80-45na.c
+> On Thu, Jun 6, 2019 at 2:06 AM Joe Perches <joe@perches.com> wrote:
+> > Perhaps a checkpatch change too:
+> > 
+> > The first block updates unsigned only bitfields
+> > The second tests uapi definitions and suggests "__<kernel_types"
 > 
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index e36dbb4df867..f5cd5af9ce42 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -272,4 +272,14 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
->  	help
->  	  Say Y here if you want to enable support for Truly NT35597 WQXGA Dual DSI
->  	  Video Mode panel
-> +
-> +config DRM_PANEL_AUO_KD101N80_45NA
-> +	tristate "AUO KD101N80_45NA 1200x1920 panel"
-> +	depends on OF
-> +	depends on DRM_MIPI_DSI
-> +	depends on BACKLIGHT_CLASS_DEVICE
-> +	help
-> +	  Say Y here if you want to support for AUO KD101N80_45NA WUXGA PANEL
-> +	  DSI Video Mode panel
-> +
->  endmenu
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index 78e3dc376bdd..1056933bdf2e 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -28,3 +28,4 @@ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) += panel-sitronix-st7701.o
->  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
->  obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
->  obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
-> +obj-$(CONFIG_DRM_PANEL_AUO_KD101N80_45NA) += panel-auo-kd101n80-45na.o
-> diff --git a/drivers/gpu/drm/panel/panel-auo-kd101n80-45na.c b/drivers/gpu/drm/panel/panel-auo-kd101n80-45na.c
-> new file mode 100644
-> index 000000000000..ab7bfc059e8a
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-auo-kd101n80-45na.c
-> @@ -0,0 +1,352 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Jitao Shi <jitao.shi@mediatek.com>
-> + */
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include <drm/drmP.h>
-> +#include <drm/drm_crtc.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_panel.h>
-> +
-> +#include <video/mipi_display.h>
-> +
-> +struct auo_panel {
-> +	struct drm_panel base;
-> +	struct mipi_dsi_device *dsi;
-> +
-> +	struct backlight_device *backlight;
-> +	struct regulator *pp1800;
-> +	struct regulator *avee;
-> +	struct regulator *avdd;
-> +	struct gpio_desc *enable_gpio;
-> +
-> +	bool prepared;
-> +	bool enabled;
-> +
-> +	const struct drm_display_mode *mode;
-> +};
-> +
-> +static inline struct auo_panel *to_auo_panel(struct drm_panel *panel)
-> +{
-> +	return container_of(panel, struct auo_panel, base);
-> +}
-> +
-> +static int auo_panel_init(struct auo_panel *auo)
-> +{
-> +	struct drm_panel *panel = &auo->base;
-> +	int err;
-> +
-> +	err = mipi_dsi_dcs_exit_sleep_mode(auo->dsi);
-> +	if (err < 0) {
-> +		DRM_DEV_ERROR(panel->dev, "failed to exit sleep mode: %d\n",
-> +			      err);
-> +		return err;
-> +	}
-> +
-> +	/* T3.1*/
-> +	msleep(120);
-> +
-> +	err = mipi_dsi_dcs_set_display_on(auo->dsi);
-> +	if (err < 0) {
-> +		DRM_DEV_ERROR(panel->dev, "failed to set display on: %d\n",
-> +			      err);
-> +	}
-> +	/* T3.1 + T3.2: > 200ms */
-> +	msleep(120);
-> +
-> +	return err;
-> +}
-> +
-> +static int auo_panel_off(struct auo_panel *auo)
-> +{
-> +	struct mipi_dsi_device *dsi = auo->dsi;
-> +	int ret;
-> +
-> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-> +
-> +	ret = mipi_dsi_dcs_set_display_off(dsi);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int auo_panel_disable(struct drm_panel *panel)
-> +{
-> +	struct auo_panel *auo = to_auo_panel(panel);
-> +
-> +	if (!auo->enabled)
-> +		return 0;
-> +
-> +	backlight_disable(auo->backlight);
-> +
-> +	auo->enabled = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static int auo_panel_unprepare(struct drm_panel *panel)
-> +{
-> +	struct auo_panel *auo = to_auo_panel(panel);
-> +	int ret;
-> +
-> +	if (!auo->prepared)
-> +		return 0;
-> +
-> +	ret = auo_panel_off(auo);
-> +	if (ret < 0) {
-> +		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	msleep(150);
-> +	regulator_disable(auo->avee);
-> +	regulator_disable(auo->avdd);
-> +	usleep_range(5000, 7000);
-> +	regulator_disable(auo->pp1800);
-> +	if (auo->enable_gpio)
-> +		gpiod_set_value(auo->enable_gpio, 0);
-> +
-> +	auo->prepared = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static int auo_panel_prepare(struct drm_panel *panel)
-> +{
-> +	struct auo_panel *auo = to_auo_panel(panel);
-> +	int ret;
-> +
-> +	if (auo->prepared)
-> +		return 0;
-> +
-> +	if (auo->enable_gpio) {
-> +		gpiod_set_value(auo->enable_gpio, 0);
-> +		usleep_range(1000, 1500);
-> +	}
-> +
-> +	ret = regulator_enable(auo->pp1800);
-> +	if (ret < 0)
-> +		return ret;
-> +	ret = regulator_enable(auo->avdd);
-> +	if (ret < 0)
-> +		goto poweroff1v8;
-> +	ret = regulator_enable(auo->avee);
-> +	if (ret < 0)
-> +		goto poweroffavdd;
-> +
-> +	if (auo->enable_gpio) {
-> +		gpiod_set_value(auo->enable_gpio, 1);
-> +		usleep_range(10000, 12000);
-> +	}
-> +
-> +	ret = auo_panel_init(auo);
-> +	if (ret < 0) {
-> +		dev_err(panel->dev, "failed to init panel: %d\n", ret);
-> +		goto poweroff;
-> +	}
-> +
-> +	auo->prepared = true;
-> +
-> +	return 0;
-> +
-> +poweroff:
-> +	regulator_disable(auo->avee);
-> +poweroffavdd:
-> +	regulator_disable(auo->avdd);
-> +poweroff1v8:
-> +	usleep_range(5000, 7000);
-> +	regulator_disable(auo->pp1800);
-> +	if (auo->enable_gpio)
-> +		gpiod_set_value(auo->enable_gpio, 0);
-> +	return ret;
-> +}
-> +
-> +static int auo_panel_enable(struct drm_panel *panel)
-> +{
-> +	struct auo_panel *auo = to_auo_panel(panel);
-> +	int ret;
-> +
-> +	if (auo->enabled)
-> +		return 0;
-> +
-> +	ret = backlight_enable(auo->backlight);
-> +	if (ret) {
-> +		DRM_DEV_ERROR(panel->drm->dev,
-> +			      "Failed to enable backlight %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	auo->enabled = true;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct drm_display_mode default_mode = {
-> +	.clock = 157000,
-> +	.hdisplay = 1200,
-> +	.hsync_start = 1200 + 80,
-> +	.hsync_end = 1200 + 80 + 24,
-> +	.htotal = 1200 + 80 + 24 + 36,
-> +	.vdisplay = 1920,
-> +	.vsync_start = 1920 + 16,
-> +	.vsync_end = 1920 + 16 + 4,
-> +	.vtotal = 1920 + 16 + 4 + 16,
-> +	.vrefresh = 60,
-> +};
-> +
-> +static int auo_panel_get_modes(struct drm_panel *panel)
-> +{
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(panel->drm, &default_mode);
-> +	if (!mode) {
-> +		dev_err(panel->drm->dev, "failed to add mode %ux%ux@%u\n",
-> +			default_mode.hdisplay, default_mode.vdisplay,
-> +			default_mode.vrefresh);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	drm_mode_set_name(mode);
-> +
-> +	drm_mode_probed_add(panel->connector, mode);
-> +
-> +	panel->connector->display_info.width_mm = 135;
-> +	panel->connector->display_info.height_mm = 216;
-> +	panel->connector->display_info.bpc = 8;
-> +
-> +	return 1;
-> +}
-> +
-> +static const struct drm_panel_funcs auo_panel_funcs = {
-> +	.disable = auo_panel_disable,
-> +	.unprepare = auo_panel_unprepare,
-> +	.prepare = auo_panel_prepare,
-> +	.enable = auo_panel_enable,
-> +	.get_modes = auo_panel_get_modes,
-> +};
-> +
-> +static int auo_panel_add(struct auo_panel *auo)
-> +{
-> +	struct device *dev = &auo->dsi->dev;
-> +
-> +	auo->avdd = devm_regulator_get(dev, "avdd");
-> +	if (IS_ERR(auo->avdd))
-> +		return PTR_ERR(auo->avdd);
-> +
-> +	auo->avee = devm_regulator_get(dev, "avee");
-> +	if (IS_ERR(auo->avee))
-> +		return PTR_ERR(auo->avee);
-> +
-> +	auo->pp1800 = devm_regulator_get(dev, "pp1800");
-> +	if (IS_ERR(auo->pp1800))
-> +		return PTR_ERR(auo->pp1800);
-> +
-> +	auo->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
-> +	if (IS_ERR(auo->enable_gpio)) {
-> +		dev_err(dev, "cannot get reset-gpios %ld\n",
-> +			PTR_ERR(auo->enable_gpio));
-> +		auo->enable_gpio = NULL;
-> +	} else {
-> +		gpiod_set_value(auo->enable_gpio, 0);
-> +	}
-> +
-> +	auo->backlight = devm_of_find_backlight(dev);
-> +	if (IS_ERR(auo->backlight))
-> +		return PTR_ERR(auo->backlight);
-> +
-> +	drm_panel_init(&auo->base);
-> +	auo->base.funcs = &auo_panel_funcs;
-> +	auo->base.dev = &auo->dsi->dev;
-> +
-> +	return drm_panel_add(&auo->base);
-> +}
-> +
-> +static void auo_panel_del(struct auo_panel *auo)
-> +{
-> +	if (auo->base.dev)
-> +		drm_panel_remove(&auo->base);
-> +}
-> +
-> +static int auo_panel_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct auo_panel *auo;
-> +	int ret;
-> +
-> +	dsi->lanes = 4;
-> +	dsi->format = MIPI_DSI_FMT_RGB888;
-> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-> +		 MIPI_DSI_MODE_LPM;
-> +
-> +	auo = devm_kzalloc(&dsi->dev, sizeof(*auo), GFP_KERNEL);
-> +	if (!auo)
-> +		return -ENOMEM;
-> +
-> +	mipi_dsi_set_drvdata(dsi, auo);
-> +
-> +	auo->dsi = dsi;
-> +
-> +	ret = auo_panel_add(auo);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return mipi_dsi_attach(dsi);
-> +}
-> +
-> +static int auo_panel_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct auo_panel *auo = mipi_dsi_get_drvdata(dsi);
-> +	int ret;
-> +
-> +	ret = auo_panel_disable(&auo->base);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "failed to disable panel: %d\n", ret);
-> +
-> +	ret = mipi_dsi_detach(dsi);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
-> +
-> +	auo_panel_del(auo);
-> +
-> +	return 0;
-> +}
-> +
-> +static void auo_panel_shutdown(struct mipi_dsi_device *dsi)
-> +{
-> +	struct auo_panel *auo = mipi_dsi_get_drvdata(dsi);
-> +
-> +	auo_panel_disable(&auo->base);
-> +}
-> +
-> +static const struct of_device_id auo_of_match[] = {
-> +	{ .compatible = "auo,kd101n80-45na", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, auo_of_match);
-> +
-> +static struct mipi_dsi_driver auo_panel_driver = {
-> +	.driver = {
-> +		.name = "panel-auo-kd101n80-45na",
-> +		.of_match_table = auo_of_match,
-> +	},
-> +	.probe = auo_panel_probe,
-> +	.remove = auo_panel_remove,
-> +	.shutdown = auo_panel_shutdown,
-> +};
-> +module_mipi_dsi_driver(auo_panel_driver);
-> +
-> +MODULE_AUTHOR("Jitao Shi <jitao.shi@mediatek.com>");
-> +MODULE_DESCRIPTION("AUO kd101n80-45na wuxga (1200x1920) video mode panel driver");
-> +MODULE_LICENSE("GPL v2");
-> +
-> -- 
-> 2.21.0
+> Good.
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> In addition,
+> 
+> "warn if __u8, __u16, __u32, __u64 are used outside of uapi/"
+> 
+> Lots of kernel-space headers use __u{8,16,32,64} instead of u{8,16,32,64}
+> just because developers often miss to understand when to use
+> the underscore-prefixed types.
+
+The problem there is that checkpatch can't know if the
+__<uapi_type> being used is for an actual uapi use or not.
+
+coccinelle could be much better at that.
+
