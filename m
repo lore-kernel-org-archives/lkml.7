@@ -2,52 +2,52 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205EFC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490D0C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2CF206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4BC20843
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099731;
-	bh=G4bHDqkmuUO8py0FTMn8aLtIMlprFMhnTgpYD6ZO83c=;
+	s=default; t=1560099738;
+	bh=cUOQWn5WeOO5C2d4/1sFxufHKsFKwSesPfLkcaF011Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02faXF40cYsrmSaBET/iVLUua15MGcdsZ4i2beIbQ4MlYK5M79Eg408w8CKT1W2DA
-	 hThaQqa+jTShj2gNH7TtFA+UwDKMm8wW8ZLkt4m89mOQOp+LwtxGT8pi9ereZcLvtj
-	 stZpUyFUfhhr6TUvuXBtUUYhQtOkBqotbzAuKRS8=
+	b=GNIqT/HUBWFKALrpAjHyw2j05VIGuMMhTHuwAOMNx5pADvT/dK7LTzIh2ngVLQQVX
+	 rBPN4xRGJoJ5ElCn2/GDEO7IulHsQklrhDm8vtpmdmVs+X4MmbtSKt6CPVTL/OVlPP
+	 LAR0C5fTsYQLzMCNz8t0kfG1sgJXELQyuSGpIXn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388202AbfFIRCJ (ORCPT
+        id S1729613AbfFIRCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:02:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39768 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388193AbfFIRCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:02:04 -0400
+        id S2388197AbfFIRCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:02:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 834BC204EC;
-        Sun,  9 Jun 2019 17:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72B93206DF;
+        Sun,  9 Jun 2019 17:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099724;
-        bh=G4bHDqkmuUO8py0FTMn8aLtIMlprFMhnTgpYD6ZO83c=;
+        s=default; t=1560099726;
+        bh=cUOQWn5WeOO5C2d4/1sFxufHKsFKwSesPfLkcaF011Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZGoWFarFQ2RrZ00Fi7F5m6lEk6XoxqGRLNm1q8HOgPfizLymGOa1f8YQ/zhsAFzG
-         gT+gs1hhctIF1mp+xDhOAPXfTurXw/kEYOaTxYzANQnvsVl7+ShWm++/919I3pk2/R
-         0oof1MMNKRkO84v9B5/kLkH9V81QaG+qf19mhMmw=
+        b=N0HeocPOVtonDebkj+FWHzqtu5RlWB9KQ2TQDAhJmXoFrDVHGGLNpUvIl5h+wWT0z
+         hDpJDR68NXGVF2/9jZoEbSzMp0r9+OSvT/ZZkNpyCFNAFAx821VP2ZKSs65fW8vobL
+         N5VNltxOQV4CO5MEfSVY5T+/MtQi6UyvPKLtbjOo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 090/241] at76c50x-usb: Dont register led_trigger if usb_register_driver failed
-Date:   Sun,  9 Jun 2019 18:40:32 +0200
-Message-Id: <20190609164150.377556807@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 137/241] scsi: libsas: Do discovery on empty PHY to update PHY info
+Date:   Sun,  9 Jun 2019 18:41:19 +0200
+Message-Id: <20190609164151.745938786@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,89 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+[ Upstream commit d8649fc1c5e40e691d589ed825998c36a947491c ]
 
-commit 09ac2694b0475f96be895848687ebcbba97eeecf upstream.
+When we discover the PHY is empty in sas_rediscover_dev(), the PHY
+information (like negotiated linkrate) is not updated.
 
-Syzkaller report this:
+As such, for a user examining sysfs for that PHY, they would see
+incorrect values:
 
-[ 1213.468581] BUG: unable to handle kernel paging request at fffffbfff83bf338
-[ 1213.469530] #PF error: [normal kernel read fault]
-[ 1213.469530] PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1c868b067 PTE 0
-[ 1213.473514] Oops: 0000 [#1] SMP KASAN PTI
-[ 1213.473514] CPU: 0 PID: 6321 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
-[ 1213.473514] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[ 1213.473514] RIP: 0010:strcmp+0x31/0xa0
-[ 1213.473514] Code: 00 00 00 00 fc ff df 55 53 48 83 ec 08 eb 0a 84 db 48 89 ef 74 5a 4c 89 e6 48 89 f8 48 89 fa 48 8d 6f 01 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 50 48 89 f0 48 89 f2 0f b6 5d
-[ 1213.473514] RSP: 0018:ffff8881f2b7f950 EFLAGS: 00010246
-[ 1213.473514] RAX: 1ffffffff83bf338 RBX: ffff8881ea6f7240 RCX: ffffffff825350c6
-[ 1213.473514] RDX: 0000000000000000 RSI: ffffffffc1ee19c0 RDI: ffffffffc1df99c0
-[ 1213.473514] RBP: ffffffffc1df99c1 R08: 0000000000000001 R09: 0000000000000004
-[ 1213.473514] R10: 0000000000000000 R11: ffff8881de353f00 R12: ffff8881ee727900
-[ 1213.473514] R13: dffffc0000000000 R14: 0000000000000001 R15: ffffffffc1eeaaf0
-[ 1213.473514] FS:  00007fa66fa01700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
-[ 1213.473514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1213.473514] CR2: fffffbfff83bf338 CR3: 00000001ebb9e005 CR4: 00000000007606f0
-[ 1213.473514] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1213.473514] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1213.473514] PKRU: 55555554
-[ 1213.473514] Call Trace:
-[ 1213.473514]  led_trigger_register+0x112/0x3f0
-[ 1213.473514]  led_trigger_register_simple+0x7a/0x110
-[ 1213.473514]  ? 0xffffffffc1c10000
-[ 1213.473514]  at76_mod_init+0x77/0x1000 [at76c50x_usb]
-[ 1213.473514]  do_one_initcall+0xbc/0x47d
-[ 1213.473514]  ? perf_trace_initcall_level+0x3a0/0x3a0
-[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
-[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
-[ 1213.473514]  do_init_module+0x1b5/0x547
-[ 1213.473514]  load_module+0x6405/0x8c10
-[ 1213.473514]  ? module_frob_arch_sections+0x20/0x20
-[ 1213.473514]  ? kernel_read_file+0x1e6/0x5d0
-[ 1213.473514]  ? find_held_lock+0x32/0x1c0
-[ 1213.473514]  ? cap_capable+0x1ae/0x210
-[ 1213.473514]  ? __do_sys_finit_module+0x162/0x190
-[ 1213.473514]  __do_sys_finit_module+0x162/0x190
-[ 1213.473514]  ? __ia32_sys_init_module+0xa0/0xa0
-[ 1213.473514]  ? __mutex_unlock_slowpath+0xdc/0x690
-[ 1213.473514]  ? wait_for_completion+0x370/0x370
-[ 1213.473514]  ? vfs_write+0x204/0x4a0
-[ 1213.473514]  ? do_syscall_64+0x18/0x450
-[ 1213.473514]  do_syscall_64+0x9f/0x450
-[ 1213.473514]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 1213.473514] RIP: 0033:0x462e99
-[ 1213.473514] Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-[ 1213.473514] RSP: 002b:00007fa66fa00c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[ 1213.473514] RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-[ 1213.473514] RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
-[ 1213.473514] RBP: 00007fa66fa00c70 R08: 0000000000000000 R09: 0000000000000000
-[ 1213.473514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa66fa016bc
-[ 1213.473514] R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+root@(none)$ cd /sys/class/sas_phy/phy-0:0:20
+root@(none)$ more negotiated_linkrate
+3.0 Gbit
+root@(none)$ echo 0 > enable
+root@(none)$ more negotiated_linkrate
+3.0 Gbit
 
-If usb_register failed, no need to call led_trigger_register_simple.
+So fix this, simply discover the PHY again, even though we know it's empty;
+in the above example, this gives us:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1264b951463a ("at76c50x-usb: add driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+root@(none)$ more negotiated_linkrate
+Phy disabled
 
+We must do this after unregistering the device associated with the PHY
+(in sas_unregister_devs_sas_addr()).
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/at76c50x-usb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/wireless/at76c50x-usb.c
-+++ b/drivers/net/wireless/at76c50x-usb.c
-@@ -2582,8 +2582,8 @@ static int __init at76_mod_init(void)
- 	if (result < 0)
- 		printk(KERN_ERR DRIVER_NAME
- 		       ": usb_register failed (status %d)\n", result);
--
--	led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
-+	else
-+		led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
- 	return result;
- }
- 
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 1a6f65db615e8..ee1f9ee995e53 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -2027,6 +2027,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
+ 	if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
+ 		phy->phy_state = PHY_EMPTY;
+ 		sas_unregister_devs_sas_addr(dev, phy_id, last);
++		/*
++		 * Even though the PHY is empty, for convenience we discover
++		 * the PHY to update the PHY info, like negotiated linkrate.
++		 */
++		sas_ex_phy_discover(dev, phy_id);
+ 		return res;
+ 	} else if (SAS_ADDR(sas_addr) == SAS_ADDR(phy->attached_sas_addr) &&
+ 		   dev_type_flutter(type, phy->attached_dev_type)) {
+-- 
+2.20.1
+
 
 
