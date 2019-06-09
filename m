@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16838C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D9DC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45CE205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8382070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099132;
-	bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
+	s=default; t=1560099134;
+	bh=amxF0ukhMKyB0rc4C9BAZQTUT+r86YpNfg4bhxsSct8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OzoEhXMzCZtnZ4Lied1FR7MEfEE5Gf7MqKZHN4xQUPUL6GjYRqPkkqrlpo+nnOD2E
-	 qE7b3V5tudI5HnQ9IMdrzo0Sk7sgZu2PGCWjAgHFG2dRpaFDr126593Wd5PvfbC6Ud
-	 3lf24UyGQVWRgEsouBN4PzuCYcEQ8s+PJFLx9CWc=
+	b=VpT4V0jAI42pCNDhUaqcbaOGnb3zqCRy368hxWuZUdY/3t0KE+OvL20y6h43LNAxa
+	 8gnf7GPW5WH+8WvZ7hGw3Xrd5jK+Knu1MCvzS5tTsfoDAEZAPpehliabL/pk6986kS
+	 OOLX6nSnd2gHp+pXAz3e11Q4T3EcmLNmV7VATwU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732140AbfFIQwL (ORCPT
+        id S1732155AbfFIQwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:52:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52784 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:52:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732124AbfFIQwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:52:09 -0400
+        id S1732137AbfFIQwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:52:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B13DE205ED;
-        Sun,  9 Jun 2019 16:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582AC206DF;
+        Sun,  9 Jun 2019 16:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099128;
-        bh=yvSmm+w6lX77wNa90A/+99wgzkko2UVyotwyWPTNxgc=;
+        s=default; t=1560099130;
+        bh=amxF0ukhMKyB0rc4C9BAZQTUT+r86YpNfg4bhxsSct8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kIHi33y6dZToJfcv0rsq55e2HMSV15kCyoFlmFSFJ2KzFGCayvnL1NlRVrEXZkRMb
-         sY+46U84rr9uLtJMkJgOk4s+Y6Msr7ZNSSGwQ40BGE+3HwxB27qhtzPuKBwvwaYnvQ
-         /Vv7pvBItDJc/C2Lky3mDlwilVDGx7QjwjN6lz90=
+        b=e9q9XJMGYF4sdB4CHTdL4Wz3eIGBRRyX+lhLwcWs9Vmwrx9RiPS21iS/hUMvkP6nQ
+         iGJxk5/kp8/U5phX7pZsM9PYSTMKacSYKHnUncB8fSE3QaZOiRhA7he7c/bBMZVMQa
+         6nBxhVZNuN83W6zS9zKzZDLA6M7b8bezZgsTMXiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 02/83] llc: fix skb leak in llc_build_and_send_ui_pkt()
-Date:   Sun,  9 Jun 2019 18:41:32 +0200
-Message-Id: <20190609164127.950373368@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.9 20/83] xhci: update bounce buffer with correct sg num
+Date:   Sun,  9 Jun 2019 18:41:50 +0200
+Message-Id: <20190609164129.226846275@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -60,84 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Henry Lin <henryl@nvidia.com>
 
-[ Upstream commit 8fb44d60d4142cd2a440620cd291d346e23c131e ]
+commit 597c56e372dab2c7f79b8d700aad3a5deebf9d1b upstream.
 
-If llc_mac_hdr_init() returns an error, we must drop the skb
-since no llc_build_and_send_ui_pkt() caller will take care of this.
+This change fixes a data corruption issue occurred on USB hard disk for
+the case that bounce buffer is used during transferring data.
 
-BUG: memory leak
-unreferenced object 0xffff8881202b6800 (size 2048):
-  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.590s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    1a 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-  backtrace:
-    [<00000000e25b5abe>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<00000000e25b5abe>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<00000000e25b5abe>] slab_alloc mm/slab.c:3326 [inline]
-    [<00000000e25b5abe>] __do_kmalloc mm/slab.c:3658 [inline]
-    [<00000000e25b5abe>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-    [<00000000a1ae188a>] kmalloc include/linux/slab.h:552 [inline]
-    [<00000000a1ae188a>] sk_prot_alloc+0xd6/0x170 net/core/sock.c:1608
-    [<00000000ded25bbe>] sk_alloc+0x35/0x2f0 net/core/sock.c:1662
-    [<000000002ecae075>] llc_sk_alloc+0x35/0x170 net/llc/llc_conn.c:950
-    [<00000000551f7c47>] llc_ui_create+0x7b/0x140 net/llc/af_llc.c:173
-    [<0000000029027f0e>] __sock_create+0x164/0x250 net/socket.c:1430
-    [<000000008bdec225>] sock_create net/socket.c:1481 [inline]
-    [<000000008bdec225>] __sys_socket+0x69/0x110 net/socket.c:1523
-    [<00000000b6439228>] __do_sys_socket net/socket.c:1532 [inline]
-    [<00000000b6439228>] __se_sys_socket net/socket.c:1530 [inline]
-    [<00000000b6439228>] __x64_sys_socket+0x1e/0x30 net/socket.c:1530
-    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+While updating data between sg list and bounce buffer, current
+implementation passes mapped sg number (urb->num_mapped_sgs) to
+sg_pcopy_from_buffer() and sg_pcopy_to_buffer(). This causes data
+not get copied if target buffer is located in the elements after
+mapped sg elements. This change passes sg number for full list to
+fix issue.
 
-BUG: memory leak
-unreferenced object 0xffff88811d750d00 (size 224):
-  comm "syz-executor907", pid 7074, jiffies 4294943781 (age 8.600s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 f0 0c 24 81 88 ff ff 00 68 2b 20 81 88 ff ff  ...$.....h+ ....
-  backtrace:
-    [<0000000053026172>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-    [<0000000053026172>] slab_post_alloc_hook mm/slab.h:439 [inline]
-    [<0000000053026172>] slab_alloc_node mm/slab.c:3269 [inline]
-    [<0000000053026172>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-    [<00000000fa8f3c30>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-    [<00000000d96fdafb>] alloc_skb include/linux/skbuff.h:1058 [inline]
-    [<00000000d96fdafb>] alloc_skb_with_frags+0x5f/0x250 net/core/skbuff.c:5327
-    [<000000000a34a2e7>] sock_alloc_send_pskb+0x269/0x2a0 net/core/sock.c:2225
-    [<00000000ee39999b>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-    [<00000000e034d810>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-    [<00000000c0bc8445>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<00000000c0bc8445>] sock_sendmsg+0x54/0x70 net/socket.c:671
-    [<000000003b687167>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-    [<00000000922d78d9>] __do_sys_sendto net/socket.c:1976 [inline]
-    [<00000000922d78d9>] __se_sys_sendto net/socket.c:1972 [inline]
-    [<00000000922d78d9>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
-    [<00000000cec820c1>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-    [<000000000c32554f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Besides, for copying data from bounce buffer, calling dma_unmap_single()
+on the bounce buffer before copying data to sg list can avoid cache issue.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f9c589e142d0 ("xhci: TD-fragment, align the unsplittable case with a bounce buffer")
+Cc: <stable@vger.kernel.org> # v4.8+
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/llc/llc_output.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/net/llc/llc_output.c
-+++ b/net/llc/llc_output.c
-@@ -72,6 +72,8 @@ int llc_build_and_send_ui_pkt(struct llc
- 	rc = llc_mac_hdr_init(skb, skb->dev->dev_addr, dmac);
- 	if (likely(!rc))
- 		rc = dev_queue_xmit(skb);
-+	else
-+		kfree_skb(skb);
- 	return rc;
- }
+---
+ drivers/usb/host/xhci-ring.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -678,6 +678,7 @@ void xhci_unmap_td_bounce_buffer(struct
+ 	struct device *dev = xhci_to_hcd(xhci)->self.controller;
+ 	struct xhci_segment *seg = td->bounce_seg;
+ 	struct urb *urb = td->urb;
++	size_t len;
  
+ 	if (!seg || !urb)
+ 		return;
+@@ -688,11 +689,14 @@ void xhci_unmap_td_bounce_buffer(struct
+ 		return;
+ 	}
+ 
+-	/* for in tranfers we need to copy the data from bounce to sg */
+-	sg_pcopy_from_buffer(urb->sg, urb->num_mapped_sgs, seg->bounce_buf,
+-			     seg->bounce_len, seg->bounce_offs);
+ 	dma_unmap_single(dev, seg->bounce_dma, ring->bounce_buf_len,
+ 			 DMA_FROM_DEVICE);
++	/* for in tranfers we need to copy the data from bounce to sg */
++	len = sg_pcopy_from_buffer(urb->sg, urb->num_sgs, seg->bounce_buf,
++			     seg->bounce_len, seg->bounce_offs);
++	if (len != seg->bounce_len)
++		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %ld != %d\n",
++				len, seg->bounce_len);
+ 	seg->bounce_len = 0;
+ 	seg->bounce_offs = 0;
+ }
+@@ -3163,6 +3167,7 @@ static int xhci_align_td(struct xhci_hcd
+ 	unsigned int unalign;
+ 	unsigned int max_pkt;
+ 	u32 new_buff_len;
++	size_t len;
+ 
+ 	max_pkt = GET_MAX_PACKET(usb_endpoint_maxp(&urb->ep->desc));
+ 	unalign = (enqd_len + *trb_buff_len) % max_pkt;
+@@ -3193,8 +3198,12 @@ static int xhci_align_td(struct xhci_hcd
+ 
+ 	/* create a max max_pkt sized bounce buffer pointed to by last trb */
+ 	if (usb_urb_dir_out(urb)) {
+-		sg_pcopy_to_buffer(urb->sg, urb->num_mapped_sgs,
++		len = sg_pcopy_to_buffer(urb->sg, urb->num_sgs,
+ 				   seg->bounce_buf, new_buff_len, enqd_len);
++		if (len != seg->bounce_len)
++			xhci_warn(xhci,
++				"WARN Wrong bounce buffer write length: %ld != %d\n",
++				len, seg->bounce_len);
+ 		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
+ 						 max_pkt, DMA_TO_DEVICE);
+ 	} else {
 
 
