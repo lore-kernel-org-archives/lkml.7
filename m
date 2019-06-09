@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43611C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2CC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1342A20840
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE1B204EC
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099812;
-	bh=6c0JvXqW24/fFraJcbdkf9/+JGz+n4y9+ZrlOB6V2lE=;
+	s=default; t=1560099814;
+	bh=+kIEXJMeTP1KdmW/tnGqQswG8llJuLBkzgOSww3SMcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uvdd/EVEAKai6cCLVyFO6HQb4g8wakWloAnPXUrmSgF5PzI1hgcOugzbHq7nIOzno
-	 FbRDzPixySL2z+sSsHzVfuWjJdvZqsm+x7qw7jhMi06Jjzv+0xil5LQIkkhwdFLRHY
-	 gaQM2GuptpmRt4Seh3ZorvxJNG/CZLMcKMGKNc64=
+	b=eSRB5bUKPGnFxyQ65vRqlw0+RIZNEgTF1huhzJv4ytbvzII5vApy4+ee7MylEtXXX
+	 temAD1S4UEEiNzfJEFo8B2Wz4YX/knhe76K7qF18p85ELkpW5XGrXK3NyK1TsUIy/I
+	 lfCKgvtfAAbgaGe1zLqAaAyS6ZckKRyHWBebezkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388431AbfFIRDb (ORCPT
+        id S2388443AbfFIRDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:03:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388418AbfFIRD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:29 -0400
+        id S2388429AbfFIRDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:03:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73E3B20833;
-        Sun,  9 Jun 2019 17:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D79A204EC;
+        Sun,  9 Jun 2019 17:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099807;
-        bh=6c0JvXqW24/fFraJcbdkf9/+JGz+n4y9+ZrlOB6V2lE=;
+        s=default; t=1560099810;
+        bh=+kIEXJMeTP1KdmW/tnGqQswG8llJuLBkzgOSww3SMcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qXOFsDb7Dxhle7a1+KB0bhYZGdttMhdKXEv8M5vZQUKEPjo3VZh0k+kt7PuuMvxEz
-         QccrBHDCE81NHX8bvF39K0u4qsif+vHj249KRI2HFfgbOo8hkq8/TCAG75VpvkDIqJ
-         hqz/X6TLRDux+mTmQm4UbaIJw9DvOILuUdcYlJA4=
+        b=kCXrPfawbIxKx7U8aGzUcJbU28eRugLfh6RiilpkcrsLLPGSzXlUzx9NDnFHzfC28
+         /lv5BxRE7zSkI67mbMwzonB3H9LV3e1wCMIawxE9JLn0GcFhqbKiTJ7x5lZdQVlRvn
+         f29OJK1NlTdP9UMtY9PmW/D3NiS3tLNHGgbSI+0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        James Hutchinson <jahutchinson99@googlemail.com>,
-        Antti Palosaari <crope@iki.fi>, Sean Young <sean@mess.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 172/241] media: m88ds3103: serialize reset messages in m88ds3103_set_frontend
-Date:   Sun,  9 Jun 2019 18:41:54 +0200
-Message-Id: <20190609164152.757399090@linuxfoundation.org>
+Subject: [PATCH 4.4 173/241] media: go7007: avoid clang frame overflow warning with KASAN
+Date:   Sun,  9 Jun 2019 18:41:55 +0200
+Message-Id: <20190609164152.790981313@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -62,100 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 981fbe3da20a6f35f17977453bce7dfc1664d74f ]
+[ Upstream commit ed713a4a1367aca5c0f2f329579465db00c17995 ]
 
-Ref: https://bugzilla.kernel.org/show_bug.cgi?id=199323
+clang-8 warns about one function here when KASAN is enabled, even
+without the 'asan-stack' option:
 
-Users are experiencing problems with the DVBSky S960/S960C USB devices
-since the following commit:
+drivers/media/usb/go7007/go7007-fw.c:1551:5: warning: stack frame size of 2656 bytes in function
 
-9d659ae: ("locking/mutex: Add lock handoff to avoid starvation")
+I have reported this issue in the llvm bugzilla, but to make
+it work with the clang-8 release, a small annotation is still
+needed.
 
-The device malfunctions after running for an indeterminable period of
-time, and the problem can only be cleared by rebooting the machine.
+Link: https://bugs.llvm.org/show_bug.cgi?id=38809
 
-It is possible to encourage the problem to surface by blocking the
-signal to the LNB.
-
-Further debugging revealed the cause of the problem.
-
-In the following capture:
-- thread #1325 is running m88ds3103_set_frontend
-- thread #42 is running ts2020_stat_work
-
-a> [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 07 80
-   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 08
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 68 3f
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 08 ff
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 3d
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
-b> [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 07 00
-   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 21
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [42] usb 1-1: dvb_usb_v2_generic_io: >>> 09 01 01 60 66
-   [42] usb 1-1: dvb_usb_v2_generic_io: <<< 07 ff
-   [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 68 02 03 11
-   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-   [1325] usb 1-1: dvb_usb_v2_generic_io: >>> 08 60 02 10 0b
-   [1325] usb 1-1: dvb_usb_v2_generic_io: <<< 07
-
-Two i2c messages are sent to perform a reset in m88ds3103_set_frontend:
-
-  a. 0x07, 0x80
-  b. 0x07, 0x00
-
-However, as shown in the capture, the regmap mutex is being handed over
-to another thread (ts2020_stat_work) in between these two messages.
-
->From here, the device responds to every i2c message with an 07 message,
-and will only return to normal operation following a power cycle.
-
-Use regmap_multi_reg_write to group the two reset messages, ensuring
-both are processed before the regmap mutex is unlocked.
-
-Signed-off-by: James Hutchinson <jahutchinson99@googlemail.com>
-Reviewed-by: Antti Palosaari <crope@iki.fi>
-Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: fix checkpatch warning]
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/m88ds3103.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/media/usb/go7007/go7007-fw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/m88ds3103.c b/drivers/media/dvb-frontends/m88ds3103.c
-index d14d075ab1d63..9f0956e739a45 100644
---- a/drivers/media/dvb-frontends/m88ds3103.c
-+++ b/drivers/media/dvb-frontends/m88ds3103.c
-@@ -309,6 +309,9 @@ static int m88ds3103_set_frontend(struct dvb_frontend *fe)
- 	u16 u16tmp, divide_ratio = 0;
- 	u32 tuner_frequency, target_mclk;
- 	s32 s32tmp;
-+	static const struct reg_sequence reset_buf[] = {
-+		{0x07, 0x80}, {0x07, 0x00}
-+	};
+diff --git a/drivers/media/usb/go7007/go7007-fw.c b/drivers/media/usb/go7007/go7007-fw.c
+index 60bf5f0644d11..a5efcd4f7b4f5 100644
+--- a/drivers/media/usb/go7007/go7007-fw.c
++++ b/drivers/media/usb/go7007/go7007-fw.c
+@@ -1499,8 +1499,8 @@ static int modet_to_package(struct go7007 *go, __le16 *code, int space)
+ 	return cnt;
+ }
  
- 	dev_dbg(&client->dev,
- 		"delivery_system=%d modulation=%d frequency=%u symbol_rate=%d inversion=%d pilot=%d rolloff=%d\n",
-@@ -321,11 +324,7 @@ static int m88ds3103_set_frontend(struct dvb_frontend *fe)
- 	}
- 
- 	/* reset */
--	ret = regmap_write(dev->regmap, 0x07, 0x80);
--	if (ret)
--		goto err;
--
--	ret = regmap_write(dev->regmap, 0x07, 0x00);
-+	ret = regmap_multi_reg_write(dev->regmap, reset_buf, 2);
- 	if (ret)
- 		goto err;
- 
+-static int do_special(struct go7007 *go, u16 type, __le16 *code, int space,
+-			int *framelen)
++static noinline_for_stack int do_special(struct go7007 *go, u16 type,
++					 __le16 *code, int space, int *framelen)
+ {
+ 	switch (type) {
+ 	case SPECIAL_FRM_HEAD:
 -- 
 2.20.1
 
