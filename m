@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901B4C468BE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED78BC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8DC20684
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5ABE20684
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2uEJvbF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="siBSDH2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfFIT25 (ORCPT
+        id S1729919AbfFIT3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 15:28:57 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39768 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729082AbfFIT24 (ORCPT
+        Sun, 9 Jun 2019 15:29:02 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46564 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbfFIT24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 9 Jun 2019 15:28:56 -0400
-Received: by mail-lf1-f66.google.com with SMTP id p24so5118448lfo.6;
-        Sun, 09 Jun 2019 12:28:54 -0700 (PDT)
+Received: by mail-lj1-f194.google.com with SMTP id v24so1631642ljg.13;
+        Sun, 09 Jun 2019 12:28:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=p/IlH8/FqEF5B/kMufxrFYWiQGlg7YiEsCppmIdJ87U=;
-        b=t2uEJvbFG0yv7Kbfebe+VYLpRFpP7WhMkQvzgaKfUhZRhrp09o+lvbkEaWeKxjYbJJ
-         XIxJ+J//M3sv0Ci2QIPoOlXq4viyHjqDJk7q18N3qW3zGeZFfYWWRvasRpZB7g5HvPLq
-         d+uDJQynbPuZNDX8Hcxv4limyW711qq+2ARkhlVDcJP20G1J3VDmiXR+SbpluepaWBSd
-         FDmTfjhi4lfF/B1zrWvoD8UweIoyii0fc+K8e+mdZqi6oeVp0Vcgve55twv05gQO9QQW
-         sjn8mvFP5DAZZVNdJdOEuyKiD/L51vYj+zO0r1vHENQzhSx6irAkuZUxigX8gJfJQLbb
-         E0lw==
+        bh=jv3KwlfoUxJZX+aoCTlHRY+9L8Qx2HAqTMEwpIQvT3Y=;
+        b=siBSDH2QgaRFAWmHQDfporl8KJMNRDM7n3XmL6XCBdYsQz6A1DYz3D0MAWLCQ3LlCH
+         UCUlZce1OGR3aFcvJZODIp1tLF99XZy5vjfm99+cRaQ2vdCCwmh6Fasp4zNbr/tTiR2S
+         8juOvxjI37RBqezIThZQH5JOCmGfyA90jSZAJY+Yd0TPzVQFV32VmAx0UExw+QgtRNtw
+         PEmE/HQ5N1kJpso4iyiUtiMhab9jqfiaxibH5Wp5q9KrgODbeSniT5PgCy5C9THq4u7N
+         OYOFny9+EyvTTLVR1uzg79of9HAGs3ZW0xaA08V295EtGUxikRHR2xc5zAUKiQ6jy8Zk
+         LVrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=p/IlH8/FqEF5B/kMufxrFYWiQGlg7YiEsCppmIdJ87U=;
-        b=s6vzrvZPWnoi2mWNiw/p6B8Jj+UTcQevoGfrpa1Mo9QS5Oo1plcn/gl/8gTwiF8kpp
-         XIgqZel7UINfh6CW7Yjh980II5G2ibdMNmX2lWTx+I3BTWjWBZ/dis2pfRQCYQB3asAk
-         +WYeCGkyGi6NCMhsJxMown0oMzM/yWSQs6QhOi3mPe3dvFgNDZKPuJGc23JYdMKyQ2Fi
-         gcXRBva3a5CEpaaLfoutXgK0qed3V7k8XzAqpjoEceg9EQ+m+2pGm4LofZLGr7Wo3EDo
-         w8rx7ZaR9lXStPb9SBQujkmy9BXSGGQe6ZfpTbnQkuB0rYJ+ieitZhhSykPIv98FKCCs
-         OF9A==
-X-Gm-Message-State: APjAAAUgv0I3R8HGRsh9DfYqFXiuZkGJ8371LhlYV2T31HlU/hqzkoET
-        9th0QvWi3rbGEQuM158ZFLJimMdI
-X-Google-Smtp-Source: APXvYqw9JA//J7ASJAHOmn9Ac41mbnv1POI+bCKN1Qg8Z4oRFqpLoaBxrqyQ9EZGEwdwC1kb6TiUAw==
-X-Received: by 2002:a19:c383:: with SMTP id t125mr25896405lff.89.1560108533776;
-        Sun, 09 Jun 2019 12:28:53 -0700 (PDT)
+        bh=jv3KwlfoUxJZX+aoCTlHRY+9L8Qx2HAqTMEwpIQvT3Y=;
+        b=ZwrpLqQwuF5kjf7kyjCky4r96U3Rj2yrjKIGpW1NQiwtM8uyLr0eo3jXsPnhYOqIWH
+         h1xX5cQMavqvz0bLQ6leo/KtpHGcP6U4aAG7CTTrBb4vGLWNyODSA3rOaSoUH27fo0NP
+         fYrQiqchzylx+1erbW30YBHxGn+JhO8Be8z2HVHpSmdfIFB/0tpb6EvhEerv9GntaZBT
+         Br7f/cv8hzc5Nr8S0+HcYLh0928WIMhkHjxgtPjfCoHjmsAEbgjBQrAYkDv8aLMlkg/p
+         XY3wYMJkicLAT7UYn6K3i1UNSMdCpfbuWvxZI+8LEV1ka8rfrrHQwjgrWyhTm7zCaM9J
+         LTqw==
+X-Gm-Message-State: APjAAAXadrd2HNaWx1du1UpQTtem9NGryDZETQMWJURCKVR8Ppym1WH2
+        qf9o4ej7TT7Yc3a1d+5RqyQ=
+X-Google-Smtp-Source: APXvYqxDEL0gtOO11ONO1i6R/EedBYUDLdHjtBIfljSDcCKFUvBvC8dsXylsfqO9DSKoUNaU2XgNyw==
+X-Received: by 2002:a2e:3e01:: with SMTP id l1mr18298119lja.208.1560108534650;
+        Sun, 09 Jun 2019 12:28:54 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id e26sm1531685ljl.33.2019.06.09.12.28.52
+        by smtp.gmail.com with ESMTPSA id e26sm1531685ljl.33.2019.06.09.12.28.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 12:28:53 -0700 (PDT)
+        Sun, 09 Jun 2019 12:28:54 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Joseph Lo <josephl@nvidia.com>,
@@ -64,9 +64,9 @@ To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Peter De Schrijver <pdeschrijver@nvidia.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/3] clocksource/drivers/tegra: Set and use timer's period
-Date:   Sun,  9 Jun 2019 22:27:29 +0300
-Message-Id: <20190609192730.29459-3-digetx@gmail.com>
+Subject: [PATCH v1 3/3] clocksource/drivers/tegra: Drop unneeded typecasting in one place
+Date:   Sun,  9 Jun 2019 22:27:30 +0300
+Message-Id: <20190609192730.29459-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609192730.29459-1-digetx@gmail.com>
 References: <20190609192730.29459-1-digetx@gmail.com>
@@ -77,42 +77,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The of_clk structure has a period field that is set up initially by
-timer_of_clk_init(), that period value need to be adjusted for a case of
-TIMER1-9 that are running at a fixed rate that doesn't match the clock's
-rate. Note that the period value is currently used only by some of the
-clocksource drivers internally and hence this is just a minor cleanup
-change that doesn't fix anything.
+There is no need to cast void because kernel allows to do that without
+a warning message from a compiler.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clocksource/timer-tegra.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/clocksource/timer-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
-index 6da169de47f9..089c2f51ed40 100644
+index 089c2f51ed40..c208908fa288 100644
 --- a/drivers/clocksource/timer-tegra.c
 +++ b/drivers/clocksource/timer-tegra.c
-@@ -71,9 +71,9 @@ static int tegra_timer_shutdown(struct clock_event_device *evt)
- static int tegra_timer_set_periodic(struct clock_event_device *evt)
+@@ -81,7 +81,7 @@ static int tegra_timer_set_periodic(struct clock_event_device *evt)
+ 
+ static irqreturn_t tegra_timer_isr(int irq, void *dev_id)
  {
+-	struct clock_event_device *evt = (struct clock_event_device *)dev_id;
++	struct clock_event_device *evt = dev_id;
  	void __iomem *reg_base = timer_of_base(to_timer_of(evt));
-+	unsigned long period = timer_of_period(to_timer_of(evt));
  
--	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER |
--		       ((timer_of_rate(to_timer_of(evt)) / HZ) - 1),
-+	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER | (period - 1),
- 		       reg_base + TIMER_PTV);
- 
- 	return 0;
-@@ -297,6 +297,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
- 		cpu_to->clkevt.rating = rating;
- 		cpu_to->clkevt.cpumask = cpumask_of(cpu);
- 		cpu_to->of_base.base = timer_reg_base + base;
-+		cpu_to->of_clk.period = DIV_ROUND_UP(rate, HZ);
- 		cpu_to->of_clk.rate = rate;
- 
- 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
+ 	writel_relaxed(TIMER_PCR_INTR_CLR, reg_base + TIMER_PCR);
 -- 
 2.21.0
 
