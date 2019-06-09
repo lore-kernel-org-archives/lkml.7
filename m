@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4124C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDFDC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47C1206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526F6207E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098991;
-	bh=mJGX79p76rVdVlJMSD5PUw98T0fLpIIBGD5Wr7UkL2s=;
+	s=default; t=1560098994;
+	bh=cgsLR0MP9TO4l+0FwmXy4OKV3YkT2NYbYQJA/LEHspU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xt+tIS9dDO6r4ssRaqeUx9BvOfeBU5jFK2x4MctIpnhA6EbQQxclrTf8lX1V6J2bR
-	 a30CJgXF49TgcMDG8ZH7INj+/mvIlX/HqA278vj4OmHVdqsydNMbmcUTTguq8WxmL3
-	 kRTe4HeFYood2VpiZstW5qW048XGrO2OcLQ3zVVc=
+	b=fTfF2kNlXy0ZUIGzXeAaHmmQ55AjFKEXXcQoRwYz7syMuQzIFslBiuZz+S97TFZw3
+	 n3vOkkU9EwzhaTbkR6IIVqdiE05yYGbgx2hcDNwvZkDoWLXLbFX8mYw8He+Zna9suU
+	 6IZxhhJd91aTVtg5o++up+PhJff+wq1JxzLxMtiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731592AbfFIQtu (ORCPT
+        id S1731607AbfFIQtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:49:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731028AbfFIQts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:49:48 -0400
+        id S1731593AbfFIQtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:49:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C9722081C;
-        Sun,  9 Jun 2019 16:49:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E07A206C3;
+        Sun,  9 Jun 2019 16:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098988;
-        bh=mJGX79p76rVdVlJMSD5PUw98T0fLpIIBGD5Wr7UkL2s=;
+        s=default; t=1560098990;
+        bh=cgsLR0MP9TO4l+0FwmXy4OKV3YkT2NYbYQJA/LEHspU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Jn4R42QoORjvPxqpVZdk2fMd1D80btBvKhq7PldCdfHZqwTAmtKoOdJoMZsXh9K2
-         l0gd64rH89s9t0qAZQGhArWDyUPc/tFyIL0WIN+SvC07/pgMKkxeaqLUEPJfan9ncI
-         /YuVs7NbSTYMW+qg49NeGDC2uIPF9aoqt6/Sz2v4=
+        b=vzW2SMmNknF8fp8W4m1pAIx6DfR6q6+4hwf8WZycLAclg52Ro2YuEKgRYlVg8O2k2
+         42pMkhK3ZGGTqFKIKrJulZcAGZwlz4ZNIYElD+i3g+yt6XvPAg7tQcDsoASnFnwKbQ
+         r9fT8k7aebcda/LcWSCYUEytgWl3BC6RCfcJAKHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 01/35] ethtool: fix potential userspace buffer overflow
-Date:   Sun,  9 Jun 2019 18:42:07 +0200
-Message-Id: <20190609164125.657132872@linuxfoundation.org>
+Subject: [PATCH 4.14 10/35] ipv6: fix the check before getting the cookie in rt6_get_cookie
+Date:   Sun,  9 Jun 2019 18:42:16 +0200
+Message-Id: <20190609164126.099374565@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,54 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vivien Didelot <vivien.didelot@gmail.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 0ee4e76937d69128a6a66861ba393ebdc2ffc8a2 ]
+[ Upstream commit b7999b07726c16974ba9ca3bb9fe98ecbec5f81c ]
 
-ethtool_get_regs() allocates a buffer of size ops->get_regs_len(),
-and pass it to the kernel driver via ops->get_regs() for filling.
+In Jianlin's testing, netperf was broken with 'Connection reset by peer',
+as the cookie check failed in rt6_check() and ip6_dst_check() always
+returned NULL.
 
-There is no restriction about what the kernel drivers can or cannot do
-with the open ethtool_regs structure. They usually set regs->version
-and ignore regs->len or set it to the same size as ops->get_regs_len().
+It's caused by Commit 93531c674315 ("net/ipv6: separate handling of FIB
+entries from dst based routes"), where the cookie can be got only when
+'c1'(see below) for setting dst_cookie whereas rt6_check() is called
+when !'c1' for checking dst_cookie, as we can see in ip6_dst_check().
 
-But if userspace allocates a smaller buffer for the registers dump,
-we would cause a userspace buffer overflow in the final copy_to_user()
-call, which uses the regs.len value potentially reset by the driver.
+Since in ip6_dst_check() both rt6_dst_from_check() (c1) and rt6_check()
+(!c1) will check the 'from' cookie, this patch is to remove the c1 check
+in rt6_get_cookie(), so that the dst_cookie can always be set properly.
 
-To fix this, make this case obvious and store regs.len before calling
-ops->get_regs(), to only copy as much data as requested by userspace,
-up to the value returned by ops->get_regs_len().
+c1:
+  (rt->rt6i_flags & RTF_PCPU || unlikely(!list_empty(&rt->rt6i_uncached)))
 
-While at it, remove the redundant check for non-null regbuf.
-
-Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Fixes: 93531c674315 ("net/ipv6: separate handling of FIB entries from dst based routes")
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/ethtool.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/net/ip6_fib.h |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -1402,13 +1402,16 @@ static int ethtool_get_regs(struct net_d
- 			return -ENOMEM;
- 	}
+--- a/include/net/ip6_fib.h
++++ b/include/net/ip6_fib.h
+@@ -199,8 +199,7 @@ static inline u32 rt6_get_cookie(const s
+ {
+ 	u32 cookie = 0;
  
-+	if (regs.len < reglen)
-+		reglen = regs.len;
-+
- 	ops->get_regs(dev, &regs, regbuf);
+-	if (rt->rt6i_flags & RTF_PCPU ||
+-	    (unlikely(!list_empty(&rt->rt6i_uncached)) && rt->dst.from))
++	if (rt->dst.from)
+ 		rt = (struct rt6_info *)(rt->dst.from);
  
- 	ret = -EFAULT;
- 	if (copy_to_user(useraddr, &regs, sizeof(regs)))
- 		goto out;
- 	useraddr += offsetof(struct ethtool_regs, data);
--	if (regbuf && copy_to_user(useraddr, regbuf, regs.len))
-+	if (copy_to_user(useraddr, regbuf, reglen))
- 		goto out;
- 	ret = 0;
- 
+ 	rt6_get_cookie_safe(rt, &cookie);
 
 
