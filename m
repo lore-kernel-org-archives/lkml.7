@@ -2,108 +2,134 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A993C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC85C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C66208E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63BB2067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:17:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsTk1FJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbfFILRg (ORCPT
+        id S1728472AbfFILRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 07:17:36 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54759 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbfFILRg (ORCPT
+        Sun, 9 Jun 2019 07:17:47 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35353 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728029AbfFILRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 07:17:36 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 02DC18022D; Sun,  9 Jun 2019 13:17:22 +0200 (CEST)
-Date:   Sun, 9 Jun 2019 13:17:32 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, rui.zhang@intel.com, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org
-Subject: 5.2-rc2: low framerate in flightgear, cpu not running at full speed,
- thermal related?
-Message-ID: <20190609111732.GA2885@amd>
+        Sun, 9 Jun 2019 07:17:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so6348010wrv.2;
+        Sun, 09 Jun 2019 04:17:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ta91NurKEAOuV3biILdolmhtWxdEx4xNrjafBvP4nDI=;
+        b=DsTk1FJaFbVPoYlTHAMkCJ+6GRAOQ+gzzrHChiHOnmK6DjUCxuO6pWajsq6qk9t5mQ
+         A7m4B2uKEVHkhTQswUP07ysKAojjn7YOs7ibE74jnK2xnAd2OiP94H6jIpsZW7585Qs2
+         nkIiL871cq926N2uWcTXPb7lPNLrwQP4kTpjOZlclLOZB8NFWelPzXP46FX2lKRyikFa
+         8mj2e36YnRzQaubyMTn091nKzbaYQcX2w093y9saAK+3WdK6qDGJ1d8jVdIMamWOtAlN
+         yPNnWiyJKEW5GS879aJY7VL0iYQR8p3hn1dnsGkcR1oQ5manK5uJ09GxlVN9g/5kxQdY
+         tz5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ta91NurKEAOuV3biILdolmhtWxdEx4xNrjafBvP4nDI=;
+        b=j5wwTA/0FkQfUjoZpxPFiqxPn9cWF8wO7oq1KInuwpMOqzJmWzRUcLeuT36XEP3XfZ
+         gFq8Fqoh3+UoU1A/gGerjFIZWD8BiqKKBnlOJ1q+JDPJj8KMCRvaEgc1N8sovHu5M0je
+         moJXaZnx+ddeTxnSFNcwsMZF9hWqOMIWg8RV6n48iiSDnYGGzSRITaE7LJ+Dbf3AQGuf
+         d87BKILQPVw5zeZTNsIANoyKjCOgDCebU8inkccg87PDxiu4Nwz32OKXDMUM/k+ak65B
+         ks89xa+oMQD/WfH2fPbHxJSM9usyPqcmSMayX1Vo+Nr1iOZGBTn40xUYkdhuddmK7WVn
+         j4MA==
+X-Gm-Message-State: APjAAAW0ftreu/EkWAt2GNLLr+7RkiF8Cs5V9HOSLnbUWbIbK0t+UgOc
+        JpCdEtlc8JgcmQ3/9ajvYiUSgcA2
+X-Google-Smtp-Source: APXvYqyNwECSjybSOyeIyWfb9hSWmAAaJtp5O6MDMMuWVhGO3olUMOFaynHUfS8a7C5VsrUIjysiDQ==
+X-Received: by 2002:a5d:4992:: with SMTP id r18mr26761300wrq.107.1560079065865;
+        Sun, 09 Jun 2019 04:17:45 -0700 (PDT)
+Received: from [192.168.1.17] (bkq78.neoplus.adsl.tpnet.pl. [83.28.184.78])
+        by smtp.gmail.com with ESMTPSA id w5sm6872110wrr.86.2019.06.09.04.17.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Jun 2019 04:17:44 -0700 (PDT)
+Subject: Re: [PATCH 04/34] leds: leds-pca955x: simplify getting the adapter of
+ a client
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
+ <20190608105619.593-5-wsa+renesas@sang-engineering.com>
+ <e5a91999-a156-77b2-702b-8931140f0f8d@gmail.com> <20190609110519.GA2375@amd>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <304cd75e-1bf9-bd4b-3822-7f8a78adb5a4@gmail.com>
+Date:   Sun, 9 Jun 2019 13:17:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190609110519.GA2375@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/9/19 1:05 PM, Pavel Machek wrote:
+> On Sun 2019-06-09 13:03:40, Jacek Anaszewski wrote:
+>> Hi Wolfram,
+>>
+>> Thank you for the patches.
+>>
+>> On 6/8/19 12:55 PM, Wolfram Sang wrote:
+>>> We have a dedicated pointer for that, so use it. Much easier to read and
+>>> less computation involved.
+>>>
+>>> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>>> ---
+>>>
+>>> Please apply to your subsystem tree.
+>>>
+>>>   drivers/leds/leds-pca955x.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
+>>> index a9f5dad55956..460626d81c6a 100644
+>>> --- a/drivers/leds/leds-pca955x.c
+>>> +++ b/drivers/leds/leds-pca955x.c
+>>> @@ -432,7 +432,7 @@ static int pca955x_probe(struct i2c_client *client,
+>>>   	int ngpios = 0;
+>>>   	chip = &pca955x_chipdefs[id->driver_data];
+>>> -	adapter = to_i2c_adapter(client->dev.parent);
+>>> +	adapter = client->adapter;
+>>>   	pdata = dev_get_platdata(&client->dev);
+>>>   	if (!pdata) {
+>>>   		pdata =	pca955x_get_pdata(client, chip);
+>>>
+>>
+>> For both 4/34 and 5/34:
+>>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> 
+> 4 and 5:
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> But I wonder if it should go through the leds tree?
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I missed that "Please apply to your subsystem tree." comment.
+And this change relies on the existing code.
 
-Hi!
+Applied 4/34 and 5/34 to the for-next branch of linux-leds.git.
 
-When I start flightgear, I get framerates around 20 fps and cpu at
-3GHz:
+Thanks.
 
-pavel@duo:~/bt$ cat /proc/cpuinfo  | grep MHz
-cpu MHz		    : 3027.471
-cpu MHz		      : 2981.863
-cpu MHz		      	: 2958.352
-cpu MHz			  : 2864.001
-pavel@duo:~/bt$
-
-(Ok, fgfs is really only running at single core, so why do both cores
-run at 3GHz?)
-
-But temperatures get quite high:
-
-pavel@duo:~/bt$ sensors
-thinkpad-isa-0000
-Adapter: ISA adapter
-fan1:        4485 RPM
-
-coretemp-isa-0000
-Adapter: ISA adapter
-Package id 0:  +98.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
-Core 0:        +98.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
-Core 1:        +91.0=B0C  (high =3D +86.0=B0C, crit =3D +100.0=B0C)
-
-And soon cpu goes to 1.5GHz range, with framerates going down to
-12fps. That's a bit low.
-
-Room temperature is 26Celsius.
-
-The CPU is Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz . I guess it means
-it should be able to sustain both cores running at 2.5GHz?
-
-Any ideas? Were there any recent changes in that area?
-
+-- 
 Best regards,
-							Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlz86swACgkQMOfwapXb+vKdPQCeMqRBO1sszkxVYmrFdpM8K221
-6ZoAn01zFFX0NuUnU3CTg0vhnDleQPmb
-=QyRT
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+Jacek Anaszewski
