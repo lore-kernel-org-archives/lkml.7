@@ -2,160 +2,95 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECF1C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBB2C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB2120673
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:10:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Boq5tNp1"
+	by mail.kernel.org (Postfix) with ESMTP id E5AA1206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560107627;
+	bh=JmotrYdFAxye6PwZuAv9hObxAW5kAZw7LHEmNKMpOwQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JwrGCvlsA+wbVoE2MChtobyoU7MuBoH4jfU3CyYbFQjCpljFNaee0sC6LJ9+mTBNy
+	 y96Io2AiNsr3ZiydXcwdj/rEVzrsmKq8OrID/XR/t86DMGh710n1W+wgenpgt48+r+
+	 nBllAz7XGV9rfondM2ITbo0GOd8HHT/BiJiHn7+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbfFITKZ (ORCPT
+        id S1729386AbfFITNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 15:10:25 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40599 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729120AbfFITIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 15:08:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p11so6975184wre.7;
-        Sun, 09 Jun 2019 12:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xeS3pFHNvjix++EL35ueInrHkQ3W+h8kfOXAxNqPy0U=;
-        b=Boq5tNp1VK6nzwBemQDjHD6h3zk1NRrd4IWZcxezRhueNn9Usiv0IAuKkNhPCUDmCp
-         t3cUYxUJYs5hNO0RN9nPbNh2FbruaNxEdgviB5AHGzIL/3+b9csYdiETqPqBChyogyFt
-         G4jjFOGosov2EIC/suxPIiv6XxTv84Bxc7aY9rYtB/kwIuHqbRdiwvJaIue3CdXMiN6d
-         P/D38pI0sJtVOEEpcjRCfDMKaeQzRU4WkVVniK3I5x1WZO175nsb8wjWIlIwvVaqBzis
-         XDH5JQnepPJvqaJlL4x0vqS+gpEs4UpBeX0ncSjYWqfDIjnsKekITP4K3bcdluGkXu44
-         0YlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xeS3pFHNvjix++EL35ueInrHkQ3W+h8kfOXAxNqPy0U=;
-        b=hDv0X+EM44ta7kpCtFBwJMuSVGu1gty15UvGb6PpSmAUvE4pXWXCOit2T6mcxaYXuM
-         gZxs22wnAJ/zNxcP3EQGeBYmb6OBhZT7jWWLYJOKrhsYEv1Reiuo39r3MrokbgNlYWi6
-         5Nv0PAvfuBxE2xpHAkt1sEcbJxKs0F2rHtAq40sCGoZYKZ/FNYz6VDhqNXHrNudVqsxw
-         CVHhK5VuWRK5+g7V+JWydTCpUM0tnZzG7SiCgCpAHKrDzRZJgETVDlJ2weyqSYNv42Su
-         LsrO/pSFPrCuIbJA5qzeruRTLwOEeo+Wd1tpE6t6C+tbyQO7mfNjgsjQi7lqY11POYK4
-         UQAw==
-X-Gm-Message-State: APjAAAVFZv1F79AKl60F5cGMJhNYUPIwvI3CEOwEa4ns+e6QrFCE7USj
-        lyc5zQu07N3KdLw10iv4TGdk3oDk
-X-Google-Smtp-Source: APXvYqxcnB9NsPDxbDcYqfQxgPXplAjIqdm0SseYHYdS9iq11R32iUbHq+HDWL/uufOljOzl29P3Ew==
-X-Received: by 2002:adf:eb09:: with SMTP id s9mr40928863wrn.127.1560107319200;
-        Sun, 09 Jun 2019 12:08:39 -0700 (PDT)
-Received: from myhost.home (ckm12.neoplus.adsl.tpnet.pl. [83.31.88.12])
-        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.08.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 12:08:38 -0700 (PDT)
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-To:     linux-leds@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
-        dmurphy@ti.com, jacek.anaszewski@gmail.com,
-        Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v5 07/26] leds: sc27xx-blt: Use generic support for composing LED names
-Date:   Sun,  9 Jun 2019 21:07:44 +0200
-Message-Id: <20190609190803.14815-8-jacek.anaszewski@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+        Sun, 9 Jun 2019 15:13:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729163AbfFITNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 15:13:45 -0400
+Received: from localhost (unknown [107.242.116.141])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5D1E20673;
+        Sun,  9 Jun 2019 19:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560107624;
+        bh=JmotrYdFAxye6PwZuAv9hObxAW5kAZw7LHEmNKMpOwQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OyDhyEcqPyhvQ61dxNhvuSuOlF0Xi6XmpNgV75oiGcgLcI0dasuPztIm2pBkpMWSk
+         IwJDRIDZD5HTHP12/+LX4tDMJ6AtOcqka9RchPuqEOUTX5/bZcrUzq2rN9PhIqGiaK
+         p79jkAcdmiPYO9NN8mXWHPDhMJllyS4qS68f1IZ4=
+Date:   Sun, 9 Jun 2019 15:13:37 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andreas Ziegler <andreas.ziegler@fau.de>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH AUTOSEL 5.1 058/186] tracing: probeevent: Fix to make the
+ type of $comm string
+Message-ID: <20190609191337.GA1552@sasha-vm>
+References: <20190601131653.24205-1-sashal@kernel.org>
+ <20190601131653.24205-58-sashal@kernel.org>
+ <20190608173113.5fc866bf@oasis.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190608173113.5fc866bf@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to using generic LED support for composing LED class
-device name.
+On Sat, Jun 08, 2019 at 05:31:13PM -0400, Steven Rostedt wrote:
+>On Sat,  1 Jun 2019 09:14:34 -0400
+>Sasha Levin <sashal@kernel.org> wrote:
+>
+>> From: Masami Hiramatsu <mhiramat@kernel.org>
+>>
+>> [ Upstream commit 3dd1f7f24f8ceec00bbbc364c2ac3c893f0fdc4c ]
+>>
+>> Fix to make the type of $comm "string".  If we set the other type to $comm
+>> argument, it shows meaningless value or wrong data. Currently probe events
+>> allow us to set string array type (e.g. ":string[2]"), or other digit types
+>> like x8 on $comm. But since clearly $comm is just a string data, it should
+>> not be fetched by other types including array.
+>>
+>> Link: http://lkml.kernel.org/r/155723736241.9149.14582064184468574539.stgit@devnote2
+>>
+>> Cc: Andreas Ziegler <andreas.ziegler@fau.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
+>
+>I thought the "AUTOSEL" patches are to find patches that are not marked
+>for stable and pull them in. It would be good to differentiate those in
+>the subject. As I'm more inclined to audit automatically pulled in ones,
+>because those are more likely to be incorrectly backported.
 
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Baolin Wang <baolin.wang@linaro.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- drivers/leds/leds-sc27xx-bltc.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+That's indeed the case. I had some experimental changes for this merge
+window and apparently some stable tagged patches ended up sneaking in.
+Sorry about that!.
 
-diff --git a/drivers/leds/leds-sc27xx-bltc.c b/drivers/leds/leds-sc27xx-bltc.c
-index fecf27fb1cdc..0ede87420bfc 100644
---- a/drivers/leds/leds-sc27xx-bltc.c
-+++ b/drivers/leds/leds-sc27xx-bltc.c
-@@ -6,7 +6,6 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
--#include <uapi/linux/uleds.h>
- 
- /* PMIC global control register definition */
- #define SC27XX_MODULE_EN0	0xc08
-@@ -46,7 +45,7 @@
- #define SC27XX_DELTA_T_MAX	(SC27XX_LEDS_STEP * 255)
- 
- struct sc27xx_led {
--	char name[LED_MAX_NAME_SIZE];
-+	struct fwnode_handle *fwnode;
- 	struct led_classdev ldev;
- 	struct sc27xx_led_priv *priv;
- 	u8 line;
-@@ -249,19 +248,24 @@ static int sc27xx_led_register(struct device *dev, struct sc27xx_led_priv *priv)
- 
- 	for (i = 0; i < SC27XX_LEDS_MAX; i++) {
- 		struct sc27xx_led *led = &priv->leds[i];
-+		struct led_init_data init_data = {};
- 
- 		if (!led->active)
- 			continue;
- 
- 		led->line = i;
- 		led->priv = priv;
--		led->ldev.name = led->name;
- 		led->ldev.brightness_set_blocking = sc27xx_led_set;
- 		led->ldev.pattern_set = sc27xx_led_pattern_set;
- 		led->ldev.pattern_clear = sc27xx_led_pattern_clear;
- 		led->ldev.default_trigger = "pattern";
- 
--		err = devm_led_classdev_register(dev, &led->ldev);
-+		init_data.fwnode = led->fwnode;
-+		init_data.devicename = "sc27xx";
-+		init_data.default_label = ":";
-+
-+		err = devm_led_classdev_register_ext(dev, &led->ldev,
-+						     &init_data);
- 		if (err)
- 			return err;
- 	}
-@@ -274,7 +278,6 @@ static int sc27xx_led_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node, *child;
- 	struct sc27xx_led_priv *priv;
--	const char *str;
- 	u32 base, count, reg;
- 	int err;
- 
-@@ -316,15 +319,8 @@ static int sc27xx_led_probe(struct platform_device *pdev)
- 			return -EINVAL;
- 		}
- 
-+		priv->leds[reg].fwnode = of_fwnode_handle(child);
- 		priv->leds[reg].active = true;
--
--		err = of_property_read_string(child, "label", &str);
--		if (err)
--			snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
--				 "sc27xx::");
--		else
--			snprintf(priv->leds[reg].name, LED_MAX_NAME_SIZE,
--				 "sc27xx:%s", str);
- 	}
- 
- 	err = sc27xx_led_register(dev, priv);
--- 
-2.11.0
-
+--
+Thanks,
+Sasha
