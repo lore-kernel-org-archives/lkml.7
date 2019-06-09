@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB1BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33C2C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2BD206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C17120833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099700;
-	bh=PH8GAvkw+iJdAsXGp8BOIiBkfy7m1it3hmLcSuLdv/Y=;
+	s=default; t=1560099702;
+	bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DLK1+QP9O1wUZCT7LFIWZuSp4VLmEtxmLXvEHW8TMcxeRg1TqOKEHttAM1pb/wYwD
-	 zZhpDTLFn9jtmX+7r1PRwTFT9zaN2zP/H8m/dVW7rkhgC80sMicx6ljVDo3JrkK7np
-	 JswosAiHQWtR/KK//z41/KQlNjdEVt4bZcOUvlNY=
+	b=MubaVykgubmNOPqdMvtC3tp+A3VVv7J6Yj3IPem/buKVV9RJNNqsJvpaekELhcZJI
+	 kk4nHdXksd0K5yWE7VMcCUX+SPYFp8x+O34yPuPyUvCJaVwfMrL27WdaKvilJ6MusO
+	 VZ2EYSnAxU9IsdKKbT2E1QwLNb1yr3KuF++etxfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387624AbfFIRBj (ORCPT
+        id S2388118AbfFIRBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38986 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:01:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388099AbfFIRBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:01:36 -0400
+        id S2388107AbfFIRBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECFBE206DF;
-        Sun,  9 Jun 2019 17:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98FDC206C3;
+        Sun,  9 Jun 2019 17:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099696;
-        bh=PH8GAvkw+iJdAsXGp8BOIiBkfy7m1it3hmLcSuLdv/Y=;
+        s=default; t=1560099699;
+        bh=J4uwusvLtrICANSHTWdP5KgOtyuG4ox8q63z/IbzCHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rgza+wsEmxbG4myMWz21aWWEAY+axMvl79P7FUm54pOKJfTMJ4ajpjXu7feZBsus3
-         egyCMIs2Lrf6G79Z3+0P/g9blKcjCnopdQx5Ei8BXuaHOzqLl6PzKfbn3F7y2xnifx
-         owy7PTncp+8cUcq8XNLnxLLohmASuXKZJVBJCeBg=
+        b=fhPAWUKFycyNT68Ni+Kg96nNTzru87PVT4R0b4EZq4lYX15xlFpTHRZ4XXWdvzZ1D
+         5Y9FQ4GF/mFM+FPOSMidSasxk3BJPyC6JUtYed4FGnNJR4DPlnfhN4MeEnV0dZE7OF
+         EmIyZmYAHIkCB+f8BWI1ogxzos8uXYPagVL9F38E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 131/241] RDMA/cxgb4: Fix null pointer dereference on alloc_skb failure
-Date:   Sun,  9 Jun 2019 18:41:13 +0200
-Message-Id: <20190609164151.577557026@linuxfoundation.org>
+Subject: [PATCH 4.4 132/241] hwmon: (vt1211) Use request_muxed_region for Super-IO accesses
+Date:   Sun,  9 Jun 2019 18:41:14 +0200
+Message-Id: <20190609164151.608346696@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,36 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a6d2a5a92e67d151c98886babdc86d530d27111c ]
+[ Upstream commit 14b97ba5c20056102b3dd22696bf17b057e60976 ]
 
-Currently if alloc_skb fails to allocate the skb a null skb is passed to
-t4_set_arp_err_handler and this ends up dereferencing the null skb.  Avoid
-the NULL pointer dereference by checking for a NULL skb and returning
-early.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-Addresses-Coverity: ("Dereference null return")
-Fixes: b38a0ad8ec11 ("RDMA/cxgb4: Set arp error handler for PASS_ACCEPT_RPL messages")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
+
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
+
+Fixes: 2219cd81a6cd ("hwmon/vt1211: Add probing of alternate config index port")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hwmon/vt1211.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index c9cffced00ca1..54fd4d81a3f1f 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -360,6 +360,8 @@ static struct sk_buff *get_skb(struct sk_buff *skb, int len, gfp_t gfp)
- 		skb_reset_transport_header(skb);
- 	} else {
- 		skb = alloc_skb(len, gfp);
-+		if (!skb)
-+			return NULL;
- 	}
- 	t4_set_arp_err_handler(skb, NULL, NULL);
- 	return skb;
+diff --git a/drivers/hwmon/vt1211.c b/drivers/hwmon/vt1211.c
+index 3a6bfa51cb94f..95d5e8ec8b7fc 100644
+--- a/drivers/hwmon/vt1211.c
++++ b/drivers/hwmon/vt1211.c
+@@ -226,15 +226,21 @@ static inline void superio_select(int sio_cip, int ldn)
+ 	outb(ldn, sio_cip + 1);
+ }
+ 
+-static inline void superio_enter(int sio_cip)
++static inline int superio_enter(int sio_cip)
+ {
++	if (!request_muxed_region(sio_cip, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, sio_cip);
+ 	outb(0x87, sio_cip);
++
++	return 0;
+ }
+ 
+ static inline void superio_exit(int sio_cip)
+ {
+ 	outb(0xaa, sio_cip);
++	release_region(sio_cip, 2);
+ }
+ 
+ /* ---------------------------------------------------------------------
+@@ -1282,11 +1288,14 @@ static int __init vt1211_device_add(unsigned short address)
+ 
+ static int __init vt1211_find(int sio_cip, unsigned short *address)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	int devid;
+ 
+-	superio_enter(sio_cip);
++	err = superio_enter(sio_cip);
++	if (err)
++		return err;
+ 
++	err = -ENODEV;
+ 	devid = force_id ? force_id : superio_inb(sio_cip, SIO_VT1211_DEVID);
+ 	if (devid != SIO_VT1211_ID)
+ 		goto EXIT;
 -- 
 2.20.1
 
