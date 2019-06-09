@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A09C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD00C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15AD2067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA50320693
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100668;
-	bh=RraCkwXdzglEq/7vdS33A/72ye87OZQO/agCNTF+Lok=;
+	s=default; t=1560100674;
+	bh=jONbMhxkr6W4rPbHBLgX21C+FnpnJTZvahlGCIpnRAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fzzVHh7ST5PsToEf5oAcB94PsE9kv1j0rdlJNRLRrIWvDQHasznRgv3ukulniisP4
-	 tYd1jMS38I01l7ffM3PzhYwfX5MxTMvTfWQp9tNmI5k/YH3wdu/F1LMDImS7KATMzT
-	 L/y0E4U24ubUicN5+ywmSWKM8/p78Uu8BiMbNlhE=
+	b=of6PsmKgz0arFlGrJ8w8BwqKYYECMiZrP28A0i4HCnZs13iIvaZ8ULfbKoFTURZDz
+	 FLsNNc1QYwE5GxjXAGeIYvz/gb2qWfohvzheWRzsMZPtpael+KMbFHCe+mlHfQ3Dzy
+	 S/rHXiDx/GntqFsYKUTOkIGj1S79zyX+O8kO81e8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbfFIQvd (ORCPT
+        id S1731925AbfFIQv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731931AbfFIQv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 9 Jun 2019 12:51:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731902AbfFIQvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAFBF205ED;
-        Sun,  9 Jun 2019 16:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08A7B206C3;
+        Sun,  9 Jun 2019 16:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099086;
-        bh=RraCkwXdzglEq/7vdS33A/72ye87OZQO/agCNTF+Lok=;
+        s=default; t=1560099080;
+        bh=jONbMhxkr6W4rPbHBLgX21C+FnpnJTZvahlGCIpnRAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ng24ya3nB0GOPTEqXQNwO8AwRFCw4cHmS6QEN9NpTS9STE//xfMa0ldoSiL7M+QAJ
-         7+CvPVetCiYR8tDnoQk3VB6YDcvgsaNDxWZ3fXrFHwxdZxgq0DOQozzCJqEFPCLPIv
-         HGOuTvLppaluQ60sIvjmbXGCQMU0EiAgHqJQ8pI8=
+        b=TEfFNMUHjlkIXZxg0owQ3TvlZ0PnEIWJad5xcNQVp1vhJtQVg9oTcxAcyRf8c/n2B
+         JB3XJf1UMgjRPuDHlOT/RShXMwjX8RQx54LDB49NEwRwqSRC0ALGpxRVKPE+adZZdb
+         somTnsuh2P44SQDaFjQwJ1x/tLYW6ujS74oxsjAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Kevin Hilman <khilman@baylibre.com>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.14 22/35] MIPS: pistachio: Build uImage.gz by default
-Date:   Sun,  9 Jun 2019 18:42:28 +0200
-Message-Id: <20190609164126.812231250@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
+Subject: [PATCH 4.14 20/35] i2c: xiic: Add max_read_len quirk
+Date:   Sun,  9 Jun 2019 18:42:26 +0200
+Message-Id: <20190609164126.695268540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -60,44 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Robert Hancock <hancock@sedsystems.ca>
 
-commit e4f2d1af7163becb181419af9dece9206001e0a6 upstream.
+commit 49b809586730a77b57ce620b2f9689de765d790b upstream.
 
-The pistachio platform uses the U-Boot bootloader & generally boots a
-kernel in the uImage format. As such it's useful to build one when
-building the kernel, but to do so currently requires the user to
-manually specify a uImage target on the make command line.
+This driver does not support reading more than 255 bytes at once because
+the register for storing the number of bytes to read is only 8 bits. Add
+a max_read_len quirk to enforce this.
 
-Make uImage.gz the pistachio platform's default build target, so that
-the default is to build a kernel image that we can actually boot on a
-board such as the MIPS Creator Ci40.
+This was found when using this driver with the SFP driver, which was
+previously reading all 256 bytes in the SFP EEPROM in one transaction.
+This caused a bunch of hard-to-debug errors in the xiic driver since the
+driver/logic was treating the number of bytes to read as zero.
+Rejecting transactions that aren't supported at least allows the problem
+to be diagnosed more easily.
 
-Marked for stable backport as far as v4.1 where pistachio support was
-introduced. This is primarily useful for CI systems such as kernelci.org
-which will benefit from us building a suitable image which can then be
-booted as part of automated testing, extending our test coverage to the
-affected stable branches.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-URL: https://groups.io/g/kernelci/message/388
-Cc: stable@vger.kernel.org # v4.1+
-Cc: linux-mips@vger.kernel.org
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/pistachio/Platform |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-xiic.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/mips/pistachio/Platform
-+++ b/arch/mips/pistachio/Platform
-@@ -6,3 +6,4 @@ cflags-$(CONFIG_MACH_PISTACHIO)		+=				\
- 		-I$(srctree)/arch/mips/include/asm/mach-pistachio
- load-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff80400000
- zload-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff81000000
-+all-$(CONFIG_MACH_PISTACHIO)		:= uImage.gz
+--- a/drivers/i2c/busses/i2c-xiic.c
++++ b/drivers/i2c/busses/i2c-xiic.c
+@@ -725,11 +725,16 @@ static const struct i2c_algorithm xiic_a
+ 	.functionality = xiic_func,
+ };
+ 
++static const struct i2c_adapter_quirks xiic_quirks = {
++	.max_read_len = 255,
++};
++
+ static const struct i2c_adapter xiic_adapter = {
+ 	.owner = THIS_MODULE,
+ 	.name = DRIVER_NAME,
+ 	.class = I2C_CLASS_DEPRECATED,
+ 	.algo = &xiic_algorithm,
++	.quirks = &xiic_quirks,
+ };
+ 
+ 
 
 
