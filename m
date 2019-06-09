@@ -2,647 +2,184 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A8FC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 08:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF6EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 08:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131D82089E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 08:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC7C2089E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 08:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHXRy4he"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="TpcOjKwf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfFIIQL (ORCPT
+        id S1727982AbfFII4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 04:16:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46597 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfFIIQK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 04:16:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 81so3509353pfy.13
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 01:16:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JKgubOYn2kqP7bvmthOfBAjFXSyfkKMsAN9DaxELIK0=;
-        b=NHXRy4heRE35c2TJi2JPXR4peUM5NlxMRl/xBW2ZZNm1hCIlaJcJnZLzGe0XOvnOjm
-         DM5I11I2NZ14jFjfsd2AspvpYg21mA0Sj0Y62K6FoQvGi8Jqwj7nV7xQnTx+sL8n3sQO
-         3qtMK5ODZGCwmNQWoA66UR/ZQ/sqlD85bu5MtBrxklRumUwLI2cIGKNKn2vOnYostrPb
-         aqF9FwhpftgAIfUDXyCP2vhSdjRtV9t16xcAmVxAqMyTa6CoYfK8KNF6V4X3xFVOp2SW
-         TAIDDj23pn1RWb5va435CmSoOeZcGRtJRzYaCACzowIsoiQPDdtwE1ogVzI55eXS20jv
-         4dzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JKgubOYn2kqP7bvmthOfBAjFXSyfkKMsAN9DaxELIK0=;
-        b=p8MoAY1nSfzLPBI1IwecRHuSrC6QiVzuWsKHBmuwZBy146MAPG5clRUx1VzY/r1Gyo
-         U5ndKuPCStpNTX4tPumS0FU7+BqmNtnVAO/NzAWiKDt4FOj9AJ3KaWenZN/V/CI494Uy
-         hdpi6QhVYv35NLD4lhBItcTfte+QXOdHaG2Eo/zZX4YFnTtXJ3QOHQ5ItwW5m6OVx+OJ
-         /hye5DUEvwgF9W2oNecB92judBnTcSEoP0pJ5cD5TIVktAm+CGF+CwvxduQ1krql2//B
-         N/W+WtTx7iCqQbMqfd4uYXDA33SjBauNv41clqAWzBI/LW/TXy53zttq/jfs3TI/5sVW
-         OVwA==
-X-Gm-Message-State: APjAAAVFdHaMN/YJNKP9JMH8ixouwoq5U3B1UHutj7DkhEexSOWbo2WS
-        rdF2FqG7N6GBa6PYEIo/WI0S8F23134=
-X-Google-Smtp-Source: APXvYqzznwG7j83OteA1fJXHI9V9065O1F6ycOHdx6T9gvUQ8RjSifJxcg6DY8mlPLn8dajptUcusw==
-X-Received: by 2002:a17:90a:2743:: with SMTP id o61mr15175662pje.59.1560068169722;
-        Sun, 09 Jun 2019 01:16:09 -0700 (PDT)
-Received: from Gentoo ([103.231.91.70])
-        by smtp.gmail.com with ESMTPSA id r9sm6294954pgv.24.2019.06.09.01.16.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 01:16:08 -0700 (PDT)
-Date:   Sun, 9 Jun 2019 13:45:51 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.2-rc4
-Message-ID: <20190609081551.GB5853@Gentoo>
-References: <CAHk-=wjm7FQxdF=RKa8Xe23CLNNpbGDOACewgo8e-hwDJ8TyQg@mail.gmail.com>
+        Sun, 9 Jun 2019 04:56:03 -0400
+Received: from mout.web.de ([212.227.15.4]:49955 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727884AbfFII4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 04:56:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1560070546;
+        bh=yWKywYw0sHaVLOotH7c9LtTSfYfsAFBvYCxGv700zxE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=TpcOjKwfhXcdS7UV9guaO26+AUkea3jN+H4iVnWEdsnhHObPt2QM8xa6QrGkjfshs
+         XZhuC28QpdhPHGB1lIGnDuNvyBB9Eyrrqpl0aEZNqoDuJ7UGcpKMf4Fx1+7ZKx1PpD
+         TUMW332K9BBRRYu4Y9T+LGmfCCbSM79h0sHbf+rE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.4] ([2.244.77.74]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LnSOM-1gtQSN30BC-00heRC; Sun, 09
+ Jun 2019 10:55:45 +0200
+Subject: Re: Coccinelle: api: add devm_platform_ioremap_resource script
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        Himanshu Jha <himanshujha199640@gmail.com>
+Cc:     cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+References: <20190406061112.31620-1-himanshujha199640@gmail.com>
+ <f09006a3-691c-382a-23b8-8e9ff5b4a5f1@web.de>
+ <alpine.DEB.2.21.1906081925090.2543@hadrien>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <7b4fe770-dadd-80ba-2ba4-0f2bc90984ef@web.de>
+Date:   Sun, 9 Jun 2019 10:55:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2B/JsCI69OhZNC5r"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjm7FQxdF=RKa8Xe23CLNNpbGDOACewgo8e-hwDJ8TyQg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.1906081925090.2543@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JDSlyCoTpTsPKOQ677p0YWGseBYr8HGllMkZiK9aphYVpDna+in
+ SzvU0jbR4UgnupEymNoBCKfwYyLZIL1KNSYbBGWtPsBh89e8xArdCCGIeNLhpf6HxiKY1ov
+ EFOUbueuJxDe5LICmL89fJp7dliVfz4IqkOM0ZDAxQut8KLmAYSDaeh/EOy8hmAjqv5kJIj
+ uiFASifQqioungX2KrFgQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bJPEe4L2Q5A=:s4pRhCV8TjuiB4jQ5yEW1X
+ eyENHdN3LzPOMV+OL/UF2bzVHKvIIIFpbDsb2KoCptDRcjcmgtk2CtyB4wE7hYjC5aOzlLbYE
+ LbziWYLh6iEdKoXb3GFSqhkCnyR8FK1EgHnMASPwa+uOCZ4McLCmNgbt0+htfKH8o09egGTMA
+ xzny9F5mfaAF7ifljXj0Q2dtTkpyKCn1qq0lDk92r1Y22s0mX2ecL2PEqE+Br+2WuKBUh8uaC
+ 3Ww4cyd3bkNpWZ6dmcSTtslwT623ejZSmjQRpED8HHQxSXvYKK5oENS2PAMhic1K2rX+3+Eg1
+ Y3O0qGK4gbVR17IRTOCkxWhet1BODXXKXAsbfEvF4f9M5MSUvoxUIsApijuPtVWhoEmVoB0WF
+ MR5NsI02LW1pV3rHvPsNk7k3jd2Ofwq1CFk34BGLGWgMPmpEBHeqGFp2xPWyY3m4a3OvedgQC
+ 3WBxBnOKGmYqJSd5w7CWblETQma4aPnBN2u+3vsDAi0Kc+/R5IQFbHqV8QN7lgcsMt86eq3hv
+ NArqTXrRoWT6IObaS+a+OP1FkgB9CmCWCSSPiPTd7hUqxcnYSM6PsoN+LPfQEmADlKmdoyiyt
+ OPKSNJYc6/08AY46oyeVxSj4cxd/o2zPxJgtzBhZ1R2WK8LcKaLqTD74QL1dlCWEqs6TOr/90
+ U8iFIWoUkXA7nngFLSWtXm7j3oESPsIoSSSuUO4bZahhigAweKyilKTvryf1ypBq5GK/iUDiE
+ 19b9ZDlTLn4xYYww4qy2NTmu+jrEPR6fF6G1SZ2RWaqeW3L8UmQ2PdAX4Gv5Oxguicm2bK2XS
+ GE2dSYS0c8XE6BSQtmT1QhgR/qkrZFbEI+WXtB5y7MrFd9arLMTB+uxSLNs1zu/t11UZufiyh
+ 6EyBJY0jLGEAKDQyfRU0N2emiMiZf4BzXLe/JlNi8c+YSSjLQjWoiW8fQGWPBYsa5npBP5bY+
+ ijt0EVXuW7bJYBWL0iMstJpLhM+u2bSHdV7BNL3qoskrmSgLRXzyf
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>>> +- e1 =3D devm_ioremap_resource(arg4, id);
+>>> ++ e1 =3D devm_platform_ioremap_resource(arg1, arg3);
+>>
+>> Can the following specification variant matter for the shown SmPL
+>> change approach?
+>>
+>> + e1 =3D
+>> +-     devm_ioremap_resource(arg4, id
+>> ++     devm_platform_ioremap_resource(arg1, arg3
+>> +                           );
+>
+> In the latter case, the original formatting of e1 will be preserved.
 
---2B/JsCI69OhZNC5r
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+I would like to point the possibility out to express only required changes
+also by SmPL specifications.
 
-Woohoo! testing time fells,thanks Linus!.
 
-On 20:46 Sat 08 Jun , Linus Torvalds wrote:
->No, I'm not confused, and I haven't lost track of what day it is, I do
->actually know that it's still Saturday here, not Sunday, and I'm just
->doing rc4 a bit early because I'll be on an airplane during my normal
->release time. And while I've done releases on airports and airplanes
->before, I looked at my empty queue of pull requests and went "let's
->just do it now".
->
->We've had a fairly calm release so far, and on the whole that seems to
->hold. rc4 isn't smaller than rc3 was (it's a bit bigger), but rc3 was
->fairly small, so the size increase isn't all that worrisome. I do hope
->that we'll start actually shrinking now, though.
->
->The SPDX conversions do continue to stand out, and make the diffstat a
->bit noisy. They don't affect actual code, so it's not like we should
->have any issues with them, but it makes the patch statistics look a
->bit odd. There's just a lot more files changed than is normal in the
->rc phase, and 90+% of that changed file list comes from the SPDX
->changes. Of course, the SPDX changes also account for 95+% percent of
->the removed lines in rc4, which is why I'm not complaining. It does
->make the copyright boilerplates be a lot more legible to humans too,
->not just for scripting.
->
->But it does make the diff almost impossible to read, because so much
->of it is due to just the SPDX notice work. You can use interdiff to
->skip the SPDX stuff if you really want to, and if you do, you'll see
->the usual arch updates (arm64, mips, parisc, nds32) various random
->drivers updates (gpu stands out, some rdma), networking fixes,
->filesystems (ceph, ovlfs, xfs). And misc other stuff.
->
->But the appended shortlog is probably even more informative. None of
->it really looks all that gnarly.
->
->                Linus
->
->---
->
->Adamski, Krzysztof (Nokia - PL/Wroclaw) (1):
->      hwmon: (pmbus/core) mutex_lock write in pmbus_set_samples
->
->Adrian Hunter (1):
->      mmc: sdhci: Fix SDIO IRQ thread deadlock
->
->Alakesh Haloi (1):
->      userfaultfd: selftest: fix compiler warning
->
->Aleksei Gimbitskii (2):
->      drm/i915/gvt: Check if cur_pt_type is valid
->      drm/i915/gvt: Assign NULL to the pointer after memory free.
->
->Alex Shi (3):
->      kselftest/cgroup: fix unexpected testing failure on test_memcontrol
->      kselftest/cgroup: fix unexpected testing failure on test_core
->      kselftest/cgroup: fix incorrect test_core skip
->
->Alexandra Winter (1):
->      s390/qeth: fix VLAN attribute in bridge_hostnotify udev event
->
->Alexey Brodkin (1):
->      ARC: [plat-hsdk] Get rid of inappropriate PHY settings
->
->Amir Goldstein (2):
->      ovl: support the FS_IOC_FS[SG]ETXATTR ioctls
->      ovl: detect overlapping layers
->
->Anders Roxell (1):
->      arm64: arch_timer: mark functions as __always_inline
->
->Andrey Konovalov (1):
->      uaccess: add noop untagged_addr definition
->
->Angelo Ruocco (2):
->      cgroup: let a symlink too be created with a cftype file
->      block, bfq: add weight symlink to the bfq.weight cgroup parameter
->
->Avri Altman (1):
->      scsi: ufs: Check that space was properly alloced in copy_query_response
->
->Baolin Wang (3):
->      dmaengine: sprd: Fix the possible crash when getting descriptor status
->      dmaengine: sprd: Add validation of current descriptor in irq handler
->      dmaengine: sprd: Add interrupt support for 2-stage transfer
->
->Bart Van Assche (1):
->      MAINTAINERS: Hand over skd maintainership
->
->Ben Skeggs (6):
->      drm/nouveau/core: pass subdev into nvkm_firmware_get, rather than device
->      drm/nouveau/core: support versioned firmware loading
->      drm/nouveau/secboot: pass max supported FW version to LS load funcs
->      drm/nouveau/secboot: split out FW version-specific LS function pointers
->      drm/nouveau/secboot: enable loading of versioned LS PMU/SEC2 ACR
->msgqueue FW
->      drm/nouveau/secboot/gp10[2467]: support newer FW to fix SEC2
->failures on some boards
->
->Bob Peterson (1):
->      Revert "gfs2: Replace gl_revokes with a GLF flag"
->
->Chengguang Xu (1):
->      fpga: dfl: expand minor range when registering chrdev region
->
->Chengming Gui (1):
->      drm/amd/powerplay: add set_power_profile_mode for raven1_refresh
->
->Christian Brauner (2):
->      signal: improve comments
->      tests: fix pidfd-test compilation
->
->Christoph Hellwig (4):
->      nvme-pci: don't limit DMA segement size
->      rsxx: don't call dma_set_max_seg_size
->      mtip32xx: also set max_segment_size in the device
->      mmc: also set max_segment_size in the device
->
->Colin Ian King (1):
->      dmaengine: dw-axi-dmac: fix null dereference when pointer first is null
->
->Colin Xu (3):
->      drm/i915/gvt: Update force-to-nonpriv register whitelist
->      drm/i915/gvt: Fix GFX_MODE handling
->      drm/i915/gvt: Fix vGPU CSFE_CHICKEN1_REG mmio handler
->
->Dan Carpenter (7):
->      dmaengine: mediatek-cqdma: sleeping in atomic context
->      genwqe: Prevent an integer overflow in the ioctl
->      test_firmware: Use correct snprintf() limit
->      memstick: mspro_block: Fix an error code in mspro_block_issue_req()
->      mmc: tegra: Fix a warning message
->      scsi: smartpqi: unlock on error in pqi_submit_raid_request_synchronous()
->      drm/komeda: Potential error pointer dereference
->
->Dan Rue (1):
->      kbuild: teach kselftest-merge to find nested config files
->
->Darrick J. Wong (2):
->      xfs: fix broken log reservation debugging
->      xfs: inode btree scrubber should calculate im_boffset correctly
->
->Dave Martin (2):
->      arm64: cpufeature: Fix missing ZFR0 in __read_sysreg_by_encoding()
->      arm64: Silence gcc warnings about arch ABI drift
->
->Eduardo Valentin (1):
->      hwmon: (core) add thermal sensors only if dev->of_node is present
->
->Eric Biggers (2):
->      crypto: jitterentropy - change back to module_init()
->      crypto: hmac - fix memory leak in hmac_init_tfm()
->
->Eric Long (3):
->      dmaengine: sprd: Fix the incorrect start for 2-stage destination channels
->      dmaengine: sprd: Fix block length overflow
->      dmaengine: sprd: Fix the right place to configure 2-stage transfer
->
->Eugeniy Paltsev (3):
->      ARC: mm: SIGSEGV userspace trying to access kernel virtual memory
->      ARC: [plat-hsdk]: enable creg-gpio controller
->      ARC: [plat-hsdk]: Add support of Vivante GPU
->
->Fabrizio Castro (1):
->      virtio: Fix indentation of VIRTIO_MMIO
->
->Faiz Abbas (1):
->      mmc: sdhci_am654: Fix SLOTTYPE write
->
->Florian Fainelli (1):
->      arm64: smp: Moved cpu_logical_map[] to smp.h
->
->Gal Pressman (2):
->      RDMA/uverbs: Pass udata on uverbs error unwind
->      RDMA/efa: Remove MAYEXEC flag check from mmap flow
->
->Gao, Fred (1):
->      drm/i915/gvt: Fix cmd length of VEB_DI_IECP
->
->Geert Uytterhoeven (1):
->      MIPS: TXx9: Fix boot crash in free_initmem()
->
->Gen Zhang (1):
->      mdesc: fix a missing-check bug in get_vdev_port_node_info()
->
->George G. Davis (2):
->      scripts/checkstack.pl: Fix arm64 wrong or unknown architecture
->      ARM64: trivial: s/TIF_SECOMP/TIF_SECCOMP/ comment typo fix
->
->Gerald Schaefer (1):
->      s390/mm: fix address space detection in exception handling
->
->Greg Kroah-Hartman (1):
->      block: aoe: no need to check return value of debugfs_create functions
->
->Guenter Roeck (2):
->      xtensa: Fix section mismatch between memblock_reserve and mem_reserve
->      samples: fix pidfd-metadata compilation
->
->Gustavo A. R. Silva (1):
->      xprtrdma: Use struct_size() in kzalloc()
->
->Hangbin Liu (1):
->      Revert "fib_rules: return 0 directly if an exactly same rule
->exists when NLM_F_EXCL not supplied"
->
->Helen Koike (5):
->      drm/rockchip: fix fb references in async update
->      drm/amd: fix fb references in async update
->      drm/msm: fix fb references in async update
->      drm/vc4: fix fb references in async update
->      drm: don't block fb changes for async plane updates
->
->Helge Deller (3):
->      parisc: Allow building 64-bit kernel without -mlong-calls compiler option
->      parisc: Fix compiler warnings in float emulation code
->      parisc: Fix crash due alternative coding for NP iopdir_fdc bit
->
->Igor Stoppa (1):
->      virtio: add unlikely() to WARN_ON_ONCE()
->
->Ivan Khoronzhuk (1):
->      net: ethernet: ti: cpsw_ethtool: fix ethtool ring param set
->
->Jaesoo Lee (1):
->      nvme: Fix u32 overflow in the number of namespace list calculation
->
->Jakub Kicinski (2):
->      Revert "net/tls: avoid NULL-deref on resync during device removal"
->      net/tls: replace the sleeping lock around RX resync with a bit lock
->
->James Clarke (1):
->      sparc64: Fix regression in non-hypervisor TLB flush xcall
->
->Jan Glauber (1):
->      lockref: Limit number of cmpxchg loop retries
->
->Jann Horn (2):
->      habanalabs: fix debugfs code
->      x86/insn-eval: Fix use-after-free access to LDT entry
->
->Jason Gunthorpe (1):
->      RDMA/core: Clear out the udata before error unwind
->
->Jason Wang (4):
->      vhost: introduce vhost_exceeds_weight()
->      vhost_net: fix possible infinite loop
->      vhost: vsock: add weight support
->      vhost: scsi: add weight support
->
->Jerome Brunet (1):
->      mmc: meson-gx: fix irq ack
->
->Jiri Kosina (1):
->      x86/power: Fix 'nosmt' vs hibernation triple fault during resume
->
->Joel Fernandes (Google) (2):
->      kheaders: Move from proc to sysfs
->      kheaders: Do not regenerate archive if config is not changed
->
->John David Anglin (2):
->      parisc: Use implicit space register selection for loading the
->coherence index of I/O pdirs
->      parisc: Use lpa instruction to load physical addresses in driver code
->
->Jon Hunter (3):
->      dmaengine: tegra210-adma: Fix crash during probe
->      dmaengine: tegra210-adma: Fix channel FIFO configuration
->      dmaengine: tegra210-adma: Fix spelling
->
->Jose Abreu (2):
->      ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
->      ARC: [plat-hsdk]: Add missing FIFO size entry in GMAC node
->
->Julian Wiedmann (3):
->      s390/qeth: handle limited IPv4 broadcast in L3 TX path
->      s390/qeth: check dst entry before use
->      s390/qeth: handle error when updating TX queue count
->
->Kamal Heib (1):
->      RDMA/core: Fix panic when port_data isn't initialized
->
->Kamenee Arumugam (1):
->      IB/hfi1: Validate page aligned for a given virtual address
->
->Kees Cook (3):
->      lkdtm/usercopy: Moves the KERNEL_DS test to non-canonical
->      lkdtm/bugs: Adjust recursion test to avoid elision
->      pstore/ram: Run without kernel crash dump region
->
->Kefeng Wang (1):
->      block: Drop unlikely before IS_ERR(_OR_NULL)
->
->Krzysztof Kozlowski (1):
->      parisc: configs: Remove useless UEVENT_HELPER_PATH
->
->Leon Romanovsky (2):
->      RDMA/srp: Rename SRP sysfs name after IB device rename trigger
->      RDMA/hns: Fix PD memory leak for internal allocation
->
->Linus Torvalds (2):
->      rcu: locking and unlocking need to always be at least barriers
->      Linux 5.2-rc4
->
->Louis Li (1):
->      drm/amdgpu: fix ring test failure issue during s3 in vce 3.0 (V2)
->
->Lowry Li (Arm Technology China) (1):
->      drm/komeda: fixing of DMA mapping sg segment warning
->
->Lucas Stach (1):
->      udmabuf: actually unmap the scatterlist
->
->Mariusz Bialonczyk (1):
->      w1: ds2408: Fix typo after 49695ac46861 (reset on output_write
->retry with readback)
->
->Masahiro Yamada (4):
->      MIPS: mark ginvt() as __always_inline
->      MIPS: remove a space after -I to cope with header search paths for VDSO
->      kconfig: tests: fix recursive inclusion unit test
->      kbuild: use more portable 'command -v' for cc-cross-prefix
->
->Max Gurtovoy (1):
->      nvme-rdma: use dynamic dma mapping per command
->
->Maxime Chevallier (1):
->      net: mvpp2: Use strscpy to handle stat strings
->
->Miaohe Lin (1):
->      net: ipvlan: Fix ipvlan device tso disabled while NETIF_F_IP_CSUM is set
->
->Michal Kubecek (1):
->      mlx5: avoid 64-bit division
->
->Mike Marciniszyn (3):
->      IB/rdmavt: Fix alloc_qpn() WARN_ON()
->      IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
->      IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
->
->Mike Rapoport (1):
->      parisc: Kconfig: remove ARCH_DISCARD_MEMBLOCK
->
->Miklos Szeredi (5):
->      fuse: fallocate: fix return with locked inode
->      fuse: add FUSE_WRITE_KILL_PRIV
->      fuse: fix copy_file_range() in the writeback case
->      fuse: extract helper for range writeback
->      ovl: doc: add non-standard corner cases
->
->Ming Lei (1):
->      block: free sched's request pool in blk_cleanup_queue
->
->Minwoo Im (1):
->      nvmet: fix data_len to 0 for bdev-backed write_zeroes
->
->Moritz Fischer (1):
->      fpga: zynqmp-fpga: Correctly handle error pointer
->
->Naresh Kamboju (1):
->      selftests: vm: install test_vmalloc.sh for run_vmtests
->
->Neil Horman (1):
->      Fix memory leak in sctp_process_init
->
->Nikita Danilov (1):
->      net: aquantia: fix wol configuration not applied sometimes
->
->Nikita Yushchenko (1):
->      net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
->
->Oded Gabbay (2):
->      uapi/habanalabs: add opcode for enable/disable device debug mode
->      habanalabs: fix bug in checking huge page optimization
->
->Olga Kornievskaia (1):
->      SUNRPC fix regression in umount of a secure mount
->
->Olivier Matz (2):
->      ipv6: use READ_ONCE() for inet->hdrincl as in ipv4
->      ipv6: fix EFAULT on sendto with icmpv6 and hdrincl
->
->Omer Shpigelman (1):
->      habanalabs: halt debug engines on user process close
->
->Paolo Abeni (2):
->      net: fix indirect calls helpers for ptype list hooks.
->      pktgen: do not sleep with the thread lock held.
->
->Paul Burton (3):
->      MIPS: Bounds check virt_addr_valid
->      MIPS: Make virt_addr_valid() return bool
->      MIPS: pistachio: Build uImage.gz by default
->
->Paul Cercueil (1):
->      dmaengine: jz4780: Fix transfers being ACKed too soon
->
->Peng Ma (1):
->      dmaengine: fsl-qdma: Add improvement
->
->Pi-Hsun Shih (1):
->      pstore: Set tfm to NULL on free_buf_for_compression
->
->Prike Liang (1):
->      drm/amd/amdgpu: add RLC firmware to support raven1 refresh
->
->Rafael J. Wysocki (2):
->      x86: intel_epb: Do not build when CONFIG_PM is unset
->      PM: sleep: Add kerneldoc comments to some functions
->
->Robert Hancock (2):
->      hwmon: (pmbus/core) Treat parameters as paged if on multiple pages
->      i2c: xiic: Add max_read_len quirk
->
->Robin Murphy (2):
->      drm/arm/hdlcd: Actually validate CRTC modes
->      drm/arm/hdlcd: Allow a bit of clock tolerance
->
->Roger Pau Monne (1):
->      xen-blkfront: switch kcalloc to kvcalloc for large array allocation
->
->Russell King (9):
->      fs/adfs: factor out filename comparison
->      fs/adfs: factor out filename case lowering
->      fs/adfs: factor out object fixups
->      fs/adfs: factor out filename fixup
->      fs/adfs: remove truncated filename hashing
->      fs/adfs: move append_filetype_suffix() into adfs_object_fixup()
->      fs/adfs: fix filename fixup handling for "/" and "//" names
->      net: sfp: read eeprom in maximum 16 byte increments
->      net: phylink: avoid reducing support mask
->
->Sagi Grimberg (2):
->      nvme-rdma: fix queue mapping when queue count is limited
->      nvme-tcp: fix queue mapping when queue count is limited
->
->Scott Wood (2):
->      fpga: dfl: afu: Pass the correct device to dma_mapping_error()
->      fpga: dfl: Add lockdep classes for pdata->lock
->
->Sean Wang (2):
->      net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
->      net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW
->RX_2BYTE_OFFSET is enabled
->
->Shuah Khan (1):
->      selftests: vm: Fix test build failure when built by itself
->
->Takeshi Saito (1):
->      mmc: tmio: fix SCC error handling to avoid false positive CRC error
->
->Thomas Gleixner (159):
->      treewide: Replace GPLv2 boilerplate/reference with SPDX - rules 251..450
->
->Tim Beale (1):
->      udp: only choose unbound UDP socket for multicast when not in a VRF
->
->Tina Zhang (1):
->      drm/i915/gvt: Initialize intel_gvt_gtt_entry in stack
->
->Tomer Tayar (3):
->      habanalabs: Avoid using a non-initialized MMU cache mutex
->      habanalabs: Fix virtual address access via debugfs for 2MB pages
->      habanalabs: Read upper bits of trace buffer from RWPHI
->
->Trevor Bourget (1):
->      kbuild: tar-pkg: enable communication with jobserver
->
->Trond Myklebust (1):
->      SUNRPC: Fix a use after free when a server rejects the
->RPCSEC_GSS credential
->
->Tvrtko Ursulin (1):
->      drm/i915/icl: Add WaDisableBankHangMode
->
->Vasily Gorbik (1):
->      s390/unwind: correct stack switching during unwind
->
->Vincent Chen (3):
->      math-emu: Use statement expressions to fix Wshift-count-overflow warning
->      nds32: Avoid IEX status being incorrectly modified
->      nds32: add new emulations for floating point instruction
->
->Vineet Gupta (1):
->      ARC: fix build warnings
->
->Vivien Didelot (1):
->      ethtool: fix potential userspace buffer overflow
->
->Vladimir Oltean (2):
->      net: dsa: sja1105: Don't store frame type in skb->cb
->      net: dsa: sja1105: Fix link speed not working at 100 Mbps and below
->
->Wei Liu (1):
->      Update my email address
->
->Weinan Li (1):
->      drm/i915/gvt: add F_CMD_ACCESS flag for wa regs
->
->Wen He (1):
->      drm/arm/mali-dp: Add a loop around the second set CVAL and try 5 times
->
->Wen Yang (1):
->      fpga: stratix10-soc: fix use-after-free on s10_init()
->
->Willem de Bruijn (1):
->      packet: unconditionally free po->rollover
->
->Wolfram Sang (1):
->      MAINTAINERS: Karthikeyan Ramasubramanian is MIA
->
->Xiaolin Zhang (1):
->      drm/i915/gvt: save RING_HEAD into vreg when vgpu switched out
->
->Xin Long (3):
->      selftests: set sysctl bc_forwarding properly in router_broadcast.sh
->      ipv4: not do cache for local delivery if bc_forwarding is enabled
->      ipv6: fix the check before getting the cookie in rt6_get_cookie
->
->Xiong Zhang (1):
->      drm/i915/gvt: refine ggtt range validation
->
->Yan, Zheng (3):
->      ceph: single workqueue for inode related works
->      ceph: avoid iput_final() while holding mutex or in dispatch thread
->      ceph: fix error handling in ceph_get_caps()
->
->Yihao Wu (2):
->      NFSv4.1: Again fix a race where CB_NOTIFY_LOCK fails to wake a waiter
->      NFSv4.1: Fix bug only first CB_NOTIFY_LOCK is handled
->
->Yonglong Liu (1):
->      net: hns: Fix loopback test failed at copper ports
->
->Young Xiao (1):
->      sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
->
->YueHaibing (3):
->      parport: Fix mem leak in parport_register_dev_model
->      MIPS: uprobes: remove set but not used variable 'epc'
->      drm/komeda: remove set but not used variable 'kcrtc'
->
->Yury Norov (1):
->      parisc/slab: cleanup after /proc/slab_allocators removal
->
->Zhu Yanjun (2):
->      net: rds: fix memory leak when unload rds_rdma
->      net: rds: fix memory leak in rds_ib_flush_mr_pool
->
->james qian wang (Arm Technology China) (1):
->      drm/komeda: Constify the usage of komeda_component/pipeline/dev_funcs
+> But there is not usually any interesting formatting on the left side of =
+an
+> assignment (ie typically no newlines or comments).
 
---2B/JsCI69OhZNC5r
-Content-Type: application/pgp-signature; name="signature.asc"
+Is there any need to trigger additional source code reformatting?
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAlz8wDcACgkQsjqdtxFL
-KRXt4QgA18xvzYUbHjNFqwYphqhJuxbqtVZ6jPJ//kjCg8ECcxInRkAzmlF5mHKH
-hEpEKEgmKWqQZBgelQrLvqXO9BGKPgL1VdHSKfRWmHiSh9UyZAqQXCp25c8La4dR
-elgLeQL3+/2EILOirT3LmEuwzgCJCLHi61jEZlfa+8P1cjpK1URLr60viwQ473ur
-Kq3ZB5DQf9V+D9KEvKNvUBgQpb6HxOlQo62P/UHl/b+JMhxOP5IT0Fou9HZNwm4u
-V7KRbl+0MFcbk7MgdYMqUr6YKsUcWTEVH2Af04qAsASPAE3T0EtsPogVtMu5pVHm
-SG++rcv6Fjxm9hk3qhebDubmUhDcTg==
-=H+jx
------END PGP SIGNATURE-----
+> I can see no purpose to factorizing the right parenthesis.
 
---2B/JsCI69OhZNC5r--
+These characters at the end of such a function call should be kept unchang=
+ed.
+
+
+I got another software development concern according to the discussed
+software update =E2=80=9Cdrivers: provide devm_platform_ioremap_resource()=
+=E2=80=9D
+(from 2019-02-21).
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/=
+drivers/base/platform.c?id=3D7945f929f1a77a1c8887a97ca07f87626858ff42
+
+The flag =E2=80=9CIORESOURCE_MEM=E2=80=9D is passed as the second paramete=
+r for the call
+of the function =E2=80=9Cplatform_get_resource=E2=80=9D in this refactorin=
+g.
+Should this detail be specified also in the proposed script for the
+semantic patch language instead of using the metavariable =E2=80=9Carg2=E2=
+=80=9D
+in SmPL disjunctions?
+
+How do you think about to delete error detection and corresponding
+exception handling code for the previous function call?
+
+
+Is the SmPL code specification =E2=80=9Cwhen !=3D id=E2=80=9D really suffi=
+cient for
+the exclusion of variable reassignments here?
+
+Regards,
+Markus
