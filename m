@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B1BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF60C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220822133F
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81629206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNEoJcZt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExK2Xy+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbfFITJI (ORCPT
+        id S1730841AbfFITJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 15:09:08 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46143 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730367AbfFITJF (ORCPT
+        Sun, 9 Jun 2019 15:09:12 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52118 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730747AbfFITJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 15:09:05 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so6933390wrw.13;
-        Sun, 09 Jun 2019 12:09:03 -0700 (PDT)
+        Sun, 9 Jun 2019 15:09:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so1605755wma.1;
+        Sun, 09 Jun 2019 12:09:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r6aBBYHFZw+wLKTYMr8fmPQAN4BPkiDFppaKmykjpMw=;
-        b=kNEoJcZt5nsXjy8JVCX4nA/RHPOc0ZzeIMHnG33F/fcUuBjub+baEwb5FhMnyB9XOg
-         DQrjEY9ixDso5jtUQdcWtTSXMhSUtieeIv0BogGcvmeFPy6+rdv1jAp7cEMotcviMF3d
-         fQRF1frCxNHAsjJzjBXPkPiSUp8UQmQvHW+3W8TdfF6LlUzo4MzcaTyxfTplATplB/cd
-         YCwithQ/wP7/GDCw/Ysnx+qz+WiDMDSk4eWWLxo0jlzsDdKQ0BsayJKMiPj0H77pJdmw
-         /7oXJER8F1lmdQGjRq0i0NN2wzAKv3305XQPfZ/Wmjeu8TqkLYeCvW+0pwfhWX5AnPHR
-         /hKQ==
+        bh=upv7Vbgo1coKBDMdyJd/ZMbCzxChHqvQBd/9Rl/akWc=;
+        b=ExK2Xy+sxNIo3xn/+KSiczarC/ApP0W/S48WwXlWx144elZvp9zA3pUNyewsoUoXK6
+         ExSH09vPTFDt17vBSy19pMvSQWUwpgNkSUuKvNH/1pXzSQJUglfO60rOa8COBycBK6NN
+         9VCsk0XFBefpMrjZowQsswdSxWYYGltFjCqxR2BN6W8rfgX80iU/AU3Ci/4XV2fRykFe
+         gGbTux2q7gjMvsSEhAm0TcD7crCmbw5JfYNwTxJCLbpZVCg4nMOSYl6y04g6E1/oi5mn
+         Y84ZWNfFL9bFe94x5Us1Ebv6qagfZI0P/f6vqG00j9lQfMIYquvkVHahXytIM8dct+u4
+         VOeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=r6aBBYHFZw+wLKTYMr8fmPQAN4BPkiDFppaKmykjpMw=;
-        b=ZeEVYpkBbU0OafR7tDLi3LnQmIeDybAUZheLSW0rFv90uXgDjnvRxm4uSqY2E7eH7v
-         aZt96K/OprnKLFaP/XU7+STHe5n1hufOyB87BubQe7spe3pxxYmO4byQ5hnua2o/awcO
-         acQBNzPxRFLJ+AIb/qv7/DuA3iNZwheawEPFEwPYoaw/KWWpCXEN35Fa8DZplzPjEJz1
-         ZKTnPABTjy0jviREmVdjUlQ3q6HCrxM8nBKBwg2EtvFuClT7EZ1RlJXSDXBGl7Im1k2f
-         0fRzdNmYMFLeQWaE4/h1t4XEeuV+ST5jnqPIK0rVUvUpQh/1QyT55N75fjWpb3favprY
-         XgtA==
-X-Gm-Message-State: APjAAAUZGqdiROWnFiWQPBPQxEXgWU6zG8P0+SjKLZq821zCVDAt68+V
-        z0PCGT2kZj8nxfaNtWVHRKZw2kus
-X-Google-Smtp-Source: APXvYqyU5eUlQZsS32OOz7DzSerG7e4yvNUwoYFs+8SDfidlSOpLRe+hf3XlguNtVW6f8fAO/x1hEA==
-X-Received: by 2002:adf:b60f:: with SMTP id f15mr17412155wre.283.1560107342968;
-        Sun, 09 Jun 2019 12:09:02 -0700 (PDT)
+        bh=upv7Vbgo1coKBDMdyJd/ZMbCzxChHqvQBd/9Rl/akWc=;
+        b=cfLLwMyQ5boAPsjfGfQdMFwT3/22hG3e7QdLhWNN00ChRfwN4AqVRKt86DclCAEMLO
+         BHY/tBWtSP8Gu+Pon1R11HSZIRu39x7pJgQ9sZBlMzhTA4F+RXWIiJdB82foGRGy+VMT
+         16VH2ONYgw7O8/xALPKIgNLdft9Ddq3XdcDorf8SDBfRhkwRmvZmxbuE30ZIezF1nwfN
+         dGmMqAEBLoh/l3e0Xg8DVjWiYZXM172U3MdVZatUG6xr5XR7Thoz9ALYpFqA+hZes3pQ
+         wH9n2YS8ynRbLxqzcOK3XlbAPtlP22tq31Yz6cOBKoIMn1P7cWIU9g3PPSnOs35mJPEH
+         bzaw==
+X-Gm-Message-State: APjAAAVIkobeQbleYJIAhPglYZHFQz3l5z10+re3POVDqV0UsYXJXUXA
+        OeCH0ylWsEcggUIpFSB2yP1WGhP8
+X-Google-Smtp-Source: APXvYqzZCUaxyEQrhAwrEah/nB2Ua3qI5B8xSyUhtJo1Kx9aH/+WoZfln9IZ3y5ZhII2wM3v4b51RA==
+X-Received: by 2002:a1c:a483:: with SMTP id n125mr10706425wme.172.1560107346937;
+        Sun, 09 Jun 2019 12:09:06 -0700 (PDT)
 Received: from myhost.home (ckm12.neoplus.adsl.tpnet.pl. [83.31.88.12])
-        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.09.01
+        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.09.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 12:09:02 -0700 (PDT)
+        Sun, 09 Jun 2019 12:09:06 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
         dmurphy@ti.com, jacek.anaszewski@gmail.com,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v5 20/26] dt-bindings: as3645a: Add function and color properties
-Date:   Sun,  9 Jun 2019 21:07:57 +0200
-Message-Id: <20190609190803.14815-21-jacek.anaszewski@gmail.com>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v5 22/26] dt-bindings: leds-gpio: Add function and color properties
+Date:   Sun,  9 Jun 2019 21:07:59 +0200
+Message-Id: <20190609190803.14815-23-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
 References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
@@ -76,71 +76,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Refer to new "function" and "color" properties and mark "label"
 as deprecated.
 
-Also, fix malformed syntax of address-cells and size-cells
-in the example.
-
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/leds/ams,as3645a.txt       | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/leds/leds-gpio.txt         | 23 +++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-index fdc40e354a64..4af2987b25e9 100644
---- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-+++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-@@ -39,7 +39,9 @@ ams,input-max-microamp: Maximum flash controller input current. The
- Optional properties of the flash child node
- ===========================================
+diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Documentation/devicetree/bindings/leds/leds-gpio.txt
+index a48dda268f81..d21281b63d38 100644
+--- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
++++ b/Documentation/devicetree/bindings/leds/leds-gpio.txt
+@@ -10,8 +10,12 @@ LED sub-node properties:
+ - gpios :  Should specify the LED's GPIO, see "gpios property" in
+   Documentation/devicetree/bindings/gpio/gpio.txt.  Active low LEDs should be
+   indicated using flags in the GPIO specifier.
+-- label :  (optional)
++- function :  (optional)
++  see Documentation/devicetree/bindings/leds/common.txt
++- color :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
++- label :  (optional)
++  see Documentation/devicetree/bindings/leds/common.txt (deprecated)
+ - linux,default-trigger :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
+ - default-state:  (optional) The initial state of the LED.
+@@ -27,30 +31,34 @@ LED sub-node properties:
+ Examples:
  
--label		: The label of the flash LED.
-+function	:  See Documentation/devicetree/bindings/leds/common.txt.
-+color		:  See Documentation/devicetree/bindings/leds/common.txt.
-+label		:  See Documentation/devicetree/bindings/leds/common.txt (deprecated).
- 
- 
- Required properties of the indicator child node (1)
-@@ -52,28 +54,32 @@ led-max-microamp: Maximum indicator current. The allowed values are
- Optional properties of the indicator child node
- ===============================================
- 
--label		: The label of the indicator LED.
-+function	:  See Documentation/devicetree/bindings/leds/common.txt.
-+color		:  See Documentation/devicetree/bindings/leds/common.txt.
-+label		:  See Documentation/devicetree/bindings/leds/common.txt (deprecated).
- 
- 
- Example
- =======
- 
+ #include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/leds/common.h>
-+
- 	as3645a@30 {
--		#address-cells: 1
--		#size-cells: 0
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		reg = <0x30>;
- 		compatible = "ams,as3645a";
--		flash@0 {
-+		led@0 {
- 			reg = <0x0>;
- 			flash-timeout-us = <150000>;
- 			flash-max-microamp = <320000>;
- 			led-max-microamp = <60000>;
- 			ams,input-max-microamp = <1750000>;
--			label = "as3645a:flash";
-+			function = LED_FUNCTION_FLASH;
- 		};
--		indicator@1 {
-+		led@1 {
- 			reg = <0x1>;
- 			led-max-microamp = <10000>;
--			label = "as3645a:indicator";
-+			function = LED_FUNCTION_INDICATOR;
- 		};
+ 
+ leds {
+ 	compatible = "gpio-leds";
+-	hdd {
+-		label = "Disk Activity";
++	led0 {
+ 		gpios = <&mcu_pio 0 GPIO_ACTIVE_LOW>;
+ 		linux,default-trigger = "disk-activity";
++		function = LED_FUNCTION_DISK;
  	};
+ 
+-	fault {
++	led1 {
+ 		gpios = <&mcu_pio 1 GPIO_ACTIVE_HIGH>;
+ 		/* Keep LED on if BIOS detected hardware fault */
+ 		default-state = "keep";
++		function = LED_FUNCTION_FAULT;
+ 	};
+ };
+ 
+ run-control {
+ 	compatible = "gpio-leds";
+-	red {
++	led0 {
+ 		gpios = <&mpc8572 6 GPIO_ACTIVE_HIGH>;
++		color = <LED_COLOR_ID_RED>;
+ 		default-state = "off";
+ 	};
+-	green {
++	led1 {
+ 		gpios = <&mpc8572 7 GPIO_ACTIVE_HIGH>;
++		color = <LED_COLOR_ID_GREEN>;
+ 		default-state = "on";
+ 	};
+ };
+@@ -58,9 +66,10 @@ run-control {
+ leds {
+ 	compatible = "gpio-leds";
+ 
+-	charger-led {
++	led0 {
+ 		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+ 		linux,default-trigger = "max8903-charger-charging";
+ 		retain-state-suspended;
++		function = LED_FUNCTION_CHARGE;
+ 	};
+ };
 -- 
 2.11.0
 
