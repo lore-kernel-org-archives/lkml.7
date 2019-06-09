@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D88C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC53C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB585205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA12205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100096;
-	bh=agtC4ZKvCXiD09LkBMOirdyQMeA1+xMR2WblZ6cln/s=;
+	s=default; t=1560100102;
+	bh=j/4mj41txbokL6sWtov/J2R9lrvZFfKMACDs23RHENM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QU3rcukia0bJmL7HCDtvR6a1zn2OsANS7c0KF4774iU598qQSlO2FSpv6JEUskgcZ
-	 QNDdqZ9/hmK0gUpM9vDF6Eob8+rZ8gtqTgXL+IMxp6GZAU51hK9AFuOUoig9GgPP+h
-	 PkNBorOCMqogkiG2IKzjfcHoxKtDW+6rXSW1fJPU=
+	b=aSvdxlKm7BVARWseOdqEK3Wn6ttZKVmTULdFhMJzUXYHrlR6WONT1EpdAc60iiunF
+	 ejitnDcCWsCZk+9Ev3XPL6E1SzYwOocaOj3zRIdW3x3MWhMkN8IQ7woBcGUWCvPLxj
+	 pPsZq7goAmTzyfqqW7eptyirf9bKsYODc+tVsdN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388861AbfFIRFi (ORCPT
+        id S2388817AbfFIRFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:05:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44846 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:05:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388423AbfFIRFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:05:33 -0400
+        id S2388788AbfFIRFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2B0206C3;
-        Sun,  9 Jun 2019 17:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0374220833;
+        Sun,  9 Jun 2019 17:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099932;
-        bh=agtC4ZKvCXiD09LkBMOirdyQMeA1+xMR2WblZ6cln/s=;
+        s=default; t=1560099918;
+        bh=j/4mj41txbokL6sWtov/J2R9lrvZFfKMACDs23RHENM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzuPRQ5AJ/yXofeY7PP955+uY+22mwbtZVGC1otRz22wgfKaBSY7iLVayW2G1b9fG
-         vawXLPQQvYWhgC7/KlPFDeafWFpo+FgTeN5BhAKkA2uRthUHqDtkF/kRozodYsxkF3
-         dJ/O981aMd+FOwRjts1rW/Dcrmklu5sCc14amI+c=
+        b=MpZn3YoqjytMmjN3m8OQEPZhZk7zIXWZtwkXFi15kWjQD7AQaRIm1er3JQzqCg7wB
+         zkhKzQL0ubgua82/klhfXa97bscpxswoYggs9JnYElUSqM1OfFrOURNBYBwwNRpWqI
+         0saOc5ba/UrcLAVDBK/o/UyO1RzPsZ5IFa9VINd0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 217/241] bnx2x: disable GSO where gso_size is too big for hardware
-Date:   Sun,  9 Jun 2019 18:42:39 +0200
-Message-Id: <20190609164154.935768309@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.4 213/241] CIFS: cifs_read_allocate_pages: dont iterate through whole page array on ENOMEM
+Date:   Sun,  9 Jun 2019 18:42:35 +0200
+Message-Id: <20190609164154.817633029@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,58 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-commit 8914a595110a6eca69a5e275b323f5d09e18f4f9 upstream.
+commit 31fad7d41e73731f05b8053d17078638cf850fa6 upstream.
 
-If a bnx2x card is passed a GSO packet with a gso_size larger than
-~9700 bytes, it will cause a firmware error that will bring the card
-down:
+ In cifs_read_allocate_pages, in case of ENOMEM, we go through
+whole rdata->pages array but we have failed the allocation before
+nr_pages, therefore we may end up calling put_page with NULL
+pointer, causing oops
 
-bnx2x: [bnx2x_attn_int_deasserted3:4323(enP24p1s0f0)]MC assert!
-bnx2x: [bnx2x_mc_assert:720(enP24p1s0f0)]XSTORM_ASSERT_LIST_INDEX 0x2
-bnx2x: [bnx2x_mc_assert:736(enP24p1s0f0)]XSTORM_ASSERT_INDEX 0x0 = 0x00000000 0x25e43e47 0x00463e01 0x00010052
-bnx2x: [bnx2x_mc_assert:750(enP24p1s0f0)]Chip Revision: everest3, FW Version: 7_13_1
-... (dump of values continues) ...
-
-Detect when the mac length of a GSO packet is greater than the maximum
-packet size (9700 bytes) and disable GSO.
-
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -12824,6 +12824,24 @@ static netdev_features_t bnx2x_features_
- 					      struct net_device *dev,
- 					      netdev_features_t features)
- {
-+	/*
-+	 * A skb with gso_size + header length > 9700 will cause a
-+	 * firmware panic. Drop GSO support.
-+	 *
-+	 * Eventually the upper layer should not pass these packets down.
-+	 *
-+	 * For speed, if the gso_size is <= 9000, assume there will
-+	 * not be 700 bytes of headers and pass it through. Only do a
-+	 * full (slow) validation if the gso_size is > 9000.
-+	 *
-+	 * (Due to the way SKB_BY_FRAGS works this will also do a full
-+	 * validation in that case.)
-+	 */
-+	if (unlikely(skb_is_gso(skb) &&
-+		     (skb_shinfo(skb)->gso_size > 9000) &&
-+		     !skb_gso_validate_mac_len(skb, 9700)))
-+		features &= ~NETIF_F_GSO_MASK;
+---
+ fs/cifs/file.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -2829,7 +2829,9 @@ cifs_read_allocate_pages(struct cifs_rea
+ 	}
+ 
+ 	if (rc) {
+-		for (i = 0; i < nr_pages; i++) {
++		unsigned int nr_page_failed = i;
 +
- 	features = vlan_features_check(skb, features);
- 	return vxlan_features_check(skb, features);
- }
++		for (i = 0; i < nr_page_failed; i++) {
+ 			put_page(rdata->pages[i]);
+ 			rdata->pages[i] = NULL;
+ 		}
 
 
