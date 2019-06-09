@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198D1C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9FFC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B9D206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C118E20868
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099682;
-	bh=gMAUeHEHtlExpVdA5CbOXjavyx+aJZ6/pDH6KaSR1HM=;
+	s=default; t=1560099687;
+	bh=hFSwgNcy1FE4XaePHXQfp2EUCe80CS3i8M4vN20piSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mG+UvY/Y3LX+vtA9CkHPezj3hlob5sZZYgcMPno7OuUukxc5ihNI0wO4rENXvKXbi
-	 t9VM+DpgM8LILKcmvLPCMgqcmxgrQT7YVJcz0lS8q9a3/HGmn2J0VlYyP2OBs3y1Sh
-	 lxxQ1LwIoULLurp9qLBHEehhfEo/4Ol6+edmYbZQ=
+	b=oNqp0Bh4BMvB1ZQjUI9JlqsgZ7+G0zqEJsDqkFe+uVYBYRLpC8Q0bHR3EbX8SmAN1
+	 JBI2WihuVhofmx48m17sN0iwH8UXskrBRVetoY+OxOj2/bSBvRZvfFd6AvWqv/6+KR
+	 RggTEvZAM7ZnkYm/qNpZiC5kWh1DFigjf1sS4lJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388038AbfFIRBU (ORCPT
+        id S2388061AbfFIRB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:01:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38456 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:01:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388027AbfFIRBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:01:18 -0400
+        id S2388044AbfFIRBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EA4B206DF;
-        Sun,  9 Jun 2019 17:01:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B13B9206DF;
+        Sun,  9 Jun 2019 17:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099677;
-        bh=gMAUeHEHtlExpVdA5CbOXjavyx+aJZ6/pDH6KaSR1HM=;
+        s=default; t=1560099683;
+        bh=hFSwgNcy1FE4XaePHXQfp2EUCe80CS3i8M4vN20piSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aflDVcnzBGsU2V06RX4lMJRRU0Jj26F9tsDtTOLANnXAFP4qiTMkVKYzP8WRO3e5d
-         8DETLsGtmLpveKzb9aUic5T+MTt8j4VB/nYcMZ/+drirS6fimzUIFTRqMWcOx1eaE8
-         lcbOMJiqAXe2A8DXMmIWjOTg5YlJFCPBGs34as2k=
+        b=wRrBHwWGPbAy5b58xl4jK3kvLMiQLQ6rcgnoFmcVCGnLzaFGZdNdDQ382g5Wn6Xkz
+         t5kVJ6Qkt+hpjZctPLdNZ1UIsSzFBSGVNUJhH0rniH+zMR3VD35UZSHk5lvaqz+WRD
+         c8LKmb7+MLdTyqc7AhHcLEZuZcmigr7Q9lwpp0T0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 125/241] powerpc/numa: improve control of topology updates
-Date:   Sun,  9 Jun 2019 18:41:07 +0200
-Message-Id: <20190609164151.413451064@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 127/241] sched/core: Handle overflow in cpu_shares_write_u64
+Date:   Sun,  9 Jun 2019 18:41:09 +0200
+Message-Id: <20190609164151.467929067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,79 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d4d9b308f8f8dec68f6dbbff18c68ec7c6bd26f ]
+[ Upstream commit 5b61d50ab4ef590f5e1d4df15cd2cea5f5715308 ]
 
-When booted with "topology_updates=no", or when "off" is written to
-/proc/powerpc/topology_updates, NUMA reassignments are inhibited for
-PRRN and VPHN events. However, migration and suspend unconditionally
-re-enable reassignments via start_topology_update(). This is
-incoherent.
+Bit shift in scale_load() could overflow shares. This patch saturates
+it to MAX_SHARES like following sched_group_set_shares().
 
-Check the topology_updates_enabled flag in
-start/stop_topology_update() so that callers of those APIs need not be
-aware of whether reassignments are enabled. This allows the
-administrative decision on reassignments to remain in force across
-migrations and suspensions.
+Example:
 
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+ # echo 9223372036854776832 > cpu.shares
+ # cat cpu.shares
+
+Before patch: 1024
+After pattch: 262144
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/155125501891.293431.3345233332801109696.stgit@buzz
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/numa.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ kernel/sched/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index bb3df222ae71f..215bff2b84703 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -1611,6 +1611,9 @@ int start_topology_update(void)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1ef2fb4bbd6bd..0e70bfeded7fd 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8361,6 +8361,8 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
+ static int cpu_shares_write_u64(struct cgroup_subsys_state *css,
+ 				struct cftype *cftype, u64 shareval)
  {
- 	int rc = 0;
++	if (shareval > scale_load_down(ULONG_MAX))
++		shareval = MAX_SHARES;
+ 	return sched_group_set_shares(css_tg(css), scale_load(shareval));
+ }
  
-+	if (!topology_updates_enabled)
-+		return 0;
-+
- 	if (firmware_has_feature(FW_FEATURE_PRRN)) {
- 		if (!prrn_enabled) {
- 			prrn_enabled = 1;
-@@ -1640,6 +1643,9 @@ int stop_topology_update(void)
- {
- 	int rc = 0;
- 
-+	if (!topology_updates_enabled)
-+		return 0;
-+
- 	if (prrn_enabled) {
- 		prrn_enabled = 0;
- #ifdef CONFIG_SMP
-@@ -1685,11 +1691,13 @@ static ssize_t topology_write(struct file *file, const char __user *buf,
- 
- 	kbuf[read_len] = '\0';
- 
--	if (!strncmp(kbuf, "on", 2))
-+	if (!strncmp(kbuf, "on", 2)) {
-+		topology_updates_enabled = true;
- 		start_topology_update();
--	else if (!strncmp(kbuf, "off", 3))
-+	} else if (!strncmp(kbuf, "off", 3)) {
- 		stop_topology_update();
--	else
-+		topology_updates_enabled = false;
-+	} else
- 		return -EINVAL;
- 
- 	return count;
-@@ -1704,9 +1712,7 @@ static const struct file_operations topology_ops = {
- 
- static int topology_update_init(void)
- {
--	/* Do not poll for changes if disabled at boot */
--	if (topology_updates_enabled)
--		start_topology_update();
-+	start_topology_update();
- 
- 	if (!proc_create("powerpc/topology_updates", 0644, NULL, &topology_ops))
- 		return -ENOMEM;
 -- 
 2.20.1
 
