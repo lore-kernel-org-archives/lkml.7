@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E90C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5510FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75451206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246CF205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099167;
-	bh=QwMPYowNbNSmctDkS8RVw0Gpc7vhQN6OyjlLIbb6GPw=;
+	s=default; t=1560099171;
+	bh=CGsfm0pjwW+BoITzq0cXBgUjb7RKs9sosgFqZJdzihk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w2ied4WxBaFBQ/mibzBaHeB96MgGgKbQasbrQwiSeZFu43L8u43q1OxoFDnoz9FLY
-	 fWwd6VuYTkjhrmeBgWzZwsMNX3m/YPihyS4H7cbiGyg0/igbM6Mr3EF4KJEoN3gmTN
-	 LoCdWh5UXJIQITDOT9r2ys6m57pt3Z9Muk50z0gk=
+	b=g+FsT7tnxb95GUO6oDl7itO8udP6+jpnxCtlfBd6uXudxNxAxaSoBexNrYvylK83G
+	 zzI65weBaWgnKGE07R5ddZLjeYqOJV/PNBW9yhz4a9onPHq/Z1os+Nk6NYb48+eRAs
+	 VCN3HNDqwGmt+F7tcKlmoNWDDfbPAyRAZMzzgaEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732290AbfFIQwq (ORCPT
+        id S1732300AbfFIQwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:52:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53666 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:52:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731420AbfFIQwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:52:40 -0400
+        id S1732287AbfFIQwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:52:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0CBF205ED;
-        Sun,  9 Jun 2019 16:52:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 552A1205ED;
+        Sun,  9 Jun 2019 16:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099160;
-        bh=QwMPYowNbNSmctDkS8RVw0Gpc7vhQN6OyjlLIbb6GPw=;
+        s=default; t=1560099165;
+        bh=CGsfm0pjwW+BoITzq0cXBgUjb7RKs9sosgFqZJdzihk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uS0pT6jD85Akq1cC6CfdvzlPg5vbEquv1itHJs325BAWeoLT4u+je6xnVIIoaPFYf
-         vTn7D8SUEaVpacUFeUYBB6szijlOQ/ea8Z1o+a7vrQ3plm40mmnT4M/8AKvCTA+uow
-         gZ0M+IyNNMsBkDXzo6txoITCuQ9rrERewQFYzpvo=
+        b=NOAvOcYh6JqwnaZLlT5+mod/x/DW1URbVJ3ZA5YVmx2MInKRUhn3VUwh9ZagbRmoX
+         9EXwQyw0+x1HHdkekWyQ8WWTGiMEEVgKCrKz9IphDEIso+zBuWYRiZvkTZ7hyxj1pu
+         srEu9EZooA2NO3MMYgtt5h+qqaXafbsTyZ0K/UWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH 4.9 32/83] media: usb: siano: Fix false-positive "uninitialized variable" warning
-Date:   Sun,  9 Jun 2019 18:42:02 +0200
-Message-Id: <20190609164130.425100049@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 34/83] scsi: zfcp: fix missing zfcp_port reference put on -EBUSY from port_remove
+Date:   Sun,  9 Jun 2019 18:42:04 +0200
+Message-Id: <20190609164130.624607301@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,33 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 45457c01171fd1488a7000d1751c06ed8560ee38 upstream.
+commit d27e5e07f9c49bf2a6a4ef254ce531c1b4fb5a38 upstream.
 
-GCC complains about an apparently uninitialized variable recently
-added to smsusb_init_device().  It's a false positive, but to silence
-the warning this patch adds a trivial initialization.
+With this early return due to zfcp_unit child(ren), we don't use the
+zfcp_port reference from the earlier zfcp_get_port_by_wwpn() anymore and
+need to put it.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: kbuild test robot <lkp@intel.com>
-CC: <stable@vger.kernel.org>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: d99b601b6338 ("[SCSI] zfcp: restore refcount check on port_remove")
+Cc: <stable@vger.kernel.org> #3.7+
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/siano/smsusb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/scsi/zfcp_sysfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/usb/siano/smsusb.c
-+++ b/drivers/media/usb/siano/smsusb.c
-@@ -402,7 +402,7 @@ static int smsusb_init_device(struct usb
- 	struct smsusb_device_t *dev;
- 	void *mdev;
- 	int i, rc;
--	int in_maxp;
-+	int in_maxp = 0;
- 
- 	/* create device object */
- 	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+--- a/drivers/s390/scsi/zfcp_sysfs.c
++++ b/drivers/s390/scsi/zfcp_sysfs.c
+@@ -263,6 +263,7 @@ static ssize_t zfcp_sysfs_port_remove_st
+ 	if (atomic_read(&port->units) > 0) {
+ 		retval = -EBUSY;
+ 		mutex_unlock(&zfcp_sysfs_port_units_mutex);
++		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
+ 		goto out;
+ 	}
+ 	/* port is about to be removed, so no more unit_add */
 
 
