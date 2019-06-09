@@ -7,80 +7,73 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE81C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BCDC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7AD20868
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5962083D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 11:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560078081;
-	bh=4yCqDJ6gnHMOGHmX6Tj7HsB2ULZ8HyC9XSpyPlZH4I0=;
+	s=default; t=1560078130;
+	bh=Fl13B7AdxLKVh/jbYNRAUmggrojZf3/Gq+JViMfyvs0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vjy7sHW4GwVFBVk07+JwTaS3wl6ouHxJH72tBpbMgXzhkdgKAgBeFCazDyBKrLkG9
-	 /EwGmbJggAwYDtI9ieCL7G2UwJbKepxp7ZNaj2fw/Hqj3TOnkun6ZaIZERIDbyiuX8
-	 5yVTpgDo1k7Y/8s+n+TnMDnY8Y9JneySMt1AlAJU=
+	b=c4ub+N1qZIU+TNeJTA5lxhpG1GypZt0RY3neUBRkE3dfD07QTYHvdFYPpG/XrFx5C
+	 J4GfBJt1/YTs5mkF70AtcPXd+tBuN/JYod0lGHsbWL3N5Z7qFNRbVq3tDhZt6kbOgW
+	 2pHYu3Z9jl+dxftoBTLbqW18riFK/QbF4v3c8Q5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbfFILBT (ORCPT
+        id S1728356AbfFILCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 07:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40246 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 07:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbfFILBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 07:01:19 -0400
+        id S1728029AbfFILCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 07:02:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 420272083D;
-        Sun,  9 Jun 2019 11:01:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5134F2083D;
+        Sun,  9 Jun 2019 11:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560078078;
-        bh=4yCqDJ6gnHMOGHmX6Tj7HsB2ULZ8HyC9XSpyPlZH4I0=;
+        s=default; t=1560078128;
+        bh=Fl13B7AdxLKVh/jbYNRAUmggrojZf3/Gq+JViMfyvs0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DiF2h4EF+q1VatqeNNr06wWGkVwjUzpfSQpb1dwlJhdSr5IoS5j0usJ76lShqaL70
-         7T/PF99a+BRVtuv52+XIJxsGjywPhetr3EmRbnUwBOFXw+cQ9jZutFcQsQJyjdxKAA
-         zlZX0cAgEm2RLyZ73FcQdaBajpx1BEa9V1wPfYmo=
-Date:   Sun, 9 Jun 2019 13:01:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Michael Straube <straube.linux@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: fix indentation issues
-Message-ID: <20190609110116.GC30671@kroah.com>
-References: <20190609053741.GA12637@hari-Inspiron-1545>
+        b=hfGvUDo0m8USk6NvX4WDbIG/zePnZQvHIUxCBOUJy458mkD14q3vhfQipQeErhKYZ
+         7KNqMdHWdEwUFAKqAgUIgTkt/y0pMCwhn6T9Mul1Pa+vuEfd96sUuuUJSyw9cqv4nJ
+         SKUXGNUkJxs4fZPSXli/UoNAdluU+2NbioUMArSI=
+Date:   Sun, 9 Jun 2019 13:02:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        straube.linux@gmail.com, benniciemanuel78@gmail.com,
+        hardiksingh.k@gmail.com
+Subject: Re: [PATCH] staging: rtl8723bs: core: rtw_mlme_ext.c: Remove unused
+ variables
+Message-ID: <20190609110206.GD30671@kroah.com>
+References: <20190607071123.28193-1-nishkadg.linux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190609053741.GA12637@hari-Inspiron-1545>
+In-Reply-To: <20190607071123.28193-1-nishkadg.linux@gmail.com>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 11:07:41AM +0530, Hariprasad Kelam wrote:
-> fix below issues reported by checkpatch
+On Fri, Jun 07, 2019 at 12:41:23PM +0530, Nishka Dasgupta wrote:
+> Remove variables that are declared and assigned values but not otherwise
+> used.
+> Issue found with Coccinelle.
 > 
-> CHECK: Please don't use multiple blank lines
-> WARNING: space prohibited between function name and open parenthesis '('
-> +void _rtw_open_pktfile (_pkt *pktptr, struct pkt_file *pfile)
-> WARNING: space prohibited before semicolon
-> WARNING: space prohibited between function name and open parenthesis '('
-> CHECK: spaces preferred around that '-' (ctx:VxV)
-> CHECK: Comparison to NULL could be written "!pxmitbuf->pallocated_buf"
-> CHECK: spaces preferred around that '*' (ctx:VxV)
-> CHECK: spaces preferred around that '/' (ctx:VxV)
-> WARNING: Missing a blank line after declarations
-> WARNING: braces {} are not necessary for single statement blocks
-> CHECK: spaces preferred around that '/' (ctx:VxV)
-> CHECK: Using comparison to true is error prone
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 9 ---------
+>  1 file changed, 9 deletions(-)
 
-That is a lot of different issues trying to be fixed in one patch.
-Please break this up into "one logical type of fix per patch" and make a
-patch series.
+You sent me 8 patches for this driver, yet only 2 were ordered in a
+series.  I have no idea what order to apply these in :(
+
+Please resend them _all_ in a numbered patch series so I have a chance
+to get this correct.
 
 thanks,
 
