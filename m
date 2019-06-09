@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B38C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B1BC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE7D212F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220822133F
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrQiHLPW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNEoJcZt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbfFITJA (ORCPT
+        id S1730750AbfFITJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 15:09:00 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37315 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730513AbfFITI5 (ORCPT
+        Sun, 9 Jun 2019 15:09:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46143 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730367AbfFITJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 15:08:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 22so6177493wmg.2;
-        Sun, 09 Jun 2019 12:08:56 -0700 (PDT)
+        Sun, 9 Jun 2019 15:09:05 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so6933390wrw.13;
+        Sun, 09 Jun 2019 12:09:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wLfBGSpG5kcjtADXYpGO9iKtzL6iCob5R6RB66c3aK4=;
-        b=lrQiHLPWn3Ibg7b6JlpAEDyb8MJASMKOQoLT+7NZmZUm6mUllw9rd6eUaJMWUQw10L
-         jue6OujvfczL9Sz0RZ1tl7kgEUN/vT6Y57at2PPTcKVjsuCd98WM1Y4sNKa7uemjnck7
-         dJmud9Yw5RRNDOSBA7F3r1AQ+0jcPDl6TAPLaz76EqmhgmaVKmJZebpyi53KwLbatcl/
-         llThF23MaLInqYQyQ8dsAD7pojmoFBl8d9orPEfUZ52Va77waUEJatZtF9Ql8iiLGo6i
-         iHKsv425+QoOkP/orRNQ0Prt6g2Sv2d48duzOkiHZPV++P/XgvZ7qx252dGZoID1eQgA
-         Aw4w==
+        bh=r6aBBYHFZw+wLKTYMr8fmPQAN4BPkiDFppaKmykjpMw=;
+        b=kNEoJcZt5nsXjy8JVCX4nA/RHPOc0ZzeIMHnG33F/fcUuBjub+baEwb5FhMnyB9XOg
+         DQrjEY9ixDso5jtUQdcWtTSXMhSUtieeIv0BogGcvmeFPy6+rdv1jAp7cEMotcviMF3d
+         fQRF1frCxNHAsjJzjBXPkPiSUp8UQmQvHW+3W8TdfF6LlUzo4MzcaTyxfTplATplB/cd
+         YCwithQ/wP7/GDCw/Ysnx+qz+WiDMDSk4eWWLxo0jlzsDdKQ0BsayJKMiPj0H77pJdmw
+         /7oXJER8F1lmdQGjRq0i0NN2wzAKv3305XQPfZ/Wmjeu8TqkLYeCvW+0pwfhWX5AnPHR
+         /hKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=wLfBGSpG5kcjtADXYpGO9iKtzL6iCob5R6RB66c3aK4=;
-        b=HZDQdoUWq9opfVyLKPDd6Bqd48YsLvCW+PQ6ZcFcRhg/EuBPxQq96vukAWbiGextv9
-         SGjKyCNeLOSFcEJ7yMNITTbAair4o9Eau0W4MTOXB4R86AsKaodELWAePlTr7jL1DQAV
-         4ee5ZoOzm+uS6VI4Uagh2nDkJdJOSgaOWMCp8xCHygzrh18CJH2/Sf7keq/I0BGThnL4
-         PahntIgUijSIgT5grMfsf7mZ+MgeOxV7nmVH56ephTcPcCah6hBbgrJ0g0SWxfs9w/Mw
-         +leI6m7qbPaCTL0YBRk/4PyDTgzbmkdRJdA5SupT4b7hb0VByUbpEBlUTJfYukzIZbUg
-         i6hw==
-X-Gm-Message-State: APjAAAVUcU3y3kPG9lWwHwYt0uMOeUs2Yw7sAx5Tepxu8ioER8QLM1Bk
-        feeAFmyo/YIj5V+sbapMRtP3+KTX
-X-Google-Smtp-Source: APXvYqwd+a/5/UOK4C4OhnaZpV5dOz32BwQ8m/Y44jf4wJpNxp04wuocGikXsCENyNOU2P0wU7hX7A==
-X-Received: by 2002:a1c:40c6:: with SMTP id n189mr10611700wma.118.1560107335228;
-        Sun, 09 Jun 2019 12:08:55 -0700 (PDT)
+        bh=r6aBBYHFZw+wLKTYMr8fmPQAN4BPkiDFppaKmykjpMw=;
+        b=ZeEVYpkBbU0OafR7tDLi3LnQmIeDybAUZheLSW0rFv90uXgDjnvRxm4uSqY2E7eH7v
+         aZt96K/OprnKLFaP/XU7+STHe5n1hufOyB87BubQe7spe3pxxYmO4byQ5hnua2o/awcO
+         acQBNzPxRFLJ+AIb/qv7/DuA3iNZwheawEPFEwPYoaw/KWWpCXEN35Fa8DZplzPjEJz1
+         ZKTnPABTjy0jviREmVdjUlQ3q6HCrxM8nBKBwg2EtvFuClT7EZ1RlJXSDXBGl7Im1k2f
+         0fRzdNmYMFLeQWaE4/h1t4XEeuV+ST5jnqPIK0rVUvUpQh/1QyT55N75fjWpb3favprY
+         XgtA==
+X-Gm-Message-State: APjAAAUZGqdiROWnFiWQPBPQxEXgWU6zG8P0+SjKLZq821zCVDAt68+V
+        z0PCGT2kZj8nxfaNtWVHRKZw2kus
+X-Google-Smtp-Source: APXvYqyU5eUlQZsS32OOz7DzSerG7e4yvNUwoYFs+8SDfidlSOpLRe+hf3XlguNtVW6f8fAO/x1hEA==
+X-Received: by 2002:adf:b60f:: with SMTP id f15mr17412155wre.283.1560107342968;
+        Sun, 09 Jun 2019 12:09:02 -0700 (PDT)
 Received: from myhost.home (ckm12.neoplus.adsl.tpnet.pl. [83.31.88.12])
-        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.08.53
+        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.09.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 12:08:54 -0700 (PDT)
+        Sun, 09 Jun 2019 12:09:02 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
         dmurphy@ti.com, jacek.anaszewski@gmail.com,
-        Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: [PATCH v5 16/26] dt-bindings: cr0014114: Add function and color properties
-Date:   Sun,  9 Jun 2019 21:07:53 +0200
-Message-Id: <20190609190803.14815-17-jacek.anaszewski@gmail.com>
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v5 20/26] dt-bindings: as3645a: Add function and color properties
+Date:   Sun,  9 Jun 2019 21:07:57 +0200
+Message-Id: <20190609190803.14815-21-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
 References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
@@ -76,79 +76,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Refer to new "function" and "color" properties and mark "label"
 as deprecated.
 
+Also, fix malformed syntax of address-cells and size-cells
+in the example.
+
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/leds/leds-cr0014114.txt    | 26 ++++++++++++++++------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/leds/ams,as3645a.txt       | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
-index 4255b19ad25c..f8de7516a39b 100644
---- a/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-cr0014114.txt
-@@ -11,14 +11,20 @@ Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
- apply. In particular, "reg" and "spi-max-frequency" properties must be given.
+diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+index fdc40e354a64..4af2987b25e9 100644
+--- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
++++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+@@ -39,7 +39,9 @@ ams,input-max-microamp: Maximum flash controller input current. The
+ Optional properties of the flash child node
+ ===========================================
  
- LED sub-node properties:
--- label :
-+- function :
-+	see Documentation/devicetree/bindings/leds/common.txt
-+- color :
- 	see Documentation/devicetree/bindings/leds/common.txt
-+- label :
-+	see Documentation/devicetree/bindings/leds/common.txt (deprecated)
- - linux,default-trigger : (optional)
- 	see Documentation/devicetree/bindings/leds/common.txt
+-label		: The label of the flash LED.
++function	:  See Documentation/devicetree/bindings/leds/common.txt.
++color		:  See Documentation/devicetree/bindings/leds/common.txt.
++label		:  See Documentation/devicetree/bindings/leds/common.txt (deprecated).
+ 
+ 
+ Required properties of the indicator child node (1)
+@@ -52,28 +54,32 @@ led-max-microamp: Maximum indicator current. The allowed values are
+ Optional properties of the indicator child node
+ ===============================================
+ 
+-label		: The label of the indicator LED.
++function	:  See Documentation/devicetree/bindings/leds/common.txt.
++color		:  See Documentation/devicetree/bindings/leds/common.txt.
++label		:  See Documentation/devicetree/bindings/leds/common.txt (deprecated).
+ 
  
  Example
- -------
+ =======
  
 +#include <dt-bindings/leds/common.h>
 +
- led-controller@0 {
- 	compatible = "crane,cr0014114";
- 	reg = <0>;
-@@ -28,27 +34,33 @@ led-controller@0 {
- 
- 	led@0 {
- 		reg = <0>;
--		label = "red:coin";
-+		function = "coin";
-+		color = <LED_COLOR_ID_RED>;
+ 	as3645a@30 {
+-		#address-cells: 1
+-		#size-cells: 0
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		reg = <0x30>;
+ 		compatible = "ams,as3645a";
+-		flash@0 {
++		led@0 {
+ 			reg = <0x0>;
+ 			flash-timeout-us = <150000>;
+ 			flash-max-microamp = <320000>;
+ 			led-max-microamp = <60000>;
+ 			ams,input-max-microamp = <1750000>;
+-			label = "as3645a:flash";
++			function = LED_FUNCTION_FLASH;
+ 		};
+-		indicator@1 {
++		led@1 {
+ 			reg = <0x1>;
+ 			led-max-microamp = <10000>;
+-			label = "as3645a:indicator";
++			function = LED_FUNCTION_INDICATOR;
+ 		};
  	};
- 	led@1 {
- 		reg = <1>;
--		label = "green:coin";
-+		function = "coin";
-+		color = <LED_COLOR_ID_GREEN>;
- 	};
- 	led@2 {
- 		reg = <2>;
--		label = "blue:coin";
-+		function = "coin";
-+		color = <LED_COLOR_ID_BLUE>;
- 	};
- 	led@3 {
- 		reg = <3>;
--		label = "red:bill";
-+		function = "bill";
-+		color = <LED_COLOR_ID_RED>;
- 	};
- 	led@4 {
- 		reg = <4>;
--		label = "green:bill";
-+		function = "bill";
-+		color = <LED_COLOR_ID_GREEN>;
- 	};
- 	led@5 {
- 		reg = <5>;
--		label = "blue:bill";
-+		function = "bill";
-+		color = <LED_COLOR_ID_BLUE>;
- 	};
- 	...
- };
 -- 
 2.11.0
 
