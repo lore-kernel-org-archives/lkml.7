@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC527C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A025AC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD69206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70605206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099901;
-	bh=0vDeY41+O595UL1/ZQDEp9fOXTUTD2vKZz7tWD/OJt4=;
+	s=default; t=1560099911;
+	bh=eQ3MzPimuYsAc51Vf2nqnt7PITcqpqeYjU1IlnuoSz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IuHvrDPLstOHAyWuoB3TffCSjQArfncmLOPlk3dzk18SbfaB9/YmTgjH0nmUmdxGO
-	 w00dH7auJ4ro0cqhqxxNkzM0KxaKgQIlMGXMIRAO4RA4PBPjc0CHVRdnDi/v6j/jLp
-	 0mDZBZgkfSenxEPUk3uhE9rygav311vEHiQqJ4IQ=
+	b=h1UeFSgTbUfWnpw5kJbOLIUKKRoKp4jaXK7b5PMEJBKRhEBf+gMcR5UqnQYvgmmOi
+	 eS6c3eQGVsQ1tstDq+1HKleMS52o/1YG1ropqMtKRucxNdhwvgh+UwZmrTkoY7DkRe
+	 RqoRZLKJ81HkyYxHxngQthwgRsxIX+k2tF8pm+9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388748AbfFIRFB (ORCPT
+        id S2388763AbfFIRFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:05:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43962 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387899AbfFIRE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:04:57 -0400
+        id S2388753AbfFIRFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA52204EC;
-        Sun,  9 Jun 2019 17:04:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9EFB206DF;
+        Sun,  9 Jun 2019 17:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099896;
-        bh=0vDeY41+O595UL1/ZQDEp9fOXTUTD2vKZz7tWD/OJt4=;
+        s=default; t=1560099904;
+        bh=eQ3MzPimuYsAc51Vf2nqnt7PITcqpqeYjU1IlnuoSz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TRXQX7ognbp+LbK8aoLkbbH+8ye3HnlDjVJcIZmOhaEhWgRqknkpScs+KqmKJnGFd
-         KbWu8M5CiqA5cKzHfJ8dAQ598nuyCED21esjrKyFS3AAwy4So3SZ2KyJvkOvAA4RG6
-         1BHi5fd6sTLuLmEuym2GRkzpzyUp0k4/8lZlwQ+Q=
+        b=h/YwVyUvdtQMeMXFKlcTquwPDmnT4xX4HR3KQrjicjIpU4TVok2bILmaB9wJeU3c2
+         q/dFJlvRjlPTC/b3dhepRI3KwNvKJ61lsOQUxA2Y0dYxe+6Jrl9e/4fy+Mu3aDg5PS
+         Mys6CPCmB7GI7PxLqU6+nRZKJtYJNgzHPYZkkYBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 205/241] scsi: zfcp: fix to prevent port_remove with pure auto scan LUNs (only sdevs)
-Date:   Sun,  9 Jun 2019 18:42:27 +0200
-Message-Id: <20190609164154.543955884@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: [PATCH 4.4 208/241] drm/nouveau/i2c: Disable i2c bus access after ->fini()
+Date:   Sun,  9 Jun 2019 18:42:30 +0200
+Message-Id: <20190609164154.657998599@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,186 +59,265 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Lyude Paul <lyude@redhat.com>
 
-commit ef4021fe5fd77ced0323cede27979d80a56211ca upstream.
+commit 342406e4fbba9a174125fbfe6aeac3d64ef90f76 upstream.
 
-When the user tries to remove a zfcp port via sysfs, we only rejected it if
-there are zfcp unit children under the port. With purely automatically
-scanned LUNs there are no zfcp units but only SCSI devices. In such cases,
-the port_remove erroneously continued. We close the port and this
-implicitly closes all LUNs under the port. The SCSI devices survive with
-their private zfcp_scsi_dev still holding a reference to the "removed"
-zfcp_port (still allocated but invisible in sysfs) [zfcp_get_port_by_wwpn
-in zfcp_scsi_slave_alloc]. This is not a problem as long as the fc_rport
-stays blocked. Once (auto) port scan brings back the removed port, we
-unblock its fc_rport again by design.  However, there is no mechanism that
-would recover (open) the LUNs under the port (no "ersfs_3" without
-zfcp_unit [zfcp_erp_strategy_followup_success]).  Any pending or new I/O to
-such LUN leads to repeated:
+For a while, we've had the problem of i2c bus access not grabbing
+a runtime PM ref when it's being used in userspace by i2c-dev, resulting
+in nouveau spamming the kernel log with errors if anything attempts to
+access the i2c bus while the GPU is in runtime suspend. An example:
 
-  Done: NEEDS_RETRY Result: hostbyte=DID_IMM_RETRY driverbyte=DRIVER_OK
+[  130.078386] nouveau 0000:01:00.0: i2c: aux 000d: begin idle timeout ffffffff
 
-See also v4.10 commit 6f2ce1c6af37 ("scsi: zfcp: fix rport unblock race
-with LUN recovery"). Even a manual LUN recovery
-(echo 0 > /sys/bus/scsi/devices/H:C:T:L/zfcp_failed)
-does not help, as the LUN links to the old "removed" port which remains
-to lack ZFCP_STATUS_COMMON_RUNNING [zfcp_erp_required_act].
-The only workaround is to first ensure that the fc_rport is blocked
-(e.g. port_remove again in case it was re-discovered by (auto) port scan),
-then delete the SCSI devices, and finally re-discover by (auto) port scan.
-The port scan includes an fc_rport unblock, which in turn triggers
-a new scan on the scsi target to freshly get new pure auto scan LUNs.
+Since the GPU is in runtime suspend, the MMIO region that the i2c bus is
+on isn't accessible. On x86, the standard behavior for accessing an
+unavailable MMIO region is to just return ~0.
 
-Fix this by rejecting port_remove also if there are SCSI devices
-(even without any zfcp_unit) under this port. Re-use mechanics from v3.7
-commit d99b601b6338 ("[SCSI] zfcp: restore refcount check on port_remove").
-However, we have to give up zfcp_sysfs_port_units_mutex earlier in unit_add
-to prevent a deadlock with scsi_host scan taking shost->scan_mutex first
-and then zfcp_sysfs_port_units_mutex now in our zfcp_scsi_slave_alloc().
+Except, that turned out to be a lie. While computers with a clean
+concious will return ~0 in this scenario, some machines will actually
+completely hang a CPU on certian bad MMIO accesses. This was witnessed
+with someone's Lenovo ThinkPad P50, where sensors-detect attempting to
+access the i2c bus while the GPU was suspended would result in a CPU
+hang:
 
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: b62a8d9b45b9 ("[SCSI] zfcp: Use SCSI device data zfcp scsi dev instead of zfcp unit")
-Fixes: f8210e34887e ("[SCSI] zfcp: Allow midlayer to scan for LUNs when running in NPIV mode")
-Cc: <stable@vger.kernel.org> #2.6.37+
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  CPU: 5 PID: 12438 Comm: sensors-detect Not tainted 5.0.0-0.rc4.git3.1.fc30.x86_64 #1
+  Hardware name: LENOVO 20EQS64N17/20EQS64N17, BIOS N1EET74W (1.47 ) 11/21/2017
+  RIP: 0010:ioread32+0x2b/0x30
+  Code: 81 ff ff ff 03 00 77 20 48 81 ff 00 00 01 00 76 05 0f b7 d7 ed c3
+  48 c7 c6 e1 0c 36 96 e8 2d ff ff ff b8 ff ff ff ff c3 8b 07 <c3> 0f 1f
+  40 00 49 89 f0 48 81 fe ff ff 03 00 76 04 40 88 3e c3 48
+  RSP: 0018:ffffaac3c5007b48 EFLAGS: 00000292 ORIG_RAX: ffffffffffffff13
+  RAX: 0000000001111000 RBX: 0000000001111000 RCX: 0000043017a97186
+  RDX: 0000000000000aaa RSI: 0000000000000005 RDI: ffffaac3c400e4e4
+  RBP: ffff9e6443902c00 R08: ffffaac3c400e4e4 R09: ffffaac3c5007be7
+  R10: 0000000000000004 R11: 0000000000000001 R12: ffff9e6445dd0000
+  R13: 000000000000e4e4 R14: 00000000000003c4 R15: 0000000000000000
+  FS:  00007f253155a740(0000) GS:ffff9e644f600000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00005630d1500358 CR3: 0000000417c44006 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   g94_i2c_aux_xfer+0x326/0x850 [nouveau]
+   nvkm_i2c_aux_i2c_xfer+0x9e/0x140 [nouveau]
+   __i2c_transfer+0x14b/0x620
+   i2c_smbus_xfer_emulated+0x159/0x680
+   ? _raw_spin_unlock_irqrestore+0x1/0x60
+   ? rt_mutex_slowlock.constprop.0+0x13d/0x1e0
+   ? __lock_is_held+0x59/0xa0
+   __i2c_smbus_xfer+0x138/0x5a0
+   i2c_smbus_xfer+0x4f/0x80
+   i2cdev_ioctl_smbus+0x162/0x2d0 [i2c_dev]
+   i2cdev_ioctl+0x1db/0x2c0 [i2c_dev]
+   do_vfs_ioctl+0x408/0x750
+   ksys_ioctl+0x5e/0x90
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x60/0x1e0
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7f25317f546b
+  Code: 0f 1e fa 48 8b 05 1d da 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+  ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+  f0 ff ff 73 01 c3 48 8b 0d ed d9 0c 00 f7 d8 64 89 01 48
+  RSP: 002b:00007ffc88caab68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+  RAX: ffffffffffffffda RBX: 00005630d0fe7260 RCX: 00007f25317f546b
+  RDX: 00005630d1598e80 RSI: 0000000000000720 RDI: 0000000000000003
+  RBP: 00005630d155b968 R08: 0000000000000001 R09: 00005630d15a1da0
+  R10: 0000000000000070 R11: 0000000000000246 R12: 00005630d1598e80
+  R13: 00005630d12f3d28 R14: 0000000000000720 R15: 00005630d12f3ce0
+  watchdog: BUG: soft lockup - CPU#5 stuck for 23s! [sensors-detect:12438]
+
+Yikes! While I wanted to try to make it so that accessing an i2c bus on
+nouveau would wake up the GPU as needed, airlied pointed out that pretty
+much any usecase for userspace accessing an i2c bus on a GPU (mainly for
+the DDC brightness control that some displays have) is going to only be
+useful while there's at least one display enabled on the GPU anyway, and
+the GPU never sleeps while there's displays running.
+
+Since teaching the i2c bus to wake up the GPU on userspace accesses is a
+good deal more difficult than it might seem, mostly due to the fact that
+we have to use the i2c bus during runtime resume of the GPU, we instead
+opt for the easiest solution: don't let userspace access i2c busses on
+the GPU at all while it's in runtime suspend.
+
+Changes since v1:
+* Also disable i2c busses that run over DP AUX
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_ext.h   |    1 
- drivers/s390/scsi/zfcp_scsi.c  |    9 ++++++
- drivers/s390/scsi/zfcp_sysfs.c |   54 ++++++++++++++++++++++++++++++++++++-----
- drivers/s390/scsi/zfcp_unit.c  |    8 +++++-
- 4 files changed, 65 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h |    2 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c     |   26 +++++++++++++++++++++-
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h     |    2 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c    |   15 ++++++++++++
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c     |   21 ++++++++++++++++-
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h     |    1 
+ 6 files changed, 65 insertions(+), 2 deletions(-)
 
---- a/drivers/s390/scsi/zfcp_ext.h
-+++ b/drivers/s390/scsi/zfcp_ext.h
-@@ -161,6 +161,7 @@ extern const struct attribute_group *zfc
- extern struct mutex zfcp_sysfs_port_units_mutex;
- extern struct device_attribute *zfcp_sysfs_sdev_attrs[];
- extern struct device_attribute *zfcp_sysfs_shost_attrs[];
-+bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port);
+--- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
++++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
+@@ -37,6 +37,7 @@ struct nvkm_i2c_bus {
+ 	struct mutex mutex;
+ 	struct list_head head;
+ 	struct i2c_adapter i2c;
++	u8 enabled;
+ };
  
- /* zfcp_unit.c */
- extern int zfcp_unit_add(struct zfcp_port *, u64);
---- a/drivers/s390/scsi/zfcp_scsi.c
-+++ b/drivers/s390/scsi/zfcp_scsi.c
-@@ -124,6 +124,15 @@ static int zfcp_scsi_slave_alloc(struct
+ int nvkm_i2c_bus_acquire(struct nvkm_i2c_bus *);
+@@ -56,6 +57,7 @@ struct nvkm_i2c_aux {
+ 	struct mutex mutex;
+ 	struct list_head head;
+ 	struct i2c_adapter i2c;
++	u8 enabled;
  
- 	zfcp_sdev->erp_action.port = port;
- 
-+	mutex_lock(&zfcp_sysfs_port_units_mutex);
-+	if (zfcp_sysfs_port_is_removing(port)) {
-+		/* port is already gone */
-+		mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
-+		return -ENXIO;
-+	}
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+ 	u32 intr;
+ };
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
+@@ -105,9 +105,15 @@ nvkm_i2c_aux_acquire(struct nvkm_i2c_aux
+ {
+ 	struct nvkm_i2c_pad *pad = aux->pad;
+ 	int ret;
 +
- 	unit = zfcp_unit_find(port, zfcp_scsi_dev_lun(sdev));
- 	if (unit)
- 		put_device(&unit->dev);
---- a/drivers/s390/scsi/zfcp_sysfs.c
-+++ b/drivers/s390/scsi/zfcp_sysfs.c
-@@ -237,6 +237,53 @@ static ZFCP_DEV_ATTR(adapter, port_resca
- 
- DEFINE_MUTEX(zfcp_sysfs_port_units_mutex);
- 
-+static void zfcp_sysfs_port_set_removing(struct zfcp_port *const port)
-+{
-+	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
-+	atomic_set(&port->units, -1);
-+}
+ 	AUX_TRACE(aux, "acquire");
+ 	mutex_lock(&aux->mutex);
+-	ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_AUX);
 +
-+bool zfcp_sysfs_port_is_removing(const struct zfcp_port *const port)
-+{
-+	lockdep_assert_held(&zfcp_sysfs_port_units_mutex);
-+	return atomic_read(&port->units) == -1;
-+}
++	if (aux->enabled)
++		ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_AUX);
++	else
++		ret = -EIO;
 +
-+static bool zfcp_sysfs_port_in_use(struct zfcp_port *const port)
-+{
-+	struct zfcp_adapter *const adapter = port->adapter;
-+	unsigned long flags;
-+	struct scsi_device *sdev;
-+	bool in_use = true;
-+
-+	mutex_lock(&zfcp_sysfs_port_units_mutex);
-+	if (atomic_read(&port->units) > 0)
-+		goto unlock_port_units_mutex; /* zfcp_unit(s) under port */
-+
-+	spin_lock_irqsave(adapter->scsi_host->host_lock, flags);
-+	__shost_for_each_device(sdev, adapter->scsi_host) {
-+		const struct zfcp_scsi_dev *zsdev = sdev_to_zfcp(sdev);
-+
-+		if (sdev->sdev_state == SDEV_DEL ||
-+		    sdev->sdev_state == SDEV_CANCEL)
-+			continue;
-+		if (zsdev->port != port)
-+			continue;
-+		/* alive scsi_device under port of interest */
-+		goto unlock_host_lock;
-+	}
-+
-+	/* port is about to be removed, so no more unit_add or slave_alloc */
-+	zfcp_sysfs_port_set_removing(port);
-+	in_use = false;
-+
-+unlock_host_lock:
-+	spin_unlock_irqrestore(adapter->scsi_host->host_lock, flags);
-+unlock_port_units_mutex:
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
-+	return in_use;
-+}
-+
- static ssize_t zfcp_sysfs_port_remove_store(struct device *dev,
- 					    struct device_attribute *attr,
- 					    const char *buf, size_t count)
-@@ -259,16 +306,11 @@ static ssize_t zfcp_sysfs_port_remove_st
- 	else
- 		retval = 0;
- 
--	mutex_lock(&zfcp_sysfs_port_units_mutex);
--	if (atomic_read(&port->units) > 0) {
-+	if (zfcp_sysfs_port_in_use(port)) {
- 		retval = -EBUSY;
--		mutex_unlock(&zfcp_sysfs_port_units_mutex);
- 		put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
- 		goto out;
+ 	if (ret)
+ 		mutex_unlock(&aux->mutex);
+ 	return ret;
+@@ -141,6 +147,24 @@ nvkm_i2c_aux_del(struct nvkm_i2c_aux **p
  	}
--	/* port is about to be removed, so no more unit_add */
--	atomic_set(&port->units, -1);
--	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+ }
  
- 	write_lock_irq(&adapter->port_list_lock);
- 	list_del(&port->list);
---- a/drivers/s390/scsi/zfcp_unit.c
-+++ b/drivers/s390/scsi/zfcp_unit.c
-@@ -122,7 +122,7 @@ int zfcp_unit_add(struct zfcp_port *port
- 	int retval = 0;
++void
++nvkm_i2c_aux_init(struct nvkm_i2c_aux *aux)
++{
++	AUX_TRACE(aux, "init");
++	mutex_lock(&aux->mutex);
++	aux->enabled = true;
++	mutex_unlock(&aux->mutex);
++}
++
++void
++nvkm_i2c_aux_fini(struct nvkm_i2c_aux *aux)
++{
++	AUX_TRACE(aux, "fini");
++	mutex_lock(&aux->mutex);
++	aux->enabled = false;
++	mutex_unlock(&aux->mutex);
++}
++
+ int
+ nvkm_i2c_aux_ctor(const struct nvkm_i2c_aux_func *func,
+ 		  struct nvkm_i2c_pad *pad, int id,
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
+@@ -14,6 +14,8 @@ int nvkm_i2c_aux_ctor(const struct nvkm_
+ int nvkm_i2c_aux_new_(const struct nvkm_i2c_aux_func *, struct nvkm_i2c_pad *,
+ 		      int id, struct nvkm_i2c_aux **);
+ void nvkm_i2c_aux_del(struct nvkm_i2c_aux **);
++void nvkm_i2c_aux_init(struct nvkm_i2c_aux *);
++void nvkm_i2c_aux_fini(struct nvkm_i2c_aux *);
+ int nvkm_i2c_aux_xfer(struct nvkm_i2c_aux *, bool retry, u8 type,
+ 		      u32 addr, u8 *data, u8 size);
  
- 	mutex_lock(&zfcp_sysfs_port_units_mutex);
--	if (atomic_read(&port->units) == -1) {
-+	if (zfcp_sysfs_port_is_removing(port)) {
- 		/* port is already gone */
- 		retval = -ENODEV;
- 		goto out;
-@@ -166,8 +166,14 @@ int zfcp_unit_add(struct zfcp_port *port
- 	write_lock_irq(&port->unit_list_lock);
- 	list_add_tail(&unit->list, &port->unit_list);
- 	write_unlock_irq(&port->unit_list_lock);
-+	/*
-+	 * lock order: shost->scan_mutex before zfcp_sysfs_port_units_mutex
-+	 * due to      zfcp_unit_scsi_scan() => zfcp_scsi_slave_alloc()
-+	 */
-+	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
+@@ -160,8 +160,18 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev
+ {
+ 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
+ 	struct nvkm_i2c_pad *pad;
++	struct nvkm_i2c_bus *bus;
++	struct nvkm_i2c_aux *aux;
+ 	u32 mask;
  
- 	zfcp_unit_scsi_scan(unit);
-+	return retval;
++	list_for_each_entry(aux, &i2c->aux, head) {
++		nvkm_i2c_aux_fini(aux);
++	}
++
++	list_for_each_entry(bus, &i2c->bus, head) {
++		nvkm_i2c_bus_fini(bus);
++	}
++
+ 	if ((mask = (1 << i2c->func->aux) - 1), i2c->func->aux_stat) {
+ 		i2c->func->aux_mask(i2c, NVKM_I2C_ANY, mask, 0);
+ 		i2c->func->aux_stat(i2c, &mask, &mask, &mask, &mask);
+@@ -180,6 +190,7 @@ nvkm_i2c_init(struct nvkm_subdev *subdev
+ 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
+ 	struct nvkm_i2c_bus *bus;
+ 	struct nvkm_i2c_pad *pad;
++	struct nvkm_i2c_aux *aux;
  
- out:
- 	mutex_unlock(&zfcp_sysfs_port_units_mutex);
+ 	list_for_each_entry(pad, &i2c->pad, head) {
+ 		nvkm_i2c_pad_init(pad);
+@@ -189,6 +200,10 @@ nvkm_i2c_init(struct nvkm_subdev *subdev
+ 		nvkm_i2c_bus_init(bus);
+ 	}
+ 
++	list_for_each_entry(aux, &i2c->aux, head) {
++		nvkm_i2c_aux_init(aux);
++	}
++
+ 	return 0;
+ }
+ 
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
+@@ -110,6 +110,19 @@ nvkm_i2c_bus_init(struct nvkm_i2c_bus *b
+ 	BUS_TRACE(bus, "init");
+ 	if (bus->func->init)
+ 		bus->func->init(bus);
++
++	mutex_lock(&bus->mutex);
++	bus->enabled = true;
++	mutex_unlock(&bus->mutex);
++}
++
++void
++nvkm_i2c_bus_fini(struct nvkm_i2c_bus *bus)
++{
++	BUS_TRACE(bus, "fini");
++	mutex_lock(&bus->mutex);
++	bus->enabled = false;
++	mutex_unlock(&bus->mutex);
+ }
+ 
+ void
+@@ -126,9 +139,15 @@ nvkm_i2c_bus_acquire(struct nvkm_i2c_bus
+ {
+ 	struct nvkm_i2c_pad *pad = bus->pad;
+ 	int ret;
++
+ 	BUS_TRACE(bus, "acquire");
+ 	mutex_lock(&bus->mutex);
+-	ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
++
++	if (bus->enabled)
++		ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
++	else
++		ret = -EIO;
++
+ 	if (ret)
+ 		mutex_unlock(&bus->mutex);
+ 	return ret;
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
+@@ -17,6 +17,7 @@ int nvkm_i2c_bus_new_(const struct nvkm_
+ 		      int id, struct nvkm_i2c_bus **);
+ void nvkm_i2c_bus_del(struct nvkm_i2c_bus **);
+ void nvkm_i2c_bus_init(struct nvkm_i2c_bus *);
++void nvkm_i2c_bus_fini(struct nvkm_i2c_bus *);
+ 
+ int nvkm_i2c_bit_xfer(struct nvkm_i2c_bus *, struct i2c_msg *, int);
+ 
 
 
