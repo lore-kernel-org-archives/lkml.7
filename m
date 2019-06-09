@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A55C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F028C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6417E20652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BB520652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100699;
-	bh=vDL9p9nzS5Xtfyd1kVhUcL7tNjY01X5WTJe5ER2lxtY=;
+	s=default; t=1560100709;
+	bh=b+Z7kJ9902Wg5ePJjIatCOem4xOZ6h93vApjdrjhpb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zw5g2pZZTWI7PFDZparrcon1YSnlUe01YYFu7S5Uy41SxdQnqYI+kkcy803Hs62Lm
-	 ZvfuWRsirzzB/gxoH4gBNpOOoczuMmAnSI5fgVQ0OGkvriaFAv5NYb3WZy1pJ02fdG
-	 JDecRbdJkSwBsQ4JhOrws+ppCTo2SzYWsZ9hTcJg=
+	b=tEB5WjPLR0e/2Dg4jzZtJLVgztvUnMhkQmTZgZ7d4V2y7DL8ZrnKOY/T+GYDszFUP
+	 wbA/kIR/X+vE2N4Sr6SU5kNqH+ko6VYueEt4Pk97L6k9FZXMaLK6OpBTPzuxCwnapf
+	 pxE5u5uWgyCZkshzOnLF/1qYPkOTckB9DfdRhl6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbfFIQun (ORCPT
+        id S1732415AbfFIRS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50448 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731731AbfFIQua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:30 -0400
+        id S1730714AbfFIQuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:50:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A01A0206DF;
-        Sun,  9 Jun 2019 16:50:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3AEF205ED;
+        Sun,  9 Jun 2019 16:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099030;
-        bh=vDL9p9nzS5Xtfyd1kVhUcL7tNjY01X5WTJe5ER2lxtY=;
+        s=default; t=1560099016;
+        bh=b+Z7kJ9902Wg5ePJjIatCOem4xOZ6h93vApjdrjhpb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tjJEzpK9i6/T0iAWK3eOuLHwkfrdx7Z75Ry3/q/xnnLcyuPA2pQ3vZW1u8MoCTIcX
-         9mtHtdgL/xInSc2MdialTa3oyseoFgZyhS+S1zSdiDPjqLneXS2Hd28fs5DsQbfyQe
-         n3p1HllaKBUTWJPjSB9pT8sSo/Gh6uNnHmFAqNio=
+        b=YrHUVRT69a71nX1IZwMoaRssDyVbB/+eYvzJPAjcIXquTD3MbUt8zTmhwBCiiZzLZ
+         OYVDpTfDagoKZoa8QMPw4e3Hn46z+dqoJwNmpJlif0GzBEsIvC58GQODXBY2oxcGNN
+         DZkMUp9kbeaYaveJAZkpx/miuQ4yyCrmX9xnh6Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 4.14 16/35] pstore: Remove needless lock during console writes
-Date:   Sun,  9 Jun 2019 18:42:22 +0200
-Message-Id: <20190609164126.457142600@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matteo Croce <mcroce@redhat.com>
+Subject: [PATCH 4.14 06/35] pktgen: do not sleep with the thread lock held.
+Date:   Sun,  9 Jun 2019 18:42:12 +0200
+Message-Id: <20190609164125.879662152@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -59,61 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit b77fa617a2ff4d6beccad3d3d4b3a1f2d10368aa upstream.
+[ Upstream commit 720f1de4021f09898b8c8443f3b3e995991b6e3a ]
 
-Since the console writer does not use the preallocated crash dump buffer
-any more, there is no reason to perform locking around it.
+Currently, the process issuing a "start" command on the pktgen procfs
+interface, acquires the pktgen thread lock and never release it, until
+all pktgen threads are completed. The above can blocks indefinitely any
+other pktgen command and any (even unrelated) netdevice removal - as
+the pktgen netdev notifier acquires the same lock.
 
-Fixes: 70ad35db3321 ("pstore: Convert console write to use ->write_buf")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+The issue is demonstrated by the following script, reported by Matteo:
+
+ip -b - <<'EOF'
+	link add type dummy
+	link add type veth
+	link set dummy0 up
+EOF
+modprobe pktgen
+echo reset >/proc/net/pktgen/pgctrl
+{
+	echo rem_device_all
+	echo add_device dummy0
+} >/proc/net/pktgen/kpktgend_0
+echo count 0 >/proc/net/pktgen/dummy0
+echo start >/proc/net/pktgen/pgctrl &
+sleep 1
+rmmod veth
+
+Fix the above releasing the thread lock around the sleep call.
+
+Additionally we must prevent racing with forcefull rmmod - as the
+thread lock no more protects from them. Instead, acquire a self-reference
+before waiting for any thread. As a side effect, running
+
+rmmod pktgen
+
+while some thread is running now fails with "module in use" error,
+before this patch such command hanged indefinitely.
+
+Note: the issue predates the commit reported in the fixes tag, but
+this fix can't be applied before the mentioned commit.
+
+v1 -> v2:
+ - no need to check for thread existence after flipping the lock,
+   pktgen threads are freed only at net exit time
+ -
+
+Fixes: 6146e6a43b35 ("[PKTGEN]: Removes thread_{un,}lock() macros.")
+Reported-and-tested-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/pstore/platform.c |   29 ++++++-----------------------
- 1 file changed, 6 insertions(+), 23 deletions(-)
+ net/core/pktgen.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -597,31 +597,14 @@ static void pstore_unregister_kmsg(void)
- #ifdef CONFIG_PSTORE_CONSOLE
- static void pstore_console_write(struct console *con, const char *s, unsigned c)
+--- a/net/core/pktgen.c
++++ b/net/core/pktgen.c
+@@ -3149,7 +3149,13 @@ static int pktgen_wait_thread_run(struct
  {
--	const char *e = s + c;
-+	struct pstore_record record;
+ 	while (thread_is_running(t)) {
  
--	while (s < e) {
--		struct pstore_record record;
--		unsigned long flags;
-+	pstore_record_init(&record, psinfo);
-+	record.type = PSTORE_TYPE_CONSOLE;
++		/* note: 't' will still be around even after the unlock/lock
++		 * cycle because pktgen_thread threads are only cleared at
++		 * net exit
++		 */
++		mutex_unlock(&pktgen_thread_lock);
+ 		msleep_interruptible(100);
++		mutex_lock(&pktgen_thread_lock);
  
--		pstore_record_init(&record, psinfo);
--		record.type = PSTORE_TYPE_CONSOLE;
--
--		if (c > psinfo->bufsize)
--			c = psinfo->bufsize;
--
--		if (oops_in_progress) {
--			if (!spin_trylock_irqsave(&psinfo->buf_lock, flags))
--				break;
--		} else {
--			spin_lock_irqsave(&psinfo->buf_lock, flags);
--		}
--		record.buf = (char *)s;
--		record.size = c;
--		psinfo->write(&record);
--		spin_unlock_irqrestore(&psinfo->buf_lock, flags);
--		s += c;
--		c = e - s;
--	}
-+	record.buf = (char *)s;
-+	record.size = c;
-+	psinfo->write(&record);
+ 		if (signal_pending(current))
+ 			goto signal;
+@@ -3164,6 +3170,10 @@ static int pktgen_wait_all_threads_run(s
+ 	struct pktgen_thread *t;
+ 	int sig = 1;
+ 
++	/* prevent from racing with rmmod */
++	if (!try_module_get(THIS_MODULE))
++		return sig;
++
+ 	mutex_lock(&pktgen_thread_lock);
+ 
+ 	list_for_each_entry(t, &pn->pktgen_threads, th_list) {
+@@ -3177,6 +3187,7 @@ static int pktgen_wait_all_threads_run(s
+ 			t->control |= (T_STOP);
+ 
+ 	mutex_unlock(&pktgen_thread_lock);
++	module_put(THIS_MODULE);
+ 	return sig;
  }
  
- static struct console pstore_console = {
 
 
