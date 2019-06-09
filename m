@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA23C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9436FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90B02084A
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6941B20833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098837;
-	bh=vaYwb1577dLTm2yh/ziP4tzrtY8aiMNv6GGrTDhWrVI=;
+	s=default; t=1560098842;
+	bh=1UTgMr9SJoHnfT0WfOenI8NDzCMDHeZtBSXR4xaotXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=th07AUiNrIL7gUKzZtxaZWrs/N8zm/8od82PHEAWEW88A9G4+qEma+G6TN78U/8+9
-	 jshQRCvrhLaRFfpFrII78F8bvg4N5eY/EBrm4F3+5Jk+em+BaBJbGNzc275pRPYqZT
-	 SSivZuTrRtxD/011U8DqI1f71Ku6LE+9Xg9X88m8=
+	b=ehlhesMCNLYhfV2WhM3tcECRdpzRhsNDeDRS8F029rzjkCkQarpMEnYTFfPXgJokQ
+	 r8ritNwgmIGURev7YY2GdJ2GzGsmnHgFcqGVtCyegZIPGO8ePEYz+ttZnsWa0OlqB+
+	 UCDhs3lBRMXTJL/Kl+mZdY5sqsKnH4tFBjlbCtrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfFIQrQ (ORCPT
+        id S1730827AbfFIQrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:47:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45770 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:47:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729053AbfFIQrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:13 -0400
+        id S1730798AbfFIQrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:47:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1BFC2081C;
-        Sun,  9 Jun 2019 16:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EABA12081C;
+        Sun,  9 Jun 2019 16:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098832;
-        bh=vaYwb1577dLTm2yh/ziP4tzrtY8aiMNv6GGrTDhWrVI=;
+        s=default; t=1560098835;
+        bh=1UTgMr9SJoHnfT0WfOenI8NDzCMDHeZtBSXR4xaotXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W6pGPu7nLMYdcpDRenkrHDzhJcIP5YOfJ/SzdF6R7yEZ5+LoXCHrp/9ZBVDTzYV2H
-         Qrr0YA9IFWZL9/DntfsDmhy4veqs7PHxgdmNlrG2Uv7bVreAwWw0JAyuDpnOmKg6hm
-         E+LtlfudAXYV8yjnNxQkNk/m2o8ZGxy6LfA0tRCg=
+        b=cgaJ5nNeQ6W5iaLKpk1sNxQ5YJn2jn7BeadR/m09lgsqLoGXQ7gmsFfTwjhe5SYtS
+         8LDEvr6QWLNzm48lHswaFN7eCEQVNx/yq1ti8Z8itXQS6U+epyujdS3S0nnPVJ+Lh2
+         O0NaEBLyJBKtB+8cxHNSpnYHpdsBOV1ty8qS/b5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Jackson <ian.jackson@citrix.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 5.1 44/70] xen-blkfront: switch kcalloc to kvcalloc for large array allocation
-Date:   Sun,  9 Jun 2019 18:41:55 +0200
-Message-Id: <20190609164131.025191741@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 5.1 35/70] kbuild: use more portable command -v for cc-cross-prefix
+Date:   Sun,  9 Jun 2019 18:41:46 +0200
+Message-Id: <20190609164130.078925185@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -62,107 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit 1d5c76e66433382a1e170d1d5845bb0fed7467aa upstream.
+commit 913ab9780fc021298949cc5514d6255a008e69f9 upstream.
 
-There's no reason to request physically contiguous memory for those
-allocations.
+To print the pathname that will be used by shell in the current
+environment, 'command -v' is a standardized way. [1]
 
-[boris: added CC to stable]
+'which' is also often used in scripts, but it is less portable.
 
-Cc: stable@vger.kernel.org
-Reported-by: Ian Jackson <ian.jackson@citrix.com>
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+When I worked on commit bd55f96fa9fc ("kbuild: refactor cc-cross-prefix
+implementation"), I was eager to use 'command -v' but it did not work.
+(The reason is explained below.)
+
+I kept 'which' as before but got rid of '> /dev/null 2>&1' as I
+thought it was no longer needed. Sorry, I was wrong.
+
+It works well on my Ubuntu machine, but Alexey Brodkin reports noisy
+warnings on CentOS7 when 'which' fails to find the given command in
+the PATH environment.
+
+  $ which foo
+  which: no foo in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
+
+Given that behavior of 'which' depends on system (and it may not be
+installed by default), I want to try 'command -v' once again.
+
+The specification [1] clearly describes the behavior of 'command -v'
+when the given command is not found:
+
+  Otherwise, no output shall be written and the exit status shall reflect
+  that the name was not found.
+
+However, we need a little magic to use 'command -v' from Make.
+
+$(shell ...) passes the argument to a subshell for execution, and
+returns the standard output of the command.
+
+Here is a trick. GNU Make may optimize this by executing the command
+directly instead of forking a subshell, if no shell special characters
+are found in the command and omitting the subshell will not change the
+behavior.
+
+In this case, no shell special character is used. So, Make will try
+to run it directly. However, 'command' is a shell-builtin command,
+then Make would fail to find it in the PATH environment:
+
+  $ make ARCH=m68k defconfig
+  make: command: Command not found
+  make: command: Command not found
+  make: command: Command not found
+
+In fact, Make has a table of shell-builtin commands because it must
+ask the shell to execute them.
+
+Until recently, 'command' was missing in the table.
+
+This issue was fixed by the following commit:
+
+| commit 1af314465e5dfe3e8baa839a32a72e83c04f26ef
+| Author: Paul Smith <psmith@gnu.org>
+| Date:   Sun Nov 12 18:10:28 2017 -0500
+|
+|     * job.c: Add "command" as a known shell built-in.
+|
+|     This is not a POSIX shell built-in but it's common in UNIX shells.
+|     Reported by Nick Bowler <nbowler@draconx.ca>.
+
+Because the latest release is GNU Make 4.2.1 in 2016, this commit is
+not included in any released versions. (But some distributions may
+have back-ported it.)
+
+We need to trick Make to spawn a subshell. There are various ways to
+do so:
+
+ 1) Use a shell special character '~' as dummy
+
+    $(shell : ~; command -v $(c)gcc)
+
+ 2) Use a variable reference that always expands to the empty string
+    (suggested by David Laight)
+
+    $(shell command$${x:+} -v $(c)gcc)
+
+ 3) Use redirect
+
+    $(shell command -v $(c)gcc 2>/dev/null)
+
+I chose 3) to not confuse people. The stderr would not be polluted
+anyway, but it will provide extra safety, and is easy to understand.
+
+Tested on Make 3.81, 3.82, 4.0, 4.1, 4.2, 4.2.1
+
+[1] http://pubs.opengroup.org/onlinepubs/9699919799/utilities/command.html
+
+Fixes: bd55f96fa9fc ("kbuild: refactor cc-cross-prefix implementation")
+Cc: linux-stable <stable@vger.kernel.org> # 5.1
+Reported-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Alexey Brodkin <abrodkin@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/xen-blkfront.c |   38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ scripts/Kbuild.include |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -1310,11 +1310,11 @@ static void blkif_free_ring(struct blkfr
- 		}
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -73,8 +73,13 @@ endef
+ # Usage: CROSS_COMPILE := $(call cc-cross-prefix, m68k-linux-gnu- m68k-linux-)
+ # Return first <prefix> where a <prefix>gcc is found in PATH.
+ # If no gcc found in PATH with listed prefixes return nothing
++#
++# Note: '2>/dev/null' is here to force Make to invoke a shell. Otherwise, it
++# would try to directly execute the shell builtin 'command'. This workaround
++# should be kept for a long time since this issue was fixed only after the
++# GNU Make 4.2.1 release.
+ cc-cross-prefix = $(firstword $(foreach c, $(filter-out -%, $(1)), \
+-					$(if $(shell which $(c)gcc), $(c))))
++			$(if $(shell command -v $(c)gcc 2>/dev/null), $(c))))
  
- free_shadow:
--		kfree(rinfo->shadow[i].grants_used);
-+		kvfree(rinfo->shadow[i].grants_used);
- 		rinfo->shadow[i].grants_used = NULL;
--		kfree(rinfo->shadow[i].indirect_grants);
-+		kvfree(rinfo->shadow[i].indirect_grants);
- 		rinfo->shadow[i].indirect_grants = NULL;
--		kfree(rinfo->shadow[i].sg);
-+		kvfree(rinfo->shadow[i].sg);
- 		rinfo->shadow[i].sg = NULL;
- 	}
- 
-@@ -1353,7 +1353,7 @@ static void blkif_free(struct blkfront_i
- 	for (i = 0; i < info->nr_rings; i++)
- 		blkif_free_ring(&info->rinfo[i]);
- 
--	kfree(info->rinfo);
-+	kvfree(info->rinfo);
- 	info->rinfo = NULL;
- 	info->nr_rings = 0;
- }
-@@ -1914,9 +1914,9 @@ static int negotiate_mq(struct blkfront_
- 	if (!info->nr_rings)
- 		info->nr_rings = 1;
- 
--	info->rinfo = kcalloc(info->nr_rings,
--			      sizeof(struct blkfront_ring_info),
--			      GFP_KERNEL);
-+	info->rinfo = kvcalloc(info->nr_rings,
-+			       sizeof(struct blkfront_ring_info),
-+			       GFP_KERNEL);
- 	if (!info->rinfo) {
- 		xenbus_dev_fatal(info->xbdev, -ENOMEM, "allocating ring_info structure");
- 		info->nr_rings = 0;
-@@ -2232,17 +2232,17 @@ static int blkfront_setup_indirect(struc
- 
- 	for (i = 0; i < BLK_RING_SIZE(info); i++) {
- 		rinfo->shadow[i].grants_used =
--			kcalloc(grants,
--				sizeof(rinfo->shadow[i].grants_used[0]),
--				GFP_NOIO);
--		rinfo->shadow[i].sg = kcalloc(psegs,
--					      sizeof(rinfo->shadow[i].sg[0]),
--					      GFP_NOIO);
-+			kvcalloc(grants,
-+				 sizeof(rinfo->shadow[i].grants_used[0]),
-+				 GFP_NOIO);
-+		rinfo->shadow[i].sg = kvcalloc(psegs,
-+					       sizeof(rinfo->shadow[i].sg[0]),
-+					       GFP_NOIO);
- 		if (info->max_indirect_segments)
- 			rinfo->shadow[i].indirect_grants =
--				kcalloc(INDIRECT_GREFS(grants),
--					sizeof(rinfo->shadow[i].indirect_grants[0]),
--					GFP_NOIO);
-+				kvcalloc(INDIRECT_GREFS(grants),
-+					 sizeof(rinfo->shadow[i].indirect_grants[0]),
-+					 GFP_NOIO);
- 		if ((rinfo->shadow[i].grants_used == NULL) ||
- 			(rinfo->shadow[i].sg == NULL) ||
- 		     (info->max_indirect_segments &&
-@@ -2256,11 +2256,11 @@ static int blkfront_setup_indirect(struc
- 
- out_of_memory:
- 	for (i = 0; i < BLK_RING_SIZE(info); i++) {
--		kfree(rinfo->shadow[i].grants_used);
-+		kvfree(rinfo->shadow[i].grants_used);
- 		rinfo->shadow[i].grants_used = NULL;
--		kfree(rinfo->shadow[i].sg);
-+		kvfree(rinfo->shadow[i].sg);
- 		rinfo->shadow[i].sg = NULL;
--		kfree(rinfo->shadow[i].indirect_grants);
-+		kvfree(rinfo->shadow[i].indirect_grants);
- 		rinfo->shadow[i].indirect_grants = NULL;
- 	}
- 	if (!list_empty(&rinfo->indirect_pages)) {
+ # output directory for tests below
+ TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
 
 
