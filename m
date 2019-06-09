@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9445BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64060C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B45820833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDB120840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099932;
-	bh=dOKNw0gtkxoH/Oc8AZ5t4i9B9wr5Ck4A4AmquplmGLw=;
+	s=default; t=1560099936;
+	bh=yypGrqrxjEQ7y+K2xAwxm4B2ziaK9OEcEM3gMtFVeXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rSAujiXzWdTvwFcubRQRAiSz90w8H5sS5lIbdGgYSGv3jph9/m1F4EYsdFe3Lnoff
-	 lXV3BmaGqsW4LXx7m1w2eJptE577QgT8A4kZBvxlAjldW3AjfVDBJxTHvbrm7tHgKb
-	 Nrnus8PWJIB79r0ZFqFrJPgENElnKcdkxS2kXB28=
+	b=ElHzPARkd0+VMSgeo1sLVApxKtHtFLBfE64glf7h1yWrMA9zDbgUoGVGCOKR71daV
+	 lxp1soW7mout4bM6yR0OL8mjz/HacEnwqXFBTPafYNT+kopLwzcFidutzao49T/WlK
+	 I8u+/fV9YTr++CfG4Z+t8NwDsT+3dIzIRuTlm3uI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388838AbfFIRFb (ORCPT
+        id S2388850AbfFIRFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:05:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44694 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388825AbfFIRF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:05:27 -0400
+        id S2388831AbfFIRFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:05:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 797E620840;
-        Sun,  9 Jun 2019 17:05:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7011020843;
+        Sun,  9 Jun 2019 17:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099927;
-        bh=dOKNw0gtkxoH/Oc8AZ5t4i9B9wr5Ck4A4AmquplmGLw=;
+        s=default; t=1560099929;
+        bh=yypGrqrxjEQ7y+K2xAwxm4B2ziaK9OEcEM3gMtFVeXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JnK9T/F/YGmuXG2st3WBEXxcXmCkkHLteTNGq6mmVce9SBB8j9jSg/jNBsAkDNYcr
-         m+3pOGQXR6dIoro9BbiNs+NdHxMFxYyp1/2kDKx/5pdCIvu86WMUPGPJGcjDDQUiPf
-         M3EEOZ9c2mV8d3iVXXF71BeQB5evFXA+XICeliok=
+        b=RWvcYZqa9EsjE1xDBgU7486y1dPO+5CCZf2WsoNmc4H5kTewDIVYYCsHqPXaaIT7Y
+         SziZwkEMI9+U3kYlyeE9x9qUes/Tk2HNNQl8nsDozJgXuQrGcdpkGBq85z0m/Pk9lH
+         0GwPJTtHP4lzNSTsqEIokru2a0qM9ZnbHNfvwmeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
+        stable@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
+        "David S. Miller" <davem@davemloft.net>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 215/241] binder: replace "%p" with "%pK"
-Date:   Sun,  9 Jun 2019 18:42:37 +0200
-Message-Id: <20190609164154.879766424@linuxfoundation.org>
+Subject: [PATCH 4.4 216/241] net: create skb_gso_validate_mac_len()
+Date:   Sun,  9 Jun 2019 18:42:38 +0200
+Message-Id: <20190609164154.908348867@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,59 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 8ca86f1639ec5890d400fff9211aca22d0a392eb upstream.
+commit 2b16f048729bf35e6c28a40cbfad07239f9dcd90 upstream.
 
-The format specifier "%p" can leak kernel addresses. Use
-"%pK" instead. There were 4 remaining cases in binder.c.
+If you take a GSO skb, and split it into packets, will the MAC
+length (L2 + L3 + L4 headers + payload) of those packets be small
+enough to fit within a given length?
 
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 4.4: adjust context]
+Move skb_gso_mac_seglen() to skbuff.h with other related functions
+like skb_gso_network_seglen() so we can use it, and then create
+skb_gso_validate_mac_len to do the full calculation.
+
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 4.4: There is no GSO_BY_FRAGS case to handle, so
+ skb_gso_validate_mac_len() becomes a trivial comparison. Put it inline in
+ <linux/skbuff.h>.]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/android/binder.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/skbuff.h |   30 ++++++++++++++++++++++++++++++
+ net/sched/sch_tbf.c    |   10 ----------
+ 2 files changed, 30 insertions(+), 10 deletions(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -1249,7 +1249,7 @@ static void binder_transaction_buffer_re
- 	int debug_id = buffer->debug_id;
- 
- 	binder_debug(BINDER_DEBUG_TRANSACTION,
--		     "%d buffer release %d, size %zd-%zd, failed at %p\n",
-+		     "%d buffer release %d, size %zd-%zd, failed at %pK\n",
- 		     proc->pid, buffer->debug_id,
- 		     buffer->data_size, buffer->offsets_size, failed_at);
- 
-@@ -2105,7 +2105,7 @@ static int binder_thread_write(struct bi
- 				}
- 			}
- 			binder_debug(BINDER_DEBUG_DEAD_BINDER,
--				     "%d:%d BC_DEAD_BINDER_DONE %016llx found %p\n",
-+				     "%d:%d BC_DEAD_BINDER_DONE %016llx found %pK\n",
- 				     proc->pid, thread->pid, (u64)cookie,
- 				     death);
- 			if (death == NULL) {
-@@ -3249,7 +3249,7 @@ static void print_binder_transaction(str
- 				     struct binder_transaction *t)
- {
- 	seq_printf(m,
--		   "%s %d: %p from %d:%d to %d:%d code %x flags %x pri %ld r%d",
-+		   "%s %d: %pK from %d:%d to %d:%d code %x flags %x pri %ld r%d",
- 		   prefix, t->debug_id, t,
- 		   t->from ? t->from->proc->pid : 0,
- 		   t->from ? t->from->pid : 0,
-@@ -3263,7 +3263,7 @@ static void print_binder_transaction(str
- 	if (t->buffer->target_node)
- 		seq_printf(m, " node %d",
- 			   t->buffer->target_node->debug_id);
--	seq_printf(m, " size %zd:%zd data %p\n",
-+	seq_printf(m, " size %zd:%zd data %pK\n",
- 		   t->buffer->data_size, t->buffer->offsets_size,
- 		   t->buffer->data);
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -3664,5 +3664,35 @@ static inline unsigned int skb_gso_netwo
+ 	return hdr_len + skb_gso_transport_seglen(skb);
  }
+ 
++/**
++ * skb_gso_mac_seglen - Return length of individual segments of a gso packet
++ *
++ * @skb: GSO skb
++ *
++ * skb_gso_mac_seglen is used to determine the real size of the
++ * individual segments, including MAC/L2, Layer3 (IP, IPv6) and L4
++ * headers (TCP/UDP).
++ */
++static inline unsigned int skb_gso_mac_seglen(const struct sk_buff *skb)
++{
++	unsigned int hdr_len = skb_transport_header(skb) - skb_mac_header(skb);
++	return hdr_len + skb_gso_transport_seglen(skb);
++}
++
++/**
++ * skb_gso_validate_mac_len - Will a split GSO skb fit in a given length?
++ *
++ * @skb: GSO skb
++ * @len: length to validate against
++ *
++ * skb_gso_validate_mac_len validates if a given skb will fit a wanted
++ * length once split, including L2, L3 and L4 headers and the payload.
++ */
++static inline bool
++skb_gso_validate_mac_len(const struct sk_buff *skb, unsigned int len)
++{
++	return skb_gso_mac_seglen(skb) <= len;
++}
++
+ #endif	/* __KERNEL__ */
+ #endif	/* _LINUX_SKBUFF_H */
+--- a/net/sched/sch_tbf.c
++++ b/net/sched/sch_tbf.c
+@@ -142,16 +142,6 @@ static u64 psched_ns_t2l(const struct ps
+ 	return len;
+ }
+ 
+-/*
+- * Return length of individual segments of a gso packet,
+- * including all headers (MAC, IP, TCP/UDP)
+- */
+-static unsigned int skb_gso_mac_seglen(const struct sk_buff *skb)
+-{
+-	unsigned int hdr_len = skb_transport_header(skb) - skb_mac_header(skb);
+-	return hdr_len + skb_gso_transport_seglen(skb);
+-}
+-
+ /* GSO packet is too big, segment it so that tbf can transmit
+  * each segment in time
+  */
 
 
