@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EFDC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B2EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554982081C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1000020833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098975;
-	bh=2fcdwPav0b+daDdMQZAj1lg9khaMKU8brF9jrKOJOdc=;
+	s=default; t=1560098980;
+	bh=N0Kw7vsq9JuxlQeOCDHpr+EA5dFjOJ5sWSKiUb2/ml4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ukQEETBYNoEcPJqqN6J7bW6iVIXbGFcjEDMXxbnvr67sZVy3w+17905ZBvEwfuKn
-	 tcSupjvmya5LgEQFDyTFf9LYt80fbabSr7bzSgzeBYgKoJe1GssOjioDGb4jCgEOlV
-	 bi5kqUzcTu8i2hnLjQQVkWG2zFCkjI4AtymIMpjM=
+	b=JvHcoWQvdxPVoSBQEpiTR2VEcCO4up1jUuoRQL0VrAP4Jc20wJzQ6YXxIEfx29KMP
+	 jeeJMrnFnaVA4B49Cd4mVhR27phCregfKcEeUDAFww/o91+peh8tchS4wCkUyhB1Hz
+	 KtjfrpJAbTsPEddiv27D+11BbTokOggoO2tjP1IQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730901AbfFIQte (ORCPT
+        id S1731541AbfFIQtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:49:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49062 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:49:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731458AbfFIQtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:49:31 -0400
+        id S1731519AbfFIQth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:49:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A4CA2081C;
-        Sun,  9 Jun 2019 16:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4847F20833;
+        Sun,  9 Jun 2019 16:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098971;
-        bh=2fcdwPav0b+daDdMQZAj1lg9khaMKU8brF9jrKOJOdc=;
+        s=default; t=1560098976;
+        bh=N0Kw7vsq9JuxlQeOCDHpr+EA5dFjOJ5sWSKiUb2/ml4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qXmco7zxPjvkNIAV3FpFsjM4PTal0SQ48Qe2WPus5pBBgSx1DMBSqWZFjBlj+atcQ
-         8rVwpi4eWo6aqUPQb94fMNt4GnKQXgXEwg7hwWWQDqfGRHkoV87OV79tUaEeKJl/yM
-         Ue6Z1Zxcyf/PnN1lZzWpwYAb1t1cHBqCHcl988yM=
+        b=FibDr2eIhYKR15LIX5y185G8PcC0UajvzHcOIZ6/bRfQyVIhmQjmfu4HPCvh3Kqah
+         zTpmrrJSSGqjUXSWpnGFMzCf0uLFpx7WSb8TrUO/7I2my4PBBj6S++fYzCaQQyswGI
+         moOse/MG5jt/F/9JC8akwwcBJtQCLmFBl55tLgbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ryan Pavlik <ryan.pavlik@collabora.com>,
-        Daniel Stone <daniels@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 4.19 41/51] drm: add non-desktop quirks to Sensics and OSVR headsets.
-Date:   Sun,  9 Jun 2019 18:42:22 +0200
-Message-Id: <20190609164129.993540122@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Dufresne <dufresnep@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 43/51] drm/radeon: prefer lower reference dividers
+Date:   Sun,  9 Jun 2019 18:42:24 +0200
+Message-Id: <20190609164130.191475090@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Pavlik <ryan.pavlik@collabora.com>
+From: Christian König <christian.koenig@amd.com>
 
-commit 29054230f3e11ea818eccfa7bb4e4b3e89544164 upstream.
+commit 2e26ccb119bde03584be53406bbd22e711b0d6e6 upstream.
 
-Add two EDID vendor/product pairs used across a variety of
-Sensics products, as well as the OSVR HDK and HDK 2.
+Instead of the closest reference divider prefer the lowest,
+this fixes flickering issues on HP Compaq nx9420.
 
-Signed-off-by: Ryan Pavlik <ryan.pavlik@collabora.com>
-Signed-off-by: Daniel Stone <daniels@collabora.com>
-Reviewed-by: Daniel Stone <daniels@collabora.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181203164644.13974-1-ryan.pavlik@collabora.com
-Cc: <stable@vger.kernel.org> # v4.15+
+Bugs: https://bugs.freedesktop.org/show_bug.cgi?id=108514
+Suggested-by: Paul Dufresne <dufresnep@gmail.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/radeon/radeon_display.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -212,6 +212,12 @@ static const struct edid_quirk {
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -921,12 +921,12 @@ static void avivo_get_fb_ref_div(unsigne
+ 	ref_div_max = max(min(100 / post_div, ref_div_max), 1u);
  
- 	/* Sony PlayStation VR Headset */
- 	{ "SNY", 0x0704, EDID_QUIRK_NON_DESKTOP },
-+
-+	/* Sensics VR Headsets */
-+	{ "SEN", 0x1019, EDID_QUIRK_NON_DESKTOP },
-+
-+	/* OSVR HDK and HDK2 VR Headsets */
-+	{ "SVR", 0x1019, EDID_QUIRK_NON_DESKTOP },
- };
+ 	/* get matching reference and feedback divider */
+-	*ref_div = min(max(DIV_ROUND_CLOSEST(den, post_div), 1u), ref_div_max);
++	*ref_div = min(max(den/post_div, 1u), ref_div_max);
+ 	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
  
- /*
+ 	/* limit fb divider to its maximum */
+ 	if (*fb_div > fb_div_max) {
+-		*ref_div = DIV_ROUND_CLOSEST(*ref_div * fb_div_max, *fb_div);
++		*ref_div = (*ref_div * fb_div_max)/(*fb_div);
+ 		*fb_div = fb_div_max;
+ 	}
+ }
 
 
