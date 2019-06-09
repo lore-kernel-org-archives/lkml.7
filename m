@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545A6C2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48CDC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207FA206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA96206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099570;
-	bh=PcLS/2LhuBm4J2OQxcx2OO5U1Kq3llYXMRYnvXXy2RE=;
+	s=default; t=1560099573;
+	bh=uy1zZLB+AkKVM+qyopiBM8i0e074O0Uwc97z9JC1Mgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqr6BDPI3TpBoKdmNuilXLoPY0J6Zo4QIdmmKhCZID8AlNvodOCkYq/sikQtCDJpi
-	 8S1Pa85MvpBWSqsGGvwcV8kegzKA+J23SKizcsls7T/+m+kX7115lxop35sTJL4ilq
-	 cQqN5TclnzvvZTvlzfntF8T7gu0Xh0NFh8n9WANI=
+	b=lfP/dmIoK+a/SvEEFfNG1dLvfYNNJchNDfGkxDJGt1rTEZi5Yuj46Uw31rgPLOtKD
+	 EOZ/wZrL7vr/mQ4qoTefFihn3XgmsBNHES+se0B3m2+mX3mtsIEgWRKdrsZ3hxdxrl
+	 AfKJaBG3egAE95SrPbZ1Vj4bSD+HQmxYadmIiaxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387678AbfFIQ73 (ORCPT
+        id S2387689AbfFIQ7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:59:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387649AbfFIQ7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:59:24 -0400
+        id S2387676AbfFIQ73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:59:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0B28206C3;
-        Sun,  9 Jun 2019 16:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72A01204EC;
+        Sun,  9 Jun 2019 16:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099563;
-        bh=PcLS/2LhuBm4J2OQxcx2OO5U1Kq3llYXMRYnvXXy2RE=;
+        s=default; t=1560099569;
+        bh=uy1zZLB+AkKVM+qyopiBM8i0e074O0Uwc97z9JC1Mgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLr9NXRE1UaqQhcNLd9FYMdavx1CHAjfJaAuGcWKPdql9Jc1vwQHTuQ7fMzei/dn4
-         IcnDgTpb9fYxYi9HtrgT9So58iz+SCczDnSB4P1SLWnXKPnEEfjS8x11i5OfhmozhX
-         Ir1czFr/GWOTh7Me2hVi14QT7AKNWa+c7w7Kel3k=
+        b=LzO2E42yAKrvE59yPDSAEnWtRjvkGLg5TtlsbK6Frj/4uNblxIza1sZ2rNkduhJ8+
+         S/TraGSZfKlZ4JxUZVPhqA/TK0sAA1DnWcDsxo1xe4SKXS8FXO6SA+9OuPnaU9Qtz/
+         h3zaIhS2ebelXmxk+WirjjpXG7UxeLKEuLBuWrLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.4 083/241] btrfs: sysfs: dont leak memory when failing add fsid
-Date:   Sun,  9 Jun 2019 18:40:25 +0200
-Message-Id: <20190609164150.170337253@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 085/241] hugetlb: use same fault hash key for shared and private mappings
+Date:   Sun,  9 Jun 2019 18:40:27 +0200
+Message-Id: <20190609164150.229271039@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -59,53 +65,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobin C. Harding <tobin@kernel.org>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-commit e32773357d5cc271b1d23550b3ed026eb5c2a468 upstream.
+commit 1b426bac66e6cc83c9f2d92b96e4e72acf43419a upstream.
 
-A failed call to kobject_init_and_add() must be followed by a call to
-kobject_put().  Currently in the error path when adding fs_devices we
-are missing this call.  This could be fixed by calling
-btrfs_sysfs_remove_fsid() if btrfs_sysfs_add_fsid() returns an error or
-by adding a call to kobject_put() directly in btrfs_sysfs_add_fsid().
-Here we choose the second option because it prevents the slightly
-unusual error path handling requirements of kobject from leaking out
-into btrfs functions.
+hugetlb uses a fault mutex hash table to prevent page faults of the
+same pages concurrently.  The key for shared and private mappings is
+different.  Shared keys off address_space and file index.  Private keys
+off mm and virtual address.  Consider a private mappings of a populated
+hugetlbfs file.  A fault will map the page from the file and if needed
+do a COW to map a writable page.
 
-Add a call to kobject_put() in the error path of kobject_add_and_init().
-This causes the release method to be called if kobject_init_and_add()
-fails.  open_tree() is the function that calls btrfs_sysfs_add_fsid()
-and the error code in this function is already written with the
-assumption that the release method is called during the error path of
-open_tree() (as seen by the call to btrfs_sysfs_remove_fsid() under the
-fail_fsdev_sysfs label).
+Hugetlbfs hole punch uses the fault mutex to prevent mappings of file
+pages.  It uses the address_space file index key.  However, private
+mappings will use a different key and could race with this code to map
+the file page.  This causes problems (BUG) for the page cache remove
+code as it expects the page to be unmapped.  A sample stack is:
 
-Cc: stable@vger.kernel.org # v4.4+
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+page dumped because: VM_BUG_ON_PAGE(page_mapped(page))
+kernel BUG at mm/filemap.c:169!
+...
+RIP: 0010:unaccount_page_cache_page+0x1b8/0x200
+...
+Call Trace:
+__delete_from_page_cache+0x39/0x220
+delete_from_page_cache+0x45/0x70
+remove_inode_hugepages+0x13c/0x380
+? __add_to_page_cache_locked+0x162/0x380
+hugetlbfs_fallocate+0x403/0x540
+? _cond_resched+0x15/0x30
+? __inode_security_revalidate+0x5d/0x70
+? selinux_file_permission+0x100/0x130
+vfs_fallocate+0x13f/0x270
+ksys_fallocate+0x3c/0x80
+__x64_sys_fallocate+0x1a/0x20
+do_syscall_64+0x5b/0x180
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+There seems to be another potential COW issue/race with this approach
+of different private and shared keys as noted in commit 8382d914ebf7
+("mm, hugetlb: improve page-fault scalability").
+
+Since every hugetlb mapping (even anon and private) is actually a file
+mapping, just use the address_space index key for all mappings.  This
+results in potentially more hash collisions.  However, this should not
+be the common case.
+
+Link: http://lkml.kernel.org/r/20190328234704.27083-3-mike.kravetz@oracle.com
+Link: http://lkml.kernel.org/r/20190412165235.t4sscoujczfhuiyt@linux-r8p5
+Fixes: b5cec28d36f5 ("hugetlbfs: truncate_hugepages() takes a range of pages")
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- fs/btrfs/sysfs.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -733,7 +733,12 @@ int btrfs_sysfs_add_fsid(struct btrfs_fs
- 	fs_devs->fsid_kobj.kset = btrfs_kset;
- 	error = kobject_init_and_add(&fs_devs->fsid_kobj,
- 				&btrfs_ktype, parent, "%pU", fs_devs->fsid);
--	return error;
-+	if (error) {
-+		kobject_put(&fs_devs->fsid_kobj);
-+		return error;
-+	}
-+
-+	return 0;
+---
+ fs/hugetlbfs/inode.c    |    8 ++------
+ include/linux/hugetlb.h |    4 +---
+ mm/hugetlb.c            |   19 +++++--------------
+ 3 files changed, 8 insertions(+), 23 deletions(-)
+
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -414,9 +414,7 @@ static void remove_inode_hugepages(struc
+ 			if (next >= end)
+ 				break;
+ 
+-			hash = hugetlb_fault_mutex_hash(h, current->mm,
+-							&pseudo_vma,
+-							mapping, next, 0);
++			hash = hugetlb_fault_mutex_hash(h, mapping, next, 0);
+ 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 			lock_page(page);
+@@ -569,7 +567,6 @@ static long hugetlbfs_fallocate(struct f
+ 	struct address_space *mapping = inode->i_mapping;
+ 	struct hstate *h = hstate_inode(inode);
+ 	struct vm_area_struct pseudo_vma;
+-	struct mm_struct *mm = current->mm;
+ 	loff_t hpage_size = huge_page_size(h);
+ 	unsigned long hpage_shift = huge_page_shift(h);
+ 	pgoff_t start, index, end;
+@@ -633,8 +630,7 @@ static long hugetlbfs_fallocate(struct f
+ 		addr = index * hpage_size;
+ 
+ 		/* mutex taken here, fault path and hole punch */
+-		hash = hugetlb_fault_mutex_hash(h, mm, &pseudo_vma, mapping,
+-						index, addr);
++		hash = hugetlb_fault_mutex_hash(h, mapping, index, addr);
+ 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 		/* See if already present in mapping to avoid alloc/free */
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -91,9 +91,7 @@ void putback_active_hugepage(struct page
+ void free_huge_page(struct page *page);
+ void hugetlb_fix_reserve_counts(struct inode *inode, bool restore_reserve);
+ extern struct mutex *hugetlb_fault_mutex_table;
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
+-				struct vm_area_struct *vma,
+-				struct address_space *mapping,
++u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+ 				pgoff_t idx, unsigned long address);
+ 
+ #ifdef CONFIG_ARCH_WANT_HUGE_PMD_SHARE
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3703,21 +3703,14 @@ backout_unlocked:
  }
  
- int btrfs_sysfs_add_mounted(struct btrfs_fs_info *fs_info)
+ #ifdef CONFIG_SMP
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
+-			    struct vm_area_struct *vma,
+-			    struct address_space *mapping,
++u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+ 			    pgoff_t idx, unsigned long address)
+ {
+ 	unsigned long key[2];
+ 	u32 hash;
+ 
+-	if (vma->vm_flags & VM_SHARED) {
+-		key[0] = (unsigned long) mapping;
+-		key[1] = idx;
+-	} else {
+-		key[0] = (unsigned long) mm;
+-		key[1] = address >> huge_page_shift(h);
+-	}
++	key[0] = (unsigned long) mapping;
++	key[1] = idx;
+ 
+ 	hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
+ 
+@@ -3728,9 +3721,7 @@ u32 hugetlb_fault_mutex_hash(struct hsta
+  * For uniprocesor systems we always use a single mutex, so just
+  * return 0 and avoid the hashing overhead.
+  */
+-u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
+-			    struct vm_area_struct *vma,
+-			    struct address_space *mapping,
++u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
+ 			    pgoff_t idx, unsigned long address)
+ {
+ 	return 0;
+@@ -3776,7 +3767,7 @@ int hugetlb_fault(struct mm_struct *mm,
+ 	 * get spurious allocation failures if two CPUs race to instantiate
+ 	 * the same page in the page cache.
+ 	 */
+-	hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping, idx, address);
++	hash = hugetlb_fault_mutex_hash(h, mapping, idx, address);
+ 	mutex_lock(&hugetlb_fault_mutex_table[hash]);
+ 
+ 	entry = huge_ptep_get(ptep);
 
 
