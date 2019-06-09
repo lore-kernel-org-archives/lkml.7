@@ -2,65 +2,69 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9783FC468C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0936DC468BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF56214AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A0E214AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047313;
-	bh=3JXGXvlyoVFPAJX61tI7YWUdIAkaLGnZWbZ+ZNU8AtA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MI2MZV3RvMfRIIQbJ5Wz3twfKUY6AxfCUpNaD/8EXeIdTHR1y3RCUXQeru/qppKD6
-	 a/2z/Vx5BuSeRZnhvkJT/67Y5fIjP+STkSm4bNJ9EQ6/LmO91aYv9wKjYfGGu5UxmM
-	 yJDhbeia1tpfJGTQTp17pTCMUM/Fth+i29hVmZvM=
+	s=default; t=1560047318;
+	bh=00/fu46zjLChL9ElQQ7TCGZozmIUhrcjvTgOnCLy8SY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YBY3x7CDZBBucjXdlJrFOWgK6Il59CaDRsIz5GzKmxXj1xzvVqshhDZ6C+QzCbzl4
+	 JV1rnE6526n02jRIdbPbnDrYDVcAl7mBvAPD7do6PA4z8Q7egP0ETNoxw7wocC/mF2
+	 rUFGCjLkCM00xtA4AEjFItgrzIV7jMm4ChQMuRX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfFIC2c (ORCPT
+        id S1728149AbfFIC1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:28:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55762 "EHLO
+        Sat, 8 Jun 2019 22:27:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55632 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbfFIC1h (ORCPT
+        with ESMTP id S1727841AbfFIC1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:27:37 -0400
+        Sat, 8 Jun 2019 22:27:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rZLg2LTYMOgS/WtlCAt2WgYsQotEjf1R2RpmPjDF3/Q=; b=TR1dt+37nDWxfiKQtjtqqIwnkC
-        I/uJyFZVblLTGTSYs1SRQCLc7IKMQ1Enm4GpvK6Qho5x5fWmtZ4AEQakL2wBgIufL6ZQp2WWp6WbH
-        +7qoQE9XfoIOZx4pKVIO9YSyKIxbU1u/u8srWx8d8fr17jQvPQsUxEjdpNk4PE07x3LsmYuFLJYwi
-        BGNxY/cAMmiWgsF0uzgi7LMfDq6wT3Fz51ZOXIY780i8DPynNs0zthuhhVu5CrE7lGH9N9ZEy08IW
-        xO1BfqbyFNh/K+JZ77ZP9s5f5cSPXtKvXfW78jhoV2SXu0eWkYEddOB07BvtHhEzCE/VvRccHuP7x
-        5T6HYIrw==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=V2sdNJm6eazxqDbysnbOMl3lGWajyec71slvc9Q6kHo=; b=OtXiJg/3+Poxd89pNC5p/PRyh
+        FW7LXJCpmk3p5Htyo2yA2xU8XKw/ZA1EliO65I8fcRximzU8yH6LYf/lNeEJMGAll4toMuNXyLO6S
+        en9avCLrI+rN8F1pDj1WwUipzq9VonhohGQXaW/wZw1rKH53t5M047xWZXVrc6k3DTUb5/GMVGdi2
+        n8cM/vqSd9YKA9lTdBgjuVKIN0uZ/niwERUuZkIMM1x7rCbP7KBXGsm8qWY9daZeZLplPERUe8ib/
+        l0aZmAhEh4Zbtt7BYEQUYO8LwQwTpU3NiaQAV0DSPKEo0kiZxebO2rw0VBcSxVQ+IWDRi+dSddwT0
+        OHxPQzbxQ==;
 Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZnYS-0001n9-M6; Sun, 09 Jun 2019 02:27:34 +0000
+        id 1hZnYO-0001mp-2e; Sun, 09 Jun 2019 02:27:28 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZnYL-0000KW-MF; Sat, 08 Jun 2019 23:27:25 -0300
+        id 1hZnYK-0000I7-Ob; Sat, 08 Jun 2019 23:27:24 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        linux-watchdog@vger.kernel.org
-Subject: [PATCH v3 30/33] docs: watchdog: convert docs to ReST and rename to *.rst
-Date:   Sat,  8 Jun 2019 23:27:20 -0300
-Message-Id: <8c4657f2999cb81df52d73bdcb6a5fe02bd5677d.1560045490.git.mchehab+samsung@kernel.org>
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH v3 00/33] Convert files to ReST - part 1
+Date:   Sat,  8 Jun 2019 23:26:50 -0300
+Message-Id: <cover.1560045490.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1560045490.git.mchehab+samsung@kernel.org>
-References: <cover.1560045490.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,44 +72,728 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert those documents and prepare them to be part of the kernel
-API book, as most of the stuff there are related to the
-Kernel interfaces.
+This is the first part of a series I wrote sometime ago where I manually
+convert lots of files to be properly parsed by Sphinx as ReST files.
 
-Still, in the future, it would make sense to split the docs,
-as some of the stuff is clearly focused on sysadmin tasks.
+As it touches on lot of stuff, this series is based on today's docs-next
++ linux-next, at tag next-20190607.
 
-The conversion is actually:
-  - add blank lines and identation in order to identify paragraphs;
-  - fix tables markups;
-  - add some lists markups;
-  - mark literal blocks;
-  - adjust title markups.
+I have right now about 85 patches with this undergoing work. That's
+because I opted to do ~1 patch per converted directory.
 
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
+That sounds too much to be send on a single round. So, I'm opting to split
+it on 3 parts. Those patches should probably be good to be merged
+either by subsystem maintainers or via the docs tree.
 
-Cc: Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- .../admin-guide/kernel-parameters.txt         |   2 +-
- Documentation/kernel-per-CPU-kthreads.txt     |   2 +-
- ....txt => convert_drivers_to_kernel_api.rst} | 109 +--
- .../watchdog/{hpwdt.txt => hpwdt.rst}         |  25 +-
- Documentation/watchdog/index.rst              |  25 +
- .../watchdog/{mlx-wdt.txt => mlx-wdt.rst}     |  24 +-
- .../{pcwd-watchdog.txt => pcwd-watchdog.rst}  |  13 +-
- .../{watchdog-api.txt => watchdog-api.rst}    |  76 +-
- ...kernel-api.txt => watchdog-kernel-api.rst} |  91 ++-
- ...parameters.txt => watchdog-parameters.rst} | 672 +++++++++++++-----
- .../{watchdog-pm.txt => watchdog-pm.rst}      |   3 +
- Documentation/watchdog/{wdt.txt => wdt.rst}   |  31 +-
- MAINTAINERS                                   |   2 +-
- drivers/watchdog/Kconfig                      |   6 +-
- drivers/watchdog/smsc37b787_wdt.c             |   2 +-
- 15 files changed, 767 insertions(+), 316 deletions(-)
+I opted to mark new files not included yet to the main index.rst (directly or
+indirectly ) with the :orphan: tag, in order to avoid adding warnings to the
+build system. This should be removed after we find a "home" for all
+the converted files within the new document tree arrangement.
+
+Both this series and  the next parts are on my devel git tree,
+at:
+
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=convert_rst_renames_v4
+
+The final output in html (after all patches I currently have, including 
+the upcoming series) can be seen at:
+
+	https://www.infradead.org/~mchehab/rst_conversion/
+
+Mauro Carvalho Chehab (33):
+  docs: aoe: convert docs to ReST and rename to *.rst
+  docs: arm64: convert docs to ReST and rename to .rst
+  docs: cdrom-standard.tex: convert from LaTeX to ReST
+  docs: cdrom: convert docs to ReST and rename to *.rst
+  docs: cgroup-v1: convert docs to ReST and rename to *.rst
+  docs: cgroup-v1/blkio-controller.rst: add a note about CFQ scheduler
+  docs: cpu-freq: convert docs to ReST and rename to *.rst
+  docs: convert docs to ReST and rename to *.rst
+  docs: fault-injection: convert docs to ReST and rename to *.rst
+  docs: fb: convert docs to ReST and rename to *.rst
+  docs: fpga: convert docs to ReST and rename to *.rst
+  docs: ide: convert docs to ReST and rename to *.rst
+  docs: infiniband: convert docs to ReST and rename to *.rst
+  docs: kbuild: convert docs to ReST and rename to *.rst
+  docs: kdump: convert docs to ReST and rename to *.rst
+  docs: locking: convert docs to ReST and rename to *.rst
+  docs: mic: convert docs to ReST and rename to *.rst
+  docs: netlabel: convert docs to ReST and rename to *.rst
+  docs: pcmcia: convert docs to ReST and rename to *.rst
+  docs: convert docs to ReST and rename to *.rst
+  docs: powerpc: convert docs to ReST and rename to *.rst
+  docs: pps.txt: convert to ReST and rename to pps.rst
+  docs: ptp.txt: convert to ReST and move to driver-api
+  docs: riscv: convert docs to ReST and rename to *.rst
+  docs: Debugging390.txt: convert table to ascii artwork
+  docs: s390: convert docs to ReST and rename to *.rst
+  s390: include/asm/debug.h add kerneldoc markups
+  docs: target: convert docs to ReST and rename to *.rst
+  docs: timers: convert docs to ReST and rename to *.rst
+  docs: watchdog: convert docs to ReST and rename to *.rst
+  docs: xilinx: convert eemi.txt to eemi.rst
+  docs: scheduler: convert docs to ReST and rename to *.rst
+  docs: EDID/HOWTO.txt: convert it and rename to howto.rst
+
+ .../ABI/testing/sysfs-class-powercap          |    2 +-
+ Documentation/ABI/testing/sysfs-kernel-uids   |    2 +-
+ Documentation/EDID/{HOWTO.txt => howto.rst}   |   31 +-
+ Documentation/PCI/pci-error-recovery.rst      |   23 +-
+ Documentation/admin-guide/README.rst          |    2 +-
+ Documentation/admin-guide/bug-hunting.rst     |    2 +-
+ Documentation/admin-guide/hw-vuln/l1tf.rst    |    2 +-
+ .../admin-guide/kernel-parameters.txt         |   28 +-
+ .../admin-guide/mm/numa_memory_policy.rst     |    2 +-
+ Documentation/aoe/{aoe.txt => aoe.rst}        |   63 +-
+ Documentation/aoe/examples.rst                |   23 +
+ Documentation/aoe/index.rst                   |   19 +
+ Documentation/aoe/{todo.txt => todo.rst}      |    3 +
+ Documentation/aoe/udev.txt                    |    2 +-
+ ...object_usage.txt => acpi_object_usage.rst} |  288 +-
+ .../arm64/{arm-acpi.txt => arm-acpi.rst}      |  155 +-
+ .../arm64/{booting.txt => booting.rst}        |   91 +-
+ ...egisters.txt => cpu-feature-registers.rst} |  204 +-
+ .../arm64/{elf_hwcaps.txt => elf_hwcaps.rst}  |   56 +-
+ .../{hugetlbpage.txt => hugetlbpage.rst}      |    7 +-
+ Documentation/arm64/index.rst                 |   28 +
+ ...structions.txt => legacy_instructions.rst} |   43 +-
+ .../arm64/{memory.txt => memory.rst}          |   91 +-
+ ...ication.txt => pointer-authentication.rst} |    2 +
+ ...{silicon-errata.txt => silicon-errata.rst} |   65 +-
+ Documentation/arm64/{sve.txt => sve.rst}      |   12 +-
+ ...agged-pointers.txt => tagged-pointers.rst} |    6 +-
+ Documentation/block/bfq-iosched.txt           |    2 +-
+ Documentation/cdrom/Makefile                  |   21 -
+ ...{cdrom-standard.tex => cdrom-standard.rst} | 1491 +++++-----
+ Documentation/cdrom/{ide-cd => ide-cd.rst}    |  196 +-
+ Documentation/cdrom/index.rst                 |   19 +
+ ...{packet-writing.txt => packet-writing.rst} |   27 +-
+ ...io-controller.txt => blkio-controller.rst} |  103 +-
+ .../cgroup-v1/{cgroups.txt => cgroups.rst}    |  184 +-
+ .../cgroup-v1/{cpuacct.txt => cpuacct.rst}    |   15 +-
+ .../cgroup-v1/{cpusets.txt => cpusets.rst}    |  205 +-
+ .../cgroup-v1/{devices.txt => devices.rst}    |   40 +-
+ ...er-subsystem.txt => freezer-subsystem.rst} |   14 +-
+ .../cgroup-v1/{hugetlb.txt => hugetlb.rst}    |   39 +-
+ Documentation/cgroup-v1/index.rst             |   30 +
+ .../{memcg_test.txt => memcg_test.rst}        |  263 +-
+ .../cgroup-v1/{memory.txt => memory.rst}      |  449 +--
+ .../cgroup-v1/{net_cls.txt => net_cls.rst}    |   37 +-
+ .../cgroup-v1/{net_prio.txt => net_prio.rst}  |   24 +-
+ .../cgroup-v1/{pids.txt => pids.rst}          |   78 +-
+ .../cgroup-v1/{rdma.txt => rdma.rst}          |   66 +-
+ .../{amd-powernow.txt => amd-powernow.rst}    |   11 +-
+ Documentation/cpu-freq/{core.txt => core.rst} |   68 +-
+ .../{cpu-drivers.txt => cpu-drivers.rst}      |  217 +-
+ ...pufreq-nforce2.txt => cpufreq-nforce2.rst} |   12 +-
+ .../{cpufreq-stats.txt => cpufreq-stats.rst}  |  141 +-
+ .../cpu-freq/{index.txt => index.rst}         |   44 +-
+ .../{pcc-cpufreq.txt => pcc-cpufreq.rst}      |  102 +-
+ ...{cache-policies.txt => cache-policies.rst} |   24 +-
+ .../device-mapper/{cache.txt => cache.rst}    |  206 +-
+ .../device-mapper/{delay.txt => delay.rst}    |   29 +-
+ .../{dm-crypt.txt => dm-crypt.rst}            |   57 +-
+ .../{dm-flakey.txt => dm-flakey.rst}          |   45 +-
+ .../{dm-init.txt => dm-init.rst}              |   75 +-
+ .../{dm-integrity.txt => dm-integrity.rst}    |   62 +-
+ .../device-mapper/{dm-io.txt => dm-io.rst}    |   14 +-
+ .../device-mapper/{dm-log.txt => dm-log.rst}  |    5 +-
+ ...m-queue-length.txt => dm-queue-length.rst} |   25 +-
+ .../{dm-raid.txt => dm-raid.rst}              |  225 +-
+ ...m-service-time.txt => dm-service-time.rst} |   68 +-
+ .../{dm-uevent.txt => dm-uevent.rst}          |  143 +-
+ .../{dm-zoned.txt => dm-zoned.rst}            |   10 +-
+ .../device-mapper/{era.txt => era.rst}        |   36 +-
+ Documentation/device-mapper/index.rst         |   44 +
+ .../device-mapper/{kcopyd.txt => kcopyd.rst}  |   10 +-
+ .../device-mapper/{linear.txt => linear.rst}  |  100 +-
+ .../{log-writes.txt => log-writes.rst}        |   91 +-
+ ...ersistent-data.txt => persistent-data.rst} |    4 +
+ .../{snapshot.txt => snapshot.rst}            |  116 +-
+ .../{statistics.txt => statistics.rst}        |   62 +-
+ .../{striped.txt => striped.rst}              |   68 +-
+ .../device-mapper/{switch.txt => switch.rst}  |   47 +-
+ ...provisioning.txt => thin-provisioning.rst} |   68 +-
+ .../{unstriped.txt => unstriped.rst}          |  111 +-
+ .../device-mapper/{verity.txt => verity.rst}  |   20 +-
+ .../{writecache.txt => writecache.rst}        |   13 +-
+ .../device-mapper/{zero.txt => zero.rst}      |   14 +-
+ Documentation/driver-api/pm/devices.rst       |    6 +-
+ .../{pps/pps.txt => driver-api/pps.rst}       |   67 +-
+ .../{ptp/ptp.txt => driver-api/ptp.rst}       |   26 +-
+ Documentation/driver-api/s390-drivers.rst     |    4 +-
+ .../driver-api/usb/power-management.rst       |    2 +-
+ ...ault-injection.txt => fault-injection.rst} |  265 +-
+ Documentation/fault-injection/index.rst       |   20 +
+ ...r-inject.txt => notifier-error-inject.rst} |   18 +-
+ ...injection.txt => nvme-fault-injection.rst} |  174 +-
+ ...rovoke-crashes.txt => provoke-crashes.rst} |   40 +-
+ Documentation/fb/{api.txt => api.rst}         |   29 +-
+ Documentation/fb/{arkfb.txt => arkfb.rst}     |    8 +-
+ .../fb/{aty128fb.txt => aty128fb.rst}         |   35 +-
+ .../fb/{cirrusfb.txt => cirrusfb.rst}         |   47 +-
+ .../fb/{cmap_xfbdev.txt => cmap_xfbdev.rst}   |   57 +-
+ .../fb/{deferred_io.txt => deferred_io.rst}   |   28 +-
+ Documentation/fb/{efifb.txt => efifb.rst}     |   18 +-
+ .../fb/{ep93xx-fb.txt => ep93xx-fb.rst}       |   27 +-
+ Documentation/fb/{fbcon.txt => fbcon.rst}     |  177 +-
+ .../fb/{framebuffer.txt => framebuffer.rst}   |   79 +-
+ Documentation/fb/{gxfb.txt => gxfb.rst}       |   24 +-
+ Documentation/fb/index.rst                    |   50 +
+ .../fb/{intel810.txt => intel810.rst}         |   79 +-
+ Documentation/fb/{intelfb.txt => intelfb.rst} |   62 +-
+ .../fb/{internals.txt => internals.rst}       |   24 +-
+ Documentation/fb/{lxfb.txt => lxfb.rst}       |   25 +-
+ .../fb/{matroxfb.txt => matroxfb.rst}         |  528 ++--
+ .../fb/{metronomefb.txt => metronomefb.rst}   |    8 +-
+ Documentation/fb/{modedb.txt => modedb.rst}   |   44 +-
+ Documentation/fb/{pvr2fb.txt => pvr2fb.rst}   |   55 +-
+ Documentation/fb/{pxafb.txt => pxafb.rst}     |   81 +-
+ Documentation/fb/{s3fb.txt => s3fb.rst}       |    8 +-
+ .../fb/{sa1100fb.txt => sa1100fb.rst}         |   23 +-
+ .../fb/{sh7760fb.txt => sh7760fb.rst}         |  153 +-
+ Documentation/fb/{sisfb.txt => sisfb.rst}     |   40 +-
+ Documentation/fb/{sm501.txt => sm501.rst}     |    7 +-
+ Documentation/fb/{sm712fb.txt => sm712fb.rst} |   18 +-
+ Documentation/fb/{sstfb.txt => sstfb.rst}     |  231 +-
+ Documentation/fb/{tgafb.txt => tgafb.rst}     |   30 +-
+ .../fb/{tridentfb.txt => tridentfb.rst}       |   36 +-
+ Documentation/fb/{udlfb.txt => udlfb.rst}     |   55 +-
+ Documentation/fb/{uvesafb.txt => uvesafb.rst} |  128 +-
+ Documentation/fb/{vesafb.txt => vesafb.rst}   |  121 +-
+ Documentation/fb/{viafb.txt => viafb.rst}     |  393 +--
+ .../fb/{vt8623fb.txt => vt8623fb.rst}         |   10 +-
+ Documentation/filesystems/tmpfs.txt           |    2 +-
+ .../filesystems/ubifs-authentication.md       |    4 +-
+ Documentation/fpga/{dfl.txt => dfl.rst}       |   58 +-
+ Documentation/fpga/index.rst                  |   17 +
+ Documentation/ide/changelogs.rst              |   17 +
+ .../ide/{ide-tape.txt => ide-tape.rst}        |   23 +-
+ Documentation/ide/{ide.txt => ide.rst}        |  147 +-
+ Documentation/ide/index.rst                   |   21 +
+ ...arm-plug-howto.txt => warm-plug-howto.rst} |   10 +-
+ .../{core_locking.txt => core_locking.rst}    |   64 +-
+ Documentation/infiniband/index.rst            |   23 +
+ .../infiniband/{ipoib.txt => ipoib.rst}       |   24 +-
+ .../infiniband/{opa_vnic.txt => opa_vnic.rst} |  108 +-
+ .../infiniband/{sysfs.txt => sysfs.rst}       |    4 +-
+ .../{tag_matching.txt => tag_matching.rst}    |    5 +
+ .../infiniband/{user_mad.txt => user_mad.rst} |   33 +-
+ .../{user_verbs.txt => user_verbs.rst}        |   12 +-
+ ...eaders_install.txt => headers_install.rst} |    5 +-
+ Documentation/kbuild/index.rst                |   27 +
+ Documentation/kbuild/issues.rst               |   11 +
+ .../kbuild/{kbuild.txt => kbuild.rst}         |  119 +-
+ ...nfig-language.txt => kconfig-language.rst} |  232 +-
+ ...anguage.txt => kconfig-macro-language.rst} |   37 +-
+ .../kbuild/{kconfig.txt => kconfig.rst}       |  136 +-
+ .../kbuild/{makefiles.txt => makefiles.rst}   |  530 ++--
+ .../kbuild/{modules.txt => modules.rst}       |  168 +-
+ Documentation/kdump/index.rst                 |   21 +
+ Documentation/kdump/{kdump.txt => kdump.rst}  |  131 +-
+ .../kdump/{vmcoreinfo.txt => vmcoreinfo.rst}  |   59 +-
+ Documentation/kernel-hacking/hacking.rst      |    4 +-
+ Documentation/kernel-hacking/locking.rst      |    2 +-
+ Documentation/kernel-per-CPU-kthreads.txt     |    2 +-
+ Documentation/locking/index.rst               |   24 +
+ ...{lockdep-design.txt => lockdep-design.rst} |   51 +-
+ .../locking/{lockstat.txt => lockstat.rst}    |  221 +-
+ .../{locktorture.txt => locktorture.rst}      |  105 +-
+ .../{mutex-design.txt => mutex-design.rst}    |   26 +-
+ ...t-mutex-design.txt => rt-mutex-design.rst} |  139 +-
+ .../locking/{rt-mutex.txt => rt-mutex.rst}    |   30 +-
+ .../locking/{spinlocks.txt => spinlocks.rst}  |   32 +-
+ ...w-mutex-design.txt => ww-mutex-design.rst} |   82 +-
+ Documentation/mic/index.rst                   |   18 +
+ .../{mic_overview.txt => mic_overview.rst}    |    6 +-
+ .../{scif_overview.txt => scif_overview.rst}  |   58 +-
+ .../{cipso_ipv4.txt => cipso_ipv4.rst}        |   19 +-
+ Documentation/netlabel/draft_ietf.rst         |    5 +
+ Documentation/netlabel/index.rst              |   21 +
+ .../{introduction.txt => introduction.rst}    |   16 +-
+ .../{lsm_interface.txt => lsm_interface.rst}  |   16 +-
+ Documentation/networking/timestamping.txt     |    2 +-
+ .../{devicetable.txt => devicetable.rst}      |    4 +
+ ...{driver-changes.txt => driver-changes.rst} |   35 +-
+ .../pcmcia/{driver.txt => driver.rst}         |   18 +-
+ Documentation/pcmcia/index.rst                |   20 +
+ .../pcmcia/{locking.txt => locking.rst}       |   39 +-
+ Documentation/pi-futex.txt                    |    2 +-
+ .../power/{apm-acpi.txt => apm-acpi.rst}      |   10 +-
+ ...m-debugging.txt => basic-pm-debugging.rst} |   79 +-
+ ...harger-manager.txt => charger-manager.rst} |  101 +-
+ ...rivers-testing.txt => drivers-testing.rst} |   15 +-
+ .../{energy-model.txt => energy-model.rst}    |  101 +-
+ ...ing-of-tasks.txt => freezing-of-tasks.rst} |   91 +-
+ Documentation/power/index.rst                 |   46 +
+ .../power/{interface.txt => interface.rst}    |   24 +-
+ Documentation/power/{opp.txt => opp.rst}      |  175 +-
+ Documentation/power/{pci.txt => pci.rst}      |   87 +-
+ ...qos_interface.txt => pm_qos_interface.rst} |  127 +-
+ ...upply_class.txt => power_supply_class.rst} |  269 +-
+ .../powercap/{powercap.txt => powercap.rst}   |  297 +-
+ .../regulator/{consumer.txt => consumer.rst}  |  141 +-
+ .../regulator/{design.txt => design.rst}      |    9 +-
+ .../regulator/{machine.txt => machine.rst}    |   47 +-
+ .../regulator/{overview.txt => overview.rst}  |   57 +-
+ .../{regulator.txt => regulator.rst}          |   18 +-
+ .../power/{runtime_pm.txt => runtime_pm.rst}  |  234 +-
+ Documentation/power/{s2ram.txt => s2ram.rst}  |   20 +-
+ ...hotplug.txt => suspend-and-cpuhotplug.rst} |   42 +-
+ ...errupts.txt => suspend-and-interrupts.rst} |    2 +
+ ...ap-files.txt => swsusp-and-swap-files.rst} |   17 +-
+ ...{swsusp-dmcrypt.txt => swsusp-dmcrypt.rst} |  120 +-
+ .../power/{swsusp.txt => swsusp.rst}          |  639 ++--
+ .../power/{tricks.txt => tricks.rst}          |    6 +-
+ ...serland-swsusp.txt => userland-swsusp.rst} |   55 +-
+ Documentation/power/{video.txt => video.rst}  |  156 +-
+ .../{bootwrapper.txt => bootwrapper.rst}      |   28 +-
+ .../{cpu_families.txt => cpu_families.rst}    |   23 +-
+ .../{cpu_features.txt => cpu_features.rst}    |    6 +-
+ Documentation/powerpc/{cxl.txt => cxl.rst}    |   46 +-
+ .../powerpc/{cxlflash.txt => cxlflash.rst}    |   10 +-
+ .../{DAWR-POWER9.txt => dawr-power9.rst}      |   15 +-
+ Documentation/powerpc/{dscr.txt => dscr.rst}  |   18 +-
+ ...ecovery.txt => eeh-pci-error-recovery.rst} |  108 +-
+ ...ed-dump.txt => firmware-assisted-dump.rst} |  119 +-
+ Documentation/powerpc/{hvcs.txt => hvcs.rst}  |  108 +-
+ Documentation/powerpc/index.rst               |   34 +
+ Documentation/powerpc/isa-versions.rst        |   15 +-
+ .../powerpc/{mpc52xx.txt => mpc52xx.rst}      |   12 +-
+ ...nv.txt => pci_iov_resource_on_powernv.rst} |   15 +-
+ .../powerpc/{pmu-ebb.txt => pmu-ebb.rst}      |    1 +
+ .../powerpc/{ptrace.txt => ptrace.rst}        |  169 +-
+ .../{qe_firmware.txt => qe_firmware.rst}      |   37 +-
+ .../{syscall64-abi.txt => syscall64-abi.rst}  |   29 +-
+ ...al_memory.txt => transactional_memory.rst} |   45 +-
+ Documentation/process/4.Coding.rst            |    2 +-
+ Documentation/process/coding-style.rst        |    2 +-
+ Documentation/process/submit-checklist.rst    |    2 +-
+ Documentation/process/submitting-drivers.rst  |    2 +-
+ Documentation/riscv/index.rst                 |   17 +
+ Documentation/riscv/{pmu.txt => pmu.rst}      |   98 +-
+ Documentation/s390/{3270.txt => 3270.rst}     |   85 +-
+ Documentation/s390/{cds.txt => cds.rst}       |  354 ++-
+ .../s390/{CommonIO => common_io.rst}          |   49 +-
+ Documentation/s390/{DASD => dasd.rst}         |   33 +-
+ .../{Debugging390.txt => debugging390.rst}    | 2599 ++++++++++-------
+ .../{driver-model.txt => driver-model.rst}    |  179 +-
+ Documentation/s390/index.rst                  |   30 +
+ .../s390/{monreader.txt => monreader.rst}     |   85 +-
+ Documentation/s390/{qeth.txt => qeth.rst}     |   36 +-
+ .../s390/{s390dbf.txt => s390dbf.rst}         |  616 +---
+ Documentation/s390/text_files.rst             |   11 +
+ .../s390/{vfio-ap.txt => vfio-ap.rst}         |  487 +--
+ .../s390/{vfio-ccw.txt => vfio-ccw.rst}       |   90 +-
+ .../s390/{zfcpdump.txt => zfcpdump.rst}       |    2 +
+ .../{completion.txt => completion.rst}        |   38 +-
+ Documentation/scheduler/index.rst             |   29 +
+ .../{sched-arch.txt => sched-arch.rst}        |   18 +-
+ .../{sched-bwc.txt => sched-bwc.rst}          |   30 +-
+ ...{sched-deadline.txt => sched-deadline.rst} |  297 +-
+ ...ed-design-CFS.txt => sched-design-CFS.rst} |   17 +-
+ .../{sched-domains.txt => sched-domains.rst}  |    8 +-
+ .../{sched-energy.txt => sched-energy.rst}    |   53 +-
+ ...-nice-design.txt => sched-nice-design.rst} |    6 +-
+ ...{sched-rt-group.txt => sched-rt-group.rst} |   30 +-
+ .../{sched-stats.txt => sched-stats.rst}      |   35 +-
+ Documentation/scheduler/text_files.rst        |    5 +
+ Documentation/target/index.rst                |   19 +
+ Documentation/target/scripts.rst              |   11 +
+ ...cm_mod_builder.txt => tcm_mod_builder.rst} |  200 +-
+ .../{tcmu-design.txt => tcmu-design.rst}      |  268 +-
+ .../timers/{highres.txt => highres.rst}       |   13 +-
+ Documentation/timers/{hpet.txt => hpet.rst}   |    4 +-
+ .../timers/{hrtimers.txt => hrtimers.rst}     |    6 +-
+ Documentation/timers/index.rst                |   22 +
+ Documentation/timers/{NO_HZ.txt => no_hz.rst} |   40 +-
+ .../{timekeeping.txt => timekeeping.rst}      |    3 +-
+ .../{timers-howto.txt => timers-howto.rst}    |   15 +-
+ Documentation/trace/coresight-cpu-debug.txt   |    2 +-
+ .../it_IT/kernel-hacking/hacking.rst          |    4 +-
+ .../it_IT/kernel-hacking/locking.rst          |    2 +-
+ .../translations/it_IT/process/4.Coding.rst   |    2 +-
+ .../it_IT/process/coding-style.rst            |    2 +-
+ .../it_IT/process/submit-checklist.rst        |    2 +-
+ .../translations/zh_CN/arm64/booting.txt      |    4 +-
+ .../zh_CN/arm64/legacy_instructions.txt       |    4 +-
+ .../translations/zh_CN/arm64/memory.txt       |    4 +-
+ .../zh_CN/arm64/silicon-errata.txt            |    4 +-
+ .../zh_CN/arm64/tagged-pointers.txt           |    4 +-
+ .../translations/zh_CN/oops-tracing.txt       |    2 +-
+ .../translations/zh_CN/process/4.Coding.rst   |    2 +-
+ .../zh_CN/process/coding-style.rst            |    2 +-
+ .../zh_CN/process/submit-checklist.rst        |    2 +-
+ .../zh_CN/process/submitting-drivers.rst      |    2 +-
+ Documentation/virtual/kvm/api.txt             |    2 +-
+ Documentation/vm/numa.rst                     |    6 +-
+ Documentation/vm/page_migration.rst           |    2 +-
+ Documentation/vm/unevictable-lru.rst          |    2 +-
+ ....txt => convert_drivers_to_kernel_api.rst} |  109 +-
+ .../watchdog/{hpwdt.txt => hpwdt.rst}         |   27 +-
+ Documentation/watchdog/index.rst              |   25 +
+ .../watchdog/{mlx-wdt.txt => mlx-wdt.rst}     |   24 +-
+ .../{pcwd-watchdog.txt => pcwd-watchdog.rst}  |   13 +-
+ .../{watchdog-api.txt => watchdog-api.rst}    |   76 +-
+ ...kernel-api.txt => watchdog-kernel-api.rst} |   91 +-
+ ...parameters.txt => watchdog-parameters.rst} |  672 +++--
+ .../{watchdog-pm.txt => watchdog-pm.rst}      |    3 +
+ Documentation/watchdog/{wdt.txt => wdt.rst}   |   31 +-
+ .../x86/x86_64/fake-numa-for-cpusets.rst      |    4 +-
+ Documentation/xilinx/{eemi.txt => eemi.rst}   |    8 +-
+ Documentation/xilinx/index.rst                |   17 +
+ Kconfig                                       |    2 +-
+ MAINTAINERS                                   |   38 +-
+ arch/arc/plat-eznps/Kconfig                   |    2 +-
+ arch/arm/Kconfig                              |    2 +-
+ arch/arm64/Kconfig                            |    2 +-
+ arch/arm64/include/asm/efi.h                  |    2 +-
+ arch/arm64/include/asm/image.h                |    2 +-
+ arch/arm64/include/uapi/asm/sigcontext.h      |    2 +-
+ arch/arm64/kernel/kexec_image.c               |    2 +-
+ arch/c6x/Kconfig                              |    2 +-
+ arch/m68k/q40/README                          |    2 +-
+ arch/microblaze/Kconfig.debug                 |    2 +-
+ arch/microblaze/Kconfig.platform              |    2 +-
+ arch/nds32/Kconfig                            |    2 +-
+ arch/openrisc/Kconfig                         |    2 +-
+ arch/powerpc/kernel/exceptions-64s.S          |    2 +-
+ arch/powerpc/sysdev/Kconfig                   |    2 +-
+ arch/riscv/Kconfig                            |    2 +-
+ arch/s390/Kconfig                             |    4 +-
+ arch/s390/include/asm/debug.h                 |  235 +-
+ arch/sh/Kconfig                               |    2 +-
+ arch/x86/Kconfig                              |    6 +-
+ block/Kconfig                                 |    2 +-
+ drivers/auxdisplay/Kconfig                    |    2 +-
+ drivers/block/Kconfig                         |    2 +-
+ drivers/cdrom/cdrom.c                         |    2 +-
+ drivers/cpufreq/Kconfig.x86                   |    2 +-
+ drivers/firmware/Kconfig                      |    2 +-
+ drivers/gpu/drm/Kconfig                       |    2 +-
+ drivers/gpu/drm/drm_modeset_lock.c            |    2 +-
+ drivers/gpu/drm/i915/i915_drv.h               |    2 +-
+ drivers/ide/Kconfig                           |   20 +-
+ drivers/ide/ide-cd.c                          |    2 +-
+ drivers/infiniband/core/user_mad.c            |    2 +-
+ drivers/infiniband/ulp/ipoib/Kconfig          |    2 +-
+ drivers/md/Kconfig                            |    2 +-
+ drivers/md/dm-init.c                          |    2 +-
+ drivers/md/dm-raid.c                          |    2 +-
+ drivers/media/usb/dvb-usb-v2/anysee.c         |    2 +-
+ drivers/misc/lkdtm/core.c                     |    2 +-
+ drivers/mtd/devices/Kconfig                   |    2 +-
+ drivers/net/ethernet/smsc/Kconfig             |    6 +-
+ drivers/net/wireless/intel/iwlegacy/Kconfig   |    4 +-
+ drivers/net/wireless/intel/iwlwifi/Kconfig    |    2 +-
+ drivers/opp/Kconfig                           |    2 +-
+ drivers/parport/Kconfig                       |    2 +-
+ drivers/pcmcia/ds.c                           |    2 +-
+ drivers/power/supply/power_supply_core.c      |    2 +-
+ drivers/regulator/core.c                      |    2 +-
+ drivers/s390/char/zcore.c                     |    2 +-
+ drivers/scsi/Kconfig                          |    4 +-
+ drivers/soc/fsl/qe/qe.c                       |    2 +-
+ drivers/staging/sm750fb/Kconfig               |    2 +-
+ drivers/tty/Kconfig                           |    2 +-
+ drivers/tty/hvc/hvcs.c                        |    2 +-
+ drivers/usb/misc/Kconfig                      |    4 +-
+ drivers/video/fbdev/Kconfig                   |   38 +-
+ drivers/video/fbdev/matrox/matroxfb_base.c    |    2 +-
+ drivers/video/fbdev/pxafb.c                   |    2 +-
+ drivers/video/fbdev/sh7760fb.c                |    2 +-
+ drivers/watchdog/Kconfig                      |    6 +-
+ drivers/watchdog/smsc37b787_wdt.c             |    2 +-
+ include/linux/cgroup-defs.h                   |    2 +-
+ include/linux/fault-inject.h                  |    2 +-
+ include/linux/interrupt.h                     |    2 +-
+ include/linux/iopoll.h                        |    4 +-
+ include/linux/lockdep.h                       |    2 +-
+ include/linux/mutex.h                         |    2 +-
+ include/linux/pci.h                           |    2 +-
+ include/linux/pm.h                            |    2 +-
+ include/linux/regmap.h                        |    4 +-
+ include/linux/rwsem.h                         |    2 +-
+ include/pcmcia/ds.h                           |    2 +-
+ include/pcmcia/ss.h                           |    2 +-
+ include/soc/fsl/qe/qe.h                       |    2 +-
+ include/uapi/linux/bpf.h                      |    2 +-
+ init/Kconfig                                  |    8 +-
+ kernel/cgroup/cpuset.c                        |    2 +-
+ kernel/locking/mutex.c                        |    2 +-
+ kernel/locking/rtmutex.c                      |    2 +-
+ kernel/power/Kconfig                          |    6 +-
+ kernel/sched/deadline.c                       |    2 +-
+ lib/Kconfig.debug                             |    6 +-
+ net/bridge/netfilter/Kconfig                  |    2 +-
+ net/ipv4/netfilter/Kconfig                    |    2 +-
+ net/ipv6/netfilter/Kconfig                    |    2 +-
+ net/netfilter/Kconfig                         |   16 +-
+ net/tipc/Kconfig                              |    2 +-
+ net/wireless/Kconfig                          |    2 +-
+ scripts/Kbuild.include                        |    4 +-
+ scripts/Makefile.host                         |    2 +-
+ scripts/checkpatch.pl                         |    8 +-
+ scripts/documentation-file-ref-check          |    2 +-
+ scripts/kconfig/symbol.c                      |    2 +-
+ .../tests/err_recursive_dep/expected_stderr   |   14 +-
+ security/device_cgroup.c                      |    2 +-
+ sound/oss/dmasound/Kconfig                    |    6 +-
+ sound/soc/sof/ops.h                           |    2 +-
+ tools/include/uapi/linux/bpf.h                |    2 +-
+ tools/testing/fault-injection/failcmd.sh      |    2 +-
+ 407 files changed, 14319 insertions(+), 10552 deletions(-)
+ rename Documentation/EDID/{HOWTO.txt => howto.rst} (83%)
+ rename Documentation/aoe/{aoe.txt => aoe.rst} (79%)
+ create mode 100644 Documentation/aoe/examples.rst
+ create mode 100644 Documentation/aoe/index.rst
+ rename Documentation/aoe/{todo.txt => todo.rst} (98%)
+ rename Documentation/arm64/{acpi_object_usage.txt => acpi_object_usage.rst} (84%)
+ rename Documentation/arm64/{arm-acpi.txt => arm-acpi.rst} (86%)
+ rename Documentation/arm64/{booting.txt => booting.rst} (86%)
+ rename Documentation/arm64/{cpu-feature-registers.txt => cpu-feature-registers.rst} (65%)
+ rename Documentation/arm64/{elf_hwcaps.txt => elf_hwcaps.rst} (92%)
+ rename Documentation/arm64/{hugetlbpage.txt => hugetlbpage.rst} (86%)
+ create mode 100644 Documentation/arm64/index.rst
+ rename Documentation/arm64/{legacy_instructions.txt => legacy_instructions.rst} (73%)
+ rename Documentation/arm64/{memory.txt => memory.rst} (36%)
+ rename Documentation/arm64/{pointer-authentication.txt => pointer-authentication.rst} (99%)
+ rename Documentation/arm64/{silicon-errata.txt => silicon-errata.rst} (55%)
+ rename Documentation/arm64/{sve.txt => sve.rst} (98%)
+ rename Documentation/arm64/{tagged-pointers.txt => tagged-pointers.rst} (94%)
+ delete mode 100644 Documentation/cdrom/Makefile
+ rename Documentation/cdrom/{cdrom-standard.tex => cdrom-standard.rst} (26%)
+ rename Documentation/cdrom/{ide-cd => ide-cd.rst} (82%)
+ create mode 100644 Documentation/cdrom/index.rst
+ rename Documentation/cdrom/{packet-writing.txt => packet-writing.rst} (91%)
+ rename Documentation/cgroup-v1/{blkio-controller.txt => blkio-controller.rst} (89%)
+ rename Documentation/cgroup-v1/{cgroups.txt => cgroups.rst} (88%)
+ rename Documentation/cgroup-v1/{cpuacct.txt => cpuacct.rst} (90%)
+ rename Documentation/cgroup-v1/{cpusets.txt => cpusets.rst} (90%)
+ rename Documentation/cgroup-v1/{devices.txt => devices.rst} (88%)
+ rename Documentation/cgroup-v1/{freezer-subsystem.txt => freezer-subsystem.rst} (95%)
+ rename Documentation/cgroup-v1/{hugetlb.txt => hugetlb.rst} (70%)
+ create mode 100644 Documentation/cgroup-v1/index.rst
+ rename Documentation/cgroup-v1/{memcg_test.txt => memcg_test.rst} (62%)
+ rename Documentation/cgroup-v1/{memory.txt => memory.rst} (71%)
+ rename Documentation/cgroup-v1/{net_cls.txt => net_cls.rst} (50%)
+ rename Documentation/cgroup-v1/{net_prio.txt => net_prio.rst} (71%)
+ rename Documentation/cgroup-v1/{pids.txt => pids.rst} (62%)
+ rename Documentation/cgroup-v1/{rdma.txt => rdma.rst} (79%)
+ rename Documentation/cpu-freq/{amd-powernow.txt => amd-powernow.rst} (91%)
+ rename Documentation/cpu-freq/{core.txt => core.rst} (66%)
+ rename Documentation/cpu-freq/{cpu-drivers.txt => cpu-drivers.rst} (57%)
+ rename Documentation/cpu-freq/{cpufreq-nforce2.txt => cpufreq-nforce2.rst} (65%)
+ rename Documentation/cpu-freq/{cpufreq-stats.txt => cpufreq-stats.rst} (31%)
+ rename Documentation/cpu-freq/{index.txt => index.rst} (37%)
+ rename Documentation/cpu-freq/{pcc-cpufreq.txt => pcc-cpufreq.rst} (80%)
+ rename Documentation/device-mapper/{cache-policies.txt => cache-policies.rst} (94%)
+ rename Documentation/device-mapper/{cache.txt => cache.rst} (61%)
+ rename Documentation/device-mapper/{delay.txt => delay.rst} (53%)
+ rename Documentation/device-mapper/{dm-crypt.txt => dm-crypt.rst} (87%)
+ rename Documentation/device-mapper/{dm-flakey.txt => dm-flakey.rst} (60%)
+ rename Documentation/device-mapper/{dm-init.txt => dm-init.rst} (69%)
+ rename Documentation/device-mapper/{dm-integrity.txt => dm-integrity.rst} (90%)
+ rename Documentation/device-mapper/{dm-io.txt => dm-io.rst} (92%)
+ rename Documentation/device-mapper/{dm-log.txt => dm-log.rst} (90%)
+ rename Documentation/device-mapper/{dm-queue-length.txt => dm-queue-length.rst} (76%)
+ rename Documentation/device-mapper/{dm-raid.txt => dm-raid.rst} (71%)
+ rename Documentation/device-mapper/{dm-service-time.txt => dm-service-time.rst} (60%)
+ rename Documentation/device-mapper/{dm-uevent.txt => dm-uevent.rst} (31%)
+ rename Documentation/device-mapper/{dm-zoned.txt => dm-zoned.rst} (97%)
+ rename Documentation/device-mapper/{era.txt => era.rst} (70%)
+ create mode 100644 Documentation/device-mapper/index.rst
+ rename Documentation/device-mapper/{kcopyd.txt => kcopyd.rst} (93%)
+ rename Documentation/device-mapper/{linear.txt => linear.rst} (18%)
+ rename Documentation/device-mapper/{log-writes.txt => log-writes.rst} (61%)
+ rename Documentation/device-mapper/{persistent-data.txt => persistent-data.rst} (98%)
+ rename Documentation/device-mapper/{snapshot.txt => snapshot.rst} (62%)
+ rename Documentation/device-mapper/{statistics.txt => statistics.rst} (87%)
+ rename Documentation/device-mapper/{striped.txt => striped.rst} (32%)
+ rename Documentation/device-mapper/{switch.txt => switch.rst} (84%)
+ rename Documentation/device-mapper/{thin-provisioning.txt => thin-provisioning.rst} (92%)
+ rename Documentation/device-mapper/{unstriped.txt => unstriped.rst} (60%)
+ rename Documentation/device-mapper/{verity.txt => verity.rst} (98%)
+ rename Documentation/device-mapper/{writecache.txt => writecache.rst} (96%)
+ rename Documentation/device-mapper/{zero.txt => zero.rst} (83%)
+ rename Documentation/{pps/pps.txt => driver-api/pps.rst} (89%)
+ rename Documentation/{ptp/ptp.txt => driver-api/ptp.rst} (88%)
+ rename Documentation/fault-injection/{fault-injection.txt => fault-injection.rst} (68%)
+ create mode 100644 Documentation/fault-injection/index.rst
+ rename Documentation/fault-injection/{notifier-error-inject.txt => notifier-error-inject.rst} (83%)
+ rename Documentation/fault-injection/{nvme-fault-injection.txt => nvme-fault-injection.rst} (19%)
+ rename Documentation/fault-injection/{provoke-crashes.txt => provoke-crashes.rst} (45%)
+ rename Documentation/fb/{api.txt => api.rst} (97%)
+ rename Documentation/fb/{arkfb.txt => arkfb.rst} (92%)
+ rename Documentation/fb/{aty128fb.txt => aty128fb.rst} (61%)
+ rename Documentation/fb/{cirrusfb.txt => cirrusfb.rst} (75%)
+ rename Documentation/fb/{cmap_xfbdev.txt => cmap_xfbdev.rst} (50%)
+ rename Documentation/fb/{deferred_io.txt => deferred_io.rst} (86%)
+ rename Documentation/fb/{efifb.txt => efifb.rst} (75%)
+ rename Documentation/fb/{ep93xx-fb.txt => ep93xx-fb.rst} (85%)
+ rename Documentation/fb/{fbcon.txt => fbcon.rst} (69%)
+ rename Documentation/fb/{framebuffer.txt => framebuffer.rst} (92%)
+ rename Documentation/fb/{gxfb.txt => gxfb.rst} (60%)
+ create mode 100644 Documentation/fb/index.rst
+ rename Documentation/fb/{intel810.txt => intel810.rst} (83%)
+ rename Documentation/fb/{intelfb.txt => intelfb.rst} (73%)
+ rename Documentation/fb/{internals.txt => internals.rst} (82%)
+ rename Documentation/fb/{lxfb.txt => lxfb.rst} (60%)
+ rename Documentation/fb/{matroxfb.txt => matroxfb.rst} (32%)
+ rename Documentation/fb/{metronomefb.txt => metronomefb.rst} (98%)
+ rename Documentation/fb/{modedb.txt => modedb.rst} (87%)
+ rename Documentation/fb/{pvr2fb.txt => pvr2fb.rst} (36%)
+ rename Documentation/fb/{pxafb.txt => pxafb.rst} (78%)
+ rename Documentation/fb/{s3fb.txt => s3fb.rst} (94%)
+ rename Documentation/fb/{sa1100fb.txt => sa1100fb.rst} (64%)
+ rename Documentation/fb/{sh7760fb.txt => sh7760fb.rst} (39%)
+ rename Documentation/fb/{sisfb.txt => sisfb.rst} (85%)
+ rename Documentation/fb/{sm501.txt => sm501.rst} (65%)
+ rename Documentation/fb/{sm712fb.txt => sm712fb.rst} (59%)
+ rename Documentation/fb/{sstfb.txt => sstfb.rst} (28%)
+ rename Documentation/fb/{tgafb.txt => tgafb.rst} (71%)
+ rename Documentation/fb/{tridentfb.txt => tridentfb.rst} (70%)
+ rename Documentation/fb/{udlfb.txt => udlfb.rst} (77%)
+ rename Documentation/fb/{uvesafb.txt => uvesafb.rst} (52%)
+ rename Documentation/fb/{vesafb.txt => vesafb.rst} (57%)
+ rename Documentation/fb/{viafb.txt => viafb.rst} (18%)
+ rename Documentation/fb/{vt8623fb.txt => vt8623fb.rst} (85%)
+ rename Documentation/fpga/{dfl.txt => dfl.rst} (89%)
+ create mode 100644 Documentation/fpga/index.rst
+ create mode 100644 Documentation/ide/changelogs.rst
+ rename Documentation/ide/{ide-tape.txt => ide-tape.rst} (83%)
+ rename Documentation/ide/{ide.txt => ide.rst} (72%)
+ create mode 100644 Documentation/ide/index.rst
+ rename Documentation/ide/{warm-plug-howto.txt => warm-plug-howto.rst} (61%)
+ rename Documentation/infiniband/{core_locking.txt => core_locking.rst} (78%)
+ create mode 100644 Documentation/infiniband/index.rst
+ rename Documentation/infiniband/{ipoib.txt => ipoib.rst} (90%)
+ rename Documentation/infiniband/{opa_vnic.txt => opa_vnic.rst} (63%)
+ rename Documentation/infiniband/{sysfs.txt => sysfs.rst} (69%)
+ rename Documentation/infiniband/{tag_matching.txt => tag_matching.rst} (98%)
+ rename Documentation/infiniband/{user_mad.txt => user_mad.rst} (90%)
+ rename Documentation/infiniband/{user_verbs.txt => user_verbs.rst} (93%)
+ rename Documentation/kbuild/{headers_install.txt => headers_install.rst} (96%)
+ create mode 100644 Documentation/kbuild/index.rst
+ create mode 100644 Documentation/kbuild/issues.rst
+ rename Documentation/kbuild/{kbuild.txt => kbuild.rst} (72%)
+ rename Documentation/kbuild/{kconfig-language.txt => kconfig-language.rst} (85%)
+ rename Documentation/kbuild/{kconfig-macro-language.txt => kconfig-macro-language.rst} (94%)
+ rename Documentation/kbuild/{kconfig.txt => kconfig.rst} (80%)
+ rename Documentation/kbuild/{makefiles.txt => makefiles.rst} (83%)
+ rename Documentation/kbuild/{modules.txt => modules.rst} (84%)
+ create mode 100644 Documentation/kdump/index.rst
+ rename Documentation/kdump/{kdump.txt => kdump.rst} (91%)
+ rename Documentation/kdump/{vmcoreinfo.txt => vmcoreinfo.rst} (95%)
+ create mode 100644 Documentation/locking/index.rst
+ rename Documentation/locking/{lockdep-design.txt => lockdep-design.rst} (93%)
+ rename Documentation/locking/{lockstat.txt => lockstat.rst} (41%)
+ rename Documentation/locking/{locktorture.txt => locktorture.rst} (57%)
+ rename Documentation/locking/{mutex-design.txt => mutex-design.rst} (94%)
+ rename Documentation/locking/{rt-mutex-design.txt => rt-mutex-design.rst} (91%)
+ rename Documentation/locking/{rt-mutex.txt => rt-mutex.rst} (71%)
+ rename Documentation/locking/{spinlocks.txt => spinlocks.rst} (89%)
+ rename Documentation/locking/{ww-mutex-design.txt => ww-mutex-design.rst} (93%)
+ create mode 100644 Documentation/mic/index.rst
+ rename Documentation/mic/{mic_overview.txt => mic_overview.rst} (96%)
+ rename Documentation/mic/{scif_overview.txt => scif_overview.rst} (76%)
+ rename Documentation/netlabel/{cipso_ipv4.txt => cipso_ipv4.rst} (87%)
+ create mode 100644 Documentation/netlabel/draft_ietf.rst
+ create mode 100644 Documentation/netlabel/index.rst
+ rename Documentation/netlabel/{introduction.txt => introduction.rst} (91%)
+ rename Documentation/netlabel/{lsm_interface.txt => lsm_interface.rst} (88%)
+ rename Documentation/pcmcia/{devicetable.txt => devicetable.rst} (97%)
+ rename Documentation/pcmcia/{driver-changes.txt => driver-changes.rst} (90%)
+ rename Documentation/pcmcia/{driver.txt => driver.rst} (66%)
+ create mode 100644 Documentation/pcmcia/index.rst
+ rename Documentation/pcmcia/{locking.txt => locking.rst} (81%)
+ rename Documentation/power/{apm-acpi.txt => apm-acpi.rst} (87%)
+ rename Documentation/power/{basic-pm-debugging.txt => basic-pm-debugging.rst} (87%)
+ rename Documentation/power/{charger-manager.txt => charger-manager.rst} (78%)
+ rename Documentation/power/{drivers-testing.txt => drivers-testing.rst} (86%)
+ rename Documentation/power/{energy-model.txt => energy-model.rst} (74%)
+ rename Documentation/power/{freezing-of-tasks.txt => freezing-of-tasks.rst} (75%)
+ create mode 100644 Documentation/power/index.rst
+ rename Documentation/power/{interface.txt => interface.rst} (84%)
+ rename Documentation/power/{opp.txt => opp.rst} (78%)
+ rename Documentation/power/{pci.txt => pci.rst} (97%)
+ rename Documentation/power/{pm_qos_interface.txt => pm_qos_interface.rst} (62%)
+ rename Documentation/power/{power_supply_class.txt => power_supply_class.rst} (46%)
+ rename Documentation/power/powercap/{powercap.txt => powercap.rst} (40%)
+ rename Documentation/power/regulator/{consumer.txt => consumer.rst} (61%)
+ rename Documentation/power/regulator/{design.txt => design.rst} (86%)
+ rename Documentation/power/regulator/{machine.txt => machine.rst} (75%)
+ rename Documentation/power/regulator/{overview.txt => overview.rst} (79%)
+ rename Documentation/power/regulator/{regulator.txt => regulator.rst} (49%)
+ rename Documentation/power/{runtime_pm.txt => runtime_pm.rst} (89%)
+ rename Documentation/power/{s2ram.txt => s2ram.rst} (92%)
+ rename Documentation/power/{suspend-and-cpuhotplug.txt => suspend-and-cpuhotplug.rst} (90%)
+ rename Documentation/power/{suspend-and-interrupts.txt => suspend-and-interrupts.rst} (98%)
+ rename Documentation/power/{swsusp-and-swap-files.txt => swsusp-and-swap-files.rst} (83%)
+ rename Documentation/power/{swsusp-dmcrypt.txt => swsusp-dmcrypt.rst} (67%)
+ rename Documentation/power/{swsusp.txt => swsusp.rst} (20%)
+ rename Documentation/power/{tricks.txt => tricks.rst} (93%)
+ rename Documentation/power/{userland-swsusp.txt => userland-swsusp.rst} (85%)
+ rename Documentation/power/{video.txt => video.rst} (56%)
+ rename Documentation/powerpc/{bootwrapper.txt => bootwrapper.rst} (93%)
+ rename Documentation/powerpc/{cpu_families.txt => cpu_families.rst} (95%)
+ rename Documentation/powerpc/{cpu_features.txt => cpu_features.rst} (97%)
+ rename Documentation/powerpc/{cxl.txt => cxl.rst} (95%)
+ rename Documentation/powerpc/{cxlflash.txt => cxlflash.rst} (98%)
+ rename Documentation/powerpc/{DAWR-POWER9.txt => dawr-power9.rst} (95%)
+ rename Documentation/powerpc/{dscr.txt => dscr.rst} (91%)
+ rename Documentation/powerpc/{eeh-pci-error-recovery.txt => eeh-pci-error-recovery.rst} (82%)
+ rename Documentation/powerpc/{firmware-assisted-dump.txt => firmware-assisted-dump.rst} (80%)
+ rename Documentation/powerpc/{hvcs.txt => hvcs.rst} (91%)
+ create mode 100644 Documentation/powerpc/index.rst
+ rename Documentation/powerpc/{mpc52xx.txt => mpc52xx.rst} (91%)
+ rename Documentation/powerpc/{pci_iov_resource_on_powernv.txt => pci_iov_resource_on_powernv.rst} (97%)
+ rename Documentation/powerpc/{pmu-ebb.txt => pmu-ebb.rst} (99%)
+ rename Documentation/powerpc/{ptrace.txt => ptrace.rst} (48%)
+ rename Documentation/powerpc/{qe_firmware.txt => qe_firmware.rst} (95%)
+ rename Documentation/powerpc/{syscall64-abi.txt => syscall64-abi.rst} (82%)
+ rename Documentation/powerpc/{transactional_memory.txt => transactional_memory.rst} (93%)
+ create mode 100644 Documentation/riscv/index.rst
+ rename Documentation/riscv/{pmu.txt => pmu.rst} (77%)
+ rename Documentation/s390/{3270.txt => 3270.rst} (90%)
+ rename Documentation/s390/{cds.txt => cds.rst} (64%)
+ rename Documentation/s390/{CommonIO => common_io.rst} (87%)
+ rename Documentation/s390/{DASD => dasd.rst} (92%)
+ rename Documentation/s390/{Debugging390.txt => debugging390.rst} (43%)
+ rename Documentation/s390/{driver-model.txt => driver-model.rst} (73%)
+ create mode 100644 Documentation/s390/index.rst
+ rename Documentation/s390/{monreader.txt => monreader.rst} (81%)
+ rename Documentation/s390/{qeth.txt => qeth.rst} (62%)
+ rename Documentation/s390/{s390dbf.txt => s390dbf.rst} (18%)
+ create mode 100644 Documentation/s390/text_files.rst
+ rename Documentation/s390/{vfio-ap.txt => vfio-ap.rst} (72%)
+ rename Documentation/s390/{vfio-ccw.txt => vfio-ccw.rst} (89%)
+ rename Documentation/s390/{zfcpdump.txt => zfcpdump.rst} (97%)
+ rename Documentation/scheduler/{completion.txt => completion.rst} (94%)
+ create mode 100644 Documentation/scheduler/index.rst
+ rename Documentation/scheduler/{sched-arch.txt => sched-arch.rst} (81%)
+ rename Documentation/scheduler/{sched-bwc.txt => sched-bwc.rst} (90%)
+ rename Documentation/scheduler/{sched-deadline.txt => sched-deadline.rst} (88%)
+ rename Documentation/scheduler/{sched-design-CFS.txt => sched-design-CFS.rst} (97%)
+ rename Documentation/scheduler/{sched-domains.txt => sched-domains.rst} (97%)
+ rename Documentation/scheduler/{sched-energy.txt => sched-energy.rst} (96%)
+ rename Documentation/scheduler/{sched-nice-design.txt => sched-nice-design.rst} (98%)
+ rename Documentation/scheduler/{sched-rt-group.txt => sched-rt-group.rst} (95%)
+ rename Documentation/scheduler/{sched-stats.txt => sched-stats.rst} (91%)
+ create mode 100644 Documentation/scheduler/text_files.rst
+ create mode 100644 Documentation/target/index.rst
+ create mode 100644 Documentation/target/scripts.rst
+ rename Documentation/target/{tcm_mod_builder.txt => tcm_mod_builder.rst} (22%)
+ rename Documentation/target/{tcmu-design.txt => tcmu-design.rst} (69%)
+ rename Documentation/timers/{highres.txt => highres.rst} (98%)
+ rename Documentation/timers/{hpet.txt => hpet.rst} (91%)
+ rename Documentation/timers/{hrtimers.txt => hrtimers.rst} (98%)
+ create mode 100644 Documentation/timers/index.rst
+ rename Documentation/timers/{NO_HZ.txt => no_hz.rst} (93%)
+ rename Documentation/timers/{timekeeping.txt => timekeeping.rst} (98%)
+ rename Documentation/timers/{timers-howto.txt => timers-howto.rst} (93%)
  rename Documentation/watchdog/{convert_drivers_to_kernel_api.txt => convert_drivers_to_kernel_api.rst} (75%)
- rename Documentation/watchdog/{hpwdt.txt => hpwdt.rst} (79%)
+ rename Documentation/watchdog/{hpwdt.txt => hpwdt.rst} (78%)
  create mode 100644 Documentation/watchdog/index.rst
  rename Documentation/watchdog/{mlx-wdt.txt => mlx-wdt.rst} (78%)
  rename Documentation/watchdog/{pcwd-watchdog.txt => pcwd-watchdog.rst} (89%)
@@ -114,2002 +802,10 @@ Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
  rename Documentation/watchdog/{watchdog-parameters.txt => watchdog-parameters.rst} (42%)
  rename Documentation/watchdog/{watchdog-pm.txt => watchdog-pm.rst} (92%)
  rename Documentation/watchdog/{wdt.txt => wdt.rst} (68%)
+ rename Documentation/xilinx/{eemi.txt => eemi.rst} (92%)
+ create mode 100644 Documentation/xilinx/index.rst
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0092a453f7dc..3d072ca532bb 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5182,7 +5182,7 @@
- 			Default: 3 = cyan.
- 
- 	watchdog timers	[HW,WDT] For information on watchdog timers,
--			see Documentation/watchdog/watchdog-parameters.txt
-+			see Documentation/watchdog/watchdog-parameters.rst
- 			or other driver-specific files in the
- 			Documentation/watchdog/ directory.
- 
-diff --git a/Documentation/kernel-per-CPU-kthreads.txt b/Documentation/kernel-per-CPU-kthreads.txt
-index 23b0c8b20cd1..5623b9916411 100644
---- a/Documentation/kernel-per-CPU-kthreads.txt
-+++ b/Documentation/kernel-per-CPU-kthreads.txt
-@@ -348,7 +348,7 @@ To reduce its OS jitter, do at least one of the following:
- 2.	Boot with "nosoftlockup=0", which will also prevent these kthreads
- 	from being created.  Other related watchdog and softlockup boot
- 	parameters may be found in Documentation/admin-guide/kernel-parameters.rst
--	and Documentation/watchdog/watchdog-parameters.txt.
-+	and Documentation/watchdog/watchdog-parameters.rst.
- 3.	Echo a zero to /proc/sys/kernel/watchdog to disable the
- 	watchdog timer.
- 4.	Echo a large number of /proc/sys/kernel/watchdog_thresh in
-diff --git a/Documentation/watchdog/convert_drivers_to_kernel_api.txt b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
-similarity index 75%
-rename from Documentation/watchdog/convert_drivers_to_kernel_api.txt
-rename to Documentation/watchdog/convert_drivers_to_kernel_api.rst
-index 9fffb2958d13..dd934cc08e40 100644
---- a/Documentation/watchdog/convert_drivers_to_kernel_api.txt
-+++ b/Documentation/watchdog/convert_drivers_to_kernel_api.rst
-@@ -1,6 +1,8 @@
-+=========================================================
- Converting old watchdog drivers to the watchdog framework
-+=========================================================
-+
- by Wolfram Sang <w.sang@pengutronix.de>
--=========================================================
- 
- Before the watchdog framework came into the kernel, every driver had to
- implement the API on its own. Now, as the framework factored out the common
-@@ -69,16 +71,16 @@ Here is a overview of the functions and probably needed actions:
-   -ENOIOCTLCMD, the IOCTLs of the framework will be tried, too. Any other error
-   is directly given to the user.
- 
--Example conversion:
-+Example conversion::
- 
---static const struct file_operations s3c2410wdt_fops = {
---       .owner          = THIS_MODULE,
---       .llseek         = no_llseek,
---       .write          = s3c2410wdt_write,
---       .unlocked_ioctl = s3c2410wdt_ioctl,
---       .open           = s3c2410wdt_open,
---       .release        = s3c2410wdt_release,
---};
-+  -static const struct file_operations s3c2410wdt_fops = {
-+  -       .owner          = THIS_MODULE,
-+  -       .llseek         = no_llseek,
-+  -       .write          = s3c2410wdt_write,
-+  -       .unlocked_ioctl = s3c2410wdt_ioctl,
-+  -       .open           = s3c2410wdt_open,
-+  -       .release        = s3c2410wdt_release,
-+  -};
- 
- Check the functions for device-specific stuff and keep it for later
- refactoring. The rest can go.
-@@ -89,24 +91,24 @@ Remove the miscdevice
- 
- Since the file_operations are gone now, you can also remove the 'struct
- miscdevice'. The framework will create it on watchdog_dev_register() called by
--watchdog_register_device().
-+watchdog_register_device()::
- 
---static struct miscdevice s3c2410wdt_miscdev = {
---       .minor          = WATCHDOG_MINOR,
---       .name           = "watchdog",
---       .fops           = &s3c2410wdt_fops,
---};
-+  -static struct miscdevice s3c2410wdt_miscdev = {
-+  -       .minor          = WATCHDOG_MINOR,
-+  -       .name           = "watchdog",
-+  -       .fops           = &s3c2410wdt_fops,
-+  -};
- 
- 
- Remove obsolete includes and defines
- ------------------------------------
- 
- Because of the simplifications, a few defines are probably unused now. Remove
--them. Includes can be removed, too. For example:
-+them. Includes can be removed, too. For example::
- 
--- #include <linux/fs.h>
--- #include <linux/miscdevice.h> (if MODULE_ALIAS_MISCDEV is not used)
--- #include <linux/uaccess.h> (if no custom IOCTLs are used)
-+  - #include <linux/fs.h>
-+  - #include <linux/miscdevice.h> (if MODULE_ALIAS_MISCDEV is not used)
-+  - #include <linux/uaccess.h> (if no custom IOCTLs are used)
- 
- 
- Add the watchdog operations
-@@ -121,30 +123,30 @@ change the function header. Other changes are most likely not needed, because
- here simply happens the direct hardware access. If you have device-specific
- code left from the above steps, it should be refactored into these callbacks.
- 
--Here is a simple example:
-+Here is a simple example::
- 
--+static struct watchdog_ops s3c2410wdt_ops = {
--+       .owner = THIS_MODULE,
--+       .start = s3c2410wdt_start,
--+       .stop = s3c2410wdt_stop,
--+       .ping = s3c2410wdt_keepalive,
--+       .set_timeout = s3c2410wdt_set_heartbeat,
--+};
-+  +static struct watchdog_ops s3c2410wdt_ops = {
-+  +       .owner = THIS_MODULE,
-+  +       .start = s3c2410wdt_start,
-+  +       .stop = s3c2410wdt_stop,
-+  +       .ping = s3c2410wdt_keepalive,
-+  +       .set_timeout = s3c2410wdt_set_heartbeat,
-+  +};
- 
--A typical function-header change looks like:
-+A typical function-header change looks like::
- 
---static void s3c2410wdt_keepalive(void)
--+static int s3c2410wdt_keepalive(struct watchdog_device *wdd)
-- {
--...
--+
--+       return 0;
-- }
-+  -static void s3c2410wdt_keepalive(void)
-+  +static int s3c2410wdt_keepalive(struct watchdog_device *wdd)
-+   {
-+  ...
-+  +
-+  +       return 0;
-+   }
- 
--...
-+  ...
- 
---       s3c2410wdt_keepalive();
--+       s3c2410wdt_keepalive(&s3c2410_wdd);
-+  -       s3c2410wdt_keepalive();
-+  +       s3c2410wdt_keepalive(&s3c2410_wdd);
- 
- 
- Add the watchdog device
-@@ -159,12 +161,12 @@ static variables. Those have to be converted to use the members in
- watchdog_device. Note that the timeout values are unsigned int. Some drivers
- use signed int, so this has to be converted, too.
- 
--Here is a simple example for a watchdog device:
-+Here is a simple example for a watchdog device::
- 
--+static struct watchdog_device s3c2410_wdd = {
--+       .info = &s3c2410_wdt_ident,
--+       .ops = &s3c2410wdt_ops,
--+};
-+  +static struct watchdog_device s3c2410_wdd = {
-+  +       .info = &s3c2410_wdt_ident,
-+  +       .ops = &s3c2410wdt_ops,
-+  +};
- 
- 
- Handle the 'nowayout' feature
-@@ -173,12 +175,12 @@ Handle the 'nowayout' feature
- A few drivers use nowayout statically, i.e. there is no module parameter for it
- and only CONFIG_WATCHDOG_NOWAYOUT determines if the feature is going to be
- used. This needs to be converted by initializing the status variable of the
--watchdog_device like this:
-+watchdog_device like this::
- 
-         .status = WATCHDOG_NOWAYOUT_INIT_STATUS,
- 
- Most drivers, however, also allow runtime configuration of nowayout, usually
--by adding a module parameter. The conversion for this would be something like:
-+by adding a module parameter. The conversion for this would be something like::
- 
- 	watchdog_set_nowayout(&s3c2410_wdd, nowayout);
- 
-@@ -191,15 +193,15 @@ Register the watchdog device
- 
- Replace misc_register(&miscdev) with watchdog_register_device(&watchdog_dev).
- Make sure the return value gets checked and the error message, if present,
--still fits. Also convert the unregister case.
-+still fits. Also convert the unregister case::
- 
---       ret = misc_register(&s3c2410wdt_miscdev);
--+       ret = watchdog_register_device(&s3c2410_wdd);
-+  -       ret = misc_register(&s3c2410wdt_miscdev);
-+  +       ret = watchdog_register_device(&s3c2410_wdd);
- 
--...
-+  ...
- 
---       misc_deregister(&s3c2410wdt_miscdev);
--+       watchdog_unregister_device(&s3c2410_wdd);
-+  -       misc_deregister(&s3c2410wdt_miscdev);
-+  +       watchdog_unregister_device(&s3c2410_wdd);
- 
- 
- Update the Kconfig-entry
-@@ -207,7 +209,7 @@ Update the Kconfig-entry
- 
- The entry for the driver now needs to select WATCHDOG_CORE:
- 
--+       select WATCHDOG_CORE
-+  +       select WATCHDOG_CORE
- 
- 
- Create a patch and send it to upstream
-@@ -215,4 +217,3 @@ Create a patch and send it to upstream
- 
- Make sure you understood Documentation/process/submitting-patches.rst and send your patch to
- linux-watchdog@vger.kernel.org. We are looking forward to it :)
--
-diff --git a/Documentation/watchdog/hpwdt.txt b/Documentation/watchdog/hpwdt.rst
-similarity index 79%
-rename from Documentation/watchdog/hpwdt.txt
-rename to Documentation/watchdog/hpwdt.rst
-index aaa9e4b4bdcd..94a96371113e 100644
---- a/Documentation/watchdog/hpwdt.txt
-+++ b/Documentation/watchdog/hpwdt.rst
-@@ -1,7 +1,12 @@
-+===========================
-+HPE iLO NMI Watchdog Driver
-+===========================
-+
-+for iLO based ProLiant Servers
-+==============================
-+
- Last reviewed: 08/20/2018
- 
--                     HPE iLO NMI Watchdog Driver
--                   for iLO based ProLiant Servers
- 
-  The HPE iLO NMI Watchdog driver is a kernel module that provides basic
-  watchdog functionality and handler for the iLO "Generate NMI to System"
-@@ -20,23 +25,26 @@ Last reviewed: 08/20/2018
- 
-  The hpwdt driver also has the following module parameters:
- 
-- soft_margin - allows the user to set the watchdog timer value.
-+ ============  ================================================================
-+ soft_margin   allows the user to set the watchdog timer value.
-                Default value is 30 seconds.
-- timeout     - an alias of soft_margin.
-- pretimeout  - allows the user to set the watchdog pretimeout value.
-+ timeout       an alias of soft_margin.
-+ pretimeout    allows the user to set the watchdog pretimeout value.
-                This is the number of seconds before timeout when an
-                NMI is delivered to the system. Setting the value to
-                zero disables the pretimeout NMI.
-                Default value is 9 seconds.
-- nowayout    - basic watchdog parameter that does not allow the timer to
-+ nowayout      basic watchdog parameter that does not allow the timer to
-                be restarted or an impending ASR to be escaped.
-                Default value is set when compiling the kernel. If it is set
-                to "Y", then there is no way of disabling the watchdog once
-                it has been started.
-+ ============  ================================================================
- 
-- NOTE: More information about watchdog drivers in general, including the ioctl
-+ NOTE:
-+       More information about watchdog drivers in general, including the ioctl
-        interface to /dev/watchdog can be found in
--       Documentation/watchdog/watchdog-api.txt and Documentation/IPMI.txt.
-+       Documentation/watchdog/watchdog-api.rst and Documentation/IPMI.txt.
- 
-  Due to limitations in the iLO hardware, the NMI pretimeout if enabled,
-  can only be set to 9 seconds.  Attempts to set pretimeout to other
-@@ -63,4 +71,3 @@ Last reviewed: 08/20/2018
- 
-  The HPE iLO NMI Watchdog Driver and documentation were originally developed
-  by Tom Mingarelli.
--
-diff --git a/Documentation/watchdog/index.rst b/Documentation/watchdog/index.rst
-new file mode 100644
-index 000000000000..33a0de631e84
---- /dev/null
-+++ b/Documentation/watchdog/index.rst
-@@ -0,0 +1,25 @@
-+:orphan:
-+
-+======================
-+Linux Watchdog Support
-+======================
-+
-+.. toctree::
-+    :maxdepth: 1
-+
-+    hpwdt
-+    mlx-wdt
-+    pcwd-watchdog
-+    watchdog-api
-+    watchdog-kernel-api
-+    watchdog-parameters
-+    watchdog-pm
-+    wdt
-+    convert_drivers_to_kernel_api
-+
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/watchdog/mlx-wdt.txt b/Documentation/watchdog/mlx-wdt.rst
-similarity index 78%
-rename from Documentation/watchdog/mlx-wdt.txt
-rename to Documentation/watchdog/mlx-wdt.rst
-index 66eeb78505c3..bf5bafac47f0 100644
---- a/Documentation/watchdog/mlx-wdt.txt
-+++ b/Documentation/watchdog/mlx-wdt.rst
-@@ -1,5 +1,9 @@
--		Mellanox watchdog drivers
--		for x86 based system switches
-+=========================
-+Mellanox watchdog drivers
-+=========================
-+
-+for x86 based system switches
-+=============================
- 
- This driver provides watchdog functionality for various Mellanox
- Ethernet and Infiniband switch systems.
-@@ -9,16 +13,16 @@ Mellanox watchdog device is implemented in a programmable logic device.
- There are 2 types of HW watchdog implementations.
- 
- Type 1:
--Actual HW timeout can be defined as a power of 2 msec.
--e.g. timeout 20 sec will be rounded up to 32768 msec.
--The maximum timeout period is 32 sec (32768 msec.),
--Get time-left isn't supported
-+  Actual HW timeout can be defined as a power of 2 msec.
-+  e.g. timeout 20 sec will be rounded up to 32768 msec.
-+  The maximum timeout period is 32 sec (32768 msec.),
-+  Get time-left isn't supported
- 
- Type 2:
--Actual HW timeout is defined in sec. and it's the same as
--a user-defined timeout.
--Maximum timeout is 255 sec.
--Get time-left is supported.
-+  Actual HW timeout is defined in sec. and it's the same as
-+  a user-defined timeout.
-+  Maximum timeout is 255 sec.
-+  Get time-left is supported.
- 
- Type 1 HW watchdog implementation exist in old systems and
- all new systems have type 2 HW watchdog.
-diff --git a/Documentation/watchdog/pcwd-watchdog.txt b/Documentation/watchdog/pcwd-watchdog.rst
-similarity index 89%
-rename from Documentation/watchdog/pcwd-watchdog.txt
-rename to Documentation/watchdog/pcwd-watchdog.rst
-index b8e60a441a43..405e2a370082 100644
---- a/Documentation/watchdog/pcwd-watchdog.txt
-+++ b/Documentation/watchdog/pcwd-watchdog.rst
-@@ -1,8 +1,13 @@
-+===================================
-+Berkshire Products PC Watchdog Card
-+===================================
-+
- Last reviewed: 10/05/2007
- 
--                     Berkshire Products PC Watchdog Card
--                   Support for ISA Cards  Revision A and C
--           Documentation and Driver by Ken Hollis <kenji@bitgate.com>
-+Support for ISA Cards  Revision A and C
-+=======================================
-+
-+Documentation and Driver by Ken Hollis <kenji@bitgate.com>
- 
-  The PC Watchdog is a card that offers the same type of functionality that
-  the WDT card does, only it doesn't require an IRQ to run.  Furthermore,
-@@ -33,6 +38,7 @@ Last reviewed: 10/05/2007
- 	WDIOC_GETSUPPORT
- 		This returns the support of the card itself.  This
- 		returns in structure "PCWDS" which returns:
-+
- 			options = WDIOS_TEMPPANIC
- 				  (This card supports temperature)
- 			firmware_version = xxxx
-@@ -63,4 +69,3 @@ Last reviewed: 10/05/2007
- 
-  -- Ken Hollis
-     (kenji@bitgate.com)
--
-diff --git a/Documentation/watchdog/watchdog-api.txt b/Documentation/watchdog/watchdog-api.rst
-similarity index 80%
-rename from Documentation/watchdog/watchdog-api.txt
-rename to Documentation/watchdog/watchdog-api.rst
-index 0e62ba33b7fb..c6c1e9fa9f73 100644
---- a/Documentation/watchdog/watchdog-api.txt
-+++ b/Documentation/watchdog/watchdog-api.rst
-@@ -1,7 +1,10 @@
-+=============================
-+The Linux Watchdog driver API
-+=============================
-+
- Last reviewed: 10/05/2007
- 
- 
--The Linux Watchdog driver API.
- 
- Copyright 2002 Christer Weingel <wingel@nano-system.com>
- 
-@@ -10,7 +13,8 @@ driver which is (c) Copyright 2000 Jakob Oestergaard <jakob@ostenfeld.dk>
- 
- This document describes the state of the Linux 2.4.18 kernel.
- 
--Introduction:
-+Introduction
-+============
- 
- A Watchdog Timer (WDT) is a hardware circuit that can reset the
- computer system in case of a software fault.  You probably knew that
-@@ -30,7 +34,8 @@ drivers implement different, and sometimes incompatible, parts of it.
- This file is an attempt to document the existing usage and allow
- future driver writers to use it as a reference.
- 
--The simplest API:
-+The simplest API
-+================
- 
- All drivers support the basic mode of operation, where the watchdog
- activates as soon as /dev/watchdog is opened and will reboot unless
-@@ -54,7 +59,8 @@ after the timeout has passed. Watchdog devices also usually support
- the nowayout module parameter so that this option can be controlled at
- runtime.
- 
--Magic Close feature:
-+Magic Close feature
-+===================
- 
- If a driver supports "Magic Close", the driver will not disable the
- watchdog unless a specific magic character 'V' has been sent to
-@@ -64,7 +70,8 @@ will assume that the daemon (and userspace in general) died, and will
- stop pinging the watchdog without disabling it first.  This will then
- cause a reboot if the watchdog is not re-opened in sufficient time.
- 
--The ioctl API:
-+The ioctl API
-+=============
- 
- All conforming drivers also support an ioctl API.
- 
-@@ -73,7 +80,7 @@ Pinging the watchdog using an ioctl:
- All drivers that have an ioctl interface support at least one ioctl,
- KEEPALIVE.  This ioctl does exactly the same thing as a write to the
- watchdog device, so the main loop in the above program could be
--replaced with:
-+replaced with::
- 
- 	while (1) {
- 		ioctl(fd, WDIOC_KEEPALIVE, 0);
-@@ -82,14 +89,15 @@ replaced with:
- 
- the argument to the ioctl is ignored.
- 
--Setting and getting the timeout:
-+Setting and getting the timeout
-+===============================
- 
- For some drivers it is possible to modify the watchdog timeout on the
- fly with the SETTIMEOUT ioctl, those drivers have the WDIOF_SETTIMEOUT
- flag set in their option field.  The argument is an integer
- representing the timeout in seconds.  The driver returns the real
- timeout used in the same variable, and this timeout might differ from
--the requested one due to limitation of the hardware.
-+the requested one due to limitation of the hardware::
- 
-     int timeout = 45;
-     ioctl(fd, WDIOC_SETTIMEOUT, &timeout);
-@@ -99,18 +107,19 @@ This example might actually print "The timeout was set to 60 seconds"
- if the device has a granularity of minutes for its timeout.
- 
- Starting with the Linux 2.4.18 kernel, it is possible to query the
--current timeout using the GETTIMEOUT ioctl.
-+current timeout using the GETTIMEOUT ioctl::
- 
-     ioctl(fd, WDIOC_GETTIMEOUT, &timeout);
-     printf("The timeout was is %d seconds\n", timeout);
- 
--Pretimeouts:
-+Pretimeouts
-+===========
- 
- Some watchdog timers can be set to have a trigger go off before the
- actual time they will reset the system.  This can be done with an NMI,
- interrupt, or other mechanism.  This allows Linux to record useful
- information (like panic information and kernel coredumps) before it
--resets.
-+resets::
- 
-     pretimeout = 10;
-     ioctl(fd, WDIOC_SETPRETIMEOUT, &pretimeout);
-@@ -121,89 +130,113 @@ the pretimeout.  So, for instance, if you set the timeout to 60 seconds
- and the pretimeout to 10 seconds, the pretimeout will go off in 50
- seconds.  Setting a pretimeout to zero disables it.
- 
--There is also a get function for getting the pretimeout:
-+There is also a get function for getting the pretimeout::
- 
-     ioctl(fd, WDIOC_GETPRETIMEOUT, &timeout);
-     printf("The pretimeout was is %d seconds\n", timeout);
- 
- Not all watchdog drivers will support a pretimeout.
- 
--Get the number of seconds before reboot:
-+Get the number of seconds before reboot
-+=======================================
- 
- Some watchdog drivers have the ability to report the remaining time
- before the system will reboot. The WDIOC_GETTIMELEFT is the ioctl
--that returns the number of seconds before reboot.
-+that returns the number of seconds before reboot::
- 
-     ioctl(fd, WDIOC_GETTIMELEFT, &timeleft);
-     printf("The timeout was is %d seconds\n", timeleft);
- 
--Environmental monitoring:
-+Environmental monitoring
-+========================
- 
- All watchdog drivers are required return more information about the system,
- some do temperature, fan and power level monitoring, some can tell you
- the reason for the last reboot of the system.  The GETSUPPORT ioctl is
--available to ask what the device can do:
-+available to ask what the device can do::
- 
- 	struct watchdog_info ident;
- 	ioctl(fd, WDIOC_GETSUPPORT, &ident);
- 
- the fields returned in the ident struct are:
- 
-+	================	=============================================
-         identity		a string identifying the watchdog driver
- 	firmware_version	the firmware version of the card if available
- 	options			a flags describing what the device supports
-+	================	=============================================
- 
- the options field can have the following bits set, and describes what
- kind of information that the GET_STATUS and GET_BOOT_STATUS ioctls can
- return.   [FIXME -- Is this correct?]
- 
-+	================	=========================
- 	WDIOF_OVERHEAT		Reset due to CPU overheat
-+	================	=========================
- 
- The machine was last rebooted by the watchdog because the thermal limit was
--exceeded
-+exceeded:
- 
-+	==============		==========
- 	WDIOF_FANFAULT		Fan failed
-+	==============		==========
- 
- A system fan monitored by the watchdog card has failed
- 
-+	=============		================
- 	WDIOF_EXTERN1		External relay 1
-+	=============		================
- 
- External monitoring relay/source 1 was triggered. Controllers intended for
- real world applications include external monitoring pins that will trigger
- a reset.
- 
-+	=============		================
- 	WDIOF_EXTERN2		External relay 2
-+	=============		================
- 
- External monitoring relay/source 2 was triggered
- 
-+	================	=====================
- 	WDIOF_POWERUNDER	Power bad/power fault
-+	================	=====================
- 
- The machine is showing an undervoltage status
- 
-+	===============		=============================
- 	WDIOF_CARDRESET		Card previously reset the CPU
-+	===============		=============================
- 
- The last reboot was caused by the watchdog card
- 
-+	================	=====================
- 	WDIOF_POWEROVER		Power over voltage
-+	================	=====================
- 
- The machine is showing an overvoltage status. Note that if one level is
- under and one over both bits will be set - this may seem odd but makes
- sense.
- 
-+	===================	=====================
- 	WDIOF_KEEPALIVEPING	Keep alive ping reply
-+	===================	=====================
- 
- The watchdog saw a keepalive ping since it was last queried.
- 
-+	================	=======================
- 	WDIOF_SETTIMEOUT	Can set/get the timeout
-+	================	=======================
- 
- The watchdog can do pretimeouts.
- 
-+	================	================================
- 	WDIOF_PRETIMEOUT	Pretimeout (in seconds), get/set
-+	================	================================
- 
- 
- For those drivers that return any bits set in the option field, the
- GETSTATUS and GETBOOTSTATUS ioctls can be used to ask for the current
--status, and the status at the last reboot, respectively.  
-+status, and the status at the last reboot, respectively::
- 
-     int flags;
-     ioctl(fd, WDIOC_GETSTATUS, &flags);
-@@ -216,22 +249,23 @@ Note that not all devices support these two calls, and some only
- support the GETBOOTSTATUS call.
- 
- Some drivers can measure the temperature using the GETTEMP ioctl.  The
--returned value is the temperature in degrees fahrenheit.
-+returned value is the temperature in degrees fahrenheit::
- 
-     int temperature;
-     ioctl(fd, WDIOC_GETTEMP, &temperature);
- 
- Finally the SETOPTIONS ioctl can be used to control some aspects of
--the cards operation.
-+the cards operation::
- 
-     int options = 0;
-     ioctl(fd, WDIOC_SETOPTIONS, &options);
- 
- The following options are available:
- 
-+	=================	================================
- 	WDIOS_DISABLECARD	Turn off the watchdog timer
- 	WDIOS_ENABLECARD	Turn on the watchdog timer
- 	WDIOS_TEMPPANIC		Kernel panic on temperature trip
-+	=================	================================
- 
- [FIXME -- better explanations]
--
-diff --git a/Documentation/watchdog/watchdog-kernel-api.txt b/Documentation/watchdog/watchdog-kernel-api.rst
-similarity index 90%
-rename from Documentation/watchdog/watchdog-kernel-api.txt
-rename to Documentation/watchdog/watchdog-kernel-api.rst
-index 3a91ef5af044..864edbe932c1 100644
---- a/Documentation/watchdog/watchdog-kernel-api.txt
-+++ b/Documentation/watchdog/watchdog-kernel-api.rst
-@@ -1,5 +1,7 @@
--The Linux WatchDog Timer Driver Core kernel API.
- ===============================================
-+The Linux WatchDog Timer Driver Core kernel API
-+===============================================
-+
- Last reviewed: 12-Feb-2013
- 
- Wim Van Sebroeck <wim@iguana.be>
-@@ -9,7 +11,7 @@ Introduction
- This document does not describe what a WatchDog Timer (WDT) Driver or Device is.
- It also does not describe the API which can be used by user space to communicate
- with a WatchDog Timer. If you want to know this then please read the following
--file: Documentation/watchdog/watchdog-api.txt .
-+file: Documentation/watchdog/watchdog-api.rst .
- 
- So what does this document describe? It describes the API that can be used by
- WatchDog Timer Drivers that want to use the WatchDog Timer Driver Core
-@@ -23,10 +25,10 @@ The API
- Each watchdog timer driver that wants to use the WatchDog Timer Driver Core
- must #include <linux/watchdog.h> (you would have to do this anyway when
- writing a watchdog device driver). This include file contains following
--register/unregister routines:
-+register/unregister routines::
- 
--extern int watchdog_register_device(struct watchdog_device *);
--extern void watchdog_unregister_device(struct watchdog_device *);
-+	extern int watchdog_register_device(struct watchdog_device *);
-+	extern void watchdog_unregister_device(struct watchdog_device *);
- 
- The watchdog_register_device routine registers a watchdog timer device.
- The parameter of this routine is a pointer to a watchdog_device structure.
-@@ -40,9 +42,9 @@ The watchdog subsystem includes an registration deferral mechanism,
- which allows you to register an watchdog as early as you wish during
- the boot process.
- 
--The watchdog device structure looks like this:
-+The watchdog device structure looks like this::
- 
--struct watchdog_device {
-+  struct watchdog_device {
- 	int id;
- 	struct device *parent;
- 	const struct attribute_group **groups;
-@@ -62,9 +64,10 @@ struct watchdog_device {
- 	struct watchdog_core_data *wd_data;
- 	unsigned long status;
- 	struct list_head deferred;
--};
-+  };
- 
- It contains following fields:
-+
- * id: set by watchdog_register_device, id 0 is special. It has both a
-   /dev/watchdog0 cdev (dynamic major, minor 0) as well as the old
-   /dev/watchdog miscdev. The id is set automatically when calling
-@@ -114,9 +117,9 @@ It contains following fields:
- * deferred: entry in wtd_deferred_reg_list which is used to
-   register early initialized watchdogs.
- 
--The list of watchdog operations is defined as:
-+The list of watchdog operations is defined as::
- 
--struct watchdog_ops {
-+  struct watchdog_ops {
- 	struct module *owner;
- 	/* mandatory operations */
- 	int (*start)(struct watchdog_device *);
-@@ -129,7 +132,7 @@ struct watchdog_ops {
- 	unsigned int (*get_timeleft)(struct watchdog_device *);
- 	int (*restart)(struct watchdog_device *);
- 	long (*ioctl)(struct watchdog_device *, unsigned int, unsigned long);
--};
-+  };
- 
- It is important that you first define the module owner of the watchdog timer
- driver's operations. This module owner will be used to lock the module when
-@@ -138,6 +141,7 @@ module and /dev/watchdog is still open).
- 
- Some operations are mandatory and some are optional. The mandatory operations
- are:
-+
- * start: this is a pointer to the routine that starts the watchdog timer
-   device.
-   The routine needs a pointer to the watchdog timer device structure as a
-@@ -146,51 +150,64 @@ are:
- Not all watchdog timer hardware supports the same functionality. That's why
- all other routines/operations are optional. They only need to be provided if
- they are supported. These optional routines/operations are:
-+
- * stop: with this routine the watchdog timer device is being stopped.
-+
-   The routine needs a pointer to the watchdog timer device structure as a
-   parameter. It returns zero on success or a negative errno code for failure.
-   Some watchdog timer hardware can only be started and not be stopped. A
-   driver supporting such hardware does not have to implement the stop routine.
-+
-   If a driver has no stop function, the watchdog core will set WDOG_HW_RUNNING
-   and start calling the driver's keepalive pings function after the watchdog
-   device is closed.
-+
-   If a watchdog driver does not implement the stop function, it must set
-   max_hw_heartbeat_ms.
- * ping: this is the routine that sends a keepalive ping to the watchdog timer
-   hardware.
-+
-   The routine needs a pointer to the watchdog timer device structure as a
-   parameter. It returns zero on success or a negative errno code for failure.
-+
-   Most hardware that does not support this as a separate function uses the
-   start function to restart the watchdog timer hardware. And that's also what
-   the watchdog timer driver core does: to send a keepalive ping to the watchdog
-   timer hardware it will either use the ping operation (when available) or the
-   start operation (when the ping operation is not available).
-+
-   (Note: the WDIOC_KEEPALIVE ioctl call will only be active when the
-   WDIOF_KEEPALIVEPING bit has been set in the option field on the watchdog's
-   info structure).
- * status: this routine checks the status of the watchdog timer device. The
-   status of the device is reported with watchdog WDIOF_* status flags/bits.
-+
-   WDIOF_MAGICCLOSE and WDIOF_KEEPALIVEPING are reported by the watchdog core;
-   it is not necessary to report those bits from the driver. Also, if no status
-   function is provided by the driver, the watchdog core reports the status bits
-   provided in the bootstatus variable of struct watchdog_device.
-+
- * set_timeout: this routine checks and changes the timeout of the watchdog
-   timer device. It returns 0 on success, -EINVAL for "parameter out of range"
-   and -EIO for "could not write value to the watchdog". On success this
-   routine should set the timeout value of the watchdog_device to the
-   achieved timeout value (which may be different from the requested one
-   because the watchdog does not necessarily have a 1 second resolution).
-+
-   Drivers implementing max_hw_heartbeat_ms set the hardware watchdog heartbeat
-   to the minimum of timeout and max_hw_heartbeat_ms. Those drivers set the
-   timeout value of the watchdog_device either to the requested timeout value
-   (if it is larger than max_hw_heartbeat_ms), or to the achieved timeout value.
-   (Note: the WDIOF_SETTIMEOUT needs to be set in the options field of the
-   watchdog's info structure).
-+
-   If the watchdog driver does not have to perform any action but setting the
-   watchdog_device.timeout, this callback can be omitted.
-+
-   If set_timeout is not provided but, WDIOF_SETTIMEOUT is set, the watchdog
-   infrastructure updates the timeout value of the watchdog_device internally
-   to the requested value.
-+
-   If the pretimeout feature is used (WDIOF_PRETIMEOUT), then set_timeout must
-   also take care of checking if pretimeout is still valid and set up the timer
-   accordingly. This can't be done in the core without races, so it is the
-@@ -201,13 +218,16 @@ they are supported. These optional routines/operations are:
-   seconds before the actual timeout would happen. It returns 0 on success,
-   -EINVAL for "parameter out of range" and -EIO for "could not write value to
-   the watchdog". A value of 0 disables pretimeout notification.
-+
-   (Note: the WDIOF_PRETIMEOUT needs to be set in the options field of the
-   watchdog's info structure).
-+
-   If the watchdog driver does not have to perform any action but setting the
-   watchdog_device.pretimeout, this callback can be omitted. That means if
-   set_pretimeout is not provided but WDIOF_PRETIMEOUT is set, the watchdog
-   infrastructure updates the pretimeout value of the watchdog_device internally
-   to the requested value.
-+
- * get_timeleft: this routines returns the time that's left before a reset.
- * restart: this routine restarts the machine. It returns 0 on success or a
-   negative errno code for failure.
-@@ -218,6 +238,7 @@ they are supported. These optional routines/operations are:
- 
- The status bits should (preferably) be set with the set_bit and clear_bit alike
- bit-operations. The status bits that are defined are:
-+
- * WDOG_ACTIVE: this status bit indicates whether or not a watchdog timer device
-   is active or not from user perspective. User space is expected to send
-   heartbeat requests to the driver while this flag is set.
-@@ -235,22 +256,30 @@ bit-operations. The status bits that are defined are:
- 
-   To set the WDOG_NO_WAY_OUT status bit (before registering your watchdog
-   timer device) you can either:
-+
-   * set it statically in your watchdog_device struct with
-+
- 	.status = WATCHDOG_NOWAYOUT_INIT_STATUS,
-+
-     (this will set the value the same as CONFIG_WATCHDOG_NOWAYOUT) or
--  * use the following helper function:
--  static inline void watchdog_set_nowayout(struct watchdog_device *wdd, int nowayout)
-+  * use the following helper function::
-+
-+	static inline void watchdog_set_nowayout(struct watchdog_device *wdd,
-+						 int nowayout)
-+
-+Note:
-+   The WatchDog Timer Driver Core supports the magic close feature and
-+   the nowayout feature. To use the magic close feature you must set the
-+   WDIOF_MAGICCLOSE bit in the options field of the watchdog's info structure.
- 
--Note: The WatchDog Timer Driver Core supports the magic close feature and
--the nowayout feature. To use the magic close feature you must set the
--WDIOF_MAGICCLOSE bit in the options field of the watchdog's info structure.
- The nowayout feature will overrule the magic close feature.
- 
- To get or set driver specific data the following two helper functions should be
--used:
-+used::
- 
--static inline void watchdog_set_drvdata(struct watchdog_device *wdd, void *data)
--static inline void *watchdog_get_drvdata(struct watchdog_device *wdd)
-+  static inline void watchdog_set_drvdata(struct watchdog_device *wdd,
-+					  void *data)
-+  static inline void *watchdog_get_drvdata(struct watchdog_device *wdd)
- 
- The watchdog_set_drvdata function allows you to add driver specific data. The
- arguments of this function are the watchdog device where you want to add the
-@@ -260,10 +289,11 @@ The watchdog_get_drvdata function allows you to retrieve driver specific data.
- The argument of this function is the watchdog device where you want to retrieve
- data from. The function returns the pointer to the driver specific data.
- 
--To initialize the timeout field, the following function can be used:
-+To initialize the timeout field, the following function can be used::
- 
--extern int watchdog_init_timeout(struct watchdog_device *wdd,
--                                  unsigned int timeout_parm, struct device *dev);
-+  extern int watchdog_init_timeout(struct watchdog_device *wdd,
-+                                   unsigned int timeout_parm,
-+                                   struct device *dev);
- 
- The watchdog_init_timeout function allows you to initialize the timeout field
- using the module timeout parameter or by retrieving the timeout-sec property from
-@@ -272,30 +302,33 @@ to set the default timeout value as timeout value in the watchdog_device and
- then use this function to set the user "preferred" timeout value.
- This routine returns zero on success and a negative errno code for failure.
- 
--To disable the watchdog on reboot, the user must call the following helper:
-+To disable the watchdog on reboot, the user must call the following helper::
- 
--static inline void watchdog_stop_on_reboot(struct watchdog_device *wdd);
-+  static inline void watchdog_stop_on_reboot(struct watchdog_device *wdd);
- 
- To disable the watchdog when unregistering the watchdog, the user must call
- the following helper. Note that this will only stop the watchdog if the
- nowayout flag is not set.
- 
--static inline void watchdog_stop_on_unregister(struct watchdog_device *wdd);
-+::
-+
-+  static inline void watchdog_stop_on_unregister(struct watchdog_device *wdd);
- 
- To change the priority of the restart handler the following helper should be
--used:
-+used::
- 
--void watchdog_set_restart_priority(struct watchdog_device *wdd, int priority);
-+  void watchdog_set_restart_priority(struct watchdog_device *wdd, int priority);
- 
- User should follow the following guidelines for setting the priority:
-+
- * 0: should be called in last resort, has limited restart capabilities
- * 128: default restart handler, use if no other handler is expected to be
-   available, and/or if restart is sufficient to restart the entire system
- * 255: highest priority, will preempt all other restart handlers
- 
--To raise a pretimeout notification, the following function should be used:
-+To raise a pretimeout notification, the following function should be used::
- 
--void watchdog_notify_pretimeout(struct watchdog_device *wdd)
-+  void watchdog_notify_pretimeout(struct watchdog_device *wdd)
- 
- The function can be called in the interrupt context. If watchdog pretimeout
- governor framework (kbuild CONFIG_WATCHDOG_PRETIMEOUT_GOV symbol) is enabled,
-diff --git a/Documentation/watchdog/watchdog-parameters.txt b/Documentation/watchdog/watchdog-parameters.rst
-similarity index 42%
-rename from Documentation/watchdog/watchdog-parameters.txt
-rename to Documentation/watchdog/watchdog-parameters.rst
-index 0b88e333f9e1..b121caae7798 100644
---- a/Documentation/watchdog/watchdog-parameters.txt
-+++ b/Documentation/watchdog/watchdog-parameters.rst
-@@ -1,410 +1,736 @@
-+==========================
-+WatchDog Module Parameters
-+==========================
-+
- This file provides information on the module parameters of many of
- the Linux watchdog drivers.  Watchdog driver parameter specs should
- be listed here unless the driver has its own driver-specific information
- file.
- 
--
- See Documentation/admin-guide/kernel-parameters.rst for information on
- providing kernel parameters for builtin drivers versus loadable
- modules.
- 
--
- -------------------------------------------------
-+
- acquirewdt:
--wdt_stop: Acquire WDT 'stop' io port (default 0x43)
--wdt_start: Acquire WDT 'start' io port (default 0x443)
--nowayout: Watchdog cannot be stopped once started
-+    wdt_stop:
-+	Acquire WDT 'stop' io port (default 0x43)
-+    wdt_start:
-+	Acquire WDT 'start' io port (default 0x443)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- advantechwdt:
--wdt_stop: Advantech WDT 'stop' io port (default 0x443)
--wdt_start: Advantech WDT 'start' io port (default 0x443)
--timeout: Watchdog timeout in seconds. 1<= timeout <=63, default=60.
--nowayout: Watchdog cannot be stopped once started
-+    wdt_stop:
-+	Advantech WDT 'stop' io port (default 0x443)
-+    wdt_start:
-+	Advantech WDT 'start' io port (default 0x443)
-+    timeout:
-+	Watchdog timeout in seconds. 1<= timeout <=63, default=60.
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- alim1535_wdt:
--timeout: Watchdog timeout in seconds. (0 < timeout < 18000, default=60
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. (0 < timeout < 18000, default=60
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- alim7101_wdt:
--timeout: Watchdog timeout in seconds. (1<=timeout<=3600, default=30
--use_gpio: Use the gpio watchdog (required by old cobalt boards).
-+    timeout:
-+	Watchdog timeout in seconds. (1<=timeout<=3600, default=30
-+    use_gpio:
-+	Use the gpio watchdog (required by old cobalt boards).
- 	default=0/off/no
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- ar7_wdt:
--margin: Watchdog margin in seconds (default=60)
--nowayout: Disable watchdog shutdown on close
-+    margin:
-+	Watchdog margin in seconds (default=60)
-+    nowayout:
-+	Disable watchdog shutdown on close
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- armada_37xx_wdt:
--timeout: Watchdog timeout in seconds. (default=120)
--nowayout: Disable watchdog shutdown on close
-+    timeout:
-+	Watchdog timeout in seconds. (default=120)
-+    nowayout:
-+	Disable watchdog shutdown on close
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- at91rm9200_wdt:
--wdt_time: Watchdog time in seconds. (default=5)
--nowayout: Watchdog cannot be stopped once started
-+    wdt_time:
-+	Watchdog time in seconds. (default=5)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- at91sam9_wdt:
--heartbeat: Watchdog heartbeats in seconds. (default = 15)
--nowayout: Watchdog cannot be stopped once started
-+    heartbeat:
-+	Watchdog heartbeats in seconds. (default = 15)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- bcm47xx_wdt:
--wdt_time: Watchdog time in seconds. (default=30)
--nowayout: Watchdog cannot be stopped once started
-+    wdt_time:
-+	Watchdog time in seconds. (default=30)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- coh901327_wdt:
--margin: Watchdog margin in seconds (default 60s)
-+    margin:
-+	Watchdog margin in seconds (default 60s)
-+
- -------------------------------------------------
-+
- cpu5wdt:
--port: base address of watchdog card, default is 0x91
--verbose: be verbose, default is 0 (no)
--ticks: count down ticks, default is 10000
-+    port:
-+	base address of watchdog card, default is 0x91
-+    verbose:
-+	be verbose, default is 0 (no)
-+    ticks:
-+	count down ticks, default is 10000
-+
- -------------------------------------------------
-+
- cpwd:
--wd0_timeout: Default watchdog0 timeout in 1/10secs
--wd1_timeout: Default watchdog1 timeout in 1/10secs
--wd2_timeout: Default watchdog2 timeout in 1/10secs
-+    wd0_timeout:
-+	Default watchdog0 timeout in 1/10secs
-+    wd1_timeout:
-+	Default watchdog1 timeout in 1/10secs
-+    wd2_timeout:
-+	Default watchdog2 timeout in 1/10secs
-+
- -------------------------------------------------
-+
- da9052wdt:
--timeout: Watchdog timeout in seconds. 2<= timeout <=131, default=2.048s
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. 2<= timeout <=131, default=2.048s
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- davinci_wdt:
--heartbeat: Watchdog heartbeat period in seconds from 1 to 600, default 60
-+    heartbeat:
-+	Watchdog heartbeat period in seconds from 1 to 600, default 60
-+
- -------------------------------------------------
-+
- ebc-c384_wdt:
--timeout: Watchdog timeout in seconds. (1<=timeout<=15300, default=60)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. (1<=timeout<=15300, default=60)
-+    nowayout:
-+	Watchdog cannot be stopped once started
-+
- -------------------------------------------------
-+
- ep93xx_wdt:
--nowayout: Watchdog cannot be stopped once started
--timeout: Watchdog timeout in seconds. (1<=timeout<=3600, default=TBD)
-+    nowayout:
-+	Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. (1<=timeout<=3600, default=TBD)
-+
- -------------------------------------------------
-+
- eurotechwdt:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
--io: Eurotech WDT io port (default=0x3f0)
--irq: Eurotech WDT irq (default=10)
--ev: Eurotech WDT event type (default is `int')
-+    io:
-+	Eurotech WDT io port (default=0x3f0)
-+    irq:
-+	Eurotech WDT irq (default=10)
-+    ev:
-+	Eurotech WDT event type (default is `int`)
-+
- -------------------------------------------------
-+
- gef_wdt:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- geodewdt:
--timeout: Watchdog timeout in seconds. 1<= timeout <=131, default=60.
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. 1<= timeout <=131, default=60.
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- i6300esb:
--heartbeat: Watchdog heartbeat in seconds. (1<heartbeat<2046, default=30)
--nowayout: Watchdog cannot be stopped once started
-+    heartbeat:
-+	Watchdog heartbeat in seconds. (1<heartbeat<2046, default=30)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- iTCO_wdt:
--heartbeat: Watchdog heartbeat in seconds.
-+    heartbeat:
-+	Watchdog heartbeat in seconds.
- 	(2<heartbeat<39 (TCO v1) or 613 (TCO v2), default=30)
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- iTCO_vendor_support:
--vendorsupport: iTCO vendor specific support mode, default=0 (none),
-+    vendorsupport:
-+	iTCO vendor specific support mode, default=0 (none),
- 	1=SuperMicro Pent3, 2=SuperMicro Pent4+, 911=Broken SMI BIOS
-+
- -------------------------------------------------
-+
- ib700wdt:
--timeout: Watchdog timeout in seconds. 0<= timeout <=30, default=30.
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. 0<= timeout <=30, default=30.
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- ibmasr:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- imx2_wdt:
--timeout: Watchdog timeout in seconds (default 60 s)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds (default 60 s)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- indydog:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- iop_wdt:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- it8712f_wdt:
--margin: Watchdog margin in seconds (default 60)
--nowayout: Disable watchdog shutdown on close
-+    margin:
-+	Watchdog margin in seconds (default 60)
-+    nowayout:
-+	Disable watchdog shutdown on close
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- it87_wdt:
--nogameport: Forbid the activation of game port, default=0
--nocir: Forbid the use of CIR (workaround for some buggy setups); set to 1 if
-+    nogameport:
-+	Forbid the activation of game port, default=0
-+    nocir:
-+	Forbid the use of CIR (workaround for some buggy setups); set to 1 if
- system resets despite watchdog daemon running, default=0
--exclusive: Watchdog exclusive device open, default=1
--timeout: Watchdog timeout in seconds, default=60
--testmode: Watchdog test mode (1 = no reboot), default=0
--nowayout: Watchdog cannot be stopped once started
-+    exclusive:
-+	Watchdog exclusive device open, default=1
-+    timeout:
-+	Watchdog timeout in seconds, default=60
-+    testmode:
-+	Watchdog test mode (1 = no reboot), default=0
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- ixp4xx_wdt:
--heartbeat: Watchdog heartbeat in seconds (default 60s)
--nowayout: Watchdog cannot be stopped once started
-+    heartbeat:
-+	Watchdog heartbeat in seconds (default 60s)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- ks8695_wdt:
--wdt_time: Watchdog time in seconds. (default=5)
--nowayout: Watchdog cannot be stopped once started
-+    wdt_time:
-+	Watchdog time in seconds. (default=5)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- machzwd:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
--action: after watchdog resets, generate:
-+    action:
-+	after watchdog resets, generate:
- 	0 = RESET(*)  1 = SMI  2 = NMI  3 = SCI
-+
- -------------------------------------------------
-+
- max63xx_wdt:
--heartbeat: Watchdog heartbeat period in seconds from 1 to 60, default 60
--nowayout: Watchdog cannot be stopped once started
-+    heartbeat:
-+	Watchdog heartbeat period in seconds from 1 to 60, default 60
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
--nodelay: Force selection of a timeout setting without initial delay
-+    nodelay:
-+	Force selection of a timeout setting without initial delay
- 	(max6373/74 only, default=0)
-+
- -------------------------------------------------
-+
- mixcomwd:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- mpc8xxx_wdt:
--timeout: Watchdog timeout in ticks. (0<timeout<65536, default=65535)
--reset: Watchdog Interrupt/Reset Mode. 0 = interrupt, 1 = reset
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in ticks. (0<timeout<65536, default=65535)
-+    reset:
-+	Watchdog Interrupt/Reset Mode. 0 = interrupt, 1 = reset
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- mv64x60_wdt:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- ni903x_wdt:
--timeout: Initial watchdog timeout in seconds (0<timeout<516, default=60)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Initial watchdog timeout in seconds (0<timeout<516, default=60)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- nic7018_wdt:
--timeout: Initial watchdog timeout in seconds (0<timeout<464, default=80)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Initial watchdog timeout in seconds (0<timeout<464, default=80)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- nuc900_wdt:
--heartbeat: Watchdog heartbeats in seconds.
-+    heartbeat:
-+	Watchdog heartbeats in seconds.
- 	(default = 15)
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- omap_wdt:
--timer_margin: initial watchdog timeout (in seconds)
--early_enable: Watchdog is started on module insertion (default=0
--nowayout: Watchdog cannot be stopped once started
-+    timer_margin:
-+	initial watchdog timeout (in seconds)
-+    early_enable:
-+	Watchdog is started on module insertion (default=0
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- orion_wdt:
--heartbeat: Initial watchdog heartbeat in seconds
--nowayout: Watchdog cannot be stopped once started
-+    heartbeat:
-+	Initial watchdog heartbeat in seconds
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- pc87413_wdt:
--io: pc87413 WDT I/O port (default: io).
--timeout: Watchdog timeout in minutes (default=timeout).
--nowayout: Watchdog cannot be stopped once started
-+    io:
-+	pc87413 WDT I/O port (default: io).
-+    timeout:
-+	Watchdog timeout in minutes (default=timeout).
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- pika_wdt:
--heartbeat: Watchdog heartbeats in seconds. (default = 15)
--nowayout: Watchdog cannot be stopped once started
-+    heartbeat:
-+	Watchdog heartbeats in seconds. (default = 15)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- pnx4008_wdt:
--heartbeat: Watchdog heartbeat period in seconds from 1 to 60, default 19
--nowayout: Set to 1 to keep watchdog running after device release
-+    heartbeat:
-+	Watchdog heartbeat period in seconds from 1 to 60, default 19
-+    nowayout:
-+	Set to 1 to keep watchdog running after device release
-+
- -------------------------------------------------
-+
- pnx833x_wdt:
--timeout: Watchdog timeout in Mhz. (68Mhz clock), default=2040000000 (30 seconds)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in Mhz. (68Mhz clock), default=2040000000 (30 seconds)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
--start_enabled: Watchdog is started on module insertion (default=1)
-+    start_enabled:
-+	Watchdog is started on module insertion (default=1)
-+
- -------------------------------------------------
-+
- rc32434_wdt:
--timeout: Watchdog timeout value, in seconds (default=20)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout value, in seconds (default=20)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- riowd:
--riowd_timeout: Watchdog timeout in minutes (default=1)
-+    riowd_timeout:
-+	Watchdog timeout in minutes (default=1)
-+
- -------------------------------------------------
-+
- s3c2410_wdt:
--tmr_margin: Watchdog tmr_margin in seconds. (default=15)
--tmr_atboot: Watchdog is started at boot time if set to 1, default=0
--nowayout: Watchdog cannot be stopped once started
-+    tmr_margin:
-+	Watchdog tmr_margin in seconds. (default=15)
-+    tmr_atboot:
-+	Watchdog is started at boot time if set to 1, default=0
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
--soft_noboot: Watchdog action, set to 1 to ignore reboots, 0 to reboot
--debug: Watchdog debug, set to >1 for debug, (default 0)
-+    soft_noboot:
-+	Watchdog action, set to 1 to ignore reboots, 0 to reboot
-+    debug:
-+	Watchdog debug, set to >1 for debug, (default 0)
-+
- -------------------------------------------------
-+
- sa1100_wdt:
--margin: Watchdog margin in seconds (default 60s)
-+    margin:
-+	Watchdog margin in seconds (default 60s)
-+
- -------------------------------------------------
-+
- sb_wdog:
--timeout: Watchdog timeout in microseconds (max/default 8388607 or 8.3ish secs)
-+    timeout:
-+	Watchdog timeout in microseconds (max/default 8388607 or 8.3ish secs)
-+
- -------------------------------------------------
-+
- sbc60xxwdt:
--wdt_stop: SBC60xx WDT 'stop' io port (default 0x45)
--wdt_start: SBC60xx WDT 'start' io port (default 0x443)
--timeout: Watchdog timeout in seconds. (1<=timeout<=3600, default=30)
--nowayout: Watchdog cannot be stopped once started
-+    wdt_stop:
-+	SBC60xx WDT 'stop' io port (default 0x45)
-+    wdt_start:
-+	SBC60xx WDT 'start' io port (default 0x443)
-+    timeout:
-+	Watchdog timeout in seconds. (1<=timeout<=3600, default=30)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- sbc7240_wdt:
--timeout: Watchdog timeout in seconds. (1<=timeout<=255, default=30)
--nowayout: Disable watchdog when closing device file
-+    timeout:
-+	Watchdog timeout in seconds. (1<=timeout<=255, default=30)
-+    nowayout:
-+	Disable watchdog when closing device file
-+
- -------------------------------------------------
-+
- sbc8360:
--timeout: Index into timeout table (0-63) (default=27 (60s))
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Index into timeout table (0-63) (default=27 (60s))
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- sbc_epx_c3:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- sbc_fitpc2_wdt:
--margin: Watchdog margin in seconds (default 60s)
--nowayout: Watchdog cannot be stopped once started
-+    margin:
-+	Watchdog margin in seconds (default 60s)
-+    nowayout:
-+	Watchdog cannot be stopped once started
-+
- -------------------------------------------------
-+
- sbsa_gwdt:
--timeout: Watchdog timeout in seconds. (default 10s)
--action: Watchdog action at the first stage timeout,
-+    timeout:
-+	Watchdog timeout in seconds. (default 10s)
-+    action:
-+	Watchdog action at the first stage timeout,
- 	set to 0 to ignore, 1 to panic. (default=0)
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- sc1200wdt:
--isapnp: When set to 0 driver ISA PnP support will be disabled (default=1)
--io: io port
--timeout: range is 0-255 minutes, default is 1
--nowayout: Watchdog cannot be stopped once started
-+    isapnp:
-+	When set to 0 driver ISA PnP support will be disabled (default=1)
-+    io:
-+	io port
-+    timeout:
-+	range is 0-255 minutes, default is 1
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- sc520_wdt:
--timeout: Watchdog timeout in seconds. (1 <= timeout <= 3600, default=30)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. (1 <= timeout <= 3600, default=30)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- sch311x_wdt:
--force_id: Override the detected device ID
--therm_trip: Should a ThermTrip trigger the reset generator
--timeout: Watchdog timeout in seconds. 1<= timeout <=15300, default=60
--nowayout: Watchdog cannot be stopped once started
-+    force_id:
-+	Override the detected device ID
-+    therm_trip:
-+	Should a ThermTrip trigger the reset generator
-+    timeout:
-+	Watchdog timeout in seconds. 1<= timeout <=15300, default=60
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- scx200_wdt:
--margin: Watchdog margin in seconds
--nowayout: Disable watchdog shutdown on close
-+    margin:
-+	Watchdog margin in seconds
-+    nowayout:
-+	Disable watchdog shutdown on close
-+
- -------------------------------------------------
-+
- shwdt:
--clock_division_ratio: Clock division ratio. Valid ranges are from 0x5 (1.31ms)
-+    clock_division_ratio:
-+	Clock division ratio. Valid ranges are from 0x5 (1.31ms)
- 	to 0x7 (5.25ms). (default=7)
--heartbeat: Watchdog heartbeat in seconds. (1 <= heartbeat <= 3600, default=30
--nowayout: Watchdog cannot be stopped once started
-+    heartbeat:
-+	Watchdog heartbeat in seconds. (1 <= heartbeat <= 3600, default=30
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- smsc37b787_wdt:
--timeout: range is 1-255 units, default is 60
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	range is 1-255 units, default is 60
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- softdog:
--soft_margin: Watchdog soft_margin in seconds.
-+    soft_margin:
-+	Watchdog soft_margin in seconds.
- 	(0 < soft_margin < 65536, default=60)
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
--soft_noboot: Softdog action, set to 1 to ignore reboots, 0 to reboot
-+    soft_noboot:
-+	Softdog action, set to 1 to ignore reboots, 0 to reboot
- 	(default=0)
-+
- -------------------------------------------------
-+
- stmp3xxx_wdt:
--heartbeat: Watchdog heartbeat period in seconds from 1 to 4194304, default 19
-+    heartbeat:
-+	Watchdog heartbeat period in seconds from 1 to 4194304, default 19
-+
- -------------------------------------------------
-+
- tegra_wdt:
--heartbeat: Watchdog heartbeats in seconds. (default = 120)
--nowayout: Watchdog cannot be stopped once started
-+    heartbeat:
-+	Watchdog heartbeats in seconds. (default = 120)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- ts72xx_wdt:
--timeout: Watchdog timeout in seconds. (1 <= timeout <= 8, default=8)
--nowayout: Disable watchdog shutdown on close
-+    timeout:
-+	Watchdog timeout in seconds. (1 <= timeout <= 8, default=8)
-+    nowayout:
-+	Disable watchdog shutdown on close
-+
- -------------------------------------------------
-+
- twl4030_wdt:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- txx9wdt:
--timeout: Watchdog timeout in seconds. (0<timeout<N, default=60)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. (0<timeout<N, default=60)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- uniphier_wdt:
--timeout: Watchdog timeout in power of two seconds.
-+    timeout:
-+	Watchdog timeout in power of two seconds.
- 	(1 <= timeout <= 128, default=64)
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- w83627hf_wdt:
--wdt_io: w83627hf/thf WDT io port (default 0x2E)
--timeout: Watchdog timeout in seconds. 1 <= timeout <= 255, default=60.
--nowayout: Watchdog cannot be stopped once started
-+    wdt_io:
-+	w83627hf/thf WDT io port (default 0x2E)
-+    timeout:
-+	Watchdog timeout in seconds. 1 <= timeout <= 255, default=60.
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- w83877f_wdt:
--timeout: Watchdog timeout in seconds. (1<=timeout<=3600, default=30)
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. (1<=timeout<=3600, default=30)
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- w83977f_wdt:
--timeout: Watchdog timeout in seconds (15..7635), default=45)
--testmode: Watchdog testmode (1 = no reboot), default=0
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds (15..7635), default=45)
-+    testmode:
-+	Watchdog testmode (1 = no reboot), default=0
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- wafer5823wdt:
--timeout: Watchdog timeout in seconds. 1 <= timeout <= 255, default=60.
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds. 1 <= timeout <= 255, default=60.
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- wdt285:
--soft_margin: Watchdog timeout in seconds (default=60)
-+    soft_margin:
-+	Watchdog timeout in seconds (default=60)
-+
- -------------------------------------------------
-+
- wdt977:
--timeout: Watchdog timeout in seconds (60..15300, default=60)
--testmode: Watchdog testmode (1 = no reboot), default=0
--nowayout: Watchdog cannot be stopped once started
-+    timeout:
-+	Watchdog timeout in seconds (60..15300, default=60)
-+    testmode:
-+	Watchdog testmode (1 = no reboot), default=0
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- wm831x_wdt:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- wm8350_wdt:
--nowayout: Watchdog cannot be stopped once started
-+    nowayout:
-+	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+
- -------------------------------------------------
-+
- sun4v_wdt:
--timeout_ms: Watchdog timeout in milliseconds 1..180000, default=60000)
--nowayout: Watchdog cannot be stopped once started
---------------------------------------------------
-+    timeout_ms:
-+	Watchdog timeout in milliseconds 1..180000, default=60000)
-+    nowayout:
-+	Watchdog cannot be stopped once started
-diff --git a/Documentation/watchdog/watchdog-pm.txt b/Documentation/watchdog/watchdog-pm.rst
-similarity index 92%
-rename from Documentation/watchdog/watchdog-pm.txt
-rename to Documentation/watchdog/watchdog-pm.rst
-index 7a4dd46e0d24..646e1f28f31f 100644
---- a/Documentation/watchdog/watchdog-pm.txt
-+++ b/Documentation/watchdog/watchdog-pm.rst
-@@ -1,5 +1,7 @@
-+===============================================
- The Linux WatchDog Timer Power Management Guide
- ===============================================
-+
- Last reviewed: 17-Dec-2018
- 
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-@@ -16,4 +18,5 @@ On resume, a watchdog timer shall be reset to its selected value to give
- userspace enough time to resume. [1] [2]
- 
- [1] https://patchwork.kernel.org/patch/10252209/
-+
- [2] https://patchwork.kernel.org/patch/10711625/
-diff --git a/Documentation/watchdog/wdt.txt b/Documentation/watchdog/wdt.rst
-similarity index 68%
-rename from Documentation/watchdog/wdt.txt
-rename to Documentation/watchdog/wdt.rst
-index ed2f0b860869..d97b0361535b 100644
---- a/Documentation/watchdog/wdt.txt
-+++ b/Documentation/watchdog/wdt.rst
-@@ -1,11 +1,14 @@
-+============================================================
-+WDT Watchdog Timer Interfaces For The Linux Operating System
-+============================================================
-+
- Last Reviewed: 10/05/2007
- 
--	WDT Watchdog Timer Interfaces For The Linux Operating System
--		Alan Cox <alan@lxorguk.ukuu.org.uk>
-+Alan Cox <alan@lxorguk.ukuu.org.uk>
- 
--	ICS	WDT501-P
--	ICS	WDT501-P (no fan tachometer)
--	ICS	WDT500-P
-+	- ICS	WDT501-P
-+	- ICS	WDT501-P (no fan tachometer)
-+	- ICS	WDT500-P
- 
- All the interfaces provide /dev/watchdog, which when open must be written
- to within a timeout or the machine will reboot. Each write delays the reboot
-@@ -21,19 +24,26 @@ degrees Fahrenheit. Each read returns a single byte giving the temperature.
- The third interface logs kernel messages on additional alert events.
- 
- The ICS ISA-bus wdt card cannot be safely probed for. Instead you need to
--pass IO address and IRQ boot parameters.  E.g.:
-+pass IO address and IRQ boot parameters.  E.g.::
-+
- 	wdt.io=0x240 wdt.irq=11
- 
- Other "wdt" driver parameters are:
-+
-+	===========	======================================================
- 	heartbeat	Watchdog heartbeat in seconds (default 60)
- 	nowayout	Watchdog cannot be stopped once started (kernel
--				build parameter)
-+			build parameter)
- 	tachometer	WDT501-P Fan Tachometer support (0=disable, default=0)
- 	type		WDT501-P Card type (500 or 501, default=500)
-+	===========	======================================================
- 
- Features
- --------
--		WDT501P		WDT500P
-+
-+================   =======	   =======
-+		   WDT501P	   WDT500P
-+================   =======	   =======
- Reboot Timer	   X               X
- External Reboot	   X	           X
- I/O Port Monitor   o		   o
-@@ -42,9 +52,12 @@ Fan Speed          X		   o
- Power Under	   X               o
- Power Over         X               o
- Overheat           X               o
-+================   =======	   =======
- 
- The external event interfaces on the WDT boards are not currently supported.
- Minor numbers are however allocated for it.
- 
- 
--Example Watchdog Driver:  see samples/watchdog/watchdog-simple.c
-+Example Watchdog Driver:
-+
-+	see samples/watchdog/watchdog-simple.c
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 08efe50266b5..a9abccb2644b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7027,7 +7027,7 @@ F:	drivers/media/usb/hdpvr/
- HEWLETT PACKARD ENTERPRISE ILO NMI WATCHDOG DRIVER
- M:	Jerry Hoemann <jerry.hoemann@hpe.com>
- S:	Supported
--F:	Documentation/watchdog/hpwdt.txt
-+F:	Documentation/watchdog/hpwdt.rst
- F:	drivers/watchdog/hpwdt.c
- 
- HEWLETT-PACKARD SMART ARRAY RAID DRIVER (hpsa)
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index ffe754539f5a..6cad0b33d7ad 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -18,7 +18,7 @@ menuconfig WATCHDOG
- 	  reboot the machine) and a driver for hardware watchdog boards, which
- 	  are more robust and can also keep track of the temperature inside
- 	  your computer. For details, read
--	  <file:Documentation/watchdog/watchdog-api.txt> in the kernel source.
-+	  <file:Documentation/watchdog/watchdog-api.rst> in the kernel source.
- 
- 	  The watchdog is usually used together with the watchdog daemon
- 	  which is available from
-@@ -1870,7 +1870,7 @@ config BOOKE_WDT
- 	  Watchdog driver for PowerPC Book-E chips, such as the Freescale
- 	  MPC85xx SOCs and the IBM PowerPC 440.
- 
--	  Please see Documentation/watchdog/watchdog-api.txt for
-+	  Please see Documentation/watchdog/watchdog-api.rst for
- 	  more information.
- 
- config BOOKE_WDT_DEFAULT_TIMEOUT
-@@ -2019,7 +2019,7 @@ config PCWATCHDOG
- 	  This card simply watches your kernel to make sure it doesn't freeze,
- 	  and if it does, it reboots your computer after a certain amount of
- 	  time. This driver is like the WDT501 driver but for different
--	  hardware. Please read <file:Documentation/watchdog/pcwd-watchdog.txt>. The PC
-+	  hardware. Please read <file:Documentation/watchdog/pcwd-watchdog.rst>. The PC
- 	  watchdog cards can be ordered from <http://www.berkprod.com/>.
- 
- 	  To compile this driver as a module, choose M here: the
-diff --git a/drivers/watchdog/smsc37b787_wdt.c b/drivers/watchdog/smsc37b787_wdt.c
-index 13c817ea1d6a..f5713030d0f7 100644
---- a/drivers/watchdog/smsc37b787_wdt.c
-+++ b/drivers/watchdog/smsc37b787_wdt.c
-@@ -36,7 +36,7 @@
-  *  mknod /dev/watchdog c 10 130
-  *
-  * For an example userspace keep-alive daemon, see:
-- *   Documentation/watchdog/wdt.txt
-+ *   Documentation/watchdog/wdt.rst
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 -- 
 2.21.0
+
 
