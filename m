@@ -2,131 +2,205 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB18C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 15:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA948C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 15:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDC72070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 15:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65852070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 15:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="T04STpls"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hyOankHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbfFIPKV (ORCPT
+        id S1728849AbfFIPQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 11:10:21 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:59515 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbfFIPKV (ORCPT
+        Sun, 9 Jun 2019 11:16:03 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34910 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbfFIPQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 11:10:21 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x59F9vDP015586;
-        Mon, 10 Jun 2019 00:09:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x59F9vDP015586
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560092997;
-        bh=0eo4lFsztS6xZOJdGXsOvDiKLKz0/o6ftdMYEqEAoTU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=T04STplsglT9qczTK8mYyn5afdvQA8elzsgrBWchugaCq1BRTj5O9oftLlqEX2tEK
-         LVd6LX9soEsS5XHO6aLT07NOJKU2HfzVBdxUBHYQag1kcMg1RmlCbaRLVVKKlup/h+
-         a6N2rFgRrnSYR7HXmioJyBVtiUoRPskGHENplK+36+/qu3JMftXIr2CKguvZJuR8Vz
-         5lf6QpvHOzuVqrz0m3oTh51sTngXfYwjQ0b5sj4zYHdFjNRybJX2bK5agQkS+eHY6r
-         hyiNYSlRDOiFBAdF2kVph0M8/IC6ddigJR5xxnQlzXuDXaI99VhxWSQ98obIxof56M
-         4G17wrlIM760g==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: remove unused pin_is_valid()
-Date:   Mon, 10 Jun 2019 00:09:53 +0900
-Message-Id: <20190609150953.6432-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 9 Jun 2019 11:16:02 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c6so5933662wml.0;
+        Sun, 09 Jun 2019 08:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=xM92I2oMiGz86blo54tMJZX9FcNKVrwE135SXsW4qjM=;
+        b=hyOankHVoxS8akM8dGjjwSiAPP/3VGja6/yQIvC5qkfu3lmWX5gyq4ayl25U2uVHFD
+         VQ9M2aoIdzlxDnhSj7gkSX0I8ayOZmILjv1pFCo8FsTSmCNTMlOX7J7nyPvNcyRV3J4u
+         gZm0W+D6T8vnPG36qtB5YaG70bZqENj+/C5ypbI6+aCVQEo50sWJi7xC5tEKo2N4/moD
+         3MCQXSvl/lHAmTyqxbVuwMYjEDax7tsPwT3vOrGKOhwHN/cDeo3ruARqaA3tJFEJXJj+
+         aEsvdBtLRRKXsGwHJ7kG346bukVMxgOFRsbGMf8znUFGKVtNa8RC06YKX1nksbuuR6r6
+         4ygw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=xM92I2oMiGz86blo54tMJZX9FcNKVrwE135SXsW4qjM=;
+        b=iNa8/6irPtZckxNfFiNBaz9H49nahFOMQF5U0E+PzX1xbrrgYwfTuBdjsXcfD3WXtT
+         fol6IRH2OwziQbSNwBHqTYVEHeOfxU4UA4jA/wJ93I+D9c4k8gymBtblYfALbtN1jiOL
+         FqlnP6w0AmG11G1RFWarE9OUl6Zu1+/u/Qq54/mU9bXlGh0yiPOjfRRS6fT+AL0HRc5A
+         7jh0D29Gjmhilu8/M+a6jwQaX/6KqzRQrnaCrNfTHxaFhjyFE+5ql0AVHaNCETJ9MJYS
+         8yQtiK8proLeCh4aQuYCNNRq2cMY4aenckoOmpAy9yP2ENEn68ImBLxZ9WwapJqtc9wK
+         QNEw==
+X-Gm-Message-State: APjAAAX4LqBEXZ04XGHZR88RwkPoIQOyM1yix1oqnAsjD2GQ++1JMIxB
+        AsbNPWuY/mTejfluQEg15uP3JIm9
+X-Google-Smtp-Source: APXvYqxkKmZuoiSlALK1AuVCeFg4hdD0oFsDNLDSg1/at5Hu7sjB2JpioZcxrwvj4j2Yd7kHqdALcA==
+X-Received: by 2002:a1c:c583:: with SMTP id v125mr9968204wmf.158.1560093359729;
+        Sun, 09 Jun 2019 08:15:59 -0700 (PDT)
+Received: from [192.168.1.17] (ckm12.neoplus.adsl.tpnet.pl. [83.31.88.12])
+        by smtp.gmail.com with ESMTPSA id p16sm12455926wrg.49.2019.06.09.08.15.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 09 Jun 2019 08:15:59 -0700 (PDT)
+Subject: Re: [PATCH v4 2/2] documention: leds: Add multicolor class
+ documentation
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190530181630.30373-1-dmurphy@ti.com>
+ <20190530181630.30373-2-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <d5bdf93b-2a6e-a773-ebb1-4850859ed147@gmail.com>
+Date:   Sun, 9 Jun 2019 17:15:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190530181630.30373-2-dmurphy@ti.com>
+Content-Type: multipart/mixed;
+ boundary="------------1E09EAE11F5DFB1537256FD3"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function was used by pin_request() to pointlessly double-check
-the pin validity, and it was the only user ever.
+This is a multi-part message in MIME format.
+--------------1E09EAE11F5DFB1537256FD3
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Since commit d2f6a1c6fb0e ("pinctrl: remove double pin validity
-check."), no one has ever used it.
+Hi Dan,
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+On 5/30/19 8:16 PM, Dan Murphy wrote:
+[...]
+> +Multicolor Class Brightness Control
+> +-----------------------------------
+> +The multicolor class will redirect the device drivers call back
+> +function for brightness control to the multicolor class brightness
+> +control function.
+> +
+> +The brightness level for each LED is calculated based on the color LED
+> +brightness setting divided by the color LED max brightness setting multiplied by
+> +the requested value.
+> +
+> +led_brightness = requested_value*(led_color_brightness/led_color_max_brightness)
+> +
+> +Example:
+> +Three LEDs are present in the group as defined in "Directory Layout Example"
+> +within this document.
+> +
+> +A user first writes the color LED brightness file with the brightness level that
+> +is neccesary to achieve a blueish violet output from the RGB LED group.
+> +
+> +echo 138 > /sys/class/leds/rgb:grouped_leds/red/brightness
+> +echo 43 > /sys/class/leds/rgb:grouped_leds/green/brightness
+> +echo 226 > /sys/class/leds/rgb:grouped_leds/blue/brightness
+> +
+> +red -
+> +	brightness = 138
+> +	max_brightness = 255
+> +green -
+> +	brightness = 43
+> +	max_brightness = 255
+> +blue -
+> +	brightness = 226
+> +	max_brightness = 255
+> +
+> +The user can control the brightness of that RGB group by writing the parent
+> +'brightness' control.  Assuming a parent max_brightness of 255 the user may want
+> +to dim the LED color group to half.  The user would write a value of 128 to the
+> +parent brightness file then the values written to each LED will be adjusted
+> +base on this value
+> +
+> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
+> +255
+> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
+> +
+> +adjusted_red_value = 128 * (138/255) = 69
+> +adjusted_green_value = 128 * (43/255) = 21
+> +adjusted_blue_value = 128 * (226/255) = 113
+> +
+> +Reading the parent brightness file will return the current brightness value of
+> +the color LED group.
 
- drivers/pinctrl/core.c          | 23 -----------------------
- include/linux/pinctrl/pinctrl.h | 10 ----------
- 2 files changed, 33 deletions(-)
+I've tested this algorithm with python script and at least on my LED 
+monitor it works as expected. Attached is the script I've come up with.
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index a64849a9d1b0..aeba6366fb13 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -177,29 +177,6 @@ const char *pin_get_name(struct pinctrl_dev *pctldev, const unsigned pin)
- 	return desc->name;
- }
- 
--/**
-- * pin_is_valid() - check if pin exists on controller
-- * @pctldev: the pin control device to check the pin on
-- * @pin: pin to check, use the local pin controller index number
-- *
-- * This tells us whether a certain pin exist on a certain pin controller or
-- * not. Pin lists may be sparse, so some pins may not exist.
-- */
--bool pin_is_valid(struct pinctrl_dev *pctldev, int pin)
--{
--	struct pin_desc *pindesc;
--
--	if (pin < 0)
--		return false;
--
--	mutex_lock(&pctldev->mutex);
--	pindesc = pin_desc_get(pctldev, pin);
--	mutex_unlock(&pctldev->mutex);
--
--	return pindesc != NULL;
--}
--EXPORT_SYMBOL_GPL(pin_is_valid);
--
- /* Deletes a range of pin descriptors */
- static void pinctrl_free_pindescs(struct pinctrl_dev *pctldev,
- 				  const struct pinctrl_pin_desc *pins,
-diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
-index e429e5d92dd6..34b10d112be6 100644
---- a/include/linux/pinctrl/pinctrl.h
-+++ b/include/linux/pinctrl/pinctrl.h
-@@ -166,7 +166,6 @@ extern struct pinctrl_dev *devm_pinctrl_register(struct device *dev,
- extern void devm_pinctrl_unregister(struct device *dev,
- 				struct pinctrl_dev *pctldev);
- 
--extern bool pin_is_valid(struct pinctrl_dev *pctldev, int pin);
- extern void pinctrl_add_gpio_range(struct pinctrl_dev *pctldev,
- 				struct pinctrl_gpio_range *range);
- extern void pinctrl_add_gpio_ranges(struct pinctrl_dev *pctldev,
-@@ -197,15 +196,6 @@ struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
- extern const char *pinctrl_dev_get_name(struct pinctrl_dev *pctldev);
- extern const char *pinctrl_dev_get_devname(struct pinctrl_dev *pctldev);
- extern void *pinctrl_dev_get_drvdata(struct pinctrl_dev *pctldev);
--#else
--
--struct pinctrl_dev;
--
--/* Sufficiently stupid default functions when pinctrl is not in use */
--static inline bool pin_is_valid(struct pinctrl_dev *pctldev, int pin)
--{
--	return pin >= 0;
--}
- 
- #endif /* !CONFIG_PINCTRL */
- 
+> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
+> +255
+> +
+> +echo 128 > /sys/class/leds/rgb:grouped_leds/brightness
+> +
+> +cat /sys/class/leds/rgb:grouped_leds/max_brightness
+> +128
+> +
+> +
+> 
+
 -- 
-2.17.1
+Best regards,
+Jacek Anaszewski
 
+--------------1E09EAE11F5DFB1537256FD3
+Content-Type: text/x-python;
+ name="led_color.py"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="led_color.py"
+
+#!/usr/bin/python3.5
+
+from PIL import Image
+import sys
+import time
+
+WIDTH = 500
+HEIGHT = 500
+
+def print_usage():
+        print ('Usage: led_color.py RED GREEN BLUE TOP_BRIGHTNESS')
+        sys.exit(0)
+
+def main():
+    if len(sys.argv) != 5:
+            print_usage()
+
+    MAX_R = int(sys.argv[4])
+    MAX_G = int(sys.argv[4])
+    MAX_B = int(sys.argv[4])
+
+    R = int(sys.argv[1])
+    G = int(sys.argv[2])
+    B = int(sys.argv[3])
+    TB = int(sys.argv[4])
+
+    for BR in range(1,TB+1):
+        OUT_R = int(BR * R / MAX_R)
+        OUT_G = int(BR * G / MAX_G)
+        OUT_B = int(BR * B / MAX_B)
+
+        print("red: {}, green: {}, blue: {}".format(OUT_R, OUT_G, OUT_B))
+
+        img = Image.new("RGB", (WIDTH,HEIGHT), (OUT_R,OUT_G,OUT_B))
+        img.show()
+        time.sleep(0.1)
+
+
+if __name__ == "__main__":
+        main()
+
+
+--------------1E09EAE11F5DFB1537256FD3--
