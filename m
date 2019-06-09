@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A366C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA674C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A948204EC
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C080E206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099228;
-	bh=/WDg0odzFRg+uZtPg1a00/xxONvr3PqkxaGzqEVXKOk=;
+	s=default; t=1560099231;
+	bh=QBWRgYfsn+O2itnjsFV3d+wF5N0UlcnE1/xsKhZMtSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJx1f7Bspbs+vUbfFGarwg4bvAjsxRiQQmdleqNY3cUbXidTOoqAmAh9KJZfs70mC
-	 xtGAtsLTNp+SPy31scKPK0QozpNfuvGj1dNDC4tEwpCqYFzwkWDfHVH64V6RpR9lH9
-	 /7VJqbsABEu4NK8FrvzspQfj3BTjA4Xt4rEp65S4=
+	b=TgT9tAl0lRnNrUNSnLmQAIYJPwWIierBOIHP2P3f+faIn3z2oe+xwJewUG0pY9e0r
+	 Wm6Sjypnxtuj1+XNGwnpjpM4i5AawRs21P3cjnVsan4oxsGaxpABgSa1inzZeg/sdj
+	 dvhNKkqtJS8jbxyhSF5AtDaof7wVahLbnDz/IioE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732486AbfFIQxr (ORCPT
+        id S1732495AbfFIQxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55128 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732469AbfFIQxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:46 -0400
+        id S1732469AbfFIQxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB463205ED;
-        Sun,  9 Jun 2019 16:53:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A5EC206C3;
+        Sun,  9 Jun 2019 16:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099225;
-        bh=/WDg0odzFRg+uZtPg1a00/xxONvr3PqkxaGzqEVXKOk=;
+        s=default; t=1560099227;
+        bh=QBWRgYfsn+O2itnjsFV3d+wF5N0UlcnE1/xsKhZMtSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UKjbSWopvpuGUT6leWLCHAbcHRkANsZQNsYLPHiRV5ycZvZ21ksDEPkU8AiLJwh1p
-         JkvCV9pRqSKNG5x+2vgvrPLJSfshYJYhO0s98HCeY4t8cyKgHTRoaOd++eZd6/Tt15
-         Kc4gNM5QstBDKOVlZER8KtxNe0soV+PIGEw+yE9g=
+        b=eMqIJhap570VstNZGKEClhuQ0WeXFqzFFtfQTbdgExCWa9ABFAHnNkzXgYLN6u7/6
+         BOL0xu+tkiJFDHivomvRq90BkEWzBUm9d6pwQSHM7NLk1h4HeKv6rvsyuk9C50Fv/c
+         lcHhZaR2++UlO+wTrKKsqIzQlQLrgAQlzwyoPKXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 53/83] binder: replace "%p" with "%pK"
-Date:   Sun,  9 Jun 2019 18:42:23 +0200
-Message-Id: <20190609164132.460238457@linuxfoundation.org>
+Subject: [PATCH 4.9 54/83] fs: prevent page refcount overflow in pipe_buf_get
+Date:   Sun,  9 Jun 2019 18:42:24 +0200
+Message-Id: <20190609164132.540348589@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -59,59 +61,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Todd Kjos <tkjos@android.com>
+From: Matthew Wilcox <willy@infradead.org>
 
-commit 8ca86f1639ec5890d400fff9211aca22d0a392eb upstream.
+commit 15fab63e1e57be9fdb5eec1bbc5916e9825e9acb upstream.
 
-The format specifier "%p" can leak kernel addresses. Use
-"%pK" instead. There were 4 remaining cases in binder.c.
+Change pipe_buf_get() to return a bool indicating whether it succeeded
+in raising the refcount of the page (if the thing in the pipe is a page).
+This removes another mechanism for overflowing the page refcount.  All
+callers converted to handle a failure.
 
-Signed-off-by: Todd Kjos <tkjos@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 [bwh: Backported to 4.9: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/android/binder.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/fuse/dev.c             |   12 ++++++------
+ fs/pipe.c                 |    4 ++--
+ fs/splice.c               |   12 ++++++++++--
+ include/linux/pipe_fs_i.h |   10 ++++++----
+ kernel/trace/trace.c      |    6 +++++-
+ 5 files changed, 29 insertions(+), 15 deletions(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -1260,7 +1260,7 @@ static void binder_transaction_buffer_re
- 	int debug_id = buffer->debug_id;
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1975,10 +1975,8 @@ static ssize_t fuse_dev_splice_write(str
+ 		rem += pipe->bufs[(pipe->curbuf + idx) & (pipe->buffers - 1)].len;
  
- 	binder_debug(BINDER_DEBUG_TRANSACTION,
--		     "%d buffer release %d, size %zd-%zd, failed at %p\n",
-+		     "%d buffer release %d, size %zd-%zd, failed at %pK\n",
- 		     proc->pid, buffer->debug_id,
- 		     buffer->data_size, buffer->offsets_size, failed_at);
+ 	ret = -EINVAL;
+-	if (rem < len) {
+-		pipe_unlock(pipe);
+-		goto out;
+-	}
++	if (rem < len)
++		goto out_free;
  
-@@ -2123,7 +2123,7 @@ static int binder_thread_write(struct bi
- 				}
- 			}
- 			binder_debug(BINDER_DEBUG_DEAD_BINDER,
--				     "%d:%d BC_DEAD_BINDER_DONE %016llx found %p\n",
-+				     "%d:%d BC_DEAD_BINDER_DONE %016llx found %pK\n",
- 				     proc->pid, thread->pid, (u64)cookie,
- 				     death);
- 			if (death == NULL) {
-@@ -3272,7 +3272,7 @@ static void print_binder_transaction(str
- 				     struct binder_transaction *t)
- {
- 	seq_printf(m,
--		   "%s %d: %p from %d:%d to %d:%d code %x flags %x pri %ld r%d",
-+		   "%s %d: %pK from %d:%d to %d:%d code %x flags %x pri %ld r%d",
- 		   prefix, t->debug_id, t,
- 		   t->from ? t->from->proc->pid : 0,
- 		   t->from ? t->from->pid : 0,
-@@ -3286,7 +3286,7 @@ static void print_binder_transaction(str
- 	if (t->buffer->target_node)
- 		seq_printf(m, " node %d",
- 			   t->buffer->target_node->debug_id);
--	seq_printf(m, " size %zd:%zd data %p\n",
-+	seq_printf(m, " size %zd:%zd data %pK\n",
- 		   t->buffer->data_size, t->buffer->offsets_size,
- 		   t->buffer->data);
+ 	rem = len;
+ 	while (rem) {
+@@ -1996,7 +1994,9 @@ static ssize_t fuse_dev_splice_write(str
+ 			pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
+ 			pipe->nrbufs--;
+ 		} else {
+-			pipe_buf_get(pipe, ibuf);
++			if (!pipe_buf_get(pipe, ibuf))
++				goto out_free;
++
+ 			*obuf = *ibuf;
+ 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
+ 			obuf->len = rem;
+@@ -2019,11 +2019,11 @@ static ssize_t fuse_dev_splice_write(str
+ 	ret = fuse_dev_do_write(fud, &cs, len);
+ 
+ 	pipe_lock(pipe);
++out_free:
+ 	for (idx = 0; idx < nbuf; idx++)
+ 		pipe_buf_release(pipe, &bufs[idx]);
+ 	pipe_unlock(pipe);
+ 
+-out:
+ 	kfree(bufs);
+ 	return ret;
  }
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -193,9 +193,9 @@ EXPORT_SYMBOL(generic_pipe_buf_steal);
+  *	in the tee() system call, when we duplicate the buffers in one
+  *	pipe into another.
+  */
+-void generic_pipe_buf_get(struct pipe_inode_info *pipe, struct pipe_buffer *buf)
++bool generic_pipe_buf_get(struct pipe_inode_info *pipe, struct pipe_buffer *buf)
+ {
+-	get_page(buf->page);
++	return try_get_page(buf->page);
+ }
+ EXPORT_SYMBOL(generic_pipe_buf_get);
+ 
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1585,7 +1585,11 @@ retry:
+ 			 * Get a reference to this pipe buffer,
+ 			 * so we can copy the contents over.
+ 			 */
+-			pipe_buf_get(ipipe, ibuf);
++			if (!pipe_buf_get(ipipe, ibuf)) {
++				if (ret == 0)
++					ret = -EFAULT;
++				break;
++			}
+ 			*obuf = *ibuf;
+ 
+ 			/*
+@@ -1659,7 +1663,11 @@ static int link_pipe(struct pipe_inode_i
+ 		 * Get a reference to this pipe buffer,
+ 		 * so we can copy the contents over.
+ 		 */
+-		pipe_buf_get(ipipe, ibuf);
++		if (!pipe_buf_get(ipipe, ibuf)) {
++			if (ret == 0)
++				ret = -EFAULT;
++			break;
++		}
+ 
+ 		obuf = opipe->bufs + nbuf;
+ 		*obuf = *ibuf;
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -107,18 +107,20 @@ struct pipe_buf_operations {
+ 	/*
+ 	 * Get a reference to the pipe buffer.
+ 	 */
+-	void (*get)(struct pipe_inode_info *, struct pipe_buffer *);
++	bool (*get)(struct pipe_inode_info *, struct pipe_buffer *);
+ };
+ 
+ /**
+  * pipe_buf_get - get a reference to a pipe_buffer
+  * @pipe:	the pipe that the buffer belongs to
+  * @buf:	the buffer to get a reference to
++ *
++ * Return: %true if the reference was successfully obtained.
+  */
+-static inline void pipe_buf_get(struct pipe_inode_info *pipe,
++static inline __must_check bool pipe_buf_get(struct pipe_inode_info *pipe,
+ 				struct pipe_buffer *buf)
+ {
+-	buf->ops->get(pipe, buf);
++	return buf->ops->get(pipe, buf);
+ }
+ 
+ /**
+@@ -178,7 +180,7 @@ struct pipe_inode_info *alloc_pipe_info(
+ void free_pipe_info(struct pipe_inode_info *);
+ 
+ /* Generic pipe buffer ops functions */
+-void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
++bool generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
+ void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6145,12 +6145,16 @@ static void buffer_pipe_buf_release(stru
+ 	buf->private = 0;
+ }
+ 
+-static void buffer_pipe_buf_get(struct pipe_inode_info *pipe,
++static bool buffer_pipe_buf_get(struct pipe_inode_info *pipe,
+ 				struct pipe_buffer *buf)
+ {
+ 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
+ 
++	if (ref->ref > INT_MAX/2)
++		return false;
++
+ 	ref->ref++;
++	return true;
+ }
+ 
+ /* Pipe buffer operations for a buffer. */
 
 
