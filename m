@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A49C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BF5C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D2A206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A360206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099824;
-	bh=5ixMBIq1+roRVC3r4/nZrw1E/YkRIL6fVkkxoQk5dnA=;
+	s=default; t=1560099829;
+	bh=9LJBPhhgCXn4j8CTWEVyTQ6fo+0Of7f5Yrs6ApXe3N8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gto+orp0z5eDriwB+aYyAnqWkPidtXsCSn1E7BuZjwfZlMAOLCYprwDyk1BOrnL3u
-	 6BQBtfg0HwZ4VxYtv5enMweNG9tXgdDwAmZBKZV+21Mbq1hHtybtaKjhjoQKyKo+4P
-	 m8xaaU5gE7wIGRT0DTOTZSELCc4rVWOpKJueromw=
+	b=XKdz1U5AuR4VNQ4pKoQM/aeySysvAe3azsMeFSmz1mqSUWWGiSEEWC8r/+P7lee2A
+	 U8o0H2nAqHu9pOnSpefxteN9RTr9lkXyUxEy7C0mBaUGjdODZJmArDNlX1bM4Lky3E
+	 miY5mObrE9fZfe6lHU4QaLbqDHWYgXkm2qFdD83w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388475AbfFIRDo (ORCPT
+        id S2388500AbfFIRDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:03:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42096 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388448AbfFIRDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:03:38 -0400
+        id S2388485AbfFIRDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:03:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF6D6206C3;
-        Sun,  9 Jun 2019 17:03:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C43E8206C3;
+        Sun,  9 Jun 2019 17:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099818;
-        bh=5ixMBIq1+roRVC3r4/nZrw1E/YkRIL6fVkkxoQk5dnA=;
+        s=default; t=1560099826;
+        bh=9LJBPhhgCXn4j8CTWEVyTQ6fo+0Of7f5Yrs6ApXe3N8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtrS1lzn1lwjCDs6R2Lr/R9b4Hzu7R0Q77qKA6mr8JzSvOfFnFf4goDgSnXaRcZBG
-         zQ0NFwEcgXDXF9TbUDTaowsWFMDNCcwvLw5d0iBK8Bku5N+GpyO8gpdl2GZt4X7rSy
-         8XOf3UTa4ewztKonv7aRlThO7kS80SvxVr/CKzDc=
+        b=gYksygU4cIaPOPZy+JFlFw/ciy6iVfsA2rFsbZ8GQKNa3qSSDCgyNKoJZ/3fzNSpx
+         n6GxerVskqBKXDbxGdX5JlmKXiNN/Q/Jmipzetr0oora4BPIVLXCKKPr+o8gJKLF3T
+         seXxkeCj2cOoCQ+QPoy0HQdkY4Z3530/8rF2tMBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 140/241] mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support
-Date:   Sun,  9 Jun 2019 18:41:22 +0200
-Message-Id: <20190609164151.828510409@linuxfoundation.org>
+Subject: [PATCH 4.4 178/241] spi: Fix zero length xfer bug
+Date:   Sun,  9 Jun 2019 18:42:00 +0200
+Message-Id: <20190609164152.975610585@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,45 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05cb6b2a66fa7837211a060878e91be5eb10cb07 ]
+[ Upstream commit 5442dcaa0d90fc376bdfc179a018931a8f43dea4 ]
 
-eSDHC-A001: The data timeout counter (SYSCTL[DTOCV]) is not
-reliable for DTOCV values 0x4(2^17 SD clock), 0x8(2^21 SD clock),
-and 0xC(2^25 SD clock). The data timeout counter can count from
-2^13–2^27, but for values 2^17, 2^21, and 2^25, the timeout
-counter counts for only 2^13 SD clocks.
-A-008358: The data timeout counter value loaded into the timeout
-counter is less than expected and can result into early timeout
-error in case of eSDHC data transactions. The table below shows
-the expected vs actual timeout period for different values of
-SYSCTL[DTOCV]:
-these two erratum has the same quirk to control it, and set
-SDHCI_QUIRK_RESET_AFTER_REQUEST to fix above issue.
+This fixes a bug for messages containing both zero length and
+unidirectional xfers.
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+The function spi_map_msg will allocate dummy tx and/or rx buffers
+for use with unidirectional transfers when the hardware can only do
+a bidirectional transfer.  That dummy buffer will be used in place
+of a NULL buffer even when the xfer length is 0.
+
+Then in the function __spi_map_msg, if he hardware can dma,
+the zero length xfer will have spi_map_buf called on the dummy
+buffer.
+
+Eventually, __sg_alloc_table is called and returns -EINVAL
+because nents == 0.
+
+This fix prevents the error by not using the dummy buffer when
+the xfer length is zero.
+
+Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/spi/spi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index a5a11e7ab53b4..356b294c93c9e 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -624,8 +624,10 @@ static int sdhci_esdhc_probe(struct platform_device *pdev)
- 	if (esdhc->vendor_ver > VENDOR_V_22)
- 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
- 
--	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
-+	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
- 		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-+		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
-+	}
- 
- 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
- 	    of_device_is_compatible(np, "fsl,p5020-esdhc") ||
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 04fd651f9e3e3..c132c676df3a6 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -903,6 +903,8 @@ static int spi_map_msg(struct spi_master *master, struct spi_message *msg)
+ 		if (max_tx || max_rx) {
+ 			list_for_each_entry(xfer, &msg->transfers,
+ 					    transfer_list) {
++				if (!xfer->len)
++					continue;
+ 				if (!xfer->tx_buf)
+ 					xfer->tx_buf = master->dummy_tx;
+ 				if (!xfer->rx_buf)
 -- 
 2.20.1
 
