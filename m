@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F22C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB91C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B18D206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC9F206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099971;
-	bh=RIZxM074gjLVkKvqGhcrySREjdYpGz6+CiM9kD9xK/k=;
+	s=default; t=1560099975;
+	bh=NLnvptziKAVZuk6uzcgGO5PsE1kFu57e/1dpLuPkxJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tt8ql66L46kwLZXHMHOiuHgMm7QuxZJOWgXRvuKAqEvEjCCE+AXr/Hv7Tkus/yD8O
-	 TMbWn8sHZjgXEnaVsdd4jO254U7ObppVLqa7N9vie1/PmX+ri+xyL1Qv5MaIFCpgcM
-	 /HV4AQfXMTDADGCCydY1lCKT/0he3rOjGCwv3XkU=
+	b=C94hdl51w0iXmssabEQP0SuWBda89yDlnVxrdy0WeYGRo0LMSikOQqmbTJJlKLeHn
+	 wsAlz3si3bSBHUAk1fwZwM7soMk98qiZRzlxkbF5W/SperqaWdS/nYQPXyeRHriHoR
+	 cvYukz0UFt5ERhpXGGOK+R44fKJvTOcq48P3OsNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388570AbfFIRGK (ORCPT
+        id S2388980AbfFIRGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:06:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388514AbfFIRGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:06:06 -0400
+        id S2388966AbfFIRGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:06:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00D24206C3;
-        Sun,  9 Jun 2019 17:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04E81206C3;
+        Sun,  9 Jun 2019 17:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099966;
-        bh=RIZxM074gjLVkKvqGhcrySREjdYpGz6+CiM9kD9xK/k=;
+        s=default; t=1560099969;
+        bh=NLnvptziKAVZuk6uzcgGO5PsE1kFu57e/1dpLuPkxJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SdOxJ5j7ThIFIMsIh7ilumoPBreFjA0UOcknpEnZPIoilrQCTrTEOwrVU1wMtxMuz
-         lZNCJ0GeZxibwDr9Azb2UVJoO9OTuz/jUaKBCiXFFgwqdaD6hDgenHo+jt/9FqjBcn
-         UgbJ+ohh0rVLmcKDDX7RBlF8rmvuWfMJItBVGC34=
+        b=gL83iQAbaBRCwvzQ3DnPXeu2VFkY2KWUlzPlw3aVvRZS1JChx1acjt0k7plcBZFJd
+         B9rcVyvBRJzhMBJQzjiezcAelF/xLUGrCapr12KYktRvsOA4a8/67aUSBXaeo89Myz
+         DOGHMn6+4vXM10Axe3aW/s2cu1LFN8RgxNvbX9PE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 190/241] Revert "tipc: fix modprobe tipc failed after switch order of device registration"
-Date:   Sun,  9 Jun 2019 18:42:12 +0200
-Message-Id: <20190609164153.404723678@linuxfoundation.org>
+        stable@vger.kernel.org, Junwei Hu <hujunwei4@huawei.com>,
+        Wang Wang <wangwang2@huawei.com>,
+        syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com,
+        Kang Zhou <zhoukang7@huawei.com>,
+        Suanming Mou <mousuanming@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 191/241] tipc: fix modprobe tipc failed after switch order of device registration -v2
+Date:   Sun,  9 Jun 2019 18:42:13 +0200
+Message-Id: <20190609164153.444441687@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -58,78 +63,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David S. Miller <davem@davemloft.net>
+From: Junwei Hu <hujunwei4@huawei.com>
 
-commit 5593530e56943182ebb6d81eca8a3be6db6dbba4 upstream.
+commit 526f5b851a96566803ee4bee60d0a34df56c77f8 upstream.
 
-This reverts commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e.
+Error message printed:
+modprobe: ERROR: could not insert 'tipc': Address family not
+supported by protocol.
+when modprobe tipc after the following patch: switch order of
+device registration, commit 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
 
-More revisions coming up.
+Because sock_create_kern(net, AF_TIPC, ...) called by
+tipc_topsrv_create_listener() in the initialization process
+of tipc_init_net(), so tipc_socket_init() must be execute before that.
+Meanwhile, tipc_net_id need to be initialized when sock_create()
+called, and tipc_socket_init() is no need to be called for each namespace.
 
+I add a variable tipc_topsrv_net_ops, and split the
+register_pernet_subsys() of tipc into two parts, and split
+tipc_socket_init() with initialization of pernet params.
+
+By the way, I fixed resources rollback error when tipc_bcast_init()
+failed in tipc_init_net().
+
+Fixes: 7e27e8d6130c ("tipc: switch order of device registration to fix a crash")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reported-by: syzbot+1e8114b61079bfe9cbc5@syzkaller.appspotmail.com
+Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+Reviewed-by: Suanming Mou <mousuanming@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/tipc/core.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ net/tipc/core.c   |   18 ++++++++++++------
+ net/tipc/subscr.c |   14 ++++++++++++--
+ net/tipc/subscr.h |    5 +++--
+ 3 files changed, 27 insertions(+), 10 deletions(-)
 
 --- a/net/tipc/core.c
 +++ b/net/tipc/core.c
-@@ -61,10 +61,6 @@ static int __net_init tipc_init_net(stru
- 	INIT_LIST_HEAD(&tn->node_list);
- 	spin_lock_init(&tn->node_list_lock);
+@@ -70,9 +70,6 @@ static int __net_init tipc_init_net(stru
+ 		goto out_nametbl;
  
--	err = tipc_socket_init();
+ 	INIT_LIST_HEAD(&tn->dist_queue);
+-	err = tipc_topsrv_start(net);
 -	if (err)
--		goto out_socket;
--
- 	err = tipc_sk_rht_init(net);
+-		goto out_subscr;
+ 
+ 	err = tipc_bcast_init(net);
  	if (err)
- 		goto out_sk_rht;
-@@ -91,8 +87,6 @@ out_subscr:
+@@ -81,8 +78,6 @@ static int __net_init tipc_init_net(stru
+ 	return 0;
+ 
+ out_bclink:
+-	tipc_bcast_stop(net);
+-out_subscr:
+ 	tipc_nametbl_stop(net);
  out_nametbl:
  	tipc_sk_rht_destroy(net);
- out_sk_rht:
--	tipc_socket_stop();
--out_socket:
- 	return err;
- }
+@@ -92,7 +87,6 @@ out_sk_rht:
  
-@@ -103,7 +97,6 @@ static void __net_exit tipc_exit_net(str
+ static void __net_exit tipc_exit_net(struct net *net)
+ {
+-	tipc_topsrv_stop(net);
+ 	tipc_net_stop(net);
  	tipc_bcast_stop(net);
  	tipc_nametbl_stop(net);
- 	tipc_sk_rht_destroy(net);
--	tipc_socket_stop();
- }
+@@ -106,6 +100,11 @@ static struct pernet_operations tipc_net
+ 	.size = sizeof(struct tipc_net),
+ };
  
- static struct pernet_operations tipc_net_ops = {
-@@ -141,6 +134,10 @@ static int __init tipc_init(void)
++static struct pernet_operations tipc_topsrv_net_ops = {
++	.init = tipc_topsrv_init_net,
++	.exit = tipc_topsrv_exit_net,
++};
++
+ static int __init tipc_init(void)
+ {
+ 	int err;
+@@ -138,6 +137,10 @@ static int __init tipc_init(void)
  	if (err)
- 		goto out_pernet;
+ 		goto out_socket;
  
-+	err = tipc_socket_init();
++	err = register_pernet_subsys(&tipc_topsrv_net_ops);
 +	if (err)
-+		goto out_socket;
++		goto out_pernet_topsrv;
 +
  	err = tipc_bearer_setup();
  	if (err)
  		goto out_bearer;
-@@ -148,6 +145,8 @@ static int __init tipc_init(void)
+@@ -145,6 +148,8 @@ static int __init tipc_init(void)
  	pr_info("Started in single node mode\n");
  	return 0;
  out_bearer:
-+	tipc_socket_stop();
-+out_socket:
++	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++out_pernet_topsrv:
+ 	tipc_socket_stop();
+ out_socket:
  	unregister_pernet_subsys(&tipc_net_ops);
- out_pernet:
- 	tipc_unregister_sysctl();
-@@ -163,6 +162,7 @@ out_netlink:
+@@ -162,6 +167,7 @@ out_netlink:
  static void __exit tipc_exit(void)
  {
  	tipc_bearer_cleanup();
-+	tipc_socket_stop();
++	unregister_pernet_subsys(&tipc_topsrv_net_ops);
+ 	tipc_socket_stop();
  	unregister_pernet_subsys(&tipc_net_ops);
  	tipc_netlink_stop();
- 	tipc_netlink_compat_stop();
+--- a/net/tipc/subscr.c
++++ b/net/tipc/subscr.c
+@@ -306,7 +306,7 @@ static void *tipc_subscrb_connect_cb(int
+ 	return (void *)tipc_subscrb_create(conid);
+ }
+ 
+-int tipc_topsrv_start(struct net *net)
++static int tipc_topsrv_start(struct net *net)
+ {
+ 	struct tipc_net *tn = net_generic(net, tipc_net_id);
+ 	const char name[] = "topology_server";
+@@ -344,7 +344,7 @@ int tipc_topsrv_start(struct net *net)
+ 	return tipc_server_start(topsrv);
+ }
+ 
+-void tipc_topsrv_stop(struct net *net)
++static void tipc_topsrv_stop(struct net *net)
+ {
+ 	struct tipc_net *tn = net_generic(net, tipc_net_id);
+ 	struct tipc_server *topsrv = tn->topsrv;
+@@ -353,3 +353,13 @@ void tipc_topsrv_stop(struct net *net)
+ 	kfree(topsrv->saddr);
+ 	kfree(topsrv);
+ }
++
++int __net_init tipc_topsrv_init_net(struct net *net)
++{
++	return tipc_topsrv_start(net);
++}
++
++void __net_exit tipc_topsrv_exit_net(struct net *net)
++{
++	tipc_topsrv_stop(net);
++}
+--- a/net/tipc/subscr.h
++++ b/net/tipc/subscr.h
+@@ -77,7 +77,8 @@ int tipc_subscrp_check_overlap(struct ti
+ void tipc_subscrp_report_overlap(struct tipc_subscription *sub,
+ 				 u32 found_lower, u32 found_upper, u32 event,
+ 				 u32 port_ref, u32 node, int must);
+-int tipc_topsrv_start(struct net *net);
+-void tipc_topsrv_stop(struct net *net);
++
++int __net_init tipc_topsrv_init_net(struct net *net);
++void __net_exit tipc_topsrv_exit_net(struct net *net);
+ 
+ #endif
 
 
