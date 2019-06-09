@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81898C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDE9C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B28720840
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8511C2084A
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099475;
-	bh=vPa2MfBrgXsrWOaPkyAwBsHtf9+DoQhQB9U3rsbN9F8=;
+	s=default; t=1560099480;
+	bh=8G87I6+bRkUxbApeia6mB4Dt8Rsuu8aFBBZL7mVii/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KvKk+8fWPRAA7xVsQafG/ERneo2nNRQV2/abGkbqCJoo+TYpzqqEqZHy+w0XfZIta
-	 nMZC14lSCcYcQQjIzzc13BYR7lgvzw5cYbnXbvd2abV5SqKubp6+tSAY/vH2bcZCMA
-	 V5l9wYjg+fWzgjRzR7AEAS1xyDSThbxwCdsqUDxs=
+	b=RGBYHW4Xc5llIw1XeSHfltSEsQsL0DCWthELjckQT0V4kgzJ5UVYBj5GVJpvqhXMl
+	 E4pwjaIgIBd0xXZUMF9qmaGZvTtu5fPtGC64gpuD8yIf4oQ2obFA3ApUpdDw5mdcso
+	 S9JYCJ33ydi/fhukIlq9cxT0Iz93nhr/IJDgMztQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733269AbfFIQ5y (ORCPT
+        id S1733283AbfFIQ57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:57:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60972 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733248AbfFIQ5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:57:50 -0400
+        id S1733248AbfFIQ54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:57:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B2BF204EC;
-        Sun,  9 Jun 2019 16:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 055BE204EC;
+        Sun,  9 Jun 2019 16:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099469;
-        bh=vPa2MfBrgXsrWOaPkyAwBsHtf9+DoQhQB9U3rsbN9F8=;
+        s=default; t=1560099475;
+        bh=8G87I6+bRkUxbApeia6mB4Dt8Rsuu8aFBBZL7mVii/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k0mDFgLBii9Vee6DkMRdmY3/PyyOcT9zmgc2G5ratVVEHAoEbOBJTX8y/J7Hu+WzN
-         tNt8YTx4WHTpX/mzGpwsnyGnmPBLWbq0GxmVIoS4puq2+2fhmA4IJt4jWaxCUJ5/LA
-         im3VKb6yYukzy64mA5ritAd/BULp0vehvFflSs8g=
+        b=AqKBEnprs62ddPpPAvmgZKWbf3ARdsNcHRiU4SQ/8Q4KXEsbvPT/qv05Mt8Xnl3aP
+         t/QM8o0kQRr8bj/7r7Ex1Q70oVErK+iOrar3fjefKBzyK+uZrIHe+DJBtMKldQY4cc
+         N7zDstjVfzAQ/jsq44xyWMj7Rtggii/dxUN4jn54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.4 052/241] perf intel-pt: Fix improved sample timestamp
-Date:   Sun,  9 Jun 2019 18:39:54 +0200
-Message-Id: <20190609164149.273619278@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.4 054/241] fbdev: sm712fb: fix brightness control on reboot, dont set SR30
+Date:   Sun,  9 Jun 2019 18:39:56 +0200
+Message-Id: <20190609164149.332234662@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -60,96 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Yifeng Li <tomli@tomli.me>
 
-commit 61b6e08dc8e3ea80b7485c9b3f875ddd45c8466b upstream.
+commit 5481115e25e42b9215f2619452aa99c95f08492f upstream.
 
-The decoder uses its current timestamp in samples. Usually that is a
-timestamp that has already passed, but in some cases it is a timestamp
-for a branch that the decoder is walking towards, and consequently
-hasn't reached.
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), rebooting with
+sm712fb framebuffer driver would cause the role of brightness up/down
+button to swap.
 
-The intel_pt_sample_time() function decides which is which, but was not
-handling TNT packets exactly correctly.
+Experiments showed the FPR30 register caused this behavior. Moreover,
+even if this register don't have side-effect on other systems, over-
+writing it is also highly questionable, since it was originally
+configurated by the motherboard manufacturer by hardwiring pull-down
+resistors to indicate the type of LCD panel. We should not mess with
+it.
 
-In the case of TNT, the timestamp applies to the first branch, so the
-decoder must first walk to that branch.
+Stop writing to the SR30 (a.k.a FPR30) register.
 
-That means intel_pt_sample_time() should return true for TNT, and this
-patch makes that change. However, if the first branch is a non-taken
-branch (i.e. a 'N'), then intel_pt_sample_time() needs to return false
-for subsequent taken branches in the same TNT packet.
-
-To handle that, introduce a new state INTEL_PT_STATE_TNT_CONT to
-distinguish the cases.
-
-Note that commit 3f04d98e972b5 ("perf intel-pt: Improve sample
-timestamp") was also a stable fix and appears, for example, in v4.4
-stable tree as commit a4ebb58fd124 ("perf intel-pt: Improve sample
-timestamp").
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org # v4.4+
-Fixes: 3f04d98e972b5 ("perf intel-pt: Improve sample timestamp")
-Link: http://lkml.kernel.org/r/20190510124143.27054-3-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/sm712fb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -58,6 +58,7 @@ enum intel_pt_pkt_state {
- 	INTEL_PT_STATE_NO_IP,
- 	INTEL_PT_STATE_ERR_RESYNC,
- 	INTEL_PT_STATE_IN_SYNC,
-+	INTEL_PT_STATE_TNT_CONT,
- 	INTEL_PT_STATE_TNT,
- 	INTEL_PT_STATE_TIP,
- 	INTEL_PT_STATE_TIP_PGD,
-@@ -72,8 +73,9 @@ static inline bool intel_pt_sample_time(
- 	case INTEL_PT_STATE_NO_IP:
- 	case INTEL_PT_STATE_ERR_RESYNC:
- 	case INTEL_PT_STATE_IN_SYNC:
--	case INTEL_PT_STATE_TNT:
-+	case INTEL_PT_STATE_TNT_CONT:
- 		return true;
-+	case INTEL_PT_STATE_TNT:
- 	case INTEL_PT_STATE_TIP:
- 	case INTEL_PT_STATE_TIP_PGD:
- 	case INTEL_PT_STATE_FUP:
-@@ -1148,7 +1150,9 @@ static int intel_pt_walk_tnt(struct inte
- 				return -ENOENT;
- 			}
- 			decoder->tnt.count -= 1;
--			if (!decoder->tnt.count)
-+			if (decoder->tnt.count)
-+				decoder->pkt_state = INTEL_PT_STATE_TNT_CONT;
-+			else
- 				decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			decoder->tnt.payload <<= 1;
- 			decoder->state.from_ip = decoder->ip;
-@@ -1179,7 +1183,9 @@ static int intel_pt_walk_tnt(struct inte
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1144,8 +1144,8 @@ static void sm7xx_set_timing(struct smtc
  
- 		if (intel_pt_insn.branch == INTEL_PT_BR_CONDITIONAL) {
- 			decoder->tnt.count -= 1;
--			if (!decoder->tnt.count)
-+			if (decoder->tnt.count)
-+				decoder->pkt_state = INTEL_PT_STATE_TNT_CONT;
-+			else
- 				decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			if (decoder->tnt.payload & BIT63) {
- 				decoder->tnt.payload <<= 1;
-@@ -2123,6 +2129,7 @@ const struct intel_pt_state *intel_pt_de
- 			err = intel_pt_walk_trace(decoder);
- 			break;
- 		case INTEL_PT_STATE_TNT:
-+		case INTEL_PT_STATE_TNT_CONT:
- 			err = intel_pt_walk_tnt(decoder);
- 			if (err == -EAGAIN)
- 				err = intel_pt_walk_trace(decoder);
+ 		/* init SEQ register SR30 - SR75 */
+ 		for (i = 0; i < SIZE_SR30_SR75; i++)
+-			if ((i + 0x30) != 0x62 && (i + 0x30) != 0x6a &&
+-			    (i + 0x30) != 0x6b)
++			if ((i + 0x30) != 0x30 && (i + 0x30) != 0x62 &&
++			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b)
+ 				smtc_seqw(i + 0x30,
+ 					  vgamode[j].init_sr30_sr75[i]);
+ 
 
 
