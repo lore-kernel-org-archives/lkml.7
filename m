@@ -7,58 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852CDC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4DDC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA1E206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D69206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099237;
-	bh=jn5STUV+VcC4A12rzncY3TQ86QUZFyuFr8waJzuPqhY=;
+	s=default; t=1560099240;
+	bh=7Z2eSdjGURg30XUUYIo4u7JEH8kXWqo29Oy1NRh4YyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hW3SfhaGh/A1pHKGgP/Ns12y6geXS0Ia75u5PwAdk2dKeD6YrCPXut/kxPJue/uxJ
-	 dJOY6lB3X+nO77C0NLhFOvTy2i9J9NjJ+g77SRTWjT5q3RaBqB799/eD/k4DO2ZMYk
-	 dKcNf6NHFyFMnbjpsh2rPoOXCDLIHe9ZbeChO8Mw=
+	b=0syrztXirNE95tBBZl/8dxZdJzl2g79JaVoKowKJlWVsZ52v4uUzM95iTTQNeAJOK
+	 WgfNhh1EW9QP/Eox150mO13T/LqbqOhCUEnAO+4anEaU/wioscjg5ozqziMYRoUzEs
+	 X9t7DGGDgHnQ9hNw3B+J4ik9inLNvx//oaXwzLek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732506AbfFIQx4 (ORCPT
+        id S1731931AbfFIQx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:53:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55250 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:53:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732496AbfFIQxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:53:52 -0400
+        id S1732505AbfFIQx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:53:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61AAC204EC;
-        Sun,  9 Jun 2019 16:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DACB62081C;
+        Sun,  9 Jun 2019 16:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099230;
-        bh=jn5STUV+VcC4A12rzncY3TQ86QUZFyuFr8waJzuPqhY=;
+        s=default; t=1560099236;
+        bh=7Z2eSdjGURg30XUUYIo4u7JEH8kXWqo29Oy1NRh4YyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNxuJoHv6T/M4dfVv6m74Um4s+Bx0mmWZJx3YZz4ILkINWJuDoveX3lljK2bng10b
-         66Z4OkEGCvcuADD9SXq8gzcHnadfaT7/1KCdRQ0M86+eXS+8G+T3GD7vr1z2GpQzxu
-         Pwlp1MdILAj81BdJTrc0q/VFqRe4ql5mISYJ1AFI=
+        b=y2rQg2NUttk6u4rmIDBGCNtmYLaLUNT/RNcB4YzvGxvLuwT19HPmMYTAIZ9Akrp4H
+         XKCQpp5+tKyvJP0PoTR4ZLac/ojElJL2D0UmhiUiD5RedQ2OrJrab7ulVNbNxOs05w
+         SSU5FeAR3W4DP3xKnHbfEY8hYKInqPhnqO3BYPDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Punit Agrawal <punit.agrawal@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hillf Danton <hillf.zj@alibaba-inc.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 55/83] mm, gup: remove broken VM_BUG_ON_PAGE compound check for hugepages
-Date:   Sun,  9 Jun 2019 18:42:25 +0200
-Message-Id: <20190609164132.620872548@linuxfoundation.org>
+Subject: [PATCH 4.9 57/83] mm: prevent get_user_pages() from overflowing page refcount
+Date:   Sun,  9 Jun 2019 18:42:27 +0200
+Message-Id: <20190609164132.774263938@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -71,70 +61,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit a3e328556d41bb61c55f9dfcc62d6a826ea97b85 upstream.
+commit 8fde12ca79aff9b5ba951fce1a2641901b8d8e64 upstream.
 
-When operating on hugepages with DEBUG_VM enabled, the GUP code checks
-the compound head for each tail page prior to calling
-page_cache_add_speculative.  This is broken, because on the fast-GUP
-path (where we don't hold any page table locks) we can be racing with a
-concurrent invocation of split_huge_page_to_list.
+If the page refcount wraps around past zero, it will be freed while
+there are still four billion references to it.  One of the possible
+avenues for an attacker to try to make this happen is by doing direct IO
+on a page multiple times.  This patch makes get_user_pages() refuse to
+take a new page reference if there are already more than two billion
+references to the page.
 
-split_huge_page_to_list deals with this race by using page_ref_freeze to
-freeze the page and force concurrent GUPs to fail whilst the component
-pages are modified.  This modification includes clearing the
-compound_head field for the tail pages, so checking this prior to a
-successful call to page_cache_add_speculative can lead to false
-positives: In fact, page_cache_add_speculative *already* has this check
-once the page refcount has been successfully updated, so we can simply
-remove the broken calls to VM_BUG_ON_PAGE.
-
-Link: http://lkml.kernel.org/r/20170522133604.11392-2-punit.agrawal@arm.com
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-Acked-by: Steve Capper <steve.capper@arm.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Hillf Danton <hillf.zj@alibaba-inc.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: Jann Horn <jannh@google.com>
+Acked-by: Matthew Wilcox <willy@infradead.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 4.9:
+ - Add the "err" variable in follow_hugetlb_page()
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/gup.c |    3 ---
- 1 file changed, 3 deletions(-)
+ mm/gup.c     |   45 ++++++++++++++++++++++++++++++++++-----------
+ mm/hugetlb.c |   16 +++++++++++++++-
+ 2 files changed, 49 insertions(+), 12 deletions(-)
 
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -1316,7 +1316,6 @@ static int gup_huge_pmd(pmd_t orig, pmd_
- 	head = pmd_page(orig);
- 	page = head + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
- 	do {
--		VM_BUG_ON_PAGE(compound_head(page) != head, page);
- 		pages[*nr] = page;
- 		(*nr)++;
- 		page++;
-@@ -1351,7 +1350,6 @@ static int gup_huge_pud(pud_t orig, pud_
- 	head = pud_page(orig);
- 	page = head + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
- 	do {
--		VM_BUG_ON_PAGE(compound_head(page) != head, page);
- 		pages[*nr] = page;
- 		(*nr)++;
- 		page++;
-@@ -1387,7 +1385,6 @@ static int gup_huge_pgd(pgd_t orig, pgd_
- 	head = pgd_page(orig);
- 	page = head + ((addr & ~PGDIR_MASK) >> PAGE_SHIFT);
- 	do {
--		VM_BUG_ON_PAGE(compound_head(page) != head, page);
- 		pages[*nr] = page;
- 		(*nr)++;
- 		page++;
+@@ -153,7 +153,10 @@ retry:
+ 	}
+ 
+ 	if (flags & FOLL_GET) {
+-		get_page(page);
++		if (unlikely(!try_get_page(page))) {
++			page = ERR_PTR(-ENOMEM);
++			goto out;
++		}
+ 
+ 		/* drop the pgmap reference now that we hold the page */
+ 		if (pgmap) {
+@@ -292,7 +295,10 @@ struct page *follow_page_mask(struct vm_
+ 			if (pmd_trans_unstable(pmd))
+ 				ret = -EBUSY;
+ 		} else {
+-			get_page(page);
++			if (unlikely(!try_get_page(page))) {
++				spin_unlock(ptl);
++				return ERR_PTR(-ENOMEM);
++			}
+ 			spin_unlock(ptl);
+ 			lock_page(page);
+ 			ret = split_huge_page(page);
+@@ -348,7 +354,10 @@ static int get_gate_page(struct mm_struc
+ 			goto unmap;
+ 		*page = pte_page(*pte);
+ 	}
+-	get_page(*page);
++	if (unlikely(!try_get_page(*page))) {
++		ret = -ENOMEM;
++		goto unmap;
++	}
+ out:
+ 	ret = 0;
+ unmap:
+@@ -1231,6 +1240,20 @@ struct page *get_dump_page(unsigned long
+  */
+ #ifdef CONFIG_HAVE_GENERIC_RCU_GUP
+ 
++/*
++ * Return the compund head page with ref appropriately incremented,
++ * or NULL if that failed.
++ */
++static inline struct page *try_get_compound_head(struct page *page, int refs)
++{
++	struct page *head = compound_head(page);
++	if (WARN_ON_ONCE(page_ref_count(head) < 0))
++		return NULL;
++	if (unlikely(!page_cache_add_speculative(head, refs)))
++		return NULL;
++	return head;
++}
++
+ #ifdef __HAVE_ARCH_PTE_SPECIAL
+ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 			 int write, struct page **pages, int *nr)
+@@ -1263,9 +1286,9 @@ static int gup_pte_range(pmd_t pmd, unsi
+ 
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+-		head = compound_head(page);
+ 
+-		if (!page_cache_get_speculative(head))
++		head = try_get_compound_head(page, 1);
++		if (!head)
+ 			goto pte_unmap;
+ 
+ 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+@@ -1321,8 +1344,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pmd_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pmd_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -1355,8 +1378,8 @@ static int gup_huge_pud(pud_t orig, pud_
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pud_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pud_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -1390,8 +1413,8 @@ static int gup_huge_pgd(pgd_t orig, pgd_
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pgd_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pgd_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3984,6 +3984,7 @@ long follow_hugetlb_page(struct mm_struc
+ 	unsigned long vaddr = *position;
+ 	unsigned long remainder = *nr_pages;
+ 	struct hstate *h = hstate_vma(vma);
++	int err = -EFAULT;
+ 
+ 	while (vaddr < vma->vm_end && remainder) {
+ 		pte_t *pte;
+@@ -4055,6 +4056,19 @@ long follow_hugetlb_page(struct mm_struc
+ 
+ 		pfn_offset = (vaddr & ~huge_page_mask(h)) >> PAGE_SHIFT;
+ 		page = pte_page(huge_ptep_get(pte));
++
++		/*
++		 * Instead of doing 'try_get_page()' below in the same_page
++		 * loop, just check the count once here.
++		 */
++		if (unlikely(page_count(page) <= 0)) {
++			if (pages) {
++				spin_unlock(ptl);
++				remainder = 0;
++				err = -ENOMEM;
++				break;
++			}
++		}
+ same_page:
+ 		if (pages) {
+ 			pages[i] = mem_map_offset(page, pfn_offset);
+@@ -4081,7 +4095,7 @@ same_page:
+ 	*nr_pages = remainder;
+ 	*position = vaddr;
+ 
+-	return i ? i : -EFAULT;
++	return i ? i : err;
+ }
+ 
+ #ifndef __HAVE_ARCH_FLUSH_HUGETLB_TLB_RANGE
 
 
