@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E257C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B492C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486B8206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A504206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098881;
-	bh=QCtxU2sR28pkPYBHfyAgs8ZVRZgw/+3pheZ7fz1NubI=;
+	s=default; t=1560098887;
+	bh=j8+0werx+ueP1SttlAq1Hd3V5fyJGBI9OfJYTnaDHTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMtwpUHVwKOkjkrNwSxF6RAtVPs/kpUYFL71G2hbBAnxw/31NQzUKxmelL1P/oQaf
-	 NjC/PpMw89xkrw3B3DK/3vG954nsZxHXDuVDh/3Q6ir3pauSCwlXN3JtHaR/rnbjPe
-	 Z0RPZSVhzwCmwSJ8yWGUSLXh9MBvQAyZ1GDZ0yxE=
+	b=cIMg8ZXvyq5R3J8TuMnSs2F8VibftYVX6WBALAen8CRl0p/B3K7d4OSe/lfavSDTW
+	 gG1d9t7mC26M3GXQpjAV4t1/OhCBSOL61cAb65GAV6f9rbWVvrV/EAvbcuz2Rl04lR
+	 uqxpIzBpA5nDNbh52Spk0ePJ2dB0j35Vm1TTlYu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbfFIQsA (ORCPT
+        id S1731094AbfFIQsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46704 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730968AbfFIQrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:53 -0400
+        id S1731064AbfFIQsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1DD206C3;
-        Sun,  9 Jun 2019 16:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28545205ED;
+        Sun,  9 Jun 2019 16:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098872;
-        bh=QCtxU2sR28pkPYBHfyAgs8ZVRZgw/+3pheZ7fz1NubI=;
+        s=default; t=1560098880;
+        bh=j8+0werx+ueP1SttlAq1Hd3V5fyJGBI9OfJYTnaDHTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1UcUHyrDibmlP2rB5MB/bF7/3+NONSbtb/iu8q2XKyu2Cx3X0K6rinGs1A4Ag7KPf
-         Lu/uPMq3EEFsZbP/gfd+5AafR5IDyZUlAiadx/AASPzyACl8XgdnKy/aQ3d+bBFQl7
-         hKiDWx8/RifDCRMtmYbY9byADfJt4CCV+E7HpDic=
+        b=GlbIGjRr2hFcDYMJ4vGzEe9cmc3sx4EXaC1tyB3/i+BSklDrY5CUXNaZDcV0kDpfv
+         CQoYGwNswGKZKJhJ/vwj/87cQ08b1jJorrvmjmgA6JvCqqxZBa3UD39hNfNAK7Fumu
+         6Dcl+JT50nZLe3fYcdvEK9iTmd+DQMboZf/HJBbU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yihao Wu <wuyihao@linux.alibaba.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 20/51] NFSv4.1: Again fix a race where CB_NOTIFY_LOCK fails to wake a waiter
-Date:   Sun,  9 Jun 2019 18:42:01 +0200
-Message-Id: <20190609164128.246232064@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 22/51] fuse: fallocate: fix return with locked inode
+Date:   Sun,  9 Jun 2019 18:42:03 +0200
+Message-Id: <20190609164128.380174810@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,99 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yihao Wu <wuyihao@linux.alibaba.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 52b042ab9948cc367b61f9ca9c18603aa7813c3a upstream.
+commit 35d6fcbb7c3e296a52136347346a698a35af3fda upstream.
 
-Commit b7dbcc0e433f "NFSv4.1: Fix a race where CB_NOTIFY_LOCK fails to wake a waiter"
-found this bug. However it didn't fix it.
+Do the proper cleanup in case the size check fails.
 
-This commit replaces schedule_timeout() with wait_woken() and
-default_wake_function() with woken_wake_function() in function
-nfs4_retry_setlk() and nfs4_wake_lock_waiter(). wait_woken() uses
-memory barriers in its implementation to avoid potential race condition
-when putting a process into sleeping state and then waking it up.
+Tested with xfstests:generic/228
 
-Fixes: a1d617d8f134 ("nfs: allow blocking locks to be awoken by lock callbacks")
-Cc: stable@vger.kernel.org #4.9+
-Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 0cbade024ba5 ("fuse: honor RLIMIT_FSIZE in fuse_file_fallocate")
+Cc: Liu Bo <bo.liu@linux.alibaba.com>
+Cc: <stable@vger.kernel.org> # v3.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |   24 +++++++-----------------
- 1 file changed, 7 insertions(+), 17 deletions(-)
+ fs/fuse/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6850,7 +6850,6 @@ struct nfs4_lock_waiter {
- 	struct task_struct	*task;
- 	struct inode		*inode;
- 	struct nfs_lowner	*owner;
--	bool			notified;
- };
- 
- static int
-@@ -6872,13 +6871,13 @@ nfs4_wake_lock_waiter(wait_queue_entry_t
- 		/* Make sure it's for the right inode */
- 		if (nfs_compare_fh(NFS_FH(waiter->inode), &cbnl->cbnl_fh))
- 			return 0;
--
--		waiter->notified = true;
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2981,7 +2981,7 @@ static long fuse_file_fallocate(struct f
+ 	    offset + length > i_size_read(inode)) {
+ 		err = inode_newsize_ok(inode, offset + length);
+ 		if (err)
+-			return err;
++			goto out;
  	}
  
- 	/* override "private" so we can use default_wake_function */
- 	wait->private = waiter->task;
--	ret = autoremove_wake_function(wait, mode, flags, key);
-+	ret = woken_wake_function(wait, mode, flags, key);
-+	if (ret)
-+		list_del_init(&wait->entry);
- 	wait->private = waiter;
- 	return ret;
- }
-@@ -6887,7 +6886,6 @@ static int
- nfs4_retry_setlk(struct nfs4_state *state, int cmd, struct file_lock *request)
- {
- 	int status = -ERESTARTSYS;
--	unsigned long flags;
- 	struct nfs4_lock_state *lsp = request->fl_u.nfs4_fl.owner;
- 	struct nfs_server *server = NFS_SERVER(state->inode);
- 	struct nfs_client *clp = server->nfs_client;
-@@ -6897,8 +6895,7 @@ nfs4_retry_setlk(struct nfs4_state *stat
- 				    .s_dev = server->s_dev };
- 	struct nfs4_lock_waiter waiter = { .task  = current,
- 					   .inode = state->inode,
--					   .owner = &owner,
--					   .notified = false };
-+					   .owner = &owner};
- 	wait_queue_entry_t wait;
- 
- 	/* Don't bother with waitqueue if we don't expect a callback */
-@@ -6911,21 +6908,14 @@ nfs4_retry_setlk(struct nfs4_state *stat
- 	add_wait_queue(q, &wait);
- 
- 	while(!signalled()) {
--		waiter.notified = false;
- 		status = nfs4_proc_setlk(state, cmd, request);
- 		if ((status != -EAGAIN) || IS_SETLK(cmd))
- 			break;
- 
- 		status = -ERESTARTSYS;
--		spin_lock_irqsave(&q->lock, flags);
--		if (waiter.notified) {
--			spin_unlock_irqrestore(&q->lock, flags);
--			continue;
--		}
--		set_current_state(TASK_INTERRUPTIBLE);
--		spin_unlock_irqrestore(&q->lock, flags);
--
--		freezable_schedule_timeout(NFS4_LOCK_MAXTIMEOUT);
-+		freezer_do_not_count();
-+		wait_woken(&wait, TASK_INTERRUPTIBLE, NFS4_LOCK_MAXTIMEOUT);
-+		freezer_count();
- 	}
- 
- 	finish_wait(q, &wait);
+ 	if (!(mode & FALLOC_FL_KEEP_SIZE))
 
 
