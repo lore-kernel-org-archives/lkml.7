@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A15C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A116DC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6938A206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C12205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098935;
-	bh=g75Sm/xoGHFxBj4nYNq3+J9XqVcsXYBwcfM3Lm26yAg=;
+	s=default; t=1560098937;
+	bh=E2Rdlv7uSDPtJzLGVT8UvHslPJ1nncPg72gVgMTpO0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+eMzj8fQR+nrMZ2opp8h8RWcei226/8s1Fxk4WRwXtPrnhzc/Q0o0g2OTVUu0BKx
-	 /jSZSIjYHCib5IEp9D/l8utT2YEDlbu/uDu5t6aqt38zUmg9PhOzHBDu3JoX/1Kcrz
-	 Y/18tjst57yMS5iguOgEA286uT2abjgNEWl8eLho=
+	b=ZaXou4hx4ODAtNtn0y2BnMZPMMQTLplSoCV5Zzeu+oeGjoJlwhjnb++PvBC4GPbDw
+	 jgpxJfgO5RAyxebkDUzw6U7iCFeQpJISxgL1GKhBp10TyTXt2ROWdciJmIt9mfFh8/
+	 ZnSuwQ8NCXGWyDroPuAJt4jaDh+fhb+0EXOX0R38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbfFIQsy (ORCPT
+        id S1731348AbfFIQs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48078 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730097AbfFIQsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:52 -0400
+        id S1731334AbfFIQsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9ED205ED;
-        Sun,  9 Jun 2019 16:48:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE86205ED;
+        Sun,  9 Jun 2019 16:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098931;
-        bh=g75Sm/xoGHFxBj4nYNq3+J9XqVcsXYBwcfM3Lm26yAg=;
+        s=default; t=1560098934;
+        bh=E2Rdlv7uSDPtJzLGVT8UvHslPJ1nncPg72gVgMTpO0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OOGPYk2R+ozotSZM7KEtrkDt4+L3hikiEAfVzRW3Ite4bO5BZ4byj6DDHb3EwgC+Q
-         HtIWljfTUIMSOsMd/2cUimx35qYxZRjAl7RWXNvNtx/LNwgdPk1odIwaaWPmCqcl7T
-         LAotkqMs5Kmnaieu7IKX3UreFGsNKEfNWTa3stn8=
+        b=O2r/Uu9ZbbJX0xUdcGx0556HGECzYPMO6a0cRBi6lQUAnKxr1ckybgkZeXoJ9GQjU
+         uvtU/iqyY3RLOCboULMwcIHkY9qAiBrwg+7qIqK8BWBonxzbflP4ZOyo8U7Sphb1Oq
+         0Ga8JKIjqnCLRRSrT4XDr0W6HN+c3guC3OMVxiRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 09/51] net: rds: fix memory leak in rds_ib_flush_mr_pool
-Date:   Sun,  9 Jun 2019 18:41:50 +0200
-Message-Id: <20190609164127.631681340@linuxfoundation.org>
+Subject: [PATCH 4.19 10/51] net: sfp: read eeprom in maximum 16 byte increments
+Date:   Sun,  9 Jun 2019 18:41:51 +0200
+Message-Id: <20190609164127.735353425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,90 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 85cb928787eab6a2f4ca9d2a798b6f3bed53ced1 ]
+[ Upstream commit 28e74a7cfd6403f0d1c0f8b10b45d6fae37b227e ]
 
-When the following tests last for several hours, the problem will occur.
+Some SFP modules do not like reads longer than 16 bytes, so read the
+EEPROM in chunks of 16 bytes at a time.  This behaviour is not specified
+in the SFP MSAs, which specifies:
 
-Server:
-    rds-stress -r 1.1.1.16 -D 1M
-Client:
-    rds-stress -r 1.1.1.14 -s 1.1.1.16 -D 1M -T 30
+ "The serial interface uses the 2-wire serial CMOS E2PROM protocol
+  defined for the ATMEL AT24C01A/02/04 family of components."
 
-The following will occur.
+and
 
-"
-Starting up....
-tsks   tx/s   rx/s  tx+rx K/s    mbi K/s    mbo K/s tx us/c   rtt us cpu
-%
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-"
->From vmcore, we can find that clean_list is NULL.
+ "As long as the SFP+ receives an acknowledge, it shall serially clock
+  out sequential data words. The sequence is terminated when the host
+  responds with a NACK and a STOP instead of an acknowledge."
 
->From the source code, rds_mr_flushd calls rds_ib_mr_pool_flush_worker.
-Then rds_ib_mr_pool_flush_worker calls
-"
- rds_ib_flush_mr_pool(pool, 0, NULL);
-"
-Then in function
-"
-int rds_ib_flush_mr_pool(struct rds_ib_mr_pool *pool,
-                         int free_all, struct rds_ib_mr **ibmr_ret)
-"
-ibmr_ret is NULL.
+We must avoid breaking a read across a 16-bit quantity in the diagnostic
+page, thankfully all 16-bit quantities in that page are naturally
+aligned.
 
-In the source code,
-"
-...
-list_to_llist_nodes(pool, &unmap_list, &clean_nodes, &clean_tail);
-if (ibmr_ret)
-        *ibmr_ret = llist_entry(clean_nodes, struct rds_ib_mr, llnode);
-
-/* more than one entry in llist nodes */
-if (clean_nodes->next)
-        llist_add_batch(clean_nodes->next, clean_tail, &pool->clean_list);
-...
-"
-When ibmr_ret is NULL, llist_entry is not executed. clean_nodes->next
-instead of clean_nodes is added in clean_list.
-So clean_nodes is discarded. It can not be used again.
-The workqueue is executed periodically. So more and more clean_nodes are
-discarded. Finally the clean_list is NULL.
-Then this problem will occur.
-
-Fixes: 1bc144b62524 ("net, rds, Replace xlist in net/rds/xlist.h with llist")
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/ib_rdma.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/phy/sfp.c |   24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
---- a/net/rds/ib_rdma.c
-+++ b/net/rds/ib_rdma.c
-@@ -428,12 +428,14 @@ int rds_ib_flush_mr_pool(struct rds_ib_m
- 		wait_clean_list_grace();
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -280,6 +280,7 @@ static int sfp_i2c_read(struct sfp *sfp,
+ {
+ 	struct i2c_msg msgs[2];
+ 	u8 bus_addr = a2 ? 0x51 : 0x50;
++	size_t this_len;
+ 	int ret;
  
- 		list_to_llist_nodes(pool, &unmap_list, &clean_nodes, &clean_tail);
--		if (ibmr_ret)
-+		if (ibmr_ret) {
- 			*ibmr_ret = llist_entry(clean_nodes, struct rds_ib_mr, llnode);
--
-+			clean_nodes = clean_nodes->next;
-+		}
- 		/* more than one entry in llist nodes */
--		if (clean_nodes->next)
--			llist_add_batch(clean_nodes->next, clean_tail, &pool->clean_list);
-+		if (clean_nodes)
-+			llist_add_batch(clean_nodes, clean_tail,
-+					&pool->clean_list);
+ 	msgs[0].addr = bus_addr;
+@@ -291,11 +292,26 @@ static int sfp_i2c_read(struct sfp *sfp,
+ 	msgs[1].len = len;
+ 	msgs[1].buf = buf;
  
- 	}
+-	ret = i2c_transfer(sfp->i2c, msgs, ARRAY_SIZE(msgs));
+-	if (ret < 0)
+-		return ret;
++	while (len) {
++		this_len = len;
++		if (this_len > 16)
++			this_len = 16;
  
+-	return ret == ARRAY_SIZE(msgs) ? len : 0;
++		msgs[1].len = this_len;
++
++		ret = i2c_transfer(sfp->i2c, msgs, ARRAY_SIZE(msgs));
++		if (ret < 0)
++			return ret;
++
++		if (ret != ARRAY_SIZE(msgs))
++			break;
++
++		msgs[1].buf += this_len;
++		dev_addr += this_len;
++		len -= this_len;
++	}
++
++	return msgs[1].buf - (u8 *)buf;
+ }
+ 
+ static int sfp_i2c_write(struct sfp *sfp, bool a2, u8 dev_addr, void *buf,
 
 
