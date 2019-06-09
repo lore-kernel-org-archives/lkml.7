@@ -6,69 +6,90 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3B5C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35224C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC5E2166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121B1216C4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfFIB1A (ORCPT
+        id S1727994AbfFIB0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 21:27:00 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:59996 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbfFIB0p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Jun 2019 21:26:45 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:59968 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbfFIB0o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 21:26:44 -0400
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 0D0C527ACE; Sat,  8 Jun 2019 21:26:43 -0400 (EDT)
+        id D3B5327AF4; Sat,  8 Jun 2019 21:26:42 -0400 (EDT)
 To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc:     "Michael Schmitz" <schmitzmic@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <825f9cc5f8887f0d32274442ea7b21449b48f27c.1560043151.git.fthain@telegraphics.com.au>
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Message-Id: <4f1de194d0d8fdca36f0f7e90ced7bc5fe1f78f6.1560043151.git.fthain@telegraphics.com.au>
 In-Reply-To: <cover.1560043151.git.fthain@telegraphics.com.au>
 References: <cover.1560043151.git.fthain@telegraphics.com.au>
 From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH v2 7/7] scsi: mac_scsi: Treat Last Byte Sent time-out as
- failure
+Subject: [PATCH v2 4/7] scsi: mac_scsi: Increase PIO/PDMA transfer length
+ threshold
 Date:   Sun, 09 Jun 2019 11:19:11 +1000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A system bus error during a PDMA send operation can result in bytes being
-lost. Theoretically that could cause the target to remain in DATA OUT
-phase and the initiator (expecting a phase change) would time-out waiting
-for the Last Byte Sent flag. Should that happen, fail the transfer so the
-core driver will stop using PDMA with this target.
+Some targets introduce delays when handshaking the response to certain
+commands. For example, a disk may send a 96-byte response to an INQUIRY
+command (or a 24-byte response to a MODE SENSE command) too slowly.
+
+Apparently the first 12 or 14 bytes are handshaked okay but then the
+system bus error timeout is reached while transferring the next word.
+
+Since the scsi bus phase hasn't changed, the driver then sets the target
+borken flag to prevent further PDMA transfers. The driver also logs the
+warning, "switching to slow handshake".
+
+Raise the PDMA threshold to 512 bytes so that PIO transfers will be used
+for these commands. This default is sufficiently low that PDMA will still
+be used for READ and WRITE commands.
+
+The existing threshold (16 bytes) was chosen more or less at random.
+However, best performance requires the threshold to be as low as possible.
+Those systems that don't need the PIO workaround at all may benefit from
+mac_scsi.setup_use_pdma=1
 
 Cc: Michael Schmitz <schmitzmic@gmail.com>
+Cc: stable@vger.kernel.org # v4.14+
+Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/scsi/mac_scsi.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/mac_scsi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/scsi/mac_scsi.c b/drivers/scsi/mac_scsi.c
-index 8fbec1768bbf..658a719cfcba 100644
+index 8b4b5b1a13d7..ba1afcaadae8 100644
 --- a/drivers/scsi/mac_scsi.c
 +++ b/drivers/scsi/mac_scsi.c
-@@ -360,9 +360,12 @@ static inline int macscsi_pwrite(struct NCR5380_hostdata *hostdata,
- 		if (hostdata->pdma_residual == 0) {
- 			if (NCR5380_poll_politely(hostdata, TARGET_COMMAND_REG,
- 			                          TCR_LAST_BYTE_SENT,
--			                          TCR_LAST_BYTE_SENT, HZ / 64) < 0)
-+			                          TCR_LAST_BYTE_SENT,
-+			                          HZ / 64) < 0) {
- 				scmd_printk(KERN_ERR, hostdata->connected,
- 				            "%s: Last Byte Sent timeout\n", __func__);
-+				result = -1;
-+			}
- 			goto out;
- 		}
+@@ -52,7 +52,7 @@ static int setup_cmd_per_lun = -1;
+ module_param(setup_cmd_per_lun, int, 0);
+ static int setup_sg_tablesize = -1;
+ module_param(setup_sg_tablesize, int, 0);
+-static int setup_use_pdma = -1;
++static int setup_use_pdma = 512;
+ module_param(setup_use_pdma, int, 0);
+ static int setup_hostid = -1;
+ module_param(setup_hostid, int, 0);
+@@ -305,7 +305,7 @@ static int macscsi_dma_xfer_len(struct NCR5380_hostdata *hostdata,
+                                 struct scsi_cmnd *cmd)
+ {
+ 	if (hostdata->flags & FLAG_NO_PSEUDO_DMA ||
+-	    cmd->SCp.this_residual < 16)
++	    cmd->SCp.this_residual < setup_use_pdma)
+ 		return 0;
  
+ 	return cmd->SCp.this_residual;
 -- 
 2.21.0
 
