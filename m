@@ -2,52 +2,62 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE24C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3830C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DFB207E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745C220843
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099062;
-	bh=+ffkygEXS9IF6JTPeHnhNmCIkKljbnqV2d1KZQBZGMc=;
+	s=default; t=1560099066;
+	bh=HMbwTyZMlRPgVCnkmWlm6PeYYfTFrs6bET/E8bVYWfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVcMhOt8pqRFctFYbrdQD/Q0dm2KTUPGYdE7yJMEy4zGLPtEHpxpjX9k/qIyQs64P
-	 kFTDWyFDGDQd9ViOcRA/KBPZKovo0ZTGxbhqQMDrVSAUwTMFEpRJ5b57vJTdLQem28
-	 5b78IB38RqkOsLzE2ET1zT6Tenj1O2xD0lqebBQo=
+	b=h/FCWEu7MMB3qohpdNWxcppoQ+E4mBU1JFAez2wOU5K9OfnHj8biEELsb6KgfHaHo
+	 xtgfZdL9+CqTkKlI0g8hbKvqrXVmeJLxnD60VxaO9pBHy+C87mB4lcS93VVlMXlmT1
+	 OtXZdNqT8L2y7s2STALML4Y0/wEwkDnEtXN8SoTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731844AbfFIQvB (ORCPT
+        id S1731353AbfFIQvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:51:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731826AbfFIQu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:57 -0400
+        id S1731845AbfFIQvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:51:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16FD8205ED;
-        Sun,  9 Jun 2019 16:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EEF9206C3;
+        Sun,  9 Jun 2019 16:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099056;
-        bh=+ffkygEXS9IF6JTPeHnhNmCIkKljbnqV2d1KZQBZGMc=;
+        s=default; t=1560099061;
+        bh=HMbwTyZMlRPgVCnkmWlm6PeYYfTFrs6bET/E8bVYWfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0pAOq9JWFVfkRDUNhEh1DBxUit6HtwUy3sR+J1TUZkbRjI/ctzsWWQ+wn9uIhYSRk
-         Av+hFrVGrZp3WFDck+ICqJBUzrsnoi4RiqJRd+U2NWBwxJ9smbqjYTuOZxjqQnFw9d
-         4nxev5WEnmx5EvGuUf84euhpM6ZYxjktukdF39kE=
+        b=Z8fmY1O3hvVCorCh6QDInixzISGgCMHzH/49HCy2jZqh9/Vyvc3Ah37mM2zXiyQKW
+         N0CXshFdR4j7sjWgExnFTV3PN+D8wd68ypGIFPCX6jbF64/L4PrCkCXnA3InNjcfXp
+         vySyIzBJSuUPMi09B+MWIkZjnGAvuKF8zDke2LVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Li RongQing <lirongqing@baidu.com>,
-        Wang Li <wangli39@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
-Subject: [PATCH 4.14 32/35] TTY: serial_core, add ->install
-Date:   Sun,  9 Jun 2019 18:42:38 +0200
-Message-Id: <20190609164127.374966523@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yongzhi Pan <panyongzhi@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Nikolaus Rath <Nikolaus@rath.org>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 34/35] fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+Date:   Sun,  9 Jun 2019 18:42:40 +0200
+Message-Id: <20190609164127.487120713@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -60,125 +70,645 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Kirill Smelkov <kirr@nexedi.com>
 
-commit 4cdd17ba1dff20ffc99fdbd2e6f0201fc7fe67df upstream.
+commit 10dce8af34226d90fa56746a934f8da5dcdba3df upstream.
 
-We need to compute the uart state only on the first open. This is
-usually what is done in the ->install hook. serial_core used to do this
-in ->open on every open. So move it to ->install.
+Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") added
+locking for file.f_pos access and in particular made concurrent read and
+write not possible - now both those functions take f_pos lock for the
+whole run, and so if e.g. a read is blocked waiting for data, write will
+deadlock waiting for that read to complete.
 
-As a side effect, it ensures the state is set properly in the window
-after tty_init_dev is called, but before uart_open. This fixes a bunch
-of races between tty_open and flush_to_ldisc we were dealing with
-recently.
+This caused regression for stream-like files where previously read and
+write could run simultaneously, but after that patch could not do so
+anymore. See e.g. commit 581d21a2d02a ("xenbus: fix deadlock on writes
+to /proc/xen/xenbus") which fixes such regression for particular case of
+/proc/xen/xenbus.
 
-One of such bugs was attempted to fix in commit fedb5760648a (serial:
-fix race between flush_to_ldisc and tty_open), but it only took care of
-a couple of functions (uart_start and uart_unthrottle).  I was able to
-reproduce the crash on a SLE system, but in uart_write_room which is
-also called from flush_to_ldisc via process_echoes. I was *unable* to
-reproduce the bug locally. It is due to having this patch in my queue
-since 2012!
+The patch that added f_pos lock in 2014 did so to guarantee POSIX thread
+safety for read/write/lseek and added the locking to file descriptors of
+all regular files. In 2014 that thread-safety problem was not new as it
+was already discussed earlier in 2006.
 
- general protection fault: 0000 [#1] SMP KASAN PTI
- CPU: 1 PID: 5 Comm: kworker/u4:0 Tainted: G             L 4.12.14-396-default #1 SLE15-SP1 (unreleased)
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c89-prebuilt.qemu.org 04/01/2014
- Workqueue: events_unbound flush_to_ldisc
- task: ffff8800427d8040 task.stack: ffff8800427f0000
- RIP: 0010:uart_write_room+0xc4/0x590
- RSP: 0018:ffff8800427f7088 EFLAGS: 00010202
- RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
- RDX: 000000000000002f RSI: 00000000000000ee RDI: ffff88003888bd90
- RBP: ffffffffb9545850 R08: 0000000000000001 R09: 0000000000000400
- R10: ffff8800427d825c R11: 000000000000006e R12: 1ffff100084fee12
- R13: ffffc900004c5000 R14: ffff88003888bb28 R15: 0000000000000178
- FS:  0000000000000000(0000) GS:ffff880043300000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000561da0794148 CR3: 000000000ebf4000 CR4: 00000000000006e0
- Call Trace:
-  tty_write_room+0x6d/0xc0
-  __process_echoes+0x55/0x870
-  n_tty_receive_buf_common+0x105e/0x26d0
-  tty_ldisc_receive_buf+0xb7/0x1c0
-  tty_port_default_receive_buf+0x107/0x180
-  flush_to_ldisc+0x35d/0x5c0
-...
+However even though 2006'th version of Linus's patch was adding f_pos
+locking "only for files that are marked seekable with FMODE_LSEEK (thus
+avoiding the stream-like objects like pipes and sockets)", the 2014
+version - the one that actually made it into the tree as 9c225f2655e3 -
+is doing so irregardless of whether a file is seekable or not.
 
-0 in rbx means tty->driver_data is NULL in uart_write_room. 0x178 is
-tried to be dereferenced (0x178 >> 3 is 0x2f in rdx) at
-uart_write_room+0xc4. 0x178 is exactly (struct uart_state *)NULL->refcount
-used in uart_port_lock from uart_write_room.
+See
 
-So revert the upstream commit here as my local patch should fix the
-whole family.
+    https://lore.kernel.org/lkml/53022DB1.4070805@gmail.com/
+    https://lwn.net/Articles/180387
+    https://lwn.net/Articles/180396
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Li RongQing <lirongqing@baidu.com>
-Cc: Wang Li <wangli39@baidu.com>
-Cc: Zhang Yu <zhangyu31@baidu.com>
+for historic context.
+
+The reason that it did so is, probably, that there are many files that
+are marked non-seekable, but e.g. their read implementation actually
+depends on knowing current position to correctly handle the read. Some
+examples:
+
+	kernel/power/user.c		snapshot_read
+	fs/debugfs/file.c		u32_array_read
+	fs/fuse/control.c		fuse_conn_waiting_read + ...
+	drivers/hwmon/asus_atk0110.c	atk_debugfs_ggrp_read
+	arch/s390/hypfs/inode.c		hypfs_read_iter
+	...
+
+Despite that, many nonseekable_open users implement read and write with
+pure stream semantics - they don't depend on passed ppos at all. And for
+those cases where read could wait for something inside, it creates a
+situation similar to xenbus - the write could be never made to go until
+read is done, and read is waiting for some, potentially external, event,
+for potentially unbounded time -> deadlock.
+
+Besides xenbus, there are 14 such places in the kernel that I've found
+with semantic patch (see below):
+
+	drivers/xen/evtchn.c:667:8-24: ERROR: evtchn_fops: .read() can deadlock .write()
+	drivers/isdn/capi/capi.c:963:8-24: ERROR: capi_fops: .read() can deadlock .write()
+	drivers/input/evdev.c:527:1-17: ERROR: evdev_fops: .read() can deadlock .write()
+	drivers/char/pcmcia/cm4000_cs.c:1685:7-23: ERROR: cm4000_fops: .read() can deadlock .write()
+	net/rfkill/core.c:1146:8-24: ERROR: rfkill_fops: .read() can deadlock .write()
+	drivers/s390/char/fs3270.c:488:1-17: ERROR: fs3270_fops: .read() can deadlock .write()
+	drivers/usb/misc/ldusb.c:310:1-17: ERROR: ld_usb_fops: .read() can deadlock .write()
+	drivers/hid/uhid.c:635:1-17: ERROR: uhid_fops: .read() can deadlock .write()
+	net/batman-adv/icmp_socket.c:80:1-17: ERROR: batadv_fops: .read() can deadlock .write()
+	drivers/media/rc/lirc_dev.c:198:1-17: ERROR: lirc_fops: .read() can deadlock .write()
+	drivers/leds/uleds.c:77:1-17: ERROR: uleds_fops: .read() can deadlock .write()
+	drivers/input/misc/uinput.c:400:1-17: ERROR: uinput_fops: .read() can deadlock .write()
+	drivers/infiniband/core/user_mad.c:985:7-23: ERROR: umad_fops: .read() can deadlock .write()
+	drivers/gnss/core.c:45:1-17: ERROR: gnss_fops: .read() can deadlock .write()
+
+In addition to the cases above another regression caused by f_pos
+locking is that now FUSE filesystems that implement open with
+FOPEN_NONSEEKABLE flag, can no longer implement bidirectional
+stream-like files - for the same reason as above e.g. read can deadlock
+write locking on file.f_pos in the kernel.
+
+FUSE's FOPEN_NONSEEKABLE was added in 2008 in a7c1b990f715 ("fuse:
+implement nonseekable open") to support OSSPD. OSSPD implements /dev/dsp
+in userspace with FOPEN_NONSEEKABLE flag, with corresponding read and
+write routines not depending on current position at all, and with both
+read and write being potentially blocking operations:
+
+See
+
+    https://github.com/libfuse/osspd
+    https://lwn.net/Articles/308445
+
+    https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1406
+    https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1438-L1477
+    https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1479-L1510
+
+Corresponding libfuse example/test also describes FOPEN_NONSEEKABLE as
+"somewhat pipe-like files ..." with read handler not using offset.
+However that test implements only read without write and cannot exercise
+the deadlock scenario:
+
+    https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L124-L131
+    https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L146-L163
+    https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L209-L216
+
+I've actually hit the read vs write deadlock for real while implementing
+my FUSE filesystem where there is /head/watch file, for which open
+creates separate bidirectional socket-like stream in between filesystem
+and its user with both read and write being later performed
+simultaneously. And there it is semantically not easy to split the
+stream into two separate read-only and write-only channels:
+
+    https://lab.nexedi.com/kirr/wendelin.core/blob/f13aa600/wcfs/wcfs.go#L88-169
+
+Let's fix this regression. The plan is:
+
+1. We can't change nonseekable_open to include &~FMODE_ATOMIC_POS -
+   doing so would break many in-kernel nonseekable_open users which
+   actually use ppos in read/write handlers.
+
+2. Add stream_open() to kernel to open stream-like non-seekable file
+   descriptors. Read and write on such file descriptors would never use
+   nor change ppos. And with that property on stream-like files read and
+   write will be running without taking f_pos lock - i.e. read and write
+   could be running simultaneously.
+
+3. With semantic patch search and convert to stream_open all in-kernel
+   nonseekable_open users for which read and write actually do not
+   depend on ppos and where there is no other methods in file_operations
+   which assume @offset access.
+
+4. Add FOPEN_STREAM to fs/fuse/ and open in-kernel file-descriptors via
+   steam_open if that bit is present in filesystem open reply.
+
+   It was tempting to change fs/fuse/ open handler to use stream_open
+   instead of nonseekable_open on just FOPEN_NONSEEKABLE flags, but
+   grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
+   and in particular GVFS which actually uses offset in its read and
+   write handlers
+
+	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+
+   so if we would do such a change it will break a real user.
+
+5. Add stream_open and FOPEN_STREAM handling to stable kernels starting
+   from v3.14+ (the kernel where 9c225f2655 first appeared).
+
+   This will allow to patch OSSPD and other FUSE filesystems that
+   provide stream-like files to return FOPEN_STREAM | FOPEN_NONSEEKABLE
+   in their open handler and this way avoid the deadlock on all kernel
+   versions. This should work because fs/fuse/ ignores unknown open
+   flags returned from a filesystem and so passing FOPEN_STREAM to a
+   kernel that is not aware of this flag cannot hurt. In turn the kernel
+   that is not aware of FOPEN_STREAM will be < v3.14 where just
+   FOPEN_NONSEEKABLE is sufficient to implement streams without read vs
+   write deadlock.
+
+This patch adds stream_open, converts /proc/xen/xenbus to it and adds
+semantic patch to automatically locate in-kernel places that are either
+required to be converted due to read vs write deadlock, or that are just
+safe to be converted because read and write do not use ppos and there
+are no other funky methods in file_operations.
+
+Regarding semantic patch I've verified each generated change manually -
+that it is correct to convert - and each other nonseekable_open instance
+left - that it is either not correct to convert there, or that it is not
+converted due to current stream_open.cocci limitations.
+
+The script also does not convert files that should be valid to convert,
+but that currently have .llseek = noop_llseek or generic_file_llseek for
+unknown reason despite file being opened with nonseekable_open (e.g.
+drivers/input/mousedev.c)
+
+Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+Cc: Yongzhi Pan <panyongzhi@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: David Vrabel <david.vrabel@citrix.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christoph Hellwig <hch@lst.de>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable <stable@vger.kernel.org>
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: Nikolaus Rath <Nikolaus@rath.org>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/serial_core.c |   24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/xen/xenbus/xenbus_dev_frontend.c |    4 
+ fs/open.c                                |   18 +
+ fs/read_write.c                          |    5 
+ include/linux/fs.h                       |    4 
+ scripts/coccinelle/api/stream_open.cocci |  363 +++++++++++++++++++++++++++++++
+ 5 files changed, 389 insertions(+), 5 deletions(-)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -143,9 +143,6 @@ static void uart_start(struct tty_struct
- 	struct uart_port *port;
- 	unsigned long flags;
+--- a/drivers/xen/xenbus/xenbus_dev_frontend.c
++++ b/drivers/xen/xenbus/xenbus_dev_frontend.c
+@@ -614,9 +614,7 @@ static int xenbus_file_open(struct inode
+ 	if (xen_store_evtchn == 0)
+ 		return -ENOENT;
  
--	if (!state)
--		return;
+-	nonseekable_open(inode, filp);
 -
- 	port = uart_port_lock(state, flags);
- 	__uart_start(tty);
- 	uart_port_unlock(port, flags);
-@@ -1731,11 +1728,8 @@ static void uart_dtr_rts(struct tty_port
-  */
- static int uart_open(struct tty_struct *tty, struct file *filp)
- {
--	struct uart_driver *drv = tty->driver->driver_state;
--	int retval, line = tty->index;
--	struct uart_state *state = drv->state + line;
--
--	tty->driver_data = state;
-+	struct uart_state *state = tty->driver_data;
-+	int retval;
+-	filp->f_mode &= ~FMODE_ATOMIC_POS; /* cdev-style semantics */
++	stream_open(inode, filp);
  
- 	retval = tty_port_open(&state->port, tty, filp);
- 	if (retval > 0)
-@@ -2418,9 +2412,6 @@ static void uart_poll_put_char(struct tt
- 	struct uart_state *state = drv->state + line;
- 	struct uart_port *port;
- 
--	if (!state)
--		return;
--
- 	port = uart_port_ref(state);
- 	if (!port)
- 		return;
-@@ -2432,7 +2423,18 @@ static void uart_poll_put_char(struct tt
+ 	u = kzalloc(sizeof(*u), GFP_KERNEL);
+ 	if (u == NULL)
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1212,3 +1212,21 @@ int nonseekable_open(struct inode *inode
  }
- #endif
  
-+static int uart_install(struct tty_driver *driver, struct tty_struct *tty)
+ EXPORT_SYMBOL(nonseekable_open);
++
++/*
++ * stream_open is used by subsystems that want stream-like file descriptors.
++ * Such file descriptors are not seekable and don't have notion of position
++ * (file.f_pos is always 0). Contrary to file descriptors of other regular
++ * files, .read() and .write() can run simultaneously.
++ *
++ * stream_open never fails and is marked to return int so that it could be
++ * directly used as file_operations.open .
++ */
++int stream_open(struct inode *inode, struct file *filp)
 +{
-+	struct uart_driver *drv = driver->driver_state;
-+	struct uart_state *state = drv->state + tty->index;
-+
-+	tty->driver_data = state;
-+
-+	return tty_standard_install(driver, tty);
++	filp->f_mode &= ~(FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE | FMODE_ATOMIC_POS);
++	filp->f_mode |= FMODE_STREAM;
++	return 0;
 +}
 +
- static const struct tty_operations uart_ops = {
-+	.install	= uart_install,
- 	.open		= uart_open,
- 	.close		= uart_close,
- 	.write		= uart_write,
++EXPORT_SYMBOL(stream_open);
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -555,12 +555,13 @@ ssize_t vfs_write(struct file *file, con
+ 
+ static inline loff_t file_pos_read(struct file *file)
+ {
+-	return file->f_pos;
++	return file->f_mode & FMODE_STREAM ? 0 : file->f_pos;
+ }
+ 
+ static inline void file_pos_write(struct file *file, loff_t pos)
+ {
+-	file->f_pos = pos;
++	if ((file->f_mode & FMODE_STREAM) == 0)
++		file->f_pos = pos;
+ }
+ 
+ SYSCALL_DEFINE3(read, unsigned int, fd, char __user *, buf, size_t, count)
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -148,6 +148,9 @@ typedef int (dio_iodone_t)(struct kiocb
+ /* Has write method(s) */
+ #define FMODE_CAN_WRITE         ((__force fmode_t)0x40000)
+ 
++/* File is stream-like */
++#define FMODE_STREAM		((__force fmode_t)0x200000)
++
+ /* File was opened by fanotify and shouldn't generate fanotify events */
+ #define FMODE_NONOTIFY		((__force fmode_t)0x4000000)
+ 
+@@ -2945,6 +2948,7 @@ extern loff_t no_seek_end_llseek_size(st
+ extern loff_t no_seek_end_llseek(struct file *, loff_t, int);
+ extern int generic_file_open(struct inode * inode, struct file * filp);
+ extern int nonseekable_open(struct inode * inode, struct file * filp);
++extern int stream_open(struct inode * inode, struct file * filp);
+ 
+ #ifdef CONFIG_BLOCK
+ typedef void (dio_submit_t)(struct bio *bio, struct inode *inode,
+--- /dev/null
++++ b/scripts/coccinelle/api/stream_open.cocci
+@@ -0,0 +1,363 @@
++// SPDX-License-Identifier: GPL-2.0
++// Author: Kirill Smelkov (kirr@nexedi.com)
++//
++// Search for stream-like files that are using nonseekable_open and convert
++// them to stream_open. A stream-like file is a file that does not use ppos in
++// its read and write. Rationale for the conversion is to avoid deadlock in
++// between read and write.
++
++virtual report
++virtual patch
++virtual explain  // explain decisions in the patch (SPFLAGS="-D explain")
++
++// stream-like reader & writer - ones that do not depend on f_pos.
++@ stream_reader @
++identifier readstream, ppos;
++identifier f, buf, len;
++type loff_t;
++@@
++  ssize_t readstream(struct file *f, char *buf, size_t len, loff_t *ppos)
++  {
++    ... when != ppos
++  }
++
++@ stream_writer @
++identifier writestream, ppos;
++identifier f, buf, len;
++type loff_t;
++@@
++  ssize_t writestream(struct file *f, const char *buf, size_t len, loff_t *ppos)
++  {
++    ... when != ppos
++  }
++
++
++// a function that blocks
++@ blocks @
++identifier block_f;
++identifier wait_event =~ "^wait_event_.*";
++@@
++  block_f(...) {
++    ... when exists
++    wait_event(...)
++    ... when exists
++  }
++
++// stream_reader that can block inside.
++//
++// XXX wait_* can be called not directly from current function (e.g. func -> f -> g -> wait())
++// XXX currently reader_blocks supports only direct and 1-level indirect cases.
++@ reader_blocks_direct @
++identifier stream_reader.readstream;
++identifier wait_event =~ "^wait_event_.*";
++@@
++  readstream(...)
++  {
++    ... when exists
++    wait_event(...)
++    ... when exists
++  }
++
++@ reader_blocks_1 @
++identifier stream_reader.readstream;
++identifier blocks.block_f;
++@@
++  readstream(...)
++  {
++    ... when exists
++    block_f(...)
++    ... when exists
++  }
++
++@ reader_blocks depends on reader_blocks_direct || reader_blocks_1 @
++identifier stream_reader.readstream;
++@@
++  readstream(...) {
++    ...
++  }
++
++
++// file_operations + whether they have _any_ .read, .write, .llseek ... at all.
++//
++// XXX add support for file_operations xxx[N] = ...	(sound/core/pcm_native.c)
++@ fops0 @
++identifier fops;
++@@
++  struct file_operations fops = {
++    ...
++  };
++
++@ has_read @
++identifier fops0.fops;
++identifier read_f;
++@@
++  struct file_operations fops = {
++    .read = read_f,
++  };
++
++@ has_read_iter @
++identifier fops0.fops;
++identifier read_iter_f;
++@@
++  struct file_operations fops = {
++    .read_iter = read_iter_f,
++  };
++
++@ has_write @
++identifier fops0.fops;
++identifier write_f;
++@@
++  struct file_operations fops = {
++    .write = write_f,
++  };
++
++@ has_write_iter @
++identifier fops0.fops;
++identifier write_iter_f;
++@@
++  struct file_operations fops = {
++    .write_iter = write_iter_f,
++  };
++
++@ has_llseek @
++identifier fops0.fops;
++identifier llseek_f;
++@@
++  struct file_operations fops = {
++    .llseek = llseek_f,
++  };
++
++@ has_no_llseek @
++identifier fops0.fops;
++@@
++  struct file_operations fops = {
++    .llseek = no_llseek,
++  };
++
++@ has_mmap @
++identifier fops0.fops;
++identifier mmap_f;
++@@
++  struct file_operations fops = {
++    .mmap = mmap_f,
++  };
++
++@ has_copy_file_range @
++identifier fops0.fops;
++identifier copy_file_range_f;
++@@
++  struct file_operations fops = {
++    .copy_file_range = copy_file_range_f,
++  };
++
++@ has_remap_file_range @
++identifier fops0.fops;
++identifier remap_file_range_f;
++@@
++  struct file_operations fops = {
++    .remap_file_range = remap_file_range_f,
++  };
++
++@ has_splice_read @
++identifier fops0.fops;
++identifier splice_read_f;
++@@
++  struct file_operations fops = {
++    .splice_read = splice_read_f,
++  };
++
++@ has_splice_write @
++identifier fops0.fops;
++identifier splice_write_f;
++@@
++  struct file_operations fops = {
++    .splice_write = splice_write_f,
++  };
++
++
++// file_operations that is candidate for stream_open conversion - it does not
++// use mmap and other methods that assume @offset access to file.
++//
++// XXX for simplicity require no .{read/write}_iter and no .splice_{read/write} for now.
++// XXX maybe_steam.fops cannot be used in other rules - it gives "bad rule maybe_stream or bad variable fops".
++@ maybe_stream depends on (!has_llseek || has_no_llseek) && !has_mmap && !has_copy_file_range && !has_remap_file_range && !has_read_iter && !has_write_iter && !has_splice_read && !has_splice_write @
++identifier fops0.fops;
++@@
++  struct file_operations fops = {
++  };
++
++
++// ---- conversions ----
++
++// XXX .open = nonseekable_open -> .open = stream_open
++// XXX .open = func -> openfunc -> nonseekable_open
++
++// read & write
++//
++// if both are used in the same file_operations together with an opener -
++// under that conditions we can use stream_open instead of nonseekable_open.
++@ fops_rw depends on maybe_stream @
++identifier fops0.fops, openfunc;
++identifier stream_reader.readstream;
++identifier stream_writer.writestream;
++@@
++  struct file_operations fops = {
++      .open  = openfunc,
++      .read  = readstream,
++      .write = writestream,
++  };
++
++@ report_rw depends on report @
++identifier fops_rw.openfunc;
++position p1;
++@@
++  openfunc(...) {
++    <...
++     nonseekable_open@p1
++    ...>
++  }
++
++@ script:python depends on report && reader_blocks @
++fops << fops0.fops;
++p << report_rw.p1;
++@@
++coccilib.report.print_report(p[0],
++  "ERROR: %s: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix." % (fops,))
++
++@ script:python depends on report && !reader_blocks @
++fops << fops0.fops;
++p << report_rw.p1;
++@@
++coccilib.report.print_report(p[0],
++  "WARNING: %s: .read() and .write() have stream semantic; safe to change nonseekable_open -> stream_open." % (fops,))
++
++
++@ explain_rw_deadlocked depends on explain && reader_blocks @
++identifier fops_rw.openfunc;
++@@
++  openfunc(...) {
++    <...
++-    nonseekable_open
+++    nonseekable_open /* read & write (was deadlock) */
++    ...>
++  }
++
++
++@ explain_rw_nodeadlock depends on explain && !reader_blocks @
++identifier fops_rw.openfunc;
++@@
++  openfunc(...) {
++    <...
++-    nonseekable_open
+++    nonseekable_open /* read & write (no direct deadlock) */
++    ...>
++  }
++
++@ patch_rw depends on patch @
++identifier fops_rw.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   stream_open
++    ...>
++  }
++
++
++// read, but not write
++@ fops_r depends on maybe_stream && !has_write @
++identifier fops0.fops, openfunc;
++identifier stream_reader.readstream;
++@@
++  struct file_operations fops = {
++      .open  = openfunc,
++      .read  = readstream,
++  };
++
++@ report_r depends on report @
++identifier fops_r.openfunc;
++position p1;
++@@
++  openfunc(...) {
++    <...
++    nonseekable_open@p1
++    ...>
++  }
++
++@ script:python depends on report @
++fops << fops0.fops;
++p << report_r.p1;
++@@
++coccilib.report.print_report(p[0],
++  "WARNING: %s: .read() has stream semantic; safe to change nonseekable_open -> stream_open." % (fops,))
++
++@ explain_r depends on explain @
++identifier fops_r.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   nonseekable_open /* read only */
++    ...>
++  }
++
++@ patch_r depends on patch @
++identifier fops_r.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   stream_open
++    ...>
++  }
++
++
++// write, but not read
++@ fops_w depends on maybe_stream && !has_read @
++identifier fops0.fops, openfunc;
++identifier stream_writer.writestream;
++@@
++  struct file_operations fops = {
++      .open  = openfunc,
++      .write = writestream,
++  };
++
++@ report_w depends on report @
++identifier fops_w.openfunc;
++position p1;
++@@
++  openfunc(...) {
++    <...
++    nonseekable_open@p1
++    ...>
++  }
++
++@ script:python depends on report @
++fops << fops0.fops;
++p << report_w.p1;
++@@
++coccilib.report.print_report(p[0],
++  "WARNING: %s: .write() has stream semantic; safe to change nonseekable_open -> stream_open." % (fops,))
++
++@ explain_w depends on explain @
++identifier fops_w.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   nonseekable_open /* write only */
++    ...>
++  }
++
++@ patch_w depends on patch @
++identifier fops_w.openfunc;
++@@
++  openfunc(...) {
++    <...
++-   nonseekable_open
+++   stream_open
++    ...>
++  }
++
++
++// no read, no write - don't change anything
 
 
