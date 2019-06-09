@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F4EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16488C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E87F20693
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D041020693
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100813;
-	bh=sdE3P7sOxxmzEGlCIbI3UmAgN/aiH7Yp1z0Sp9FfpiI=;
+	s=default; t=1560100817;
+	bh=3dLa8NimBsKucGoDE8GB6eGxCqZMLfx7ATcmD0+iWdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lei438tdgBzwKAwkXYes6s9gyrEOiolY1BEr5w2u8GFBWqDGpYqdHWXxKWbBYImie
-	 ZqDeNlxrmko13uVA8b1/o9ii79nuABa1K1g7W2yGvXzLcU27aJd5jRLSHs+bLIoG4R
-	 r58QUbO1pk0QYqnMB4OT7y+bn6sDksI2QbEynqBg=
+	b=mWcv+Qno60iJkuQT9Ij/jhfBihf6q6phyKhnIHogVxyRbwev44YHFedeewZgD4oY8
+	 bflJ+edVkG0DDCSTDJfahKTOwe68AfunCxn51pgouv9Xp32GaHr++U/zB5TNqufIM8
+	 fvP4uvX9+tyBBTkEC3jmtGTLr+dZcgYm/Ge/RpR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbfFIQrq (ORCPT
+        id S1732096AbfFIRUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:20:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730910AbfFIQrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:39 -0400
+        id S1730139AbfFIQrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:47:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA409205ED;
-        Sun,  9 Jun 2019 16:47:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DAD7205ED;
+        Sun,  9 Jun 2019 16:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098859;
-        bh=sdE3P7sOxxmzEGlCIbI3UmAgN/aiH7Yp1z0Sp9FfpiI=;
+        s=default; t=1560098864;
+        bh=3dLa8NimBsKucGoDE8GB6eGxCqZMLfx7ATcmD0+iWdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjzID1LQGlGyzSbq4tDV68WEtk/uNsg5KycjVLMUY4cciyoxyZc6cLbjggYis7OeH
-         iVnIZH+m9rNMaqTFbWuod7Khr09OcRMnEVM4oC+REIodpWNfGVCOCfnX9jqFNLyu0P
-         xz7Y2iV1gwg3OGV1MTxSneXM8JnzOxTjEoBTCHMc=
+        b=dOmZgAON47Z7H5WW3AUUFt2VzostV4vwT8HiJnwEOjVhZGmylkCUi6rI19z47ots+
+         ycOmE3kDQ5qLAiEg29VepsRg5xR+mUDEnm2yJ5MveU5dQ9WbXJZy37Un4mMjZ+WdFw
+         ooDb9QMf3sJcAHa9D44cBGyw4gQ6ekn36iOk3RwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Matz <olivier.matz@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 15/51] ipv6: use READ_ONCE() for inet->hdrincl as in ipv4
-Date:   Sun,  9 Jun 2019 18:41:56 +0200
-Message-Id: <20190609164127.967317205@linuxfoundation.org>
+        stable@vger.kernel.org, Emil Lenngren <emil.lenngren@gmail.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Christian Lamparter <chunkeey@gmail.com>
+Subject: [PATCH 4.19 17/51] mtd: spinand: macronix: Fix ECC Status Read
+Date:   Sun,  9 Jun 2019 18:41:58 +0200
+Message-Id: <20190609164128.063229742@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -59,64 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Matz <olivier.matz@6wind.com>
+From: Emil Lenngren <emil.lenngren@gmail.com>
 
-[ Upstream commit 59e3e4b52663a9d97efbce7307f62e4bc5c9ce91 ]
+commit f4cb4d7b46f6409382fd981eec9556e1f3c1dc5d upstream.
 
-As it was done in commit 8f659a03a0ba ("net: ipv4: fix for a race
-condition in raw_sendmsg") and commit 20b50d79974e ("net: ipv4: emulate
-READ_ONCE() on ->hdrincl bit-field in raw_sendmsg()") for ipv4, copy the
-value of inet->hdrincl in a local variable, to avoid introducing a race
-condition in the next commit.
+The datasheet specifies the upper four bits are reserved.
+Testing on real hardware shows that these bits can indeed be nonzero.
 
-Signed-off-by: Olivier Matz <olivier.matz@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Emil Lenngren <emil.lenngren@gmail.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Christian Lamparter <chunkeey@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/raw.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -782,6 +782,7 @@ static int rawv6_sendmsg(struct sock *sk
- 	struct flowi6 fl6;
- 	struct ipcm6_cookie ipc6;
- 	int addr_len = msg->msg_namelen;
-+	int hdrincl;
- 	u16 proto;
- 	int err;
+---
+ drivers/mtd/nand/spi/macronix.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+--- a/drivers/mtd/nand/spi/macronix.c
++++ b/drivers/mtd/nand/spi/macronix.c
+@@ -10,6 +10,7 @@
+ #include <linux/mtd/spinand.h>
  
-@@ -795,6 +796,13 @@ static int rawv6_sendmsg(struct sock *sk
- 	if (msg->msg_flags & MSG_OOB)
- 		return -EOPNOTSUPP;
+ #define SPINAND_MFR_MACRONIX		0xC2
++#define MACRONIX_ECCSR_MASK		0x0F
  
-+	/* hdrincl should be READ_ONCE(inet->hdrincl)
-+	 * but READ_ONCE() doesn't work with bit fields.
-+	 * Doing this indirectly yields the same result.
-+	 */
-+	hdrincl = inet->hdrincl;
-+	hdrincl = READ_ONCE(hdrincl);
+ static SPINAND_OP_VARIANTS(read_cache_variants,
+ 		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
+@@ -55,7 +56,12 @@ static int mx35lf1ge4ab_get_eccsr(struct
+ 					  SPI_MEM_OP_DUMMY(1, 1),
+ 					  SPI_MEM_OP_DATA_IN(1, eccsr, 1));
+ 
+-	return spi_mem_exec_op(spinand->spimem, &op);
++	int ret = spi_mem_exec_op(spinand->spimem, &op);
++	if (ret)
++		return ret;
 +
- 	/*
- 	 *	Get and verify the address.
- 	 */
-@@ -907,7 +915,7 @@ static int rawv6_sendmsg(struct sock *sk
- 		fl6.flowi6_oif = np->ucast_oif;
- 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
++	*eccsr &= MACRONIX_ECCSR_MASK;
++	return 0;
+ }
  
--	if (inet->hdrincl)
-+	if (hdrincl)
- 		fl6.flowi6_flags |= FLOWI_FLAG_KNOWN_NH;
- 
- 	if (ipc6.tclass < 0)
-@@ -930,7 +938,7 @@ static int rawv6_sendmsg(struct sock *sk
- 		goto do_confirm;
- 
- back_from_confirm:
--	if (inet->hdrincl)
-+	if (hdrincl)
- 		err = rawv6_send_hdrinc(sk, msg, len, &fl6, &dst,
- 					msg->msg_flags, &ipc6.sockc);
- 	else {
+ static int mx35lf1ge4ab_ecc_get_status(struct spinand_device *spinand,
 
 
