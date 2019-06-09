@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B250EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E471C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8920D207E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180CC206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099261;
-	bh=Prh6NfLryFAVFKbWVMDS/CHgoSpQk1KuHybp3IJMt6o=;
+	s=default; t=1560099265;
+	bh=XXAVISAqyT7WLSXlmPvehZaHAV45vUBD1NaiHN9s+Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rcMrF8SXFPWbmwekBRQoL/IUJtHcUSMoV2a30aF5vEIP1iRYn9Nf2jD5qrRk6oF1b
-	 3NQHMo/PojO7v24BE067iIPBViIpHMkExj4cFINHBH3HB6wLUsVBP+Yx/Huc1D1jxY
-	 3hmeAbR9b37CJo48zeId9oioCw3UzHV8CWKyknF4=
+	b=CZfb6GGkUiBr82jBv9tx8YVLDa3cNaqGOeRuwDgzCHuQDPeODETrA3/eBZ+oxGUNi
+	 Nprfm7tQ4Hba93UHPmbEmB0oh5GHAnA5BOEFVGI3kZD/2P1jYAZzmIr5W+3MBIlSjL
+	 rhFI908jx5Q7PEbmuW4aQ+mxtG6eIb2C8eQk8OY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbfFIQyU (ORCPT
+        id S1732585AbfFIQyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55882 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732141AbfFIQyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:54:16 -0400
+        id S1732574AbfFIQyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:54:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFC42204EC;
-        Sun,  9 Jun 2019 16:54:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA545204EC;
+        Sun,  9 Jun 2019 16:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099256;
-        bh=Prh6NfLryFAVFKbWVMDS/CHgoSpQk1KuHybp3IJMt6o=;
+        s=default; t=1560099259;
+        bh=XXAVISAqyT7WLSXlmPvehZaHAV45vUBD1NaiHN9s+Ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AUhJQfjTzkw8BgrhQyACBkaBS8x/g86dnr038jsD+Oz8JvGAP5kft8LAtfpankgGI
-         N9pd1XwiHIhC/3qI9mhcySI6oEo7THTw599J490GzLDrfgDeJvXmmxpCE/Ns0VvqIO
-         WbFMMRlLNczncMLL4XNU5UpDYC6OlOpbhXPm05rA=
+        b=EryxZZcVAd/wsGZEtoNk1RQh8GDTxNq3xEVe2np6wTiwm2fPWBF6Ci6+d3Rx4IxIt
+         P7AlnvY9QmrO9K3lWTCba3j/Q6HynMPn/6kVc2UGdQMue85hyTDOjvYg75iLQgMMh/
+         hPJKnc1cXQBN6UGmU8IlPrbVMfeBR/vJzNANMpUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.9 21/83] xhci: Use %zu for printing size_t type
-Date:   Sun,  9 Jun 2019 18:41:51 +0200
-Message-Id: <20190609164129.318546479@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alec Ari <neotheuser@gmail.com>, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 59/83] Revert "x86/build: Move _etext to actual end of .text"
+Date:   Sun,  9 Jun 2019 18:42:29 +0200
+Message-Id: <20190609164132.916806087@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -60,47 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit c1a145a3ed9a40f3b6145feb97789e8eb49c5566 upstream.
+This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
 
-Commit 597c56e372da ("xhci: update bounce buffer with correct sg num")
-caused the following build warnings:
+It seems to cause lots of problems when using the gold linker, and no
+one really needs this at the moment, so just revert it from the stable
+trees.
 
-drivers/usb/host/xhci-ring.c:676:19: warning: format '%ld' expects argument of type 'long int', but argument 3 has type 'size_t {aka unsigned int}' [-Wformat=]
-
-Use %zu for printing size_t type in order to fix the warnings.
-
-Fixes: 597c56e372da ("xhci: update bounce buffer with correct sg num")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Reported-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: Alec Ari <neotheuser@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/host/xhci-ring.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -695,7 +695,7 @@ void xhci_unmap_td_bounce_buffer(struct
- 	len = sg_pcopy_from_buffer(urb->sg, urb->num_sgs, seg->bounce_buf,
- 			     seg->bounce_len, seg->bounce_offs);
- 	if (len != seg->bounce_len)
--		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %ld != %d\n",
-+		xhci_warn(xhci, "WARN Wrong bounce buffer read length: %zu != %d\n",
- 				len, seg->bounce_len);
- 	seg->bounce_len = 0;
- 	seg->bounce_offs = 0;
-@@ -3202,7 +3202,7 @@ static int xhci_align_td(struct xhci_hcd
- 				   seg->bounce_buf, new_buff_len, enqd_len);
- 		if (len != seg->bounce_len)
- 			xhci_warn(xhci,
--				"WARN Wrong bounce buffer write length: %ld != %d\n",
-+				"WARN Wrong bounce buffer write length: %zu != %d\n",
- 				len, seg->bounce_len);
- 		seg->bounce_dma = dma_map_single(dev, seg->bounce_buf,
- 						 max_pkt, DMA_TO_DEVICE);
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -111,10 +111,10 @@ SECTIONS
+ 		*(.text.__x86.indirect_thunk)
+ 		__indirect_thunk_end = .;
+ #endif
+-	} :text = 0x9090
+ 
+-	/* End of text section */
+-	_etext = .;
++		/* End of text section */
++		_etext = .;
++	} :text = 0x9090
+ 
+ 	NOTES :text :note
+ 
 
 
