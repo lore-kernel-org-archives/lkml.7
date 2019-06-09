@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA3C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497ADC2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BEC20833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171F72081C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098828;
-	bh=djcMLwIfe/22lcru6QrlwMZ98x837/yYlP/0xOJ48ow=;
+	s=default; t=1560098831;
+	bh=Nggsw0KzbLBQhB1nqN+J0wSd06FmF8uIhVN1dpIoAP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XXBPF/0XvHaB73zInuixyDsbef/gSOhvQDwj9K2t2rOE3T1kIOc6Hdyc4dLoo8GlJ
-	 bLRTOApran6EFuoWYkVormruafPWDiufO0t+Mc2OByoKVeZuiPm2LQtWDtOdpjpqta
-	 UbcYZUlJMk+wPEngVdlyTt98pRdT3o497QFxyr4c=
+	b=IwVEgyRjJdT8puprvdE/8E2ZsXe2trjaQPRxHkHoF/NWZk3OQaiKFv+STPPh61RHt
+	 0E6WSWm4qoU6bBKvhklzTt21Kp2QXTOcofph09ALpGU8tyvQtu+B6SH0P+hgDQ5ouu
+	 x1lfBcFO0peiUAMHGJI7Zb3mP2KPMPrhX48FfOyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbfFIQrH (ORCPT
+        id S1730786AbfFIQrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:47:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45602 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:47:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730735AbfFIQrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:05 -0400
+        id S1730735AbfFIQrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:47:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C22208E3;
-        Sun,  9 Jun 2019 16:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A70F42081C;
+        Sun,  9 Jun 2019 16:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098824;
-        bh=djcMLwIfe/22lcru6QrlwMZ98x837/yYlP/0xOJ48ow=;
+        s=default; t=1560098827;
+        bh=Nggsw0KzbLBQhB1nqN+J0wSd06FmF8uIhVN1dpIoAP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LgaWbpPpe34bq96A61o1XHKMe08SuGd/BwMp5FrZ1K+ckBRRX4Mno5/dweNjhOJqs
-         aEm6BSet/dLC5j1eBdubwTYHzmyFbA4T4SPyH0HbVsGqC7rP3uAEy/PjjqgzoJWMsg
-         jeU+Allul09M3l8b99S+GxBP1lPwhlXBnFaYOMIk=
+        b=b6GMxDfIBdLkoPjro0icDS69hJGICT096QJ9gRl00SibbMqJEM8tka4iQW3z4Yspl
+         ipGkyi7dks877C9BnKeJJCLOiE2144jleoPvxDkuIQPLx1p+xVFSLmM0YNa8NStjix
+         i5Pdd3UeEo8sT9JWg/3zhGTz+Hrfvjtsw+GfqR+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 5.1 41/70] i2c: xiic: Add max_read_len quirk
-Date:   Sun,  9 Jun 2019 18:41:52 +0200
-Message-Id: <20190609164130.702915045@linuxfoundation.org>
+        stable@vger.kernel.org, Janosch Frank <frankja@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: [PATCH 5.1 42/70] s390/mm: fix address space detection in exception handling
+Date:   Sun,  9 Jun 2019 18:41:53 +0200
+Message-Id: <20190609164130.814053228@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -60,49 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Hancock <hancock@sedsystems.ca>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-commit 49b809586730a77b57ce620b2f9689de765d790b upstream.
+commit 962f0af83c239c0aef05639631e871c874b00f99 upstream.
 
-This driver does not support reading more than 255 bytes at once because
-the register for storing the number of bytes to read is only 8 bits. Add
-a max_read_len quirk to enforce this.
+Commit 0aaba41b58bc ("s390: remove all code using the access register
+mode") removed access register mode from the kernel, and also from the
+address space detection logic. However, user space could still switch
+to access register mode (trans_exc_code == 1), and exceptions in that
+mode would not be correctly assigned.
 
-This was found when using this driver with the SFP driver, which was
-previously reading all 256 bytes in the SFP EEPROM in one transaction.
-This caused a bunch of hard-to-debug errors in the xiic driver since the
-driver/logic was treating the number of bytes to read as zero.
-Rejecting transactions that aren't supported at least allows the problem
-to be diagnosed more easily.
+Fix this by adding a check for trans_exc_code == 1 to get_fault_type(),
+and remove the wrong comment line before that function.
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Reviewed-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
+Fixes: 0aaba41b58bc ("s390: remove all code using the access register mode")
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: <stable@vger.kernel.org> # v4.15+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-xiic.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ arch/s390/mm/fault.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/i2c/busses/i2c-xiic.c
-+++ b/drivers/i2c/busses/i2c-xiic.c
-@@ -718,11 +718,16 @@ static const struct i2c_algorithm xiic_a
- 	.functionality = xiic_func,
- };
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -83,7 +83,6 @@ static inline int notify_page_fault(stru
  
-+static const struct i2c_adapter_quirks xiic_quirks = {
-+	.max_read_len = 255,
-+};
-+
- static const struct i2c_adapter xiic_adapter = {
- 	.owner = THIS_MODULE,
- 	.name = DRIVER_NAME,
- 	.class = I2C_CLASS_DEPRECATED,
- 	.algo = &xiic_algorithm,
-+	.quirks = &xiic_quirks,
- };
- 
- 
+ /*
+  * Find out which address space caused the exception.
+- * Access register mode is impossible, ignore space == 3.
+  */
+ static inline enum fault_type get_fault_type(struct pt_regs *regs)
+ {
+@@ -108,6 +107,10 @@ static inline enum fault_type get_fault_
+ 		}
+ 		return VDSO_FAULT;
+ 	}
++	if (trans_exc_code == 1) {
++		/* access register mode, not used in the kernel */
++		return USER_FAULT;
++	}
+ 	/* home space exception -> access via kernel ASCE */
+ 	return KERNEL_FAULT;
+ }
 
 
