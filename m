@@ -2,82 +2,134 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF34CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 04:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F202C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 04:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFF5212F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 04:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272D62166E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 04:35:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="by4vZqhK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbfFIEDG (ORCPT
+        id S1726552AbfFIEfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 00:03:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54128 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfFIEDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 00:03:06 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D82317FDEE;
-        Sun,  9 Jun 2019 04:03:05 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-49.pek2.redhat.com [10.72.12.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1507F601A6;
-        Sun,  9 Jun 2019 04:02:52 +0000 (UTC)
-Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel e820
- table
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com
-References: <20190423013007.17838-1-lijiang@redhat.com>
- <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
- <20190607174211.GN20269@zn.tnic>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <843cf2d9-8b52-75de-0e76-7ae216bc8e64@redhat.com>
-Date:   Sun, 9 Jun 2019 12:02:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 9 Jun 2019 00:35:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41286 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfFIEfg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 00:35:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3iCKY5LeaLUChDTDcVwu/h/F/j5YNJNGeSjVT5fdq88=; b=by4vZqhKqOxBJlKDd6hArInlm
+        WKADOCatsOoNcHcijlFuSKSkpxMaFoz+89V6rK04DRk+KaXCbmjSjbMjOQfsAKas/yaCx5yaCrasG
+        PyDXtgEdyTUBWH6O2Kupd/9erdnh9qOXU3372Xvj91W9/ecClafI8rERmnDPqNnlLZLG8HaG0+dgj
+        PG34x6yfIbTqxYxkE5sdI9jS93S8CLdAEfq+8giWfgfKdy/xskycgZGnI+QZfPXyxlcVAEB/kbmeC
+        MklrDoI9xw3g29y2gcGpCpY13lPuccz0x2cX4ZFoHieSnsz9BE7EtXKwrdSxm6hjjELk+Y+gJQ64J
+        +1JtM+uTg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZpYN-0008Ro-Px; Sun, 09 Jun 2019 04:35:35 +0000
+Subject: Re: [PATCH 02/13] uapi: General notification ring definitions [ver
+ #4]
+To:     David Howells <dhowells@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190607151228.GA1872258@magnolia>
+ <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
+ <155991706083.15579.16359443779582362339.stgit@warthog.procyon.org.uk>
+ <29222.1559922719@warthog.procyon.org.uk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6b6f5bb0-1426-239b-ac9f-281e31ddcd04@infradead.org>
+Date:   Sat, 8 Jun 2019 21:35:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190607174211.GN20269@zn.tnic>
+In-Reply-To: <29222.1559922719@warthog.procyon.org.uk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Sun, 09 Jun 2019 04:03:06 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019年06月08日 01:42, Borislav Petkov 写道:
-> On Tue, May 28, 2019 at 03:30:21PM +0800, lijiang wrote:
->> Hi, Boris and Thomas
+On 6/7/19 8:51 AM, David Howells wrote:
+> Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> 
+
+>>> +	__u32			info;
+>>> +#define WATCH_INFO_OVERRUN	0x00000001	/* Event(s) lost due to overrun */
+>>> +#define WATCH_INFO_ENOMEM	0x00000002	/* Event(s) lost due to ENOMEM */
+>>> +#define WATCH_INFO_RECURSIVE	0x00000004	/* Change was recursive */
+>>> +#define WATCH_INFO_LENGTH	0x000001f8	/* Length of record / sizeof(watch_notification) */
 >>
->> Could you give me any suggestions about this patch series? Other reviewers?
+>> This is a mask, isn't it?  Could we perhaps have some helpers here?
+>> Something along the lines of...
+>>
+>> #define WATCH_INFO_LENGTH_MASK	0x000001f8
+>> #define WATCH_INFO_LENGTH_SHIFT	3
+>>
+>> static inline size_t watch_notification_length(struct watch_notification *wn)
+>> {
+>> 	return (wn->info & WATCH_INFO_LENGTH_MASK) >> WATCH_INFO_LENGTH_SHIFT *
+>> 			sizeof(struct watch_notification);
+>> }
+>>
+>> static inline struct watch_notification *watch_notification_next(
+>> 		struct watch_notification *wn)
+>> {
+>> 	return wn + ((wn->info & WATCH_INFO_LENGTH_MASK) >>
+>> 			WATCH_INFO_LENGTH_SHIFT);
+>> }
 > 
-> So I'm testing this on a box with SME enabled but after loading the
-> crash kernel, it freezes instead of rebooting. My cmdline is:
-> 
->  kexec -s -p /boot/vmlinuz-5.2.0-rc3+ --initrd=/boot/initrd.img-5.2.0-rc3+ --command-line="maxcpus=1 root=/dev/sda5 ro debug ignore_loglevel log_buf_len=16M no_console_suspend net.ifnames=0 systemd.log_target=null mem_encrypt=on kvm_amd.sev=1 nr_cpus=1 irqpoll reset_devices vga=normal LANG=en_US.UTF-8 earlyprintk=serial cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never disable_cpu_apicid=0"
-> 
-> and the reserved range is:
-> 
-> [    0.000000] Reserving 256MB of memory at 3392MB for crashkernel (System RAM: 16271MB)
-> 
-> I'm wondering if it is related to
-> 
-> https://lkml.kernel.org/r/20190604134952.GC26891@MiWiFi-R3L-srv
-> 
-Yes. It should be a SME issue.
+> No inline functions in UAPI headers, please.  I'd love to kill off the ones
+> that we have, but that would break things.
 
-Thanks.
-Lianbo
+Hi David,
 
-> Thx.
+What is the problem with inline functions in UAPI headers?
+
+>> ...so that we don't have to opencode all of the ring buffer walking
+>> magic and stuff?
 > 
+> There'll end up being a small userspace library, I think.
+
+>>> +};
+>>> +
+>>> +#define WATCH_LENGTH_SHIFT	3
+>>> +
+>>> +struct watch_queue_buffer {
+>>> +	union {
+>>> +		/* The first few entries are special, containing the
+>>> +		 * ring management variables.
+>>
+>> The first /two/ entries, correct?
+> 
+> Currently two.
+> 
+>> Also, weird multiline comment style.
+> 
+> Not really.
+
+Yes really.
+
+>>> +		 */
+
+It does not match the preferred coding style for multi-line comments
+according to coding-style.rst.
+
+
+thanks.
+-- 
+~Randy
