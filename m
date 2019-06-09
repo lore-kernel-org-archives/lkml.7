@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C35C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC74C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B75B205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DDF7206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099049;
-	bh=x/C2d2mxfXgIw/4tYqINkyi/w6w4KJi8gRh9kImqzYA=;
+	s=default; t=1560099053;
+	bh=B2SiIh6nqU8JhbnZqr5zqXd+B9YpyaDEGxBG0NX2oos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wLpOAEXb2DYoBcmiCpJDgwRLZKYv3W2KypvNcmJCY4HbMQo0DlMzAmLjnufkLTQCQ
-	 V+57tcPDm53yHJ7sHwVC+VsgsM6CYlCNVo6WNP/6VbUMkzHGvU9zBNkfTT6Kfag4YT
-	 nKj3BUtxJ2ZbGD77C/0xfEuzUCvOSZhhKDaSyJzM=
+	b=OKKpwWYNrQod/D16IUUmCeHFfKPUKrIRn2DT4tdDsE8L/gDgZmnrqUoc3b8WGMQD9
+	 Qx6jDFIO2QiTWz75qGwJTGTNK7OBnu1MbpavnshxiPqcN2BCfvG39yDNmX3ru2JoYs
+	 jAyQwziybmpU9gGbrGWFTJStsoed5Zo7ZAaMOUNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731793AbfFIQus (ORCPT
+        id S1731797AbfFIQuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:50:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50706 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:50:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731771AbfFIQun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:43 -0400
+        id S1731792AbfFIQut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:50:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E41D4206DF;
-        Sun,  9 Jun 2019 16:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B0F6205ED;
+        Sun,  9 Jun 2019 16:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099043;
-        bh=x/C2d2mxfXgIw/4tYqINkyi/w6w4KJi8gRh9kImqzYA=;
+        s=default; t=1560099048;
+        bh=B2SiIh6nqU8JhbnZqr5zqXd+B9YpyaDEGxBG0NX2oos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wPm1/8GoZLxlWT0Eo1sioz+mIfLyhgCsEDgcg2FyjrIirCLjBoVRS+OciE7UM2j6t
-         0W/VuVT5jAFUJhz8eEzlHB50ItegfASjTRJ/r3h4jSaEIbNJsnizmy3u/D9RIC0Z4q
-         bvlOPLYCgrp3SFI4iZTN12iAoQIjSnKNAgUzp/SQ=
+        b=hp8zclJaXmtZ0EEMH+PZe4SdId+YHbl8oLSFDC/UOb5xIvAqyfNSL/e8PZUEUQKys
+         STpg70e9D7MC5xowe0ZiAQO0ZCBc6I2iLd7felseIbA7lQSaHTc7CrvIkY2npRcU4z
+         LEBJ5TVe34v7l6JGsNAP7nfBQVyfEKCGK25eV6cE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 4.14 27/35] drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)
-Date:   Sun,  9 Jun 2019 18:42:33 +0200
-Message-Id: <20190609164127.107357421@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Dufresne <dufresnep@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.14 29/35] drm/radeon: prefer lower reference dividers
+Date:   Sun,  9 Jun 2019 18:42:35 +0200
+Message-Id: <20190609164127.196085204@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -59,112 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Christian König <christian.koenig@amd.com>
 
-commit b30a43ac7132cdda833ac4b13dd1ebd35ace14b7 upstream.
+commit 2e26ccb119bde03584be53406bbd22e711b0d6e6 upstream.
 
-There was a nouveau DDX that relied on legacy context ioctls to work,
-but we fixed it years ago, give distros that have a modern DDX the
-option to break the uAPI and close the mess of holes that legacy
-context support is.
+Instead of the closest reference divider prefer the lowest,
+this fixes flickering issues on HP Compaq nx9420.
 
-Full context of the story:
-
-commit 0e975980d435d58df2d430d688b8c18778b42218
-Author: Peter Antoine <peter.antoine@intel.com>
-Date:   Tue Jun 23 08:18:49 2015 +0100
-
-    drm: Turn off Legacy Context Functions
-
-    The context functions are not used by the i915 driver and should not
-    be used by modeset drivers. These driver functions contain several bugs
-    and security holes. This change makes these functions optional can be
-    turned on by a setting, they are turned off by default for modeset
-    driver with the exception of the nouvea driver that may require them with
-    an old version of libdrm.
-
-    The previous attempt was
-
-    commit 7c510133d93dd6f15ca040733ba7b2891ed61fd1
-    Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-    Date:   Thu Aug 8 15:41:21 2013 +0200
-
-        drm: mark context support as a legacy subsystem
-
-    but this had to be reverted
-
-    commit c21eb21cb50d58e7cbdcb8b9e7ff68b85cfa5095
-    Author: Dave Airlie <airlied@redhat.com>
-    Date:   Fri Sep 20 08:32:59 2013 +1000
-
-        Revert "drm: mark context support as a legacy subsystem"
-
-    v2: remove returns from void function, and formatting (Daniel Vetter)
-
-    v3:
-    - s/Nova/nouveau/ in the commit message, and add references to the
-      previous attempts
-    - drop the part touching the drm hw lock, that should be a separate
-      patch.
-
-    Signed-off-by: Peter Antoine <peter.antoine@intel.com> (v2)
-    Cc: Peter Antoine <peter.antoine@intel.com> (v2)
-    Reviewed-by: Peter Antoine <peter.antoine@intel.com>
-    Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-v2: move DRM_VM dependency into legacy config.
-v3: fix missing dep (kbuild robot)
-
+Bugs: https://bugs.freedesktop.org/show_bug.cgi?id=108514
+Suggested-by: Paul Dufresne <dufresnep@gmail.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/nouveau/Kconfig       |   13 ++++++++++++-
- drivers/gpu/drm/nouveau/nouveau_drm.c |    7 +++++--
- 2 files changed, 17 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/radeon/radeon_display.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -16,10 +16,21 @@ config DRM_NOUVEAU
- 	select INPUT if ACPI && X86
- 	select THERMAL if ACPI && X86
- 	select ACPI_VIDEO if ACPI && X86
--	select DRM_VM
- 	help
- 	  Choose this option for open-source NVIDIA support.
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -923,12 +923,12 @@ static void avivo_get_fb_ref_div(unsigne
+ 	ref_div_max = max(min(100 / post_div, ref_div_max), 1u);
  
-+config NOUVEAU_LEGACY_CTX_SUPPORT
-+	bool "Nouveau legacy context support"
-+	depends on DRM_NOUVEAU
-+	select DRM_VM
-+	default y
-+	help
-+	  There was a version of the nouveau DDX that relied on legacy
-+	  ctx ioctls not erroring out. But that was back in time a long
-+	  ways, so offer a way to disable it now. For uapi compat with
-+	  old nouveau ddx this should be on by default, but modern distros
-+	  should consider turning it off.
-+
- config NOUVEAU_PLATFORM_DRIVER
- 	bool "Nouveau (NVIDIA) SoC GPUs"
- 	depends on DRM_NOUVEAU && ARCH_TEGRA
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -967,8 +967,11 @@ nouveau_driver_fops = {
- static struct drm_driver
- driver_stub = {
- 	.driver_features =
--		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER |
--		DRIVER_KMS_LEGACY_CONTEXT,
-+		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER
-+#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
-+		| DRIVER_KMS_LEGACY_CONTEXT
-+#endif
-+		,
+ 	/* get matching reference and feedback divider */
+-	*ref_div = min(max(DIV_ROUND_CLOSEST(den, post_div), 1u), ref_div_max);
++	*ref_div = min(max(den/post_div, 1u), ref_div_max);
+ 	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
  
- 	.load = nouveau_drm_load,
- 	.unload = nouveau_drm_unload,
+ 	/* limit fb divider to its maximum */
+ 	if (*fb_div > fb_div_max) {
+-		*ref_div = DIV_ROUND_CLOSEST(*ref_div * fb_div_max, *fb_div);
++		*ref_div = (*ref_div * fb_div_max)/(*fb_div);
+ 		*fb_div = fb_div_max;
+ 	}
+ }
 
 
