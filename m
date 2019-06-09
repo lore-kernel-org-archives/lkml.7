@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3034C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE24C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793E8206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DFB207E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099059;
-	bh=Kyw+DKCc0PB3LdzCySl7UpeaARmShREkB7OnDvbwj0I=;
+	s=default; t=1560099062;
+	bh=+ffkygEXS9IF6JTPeHnhNmCIkKljbnqV2d1KZQBZGMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MVkYsEPPBOj9793kH5BHfN1aMJN6Q0JIBDrImVJ1XY1ftM2lvr0tBCUgQOowL3P7m
-	 uz7Ggk8A4ec3K5lqojGfi+2VBE7z4Evs08Y28WXoJiVA7tPU3z6uUNWjnsJng6XYGa
-	 MPGojttg4/pi7TUB8KwHTa3FPXDfwwZ4LJcmFM5k=
+	b=mVcMhOt8pqRFctFYbrdQD/Q0dm2KTUPGYdE7yJMEy4zGLPtEHpxpjX9k/qIyQs64P
+	 kFTDWyFDGDQd9ViOcRA/KBPZKovo0ZTGxbhqQMDrVSAUwTMFEpRJ5b57vJTdLQem28
+	 5b78IB38RqkOsLzE2ET1zT6Tenj1O2xD0lqebBQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731158AbfFIQu6 (ORCPT
+        id S1731844AbfFIQvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:50:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50922 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:51:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731810AbfFIQuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:54 -0400
+        id S1731826AbfFIQu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FCE520843;
-        Sun,  9 Jun 2019 16:50:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16FD8205ED;
+        Sun,  9 Jun 2019 16:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099054;
-        bh=Kyw+DKCc0PB3LdzCySl7UpeaARmShREkB7OnDvbwj0I=;
+        s=default; t=1560099056;
+        bh=+ffkygEXS9IF6JTPeHnhNmCIkKljbnqV2d1KZQBZGMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jgx4n08eO9IXYh7o/j8gKa+CGuxucj7J42qGMNPhmIcUnZMkiLyCHjEWnXVsV7GnJ
-         9ofv0DyYypm19RnZlD3sgu7y1Y/if7R6W5LIlWbuU2YW/hRifyHbyMlLuZiSeT24Yx
-         z3kR8JMO4nyWj3wP04TRyQpmOyzw9lUylk93H0pU=
+        b=0pAOq9JWFVfkRDUNhEh1DBxUit6HtwUy3sR+J1TUZkbRjI/ctzsWWQ+wn9uIhYSRk
+         Av+hFrVGrZp3WFDck+ICqJBUzrsnoi4RiqJRd+U2NWBwxJ9smbqjYTuOZxjqQnFw9d
+         4nxev5WEnmx5EvGuUf84euhpM6ZYxjktukdF39kE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paulo Zanoni <paulo.r.zanoni@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 4.14 31/35] drm/i915/fbc: disable framebuffer compression on GeminiLake
-Date:   Sun,  9 Jun 2019 18:42:37 +0200
-Message-Id: <20190609164127.307742746@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Li RongQing <lirongqing@baidu.com>,
+        Wang Li <wangli39@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
+Subject: [PATCH 4.14 32/35] TTY: serial_core, add ->install
+Date:   Sun,  9 Jun 2019 18:42:38 +0200
+Message-Id: <20190609164127.374966523@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -64,49 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 396dd8143bdd94bd1c358a228a631c8c895a1126 upstream.
+commit 4cdd17ba1dff20ffc99fdbd2e6f0201fc7fe67df upstream.
 
-On many (all?) the Gemini Lake systems we work with, there is frequent
-momentary graphical corruption at the top of the screen, and it seems
-that disabling framebuffer compression can avoid this.
+We need to compute the uart state only on the first open. This is
+usually what is done in the ->install hook. serial_core used to do this
+in ->open on every open. So move it to ->install.
 
-The ticket was reported 6 months ago and has already affected a
-multitude of users, without any real progress being made. So, lets
-disable framebuffer compression on GeminiLake until a solution is found.
+As a side effect, it ensures the state is set properly in the window
+after tty_init_dev is called, but before uart_open. This fixes a bunch
+of races between tty_open and flush_to_ldisc we were dealing with
+recently.
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=108085
-Fixes: fd7d6c5c8f3e ("drm/i915: enable FBC on gen9+ too")
-Cc: Paulo Zanoni <paulo.r.zanoni@intel.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Reviewed-by: Paulo Zanoni <paulo.r.zanoni@intel.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190423092810.28359-1-jian-hong@endlessm.com
-(cherry picked from commit 1d25724b41fad7eeb2c3058a5c8190d6ece73e08)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+One of such bugs was attempted to fix in commit fedb5760648a (serial:
+fix race between flush_to_ldisc and tty_open), but it only took care of
+a couple of functions (uart_start and uart_unthrottle).  I was able to
+reproduce the crash on a SLE system, but in uart_write_room which is
+also called from flush_to_ldisc via process_echoes. I was *unable* to
+reproduce the bug locally. It is due to having this patch in my queue
+since 2012!
+
+ general protection fault: 0000 [#1] SMP KASAN PTI
+ CPU: 1 PID: 5 Comm: kworker/u4:0 Tainted: G             L 4.12.14-396-default #1 SLE15-SP1 (unreleased)
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c89-prebuilt.qemu.org 04/01/2014
+ Workqueue: events_unbound flush_to_ldisc
+ task: ffff8800427d8040 task.stack: ffff8800427f0000
+ RIP: 0010:uart_write_room+0xc4/0x590
+ RSP: 0018:ffff8800427f7088 EFLAGS: 00010202
+ RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+ RDX: 000000000000002f RSI: 00000000000000ee RDI: ffff88003888bd90
+ RBP: ffffffffb9545850 R08: 0000000000000001 R09: 0000000000000400
+ R10: ffff8800427d825c R11: 000000000000006e R12: 1ffff100084fee12
+ R13: ffffc900004c5000 R14: ffff88003888bb28 R15: 0000000000000178
+ FS:  0000000000000000(0000) GS:ffff880043300000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000561da0794148 CR3: 000000000ebf4000 CR4: 00000000000006e0
+ Call Trace:
+  tty_write_room+0x6d/0xc0
+  __process_echoes+0x55/0x870
+  n_tty_receive_buf_common+0x105e/0x26d0
+  tty_ldisc_receive_buf+0xb7/0x1c0
+  tty_port_default_receive_buf+0x107/0x180
+  flush_to_ldisc+0x35d/0x5c0
+...
+
+0 in rbx means tty->driver_data is NULL in uart_write_room. 0x178 is
+tried to be dereferenced (0x178 >> 3 is 0x2f in rdx) at
+uart_write_room+0xc4. 0x178 is exactly (struct uart_state *)NULL->refcount
+used in uart_port_lock from uart_write_room.
+
+So revert the upstream commit here as my local patch should fix the
+whole family.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Li RongQing <lirongqing@baidu.com>
+Cc: Wang Li <wangli39@baidu.com>
+Cc: Zhang Yu <zhangyu31@baidu.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/intel_fbc.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/serial_core.c |   24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
---- a/drivers/gpu/drm/i915/intel_fbc.c
-+++ b/drivers/gpu/drm/i915/intel_fbc.c
-@@ -1299,6 +1299,10 @@ static int intel_sanitize_fbc_option(str
- 	if (!HAS_FBC(dev_priv))
- 		return 0;
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -143,9 +143,6 @@ static void uart_start(struct tty_struct
+ 	struct uart_port *port;
+ 	unsigned long flags;
  
-+	/* https://bugs.freedesktop.org/show_bug.cgi?id=108085 */
-+	if (IS_GEMINILAKE(dev_priv))
-+		return 0;
+-	if (!state)
+-		return;
+-
+ 	port = uart_port_lock(state, flags);
+ 	__uart_start(tty);
+ 	uart_port_unlock(port, flags);
+@@ -1731,11 +1728,8 @@ static void uart_dtr_rts(struct tty_port
+  */
+ static int uart_open(struct tty_struct *tty, struct file *filp)
+ {
+-	struct uart_driver *drv = tty->driver->driver_state;
+-	int retval, line = tty->index;
+-	struct uart_state *state = drv->state + line;
+-
+-	tty->driver_data = state;
++	struct uart_state *state = tty->driver_data;
++	int retval;
+ 
+ 	retval = tty_port_open(&state->port, tty, filp);
+ 	if (retval > 0)
+@@ -2418,9 +2412,6 @@ static void uart_poll_put_char(struct tt
+ 	struct uart_state *state = drv->state + line;
+ 	struct uart_port *port;
+ 
+-	if (!state)
+-		return;
+-
+ 	port = uart_port_ref(state);
+ 	if (!port)
+ 		return;
+@@ -2432,7 +2423,18 @@ static void uart_poll_put_char(struct tt
+ }
+ #endif
+ 
++static int uart_install(struct tty_driver *driver, struct tty_struct *tty)
++{
++	struct uart_driver *drv = driver->driver_state;
++	struct uart_state *state = drv->state + tty->index;
 +
- 	if (IS_BROADWELL(dev_priv) || INTEL_GEN(dev_priv) >= 9)
- 		return 1;
- 
++	tty->driver_data = state;
++
++	return tty_standard_install(driver, tty);
++}
++
+ static const struct tty_operations uart_ops = {
++	.install	= uart_install,
+ 	.open		= uart_open,
+ 	.close		= uart_close,
+ 	.write		= uart_write,
 
 
