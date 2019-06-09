@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A17C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEBDC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2023206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03668208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099769;
-	bh=Fbo8dytbPMSisTSOkUgK0/guHrahixpxaGNIxTv3bOU=;
+	s=default; t=1560099774;
+	bh=HvJL7t2idgccN7TE0yztFjS3HveqVYCdJcj2hPPEAWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ff81/9K8YCcunfIlMElJNVqB71hC5n/kBhU9HW4ajPVEo6+vKIz80xyUgtgyuwla
-	 /hEz7/+3avFDY4nQ8wP4fuvauCeaAdGsMCS9+mE6869d1jCkozKRwrIXuIyg5jOn/B
-	 QhXkwHZd/03qTmQ43fKwJ+rvdu+2VqtfjlznO+dk=
+	b=KIKGfN9xw88yShJ27giStVO9Lz3oN9Q56RBQU8qZ4X64qgVOWgemauiPxQGstRm2k
+	 pkyOPN1jkwPa8PzgyYuhtZLGs0QZwXQpTUrjI+ddQlZ7rRLzq9Fu/Xr7Fjj45MB8Z5
+	 6Mj3ehOyaZVJoGeU7q8AT9puW/mIld5hMdA3d+ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388308AbfFIRCs (ORCPT
+        id S2388318AbfFIRCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40792 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388290AbfFIRCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:02:43 -0400
+        id S2388302AbfFIRCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:02:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08D1F206DF;
-        Sun,  9 Jun 2019 17:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7FC7204EC;
+        Sun,  9 Jun 2019 17:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099763;
-        bh=Fbo8dytbPMSisTSOkUgK0/guHrahixpxaGNIxTv3bOU=;
+        s=default; t=1560099766;
+        bh=HvJL7t2idgccN7TE0yztFjS3HveqVYCdJcj2hPPEAWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U/p58+uyjrAbuNEdbStsGEZLZDp9Kf989JJbA6oj31E+Omz1IwP9VY21dWL7c9v0M
-         lh+9cPQbm9erdR2vWx6pJC6PQ9++Hs7U5axFNqnP13FLWK5k87uWcOObQUKs77i7Nh
-         Vfv0HcSg/woPoq3KaQ14zdHIUjpTwAfnIL1zaOrA=
+        b=cwEDYWt8fLq5kPQI4b+vWeaIDurasVakP8bm6/VSUZuXX3Ggs2MIxlkiXB72MDMV6
+         StAK67VsVGkh8Oi0oLWYm7u/17Ryg/eV9W6dAPY+A7MbAXV+HyjSI3a7KZtPYjd3J6
+         F9NsVxOtZV/IIFtiXLfhBGbV9F4HQ3FQGeIetC28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 157/241] scsi: ufs: Avoid configuring regulator with undefined voltage range
-Date:   Sun,  9 Jun 2019 18:41:39 +0200
-Message-Id: <20190609164152.299169268@linuxfoundation.org>
+Subject: [PATCH 4.4 158/241] arm64: cpu_ops: fix a leaked reference by adding missing of_node_put
+Date:   Sun,  9 Jun 2019 18:41:40 +0200
+Message-Id: <20190609164152.326381415@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -62,57 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b141e8cfd54ba3e5c610717295b2a02aab26a05 ]
+[ Upstream commit 92606ec9285fb84cd9b5943df23f07d741384bfc ]
 
-For regulators used by UFS, vcc, vccq and vccq2 will have voltage range
-initialized by ufshcd_populate_vreg(), however other regulators may have
-undefined voltage range if dt-bindings have no such definition.
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-In above undefined case, both "min_uV" and "max_uV" fields in ufs_vreg
-struct will be zero values and these values will be configured on
-regulators in different power modes.
+Detected by coccinelle with the following warnings:
+  ./arch/arm64/kernel/cpu_ops.c:102:1-7: ERROR: missing of_node_put;
+  acquired a node pointer with refcount incremented on line 69, but
+  without a corresponding object release within this function.
 
-Currently this may have no harm if both "min_uV" and "max_uV" always keep
-"zero values" because regulator_set_voltage() will always bypass such
-invalid values and return "good" results.
-
-However improper values shall be fixed to avoid potential bugs.  Simply
-bypass voltage configuration if voltage range is not defined.
-
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Acked-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/arm64/kernel/cpu_ops.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index ed76381fce4cc..7322a17660d10 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4434,12 +4434,15 @@ static int ufshcd_config_vreg(struct device *dev,
- 	name = vreg->name;
- 
- 	if (regulator_count_voltages(reg) > 0) {
--		min_uV = on ? vreg->min_uV : 0;
--		ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
--		if (ret) {
--			dev_err(dev, "%s: %s set voltage failed, err=%d\n",
-+		if (vreg->min_uV && vreg->max_uV) {
-+			min_uV = on ? vreg->min_uV : 0;
-+			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
-+			if (ret) {
-+				dev_err(dev,
-+					"%s: %s set voltage failed, err=%d\n",
- 					__func__, name, ret);
--			goto out;
-+				goto out;
-+			}
+diff --git a/arch/arm64/kernel/cpu_ops.c b/arch/arm64/kernel/cpu_ops.c
+index b6bd7d4477683..fbd6aead48e10 100644
+--- a/arch/arm64/kernel/cpu_ops.c
++++ b/arch/arm64/kernel/cpu_ops.c
+@@ -73,6 +73,7 @@ static const char *__init cpu_read_enable_method(int cpu)
+ 				pr_err("%s: missing enable-method property\n",
+ 					dn->full_name);
  		}
- 
- 		uA_load = on ? vreg->max_uA : 0;
++		of_node_put(dn);
+ 	} else {
+ 		enable_method = acpi_get_enable_method(cpu);
+ 		if (!enable_method)
 -- 
 2.20.1
 
