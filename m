@@ -2,129 +2,89 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB01C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F586C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548CB2166E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E0F214AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 01:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="huqAGmgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfFIB2S (ORCPT
+        id S1727903AbfFIBtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 21:28:18 -0400
-Received: from mga03.intel.com ([134.134.136.65]:55288 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbfFIB2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 21:28:18 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jun 2019 18:28:17 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Jun 2019 18:28:16 -0700
-Date:   Sat, 8 Jun 2019 18:29:32 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190609012931.GA19825@iweiny-DESK2.sc.intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
+        Sat, 8 Jun 2019 21:49:18 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:52682 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfFIBtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Jun 2019 21:49:17 -0400
+Received: by mail-it1-f195.google.com with SMTP id l21so8356132ita.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2019 18:49:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=gezvdrCCB1eFoVy4rTrBVmFiPugXcg77UnQ5Qbf7MCs=;
+        b=huqAGmgRp/IMJ6IItXSuWcUGce0kAPYhAgld1VYkhBCxbq9jYWtGHv0VVxR4mtjtFj
+         Pje56U+SCbwv7t17169G02j548woO0ZfGQhzG3gFA0ctipdR407PB1HbX595NdmtloBP
+         uU1Cf+ilslY90HYbeyGdAFvZfdfgU+NjJ+99xeriSV0dZbLcnlRLfvmyGV+2unAaes07
+         BGle8Q+qJmtuEsXdFbTUSGMxqIAYI82nXg6cVxO/EGEeX7NoPvzmyYIMUzILYCqz0bVR
+         j2jncswh1KptTGcPwlSwss4HqKSKGUTXZ6jIUaYz6uajNDzHlisY5tHYugVJBid2NlWQ
+         6EUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=gezvdrCCB1eFoVy4rTrBVmFiPugXcg77UnQ5Qbf7MCs=;
+        b=m6e3HfWiwu+HEyYMXhhilPZ1wMl1aR5ECO5BRBpW0otHqIzO3f2OQuAsIt41nwZok6
+         ZYfxg7Lks1BeV76uehQG4w6fP6AK32PBivQCPbmLawyH9E+mprPl+HhSBelh7yhQWpAu
+         Drg8Q1Xk12AmeVdIgQuw+b+nK1n4bi1LEGoMfwK/+OaNiDAZ0HvbELYVmg02Szlf3joY
+         fxaT4Ysz8ASE0ej+/Je2mRv5lsbKwXOjBMiEpyym9/Sped5KyzTHrfd6LYiFvszhpf5q
+         TRB6RI8oynKACwHM2Zi09Tf4G1Qp5y8CRN6eN19PM9zNKyreE/K3dIfv1fArRwBmcSBn
+         ZTbw==
+X-Gm-Message-State: APjAAAVt94Gy+4f0Aq+sqqr2c/JYTNIE3cRa6MH0kekjaDc7Odn6sR1t
+        EeqKYMS5K9Q3v4iBZvOMfoWF0w==
+X-Google-Smtp-Source: APXvYqzhnLgdvut8Sw31mC+3id4EyC0GRJRfrCSBlSx1/cpNZwMxjofbGkBFHK4zP7Mf+HeG3Pnhfg==
+X-Received: by 2002:a24:dc05:: with SMTP id q5mr9924544itg.123.1560044957125;
+        Sat, 08 Jun 2019 18:49:17 -0700 (PDT)
+Received: from localhost (219.sub-174-221-130.myvzw.com. [174.221.130.219])
+        by smtp.gmail.com with ESMTPSA id j9sm2929924itk.23.2019.06.08.18.49.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 08 Jun 2019 18:49:16 -0700 (PDT)
+Date:   Sat, 8 Jun 2019 18:49:09 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Kevin Hilman <khilman@baylibre.com>
+cc:     linux-riscv@lists.infradead.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Loys Ollivier <lollivier@baylibre.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RISC-V: defconfig: enable clocks, serial console
+In-Reply-To: <20190605175042.13719-1-khilman@baylibre.com>
+Message-ID: <alpine.DEB.2.21.9999.1906081848410.720@viisi.sifive.com>
+References: <20190605175042.13719-1-khilman@baylibre.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190608001036.GF14308@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
-> On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
-> > On Fri, Jun 07, 2019 at 01:04:26PM +0200, Jan Kara wrote:
-> > > On Thu 06-06-19 15:03:30, Ira Weiny wrote:
-> > > > On Thu, Jun 06, 2019 at 12:42:03PM +0200, Jan Kara wrote:
-> > > > > On Wed 05-06-19 18:45:33, ira.weiny@intel.com wrote:
-> > > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > 
-> > > > > So I'd like to actually mandate that you *must* hold the file lease until
-> > > > > you unpin all pages in the given range (not just that you have an option to
-> > > > > hold a lease). And I believe the kernel should actually enforce this. That
-> > > > > way we maintain a sane state that if someone uses a physical location of
-> > > > > logical file offset on disk, he has a layout lease. Also once this is done,
-> > > > > sysadmin has a reasonably easy way to discover run-away RDMA application
-> > > > > and kill it if he wishes so.
-> > > > 
-> > > > Fair enough.
-> > > > 
-> > > > I was kind of heading that direction but had not thought this far forward.  I
-> > > > was exploring how to have a lease remain on the file even after a "lease
-> > > > break".  But that is incompatible with the current semantics of a "layout"
-> > > > lease (as currently defined in the kernel).  [In the end I wanted to get an RFC
-> > > > out to see what people think of this idea so I did not look at keeping the
-> > > > lease.]
-> > > > 
-> > > > Also hitch is that currently a lease is forcefully broken after
-> > > > <sysfs>/lease-break-time.  To do what you suggest I think we would need a new
-> > > > lease type with the semantics you describe.
-> > > 
-> > > I'd do what Dave suggested - add flag to mark lease as unbreakable by
-> > > truncate and teach file locking core to handle that. There actually is
-> > > support for locks that are not broken after given timeout so there
-> > > shouldn't be too many changes need.
-> > >  
-> > > > Previously I had thought this would be a good idea (for other reasons).  But
-> > > > what does everyone think about using a "longterm lease" similar to [1] which
-> > > > has the semantics you proppose?  In [1] I was not sure "longterm" was a good
-> > > > name but with your proposal I think it makes more sense.
-> > > 
-> > > As I wrote elsewhere in this thread I think FL_LAYOUT name still makes
-> > > sense and I'd add there FL_UNBREAKABLE to mark unusal behavior with
-> > > truncate.
-> > 
-> > Ok I want to make sure I understand what you and Dave are suggesting.
-> > 
-> > Are you suggesting that we have something like this from user space?
-> > 
-> > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
-> 
-> Rather than "unbreakable", perhaps a clearer description of the
-> policy it entails is "exclusive"?
-> 
-> i.e. what we are talking about here is an exclusive lease that
-> prevents other processes from changing the layout. i.e. the
-> mechanism used to guarantee a lease is exclusive is that the layout
-> becomes "unbreakable" at the filesystem level, but the policy we are
-> actually presenting to uses is "exclusive access"...
+On Wed, 5 Jun 2019, Kevin Hilman wrote:
 
-That sounds good.
-
-Ira
-
+> Enable PRCI clock driver and serial console by default, so the default
+> upstream defconfig is bootable to a serial console.
 > 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+
+Thanks, queued for v5.2-rc with Christoph's Reviewed-by:.
+
+
+- Paul
