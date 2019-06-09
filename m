@@ -2,191 +2,69 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB04EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDAEC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A94AA2070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A450A2070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 07:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EUKVNe+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfFIHnG (ORCPT
+        id S1727884AbfFIHtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 03:43:06 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:44304 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfFIHnG (ORCPT
+        Sun, 9 Jun 2019 03:49:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49446 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727432AbfFIHtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 03:43:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id i133so5157754ioa.11
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 00:43:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=yAicNkdscf5kQvfc6bxK37dI5ehTFzMYc0sm+btwdgk=;
-        b=dsNgFECvflijztz1XEM+eVubbFNeWGGAxY6yhzXU2ecb0OZlRN0ty8dtk9sO8fqJpt
-         vq3gJuAwd1/7WNlwTXhC5aKoxUJpS1PFOhlGts427Paq7hCiF40Igio05o6nPx3vOx4p
-         XV/BGGc0chMp1Cx6RQsNsMV8FTBsGhjcb4wjQuj+hUT6lC4izUS3S6SdnyayJzRvc5Qt
-         JMpg1yixyMpi55SXEZslQRIwFo4OlrItEhrW9jhEPZB4Z/doFAtKIAiaCUUWU3yud7sb
-         hNsZymt1WG0YC9Z1U77uy2aghEOKwcsDmRTLFCByWTF0A+Fxc4JF3lbBea8xOZS0mEt+
-         lboA==
-X-Gm-Message-State: APjAAAUmIlZUVAI/KI6CRZJsmFXhFg7mhbkEHw+JW0SRAwvl8AMbMisJ
-        R+a+zhgqqEFYGPis1KRdbx6UIpvN5BXc226UqRzFIG5fMvCu
-X-Google-Smtp-Source: APXvYqwJqV/z7ETtI3lH4fclpJ6A82UOp6ufZE3FvO3cs5au1b6W15lxoeSFd2QKY+hlR00vt1KmKHcsWBn2gZwoVWs/OJdYJEU2
+        Sun, 9 Jun 2019 03:49:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Nxxyp57smYbpqOTasWziZ8RG57j0OS5gRkGI1VG8Mpk=; b=EUKVNe+bDclRh9ir0L1GK+Yo+
+        /BoPSkr7wP3UhcDhMaeIQH90KJJjScIHaRQ3Tval0AGYL/bh7DE4xGxC1gigluqzwpuc8nEiqRKzE
+        YUgWFFCYnJzGCzlxUFH2YgRlE6I58Gki9tnI2pxTE55Kj54IAgHEx9QKNXyd0NVA05kTYNmU545JF
+        l3PckEat0ijCqLfp8thgsU+r7bfMPQWx+KbjdxFlKJp61F9K1yzmgqhSIGJWCyAk7z1zul9FYnZkt
+        WBBULDPG7u6wLJVe1PZDCdVgYxb1Cqg0thRVqVj98RdHiT+oz1a6/9iXQXqW//u/Sc3iNkupoQKNB
+        vwnDTyyrw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hZsa2-0006bN-3M; Sun, 09 Jun 2019 07:49:30 +0000
+Date:   Sun, 9 Jun 2019 00:49:30 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        linux-riscv@lists.infradead.org, lollivier@baylibre.com,
+        paul@pwsan.com, linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu
+Subject: Re: [PATCH v3 1/5] arch: riscv: add support for building DTB files
+ from DT source data
+Message-ID: <20190609074930.GA25109@infradead.org>
+References: <mhng-802d67ce-9f78-4ebc-9981-a27e5e4e40df@palmer-si-x1e>
+ <alpine.DEB.2.21.9999.1906082245300.720@viisi.sifive.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:1cf:: with SMTP id s15mr9779331itk.78.1560066185465;
- Sun, 09 Jun 2019 00:43:05 -0700 (PDT)
-Date:   Sun, 09 Jun 2019 00:43:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cf98fa058adf3615@google.com>
-Subject: INFO: rcu detected stall in rose_loopback_timer (2)
-From:   syzbot <syzbot+d37efb0ca1b82682326e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1906082245300.720@viisi.sifive.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Jun 08, 2019 at 10:50:14PM -0700, Paul Walmsley wrote:
+> Once there are SoC variants that have different CPU cores, but with the 
+> remaining chip integration the same, I think it would make sense to move 
+> the CONFIG_SOC_ stuff out from ARM, RISC-V, etc., into something that's 
+> not CPU architecture-specific.  But for the time being, that seems 
+> premature.  Might as well have it be driven by an actual use-case.
 
-syzbot found the following crash on:
-
-HEAD commit:    720f1de4 pktgen: do not sleep with the thread lock held.
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=154dc971a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4f721a391cd46ea
-dashboard link: https://syzkaller.appspot.com/bug?extid=d37efb0ca1b82682326e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d37efb0ca1b82682326e@syzkaller.appspotmail.com
-
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	0-...!: (1 GPs behind) idle=066/1/0x4000000000000004  
-softirq=187193/187194 fqs=6
-	(t=10501 jiffies g=300401 q=147)
-rcu: rcu_preempt kthread starved for 10489 jiffies! g300401 f0x0  
-RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=1
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     I29056    10      2 0x80004000
-Call Trace:
-  context_switch kernel/sched/core.c:2818 [inline]
-  __schedule+0x7cb/0x1560 kernel/sched/core.c:3445
-  schedule+0xa8/0x260 kernel/sched/core.c:3509
-  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
-  rcu_gp_fqs_loop kernel/rcu/tree.c:1589 [inline]
-  rcu_gp_kthread+0x9b2/0x18b0 kernel/rcu/tree.c:1746
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-NMI backtrace for cpu 0
-CPU: 0 PID: 8284 Comm: syz-executor.4 Not tainted 5.2.0-rc2+ #44
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
-  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
-  rcu_pending kernel/rcu/tree.c:2625 [inline]
-  rcu_sched_clock_irq.cold+0x4d1/0xbfd kernel/rcu/tree.c:2161
-  update_process_times+0x32/0x80 kernel/time/timer.c:1639
-  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1298
-  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
-  __hrtimer_run_queues+0x33b/0xdd0 kernel/time/hrtimer.c:1451
-  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
-  smp_apic_timer_interrupt+0x111/0x550 arch/x86/kernel/apic/apic.c:1066
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
-RIP: 0010:get_current arch/x86/include/asm/current.h:15 [inline]
-RIP: 0010:__sanitizer_cov_trace_pc+0x8/0x50 kernel/kcov.c:101
-Code: f4 ff ff ff e8 3d 11 ea ff 48 c7 05 de 6a f5 08 00 00 00 00 e9 a4 e9  
-ff ff 90 90 90 90 90 90 90 90 90 55 48 89 e5 48 8b 75 08 <65> 48 8b 04 25  
-c0 fd 01 00 65 8b 15 00 59 91 7e 81 e2 00 01 1f 00
-RSP: 0018:ffff8880ae809c70 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffff1100cce5825 RBX: dffffc0000000000 RCX: ffffffff864acc36
-RDX: 0000000000000100 RSI: ffffffff864acbfd RDI: ffff88806672c128
-RBP: ffff8880ae809c70 R08: ffff8880491a02c0 R09: ffffed1015d0137e
-R10: ffffed1015d0137d R11: 0000000000000003 R12: ffff88806672c128
-R13: 00000000fffff034 R14: ffff88809afb4000 R15: 0000000000000000
-  rose_find_socket+0x7d/0x120 net/rose/af_rose.c:281
-  rose_loopback_timer+0x336/0x480 net/rose/rose_loopback.c:94
-  call_timer_fn+0x193/0x720 kernel/time/timer.c:1322
-  expire_timers kernel/time/timer.c:1366 [inline]
-  __run_timers kernel/time/timer.c:1685 [inline]
-  __run_timers kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x66f/0x1740 kernel/time/timer.c:1698
-  __do_softirq+0x25c/0x94c kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:374 [inline]
-  irq_exit+0x180/0x1d0 kernel/softirq.c:414
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x13b/0x550 arch/x86/kernel/apic/apic.c:1068
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
-  </IRQ>
-RIP: 0010:debug_lockdep_rcu_enabled+0x26/0xa0 kernel/rcu/update.c:236
-Code: 00 00 00 00 48 c7 c0 64 88 80 89 55 48 ba 00 00 00 00 00 fc ff df 48  
-89 c1 83 e0 07 48 89 e5 48 c1 e9 03 83 c0 03 0f b6 14 11 <38> d0 7c 04 84  
-d2 75 49 8b 15 80 fc 22 08 85 d2 74 3b 48 c7 c0 74
-RSP: 0018:ffff8880671c7668 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: ffffea0001b56940 RCX: 1ffffffff130110c
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000286
-RBP: ffff8880671c7668 R08: 00000000d22d0c1d R09: ffff8880491a0b88
-R10: ffff8880491a0b68 R11: ffff8880491a02c0 R12: ffffea0001b56940
-R13: ffffea0001b56948 R14: 0000000000000000 R15: dead000000000100
-  rcu_read_lock+0x2e/0x70 include/linux/rcupdate.h:596
-  lock_page_memcg+0x19/0x1d0 mm/memcontrol.c:1984
-  page_remove_file_rmap mm/rmap.c:1218 [inline]
-  page_remove_rmap+0x53d/0x1090 mm/rmap.c:1303
-  zap_pte_range mm/memory.c:1093 [inline]
-  zap_pmd_range mm/memory.c:1195 [inline]
-  zap_pud_range mm/memory.c:1224 [inline]
-  zap_p4d_range mm/memory.c:1245 [inline]
-  unmap_page_range+0xd3b/0x22f0 mm/memory.c:1266
-  unmap_single_vma+0x19d/0x300 mm/memory.c:1311
-  unmap_vmas+0x135/0x280 mm/memory.c:1343
-  exit_mmap+0x2ad/0x510 mm/mmap.c:3145
-  __mmput kernel/fork.c:1059 [inline]
-  mmput+0x15f/0x4c0 kernel/fork.c:1080
-  exit_mm kernel/exit.c:547 [inline]
-  do_exit+0x816/0x2fa0 kernel/exit.c:864
-  do_group_exit+0x135/0x370 kernel/exit.c:981
-  get_signal+0x41e/0x2240 kernel/signal.c:2638
-  do_signal+0x87/0x1900 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:164
-  prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
-  do_syscall_64+0x58e/0x680 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459279
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f568e65ecf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: 0000000000000001 RBX: 000000000075bf28 RCX: 0000000000459279
-RDX: 00000000004c7f9b RSI: 0000000000000081 RDI: 000000000075bf2c
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000211d49 R11: 0000000000000246 R12: 000000000075bf2c
-R13: 00007ffd5e3d782f R14: 00007f568e65f9c0 R15: 000000000075bf2c
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+We've already had a few SOC families with the same periphals glue and
+either m68k/powerpc, powerpc/mips or mips/arm/arm64 CPUs, so this isn't
+exactly new.  Not really sure the grouping adds that much value, though.
