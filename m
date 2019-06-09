@@ -2,56 +2,53 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E73FC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE42C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E45205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8997E205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100253;
-	bh=P8WAO2Ji7lWjW//kaUmahcMFJEYZAyIOHJry0WDpX3U=;
+	s=default; t=1560100266;
+	bh=gF7m42X1PrEptWyk5LBiKFn0g3ZJIyjsxi25BehhXFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qg+jEKRIH7ILxkTP+Nr5K0ekEkLFP/fos3AIeFVM9QA7e6PN8gJGOVeFqv2r0tkOh
-	 SnI+NPl5DCx60XnMUl7m6JDIXzqCrCCV6ISyEp0e+91JKENpc23YYKvmyX7lUjvu9s
-	 dXFTl3w1w4qv3mj/oGme4+a6iNUPlnz5hmH9bFkY=
+	b=P9F/nfZ0mCoKUQpLWWot+56e9AZ2KGHciZsd6fK6gdpwGE+6Xz/dh/g1n8P3SrlD7
+	 /vcb7iNrvdSsVm6KKeWLcj+fNtMldbV6wxTgXC/Zaj17iprOAFV4WUiAZfhQdJjDFX
+	 pbC88kBUB5gN7gtgz94bzdYA2I5zd8/rQcsRd43w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389012AbfFIRKw (ORCPT
+        id S2388862AbfFIRLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:10:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388205AbfFIRCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:02:13 -0400
+        id S1733260AbfFIRBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8580206C3;
-        Sun,  9 Jun 2019 17:02:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A5D5208C0;
+        Sun,  9 Jun 2019 17:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099732;
-        bh=P8WAO2Ji7lWjW//kaUmahcMFJEYZAyIOHJry0WDpX3U=;
+        s=default; t=1560099710;
+        bh=gF7m42X1PrEptWyk5LBiKFn0g3ZJIyjsxi25BehhXFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUaiPN/9qIGsbEp5yaYsI5RhKmXMP/HlZi5cI1mWycmTTXxJo8XmH3Hqp5UownbpD
-         0BvI0LW8K5pwG+D/uC/1OniBNIbuvxNM1kkcsI/IuvEm6cK3IUOC9xE2r6Nyz4b9bb
-         mODuhi3XY6+5CHaU1tDfZwnEpERYo14OMkywsIBY=
+        b=rbtQnkWhrpuepuQnsADvEBcEAUkTY4ljEeE9nYiWWZ42YyV/JWdiMlBIWKA2BJc4I
+         Qov6AeLNriBeEU/N7HVovoUBbVfKmHsS+fcu0fqqR+YsQl5qtBvSDltPVeeP//wb+P
+         2UzJ6vjdkPOLp1baJkJ911T6zum/4wnzFJHK5U5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        clang-built-linux@googlegroups.com, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 147/241] x86/build: Keep local relocations with ld.lld
-Date:   Sun,  9 Jun 2019 18:41:29 +0200
-Message-Id: <20190609164152.022646166@linuxfoundation.org>
+Subject: [PATCH 4.4 095/241] mmc: core: Verify SD bus width
+Date:   Sun,  9 Jun 2019 18:40:37 +0200
+Message-Id: <20190609164150.538605430@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -64,42 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c21383f3429dd70da39c0c7f1efa12377a47ab6 ]
+[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
 
-The LLVM linker (ld.lld) defaults to removing local relocations, which
-causes KASLR boot failures. ld.bfd and ld.gold already handle this
-correctly. This adds the explicit instruction "--discard-none" during
-the link phase. There is no change in output for ld.bfd and ld.gold,
-but ld.lld now produces an image with all the needed relocations.
+The SD Physical Layer Spec says the following: Since the SD Memory Card
+shall support at least the two bus modes 1-bit or 4-bit width, then any SD
+Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: clang-built-linux@googlegroups.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190404214027.GA7324@beast
-Link: https://github.com/ClangBuiltLinux/linux/issues/404
+This change verifies the card has specified a bus width.
+
+AMD SDHC Device 7806 can get into a bad state after a card disconnect
+where anything transferred via the DATA lines will always result in a
+zero filled buffer. Currently the driver will continue without error if
+the HC is in this condition. A block device will be created, but reading
+from it will result in a zero buffer. This makes it seem like the SD
+device has been erased, when in actuality the data is never getting
+copied from the DATA lines to the data buffer.
+
+SCR is the first command in the SD initialization sequence that uses the
+DATA lines. By checking that the response was invalid, we can abort
+mounting the card.
+
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/core/sd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index e26560cd18444..00e0226634fa9 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -47,7 +47,7 @@ export REALMODE_CFLAGS
- export BITS
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index 967535d76e346..fb8741f18c1f5 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -216,6 +216,14 @@ static int mmc_decode_scr(struct mmc_card *card)
  
- ifdef CONFIG_X86_NEED_RELOCS
--        LDFLAGS_vmlinux := --emit-relocs
-+        LDFLAGS_vmlinux := --emit-relocs --discard-none
- endif
+ 	if (scr->sda_spec3)
+ 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
++
++	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
++	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
++	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
++		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
  
- #
 -- 
 2.20.1
 
