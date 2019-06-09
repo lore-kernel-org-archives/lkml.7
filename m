@@ -2,94 +2,114 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7444FC468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1796C468BD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA5B206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D6020840
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098311;
-	bh=79QRfsPQqPY0okGXzSNRFKdqiw8IAWcQjpMsIY34bDo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O90YqwSPXgDh3ZNtZ/6TXXTKkAs11FlpCFE441nO7AtvJOErb+lDYIsFsCDvi3Zd+
-	 HRtanJgzpLcy/Inb4UMVEdlKYMcyGehKVqPVDEvNRit9bDKEI8/QY0nsDSGVSYAohU
-	 fmhnBivEWiGx7WHbc3SgqUHqHSlRCBDa1iig1aJQ=
+	s=default; t=1560098644;
+	bh=4z+CNzBm9U/1F/ScUJeAfwdnRGEeNt33hnqlxDsl0AI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=h5AmD33vPtB08fbQp6DWh2wdQciuDTjEQY8x6/ioxIMln3S7ZybhlH9v07CCffmNu
+	 yymKT8EqKfCItaARMT8IAc24rLePP0ELZw1PBGTMkVGWyffqKQNQvWUaGKn0KzOuk8
+	 45rPx1n+Y99j9GPtU80E9bi+n71GIJozVtUi5BUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfFIQia (ORCPT
+        id S1729053AbfFIQoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37188 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:44:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728678AbfFIQia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:38:30 -0400
+        id S1728858AbfFIQoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:44:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 039C3206C3;
-        Sun,  9 Jun 2019 16:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B18E72081C;
+        Sun,  9 Jun 2019 16:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098309;
-        bh=79QRfsPQqPY0okGXzSNRFKdqiw8IAWcQjpMsIY34bDo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hQ+OT9SKRIM9UPCGhSeRnzjCR4H9e7Wb5SGvxoR+VVFLW5jxI+gtyPRo9sXzzEIg7
-         dG5k2rHtPQm6knDDawL0Lb9KB4/3ZgNW9EWtYbGdBsoQcDz8YHvjZ3agQMxkX9wPsj
-         EeRHttjwSXV+zBpBvL2f/tI3pI5GIYnIzC7JuTTQ=
-Date:   Sun, 9 Jun 2019 18:38:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4.14 0/2] Fix FUSE read/write deadlock on stream-like
- files
-Message-ID: <20190609163826.GB26671@kroah.com>
-References: <20190609123831.11489-1-kirr@nexedi.com>
+        s=default; t=1560098643;
+        bh=4z+CNzBm9U/1F/ScUJeAfwdnRGEeNt33hnqlxDsl0AI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KLEKMKwx3k2oP/mtssXmj0GGKRcYAEXqxnu+/cMjVnfTUff1f7PEWyToziXJRphlu
+         Vrxva/raaZL1ig3siBzri2r36dl2NjKn1Zmct5sw7509bp4i90vwGRR69LSRkOWJ3i
+         8mxuuW/WGYwkMiiFcDIw8DT5RiDxp2RevspnZi9c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 01/70] ethtool: fix potential userspace buffer overflow
+Date:   Sun,  9 Jun 2019 18:41:12 +0200
+Message-Id: <20190609164127.613168840@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
+References: <20190609164127.541128197@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190609123831.11489-1-kirr@nexedi.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 09, 2019 at 12:39:08PM +0000, Kirill Smelkov wrote:
-> Hello stable team,
-> 
-> Please consider applying the following 2 patches to Linux-4.14 stable
-> tree. The patches fix regression introduced in 3.14 where both read and
-> write started to run under lock taken, which resulted in FUSE (and many
-> other drivers) deadlocks for cases where stream-like files are used with
-> read and write being run simultaneously.
-> 
-> Please see complete problem description in upstream commit 10dce8af3422
-> ("fs: stream_open - opener for stream-like files so that read and write
-> can run simultaneously without deadlock").
-> 
-> The actual FUSE fix (upstream commit bbd84f33652f "fuse: Add
-> FOPEN_STREAM to use stream_open()") was merged into 5.2 with `Cc:
-> stable@vger.kernel.org # v3.14+` mark and is already included into 5.1,
-> 5.0 and 4.19 stable trees. However for some reason it is not (yet ?)
-> included into 4.14, 4.9, 4.4, 3.18 and 3.16 trees.
-> 
-> The patches fix a real problem into which my FUSE filesystem ran, and
-> which also likely affects OSSPD (full details are in the patches
-> description). Please consider including the fixes into 4.14 (as well as
-> into earlier stable trees - I will send corresponding series separately -
-> - one per tree).
+From: Vivien Didelot <vivien.didelot@gmail.com>
 
-Many thanks for these.  I've queued up all but the 3.16 patches (those
-are for Ben).
+[ Upstream commit 0ee4e76937d69128a6a66861ba393ebdc2ffc8a2 ]
 
-I hadn't done the backport yet, as I didn't know how "severe" this was,
-and didn't have the time to do it.  Thanks for making it easy :)
+ethtool_get_regs() allocates a buffer of size ops->get_regs_len(),
+and pass it to the kernel driver via ops->get_regs() for filling.
 
-greg k-h
+There is no restriction about what the kernel drivers can or cannot do
+with the open ethtool_regs structure. They usually set regs->version
+and ignore regs->len or set it to the same size as ops->get_regs_len().
+
+But if userspace allocates a smaller buffer for the registers dump,
+we would cause a userspace buffer overflow in the final copy_to_user()
+call, which uses the regs.len value potentially reset by the driver.
+
+To fix this, make this case obvious and store regs.len before calling
+ops->get_regs(), to only copy as much data as requested by userspace,
+up to the value returned by ops->get_regs_len().
+
+While at it, remove the redundant check for non-null regbuf.
+
+Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/core/ethtool.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -1358,13 +1358,16 @@ static int ethtool_get_regs(struct net_d
+ 	if (!regbuf)
+ 		return -ENOMEM;
+ 
++	if (regs.len < reglen)
++		reglen = regs.len;
++
+ 	ops->get_regs(dev, &regs, regbuf);
+ 
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &regs, sizeof(regs)))
+ 		goto out;
+ 	useraddr += offsetof(struct ethtool_regs, data);
+-	if (regbuf && copy_to_user(useraddr, regbuf, regs.len))
++	if (copy_to_user(useraddr, regbuf, reglen))
+ 		goto out;
+ 	ret = 0;
+ 
+
+
