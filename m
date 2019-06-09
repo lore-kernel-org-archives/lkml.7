@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F37C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68702C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E44206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0B5206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099582;
-	bh=uUxkPqFQilc1zz9Bg/0e7rKTxIztRsjn991NqXP2H+4=;
+	s=default; t=1560099589;
+	bh=efh1BNoFi31+cLx+5zdLiuS2kTb44Z1B/wWMtGTGnj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Db45KTkVVfWueDz/cX6RQbBc1VcBVhn4n0Dzj0fUt0j7DvYkkKTF5pdrlFWdEPJQi
-	 7h/0rchoJQ17Vo6RJhM4aHJh2TQ7ShDI8oWoEpc+m8qzye3EOApSSE+U32qhn4ldzY
-	 xi/4ybnKutf30+GkvEIOHEt1McQMf+zEZjgbDWhg=
+	b=1Brv1zOUPA7tiMMiFpgZ9Y1+i4Z4wB38c1xEAIsZtID6YaE/mFNrYA0zFasVJBgU+
+	 O+P8TjoF7byQcjd/o6d8VgD+C57QetP9Pgkx/wxv22c6R6lPkk3I+Tbdvq5HqLycYh
+	 orOTKJRwGBfsxdlYsFJ5A6mZSLCauBJHLIUfcnc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387707AbfFIQ7k (ORCPT
+        id S2387732AbfFIQ7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:59:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35570 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:59:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733212AbfFIQ7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:59:38 -0400
+        id S2387716AbfFIQ7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:59:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4808207E0;
-        Sun,  9 Jun 2019 16:59:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75667206DF;
+        Sun,  9 Jun 2019 16:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099577;
-        bh=uUxkPqFQilc1zz9Bg/0e7rKTxIztRsjn991NqXP2H+4=;
+        s=default; t=1560099582;
+        bh=efh1BNoFi31+cLx+5zdLiuS2kTb44Z1B/wWMtGTGnj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMedhCNnKSB/qYuZpNtUmb0ZFUX/CFAGA1e3l23b0hmr/aWrX3VxOljJy2AY/o72L
-         w1eig5zU0phdaFUVDRQGSqdSk5ltyzIhjrqN4qCrCatl2XF2h/dqW0H5is5uKkd8vs
-         kXkK3sbOO+9TCWUj2dEQy6a3WfXXYaUupZN+NN4g=
+        b=sMZpklVjw8h33HjSrkUCmApNbg2dr61wSLQNkPOK8vPow4eimJ780nZ3W5MapU/lB
+         UiKvaS2TnXlgWFvvgyslucOSg6aJ/VdD4OTtZR6XaMvB9rqDwnyTOXa3RutC1U6/2e
+         HFTjBjsCj0/1CvG5fgg93ldvsBd9G0J8ThiyFLyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-        Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.4 088/241] media: vivid: use vfree() instead of kfree() for dev->bitmap_cap
-Date:   Sun,  9 Jun 2019 18:40:30 +0200
-Message-Id: <20190609164150.313262931@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.4 047/241] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
+Date:   Sun,  9 Jun 2019 18:39:49 +0200
+Message-Id: <20190609164149.128975774@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,37 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit dad7e270ba712ba1c99cd2d91018af6044447a06 upstream.
+commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 upstream.
 
-syzkaller reported crashes on kfree() called from
-vivid_vid_cap_s_selection(). This looks like a simple typo, as
-dev->bitmap_cap is allocated with vzalloc() throughout the file.
+Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
+the TLB_FLUSH register differs from later Tegra generations that have 128
+ASID's.
 
-Fixes: ef834f7836ec0 ("[media] vivid: add the video capture and output
-parts")
+In a result the PTE's are now flushed correctly from TLB and this fixes
+problems with graphics (randomly failing tests) on Tegra30.
 
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Reported-by: Syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/vivid/vivid-vid-cap.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/tegra-smmu.c |   25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
---- a/drivers/media/platform/vivid/vivid-vid-cap.c
-+++ b/drivers/media/platform/vivid/vivid-vid-cap.c
-@@ -993,7 +993,7 @@ int vivid_vid_cap_s_selection(struct fil
- 		rect_map_inside(&s->r, &dev->fmt_cap_rect);
- 		if (dev->bitmap_cap && (compose->width != s->r.width ||
- 					compose->height != s->r.height)) {
--			kfree(dev->bitmap_cap);
-+			vfree(dev->bitmap_cap);
- 			dev->bitmap_cap = NULL;
- 		}
- 		*compose = s->r;
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -91,7 +91,6 @@ static inline u32 smmu_readl(struct tegr
+ #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
+-#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
+ #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
+ 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
+ #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
+@@ -194,8 +193,12 @@ static inline void smmu_flush_tlb_asid(s
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_MATCH_ALL;
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -205,8 +208,12 @@ static inline void smmu_flush_tlb_sectio
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_SECTION(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -216,8 +223,12 @@ static inline void smmu_flush_tlb_group(
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_GROUP(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
 
 
