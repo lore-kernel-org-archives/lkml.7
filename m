@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47754C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ACCC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2222720652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219DE20652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100890;
-	bh=2hmnF4XbiYzaLjNdH4KcV6WLN+C49zVKNABkve9f/FQ=;
+	s=default; t=1560100905;
+	bh=g75Sm/xoGHFxBj4nYNq3+J9XqVcsXYBwcfM3Lm26yAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EyvXfjGCEu6vJoK9EDULYYISXmFx36xkfzfO+kjHRmVJYcNVa6GzpbG6Wi12AKxtn
-	 DaKlrAR4dR38LLFzhaSJiC2hqRjFG9UQHNiMSB4Pdb18b3bCkSi7/QXfYh1jj7m5QI
-	 qfZ1c7JTV1cO6fWjshnv9RCfFmGlFyhAU5IyIvhc=
+	b=h7D/wnurZL8dbP6JtO7H26xCikgDe4QQ0VH61mFyTS58feStnambR9t0dRdGNvequ
+	 efeSSx+AI+dWBIZJ8In+MKCJ8Su5zRN9JxufQ50jpar4xRFTigZ8sYSsXE+5rcPgLG
+	 fM0A6Xusz8y12rOsdJXJkKWFPHBe/Qtw4HDmCfZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731216AbfFIRV3 (ORCPT
+        id S1729928AbfFIQpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:21:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43842 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:45:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730126AbfFIQpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:45:53 -0400
+        id S1729030AbfFIQp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:45:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A81B20833;
-        Sun,  9 Jun 2019 16:45:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02EED2083D;
+        Sun,  9 Jun 2019 16:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098752;
-        bh=2hmnF4XbiYzaLjNdH4KcV6WLN+C49zVKNABkve9f/FQ=;
+        s=default; t=1560098728;
+        bh=g75Sm/xoGHFxBj4nYNq3+J9XqVcsXYBwcfM3Lm26yAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5Gz4pWRM3DVCfHJuw56GPkRk99/kRBuSgdiRCFMd/IFX3835aWyRWD6oM1cJAYw9
-         y9dkAXCJL2+c+LOkBMgBYacFOZUqNBCzxv6je0C5VpmAvs8hI9SJNpJ6zLsi+Gfsok
-         +jVgFOMcMgN1cS6MuNpTfqcBO+a8/uwSeXdFGPpQ=
+        b=Xn+u2qJX2eW8xz3bXOij+h4GUimj2u/748z8kMVKFIocBpI9WHpPxK/m0Y+e3eOJ8
+         oJRjM2TmS5kI38MJYg/t/t16VnMHmSCWZPegSdbujZPRlULYPF/gdxwFFes1kMUHjE
+         UhSwRQqApkgsquPoTJTmXBkPiWmC7GvUq1KCLj0A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH 5.1 49/70] drm/rockchip: fix fb references in async update
-Date:   Sun,  9 Jun 2019 18:42:00 +0200
-Message-Id: <20190609164131.535974639@linuxfoundation.org>
+        stable@vger.kernel.org, Zhu Yanjun <yanjun.zhu@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 07/70] net: rds: fix memory leak in rds_ib_flush_mr_pool
+Date:   Sun,  9 Jun 2019 18:41:18 +0200
+Message-Id: <20190609164127.885921304@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -59,117 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Zhu Yanjun <yanjun.zhu@oracle.com>
 
-commit d985a3533274ef7dd1ccb25cb05a72259b25268f upstream.
+[ Upstream commit 85cb928787eab6a2f4ca9d2a798b6f3bed53ced1 ]
 
-In the case of async update, modifications are done in place, i.e. in the
-current plane state, so the new_state is prepared and the new_state is
-cleaned up (instead of the old_state, unlike what happens in a
-normal sync update).
-To cleanup the old_fb properly, it needs to be placed in the new_state
-in the end of async_update, so cleanup call will unreference the old_fb
-correctly.
+When the following tests last for several hours, the problem will occur.
 
-Also, the previous code had a:
+Server:
+    rds-stress -r 1.1.1.16 -D 1M
+Client:
+    rds-stress -r 1.1.1.14 -s 1.1.1.16 -D 1M -T 30
 
-	plane_state = plane->funcs->atomic_duplicate_state(plane);
-	...
-	swap(plane_state, plane->state);
+The following will occur.
 
-	if (plane->state->fb && plane->state->fb != new_state->fb) {
-	...
-	}
+"
+Starting up....
+tsks   tx/s   rx/s  tx+rx K/s    mbi K/s    mbo K/s tx us/c   rtt us cpu
+%
+  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
+  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
+  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
+  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
+"
+>From vmcore, we can find that clean_list is NULL.
 
-Which was wrong, as the fb were just assigned to be equal, so this if
-statement nevers evaluates to true.
+>From the source code, rds_mr_flushd calls rds_ib_mr_pool_flush_worker.
+Then rds_ib_mr_pool_flush_worker calls
+"
+ rds_ib_flush_mr_pool(pool, 0, NULL);
+"
+Then in function
+"
+int rds_ib_flush_mr_pool(struct rds_ib_mr_pool *pool,
+                         int free_all, struct rds_ib_mr **ibmr_ret)
+"
+ibmr_ret is NULL.
 
-Another details is that the function drm_crtc_vblank_get() can only be
-called when vop->is_enabled is true, otherwise it has no effect and
-trows a WARN_ON().
+In the source code,
+"
+...
+list_to_llist_nodes(pool, &unmap_list, &clean_nodes, &clean_tail);
+if (ibmr_ret)
+        *ibmr_ret = llist_entry(clean_nodes, struct rds_ib_mr, llnode);
 
-Calling drm_atomic_set_fb_for_plane() (which get a referent of the new
-fb and pus the old fb) is not required, as it is taken care by
-drm_mode_cursor_universal() when calling
-drm_atomic_helper_update_plane().
+/* more than one entry in llist nodes */
+if (clean_nodes->next)
+        llist_add_batch(clean_nodes->next, clean_tail, &pool->clean_list);
+...
+"
+When ibmr_ret is NULL, llist_entry is not executed. clean_nodes->next
+instead of clean_nodes is added in clean_list.
+So clean_nodes is discarded. It can not be used again.
+The workqueue is executed periodically. So more and more clean_nodes are
+discarded. Finally the clean_list is NULL.
+Then this problem will occur.
 
-Fixes: 15609559a834 ("drm/rockchip: update cursors asynchronously through atomic.")
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190603165610.24614-2-helen.koike@collabora.com
+Fixes: 1bc144b62524 ("net, rds, Replace xlist in net/rds/xlist.h with llist")
+Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c |   49 ++++++++++++++--------------
- 1 file changed, 25 insertions(+), 24 deletions(-)
+ net/rds/ib_rdma.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -924,29 +924,17 @@ static void vop_plane_atomic_async_updat
- 					  struct drm_plane_state *new_state)
- {
- 	struct vop *vop = to_vop(plane->state->crtc);
--	struct drm_plane_state *plane_state;
-+	struct drm_framebuffer *old_fb = plane->state->fb;
+--- a/net/rds/ib_rdma.c
++++ b/net/rds/ib_rdma.c
+@@ -428,12 +428,14 @@ int rds_ib_flush_mr_pool(struct rds_ib_m
+ 		wait_clean_list_grace();
  
--	plane_state = plane->funcs->atomic_duplicate_state(plane);
--	plane_state->crtc_x = new_state->crtc_x;
--	plane_state->crtc_y = new_state->crtc_y;
--	plane_state->crtc_h = new_state->crtc_h;
--	plane_state->crtc_w = new_state->crtc_w;
--	plane_state->src_x = new_state->src_x;
--	plane_state->src_y = new_state->src_y;
--	plane_state->src_h = new_state->src_h;
--	plane_state->src_w = new_state->src_w;
+ 		list_to_llist_nodes(pool, &unmap_list, &clean_nodes, &clean_tail);
+-		if (ibmr_ret)
++		if (ibmr_ret) {
+ 			*ibmr_ret = llist_entry(clean_nodes, struct rds_ib_mr, llnode);
 -
--	if (plane_state->fb != new_state->fb)
--		drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
--
--	swap(plane_state, plane->state);
--
--	if (plane->state->fb && plane->state->fb != new_state->fb) {
--		drm_framebuffer_get(plane->state->fb);
--		WARN_ON(drm_crtc_vblank_get(plane->state->crtc) != 0);
--		drm_flip_work_queue(&vop->fb_unref_work, plane->state->fb);
--		set_bit(VOP_PENDING_FB_UNREF, &vop->pending);
--	}
-+	plane->state->crtc_x = new_state->crtc_x;
-+	plane->state->crtc_y = new_state->crtc_y;
-+	plane->state->crtc_h = new_state->crtc_h;
-+	plane->state->crtc_w = new_state->crtc_w;
-+	plane->state->src_x = new_state->src_x;
-+	plane->state->src_y = new_state->src_y;
-+	plane->state->src_h = new_state->src_h;
-+	plane->state->src_w = new_state->src_w;
-+	swap(plane->state->fb, new_state->fb);
- 
- 	if (vop->is_enabled) {
- 		rockchip_drm_psr_inhibit_get_state(new_state->state);
-@@ -955,9 +943,22 @@ static void vop_plane_atomic_async_updat
- 		vop_cfg_done(vop);
- 		spin_unlock(&vop->reg_lock);
- 		rockchip_drm_psr_inhibit_put_state(new_state->state);
--	}
- 
--	plane->funcs->atomic_destroy_state(plane, plane_state);
-+		/*
-+		 * A scanout can still be occurring, so we can't drop the
-+		 * reference to the old framebuffer. To solve this we get a
-+		 * reference to old_fb and set a worker to release it later.
-+		 * FIXME: if we perform 500 async_update calls before the
-+		 * vblank, then we can have 500 different framebuffers waiting
-+		 * to be released.
-+		 */
-+		if (old_fb && plane->state->fb != old_fb) {
-+			drm_framebuffer_get(old_fb);
-+			WARN_ON(drm_crtc_vblank_get(plane->state->crtc) != 0);
-+			drm_flip_work_queue(&vop->fb_unref_work, old_fb);
-+			set_bit(VOP_PENDING_FB_UNREF, &vop->pending);
++			clean_nodes = clean_nodes->next;
 +		}
-+	}
- }
+ 		/* more than one entry in llist nodes */
+-		if (clean_nodes->next)
+-			llist_add_batch(clean_nodes->next, clean_tail, &pool->clean_list);
++		if (clean_nodes)
++			llist_add_batch(clean_nodes, clean_tail,
++					&pool->clean_list);
  
- static const struct drm_plane_helper_funcs plane_helper_funcs = {
+ 	}
+ 
 
 
