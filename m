@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69B4C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E2FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA372070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D077205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099022;
-	bh=eBArp9OlkdlnU/YwwDnldjPrHVr7342yFoQF/lOt9yQ=;
+	s=default; t=1560099026;
+	bh=exWukPSu3WNeBv6dsjT6JWe1vjTR4+WeNJekXX3cjW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AIsDZIu0VSzW7g8qvelJzbyg2MY+RFNQVCwegWwd7eIjBDK+cf6aZCqGGN1BMtCAW
-	 knJeFL2Oms3/Elc1Sddyc6Ykmyw7RtDeY6BsxQjyv4gKGbGm+Hvcj1T98f85PbsmzC
-	 gAlaav308DYN0B0LvIkKGHy54LeYYrnu/jDTVxUw=
+	b=A4qoEJCkHEubCd44vguCIDIby9METH/JjsfJQh5qf5aH08A7KpLG6DJgFE6Ln1np+
+	 VIzchwTZwyUq/ljKS5lGFI/753TZskKp1jWGvShaq4SckENHmq/OlOEWMLRg8YkPV4
+	 NGouSW8ntJScZY0jLSl9UAGgaiz6rRW2+oegYu8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbfFIQuV (ORCPT
+        id S1731709AbfFIQuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:50:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50006 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731671AbfFIQuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:14 -0400
+        id S1731671AbfFIQuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:50:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF2A82070B;
-        Sun,  9 Jun 2019 16:50:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A620207E0;
+        Sun,  9 Jun 2019 16:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099013;
-        bh=eBArp9OlkdlnU/YwwDnldjPrHVr7342yFoQF/lOt9yQ=;
+        s=default; t=1560099021;
+        bh=exWukPSu3WNeBv6dsjT6JWe1vjTR4+WeNJekXX3cjW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02LKhgKAeSVn8mrdwQuySyQkVT/4Y+5Fpeu5tdaslfYEOCCtDEjHOdsnQed5xITeT
-         10kVR/0y7aDE05RnaxxIMBwee2/8jXVnn4LTPUuduJNYHritcgBBgyAi/3rSVfgJJo
-         8W4+1qyvWOGwuTAwJ7LKGi1EyWbrVVDPITw7PO8w=
+        b=e7P9VqbD+4kmZja75Z8618j4XapvWJlOu+6Z7NfEDdmWh3JXc6f65ZfMXhtbE4H0E
+         L9VINQWpNyBMpbjiEIdmmCJ7c7dy+p6aGUUV1ZasBmN3P7iuIQu6ql3IX1S5e097/C
+         KqAaY1e0j/XXQWfOqrLYeY6d3PsRIhV5bSS6g8cU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        stable@vger.kernel.org, Olivier Matz <olivier.matz@6wind.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 05/35] net: rds: fix memory leak in rds_ib_flush_mr_pool
-Date:   Sun,  9 Jun 2019 18:42:11 +0200
-Message-Id: <20190609164125.833421918@linuxfoundation.org>
+Subject: [PATCH 4.14 08/35] ipv6: use READ_ONCE() for inet->hdrincl as in ipv4
+Date:   Sun,  9 Jun 2019 18:42:14 +0200
+Message-Id: <20190609164125.990850586@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -60,90 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+From: Olivier Matz <olivier.matz@6wind.com>
 
-[ Upstream commit 85cb928787eab6a2f4ca9d2a798b6f3bed53ced1 ]
+[ Upstream commit 59e3e4b52663a9d97efbce7307f62e4bc5c9ce91 ]
 
-When the following tests last for several hours, the problem will occur.
+As it was done in commit 8f659a03a0ba ("net: ipv4: fix for a race
+condition in raw_sendmsg") and commit 20b50d79974e ("net: ipv4: emulate
+READ_ONCE() on ->hdrincl bit-field in raw_sendmsg()") for ipv4, copy the
+value of inet->hdrincl in a local variable, to avoid introducing a race
+condition in the next commit.
 
-Server:
-    rds-stress -r 1.1.1.16 -D 1M
-Client:
-    rds-stress -r 1.1.1.14 -s 1.1.1.16 -D 1M -T 30
-
-The following will occur.
-
-"
-Starting up....
-tsks   tx/s   rx/s  tx+rx K/s    mbi K/s    mbo K/s tx us/c   rtt us cpu
-%
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-  1      0      0       0.00       0.00       0.00    0.00 0.00 -1.00
-"
->From vmcore, we can find that clean_list is NULL.
-
->From the source code, rds_mr_flushd calls rds_ib_mr_pool_flush_worker.
-Then rds_ib_mr_pool_flush_worker calls
-"
- rds_ib_flush_mr_pool(pool, 0, NULL);
-"
-Then in function
-"
-int rds_ib_flush_mr_pool(struct rds_ib_mr_pool *pool,
-                         int free_all, struct rds_ib_mr **ibmr_ret)
-"
-ibmr_ret is NULL.
-
-In the source code,
-"
-...
-list_to_llist_nodes(pool, &unmap_list, &clean_nodes, &clean_tail);
-if (ibmr_ret)
-        *ibmr_ret = llist_entry(clean_nodes, struct rds_ib_mr, llnode);
-
-/* more than one entry in llist nodes */
-if (clean_nodes->next)
-        llist_add_batch(clean_nodes->next, clean_tail, &pool->clean_list);
-...
-"
-When ibmr_ret is NULL, llist_entry is not executed. clean_nodes->next
-instead of clean_nodes is added in clean_list.
-So clean_nodes is discarded. It can not be used again.
-The workqueue is executed periodically. So more and more clean_nodes are
-discarded. Finally the clean_list is NULL.
-Then this problem will occur.
-
-Fixes: 1bc144b62524 ("net, rds, Replace xlist in net/rds/xlist.h with llist")
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: Olivier Matz <olivier.matz@6wind.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/ib_rdma.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ net/ipv6/raw.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/net/rds/ib_rdma.c
-+++ b/net/rds/ib_rdma.c
-@@ -416,12 +416,14 @@ int rds_ib_flush_mr_pool(struct rds_ib_m
- 		wait_clean_list_grace();
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -782,6 +782,7 @@ static int rawv6_sendmsg(struct sock *sk
+ 	struct sockcm_cookie sockc;
+ 	struct ipcm6_cookie ipc6;
+ 	int addr_len = msg->msg_namelen;
++	int hdrincl;
+ 	u16 proto;
+ 	int err;
  
- 		list_to_llist_nodes(pool, &unmap_list, &clean_nodes, &clean_tail);
--		if (ibmr_ret)
-+		if (ibmr_ret) {
- 			*ibmr_ret = llist_entry(clean_nodes, struct rds_ib_mr, llnode);
--
-+			clean_nodes = clean_nodes->next;
-+		}
- 		/* more than one entry in llist nodes */
--		if (clean_nodes->next)
--			llist_add_batch(clean_nodes->next, clean_tail, &pool->clean_list);
-+		if (clean_nodes)
-+			llist_add_batch(clean_nodes, clean_tail,
-+					&pool->clean_list);
+@@ -795,6 +796,13 @@ static int rawv6_sendmsg(struct sock *sk
+ 	if (msg->msg_flags & MSG_OOB)
+ 		return -EOPNOTSUPP;
  
- 	}
++	/* hdrincl should be READ_ONCE(inet->hdrincl)
++	 * but READ_ONCE() doesn't work with bit fields.
++	 * Doing this indirectly yields the same result.
++	 */
++	hdrincl = inet->hdrincl;
++	hdrincl = READ_ONCE(hdrincl);
++
+ 	/*
+ 	 *	Get and verify the address.
+ 	 */
+@@ -913,7 +921,7 @@ static int rawv6_sendmsg(struct sock *sk
+ 		fl6.flowi6_oif = np->ucast_oif;
+ 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
  
+-	if (inet->hdrincl)
++	if (hdrincl)
+ 		fl6.flowi6_flags |= FLOWI_FLAG_KNOWN_NH;
+ 
+ 	if (ipc6.tclass < 0)
+@@ -936,7 +944,7 @@ static int rawv6_sendmsg(struct sock *sk
+ 		goto do_confirm;
+ 
+ back_from_confirm:
+-	if (inet->hdrincl)
++	if (hdrincl)
+ 		err = rawv6_send_hdrinc(sk, msg, len, &fl6, &dst, msg->msg_flags);
+ 	else {
+ 		ipc6.opt = opt;
 
 
