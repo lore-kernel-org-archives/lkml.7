@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B617CC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB74DC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE9B20652
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1462067C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100786;
-	bh=vaYwb1577dLTm2yh/ziP4tzrtY8aiMNv6GGrTDhWrVI=;
+	s=default; t=1560100792;
+	bh=/L4nN1cLrpDNu4y8INv/OnSstEZDePv2AWT52q3KjHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NL3WBjfdbKTqDiXA5Y9BEtBEYUvucchZoxBJPxkrBMP4F/o9H6r7iA5OT6surWrrp
-	 3YGgej0AC//woa09G1g9vstp6Pw0Bbxb3maDfeGbzgqKT7Bl3mV62uPmL6tWUpE/nx
-	 lnoM+4HxjxyRoTJL5BvNDOwgE4LSktVVpFh7XxCY=
+	b=sXgI9rjNz/1Dp8zITW7SpjPGq/+JyEpJn3eHpKJzOQ7iPKDMSEx+563zgdy0mE9l9
+	 1J/bwQQvMDR/QB7cVlk2C5ii8/fS6erbHcs+6+I3J/9kZD50D//O68GB8Og5iz3cTB
+	 wwaN1oiIyAzkAdqGWeEEDn9eoh0A46IK/715SVVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732314AbfFIRTp (ORCPT
+        id S1731127AbfFIQsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:19:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47502 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729778AbfFIQs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:26 -0400
+        id S1731111AbfFIQsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72AD8206C3;
-        Sun,  9 Jun 2019 16:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58384206C3;
+        Sun,  9 Jun 2019 16:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098905;
-        bh=vaYwb1577dLTm2yh/ziP4tzrtY8aiMNv6GGrTDhWrVI=;
+        s=default; t=1560098888;
+        bh=/L4nN1cLrpDNu4y8INv/OnSstEZDePv2AWT52q3KjHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ieNprXqVxYDDCeykioF/m3dx/v7dthPblPzDvyglSTiKGCpP7QzUO6Xs/d2Sp06P
-         SrNSXBd4BbYh+bYa6L4E2Qf9+2WShxiX8xNBHmi+4yKZo+StCIzz3uYLmi9NYqBIqX
-         ZzYMLOWaXtFC91bb2dqP+wyGTAZ9lQcDxmKN2OTU=
+        b=2fJb7EW3rTakIyG7yaexmlxUShLMs8iIG0RaAUtYIOAh5NPNZWQce9zTE8/3C9HJ1
+         wMrIBx+JjVh9HX2E7xzX6dvF9PTsZCcp9h60RzNCBCMpCiBVuk4h+YDXEm79msUfo3
+         +zxt0XAwbbiFIWtS0JwBsUHCxvakZTCbbfuWThRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Jackson <ian.jackson@citrix.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 4.19 31/51] xen-blkfront: switch kcalloc to kvcalloc for large array allocation
-Date:   Sun,  9 Jun 2019 18:42:12 +0200
-Message-Id: <20190609164129.060139900@linuxfoundation.org>
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.19 25/51] pstore: Set tfm to NULL on free_buf_for_compression
+Date:   Sun,  9 Jun 2019 18:42:06 +0200
+Message-Id: <20190609164128.597833273@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -62,107 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-commit 1d5c76e66433382a1e170d1d5845bb0fed7467aa upstream.
+commit a9fb94a99bb515d8720ba8440ce3aba84aec80f8 upstream.
 
-There's no reason to request physically contiguous memory for those
-allocations.
+Set tfm to NULL on free_buf_for_compression() after crypto_free_comp().
 
-[boris: added CC to stable]
+This avoid a use-after-free when allocate_buf_for_compression()
+and free_buf_for_compression() are called twice. Although
+free_buf_for_compression() freed the tfm, allocate_buf_for_compression()
+won't reinitialize the tfm since the tfm pointer is not NULL.
 
+Fixes: 95047b0519c1 ("pstore: Refactor compression initialization")
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
 Cc: stable@vger.kernel.org
-Reported-by: Ian Jackson <ian.jackson@citrix.com>
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/xen-blkfront.c |   38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ fs/pstore/platform.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -1310,11 +1310,11 @@ static void blkif_free_ring(struct blkfr
- 		}
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -324,8 +324,10 @@ static void allocate_buf_for_compression
  
- free_shadow:
--		kfree(rinfo->shadow[i].grants_used);
-+		kvfree(rinfo->shadow[i].grants_used);
- 		rinfo->shadow[i].grants_used = NULL;
--		kfree(rinfo->shadow[i].indirect_grants);
-+		kvfree(rinfo->shadow[i].indirect_grants);
- 		rinfo->shadow[i].indirect_grants = NULL;
--		kfree(rinfo->shadow[i].sg);
-+		kvfree(rinfo->shadow[i].sg);
- 		rinfo->shadow[i].sg = NULL;
- 	}
- 
-@@ -1353,7 +1353,7 @@ static void blkif_free(struct blkfront_i
- 	for (i = 0; i < info->nr_rings; i++)
- 		blkif_free_ring(&info->rinfo[i]);
- 
--	kfree(info->rinfo);
-+	kvfree(info->rinfo);
- 	info->rinfo = NULL;
- 	info->nr_rings = 0;
- }
-@@ -1914,9 +1914,9 @@ static int negotiate_mq(struct blkfront_
- 	if (!info->nr_rings)
- 		info->nr_rings = 1;
- 
--	info->rinfo = kcalloc(info->nr_rings,
--			      sizeof(struct blkfront_ring_info),
--			      GFP_KERNEL);
-+	info->rinfo = kvcalloc(info->nr_rings,
-+			       sizeof(struct blkfront_ring_info),
-+			       GFP_KERNEL);
- 	if (!info->rinfo) {
- 		xenbus_dev_fatal(info->xbdev, -ENOMEM, "allocating ring_info structure");
- 		info->nr_rings = 0;
-@@ -2232,17 +2232,17 @@ static int blkfront_setup_indirect(struc
- 
- 	for (i = 0; i < BLK_RING_SIZE(info); i++) {
- 		rinfo->shadow[i].grants_used =
--			kcalloc(grants,
--				sizeof(rinfo->shadow[i].grants_used[0]),
--				GFP_NOIO);
--		rinfo->shadow[i].sg = kcalloc(psegs,
--					      sizeof(rinfo->shadow[i].sg[0]),
--					      GFP_NOIO);
-+			kvcalloc(grants,
-+				 sizeof(rinfo->shadow[i].grants_used[0]),
-+				 GFP_NOIO);
-+		rinfo->shadow[i].sg = kvcalloc(psegs,
-+					       sizeof(rinfo->shadow[i].sg[0]),
-+					       GFP_NOIO);
- 		if (info->max_indirect_segments)
- 			rinfo->shadow[i].indirect_grants =
--				kcalloc(INDIRECT_GREFS(grants),
--					sizeof(rinfo->shadow[i].indirect_grants[0]),
--					GFP_NOIO);
-+				kvcalloc(INDIRECT_GREFS(grants),
-+					 sizeof(rinfo->shadow[i].indirect_grants[0]),
-+					 GFP_NOIO);
- 		if ((rinfo->shadow[i].grants_used == NULL) ||
- 			(rinfo->shadow[i].sg == NULL) ||
- 		     (info->max_indirect_segments &&
-@@ -2256,11 +2256,11 @@ static int blkfront_setup_indirect(struc
- 
- out_of_memory:
- 	for (i = 0; i < BLK_RING_SIZE(info); i++) {
--		kfree(rinfo->shadow[i].grants_used);
-+		kvfree(rinfo->shadow[i].grants_used);
- 		rinfo->shadow[i].grants_used = NULL;
--		kfree(rinfo->shadow[i].sg);
-+		kvfree(rinfo->shadow[i].sg);
- 		rinfo->shadow[i].sg = NULL;
--		kfree(rinfo->shadow[i].indirect_grants);
-+		kvfree(rinfo->shadow[i].indirect_grants);
- 		rinfo->shadow[i].indirect_grants = NULL;
- 	}
- 	if (!list_empty(&rinfo->indirect_pages)) {
+ static void free_buf_for_compression(void)
+ {
+-	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm)
++	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm) {
+ 		crypto_free_comp(tfm);
++		tfm = NULL;
++	}
+ 	kfree(big_oops_buf);
+ 	big_oops_buf = NULL;
+ 	big_oops_buf_sz = 0;
 
 
