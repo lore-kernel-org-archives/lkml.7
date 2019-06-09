@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95D5C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1550CC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33E62081C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33B7208E3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098819;
-	bh=w3fLyttRot9PQvpvJqENFjdubh78MZQDTHQmwl0Id0c=;
+	s=default; t=1560098822;
+	bh=Eis6heOs73XTHxMj9u1B8PECl107rlwe7UWYK2RSzCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tfKHHvlVN23DpPNmKriQfuHHw4B1R+4LdrjzSkjByz7TQqBgCBbvcE/YgJjHE67ut
-	 dQF9nHWIAvjVruV/i/+IlNAe50/+Ui8yxM9sNZiKUURauY1Lbeai84f1M2LGm58bTf
-	 uLEOAe0mJ1UCJzH9f2aFdCw9nSaGChlcFNnnhSOA=
+	b=VhCiLw6voLY1s0m+A7tHNQd/LPxj5SpawnYqPw7P5pEktIp+9k2Ob+UW8yGyH/zbL
+	 au5m70YeAeuVWmzrt4TkcY3pSeBW8ZC7nPXOoWjzXLramuwqu5cjY/XoXQZVW0jACf
+	 QtQ81X9mSJW8CMkjSRDgbVp4NuFl8P9mvNxM5eX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbfFIQq6 (ORCPT
+        id S1730721AbfFIQrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:46:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45320 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:47:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730652AbfFIQqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:46:53 -0400
+        id S1730686AbfFIQq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:46:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0E882081C;
-        Sun,  9 Jun 2019 16:46:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65E5F2081C;
+        Sun,  9 Jun 2019 16:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098813;
-        bh=w3fLyttRot9PQvpvJqENFjdubh78MZQDTHQmwl0Id0c=;
+        s=default; t=1560098815;
+        bh=Eis6heOs73XTHxMj9u1B8PECl107rlwe7UWYK2RSzCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyOLAU0UtPB/3llJ0GqnZTDpDQI2X/N3UgcNXpQkMoRTheftOTBn0nKHS+OAM2+By
-         SlfXU3Y7mDCmsmEUhHZr8xnVBJI6GwUi3qmlvv8hejmNrOll5mZuzLl5xV+A4rZK0w
-         SQvjcWfot51Sb209tx/qsBWKhDxRW5IckpdixSIg=
+        b=D1fWQihOfw0fNfN6Az6zVBAE7ajTazVDFSOGS3f8eJnSVH7xf4lFBPUGJydyo5Pdb
+         cOX4XELyDiMb3SZYNTtGN4TEC06P17oY0upOMw8Cdnw5cNHM9f18nqMrkcsy0sQKfl
+         kQ78H09R5Qw6+Q9LrQx1O6V6JvM5rIIXk1S4G3cQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: [PATCH 5.1 69/70] drm/amd: fix fb references in async update
-Date:   Sun,  9 Jun 2019 18:42:20 +0200
-Message-Id: <20190609164133.176089569@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Li RongQing <lirongqing@baidu.com>,
+        Wang Li <wangli39@baidu.com>, Zhang Yu <zhangyu31@baidu.com>
+Subject: [PATCH 5.1 70/70] TTY: serial_core, add ->install
+Date:   Sun,  9 Jun 2019 18:42:21 +0200
+Message-Id: <20190609164133.249548765@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
 References: <20190609164127.541128197@linuxfoundation.org>
@@ -61,41 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 332af874db929f92931727bfe191b2c666438c81 upstream.
+commit 4cdd17ba1dff20ffc99fdbd2e6f0201fc7fe67df upstream.
 
-Async update callbacks are expected to set the old_fb in the new_state
-so prepare/cleanup framebuffers are balanced.
+We need to compute the uart state only on the first open. This is
+usually what is done in the ->install hook. serial_core used to do this
+in ->open on every open. So move it to ->install.
 
-Calling drm_atomic_set_fb_for_plane() (which gets a reference of the new
-fb and put the old fb) is not required, as it's taken care by
-drm_mode_cursor_universal() when calling drm_atomic_helper_update_plane().
+As a side effect, it ensures the state is set properly in the window
+after tty_init_dev is called, but before uart_open. This fixes a bunch
+of races between tty_open and flush_to_ldisc we were dealing with
+recently.
 
-Cc: <stable@vger.kernel.org> # v4.20+
-Fixes: 674e78acae0d ("drm/amd/display: Add fast path for cursor plane updates")
-Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190603165610.24614-3-helen.koike@collabora.com
+One of such bugs was attempted to fix in commit fedb5760648a (serial:
+fix race between flush_to_ldisc and tty_open), but it only took care of
+a couple of functions (uart_start and uart_unthrottle).  I was able to
+reproduce the crash on a SLE system, but in uart_write_room which is
+also called from flush_to_ldisc via process_echoes. I was *unable* to
+reproduce the bug locally. It is due to having this patch in my queue
+since 2012!
+
+ general protection fault: 0000 [#1] SMP KASAN PTI
+ CPU: 1 PID: 5 Comm: kworker/u4:0 Tainted: G             L 4.12.14-396-default #1 SLE15-SP1 (unreleased)
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c89-prebuilt.qemu.org 04/01/2014
+ Workqueue: events_unbound flush_to_ldisc
+ task: ffff8800427d8040 task.stack: ffff8800427f0000
+ RIP: 0010:uart_write_room+0xc4/0x590
+ RSP: 0018:ffff8800427f7088 EFLAGS: 00010202
+ RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+ RDX: 000000000000002f RSI: 00000000000000ee RDI: ffff88003888bd90
+ RBP: ffffffffb9545850 R08: 0000000000000001 R09: 0000000000000400
+ R10: ffff8800427d825c R11: 000000000000006e R12: 1ffff100084fee12
+ R13: ffffc900004c5000 R14: ffff88003888bb28 R15: 0000000000000178
+ FS:  0000000000000000(0000) GS:ffff880043300000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000561da0794148 CR3: 000000000ebf4000 CR4: 00000000000006e0
+ Call Trace:
+  tty_write_room+0x6d/0xc0
+  __process_echoes+0x55/0x870
+  n_tty_receive_buf_common+0x105e/0x26d0
+  tty_ldisc_receive_buf+0xb7/0x1c0
+  tty_port_default_receive_buf+0x107/0x180
+  flush_to_ldisc+0x35d/0x5c0
+...
+
+0 in rbx means tty->driver_data is NULL in uart_write_room. 0x178 is
+tried to be dereferenced (0x178 >> 3 is 0x2f in rdx) at
+uart_write_room+0xc4. 0x178 is exactly (struct uart_state *)NULL->refcount
+used in uart_port_lock from uart_write_room.
+
+So revert the upstream commit here as my local patch should fix the
+whole family.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Li RongQing <lirongqing@baidu.com>
+Cc: Wang Li <wangli39@baidu.com>
+Cc: Zhang Yu <zhangyu31@baidu.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/tty/serial/serial_core.c |   24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -3789,8 +3789,7 @@ static void dm_plane_atomic_async_update
- 	struct drm_plane_state *old_state =
- 		drm_atomic_get_old_plane_state(new_state->state, plane);
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -130,9 +130,6 @@ static void uart_start(struct tty_struct
+ 	struct uart_port *port;
+ 	unsigned long flags;
  
--	if (plane->state->fb != new_state->fb)
--		drm_atomic_set_fb_for_plane(plane->state, new_state->fb);
-+	swap(plane->state->fb, new_state->fb);
+-	if (!state)
+-		return;
+-
+ 	port = uart_port_lock(state, flags);
+ 	__uart_start(tty);
+ 	uart_port_unlock(port, flags);
+@@ -730,9 +727,6 @@ static void uart_unthrottle(struct tty_s
+ 	upstat_t mask = UPSTAT_SYNC_FIFO;
+ 	struct uart_port *port;
  
- 	plane->state->src_x = new_state->src_x;
- 	plane->state->src_y = new_state->src_y;
+-	if (!state)
+-		return;
+-
+ 	port = uart_port_ref(state);
+ 	if (!port)
+ 		return;
+@@ -1747,6 +1741,16 @@ static void uart_dtr_rts(struct tty_port
+ 	uart_port_deref(uport);
+ }
+ 
++static int uart_install(struct tty_driver *driver, struct tty_struct *tty)
++{
++	struct uart_driver *drv = driver->driver_state;
++	struct uart_state *state = drv->state + tty->index;
++
++	tty->driver_data = state;
++
++	return tty_standard_install(driver, tty);
++}
++
+ /*
+  * Calls to uart_open are serialised by the tty_lock in
+  *   drivers/tty/tty_io.c:tty_open()
+@@ -1759,11 +1763,8 @@ static void uart_dtr_rts(struct tty_port
+  */
+ static int uart_open(struct tty_struct *tty, struct file *filp)
+ {
+-	struct uart_driver *drv = tty->driver->driver_state;
+-	int retval, line = tty->index;
+-	struct uart_state *state = drv->state + line;
+-
+-	tty->driver_data = state;
++	struct uart_state *state = tty->driver_data;
++	int retval;
+ 
+ 	retval = tty_port_open(&state->port, tty, filp);
+ 	if (retval > 0)
+@@ -2448,6 +2449,7 @@ static void uart_poll_put_char(struct tt
+ #endif
+ 
+ static const struct tty_operations uart_ops = {
++	.install	= uart_install,
+ 	.open		= uart_open,
+ 	.close		= uart_close,
+ 	.write		= uart_write,
 
 
