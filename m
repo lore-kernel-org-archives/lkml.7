@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81BFC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90E2C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5F6208E4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEE4208E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 13:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="hsG40JLJ";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="pnc3h38e"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="fVRAc9Zf";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="TLVa9k6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbfFIN4z (ORCPT
+        id S1728915AbfFIN47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 09:56:55 -0400
+        Sun, 9 Jun 2019 09:56:59 -0400
 Received: from mail177-30.suw61.mandrillapp.com ([198.2.177.30]:27120 "EHLO
         mail177-30.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728591AbfFIN4z (ORCPT
+        by vger.kernel.org with ESMTP id S1728786AbfFIN47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 09:56:55 -0400
-X-Greylist: delayed 913 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jun 2019 09:56:51 EDT
+        Sun, 9 Jun 2019 09:56:59 -0400
+X-Greylist: delayed 917 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jun 2019 09:56:55 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
  h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=ySr4Nrr+89DHcvxITmE7xFf/aeGkap9445ywRZ8FnQs=;
- b=hsG40JLJ3u2re6cQucij0JMvy9TGH2IY2i48JtiH14hFteuvf/9aOUZuRhqs/UIFGVTK70/jMdF+
-   apFixXv3DAg1J8n+LVKZhE5OYtu3y3Em0auHe7+VM4YbbhgY0UmFlHaD0kaURHywoozEteJGVHND
-   6itsQlgYzZ9JOHyXBVk=
-Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id hvk82622rtk4 for <linux-kernel@vger.kernel.org>; Sun, 9 Jun 2019 13:39:09 +0000 (envelope-from <bounce-md_31050260.5cfd0bfd.v1-a2a3da36bfd74133abef0034ead623e5@mandrillapp.com>)
+ bh=KZQ0mF8wK0NxP72MeUszgd9qIpekgTg1ASFI3Cl3c6Y=;
+ b=fVRAc9ZfgwAK7Sx/RKufW2DMBFx6YmUuOKoDJ09l7e+7reNbOpspugcdIK+ZGrPTz6NPQ6TWbDfn
+   wIoEAwCqUx4ZghXR5Hjw1foGpWRebDt1SsIzWH8Lon9Ql1Jc/HHo4xqubdUF96K7nWmoa6HfHwO+
+   jLlgmUNTvi+PzcusBTs=
+Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id hvk82e22rtkc for <linux-kernel@vger.kernel.org>; Sun, 9 Jun 2019 13:39:10 +0000 (envelope-from <bounce-md_31050260.5cfd0bfe.v1-a49f4940cafb4af3b25a60c43a5bd3be@mandrillapp.com>)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560087549; h=From : 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560087550; h=From : 
  Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
  MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
  Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=ySr4Nrr+89DHcvxITmE7xFf/aeGkap9445ywRZ8FnQs=; 
- b=pnc3h38eGLrPjCVXjL6tJX9ZjaiVN2HcFDMXehcg0+A19zrLNwS1p04r/zHNGdtTpvPkA8
- THTHFGC07oeVcbSfFi3iTv3acw4ku4oUDqVO/GJuYpHDtr19DbtH/a+MUNJyGClkhCDzWK5b
- FtFBpkGsQaj7uWeQrHQLah0TZcvGM=
+ bh=KZQ0mF8wK0NxP72MeUszgd9qIpekgTg1ASFI3Cl3c6Y=; 
+ b=TLVa9k6jZZ9C7gMyVJ+rdkBJUYypxSVBdexts6Uli9/SUux9jlhf7XkeWMsA07LASv2ZLG
+ Gq4oB7XGHxYRlGrWU8P9lsSIBJrTacb5duX67THOgLPPdKEa627BXLqwFg//afd0VpybL9w+
+ ZMawYZ2rVVwRmfny6uaIgzwnY7GJ0=
 From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH 4.4 1/2] fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
-Received: from [87.98.221.171] by mandrillapp.com id a2a3da36bfd74133abef0034ead623e5; Sun, 09 Jun 2019 13:39:09 +0000
+Subject: [PATCH 3.18 1/2] fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+Received: from [87.98.221.171] by mandrillapp.com id a49f4940cafb4af3b25a60c43a5bd3be; Sun, 09 Jun 2019 13:39:10 +0000
 X-Mailer: git-send-email 2.20.1
 To:     <stable@vger.kernel.org>
 Cc:     Sasha Levin <sashal@kernel.org>,
@@ -63,13 +63,13 @@ Cc:     Sasha Levin <sashal@kernel.org>,
         Julia Lawall <Julia.Lawall@lip6.fr>,
         Nikolaus Rath <Nikolaus@rath.org>,
         Han-Wen Nienhuys <hanwen@google.com>
-Message-Id: <20190609132443.9420-2-kirr@nexedi.com>
-In-Reply-To: <20190609132443.9420-1-kirr@nexedi.com>
-References: <20190609132443.9420-1-kirr@nexedi.com>
+Message-Id: <20190609133501.7873-2-kirr@nexedi.com>
+In-Reply-To: <20190609133501.7873-1-kirr@nexedi.com>
+References: <20190609133501.7873-1-kirr@nexedi.com>
 X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.a2a3da36bfd74133abef0034ead623e5
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.a49f4940cafb4af3b25a60c43a5bd3be
 X-Mandrill-User: md_31050260
-Date:   Sun, 09 Jun 2019 13:39:09 +0000
+Date:   Sun, 09 Jun 2019 13:39:10 +0000
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
@@ -80,10 +80,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 [ commit 10dce8af34226d90fa56746a934f8da5dcdba3df upstream.
 
-  while porting to 4.4 xenbus conflict was trivially resolved in a way
+  while porting to 3.18 xenbus conflict was trivially resolved in a way
   that actually fixes /proc/xen/xenbus deadlock introduced in 3.14,
   because original upstream commit 581d21a2d02a to fix xenbus deadlock
-  was not included into 4.4 . ]
+  was not included into 3.18 . ]
 
 Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") added
 locking for file.f_pos access and in particular made concurrent read and
@@ -270,7 +270,7 @@ Cc: Nikolaus Rath <Nikolaus@rath.org>
 Cc: Han-Wen Nienhuys <hanwen@google.com>
 Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[ backport to 4.4: actually fixed deadlock on /proc/xen/xenbus as 581d21a2d02a was not backported to 4.4 ]
+[ backport to 3.18: actually fixed deadlock on /proc/xen/xenbus as 581d21a2d02a was not backported to 3.18 ]
 ---
  drivers/xen/xenbus/xenbus_dev_frontend.c |   2 +-
  fs/open.c                                |  18 ++
@@ -294,10 +294,10 @@ index 816a0e08ef10..d7591efa7775 100644
  	u = kzalloc(sizeof(*u), GFP_KERNEL);
  	if (u == NULL)
 diff --git a/fs/open.c b/fs/open.c
-index fbc5c7b230b3..6cf516156111 100644
+index 1651f35d50f5..f38b2a83b9fe 100644
 --- a/fs/open.c
 +++ b/fs/open.c
-@@ -1152,3 +1152,21 @@ int nonseekable_open(struct inode *inode, struct file *filp)
+@@ -1126,3 +1126,21 @@ int nonseekable_open(struct inode *inode, struct file *filp)
  }
  
  EXPORT_SYMBOL(nonseekable_open);
@@ -320,10 +320,10 @@ index fbc5c7b230b3..6cf516156111 100644
 +
 +EXPORT_SYMBOL(stream_open);
 diff --git a/fs/read_write.c b/fs/read_write.c
-index 16e554ba885d..7b175b9134ec 100644
+index 1afb99c33c63..54d6ba4dae73 100644
 --- a/fs/read_write.c
 +++ b/fs/read_write.c
-@@ -553,12 +553,13 @@ EXPORT_SYMBOL(vfs_write);
+@@ -551,12 +551,13 @@ EXPORT_SYMBOL(vfs_write);
  
  static inline loff_t file_pos_read(struct file *file)
  {
@@ -340,10 +340,10 @@ index 16e554ba885d..7b175b9134ec 100644
  
  SYSCALL_DEFINE3(read, unsigned int, fd, char __user *, buf, size_t, count)
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 13277d2715df..26c4bf47cc99 100644
+index 2a41353033d3..988cac4e741c 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -140,6 +140,9 @@ typedef void (dax_iodone_t)(struct buffer_head *bh_map, int uptodate);
+@@ -133,6 +133,9 @@ typedef void (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
  /* Has write method(s) */
  #define FMODE_CAN_WRITE         ((__force fmode_t)0x40000)
  
@@ -351,16 +351,16 @@ index 13277d2715df..26c4bf47cc99 100644
 +#define FMODE_STREAM		((__force fmode_t)0x200000)
 +
  /* File was opened by fanotify and shouldn't generate fanotify events */
- #define FMODE_NONOTIFY		((__force fmode_t)0x4000000)
+ #define FMODE_NONOTIFY		((__force fmode_t)0x1000000)
  
-@@ -2706,6 +2709,7 @@ extern loff_t fixed_size_llseek(struct file *file, loff_t offset,
+@@ -2499,6 +2502,7 @@ extern loff_t fixed_size_llseek(struct file *file, loff_t offset,
  		int whence, loff_t size);
  extern int generic_file_open(struct inode * inode, struct file * filp);
  extern int nonseekable_open(struct inode * inode, struct file * filp);
 +extern int stream_open(struct inode * inode, struct file * filp);
  
- #ifdef CONFIG_BLOCK
- typedef void (dio_submit_t)(int rw, struct bio *bio, struct inode *inode,
+ #ifdef CONFIG_FS_XIP
+ extern ssize_t xip_file_read(struct file *filp, char __user *buf, size_t len,
 diff --git a/scripts/coccinelle/api/stream_open.cocci b/scripts/coccinelle/api/stream_open.cocci
 new file mode 100644
 index 000000000000..350145da7669
