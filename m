@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0E5C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D16C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9E7206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E005E206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560098920;
-	bh=RraCkwXdzglEq/7vdS33A/72ye87OZQO/agCNTF+Lok=;
+	s=default; t=1560098924;
+	bh=c/h5LsyEMrg8LMhNb60YT3K6SWopq5tpLSzjqwcrkdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgcFZuHzBMQf6N7TOCQmO3U2efceTy7ER7MqoLawpWSwhmKn3XaBF7d1x2jtKZrQ/
-	 /iCL5YjmFH3zU8BLwjWwNKAL4JWy+x8KG3n0yUd5m19j+SxLLlWO6vyU+DsiW8XmfV
-	 q9GpGQWbAtcqpxLiFGR3PQDWi5gn8xj5nTgluVNc=
+	b=0kNIfUYyg697/28QebMd3CPzKyCJIF0BkuQqO9W56cLtfq5cLU5ujP1X3eDPZFmse
+	 10ta9AF+cJ8g05/+HMtzlCXYNGFheMaYbfKU6AkpBfaa/oDfY7tRknFv8Gpuo2SMhN
+	 O6vvw/gL/Aavk8mF7EgURBnoCrkjtOEbqCywBZPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbfFIQsj (ORCPT
+        id S1731277AbfFIQsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731232AbfFIQsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:48:35 -0400
+        id S1731232AbfFIQsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:48:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28246205ED;
-        Sun,  9 Jun 2019 16:48:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5799206C3;
+        Sun,  9 Jun 2019 16:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098914;
-        bh=RraCkwXdzglEq/7vdS33A/72ye87OZQO/agCNTF+Lok=;
+        s=default; t=1560098920;
+        bh=c/h5LsyEMrg8LMhNb60YT3K6SWopq5tpLSzjqwcrkdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ccsxcei6/nm0gUVfv/9l3kkUGB9aZwrhP7XKlFfm8XgYrCkziI0I7wGPV2/h5eeV4
-         7NyZVox0MW0h/Qz5gsTxHcuNIs22MAGZMZpFytd4keIRDqMx4AYUf5SF/xw697Wv/z
-         uVM9L3l55QWhfKWeS51FryLywk6V6ypXS1oKNASo=
+        b=hS/7FOggIOFtGyGR8TCCaaHqdWStk9gk41Bzj27i1W7dOA94lLUUCJXyGPYv7lxoR
+         9zHWR7Zy5WLbIe/pvMeFAUS9OgMVhZvg0cjih35UJfahKdDF64naqGohaFSlsfpiWM
+         kdyP1oiTBbUzfehUBW0qolgD0Qn4SbEbXhOt/LEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Kevin Hilman <khilman@baylibre.com>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.19 33/51] MIPS: pistachio: Build uImage.gz by default
-Date:   Sun,  9 Jun 2019 18:42:14 +0200
-Message-Id: <20190609164129.245033949@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 4.19 35/51] genwqe: Prevent an integer overflow in the ioctl
+Date:   Sun,  9 Jun 2019 18:42:16 +0200
+Message-Id: <20190609164129.413681866@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,44 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit e4f2d1af7163becb181419af9dece9206001e0a6 upstream.
+commit 110080cea0d0e4dfdb0b536e7f8a5633ead6a781 upstream.
 
-The pistachio platform uses the U-Boot bootloader & generally boots a
-kernel in the uImage format. As such it's useful to build one when
-building the kernel, but to do so currently requires the user to
-manually specify a uImage target on the make command line.
+There are a couple potential integer overflows here.
 
-Make uImage.gz the pistachio platform's default build target, so that
-the default is to build a kernel image that we can actually boot on a
-board such as the MIPS Creator Ci40.
+	round_up(m->size + (m->addr & ~PAGE_MASK), PAGE_SIZE);
 
-Marked for stable backport as far as v4.1 where pistachio support was
-introduced. This is primarily useful for CI systems such as kernelci.org
-which will benefit from us building a suitable image which can then be
-booted as part of automated testing, extending our test coverage to the
-affected stable branches.
+The first thing is that the "m->size + (...)" addition could overflow,
+and the second is that round_up() overflows to zero if the result is
+within PAGE_SIZE of the type max.
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-URL: https://groups.io/g/kernelci/message/388
-Cc: stable@vger.kernel.org # v4.1+
-Cc: linux-mips@vger.kernel.org
+In this code, the "m->size" variable is an u64 but we're saving the
+result in "map_size" which is an unsigned long and genwqe_user_vmap()
+takes an unsigned long as well.  So I have used ULONG_MAX as the upper
+bound.  From a practical perspective unsigned long is fine/better than
+trying to change all the types to u64.
+
+Fixes: eaf4722d4645 ("GenWQE Character device and DDCB queue")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/pistachio/Platform |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/genwqe/card_dev.c   |    2 ++
+ drivers/misc/genwqe/card_utils.c |    4 ++++
+ 2 files changed, 6 insertions(+)
 
---- a/arch/mips/pistachio/Platform
-+++ b/arch/mips/pistachio/Platform
-@@ -6,3 +6,4 @@ cflags-$(CONFIG_MACH_PISTACHIO)		+=				\
- 		-I$(srctree)/arch/mips/include/asm/mach-pistachio
- load-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff80400000
- zload-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff81000000
-+all-$(CONFIG_MACH_PISTACHIO)		:= uImage.gz
+--- a/drivers/misc/genwqe/card_dev.c
++++ b/drivers/misc/genwqe/card_dev.c
+@@ -780,6 +780,8 @@ static int genwqe_pin_mem(struct genwqe_
+ 
+ 	if ((m->addr == 0x0) || (m->size == 0))
+ 		return -EINVAL;
++	if (m->size > ULONG_MAX - PAGE_SIZE - (m->addr & ~PAGE_MASK))
++		return -EINVAL;
+ 
+ 	map_addr = (m->addr & PAGE_MASK);
+ 	map_size = round_up(m->size + (m->addr & ~PAGE_MASK), PAGE_SIZE);
+--- a/drivers/misc/genwqe/card_utils.c
++++ b/drivers/misc/genwqe/card_utils.c
+@@ -587,6 +587,10 @@ int genwqe_user_vmap(struct genwqe_dev *
+ 	/* determine space needed for page_list. */
+ 	data = (unsigned long)uaddr;
+ 	offs = offset_in_page(data);
++	if (size > ULONG_MAX - PAGE_SIZE - offs) {
++		m->size = 0;	/* mark unused and not added */
++		return -EINVAL;
++	}
+ 	m->nr_pages = DIV_ROUND_UP(offs + size, PAGE_SIZE);
+ 
+ 	m->page_list = kcalloc(m->nr_pages,
 
 
