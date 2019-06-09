@@ -2,313 +2,141 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D8DC468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E6CC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43C12070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8705D208E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 12:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfFIMVq (ORCPT
+        id S1728542AbfFIMW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 08:21:46 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:14653 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfFIMVp (ORCPT
+        Sun, 9 Jun 2019 08:22:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53914 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726874AbfFIMW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 08:21:45 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,571,1557212400"; 
-   d="scan'208";a="36755735"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2019 05:21:44 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 9 Jun 2019 05:21:44 -0700
-Received: from soft-dev3.microsemi.net (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Sun, 9 Jun 2019 05:21:42 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <ralf@linux-mips.org>, <paul.burton@mips.com>,
-        <alexandre.belloni@bootlin.com>, <UNGLinuxDriver@microchip.com>,
-        <ebiggers@google.com>, <chandan@linux.vnet.ibm.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH] MIPS: Ocelot: configs: Move ocelot.config from generic
-Date:   Sun, 9 Jun 2019 14:20:46 +0200
-Message-ID: <1560082846-6320-1-git-send-email-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 9 Jun 2019 08:22:28 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x59CHLPA026875
+        for <linux-kernel@vger.kernel.org>; Sun, 9 Jun 2019 08:22:27 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t0t06kd2u-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 08:22:27 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Sun, 9 Jun 2019 13:22:26 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 9 Jun 2019 13:22:24 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x59CMNwY33489366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 9 Jun 2019 12:22:23 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 344B1B2067;
+        Sun,  9 Jun 2019 12:22:23 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25F7CB2066;
+        Sun,  9 Jun 2019 12:22:23 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.156.65])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun,  9 Jun 2019 12:22:23 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9402D16C5D98; Sun,  9 Jun 2019 05:22:26 -0700 (PDT)
+Date:   Sun, 9 Jun 2019 05:22:26 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Eric Dumazet <edumazet@google.com>, rcu <rcu@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Question about cacheline bounching with percpu-rwsem and rcu-sync
+Reply-To: paulmck@linux.ibm.com
+References: <CAEXW_YTzUsT8xCD=vkSR=mT+L7ot7tCESTWYVqNt_3SQeVDUEA@mail.gmail.com>
+ <20190531135051.GL28207@linux.ibm.com>
+ <CAEXW_YReo2juN8A3CF+CKv8PcN_cH23gYWkLfkOJQqignyx85g@mail.gmail.com>
+ <CAEXW_YT93U4OAVUggkR7E3KV2m7pdVwG-r+x6zjtrGzortvc4w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YT93U4OAVUggkR7E3KV2m7pdVwG-r+x6zjtrGzortvc4w@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19060912-0064-0000-0000-000003EBC724
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011238; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01215471; UDB=6.00639004; IPR=6.00996561;
+ MB=3.00027243; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-09 12:22:25
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060912-0065-0000-0000-00003DD1BA62
+Message-Id: <20190609122226.GU28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-09_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906090092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move board-ocelot.config from configs/generic to configs. This allows to
-enable or disable more configuration options for ocelot board.
-Therefore enable the following options:
-CONFIG_MISC_FILESYSTEMS=y
-CONFIG_SQUASHFS=y
-CONFIG_SQUASHFS_XZ=y
-CONFIG_NET_SCHED=y
-CONFIG_NET_SCH_INGRESS=y
-CONFIG_NET_CLS_MATCHALL=y
-CONFIG_NET_CLS_FLOWER=y
-CONFIG_NET_CLS_ACT=y
-CONFIG_NET_ACT_POLICE=y
-CONFIG_NET_ACT_GACT=y
-CONFIG_BRIDGE_VLAN_FILTERING=y
+On Sat, Jun 08, 2019 at 08:24:36PM -0400, Joel Fernandes wrote:
+> On Fri, May 31, 2019 at 10:43 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> [snip]
+> > >
+> > > Either way, it would be good for you to just try it.  Create a kernel
+> > > module or similar than hammers on percpu_down_read() and percpu_up_read(),
+> > > and empirically check the scalability on a largish system.  Then compare
+> > > this to down_read() and up_read()
+> >
+> > Will do! thanks.
+> 
+> I created a test for this and the results are quite amazing just
+> stressed read lock/unlock for rwsem vs percpu-rwsem.
+> The test is conducted on a dual socket Intel x86_64 machine with 14
+> cores each socket.
+> 
+> Test runs 10,000,000 loops of rwsem vs percpu-rwsem:
+> https://github.com/joelagnel/linux-kernel/commit/8fe968116bd887592301179a53b7b3200db84424
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- arch/mips/Makefile                            |   3 -
- arch/mips/configs/generic/board-ocelot.config |  51 ----------
- arch/mips/configs/ocelot_defconfig            | 140 ++++++++++++++++++++++++++
- 3 files changed, 140 insertions(+), 54 deletions(-)
- delete mode 100644 arch/mips/configs/generic/board-ocelot.config
- create mode 100644 arch/mips/configs/ocelot_defconfig
+Interesting location, but looks functional.  ;-)
 
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 8f4486c..984c09c 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -549,9 +549,6 @@ generic_defconfig:
- # now that the boards have been converted to use the generic kernel they are
- # wrappers around the generic rules above.
- #
--legacy_defconfigs		+= ocelot_defconfig
--ocelot_defconfig-y		:= 32r2el_defconfig BOARDS=ocelot
--
- legacy_defconfigs		+= sead3_defconfig
- sead3_defconfig-y		:= 32r2el_defconfig BOARDS=sead-3
- 
-diff --git a/arch/mips/configs/generic/board-ocelot.config b/arch/mips/configs/generic/board-ocelot.config
-deleted file mode 100644
-index 1134fbb..0000000
---- a/arch/mips/configs/generic/board-ocelot.config
-+++ /dev/null
-@@ -1,51 +0,0 @@
--# require CONFIG_CPU_MIPS32_R2=y
--
--CONFIG_LEGACY_BOARD_OCELOT=y
--CONFIG_FIT_IMAGE_FDT_OCELOT=y
--
--CONFIG_BRIDGE=y
--CONFIG_GENERIC_PHY=y
--
--CONFIG_MTD=y
--CONFIG_MTD_CMDLINE_PARTS=y
--CONFIG_MTD_BLOCK=y
--CONFIG_MTD_M25P80=y
--CONFIG_MTD_RAW_NAND=y
--CONFIG_MTD_NAND_PLATFORM=y
--CONFIG_MTD_SPI_NOR=y
--CONFIG_MTD_UBI=y
--
--CONFIG_BLK_DEV_LOOP=y
--CONFIG_BLK_DEV_RAM=y
--
--CONFIG_SERIAL_8250=y
--CONFIG_SERIAL_8250_CONSOLE=y
--CONFIG_SERIAL_OF_PLATFORM=y
--
--CONFIG_NETDEVICES=y
--CONFIG_NET_SWITCHDEV=y
--CONFIG_NET_DSA=y
--CONFIG_MSCC_OCELOT_SWITCH=y
--CONFIG_MSCC_OCELOT_SWITCH_OCELOT=y
--CONFIG_MDIO_MSCC_MIIM=y
--CONFIG_MICROSEMI_PHY=y
--
--CONFIG_I2C=y
--CONFIG_I2C_CHARDEV=y
--CONFIG_I2C_MUX=y
--CONFIG_I2C_DESIGNWARE_PLATFORM=y
--
--CONFIG_SPI=y
--CONFIG_SPI_BITBANG=y
--CONFIG_SPI_DESIGNWARE=y
--CONFIG_SPI_DW_MMIO=y
--CONFIG_SPI_SPIDEV=y
--
--CONFIG_PINCTRL_OCELOT=y
--
--CONFIG_GPIO_SYSFS=y
--
--CONFIG_POWER_RESET=y
--CONFIG_POWER_RESET_OCELOT_RESET=y
--
--CONFIG_MAGIC_SYSRQ=y
-diff --git a/arch/mips/configs/ocelot_defconfig b/arch/mips/configs/ocelot_defconfig
-new file mode 100644
-index 0000000..016dffe
---- /dev/null
-+++ b/arch/mips/configs/ocelot_defconfig
-@@ -0,0 +1,140 @@
-+CONFIG_SYSVIPC=y
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_MEMCG=y
-+CONFIG_MEMCG_SWAP=y
-+CONFIG_BLK_CGROUP=y
-+CONFIG_CFS_BANDWIDTH=y
-+CONFIG_RT_GROUP_SCHED=y
-+CONFIG_CGROUP_PIDS=y
-+CONFIG_CGROUP_FREEZER=y
-+CONFIG_CPUSETS=y
-+CONFIG_CGROUP_DEVICE=y
-+CONFIG_CGROUP_CPUACCT=y
-+CONFIG_NAMESPACES=y
-+CONFIG_USER_NS=y
-+CONFIG_SCHED_AUTOGROUP=y
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_BPF_SYSCALL=y
-+CONFIG_USERFAULTFD=y
-+CONFIG_EMBEDDED=y
-+# CONFIG_SLUB_DEBUG is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_LEGACY_BOARD_OCELOT=y
-+CONFIG_FIT_IMAGE_FDT_OCELOT=y
-+CONFIG_CPU_LITTLE_ENDIAN=y
-+CONFIG_CPU_MIPS32_R2=y
-+CONFIG_MIPS_CPS=y
-+CONFIG_HIGHMEM=y
-+CONFIG_NR_CPUS=16
-+CONFIG_MIPS_O32_FP64_SUPPORT=y
-+CONFIG_JUMP_LABEL=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
-+CONFIG_TRIM_UNUSED_KSYMS=y
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+CONFIG_IP_PNP=y
-+CONFIG_IP_PNP_DHCP=y
-+CONFIG_NETFILTER=y
-+CONFIG_BRIDGE=y
-+CONFIG_BRIDGE_VLAN_FILTERING=y
-+CONFIG_NET_DSA=y
-+CONFIG_VLAN_8021Q=y
-+CONFIG_NET_SCHED=y
-+CONFIG_NET_SCH_INGRESS=y
-+CONFIG_NET_CLS_FLOWER=y
-+CONFIG_NET_CLS_MATCHALL=y
-+CONFIG_NET_CLS_ACT=y
-+CONFIG_NET_ACT_POLICE=y
-+CONFIG_NET_ACT_GACT=y
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_MTD=y
-+CONFIG_MTD_CMDLINE_PARTS=y
-+CONFIG_MTD_BLOCK=y
-+CONFIG_MTD_M25P80=y
-+CONFIG_MTD_RAW_NAND=y
-+CONFIG_MTD_NAND_PLATFORM=y
-+CONFIG_MTD_SPI_NOR=y
-+CONFIG_MTD_UBI=y
-+CONFIG_BLK_DEV_LOOP=y
-+CONFIG_BLK_DEV_RAM=y
-+CONFIG_BLK_DEV_RAM_COUNT=2
-+CONFIG_BLK_DEV_RAM_SIZE=16000
-+CONFIG_SCSI=y
-+CONFIG_NETDEVICES=y
-+CONFIG_MSCC_OCELOT_SWITCH=y
-+CONFIG_MSCC_OCELOT_SWITCH_OCELOT=y
-+CONFIG_MDIO_MSCC_MIIM=y
-+CONFIG_MICROSEMI_PHY=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+CONFIG_HW_RANDOM=y
-+CONFIG_I2C=y
-+CONFIG_I2C_CHARDEV=y
-+CONFIG_I2C_MUX=y
-+CONFIG_I2C_DESIGNWARE_PLATFORM=y
-+CONFIG_SPI=y
-+CONFIG_SPI_BITBANG=y
-+CONFIG_SPI_DESIGNWARE=y
-+CONFIG_SPI_DW_MMIO=y
-+CONFIG_SPI_SPIDEV=y
-+CONFIG_PINCTRL_OCELOT=y
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_OCELOT_RESET=y
-+# CONFIG_HWMON is not set
-+CONFIG_HID_A4TECH=y
-+CONFIG_HID_APPLE=y
-+CONFIG_HID_BELKIN=y
-+CONFIG_HID_CHERRY=y
-+CONFIG_HID_CHICONY=y
-+CONFIG_HID_CYPRESS=y
-+CONFIG_HID_EZKEY=y
-+CONFIG_HID_KENSINGTON=y
-+CONFIG_HID_LOGITECH=y
-+CONFIG_HID_MICROSOFT=y
-+CONFIG_HID_MONTEREY=y
-+# CONFIG_MIPS_PLATFORM_DEVICES is not set
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_GENERIC_PHY=y
-+CONFIG_EXT4_FS=y
-+CONFIG_EXT4_FS_POSIX_ACL=y
-+CONFIG_EXT4_FS_SECURITY=y
-+CONFIG_FS_ENCRYPTION=y
-+CONFIG_FANOTIFY=y
-+CONFIG_FUSE_FS=y
-+CONFIG_CUSE=y
-+CONFIG_OVERLAY_FS=y
-+CONFIG_MSDOS_FS=y
-+CONFIG_VFAT_FS=y
-+CONFIG_TMPFS=y
-+CONFIG_TMPFS_POSIX_ACL=y
-+CONFIG_SQUASHFS=y
-+CONFIG_SQUASHFS_XZ=y
-+CONFIG_NFS_FS=y
-+CONFIG_NFS_V3_ACL=y
-+CONFIG_NFS_V4=y
-+CONFIG_NFS_V4_1=y
-+CONFIG_NFS_V4_2=y
-+CONFIG_ROOT_NFS=y
-+# CONFIG_XZ_DEC_X86 is not set
-+# CONFIG_XZ_DEC_POWERPC is not set
-+# CONFIG_XZ_DEC_IA64 is not set
-+# CONFIG_XZ_DEC_ARM is not set
-+# CONFIG_XZ_DEC_ARMTHUMB is not set
-+# CONFIG_XZ_DEC_SPARC is not set
-+CONFIG_PRINTK_TIME=y
-+CONFIG_DEBUG_INFO=y
-+CONFIG_DEBUG_INFO_REDUCED=y
-+CONFIG_DEBUG_FS=y
-+CONFIG_MAGIC_SYSRQ=y
-+# CONFIG_SCHED_DEBUG is not set
-+# CONFIG_FTRACE is not set
-+CONFIG_CMDLINE_BOOL=y
-+CONFIG_CMDLINE="earlycon"
--- 
-2.7.4
+> Graphs/Results here:
+> https://docs.google.com/spreadsheets/d/1cbVLNK8tzTZNTr-EDGDC0T0cnFCdFK3wg2Foj5-Ll9s/edit?usp=sharing
+> 
+> The completion time of the test goes up somewhat exponentially with
+> the number of threads, for the rwsem case, where as for percpu-rwsem
+> it is the same. I could add this data to some of the documentation as
+> well.
+
+Actually, the completion time looks to be pretty close to linear in the
+number of CPUs.  Which is still really bad, don't get me wrong.
+
+Thank you for doing this, and it might be good to have some documentation
+on this.  In perfbook, I use counters to make this point, and perhaps
+I need to emphasize more that it also applies to other algorithms,
+including locking.  Me, I learned this lesson from a logic analyzer
+back in the very early 1990s.  This was back in the days before on-CPU
+caches when a logic analyzer could actually tell you something about
+the detailed execution.  ;-)
+
+The key point is that you can often closely approximate the performance
+of synchronization algorithms by counting the number of cache misses and
+the number of CPUs competing for each cache line.
+
+If you want to get the microbenchmark test code itself upstream,
+one approach might be to have a kernel/locking/lockperf.c similar to
+kernel/rcu/rcuperf.c.
+
+Thoughts?
+
+							Thanx, Paul
 
