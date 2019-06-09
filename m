@@ -2,290 +2,134 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4B7C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50C2C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9B52080C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DpySRNg9"
+	by mail.kernel.org (Postfix) with ESMTP id A4EA521530
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 10:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFIKc2 (ORCPT
+        id S1728410AbfFIKcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 06:32:28 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37048 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727853AbfFIKcZ (ORCPT
+        Sun, 9 Jun 2019 06:32:54 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:57814 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728168AbfFIKcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 06:32:25 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x59AVptH056731;
-        Sun, 9 Jun 2019 05:31:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560076311;
-        bh=bhf1NnC4v0L9mSFxunRdPIHPTAIDYrhcmMkuEkkylxM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=DpySRNg93tW2CkhUN1FDLag9UYAVmXlwYyBvxKeFeE2xlciiD6edauRRgxl+9IGKx
-         GvF9RpH2xomzyLhDJCyy01gbTyRvoeQTK1OAFk6rXQJ3K0m2kemcLgEvTN66mY+8Xh
-         PQjO4QOOGTbyN9ZAldXFHZJL8ZsOPfts+MpMArYA=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x59AVp4O078858
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 9 Jun 2019 05:31:51 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 9 Jun
- 2019 05:31:49 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sun, 9 Jun 2019 05:31:49 -0500
-Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x59AVe1e049269;
-        Sun, 9 Jun 2019 05:31:45 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-mtd@lists.infradead.org>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        <devicetree@vger.kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 1/5] mtd: cfi_cmdset_0002: Add support for polling status register
-Date:   Sun, 9 Jun 2019 16:02:23 +0530
-Message-ID: <20190609103227.24875-2-vigneshr@ti.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609103227.24875-1-vigneshr@ti.com>
-References: <20190609103227.24875-1-vigneshr@ti.com>
+        Sun, 9 Jun 2019 06:32:51 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C6F642002D;
+        Sun,  9 Jun 2019 12:32:42 +0200 (CEST)
+Date:   Sun, 9 Jun 2019 12:32:41 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
+        dri-devel@lists.freedesktop.org,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        cawa.cheng@mediatek.com,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        linux-arm-kernel@lists.infradead.org,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: [1/2] dt-bindngs: display: panel: Add BOE tv101wum-nl6 panel
+ bindings
+Message-ID: <20190609103241.GA28935@ravnborg.org>
+References: <20190608070230.55381-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608070230.55381-1-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
+        a=GOHkJZeNjhEJBjOU3QsA:9 a=zQRrZ5hHoVty9KUv:21 a=G8XELezRatH2Uwd4:21
+        a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
-Set (0x0002) for flash operations, therefore
-drivers/mtd/chips/cfi_cmdset_0002.c can be used as is. But these devices
-do not support DQ polling method of determining chip ready/good status.
-These flashes provide Status Register whose bits can be polled to know
-status of flash operation.
+Hi Jitao
 
-Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
-Extended Query version 1.5. Bit 0 of "Software Features supported" field
-of CFI Primary Vendor-Specific Extended Query table indicates
-presence/absence of status register and Bit 1 indicates whether or not
-DQ polling is supported. Using these bits, its possible to determine
-whether flash supports DQ polling or need to use Status Register.
+Always good to see more panels added.
 
-Add support for polling Status Register to know device ready/status of
-erase/write operations when DQ polling is not supported.
-Print error messages on erase/program failure by looking at related
-Status Register bits.
+On Sat, Jun 08, 2019 at 03:02:29PM +0800, Jitao Shi wrote:
+> Add documentation for boe tv101wum-n16 panel.
 
-[1] https://www.cypress.com/file/213346/download
+The changelog says tv101wum-n16 but the compatible says tv101wum-nl6.
+Please pick the right one and be consistent. (number one '1' versus
+character 'l')
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
-v5: No change
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../display/panel/boe,tv101wum-nl6.txt        | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+> new file mode 100644
+> index 000000000000..2a84735d742d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+> @@ -0,0 +1,34 @@
+> +Boe Corporation 10.1" WUXGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "boe,tv101wum"
+The example uses "boe,tv101wum-nl6", which matches the filename.
+Please fix so it is the same all over.
 
- drivers/mtd/chips/cfi_cmdset_0002.c | 90 +++++++++++++++++++++++++++++
- include/linux/mtd/cfi.h             |  5 ++
- 2 files changed, 95 insertions(+)
+> +- reg: the virtual channel number of a DSI peripheral
+> +- enable-gpios: a GPIO spec for the enable pin
+> +- pp1800-supply: core voltage supply
+> +- avdd-supply: 
+> +- avee-supply: 
+Missing descriptions - please add.
+> +- backlight: phandle of the backlight device attached to the panel
+> +
+> +The device node can contain one 'port' child node with one child
+> +'endpoint' node, according to the bindings defined in
+> +media/video-interfaces.txt. This node should describe panel's video bus.
+> +
+> +Example:
+> +&dsi {
+> +	...
+> +	panel@0 {
+> +		compatible = "boe,tv101wum-nl6";
+> +		reg = <0>;
+> +		enable-gpios = <&pio 45 0>;
+> +		avdd-supply = <&ppvarn_lcd>;
+> +		avee-supply = <&ppvarp_lcd>;
+> +		pp1800-supply = <&pp1800_lcd>;
+> +		backlight = <&backlight_lcd0>;
+> +		status = "okay";
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&dsi_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> \ No newline at end of file
+Please add newline.
 
-diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-index c8fa5906bdf9..0f571f162e3b 100644
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -49,6 +49,16 @@
- #define SST49LF008A		0x005a
- #define AT49BV6416		0x00d6
- 
-+/*
-+ * Status Register bit description. Used by flash devices that don't
-+ * support DQ polling (e.g. HyperFlash)
-+ */
-+#define CFI_SR_DRB		BIT(7)
-+#define CFI_SR_ESB		BIT(5)
-+#define CFI_SR_PSB		BIT(4)
-+#define CFI_SR_WBASB		BIT(3)
-+#define CFI_SR_SLSB		BIT(1)
-+
- static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
- static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
- static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
-@@ -97,6 +107,48 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
- 	.module		= THIS_MODULE
- };
- 
-+/*
-+ * Use status register to poll for Erase/write completion when DQ is not
-+ * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
-+ * CFI Primary Vendor-Specific Extended Query table 1.5
-+ */
-+static int cfi_use_status_reg(struct cfi_private *cfi)
-+{
-+	struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
-+
-+	return extp->MinorVersion >= '5' &&
-+		(extp->SoftwareFeatures & 0x3) == 0x1;
-+}
-+
-+static void cfi_check_err_status(struct map_info *map, unsigned long adr)
-+{
-+	struct cfi_private *cfi = map->fldrv_priv;
-+	map_word status;
-+
-+	if (!cfi_use_status_reg(cfi))
-+		return;
-+
-+	cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+			 cfi->device_type, NULL);
-+	status = map_read(map, adr);
-+
-+	if (map_word_bitsset(map, status, CMD(0x3a))) {
-+		unsigned long chipstatus = MERGESTATUS(status);
-+
-+		if (chipstatus & CFI_SR_ESB)
-+			pr_err("%s erase operation failed, status %lx\n",
-+			       map->name, chipstatus);
-+		if (chipstatus & CFI_SR_PSB)
-+			pr_err("%s program operation failed, status %lx\n",
-+			       map->name, chipstatus);
-+		if (chipstatus & CFI_SR_WBASB)
-+			pr_err("%s buffer program command aborted, status %lx\n",
-+			       map->name, chipstatus);
-+		if (chipstatus & CFI_SR_SLSB)
-+			pr_err("%s sector write protected, status %lx\n",
-+			       map->name, chipstatus);
-+	}
-+}
- 
- /* #define DEBUG_CFI_FEATURES */
- 
-@@ -744,8 +796,22 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
-  */
- static int __xipram chip_ready(struct map_info *map, unsigned long addr)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word d, t;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		map_word ready = CMD(CFI_SR_DRB);
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		d = map_read(map, addr);
-+
-+		return map_word_andequal(map, d, ready, ready);
-+	}
-+
- 	d = map_read(map, addr);
- 	t = map_read(map, addr);
- 
-@@ -769,8 +835,27 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
-  */
- static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word oldd, curd;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		map_word ready = CMD(CFI_SR_DRB);
-+		map_word err = CMD(CFI_SR_PSB | CFI_SR_ESB);
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit and Erase/Program status bit to know if
-+		 * operation succeeded.
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		curd = map_read(map, addr);
-+
-+		if (map_word_andequal(map, curd, ready, ready))
-+			return !map_word_bitsset(map, curd, err);
-+
-+		return 0;
-+	}
-+
- 	oldd = map_read(map, addr);
- 	curd = map_read(map, addr);
- 
-@@ -1644,6 +1729,7 @@ static int __xipram do_write_oneword(struct map_info *map, struct flchip *chip,
- 	/* Did we succeed? */
- 	if (!chip_good(map, adr, datum)) {
- 		/* reset on all failures. */
-+		cfi_check_err_status(map, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -1901,6 +1987,7 @@ static int __xipram do_write_buffer(struct map_info *map, struct flchip *chip,
- 	 * See e.g.
- 	 * http://www.spansion.com/Support/Application%20Notes/MirrorBit_Write_Buffer_Prog_Page_Buffer_Read_AN.pdf
- 	 */
-+	cfi_check_err_status(map, adr);
- 	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
- 			 cfi->device_type, NULL);
- 	cfi_send_gen_cmd(0x55, cfi->addr_unlock2, chip->start, map, cfi,
-@@ -2107,6 +2194,7 @@ static int do_panic_write_oneword(struct map_info *map, struct flchip *chip,
- 
- 	if (!chip_good(map, adr, datum)) {
- 		/* reset on all failures. */
-+		cfi_check_err_status(map, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -2316,6 +2404,7 @@ static int __xipram do_erase_chip(struct map_info *map, struct flchip *chip)
- 	/* Did we succeed? */
- 	if (ret) {
- 		/* reset on all failures. */
-+		cfi_check_err_status(map, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -2412,6 +2501,7 @@ static int __xipram do_erase_oneblock(struct map_info *map, struct flchip *chip,
- 	/* Did we succeed? */
- 	if (ret) {
- 		/* reset on all failures. */
-+		cfi_check_err_status(map, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
-index 208c87cf2e3e..b50416169049 100644
---- a/include/linux/mtd/cfi.h
-+++ b/include/linux/mtd/cfi.h
-@@ -219,6 +219,11 @@ struct cfi_pri_amdstd {
- 	uint8_t  VppMin;
- 	uint8_t  VppMax;
- 	uint8_t  TopBottom;
-+	/* Below field are added from version 1.5 */
-+	uint8_t  ProgramSuspend;
-+	uint8_t  UnlockBypass;
-+	uint8_t  SecureSiliconSector;
-+	uint8_t  SoftwareFeatures;
- } __packed;
- 
- /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
--- 
-2.21.0
-
+	Sam
