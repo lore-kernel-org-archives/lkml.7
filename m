@@ -2,61 +2,60 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86926C28CC5
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8A5C28CC5
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440CA214AE
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162CF214AE
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 02:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560047379;
-	bh=rIXUsQ6KrV22nvfOLBEphHcv3awblM01Tt7BfoJoAz8=;
+	s=default; t=1560047393;
+	bh=j3FHrglBK3ElzFAtaKKCdxepOVkIjQNLuGnT28xuhAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rpxcjeC4z7a4+wAH8JqyBiME5TQtAznjC1YqNeMgXG8fi77eC7aA0ag71IkcU21NT
-	 ah9IpcgSN2RfobvxFyZt/BofRFKyiHjth3BDi516dAVPPCzoravKPggJLMaeGlDrtJ
-	 jnPuaIiaj+UwmndXHYqJZ16yRHqPbsGVAsH8FTF8=
+	b=KURH0x/ZegUEm4KXCQ36WyM+k020BQrjujusBlZ+LVcp+1CBXRjTNt2s1iaVLd8mC
+	 Ty8F4RE8ToygBZfu/cdrLkpScxkTSEVXweaEKo5CKUHYwiLjyGl1GEdge6djEsvd3b
+	 xvJ86d0JY/+cbgP4/Wd7fEhfMXaqbkVahOL2DmqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfFIC3i (ORCPT
+        id S1728770AbfFIC3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Jun 2019 22:29:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55674 "EHLO
+        Sat, 8 Jun 2019 22:29:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55642 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbfFIC1d (ORCPT
+        with ESMTP id S1727630AbfFIC1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Jun 2019 22:27:33 -0400
+        Sat, 8 Jun 2019 22:27:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YvaWc7/jIKu+tp7QGKqga7yKT74/WnMkBzkmsTWeFfs=; b=TfO4n5+Yw7gpcO0GqJP2nbiL+8
-        CFszIf4pGyYBI/86jdAK81WXmFf1UgReMW7RJ5DcL2RMCEomhz5bgY9/5Q29PoJrgrHsAds0rckd/
-        YbXztYZQveklC/G3jllL8+j3cC2c1Sz4PfASLOAKosi/NjyAPBTIf2kHTiWXZTo67lhKCDG0aJWd2
-        2lG+2ntlUsu5FQ8HjmAhdS90LS/L+l0yTYmBuRrELPz5O6ZM5LvpAA1gbY8Z2/YutMKspV8Dvw4+E
-        dQr6Wl6WpINAfsLmfLDD46SDWBS0fsSgTM/aof7MzRpwT40dzpqRsZ2MrtNTtzkdRccyw37BNhHLA
-        FnSYxy7g==;
+        bh=HSCm9fmHq45iKXWvH1z71kgLM8Zr/K08UPBWZ48G3rQ=; b=uEXex3bzRE7TtZEhdIcrgqO2/F
+        UUAWu2jvNFKVpxGz0N/V+MDqaVTTbVhMTt1HSEheJkj1I4BRZlaJoXIbCrLo7og9XvTccvNrDCJDT
+        xP1wXtLBM7hZpnmtWMLFQ45AJ0jwKOb3hjO9iaN78I3F/MblqNCnwxtYB5g1f+dZ8nfai8GkCA6ly
+        r5lRWx9cEcIPXkGXyiTwkNkw9uDOVwaSM8QGaf+7YC5BZul68TcQPJuIkJq4iMWpJHD1X4XV+83yt
+        71u5+9gjCI5N+wZO1SfckZRnsYSvMYUVmR1rWjgtxluMYREdO4Zg0A01m2cp8ZEJhDZz+86+YTjFH
+        ZhiY92VQ==;
 Received: from 179.176.115.133.dynamic.adsl.gvt.net.br ([179.176.115.133] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hZnYS-0001n1-FB; Sun, 09 Jun 2019 02:27:32 +0000
+        id 1hZnYS-0001mu-84; Sun, 09 Jun 2019 02:27:32 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hZnYL-0000K2-Fa; Sat, 08 Jun 2019 23:27:25 -0300
+        id 1hZnYL-0000JV-9D; Sat, 08 Jun 2019 23:27:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v3 24/33] docs: riscv: convert docs to ReST and rename to *.rst
-Date:   Sat,  8 Jun 2019 23:27:14 -0300
-Message-Id: <55623342910f7ef470a3c49a3d42cfb23fb12e76.1560045490.git.mchehab+samsung@kernel.org>
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH v3 17/33] docs: mic: convert docs to ReST and rename to *.rst
+Date:   Sat,  8 Jun 2019 23:27:07 -0300
+Message-Id: <bfb9f5bd5c6278f167f15301df435008d4308830.1560045490.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560045490.git.mchehab+samsung@kernel.org>
 References: <cover.1560045490.git.mchehab+samsung@kernel.org>
@@ -67,39 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion here is trivial:
- - Adjust the document title's markup
- - Do some whitespace alignment;
- - mark literal blocks;
- - Use ReST way to markup indented lists.
+Convert Intel Many Integrated Core architecture docs to ReST.
+
+The conversion is trivial: just add title and literal block
+markups, and adjust some identation.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/riscv/index.rst            | 17 ++++
- Documentation/riscv/{pmu.txt => pmu.rst} | 98 +++++++++++++-----------
- 2 files changed, 69 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/riscv/index.rst
- rename Documentation/riscv/{pmu.txt => pmu.rst} (77%)
+ Documentation/mic/index.rst                   | 18 ++++++
+ .../{mic_overview.txt => mic_overview.rst}    |  6 +-
+ .../{scif_overview.txt => scif_overview.rst}  | 58 +++++++++++--------
+ 3 files changed, 57 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/mic/index.rst
+ rename Documentation/mic/{mic_overview.txt => mic_overview.rst} (96%)
+ rename Documentation/mic/{scif_overview.txt => scif_overview.rst} (76%)
 
-diff --git a/Documentation/riscv/index.rst b/Documentation/riscv/index.rst
+diff --git a/Documentation/mic/index.rst b/Documentation/mic/index.rst
 new file mode 100644
-index 000000000000..c4b906d9b5a7
+index 000000000000..082fa8f6a260
 --- /dev/null
-+++ b/Documentation/riscv/index.rst
-@@ -0,0 +1,17 @@
++++ b/Documentation/mic/index.rst
+@@ -0,0 +1,18 @@
 +:orphan:
 +
-+===================
-+RISC-V architecture
-+===================
++=============================================
++Intel Many Integrated Core (MIC) architecture
++=============================================
 +
 +.. toctree::
 +    :maxdepth: 1
 +
-+    pmu
++    mic_overview
++    scif_overview
 +
 +.. only::  subproject and html
 +
@@ -107,183 +108,128 @@ index 000000000000..c4b906d9b5a7
 +   =======
 +
 +   * :ref:`genindex`
-diff --git a/Documentation/riscv/pmu.txt b/Documentation/riscv/pmu.rst
-similarity index 77%
-rename from Documentation/riscv/pmu.txt
-rename to Documentation/riscv/pmu.rst
-index b29f03a6d82f..acb216b99c26 100644
---- a/Documentation/riscv/pmu.txt
-+++ b/Documentation/riscv/pmu.rst
-@@ -1,5 +1,7 @@
-+===================================
- Supporting PMUs on RISC-V platforms
--==========================================
-+===================================
+diff --git a/Documentation/mic/mic_overview.txt b/Documentation/mic/mic_overview.rst
+similarity index 96%
+rename from Documentation/mic/mic_overview.txt
+rename to Documentation/mic/mic_overview.rst
+index 074adbdf83a4..17d956bdaf7c 100644
+--- a/Documentation/mic/mic_overview.txt
++++ b/Documentation/mic/mic_overview.rst
+@@ -1,3 +1,7 @@
++======================================================
++Intel Many Integrated Core (MIC) architecture overview
++======================================================
 +
- Alan Kao <alankao@andestech.com>, Mar 2018
+ An Intel MIC X100 device is a PCIe form factor add-in coprocessor
+ card based on the Intel Many Integrated Core (MIC) architecture
+ that runs a Linux OS. It is a PCIe endpoint in a platform and therefore
+@@ -45,7 +49,7 @@ Here is a block diagram of the various components described above. The
+ virtio backends are situated on the host rather than the card given better
+ single threaded performance for the host compared to MIC, the ability of
+ the host to initiate DMA's to/from the card using the MIC DMA engine and
+-the fact that the virtio block storage backend can only be on the host.
++the fact that the virtio block storage backend can only be on the host::
  
- Introduction
-@@ -77,13 +79,13 @@ Note that some features can be done in this stage as well:
- (2) privilege level setting (user space only, kernel space only, both);
- (3) destructor setting.  Normally it is sufficient to apply *riscv_destroy_event*;
- (4) tweaks for non-sampling events, which will be utilized by functions such as
--*perf_adjust_period*, usually something like the follows:
-+    *perf_adjust_period*, usually something like the follows::
- 
--if (!is_sampling_event(event)) {
--        hwc->sample_period = x86_pmu.max_period;
--        hwc->last_period = hwc->sample_period;
--        local64_set(&hwc->period_left, hwc->sample_period);
--}
-+      if (!is_sampling_event(event)) {
-+              hwc->sample_period = x86_pmu.max_period;
-+              hwc->last_period = hwc->sample_period;
-+              local64_set(&hwc->period_left, hwc->sample_period);
-+      }
- 
- In the case of *riscv_base_pmu*, only (3) is provided for now.
- 
-@@ -94,10 +96,10 @@ In the case of *riscv_base_pmu*, only (3) is provided for now.
- 3.1. Interrupt Initialization
- 
- This often occurs at the beginning of the *event_init* method. In common
--practice, this should be a code segment like
-+practice, this should be a code segment like::
- 
--int x86_reserve_hardware(void)
--{
-+  int x86_reserve_hardware(void)
-+  {
-         int err = 0;
- 
-         if (!atomic_inc_not_zero(&pmc_refcount)) {
-@@ -114,7 +116,7 @@ int x86_reserve_hardware(void)
-         }
- 
-         return err;
--}
-+  }
- 
- And the magic is in *reserve_pmc_hardware*, which usually does atomic
- operations to make implemented IRQ accessible from some global function pointer.
-@@ -128,28 +130,28 @@ which will be introduced in the next section.)
- 
- 3.2. IRQ Structure
- 
--Basically, a IRQ runs the following pseudo code:
-+Basically, a IRQ runs the following pseudo code::
- 
--for each hardware counter that triggered this overflow
-+  for each hardware counter that triggered this overflow
- 
--    get the event of this counter
-+      get the event of this counter
- 
--    // following two steps are defined as *read()*,
--    // check the section Reading/Writing Counters for details.
--    count the delta value since previous interrupt
--    update the event->count (# event occurs) by adding delta, and
--               event->hw.period_left by subtracting delta
-+      // following two steps are defined as *read()*,
-+      // check the section Reading/Writing Counters for details.
-+      count the delta value since previous interrupt
-+      update the event->count (# event occurs) by adding delta, and
-+                 event->hw.period_left by subtracting delta
- 
--    if the event overflows
--        sample data
--        set the counter appropriately for the next overflow
-+      if the event overflows
-+          sample data
-+          set the counter appropriately for the next overflow
- 
--        if the event overflows again
--            too frequently, throttle this event
--        fi
--    fi
-+          if the event overflows again
-+              too frequently, throttle this event
-+          fi
-+      fi
- 
--end for
-+  end for
- 
- However as of this writing, none of the RISC-V implementations have designed an
- interrupt for perf, so the details are to be completed in the future.
-@@ -195,23 +197,26 @@ A normal flow of these state transitions are as follows:
-   At this stage, a general event is bound to a physical counter, if any.
-   The state changes to PERF_HES_STOPPED and PERF_HES_UPTODATE, because it is now
-   stopped, and the (software) event count does not need updating.
--** *start* is then called, and the counter is enabled.
--   With flag PERF_EF_RELOAD, it writes an appropriate value to the counter (check
--   previous section for detail).
--   Nothing is written if the flag does not contain PERF_EF_RELOAD.
--   The state now is reset to none, because it is neither stopped nor updated
--   (the counting already started)
+                +----------+           |             +----------+
+                | Card OS  |           |             | Host OS  |
+diff --git a/Documentation/mic/scif_overview.txt b/Documentation/mic/scif_overview.rst
+similarity index 76%
+rename from Documentation/mic/scif_overview.txt
+rename to Documentation/mic/scif_overview.rst
+index 0a280d986731..4c8ad9e43706 100644
+--- a/Documentation/mic/scif_overview.txt
++++ b/Documentation/mic/scif_overview.rst
+@@ -1,3 +1,7 @@
++========================================
++Symmetric Communication Interface (SCIF)
++========================================
 +
-+  - *start* is then called, and the counter is enabled.
-+    With flag PERF_EF_RELOAD, it writes an appropriate value to the counter (check
-+    previous section for detail).
-+    Nothing is written if the flag does not contain PERF_EF_RELOAD.
-+    The state now is reset to none, because it is neither stopped nor updated
-+    (the counting already started)
+ The Symmetric Communication Interface (SCIF (pronounced as skiff)) is a low
+ level communications API across PCIe currently implemented for MIC. Currently
+ SCIF provides inter-node communication within a single host platform, where a
+@@ -8,8 +12,11 @@ is to deliver the maximum possible performance given the communication
+ abilities of the hardware. SCIF has been used to implement an offload compiler
+ runtime and OFED support for MPI implementations for MIC coprocessors.
+ 
+-==== SCIF API Components ====
++SCIF API Components
++===================
 +
- * When being context-switched out, *del* is called.  It then checks out all the
-   events in the PMU and calls *stop* to update their counts.
--** *stop* is called by *del*
--   and the perf core with flag PERF_EF_UPDATE, and it often shares the same
--   subroutine as *read* with the same logic.
--   The state changes to PERF_HES_STOPPED and PERF_HES_UPTODATE, again.
- 
--** Life cycle of these two pairs: *add* and *del* are called repeatedly as
--  tasks switch in-and-out; *start* and *stop* is also called when the perf core
--  needs a quick stop-and-start, for instance, when the interrupt period is being
--  adjusted.
-+  - *stop* is called by *del*
-+    and the perf core with flag PERF_EF_UPDATE, and it often shares the same
-+    subroutine as *read* with the same logic.
-+    The state changes to PERF_HES_STOPPED and PERF_HES_UPTODATE, again.
+ The SCIF API has the following parts:
 +
-+  - Life cycle of these two pairs: *add* and *del* are called repeatedly as
-+    tasks switch in-and-out; *start* and *stop* is also called when the perf core
-+    needs a quick stop-and-start, for instance, when the interrupt period is being
-+    adjusted.
+ 1. Connection establishment using a client server model
+ 2. Byte stream messaging intended for short messages
+ 3. Node enumeration to determine online nodes
+@@ -28,9 +35,12 @@ can also register local memory which is followed by data transfer using either
+ DMA, CPU copies or remote memory mapping via mmap. SCIF supports both user and
+ kernel mode clients which are functionally equivalent.
  
- Current implementation is sufficient for now and can be easily extended to
- features in the future.
-@@ -225,25 +230,26 @@ A. Related Structures
-   Both structures are designed to be read-only.
- 
-   *struct pmu* defines some function pointer interfaces, and most of them take
--*struct perf_event* as a main argument, dealing with perf events according to
--perf's internal state machine (check kernel/events/core.c for details).
-+  *struct perf_event* as a main argument, dealing with perf events according to
-+  perf's internal state machine (check kernel/events/core.c for details).
- 
-   *struct riscv_pmu* defines PMU-specific parameters.  The naming follows the
--convention of all other architectures.
-+  convention of all other architectures.
- 
- * struct perf_event: include/linux/perf_event.h
- * struct hw_perf_event
- 
-   The generic structure that represents perf events, and the hardware-related
--details.
-+  details.
- 
- * struct riscv_hw_events: arch/riscv/include/asm/perf_event.h
- 
-   The structure that holds the status of events, has two fixed members:
--the number of events and the array of the events.
-+  the number of events and the array of the events.
- 
- References
- ----------
- 
- [1] https://github.com/riscv/riscv-linux/pull/124
+-==== SCIF Performance for MIC ====
++SCIF Performance for MIC
++========================
 +
- [2] https://groups.google.com/a/groups.riscv.org/forum/#!topic/sw-dev/f19TmCNP6yA
+ DMA bandwidth comparison between the TCP (over ethernet over PCIe) stack versus
+-SCIF shows the performance advantages of SCIF for HPC applications and runtimes.
++SCIF shows the performance advantages of SCIF for HPC applications and
++runtimes::
+ 
+              Comparison of TCP and SCIF based BW
+ 
+@@ -66,33 +76,33 @@ space API similar to the kernel API in scif.h. The SCIF user space library
+ is distributed @ https://software.intel.com/en-us/mic-developer
+ 
+ Here is some pseudo code for an example of how two applications on two PCIe
+-nodes would typically use the SCIF API:
++nodes would typically use the SCIF API::
+ 
+-Process A (on node A)			Process B (on node B)
++  Process A (on node A)			Process B (on node B)
+ 
+-/* get online node information */
+-scif_get_node_ids(..)			scif_get_node_ids(..)
+-scif_open(..)				scif_open(..)
+-scif_bind(..)				scif_bind(..)
+-scif_listen(..)
+-scif_accept(..)				scif_connect(..)
+-/* SCIF connection established */
++  /* get online node information */
++  scif_get_node_ids(..)			scif_get_node_ids(..)
++  scif_open(..)				scif_open(..)
++  scif_bind(..)				scif_bind(..)
++  scif_listen(..)
++  scif_accept(..)				scif_connect(..)
++  /* SCIF connection established */
+ 
+-/* Send and receive short messages */
+-scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
++  /* Send and receive short messages */
++  scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
+ 
+-/* Register memory */
+-scif_register(..)			scif_register(..)
++  /* Register memory */
++  scif_register(..)			scif_register(..)
+ 
+-/* RDMA */
+-scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
++  /* RDMA */
++  scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
+ 
+-/* Fence DMAs */
+-scif_fence_signal(..)			scif_fence_signal(..)
++  /* Fence DMAs */
++  scif_fence_signal(..)			scif_fence_signal(..)
+ 
+-mmap(..)				mmap(..)
++  mmap(..)				mmap(..)
+ 
+-/* Access remote registered memory */
++  /* Access remote registered memory */
+ 
+-/* Close the endpoints */
+-scif_close(..)				scif_close(..)
++  /* Close the endpoints */
++  scif_close(..)				scif_close(..)
 -- 
 2.21.0
 
