@@ -2,54 +2,54 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13792C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8D6C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDAAE205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5CD205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100240;
-	bh=KOWkuXuBtpVMA1akSWD0Yjms8HspRwlAqWzEw0WHYkw=;
+	s=default; t=1560100247;
+	bh=d03wGcSLh8G/HpcgAyBKycnljy+lMikE51SomgRCph0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixcVLz9CIiqHj9q6GQkm60IP9jwWwMrSqYTx9bmiWrjwZ5ka1GoWzIBgP0lJs8+kT
-	 8NYGYPBsiix4XMd0g5OrzQIMKS9utgOSMYaDi/FaV9HmXT1fN/dCS2V7Uh66WS1Voh
-	 F5Y/SSpTL3mSYZTnENMOHExxjWlyX4uUmxlUWwJ0=
+	b=o8pWlZ1oOSYUacj1iX5StWhVur+gjfVtQ8b0yhY/fvTErhySDbk+HG9s6RqvmA17L
+	 pdmjH8GyQ6b491BfLsH1LwRREJsETGqaFyhsFl6VkzkcUXFeM09oFqqpihy0Sx55SE
+	 qluGJoPftbPfEgDlwuHNiyEj46K8Zqyhl6j7zbUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388251AbfFIRCe (ORCPT
+        id S2388967AbfFIRKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40432 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:10:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730057AbfFIRCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:02:30 -0400
+        id S2388222AbfFIRCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:02:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0852F207E0;
-        Sun,  9 Jun 2019 17:02:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55C1820833;
+        Sun,  9 Jun 2019 17:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099749;
-        bh=KOWkuXuBtpVMA1akSWD0Yjms8HspRwlAqWzEw0WHYkw=;
+        s=default; t=1560099740;
+        bh=d03wGcSLh8G/HpcgAyBKycnljy+lMikE51SomgRCph0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nF8R6nMSt1/629xnIAv1cPKJeSbJ37QoJgqfr/uVQLPqqicdXjpT+FmnhFYVXXneM
-         V6X16Q36Vno310egX5PgBdu3bN4WVKwxs+/JRw1s6OFDJD94Vt7a+gatKNSS2AV6L4
-         1oaHZWQas+t3KTbN9ebpqs6aTsycjQh2pgmG0VIY=
+        b=vFspVEOxSMYnDmlRliMNp2weJSupYXPb528VsEisfotx54UHnS6T/3QDmUDMRYFlk
+         yO5jyOD2yEX6xAU76dGN71+3GmSz+pkUTaPtpM6dV9So3/7FOe8v0+YGdVs3tHWo1n
+         njT5TwOosZuywVGAWvkf0ZJiFfB14UU3m38XGqDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
+        stable@vger.kernel.org,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 153/241] b43: shut up clang -Wuninitialized variable warning
-Date:   Sun,  9 Jun 2019 18:41:35 +0200
-Message-Id: <20190609164152.189529210@linuxfoundation.org>
+Subject: [PATCH 4.4 150/241] iio: common: ssp_sensors: Initialize calculated_time in ssp_common_process_data
+Date:   Sun,  9 Jun 2019 18:41:32 +0200
+Message-Id: <20190609164152.105384275@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -62,67 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d825db346270dbceef83b7b750dbc29f1d7dcc0e ]
+[ Upstream commit 6f9ca1d3eb74b81f811a87002de2d51640d135b1 ]
 
-Clang warns about what is clearly a case of passing an uninitalized
-variable into a static function:
+When building with -Wsometimes-uninitialized, Clang warns:
 
-drivers/net/wireless/broadcom/b43/phy_lp.c:1852:23: error: variable 'gains' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                lpphy_papd_cal(dev, gains, 0, 1, 30);
-                                    ^~~~~
-drivers/net/wireless/broadcom/b43/phy_lp.c:1838:2: note: variable 'gains' is declared here
-        struct lpphy_tx_gains gains, oldgains;
-        ^
-1 error generated.
+drivers/iio/common/ssp_sensors/ssp_iio.c:95:6: warning: variable
+'calculated_time' is used uninitialized whenever 'if' condition is false
+[-Wsometimes-uninitialized]
 
-However, this function is empty, and its arguments are never evaluated,
-so gcc in contrast does not warn here. Both compilers behave in a
-reasonable way as far as I can tell, so we should change the code
-to avoid the warning everywhere.
+While it isn't wrong, this will never be a problem because
+iio_push_to_buffers_with_timestamp only uses calculated_time
+on the same condition that it is assigned (when scan_timestamp
+is not zero). While iio_push_to_buffers_with_timestamp is marked
+as inline, Clang does inlining in the optimization stage, which
+happens after the semantic analysis phase (plus inline is merely
+a hint to the compiler).
 
-We could just eliminate the lpphy_papd_cal() function entirely,
-given that it has had the TODO comment in it for 10 years now
-and is rather unlikely to ever get done. I'm doing a simpler
-change here, and just pass the 'oldgains' variable in that has
-been initialized, based on the guess that this is what was
-originally meant.
+Fix this by just zero initializing calculated_time.
 
-Fixes: 2c0d6100da3e ("b43: LP-PHY: Begin implementing calibration & software RFKILL support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/394
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/b43/phy_lp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/common/ssp_sensors/ssp_iio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/b43/phy_lp.c b/drivers/net/wireless/b43/phy_lp.c
-index 058a9f2320503..55cb07693ae80 100644
---- a/drivers/net/wireless/b43/phy_lp.c
-+++ b/drivers/net/wireless/b43/phy_lp.c
-@@ -1834,7 +1834,7 @@ static void lpphy_papd_cal(struct b43_wldev *dev, struct lpphy_tx_gains gains,
- static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
+diff --git a/drivers/iio/common/ssp_sensors/ssp_iio.c b/drivers/iio/common/ssp_sensors/ssp_iio.c
+index a3ae165f8d9f3..16180e6321bd4 100644
+--- a/drivers/iio/common/ssp_sensors/ssp_iio.c
++++ b/drivers/iio/common/ssp_sensors/ssp_iio.c
+@@ -80,7 +80,7 @@ int ssp_common_process_data(struct iio_dev *indio_dev, void *buf,
+ 			    unsigned int len, int64_t timestamp)
  {
- 	struct b43_phy_lp *lpphy = dev->phy.lp;
--	struct lpphy_tx_gains gains, oldgains;
-+	struct lpphy_tx_gains oldgains;
- 	int old_txpctl, old_afe_ovr, old_rf, old_bbmult;
+ 	__le32 time;
+-	int64_t calculated_time;
++	int64_t calculated_time = 0;
+ 	struct ssp_sensor_data *spd = iio_priv(indio_dev);
  
- 	lpphy_read_tx_pctl_mode_from_hardware(dev);
-@@ -1848,9 +1848,9 @@ static void lpphy_papd_cal_txpwr(struct b43_wldev *dev)
- 	lpphy_set_tx_power_control(dev, B43_LPPHY_TXPCTL_OFF);
- 
- 	if (dev->dev->chip_id == 0x4325 && dev->dev->chip_rev == 0)
--		lpphy_papd_cal(dev, gains, 0, 1, 30);
-+		lpphy_papd_cal(dev, oldgains, 0, 1, 30);
- 	else
--		lpphy_papd_cal(dev, gains, 0, 1, 65);
-+		lpphy_papd_cal(dev, oldgains, 0, 1, 65);
- 
- 	if (old_afe_ovr)
- 		lpphy_set_tx_gains(dev, oldgains);
+ 	if (indio_dev->scan_bytes == 0)
 -- 
 2.20.1
 
