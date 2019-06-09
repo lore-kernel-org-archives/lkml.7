@@ -2,232 +2,167 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4136FC468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C3FC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0252067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100836;
-	bh=dXAI8+J7R8bpRX9mH8IiBBnSgPD7BhNOjOyyBKlp42c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEhF5oDnj+/HY0cxa+2SscfGHgWUCak8Fh/jdLL1e2N8GvV4/eWZZjDCk0bm03MhM
-	 TuHg8igeEGWLBA2zaMV7bJWhSb2AvyCbvMVovNvhmL0h2PC140tbCc6P0vgAjGWwiA
-	 DvR3wmIKdwu9R+j/XTihNb6m9COI58t2JHGnyctE=
+	by mail.kernel.org (Postfix) with ESMTP id D4E8F20652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GZ0tzeWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbfFIQrF (ORCPT
+        id S1732002AbfFIRUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:47:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730686AbfFIQrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1C92081C;
-        Sun,  9 Jun 2019 16:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098821;
-        bh=dXAI8+J7R8bpRX9mH8IiBBnSgPD7BhNOjOyyBKlp42c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYdoVknNyxlXgAmlxJc6b7ybWzmc2EgFtIC8Tb10gYYy4cUl80W4k4HJlh9CaPRyl
-         nRuIpukCSA0cQ1CsUBaQQYqpINaAleschz9TL45bvW3qzl/8iMW+Ja90zUSDsiBL75
-         MwoldrJ5Wdb2ALlm+vTiliAHKvOpb6Ga4dNk5Sso=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 40/70] x86/insn-eval: Fix use-after-free access to LDT entry
-Date:   Sun,  9 Jun 2019 18:41:51 +0200
-Message-Id: <20190609164130.597045549@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190609164127.541128197@linuxfoundation.org>
-References: <20190609164127.541128197@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sun, 9 Jun 2019 13:20:39 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:20540 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730139AbfFIRUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:20:36 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x59HKQ00009606;
+        Mon, 10 Jun 2019 02:20:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x59HKQ00009606
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560100827;
+        bh=1ySK9wzh5EoMbwrJ8cJodwxCbTXiTLYsNbdKaL1fqtI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GZ0tzeWlAtCiiyKxspCt0mUF0VDxbXBDzbXup66dIyNRwF29xHu6y3v0d8yGc7Vga
+         BiKpv0OmeIeE0Y66CjkuCM+0BAPuHv1VpltpWJ4TF2i5DXqa1Pe+p7jpFy8qe6vWrH
+         qBKhpSVH6QPz0zbLAxA1LLigJy1pWtotzKV1RzrmcBb7aDdctBwTyz4mnj31ujvRA1
+         boAROXP/k2UEiz83ZrBY9a5jhxoBe8lagGWMj1GA2PXUweoWWtBmC9iCaWNUWsIsGk
+         qq/MlfQvpU/KtLxzhFdbF+0aQq3JMcHX5lESVHkQegw3Bsmay3vomR7TkWbL8a/zpl
+         M5zJ8+cvafWLg==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id q64so4012902vsd.1;
+        Sun, 09 Jun 2019 10:20:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAWd/57RmiEDymoUbAULTiOP+z18XgVSkE+NoyC2mDkH8V8D7OvI
+        MMB7n8q/BCIbDLMW9NoM/M5tAN+KMD/oQpARyF0=
+X-Google-Smtp-Source: APXvYqyVekfcVCyZGa1ldLjCcfToCDvlg8U4tDLhnKcPBhGAs7CzTNxomvXqVEzZuvlWy2C4qxXT+i4Fa5So7679jEA=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr14566333vsl.155.1560100825584;
+ Sun, 09 Jun 2019 10:20:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+ <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
+ <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
+ <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+ <20190604134213.GA26263@kroah.com> <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+ <CAK8P3a0bz8XYJOsmND2=CT_oTDmGMJGaRo9+QMroEhpekSMEaQ@mail.gmail.com>
+ <CAK7LNARU+uT0aUBh5niwEafL8+Ok7=sOZYukptpDH1w7Cii3hQ@mail.gmail.com>
+ <20190605051040.GA22760@kroah.com> <b70cf8c1f901ea09abbdb22dd28244b18fd1a39d.camel@perches.com>
+ <20190605071413.779bd821@coco.lan> <a798561d24c486d31063a7994d8630c859df00e9.camel@perches.com>
+ <CAK7LNARsSFT1ncyRgWi_tga_7KC6ZwZOETXQ2GrO9PfeJgLxyQ@mail.gmail.com>
+ <ba5ec856bce34eead8ba655b9bd6c54b002c40b5.camel@perches.com>
+ <CAK7LNAToTXt71obf8NvOiuN5MnxHs+-dkCp_Midu9e6OaOqc4g@mail.gmail.com> <bd1ef99fc503fed492ad036f781963ca15a8596f.camel@perches.com>
+In-Reply-To: <bd1ef99fc503fed492ad036f781963ca15a8596f.camel@perches.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 10 Jun 2019 02:19:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT3iKOX=0GxrB__m9haM=0L+MZQRq_OvFhW5N3iaaBAPA@mail.gmail.com>
+Message-ID: <CAK7LNAT3iKOX=0GxrB__m9haM=0L+MZQRq_OvFhW5N3iaaBAPA@mail.gmail.com>
+Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
+To:     Joe Perches <joe@perches.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+On Sun, Jun 9, 2019 at 10:40 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Sun, 2019-06-09 at 22:08 +0900, Masahiro Yamada wrote:
+> > On Sun, Jun 9, 2019 at 8:57 PM Joe Perches <joe@perches.com> wrote:
+> > > On Sun, 2019-06-09 at 16:14 +0900, Masahiro Yamada wrote:
+> > > > Hi Joe,
+> > > >
+> > > > On Thu, Jun 6, 2019 at 2:06 AM Joe Perches <joe@perches.com> wrote:
+> > > > > Perhaps a checkpatch change too:
+> > > > >
+> > > > > The first block updates unsigned only bitfields
+> > > > > The second tests uapi definitions and suggests "__<kernel_types"
+> > > >
+> > > > Good.
+> > > >
+> > > > In addition,
+> > > >
+> > > > "warn if __u8, __u16, __u32, __u64 are used outside of uapi/"
+> > > >
+> > > > Lots of kernel-space headers use __u{8,16,32,64} instead of u{8,16,32,64}
+> > > > just because developers often miss to understand when to use
+> > > > the underscore-prefixed types.
+> > >
+> > > The problem there is that checkpatch can't know if the
+> > > __<uapi_type> being used is for an actual uapi use or not.
+> > >
+> > > coccinelle could be much better at that.
+> >
+> > Why?
+>
+>
+> Perhaps it's (somewhat) bad form to have a __uapi type in a
+> structure, include that structure in a driver for something
+> like a copy_to/from_user, and map the __<uapi_type> to a non
+> underscore prefixed <kernel_type>
 
-commit de9f869616dd95e95c00bdd6b0fcd3421e8a4323 upstream.
+Linus Torvalds wrote 'sparse' to check this.
 
-get_desc() computes a pointer into the LDT while holding a lock that
-protects the LDT from being freed, but then drops the lock and returns the
-(now potentially dangling) pointer to its caller.
+Any attempt to distinguish the address-space
+by the presence of double-underscore-prefixes is pointless.
+This is already checked by __kernel / __user.
 
-Fix it by giving the caller a copy of the LDT entry instead.
+It is absolutely correct to assign __u32 to u32, and vice versa.
 
-Fixes: 670f928ba09b ("x86/insn-eval: Add utility function to get segment descriptor")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If you think the following patch is wrong, please tell me why:
 
----
- arch/x86/lib/insn-eval.c |   47 ++++++++++++++++++++++++-----------------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
 
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -557,7 +557,8 @@ static int get_reg_offset_16(struct insn
- }
- 
- /**
-- * get_desc() - Obtain pointer to a segment descriptor
-+ * get_desc() - Obtain contents of a segment descriptor
-+ * @out:	Segment descriptor contents on success
-  * @sel:	Segment selector
-  *
-  * Given a segment selector, obtain a pointer to the segment descriptor.
-@@ -565,18 +566,18 @@ static int get_reg_offset_16(struct insn
-  *
-  * Returns:
-  *
-- * Pointer to segment descriptor on success.
-+ * True on success, false on failure.
-  *
-  * NULL on error.
-  */
--static struct desc_struct *get_desc(unsigned short sel)
-+static bool get_desc(struct desc_struct *out, unsigned short sel)
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index 748ac489ef7e..24c1b73d9fbd 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -1132,7 +1132,7 @@ static struct binder_node *binder_init_node_ilocked(
+        struct binder_node *node;
+        binder_uintptr_t ptr = fp ? fp->binder : 0;
+        binder_uintptr_t cookie = fp ? fp->cookie : 0;
+-       __u32 flags = fp ? fp->flags : 0;
++       u32 flags = fp ? fp->flags : 0;
+
+        assert_spin_locked(&proc->inner_lock);
+
+@@ -4918,7 +4918,7 @@ static int
+binder_ioctl_get_node_info_for_ref(struct binder_proc *proc,
  {
- 	struct desc_ptr gdt_desc = {0, 0};
- 	unsigned long desc_base;
- 
- #ifdef CONFIG_MODIFY_LDT_SYSCALL
- 	if ((sel & SEGMENT_TI_MASK) == SEGMENT_LDT) {
--		struct desc_struct *desc = NULL;
-+		bool success = false;
- 		struct ldt_struct *ldt;
- 
- 		/* Bits [15:3] contain the index of the desired entry. */
-@@ -584,12 +585,14 @@ static struct desc_struct *get_desc(unsi
- 
- 		mutex_lock(&current->active_mm->context.lock);
- 		ldt = current->active_mm->context.ldt;
--		if (ldt && sel < ldt->nr_entries)
--			desc = &ldt->entries[sel];
-+		if (ldt && sel < ldt->nr_entries) {
-+			*out = ldt->entries[sel];
-+			success = true;
-+		}
- 
- 		mutex_unlock(&current->active_mm->context.lock);
- 
--		return desc;
-+		return success;
- 	}
- #endif
- 	native_store_gdt(&gdt_desc);
-@@ -604,9 +607,10 @@ static struct desc_struct *get_desc(unsi
- 	desc_base = sel & ~(SEGMENT_RPL_MASK | SEGMENT_TI_MASK);
- 
- 	if (desc_base > gdt_desc.size)
--		return NULL;
-+		return false;
- 
--	return (struct desc_struct *)(gdt_desc.address + desc_base);
-+	*out = *(struct desc_struct *)(gdt_desc.address + desc_base);
-+	return true;
- }
- 
- /**
-@@ -628,7 +632,7 @@ static struct desc_struct *get_desc(unsi
-  */
- unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
- {
--	struct desc_struct *desc;
-+	struct desc_struct desc;
- 	short sel;
- 
- 	sel = get_segment_selector(regs, seg_reg_idx);
-@@ -666,11 +670,10 @@ unsigned long insn_get_seg_base(struct p
- 	if (!sel)
- 		return -1L;
- 
--	desc = get_desc(sel);
--	if (!desc)
-+	if (!get_desc(&desc, sel))
- 		return -1L;
- 
--	return get_desc_base(desc);
-+	return get_desc_base(&desc);
- }
- 
- /**
-@@ -692,7 +695,7 @@ unsigned long insn_get_seg_base(struct p
-  */
- static unsigned long get_seg_limit(struct pt_regs *regs, int seg_reg_idx)
- {
--	struct desc_struct *desc;
-+	struct desc_struct desc;
- 	unsigned long limit;
- 	short sel;
- 
-@@ -706,8 +709,7 @@ static unsigned long get_seg_limit(struc
- 	if (!sel)
- 		return 0;
- 
--	desc = get_desc(sel);
--	if (!desc)
-+	if (!get_desc(&desc, sel))
- 		return 0;
- 
- 	/*
-@@ -716,8 +718,8 @@ static unsigned long get_seg_limit(struc
- 	 * not tested when checking the segment limits. In practice,
- 	 * this means that the segment ends in (limit << 12) + 0xfff.
- 	 */
--	limit = get_desc_limit(desc);
--	if (desc->g)
-+	limit = get_desc_limit(&desc);
-+	if (desc.g)
- 		limit = (limit << 12) + 0xfff;
- 
- 	return limit;
-@@ -741,7 +743,7 @@ static unsigned long get_seg_limit(struc
-  */
- int insn_get_code_seg_params(struct pt_regs *regs)
- {
--	struct desc_struct *desc;
-+	struct desc_struct desc;
- 	short sel;
- 
- 	if (v8086_mode(regs))
-@@ -752,8 +754,7 @@ int insn_get_code_seg_params(struct pt_r
- 	if (sel < 0)
- 		return sel;
- 
--	desc = get_desc(sel);
--	if (!desc)
-+	if (!get_desc(&desc, sel))
- 		return -EINVAL;
- 
- 	/*
-@@ -761,10 +762,10 @@ int insn_get_code_seg_params(struct pt_r
- 	 * determines whether a segment contains data or code. If this is a data
- 	 * segment, return error.
- 	 */
--	if (!(desc->type & BIT(3)))
-+	if (!(desc.type & BIT(3)))
- 		return -EINVAL;
- 
--	switch ((desc->l << 1) | desc->d) {
-+	switch ((desc.l << 1) | desc.d) {
- 	case 0: /*
- 		 * Legacy mode. CS.L=0, CS.D=0. Address and operand size are
- 		 * both 16-bit.
+        struct binder_node *node;
+        struct binder_context *context = proc->context;
+-       __u32 handle = info->handle;
++       u32 handle = info->handle;
+
+        if (info->strong_count || info->weak_count || info->reserved1 ||
+            info->reserved2 || info->reserved3) {
 
 
+
+
+>
+> For instance
+>
+> struct flat_binder_object in drivers/android/binder.c
+>
+> How is checkpatch supposed to know that __u32 flags is
+> inappropriate?
+>
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
