@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CEEC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B8EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F1B2070B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFED8206BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099136;
-	bh=jlmm+uNC1TnX0UeYFe/dky9+1HbJUhs2EOBbUH01oME=;
+	s=default; t=1560099140;
+	bh=uA1XUY8Y9JhDRjVcaTRxjH3VmToFHsV8hi0Ve44fnq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eAmhqmvlgAfyOrssujBKX7TiDHw0BtS+A7eIRk++C++RIiejq3zUkuCFxnLxGcIbg
-	 3YMLOqXN1hlusEyyID2z4LAV0s7oMiJbdbyhywECZR+21W3CFg8hBk6U5+lW2w5bMY
-	 WfsUWVtvUmqzx+hUBql5e/BFOZaygQK18bzxA71Y=
+	b=uHpEJPXdnbLjK+yRfBGxIy+rDevUxYXRTWcG31J3WDPMJubYvHZ0/GFZacNvoy5x6
+	 ZjIrX8PD1hv/MPkSlFv481oYfVPOiCu/nuDPEzb9nvTsyQs+QBK99KoAItOOntO/Nk
+	 bsqF1VmdOmYnAVuaeRv0S0U2uNJVYGHYx+Y+Fd0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732169AbfFIQwP (ORCPT
+        id S1732181AbfFIQwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:52:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732154AbfFIQwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:52:14 -0400
+        id S1732154AbfFIQwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:52:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 043FC205ED;
-        Sun,  9 Jun 2019 16:52:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96AF3206BB;
+        Sun,  9 Jun 2019 16:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099133;
-        bh=jlmm+uNC1TnX0UeYFe/dky9+1HbJUhs2EOBbUH01oME=;
+        s=default; t=1560099136;
+        bh=uA1XUY8Y9JhDRjVcaTRxjH3VmToFHsV8hi0Ve44fnq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ne4HONOWGOy4JL9A1ekR9j4CRGFxqWwSwkW7AINnFoVjFASLCmwyBTqCbqgcmu1eL
-         NC+Lo9+/zn+K1J+AlnJmorgDdDRkv5tsPl9qwWTqW54yXhEujMDMtOcBtQeB0QjeO9
-         dit6/RjHLfTi0B+mGGcvo6PdCDiuMIU6BzBs9iyw=
+        b=jqGvNbrzxUip7dqQ0xT8vr7RuO5igPsQbDRb6InlQYMuZeSmiiW7BwtPRl/Ja1j1R
+         Z6/+NO6qnEmeOZBQ4fywRIXyy5GMUClz9jA6B4m8AKOcBvMVSnj263lypzaWBC/frW
+         gW7xcMWiFwhw8hpLfMjhfFmAa9BX3yduWPTcx0Ag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
-        Fugang Duan <fugang.duan@nxp.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 03/83] net: fec: fix the clk mismatch in failed_reset path
-Date:   Sun,  9 Jun 2019 18:41:33 +0200
-Message-Id: <20190609164128.000385686@linuxfoundation.org>
+Subject: [PATCH 4.9 04/83] net-gro: fix use-after-free read in napi_gro_frags()
+Date:   Sun,  9 Jun 2019 18:41:34 +0200
+Message-Id: <20190609164128.066835650@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.843327870@linuxfoundation.org>
 References: <20190609164127.843327870@linuxfoundation.org>
@@ -60,34 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Duan <fugang.duan@nxp.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ce8d24f9a5965a58c588f9342689702a1024433c ]
+[ Upstream commit a4270d6795b0580287453ea55974d948393e66ef ]
 
-Fix the clk mismatch in the error path "failed_reset" because
-below error path will disable clk_ahb and clk_ipg directly, it
-should use pm_runtime_put_noidle() instead of pm_runtime_put()
-to avoid to call runtime resume callback.
+If a network driver provides to napi_gro_frags() an
+skb with a page fragment of exactly 14 bytes, the call
+to gro_pull_from_frag0() will 'consume' the fragment
+by calling skb_frag_unref(skb, 0), and the page might
+be freed and reused.
 
-Reported-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Tested-by: Baruch Siach <baruch@tkos.co.il>
+Reading eth->h_proto at the end of napi_frags_skb() might
+read mangled data, or crash under specific debugging features.
+
+BUG: KASAN: use-after-free in napi_frags_skb net/core/dev.c:5833 [inline]
+BUG: KASAN: use-after-free in napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
+Read of size 2 at addr ffff88809366840c by task syz-executor599/8957
+
+CPU: 1 PID: 8957 Comm: syz-executor599 Not tainted 5.2.0-rc1+ #32
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+ __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ kasan_report+0x12/0x20 mm/kasan/common.c:614
+ __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
+ napi_frags_skb net/core/dev.c:5833 [inline]
+ napi_gro_frags+0xc6f/0xd10 net/core/dev.c:5841
+ tun_get_user+0x2f3c/0x3ff0 drivers/net/tun.c:1991
+ tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
+ call_write_iter include/linux/fs.h:1872 [inline]
+ do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+ do_iter_write fs/read_write.c:970 [inline]
+ do_iter_write+0x184/0x610 fs/read_write.c:951
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+ do_writev+0x15b/0x330 fs/read_write.c:1058
+
+Fixes: a50e233c50db ("net-gro: restore frag0 optimization")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/fec_main.c |    2 +-
+ net/core/dev.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -3508,7 +3508,7 @@ failed_init:
- 	if (fep->reg_phy)
- 		regulator_disable(fep->reg_phy);
- failed_reset:
--	pm_runtime_put(&pdev->dev);
-+	pm_runtime_put_noidle(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- failed_regulator:
- failed_clk_ipg:
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4828,7 +4828,6 @@ static struct sk_buff *napi_frags_skb(st
+ 	skb_reset_mac_header(skb);
+ 	skb_gro_reset_offset(skb);
+ 
+-	eth = skb_gro_header_fast(skb, 0);
+ 	if (unlikely(skb_gro_header_hard(skb, hlen))) {
+ 		eth = skb_gro_header_slow(skb, hlen, 0);
+ 		if (unlikely(!eth)) {
+@@ -4838,6 +4837,7 @@ static struct sk_buff *napi_frags_skb(st
+ 			return NULL;
+ 		}
+ 	} else {
++		eth = (const struct ethhdr *)skb->data;
+ 		gro_pull_from_frag0(skb, hlen);
+ 		NAPI_GRO_CB(skb)->frag0 += hlen;
+ 		NAPI_GRO_CB(skb)->frag0_len -= hlen;
 
 
