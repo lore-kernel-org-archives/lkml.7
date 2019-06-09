@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1803AC2BCA1
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987BDC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51162146E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED6B206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099713;
-	bh=wo7KJCLYN64lUMeRiuI5l/Ol11RFSGVvd64QwJiY/4o=;
+	s=default; t=1560099715;
+	bh=UT5ptIzvBWmArzRHvLDDWZswCaWyxEW9/R4B4KcsSDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fY/V30ViXMx3uFsYPij1PeDT7NlebrdDndEkOdw28IILhn3uuPBBnvdDpZAOUYUv7
-	 b1v+UM14hfi+xtYAsbDv1T2P4bGPixqfCMAi7Zsd4F5qVhy/yPGTQdz67ZDz4K7yVE
-	 5sHXbgf8mP/ylRyfYBGmXc7Zl/QF8nUX1DrJ6kTQ=
+	b=oCyys6Z3LqXEbhumGWFlxK3itwkiLRavD0tvdEVqv0VyFq8t9s+gXLKInnEnHjOPK
+	 nR+EIQFQoHY7cuNhR7n4STd00t75GJ6uSqFCMAtdO3JwE+T/NjZOEBqqc+7md8ANDz
+	 cJi37jBaV4mPG3tFQ0YGskXw9Cdt0wiHsXqGzWKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388148AbfFIRBw (ORCPT
+        id S1732800AbfFIRBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:01:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 13:01:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388131AbfFIRBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 13:01:47 -0400
+        id S2388131AbfFIRBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 13:01:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A741E20843;
-        Sun,  9 Jun 2019 17:01:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E0CD208C0;
+        Sun,  9 Jun 2019 17:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099707;
-        bh=wo7KJCLYN64lUMeRiuI5l/Ol11RFSGVvd64QwJiY/4o=;
+        s=default; t=1560099712;
+        bh=UT5ptIzvBWmArzRHvLDDWZswCaWyxEW9/R4B4KcsSDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WfX9lGX20Z3lcOccQJHhCLNrOcJfvnAyfrftql+qM0XfcXa6rlDUeV6CCWINLi5SL
-         HAaN04m3vc8PUZdJ5ZWkba3sNyXnY62eRLaDr82yCGdmqeO36+f5WpPVrEnJ/lUE/N
-         oxGaI1b5O9IO1kcpv4ApMEXMYnkMGvgEN74rzGZk=
+        b=fcwdO+4ohZGs154fSE2S+pSbIC8I2mVM/FXh+Q84/yhTA4uBBKsqB9PtcD/WfOzdi
+         /DBMe2wI3hkhq8i9Y/Fs+6SzTk1YpvJTfw+V+tC07Ip2CBH21GIK3U584QVq+A1/KT
+         KoJqFyPWA5p/PwdDcKXOmDb98lH1uCQPwzq/9KWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Bo YU <tsu.yubo@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 135/241] hwmon: (pc87427) Use request_muxed_region for Super-IO accesses
-Date:   Sun,  9 Jun 2019 18:41:17 +0200
-Message-Id: <20190609164151.689850673@linuxfoundation.org>
+Subject: [PATCH 4.4 096/241] powerpc/boot: Fix missing check of lseek() return value
+Date:   Sun,  9 Jun 2019 18:40:38 +0200
+Message-Id: <20190609164150.565716531@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
@@ -61,67 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 755a9b0f8aaa5639ba5671ca50080852babb89ce ]
+[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+This is detected by Coverity scan: CID: 1440481
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
-
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
-
-Fixes: ba224e2c4f0a7 ("hwmon: New PC87427 hardware monitoring driver")
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reported-by: John Garry <john.garry@huawei.com>
-Cc: John Garry <john.garry@huawei.com>
-Acked-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pc87427.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ arch/powerpc/boot/addnote.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pc87427.c b/drivers/hwmon/pc87427.c
-index cb9fdd37bd0d9..2b5b8c3de8fce 100644
---- a/drivers/hwmon/pc87427.c
-+++ b/drivers/hwmon/pc87427.c
-@@ -106,6 +106,13 @@ static const char *logdev_str[2] = { DRVNAME " FMC", DRVNAME " HMC" };
- #define LD_IN		1
- #define LD_TEMP		1
+diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
+index 9d9f6f334d3cc..3da3e2b1b51bc 100644
+--- a/arch/powerpc/boot/addnote.c
++++ b/arch/powerpc/boot/addnote.c
+@@ -223,7 +223,11 @@ main(int ac, char **av)
+ 	PUT_16(E_PHNUM, np + 2);
  
-+static inline int superio_enter(int sioaddr)
-+{
-+	if (!request_muxed_region(sioaddr, 2, DRVNAME))
-+		return -EBUSY;
-+	return 0;
-+}
-+
- static inline void superio_outb(int sioaddr, int reg, int val)
- {
- 	outb(reg, sioaddr);
-@@ -122,6 +129,7 @@ static inline void superio_exit(int sioaddr)
- {
- 	outb(0x02, sioaddr);
- 	outb(0x02, sioaddr + 1);
-+	release_region(sioaddr, 2);
- }
- 
- /*
-@@ -1220,7 +1228,11 @@ static int __init pc87427_find(int sioaddr, struct pc87427_sio_data *sio_data)
- {
- 	u16 val;
- 	u8 cfg, cfg_b;
--	int i, err = 0;
-+	int i, err;
-+
-+	err = superio_enter(sioaddr);
-+	if (err)
-+		return err;
- 
- 	/* Identify device */
- 	val = force_id ? force_id : superio_inb(sioaddr, SIOREG_DEVID);
+ 	/* write back */
+-	lseek(fd, (long) 0, SEEK_SET);
++	i = lseek(fd, (long) 0, SEEK_SET);
++	if (i < 0) {
++		perror("lseek");
++		exit(1);
++	}
+ 	i = write(fd, buf, n);
+ 	if (i < 0) {
+ 		perror("write");
 -- 
 2.20.1
 
