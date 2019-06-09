@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ED2C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A55C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143432067C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6417E20652
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100694;
-	bh=D97dp07vttzcT0zf2mnUVwJdjWopWxsQ2RzFPrziyTk=;
+	s=default; t=1560100699;
+	bh=vDL9p9nzS5Xtfyd1kVhUcL7tNjY01X5WTJe5ER2lxtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SjcxIcdJqVtEQNEMDK93aV/+gm6w6urMcNTyduidjyJIxCoiafOB4zOxKIpWuodZC
-	 hyL/Ep3F6mocMBKyfj81oGRJ7qp3drJ+evwRRMokq3TNWLKULKOifLwYnEV+5/e5m6
-	 FuDSzhaLQEF9TD6sxzvTohKrKDQOmAt31KLfQMD0=
+	b=zw5g2pZZTWI7PFDZparrcon1YSnlUe01YYFu7S5Uy41SxdQnqYI+kkcy803Hs62Lm
+	 ZvfuWRsirzzB/gxoH4gBNpOOoczuMmAnSI5fgVQ0OGkvriaFAv5NYb3WZy1pJ02fdG
+	 JDecRbdJkSwBsQ4JhOrws+ppCTo2SzYWsZ9hTcJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731806AbfFIRSN (ORCPT
+        id S1731772AbfFIQun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:50:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731780AbfFIQuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:50:46 -0400
+        id S1731731AbfFIQua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:50:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8344A206DF;
-        Sun,  9 Jun 2019 16:50:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01A0206DF;
+        Sun,  9 Jun 2019 16:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099046;
-        bh=D97dp07vttzcT0zf2mnUVwJdjWopWxsQ2RzFPrziyTk=;
+        s=default; t=1560099030;
+        bh=vDL9p9nzS5Xtfyd1kVhUcL7tNjY01X5WTJe5ER2lxtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGcdeAQ+OWWAZrlhUXYnnGHMi4qzKKfToh7wjPJFxODMeWJ+YizSROaDc2SQWCnqK
-         yXJM7p6ufwr7HaIrPSibGX62kI3dtmMotPe7sI+XFSvZgHofhjKh6FVAI/F6mBSiNu
-         h5wSMFRpdRMCrqcz5GIHrEHP034uRw6rGR4IeOXU=
+        b=tjJEzpK9i6/T0iAWK3eOuLHwkfrdx7Z75Ry3/q/xnnLcyuPA2pQ3vZW1u8MoCTIcX
+         9mtHtdgL/xInSc2MdialTa3oyseoFgZyhS+S1zSdiDPjqLneXS2Hd28fs5DsQbfyQe
+         n3p1HllaKBUTWJPjSB9pT8sSo/Gh6uNnHmFAqNio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.14 28/35] drm/amdgpu/psp: move psp version specific function pointers to early_init
-Date:   Sun,  9 Jun 2019 18:42:34 +0200
-Message-Id: <20190609164127.152712044@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 4.14 16/35] pstore: Remove needless lock during console writes
+Date:   Sun,  9 Jun 2019 18:42:22 +0200
+Message-Id: <20190609164126.457142600@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164125.377368385@linuxfoundation.org>
 References: <20190609164125.377368385@linuxfoundation.org>
@@ -60,60 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 9d6fea5744d6798353f37ac42a8a653a2607ca69 upstream.
+commit b77fa617a2ff4d6beccad3d3d4b3a1f2d10368aa upstream.
 
-In case we need to use them for GPU reset prior initializing the
-asic.  Fixes a crash if the driver attempts to reset the GPU at driver
-load time.
+Since the console writer does not use the preallocated crash dump buffer
+any more, there is no reason to perform locking around it.
 
-Acked-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: 70ad35db3321 ("pstore: Convert console write to use ->write_buf")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ fs/pstore/platform.c |   29 ++++++-----------------------
+ 1 file changed, 6 insertions(+), 23 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-@@ -37,18 +37,10 @@ static void psp_set_funcs(struct amdgpu_
- static int psp_early_init(void *handle)
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -597,31 +597,14 @@ static void pstore_unregister_kmsg(void)
+ #ifdef CONFIG_PSTORE_CONSOLE
+ static void pstore_console_write(struct console *con, const char *s, unsigned c)
  {
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
-+	struct psp_context *psp = &adev->psp;
+-	const char *e = s + c;
++	struct pstore_record record;
  
- 	psp_set_funcs(adev);
+-	while (s < e) {
+-		struct pstore_record record;
+-		unsigned long flags;
++	pstore_record_init(&record, psinfo);
++	record.type = PSTORE_TYPE_CONSOLE;
  
--	return 0;
--}
+-		pstore_record_init(&record, psinfo);
+-		record.type = PSTORE_TYPE_CONSOLE;
 -
--static int psp_sw_init(void *handle)
--{
--	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
--	struct psp_context *psp = &adev->psp;
--	int ret;
+-		if (c > psinfo->bufsize)
+-			c = psinfo->bufsize;
 -
- 	switch (adev->asic_type) {
- 	case CHIP_VEGA10:
- 		psp->init_microcode = psp_v3_1_init_microcode;
-@@ -79,6 +71,15 @@ static int psp_sw_init(void *handle)
+-		if (oops_in_progress) {
+-			if (!spin_trylock_irqsave(&psinfo->buf_lock, flags))
+-				break;
+-		} else {
+-			spin_lock_irqsave(&psinfo->buf_lock, flags);
+-		}
+-		record.buf = (char *)s;
+-		record.size = c;
+-		psinfo->write(&record);
+-		spin_unlock_irqrestore(&psinfo->buf_lock, flags);
+-		s += c;
+-		c = e - s;
+-	}
++	record.buf = (char *)s;
++	record.size = c;
++	psinfo->write(&record);
+ }
  
- 	psp->adev = adev;
- 
-+	return 0;
-+}
-+
-+static int psp_sw_init(void *handle)
-+{
-+	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
-+	struct psp_context *psp = &adev->psp;
-+	int ret;
-+
- 	ret = psp_init_microcode(psp);
- 	if (ret) {
- 		DRM_ERROR("Failed to load psp firmware!\n");
+ static struct console pstore_console = {
 
 
