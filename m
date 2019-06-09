@@ -2,116 +2,78 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD610C468BD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 20:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C390C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 20:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97779206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 20:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40891206E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 20:45:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbFFD5EG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EYbbZBLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbfFIUmo (ORCPT
+        id S1730129AbfFIUpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 16:42:44 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:41131 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfFIUmn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 16:42:43 -0400
-Received: by mail-yw1-f68.google.com with SMTP id y185so2979766ywy.8;
-        Sun, 09 Jun 2019 13:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dHOuiC6jFhECkmRndI+3xRNUfQfecXP3FcFTB3ajICg=;
-        b=mbFFD5EGsJnRs+WtuLfzRnsU7i83wTtVB8J5XF2rATaAIYVOgMz7F+JEZGNaHzUvfF
-         u5YmOGLpbDkZeGXy6PutvA2NYPJD/76V68n75vw7IvryLqcXA8t6Mum9qFVRgLYgc+w3
-         LfNNl6FRGbUzWpheasOWOowkbIvUWj3rKdMMZCdaKgHyzy+gIePTpGCuIoO8hd5/ho6F
-         k+1i6cRy3eRvVKwhxiZZBmKsbDy6P0T5DlgkhIRp1GyhhxiQfy86M5t5Q9TnmQ4OJ8RB
-         Ri2q95+a8BTeg3xz7IUwzBSXkLmM5ZZlb925gAjT8bg95v1qfPUsKXkWrsG1PwBMOVps
-         8s5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dHOuiC6jFhECkmRndI+3xRNUfQfecXP3FcFTB3ajICg=;
-        b=ZGWWTcfbhv2mj55vsa3Tj4MYcfMs9CRef/IzgI6PgNR4qC6YSrY+3T7DhVrZ4Xeg95
-         4jNdb8eKBkMArmzazY4prEs1RMfGG5THSopksg4Le5tfWAG8S/mrCNMSc/ajnGQE/tPm
-         1Aai0JhXG6XuZOIh9Qjf5ZGtMdADJD5bYOpxKA70sM8YHyWIcjelU0VhU6uxKw/Pgf6o
-         gLpom67QrKVCWu+rNty/bmBHQruYwW2j+orwUDJgVU8WjFbBDfxBgr3rbq/QSbKxywsx
-         n0UI8XQSo2DEKkYRbG/ADqipuWfjx+UNIALtxhLNy/eCCLU4keWWvLfpgslTuOxOi6+0
-         aaGw==
-X-Gm-Message-State: APjAAAXcQnwWjTAaIsjUbjWD5bIVeIsBue+yFUwVnjn6dVZ0jyG+iIXR
-        flJ0J+ETV/syj9gCDRI/q700b07U8ZVaA1E9Ksc=
-X-Google-Smtp-Source: APXvYqythVEaeiFW8xnZx3alFf6puC+4RKU77X/tV3b27TEXcp0Dskr/eyS/U9ZI1M0PKDZN+WyHQVOaeJi7ultK2nw=
-X-Received: by 2002:a0d:edc3:: with SMTP id w186mr13821844ywe.306.1560112962176;
- Sun, 09 Jun 2019 13:42:42 -0700 (PDT)
+        Sun, 9 Jun 2019 16:45:17 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39592 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbfFIUpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 16:45:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Ja8yjXW/Nihycq7JSqkIhvcVwYqGe/pmO57BMxjFYPk=; b=EYbbZBLSizui0oPFI5qV/M5viF
+        GOKssAIC+f0FZh61uB6bXNkCpDBl4FX1XHr2INo24UPEpmeEQPHsWyieVq/VXLli27kYIRbo4nNKZ
+        SVBwWyk8eT8+a46B46DO6XYLjpmfdCU4iL7uJ3feMXleePBM7e+n3vgaESbkBGt5XEJ0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ha4gg-0002Un-Lv; Sun, 09 Jun 2019 22:45:10 +0200
+Date:   Sun, 9 Jun 2019 22:45:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com,
+        devicetree@vger.kernel.org, narmstrong@baylibre.com,
+        khilman@baylibre.com, linux-kernel@vger.kernel.org,
+        davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC next v1 0/5] stmmac: honor the GPIO flags for the PHY reset
+ GPIO
+Message-ID: <20190609204510.GB8247@lunn.ch>
+References: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-References: <20190527201459.20130-1-peron.clem@gmail.com> <20190528111024.gj25jh5vstizze74@flea>
-In-Reply-To: <20190528111024.gj25jh5vstizze74@flea>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 9 Jun 2019 22:42:31 +0200
-Message-ID: <CAJiuCcebCkdkR9tDOUOEO+Rs-VuSUVLtDpqw3pWUX8o8aPtMsw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] Allwinner H6 DMA support
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190609180621.7607-1-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+> Patch #1 and #4 are minor cleanups which follow the boyscout rule:
+> "Always leave the campground cleaner than you found it."
 
-On Tue, 28 May 2019 at 13:10, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Mon, May 27, 2019 at 10:14:52PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > This series has been first proposed by Jernej Skrabec[1].
-> > As this series is mandatory for SPDIF/I2S support and because he is
-> > busy on Cedrus stuff. I asked him to make the minor change requested
-> > and repost it.
-> > Authorship remains to him.
-> >
-> > I have tested this series with SPDIF driver and added a patch to enable
-> > DMA_SUN6I_CONFIG for arm64.
-> >
-> > Original Post:
-> > "
-> > DMA engine engine on H6 almost the same as on older SoCs. The biggest
-> > difference is that it has slightly rearranged bits in registers and
-> > it needs additional clock, probably due to iommu.
-> >
-> > These patches were tested with I2S connected to HDMI. I2S needs
-> > additional patches which will be sent later.
->
-> For the whole series,
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> I
+> am also looking for suggestions how to handle these cross-tree changes
+> (patch #2 belongs to the linux-gpio tree, patches #1, 3 and #4 should
+> go through the net-next tree. I will re-send patch #5 separately as
+> this should go through Kevin's linux-amlogic tree).
 
-Thanks, Is it ok to pick patch 5/6/7 to sunxi tree ?
+Hi Martin
 
-Regards,
-Cl=C3=A9ment
+Patches 1 and 4 don't seem to have and dependencies. So i would
+suggest splitting them out and submitting them to netdev for merging
+independent of the rest.
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Linus can probably create a stable branch with the GPIO changes, which
+David can pull into net-next, and then apply the stmmac changes on
+top.
+
+	Andrew
