@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C4AC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F4EC28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D71206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E87F20693
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 17:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560100807;
-	bh=8oduMf+dBgb6kaS66Ozv83moSLTyUNtaMe1r0s2XBq4=;
+	s=default; t=1560100813;
+	bh=sdE3P7sOxxmzEGlCIbI3UmAgN/aiH7Yp1z0Sp9FfpiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNgHp30QfwCfSSxSQifQrfK9e4SxHo+r7WWyJQstfi7voHfyFPTzp0biMK1dIiYST
-	 iSjGxxdTAz3J3h09e9dGwU1v0wHdAuM0mh7BhFdFq7xIn3nae4IzfHUH3GUJ7y/YKi
-	 8CDG2jVOFNg1i3ptlPnzSOi1kV0+C5osPhpsX1is=
+	b=lei438tdgBzwKAwkXYes6s9gyrEOiolY1BEr5w2u8GFBWqDGpYqdHWXxKWbBYImie
+	 ZqDeNlxrmko13uVA8b1/o9ii79nuABa1K1g7W2yGvXzLcU27aJd5jRLSHs+bLIoG4R
+	 r58QUbO1pk0QYqnMB4OT7y+bn6sDksI2QbEynqBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbfFIRUG (ORCPT
+        id S1730976AbfFIQrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 13:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46826 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729553AbfFIQr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:47:58 -0400
+        id S1730910AbfFIQrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:47:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BD7F206C3;
-        Sun,  9 Jun 2019 16:47:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA409205ED;
+        Sun,  9 Jun 2019 16:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560098877;
-        bh=8oduMf+dBgb6kaS66Ozv83moSLTyUNtaMe1r0s2XBq4=;
+        s=default; t=1560098859;
+        bh=sdE3P7sOxxmzEGlCIbI3UmAgN/aiH7Yp1z0Sp9FfpiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLDef88fAT4mCrbTVMNwyYD85x8x1sFKowrK3SspdHg546euUNTU4SygxRWdV0jzc
-         fRbzZ6l3uQ+1HkGRMKPlBKiAyhk6QLsYLIcySN62JzxT7ygIzMdOE87egoA5Z35XSF
-         IZZwBBNXBjD7u50VwTHdhHbuJ1HshNu7RRWCW9Po=
+        b=hjzID1LQGlGyzSbq4tDV68WEtk/uNsg5KycjVLMUY4cciyoxyZc6cLbjggYis7OeH
+         iVnIZH+m9rNMaqTFbWuod7Khr09OcRMnEVM4oC+REIodpWNfGVCOCfnX9jqFNLyu0P
+         xz7Y2iV1gwg3OGV1MTxSneXM8JnzOxTjEoBTCHMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Olivier Matz <olivier.matz@6wind.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 04/51] ipv6: fix the check before getting the cookie in rt6_get_cookie
-Date:   Sun,  9 Jun 2019 18:41:45 +0200
-Message-Id: <20190609164127.386795598@linuxfoundation.org>
+Subject: [PATCH 4.19 15/51] ipv6: use READ_ONCE() for inet->hdrincl as in ipv4
+Date:   Sun,  9 Jun 2019 18:41:56 +0200
+Message-Id: <20190609164127.967317205@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164127.123076536@linuxfoundation.org>
 References: <20190609164127.123076536@linuxfoundation.org>
@@ -60,46 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Olivier Matz <olivier.matz@6wind.com>
 
-[ Upstream commit b7999b07726c16974ba9ca3bb9fe98ecbec5f81c ]
+[ Upstream commit 59e3e4b52663a9d97efbce7307f62e4bc5c9ce91 ]
 
-In Jianlin's testing, netperf was broken with 'Connection reset by peer',
-as the cookie check failed in rt6_check() and ip6_dst_check() always
-returned NULL.
+As it was done in commit 8f659a03a0ba ("net: ipv4: fix for a race
+condition in raw_sendmsg") and commit 20b50d79974e ("net: ipv4: emulate
+READ_ONCE() on ->hdrincl bit-field in raw_sendmsg()") for ipv4, copy the
+value of inet->hdrincl in a local variable, to avoid introducing a race
+condition in the next commit.
 
-It's caused by Commit 93531c674315 ("net/ipv6: separate handling of FIB
-entries from dst based routes"), where the cookie can be got only when
-'c1'(see below) for setting dst_cookie whereas rt6_check() is called
-when !'c1' for checking dst_cookie, as we can see in ip6_dst_check().
-
-Since in ip6_dst_check() both rt6_dst_from_check() (c1) and rt6_check()
-(!c1) will check the 'from' cookie, this patch is to remove the c1 check
-in rt6_get_cookie(), so that the dst_cookie can always be set properly.
-
-c1:
-  (rt->rt6i_flags & RTF_PCPU || unlikely(!list_empty(&rt->rt6i_uncached)))
-
-Fixes: 93531c674315 ("net/ipv6: separate handling of FIB entries from dst based routes")
-Reported-by: Jianlin Shi <jishi@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Olivier Matz <olivier.matz@6wind.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ip6_fib.h |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/ipv6/raw.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/include/net/ip6_fib.h
-+++ b/include/net/ip6_fib.h
-@@ -260,8 +260,7 @@ static inline u32 rt6_get_cookie(const s
- 	rcu_read_lock();
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -782,6 +782,7 @@ static int rawv6_sendmsg(struct sock *sk
+ 	struct flowi6 fl6;
+ 	struct ipcm6_cookie ipc6;
+ 	int addr_len = msg->msg_namelen;
++	int hdrincl;
+ 	u16 proto;
+ 	int err;
  
- 	from = rcu_dereference(rt->from);
--	if (from && (rt->rt6i_flags & RTF_PCPU ||
--	    unlikely(!list_empty(&rt->rt6i_uncached))))
-+	if (from)
- 		fib6_get_cookie_safe(from, &cookie);
+@@ -795,6 +796,13 @@ static int rawv6_sendmsg(struct sock *sk
+ 	if (msg->msg_flags & MSG_OOB)
+ 		return -EOPNOTSUPP;
  
- 	rcu_read_unlock();
++	/* hdrincl should be READ_ONCE(inet->hdrincl)
++	 * but READ_ONCE() doesn't work with bit fields.
++	 * Doing this indirectly yields the same result.
++	 */
++	hdrincl = inet->hdrincl;
++	hdrincl = READ_ONCE(hdrincl);
++
+ 	/*
+ 	 *	Get and verify the address.
+ 	 */
+@@ -907,7 +915,7 @@ static int rawv6_sendmsg(struct sock *sk
+ 		fl6.flowi6_oif = np->ucast_oif;
+ 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
+ 
+-	if (inet->hdrincl)
++	if (hdrincl)
+ 		fl6.flowi6_flags |= FLOWI_FLAG_KNOWN_NH;
+ 
+ 	if (ipc6.tclass < 0)
+@@ -930,7 +938,7 @@ static int rawv6_sendmsg(struct sock *sk
+ 		goto do_confirm;
+ 
+ back_from_confirm:
+-	if (inet->hdrincl)
++	if (hdrincl)
+ 		err = rawv6_send_hdrinc(sk, msg, len, &fl6, &dst,
+ 					msg->msg_flags, &ipc6.sockc);
+ 	else {
 
 
