@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7934EC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3D3C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D01D20833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1DC20833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 19:09:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bW2i65Er"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CF6Mvhto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbfFITJN (ORCPT
+        id S1730934AbfFITJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 15:09:13 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53602 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730659AbfFITJI (ORCPT
+        Sun, 9 Jun 2019 15:09:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35371 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730367AbfFITJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 15:09:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so6495904wmj.3;
-        Sun, 09 Jun 2019 12:09:06 -0700 (PDT)
+        Sun, 9 Jun 2019 15:09:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so7005848wrv.2;
+        Sun, 09 Jun 2019 12:09:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=H5XnYMhzFtyFFN1fSCd9PIubqiCUTeCLqoHFgWTMKHU=;
-        b=bW2i65Er5/E2yGstFsRcoXJrxgAvVSQ6pM01+Ujpv646zr/bvOT/VcrfpEZGeoYHe4
-         NBHuwkq44T4XQf9syS1eWXhrq7f0RfhaZC80gxta+5ugWNq55gcywWdarbcm+/MmdD6b
-         YNwUx6+cfFvf0O02tuYiJXgD/7tyOcGmyiNaBGrPe/EBcf2Nf4+THtVvkLAdeYhjVT6C
-         aL1eD40k4sCRTNCAqZVDRE5BgtyHjLXqr/NBi0l3MuSmMsp96Nrqh7UWcI9pDenD3BaG
-         6CA+zTVSFQr64LRcTUSpgqdw1QOt3muTlEtFZxaXjdpE/0egJGOgIoBpef/G4UNtV8gc
-         xctQ==
+        bh=oXwCvaOUC9RvoHYx8yAS+swNCbtgxdjgYrIH9bepZgg=;
+        b=CF6MvhtoA0H3IumEKJUASP4feaB7e7dXqpSPOrfuasRnaOqGbhe/LNeY+ZwRmaVgnS
+         pwwurWqZ7VACGGSsSbf4MbZoE0/omqRNRnQ7t5nwj6hgcfsNbXltaCBGOZZ4h3MqW59O
+         BsG4XftF0Cs1moOwxpuWA7b8mMol9eZH10n9jb4b5cyCYnjagN64mfRrjmH+DyoFlTje
+         arpPdXknz3ymQhxoPDx2LNgE1pafWL9PqHigSrItiv4BQEmsulvnfdwQU76szl0JRUE4
+         BD+nmyXqNGeLyiEoOPFKzhw8HoTcMINCvpBR1+F2NkK3ZBgYPWdv0V7yKKwB34YJlyoo
+         3d8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=H5XnYMhzFtyFFN1fSCd9PIubqiCUTeCLqoHFgWTMKHU=;
-        b=qZbfZ5SZ5JCRTcGR2SvpPGu+jQSPDdHCTfg9ojL3FZ8XjnurW1OQOpIgKmXrGFqMMG
-         SZtvQfwIhNOMcVATfFQBpDwO4V/WakrReyHhvigzdKHXjZDDa4mOPEt0pYpv656zef95
-         CbqyPYqQFNivZ4MV52li9ifuEAT/RAzie3jUGi/MjbXZB4vPP7vVa1z9UEJ0tXw/fff4
-         lfaMVHQXgWxIdm66XjV7gJ5AOLt2B4LSAm78t7idYWzciwaeSp4LzTMPlVifonygyjBf
-         D6EC9MxN2f4D+tfWOMIl8XYk3h+xwSw7GtuZb9NyrSkm2nrIWn7Ww7Tp+0DH0YqzqFwf
-         cCnA==
-X-Gm-Message-State: APjAAAXiKJ6Daa2QAfp/VUZadC4EEMgn1799x3hbs7wOJqTG7WbdCZZF
-        PDm6xVSvJCLs82Z1I+WbyeIuF+XC
-X-Google-Smtp-Source: APXvYqwDp5oJCsLknDNh5UePh0gfBxTChYuSuJ+pnvb7mU0MZqiiPVtRuiI3s/A0txnounDYndx59A==
-X-Received: by 2002:a1c:a002:: with SMTP id j2mr10768842wme.131.1560107345275;
-        Sun, 09 Jun 2019 12:09:05 -0700 (PDT)
+        bh=oXwCvaOUC9RvoHYx8yAS+swNCbtgxdjgYrIH9bepZgg=;
+        b=iflz/lrrVSvIgh+V4KCiAR1lggpQOFcFE2IUh4IBlH4p8tj/uVajjt88yQ0968qlye
+         dfhQpHoPFfpNUqFlKwVHUse3GBx3NMkG8NHlKLZ1re9cU5jizzBpX1wgjPNh2hG0L1Wq
+         Xci82Ls3K6CyP8EaDp4sqSo26uGJoyuk7KriN61Qb+D+raj/4cuLDvDEiv+lN0ivUr1O
+         0PEczEKv/wtMZ9WJVTs3OFyiqlfVAu1SDFlb5gSRqepmCLShvPiDV+pV2wopRf4BLDXk
+         atJg6XfuchSaTGLUrxiI9B1mwscBFl+BJpI67t7A89Iwg6FZCDR2jQZxRuyyrHanGbZZ
+         aadw==
+X-Gm-Message-State: APjAAAWyEjJeW05Q/pniHfQgv0uU+TV7ZuYV/XYVRri4LPQn0H2J2Jws
+        tmsB/T3erAKDctjBn5CJN99ijvFy
+X-Google-Smtp-Source: APXvYqxzszUX1dwqMI7B5HEafvjKHzJTeuNx5ouEPuP5Bu2wXorJGN4n4qd4V4cNN9svaZDf/TRvGg==
+X-Received: by 2002:a05:6000:1289:: with SMTP id f9mr3776086wrx.125.1560107348752;
+        Sun, 09 Jun 2019 12:09:08 -0700 (PDT)
 Received: from myhost.home (ckm12.neoplus.adsl.tpnet.pl. [83.31.88.12])
-        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.09.03
+        by smtp.gmail.com with ESMTPSA id y38sm14725041wrd.41.2019.06.09.12.09.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 09 Jun 2019 12:09:04 -0700 (PDT)
+        Sun, 09 Jun 2019 12:09:08 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
         dmurphy@ti.com, jacek.anaszewski@gmail.com,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v5 21/26] leds: as3645a: Use generic support for composing LED names
-Date:   Sun,  9 Jun 2019 21:07:58 +0200
-Message-Id: <20190609190803.14815-22-jacek.anaszewski@gmail.com>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v5 23/26] leds: gpio: Use generic support for composing LED names
+Date:   Sun,  9 Jun 2019 21:08:00 +0200
+Message-Id: <20190609190803.14815-24-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
 References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
@@ -76,188 +76,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Switch to using generic LED support for composing LED class
 device name.
 
-After switching to new led_classdev_register_ext() the validity
-of struct led_classdev's name property is no longer guaranteed,
-and therefore rely on struct device's kobj.name instead.
-
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/leds/leds-as3645a.c | 74 +++++++++++++++++----------------------------
- 1 file changed, 28 insertions(+), 46 deletions(-)
+ drivers/leds/leds-gpio.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/leds/leds-as3645a.c b/drivers/leds/leds-as3645a.c
-index 14ab6b0e4de9..a7126f45064e 100644
---- a/drivers/leds/leds-as3645a.c
-+++ b/drivers/leds/leds-as3645a.c
-@@ -124,11 +124,6 @@ struct as3645a_config {
- 	u32 peak;
- };
+diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+index b26cf78993d1..fe70613aca34 100644
+--- a/drivers/leds/leds-gpio.c
++++ b/drivers/leds/leds-gpio.c
+@@ -77,11 +77,11 @@ static int gpio_blink_set(struct led_classdev *led_cdev,
  
--struct as3645a_names {
--	char flash[32];
--	char indicator[32];
--};
--
- struct as3645a {
- 	struct i2c_client *client;
- 
-@@ -484,12 +479,10 @@ static int as3645a_detect(struct as3645a *flash)
- }
- 
- static int as3645a_parse_node(struct as3645a *flash,
--			      struct as3645a_names *names,
- 			      struct fwnode_handle *fwnode)
+ static int create_gpio_led(const struct gpio_led *template,
+ 	struct gpio_led_data *led_dat, struct device *parent,
+-	struct device_node *np, gpio_blink_set_t blink_set)
++	struct fwnode_handle *fwnode, gpio_blink_set_t blink_set)
  {
- 	struct as3645a_config *cfg = &flash->cfg;
- 	struct fwnode_handle *child;
--	const char *name;
- 	int rval;
- 
- 	fwnode_for_each_child_node(fwnode, child) {
-@@ -517,17 +510,6 @@ static int as3645a_parse_node(struct as3645a *flash,
- 		return -ENODEV;
- 	}
- 
--	rval = fwnode_property_read_string(flash->flash_node, "label", &name);
--	if (!rval) {
--		strlcpy(names->flash, name, sizeof(names->flash));
--	} else if (is_of_node(fwnode)) {
--		snprintf(names->flash, sizeof(names->flash),
--			 "%pOFn:flash", to_of_node(fwnode));
--	} else {
--		dev_err(&flash->client->dev, "flash node has no label!\n");
--		return -EINVAL;
--	}
--
- 	rval = fwnode_property_read_u32(flash->flash_node, "flash-timeout-us",
- 					&cfg->flash_timeout_us);
- 	if (rval < 0) {
-@@ -565,17 +547,6 @@ static int as3645a_parse_node(struct as3645a *flash,
- 		goto out_err;
- 	}
- 
--	rval = fwnode_property_read_string(flash->indicator_node, "label",
--					   &name);
--	if (!rval) {
--		strlcpy(names->indicator, name, sizeof(names->indicator));
--	} else if (is_of_node(fwnode)) {
--		snprintf(names->indicator, sizeof(names->indicator),
--			 "%pOFn:indicator", to_of_node(fwnode));
--	} else {
--		dev_err(&flash->client->dev, "indicator node has no label!\n");
--		return -EINVAL;
--	}
- 
- 	rval = fwnode_property_read_u32(flash->indicator_node,
- 					"led-max-microamp",
-@@ -595,21 +566,25 @@ static int as3645a_parse_node(struct as3645a *flash,
- 	return rval;
- }
- 
--static int as3645a_led_class_setup(struct as3645a *flash,
--				   struct as3645a_names *names)
-+static int as3645a_led_class_setup(struct as3645a *flash)
- {
- 	struct led_classdev *fled_cdev = &flash->fled.led_cdev;
- 	struct led_classdev *iled_cdev = &flash->iled_cdev;
 +	struct led_init_data init_data = {};
- 	struct led_flash_setting *cfg;
- 	int rval;
+ 	int ret, state;
  
--	iled_cdev->name = names->indicator;
- 	iled_cdev->brightness_set_blocking = as3645a_set_indicator_brightness;
- 	iled_cdev->max_brightness =
- 		flash->cfg.indicator_max_ua / AS_INDICATOR_INTENSITY_STEP;
- 	iled_cdev->flags = LED_CORE_SUSPENDRESUME;
+-	led_dat->cdev.name = template->name;
+ 	led_dat->cdev.default_trigger = template->default_trigger;
+ 	led_dat->can_sleep = gpiod_cansleep(led_dat->gpiod);
+ 	if (!led_dat->can_sleep)
+@@ -112,7 +112,16 @@ static int create_gpio_led(const struct gpio_led *template,
+ 	if (ret < 0)
+ 		return ret;
  
--	rval = led_classdev_register(&flash->client->dev, iled_cdev);
-+	init_data.fwnode = flash->indicator_node;
-+	init_data.devicename = AS_NAME;
-+	init_data.default_label = "indicator";
+-	return devm_led_classdev_register(parent, &led_dat->cdev);
++	if (template->name) {
++		led_dat->cdev.name = template->name;
++		ret = devm_led_classdev_register(parent, &led_dat->cdev);
++	} else {
++		init_data.fwnode = fwnode;
++		ret = devm_led_classdev_register_ext(parent, &led_dat->cdev,
++						     &init_data);
++	}
 +
-+	rval = led_classdev_register_ext(&flash->client->dev, iled_cdev,
-+					 &init_data);
- 	if (rval < 0)
- 		return rval;
- 
-@@ -627,7 +602,6 @@ static int as3645a_led_class_setup(struct as3645a *flash,
- 
- 	flash->fled.ops = &as3645a_led_flash_ops;
- 
--	fled_cdev->name = names->flash;
- 	fled_cdev->brightness_set_blocking = as3645a_set_assist_brightness;
- 	/* Value 0 is off in LED class. */
- 	fled_cdev->max_brightness =
-@@ -635,15 +609,23 @@ static int as3645a_led_class_setup(struct as3645a *flash,
- 				       flash->cfg.assist_max_ua) + 1;
- 	fled_cdev->flags = LED_DEV_CAP_FLASH | LED_CORE_SUSPENDRESUME;
- 
--	rval = led_classdev_flash_register(&flash->client->dev, &flash->fled);
--	if (rval) {
--		led_classdev_unregister(iled_cdev);
--		dev_err(&flash->client->dev,
--			"led_classdev_flash_register() failed, error %d\n",
--			rval);
--	}
-+	init_data.fwnode = flash->flash_node;
-+	init_data.devicename = AS_NAME;
-+	init_data.default_label = "flash";
-+
-+	rval = led_classdev_flash_register_ext(&flash->client->dev,
-+					       &flash->fled, &init_data);
-+	if (rval)
-+		goto out_err;
- 
- 	return rval;
-+
-+out_err:
-+	led_classdev_unregister(iled_cdev);
-+	dev_err(&flash->client->dev,
-+		"led_classdev_flash_register() failed, error %d\n",
-+		rval);
-+	return rval;
++	return ret;
  }
  
- static int as3645a_v4l2_setup(struct as3645a *flash)
-@@ -667,8 +649,9 @@ static int as3645a_v4l2_setup(struct as3645a *flash)
- 		},
- 	};
+ struct gpio_leds_priv {
+@@ -145,15 +154,6 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
+ 		struct gpio_led_data *led_dat = &priv->leds[priv->num_leds];
+ 		struct gpio_led led = {};
+ 		const char *state = NULL;
+-		struct device_node *np = to_of_node(child);
+-
+-		ret = fwnode_property_read_string(child, "label", &led.name);
+-		if (ret && IS_ENABLED(CONFIG_OF) && np)
+-			led.name = np->name;
+-		if (!led.name) {
+-			fwnode_handle_put(child);
+-			return ERR_PTR(-EINVAL);
+-		}
  
--	strlcpy(cfg.dev_name, led->name, sizeof(cfg.dev_name));
--	strlcpy(cfgind.dev_name, flash->iled_cdev.name, sizeof(cfg.dev_name));
-+	strlcpy(cfg.dev_name, led->dev->kobj.name, sizeof(cfg.dev_name));
-+	strlcpy(cfgind.dev_name, flash->iled_cdev.dev->kobj.name,
-+		sizeof(cfg.dev_name));
+ 		led.gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
+ 							     GPIOD_ASIS,
+@@ -185,7 +185,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
+ 		if (fwnode_property_present(child, "panic-indicator"))
+ 			led.panic_indicator = 1;
  
- 	flash->vf = v4l2_flash_init(
- 		&flash->client->dev, flash->flash_node, &flash->fled, NULL,
-@@ -689,7 +672,6 @@ static int as3645a_v4l2_setup(struct as3645a *flash)
- 
- static int as3645a_probe(struct i2c_client *client)
- {
--	struct as3645a_names names;
- 	struct as3645a *flash;
- 	int rval;
- 
-@@ -702,7 +684,7 @@ static int as3645a_probe(struct i2c_client *client)
- 
- 	flash->client = client;
- 
--	rval = as3645a_parse_node(flash, &names, dev_fwnode(&client->dev));
-+	rval = as3645a_parse_node(flash, dev_fwnode(&client->dev));
- 	if (rval < 0)
- 		return rval;
- 
-@@ -717,7 +699,7 @@ static int as3645a_probe(struct i2c_client *client)
- 	if (rval)
- 		goto out_mutex_destroy;
- 
--	rval = as3645a_led_class_setup(flash, &names);
-+	rval = as3645a_led_class_setup(flash);
- 	if (rval)
- 		goto out_mutex_destroy;
- 
+-		ret = create_gpio_led(&led, led_dat, dev, np, NULL);
++		ret = create_gpio_led(&led, led_dat, dev, child, NULL);
+ 		if (ret < 0) {
+ 			fwnode_handle_put(child);
+ 			return ERR_PTR(ret);
 -- 
 2.11.0
 
