@@ -2,77 +2,117 @@ Return-Path: <SRS0=y5Xy=UI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9998BC28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 14:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5A4C28EBD
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 14:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E59920833
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 14:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635A320833
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 14:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S2hhrEwn"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="au3C9M3q";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="QD1Gg5GP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbfFIOx5 (ORCPT
+        id S1729050AbfFIOyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 10:53:57 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45751 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728905AbfFIOx4 (ORCPT
+        Sun, 9 Jun 2019 10:54:13 -0400
+Received: from mail177-30.suw61.mandrillapp.com ([198.2.177.30]:36805 "EHLO
+        mail177-30.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728534AbfFIOyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 10:53:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u10so4858822lfm.12
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2019 07:53:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MU+WyG1TNeU0wHpSgq4qa0v7PmW/GjVZf4FGn3dLePA=;
-        b=S2hhrEwnLrxZ19kIxNfe07/0PGlroLlmWeZ9yAhw8zzAll+czOobfpLnWQkvdpyUH9
-         rd1s16S0Q0IKggD9pllTNCPoJcLhr3W5fZR03/b/oXSmhP0f7jJVgyYwTjNJulLM1xg+
-         NoeRnPaZ2SoPPRjj3sOkTZrj+EpNRT3b1AaNvZyqFXUqwO9oidtzjABATvXE9fLH03YX
-         8qL+7tsYI+t+wwyXN0SThW/fSnOXpW/0goe61nHrIT2wLKQlxnFp8snQTDsF6wbREjw3
-         bYFmbJlu3k4XaUJQUbK2IRLfrB3KqnK7y1jVn+LC9XFHgFa9iLNXwMoSBqnpwvP3FM6l
-         TUgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MU+WyG1TNeU0wHpSgq4qa0v7PmW/GjVZf4FGn3dLePA=;
-        b=uLfVYM74JFCRsOEDJelSA1GOLYykhfzjQ+GijBqpqJHrY5U8xhBvmNNgBnFUXKIxtt
-         jTtD5A2SQcoqkxnC/8xTocfF4cQQxkCt/d3R7O/zt1D2KJ95idKn0AQAplcu3i4cKE8c
-         AhvylQZ1fDmerN25LY6RWp6P/87BUI3yLLvYDhIc/dsbC1iX2q0izHRbK6RRykXq09v4
-         qbIkolis6BVzP/9aGzU3dULue1ozaqi7o5FvI29hBRDM0cS+GTkHCQrba7gvNKdAniJ3
-         Qr34nhMS5WNAwZ/H9TKT5RnqDt6UTzJ4xKgV4Qw7KOU2H8wSFJRveK0kxSRYGXcd4f89
-         ze5Q==
-X-Gm-Message-State: APjAAAVAutHX6CFaCvgpqMDzD9hsV4vuRgBlm/Gi7m1uxEotK0Rx5Vbp
-        LIWNEVWjy9X+w/dzuIFyeVxVF/sc48lW6jI5dcr7rA==
-X-Google-Smtp-Source: APXvYqwlidGfg5rHLR8MpVmRrgDqJeNGuuQj25IrHXF9OTZsqnr04f3gGacriT/TP/hbmUYhm5ANmiweypSJWOgGtcs=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr31483477lfh.92.1560092034835;
- Sun, 09 Jun 2019 07:53:54 -0700 (PDT)
+        Sun, 9 Jun 2019 10:54:13 -0400
+X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Jun 2019 10:54:12 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=8NPqAV0ieNyzOZGqpqAKuzdt9sBdqoIrZdZwXwFyY0o=;
+ b=au3C9M3q2/WKKblEjm8os8w0arpH8K34cnrjwB9QeSHwY8SwYrrKrrOXkGa7aNeiE2ox1frKkp8n
+   4IADGsyFOYEQeBBVoID9DkQViFoHeLd2EDYIxw+NOZfEDAO6oVrmD3maASx9jYf6zHdqXexP8bk2
+   cFBHvjZXbDkdDDTQz1E=
+Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id hvkep822rtkn for <linux-kernel@vger.kernel.org>; Sun, 9 Jun 2019 14:39:09 +0000 (envelope-from <bounce-md_31050260.5cfd1a0d.v1-49e2eef631cb48dfb884b9e188d01f9e@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560091149; h=From : 
+ Subject : To : Cc : Message-Id : Date : MIME-Version : Content-Type : 
+ Content-Transfer-Encoding : From : Subject : Date : X-Mandrill-User : 
+ List-Unsubscribe; bh=8NPqAV0ieNyzOZGqpqAKuzdt9sBdqoIrZdZwXwFyY0o=; 
+ b=QD1Gg5GPmbzB+TEuJmukP5MJ/9Y4HXi5De0zFbnDbI/r5wrFbpJMO5cjkW5f2Zt37Vfvyj
+ A5mqoVMgpDKfr1Fyj13O9lFUKjw7HJrOz3iffSChv22j05L2VsiN6oCW5G9jAFpi7iCyAuOU
+ KxM+MTFeUaRyJt9F47rJKO4G4wTq8=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH 3.18 0/2] Fix FUSE read/write deadlock on stream-like files
+Received: from [87.98.221.171] by mandrillapp.com id 49e2eef631cb48dfb884b9e188d01f9e; Sun, 09 Jun 2019 14:39:09 +0000
+X-Mailer: git-send-email 2.20.1
+To:     <stable@vger.kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kirill Smelkov <kirr@nexedi.com>
+Message-Id: <20190609133501.7873-1-kirr@nexedi.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.49e2eef631cb48dfb884b9e188d01f9e
+X-Mandrill-User: md_31050260
+Date:   Sun, 09 Jun 2019 14:39:09 +0000
 MIME-Version: 1.0
-References: <20190609144313.4842-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190609144313.4842-1-yamada.masahiro@socionext.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 9 Jun 2019 16:53:48 +0200
-Message-ID: <CACRpkdab=A_kRBaNER54azChP276uWt8ccW7736H2G7F+1A0cA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: add include guard to pinctrl-state.h
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 9, 2019 at 4:43 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+Hello stable team,
 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Please consider applying the following 2 patches to Linux-3.18 stable
+tree. The patches fix regression introduced in 3.14 where both read and
+write started to run under lock taken, which resulted in FUSE (and many
+other drivers) deadlocks for cases where stream-like files are used with
+read and write being run simultaneously.
 
-Patch applied.
+Please see complete problem description in upstream commit 10dce8af3422
+("fs: stream_open - opener for stream-like files so that read and write
+can run simultaneously without deadlock").
 
-Yours,
-Linus Walleij
+The actual FUSE fix (upstream commit bbd84f33652f "fuse: Add
+FOPEN_STREAM to use stream_open()") was merged into 5.2 with `Cc:
+stable@vger.kernel.org # v3.14+` mark and is already included into 5.1,
+5.0 and 4.19 stable trees. However for some reason it is not (yet ?)
+included into 4.14, 4.9, 4.4, 3.18 and 3.16 trees.
+
+The patches fix a real problem into which my FUSE filesystem ran, and
+which also likely affects OSSPD (full details are in the patches
+description). Please consider including the fixes into 3.18 (as well as
+into other stable trees - I'm sending corresponding series separately -
+- one per tree).
+
+Thanks beforehand,
+Kirill
+
+P.S. the patches have been already a bit discussed in stable context some
+time ago:
+
+https://lore.kernel.org/linux-fsdevel/CAHk-=wgh234SyBG810=vB360PCzVkAhQRqGg8aFdATZd+daCFw@mail.gmail.com/
+https://lore.kernel.org/linux-fsdevel/20190424183012.GB3798@deco.navytux.spb.ru/
+https://lore.kernel.org/linux-fsdevel/20190424191652.GE3798@deco.navytux.spb.ru/
+...
+
+Kirill Smelkov (2):
+  fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+  fuse: Add FOPEN_STREAM to use stream_open()
+
+ drivers/xen/xenbus/xenbus_dev_frontend.c |   2 +-
+ fs/fuse/file.c                           |   4 +-
+ fs/open.c                                |  18 ++
+ fs/read_write.c                          |   5 +-
+ include/linux/fs.h                       |   4 +
+ include/uapi/linux/fuse.h                |   2 +
+ scripts/coccinelle/api/stream_open.cocci | 363 +++++++++++++++++++++++
+ 7 files changed, 394 insertions(+), 4 deletions(-)
+ create mode 100644 scripts/coccinelle/api/stream_open.cocci
+
+-- 
+2.20.1
