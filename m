@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22116C28EBD
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEF0C2BCA1
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC44206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A362081C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Jun 2019 16:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560099349;
-	bh=BT0+PLSHpy9Y6WnvFZU/IEPYQG63I+Jmn3K3hx214Do=;
+	s=default; t=1560099352;
+	bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TaikD76lcviuJJtNa5ABz78QaM3uHtDHayomeGoElDOjXM6T7k0Eo2FCN/HWABQ7g
-	 7wl9FTeCGU1tBF8sFt2ffLF5Vc3ZSZygbp6ta+7ps90i9kCT7hTym5aibsnU3e7zev
-	 gtltDOyKgIMKSrJxFJbpRM2gJNZ3pnrjsq2dqxII=
+	b=CUcEbSrmMQH8q9tlPO9cVuVYbpqKIPy+eDbazm76UQvt0N6Idk/7fV+quz8vyuIAq
+	 gYbwpLYY3U+KcQE3cW601DJHcdlQwGFm8QfltYlDRjorWHvKiv+dExD6QkEprJEWfP
+	 3An0dSeYBjRFWVzHynVXqq7Y6c2rLcnbAUW79wQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732840AbfFIQzr (ORCPT
+        id S1732849AbfFIQzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Jun 2019 12:55:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57928 "EHLO mail.kernel.org"
+        Sun, 9 Jun 2019 12:55:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732824AbfFIQzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Jun 2019 12:55:44 -0400
+        id S1732833AbfFIQzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Jun 2019 12:55:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04813204EC;
-        Sun,  9 Jun 2019 16:55:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92CEB206BB;
+        Sun,  9 Jun 2019 16:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560099343;
-        bh=BT0+PLSHpy9Y6WnvFZU/IEPYQG63I+Jmn3K3hx214Do=;
+        s=default; t=1560099346;
+        bh=hcCWdm8G1C81OZqG9T6IE40vqZ2g7WBEfGBUW8Mt+Bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyYdgiiiIl+uwzzBqFNwY7ZnMGg5kT1w6nf0XEewUO/s+iZpXN8b34lSDGsVawuCy
-         08b7oxpKummlSvqXyopDWaYZk5kRDAmttbJTh4ra2OE0SiKOcZXF9yjiUpkuqz3vKK
-         MDksUxJU2ANDuzZBsi0UZorbbkrgt0g7CYbcWS/8=
+        b=n7HaMUTUOWIwaqh6k998TYxrU5KCT+VJKs/uLS9cFC2JW5DxNfkEv0yu0gc6Ff7qa
+         LPLo9fHepmTxJmFnbjvBje9IwJ0aJBWuzwbXlasUFZxKEIUfJo2iPhOzSk2HT49Nsj
+         IxZ/Q6mkWLpxkQVU/ik4knY95TWB+fkgQ3z92SXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,15 +50,13 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 001/241] x86/speculation/mds: Revert CPU buffer clear on double fault exit
-Date:   Sun,  9 Jun 2019 18:39:03 +0200
-Message-Id: <20190609164147.815178298@linuxfoundation.org>
+Subject: [PATCH 4.4 002/241] x86/speculation/mds: Improve CPU buffer clear documentation
+Date:   Sun,  9 Jun 2019 18:39:04 +0200
+Message-Id: <20190609164147.855003688@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190609164147.729157653@linuxfoundation.org>
 References: <20190609164147.729157653@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -69,12 +67,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andy Lutomirski <luto@kernel.org>
 
-commit 88640e1dcd089879530a49a8d212d1814678dfe7 upstream.
+commit 9d8d0294e78a164d407133dea05caf4b84247d6a upstream.
 
-The double fault ESPFIX path doesn't return to user mode at all --
-it returns back to the kernel by simulating a #GP fault.
-prepare_exit_to_usermode() will run on the way out of
-general_protection before running user code.
+On x86_64, all returns to usermode go through
+prepare_exit_to_usermode(), with the sole exception of do_nmi().
+This even includes machine checks -- this was added several years
+ago to support MCE recovery.  Update the documentation.
 
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Cc: Borislav Petkov <bp@suse.de>
@@ -86,54 +84,61 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
 Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
-Link: http://lkml.kernel.org/r/ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org
+Link: http://lkml.kernel.org/r/999fa9e126ba6a48e9d214d2f18dbde5c62ac55c.1557865329.git.luto@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/x86/mds.rst |    7 -------
- arch/x86/kernel/traps.c   |    8 --------
- 2 files changed, 15 deletions(-)
+ Documentation/x86/mds.rst |   39 +++++++--------------------------------
+ 1 file changed, 7 insertions(+), 32 deletions(-)
 
 --- a/Documentation/x86/mds.rst
 +++ b/Documentation/x86/mds.rst
-@@ -158,13 +158,6 @@ Mitigation points
-      mitigated on the return from do_nmi() to provide almost complete
-      coverage.
+@@ -142,38 +142,13 @@ Mitigation points
+    mds_user_clear.
  
--   - Double fault (#DF):
+    The mitigation is invoked in prepare_exit_to_usermode() which covers
+-   most of the kernel to user space transitions. There are a few exceptions
+-   which are not invoking prepare_exit_to_usermode() on return to user
+-   space. These exceptions use the paranoid exit code.
 -
--     A double fault is usually fatal, but the ESPFIX workaround, which can
--     be triggered from user space through modify_ldt(2) is a recoverable
--     double fault. #DF uses the paranoid exit path, so explicit mitigation
--     in the double fault handler is required.
+-   - Non Maskable Interrupt (NMI):
 -
-    - Machine Check Exception (#MC):
+-     Access to sensible data like keys, credentials in the NMI context is
+-     mostly theoretical: The CPU can do prefetching or execute a
+-     misspeculated code path and thereby fetching data which might end up
+-     leaking through a buffer.
+-
+-     But for mounting other attacks the kernel stack address of the task is
+-     already valuable information. So in full mitigation mode, the NMI is
+-     mitigated on the return from do_nmi() to provide almost complete
+-     coverage.
+-
+-   - Machine Check Exception (#MC):
+-
+-     Another corner case is a #MC which hits between the CPU buffer clear
+-     invocation and the actual return to user. As this still is in kernel
+-     space it takes the paranoid exit path which does not clear the CPU
+-     buffers. So the #MC handler repopulates the buffers to some
+-     extent. Machine checks are not reliably controllable and the window is
+-     extremly small so mitigation would just tick a checkbox that this
+-     theoretical corner case is covered. To keep the amount of special
+-     cases small, ignore #MC.
+-
+-   - Debug Exception (#DB):
+-
+-     This takes the paranoid exit path only when the INT1 breakpoint is in
+-     kernel space. #DB on a user space address takes the regular exit path,
+-     so no extra mitigation required.
++   all but one of the kernel to user space transitions.  The exception
++   is when we return from a Non Maskable Interrupt (NMI), which is
++   handled directly in do_nmi().
++
++   (The reason that NMI is special is that prepare_exit_to_usermode() can
++    enable IRQs.  In NMI context, NMIs are blocked, and we don't want to
++    enable IRQs with NMIs blocked.)
  
-      Another corner case is a #MC which hits between the CPU buffer clear
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -61,7 +61,6 @@
- #include <asm/alternative.h>
- #include <asm/fpu/xstate.h>
- #include <asm/trace/mpx.h>
--#include <asm/nospec-branch.h>
- #include <asm/mpx.h>
- #include <asm/vm86.h>
  
-@@ -338,13 +337,6 @@ dotraplinkage void do_double_fault(struc
- 		regs->ip = (unsigned long)general_protection;
- 		regs->sp = (unsigned long)&normal_regs->orig_ax;
- 
--		/*
--		 * This situation can be triggered by userspace via
--		 * modify_ldt(2) and the return does not take the regular
--		 * user space exit, so a CPU buffer clear is required when
--		 * MDS mitigation is enabled.
--		 */
--		mds_user_clear_cpu_buffers();
- 		return;
- 	}
- #endif
+ 2. C-State transition
 
 
